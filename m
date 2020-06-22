@@ -2,114 +2,266 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D16DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1452075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F6120727
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oCJRZhCa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VnLhWmtj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731023AbgFVXuI (ORCPT
+        id S1731075AbgFVXxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:50:08 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:41441 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbgFVXuH (ORCPT
+        Mon, 22 Jun 2020 19:53:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730227AbgFVXxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:50:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592869807; x=1624405807;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=rZllEpf8ZszlyvJoAGgIfYMlPA/MYJ1fDs3XrZKxdZc=;
-  b=oCJRZhCaB08569ZvGCGoPG0FqzY4lsh0JvZ5Ey4b6im1WHKfpxlKrLmL
-   2Ybt5F+BxgjBGj8WpNJbtKVawvGs++kAdUHjTb7sy+XD/DIW4MLjOYmxy
-   fzR94s2TEyrHUa8aOwuiQ6MPbGSctXz9oz/oT3dBqZm1EIsuoTbCZVJu9
-   MwHau4FIAUJz7jyo78pHHuqBlcGH+JHd88Un2bbpA+LDBqIjBtKihNzLD
-   i2vblqOcbxa2SxAkqC9zyLb27GByp/Detnf/0p4VMsAv49UQxFeVNnhni
-   NGbb0ghHmhzsyRUcL5zA9oXe5LYhYkH5XHMiiSwWhXpX38bYmNnfQPM9e
-   A==;
-IronPort-SDR: w58p2vJDUuC1etz4K2HV9UCvQup0jV6RVz+pUc/SgCesYTZeX/yQFYDmkQmyDCu1uTqLY7f82S
- CuHfLzzBzsGHGNrMAXq0stAUCgQJsOvSZmhEHlopXz5T84UYx0zxPo3Bd7Apd0TBO8wHh8e7b2
- O/JNqBBqiXrgOivp5PeDar0xUSeF+vi4y7O8V1IrJzzS/AL4RGBaaOu7uxbJtKEf/oxTIUsZ6a
- dRivYXpc5DgZXS6E1flOCPiLmYoD+xCgaZfgytDpTlplVR/4zpi9cheqFz+rgwWpGU5UdSi4Nt
- L1w=
-X-IronPort-AV: E=Sophos;i="5.75,268,1589212800"; 
-   d="scan'208";a="140646385"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 23 Jun 2020 07:50:06 +0800
-IronPort-SDR: rR/kW+sJPyHkatnuX/t0dcIWK/1KvL7vSG0HOKOpVqImaTSYBgymY2KgAY/7bhDjTrPQrFLXoJ
- nZzxVedu3qBFYtm4/WWWhAaTm4wTla67g=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 16:39:12 -0700
-IronPort-SDR: JiLUl4lWt6ijHyeGhTrIqNZmAwbOJ4TKFawtA72xtj+eWa4H8YRT6IHsXhbWWv1znpHQhmz8OU
- jEid+rR83mPg==
-WDCIronportException: Internal
-Received: from lpt-lee-f.ad.shared (HELO yoda.hgst.com) ([10.86.58.181])
-  by uls-op-cesaip01.wdc.com with ESMTP; 22 Jun 2020 16:50:06 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greentime Hu <greentime.hu@sifive.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH] RISC-V: Use a local variable instead of smp_processor_id()
-Date:   Mon, 22 Jun 2020 16:47:25 -0700
-Message-Id: <20200622234725.92511-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 22 Jun 2020 19:53:49 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C01E8C061573;
+        Mon, 22 Jun 2020 16:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Mz/A+hFfuf24LVGItLsLfUEgCItsEK6JiOXYHwMwFLQ=; b=VnLhWmtjHgbFCQ6Yr0nSQfHPy
+        TSbERVRaAM8pnpmgV7XlFpnLWt/E9Qq6dXeNOkp0zXJab0YenjSNZRFGanOc8RglhvdxAnuxVQGNo
+        /kWpdFWWPkSj+XWD7JaIIwK171gc5VYUH8VKQtkXJ6grVq457ol0PvS4xfcukZ/5xb6ycFitF2AFo
+        IFBq2Ntw0w+RJ1njeQSRCrl44goxjpO5KrGxaKgJPDmBwjgq17mAm40qqtetacSOSfTqEMPg8yFJg
+        a0i3VbQvStMgEnKcJfyjwzNdhkHQznIQgtmQNRNZ5FIQcOnLAK2Veb0uhu6HikuPCSjPzpLXE8fhD
+        JqtWS9cjA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58994)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jnWG3-00013A-4g; Tue, 23 Jun 2020 00:53:47 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jnWFw-0000UE-KX; Tue, 23 Jun 2020 00:53:40 +0100
+Date:   Tue, 23 Jun 2020 00:53:40 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH 1/2] net: ethernet: mvneta: Fix Serdes configuration for
+ SoCs without comphy
+Message-ID: <20200622235340.GQ1551@shell.armlinux.org.uk>
+References: <20200616083140.8498-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616083140.8498-1-s.hauer@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greentime Hu <greentime.hu@sifive.com>
+On Tue, Jun 16, 2020 at 10:31:39AM +0200, Sascha Hauer wrote:
+> The MVNETA_SERDES_CFG register is only available on older SoCs like the
+> Armada XP. On newer SoCs like the Armada 38x the fields are moved to
+> comphy. This patch moves the writes to this register next to the comphy
+> initialization, so that depending on the SoC either comphy or
+> MVNETA_SERDES_CFG is configured.
+> With this we no longer write to the MVNETA_SERDES_CFG on SoCs where it
+> doesn't exist.
+> 
+> Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  drivers/net/ethernet/marvell/mvneta.c | 80 +++++++++++++++------------
+>  1 file changed, 44 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> index 51889770958d8..9933eb4577d43 100644
+> --- a/drivers/net/ethernet/marvell/mvneta.c
+> +++ b/drivers/net/ethernet/marvell/mvneta.c
+> @@ -106,6 +106,7 @@
+>  #define      MVNETA_TX_IN_PRGRS                  BIT(1)
+>  #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
+>  #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
+> +/* Only exists on Armada XP and Armada 370 */
+>  #define MVNETA_SERDES_CFG			 0x24A0
+>  #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
+>  #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
+> @@ -3514,26 +3515,55 @@ static int mvneta_setup_txqs(struct mvneta_port *pp)
+>  	return 0;
+>  }
+>  
+> -static int mvneta_comphy_init(struct mvneta_port *pp)
+> +static int mvneta_comphy_init(struct mvneta_port *pp, phy_interface_t interface)
+>  {
+>  	int ret;
+>  
+> -	if (!pp->comphy)
+> -		return 0;
+> -
+> -	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
+> -			       pp->phy_interface);
+> +	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET, interface);
+>  	if (ret)
+>  		return ret;
+>  
+>  	return phy_power_on(pp->comphy);
+>  }
+>  
+> +static int mvneta_config_interface(struct mvneta_port *pp,
+> +				   phy_interface_t interface)
+> +{
+> +	int ret = 0;
+> +
+> +	if (pp->comphy) {
+> +		if (interface == PHY_INTERFACE_MODE_SGMII ||
+> +		    interface == PHY_INTERFACE_MODE_1000BASEX ||
+> +		    interface == PHY_INTERFACE_MODE_2500BASEX) {
+> +			ret = mvneta_comphy_init(pp, interface);
+> +		}
+> +	} else {
+> +		switch (interface) {
+> +		case PHY_INTERFACE_MODE_QSGMII:
+> +			mvreg_write(pp, MVNETA_SERDES_CFG,
+> +				    MVNETA_QSGMII_SERDES_PROTO);
+> +			break;
+> +
+> +		case PHY_INTERFACE_MODE_SGMII:
+> +		case PHY_INTERFACE_MODE_1000BASEX:
+> +			mvreg_write(pp, MVNETA_SERDES_CFG,
+> +				    MVNETA_SGMII_SERDES_PROTO);
+> +			break;
+> +		default:
+> +			return -EINVAL;
 
-Store the smp_processor_id() in a local variable to save some
-pointer chasing.
+I've just noticed that you made changes to the patch I sent, such as
+adding this default case that errors out, and by doing so, you have
+caused a regression by causing a WARN_ON() splat.
 
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/kernel/smpboot.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+It was not accidental that my patch had "break;" here instead of an
+error return, and I left the interface mode checking in
+mvneta_port_power_up() that you also removed.
 
-diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index 4e9922790f6e..3e033e97dd08 100644
---- a/arch/riscv/kernel/smpboot.c
-+++ b/arch/riscv/kernel/smpboot.c
-@@ -146,6 +146,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
- asmlinkage __visible void smp_callin(void)
- {
- 	struct mm_struct *mm = &init_mm;
-+	unsigned int curr_cpuid = smp_processor_id();
- 
- 	if (!IS_ENABLED(CONFIG_RISCV_SBI))
- 		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-@@ -155,9 +156,9 @@ asmlinkage __visible void smp_callin(void)
- 	current->active_mm = mm;
- 
- 	trap_init();
--	notify_cpu_starting(smp_processor_id());
--	update_siblings_masks(smp_processor_id());
--	set_cpu_online(smp_processor_id(), 1);
-+	notify_cpu_starting(curr_cpuid);
-+	update_siblings_masks(curr_cpuid);
-+	set_cpu_online(curr_cpuid, 1);
- 	/*
- 	 * Remote TLB flushes are ignored while the CPU is offline, so emit
- 	 * a local TLB flush right now just in case.
+mvneta supports RGMII, and since RGMII doesn't use the serdes, there
+is no need to write to MVNETA_SGMII_SERDES_PROTO, and so we want to
+ignore those, not return -EINVAL.
+
+Since the interface type was already validated both by phylink when
+the interface is brought up, and also by the driver at probe time
+through mvneta_port_power_up(), which performs early validation of
+the mode given in DT this was not a problem... there is no need to
+consider anything but the RGMII case in the "default" case here.
+
+So, please fix this... at minimum fixing this switch() statement not
+to error out in the RGMII cases.  However, I think actually following
+what was in my patch (which was there for good reason) rather than
+randomly changing it would have been better.
+
+This will have made the kernel on the SolidRun Clearfog platform
+trigger the WARN_ON()s for the dedicated gigabit port, which uses
+RGMII, and doesn't have a comphy specified in DT... and having
+waited for the compile to finish and the resulting kernel to boot...
+
+WARNING: CPU: 0 PID: 268 at drivers/net/ethernet/marvell/mvneta.c:3512 mvneta_start_dev+0x220/0x23c
+
+Thanks.
+
+> +		}
+> +	}
+> +
+> +	pp->phy_interface = interface;
+> +
+> +	return ret;
+> +}
+> +
+>  static void mvneta_start_dev(struct mvneta_port *pp)
+>  {
+>  	int cpu;
+>  
+> -	WARN_ON(mvneta_comphy_init(pp));
+> +	WARN_ON(mvneta_config_interface(pp, pp->phy_interface));
+>  
+>  	mvneta_max_rx_size_set(pp, pp->pkt_size);
+>  	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
+> @@ -3907,14 +3937,10 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
+>  	if (state->speed == SPEED_2500)
+>  		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
+>  
+> -	if (pp->comphy && pp->phy_interface != state->interface &&
+> -	    (state->interface == PHY_INTERFACE_MODE_SGMII ||
+> -	     state->interface == PHY_INTERFACE_MODE_1000BASEX ||
+> -	     state->interface == PHY_INTERFACE_MODE_2500BASEX)) {
+> -		pp->phy_interface = state->interface;
+> -
+> -		WARN_ON(phy_power_off(pp->comphy));
+> -		WARN_ON(mvneta_comphy_init(pp));
+> +	if (pp->phy_interface != state->interface) {
+> +		if (pp->comphy)
+> +			WARN_ON(phy_power_off(pp->comphy));
+> +		WARN_ON(mvneta_config_interface(pp, state->interface));
+>  	}
+>  
+>  	if (new_ctrl0 != gmac_ctrl0)
+> @@ -4958,20 +4984,10 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
+>  }
+>  
+>  /* Power up the port */
+> -static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+> +static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+>  {
+>  	/* MAC Cause register should be cleared */
+>  	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
+> -
+> -	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
+> -		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
+> -	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
+> -		 phy_interface_mode_is_8023z(phy_mode))
+> -		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
+> -	else if (!phy_interface_mode_is_rgmii(phy_mode))
+> -		return -EINVAL;
+> -
+> -	return 0;
+>  }
+>  
+>  /* Device initialization routine */
+> @@ -5157,11 +5173,7 @@ static int mvneta_probe(struct platform_device *pdev)
+>  	if (err < 0)
+>  		goto err_netdev;
+>  
+> -	err = mvneta_port_power_up(pp, phy_mode);
+> -	if (err < 0) {
+> -		dev_err(&pdev->dev, "can't power up port\n");
+> -		goto err_netdev;
+> -	}
+> +	mvneta_port_power_up(pp, phy_mode);
+>  
+>  	/* Armada3700 network controller does not support per-cpu
+>  	 * operation, so only single NAPI should be initialized.
+> @@ -5315,11 +5327,7 @@ static int mvneta_resume(struct device *device)
+>  		}
+>  	}
+>  	mvneta_defaults_set(pp);
+> -	err = mvneta_port_power_up(pp, pp->phy_interface);
+> -	if (err < 0) {
+> -		dev_err(device, "can't power up port\n");
+> -		return err;
+> -	}
+> +	mvneta_port_power_up(pp, pp->phy_interface);
+>  
+>  	netif_device_attach(dev);
+>  
+> -- 
+> 2.27.0
+> 
+> 
+
 -- 
-2.26.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
