@@ -2,255 +2,266 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6D3C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BFAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEEF20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CDC20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lse8lrrC"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="tx7Dvff7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbgFVUYr (ORCPT
+        id S1730396AbgFVUZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:24:47 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52326 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728228AbgFVUYq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:24:46 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MKOcbu046999;
-        Mon, 22 Jun 2020 15:24:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592857478;
-        bh=TLOmjnW8sOkYfjB1lvZvwzzA4gy5pYwNnSPTHqBMPzQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lse8lrrCqtNndXqrWhq0MvVkyVnmSCZBB8zs1BAdmUHZ5M4zTVUjZ/sDC7Z8zwuez
-         9x1CcjMjKsaYryGDI3GY7c9c28ysTWud5pENiuLdGAjotEVUj/CoO1h1PRFvmLZ9FB
-         BzYT6pF2ka5onDNWnieM0WuX1cjA2R3rz6gVCdao=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MKOcVB006502
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 15:24:38 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Jun 2020 15:24:38 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 22 Jun 2020 15:24:38 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MKOcaO049424;
-        Mon, 22 Jun 2020 15:24:38 -0500
-Subject: Re: [PATCH v3 2/6] remoteproc: k3: Add TI-SCI processor control
- helper functions
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200612224914.7634-1-s-anna@ti.com>
- <20200612224914.7634-3-s-anna@ti.com> <20200622173540.GA1820962@xps15>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <39989eb0-8d3d-ad6c-6352-73d54b8876d9@ti.com>
-Date:   Mon, 22 Jun 2020 15:24:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 16:25:19 -0400
+Received: from mail-eopbgr760089.outbound.protection.outlook.com ([40.107.76.89]:20006
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728443AbgFVUZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:25:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J+RKJyqSVLy3eaEvRt3IjvFyPm47MyJSeziPBEM2h4QKSR51QXNOihcAyNZDmbVErm7ggpL2E3Kn2uSJFcet+4juMs8QOm6/uYXD6wmnzgSpTe1qroY2C6/uTKyZkKNiLXZydJgShZTNYAm4euiZa47pe4f8TYRETzcpSFgFeldhD8f48YLbeO2y18QA1zRHFnOyrVRCYI2/xWD5IsktnfpRQ7M9jqpEdFLQ68u3fyRjV8tUqX0AmQyG3ca+By+BSzf0ZW/D/hOHLpCUc3aix+X/6luNNUs69kgKP+Yyi72IsqG0mDjJTeb+GfrnkQayGiEbY/ooPqAsYMsaUT93AQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8jchcwRejZk/OQvDQPkbaFjKKCr3OO0jYkDFQbCT8NM=;
+ b=D7tXdC3T08m2rFky8j7OhpAY+Drg5xikg57RyT4JXCmb4oTyBYOcrg7jVhxTVxURYBY63zNl1dpI2qlEbwcCjapYj7MfX6o2A+5wcnaEojUHS5tl1NeTivzlp2uXKn5Iblp6NG1+a4FxbWKkpwa1+JzMDm+sJelsSa3Ve0tHk4Yr77/OGDoAM7puowlwGbrulSnHciCzvBnMXIT5imsPskRwzKaSIPydHKKXuD4eJnrFKSG+0PjKNn2rcgRL/nHomXgOG7N+d4aLFEG4rnre3032A5vPWgysIu10wQdT/LkcL57shQQkrN5z08rCtkg42TCJ1+26KpYS8FwE6un6pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8jchcwRejZk/OQvDQPkbaFjKKCr3OO0jYkDFQbCT8NM=;
+ b=tx7Dvff7PmwYYk2BT7YGUcX7h9GF9U35t1FQbGo7llLRAB1ZqCA32vh09NceGgX7GFjc/esB5KqDsqE3z+scPp1KoZFPep3LRVgO8/hPkJoM3gDhgT+x6KjCV1OvmWy5SsTac7tl04sGfNfpdFh+Y61zifp5KplskDaSVpI4HTw=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2590.namprd12.prod.outlook.com (2603:10b6:802:2e::17)
+ by SA0PR12MB4526.namprd12.prod.outlook.com (2603:10b6:806:98::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
+ 2020 20:25:15 +0000
+Received: from SN1PR12MB2590.namprd12.prod.outlook.com
+ ([fe80::c179:ec27:4476:8e05]) by SN1PR12MB2590.namprd12.prod.outlook.com
+ ([fe80::c179:ec27:4476:8e05%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 20:25:15 +0000
+From:   John Allen <john.allen@amd.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     thomas.lendacky@amd.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, bp@suse.de, linux-kernel@vger.kernel.org,
+        John Allen <john.allen@amd.com>, stable@vger.kernel.org
+Subject: [PATCH] crypto: ccp - Fix use of merged scatterlists
+Date:   Mon, 22 Jun 2020 15:24:02 -0500
+Message-Id: <20200622202402.360064-1-john.allen@amd.com>
+X-Mailer: git-send-email 2.26.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SN6PR16CA0047.namprd16.prod.outlook.com
+ (2603:10b6:805:ca::24) To SN1PR12MB2590.namprd12.prod.outlook.com
+ (2603:10b6:802:2e::17)
 MIME-Version: 1.0
-In-Reply-To: <20200622173540.GA1820962@xps15>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mojo.amd.com (165.204.77.1) by SN6PR16CA0047.namprd16.prod.outlook.com (2603:10b6:805:ca::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Mon, 22 Jun 2020 20:25:14 +0000
+X-Mailer: git-send-email 2.26.2
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6b450702-1cbb-44b5-556c-08d816ea5f06
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4526:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4526BD4F53A220941DC5484E9A970@SA0PR12MB4526.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +iEBAqfzLBFKhEJbyIRbIpJMfKVdX/TOT1szJ8S8PQBhkFLomx+uIc2njN70nFnwJ3FElZbdhqQHICIqTNHq4NU51r+fsz//yXADeun8kDvYcPMFPHqbz/6Azra7QMske/QlCL1elmDoty4ktF2n6m3qqleToT+ubJl2jviNFfj6EYfJ+jI0eIvfWe9qLDqYQLoVj1kAfGWoseA5Cu//jEUYH/eGYh2UJ9Lf4zS/ukEbtmaqkxAAVCwNdYxfpqY/xgYyBlzvqRa7NyOvEMKPxvurb9rYqklu5Wk3u2DLm3UeucTqAbGeX3Gy///K6xINimxuQ54me7xy5q2ZgdCroQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2590.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(8936002)(26005)(5660300002)(8676002)(2906002)(86362001)(16526019)(66556008)(66946007)(1076003)(186003)(66476007)(6916009)(36756003)(6666004)(4326008)(44832011)(2616005)(956004)(478600001)(83380400001)(7696005)(316002)(52116002)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: NAzZjxjGnPxATXeDndCSWGJdYrSV8CVdvbbCBKltvIkD9B424VY2t8CwjcK2aeVutTkSCsIcjicmGHqdCXeW0+DkT8NsSeaLQMaEkIVpNc3BR3ip+pjCkQYmwu3mobElFApoJInXYdroLdxmWrrZVchiAwqsG/vGgqrhh/beFYnwZAyc7hey5V93in8JMUAg/72Pqg3jw3dXNnZneoXLDgvlKQmJWgzq+0qxQ/v3CMVhSpc7LP4gqdlag+Og+nrHDkP6OD4yfx+6EJCcwon7vl86zxHYOs8HXu1LrsRfkTCzDlkO8+JEPTIQ/WA0IhmP0i8I7lrSPyZMe91oQAxHeNuvgEuGvaes37rblumH7ShjU7izpftQY4/uU0fALHigW6TuMZpiLYrO6GjD8jDXqHKmSBmdLPh7+SJHQRswWkpfBBsVZ2rLQsg8AZ27KjkIztzmrDU6IS5B6Kk+aQ21CwyiUJr7OlrWHyyt9ia0a4A=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b450702-1cbb-44b5-556c-08d816ea5f06
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 20:25:14.8432
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zKg2jxG/DrKjrGd1s+d1ZxKAW4NeQSunZXP7RieCRTZ+iasoVMZJZOkoXuEOKcJFntuXAK8Fw1WdushOU+KRfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4526
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+Running the crypto manager self tests with
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS may result in several types of errors
+when using the ccp-crypto driver:
 
-On 6/22/20 12:35 PM, Mathieu Poirier wrote:
-> Hi Suman,
-> 
-> Apologies for the late reply, this one slipped through the cracks...
+alg: skcipher: cbc-des3-ccp encryption failed on test vector 0; expected_error=0, actual_error=-5 ...
 
-No problem :)
+alg: skcipher: ctr-aes-ccp decryption overran dst buffer on test vector 0 ...
 
-> 
-> 
-> On Fri, Jun 12, 2020 at 05:49:10PM -0500, Suman Anna wrote:
->> Texas Instruments' K3 generation SoCs have specific modules/register
->> spaces used for configuring the various aspects of a remote processor.
->> These include power, reset, boot vector and other configuration features
->> specific to each compute processor present on the SoC. These registers
->> are managed by the System Controller such as DMSC on K3 AM65x SoCs.
->>
->> The Texas Instrument's System Control Interface (TI-SCI) Message Protocol
->> is used to communicate to the System Controller from various compute
->> processors to invoke specific services provided by the firmware running
->> on the System Controller.
->>
->> Add a common processor control interface header file that can be used by
->> multiple remoteproc drivers. The helper functions within this header file
->> abstract the various TI SCI protocol ops for the remoteproc drivers, and
->> allow them to request the System Controller to be able to program and
->> manage various remote processors on the SoC. The remoteproc drivers are
->> expected to manage the life-cycle of their ti_sci_proc_dev local
->> structures.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->> v3: New to this series, but the patch is identical to the one from the
->>      K3 R5F series posted previously, with patch title adjusted
->>      https://patchwork.kernel.org/patch/11456379/
->>
->>   drivers/remoteproc/ti_sci_proc.h | 102 +++++++++++++++++++++++++++++++
->>   1 file changed, 102 insertions(+)
->>   create mode 100644 drivers/remoteproc/ti_sci_proc.h
->>
->> diff --git a/drivers/remoteproc/ti_sci_proc.h b/drivers/remoteproc/ti_sci_proc.h
->> new file mode 100644
->> index 000000000000..e42d8015b8e7
->> --- /dev/null
->> +++ b/drivers/remoteproc/ti_sci_proc.h
->> @@ -0,0 +1,102 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Texas Instruments TI-SCI Processor Controller Helper Functions
->> + *
->> + * Copyright (C) 2018-2020 Texas Instruments Incorporated - http://www.ti.com/
->> + *	Suman Anna
->> + */
->> +
->> +#ifndef REMOTEPROC_TI_SCI_PROC_H
->> +#define REMOTEPROC_TI_SCI_PROC_H
->> +
->> +/**
->> + * struct ti_sci_proc - structure representing a processor control client
->> + * @sci: cached TI-SCI protocol handle
->> + * @ops: cached TI-SCI proc ops
->> + * @dev: cached client device pointer
->> + * @proc_id: processor id for the consumer remoteproc device
->> + * @host_id: host id to pass the control over for this consumer remoteproc
->> + *	     device
->> + */
->> +struct ti_sci_proc {
->> +	const struct ti_sci_handle *sci;
->> +	const struct ti_sci_proc_ops *ops;
->> +	struct device *dev;
-> 
-> Please include the proper header files for the above structures.  
+alg: ahash: sha224-ccp test failed (wrong result) on test vector ...
 
-OK, I will move the #include <linux/soc/ti/ti_sci_protocol.h> from the 
-driver source files to here.
+These errors are the result of improper processing of scatterlists mapped
+for DMA.
 
-I would also
-> have expected the name of the structure to be ti_sci_rproc but that choice is
-> entirely your.
+Given a scatterlist in which entries are merged as part of mapping the
+scatterlist for DMA, the DMA length of a merged entry will reflect the
+combined length of the entries that were merged. The subsequent
+scatterlist entry will contain DMA information for the scatterlist entry
+after the last merged entry, but the non-DMA information will be that of
+the first merged entry.
 
-This follows the terminology used in the TI SCI protocol and firmware 
-code. I will leave it unchanged.
+The ccp driver does not take this scatterlist merging into account. To
+address this, add a second scatterlist pointer to track the current
+position in the DMA mapped representation of the scatterlist. Both the DMA
+representation and the original representation of the scatterlist must be
+tracked as while most of the driver can use just the DMA representation,
+scatterlist_map_and_copy() must use the original representation and
+expects the scatterlist pointer to be accurate to the original
+representation.
 
-> 
-> With the proper header files included:
-> 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+In order to properly walk the original scatterlist, the scatterlist must
+be walked until the combined lengths of the entries seen is equal to the
+DMA length of the current entry being processed in the DMA mapped
+representation.
 
-Thanks, I will await any comments from Rob on the bindings patch before 
-I refresh this series.
+Fixes: 63b945091a070 ("crypto: ccp - CCP device driver and interface support")
+Signed-off-by: John Allen <john.allen@amd.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/crypto/ccp/ccp-dev.h |  1 +
+ drivers/crypto/ccp/ccp-ops.c | 37 +++++++++++++++++++++++++-----------
+ 2 files changed, 27 insertions(+), 11 deletions(-)
 
-regards
-Suman
-
-> 
->> +	u8 proc_id;
->> +	u8 host_id;
->> +};
->> +
->> +static inline int ti_sci_proc_request(struct ti_sci_proc *tsp)
->> +{
->> +	int ret;
->> +
->> +	ret = tsp->ops->request(tsp->sci, tsp->proc_id);
->> +	if (ret)
->> +		dev_err(tsp->dev, "ti-sci processor request failed: %d\n",
->> +			ret);
->> +	return ret;
->> +}
->> +
->> +static inline int ti_sci_proc_release(struct ti_sci_proc *tsp)
->> +{
->> +	int ret;
->> +
->> +	ret = tsp->ops->release(tsp->sci, tsp->proc_id);
->> +	if (ret)
->> +		dev_err(tsp->dev, "ti-sci processor release failed: %d\n",
->> +			ret);
->> +	return ret;
->> +}
->> +
->> +static inline int ti_sci_proc_handover(struct ti_sci_proc *tsp)
->> +{
->> +	int ret;
->> +
->> +	ret = tsp->ops->handover(tsp->sci, tsp->proc_id, tsp->host_id);
->> +	if (ret)
->> +		dev_err(tsp->dev, "ti-sci processor handover of %d to %d failed: %d\n",
->> +			tsp->proc_id, tsp->host_id, ret);
->> +	return ret;
->> +}
->> +
->> +static inline int ti_sci_proc_set_config(struct ti_sci_proc *tsp,
->> +					 u64 boot_vector,
->> +					 u32 cfg_set, u32 cfg_clr)
->> +{
->> +	int ret;
->> +
->> +	ret = tsp->ops->set_config(tsp->sci, tsp->proc_id, boot_vector,
->> +				   cfg_set, cfg_clr);
->> +	if (ret)
->> +		dev_err(tsp->dev, "ti-sci processor set_config failed: %d\n",
->> +			ret);
->> +	return ret;
->> +}
->> +
->> +static inline int ti_sci_proc_set_control(struct ti_sci_proc *tsp,
->> +					  u32 ctrl_set, u32 ctrl_clr)
->> +{
->> +	int ret;
->> +
->> +	ret = tsp->ops->set_control(tsp->sci, tsp->proc_id, ctrl_set, ctrl_clr);
->> +	if (ret)
->> +		dev_err(tsp->dev, "ti-sci processor set_control failed: %d\n",
->> +			ret);
->> +	return ret;
->> +}
->> +
->> +static inline int ti_sci_proc_get_status(struct ti_sci_proc *tsp,
->> +					 u64 *boot_vector, u32 *cfg_flags,
->> +					 u32 *ctrl_flags, u32 *status_flags)
->> +{
->> +	int ret;
->> +
->> +	ret = tsp->ops->get_status(tsp->sci, tsp->proc_id, boot_vector,
->> +				   cfg_flags, ctrl_flags, status_flags);
->> +	if (ret)
->> +		dev_err(tsp->dev, "ti-sci processor get_status failed: %d\n",
->> +			ret);
->> +	return ret;
->> +}
->> +
->> +#endif /* REMOTEPROC_TI_SCI_PROC_H */
->> -- 
->> 2.26.0
->>
+diff --git a/drivers/crypto/ccp/ccp-dev.h b/drivers/crypto/ccp/ccp-dev.h
+index 3f68262d9ab4..87a34d91fdf7 100644
+--- a/drivers/crypto/ccp/ccp-dev.h
++++ b/drivers/crypto/ccp/ccp-dev.h
+@@ -469,6 +469,7 @@ struct ccp_sg_workarea {
+ 	unsigned int sg_used;
+ 
+ 	struct scatterlist *dma_sg;
++	struct scatterlist *dma_sg_head;
+ 	struct device *dma_dev;
+ 	unsigned int dma_count;
+ 	enum dma_data_direction dma_dir;
+diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
+index 422193690fd4..64112c736810 100644
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -63,7 +63,7 @@ static u32 ccp_gen_jobid(struct ccp_device *ccp)
+ static void ccp_sg_free(struct ccp_sg_workarea *wa)
+ {
+ 	if (wa->dma_count)
+-		dma_unmap_sg(wa->dma_dev, wa->dma_sg, wa->nents, wa->dma_dir);
++		dma_unmap_sg(wa->dma_dev, wa->dma_sg_head, wa->nents, wa->dma_dir);
+ 
+ 	wa->dma_count = 0;
+ }
+@@ -92,6 +92,7 @@ static int ccp_init_sg_workarea(struct ccp_sg_workarea *wa, struct device *dev,
+ 		return 0;
+ 
+ 	wa->dma_sg = sg;
++	wa->dma_sg_head = sg;
+ 	wa->dma_dev = dev;
+ 	wa->dma_dir = dma_dir;
+ 	wa->dma_count = dma_map_sg(dev, sg, wa->nents, dma_dir);
+@@ -104,14 +105,28 @@ static int ccp_init_sg_workarea(struct ccp_sg_workarea *wa, struct device *dev,
+ static void ccp_update_sg_workarea(struct ccp_sg_workarea *wa, unsigned int len)
+ {
+ 	unsigned int nbytes = min_t(u64, len, wa->bytes_left);
++	unsigned int sg_combined_len = 0;
+ 
+ 	if (!wa->sg)
+ 		return;
+ 
+ 	wa->sg_used += nbytes;
+ 	wa->bytes_left -= nbytes;
+-	if (wa->sg_used == wa->sg->length) {
+-		wa->sg = sg_next(wa->sg);
++	if (wa->sg_used == sg_dma_len(wa->dma_sg)) {
++		/* Advance to the next DMA scatterlist entry */
++		wa->dma_sg = sg_next(wa->dma_sg);
++
++		/* In the case that the DMA mapped scatterlist has entries
++		 * that have been merged, the non-DMA mapped scatterlist
++		 * must be advanced multiple times for each merged entry.
++		 * This ensures that the current non-DMA mapped entry
++		 * corresponds to the current DMA mapped entry.
++		 */
++		do {
++			sg_combined_len += wa->sg->length;
++			wa->sg = sg_next(wa->sg);
++		} while (wa->sg_used > sg_combined_len);
++
+ 		wa->sg_used = 0;
+ 	}
+ }
+@@ -299,7 +314,7 @@ static unsigned int ccp_queue_buf(struct ccp_data *data, unsigned int from)
+ 	/* Update the structures and generate the count */
+ 	buf_count = 0;
+ 	while (sg_wa->bytes_left && (buf_count < dm_wa->length)) {
+-		nbytes = min(sg_wa->sg->length - sg_wa->sg_used,
++		nbytes = min(sg_dma_len(sg_wa->dma_sg) - sg_wa->sg_used,
+ 			     dm_wa->length - buf_count);
+ 		nbytes = min_t(u64, sg_wa->bytes_left, nbytes);
+ 
+@@ -331,11 +346,11 @@ static void ccp_prepare_data(struct ccp_data *src, struct ccp_data *dst,
+ 	 * and destination. The resulting len values will always be <= UINT_MAX
+ 	 * because the dma length is an unsigned int.
+ 	 */
+-	sg_src_len = sg_dma_len(src->sg_wa.sg) - src->sg_wa.sg_used;
++	sg_src_len = sg_dma_len(src->sg_wa.dma_sg) - src->sg_wa.sg_used;
+ 	sg_src_len = min_t(u64, src->sg_wa.bytes_left, sg_src_len);
+ 
+ 	if (dst) {
+-		sg_dst_len = sg_dma_len(dst->sg_wa.sg) - dst->sg_wa.sg_used;
++		sg_dst_len = sg_dma_len(dst->sg_wa.dma_sg) - dst->sg_wa.sg_used;
+ 		sg_dst_len = min_t(u64, src->sg_wa.bytes_left, sg_dst_len);
+ 		op_len = min(sg_src_len, sg_dst_len);
+ 	} else {
+@@ -365,7 +380,7 @@ static void ccp_prepare_data(struct ccp_data *src, struct ccp_data *dst,
+ 		/* Enough data in the sg element, but we need to
+ 		 * adjust for any previously copied data
+ 		 */
+-		op->src.u.dma.address = sg_dma_address(src->sg_wa.sg);
++		op->src.u.dma.address = sg_dma_address(src->sg_wa.dma_sg);
+ 		op->src.u.dma.offset = src->sg_wa.sg_used;
+ 		op->src.u.dma.length = op_len & ~(block_size - 1);
+ 
+@@ -386,7 +401,7 @@ static void ccp_prepare_data(struct ccp_data *src, struct ccp_data *dst,
+ 			/* Enough room in the sg element, but we need to
+ 			 * adjust for any previously used area
+ 			 */
+-			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.sg);
++			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.dma_sg);
+ 			op->dst.u.dma.offset = dst->sg_wa.sg_used;
+ 			op->dst.u.dma.length = op->src.u.dma.length;
+ 		}
+@@ -2028,7 +2043,7 @@ ccp_run_passthru_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	dst.sg_wa.sg_used = 0;
+ 	for (i = 1; i <= src.sg_wa.dma_count; i++) {
+ 		if (!dst.sg_wa.sg ||
+-		    (dst.sg_wa.sg->length < src.sg_wa.sg->length)) {
++		    (sg_dma_len(dst.sg_wa.sg) < sg_dma_len(src.sg_wa.sg))) {
+ 			ret = -EINVAL;
+ 			goto e_dst;
+ 		}
+@@ -2054,8 +2069,8 @@ ccp_run_passthru_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 			goto e_dst;
+ 		}
+ 
+-		dst.sg_wa.sg_used += src.sg_wa.sg->length;
+-		if (dst.sg_wa.sg_used == dst.sg_wa.sg->length) {
++		dst.sg_wa.sg_used += sg_dma_len(src.sg_wa.sg);
++		if (dst.sg_wa.sg_used == sg_dma_len(dst.sg_wa.sg)) {
+ 			dst.sg_wa.sg = sg_next(dst.sg_wa.sg);
+ 			dst.sg_wa.sg_used = 0;
+ 		}
+-- 
+2.18.4
 
