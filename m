@@ -2,136 +2,111 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0584AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C60C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6B4020732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EC420767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592848130;
-	bh=Uzn47uBZ2+vkozS3P9Nb31SRXtiRvEfMOh5MNInwrnI=;
+	s=default; t=1592848238;
+	bh=qjtp1/KH/WMZbRfbpQzHVmAu5e9VAzUBeh+srNPb4Rg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vzIKuhrU/JGAXzVepse1HJ8ClJBf/jrnKecAYcLIv4//QawvUet8atoetrTctCsNc
-	 P7iXn4snz0cs6cDrpEA27F+ZrDujRqlMxGr2dRGNpp469/ooF3vWNo0XZY5lw//koo
-	 0yOCtva3yR0kRGwlDxq0av/BdTi9qGcQcZPwALzA=
+	b=HrWQsHli3qW2VVsvSCHCWZ/Gl1FXWZkyL8zhVqWEncRZh+Ry/KDA3G867eW/37UtU
+	 gYPfUyspplKA1g5o5FvtT9f/BV5OpHagRqInfMPcVWgWyOD4jxCkWWyr4q+qO8yoGv
+	 uqm/X69HdHs2rlyY9i+UCYr8mzSZE5MCIO8AGbI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbgFVRst (ORCPT
+        id S1730172AbgFVRuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729886AbgFVRss (ORCPT
+        Mon, 22 Jun 2020 13:50:37 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:33973 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729992AbgFVRug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:48:48 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0552C061573;
-        Mon, 22 Jun 2020 10:48:48 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id e12so2419188qtr.9;
-        Mon, 22 Jun 2020 10:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zz2d7iJ3NwSu2E/XoT3Xn56CBZyHHLfswhOCBJmBdrE=;
-        b=ETnjGl3qDhRrVDClBj2NSJfweTbL2NDdD1MEU+xv69obilnDdQfWyceVLkqgCZLpWf
-         q7tn6oOks08DQhsP6CFXouUZ4AHslswN2wwzmX3IhjczxV+Aib6GdkjmHNreF5VHVy1d
-         HXBnRorul4AUJTUvTJAG0ubQBSb/O3nMDCt3kgWAKrDDgTkO0gf1FHnzFuhbrlZQzSwL
-         58oiiqqiDifJGT5+YFOCnMV1FUE+sfn1h/jr0hP9iZJ65BVmZzYAViL55EB/meCB+7V9
-         MiEmyeayF7/5P6by0vaXcwrQ274Im85PM9HscGRo44BO/VHEKky8H9KMAqi7aJJ/7AiE
-         RDFw==
+        Mon, 22 Jun 2020 13:50:36 -0400
+Received: by mail-ej1-f68.google.com with SMTP id y10so4501832eje.1;
+        Mon, 22 Jun 2020 10:50:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=zz2d7iJ3NwSu2E/XoT3Xn56CBZyHHLfswhOCBJmBdrE=;
-        b=dMOwQtE04dOltYtEAGa3RN273vlr1Fi/Q6diz6VmCo84TGDVbTX6K3WDrZE1EkeQF9
-         2zBttvTTRsc1TYoarOXCL6gyJeoWNpvMOv7fil3P0/qnyt7uXGNLkyG6pyyfprK/ZXv1
-         Bo51KQl7Obg1QhRLwv9/Hc9G41AYErCqWo9gC7G9/MAhcfrz0Y6JVdXZejJ/oYcqyrxp
-         MWCipN4UNsgQ0b7jZgg3FNA6D/PrN2ADjMl+1ZQFAH+eZKX8jN0cLh7jnFYpQJ9rOXYw
-         vnWZeivxGDlS4+TCbKjpQnFF+j9xXAHCbnaOvrlbpYY2HObRcBNPQtjdv/on9EHRU+da
-         hk8w==
-X-Gm-Message-State: AOAM532+SqzQyjk7ADt0krd2sGqxIbmioTdQCvEvo116/dKWxhm3EkxW
-        M7cDe8TPmwa3bkj1GoPnvAo=
-X-Google-Smtp-Source: ABdhPJwJGd5blfrA0ijj0HL23K9O7SFQg5SC/KD4zcSDDomdxnJx0fH3LfuBQyFjWdjurKfckSSDOg==
-X-Received: by 2002:aed:2359:: with SMTP id i25mr17459184qtc.194.1592848127683;
-        Mon, 22 Jun 2020 10:48:47 -0700 (PDT)
-Received: from localhost ([199.96.181.106])
-        by smtp.gmail.com with ESMTPSA id a25sm4819864qtk.40.2020.06.22.10.48.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 10:48:46 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 13:48:45 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Ian Kent <raven@themaw.net>
-Cc:     Rick Lindsley <ricklind@linux.vnet.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-Message-ID: <20200622174845.GB13061@mtj.duckdns.org>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HOTnjMjsu7xKDVdNqVPUTaQv3pQPCvDqx33cGwyLPp8=;
+        b=SjbLwWFuJcdI9AzqCeHfRZT8iIDIcnPoGnl59o4XKNBcHmg3azNd0osaEn/TKN5VSV
+         NwSPt/dHMeNpev9wrlx/F8m6TKlhuxioBHu5iEbrHDbtivH09Qlx+9pXO4POBN6fcGzJ
+         WFu5BqzbqIa7fNsNKzbB8Omu0aEZOZPBPXpZb4koW8EqoP971a96FKTmEFeGAXkJpakS
+         AHopcjZkVAVGSxMsU9Fm7jpyoAwLAHBSp9muhYpVC82c03xYtqaIVCMuVWy5SkW70n/e
+         dyY25/6KEWvtwV0pNgxI6HQinRB3GTrwDsXWBh8xtPk95SU4d22Tdo7NhwIqgz57ZbXS
+         HBNQ==
+X-Gm-Message-State: AOAM533w79MrjNwhQ0iRccr+FCgzAsnBRqqqd3nZgATVOTHqOniMShM5
+        p6MLfeOhFTYAH5U8wQzL/ok=
+X-Google-Smtp-Source: ABdhPJwqCv6kCCLUnC8zvrY8jFVgGacYWcI+rhbYCVMJlmSQeTmHKLBbvMdE28EVRur5t8b44IybxQ==
+X-Received: by 2002:a17:906:6d4b:: with SMTP id a11mr17477631ejt.108.1592848234574;
+        Mon, 22 Jun 2020 10:50:34 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.235])
+        by smtp.googlemail.com with ESMTPSA id rv14sm11814489ejb.110.2020.06.22.10.50.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jun 2020 10:50:33 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 19:50:31 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCH] ARM: exynos: clear L310_AUX_CTRL_FULL_LINE_ZERO in
+ default l2c_aux_val
+Message-ID: <20200622175031.GA29235@kozik-lap>
+References: <c6d979c0050502cd1bca8619cb5ff95db239db12.1591969825.git.guillaume.tucker@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
+In-Reply-To: <c6d979c0050502cd1bca8619cb5ff95db239db12.1591969825.git.guillaume.tucker@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Ian.
-
-On Sun, Jun 21, 2020 at 12:55:33PM +0800, Ian Kent wrote:
-> > > They are used for hotplugging and partitioning memory. The size of
-> > > the
-> > > segments (and thus the number of them) is dictated by the
-> > > underlying
-> > > hardware.
-> > 
-> > This sounds so bad. There gotta be a better interface for that,
-> > right?
+On Fri, Jun 12, 2020 at 02:58:37PM +0100, Guillaume Tucker wrote:
+> This "alert" error message can be seen on exynos4412-odroidx2:
 > 
-> I'm still struggling a bit to grasp what your getting at but ...
-
-I was more trying to say that the sysfs device interface with per-object
-directory isn't the right interface for this sort of usage at all. Are these
-even real hardware pieces which can be plugged in and out? While being a
-discrete piece of hardware isn't a requirement to be a device model device,
-the whole thing is designed with such use cases on mind. It definitely isn't
-the right design for representing six digit number of logical entities.
-
-It should be obvious that representing each consecutive memory range with a
-separate directory entry is far from an optimal way of representing
-something like this. It's outright silly.
-
-> Maybe your talking about the underlying notifications system where
-> a notification is sent for every event.
+>     L2C: platform modifies aux control register: 0x02070000 -> 0x3e470001
+>     L2C: platform provided aux values permit register corruption.
 > 
-> There's nothing new about that problem and it's becoming increasingly
-> clear that existing kernel notification sub-systems don't scale well.
+> Followed by this plain error message:
 > 
-> Mount handling is a current example which is one of the areas David
-> Howells is trying to improve and that's taken years now to get as
-> far as it has.
+>     L2C-310: enabling full line of zeros but not enabled in Cortex-A9
+> 
+> To fix it, don't set the L310_AUX_CTRL_FULL_LINE_ZERO flag (bit 0) in
+> the default value of l2c_aux_val.  It may instead be enabled when
+> applicable by the logic in l2c310_enable() if the attribute
+> "arm,full-line-zero-disable" was set in the device tree.
+> 
+> The initial commit that introduced this default value was in v2.6.38:
+> 
+>   1cf0eb799759 "ARM: S5PV310: Add L2 cache init function in cpu.c"
+> 
+> However, the code to set the L310_AUX_CTRL_FULL_LINE_ZERO flag and
+> manage that feature was added much later and the default value was not
+> updated then.  So this seems to have been a subtle oversight
+> especially since enabling it only in the cache and not in the A9 core
+> doesn't actually prevent the platform from running.  According to the
+> TRM, the opposite would be a real issue, if the feature was enabled in
+> the A9 core but not in the cache controller.
+> 
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> ---
+>  arch/arm/mach-exynos/exynos.c | 2 +-
 
-There sure are scalability issues everywhere that needs to be improved but
-there also are cases where the issue is the approach itself rather than
-scalability and I'm wondering whether this is the latter.
+Thanks, applied.
 
-Thanks.
+Best regards,
+Krzysztof
 
--- 
-tejun
