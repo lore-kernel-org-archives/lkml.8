@@ -2,156 +2,381 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE48C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDF120578
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:31:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="GU61v2ZL"
+	by mail.kernel.org (Postfix) with ESMTP id 720BC206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592821876;
+	bh=mEFo4cRp3tk2VMvmFtIa2Y+HN2ocSRjMpikz9adpCls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V8QwYPHNN8W1vT/VqHPNRKCt344uoqYOYIQdeFtK0Zj/QzLGVnJ9nwnZcy8aGABHJ
+	 ycf+O8Q+PCAHt+LmZef4VEygYCG5O+Cwv/JGYh7Gu6B2QGo5sm8A9rK0ogX1xOA6xp
+	 Rvo8bnH5itgRmiUJ454ruNRPW4o+3wN7vR9Q4dwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgFVKbJ (ORCPT
+        id S1727943AbgFVKbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:31:09 -0400
-Received: from mail-bn8nam12on2049.outbound.protection.outlook.com ([40.107.237.49]:17472
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727876AbgFVKbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:31:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hv/YnjkCQBxFMjwj06n9YEGUr0jQ3mB9QA/OG/SDTzxInn3hoxfm7mxkVcOwI/+H8TxTsUDHbfM6zXKDJZcadjkeyUzqHR3E88mkbbORqQe9SPpxRYRI9BzRAlmb3O80RzBlS8lDPJvy2LPZeCHBfOoCFgrXoBgG0inHiSIZE1ZNOjSsbsEoB7B0NNoVujXr4K2f+yP7GYCQIMNfafjy1rqroy9xCq8me4CUyjiz53AwMQj7fVsIP31xINU9tiFGD/EGBDM8Bk7rctHB1NcWMK9q8I3rufdYjBwaGCOLEeZomDFAD+on1wZa6UVOLmXz8XjXj571oa51tYkbrcXglA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aLqXYD5+M1qr6969+54SQO/N2iaUDB9aJQm0E0oXLNo=;
- b=GY3GCjnq1KFlxHiE47Hurv3p1dcBqs+lmhaiSacbA7wiuisRa/U+2ulAqQGAyaDx6j44LLk+sUh7rOEs5IGzsrAZgS2Ifz9H6n76L9MB0SISB/ZZT/6CxH8Hfl/+WKcfj3g71/LrS9d00IZnD8oRVli6oAcRLBWWn86iSkZ+LF3OtqJiVXYOhRoDzKU7Dm88VvVJwjByYpdbz9B4OMIuyjvSlfANWiAFUjJj4/VNr2lSZfW2x0RGCralcBvMeSSbk5dRJHSjClt112I2OIKUHqzwr9IAQBcFmvNqgyN3f2GnpF/D4lSkoOQT5jx6CwdKWJ1BztfixiaTRzY9RquCcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aLqXYD5+M1qr6969+54SQO/N2iaUDB9aJQm0E0oXLNo=;
- b=GU61v2ZLCDwzZ5qZB1LPuLv7/cLwZHOoizjRn2kQzGsa4kFPPk2UnB3KsxPWcZSVwnVECyPmCYZ0tqxLjhw+2wP+0gJzkoioJzqd6fkKAEZajp0RwONYGBDuVexpdz/z9klVRdWOJrEdCc5IunTxfB7vPvwYDJxQ+tBpux8f8u0=
-Authentication-Results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BYAPR03MB4134.namprd03.prod.outlook.com (2603:10b6:a03:18::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Mon, 22 Jun
- 2020 10:31:01 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 10:31:01 +0000
-Date:   Mon, 22 Jun 2020 18:29:27 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] net: phy: export phy_disable_interrupts()
-Message-ID: <20200622182927.7679958e@xhacker.debian>
-In-Reply-To: <20200622182857.3130b555@xhacker.debian>
-References: <20200622182857.3130b555@xhacker.debian>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYBP286CA0043.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:404:10a::31) To BYAPR03MB3573.namprd03.prod.outlook.com
- (2603:10b6:a02:ae::15)
+        Mon, 22 Jun 2020 06:31:15 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:33089 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgFVKbB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 06:31:01 -0400
+Received: by mail-ej1-f66.google.com with SMTP id n24so17502008ejd.0;
+        Mon, 22 Jun 2020 03:30:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ckKsMq8ITFq/ilrKu/PZQQYxxR9UxebEGV3IDPDQoOU=;
+        b=Y2xNvV0GHEdWuFX/qa2KwuuRzA1uI7yOHW1gVEKieZbm4vz0We0RaGNdvkvm842lXj
+         FMneXczzVWzSm1ugGlD5WQtaI3yIoLl7IPys4UvXuK2P2vgEJrtSYOsxTWcoyNXYBmNw
+         Bffdf/lTHXZDKVbBDXxDEKfFELUJrnsviNrbK8LWc8qcRP2bzm60wggolfbR355/T3cQ
+         xHdu15RIXu+Q6cNY/nJ62UxYN7mQhPtln/RzFgxSkbIczzlMMrYTWpYpRCLPna2XKrNv
+         aWoZ3apxfYmY6UMAmfr8hSpUHpL7Ux8VlVDiSMIj0jad+7334k9I/j38/zigmRbbU7l+
+         Cc6A==
+X-Gm-Message-State: AOAM533kqdWsZrlvGKPh7ehqHanJ0z7mSdBhbS4X7KEz/xkmVOZ2bk3Y
+        xgm+gRj5B8mUGvXDb5CeMYE=
+X-Google-Smtp-Source: ABdhPJzspbUk0TaXHXx2IG8Cd+8R8X3TjTS7GIKo4oqBOiIEFK5i4OtxEgcDmLIVRGMrP3kjqYHFVg==
+X-Received: by 2002:a17:906:7e19:: with SMTP id e25mr14835761ejr.319.1592821855835;
+        Mon, 22 Jun 2020 03:30:55 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.235])
+        by smtp.googlemail.com with ESMTPSA id aq25sm3071996ejc.11.2020.06.22.03.30.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jun 2020 03:30:54 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 12:30:52 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] spi: spi-fsl-dspi: Fix external abort on
+ interrupt in resume or exit paths
+Message-ID: <20200622103052.GA2929@kozik-lap>
+References: <1592300467-29196-1-git-send-email-krzk@kernel.org>
+ <CA+h21hoxbgj5qjACbZSX9_JqL0cp1rX12FA3Dba0b9ARvp7vqw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYBP286CA0043.JPNP286.PROD.OUTLOOK.COM (2603:1096:404:10a::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 10:30:59 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6dd8137b-601a-4659-8418-08d816975c3b
-X-MS-TrafficTypeDiagnostic: BYAPR03MB4134:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB4134FA469D54202697B2C7B7ED970@BYAPR03MB4134.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0442E569BC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vl7G1RWmpuQ/0PGIoTdv1p5CECCQ5hlxI53S0xh8X2AHzh33omHWxiY+ay+7XtEg+ubO08iFg7npWho0Pz6QJJBeYu3CL99oUXeNcBgTSZaa1dQpsGhsz1r117VE+NduFcqSi9tpCkgQB2pmdUuRX+ps48Ax9LgMyAr8Pondw4yzlxiKijc2mNAiZ2cXiIGPWkuPMcFLM1S3jxUNcw4ZtHSmkkwrfJPX+l/mrmkjJ/6RbUjBaUTO0CWsi+pzU6n8D7wuNptYKzObKoXkju50zWG5eYUyFI2eiDfJF9nEPEe3oH2l/6XBBCBxVnxmcgHM
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(346002)(39860400002)(366004)(396003)(83380400001)(7696005)(66946007)(16526019)(186003)(52116002)(26005)(8676002)(956004)(8936002)(6506007)(4326008)(6666004)(86362001)(9686003)(1076003)(5660300002)(55016002)(110136005)(66556008)(66476007)(478600001)(316002)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: SjJFpd2Fu3kp3jnbwvPnZBtQR1Qs3Aec4GV3hnQR7sCqUJFGYpaUfPVwzrTLa1X16hldel8qOCT7OPEH5Js0lwQxeto7utbbGSb39RH2AaywVRsaLUYiTExFxIzrQn+x9o1Ce/3y20fyEJOBFttKp8qGUkazNizLAXrnmjgl5G14+Wll0o0nQKEGtstOH+AX85HJv8zRKpdvYr+y5h8w2qEAaYGf4RW7ExDYMtOvBYO+oyW/ltDfP5ephfa8583agmGhdg6eAOyq1emw4OMpZKkwMDgYd2q30Ikzpi5JtA0p0XAjjury0FXtI9oGAd4XORwm/0YPpvjOIpPXxLice3N8na+evL7p/KpbYc3RJMm0OnmNDD+NWLrO7yhWOp+RzsfdRoKKhuqGND16yowhYRZDR4xNOP1xuRzBXxVIQCFRS5eNEVbtDXFkz9I7+VHQvEpiYE5NhVPNuRpMvbmOQ1oZ4n8wMkh489l0jdGzxdj6NkccEDgS4cReg0f0O2Mk
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6dd8137b-601a-4659-8418-08d816975c3b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 10:31:01.7391
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UdqjdRJdPol3sz/ZOVEyFE9KjeNXrnRWHg+96f9jw+OMZs7xy0aMFtOHqydwxVvMqSEm+jqd6BEQjlS/QKXuyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4134
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+h21hoxbgj5qjACbZSX9_JqL0cp1rX12FA3Dba0b9ARvp7vqw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We face an issue with rtl8211f, a pin is shared between INTB and PMEB,
-and the PHY Register Accessible Interrupt is enabled by default, so
-the INTB/PMEB pin is always active in polling mode case.
+On Fri, Jun 19, 2020 at 12:24:56AM +0300, Vladimir Oltean wrote:
+> Hi Krzysztof,
+> 
+> On Tue, 16 Jun 2020 at 12:42, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > If shared interrupt comes late, during probe error path or device remove
+> > (could be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
+> > dspi_interrupt() will access registers with the clock being disabled.
+> > This leads to external abort on non-linefetch on Toradex Colibri VF50
+> > module (with Vybrid VF5xx):
+> >
+> >     $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
+> >
+> >     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
+> >     Internal error: : 1008 [#1] ARM
+> >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+> >     Backtrace:
+> >       (regmap_mmio_read32le)
+> >       (regmap_mmio_read)
+> >       (_regmap_bus_reg_read)
+> >       (_regmap_read)
+> >       (regmap_read)
+> >       (dspi_interrupt)
+> >       (free_irq)
+> >       (devm_irq_release)
+> >       (release_nodes)
+> >       (devres_release_all)
+> >       (device_release_driver_internal)
+> >
+> > The resource-managed framework should not be used for shared interrupt
+> > handling, because the interrupt handler might be called after releasing
+> > other resources and disabling clocks.
+> >
+> > Similar bug could happen during suspend - the shared interrupt handler
+> > could be invoked after suspending the device.  Each device sharing this
+> > interrupt line should disable the IRQ during suspend so handler will be
+> > invoked only in following cases:
+> > 1. None suspended,
+> > 2. All devices resumed.
+> >
+> > Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > Changes since v2:
+> > 1. Go back to v1 and use non-devm interface,
+> > 2. Fix also suspend/resume paths.
+> >
+> > Changes since v1:
+> > 1. Disable the IRQ instead of using non-devm interface.
+> > ---
+> >  drivers/spi/spi-fsl-dspi.c | 17 +++++++++++++----
+> >  1 file changed, 13 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> > index 58190c94561f..7ecc90ec8f2f 100644
+> > --- a/drivers/spi/spi-fsl-dspi.c
+> > +++ b/drivers/spi/spi-fsl-dspi.c
+> > @@ -1109,6 +1109,8 @@ static int dspi_suspend(struct device *dev)
+> >         struct spi_controller *ctlr = dev_get_drvdata(dev);
+> >         struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+> >
+> > +       if (dspi->irq > 0)
+> 
+> Since the line right above "goto poll_mode" is executing "dspi->irq =
+> 0;" on error, all these checks could have been simplified as "if
+> (dspi->irq)" which is slightly easier on the eye.
 
-As Heiner pointed out "I was thinking about calling
-phy_disable_interrupts() in phy_init_hw(), to have a defined init
-state as we don't know in which state the PHY is if the PHY driver is
-loaded. We shouldn't assume that it's the chip power-on defaults, BIOS
-or boot loader could have changed this. Or in case of dual-boot
-systems the other OS could leave the PHY in whatever state."
+Indeed.
 
-Export phy_disable_interrupts() so that it could be used in
-phy_init_hw() to have a defined init state.
+> 
+> 
+> > +               disable_irq(dspi->irq);
+> >         spi_controller_suspend(ctlr);
+> >         clk_disable_unprepare(dspi->clk);
+> >
+> > @@ -1129,6 +1131,8 @@ static int dspi_resume(struct device *dev)
+> >         if (ret)
+> >                 return ret;
+> >         spi_controller_resume(ctlr);
+> > +       if (dspi->irq > 0)
+> > +               enable_irq(dspi->irq);
+> >
+> >         return 0;
+> >  }
+> > @@ -1385,8 +1389,8 @@ static int dspi_probe(struct platform_device *pdev)
+> >                 goto poll_mode;
+> >         }
+> >
+> > -       ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
+> > -                              IRQF_SHARED, pdev->name, dspi);
+> > +       ret = request_threaded_irq(dspi->irq, dspi_interrupt, NULL,
+> > +                                  IRQF_SHARED, pdev->name, dspi);
+> >         if (ret < 0) {
+> >                 dev_err(&pdev->dev, "Unable to attach DSPI interrupt\n");
+> >                 goto out_clk_put;
+> > @@ -1400,7 +1404,7 @@ static int dspi_probe(struct platform_device *pdev)
+> >                 ret = dspi_request_dma(dspi, res->start);
+> >                 if (ret < 0) {
+> >                         dev_err(&pdev->dev, "can't get dma channels\n");
+> > -                       goto out_clk_put;
+> > +                       goto out_free_irq;
+> >                 }
+> >         }
+> >
+> > @@ -1415,11 +1419,14 @@ static int dspi_probe(struct platform_device *pdev)
+> >         ret = spi_register_controller(ctlr);
+> >         if (ret != 0) {
+> >                 dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
+> > -               goto out_clk_put;
+> > +               goto out_free_irq;
+> >         }
+> >
+> >         return ret;
+> >
+> > +out_free_irq:
+> > +       if (dspi->irq > 0)
+> > +               free_irq(dspi->irq, dspi);
+> >  out_clk_put:
+> >         clk_disable_unprepare(dspi->clk);
+> >  out_ctlr_put:
+> > @@ -1435,6 +1442,8 @@ static int dspi_remove(struct platform_device *pdev)
+> >
+> >         /* Disconnect from the SPI framework */
+> >         dspi_release_dma(dspi);
+> > +       if (dspi->irq > 0)
+> > +               free_irq(dspi->irq, dspi);
+> 
+> There is a subtle but important bug here: by waiting for the current
+> interrupt to finish and removing the handler, you are effectively
+> causing dspi_transfer_one_message to deadlock. The way this driver
+> works (and I'm sure many others) is that it transmits a SPI buffer
+> through a train of interrupts: each completion of a chunk triggers the
+> transmission of the next one, which will eventually raise an IRQ and
+> the process continues. But if you just disable the IRQ like that, you
+> effectively chop the interrupt train in the middle, and
+> dspi_transfer_one_message will remain stuck in
+> wait_for_completion(&dspi->xfer_done).
+> The reason why you don't do this (while I very much do) is that you
+> seem to be on Vybrid which uses DMA mode, and for DMA, the DSPI
+> interrupt line doesn't really do much of anything at all (which makes
+> it a bit funny that you're spending so much time working on it).
+> Instead, the completion events go from the DSPI controller directly to
+> the DMA controller, requesting for more data, and that's where IRQs
+> are raised to the CPU.
+> So, to avoid this deadlock, I would suggest you move
+> spi_unregister_controller as the first thing that gets called in the
+> teardown process. And yes, this should be a bugfix patch in itself.
 
-Suggested-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/net/phy/phy.c | 3 ++-
- include/linux/phy.h   | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+You're right. It also makes sense from the reverse-probe-order point of
+view.
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 1de3938628f4..a3d92a15da71 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -840,7 +840,7 @@ static void phy_error(struct phy_device *phydev)
-  * phy_disable_interrupts - Disable the PHY interrupts from the PHY side
-  * @phydev: target phy_device struct
-  */
--static int phy_disable_interrupts(struct phy_device *phydev)
-+int phy_disable_interrupts(struct phy_device *phydev)
- {
- 	int err;
- 
-@@ -852,6 +852,7 @@ static int phy_disable_interrupts(struct phy_device *phydev)
- 	/* Clear the interrupt */
- 	return phy_clear_interrupt(phydev);
- }
-+EXPORT_SYMBOL_GPL(phy_request_interrupt);
- 
- /**
-  * phy_interrupt - PHY interrupt handler
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c05d0fb5c00..b693b609b2f5 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1416,6 +1416,7 @@ int phy_ethtool_ksettings_set(struct phy_device *phydev,
- int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd);
- int phy_do_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd);
- int phy_do_ioctl_running(struct net_device *dev, struct ifreq *ifr, int cmd);
-+int phy_disable_interrupts(struct phy_device *phydev);
- void phy_request_interrupt(struct phy_device *phydev);
- void phy_free_interrupt(struct phy_device *phydev);
- void phy_print_status(struct phy_device *phydev);
--- 
-2.27.0
+> 
+> And while I'm at it, let me add another one: this recent commit:
+> 
+> commit dc234825997ec6ff05980ca9e2204f4ac3f8d695
+> Author: Peng Ma <peng.ma@nxp.com>
+> Date:   Fri Apr 24 14:12:16 2020 +0800
+> 
+>     spi: spi-fsl-dspi: Adding shutdown hook
+> 
+>     We need to ensure dspi controller could be stopped in order for kexec
+>     to start the next kernel.
+>     So add the shutdown operation support.
+> 
+>     Signed-off-by: Peng Ma <peng.ma@nxp.com>
+>     Link: https://lore.kernel.org/r/20200424061216.27445-1-peng.ma@nxp.com
+>     Signed-off-by: Mark Brown <broonie@kernel.org>
+> 
+> is causing some very similar issues: if you look at the code it adds,
+> it disables the FIFOs and halts the module, which is bad for the same
+> reason that it will hang an ongoing interrupt train in
+> dspi_transfer_one_message:
+> 
+> [17159.264026] INFO: task init:1870 blocked for more than 120 seconds.
+> [17159.270385]       Not tainted 5.8.0-rc1-00133-g923e4b5032dd-dirty #208
+> [17159.276953] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [17159.284828] init            D    0  1870      1 0x00000008
+> [17159.290353] Call trace:
+> [17159.292828]  __switch_to+0x108/0x158
+> [17159.296433]  __schedule+0x320/0x870
+> [17159.299933]  schedule+0x50/0x110
+> [17159.303188]  schedule_timeout+0x35c/0x438
+> [17159.307229]  wait_for_completion+0xb0/0x148
+> [17159.311444]  dspi_transfer_one_message+0x8c/0x4d0
+> [17159.316180]  __spi_pump_messages+0x434/0x9a8
+> [17159.320480]  __spi_sync+0x2ec/0x3a8
+> [17159.323994]  spi_sync+0x3c/0x60
+> [17159.327149]  spi_sync_transfer+0x94/0xb8
+> [17159.331101]  sja1105_xfer.isra.0+0x26c/0x2f8
+> [17159.335402]  sja1105_xfer_buf+0x20/0x30
+> [17159.339267]  sja1105_dynamic_config_write+0x18c/0x1e0
+> [17159.344353]  sja1105_bridge_stp_state_set+0x58/0xd0
+> [17159.349265]  dsa_port_set_state+0x74/0xd0
+> [17159.353303]  dsa_port_set_state_now+0x28/0x58
+> [17159.357690]  dsa_port_disable_rt+0x74/0x78
+> [17159.361818]  dsa_slave_close+0x2c/0xd0
+> [17159.365601]  __dev_close_many+0xcc/0x150
+> [17159.369553]  dev_close_many+0x8c/0x130
+> [17159.373330]  rollback_registered_many+0x128/0x550
+> [17159.378066]  unregister_netdevice_queue+0x98/0x120
+> [17159.382891]  unregister_netdev+0x2c/0x40
+> [17159.386843]  dsa_slave_destroy+0x4c/0x80
+> [17159.390795]  dsa_port_teardown+0xa0/0xd0
+> [17159.394746]  dsa_tree_teardown_switches+0x40/0x98
+> [17159.399481]  dsa_unregister_switch+0xbc/0x170
+> [17159.403868]  sja1105_remove+0x20/0x30
+> [17159.407557]  spi_drv_remove+0x34/0x58
+> [17159.411247]  device_release_driver_internal+0x104/0x1d8
+> [17159.416506]  device_release_driver+0x20/0x30
+> [17159.420808]  bus_remove_device+0xdc/0x168
+> [17159.424847]  device_del+0x15c/0x3b0
+> [17159.428363]  device_unregister+0x28/0x80
+> [17159.432313]  spi_unregister_device+0x8c/0xb0
+> [17159.436613]  __unregister+0x18/0x28
+> [17159.440130]  device_for_each_child+0x64/0xb0
+> [17159.444430]  spi_unregister_controller+0x44/0x140
+> [17159.449168]  dspi_shutdown+0x88/0x98
+> [17159.452770]  platform_drv_shutdown+0x28/0x38
+> [17159.457072]  device_shutdown+0x168/0x340
+> [17159.461024]  kernel_restart_prepare+0x40/0x50
+> [17159.465416]  kernel_restart+0x20/0x70
+> [17159.469107]  __do_sys_reboot+0x22c/0x258
+> [17159.473058]  __arm64_sys_reboot+0x2c/0x38
+> [17159.477098]  el0_svc_common.constprop.0+0x7c/0x180
+> [17159.481921]  do_el0_svc+0x2c/0x98
+> [17159.485261]  el0_sync_handler+0x9c/0x1b8
+> [17159.489213]  el0_sync+0x158/0x180
+> [17159.492556] INFO: lockdep is turned off.
+> [17159.496508] Kernel panic - not syncing: hung_task: blocked tasks
+> [17159.502537] CPU: 1 PID: 25 Comm: khungtaskd Not tainted
+> 5.8.0-rc1-00133-g923e4b5032dd-dirty #208
+> [17159.516767] Call trace:
+> [17159.519218]  dump_backtrace+0x0/0x1e0
+> [17159.522889]  show_stack+0x20/0x30
+> [17159.526214]  dump_stack+0xec/0x158
+> [17159.529624]  panic+0x16c/0x37c
+> [17159.532686]  watchdog+0x3d8/0x7f8
+> [17159.536008]  kthread+0x158/0x168
+> [17159.539245]  ret_from_fork+0x10/0x1c
+> [17159.542844] Kernel Offset: 0x5bd125880000 from 0xffff800010000000
+> [17159.548957] PHYS_OFFSET: 0xffffafdb00000000
+> [17159.553151] CPU features: 0x240022,21806008
+> [17159.557346] Memory Limit: none
+> [17159.560414] Rebooting in 3 seconds..
+> 
+> So for this third issue, what I would suggest would be to merge
+> dspi_shutdown with the reworked version of dspi_remove (i.e. to move
+> "/* Disable RX and TX */" and "/* Stop Running */" to dspi_remove,
+> right before clk_disable_unprepare, and then just call dspi_remove
+> from dspi_shutdown. It would end up looking like this:
+> 
+> static int dspi_remove(struct platform_device *pdev)
+> {
+>     struct spi_controller *ctlr = platform_get_drvdata(pdev);
+>     struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+> 
+>     /* Disconnect from the SPI framework */
+>     spi_unregister_controller(dspi->ctlr);
+> 
+>     dspi_release_dma(dspi);
+>     if (dspi->irq > 0)
+>         free_irq(dspi->irq, dspi);
+> 
+>     /* Disable RX and TX */
+>     regmap_update_bits(dspi->regmap, SPI_MCR,
+>                SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
+>                SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
+> 
+>     /* Stop Running */
+>     regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
+> 
+>     clk_disable_unprepare(dspi->clk);
+> 
+>     return 0;
+> }
+> 
+> static void dspi_shutdown(struct platform_device *pdev)
+> {
+>     dspi_remove(pdev);
+> }
 
+Yes, good point. The shutdown also lacks the interrupt freeing in my
+patch.
+
+Best regards,
+Krzysztof
+
+> 
+> If you think it's too complicated or that you can't test, let me know
+> and I can take over the patch series.
+> 
+> >         clk_disable_unprepare(dspi->clk);
+> >         spi_unregister_controller(dspi->ctlr);
+> >
+> > --
+> > 2.7.4
+> >
+> 
+> Thanks,
+> -Vladimir
