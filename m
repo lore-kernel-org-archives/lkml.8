@@ -2,173 +2,204 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB13C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D8520732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592861486;
-	bh=4sT7eZEB6XM8BOpQM25ecgxPmctC3tU6l4OI5GReTXs=;
-	h=Subject:From:To:Date:List-ID:From;
-	b=sMzoOsT/x7+DNthvWPgeZdTREtOsenYrXA04xEty/aXQR8WvS1x4v0ibn4yBkXnsu
-	 byKCo237/nB7ezyhZaTnyELZDNyckJtY9cC/IC+0ZmevgQ5p3gw51ClvYrQIkTZYTl
-	 fG80Drv+pnnqyCDf+5SaN8teA1zA+qdAeAFtp5p4=
+	by mail.kernel.org (Postfix) with ESMTP id 284392073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:32:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dF1l9Tgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbgFVVbZ (ORCPT
+        id S1730662AbgFVVb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgFVVbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:31:24 -0400
-Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA56120716;
-        Mon, 22 Jun 2020 21:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592861483;
-        bh=4sT7eZEB6XM8BOpQM25ecgxPmctC3tU6l4OI5GReTXs=;
-        h=Subject:From:To:Date:From;
-        b=MujtR9AVvL8ZNm3+g3Dr8lO80bOOEW+QYNOUJDQJKEJu3fkGjCRQq+5hz/SVOX57/
-         9kLiFQRun2rZb6XSbYlIInrTQHa5/V1Yajyu/ru7UosqrdUmVHYIDOUAwGRqKLe5uF
-         +c01TKGR9Be2ZO69TE/pRbBH1nNlGpz4dk9ijpAY=
-Message-ID: <6ad783612f118bdec28260a2a3562f5a5fa596cf.camel@kernel.org>
-Subject: [ANNOUNCE] 4.19.127-rt55
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Clark Williams <williams@redhat.com>,
-        Pavel Machek <pavel@denx.de>, Tom Zanussi <zanussi@kernel.org>
-Date:   Mon, 22 Jun 2020 16:31:21 -0500
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Mon, 22 Jun 2020 17:31:58 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7588 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgFVVb6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:31:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef123200000>; Mon, 22 Jun 2020 14:31:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 14:31:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 14:31:57 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
+ 2020 21:31:47 +0000
+Subject: Re: [PATCH 13/16] mm: support THP migration to device private memory
+To:     Zi Yan <ziy@nvidia.com>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
+ <20200619215649.32297-14-rcampbell@nvidia.com>
+ <F1872509-3B1F-4A8A-BFF5-E4D44E451920@nvidia.com>
+ <b6eed976-c515-72d6-a7be-2296cab8f0d4@nvidia.com>
+ <C7BEB563-3698-442C-A188-1B66CBE4CF63@nvidia.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <a5f502f8-70cd-014b-8066-bbaeb8024a29@nvidia.com>
+Date:   Mon, 22 Jun 2020 14:31:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <C7BEB563-3698-442C-A188-1B66CBE4CF63@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592861472; bh=/i3FTmhgZqhxJ2JEeAm3hdvx3NcjvZ/gYlHeYhOlEww=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dF1l9TgjnyFaLn3LwHWOsoB9IJw0BY+1aZDu/hX7K3EsU5EIsOGq0/NrvnKSPKza1
+         3vDIWUmgTzgzgnM0Gad/sfuAnEyWirWBDOpgvL3TOrOC6X8ZcN/uWLrUPoFbpqn50k
+         RdDgQt+SbzjZLhFP7BH3lfF5ZQMmxvqA7aLTWKUwUd55/BEqP/90K/3oNwc2vq+zIF
+         5qNSVXZHOowxN993zs1rflSRmn4nWnI9FBhEYwR0Am3hYNGG5ONUEU5Q1Bli/vr4No
+         Hk0B5VOS1uc/S+ioLQRYLxWKVMOQbp0y44vKRC7v30YphWQbYfquG/V4JYHM3bgho3
+         F6h3hcSPbk9bQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT Folks!
 
-I'm pleased to announce the 4.19.127-rt55 stable release.
+On 6/22/20 1:10 PM, Zi Yan wrote:
+> On 22 Jun 2020, at 15:36, Ralph Campbell wrote:
+> 
+>> On 6/21/20 4:20 PM, Zi Yan wrote:
+>>> On 19 Jun 2020, at 17:56, Ralph Campbell wrote:
+>>>
+>>>> Support transparent huge page migration to ZONE_DEVICE private memory.
+>>>> A new flag (MIGRATE_PFN_COMPOUND) is added to the input PFN array to
+>>>> indicate the huge page was fully mapped by the CPU.
+>>>> Export prep_compound_page() so that device drivers can create huge
+>>>> device private pages after calling memremap_pages().
+>>>>
+>>>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>>>> ---
+>>>>    include/linux/migrate.h |   1 +
+>>>>    include/linux/mm.h      |   1 +
+>>>>    mm/huge_memory.c        |  30 ++++--
+>>>>    mm/internal.h           |   1 -
+>>>>    mm/memory.c             |  10 +-
+>>>>    mm/memremap.c           |   9 +-
+>>>>    mm/migrate.c            | 226 ++++++++++++++++++++++++++++++++--------
+>>>>    mm/page_alloc.c         |   1 +
+>>>>    8 files changed, 226 insertions(+), 53 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+>>>> index 3e546cbf03dd..f6a64965c8bd 100644
+>>>> --- a/include/linux/migrate.h
+>>>> +++ b/include/linux/migrate.h
+>>>> @@ -166,6 +166,7 @@ static inline int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+>>>>    #define MIGRATE_PFN_MIGRATE	(1UL << 1)
+>>>>    #define MIGRATE_PFN_LOCKED	(1UL << 2)
+>>>>    #define MIGRATE_PFN_WRITE	(1UL << 3)
+>>>> +#define MIGRATE_PFN_COMPOUND	(1UL << 4)
+>>>>    #define MIGRATE_PFN_SHIFT	6
+>>>>
+>>>>    static inline struct page *migrate_pfn_to_page(unsigned long mpfn)
+>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>>> index dc7b87310c10..020b9dd3cddb 100644
+>>>> --- a/include/linux/mm.h
+>>>> +++ b/include/linux/mm.h
+>>>> @@ -932,6 +932,7 @@ static inline unsigned int page_shift(struct page *page)
+>>>>    }
+>>>>
+>>>>    void free_compound_page(struct page *page);
+>>>> +void prep_compound_page(struct page *page, unsigned int order);
+>>>>
+>>>>    #ifdef CONFIG_MMU
+>>>>    /*
+>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>> index 78c84bee7e29..25d95f7b1e98 100644
+>>>> --- a/mm/huge_memory.c
+>>>> +++ b/mm/huge_memory.c
+>>>> @@ -1663,23 +1663,35 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>>>>    	} else {
+>>>>    		struct page *page = NULL;
+>>>>    		int flush_needed = 1;
+>>>> +		bool is_anon = false;
+>>>>
+>>>>    		if (pmd_present(orig_pmd)) {
+>>>>    			page = pmd_page(orig_pmd);
+>>>> +			is_anon = PageAnon(page);
+>>>>    			page_remove_rmap(page, true);
+>>>>    			VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
+>>>>    			VM_BUG_ON_PAGE(!PageHead(page), page);
+>>>>    		} else if (thp_migration_supported()) {
+>>>>    			swp_entry_t entry;
+>>>>
+>>>> -			VM_BUG_ON(!is_pmd_migration_entry(orig_pmd));
+>>>>    			entry = pmd_to_swp_entry(orig_pmd);
+>>>> -			page = pfn_to_page(swp_offset(entry));
+>>>> +			if (is_device_private_entry(entry)) {
+>>>> +				page = device_private_entry_to_page(entry);
+>>>> +				is_anon = PageAnon(page);
+>>>> +				page_remove_rmap(page, true);
+>>>> +				VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
+>>>> +				VM_BUG_ON_PAGE(!PageHead(page), page);
+>>>> +				put_page(page);
+>>>
+>>> Why do you hide this code behind thp_migration_supported()? It seems that you just need
+>>> pmd swap entry not pmd migration entry. Also the condition is not consistent with the code
+>>> in __handle_mm_fault(), in which you handle is_device_private_entry() directly without
+>>> checking thp_migration_support().
+>>
+>> Good point, I think "else if (thp_migration_supported())" should be
+>> "else if (is_pmd_migration_entry(orig_pmd))" since if the PMD *is*
+>> a device private or migration entry, then it should be handled and the
+>> VM_BUG_ON() should be that thp_migration_supported() is true
+>> (or maybe remove the VM_BUG_ON?).
+> 
+> I disagree. A device private entry is independent of a PMD migration entry, since a device private
+> entry is just a swap entry, which is available when CONFIG_TRANSPARENT_HUGEPAGE. So for architectures
+> support THP but not THP migration (like ARM64), your code should still work.
 
-You can get this release via the git tree at:
+I'll fix this up for v2 and you can double check me.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+> I would suggest you to check all the use of is_swap_pmd() and make sure the code
+> can handle is_device_private_entry().
 
-  branch: v4.19-rt
-  Head SHA1: f297d3d16170bd3af56f7310963c727ce2cab5c7
+OK.
 
-Or to build 4.19.127-rt55 directly, the following patches should be applied:
+> For new device private code, you might need to guard it either statically or dynamically in case
+> CONFIG_DEVICE_PRIVATE is disabled. Potentially, you would like to make sure a system without
+> CONFIG_DEVICE_PRIVATE will not see is_device_private_entry() == true and give errors when it does.
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+I have compiled and run with CONFIG_DEVICE_PRIVATE off but I can test more combinations of
+config settings.
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.127.xz
+>>
+>>> Do we need to support split_huge_pmd() if a page is migrated to device? Any new code
+>>> needed in split_huge_pmd()?
+>>
+>> I was thinking that any CPU usage of the device private page would cause it to be
+>> migrated back to system memory as a whole PMD/PUD page but I'll double check.
+>> At least there should be a check that the page isn't a device private page.
+> 
+> Well, that depends. If we can allocate a THP on CPU memory, we can migrate the whole page back.
+> But if no THP is allocated due to low on free memory or memory fragmentation, I think you
+> might need a fallback plan, either splitting the device private page and migrating smaller
+> pages instead or reclaiming CPU memory until you get a THP. IMHO, the former might be preferred,
+> since the latter might cost a lot of CPU cycles but still gives no THP after all.
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.127-rt55.patch.xz
-
-
-You can also build from 4.19.127-rt54 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/incr/patch-4.19.127-rt54-rt55.patch.xz
-
-Enjoy!
-
-   Tom
-
-Changes from v4.19.127-rt54:
----
-
-Kevin Hao (1):
-      mm: slub: Always flush the delayed empty slubs in flush_all()
-
-Sebastian Andrzej Siewior (1):
-      fs/dcache: Include swait.h header
-
-Tom Zanussi (2):
-      tasklet: Fix UP case for tasklet CHAINED state
-      Linux 4.19.127-rt55
----
-fs/proc/base.c   | 1 +
- kernel/softirq.c | 6 ++++++
- localversion-rt  | 2 +-
- mm/slub.c        | 3 ---
- 4 files changed, 8 insertions(+), 4 deletions(-)
----
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index a45d4d640f01..56b1c4f1e8c0 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -95,6 +95,7 @@
- #include <linux/flex_array.h>
- #include <linux/posix-timers.h>
- #include <trace/events/oom.h>
-+#include <linux/swait.h>
- #include "internal.h"
- #include "fd.h"
- 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index 73dae64bfc9c..9bad7a16dc61 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -947,10 +947,12 @@ static void __tasklet_schedule_common(struct tasklet_struct *t,
- 	 * is locked before adding it to the list.
- 	 */
- 	if (test_bit(TASKLET_STATE_SCHED, &t->state)) {
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT_FULL)
- 		if (test_and_set_bit(TASKLET_STATE_CHAINED, &t->state)) {
- 			tasklet_unlock(t);
- 			return;
- 		}
-+#endif
- 		t->next = NULL;
- 		*head->tail = t;
- 		head->tail = &(t->next);
-@@ -1044,7 +1046,11 @@ static void tasklet_action_common(struct softirq_action *a,
- again:
- 		t->func(t->data);
- 
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT_FULL)
- 		while (cmpxchg(&t->state, TASKLET_STATEF_RC, 0) != TASKLET_STATEF_RC) {
-+#else
-+		while (!tasklet_tryunlock(t)) {
-+#endif
- 			/*
- 			 * If it got disabled meanwhile, bail out:
- 			 */
-diff --git a/localversion-rt b/localversion-rt
-index 3165a8781ff5..51b05e9abe6f 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt54
-+-rt55
-diff --git a/mm/slub.c b/mm/slub.c
-index d243c6ef7fc9..a9473bbb1338 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2341,9 +2341,6 @@ static void flush_all(struct kmem_cache *s)
- 	for_each_online_cpu(cpu) {
- 		struct slub_free_list *f;
- 
--		if (!has_cpu_slab(cpu, s))
--			continue;
--
- 		f = &per_cpu(slub_free_list, cpu);
- 		raw_spin_lock_irq(&f->lock);
- 		list_splice_init(&f->list, &tofree);
-
+Sounds reasonable. I'll work on adding the fallback path for v2.
