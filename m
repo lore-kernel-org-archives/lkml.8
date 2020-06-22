@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FCBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6123320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF52D2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="A2nZUOgn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="fwhLeGUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgFVJlo (ORCPT
+        id S1727871AbgFVJmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40692 "EHLO
+        Mon, 22 Jun 2020 05:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbgFVJlc (ORCPT
+        with ESMTP id S1727779AbgFVJlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:41:32 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2259CC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a6so13983894wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+        Mon, 22 Jun 2020 05:41:45 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBEB7C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:44 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y20so15034719wmi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cfUc+TkUAgqz9MdoL32AGr8CBlEvrLInm5v62775Pps=;
-        b=A2nZUOgnmx1UP+ORv6aiykQQt+lLSQ1KO7Odnx9nMWmPGWBB/9zwG2qDldAgXJmqFF
-         xP5a4eGOadOLgU5l8x7N7j9+z2XQcTH/rFKkU1WWhZmJmVhXF2hTLLfHyQ5etAtMHKmX
-         GzjJGiUtKBqAj3ZO+9U33Aqe6H7sc3uFms0oEry7uZGxugnSgJBjckjsDuq2/0a7BeEq
-         I4qul8QuxKe+CEztgYEFZDIF1pwVYkuHKS4ZkApg+YQ/TcNclWYBEankibn6cVK3MPY7
-         ZU+9DUlAqUZCkiO9dP4Q1H37N9frUcXcUiOti5AX0YjukaK8I91Rvini9mJsIrmoYDWK
-         Og9w==
+        bh=H6LOSRZxGizpxzfF22Sv14N1k+l2XBln54kSc7WXTbU=;
+        b=fwhLeGUTHzaOn5r0hKFAxOrI/4bP6cRMLAZ9vxuMsWmVTbLCLBfuv2c3zx2K+9WkzC
+         4510agGDHbhXy4FxLo2y6wSgQ64p20rVWdVPiqvbTzNx3rKJ0wAQIRkSuhTdzUPDyq33
+         EGJ7dP781SaoA69mOAe2VG//Mj+PraeucVuHaZFWBoluRKQxOPm81fI00ykep20zlmSB
+         RPZYYFefMuTBJhmo6T+gCbA2sk4rO/dFZ8SsuCQmoiiBtm5IHQMXEHE2Tj3zbDGXmqd+
+         33R1jARght4O0k5GCattCXLy0yW2yV908NCQr9OgF+g3eygrEUkhQhtDWFMWiBtAcU50
+         OBog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cfUc+TkUAgqz9MdoL32AGr8CBlEvrLInm5v62775Pps=;
-        b=BswNjuFz2ZIYLgc78pNLBlJgRO13rIOkEJ44gCgak/rP6aQZt7Kz7p974CBDJwmYuu
-         R7f99qUWI/c2BtE4dlbbnjf3LA6Mr+UsTQyk+WpUQyXYnzjGMHZn0moGPbptIwFndKQb
-         hYu/arsqodCaHfYlqqjDcsr+OUhES2B/IS1+1vrlfMdZEYKWroO/q4W20Yly7AOKZlDd
-         nmiZEa//IV7cxpe54NrfILeaB6OBPkiOwAcZyWlfiMBW+gPoEqlzBB7n+AjJ3A3K7Kfo
-         4dGnzXTo4qCTniVlHmYFsrM8wvQc0R4+D9WtnczxOKeV1hZNJgeQCiMbnZQxmTr1oBnP
-         BEeA==
-X-Gm-Message-State: AOAM531YIoQ+cSokS23Lm6ye3utfJPr7cpxaA1hk7zPi7FdibnPVllVH
-        J3k0AxkhL4HNQwSrcJyPJsP5yg==
-X-Google-Smtp-Source: ABdhPJzkmYuQpu0uNoygH8mU35nl1Z6nB3WJ2gtz2NCWG24AiJQNaa6UhDtUjU6DEUC2R04sQUctyQ==
-X-Received: by 2002:a5d:470a:: with SMTP id y10mr5777035wrq.405.1592818890889;
-        Mon, 22 Jun 2020 02:41:30 -0700 (PDT)
+        bh=H6LOSRZxGizpxzfF22Sv14N1k+l2XBln54kSc7WXTbU=;
+        b=i3kX041onrg+oRobuFTBc58AXC6mzWcwajVcpRrfhukvsGeCMIf6VyMX2VVKeKRRHb
+         HawFq6x+A9chOHYlZd6+HoFoESE5CWonXo0VaAAvMIPhSh9VAFHS6p05lHsB7qpI46gd
+         AumY5XSWNhRYbJRJmkFbRIy8c34A1OQHdFFhAc123riUwEfcpFLw4MxziK9VJHBxs1Np
+         5FioyxRHPYArufRWjqWdNCkcalIDWSfQMNPflsvQlwFmmrBrFlwSdpLKKRHNjDRq8AKQ
+         BIGQii0ZwSJG3MtP0b/ZqA5U12c1R01J0PN9fquz2ZH5MqVqD8CKTU99P5GAHNx0NwRp
+         ETnA==
+X-Gm-Message-State: AOAM531B9ee9BGVDLwAtPxedmOG72WVjtHxVfisS3PJAOmZ2TLwWu6ZX
+        eYV32FWCkaVjTvCqkYbfUgJluw==
+X-Google-Smtp-Source: ABdhPJxKaZTzwaRgXjyD3lQOmmZEDuZrxf5WMvWd8aJTlxKoe6V5StaOUPB2OradOOO/ubvV2pVenA==
+X-Received: by 2002:a1c:1fd1:: with SMTP id f200mr17253456wmf.162.1592818903618;
+        Mon, 22 Jun 2020 02:41:43 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.29
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:30 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:43 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -93,9 +93,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 05/15] net: phy: reset the PHY even if probe() is not implemented
-Date:   Mon, 22 Jun 2020 11:37:34 +0200
-Message-Id: <20200622093744.13685-6-brgl@bgdev.pl>
+Subject: [PATCH 12/15] dt-bindings: mdio: add phy-supply property to ethernet phy node
+Date:   Mon, 22 Jun 2020 11:37:41 +0200
+Message-Id: <20200622093744.13685-13-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -108,70 +108,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Currently we only call phy_device_reset() if the PHY driver implements
-the probe() callback. This is not mandatory and many drivers (e.g.
-realtek) don't need probe() for most devices but still can have reset
-GPIOs defined. There's no reason to depend on the presence of probe()
-here so pull the reset code out of the if clause.
+The phy-supply property is often added to MAC nodes but this is wrong
+conceptually. These supplies should be part of the PHY node on the
+MDIO bus. Add phy-supply property at PHY level to mdio.yaml.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/phy_device.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ Documentation/devicetree/bindings/net/mdio.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 1b4df12c70ad..f6985db08340 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2690,16 +2690,13 @@ static int phy_probe(struct device *dev)
+diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+index d6a3bf8550eb..9c10012c2093 100644
+--- a/Documentation/devicetree/bindings/net/mdio.yaml
++++ b/Documentation/devicetree/bindings/net/mdio.yaml
+@@ -90,6 +90,10 @@ patternProperties:
+           Delay after the reset was deasserted in microseconds. If
+           this property is missing the delay will be skipped.
  
- 	mutex_lock(&phydev->lock);
- 
--	if (phydev->drv->probe) {
--		/* Deassert the reset signal */
--		phy_device_reset(phydev, 0);
-+	/* Deassert the reset signal */
-+	phy_device_reset(phydev, 0);
- 
-+	if (phydev->drv->probe) {
- 		err = phydev->drv->probe(phydev);
--		if (err) {
--			/* Assert the reset signal */
--			phy_device_reset(phydev, 1);
-+		if (err)
- 			goto out;
--		}
- 	}
- 
- 	/* Start out supporting everything. Eventually,
-@@ -2761,6 +2758,10 @@ static int phy_probe(struct device *dev)
- 	phydev->state = PHY_READY;
- 
- out:
-+	/* Assert the reset signal */
-+	if (err)
-+		phy_device_reset(phydev, 1);
++      phy-supply:
++        description:
++          Phandle to the regulator that provides the supply voltage to the PHY.
 +
- 	mutex_unlock(&phydev->lock);
+     required:
+       - reg
  
- 	return err;
-@@ -2779,12 +2780,12 @@ static int phy_remove(struct device *dev)
- 	sfp_bus_del_upstream(phydev->sfp_bus);
- 	phydev->sfp_bus = NULL;
- 
--	if (phydev->drv && phydev->drv->remove) {
-+	if (phydev->drv && phydev->drv->remove)
- 		phydev->drv->remove(phydev);
- 
--		/* Assert the reset signal */
--		phy_device_reset(phydev, 1);
--	}
-+	/* Assert the reset signal */
-+	phy_device_reset(phydev, 1);
-+
- 	phydev->drv = NULL;
- 
- 	return 0;
 -- 
 2.26.1
 
