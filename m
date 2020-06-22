@@ -2,110 +2,112 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7524FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBF72073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYV5CCQ8"
+	by mail.kernel.org (Postfix) with ESMTP id 5A4772074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgFVPsv (ORCPT
+        id S1729595AbgFVPt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729222AbgFVPsu (ORCPT
+        Mon, 22 Jun 2020 11:49:26 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42264 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728293AbgFVPtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:48:50 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1564C061573;
-        Mon, 22 Jun 2020 08:48:50 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id u14so21424pjj.2;
-        Mon, 22 Jun 2020 08:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UTeMozTEnRvUc79vKWE21Wx7VbsBFwErofUbGnztYII=;
-        b=gYV5CCQ8bRRUQCfIIIN//96WfrVuHVcVJ6SRKfMJQAkN6uz2/TL7kHyCwxPUs2JnbX
-         VVu/rmqDIoaljcZqE78wbHblV5AWifkidKx1puFQFpiYQfoJxe+VkQShS2TLp767Gd0w
-         wKB8mlHaHw4nGWi9K7vDsyXtWI/PDjqq8/bixEkpZQYzfo5XRBDdZ+PYUVE6TAcox/zn
-         5jj2QwuHHis8QHQZEu0IMZswz1KmeJC7Y391RtYGCYGPXMcGMlCTIPRZSzyq/npPLQPI
-         CMTTVxkLSZzyFHXByOaKvwA94RoXqh6RuVx6Ox+XJ2gEblbS3+KLWZtHSZlga5IG88s/
-         2iNQ==
+        Mon, 22 Jun 2020 11:49:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t6so13408054otk.9;
+        Mon, 22 Jun 2020 08:49:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UTeMozTEnRvUc79vKWE21Wx7VbsBFwErofUbGnztYII=;
-        b=HW8zuneNXWOB4rD8TeSPcfIwGEom06dY3JqXZgGGcmrf9M5MWUfCrI2+bhFGiiEEZe
-         DhjRRKFvJv91z3ufN/pElAPazOpJA8xfI8KEloi/NKikH9Bccz0b08Zbih4IK1SUNiyc
-         qVhvmVhqY5JCNQS0c9cqpemvWaipdeslyXUUmGUvfl+Y/o1+wmOSQvvViSzA+mWF23bT
-         RTgm3G6yh1WNwij3VtHdHjQsmaSwlnw0N2zvaI94mRZXGJL7kmEJcUktfNzH64t+p+8Q
-         nsQ5QfB6MCvMbL2KtmGyju5YXiwR1lTtAdI11dayv3CNAxUo9v6o6J05lottmdlusZfz
-         nUqQ==
-X-Gm-Message-State: AOAM530c4U2jxmB++Yvw5oJZ9pqbF6fj5tsMc9+VH1Bdg0wj0c9bP2cJ
-        2Z0IVqCdxsE++UHKuUsOPKJTtZyJwANhB0rq2j8=
-X-Google-Smtp-Source: ABdhPJyd++CbCxs4tfqmXSChUpZx5iYr8UfFfO4C772lsN5Xz0B61ofSXuAbMMaY4/KTZcliJwrSXzNECuZECVMOsSQ=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr19461550pjq.228.1592840930325;
- Mon, 22 Jun 2020 08:48:50 -0700 (PDT)
+        bh=ukHKRXuBbPQ+hCHp8ZkdpCwZxoKqRm4bkB6SlAMSyts=;
+        b=INgfEx/Ox65qHBF2f2NKQt1uc/q5M9MQyJEXraXilxZsnR2p63v95aQDFUg2lt4BOe
+         wsVUgsYQihmF5uVltxwEpzEX7kmV12CrsxaVatYko5nZk+g1WRhfF/kBycqXDhEYB1gw
+         XhPdnD6a6mXHZOQdbXbG7rMpkj2edullhoN0KdWB4T0DcxXfT5feK8GtvW6u+yzHROtF
+         cTk0q1zyt9mLiuHgkubaajG16nftVdM4gqhC9lj/WU+Tx/OfvBlieZX6NilOlDIKgw6q
+         Wv9ASm+62Iw2FcRFVvfRBy8tHLh7yn9W8EMvZh6W+uegbMglLVFAFOPpua2faISK0HRP
+         UiVg==
+X-Gm-Message-State: AOAM5302uTANwsXB1tjuT+A7/FS3CtcSetVQO3zxZAshistlTalWjFRs
+        +U9GHRwMeWIu6iHr0k7r2g1ctvpNS6v8oezAp/E=
+X-Google-Smtp-Source: ABdhPJyVUFz/In4cnlLRHIolL4alEhLcXovuLEA210Edp2UfV5x+qTGIiJivAxU9OTkdQkDrFPDlwe46o1wzUgjWtl4=
+X-Received: by 2002:a9d:62c2:: with SMTP id z2mr14189823otk.145.1592840964455;
+ Mon, 22 Jun 2020 08:49:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622103817.476-1-nsaenzjulienne@suse.de> <20200622103817.476-3-nsaenzjulienne@suse.de>
- <CAHp75VcGoK=6FitfuzEhPZXSrtJiO_-XcD6jtg8SckprWhePgA@mail.gmail.com> <4aaabc8ff39007a97a03f335c6a51313a2c59551.camel@suse.de>
-In-Reply-To: <4aaabc8ff39007a97a03f335c6a51313a2c59551.camel@suse.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Jun 2020 18:48:37 +0300
-Message-ID: <CAHp75VeCgum9WtuWLK63h4XEZc8Jz2py-i3NdSw4F1eyL-ngZg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/9] reset: Add Raspberry Pi 4 firmware reset controller
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        USB <linux-usb@vger.kernel.org>,
+References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
+ <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
+ <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
+ <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
+ <CAGETcx-rHFthf-aLb_S-ST6Evozvgis5XX5u0LNxyvfMoJOLKQ@mail.gmail.com>
+ <CAMuHMdXW0jM-A5cvYtFVcgc1Gm3tKkvr0+kWpeJqpJDzNOuYeA@mail.gmail.com>
+ <CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com> <CAGETcx87JNfKEu4brQ3S-9wObv=OwXkAoDBSREQH5dAD68TPsA@mail.gmail.com>
+In-Reply-To: <CAGETcx87JNfKEu4brQ3S-9wObv=OwXkAoDBSREQH5dAD68TPsA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 22 Jun 2020 17:49:13 +0200
+Message-ID: <CAMuHMdUsWAQ3XUGh1Jg_Y3LWz4G5aaZfHqL8JjNZv3DrW3TjvQ@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
+ top level devices
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        tim.gover@raspberrypi.org, linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Ji Luo <ji.luo@nxp.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 6:08 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
-> On Mon, 2020-06-22 at 17:42 +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 22, 2020 at 5:26 PM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
+Hi Saravana,
 
-...
-
-> > > +       struct device_node *fw_node;
-> >
-> > If you are going to use fwnode (as it should be), make sure the proper
-> > data type is in use, i.e. struct fwnode_handle.
-> >
-> > Otherwise, if you want to be OF centric (I discourage this, don't know
-> > if RPi4 is ever going to run RHEL or other distros that require non-DT
-> > firmwares), don't name fw_node. It's confusing.
+On Sat, Jun 20, 2020 at 4:33 AM Saravana Kannan <saravanak@google.com> wrote:
+> On Fri, Jun 19, 2020 at 1:07 PM Saravana Kannan <saravanak@google.com> wrote:
+> > I think instead of deferred_probe_work_func() moving the device to the
+> > end of the dpm_list, I think the device probing successfully is what
+> > should move it to the end of the dpm_list. That way, the dpm_list is
+> > actually ordered by when the devices become functional and not the
+> > random order in DT or random probe order which can get pretty
+> > convoluted with multiple deferred probes. This feels right and will
+> > make suspend/resume more robust against DT ordering -- but I'm not
+> > sure what other wide ranging impact this has for other platforms.
 >
-> I agree it is confusing. I'll rename it. On the other hand, this is strictly DT
-> centric.
+> If you want to play around with a potential fix to test my hypothesis,
+> I think it's just adding this one line to driver_bound():
+> ============
+> klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
+> device_links_driver_bound(dev);
+> +device_pm_move_to_tail(dev);
+>
+> device_pm_check_callbacks(dev);
+> ============
 
-AFAIU struct device_node *np is a usual pattern in OF-only world.
+Thanks, that seems to fix the issue for me, on both affected systems!
+Note that this has quite some impact on the order devices are suspended,
+but this seems harmless.
+
+Will try on more systems later...
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
