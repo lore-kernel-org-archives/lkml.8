@@ -2,196 +2,100 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF20C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21333C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72BD20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24B820716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y4vRIsQn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UvymxQap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgFVM1a (ORCPT
+        id S1728166AbgFVM1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:27:30 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50571 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728044AbgFVM12 (ORCPT
+        Mon, 22 Jun 2020 08:27:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728044AbgFVM1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:27:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592828846;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W2h10LpTAvNoSkQ5Wfs3ntSIZK6FE0PEMdGXqFWlN0Y=;
-        b=Y4vRIsQnNtDAwuF3Yi/p0dqPKhEL5wrWVvs/SERTYnkwDIcdXSm0l9uh0whU1ZaJKrrj3t
-        1uZDZdgW5wB35Bl9vwHOl92ZToLd9oh7hkmFwL3e6LmufjJClt4He8ZlQykS1dvqZE7UC2
-        1+nACv3BW1eikgKHIRxFPZZBGAr/x8k=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-G5HG_SQ0M9uGQRhRyvd_Dg-1; Mon, 22 Jun 2020 08:27:23 -0400
-X-MC-Unique: G5HG_SQ0M9uGQRhRyvd_Dg-1
-Received: by mail-qk1-f198.google.com with SMTP id s75so7060153qka.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=W2h10LpTAvNoSkQ5Wfs3ntSIZK6FE0PEMdGXqFWlN0Y=;
-        b=f6gLkPWExRmgX+CTyXXiK9ClhiQRbsOfh+cYUf4gWzjsskuqrqmHWU75JwJEEwMI1Z
-         lIw+jZn/W0RYA9UbLiP30Tfx/SAWeJuSvNoxo0W5j86yPNY12+ImPN/mAjqInAFxnVQy
-         a4Iuo45vNVlOumtYPuR1mpMN63VHivoaQ4nTBapuUNoAz8WAlhdgOd0leoFm/9c1QmH7
-         TrNTyuR5N5tyRXmu08ZY87XXKq1Fd8+zg9Jq9b5dn5Wr4WM7/vBj1dxrCaMghfmuqtwm
-         bGxYMmcsq7/Lm1S1Ii9yYl/ZJt0nruoh84zBC0yYJX2Q/7KY/peZXLwrYuHROGB1Rb5u
-         A8CQ==
-X-Gm-Message-State: AOAM531MGyQU/W/WxmqAdioGZnhBpTCTu8IyJ+9vQazaTSy0ibxZYGMH
-        X3OFVeo6u6B334bN4yuNdC6+ghpCoNRKjzvLBtBJdAYHCu6vMufaQkibvM59xCA57vYoryZgcl4
-        itaH24xH4aVRN7zu1AU3ympUJ
-X-Received: by 2002:a37:57c3:: with SMTP id l186mr15256199qkb.498.1592828843117;
-        Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwqVS/BGYYFeq6hAqLQIa8xxrqgAC/n0blfyZ/3TKrhs1/dEQRePf7h+6AbOmI33MYNzXvvAA==
-X-Received: by 2002:a37:57c3:: with SMTP id l186mr15256181qkb.498.1592828842808;
-        Mon, 22 Jun 2020 05:27:22 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id b196sm4114868qkg.11.2020.06.22.05.27.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 05:27:22 -0700 (PDT)
-Subject: Re: [PATCH v7 0/7] Add interrupt support to FPGA DFL drivers
-To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bhu@redhat.com, mtosatti@redhat.com, gregkh@linuxfoundation.org,
-        jun.j.tian@intel.com, hao.wu@intel.com
-References: <1592280528-6350-1-git-send-email-yilun.xu@intel.com>
- <20200622064806.GA5101@yilunxu-OptiPlex-7050>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <c9a33ee6-67f2-36b8-0870-ebc038b929ce@redhat.com>
-Date:   Mon, 22 Jun 2020 05:27:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 22 Jun 2020 08:27:34 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF5AC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 05:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YfMOzPuDOeX4F8QITGOgeYF7rNWEDYNWfPQiK8lEsik=; b=UvymxQapcE7G9G3BNTsfVoWsAb
+        fZmDam+SDYF0RgZ4jiOp+7/7gPZWzGAG/TUtctH4Eqic5aqhN7oVwjo+ioPIRs5ZeVBl8dnwywvF5
+        EA7lMmLB3RyR2Q74YVlBrN+h7Zk+/ZmIwiYGz81OJzz2UblNm8ADO/TlMuucDyIphFy5UQImZGUy/
+        WRtKPGf+RamqB45FMAPFdYZA+dtQ41ouB7b1BhTVmK3T5kEAS8WmHux8Fy0NNTmcnyQrIrYiucmml
+        JBaZXZs6UiGyTqEelgstXdPFaORQ64QdAlB61NIx5TRPECKpr6pdRKPjJ3CdKfeYaWqmald2Tsy9m
+        eKouWOCA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnLXa-0004J3-P2; Mon, 22 Jun 2020 12:27:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4847A301631;
+        Mon, 22 Jun 2020 14:27:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CAED4236D2014; Mon, 22 Jun 2020 14:27:08 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 14:27:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     kbuild@lists.01.org, lkp@intel.com, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [rcu:dev.2020.06.17a 35/38] kernel/sched/core.c:2650
+ try_to_wake_up() error: uninitialized symbol 'cpu'.
+Message-ID: <20200622122708.GB576871@hirez.programming.kicks-ass.net>
+References: <20200622121116.GD4151@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20200622064806.GA5101@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622121116.GD4151@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In addition to reviewing, I have run these changes on the pac a10 card and while i do not have an afu using interrupts, I have exercised some of the new interfaces.
+On Mon, Jun 22, 2020 at 03:11:17PM +0300, Dan Carpenter wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.06.17a
+> head:   d3779e78b9848a707448dbb4a0cb6c4bb651fe9c
+> commit: 59a5d883f2ccdce1700862b5983cfd3473630aea [35/38] EXP sched: Alleged fix for v5.8 merge-window scheduler issue
+> config: x86_64-randconfig-m001-20200621 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> 
+> smatch warnings:
+> kernel/sched/core.c:2650 try_to_wake_up() error: uninitialized symbol 'cpu'.
+> 
+> # https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?id=59a5d883f2ccdce1700862b5983cfd3473630aea
+> git remote add rcu https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+> git remote update rcu
+> git checkout 59a5d883f2ccdce1700862b5983cfd3473630aea
+> vim +/cpu +2650 kernel/sched/core.c
+> 
+> ^1da177e4c3f41 kernel/sched.c      Linus Torvalds 2005-04-16  2644  
+> b5179ac70de85e kernel/sched/core.c Peter Zijlstra 2016-05-11  2645  	ttwu_queue(p, cpu, wake_flags);
+> aacedf26fb7601 kernel/sched/core.c Peter Zijlstra 2019-06-07  2646  unlock:
+> 013fdb8086acaa kernel/sched.c      Peter Zijlstra 2011-04-05  2647  	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
+> aacedf26fb7601 kernel/sched/core.c Peter Zijlstra 2019-06-07  2648  out:
+> aacedf26fb7601 kernel/sched/core.c Peter Zijlstra 2019-06-07  2649  	if (success)
+> aacedf26fb7601 kernel/sched/core.c Peter Zijlstra 2019-06-07 @2650  		ttwu_stat(p, cpu, wake_flags);
+>                                                                                              ^^^
+> This can be uninitialized on a couple "goto unlock;" paths.  Lines
+> 2581 and 2622.  The KASan tool will warn about this at run time as well.
+> I'm not sure why the build bot doesn't include the whole function for
+> this bug report...
 
-The most useful i have submitted to selftests drivers/fpga.  In the future, this would be a good place to put other fpga unit tests. 
-
-The selftest patch depends on this change.
-
-So you can also add
-
-Tested-by: Tom Rix <trix@redhat.com>
-
-Tom
-
-On 6/21/20 11:48 PM, Xu Yilun wrote:
-> Hi Moritz:
->
-> Could you please help review the patchset when you have time?
->
-> You have already reviewed the first 3 patches some time ago. The
-> comments are all fixed. Hao and Redhat guys also have done several
-> rounds of review. The patches are all Acked-by Hao, reviewed by
-> Marcelo & Tom.
->
-> There is little change to the code for several months, seems it stays
-> ready and just need your final Ack.
->
-> Actually this is the last feature for our first generation PAC A10 Card,
-> and is important for users to have the full support.
->
-> We really need your help on code review ...
->
-> Many thanks!
-> Yilun
->
-> On Tue, Jun 16, 2020 at 12:08:41PM +0800, Xu Yilun wrote:
->> This patchset add interrupt support to FPGA DFL drivers.
->>
->> With these patches, DFL driver will parse and assign interrupt resources
->> for enumerated feature devices and their sub features.
->>
->> This patchset also introduces a set of APIs for user to monitor DFL
->> interrupts. Three sub features (DFL FME error, DFL AFU error and user
->> interrupt) drivers now support these APIs.
->>
->> Patch #1: DFL framework change. Accept interrupt info input from DFL bus
->>           driver, and add interrupt parsing and assignment for feature
->>           sub devices.
->> Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
->> Patch #3: DFL framework change. Add helper functions for feature sub
->>           device drivers to handle interrupt and notify users.
->> Patch #4: Add interrupt support for AFU error reporting sub feature.
->> Patch #5: Add interrupt support for FME global error reporting sub
->>           feature.
->> Patch #6: Add interrupt support for a new sub feature, to handle user
->>           interrupts implemented in AFU.
->> Patch #7: Documentation for DFL interrupt handling.
->>
->> Main changes from v1:
->>  - Early validating irq table for each feature in parse_feature_irq()
->>    in Patch #1.
->>  - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
->>    instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
->>    DFL_FPGA_FME/PORT_XXX_SET_IRQ param
->>
->> Main changes from v2:
->>  - put parse_feature_irqs() inside create_feature_instance().
->>  - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
->>  - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
->>
->> Main changes from v3:
->>  - rebased to 5.7-rc1.
->>  - fail the dfl enumeration when irq parsing error happens.
->>  - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
->>    drivers.
->>
->> Main changes from v4:
->>  - Minor fixes for Hao's comments.
->>
->> Main changes from v5:
->>  - Remove unnecessary type casting in Patch #1 & #3.
->>  - Minor fixes for Moritz's comments.
->>
->> Main changes from v6:
->>  - Add the header file <linux/interrupt.h> for Patch #1, to fix build
->>    error on ARCH=xtensa
->>  - Minor fixes in Patch #2 & #3.
->>
->> Xu Yilun (7):
->>   fpga: dfl: parse interrupt info for feature devices on enumeration
->>   fpga: dfl: pci: add irq info for feature devices enumeration
->>   fpga: dfl: introduce interrupt trigger setting API
->>   fpga: dfl: afu: add interrupt support for port error reporting
->>   fpga: dfl: fme: add interrupt support for global error reporting
->>   fpga: dfl: afu: add AFU interrupt support
->>   Documentation: fpga: dfl: add descriptions for interrupt related
->>     interfaces.
->>
->>  Documentation/fpga/dfl.rst    |  19 +++
->>  drivers/fpga/dfl-afu-error.c  |  17 +++
->>  drivers/fpga/dfl-afu-main.c   |  32 +++++
->>  drivers/fpga/dfl-fme-error.c  |  18 +++
->>  drivers/fpga/dfl-fme-main.c   |   6 +
->>  drivers/fpga/dfl-pci.c        |  76 +++++++++--
->>  drivers/fpga/dfl.c            | 310 ++++++++++++++++++++++++++++++++++++++++++
->>  drivers/fpga/dfl.h            |  57 ++++++++
->>  include/uapi/linux/fpga-dfl.h |  82 +++++++++++
->>  9 files changed, 608 insertions(+), 9 deletions(-)
->>
->> -- 
->> 2.7.4
-
+Indeed, lemme go fix.
