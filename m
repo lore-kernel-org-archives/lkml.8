@@ -2,126 +2,155 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4296C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA14C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C150D20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0ED20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JYDbyZSD";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="R9o8jbbF"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="swtzTFmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgFVJnA (ORCPT
+        id S1727996AbgFVJnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:43:00 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:7681 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgFVJmz (ORCPT
+        Mon, 22 Jun 2020 05:43:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgFVJlf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:42:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592818998; x=1624354998;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=RieI8deHi707fPsUXcK6S6S8d7ougmTcM/fmGb80O+Q=;
-  b=JYDbyZSD9lMg7Qv6QRxwo9SJIR5pogdtEC5+FW3HDHgUd7juraR3VpZL
-   2bV/HbHQ1tg+cUbp8tUjK9X3nPbFeXMg/X9lkmIcu57uUag5uXhZ1Ga7S
-   Xg0Mx9BsxYvTmEOIs+OyhPWcpZDCTwa8rI1qSXm3Qh1H++evb09qEL6Ko
-   5pN23uWo2s0F/MNyuduQA9fe3enh05RygxlnMT2PFhVkgmacE0CpAFaGB
-   YQsEScgCne2JcfNfuk1sIHVUoMTIBXPJlm6deo1Gsom3WAbmRG0yIcd3i
-   Di30JpnZakrUrH/BTy+nKmVwS+1A5HdjJxRLkwM9QXDuGX+KO/a0Pm3vI
-   Q==;
-IronPort-SDR: RTf3jwyxSaCdTeXxkgtKkT2bvnT3a5YfL8bprs+mJxDGQqYbkVAmeSLkCHR5NxI0GHorsxWrmh
- ah6pbOlKETde/LV5/vL0W/WJPbZh30SUvH7YXyCtqB9khjJa3wMmTj3SP32zIzaihnpd4MCeg4
- 6rRq4BJZkkaVTySI5IXKYMaiPTDxzvfvI1GVpIJFnE9tjeFobxuKB3hC748UlH91lgIwtxDdiM
- gRt8H6ayCmj3UHDBuj+Ivq138ldulj9MAOoTcuztYK/O82w/TnPbQW7bdqnhRLRDRAYI0bJjy8
- 7bM=
-X-IronPort-AV: E=Sophos;i="5.75,266,1589212800"; 
-   d="scan'208";a="243584462"
-Received: from mail-co1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.52])
-  by ob1.hgst.iphmx.com with ESMTP; 22 Jun 2020 17:43:16 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OgkC1Ce8AizFvZGSAwd+imBD7jbCgNHtaz4/TWoHwCalQSVDG3324fCt04t1LRoZH94qrfhO9LMUJIjFyUyZ0KZFFjCczdD9uIEZ5yuYSoG17tGd8bP/XaBVdaJRgyXO+D6t+oGKSEuP5OTdGImkrKZP3BCpZqZXXgoJbKTpELRsilgreZjDnzLSo4Q3Vl8eQ0L6cX8xDtvCn/K1cqfZLUguGxlVAH2CR1seM/7PvKDdfiLKH16b5rI6mpJ1AA+zYz9g6SUFhwEcmMfoB0oiDXmwIQuevIuTjKdVSJT6x4yycligDPvuonETErr6dQ7im8mVCFgyMtOVli3jYNF93Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RieI8deHi707fPsUXcK6S6S8d7ougmTcM/fmGb80O+Q=;
- b=mgFL9KS/XeSH8hvsLVlDwr+yILHpPDwag3TKw6StbvplJEyk35PfEWkrb6VchMgfAZdjFLcGRO983/ZiJRMypi8gQ0IlBcfto5H+32FMnJ3VQVfd81wDEwi7lz8mI1ZsbNIvlL/3+UgHKuxNkgKUOvqe8wqGDXHmFCjH4k2/oPn9tqkp9qw/SYO+N1YD++58L5tAVEDWOErKk06R9jJQQcJqNwHd57rT5x5UOZT7IqVsP5WsJlBxuF1xhiYpHbFV9KD9uW564sWzReHjNSExwGozdLAQoEYXAjTW96nciep3ECA1n+2DR8Ffvnua5FVJh0+WKcwipJYJX90SoNdtxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Mon, 22 Jun 2020 05:41:35 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E383CC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:33 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id c3so15902456wru.12
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RieI8deHi707fPsUXcK6S6S8d7ougmTcM/fmGb80O+Q=;
- b=R9o8jbbFoj7zAr4QmY2HRJghRu0dnf9JY2QA8eXXzWJjNrEZgqWbEZCDvozKIVltbwzqBQ66HpUcbR5flIpIAFFivh2/K1Eg+Bz5GCSn479N503zVxzwHqT+ioFtRktjQdiGF2mlII6RWaeij/wpkuySzUyuj/CPsThtOzm9Uv0=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN4PR0401MB3678.namprd04.prod.outlook.com
- (2603:10b6:803:47::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
- 2020 09:42:53 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 09:42:53 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/10] block: move struct block_device to blk_types.h
-Thread-Topic: [PATCH 10/10] block: move struct block_device to blk_types.h
-Thread-Index: AQHWRtLb17aMVeh+okuBhSvh09nNrQ==
-Date:   Mon, 22 Jun 2020 09:42:53 +0000
-Message-ID: <SN4PR0401MB3598EB4A1577B5253D8147439B970@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200620071644.463185-1-hch@lst.de>
- <20200620071644.463185-11-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1597:de01:e494:6330:3987:7eb6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0e7cf5dc-7d72-4a93-19bf-08d81690a295
-x-ms-traffictypediagnostic: SN4PR0401MB3678:
-x-microsoft-antispam-prvs: <SN4PR0401MB36787E838D876AB717ADBCE89B970@SN4PR0401MB3678.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1265;
-x-forefront-prvs: 0442E569BC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VRA/HCtQG2/7jom4lhxm6UU85ZAO0AYP9oCIfnhxcgXAiv8dhV7+rZGadznvtJXYxVBtSu3pQuxBLPeNk9WIQPDMVeaVWupTtPr5b7h7SvzNeF8gPB5ZXhfi5WTJm7h2L02DGyUa7UJTOdbqULNlIMMwoKEP/TzX4/TcS1VtC7tnKg92N2JyehGQfpA726Dfxg1VAdULvaU2OsT6pZioLrgFJRe2hvgjvLl3+CDUBZBiLP9Kt7HP3A9jF30z22GoKoZq5gLruhaf2G4rmRprxpEM8mj6LL0a+wYqNY7z9V4TAWphAfVUSLun0upQrNeA/7Q023mL6ierjmikSIbp0w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(376002)(346002)(5660300002)(52536014)(8676002)(91956017)(66446008)(110136005)(54906003)(66946007)(76116006)(8936002)(316002)(66476007)(66556008)(64756008)(558084003)(4326008)(9686003)(86362001)(186003)(478600001)(33656002)(83380400001)(6506007)(7696005)(55016002)(2906002)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: MJFXab3iUYfTBvt2XU/QJ/xvUVovrsg5gHfyAqJUS85kegc9fPuxJ2POhie6IcElCApGGzqSKlLdfmiCqnO0YOnWz+AYEPV2rxg3J0ZRKgULMFoUE2rHxQA3zZbHklf57+Ep0mLlEnCe9o3uj5ohzfC6JtH37eli5EbTw2mIzQ4TFN2iSMfmEslLpFs5jGUp4SE3AAeeWCDl4MBQxx0fM2K91cSnMep1Dy5lOrpZAUEvAYZVXp6x4r+oyTS8ocT76+0hrYNbRrqrwcwuey2SyoZxB4M5+SKRsgsS/CN0JAiPkZcXBfCQintER3ikD3FTOhfdlya5aXGoCn6Q3Sgy1SnvvOfibHB4hh5ghCnvs2se92asEQUTmyexY/cpSeGr6QAQNxTM4BmBSPJ+8YKlBYvr9HF+KMN9ukO1tmT56/iw+ygbrWKhUYq/X2d1yu9v7kPtP+XKAYtcygGvyqmeIKY8/KoxlUWjJfrjYfW7QLZ+hplkZ1nnu3PIePnVLL49kM0eEqI/1eUldREbHH8ZaAJkzFC/OxdTAzDwQuQdWFV+f5FoEPH3B9t2DhqsmsHm
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nC0F5ZT+Ll5OOGkPAd3mIJIStND0frPBkptlTCmDLJg=;
+        b=swtzTFmLVIWLX97Ka8BE4T1dWXPt5l1jiTgEty4wbnCrweWQw3HbeTXNza6y2qcCXR
+         iIu5WIxWbsQs51WOv19l2MOnnx9biFYV7/MbY0YMlQ/cSE0G+PyDXwmHvUYyHhrnNdUq
+         xAHqSoVXMheRLlPuN1KpgliIQIXbuBOHq+PCzME+TGn0K+/URvl99z5NPSrgSbWHtdpH
+         2XLpBaTp7Jhs4GFXZGq+gopioO0XNjhy5k4P+p0oSTll4HgmIBiAnRFMRF6aTZi4O2og
+         vYAAkHtdQXctioWsdumoNSuMfzhqraPeWT6gTazq92hFSwkJkMSYyr7hlCsjXk1eVqPx
+         7WHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nC0F5ZT+Ll5OOGkPAd3mIJIStND0frPBkptlTCmDLJg=;
+        b=P2ka3VbmpVCMPXzg0vmzpWxuPmMLD/zMGdtLJE+zFIWXXDNLYULY//1gwBWa/hhwFl
+         PdpmQVF3r5GB1G6vhEtGhvEjusQHJnP27IoLEIRK1J7ue9eU1soWAp4JNxconb+aVJKB
+         CMGSbQM/gWYEZ+xfDWeN7mtox9gCAGRLSZZlrS3OBTyKHakMijAQkST1eW+oqrQ2ueKf
+         UkE3qqQj13WhtIEYjxob+8aRjO2FZhOgF+1zJnRG6HvL9RsKbR1qQnJCfV4Mj0J/WfOe
+         /efU/DMfa8wto6yttvySlIiToh7il1hGJy/E5KU1hdjDdCL9wFqsPbV9FKT037xg8WPL
+         duLg==
+X-Gm-Message-State: AOAM530YRgCUpYisfJlKYiUmZbm1JnmFK+6HTIRZnfSj/VZBNR4LNGEN
+        fnDfY4jV3foqTumpGlQEVYatYw==
+X-Google-Smtp-Source: ABdhPJzxHCym+Ub6CuSXGJUTfH6gp7OLN1NQWcaww2Sg2sQLihShVVzipPqZpx45p1tV4dBze4Q9ew==
+X-Received: by 2002:a5d:6802:: with SMTP id w2mr18207943wru.68.1592818892680;
+        Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 06/15] net: phy: mdio: reset MDIO devices even if probe() is not implemented
+Date:   Mon, 22 Jun 2020 11:37:35 +0200
+Message-Id: <20200622093744.13685-7-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e7cf5dc-7d72-4a93-19bf-08d81690a295
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 09:42:53.0080
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jki7XCsl5BJ6VgCwvMvG9xqgw/8mQkJdxo14lPMrqaLyadY4pnrhqvHUBOl3H9cZQh3CCw5J93AJLlpG4uQa/42FN/kcO3cT3DknvvmBP20=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3678
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that I finally remebered where struct block_device lives...=0A=
-=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Similarily to PHY drivers - there's no reason to require probe() to be
+implemented in order to call mdio_device_reset(). MDIO devices can have
+resets defined without needing to do anything in probe().
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/net/phy/mdio_device.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
+index f60443e48622..be615504b829 100644
+--- a/drivers/net/phy/mdio_device.c
++++ b/drivers/net/phy/mdio_device.c
+@@ -150,10 +150,10 @@ static int mdio_probe(struct device *dev)
+ 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
+ 	int err = 0;
+ 
+-	if (mdiodrv->probe) {
+-		/* Deassert the reset signal */
+-		mdio_device_reset(mdiodev, 0);
++	/* Deassert the reset signal */
++	mdio_device_reset(mdiodev, 0);
+ 
++	if (mdiodrv->probe) {
+ 		err = mdiodrv->probe(mdiodev);
+ 		if (err) {
+ 			/* Assert the reset signal */
+@@ -170,12 +170,11 @@ static int mdio_remove(struct device *dev)
+ 	struct device_driver *drv = mdiodev->dev.driver;
+ 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
+ 
+-	if (mdiodrv->remove) {
++	if (mdiodrv->remove)
+ 		mdiodrv->remove(mdiodev);
+ 
+-		/* Assert the reset signal */
+-		mdio_device_reset(mdiodev, 1);
+-	}
++	/* Assert the reset signal */
++	mdio_device_reset(mdiodev, 1);
+ 
+ 	return 0;
+ }
+-- 
+2.26.1
+
