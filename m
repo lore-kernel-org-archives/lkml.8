@@ -2,85 +2,113 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DATE_IN_PAST_24_48,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5BAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E5420720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A9820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgFVO1M (ORCPT
+        id S1728431AbgFVO1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:27:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48508 "EHLO mx2.suse.de"
+        Mon, 22 Jun 2020 10:27:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48424 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729485AbgFVO0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:26:51 -0400
+        id S1729515AbgFVO0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:26:48 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A4F0BC1BC;
-        Mon, 22 Jun 2020 14:26:48 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        James Tai <james.tai@realtek.com>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v4 2/3] dt-bindings: arm: realtek: Document RTD1319 and Realtek Pym Particles EVB
-Date:   Sun, 21 Jun 2020 01:32:26 +0200
-Message-Id: <20200620233227.31585-3-afaerber@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200620233227.31585-1-afaerber@suse.de>
-References: <20200620233227.31585-1-afaerber@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 52878C1E3;
+        Mon, 22 Jun 2020 14:26:45 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
+        wahrenst@gmx.net, p.zabel@pengutronix.de
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v4 4/9] ARM: dts: bcm2711: Add reset controller to xHCI node
+Date:   Mon, 22 Jun 2020 12:38:13 +0200
+Message-Id: <20200622103817.476-5-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200622103817.476-1-nsaenzjulienne@suse.de>
+References: <20200622103817.476-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Tai <james.tai@realtek.com>
+The chip is hardwired to the board's PCIe bus and needs to be properly
+setup trough a firmware routine after a PCI fundamental reset. Pass the
+reset controller phandle that takes care of triggering the
+initialization to the relevant PCI device.
 
-Define compatible strings for Realtek RTD1319 SoC and Realtek Pym Particles
-EVB.
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Signed-off-by: James Tai <james.tai@realtek.com>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- v3 -> v4:
- * Renamed compatible from pymparticle to pym-particles
- * Turned SoC comment into description
- 
- v2 -> v3: Unchanged
- 
- v1 -> v2:
- * Put string in alphabetical order
- 
- Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-index 0b388016bbcd..e36e87df3521 100644
---- a/Documentation/devicetree/bindings/arm/realtek.yaml
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -42,6 +42,12 @@ properties:
-               - synology,ds418 # Synology DiskStation DS418
-           - const: realtek,rtd1296
+Changes since v3:
+ - Correctly define PCIe topology:
+
+	[0000:00]---00.0-[01]----00.0  VIA Technologies, Inc. VL805 USB 3.0 Host Controller
+
+   Earlier versions were not taking into account the bridge between the
+   PCIe controller and xHCI controller. It worked, but out of luck...
+
+Changes since v2:
+ - Use dt-bindings to access IDs
+
+Changes since v1:
+ - Update to match new binding
+
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+index 0cef95058fb0..5b54d2185893 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -4,6 +4,8 @@
+ #include "bcm2835-rpi.dtsi"
+ #include "bcm283x-rpi-usb-peripheral.dtsi"
  
-+      - description: RTD1319 SoC based boards
-+        items:
-+          - enum:
-+              - realtek,pym-particles # Realtek Pym Particles EVB
-+          - const: realtek,rtd1319
++#include <dt-bindings/reset/raspberrypi,firmware-reset.h>
 +
-       - description: RTD1395 SoC based boards
-         items:
-           - enum:
+ / {
+ 	compatible = "raspberrypi,4-model-b", "brcm,bcm2711";
+ 	model = "Raspberry Pi 4 Model B";
+@@ -207,6 +209,21 @@ phy1: ethernet-phy@1 {
+ 	};
+ };
+ 
++&pcie0 {
++	pci@1,0 {
++		#address-cells = <3>;
++		#size-cells = <2>;
++		ranges;
++
++		reg = <0 0 0 0 0>;
++
++		usb@1,0 {
++			reg = <0x10000 0 0 0 0>;
++			resets = <&reset RASPBERRYPI_FIRMWARE_RESET_ID_USB>;
++		};
++	};
++};
++
+ /* uart0 communicates with the BT module */
+ &uart0 {
+ 	pinctrl-names = "default";
 -- 
-2.26.2
+2.27.0
 
