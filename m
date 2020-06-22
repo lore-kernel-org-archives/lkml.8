@@ -2,135 +2,219 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F659C43459
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43607C43462
 	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6EC20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592831915;
-	bh=qikvcMUWkMD2GwDYOTF/kBHN4k72EDaEulNiC5mKkgQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=E3JvOkh36UGTdpgB1sw+oYlMUVyn8xbrP+W0nRFbwAo037YFLXxSEp+mCblW/S5G2
-	 KzD+HJKujOytZSkvBQIjNIZ30VcUDXWk7hsaHl0B31PpVYpusBgbqy/ZP8wLrPSpvO
-	 KKVdkfKZKTNpOI+B0nSO2qfpy6l+sO9rIyiemlSI=
+	by mail.kernel.org (Postfix) with ESMTP id CE384207BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgFVNSe (ORCPT
+        id S1728627AbgFVNUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbgFVNSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:18:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5138220716;
-        Mon, 22 Jun 2020 13:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592831912;
-        bh=qikvcMUWkMD2GwDYOTF/kBHN4k72EDaEulNiC5mKkgQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B0qfFfo5Rc83tJz9vaii6woFeYkDGAnD5RFvcn7ik8vmD4BzUTxSqb6lPqZt4Cylp
-         Zw56K7JlDreSzOhQAtWa/DPESAPocYEJxI1kfIgj68Pj9LM93b8bYFp6P3Et09D7EJ
-         EsvGERm6V8ZtKIuCIF3jLm93jj6+JoP39hkqShqM=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jnMLG-005KB3-MS; Mon, 22 Jun 2020 14:18:31 +0100
-Date:   Mon, 22 Jun 2020 14:18:20 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bhelgaas@google.com, kernel-team@android.com
-Subject: Re: [PATCH] PCI/IOV: Plug VF bus creation race
-Message-ID: <20200622141820.7675d07d@why>
-In-Reply-To: <20200607094348.162660-1-maz@kernel.org>
-References: <20200607094348.162660-1-maz@kernel.org>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 22 Jun 2020 09:20:55 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44856 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728110AbgFVNUy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:20:54 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e5so12975300ote.11;
+        Mon, 22 Jun 2020 06:20:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cNbCZePewB/NCeRQ/HjjQVdjTqtr6FT4ufoTE5WeBks=;
+        b=Um0I1bp8pKmyNz+iK348XCgJAHLh8LQwaElwCNvzehEj2YXdRUkjJd0ONF9q3ewi6X
+         QjI9W2mpMvis+EIhu41ooY4furMT+eg9aaUF3u/LpD+PSBgU+kBtpnnJmFoVVIh0bfCm
+         c3dL4J7gvlfaE591dXAgMk1NW80g+2HcHGP0mMMSGWgyfeeo1slLRVR8Ax9RZL8p/rT1
+         WZ8iSpk1pbF851rP8JNWts3BICrIAMBPDTfkbSO9hBmZ1IGxk8hSznp3c8G2XaClKq7F
+         JjSICYn6nA6V/ku5yaB9raRrGhXRdp/CtGkv4Nii+2cGVolmDPkDvy7ZUojNbGb+NNpN
+         701Q==
+X-Gm-Message-State: AOAM533ey/GD7wP9XjmIteEBOJv4kfeYfWoJd0uLfx3wtWDF1UNEkIJx
+        t2neTnKCAyiErjQfN9zTgWsdgTUFJnvH2o61qDW2y83K
+X-Google-Smtp-Source: ABdhPJwy+Yi8KHmAGOzBAm8bJ3ozF1WWqSPJIfnMPauTIGbQnsCX1P57DWNx9KdRsKPFlAHhNl56piop7ircPAUa4XU=
+X-Received: by 2002:a9d:c29:: with SMTP id 38mr13077246otr.107.1592832050916;
+ Mon, 22 Jun 2020 06:20:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200617120510.25071-1-aford173@gmail.com>
+In-Reply-To: <20200617120510.25071-1-aford173@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 22 Jun 2020 15:20:39 +0200
+Message-ID: <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        aford@beaconembedded.com, Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  7 Jun 2020 10:43:48 +0100
-Marc Zyngier <maz@kernel.org> wrote:
+Hi Adam,
 
-Hi Bjorn,
+Thanks for your patch!
 
-> On a system that creates VFs for multiple PFs in parallel (in
-> this case, network bringup at boot time), and when these VFs
-> end-up on the same bus, bad things sometimes happen:
-> 
-> [   12.755534] sysfs: cannot create duplicate filename '/devices/platform/soc/fc000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/0000:02:01.0/pci_bus/0000:04'
-> [   12.755700] pci 0000:04:10.1: [8086:10ca] type 00 class 0x020000
-> [   12.763785] CPU: 1 PID: 581 Comm: vfs Tainted: G            E     5.7.0-00033-g002d24ebd695 #1119
-> [   12.770402] igb 0000:03:00.1: 1 VFs allocated
-> [   12.778493] Hardware name: amlogic w400/w400, BIOS 2020.01-rc5 03/12/2020
-> [   12.778496] Call trace:
-> [   12.778506]  dump_backtrace+0x0/0x1d0
-> [   12.778511]  show_stack+0x20/0x30
-> [   12.778516]  dump_stack+0xb8/0x100
-> [   12.778520]  sysfs_warn_dup+0x6c/0x88
-> [   12.778530]  sysfs_create_dir_ns+0xe8/0x100
-> [   12.778535]  kobject_add_internal+0xe0/0x3a0
-> [   12.778541]  kobject_add+0x94/0x100
-> [   12.817654]  device_add+0x104/0x7b8
-> [   12.821100]  device_register+0x28/0x38
-> [   12.824810]  pci_add_new_bus+0x1f8/0x488
-> [   12.828692]  pci_iov_add_virtfn+0x2c8/0x360
-> [   12.832830]  sriov_enable+0x200/0x458
-> [   12.836452]  pci_enable_sriov+0x20/0x38
-> [   12.840282]  igb_enable_sriov+0x148/0x290 [igb]
-> [   12.844745]  igb_pci_sriov_configure+0x40/0x80 [igb]
-> [   12.849650]  sriov_numvfs_store+0xb0/0x1a0
-> [   12.853703]  dev_attr_store+0x20/0x38
-> [   12.857327]  sysfs_kf_write+0x4c/0x60
-> [   12.860947]  kernfs_fop_write+0x104/0x220
-> [   12.864916]  __vfs_write+0x24/0x50
-> [   12.868279]  vfs_write+0xec/0x1d8
-> [   12.871556]  ksys_write+0x74/0x100
-> [   12.874919]  __arm64_sys_write+0x24/0x30
-> [   12.878802]  el0_svc_common.constprop.0+0x7c/0x1f8
-> [   12.883544]  do_el0_svc+0x2c/0x98
-> [   12.886824]  el0_svc+0x18/0x48
-> [   12.889841]  el0_sync_handler+0x120/0x290
-> [   12.893808]  el0_sync+0x158/0x180
-> [   12.897143] kobject_add_internal failed for 0000:04 with -EEXIST, don't try to register things with the same name in the same directory.
-> [   12.897634] igbvf: Intel(R) Gigabit Virtual Function Network Driver - version 2.4.0-k
-> 
-> It turns out that virtfn_add_bus() doesn't hold any lock, which
-> means there is a potential race between checking that the bus
-> exists already, and adding it if it doesn't.
-> 
-> A per-device lock wouldn't help, as this happens when multiple
-> PFs insert their respective VFs concurrently.
-> 
-> Instead, let's introduce new mutex, private to the IOV subsystem,
-> that gets taken when dealing with a virtfn bus (either creation
-> or destruction). This ensures that these operations get serialized.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+On Wed, Jun 17, 2020 at 2:05 PM Adam Ford <aford173@gmail.com> wrote:
+> Beacon EmebddedWorks, formerly Logic PD is introducing a new
 
-Did you have a chance to look into this? I can reliably trigger it on
-one of my boxes. Happy to help debugging it further if you think this
-hack isn't the right fix.
+EmbeddedWorks
 
-Thanks,
+> SOM and development kit based on the RZ/G2M SoC from Renesas.
+>
+> The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
+> cellular radio.
+>
+> The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
+> along with a vareity of push buttons and LED's.
 
-	M.
+variety
+
+Are schematics for this kit available? That would make it easier to review
+the DTS.
+
+Please add the DTB to arch/arm64/boot/dts/renesas/Makefile, else it
+won't be built :-)
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
+> @@ -0,0 +1,733 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2020, Compass Electronics Group, LLC
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/clk/versaclock.h>
+
+This depends on "[PATCH V3 2/3] dt: Add additional option bindings for
+IDT VersaClock", which hasn't been accepted yet, AFAIK.
+
+> +
+> +/ {
+> +       aliases {
+> +               serial0 = &scif2;
+> +               serial1 = &hscif0;
+> +               serial2 = &hscif1;
+> +               serial3 = &scif0;
+> +               serial4 = &hscif2;
+> +               serial5 = &scif5;
+> +               spi0 = &msiof0;
+> +               spi1 = &msiof1;
+> +               spi2 = &msiof2;
+> +               spi3 = &msiof3;
+
+Please drop the spiX aliases, as they are not needed.
+
+> +               ethernet0 = &avb;
+> +       };
+
+> +       leds {
+> +               compatible = "gpio-leds";
+> +               pinctrl-0 = <&led_pins>;
+> +               pinctrl-names = "default";
+> +
+> +               led0 {
+> +                       gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+> +                       label = "LED0";
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +               led1 {
+> +                       gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
+> +                       label = "LED1";
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +               led2 {
+> +                       gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>;
+> +                       label = "LED2";
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +               led3 {
+> +                       gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
+> +                       label = "LED3";
+> +                       linux,default-trigger = "heartbeat";
+
+Lots of heartbeats ;-)
+
+> +               };
+> +       };
+
+> +&ehci0 {
+> +       dr_mode = "otg";
+> +       status = "okay";
+> +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 3>, <&versaclock6_bb 4>;
+
+What's the purpose of the 3rd and 4th clock?
+
+> +};
+> +
+> +&ehci1 {
+> +       status = "okay";
+> +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 4>;
+
+What's the purpose of the 3rd clock?
+
+> +};
+
+> +       msiof1_pins: msiof1 {
+> +               groups = "msiof1_clk_g", "msiof1_rxd_g", "msiof1_txd_g";
+> +               function = "msiof1";
+> +       };
+
+What is msiof1 connected to?
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
+
+> +       eeprom@50 {
+> +               compatible = "microchip, at24c64", "atmel,24c64";
+
+Bogus space after the first comma.
+
+> +               pagesize = <32>;
+> +               read-only;      /* Manufacturing EEPROM programmed at factory */
+> +               reg = <0x50>;
+> +       };
+
+> new file mode 100644
+> index 000000000000..e7ed5d480618
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a774a1-beacon-rzg2m-kit.dts
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2020, Compass Electronics Group, LLC
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "r8a774a1.dtsi"
+> +#include "beacon-renesom-som.dtsi"
+> +#include "beacon-renesom-baseboard.dtsi"
+> +
+> +/ {
+> +       model = "Beacon Embedded Works RZ/G2M Development Kit";
+> +       compatible =    "beacon,beacon-rzg2m", "renesas,r8a774a1";
+> +};
+
+Please include a patch to add "beacon,beacon-rzg2m" to
+Documentation/devicetree/bindings/arm/renesas.yaml.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Jazz is not dead. It just smells funny...
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
