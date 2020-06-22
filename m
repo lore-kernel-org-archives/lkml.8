@@ -2,116 +2,111 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3046C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B42C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA6A20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F5D2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrCajufr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frf3ht8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgFVMXs (ORCPT
+        id S1728131AbgFVM1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37652 "EHLO
+        Mon, 22 Jun 2020 08:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728034AbgFVMXs (ORCPT
+        with ESMTP id S1728044AbgFVM1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:23:48 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8139C061794;
-        Mon, 22 Jun 2020 05:23:47 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id z17so1520866edr.9;
-        Mon, 22 Jun 2020 05:23:47 -0700 (PDT)
+        Mon, 22 Jun 2020 08:27:24 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9760C061794;
+        Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l188so2183821qkf.10;
+        Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CTAR7V/Z8zO/EvXyOnCI3u6opFpSGrn79lAtP0brC4o=;
-        b=OrCajufrkP+2em4jab8O0EUkLyInrnq97bHfibUDuf2Prp6DIG52ZuCKqEnSSXByxV
-         305EkbA4hU6d96Uwlkp4ifmNXh0MxmOPl0/qRQ0i73mu0+roArjE1bXdc0K9EnScimt/
-         mvHVWsms4eRxlSMH2iTDXCOVAO4fC22owLSQUfbmbp/fmOjCIzqzXaEcsj9ivDWIjjMY
-         MP/E9h4Os5eS88A2kED2o5tIEbaYETySLrczO8Pmm9LNbTUjmhHBVdJkZ6JBlGUdnNiB
-         p5S3S0jA4yPGQtYKKuzTAQZpOwALWHV9jIhQRQKx91lihd8I8CkJ3EeXiZzg5xNe+vG6
-         Dr1Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BRfwCdLw+lBhNQtLxGKp6oI5intMTV4VxPqzaekWRpw=;
+        b=frf3ht8XWmKO5bV4tGgU699ueXhbUG1Bs/wG77NbgVGaUlfPmHu9yEGG6nkTVxk8Oq
+         fSJgwEksfQDgTemix2H0rhOoECWZFyijjl8ddbUG35Q3bRzl047kT32V6EaKwVtCFF+R
+         omqcsThto5ndWEYwCmTZcbJE+TTywmmleD0FV+IzyBJWuxbOhgnA8/mblUBbfkO9rlN0
+         ADCjY+VxOrXexGxUOGklhvBKLZKLPqeDeqVFR5hOPx+TQysamwJmhy962hvAoq1mRxrL
+         y8cp3rw8z5DteqYsV+Rbe8vNAt7s64ttaU4AhAd0Iz7eAJpsxBpHnjLZ05wi0b0p+3Pp
+         zyQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CTAR7V/Z8zO/EvXyOnCI3u6opFpSGrn79lAtP0brC4o=;
-        b=BdsiLcHOmmyRDho3Ib5gOn0B9prwrFmOz5fDsYS7T6fydUOD+PB3rfq/ZlcLkvQR6z
-         /um9R6XIRwZ4VsmJz30kZYyR9hMvn7py83a/fBA9Aun5huJ5O4We8EsKAiJzRJW8HE/T
-         fE8bMTb5sd7u/7F/RuyDaDtRB12NE5luWajqdbiWizXNWbhZ8WYO0/GczTos7NrGMI/E
-         EmADZqgKQGYUazMv5oyWh77b+2dW/yXMNqbwm+myRkoZpYpaUnP12FlBWtZkuh7WYbG6
-         hj785MWEQfaSYjEyNYmnUA6ZgHnp0goy8+OCSIRpa8DhYeZ6ngDUZCVuFjyi1DMYaaCF
-         kSJQ==
-X-Gm-Message-State: AOAM530HeKlizbKw1i9EYvayHRpHnHWQFw26HXhkdJdzdIegrtuRcQEn
-        gaz8me9DhYeO6bGpMHWvMDM=
-X-Google-Smtp-Source: ABdhPJwahOmxgh0msKa/vZwSsJo8AdxSNjyxVr2M4XbxaHGEO/ntewNWr/iJEOM+rUWu1ncWvnA6qA==
-X-Received: by 2002:aa7:cb53:: with SMTP id w19mr16162146edt.328.1592828626457;
-        Mon, 22 Jun 2020 05:23:46 -0700 (PDT)
-Received: from BV030612LT ([188.24.129.96])
-        by smtp.gmail.com with ESMTPSA id a24sm11398519ejc.109.2020.06.22.05.23.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Jun 2020 05:23:45 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 15:23:43 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     afaerber@suse.de,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-actions@lists.infradead.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/11] clk: actions: Add Actions S500 SoC Reset
- Management Unit support
-Message-ID: <20200622122343.GB23301@BV030612LT>
-References: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
- <e361b46511756070277ff10f94e1735bb69cc300.1592407030.git.cristian.ciocaltea@gmail.com>
- <159281354799.62212.7256905433525537681@swboyd.mtv.corp.google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BRfwCdLw+lBhNQtLxGKp6oI5intMTV4VxPqzaekWRpw=;
+        b=DClaWo+zoqyj+EaFufd/rmbvLu5RT4Hv1+iPf3m2sjESfuQnY4aC1l0UlyH2MgX2Kg
+         oMvlLWaWvvWaw1Tx8hSNPdEc444AiBUvMHyn1Imc54RlAo4Snas+bm1lKITxXQt2mTzQ
+         odltMFWyiCSmSmvP20Lbv/Uo7h1CheOP4Il0uDO4w/64KmkR+gUsNEcM7BaCPYYcqXMh
+         JJpdUBtMmTG/dW+SCz2nQZw/jK7WKKTTExXgly7xej/g2ib2PdVakHqYRAvmDQ53EoMT
+         FICsYMDq3SQ68PZd23nJpr6qc7XeDzeqB/i+EttJOu1zVS8o2So/N2JDDlKiYhZqaKDl
+         mSAw==
+X-Gm-Message-State: AOAM532mmpvKHdSqGZ3LwEp/+skDOvHbn1qW9fNRjOisOldruc93RCYD
+        agFshf3rMeqGn05CFH6WNJvk/t72UsmDcuoEdsU=
+X-Google-Smtp-Source: ABdhPJz1IrOnYmvEw3duZtLxZgFhm2K2p/F20WQvMA4Kr/6ekSopl6eRSUieG115zwp9mto13rbCGMwLpj6EjE5J5kc=
+X-Received: by 2002:a37:9942:: with SMTP id b63mr15775646qke.370.1592828843080;
+ Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159281354799.62212.7256905433525537681@swboyd.mtv.corp.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <5614531.lOV4Wx5bFT@harkonnen> <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl> <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl> <419762761.402939.1592827272368@mailbusiness.ionos.de>
+In-Reply-To: <419762761.402939.1592827272368@mailbusiness.ionos.de>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Mon, 22 Jun 2020 14:27:12 +0200
+Message-ID: <CAFLxGvyNazbyBpySuNA6SU-8tcvqYWKHsAHuhTLsofR=VoiEwQ@mail.gmail.com>
+Subject: Re: DMA Engine: Transfer From Userspace
+To:     Thomas Ruf <freelancer@rufusul.de>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Federico Vaga <federico.vaga@cern.ch>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 01:12:27AM -0700, Stephen Boyd wrote:
-> Quoting Cristian Ciocaltea (2020-06-17 09:48:09)
-> > Add Reset Management Unit (RMU) support for Actions Semi S500 SoC.
-> > 
-> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > ---
-> >  drivers/clk/actions/owl-s500.c | 80 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 80 insertions(+)
-> > 
-> > diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
-> > index 025a8f6d6482..3bce72301c65 100644
-> > --- a/drivers/clk/actions/owl-s500.c
-> > +++ b/drivers/clk/actions/owl-s500.c
-> > @@ -10,6 +10,8 @@
-> >   *
-> >   * Copyright (c) 2018 LSI-TEC - Caninos Loucos
-> >   * Author: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
-> > + *
-> > + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> 
-> You should only add your copyright when you modify a large amount of the
-> file. Adding 80 lines to a 500 line file doesn't count. Sorry.
+On Mon, Jun 22, 2020 at 2:02 PM Thomas Ruf <freelancer@rufusul.de> wrote:
+> > more the reason not do do so, why cant a kernel driver be added for your
+> > usage?
 >
+> by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
+> now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
+>
+> just let me introduce myself and the project:
+> - coding in C since '91
+> - coding in C++ since '98
+> - a lot of stuff not relevant for this ;-)
+> - working as a freelancer since Nov '19
+> - implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
+> - last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
+> - subscribed to dmaengine on friday, saw the start of this discussion on saturday
+> - talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
 
-Sure, I removed it. Thanks!
+How do you preserve bounds? This is the main reason why vfio requires an iommu.
 
-> >   */
-> >  
-> >  #include <linux/clk-provider.h>
+> here the struct for the ioctl:
+>
+> typedef struct {
+>   unsigned int struct_size;
+>   const void *src_user_ptr;
+>   void *dst_user_ptr;
+>   unsigned long length;
+>   unsigned int timeout_in_ms;
+> } dma_sg_proxy_arg_t;
+
+Is this on top of uio or a complete new subsystem?
+
+-- 
+Thanks,
+//richard
