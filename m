@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38652C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13BB5208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 532E5208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbgFVDA1 (ORCPT
+        id S1731251AbgFVDAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 23:00:27 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:44231 "EHLO
+        Sun, 21 Jun 2020 23:00:38 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53166 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731178AbgFVDAS (ORCPT
+        by vger.kernel.org with ESMTP id S1731220AbgFVDA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 23:00:18 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.5386952|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.00542553-0.000588226-0.993986;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=27;RT=27;SR=0;TI=SMTPD_---.HqMydez_1592794774;
+        Sun, 21 Jun 2020 23:00:27 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2037645|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0497008-0.00175125-0.948548;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=27;RT=27;SR=0;TI=SMTPD_---.HqMydez_1592794774;
 Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.HqMydez_1592794774)
           by smtp.aliyun-inc.com(10.147.40.44);
-          Mon, 22 Jun 2020 11:00:10 +0800
+          Mon, 22 Jun 2020 11:00:21 +0800
 From:   Frank Lee <frank@allwinnertech.com>
 To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
         mturquette@baylibre.com, sboyd@kernel.org,
@@ -38,58 +38,83 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
         huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
         Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH v2 07/11] dt-bindings: thermal: sun8i: Add binding for A100's THS controller
-Date:   Mon, 22 Jun 2020 10:59:03 +0800
-Message-Id: <20200622025907.32574-8-frank@allwinnertech.com>
+Subject: [PATCH v2 11/11] arm64: allwinner: A100: add support for Allwinner Perf1 board
+Date:   Mon, 22 Jun 2020 10:59:07 +0800
+Message-Id: <20200622025907.32574-12-frank@allwinnertech.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200622025907.32574-1-frank@allwinnertech.com>
 References: <20200622025907.32574-1-frank@allwinnertech.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a binding for A100's ths controller.
+A100 perf1 is an Allwinner A100-based SBC, with the following features:
+
+- 1GiB DDR3 DRAM
+- AXP803 PMIC
+- 2 USB 2.0 ports
+- MicroSD slot and on-board eMMC module
+- on-board Nand flash
+- ···
+
+Adds initial support for it, including the UART.
 
 Signed-off-by: Frank Lee <frank@allwinnertech.com>
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- .../devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml       | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/Makefile             |  1 +
+ .../dts/allwinner/sun50i-a100-allwinner-perf1.dts  | 27 ++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
 
-diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-index 8736926..9d40fc7 100644
---- a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-+++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-@@ -17,6 +17,7 @@ properties:
-       - allwinner,sun8i-h3-ths
-       - allwinner,sun8i-r40-ths
-       - allwinner,sun50i-a64-ths
-+      - allwinner,sun50i-a100-ths
-       - allwinner,sun50i-h5-ths
-       - allwinner,sun50i-h6-ths
- 
-@@ -61,7 +62,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: allwinner,sun50i-h6-ths
-+            enum:
-+              - allwinner,sun50i-a100-ths
-+              - allwinner,sun50i-h6-ths
- 
-     then:
-       properties:
-@@ -103,6 +106,7 @@ allOf:
-               - const: allwinner,sun8i-h3-ths
-               - const: allwinner,sun8i-r40-ths
-               - const: allwinner,sun50i-a64-ths
-+              - const: allwinner,sun50i-a100-ths
-               - const: allwinner,sun50i-h5-ths
-               - const: allwinner,sun50i-h6-ths
- 
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index e4d3cd0..ab780db 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+new file mode 100644
+index 0000000..d03fa26
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
++ */
++
++/dts-v1/;
++
++#include "sun50i-a100.dtsi"
++
++/{
++	model = "Allwinner A100 Perf1";
++	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pb_pins>;
++	status = "okay";
++};
 -- 
 1.9.1
 
