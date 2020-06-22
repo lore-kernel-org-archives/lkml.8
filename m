@@ -2,115 +2,185 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58575C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9833AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31FA620716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:09:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bRwAtSDc"
+	by mail.kernel.org (Postfix) with ESMTP id 7B64520716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbgFVWJV (ORCPT
+        id S1730989AbgFVWKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730882AbgFVWJU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:09:20 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E667AC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:09:19 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so3644497pgc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:09:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/CEH8VTZP2jm3BrV0iJu7stxsX/cPaPfhD00FUDCJv4=;
-        b=bRwAtSDcvMoGuvZ2V7MiZQ2AYZUB+iIZ05GyxDgMaBYPPQr/eNqeta8s9Kj+A1e/w1
-         UIeNztzPOl4SqKZrPezEvOsyvcurMrLEI/peVpvJ/dmpiL64RCNMDJXaiKzazq8CIRWm
-         Dh5pvxamRTWNQzWILwK3KtEIgH+FDxrwMANd8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/CEH8VTZP2jm3BrV0iJu7stxsX/cPaPfhD00FUDCJv4=;
-        b=fNTcrOcvYlgFdp4FUslUJINvXHHe5t3RsVha1fTl8uBAX6Om907OUQX6iINlTk/1BX
-         7MUyGhiUDXdE1fZonx0dREPnnoTkMIZqEPjnozWSgWOKcduJmNXYd8l9bYfVUHOpeHM4
-         5TOingjxXmxyHeKgpWG8HLgZ+HSl86J6asDSsbwf2ChqPbbVnTJCqSFCQoTxIIf6v/ey
-         2VdaO/dCON5SivypAEu2KagfCSe/+sZrQsaDkDmablVK4FIrO39NDP4qATRidoMC7tSS
-         QGPyrjkQCIue6lLriDQa5CkUsGiQV58CWYuwNM7xYTvU+WXvliN2nQmBmkOkyCguu7oh
-         NHFA==
-X-Gm-Message-State: AOAM530POCPOV0kyQHoxUtDiGGkOa42GVIuLky10LYhVUjbAgojdWXle
-        0JKT7FsycrZBgIgUfFHPSETgbh6S0Uk=
-X-Google-Smtp-Source: ABdhPJykHm2jiXE5Pmhx3etgyY6WR3nAeR8QFSIhZb8Lz+hGyZ6oJNwV16mTngn4VvoaSoaecDuRBA==
-X-Received: by 2002:a63:181f:: with SMTP id y31mr14845560pgl.47.1592863759529;
-        Mon, 22 Jun 2020 15:09:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id cm13sm454470pjb.5.2020.06.22.15.09.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 15:09:18 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 15:09:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Fangrui Song <maskray@google.com>
-Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] vmlinux.lds.h: Add .gnu.version* to DISCARDS
-Message-ID: <202006221508.F3A8D3B9@keescook>
-References: <20200622205341.2987797-1-keescook@chromium.org>
- <20200622205341.2987797-2-keescook@chromium.org>
- <20200622220043.6j3vl6v7udmk2ppp@google.com>
+        Mon, 22 Jun 2020 18:10:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60250 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730701AbgFVWKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:10:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B0F63AF3B;
+        Mon, 22 Jun 2020 22:10:20 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id DBA5F6048B; Tue, 23 Jun 2020 00:10:20 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 00:10:20 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Alexander Lobakin <alobakin@pm.me>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Tom Herbert <therbert@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 3/3] net: ethtool: sync netdev_features_strings order
+ with enum netdev_features
+Message-ID: <20200622221020.budxdjdoxwvqd42q@lion.mk-sys.cz>
+References: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
+ <sqZrzUWnFxtxVcoxsWQF4Nv8G9fd9g61ZQV90btG1FJpZVRU1lf2Wa6pX4XBQq1fkkUxaotZDm9Bb0z01hODC2HEhShi_GOVWqLE7pDSr8w=@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k22oqm7alg25phu7"
 Content-Disposition: inline
-In-Reply-To: <20200622220043.6j3vl6v7udmk2ppp@google.com>
+In-Reply-To: <sqZrzUWnFxtxVcoxsWQF4Nv8G9fd9g61ZQV90btG1FJpZVRU1lf2Wa6pX4XBQq1fkkUxaotZDm9Bb0z01hODC2HEhShi_GOVWqLE7pDSr8w=@pm.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 03:00:43PM -0700, Fangrui Song wrote:
-> On 2020-06-22, Kees Cook wrote:
-> > For vmlinux linking, no architecture uses the .gnu.version* section,
-> > so remove it via the common DISCARDS macro in preparation for adding
-> > --orphan-handling=warn more widely.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > include/asm-generic/vmlinux.lds.h | 1 +
-> > 1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > index db600ef218d7..6fbe9ed10cdb 100644
-> > --- a/include/asm-generic/vmlinux.lds.h
-> > +++ b/include/asm-generic/vmlinux.lds.h
-> > @@ -934,6 +934,7 @@
-> > 	*(.discard)							\
-> > 	*(.discard.*)							\
-> > 	*(.modinfo)							\
-> > +	*(.gnu.version*)						\
-> > 	}
-> > 
-> > /**
-> > -- 
-> > 2.25.1
-> 
-> I wonder what lead to .gnu.version{,_d,_r} sections in the kernel.
 
-Here's where I see it:
+--k22oqm7alg25phu7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ld: warning: orphan section `.gnu.version_d' from `arch/x86/boot/compressed/kernel_info.o' being placed in section `.gnu.version_d'
+On Fri, Jun 19, 2020 at 06:39:59PM +0000, Alexander Lobakin wrote:
+> The ordering of netdev_features_strings[] makes no sense when it comes
+> to user interaction, as list of features in `ethtool -k` input is sorted
+> according to the corresponding bit's position.
+> Instead, it *does* make sense when it comes to adding new netdev_features
+> or modifying existing ones. We have at least 2 occasions of forgetting to
+> add the strings for newly introduced features, and one of them existed
+> since 3.1x times till now.
+>=20
+> Let's keep this stringtable sorted according to bit's position in enum
+> netdev_features, as this simplifies both reading and modification of the
+> source code and can help not to miss or forget anything.
+>=20
+> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
 
--- 
-Kees Cook
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+
+This would also rather belong to net-next, IMHO.
+
+Michal
+
+> ---
+>  net/ethtool/common.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+> index c8e3fce6e48d..24f35d47832d 100644
+> --- a/net/ethtool/common.c
+> +++ b/net/ethtool/common.c
+> @@ -8,25 +8,25 @@
+>  const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN=
+] =3D {
+>  	[NETIF_F_SG_BIT]			=3D "tx-scatter-gather",
+>  	[NETIF_F_IP_CSUM_BIT]			=3D "tx-checksum-ipv4",
+> +
+> +	/* __UNUSED_NETIF_F_1 - deprecated */
+> +
+>  	[NETIF_F_HW_CSUM_BIT]			=3D "tx-checksum-ip-generic",
+>  	[NETIF_F_IPV6_CSUM_BIT]			=3D "tx-checksum-ipv6",
+>  	[NETIF_F_HIGHDMA_BIT]			=3D "highdma",
+>  	[NETIF_F_FRAGLIST_BIT]			=3D "tx-scatter-gather-fraglist",
+>  	[NETIF_F_HW_VLAN_CTAG_TX_BIT]		=3D "tx-vlan-hw-insert",
+> -
+>  	[NETIF_F_HW_VLAN_CTAG_RX_BIT]		=3D "rx-vlan-hw-parse",
+>  	[NETIF_F_HW_VLAN_CTAG_FILTER_BIT]	=3D "rx-vlan-filter",
+> -	[NETIF_F_HW_VLAN_STAG_TX_BIT]		=3D "tx-vlan-stag-hw-insert",
+> -	[NETIF_F_HW_VLAN_STAG_RX_BIT]		=3D "rx-vlan-stag-hw-parse",
+> -	[NETIF_F_HW_VLAN_STAG_FILTER_BIT]	=3D "rx-vlan-stag-filter",
+>  	[NETIF_F_VLAN_CHALLENGED_BIT]		=3D "vlan-challenged",
+>  	[NETIF_F_GSO_BIT]			=3D "tx-generic-segmentation",
+>  	[NETIF_F_LLTX_BIT]			=3D "tx-lockless",
+>  	[NETIF_F_NETNS_LOCAL_BIT]		=3D "netns-local",
+>  	[NETIF_F_GRO_BIT]			=3D "rx-gro",
+> -	[NETIF_F_GRO_HW_BIT]			=3D "rx-gro-hw",
+>  	[NETIF_F_LRO_BIT]			=3D "rx-lro",
+> =20
+> +	/* NETIF_F_GSO_SHIFT =3D NETIF_F_TSO_BIT */
+> +
+>  	[NETIF_F_TSO_BIT]			=3D "tx-tcp-segmentation",
+>  	[NETIF_F_GSO_ROBUST_BIT]		=3D "tx-gso-robust",
+>  	[NETIF_F_TSO_ECN_BIT]			=3D "tx-tcp-ecn-segmentation",
+> @@ -43,9 +43,14 @@ const char netdev_features_strings[NETDEV_FEATURE_COUN=
+T][ETH_GSTRING_LEN] =3D {
+>  	[NETIF_F_GSO_TUNNEL_REMCSUM_BIT]	=3D "tx-tunnel-remcsum-segmentation",
+>  	[NETIF_F_GSO_SCTP_BIT]			=3D "tx-sctp-segmentation",
+>  	[NETIF_F_GSO_ESP_BIT]			=3D "tx-esp-segmentation",
+> +
+> +	/* NETIF_F_GSO_UDP_BIT - deprecated */
+> +
+>  	[NETIF_F_GSO_UDP_L4_BIT]		=3D "tx-udp-segmentation",
+>  	[NETIF_F_GSO_FRAGLIST_BIT]		=3D "tx-gso-list",
+> =20
+> +	/* NETIF_F_GSO_LAST =3D NETIF_F_GSO_FRAGLIST_BIT */
+> +
+>  	[NETIF_F_FCOE_CRC_BIT]			=3D "tx-checksum-fcoe-crc",
+>  	[NETIF_F_SCTP_CRC_BIT]			=3D "tx-checksum-sctp",
+>  	[NETIF_F_FCOE_MTU_BIT]			=3D "fcoe-mtu",
+> @@ -56,16 +61,25 @@ const char netdev_features_strings[NETDEV_FEATURE_COU=
+NT][ETH_GSTRING_LEN] =3D {
+>  	[NETIF_F_LOOPBACK_BIT]			=3D "loopback",
+>  	[NETIF_F_RXFCS_BIT]			=3D "rx-fcs",
+>  	[NETIF_F_RXALL_BIT]			=3D "rx-all",
+> +	[NETIF_F_HW_VLAN_STAG_TX_BIT]		=3D "tx-vlan-stag-hw-insert",
+> +	[NETIF_F_HW_VLAN_STAG_RX_BIT]		=3D "rx-vlan-stag-hw-parse",
+> +	[NETIF_F_HW_VLAN_STAG_FILTER_BIT]	=3D "rx-vlan-stag-filter",
+>  	[NETIF_F_HW_L2FW_DOFFLOAD_BIT]		=3D "l2-fwd-offload",
+> +
+>  	[NETIF_F_HW_TC_BIT]			=3D "hw-tc-offload",
+>  	[NETIF_F_HW_ESP_BIT]			=3D "esp-hw-offload",
+>  	[NETIF_F_HW_ESP_TX_CSUM_BIT]		=3D "esp-tx-csum-hw-offload",
+>  	[NETIF_F_RX_UDP_TUNNEL_PORT_BIT]	=3D "rx-udp_tunnel-port-offload",
+> -	[NETIF_F_HW_TLS_RECORD_BIT]		=3D "tls-hw-record",
+>  	[NETIF_F_HW_TLS_TX_BIT]			=3D "tls-hw-tx-offload",
+>  	[NETIF_F_HW_TLS_RX_BIT]			=3D "tls-hw-rx-offload",
+> +
+> +	[NETIF_F_GRO_HW_BIT]			=3D "rx-gro-hw",
+> +	[NETIF_F_HW_TLS_RECORD_BIT]		=3D "tls-hw-record",
+>  	[NETIF_F_GRO_FRAGLIST_BIT]		=3D "rx-gro-list",
+> +
+>  	[NETIF_F_HW_MACSEC_BIT]			=3D "macsec-hw-offload",
+> +
+> +	/* NETDEV_FEATURE_COUNT */
+>  };
+> =20
+>  const char
+> --=20
+> 2.27.0
+>=20
+>=20
+
+--k22oqm7alg25phu7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7xLEwACgkQ538sG/LR
+dpUxfwf/Xe5uaU5cXmjHYAdIMaBuDYvteuYA1VACpIBJW+om8itcBhBzKmEuQbc6
+81cU96EFBvETTQ4NMgLcumRaMFLY3urdeQKD1L9TcIn8j1yX/SUaGaQzupNBsz/c
+cyyQD9xZ3PPiqVmlZCfqRm6dzM28M8F4KmbS2f1Y8tts2TmUerI3MrE9v/5IZ96F
+8uwgVJ2EnRuXAddyjvvGwPouYWLpPLKmRpYwwC2/lygL3NhICKRP3H2w9sD515Nb
+UadnTAsTOlsAeZuK52IkjoH4Y5JSbeQUBGWnyLpOWFspAlj/Q1AxljFTnqnMrplS
+7kaDp/NwueSiBfRAZgIJxFBzZfoYng==
+=ajHp
+-----END PGP SIGNATURE-----
+
+--k22oqm7alg25phu7--
