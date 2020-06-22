@@ -2,319 +2,188 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE35C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF03C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61736206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:02:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEZDn71X"
+	by mail.kernel.org (Postfix) with ESMTP id 61BCC20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgFVOCs (ORCPT
+        id S1729193AbgFVODT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:02:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbgFVOCr (ORCPT
+        Mon, 22 Jun 2020 10:03:19 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:64832 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728070AbgFVODS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:02:47 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9830BC061573;
-        Mon, 22 Jun 2020 07:02:47 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id dp10so7929100qvb.10;
-        Mon, 22 Jun 2020 07:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2n9reDCiwzp5p2T3bmWzun36Iijn1O0DAytSxN/0x1A=;
-        b=JEZDn71Xinf71REbjW+mjEFYFsPh2fNibaEuiLqW9s72hmeSvulB84TizS66PfETcg
-         g+HuwcwULqAQnQ3KeKru6Tjf+CexYvUJMkifaBYcMNSxk6WZR7SKUX1Q6lqwfVEwk90f
-         yV10JUefD7/34w0XWqq4Z8AT8Pw2EMmehIgw+nOwp4uqDCroD7RdEbGfGfzJkFs/unt1
-         Mcq15V9piOvDBsisurvw3LIc3weGs+STbHbsngrbY+FxDdZ4Wr5hgh6V2TihpWpBzjiw
-         Y/fFRhLLXnArra7INBs+cxA7KtVMltaBkEzs2lfLRHQ+j5IFNoi6br1vjbHKvsUUDIEn
-         FSQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2n9reDCiwzp5p2T3bmWzun36Iijn1O0DAytSxN/0x1A=;
-        b=nAUUcICIB4jD0WXeh3sPh1TI36K+cisBDBa9Eg7rLvLYvJ5qPpS2yRpeHqiiKkDMyw
-         rbpTs9nHuZ1KbvVwyuogzg9UuIuXO663iXgPg/0mcSiQKr3NZnkJzanMKMEYdBUingm5
-         wW2F3S+ldvi6TLjhXuIr0hJ4jZpRYA6T0Vd5niGY0v+l/6PmwR8Hfw161dsWJ3qJlgIE
-         F6lYJYskN6/zT9dXSD9dbGhSaFPskJC2tLMTYgRQ2Yr8IRHlkVpgeeDb+lHoCue/emfZ
-         RxiQ4BaiXe+h22VXDVC6qkEbA7Vu0h3f67H7Rh7ngyQIIK9FSnkIYlJnhkcTWDVpasR6
-         v5uw==
-X-Gm-Message-State: AOAM533xTSmOjDbzfTfBTPWQGSID9SRVcGmV7SkL60x49lYO1ZSnAPLS
-        NaUI5SoVJcZrDXkhGh4lG8Y=
-X-Google-Smtp-Source: ABdhPJxRyoXygJc5bB2cmdhhMuSn2psgdfwedsE6Pgja+4dCJKxY6WCNKlGKWi5el/CYG8tO1bn0fw==
-X-Received: by 2002:a0c:fba2:: with SMTP id m2mr20867510qvp.5.1592834566597;
-        Mon, 22 Jun 2020 07:02:46 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id f203sm8109472qke.135.2020.06.22.07.02.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 07:02:46 -0700 (PDT)
-Subject: Re: RFC: KTAP documentation - expected messages
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     "Bird, Tim" <Tim.Bird@sony.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
- <5c0c1ad7-c3c6-39b9-0907-330241d40464@gmail.com>
-Message-ID: <d105f53a-5de6-6d14-f345-ceddc0191f8e@gmail.com>
-Date:   Mon, 22 Jun 2020 09:02:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 10:03:18 -0400
+Received: from 89-64-85-91.dynamic.chello.pl (89.64.85.91) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id add3d0c7dbc26dbb; Mon, 22 Jun 2020 16:03:16 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>
+Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
+Subject: [RFT][PATCH v2 4/4] ACPI: OSL: Implement acpi_os_map_memory_fast_path()
+Date:   Mon, 22 Jun 2020 16:02:44 +0200
+Message-ID: <39838855.e8c3ya2Sh3@kreacher>
+In-Reply-To: <2713141.s8EVnczdoM@kreacher>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <5c0c1ad7-c3c6-39b9-0907-330241d40464@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-21 17:49, Frank Rowand wrote:
-> On 2020-06-21 17:45, Frank Rowand wrote:
->> Tim Bird started a thread [1] proposing that he document the selftest result
->> format used by Linux kernel tests.  
->>
->> [1] https://lore.kernel.org/r/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com
->>
->> The issue of messages generated by the kernel being tested (that are not
->> messages directly created by the tests, but are instead triggered as a
->> side effect of the test) came up.  In this thread, I will call these
->> messages "expected messages".  Instead of sidetracking that thread with
->> a proposal to handle expected messages, I am starting this new thread.
->>
->> I implemented an API for expected messages that are triggered by tests
->> in the Devicetree unittest code, with the expectation that the specific
->> details may change when the Devicetree unittest code adapts the KUnit
->> API.  It seems appropriate to incorporate the concept of expected
->> messages in Tim's documentation instead of waiting to address the
->> subject when the Devicetree unittest code adapts the KUnit API, since
->> Tim's document may become the kernel selftest standard.
->>
->> Instead of creating a very long email containing multiple objects,
->> I will reply to this email with a separate reply for each of:
->>
->>   The "expected messages" API implemention and use can be from
->>   drivers/of/unittest.c in the mainline kernel.
->>
->>   of_unittest_expect - A proof of concept perl program to filter console
->>                        output containing expected messages output
->>
->>                        of_unittest_expect is also available by cloning
->>                        https://github.com/frowand/dt_tools.git
->>
->>   An example raw console output with timestamps and expect messages.
->>
->>   An example of console output processed by filter program
->>   of_unittest_expect to be more human readable.  The expected
->>   messages are not removed, but are flagged.
->>
->>   An example of console output processed by filter program
->>   of_unittest_expect to be more human readable.  The expected
->>   messages are removed instead of being flagged.
->>
-> 
-> reply 1/5
-> 
-> expected messages API:
-> 
->   - execute EXPECT_BEGIN(), reporting the expected message, before the
->     point when the message will occur
-> 
->   - execute EXPECT_END(), reporting the same expected message, after the
->     point when the message will occur
-> 
->   - EXPECT_BEGIN() may occur multiple times, before the corresponding
->     EXPECT_END()s, when a single test action may result in multiple
->     expected messages
-> 
->   - When multiple EXPECT_BEGIN()s are nested, the corresponding (matching)
->     EXPECT_END()s occur in the inverse order of the EXPECT_BEGIN()s.
-> 
->   - When the expected message contain a non-constant value, a place holder
->     can be placed in the message.  Current place holders are:
-> 
->      - <<int>>  an integer
->      - <<hex>>  a hexadecimal number
-> 
->      Suggested additional place holder(s) are:
-> 
->        - <<alpha>>  contiguous non white space characters 
-> 
->        I have avoided allowing regular expessions, because test frameworks
->        may implement their own filtering instead of relying on a generic
->        console output filter program.  There are multiple definitions for
->        regular expressions in different languages, thus it could be
->        difficult to set rules for a subset of regular expression usable
->        by all languages.
-> 
-> A preliminary version of an expected messages framework has been
-> implemented in the mainline drivers/of/unittest.c.  The implementation
-> is trivial, as seen below.
-> 
-> Note that the define of "pr_fmt()" pre-dates the implementation
-> of the EXPECT_BEGIN() and EXPECT_END() macros.
-> ---------------------------------------------------------------
-> 
-> #define pr_fmt(fmt) "### dt-test ### " fmt
-> 
-> 
-> /*
->  * Expected message may have a message level other than KERN_INFO.
->  * Print the expected message only if the current loglevel will allow
->  * the actual message to print.
->  *
->  * Do not use EXPECT_BEGIN() or EXPECT_END() for messages generated by
->  * pr_debug().
->  */
-> #define EXPECT_BEGIN(level, fmt, ...) \
->         printk(level pr_fmt("EXPECT \\ : ") fmt, ##__VA_ARGS__)
-> 
-> #define EXPECT_END(level, fmt, ...) \
->         printk(level pr_fmt("EXPECT / : ") fmt, ##__VA_ARGS__)
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-I included the pr_fmt() in EXPECT_BEGIN() and EXPECT_END(), because I
-defined the two macros within the unittest.c file.
+Add acpi_os_map_memory_fast_path() and set ACPI_USE_FAST_PATH_MAPPING
+to allow acpi_ex_system_memory_space_handler() to avoid unnecessary
+memory mapping and unmapping overhead by retaining all memory
+mappings created by it until the memory opregions associated with
+them go away.
 
-For a KTAP compliant generic implementation, I would change these
-to be diagnostic messages, so:
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/osl.c                | 65 +++++++++++++++++++++++--------
+ include/acpi/platform/aclinuxex.h |  4 ++
+ 2 files changed, 53 insertions(+), 16 deletions(-)
 
-  #define EXPECT_BEGIN(level, fmt, ...) \
-          printk(level "# EXPECT \\ : " fmt, ##__VA_ARGS__)
-  
-  #define EXPECT_END(level, fmt, ...) \
-          printk(level "# EXPECT / : " fmt, ##__VA_ARGS__)
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 28863d908fa8..89554ec9a178 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -306,21 +306,8 @@ static void acpi_unmap(acpi_physical_address pg_off, void __iomem *vaddr)
+ 		iounmap(vaddr);
+ }
+ 
+-/**
+- * acpi_os_map_iomem - Get a virtual address for a given physical address range.
+- * @phys: Start of the physical address range to map.
+- * @size: Size of the physical address range to map.
+- *
+- * Look up the given physical address range in the list of existing ACPI memory
+- * mappings.  If found, get a reference to it and return a pointer to it (its
+- * virtual address).  If not found, map it, add it to that list and return a
+- * pointer to it.
+- *
+- * During early init (when acpi_permanent_mmap has not been set yet) this
+- * routine simply calls __acpi_map_table() to get the job done.
+- */
+-void __iomem __ref
+-*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
++static void __iomem __ref *__acpi_os_map_iomem(acpi_physical_address phys,
++					       acpi_size size, bool fast_path)
+ {
+ 	struct acpi_ioremap *map;
+ 	void __iomem *virt;
+@@ -332,8 +319,12 @@ void __iomem __ref
+ 		return NULL;
+ 	}
+ 
+-	if (!acpi_permanent_mmap)
++	if (!acpi_permanent_mmap) {
++		if (WARN_ON(fast_path))
++			return NULL;
++
+ 		return __acpi_map_table((unsigned long)phys, size);
++	}
+ 
+ 	mutex_lock(&acpi_ioremap_lock);
+ 	/* Check if there's a suitable mapping already. */
+@@ -343,6 +334,11 @@ void __iomem __ref
+ 		goto out;
+ 	}
+ 
++	if (fast_path) {
++		mutex_unlock(&acpi_ioremap_lock);
++		return NULL;
++	}
++
+ 	map = kzalloc(sizeof(*map), GFP_KERNEL);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+@@ -370,6 +366,25 @@ void __iomem __ref
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 	return map->virt + (phys - map->phys);
+ }
++
++/**
++ * acpi_os_map_iomem - Get a virtual address for a given physical address range.
++ * @phys: Start of the physical address range to map.
++ * @size: Size of the physical address range to map.
++ *
++ * Look up the given physical address range in the list of existing ACPI memory
++ * mappings.  If found, get a reference to it and return a pointer representing
++ * its virtual address.  If not found, map it, add it to that list and return a
++ * pointer representing its virtual address.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) call
++ * __acpi_map_table() to obtain the mapping.
++ */
++void __iomem __ref *acpi_os_map_iomem(acpi_physical_address phys,
++				      acpi_size size)
++{
++	return __acpi_os_map_iomem(phys, size, false);
++}
+ EXPORT_SYMBOL_GPL(acpi_os_map_iomem);
+ 
+ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+@@ -378,6 +393,24 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_map_memory);
+ 
++/**
++ * acpi_os_map_memory_fast_path - Fast-path physical-to-virtual address mapping.
++ * @phys: Start of the physical address range to map.
++ * @size: Size of the physical address range to map.
++ *
++ * Look up the given physical address range in the list of existing ACPI memory
++ * mappings.  If found, get a reference to it and return a pointer representing
++ * its virtual address.  If not found, return NULL.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) log a
++ * warning and return NULL.
++ */
++void __ref *acpi_os_map_memory_fast_path(acpi_physical_address phys,
++					acpi_size size)
++{
++	return __acpi_os_map_iomem(phys, size, true);
++}
++
+ /* Must be called with mutex_lock(&acpi_ioremap_lock) */
+ static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
+ {
+diff --git a/include/acpi/platform/aclinuxex.h b/include/acpi/platform/aclinuxex.h
+index e13f364d6c69..89c387449425 100644
+--- a/include/acpi/platform/aclinuxex.h
++++ b/include/acpi/platform/aclinuxex.h
+@@ -143,6 +143,10 @@ void acpi_os_release_unused_mappings(void);
+ 
+ #define ACPI_USE_DEFERRED_UNMAPPING
+ 
++void *acpi_os_map_memory_fast_path(acpi_physical_address where, acpi_size length);
++
++#define ACPI_USE_FAST_PATH_MAPPING
++
+ #endif				/* __KERNEL__ */
+ 
+ #endif				/* __ACLINUXEX_H__ */
+-- 
+2.26.2
 
-This also fixes the first issue in the "Issues" list below.
 
--Frank
 
-> 
-> 
-> 
-> Example 1 of the API use, single message:
-> -----------------------------------------
-> 
->         EXPECT_BEGIN(KERN_INFO,
->                      "OF: /testcase-data/phandle-tests/consumer-a: could not find phandle");
-> 
->         rc = of_parse_phandle_with_args(np, "phandle-list-bad-phandle",
->                                         "#phandle-cells", 0, &args);
-> 
->         EXPECT_END(KERN_INFO,
->                    "OF: /testcase-data/phandle-tests/consumer-a: could not find phandle");
-> 
-> 
-> Example 2 of the API use, two messages,
-> "<<int>>" placeholder matches any integer:
-> ------------------------------------------
-> 
->         /*
->          * messages are the result of the probes, after the
->          * driver is registered
->          */
-> 
->         EXPECT_BEGIN(KERN_INFO,
->                      "GPIO line <<int>> (line-B-input) hogged as input\n");
-> 
->         EXPECT_BEGIN(KERN_INFO,
->                      "GPIO line <<int>> (line-A-input) hogged as input\n");
-> 
->         ret = platform_driver_register(&unittest_gpio_driver);
->         if (unittest(ret == 0, "could not register unittest gpio driver\n"))
->                 return;
-> 
->         EXPECT_END(KERN_INFO,
->                    "GPIO line <<int>> (line-A-input) hogged as input\n");
->         EXPECT_END(KERN_INFO,
->                    "GPIO line <<int>> (line-B-input) hogged as input\n");
-> 
-> Subtle flow of control issue: the two EXPECT_END() are not executed if
-> platform_driver_register() fails.  The two expected messages will not
-> be printed, but the filter tool (of_unittest_expect) will not report this
-> as an error because of_unittest_expect does not search for the messages
-> until the EXPEND_END() output is encountered.
-> 
-> One could argue that this is correct behavior because unittest() will print
-> the error that platform_driver_register() failed.  The "expected" messages
-> are not expected if the register fails.
-> 
-> One could equally well argue that the two EXPECT_END() should execute
-> before unittest() checks the value of ret, so the missing messages will
-> be reported as an error by of_unittest_expect.
-> 
-> But that is a discussion that should occur in the context of whether
-> drivers/of/unittest.c has a coding error, not in the context of how
-> to implement the expected messages framework.
-> 
-> 
-> goals:
-> 
->   - The console output should be human readable and easy to parse.
->     Have "\" in the expect begin and a matching "/" in the expect end
->     is intended to make it easier to visualize pairs.
-> 
->   - The console output should be machine parsable.
-> 
-> 
-> Design alternate choices:
-> 
->   - Expect message nesting:
->      1) Nested expect messages place the "\" in the same column.
->      2) For each nested expect message, indent the "\" by one more column
->         for each level of nesting.
-> 
->     Chose 1.  This keeps the EXPECT_BEGIN() and EXPECT_END() macros very
->     simple, at the expense of the output being less human readable in the
->     raw log.
-> 
->     The raw log is already not very readable, and I would expect the normal
->     use case would be using a filter program, such as of_unittest_expect,
->     to handle the readability issue.
-> 
-> 
-> Issues:
-> 
->   - The EXPECT_BEGIN() and EXPECT_END() macros use printk() for output.
->     printk() prefixes the output with the value of the pr_fmt() macro.
->     This means the filter program must be able to deal with different
->     pr_fmt() strings being incorporated in the expect messages that
->     are in different source files.  The unittest.c pr_fmt() value is
->     currently hard coded in the of_unittest_expect filter program.
-> 
->   - The output of the of_unittest_expect filter program prepends several
->     columns of data at the beginning of the resulting filtered data.  The
->     TAP format does not expect these extra columns.
-> 
->     The prepended data is very important for making the report easily
->     read by humans.
-> 
->     1) It will be trivial to add an of_unittest_expect "--tap-out" option
->        to not add the prepended data, so that normal TAP programs can use
->        the output from of_unittest_expect.
-> 
->     2) The "--tap-out" option could also create a TAP "test line" reporting
->        an "ok" for expected message detected and "not ok" if an expected
->        message is not detected.
-> 
->        This would also require modifying the "test plan" line to change
->        the number of tests.
-> 
 
