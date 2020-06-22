@@ -2,122 +2,97 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D91C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78A852075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369762075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jEazJJyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgFVTSy (ORCPT
+        id S1728344AbgFVTTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:18:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:65396 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgFVTSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:18:53 -0400
-IronPort-SDR: wrrSBOPmd16Q1WVpsKl6gCnksCDNcI2K4n6bbk+3Sdw9iZXUWzqNpWfF2YEno758VxMJoKNEUg
- AAyyGUgw0egA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142104136"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="142104136"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 12:18:52 -0700
-IronPort-SDR: YVmGmOk4LxL2JOfJJgRpdCtim8lytnwabCI48Si0wsEpZcel5g8mmnT70/lza4l6ki1cS5jCpe
- 8nU3TqECXK3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="478491690"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Jun 2020 12:18:51 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86/mmu: Don't put invalid SPs back on the list of active pages
-Date:   Mon, 22 Jun 2020 12:18:50 -0700
-Message-Id: <20200622191850.8529-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 22 Jun 2020 15:19:08 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44794 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgFVTTF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:19:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MJJ3q7030177;
+        Mon, 22 Jun 2020 14:19:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592853544;
+        bh=4Uc57vnU9L76B5vi4WPRq81bboaPP34jgfbbQ+MxC3w=;
+        h=From:To:CC:Subject:Date;
+        b=jEazJJydbIUPSsGXDFDfIJRK3UoMRkk35oUQzNujT5acEcNsX6TNMArSA2lwMiTTO
+         zpoVhDSlBLq86GI7EcCT1izoFhaCfHGB5E66dO+gj7xbGZA0vVrRWQmszrz2I2I3bR
+         xSrLxuL1OpCLcmN6ellUgr2D/FLFyE74+E+uyaDo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MJJ3kN042288
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 14:19:03 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
+ Jun 2020 14:19:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 22 Jun 2020 14:19:03 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MJJ3xi125356;
+        Mon, 22 Jun 2020 14:19:03 -0500
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
+CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <sspatil@android.com>
+Subject: [PATCH v13 0/4] Add JEITA properties and introduce the bq2515x charger
+Date:   Mon, 22 Jun 2020 14:18:33 -0500
+Message-ID: <20200622191837.9326-1-r-rivera-matos@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delete a shadow page from the invalidation list instead of throwing it
-back on the list of active pages when it's a root shadow page with
-active users.  Invalid active root pages will be explicitly freed by
-mmu_free_root_page() when the root_count hits zero, i.e. they don't need
-to be put on the active list to avoid leakage.
+This patchset adds additional health properties to the power_supply header.
+These additional properties are taken from the JEITA specification. This
+patchset also introduces the bq2515x family of charging ICs.
 
-Use sp->role.invalid to detect that a shadow page has already been
-zapped, i.e. is not on a list.
+Dan Murphy (2):
+  power_supply: Add additional health properties to the header
+  dt-bindings: power: Convert battery.txt to battery.yaml
 
-WARN if an invalid page is encountered when zapping pages, as it should
-now be impossible.
+Ricardo Rivera-Matos (2):
+  dt-bindings: power: Add the bindings for the bq2515x family of
+    chargers.
+  power: supply: bq25150 introduce the bq25150
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu/mmu.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ Documentation/ABI/testing/sysfs-class-power   |    3 +-
+ .../bindings/power/supply/battery.txt         |   83 +-
+ .../bindings/power/supply/battery.yaml        |  139 ++
+ .../bindings/power/supply/bq2515x.yaml        |   93 ++
+ drivers/power/supply/Kconfig                  |   13 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bq2515x_charger.c        | 1158 +++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c     |    3 +
+ include/linux/power_supply.h                  |    3 +
+ 9 files changed, 1414 insertions(+), 82 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+ create mode 100644 drivers/power/supply/bq2515x_charger.c
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index fdd05c233308..fa5bd3f987dd 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2757,10 +2757,13 @@ static bool __kvm_mmu_prepare_zap_page(struct kvm *kvm,
- 	if (!sp->root_count) {
- 		/* Count self */
- 		(*nr_zapped)++;
--		list_move(&sp->link, invalid_list);
-+		if (sp->role.invalid)
-+			list_add(&sp->link, invalid_list);
-+		else
-+			list_move(&sp->link, invalid_list);
- 		kvm_mod_used_mmu_pages(kvm, -1);
- 	} else {
--		list_move(&sp->link, &kvm->arch.active_mmu_pages);
-+		list_del(&sp->link);
- 
- 		/*
- 		 * Obsolete pages cannot be used on any vCPUs, see the comment
-@@ -5732,12 +5735,11 @@ static void kvm_zap_obsolete_pages(struct kvm *kvm)
- 			break;
- 
- 		/*
--		 * Skip invalid pages with a non-zero root count, zapping pages
--		 * with a non-zero root count will never succeed, i.e. the page
--		 * will get thrown back on active_mmu_pages and we'll get stuck
--		 * in an infinite loop.
-+		 * Invalid pages should never land back on the list of active
-+		 * pages.  Skip the bogus page, otherwise we'll get stuck in an
-+		 * infinite loop if the page gets put back on the list (again).
- 		 */
--		if (sp->role.invalid && sp->root_count)
-+		if (WARN_ON(sp->role.invalid))
- 			continue;
- 
- 		/*
-@@ -6015,7 +6017,7 @@ void kvm_mmu_zap_all(struct kvm *kvm)
- 	spin_lock(&kvm->mmu_lock);
- restart:
- 	list_for_each_entry_safe(sp, node, &kvm->arch.active_mmu_pages, link) {
--		if (sp->role.invalid && sp->root_count)
-+		if (WARN_ON(sp->role.invalid))
- 			continue;
- 		if (__kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list, &ign))
- 			goto restart;
 -- 
-2.26.0
+2.27.0
 
