@@ -2,82 +2,172 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D71DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F85C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04BCB206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592854537;
-	bh=QfRYrK8z5849Hl/Iv9wWsynxoV1oaehOiifKZ4mfpNY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2vDMaUJU58q0DEUlN63NSlh/aWa6tbufo7mBstrDJe04L107ZxPpjw9H2+zDFyjex
-	 4Dm7nLnlE8E1u81wD9PhisznS71KkPuXlsDTWFaB8PnOO7rk0xpS/uJitke4gUqkxf
-	 ZePC8I1D7ONQ66GP52BYKyEQDKWHw5F1+DQ6fhsE=
+	by mail.kernel.org (Postfix) with ESMTP id 5EEE220767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:36:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XbZZVsKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgFVTff (ORCPT
+        id S1728405AbgFVTgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728143AbgFVTff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:35:35 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB12A206E2;
-        Mon, 22 Jun 2020 19:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592854535;
-        bh=QfRYrK8z5849Hl/Iv9wWsynxoV1oaehOiifKZ4mfpNY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JfokhTk1gxTrybajXHO0w4B3ciBNWwU36SoEDCyE/+X6vK5Et00KAkjVxKNN0XkgA
-         W8G1f60AQ7oE2E7AwqAtU5bKVib0D7X1scKH4ZmxBAWYF9E55FYjVEoj7/qyFR74V7
-         bGedwatZMKBKP00o8oIw6WbbODkDwYbay9WLC3tw=
-Date:   Mon, 22 Jun 2020 12:35:33 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH] [net] dcb_doit: remove redundant skb check
-Message-ID: <20200622123533.4fd450b6@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200621165657.9814-1-gaurav1086@gmail.com>
-References: <20200621165657.9814-1-gaurav1086@gmail.com>
+        Mon, 22 Jun 2020 15:36:20 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16392 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbgFVTgT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:36:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef108270000>; Mon, 22 Jun 2020 12:36:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 12:36:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 12:36:19 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
+ 2020 19:36:13 +0000
+Subject: Re: [PATCH 13/16] mm: support THP migration to device private memory
+To:     Zi Yan <ziy@nvidia.com>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
+ <20200619215649.32297-14-rcampbell@nvidia.com>
+ <F1872509-3B1F-4A8A-BFF5-E4D44E451920@nvidia.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <b6eed976-c515-72d6-a7be-2296cab8f0d4@nvidia.com>
+Date:   Mon, 22 Jun 2020 12:36:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <F1872509-3B1F-4A8A-BFF5-E4D44E451920@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592854567; bh=k92wmBgrGAE346s5tJGKtF1T6WINWYI3KFBqOeO8Nlw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=XbZZVsKWFDMXu+mngjFYiRn2RbQAIcVJJlSDUvc/OgLFsfWagoAzSycdRPS23bc+u
+         90cSRi4HCzcajweccikNKZxCcES+coy0DPkVoindh/tvK5sDM3W7s35U+bSdDmOWtG
+         NUmEHT+sZ8dRU9gRd8hVyhwMbe/dIXf2MJIlLzMb+79CGSPHSCVdY6IelcEL8R0Ul/
+         1aGjl+A5NgFU9OVnK42g+u+Gq29eihRRkGlXbO5YE/gN3yzCqijZe0sHWBN0hzB/DP
+         vJiXwvziXSBB31zCiRD/2WvlgYOdEZlyYGFb33xirIoc2J6wqlsqpKxoo0L7oCqA7S
+         hPj1k8FBFDMWg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 21 Jun 2020 12:56:28 -0400 Gaurav Singh wrote:
-> Remove the redundant null check for skb.
+
+On 6/21/20 4:20 PM, Zi Yan wrote:
+> On 19 Jun 2020, at 17:56, Ralph Campbell wrote:
 > 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+>> Support transparent huge page migration to ZONE_DEVICE private memory.
+>> A new flag (MIGRATE_PFN_COMPOUND) is added to the input PFN array to
+>> indicate the huge page was fully mapped by the CPU.
+>> Export prep_compound_page() so that device drivers can create huge
+>> device private pages after calling memremap_pages().
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> ---
+>>   include/linux/migrate.h |   1 +
+>>   include/linux/mm.h      |   1 +
+>>   mm/huge_memory.c        |  30 ++++--
+>>   mm/internal.h           |   1 -
+>>   mm/memory.c             |  10 +-
+>>   mm/memremap.c           |   9 +-
+>>   mm/migrate.c            | 226 ++++++++++++++++++++++++++++++++--------
+>>   mm/page_alloc.c         |   1 +
+>>   8 files changed, 226 insertions(+), 53 deletions(-)
+>>
+>> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+>> index 3e546cbf03dd..f6a64965c8bd 100644
+>> --- a/include/linux/migrate.h
+>> +++ b/include/linux/migrate.h
+>> @@ -166,6 +166,7 @@ static inline int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+>>   #define MIGRATE_PFN_MIGRATE	(1UL << 1)
+>>   #define MIGRATE_PFN_LOCKED	(1UL << 2)
+>>   #define MIGRATE_PFN_WRITE	(1UL << 3)
+>> +#define MIGRATE_PFN_COMPOUND	(1UL << 4)
+>>   #define MIGRATE_PFN_SHIFT	6
+>>
+>>   static inline struct page *migrate_pfn_to_page(unsigned long mpfn)
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index dc7b87310c10..020b9dd3cddb 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -932,6 +932,7 @@ static inline unsigned int page_shift(struct page *page)
+>>   }
+>>
+>>   void free_compound_page(struct page *page);
+>> +void prep_compound_page(struct page *page, unsigned int order);
+>>
+>>   #ifdef CONFIG_MMU
+>>   /*
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 78c84bee7e29..25d95f7b1e98 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -1663,23 +1663,35 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>>   	} else {
+>>   		struct page *page = NULL;
+>>   		int flush_needed = 1;
+>> +		bool is_anon = false;
+>>
+>>   		if (pmd_present(orig_pmd)) {
+>>   			page = pmd_page(orig_pmd);
+>> +			is_anon = PageAnon(page);
+>>   			page_remove_rmap(page, true);
+>>   			VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
+>>   			VM_BUG_ON_PAGE(!PageHead(page), page);
+>>   		} else if (thp_migration_supported()) {
+>>   			swp_entry_t entry;
+>>
+>> -			VM_BUG_ON(!is_pmd_migration_entry(orig_pmd));
+>>   			entry = pmd_to_swp_entry(orig_pmd);
+>> -			page = pfn_to_page(swp_offset(entry));
+>> +			if (is_device_private_entry(entry)) {
+>> +				page = device_private_entry_to_page(entry);
+>> +				is_anon = PageAnon(page);
+>> +				page_remove_rmap(page, true);
+>> +				VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
+>> +				VM_BUG_ON_PAGE(!PageHead(page), page);
+>> +				put_page(page);
+> 
+> Why do you hide this code behind thp_migration_supported()? It seems that you just need
+> pmd swap entry not pmd migration entry. Also the condition is not consistent with the code
+> in __handle_mm_fault(), in which you handle is_device_private_entry() directly without
+> checking thp_migration_support().
 
-Thanks for the patch, it looks correct, but could you describe your
-proof / reasoning based on which this change is correct?
+Good point, I think "else if (thp_migration_supported())" should be
+"else if (is_pmd_migration_entry(orig_pmd))" since if the PMD *is*
+a device private or migration entry, then it should be handled and the
+VM_BUG_ON() should be that thp_migration_supported() is true
+(or maybe remove the VM_BUG_ON?).
 
-Please post non-bug fixes like this with a [net-next] rather than [net]
-tag (https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html).
+> Do we need to support split_huge_pmd() if a page is migrated to device? Any new code
+> needed in split_huge_pmd()?
 
-> diff --git a/net/dcb/dcbnl.c b/net/dcb/dcbnl.c
-> index d2a4553bcf39..84dde5a2066e 100644
-> --- a/net/dcb/dcbnl.c
-> +++ b/net/dcb/dcbnl.c
-> @@ -1736,7 +1736,7 @@ static int dcb_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
->  	struct net_device *netdev;
->  	struct dcbmsg *dcb = nlmsg_data(nlh);
->  	struct nlattr *tb[DCB_ATTR_MAX + 1];
-> -	u32 portid = skb ? NETLINK_CB(skb).portid : 0;
-> +	u32 portid = NETLINK_CB(skb).portid;
->  	int ret = -EINVAL;
->  	struct sk_buff *reply_skb;
->  	struct nlmsghdr *reply_nlh = NULL;
-
+I was thinking that any CPU usage of the device private page would cause it to be
+migrated back to system memory as a whole PMD/PUD page but I'll double check.
+At least there should be a check that the page isn't a device private page.
