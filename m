@@ -2,227 +2,111 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2B0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8F4E20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:01:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M/UXIXyc"
+	by mail.kernel.org (Postfix) with ESMTP id 8189420767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbgFVTBG (ORCPT
+        id S1730680AbgFVTBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:01:06 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42304 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730309AbgFVS7e (ORCPT
+        Mon, 22 Jun 2020 15:01:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22622 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730020AbgFVTBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:59:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxQQT024911;
-        Mon, 22 Jun 2020 13:59:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592852366;
-        bh=KO46+BZO9FK1L9LeP+DVFgDYwDa3llKlLNQ5IXCVyUQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=M/UXIXycg/+/us1v6xgCV1Ux7YnF3B1eSC+IjhHzB5B7ENqMpdnk1SNJErXMSsedP
-         ence5bouNf1N7jC3J0ArGaT00jJ/gLOMqsZd16dDSWdQLjvhyTVQKDJdferi3E7Rtf
-         yLnlxAJea9eB4ck+YghPzKfxlABti99W/HV+ZkwE=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MIxQ9Q029795
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 13:59:26 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Jun 2020 13:59:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 22 Jun 2020 13:59:25 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxP5P025102;
-        Mon, 22 Jun 2020 13:59:25 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v29 04/16] dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
-Date:   Mon, 22 Jun 2020 13:59:07 -0500
-Message-ID: <20200622185919.2131-5-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200622185919.2131-1-dmurphy@ti.com>
-References: <20200622185919.2131-1-dmurphy@ti.com>
+        Mon, 22 Jun 2020 15:01:34 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MIWJxZ122180;
+        Mon, 22 Jun 2020 15:01:32 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31tyvucp16-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 15:01:32 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05MIWe11122980;
+        Mon, 22 Jun 2020 15:01:32 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31tyvucp0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 15:01:32 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MJ046U020167;
+        Mon, 22 Jun 2020 19:01:31 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma05wdc.us.ibm.com with ESMTP id 31sa38htam-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 19:01:31 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MJ1SlX18350440
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 19:01:28 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 396A1BE054;
+        Mon, 22 Jun 2020 19:01:30 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A52DBBE053;
+        Mon, 22 Jun 2020 19:01:28 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.110.135])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 22 Jun 2020 19:01:28 +0000 (GMT)
+Subject: Re: [PATCH v2] ima: move APPRAISE_BOOTPARAM dependency on ARCH_POLICY
+ to runtime
+To:     Bruno Meneguele <bmeneg@redhat.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zohar@linux.ibm.com, erichte@linux.ibm.com, nayna@linux.ibm.com,
+        stable@vger.kernel.org
+References: <20200622172754.10763-1-bmeneg@redhat.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <043e52d4-6835-c2c4-bc9d-d36ddb3db0e9@linux.vnet.ibm.com>
+Date:   Mon, 22 Jun 2020 15:01:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200622172754.10763-1-bmeneg@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-22_10:2020-06-22,2020-06-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ clxscore=1011 mlxlogscore=999 spamscore=0 mlxscore=0 malwarescore=0
+ adultscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006220122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
-LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
-can control RGB LEDs individually or as part of a control bank group.
-These devices have the ability to adjust the mixing control for the RGB
-LEDs to obtain different colors independent of the overall brightness of
-the LED grouping.
 
-Datasheet:
-http://www.ti.com/lit/ds/symlink/lp5012.pdf
-http://www.ti.com/lit/ds/symlink/lp5024.pdf
-http://www.ti.com/lit/ds/symlink/lp5036.pdf
+On 6/22/20 1:27 PM, Bruno Meneguele wrote:
+> IMA_APPRAISE_BOOTPARAM has been marked as dependent on !IMA_ARCH_POLICY in
+> compile time, enforcing the appraisal whenever the kernel had the arch
+> policy option enabled.
+>
+> However it breaks systems where the option is actually set but the system
+> wasn't booted in a "secure boot" platform. In this scenario, anytime the
+> an appraisal policy (i.e. ima_policy=appraisal_tcb) is used it will be
+> forced, giving no chance to the user set the 'fix' state (ima_appraise=fix)
+> to actually measure system's files.
+>
+> This patch remove this compile time dependency and move it to a runtime
+> decision, based on the arch policy loading failure/success.
 
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../devicetree/bindings/leds/leds-lp50xx.yaml | 130 ++++++++++++++++++
- 1 file changed, 130 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+Thanks for looking at this.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-new file mode 100644
-index 000000000000..de5225b54a45
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-@@ -0,0 +1,130 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-lp50xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LED driver for LP50XX RGB LED from Texas Instruments.
-+
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
-+
-+description: |
-+  The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
-+  a LED group or control them individually.
-+
-+  The difference in these RGB LED drivers is the number of supported RGB
-+  modules.
-+
-+  For more product information please see the link below:
-+  http://www.ti.com/lit/ds/symlink/lp5012.pdf
-+  http://www.ti.com/lit/ds/symlink/lp5024.pdf
-+  http://www.ti.com/lit/ds/symlink/lp5036.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,lp5009
-+      - ti,lp5012
-+      - ti,lp5018
-+      - ti,lp5024
-+      - ti,lp5030
-+      - ti,lp5036
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+      I2C slave address
-+      lp5009/12 - 0x14, 0x15, 0x16, 0x17
-+      lp5018/24 - 0x28, 0x29, 0x2a, 0x2b
-+      lp5030/36 - 0x30, 0x31, 0x32, 0x33
-+
-+  enable-gpios:
-+    maxItems: 1
-+    description: GPIO pin to enable/disable the device.
-+
-+  vled-supply:
-+    description: LED supply.
-+
-+patternProperties:
-+  '^multi-led@[0-9a-f]$':
-+    type: object
-+    allOf:
-+      - $ref: leds-class-multicolor.yaml#
-+    properties:
-+      reg:
-+        minItems: 1
-+        maxItems: 12
-+        description:
-+          This property denotes the LED module number(s) that is used on the
-+          for the child node.  The LED modules can either be used stand alone
-+          or grouped into a module bank.
-+
-+    patternProperties:
-+      "(^led-[0-9a-f]$|led)":
-+        type: object
-+        $ref: common.yaml#
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+   #include <dt-bindings/gpio/gpio.h>
-+   #include <dt-bindings/leds/common.h>
-+
-+   i2c {
-+       #address-cells = <1>;
-+       #size-cells = <0>;
-+
-+       led-controller@14 {
-+           compatible = "ti,lp5009";
-+           reg = <0x14>;
-+           #address-cells = <1>;
-+           #size-cells = <0>;
-+           enable-gpios = <&gpio1 16>;
-+
-+           multi-led@1 {
-+               #address-cells = <1>;
-+               #size-cells = <0>;
-+               reg = <0x1>;
-+               color = <LED_COLOR_ID_MULTI>;
-+               function = LED_FUNCTION_CHARGING;
-+
-+               led-0 {
-+                   color = <LED_COLOR_ID_RED>;
-+               };
-+
-+               led-1 {
-+                   color = <LED_COLOR_ID_GREEN>;
-+               };
-+
-+               led-2 {
-+                   color = <LED_COLOR_ID_BLUE>;
-+               };
-+          };
-+
-+          multi-led@2 {
-+            #address-cells = <1>;
-+            #size-cells = <2>;
-+            reg = <0x2 0x3 0x5>;
-+            color = <LED_COLOR_ID_MULTI>;
-+            function = LED_FUNCTION_STANDBY;
-+
-+            led-6 {
-+              color = <LED_COLOR_ID_RED>;
-+            };
-+
-+            led-7 {
-+              color = <LED_COLOR_ID_GREEN>;
-+            };
-+
-+            led-8 {
-+              color = <LED_COLOR_ID_BLUE>;
-+            };
-+         };
-+       };
-+    };
-+
-+...
--- 
-2.26.2
+For arch specific policies, kernel signature verification is enabled 
+based on the secure boot state of the system. Perhaps, enforce the 
+appraisal as well based on if secure boot is enabled.
+
+Thanks & Regards,
+
+     - Nayna
 
