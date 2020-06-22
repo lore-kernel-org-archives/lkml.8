@@ -2,190 +2,241 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B823C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53609C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D562168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257982415E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="NLpefLTK"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NDuQiFqb";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KY6B+gHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbgFVD0M (ORCPT
+        id S1731131AbgFVD0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 23:26:12 -0400
-Received: from mga17.intel.com ([192.55.52.151]:27980 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbgFVD0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 23:26:11 -0400
-IronPort-SDR: bmIk91UZWKys0JZx9As6hPVuUEOa/Hq08eB/ExH/tvV98oZ3xB8nfDwJ1Pk2Dwq4g4lRBTrHa9
- kBe1wbvlVFwg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="123925620"
-X-IronPort-AV: E=Sophos;i="5.75,265,1589266800"; 
-   d="scan'208";a="123925620"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 20:26:10 -0700
-IronPort-SDR: dojuEtMcbp0timVzJaZRCgZEJlcpaKOeHV4s788drpl1snyuElalFqNRAcE8ST7sTco9O2P7v8
- zPkQwBvAngrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,265,1589266800"; 
-   d="scan'208";a="300702596"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Jun 2020 20:26:09 -0700
-Received: from orsmsx153.amr.corp.intel.com (10.22.226.247) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 21 Jun 2020 20:26:09 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX153.amr.corp.intel.com (10.22.226.247) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 21 Jun 2020 20:26:09 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 21 Jun 2020 20:26:09 -0700
+        Sun, 21 Jun 2020 23:26:53 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:31684 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731108AbgFVD0w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 23:26:52 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05M3AS3C000552;
+        Sun, 21 Jun 2020 20:26:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=CZFfsnf5aAqrdLTOIdCkatcZSl4a2uguLxKdN9dQ718=;
+ b=NDuQiFqbh+ZWjA//cOYuWcPFpz4OVTpVUS8ZVQ+rRwlhxNfhT2Z/FPQm/QcqqkivPC6Z
+ H1PzJL/l+gYyrvpWOhx6QD0Z6Oo1gWCqPsYobdNJ5ThTEgS84slzDzcD7XrdABUdz6ig
+ 8PBC5693qaLeX4uO8Y2IG8ev6lLjC9yw7DQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 31sg6s5t6b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sun, 21 Jun 2020 20:26:41 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sun, 21 Jun 2020 20:26:41 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WDXaN5XodQBEJoRzyznIyji1I3pVn4jfQDejzxOnyDXdG9aXCMktLRtPtMcquirWwo3insp/5v9BfMYW40ppIhW+OtKFbD+cHEzmkIW+y8pAIKTVvNzq7xc5i4Wo4QyHbnwdmIKiVBIdg4QHT95C94cto3kaK3xiFTq0LrHkp6VF8IPMlHKDx/Thiz9Yq+Mrjo4ckqamQffkMtsP7LIgTmyk2KodasJWcZrG56OOVjEOaprmfx8m58aUo7UN84di/WbM2+bIajnG/wP9nrXH71pqOgVyyodUxsg3DZwF3vlBITmqC7pJCu7fw4e6NMD6e2x3M0LwHS+aiK8qzkpbQw==
+ b=doNZ+viHmprdLHvW0c25r220dYSq4bT4CuN34wJCAbWq3XgCVcVO8K9mUg9mFJFE+QjAULv329OIulaiQN0LL0H5LxHYxbuKRJiSSPSr18NmWj2IstjqUj8blq3ypJ9PkN7fYse3umfUf7F80RqlTLvZHY3tqO5rpdjTIBrnE5YLRAcc/GdR9FhgkD1NUMjUPopkVoOCEApzmRch38y0asW76dLr/3cqIox0cUsKgPucwCanXJE2ZN8RjLJVCe6EdVolRxGs5yjd53RVwfpqvMBftTmHDVQppGhSK6GCMa0ghuUkpaQ07/LEpk4O+eh5x52GapCRYKHOIujHi9RkHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sH2VqMH0FqgtjEh7rUtdC/bZTexJu3eAM/P4WB/FOTE=;
- b=O+dTySjc9x3Yd0HGM+iFWxK+5p4WChEoYFlSlAxePFfYBHr/2om1gvHmChEP+nu+P9DLarClWb1J5Infeu9hInkdyJ2/E1Jdpk83aOwDuyhfj1vEcXn0FpRQRksSPYzJzZk6FVtMaQjPf3HIf42XGCLGEd3BpyupusbwMc6Mr464Lf2vtk7Y7ynS4DXz+3VCA2F+yF6dQ3eFrSi2QjJM2qT2OoCwC71dvlc70tUWcTvrf0wU6NfehS1f8nYqNnzsuYqPeFS549rGayPXOOnSH96Vvm4gvmu7G4Zc25uKSt/1ZNuIQnB3gdVKaU5dtqOj3wz845LK3aN5zyfdIiDycw==
+ bh=CZFfsnf5aAqrdLTOIdCkatcZSl4a2uguLxKdN9dQ718=;
+ b=YmCzXDfYijJRvW9OJznALUOkt3UF2BoydS4mWzJf+ShMTd+erLfUHO50WHHYvuIQce75U01GlmmlcUkvHXcyTKCKJ4swNIPo07U7591WH3njogKZfTCpUO+z7oivBRyu2uqAREnrolrmNpd6LriG4+GX3MTWiduQwMWpeBAQxiU+D5bDlGpE6TY7X63N/a2W/i1DrOYEWbGAS/IQ982M/LsfFxpErCFNT/kscttWU5WBRRktj1r+GGvcFT+S6i7r/q/ZmTtWp0ZB+l+JAcv0d0+nliS33iGhkQOrZS95qsEZOZFTI5GHObjtXX+a3rtqE7P3tz8edXbOVgfKKhHA/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sH2VqMH0FqgtjEh7rUtdC/bZTexJu3eAM/P4WB/FOTE=;
- b=NLpefLTKnlASH8Kmgvd18859juB0vRNwJdBz0jqxvaUFMa2b44Ffkcg27BqY97YLA+edp6YSK59kkHR4shfOzUyjemYRebn9uqs3umWvOKKccSYD4F9Svz+3B/hhGp/BQ5pWIM5OChxcpVz+22g+ftYV5x3Xz4Ni1GOwZiqdLJ8=
-Received: from BN6PR11MB1953.namprd11.prod.outlook.com (2603:10b6:404:105::14)
- by BN6PR11MB1889.namprd11.prod.outlook.com (2603:10b6:404:104::13) with
+ bh=CZFfsnf5aAqrdLTOIdCkatcZSl4a2uguLxKdN9dQ718=;
+ b=KY6B+gHDfvEvA39V2gmqt7DbFoad7+f3tRQV9XxhrIIbfE5inTQbTleVLN/fsehlD9p5D8Iyvga6L80Njgdnh4VY11WqksEccIShU1QYb7n/AMy9CpGmKbhTS2Hgd3jaRiQU6UKxWV1ra3tHwWgBt6XfuTiQzp7AEb2rsTNlwFs=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2933.namprd15.prod.outlook.com (2603:10b6:a03:f6::26) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Mon, 22 Jun
- 2020 03:26:07 +0000
-Received: from BN6PR11MB1953.namprd11.prod.outlook.com
- ([fe80::55f9:3fed:cc3e:3855]) by BN6PR11MB1953.namprd11.prod.outlook.com
- ([fe80::55f9:3fed:cc3e:3855%12]) with mapi id 15.20.3109.026; Mon, 22 Jun
- 2020 03:26:07 +0000
-From:   "Sia, Jee Heng" <jee.heng.sia@intel.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "Mark Brown" <broonie@kernel.org>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
+ 2020 03:26:38 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 03:26:38 +0000
+Date:   Sun, 21 Jun 2020 20:26:35 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
         <clang-built-linux@googlegroups.com>
-Subject: RE: [PATCH] ASoC: Intel: KeemBay: Fix header guard
-Thread-Topic: [PATCH] ASoC: Intel: KeemBay: Fix header guard
-Thread-Index: AQHWREMIKPR/nB62fEmKfbmyAqTMIajkAQeQ
-Date:   Mon, 22 Jun 2020 03:26:07 +0000
-Message-ID: <BN6PR11MB1953F208A04F381A24B275D0DA970@BN6PR11MB1953.namprd11.prod.outlook.com>
-References: <20200617010232.23222-1-natechancellor@gmail.com>
-In-Reply-To: <20200617010232.23222-1-natechancellor@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.211]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0de18148-c12e-4f31-be6b-08d8165c0057
-x-ms-traffictypediagnostic: BN6PR11MB1889:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR11MB18897A1BD80F6F605B27F637DA970@BN6PR11MB1889.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:109;
-x-forefront-prvs: 0442E569BC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: isVjIsIneuYhhcQ2tPyuRfv190vvA4sq/c7EGmVpR+x75pNaKUV/NR3FS11FwuFBEfSTZaaZApzk6op7KY2eCqhBWt6RocreQdZDD1ikMRjf2jGh3YXJqlSdS7HZPpCv9NRprogDJrTqOdBqSdI7zC1rztiXifjPpkp5oWyCSeW8F86/KKBw8cv3x9rtM9jjOh5kdmS2qR6xBks7vVCy2hejMOfRO4l/Wg3BrUGFwLnFH4Shxb/OcFc9th1h4YG8o7sR7DmQNAUlTcleRy/+R6Wxwp5OrpA54lJTnPmBnQnldiinEQXSHPMmLC/5xPFbZJV1lG/Zx5JGKC+MCFtM8QYrZ+MpXeDwpWJloeYCvILNhnx/hHNg4PxygJfg4ltCIPFvwdAgMET+EG4TtGHF5A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB1953.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(39860400002)(376002)(136003)(110136005)(5660300002)(55016002)(9686003)(54906003)(6506007)(53546011)(2906002)(7696005)(4326008)(52536014)(66476007)(8676002)(478600001)(26005)(83380400001)(186003)(66556008)(8936002)(66446008)(64756008)(86362001)(71200400001)(316002)(33656002)(76116006)(966005)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: v4KsUMcTJPDrqoYrNbyGDFgVSPwR1CPlQ6Q4rJxHt2GnWVQ0mAehLC1ajoZPG1EXW6jOujacFTaxrXDhIGwWxCZIiic+tJrkRIH6EyX87Rwl5/UE4C5YLSXnh22CjjtbOZfV/OZCKUKJcGHMmYmpzNX7uftO6ERfuHbqoEbSe1dnitlqM7I72LQ70h5XvGw1Q9eeR5HDWDrN8j1moivv4oPJKe4TECZal+om+NLdnYrkDT255XWdeMsTibEjs35PYEuKfvgC755PnGFar37GkQecFocAwE+e19HG3MPcSoWOpgwHbKCcZHRTnbMj30YMwCb106QSOESDVG68Ce3eGfcQlS3yvCWmX0WPYUaQFhKYqXr9Z0ViGfrtJ7tXfy9F16tKwwHkKLAhpV/iAcJ9t0aR2NYr94BxgITdwknVy/Lb/0D8rqh4HoXl7o6NWrAwNttWTm0pDlpD4GDjgmoNMrQNnVpVTozuBUHBneZd6GI9Jgbl0b0EblX51BhrLKCe
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 3/5] mm: memcg/percpu: per-memcg percpu memory
+ statistics
+Message-ID: <20200622032635.GC293939@carbon.DHCP.thefacebook.com>
+References: <20200608230819.832349-1-guro@fb.com>
+ <20200608230819.832349-4-guro@fb.com>
+ <20200622014803.GA2916179@ubuntu-n2-xlarge-x86>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622014803.GA2916179@ubuntu-n2-xlarge-x86>
+X-ClientProxiedBy: BY5PR03CA0030.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::40) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0de18148-c12e-4f31-be6b-08d8165c0057
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 03:26:07.1118
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:aad7) by BY5PR03CA0030.namprd03.prod.outlook.com (2603:10b6:a03:1e0::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23 via Frontend Transport; Mon, 22 Jun 2020 03:26:37 +0000
+X-Originating-IP: [2620:10d:c090:400::5:aad7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 492e7a4f-9efe-4788-779b-08d8165c12ff
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2933:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB29331B82577B418137B33062BE970@BYAPR15MB2933.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:284;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WMc7xRs9VruRtLIsc2RTqv0oUBNqMHZz0J/MRykYVRBGxmO1FVqcXEfQqFgHARgakv6EQlLSI/7UrX2tVO6P6pPOEM7rrWgmaxaq0cW6g8PDTDHHiuMI0I+pfHBDiKa5dG21lGJXmGwvqXNRbBNP67BHQNWDgh8/Y1Q+JrwMd0jq+oiJXOSb56lpcdWix0kz//yF8ODXY/gaOmTPxQKLKD/k9BGMAl/BcfBrzjaIVPsnPYXD2H2Z7GCb8/Sg1QkgIX20kbonUBvTVf8F8B9D3Hyse44dLZjfy1isU6lryiZKoTdqjvk+Uvpy4uuRGTd6dHgxRRR2CeTxvG1asMpiY4JKfis2yfpaX1zF9fZ+Xbw+eTTEIwpmGhnssVMJeC6l
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39860400002)(396003)(136003)(366004)(33656002)(6506007)(9686003)(86362001)(7416002)(8676002)(5660300002)(66946007)(8936002)(66556008)(16526019)(186003)(66476007)(52116002)(7696005)(2906002)(55016002)(4326008)(1076003)(54906003)(83380400001)(316002)(478600001)(6916009)(21314003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Qd4F7OxXibuBG2uucAu3wW77fQzGhqIrTB/lJPt7YYfvhvv6aJxg29+dDm1Y04Wn5QlXrrvl/yjB7AdoFXlWR0s3IAb7IxlgEIuTnaKPs1oBOdyNFEUxVN1LPvyPQWw7y5NyOjMly/SX2HMb2UDu5w/Tzrl5BUKuOfdpsd/iw8cqOzeW/uh/CA73l/A9m/HBW5SZO/nj16Hby8/BCYrsffzRkipphWtp9HTEzRV8cbHnc7t9jCnEkKIRNb1mfNbe0B9uDNf4lqWZ2qivGqYDXDMVTl5ZuCrHMYdUFZFgKySevA7Si2WmTI1Gjk3ZGzF9QSTr6deJ0EKqLQaDPIBRpT7MHwtNWq97xNMV3GeZXfQLoCrGbgJ1VX+qi7L3GDColJwPglQymEttSNa/I78u3/6JM7wL+DG8HnHT/WhGOYOf4goi5JmjXUrWj2hruJ/H+6eF0GJHwz+6FNtnBwwdWfn7spF+aQj/bnxHL/R63Qv/zyBC0NuOY8a2OexKGZ6yykWlH5uV/p5qAU7MNB+CjA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 492e7a4f-9efe-4788-779b-08d8165c12ff
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 03:26:38.6720
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QWPQ2H5OqL3SjpnaRI7DIHGB8L7c+KE+kSfmc2gD9O38NHVABb4t5t3rLh8WcJeOZxiBP/+6YnB+u3Iq/AmjKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1889
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J0PPTV69yH/791bqUPlQGq7miXIU4Da+QeXiI11z/OJUF8kTvqnUj0i9YtR72pe7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2933
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-21_14:2020-06-19,2020-06-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 bulkscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ phishscore=0 spamscore=0 clxscore=1011 priorityscore=1501 suspectscore=1
+ impostorscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006220024
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me.
+On Sun, Jun 21, 2020 at 06:48:03PM -0700, Nathan Chancellor wrote:
+> On Mon, Jun 08, 2020 at 04:08:17PM -0700, Roman Gushchin wrote:
+> > Percpu memory can represent a noticeable chunk of the total
+> > memory consumption, especially on big machines with many CPUs.
+> > Let's track percpu memory usage for each memcg and display
+> > it in memory.stat.
+> > 
+> > A percpu allocation is usually scattered over multiple pages
+> > (and nodes), and can be significantly smaller than a page.
+> > So let's add a byte-sized counter on the memcg level:
+> > MEMCG_PERCPU_B. Byte-sized vmstat infra created for slabs
+> > can be perfectly reused for percpu case.
+> > 
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Acked-by: Dennis Zhou <dennis@kernel.org>
+> > ---
+> >  Documentation/admin-guide/cgroup-v2.rst |  4 ++++
+> >  include/linux/memcontrol.h              |  8 ++++++++
+> >  mm/memcontrol.c                         |  4 +++-
+> >  mm/percpu.c                             | 10 ++++++++++
+> >  4 files changed, 25 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> > index ce3e05e41724..7c1e784239bf 100644
+> > --- a/Documentation/admin-guide/cgroup-v2.rst
+> > +++ b/Documentation/admin-guide/cgroup-v2.rst
+> > @@ -1274,6 +1274,10 @@ PAGE_SIZE multiple when read back.
+> >  		Amount of memory used for storing in-kernel data
+> >  		structures.
+> >  
+> > +	  percpu
+> > +		Amount of memory used for storing per-cpu kernel
+> > +		data structures.
+> > +
+> >  	  sock
+> >  		Amount of memory used in network transmission buffers
+> >  
+> > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> > index eede46c43573..7ed3af71a6fb 100644
+> > --- a/include/linux/memcontrol.h
+> > +++ b/include/linux/memcontrol.h
+> > @@ -32,11 +32,19 @@ struct kmem_cache;
+> >  enum memcg_stat_item {
+> >  	MEMCG_SWAP = NR_VM_NODE_STAT_ITEMS,
+> >  	MEMCG_SOCK,
+> > +	MEMCG_PERCPU_B,
+> >  	/* XXX: why are these zone and not node counters? */
+> >  	MEMCG_KERNEL_STACK_KB,
+> >  	MEMCG_NR_STAT,
+> >  };
+> >  
+> > +static __always_inline bool memcg_stat_item_in_bytes(enum memcg_stat_item item)
+> > +{
+> > +	if (item == MEMCG_PERCPU_B)
+> > +		return true;
+> > +	return vmstat_item_in_bytes(item);
+> 
+> This patch is now in -next and this line causes a warning from clang,
+> which shows up in every translation unit that includes this header,
+> which is a lot:
+> 
+> include/linux/memcontrol.h:45:30: warning: implicit conversion from
+> enumeration type 'enum memcg_stat_item' to different enumeration type
+> 'enum node_stat_item' [-Wenum-conversion]
+>         return vmstat_item_in_bytes(item);
+>                ~~~~~~~~~~~~~~~~~~~~ ^~~~
+> 1 warning generated.
+> 
+> I assume this conversion is intentional; if so, it seems like expecting
+> a specific enum is misleading. Perhaps this should be applied on top?
 
-Thanks
-Regards
-Jee Heng
+Hi Nathan!
 
------Original Message-----
-From: Nathan Chancellor <natechancellor@gmail.com>=20
-Sent: Wednesday, June 17, 2020 9:03 AM
-To: Rojewski, Cezary <cezary.rojewski@intel.com>; Pierre-Louis Bossart <pie=
-rre-louis.bossart@linux.intel.com>; Liam Girdwood <liam.r.girdwood@linux.in=
-tel.com>; Jie Yang <yang.jie@linux.intel.com>; Mark Brown <broonie@kernel.o=
-rg>
-Cc: Sia, Jee Heng <jee.heng.sia@intel.com>; alsa-devel@alsa-project.org; li=
-nux-kernel@vger.kernel.org; clang-built-linux@googlegroups.com; Nathan Chan=
-cellor <natechancellor@gmail.com>
-Subject: [PATCH] ASoC: Intel: KeemBay: Fix header guard
+Yeah, these enums are kind of stacked on each other, so memcg_stat values
+extend node_stat values. And I think your patch is correct.
 
-Clang warns:
+I'm going to refresh the series with some small fixups. If you're not against
+it, I'll merge your patch into the corresponding patches.
 
- In file included from sound/soc/intel/keembay/kmb_platform.c:14:
- sound/soc/intel/keembay/kmb_platform.h:9:9: warning: 'KMB_PLATFORM_H_'
- is used as a header guard here, followed by #define of a different  macro =
-[-Wheader-guard]  #ifndef KMB_PLATFORM_H_
-         ^~~~~~~~~~~~~~~
- sound/soc/intel/keembay/kmb_platform.h:10:9: note: 'KMB_PLATFORMP_H_'
- is defined here; did you mean 'KMB_PLATFORM_H_'?
- #define KMB_PLATFORMP_H_
-         ^~~~~~~~~~~~~~~~
-         KMB_PLATFORM_H_
- 1 warning generated.
+And thank you for reporting the problem!
 
-Fix the typo so that the header guard works as intended.
-
-Fixes: c5477e966728 ("ASoC: Intel: Add KeemBay platform driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1053
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- sound/soc/intel/keembay/kmb_platform.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/intel/keembay/kmb_platform.h b/sound/soc/intel/keemb=
-ay/kmb_platform.h
-index 29600652d8f4..6bf221aa8fff 100644
---- a/sound/soc/intel/keembay/kmb_platform.h
-+++ b/sound/soc/intel/keembay/kmb_platform.h
-@@ -7,7 +7,7 @@
-  */
-=20
- #ifndef KMB_PLATFORM_H_
--#define KMB_PLATFORMP_H_
-+#define KMB_PLATFORM_H_
-=20
- #include <linux/bits.h>
- #include <linux/bitfield.h>
-
-base-commit: 27f70ec4fa0e0f419031f1b8d61b1a788244e313
---
-2.27.0
-
+> 
+> Cheers,
+> Nathan
+> 
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 2499f78cf32d..bddeb4ce7a4f 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -38,7 +38,7 @@ enum memcg_stat_item {
+>  	MEMCG_NR_STAT,
+>  };
+>  
+> -static __always_inline bool memcg_stat_item_in_bytes(enum memcg_stat_item item)
+> +static __always_inline bool memcg_stat_item_in_bytes(int item)
+>  {
+>  	if (item == MEMCG_PERCPU_B)
+>  		return true;
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 084ee1c17160..52d7961a24f0 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -211,7 +211,7 @@ enum node_stat_item {
+>   * measured in pages). This defines the API part, the internal representation
+>   * might be different.
+>   */
+> -static __always_inline bool vmstat_item_in_bytes(enum node_stat_item item)
+> +static __always_inline bool vmstat_item_in_bytes(int item)
+>  {
+>  	/*
+>  	 * Global and per-node slab counters track slab pages.
