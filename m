@@ -2,258 +2,210 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA37C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C39C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFF3020738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF1220738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G03qVrj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgFVOhB (ORCPT
+        id S1729419AbgFVOhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58206 "EHLO
+        Mon, 22 Jun 2020 10:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729359AbgFVOg7 (ORCPT
+        with ESMTP id S1729377AbgFVOhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:36:59 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EDEEC061795;
+        Mon, 22 Jun 2020 10:37:00 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A113C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:37:00 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k1so7664826pls.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t3k98uqLUbsbenoKJRmJ5jM5z4HxpBNQ2xj0GuTh8yY=;
+        b=G03qVrj55e7LDYdknFi4s2nL7rtTpCQUSF8Zz+JHlvm35ro+nr76bAY71hDYZfDiV3
+         Kxe2JLWOeu7dI7+SYPcHpTmhtrPTiSl37dj2XAVimZU+As5yL69FBik7532qj2qkDkMI
+         1mBEGupiWoWCKLNfF1bt2w00n6ArUTj6a0/1W3lFoCLLuUUFfEk1C/FqqCJ4Ob4D7CSW
+         UCMrILqg5ehc7EWeeyvVfp7+M8Di1MJcgG/UXWhYlgXYUzeoMxe+PVjEeLBbb6movnKu
+         meK5guSXva4vwkvKTYsQgS+QSTCuE+RrtznjxBAZkE0WQpnlr47NPUmNh9yixKVLmG2b
+         3vPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=t3k98uqLUbsbenoKJRmJ5jM5z4HxpBNQ2xj0GuTh8yY=;
+        b=kU2ZDfPL1Pvw4z3obopWrW/8lJMm49BfNw5AF6Av5fHpEgS3gwRaREX2hQfkjdRqyz
+         zz+uIpTAYWnZz3Bvqx5PXveiRlV4jVQW5UvUmilGPzY4rwtzLlpxa93YbNbaWkxuwbfr
+         5A8kRdPqUPFBIuxN5j/35o5r9ReNJDDwpFlD3WbGr1W5NFJ6a3DGSuMrWoDCyp2qTF6p
+         DKtYWdW99MAMEViTROXeHEnXLOyyLcv0PwTXa0xiSxgloHFOjbt2PFRYYjdvZUj8v4HV
+         /Y0xmBN2emUzsUAztvD8vUzYz/LBYc4L24b/Svj87F/MVn5TKBH0BB1wY4pKTZ5QlqKN
+         DL1Q==
+X-Gm-Message-State: AOAM533uW3AJvoFl1r/dGO8xOdE1OKXrp8eTrHRex0p5deTL5kCNmWGu
+        CFLRHHjztFXOEwo3QtJxsu8mkvzq
+X-Google-Smtp-Source: ABdhPJyCNc+L2udkdEKC2rn8aT3WoVSOZaAdBUTRBVsTyP8dPmR/8JqH97LXgot4aTcgALXvCGlJrA==
+X-Received: by 2002:a17:90a:be10:: with SMTP id a16mr17198525pjs.150.1592836619913;
         Mon, 22 Jun 2020 07:36:59 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id E0FB02A1D2C
-Subject: Re: [PATCH v3 2/2] media: vimc: Add a control to display info on test
- image
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        hverkuil@xs4all.nl
-References: <20200618190506.11892-1-kgupta@es.iitr.ac.in>
- <20200618190506.11892-3-kgupta@es.iitr.ac.in>
- <d62583ab-7dd3-9a37-c94d-99fae0f29357@collabora.com>
- <20200621203256.GA13040@kaaira-HP-Pavilion-Notebook>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <a8fb5c4c-4994-f53d-838d-0c10d796b997@collabora.com>
-Date:   Mon, 22 Jun 2020 16:36:54 +0200
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b4sm14509284pfg.75.2020.06.22.07.36.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 07:36:59 -0700 (PDT)
+Subject: Re: [tip: sched/urgent] sched: Fix RANDSTRUCT build fail
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Eric Biggers <ebiggers@kernel.org>, x86 <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <159178525684.17951.17825196124597318263.tip-bot2@tip-bot2>
+ <202006192008.337CB5212E@keescook>
+ <CAHk-=wgj17RR3zetey4fpbOxbC58A=jMt87bQ9QRe4QDnxE46w@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <86b83934-6498-28b0-8756-33254b900bc3@roeck-us.net>
+Date:   Mon, 22 Jun 2020 07:36:58 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200621203256.GA13040@kaaira-HP-Pavilion-Notebook>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAHk-=wgj17RR3zetey4fpbOxbC58A=jMt87bQ9QRe4QDnxE46w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 21.06.20 22:32, Kaaira Gupta wrote:
-> On Sat, Jun 20, 2020 at 12:05:28PM +0200, Dafna Hirschfeld wrote:
->> Hi, thanks for the patch
+On 6/20/20 9:32 AM, Linus Torvalds wrote:
+> On Fri, Jun 19, 2020 at 8:14 PM Kees Cook <keescook@chromium.org> wrote:
 >>
->> On 18.06.20 21:05, Kaaira Gupta wrote:
->>> Add a control in VIMC to display information such as the correct oder of
->>> colors for a given test pattern, brightness, hue, saturation, contrast
->>> and, width and height at sensor over test image; and display that
->>> information.
+>> On Wed, Jun 10, 2020 at 10:34:16AM -0000, tip-bot2 for Peter Zijlstra wrote:
+>>> The following commit has been merged into the sched/urgent branch of tip:
 >>>
->>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
->>> ---
->>>    drivers/media/test-drivers/vimc/Kconfig       |  2 +
->>>    drivers/media/test-drivers/vimc/vimc-common.h |  1 +
->>>    drivers/media/test-drivers/vimc/vimc-sensor.c | 47 ++++++++++++++++++-
->>>    3 files changed, 49 insertions(+), 1 deletion(-)
+>>> Commit-ID:     bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
+>>> Gitweb:        https://git.kernel.org/tip/bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
+>>> Author:        Peter Zijlstra <peterz@infradead.org>
+>>> AuthorDate:    Wed, 10 Jun 2020 12:14:09 +02:00
+>>> Committer:     Peter Zijlstra <peterz@infradead.org>
+>>> CommitterDate: Wed, 10 Jun 2020 12:30:19 +02:00
 >>>
->>> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
->>> index 4068a67585f9..da4b2ad6e40c 100644
->>> --- a/drivers/media/test-drivers/vimc/Kconfig
->>> +++ b/drivers/media/test-drivers/vimc/Kconfig
->>> @@ -2,6 +2,8 @@
->>>    config VIDEO_VIMC
->>>    	tristate "Virtual Media Controller Driver (VIMC)"
->>>    	depends on VIDEO_DEV && VIDEO_V4L2
->>> +	select FONT_SUPPORT
->>> +	select FONT_8x16
->>>    	select MEDIA_CONTROLLER
->>>    	select VIDEO_V4L2_SUBDEV_API
->>>    	select VIDEOBUF2_VMALLOC
->>> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
->>> index ae163dec2459..afda52253402 100644
->>> --- a/drivers/media/test-drivers/vimc/vimc-common.h
->>> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
->>> @@ -20,6 +20,7 @@
->>>    #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
->>>    #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
->>>    #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
->>> +#define VIMC_CID_SHOW_INFO		(VIMC_CID_VIMC_BASE + 2)
->>>    #define VIMC_FRAME_MAX_WIDTH 4096
->>>    #define VIMC_FRAME_MAX_HEIGHT 2160
->>> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
->>> index a2f09ac9a360..f5352b115aac 100644
->>> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
->>> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
->>> @@ -5,6 +5,7 @@
->>>     * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
->>>     */
->>> +#include <linux/font.h>
->>>    #include <linux/v4l2-mediabus.h>
->>>    #include <linux/vmalloc.h>
->>>    #include <media/v4l2-ctrls.h>
->>> @@ -19,6 +20,7 @@ struct vimc_sen_device {
->>>    	struct v4l2_subdev sd;
->>>    	struct tpg_data tpg;
->>>    	u8 *frame;
->>> +	bool show_info;
->>
->> I see that vivid saves the 'v4l2_ctrl*' of the controls,
->> maybe you should also do that instead of saving a boolean,
-> 
-> Hi, I don't understand..isn't boolean the control?
-
-You can see that vivid saves the controls as 'v4l2_ctrl*' and
-then the value of the control can be read from the 'cur.val' field.
-Note also that the mutex lock: "mutex_lock(dev->ctrl_hdl_user_vid.lock);"
-when reading the values. This way you have don't have to set the value
-yourself, the framework takes care of it. You only have to read the value.
-
-> 
->>
->>>    	/* The active format */
->>>    	struct v4l2_mbus_framefmt mbus_format;
->>>    	struct v4l2_ctrl_handler hdl;
->>> @@ -185,10 +187,29 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
->>>    static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
->>>    				    const void *sink_frame)
->>>    {
->>> +	u8 *basep[TPG_MAX_PLANES][2];
->>> +	char *order;
->>> +	char str[100];
->>> +	int line = 1;
->>
->> Those vars declarations can be inside the 'if (vsen->show_info)'
-> 
-> I declared it outside because I felt all declarations should be
-> together?
-
-Not crucial, but I think it is nicer to declare variables in the most inner scope where
-they are used.
-
-> 
->>
->>>    	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
->>>    						    ved);
->>> -
->>>    	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
->>> +	if (vsen->show_info) {
->>> +		tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
->>> +		order = tpg_g_color_order(&vsen->tpg);
->>> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, order);
->>> +		snprintf(str, sizeof(str), " brightness %3d, contrast %3d, saturation %3d, hue %d ",
->>> +			 vsen->tpg.brightness,
->>> +			 vsen->tpg.contrast,
->>> +			 vsen->tpg.saturation,
->>> +			 vsen->tpg.hue);
->>> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
->>> +
->>> +		snprintf(str, sizeof(str), " sensor size: %dx%d",
->>> +			 vsen->mbus_format.width, vsen->mbus_format.height);
->>> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
->>> +	}
->>> +
->>>    	return vsen->frame;
->>>    }
->>> @@ -200,6 +221,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
->>>    	if (enable) {
->>>    		const struct vimc_pix_map *vpix;
->>>    		unsigned int frame_size;
->>> +		const struct font_desc *font = find_font("VGA8x16");
->>> +
->>> +		if (font == NULL) {
->> Using 'if (!font)' is the way to check null pointer, instead of compering to null. Running checkpatch.pl with '--strict'
->> will catch that.
-> 
-> I didn't do that to be consistent with vivid's style of code. Plus I
-> thought it makes it more clear to read. Should i change this?
-
-I don't know why vivid do it this way.
-Again, it is not that crucial, but in general it is better to send a patch that passes the issues
-found in checkpatch.
-
-Thanks,
-Dafna
-
-> 
->>> +			pr_err("vimc: could not find font\n");
->> 'dev_err' should be used instead of 'pr_err'.
-> 
-> yes sorry, i didn't now the difference.
-> 
->>
->> Also, maybe checking the font here is a bit late, since the user already
->> wants to stream and expect the info to be shown.
->> Maybe it is better to check the font on 'vimc_sen_s_ctrl'.
-> 
-> Like show the control only of font is available?
-> 
-> I think showing the error is enough maybe?
-> 
->>
->> Thanks,
->> Dafna
->>
->>> +			vsen->show_info = 0;
->>> +		} else {
->>> +			tpg_set_font(font->data);
->>> +		}
->>>    		/* Calculate the frame size */
->>>    		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
->>> @@ -269,6 +298,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
->>>    	case V4L2_CID_SATURATION:
->>>    		tpg_s_saturation(&vsen->tpg, ctrl->val);
->>>    		break;
->>> +	case VIMC_CID_SHOW_INFO:
->>> +		vsen->show_info = ctrl->val;
->>> +		break;
->>>    	default:
->>>    		return -EINVAL;
->>>    	}
->>> @@ -307,6 +339,17 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
->>>    	.qmenu = tpg_pattern_strings,
->>>    };
->>> +static const struct v4l2_ctrl_config vimc_sen_ctrl_show_info = {
->>> +	.ops = &vimc_sen_ctrl_ops,
->>> +	.id = VIMC_CID_SHOW_INFO,
->>> +	.name = "Show Information",
->>> +	.type = V4L2_CTRL_TYPE_BOOLEAN,
->>> +	.min = 0,
->>> +	.max = 1,
->>> +	.step = 1,
->>> +	.def = 1,
->>> +};
->>> +
->>>    static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
->>>    					    const char *vcfg_name)
->>>    {
->>> @@ -323,6 +366,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
->>>    	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
->>>    	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
->>> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_show_info, NULL);
->>>    	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
->>>    			  V4L2_CID_VFLIP, 0, 1, 1, 0);
->>>    	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
->>> @@ -362,6 +406,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
->>>    	/* Initialize the frame format */
->>>    	vsen->mbus_format = fmt_default;
->>> +	vsen->show_info = vimc_sen_ctrl_show_info.def;
->>>    	return &vsen->ved;
+>>> sched: Fix RANDSTRUCT build fail
 >>>
+>>> As a temporary build fix, the proper cleanup needs more work.
+>>>
+>>> Reported-by: Guenter Roeck <linux@roeck-us.net>
+>>> Reported-by: Eric Biggers <ebiggers@kernel.org>
+>>> Suggested-by: Eric Biggers <ebiggers@kernel.org>
+>>> Suggested-by: Kees Cook <keescook@chromium.org>
+>>> Fixes: a148866489fb ("sched: Replace rq::wake_list")
+>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>
+>> Hi, can this please get sent to Linus before -rc2? With a148866489fb in
+>> -rc1, all the CI with the GCC plugins installed have been failing their
+>> all*config builds. This entered -next 9 days ago (and fixed the -next
+>> builds), but Linus's tree is still failing:
+> 
+> Ugh.
+> 
+> I actually think the problem goes deeper than that.
+> 
+> The code expects the list entries to be of type 'call_single_data_t'
+> 
+> Then they damn well should be that type.
+> 
+> Note how "call_single_data_t" also implies certain alignment rules
+> that the hack in 'struct task_struct' does *not* have, and while that
+> doesn't matter on x86, it could matter on other architectures.
+> 
+
+Yes, that came up before. At least, with this patch, I don't see any compile
+or boot test failures. This patch wasn't supposed to be a clean solution
+(Peter is working on that) but a quick fix that can be applied easily
+and at least improves the situation.
+
+As it is, the mainline kernel currently relies on having RANDSTRUCT
+disabled, and still has all the other problems you mentioned here,
+so it is definitely much worse.
+
+On the other side, a148866489fb has been in the tree for more
+than three weeks now. Maybe we can wait more time for a more
+comprehensive solution which hopefully doesn't introduce other
+problems.
+
+Guenter
+
+> So no, I don't think Peter's patch is correct. It may make the build
+> pass, but that "check the offsets between two fields" is not
+> sufficient.
+> 
+> Now, if we could create a new
+> 
+>    struct __call_single_list_entry {
+>         struct llist_node llist;
+>         unsigned int flags;
+>    } call_single_list_entry_t;
+> 
+> and use that as part of thecall_single_data_t and only use that for
+> tyhe traversal of the list, then that would avoid the alignment issue
+> and the waste of space in struct task_struct.
+> 
+> Hmm?
+> 
+> Peter/Ingo?
+> 
+>                  Linus
+> 
+
