@@ -2,163 +2,118 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98665C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F98206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED23206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EUOcYlug"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sJrF4WUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgFVKpi (ORCPT
+        id S1727903AbgFVKqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:45:38 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:33345 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727040AbgFVKpi (ORCPT
+        Mon, 22 Jun 2020 06:46:38 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:64510 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727094AbgFVKqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:45:38 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id nJx5j1DAgn3JWnJx8jZqbi; Mon, 22 Jun 2020 12:45:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1592822735; bh=K6dDGbPeZnB4V7J7X8liUUoj+zo4D+OAMLsTP5S9VG0=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=EUOcYlugfhEZH4PUDGfvhPmDuKTAX0LMpu1yII4FUeP5ReW9fbj6nhj8g50KzWa6h
-         tyWOqo7RIdFWhMpc9vgY8YaNC3iGXBSNvCsZW75iINEGMJlcbpSLzMG1b4+V0QmKMB
-         pr8exVkE7OkPDXjgcOgAykp6YhX6q8cOhMilf5oeeA/Fqc3XZvtwJrIoO/a8KEW8hQ
-         00csB9E0zZLk/kHJ34UsayMsGxUo6PwWDAjKKE6M9NBRPiiZDn8n+rJzjjDqYsWLwh
-         FN/fB0W9hGIj+F+LHXIxuOG1E4dgANhp7zCsSgs5bQen1BRpt1dxlikbC9y41O6sVt
-         NsfWtE/GObhrA==
-Subject: Re: [PATCH v3 1/2] media: tpg: Add function to return colors' order
- of test image
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-References: <20200618190506.11892-1-kgupta@es.iitr.ac.in>
- <20200618190506.11892-2-kgupta@es.iitr.ac.in>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8268357e-6b47-a11c-c00f-3c8fa0582a7d@xs4all.nl>
-Date:   Mon, 22 Jun 2020 12:45:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 06:46:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592822797; x=1624358797;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=KHvJLP0itNpakCb4tg71Js5YXmKvGUBsqp96jfT9yXw=;
+  b=sJrF4WUSM6wBYbfjj7vWTa+pVUOf12sweLJs3sLi7/AsDN4I4DfQOKKp
+   3FTIHpzOCWmpLChR3hM0IK3hspO7KTr31mZ4+Z9WAHnvCJ4aStwCTZZD1
+   x90KlSHHdQIGGDe9K25PpGUN4U/qay/C0FkdGFlEZ/WPa1RsoaxVj+j7m
+   OovA+PQAIsEpMHwvSn0b1O08od/wya2CyvXlYb8XS7IAuunIYvUlMQBbO
+   leXkBLTNfp/iu7OnUkmXslcClcZhmh8ZHa2eew9NQ3Zx+t6RPiZPFQq7A
+   75eWHeEKK2iR+PcfKXdhF9AvOjRWEmWaCEuUitZEzvwKn9lFyOqfaTt4p
+   A==;
+IronPort-SDR: jIDnA4F4tHU6zBj7u39UFZocR2sz485FomgdldxzhJc4VCJUfL7MIcbRuLFTJp2SBt2pRul5sR
+ NIeN5Cdwsxez19lhBD8/B+m6pclB0eJ+dQ/z7tvXIZuRs62yPkutgDPygnZP6HszIP55Mi3Ek8
+ Xw/t0xKt3INxH7jxs77pnHINpQ+LVoB/NsVJXBXvwfxHwvivMlBBDRmYIbW8nYQ+Y9Vh/zeJJH
+ +0QJHSu+m6WINc3x9cGKc+zeI/bI23cCYj4eaL99NqE0HwVT/SFi3ZPKnMWovuISDQTATMxoS8
+ hBQ=
+X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
+   d="scan'208";a="16577354"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jun 2020 03:46:36 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 22 Jun 2020 03:46:36 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 22 Jun 2020 03:46:34 -0700
+References: <20200619113121.9984-1-lars.povlsen@microchip.com> <20200619113121.9984-4-lars.povlsen@microchip.com> <20200619121107.GE5396@sirena.org.uk>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Mark Brown <broonie@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Serge Semin" <fancer.lancer@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v2 3/6] spi: dw: Add Microchip Sparx5 support
+In-Reply-To: <20200619121107.GE5396@sirena.org.uk>
+Date:   Mon, 22 Jun 2020 12:46:33 +0200
+Message-ID: <87imfjxtrq.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-In-Reply-To: <20200618190506.11892-2-kgupta@es.iitr.ac.in>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBGEHq4TD8y/cZBxbGCbRynvE5tYPNrCmi3CFgjYWZW2cb8zM7Ou+MCIat4poGCWSWFl6elS+Af/3aeQTY9P+lUvLX9+TUAfW9YXZ01nct6ffdWi8LRB
- UbhOuFHQO+IqWJRoBVIvvvil2ees4It0CeOK+WSaP+77dMfqkUzIHzgxzibkLC+yr+S9Zd9J2pGskgxZDXOScDR7K2rIMsX23AWIEpScGs1qDYlOFsJtMqCg
- XTtOjD+tEDi9MHbYA0tq+Ho7g/TEoKJRqIurDboVEJH+jjKxbQXJFOuPQM4y069H48fkVoMC/vXkD6YAi6J8dpwrHWGFnya5jj7v/8PJLGTJ0AepS+9PMEeM
- xBGkSR/kQqoopQvTZuT0esUq5nymIjh+aCrkiu1Is4ztbpQmTA4=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2020 21:05, Kaaira Gupta wrote:
-> Currently there is no method to know the correct order of the colors for
-> a test image generated by tpg. Write a function that returns a string of
-> colors' order given a tpg. It returns a NULL pointer in case of test
-> patterns which do not have a well defined colors' order. Hence add a
-> NULL check for text in tpg_gen_text().
-> 
-> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> ---
->  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 32 +++++++++++++++++--
->  include/media/tpg/v4l2-tpg.h                  |  1 +
->  2 files changed, 31 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> index 50f1e0b28b25..31e6044a4104 100644
-> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> @@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
->  	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
->  	unsigned div = step;
->  	unsigned first = 0;
-> -	unsigned len = strlen(text);
-> +	unsigned len;
->  	unsigned p;
->  
-> -	if (font8x16 == NULL || basep == NULL)
-> +	if (font8x16 == NULL || basep == NULL || text == NULL)
->  		return;
->  
-> +	len = strlen(text);
-> +
->  	/* Checks if it is possible to show string */
->  	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
->  		return;
-> @@ -2006,6 +2008,32 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
->  }
->  EXPORT_SYMBOL_GPL(tpg_gen_text);
->  
-> +char *tpg_g_color_order(const struct tpg_data *tpg)
 
-This returns a const char *.
+Mark Brown writes:
 
-> +{
-> +	#define COLORBAR(order) #order "white, yellow, cyan, green, magenta, red, blue, black"
-> +
-> +	switch (tpg->pattern) {
-> +	case TPG_PAT_75_COLORBAR:
-> +	case TPG_PAT_100_COLORBAR:
-> +	case TPG_PAT_CSC_COLORBAR:
-> +		return COLORBAR(Left to right:);
-> +	case TPG_PAT_100_HCOLORBAR:
+On Fri, Jun 19, 2020 at 01:31:18PM +0200, Lars Povlsen wrote:
 
-Just combine this with the other and just return the sequence:
+>> +/*
+>> + * The Designware SPI controller (referred to as master in the
+>> + * documentation) automatically deasserts chip select when the tx fifo
+>> + * is empty. The chip selects then needs to be driven by a CS override
+>> + * register. enable is an active low signal.
+>> + */
+>> +static void dw_spi_sparx5_set_cs(struct spi_device *spi, bool nEnable)
+>
+>The value that is passed in here is the value that should be driven on
+>the output pin, the driver should not be interpreting the value in any
+>way here.  Documenting it as nEnable adds a layer of confusion, and it
+>may not be an active high signal depending on the system.
 
-		return "White, Yellow, Cyan, Green, Magenta, Red, Blue, Black";
+Ok, I will make the CS function more like the others.
 
-It's obvious from the pattern that three are from left to right and one is from
-top to bottom. No need to mention that here.
+>
+>> +	if (!nEnable) {
+>> +		/* Ensure CS toggles, so start off all disabled */
+>> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_VAL, ~0);
+>> +		/* CS override drive enable */
+>> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_ENA, 1);
+>
+>This should just be setting the value to whatever the core asked for it
+>to be set to, the driver adding extra toggles is likely to disrupt
+>things.
 
-Regards,
+I will have a look at this again. But it was added for a reason. The
+issue is that we have two different busses in front of the controller,
+so we might need more settle time when switching interface.
 
-	Hans
+Thank you for you comments,
 
-> +		return COLORBAR(Top to bottom:);
-> +	case TPG_PAT_BLACK:
-> +		return "Black";
-> +	case TPG_PAT_WHITE:
-> +		return "White";
-> +	case TPG_PAT_RED:
-> +		return "Red";
-> +	case TPG_PAT_GREEN:
-> +		return "Green";
-> +	case TPG_PAT_BLUE:
-> +		return "Blue";
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-> +
->  void tpg_update_mv_step(struct tpg_data *tpg)
->  {
->  	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
-> diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
-> index eb191e85d363..4f79cac87b85 100644
-> --- a/include/media/tpg/v4l2-tpg.h
-> +++ b/include/media/tpg/v4l2-tpg.h
-> @@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
->  bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
->  void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
->  		const struct v4l2_rect *compose);
-> +char *tpg_g_color_order(const struct tpg_data *tpg);
->  
->  static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
->  {
-> 
+Cheers
 
+-- 
+Lars Povlsen,
+Microchip
