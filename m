@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB11C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D97F20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9942520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A0H4lXeS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hI2iPwM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgFVO1e (ORCPT
+        id S1729515AbgFVO1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56714 "EHLO
+        Mon, 22 Jun 2020 10:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729096AbgFVO1a (ORCPT
+        with ESMTP id S1729485AbgFVO1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:27:30 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70950C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:27:30 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 64so8477788pfv.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:27:30 -0700 (PDT)
+        Mon, 22 Jun 2020 10:27:35 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E38C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:27:35 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a127so8474500pfa.12
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:27:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vwFsGBHaAVO/O+/Qurpo2lVEh+kEhysHr8M/+K/fxoc=;
-        b=A0H4lXeSqd1TcxTG4LkROpY5Ka7b89dAFnokSllDR68dqft5Eb3Sn+vycp/qtrhYPY
-         Zg19eLNhtlN0dlmyu1JXx/lZTscE50s/df/wBFUmF5h0/CYagKoI7JXYmu8c/LiH9aWW
-         c51dblKL90Tzo4xj50Bfq6fyy9fWKaJKxiwUejKcV6chfaeKNl6slT2CtykiK81hqv4d
-         2yLtdAYPMo8a6blB1QahexeTWQd6h0+I/PgnWrAhNe34KueKPg9k3NcquzAXJeYN77gJ
-         MO2fh80EBgSVbP51lQ9PRKP9SD5h4V1Varsf+rDfhLRjJwdFtwfECRh2Xk9zwBi2IGHW
-         azbQ==
+        bh=SpQVzSBjDEPebQy5qXPK/BkcdPQ45hc1OKMcPgP/hpg=;
+        b=hI2iPwM6eHl78f/Rf8OaivVcHz3gxNYp7IujpJ0Fw4woi28ptBxRkJmesqWs9PJ8eq
+         yFgt6ooC0ATzyjeS3E3XgbmXm+QpmI3HL0rWsAUsTdQfAkLwHauCN9foUfI51PEMGHZ8
+         yODUaCBZN8pKYgqZBYI9xuc0XcLmgHZwlVFZ3KYI3auT9hZPwg6xMXFq9NPQ8FSG50FJ
+         oR8FlHOsAAzKbPhx4LYo0bJFdsUWcoUsugtAVKLcLzmcam3p7brbYKkOdLUOjAkWmQ16
+         9WZbzObPYrGJctJ6gY4fm+CGqzRaZTkVF7lUIi5989wtOBl4m4X8YvITzEhSBDAYRgCI
+         lq0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=vwFsGBHaAVO/O+/Qurpo2lVEh+kEhysHr8M/+K/fxoc=;
-        b=EL0YnlGYCnjffI8ZcAlqgPBuRMyz3zun3DvFvR7vEwHcHeqNLphiD9epuJ+jCZ0Yk0
-         PEFpmHyzcegqyNwoBK2QLnPC+N/po8g3VPJ/rL3XdIH1vlc2ufHQI4paTl9TZThmC9Oh
-         QZNgteMnAcRc0jpi53EQwG0+upDSMLmicBLKgufwszGvtEjc4EtRCZ4dSgzebs5Rp2rV
-         g4AhS+/W2qJi7PTuqSOc4B6b0UKUNLowMZs1D0Wl49Dtt5KohvqxLkn2zRppaBVSJkAr
-         1/I3OnfGM7VfQJCZEJ315AeFPTL66G3x65r65dk9cdeLMPqT1D41GCkEwInfBe8S0o21
-         m2Mg==
-X-Gm-Message-State: AOAM530qqrJ1rDt+a00wYjdv0/CYe8rT5BwdbzDM9WL6+PNOEwsvcx1J
-        DDhEAUwPLqOXs9n//QMsAWgD7A==
-X-Google-Smtp-Source: ABdhPJxGh0TYex4nPoXDAnP2VnSgxXNcHKtzTjFNB4KOkRhgrpCJ6SxFNH3mr4sruco8M3DapOiqzg==
-X-Received: by 2002:a63:d318:: with SMTP id b24mr12063898pgg.403.1592836050027;
-        Mon, 22 Jun 2020 07:27:30 -0700 (PDT)
+        bh=SpQVzSBjDEPebQy5qXPK/BkcdPQ45hc1OKMcPgP/hpg=;
+        b=tUHmLSBIlQKKWBlKUtLkjEXx7YWF26wEqi25Jq+u7/wanIQfdU2jVqiycEWslDbwaC
+         ZH+YpKbJAo5mUjyEjcYSMeg90jTJ+g/Yl6pvnyLSd33d4sXcISZrfJWcIzVf+2TZ1MIE
+         Ta6I6Ma7w1ir0pUwCs7mP7YB8S9BVVcX96uXxnkFjhpoT8ap6VP9nsi3w2WcaRT8ZH3U
+         BlJtq0ei+R6iIKrizwS6ve023QnE2qo2IHV+MWav3aK2fT4Ym6+TUvhAB0Ep8C0ieQox
+         3P9aP0g34RmlOQBv8VGPxeoPruW6kllnGuOwwAtT3op9b0fcRh0c9ZB6ZBg54K9pHItj
+         yxuA==
+X-Gm-Message-State: AOAM531ADeJDWEgSbTVvItbNsYlwgne+h4TfBkJPBhnXuwk0Y7D3vX49
+        IOdjEE/bnad/pXsnPxOXnE+3SQ==
+X-Google-Smtp-Source: ABdhPJwEwxcR4qCfAcHSUX33rqxUd8JB5pxuQIXs8e8eUwjmKcCs+hmNcxPhJxjHoOv9HJRsrjAwZw==
+X-Received: by 2002:a63:eb54:: with SMTP id b20mr13113025pgk.380.1592836055116;
+        Mon, 22 Jun 2020 07:27:35 -0700 (PDT)
 Received: from localhost.localdomain ([117.252.67.186])
-        by smtp.gmail.com with ESMTPSA id d6sm14547939pjh.5.2020.06.22.07.27.25
+        by smtp.gmail.com with ESMTPSA id d6sm14547939pjh.5.2020.06.22.07.27.30
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jun 2020 07:27:29 -0700 (PDT)
+        Mon, 22 Jun 2020 07:27:34 -0700 (PDT)
 From:   Sumit Garg <sumit.garg@linaro.org>
 To:     kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, daniel.thompson@linaro.org,
         jason.wessel@windriver.com, dianders@chromium.org, jslaby@suse.com,
         linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
         Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH 2/7] tty: serial: Add poll_get_irq() to the polling interface
-Date:   Mon, 22 Jun 2020 19:56:19 +0530
-Message-Id: <1592835984-28613-3-git-send-email-sumit.garg@linaro.org>
+Subject: [PATCH 3/7] kgdb: Add request_nmi() to the io ops table for kgdboc
+Date:   Mon, 22 Jun 2020 19:56:20 +0530
+Message-Id: <1592835984-28613-4-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
 References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
@@ -77,82 +77,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniel Thompson <daniel.thompson@linaro.org>
 
-Add new API: poll_get_irq() to the polling interface in order for user
-of polling interface to retrieve allocated IRQ corresponding to
-underlying serial device.
-
-Although, serial interface still works in polling mode but interrupt
-associated with serial device can be leveraged for special purposes like
-debugger(kgdb) entry.
+Add request_nmi() callback to install a non-maskable interrupt handler
+corresponding to IRQ retrieved from polling interface. If NMI handler
+installation fails due to missing support from underlying irqchip driver
+then fallback to install it as normal interrupt handler.
 
 Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- drivers/tty/serial/serial_core.c | 18 ++++++++++++++++++
- include/linux/serial_core.h      |  1 +
- include/linux/tty_driver.h       |  1 +
- 3 files changed, 20 insertions(+)
+ drivers/tty/serial/kgdboc.c | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/kgdb.h        |  7 +++++++
+ 2 files changed, 42 insertions(+)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 66a5e2f..1bb033c 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2470,6 +2470,23 @@ static void uart_poll_put_char(struct tty_driver *driver, int line, char ch)
- 	port->ops->poll_put_char(port, ch);
- 	uart_port_deref(port);
+diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
+index 84ffede..263afae 100644
+--- a/drivers/tty/serial/kgdboc.c
++++ b/drivers/tty/serial/kgdboc.c
+@@ -19,6 +19,9 @@
+ #include <linux/console.h>
+ #include <linux/vt_kern.h>
+ #include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/irqdesc.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/serial_core.h>
+@@ -390,12 +393,44 @@ static void kgdboc_post_exp_handler(void)
+ 	kgdboc_restore_input();
  }
+ 
++static int kgdb_tty_irq;
 +
-+static int uart_poll_get_irq(struct tty_driver *driver, int line)
++static int kgdboc_request_nmi(irq_handler_t fn, void *dev_id)
 +{
-+	struct uart_driver *drv = driver->driver_state;
-+	struct uart_state *state = drv->state + line;
-+	struct uart_port *port;
-+	int ret = -ENODEV;
++	int irq, res;
 +
-+	port = uart_port_ref(state);
-+	if (port && port->ops->poll_get_irq) {
-+		ret = port->ops->poll_get_irq(port);
-+		uart_port_deref(port);
++	/* Better to avoid double allocation in the tty driver! */
++	if (kgdb_tty_irq)
++		return 0;
++
++	if (!kgdb_tty_driver->ops->poll_get_irq)
++		return -ENODEV;
++
++	irq =
++	    kgdb_tty_driver->ops->poll_get_irq(kgdb_tty_driver, kgdb_tty_line);
++	if (irq <= 0)
++		return irq ? irq : -ENODEV;
++
++	irq_set_status_flags(irq, IRQ_NOAUTOEN);
++	res = request_nmi(irq, fn, IRQF_PERCPU, "kgdboc", dev_id);
++	if (res) {
++		res = request_irq(irq, fn, IRQF_SHARED, "kgdboc", dev_id);
++		WARN_ON(res);
 +	}
 +
-+	return ret;
++	enable_irq(irq);
++
++	kgdb_tty_irq = irq;
++	return 0;
 +}
 +
- #endif
- 
- static const struct tty_operations uart_ops = {
-@@ -2505,6 +2522,7 @@ static const struct tty_operations uart_ops = {
- 	.poll_init	= uart_poll_init,
- 	.poll_get_char	= uart_poll_get_char,
- 	.poll_put_char	= uart_poll_put_char,
-+	.poll_get_irq	= uart_poll_get_irq,
- #endif
+ static struct kgdb_io kgdboc_io_ops = {
+ 	.name			= "kgdboc",
+ 	.read_char		= kgdboc_get_char,
+ 	.write_char		= kgdboc_put_char,
+ 	.pre_exception		= kgdboc_pre_exp_handler,
+ 	.post_exception		= kgdboc_post_exp_handler,
++	.request_nmi		= kgdboc_request_nmi,
  };
  
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 92f5eba..8b132e6 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -78,6 +78,7 @@ struct uart_ops {
- 	int		(*poll_init)(struct uart_port *);
- 	void		(*poll_put_char)(struct uart_port *, unsigned char);
- 	int		(*poll_get_char)(struct uart_port *);
-+	int		(*poll_get_irq)(struct uart_port *);
+ #if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
+diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+index 529116b..b32b044 100644
+--- a/include/linux/kgdb.h
++++ b/include/linux/kgdb.h
+@@ -16,6 +16,7 @@
+ #include <linux/linkage.h>
+ #include <linux/init.h>
+ #include <linux/atomic.h>
++#include <linux/interrupt.h>
+ #ifdef CONFIG_HAVE_ARCH_KGDB
+ #include <asm/kgdb.h>
  #endif
+@@ -276,6 +277,10 @@ struct kgdb_arch {
+  * the I/O driver.
+  * @post_exception: Pointer to a function that will do any cleanup work
+  * for the I/O driver.
++ * @request_nmi: Pointer to a function that can install an non-maskable
++ * interrupt handler that will be called when a character is pending and that
++ * can be cleared by calling @read_char until it returns NO_POLL_CHAR. If NMI
++ * installation fails then fallback to install normal interrupt handler.
+  * @cons: valid if the I/O device is a console; else NULL.
+  */
+ struct kgdb_io {
+@@ -287,6 +292,8 @@ struct kgdb_io {
+ 	void			(*deinit) (void);
+ 	void			(*pre_exception) (void);
+ 	void			(*post_exception) (void);
++	int			(*request_nmi)(irq_handler_t nmi_handler,
++					       void *dev_id);
+ 	struct console		*cons;
  };
  
-diff --git a/include/linux/tty_driver.h b/include/linux/tty_driver.h
-index 3584462..d6da5c5 100644
---- a/include/linux/tty_driver.h
-+++ b/include/linux/tty_driver.h
-@@ -295,6 +295,7 @@ struct tty_operations {
- 	int (*poll_init)(struct tty_driver *driver, int line, char *options);
- 	int (*poll_get_char)(struct tty_driver *driver, int line);
- 	void (*poll_put_char)(struct tty_driver *driver, int line, char ch);
-+	int (*poll_get_irq)(struct tty_driver *driver, int line);
- #endif
- 	int (*proc_show)(struct seq_file *, void *);
- } __randomize_layout;
 -- 
 2.7.4
 
