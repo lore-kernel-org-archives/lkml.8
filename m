@@ -2,211 +2,244 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD52C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9D2206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB8620768
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:21:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ax92dtmh"
+	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="pVOARI8J";
+	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="fDrpV1az"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgFVJTc (ORCPT
+        id S1726993AbgFVJVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:19:32 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:30314 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbgFVJTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:19:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592817570; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=YezUPzNjvQxanzC++G4NuTRjYWGDG9cd7oj8499vmB8=; b=ax92dtmhPU9rE1yc20FwoE9SgK0fRVVQNb1CSpFd3sT10q9rK6y1wjWtxPyMukQenFa7RKlG
- pdWjsFBqZ2+JR+m1ZXp+KuH2cI/25T7Havyzok3NpXAf5SfIQt/uNabaj/xFRmbtZovCj92U
- u3krq0lI0SUuc+1kIsK7sL3VgQY=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5ef0779a4c9690533a4f38e3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 09:19:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 50DA1C43391; Mon, 22 Jun 2020 09:19:22 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.71.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11DD2C433C8;
-        Mon, 22 Jun 2020 09:19:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11DD2C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
- <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com>
- <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org>
- <159086679215.69627.4444511187342075544@swboyd.mtv.corp.google.com>
- <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org>
- <159230866475.62212.10807813558467898966@swboyd.mtv.corp.google.com>
- <4e318931-cff0-0d8b-d0a0-9d139533c551@codeaurora.org>
- <159255876756.62212.4221488367063412094@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <65457ad5-174f-cdf5-bee8-40a12ad1115f@codeaurora.org>
-Date:   Mon, 22 Jun 2020 14:49:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 05:21:50 -0400
+Received: from mx0b-00328301.pphosted.com ([148.163.141.47]:38904 "EHLO
+        mx0b-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726934AbgFVJVr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:21:47 -0400
+Received: from pps.filterd (m0156136.ppops.net [127.0.0.1])
+        by mx0b-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05M9IJWp001983;
+        Mon, 22 Jun 2020 02:21:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt1;
+ bh=klk+aE5baUWQFrUFKtJJ73/Yw6rDl9zaA1XpSQOvk1A=;
+ b=pVOARI8JJFquaNLxPUn2VkZAsdYMglc2HD91j8f1tpPzcLzrSTLhUAo+7wngAvWiF/yh
+ RCnAcR7BQ3yDMXqgB44MV5LARqFS0TTStsgih10r9p0sIueaxvnxT2vp7smrqXbaKk6V
+ VMveQaGz2LpyGSrJ28RzgDePOpC3XF2clAMlH0IbpFdRMBrT1mU9opZzCgNsLe6m3nqH
+ UJ2b1nWT9WKLhmFXNZ1/1Cb5oci6BtHQASl2AZR1Ol3UpDxNGGbTbumuYdmI5hKtQ4Sr
+ N270Hgfsabuw99C87kZXOAcw3zJ3b+aNu8qp/gfH2j5sR3+s/htv8cy5VVY0De33q16l Xw== 
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2107.outbound.protection.outlook.com [104.47.55.107])
+        by mx0b-00328301.pphosted.com with ESMTP id 31sedp0pxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 02:21:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kZVFUhyFuL9MuVHbyO3cKrvvR7xzOlpkCCwFR0L4g/7Ncjtd5txyW03Cxb8jZAjLPoqFDwsnnoTKn5sfYPY+ywjI9IU0skXCQ8vSY3+5K+V9P4Q0CBC4HT2vn+nS7wCLufkvCTJUcPMx7MwZiBqMqXqTIKF68EHi0W/Lr2ytg0DA1D4qdt8XJLX5zX84a/H6+arJtNjLcK736An2Yw87iNooQ+b5acQ1/qV2NiHNQYURNyQDOCBR1P494GwJGBXJA6WURXLdsQmTiPCtlF6QSenX7oBv1VMeKuc2IUQX1XfEUPiR1cLz2eZ3K+PrfLwCqWlglGBvy0T/0/XQcfvHcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=klk+aE5baUWQFrUFKtJJ73/Yw6rDl9zaA1XpSQOvk1A=;
+ b=Lnehak5waUfW+sZf/hM5s2tv8GLQ/1d2kXSWrChT0uoCRMrKn0ISxnQQnQcp6eNI+ZlVtzbx5UVMQsEEoURfle0ETFnBGB2Jn5baSxnOPsSxR0gtz+yBCIoiR3ThU2lbeRyaKrvJTTAJxWUlfRyW5k7Gb+qXcqnfMpg4RXLiMgyypo8XGetwG3s/ba2S/AICixMSNsnH0VnIZ6INQTCR7g6ofSlvD+/9CK1NV62HTJ3gi6mWjL2vD1haQCyxlUs4d0kVhspZr5CjvrEe+5jnzmnFNvFzCcLYpdlGp135yje+TH73mjh7NG4LZklIplCapDDd+WwDvgk5aBsG4xPcgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=invensense.com; dmarc=pass action=none
+ header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=klk+aE5baUWQFrUFKtJJ73/Yw6rDl9zaA1XpSQOvk1A=;
+ b=fDrpV1azUGFVe4VB74JFoNdC/UvLoDyv8my4XyqfKyC3vvpQQJWwXCTPrsUvWAqAZZ7KtlYxZQmms4QoKbOJnfVHdPj7yIEt1cLg+3lFp5n8QQh07e91SGRcBPtF/ZoPVGHn6LjqE/SHvKp7FWu4dIW4HNFIqiVXd3/Tidg8qN4=
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com (2603:10b6:208:265::9)
+ by BL0PR12MB2465.namprd12.prod.outlook.com (2603:10b6:207:45::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.24; Mon, 22 Jun
+ 2020 09:21:25 +0000
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::8940:8e95:6996:cc0]) by MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::8940:8e95:6996:cc0%7]) with mapi id 15.20.3109.026; Mon, 22 Jun 2020
+ 09:21:25 +0000
+From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Lars-Peter Clausen <lars@metafoo.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sensor
+ support
+Thread-Topic: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sensor
+ support
+Thread-Index: AQHWPdWIUjAhv0WNM0u1pU/hnDKuy6jYQFCAgABZXLeACSG0gIACtcSW
+Date:   Mon, 22 Jun 2020 09:21:25 +0000
+Message-ID: <MN2PR12MB4422E5AC39A8B85304058AF4C4970@MN2PR12MB4422.namprd12.prod.outlook.com>
+References: <20200608204250.3291-1-jmaneyrol@invensense.com>
+        <20200608204250.3291-7-jmaneyrol@invensense.com>
+        <fd4918b6-a55f-4047-7f18-b796a8ccd020@metafoo.de>
+        <MN2PR12MB4422148948CF6FC7953A6D2AC49F0@MN2PR12MB4422.namprd12.prod.outlook.com>,<20200620165739.29694b9b@archlinux>
+In-Reply-To: <20200620165739.29694b9b@archlinux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=invensense.com;
+x-originating-ip: [91.174.78.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c97e11ee-f5c1-4c92-ca4b-08d8168da312
+x-ms-traffictypediagnostic: BL0PR12MB2465:
+x-microsoft-antispam-prvs: <BL0PR12MB2465904EE3EB6692D8E48873C4970@BL0PR12MB2465.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0442E569BC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mtyn4JALIocPZyZ3zTdwb4ZRdhHphMnokxlzo3pzHLcU4Bpd3FkxAx5qkfMQKnVfLdJnUy1fL6OZwrpWQcLU/EZIapFmSQxHbwJfigqy7ymTAmmfk6bG52trfAIWGL3YVgtNqO4BAqUEoHlfnCuTCocD8A6hgyERCrpuqBcfzfBd0XDneZdJu1x5IfVnmvas2kkgrTWv/TUtRlkCNe7Tg6/gIN5M2pdqc+rFvmLYTppOCZeb1aNZHLumDuXceMQ9ERY8y7HgzKbSMkuZiKnuLd5JLpG4Xnv9OksxVVhRfipeAmEn6T2LpfGU9t+kwj1xq1CQ6EtHR40KwCUN40F8WA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4422.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(346002)(376002)(396003)(39850400004)(71200400001)(66476007)(55016002)(2906002)(66556008)(9686003)(8936002)(66446008)(64756008)(91956017)(8676002)(478600001)(86362001)(33656002)(66946007)(76116006)(7416002)(5660300002)(52536014)(6916009)(316002)(186003)(7696005)(4326008)(6506007)(26005)(54906003)(53546011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: PDHg/XcjQMTrMXLVn4aoSeB1luAwjJAjU8OdP+5zAgZYusf27Bppc9NYQ7iaJQ2Q2ywCOc+FGOjgiZZ2goKoEyhrWrMab+WjtWGH2ww6eEGzNq9RjFiu5UQjAu50HIUg5HNrdEdgPMisjtgQy4AWPjaRkmfY3o8zFOdoFvElsKkzO6kLU3/9KpdP+8INYi3QYcRlZ4HdJVoGb8HqJzKiWK2OzzSadY4SNZ8QG6QeeetN0oVzyPzvdhtL9PCibda3I6hhb0Grzc4NxqoubXVedrG6UPG6cEliYrBeC0/Wue8mu4TX3Y1uDamZ7M5xGlwRQvDc1nfhpQMUrn21ibfTPM2v+TE1TcNUwpWbRApsAJm4FezBa4tdYnY4riJQowFhjKHUurWmNiAK3KpwSx6wAQtRHcEsNNKJqpqECu/zqrVV1NM7Yvb55WRHGXnO4MAvAFVaaKUEDg2ENeW/tF6zgazZHsc3mH84APQNXHTUZD8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <159255876756.62212.4221488367063412094@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+X-OriginatorOrg: invensense.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c97e11ee-f5c1-4c92-ca4b-08d8168da312
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 09:21:25.3389
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wig64MO75UXcSm4dCHBHYRmstnEjFkClY5UkpgcHsI67NbR7rOjQWMlmk2qJnObEJXwzUmD4By/5zd/08iFM6YDpCDzci3uAUEqW6x3ypv8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2465
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-22_03:2020-06-22,2020-06-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 priorityscore=1501 bulkscore=0 cotscore=-2147483648
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006220071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 6/19/2020 2:56 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-06-18 03:03:03)
->> On 6/16/2020 5:27 PM, Stephen Boyd wrote:
->>> Quoting Maulik Shah (2020-06-01 04:38:25)
->>>> On 5/31/2020 12:56 AM, Stephen Boyd wrote:
->>>>> Quoting Maulik Shah (2020-05-29 02:20:32)
->>>>>> On 5/27/2020 3:45 PM, Stephen Boyd wrote:
->>>>>>> Quoting Maulik Shah (2020-05-23 10:11:13)
->>>>>>>> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
->>>>>>>>             if (d->hwirq == GPIO_NO_WAKE_IRQ)
->>>>>>>>                     return;
->>>>>>>>      
->>>>>>>> +       pdc_enable_intr(d, true);
->>>>>>>>             irq_chip_unmask_parent(d);
->>>>>>>>      }
->>>>>>>>      
->>>>>>> I find these two hunks deeply confusing. I'm not sure what the
->>>>>>> maintainers think though. I hope it would be simpler to always enable
->>>>>>> the hwirqs in the pdc when an irq is requested and only disable it in
->>>>>>> the pdc when the system goes to suspend and the pdc pin isn't for an irq
->>>>>>> that's marked for wakeup. Does that break somehow?
->>>>>> PDC monitors interrupts during CPUidle as well, in cases where deepest
->>>>>> low power mode happened from cpuidle where GIC is not active.
->>>>>> If we keep PDC IRQ always enabled/unmasked during idle and then
->>>>>> disable/mask when entering to suspend, it will break cpuidle.
->>>>> How does it break cpuidle? The irqs that would be enabled/unmasked in
->>>>> pdc would only be the irqs that the kernel has setup irq handlers for
->>>>> (from request_irq() and friends).  We want those irqs to keep working
->>>>> during cpuidle and wake the CPU from the deepest idle states.
->>>>>> I hope it would be simpler to always enable
->>>>>> the hwirqs in the pdc when an irq is requested and only disable it in
->>>>>> the pdc when the system goes to suspend and the pdc pin isn't for an irq
->>>>>> that's marked for wakeup
->>>>>> How does it break cpuidle?
->>>> Consider a scenario..
->>>> 1. All PDC irqs enabled/unmasked in HW when request_irq() happened/alloc happens
->>>> 2. Client driver disable's irq. (lazy disable is there, so in HW its still unmasked) but disabled in SW.
->>>> 3. Device enters deep CPUidle low power modes where only PDC monitors IRQ.
->>>> 4. This IRQ can still wakeup from CPUidle since it was monitored by PDC.
->>>> 5. From handler, it comes to know that IRQ is disabled in SW, so it really invokes irq_mask callback now to disable in HW.
->>>> 6. This mask callback doesn't operate on PDC (since in PDC, IRQs gets masked only during suspend, all other times its enabled)
->>>> 7. step 3 to 6 repeats, if this IRQ keeps on coming and waking up from deep cpuidle states.
->>> Ok so in summary, irq is left unmasked in pdc during deep cpu idle and
->>> it keeps waking up the CPU because it isn't masked at the PDC after the
->>> first time it interrupts? Is this a power problem?
->> yes it can be a power problem.
->>>    Because from a
->>> correctness standpoint we don't really care. It woke up the CPU because
->>> it happened, and the GIC can decide to ignore it or not by masking it at
->>> the GIC. I thought that the PDC wouldn't wake up the CPU if we masked
->>> the irq at the GIC level. Is that not true?
->> once PDC detects IRQ, it directly doesn't wake up CPU. it replays IRQ to
->> GIC.
->>
->> since at GIC its masked, GIC doesn't forward to cpu to immediatly wake
->> it up.
->>
->> however after PDC detecting IRQ, it exits low power mode and
->> watchdog/timer can wakeup upon expiry.
-> Ok. So the only problem is some screaming irq that really wants to be
-> handled but the driver that requested it has disabled it at runtime. The
-> IRQ keeps kicking the CPUs out of deep idle and then eventually the
-> timer tick happens and we've run the CPUs in a shallower idle state for
-> this time?
-No it may still enter deeper state next time.
-> Presumably we'd like to have these irqs be lazily masked at
-> the PDC so that they can become pending when they first arrive but not
-> block deep idle states if they're interrupting often while being
-> handled.
-
-We do lazily disable IRQ.  but didnot understand why lazily disable when 
-they are being handled?
-
-The edge type irqs gets masked immediatly if one irq is being handled 
-and another comes in.
-
-but that's not a problem.
-
->
-> On the other hand, we want irq wake state to be the only factor in irqs
-> being unmasked at the PDC on the entry to suspend. Purely
-> masking/unmasking at the PDC when the irq is masked in software doesn't
-> work because suspend/resume will break for disabled but wake enabled
-> irqs. But doing that makes idle work easily because we can assume during
-> idle that leaving it unmasked until it fires and then masking it in the
-> PDC until it is handled gives us good deep idle states in the face of
-> screaming irqs.
->
-> What are the actual requirements? Here is my attempt to boil this
-> discussion down into a few bullet points:
->
->   1. During system suspend, wake enabled irqs should be enabled in PDC
->   and all other irqs should be disabled in PDC.
-yes, IRQs should be enabled in both PDC and GIC before platform (PSCI 
-suspend) happens if they are marked for wakeup (enable_irq_wake())
->
->   2. During idle, enabled irqs must be enabled in PDC, unless they're
->   pending in which case they should be masked in the PDC so as to not
->   wake up the CPU from deep idle states
-
-i didn't get this point.
-
-During idle, if the driver choosen to keep IRQ enabled, it should be 
-enabled in both PDC and GIC
-
-if the driver choosen to keep IRQ disabled, with this series...
-
-a. do a lay disable when driver's call disable_irq(), meaning set the SW 
-state as disabled but leave in PDC and GIC HW as unmasked/enabled.
-
-b. if the IRQ comes inbetween and its of edge type, the generic 
-handle_edge_irq will really mask in HW.
-
->
->   3. During non-idle, non-suspend, enabled irqs must be enabled in PDC.
->
-> Or is #3 actually false and PDC has no bearing on this?
-
-Correct, During this time (non-idle, non-suspend) PDC will be in 
-something called "by pass mode" where it plays role of type conversion.
-
-(a level low to level high / edge falling to edge rising) since GIC 
-doesn't detect level low/falling edge IRQs.
-
-Thanks,
-Maulik
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Hi Jonathan,=0A=
+=0A=
+no problem, I can rework temperature to have the same raw output for both c=
+ases (with just decreased resolution for the FIFO case).=0A=
+=0A=
+v4 series is coming soon with the fix.=0A=
+=0A=
+Thanks,=0A=
+JB=0A=
+=0A=
+From: Jonathan Cameron <jic23@kernel.org>=0A=
+Sent: Saturday, June 20, 2020 17:57=0A=
+To: Jean-Baptiste Maneyrol <JManeyrol@invensense.com>=0A=
+Cc: Lars-Peter Clausen <lars@metafoo.de>; robh+dt@kernel.org <robh+dt@kerne=
+l.org>; robh@kernel.org <robh@kernel.org>; mchehab+huawei@kernel.org <mcheh=
+ab+huawei@kernel.org>; davem@davemloft.net <davem@davemloft.net>; gregkh@li=
+nuxfoundation.org <gregkh@linuxfoundation.org>; linux-iio@vger.kernel.org <=
+linux-iio@vger.kernel.org>; devicetree@vger.kernel.org <devicetree@vger.ker=
+nel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>=0A=
+Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature senso=
+r support =0A=
+=A0=0A=
+=A0CAUTION: This email originated from outside of the organization. Please =
+make sure the sender is who they say they are and do not click links or ope=
+n attachments unless you recognize the sender and know the content is safe.=
+=0A=
+=0A=
+On Sun, 14 Jun 2020 20:35:13 +0000=0A=
+Jean-Baptiste Maneyrol <JManeyrol@invensense.com> wrote:=0A=
+=0A=
+> Hello Lars,=0A=
+> =0A=
+> for the temperature data, the problem is that temperature in the FIFO (us=
+ed in buffer) is not in the same format than when reading the register.=0A=
+> =0A=
+> Reading the temperature register return a full precision value on 16 bits=
+. I am using a PROCESSED attribute for it.=0A=
+> Temperature data in buffer (coming from the FIFO) is on 8 bits in lower p=
+recision. It is reported as raw data, thus the need of the offset and scale=
+ values.=0A=
+> =0A=
+> So offset and scale values are only for transforming the temperature data=
+ from the buffer, and direct read is a full precision already processed in =
+m=B0C.=0A=
+=0A=
+That is a problem.=A0 We have no means of describing it in IIO.=0A=
+=0A=
+If the channel is processed via sysfs the assumption would normally=0A=
+be that it is processed in the buffer as well. We don't really=0A=
+have any means of describing the two separately.=0A=
+=0A=
+In cases where we've seen this before the way around it was to=0A=
+change the data in the fifo so that the scaling was the same as the=0A=
+sysfs channel (usually it's just a bit of padding).=0A=
+=0A=
+Can we do that here?=A0 Looks like the ratio is 1:64 so should=0A=
+be possible. =0A=
+=0A=
+=0A=
+=0A=
+> =0A=
+> Thanks for the review,=0A=
+> JB=0A=
+> =0A=
+> From: Lars-Peter Clausen <lars@metafoo.de>=0A=
+> Sent: Sunday, June 14, 2020 17:10=0A=
+> To: Jean-Baptiste Maneyrol <JManeyrol@invensense.com>; jic23@kernel.org <=
+jic23@kernel.org>; robh+dt@kernel.org <robh+dt@kernel.org>; robh@kernel.org=
+ <robh@kernel.org>; mchehab+huawei@kernel.org <mchehab+huawei@kernel.org>; =
+davem@davemloft.net <davem@davemloft.net>; gregkh@linuxfoundation.org <greg=
+kh@linuxfoundation.org>=0A=
+> Cc: linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; devicetree@vge=
+r.kernel.org <devicetree@vger.kernel.org>; linux-kernel@vger.kernel.org <li=
+nux-kernel@vger.kernel.org>=0A=
+> Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sen=
+sor support =0A=
+> =A0=0A=
+> =A0CAUTION: This email originated from outside of the organization. Pleas=
+e make sure the sender is who they say they are and do not click links or o=
+pen attachments unless you recognize the sender and know the content is saf=
+e.=0A=
+> =0A=
+> On 6/8/20 10:42 PM, Jean-Baptiste Maneyrol wrote:=0A=
+> > +=A0=A0=A0=A0 case IIO_CHAN_INFO_PROCESSED:=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D iio_device_claim_direct_m=
+ode(indio_dev);=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (ret)=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return re=
+t;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D inv_icm42600_temp_read(st=
+, &temp);=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 iio_device_release_direct_mode(in=
+dio_dev);=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (ret)=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return re=
+t;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *val =3D temp;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return IIO_VAL_INT;=0A=
+> > +=A0=A0=A0=A0 case IIO_CHAN_INFO_SCALE:=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *val =3D 483;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *val2 =3D 91787;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return IIO_VAL_INT_PLUS_MICRO;=0A=
+> > +=A0=A0=A0=A0 case IIO_CHAN_INFO_OFFSET:=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *val =3D 25000;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return IIO_VAL_INT;=A0 =0A=
+> =0A=
+> If the data is returned processed there is no need to specify scale and =
+=0A=
+> offset.=0A=
+> =0A=
+> But since the transformation to turn the data into standard units is a =
+=0A=
+> simple linear transform the preferred way to handle this is to return =0A=
+> RAW data and specify scale and offset.=0A=
