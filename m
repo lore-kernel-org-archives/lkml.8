@@ -2,119 +2,133 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 532E5208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CEF25388
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:02:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="h8uyWq6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731251AbgFVDAi (ORCPT
+        id S1731114AbgFVDCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 23:00:38 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53166 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731220AbgFVDA1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 23:00:27 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2037645|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0497008-0.00175125-0.948548;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=27;RT=27;SR=0;TI=SMTPD_---.HqMydez_1592794774;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.HqMydez_1592794774)
-          by smtp.aliyun-inc.com(10.147.40.44);
-          Mon, 22 Jun 2020 11:00:21 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
-        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
-        megous@megous.com, karlp@tweak.net.au, bage@linutronix.de
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
-        Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH v2 11/11] arm64: allwinner: A100: add support for Allwinner Perf1 board
-Date:   Mon, 22 Jun 2020 10:59:07 +0800
-Message-Id: <20200622025907.32574-12-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200622025907.32574-1-frank@allwinnertech.com>
-References: <20200622025907.32574-1-frank@allwinnertech.com>
+        Sun, 21 Jun 2020 23:02:38 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:32849 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726663AbgFVDCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 23:02:38 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 1dc30710;
+        Mon, 22 Jun 2020 02:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-transfer-encoding;
+         s=mail; bh=w/C+/peO/GKCjVxNCmUvVhdvlWE=; b=h8uyWq6yNHptnxTxpp1d
+        chgRc+ICh0KLYbnRjj0QnBZuvC3O902RVGYZzRoxFnoquVDcIijADSTaEUwxkLLy
+        YFZMq0xt+YBda7kWJjSxpXwsn+fwcZf7ZN9cLKA/T8RYQnpgbm07ZH3+aEEg5owP
+        tVixPBxh11GMC79eyLNFV3oXgzesCY5MO8NcRUKB3kXN3rsApg/vmo/uB3hbFKBs
+        g7TP5kpTV57S38p45jMY7Zes3eD9BvU3UEuly/lQTiG/1Kb4B8DS5OtrK6zbCrT7
+        QaamWcOpR9DylhxMWWiWailmcNbA69jmhm2yMxbd7GzG0/CLvDaBODpwEpcBFI01
+        7Q==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 53c7124b (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Mon, 22 Jun 2020 02:43:53 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     pmladek@suse.com, linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Bruno Meneguele <bmeneg@redhat.com>,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        David.Laight@ACULAB.COM,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] Revert "kernel/printk: add kmsg SEEK_CUR handling"
+Date:   Sun, 21 Jun 2020 21:02:22 -0600
+Message-Id: <20200622030222.1370098-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A100 perf1 is an Allwinner A100-based SBC, with the following features:
+This reverts commit 8ece3b3eb576a78d2e67ad4c3a80a39fa6708809.
 
-- 1GiB DDR3 DRAM
-- AXP803 PMIC
-- 2 USB 2.0 ports
-- MicroSD slot and on-board eMMC module
-- on-board Nand flash
-- ···
+This commit broke userspace. Bash uses ESPIPE to determine whether or
+not the file should be read using "unbuffered I/O", which means reading
+1 byte at a time instead of 128 bytes at a time. I used to use bash to
+read through kmsg in a really quite nasty way:
 
-Adds initial support for it, including the UART.
+    while read -t 0.1 -r line 2>/dev/null || [[ $? -ne 142 ]]; do
+       echo "SARU $line"
+    done < /dev/kmsg
 
-Signed-off-by: Frank Lee <frank@allwinnertech.com>
+This will show all lines that can fit into the 128 byte buffer, and skip
+lines that don't. That's pretty awful, but at least it worked.
+
+With this change, bash now tries to do 1-byte reads, which means it
+skips all the lines, which is worse than before.
+
+Now, I don't really care very much about this, and I'm already look for
+a workaround. But I did just spend an hour trying to figure out why my
+scripts were broken. Either way, it makes no difference to me personally
+whether this is reverted, but it might be something to consider. If you
+declare that "trying to read /dev/kmsg with bash is terminally stupid
+anyway," I might be inclined to agree with you. But do note that bash
+uses lseek(fd, 0, SEEK_CUR)==>ESPIPE to determine whether or not it's
+reading from a pipe.
+
+Cc: Bruno Meneguele <bmeneg@redhat.com>
+Cc: pmladek@suse.com
+Cc: sergey.senozhatsky@gmail.com
+Cc: rostedt@goodmis.org
+Cc: David.Laight@ACULAB.COM
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 ---
- arch/arm64/boot/dts/allwinner/Makefile             |  1 +
- .../dts/allwinner/sun50i-a100-allwinner-perf1.dts  | 27 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+ Documentation/ABI/testing/dev-kmsg |  5 -----
+ kernel/printk/printk.c             | 10 ----------
+ 2 files changed, 15 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index e4d3cd0..ab780db 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-new file mode 100644
-index 0000000..d03fa26
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-a100.dtsi"
-+
-+/{
-+	model = "Allwinner A100 Perf1";
-+	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
+diff --git a/Documentation/ABI/testing/dev-kmsg b/Documentation/ABI/testing/dev-kmsg
+index 1e6c28b1942b..f307506eb54c 100644
+--- a/Documentation/ABI/testing/dev-kmsg
++++ b/Documentation/ABI/testing/dev-kmsg
+@@ -56,11 +56,6 @@ Description:	The /dev/kmsg character device node provides userspace access
+ 		  seek after the last record available at the time
+ 		  the last SYSLOG_ACTION_CLEAR was issued.
+ 
+-		Due to the record nature of this interface with a "read all"
+-		behavior and the specific positions each seek operation sets,
+-		SEEK_CUR is not supported, returning -ESPIPE (invalid seek) to
+-		errno whenever requested.
+-
+ 		The output format consists of a prefix carrying the syslog
+ 		prefix including priority and facility, the 64 bit message
+ 		sequence number and the monotonic timestamp in microseconds,
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 8c14835be46c..b71eaf5f5a86 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -974,16 +974,6 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+ 		user->idx = log_next_idx;
+ 		user->seq = log_next_seq;
+ 		break;
+-	case SEEK_CUR:
+-		/*
+-		 * It isn't supported due to the record nature of this
+-		 * interface: _SET _DATA and _END point to very specific
+-		 * record positions, while _CUR would be more useful in case
+-		 * of a byte-based log. Because of that, return the default
+-		 * errno value for invalid seek operation.
+-		 */
+-		ret = -ESPIPE;
+-		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
 -- 
-1.9.1
+2.27.0
 
