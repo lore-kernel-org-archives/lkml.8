@@ -2,304 +2,99 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D07C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A579A20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE6320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbgFVWLS (ORCPT
+        id S1730996AbgFVWL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:11:18 -0400
-Received: from mail-lf1-f52.google.com ([209.85.167.52]:33727 "EHLO
-        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgFVWLS (ORCPT
+        Mon, 22 Jun 2020 18:11:27 -0400
+Received: from smtprelay0046.hostedemail.com ([216.40.44.46]:48118 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727018AbgFVWL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:11:18 -0400
-Received: by mail-lf1-f52.google.com with SMTP id g2so10568677lfb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:11:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OZuyls1cMAwtwJjsM2adYow5pWrQPEerf0VMA+Z2UtA=;
-        b=bP/S+wVWC3AYeh977nxMh3mDl7sXOSwzggKyoDv9sRgXOeufFXpIwzsrYdRtRtF8sj
-         ptNYN8wNBp8i9kSh6OUUkc68Psn3lVR95zSUxZIiujlSJ5M335MIAWSwhPTuyPdkN8Cs
-         RTofefq8osvxz/1chRQmzezxIG3ca0GW9hj2/HS7aY1OE/oBig6miGFBhPK+MsycDkv9
-         riQBiwVST9aRjnCw29Mo4hmiEDkwT40oAR9PAxDpAxBoyoD2MW8XUcm5n1jMuTvWZ2+H
-         dtCos9KIGK9mLij+WcJ4PtN3eVxzSdmOOwO05+kJzSOVi8y2GpOsHst2EHVvyVv26h7b
-         UCrA==
-X-Gm-Message-State: AOAM53017y5ZuBmT2NSrhlgiVra6jUPQ+6k+DL9JizIQO2RWuDArmqRi
-        QAlBmHu9VzhRhHsaSUyX6yJqgUWbUTAuzg==
-X-Google-Smtp-Source: ABdhPJzjbZiQ3nbSwFtSlsYo/E6omKmiTX7TPjlHrGObRdpZqKPeEco721dhmnBmTv4MkCeTGVLmRQ==
-X-Received: by 2002:a19:e346:: with SMTP id c6mr11129516lfk.177.1592863874519;
-        Mon, 22 Jun 2020 15:11:14 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id a23sm3738767lfb.10.2020.06.22.15.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 15:11:13 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        Mon, 22 Jun 2020 18:11:27 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id F1C8B837F24C;
+        Mon, 22 Jun 2020 22:11:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bird05_4200e1f26e36
+X-Filterd-Recvd-Size: 2763
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 22 Jun 2020 22:11:24 +0000 (UTC)
+Message-ID: <fe60cadc38d430f38ff8cb3d1ca9c1f44260b59d.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: use $root/.git when seeding camel case
+From:   Joe Perches <joe@perches.com>
+To:     Jacob Keller <jacob.e.keller@intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4] coccinelle: misc: add array_size_dup script to detect missed overflow checks
-Date:   Tue, 23 Jun 2020 01:10:56 +0300
-Message-Id: <20200622221056.34241-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615102045.4558-1-efremov@linux.com>
-References: <20200615102045.4558-1-efremov@linux.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Date:   Mon, 22 Jun 2020 15:11:23 -0700
+In-Reply-To: <20200622215834.2858106-1-jacob.e.keller@intel.com>
+References: <20200622215834.2858106-1-jacob.e.keller@intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Detect an opencoded expression that is used before or after
-array_size()/array3_size()/struct_size() to compute the same size.
+On Mon, 2020-06-22 at 14:58 -0700, Jacob Keller wrote:
+> When seeding the camel case file, checkpatch.pl uses the $root directory
+> in order to find the acceptable list of allowed camel case words.
+> 
+> However, if the current directory is a git repository, checkpatch.pl
+> attempts to seed using the local git directory.
+> 
+> This is problematic if checkpatch.pl is passed a --root and is being run
+> from within another git repository. Rather than seeding from the
+> provided root tree, checkpatch.pl will seed using the local files. If
+> the current git repository isn't a kernel tree, this can lead to
+> unexpected warnings about camel case issues.
+> 
+> Always honor the $root parameter when seeding camelcase files by using
+> "$root/.git" and changing directory to the $root before invoking git.
+[]
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -919,8 +919,8 @@ sub seed_camelcase_includes {
+>  
+>  	$camelcase_seeded = 1;
+>  
+> -	if (-e ".git") {
+> -		my $git_last_include_commit = `${git_command} log --no-merges --pretty=format:"%h%n" -1 -- include`;
+> +	if (-e "$root/.git") {
+> +		my $git_last_include_commit = `cd $root && ${git_command} log --no-merges --pretty=format:"%h%n" -1 -- include`;
+>  		chomp $git_last_include_commit;
+>  		$camelcase_cache = ".checkpatch-camelcase.git.$git_last_include_commit";
+>  	} else {
+> @@ -947,9 +947,10 @@ sub seed_camelcase_includes {
+>  		return;
+>  	}
+>  
+> -	if (-e ".git") {
+> -		$files = `${git_command} ls-files "include/*.h"`;
+> +	if (-e "$root/.git") {
+> +		$files = `cd $root && ${git_command} ls-files "include/*.h"`;
+>  		@include_files = split('\n', $files);
+> +		@include_files = map("$root/$_", @include_files);
+>  	}
+>  
+>  	foreach my $file (@include_files) {
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
-Changes in v2:
- - python rules moved next to SmPL patterns
- - assignment operator used
- - struct_size patterns fixed to check only E3, since
-   E1, E2 are sizeofs of a structure and a member
-   of a structure
-Changes in v3:
- - s/overlow/overflow/ typo fixed (thanks, Markus)
- - \(&E1\|&E2\) changed to &\(E1\|E2\)
- - print strings breaks removed
-Changes in v4:
- - duplicates warning removed
- - python2 compatability in report&&org modes added
- - s/down the code/later/ warning changed
- - \(E1\|E2\|subE1\|subE2\) patterns simplified to \(subE1\|subE2\)
+checkpatch has 4 uses of ${git_command}
 
- scripts/coccinelle/misc/array_size_dup.cocci | 209 +++++++++++++++++++
- 1 file changed, 209 insertions(+)
- create mode 100644 scripts/coccinelle/misc/array_size_dup.cocci
+Maybe git_command should be changed instead.
 
-diff --git a/scripts/coccinelle/misc/array_size_dup.cocci b/scripts/coccinelle/misc/array_size_dup.cocci
-new file mode 100644
-index 000000000000..d3d635b2d4fc
---- /dev/null
-+++ b/scripts/coccinelle/misc/array_size_dup.cocci
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+///
-+/// Check for array_size(), array3_size(), struct_size() duplicates.
-+/// Three types of patterns for these functions:
-+///  1. An opencoded expression is used before array_size() to compute the same size
-+///  2. An opencoded expression is used after array_size() to compute the same size
-+/// From security point of view only first case is relevant. These functions
-+/// perform arithmetic overflow check. Thus, if we use an opencoded expression
-+/// before a call to the *_size() function we can miss an overflow.
-+///
-+// Confidence: High
-+// Copyright: (C) 2020 Denis Efremov ISPRAS
-+// Options: --no-includes --include-headers --no-loops
-+
-+virtual context
-+virtual report
-+virtual org
-+
-+@as@
-+expression E1, E2;
-+@@
-+
-+array_size(E1, E2)
-+
-+@as_next@
-+expression subE1 <= as.E1;
-+expression subE2 <= as.E2;
-+expression as.E1, as.E2, E3;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* E1 * E2@p1
-+  ... when != \(subE1\|subE2\) aop E3
-+      when != &\(subE1\|subE2\)
-+* array_size(E1, E2)@p2
-+
-+@script:python depends on report@
-+p1 << as_next.p1;
-+p2 << as_next.p2;
-+@@
-+
-+msg = "WARNING: array_size is used later (line %s) to compute the same size" % (p2[0].line)
-+coccilib.report.print_report(p1[0], msg)
-+
-+@script:python depends on org@
-+p1 << as_next.p1;
-+p2 << as_next.p2;
-+@@
-+
-+msg = "WARNING: array_size is used later (line %s) to compute the same size" % (p2[0].line)
-+coccilib.org.print_todo(p1[0], msg)
-+
-+@as_prev@
-+expression subE1 <= as.E1;
-+expression subE2 <= as.E2;
-+expression as.E1, as.E2, E3;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* array_size(E1, E2)@p1
-+  ... when != \(subE1\|subE2\) aop E3
-+      when != &\(subE1\|subE2\)
-+* E1 * E2@p2
-+
-+@script:python depends on report@
-+p1 << as_prev.p1;
-+p2 << as_prev.p2;
-+@@
-+
-+msg = "WARNING: array_size is already used (line %s) to compute the same size" % (p1[0].line)
-+coccilib.report.print_report(p2[0], msg)
-+
-+@script:python depends on org@
-+p1 << as_prev.p1;
-+p2 << as_prev.p2;
-+@@
-+
-+msg = "WARNING: array_size is already used (line %s) to compute the same size" % (p1[0].line)
-+coccilib.org.print_todo(p2[0], msg)
-+
-+@as3@
-+expression E1, E2, E3;
-+@@
-+
-+array3_size(E1, E2, E3)
-+
-+@as3_next@
-+expression subE1 <= as3.E1;
-+expression subE2 <= as3.E2;
-+expression subE3 <= as3.E3;
-+expression as3.E1, as3.E2, as3.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* E1 * E2 * E3@p1
-+  ... when != \(subE1\|subE2\|subE3\) aop E4
-+      when != &\(subE1\|subE2\|subE3\)
-+* array3_size(E1, E2, E3)@p2
-+
-+@script:python depends on report@
-+p1 << as3_next.p1;
-+p2 << as3_next.p2;
-+@@
-+
-+msg = "WARNING: array3_size is used later (line %s) to compute the same size" % (p2[0].line)
-+coccilib.report.print_report(p1[0], msg)
-+
-+@script:python depends on org@
-+p1 << as3_next.p1;
-+p2 << as3_next.p2;
-+@@
-+
-+msg = "WARNING: array3_size is used later (line %s) to compute the same size" % (p2[0].line)
-+coccilib.org.print_todo(p1[0], msg)
-+
-+@as3_prev@
-+expression subE1 <= as3.E1;
-+expression subE2 <= as3.E2;
-+expression subE3 <= as3.E3;
-+expression as3.E1, as3.E2, as3.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* array3_size(E1, E2, E3)@p1
-+  ... when != \(subE1\|subE2\|subE3\) aop E4
-+      when != &\(subE1\|subE2\|subE3\)
-+* E1 * E2 * E3@p2
-+
-+@script:python depends on report@
-+p1 << as3_prev.p1;
-+p2 << as3_prev.p2;
-+@@
-+
-+msg = "WARNING: array3_size is already used (line %s) to compute the same size" % (p1[0].line)
-+coccilib.report.print_report(p2[0], msg)
-+
-+@script:python depends on org@
-+p1 << as3_prev.p1;
-+p2 << as3_prev.p2;
-+@@
-+
-+msg = "WARNING: array3_size is already used (line %s) to compute the same size" % (p1[0].line)
-+coccilib.org.print_todo(p2[0], msg)
-+
-+@ss@
-+expression E1, E2, E3;
-+@@
-+
-+struct_size(E1, E2, E3)
-+
-+@ss_next@
-+expression subE3 <= ss.E3;
-+expression ss.E1, ss.E2, ss.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* E1 * E2 + E3@p1
-+  ... when != subE3 aop E4
-+      when != &subE3
-+* struct_size(E1, E2, E3)@p2
-+
-+@script:python depends on report@
-+p1 << ss_next.p1;
-+p2 << ss_next.p2;
-+@@
-+
-+msg = "WARNING: struct_size is used later (line %s) to compute the same size" % (p2[0].line)
-+coccilib.report.print_report(p1[0], msg)
-+
-+@script:python depends on org@
-+p1 << ss_next.p1;
-+p2 << ss_next.p2;
-+@@
-+
-+msg = "WARNING: struct_size is used later (line %s) to compute the same size" % (p2[0].line)
-+coccilib.org.print_todo(p1[0], msg)
-+
-+@ss_prev@
-+expression subE3 <= ss.E3;
-+expression ss.E1, ss.E2, ss.E3, E4;
-+assignment operator aop;
-+position p1, p2;
-+@@
-+
-+* struct_size(E1, E2, E3)@p1
-+  ... when != subE3 aop E4
-+      when != &subE3
-+* E1 * E2 + E3@p2
-+
-+@script:python depends on report@
-+p1 << ss_prev.p1;
-+p2 << ss_prev.p2;
-+@@
-+
-+msg = "WARNING: struct_size is already used (line %s) to compute the same size" % (p1[0].line)
-+coccilib.report.print_report(p2[0], msg)
-+
-+@script:python depends on org@
-+p1 << ss_prev.p1;
-+p2 << ss_prev.p2;
-+@@
-+
-+msg = "WARNING: struct_size is already used (line %s) to compute the same size" % (p1[0].line)
-+coccilib.org.print_todo(p2[0], msg)
--- 
-2.26.2
+I wonder how this interacts with the GIT_DIR environment variable.
+
 
