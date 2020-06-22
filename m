@@ -2,160 +2,138 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAB9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2772075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:37:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592829426;
-	bh=r5svSCiyIzDvzTqMLcCy0GUx0cxm9wgDl1oWlW8d7PM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nm3O+mt5DorWjQKBjBFZ/gczQWjc/H7OCbwIpY1FQHZffyNk1D+BEIXPTI+KnUiHn
-	 k/AdTc775h+OytL2oVs0pss5IGRmrNM2AYLJlBQ/AHsFh3jiPRi5ISSX4zIo5gsdBb
-	 olWU0aeWcvmqq2wnFnnJWT0ESXUijeLwZSZFR4LU=
+	by mail.kernel.org (Postfix) with ESMTP id 0299220720
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="pOaARyiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgFVMhE (ORCPT
+        id S1728164AbgFVMjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:37:04 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37863 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgFVMhD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:37:03 -0400
-Received: by mail-pj1-f65.google.com with SMTP id m2so8557643pjv.2;
-        Mon, 22 Jun 2020 05:37:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XBnvpozQh8NlbXbb2Id9vk4JGCe+27nJySmmknsgIeQ=;
-        b=mcEXm759s4PueCz78P9k2X48Nki1maAlVrRxBHyaIXYy1URODH6qaj00RCb6YQ8MZ2
-         P+xbx+Fd97fqikveIhcsmLAypu2rj5k5CB/BwUM8LEwWDjrpxRq+eZGtp3q9lwuuzd+9
-         mV7Ttcy2Rqt3drm0lqH7NC3/Ve5uuyWW/FqKY8Cni8/qffMRqownVCfxMImaturncwLV
-         07/RSIi7/+RYdI3SEovUHqp1vNmGvBEelB8KrBJGZwJKIJBDSRIbZShoB+1p/aqkLWdl
-         UA50vDNukSvvgXxwZeNKKc0Bx/HY/V/lwqrcA10z51EIemWONSGDzMayJBo050Py/8ow
-         OKiQ==
-X-Gm-Message-State: AOAM531TAnJm2Z7ZDherPlJaElECNBAPE0cLNZCswGyeRNhcQQYtJ0jW
-        K6OMbqKGWpwhKpTKi0KeQ9Q=
-X-Google-Smtp-Source: ABdhPJyrKfaLQ3639cZrtv1SHn9cay5HXy5MKWY132MuQMsHcqSjbmonrxxCryowUAKdi5d5SomNKg==
-X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr17854178pjr.181.1592829422425;
-        Mon, 22 Jun 2020 05:37:02 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y4sm13839956pfr.182.2020.06.22.05.37.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 05:37:00 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 9C42940430; Mon, 22 Jun 2020 12:36:59 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 12:36:59 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        martin.petersen@oracle.com, jejb@linux.ibm.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v7 6/8] blktrace: fix debugfs use after free
-Message-ID: <20200622123659.GV11244@42.do-not-panic.com>
-References: <20200619204730.26124-1-mcgrof@kernel.org>
- <20200619204730.26124-7-mcgrof@kernel.org>
- <75c3a94d-dcd1-05e4-47c6-db65f074136a@acm.org>
-MIME-Version: 1.0
+        Mon, 22 Jun 2020 08:39:55 -0400
+Received: from mail-eopbgr60066.outbound.protection.outlook.com ([40.107.6.66]:35809
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726889AbgFVMjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:39:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AP0fIm8eIL6gBjbXpBT2M1dc0zOUDdqi8tBmcGBJTKOM4RJxGyEPdmBL+X8ODzJdV3IShu1wH2GgrOM7zPAtUkL/yfDw7DowuheyVpF6ZeHt1C0IU/ryN4xtOK3zVZFCUnKuG0tRBPhl3ni7DyWBD956kVif0EjzOt2pd8z+PlbzKjhwbVdvAF3SKqaWBk7TRQpUlIO+paxcErBmxQEVkLKZbIFMEnXiriihLcpIO1cTOIZZo1wkDXmMvG4OW0xNlwxvfvtL+QijZZT7OS+ZImMURBM1d72iDH6r8+Dyl9rsvuMcn0LsZC29KtmyH8T4ypBqsTDrbfMBw4JnSOb9JA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p1K3W9D2CAIdaMZ2eJJRaCFYV5/wZE+UtaAcLp9SRgs=;
+ b=T9EEnKTezHSS1HLgHSzQnTrwJhI/gEafwyffNFvEAgSn9xwFfnZotJ4xXxmnlVs52qH/eqlIsBUA4H1b2zuaoeTP0CPayKTRQPNnayHPbY0ZfwIM2JufHbIm9cEfp49wM+6vvFDXO6SZIhMrjPrp+Kidfdx/TAKJGzVCtEx6NHgq+UwCOJExkxsuBB/D7scTcz5WQpEB2+i8wS0Jfi7UZyFr94z5eU3Wnh4mEVNZLeS6cl565jUpI1gBbthcyfZSKMV2a/qWzkA8gWq2CXjhmWPmfn4NyLJEyJDRFBW29hKH3cP33NSXc8sziB0pQFnS3UyJ3KevnZgmLvZDRwQjAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p1K3W9D2CAIdaMZ2eJJRaCFYV5/wZE+UtaAcLp9SRgs=;
+ b=pOaARyiZTEmm72NN0IdoN3cfSQp5FIJ1SGJv/d1SRevkRsh8Ni070O+5nwkdvkwM3QaQQvL1lBP5bV5fdjyIpyBKTp7FmyRAMWVoO1PJCT3vtwDIeVFglUivOZfKxmV/QoJa0ziSvdRBFQOGEH1bJKVoLtJmJ4Kiztp99sUMldM=
+Authentication-Results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB4702.eurprd05.prod.outlook.com (2603:10a6:802:5b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.25; Mon, 22 Jun
+ 2020 12:39:50 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 12:39:50 +0000
+Date:   Mon, 22 Jun 2020 09:39:47 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 00/16] mm/hmm/nouveau: THP mapping and migration
+Message-ID: <20200622123947.GC2590509@mellanox.com>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <75c3a94d-dcd1-05e4-47c6-db65f074136a@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200619215649.32297-1-rcampbell@nvidia.com>
+X-ClientProxiedBy: BL0PR01CA0031.prod.exchangelabs.com (2603:10b6:208:71::44)
+ To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR01CA0031.prod.exchangelabs.com (2603:10b6:208:71::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 12:39:50 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jnLjn-00Bt6R-52; Mon, 22 Jun 2020 09:39:47 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 751cebd9-7b35-46be-0431-08d816a95b0a
+X-MS-TrafficTypeDiagnostic: VI1PR05MB4702:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB470271E4FEB6E385D7F352E4CF970@VI1PR05MB4702.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pMHw3hZKMymfaINzJj5CBQbB3lHLKD46VbCUtqy53Q69xeSoFrISsbudZYm57hKL9HTQ2aqcIF/xfOa/FUUzMRf1xqfNVpWhzzFzCC8Y3H8SKYuYThujhsTqUEbMAsyApFS0NAqn27AEC9b/g1IxXXtQ8MsiWJ8BrhtJhZ/WFz3vmNXBPmvidh4CmFzVmjzXhuighDOD15Fj6fiPd9zWPx3ekdsBnzLBPW7p/aZiCYNJWwMnXFrRMkShLdH5alaODiJ9a3i6xajnJzKgxdzxP1hqDSYpCpnXRRDjTHMexH5qIlPaTJdu8JFhRosCuiIOysewn81ExFVDOQA9JUhkJw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(376002)(396003)(39860400002)(8936002)(6916009)(186003)(26005)(1076003)(316002)(426003)(4326008)(8676002)(54906003)(83380400001)(2906002)(33656002)(5660300002)(9746002)(9786002)(36756003)(86362001)(2616005)(66476007)(66946007)(66556008)(478600001)(7416002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: tLNNxONQZO6jW+hpHfyZgIH4ekJEEY76iBbMYz/8FNO3wxQPzfWFq3Odq7G4TWT6ABx+FHBvHZwmz8kx3UjhKDksB7vj94wbWU+LQDYv0V5WvLaMkJQsXGFSj3jgmu7hDEXxHrbgpdUW5i93VB3NguMA1Oa4MKTWBVD8jNQNkdG3X/X8EP3XTWb4LgFI58kENa4x4U6n/zUmPWQvERH971WippoG425mD9tdpWq4Qo5C3n5urcpRbQurRf2Sj1MURdQfEwb10irvDYfWPCdshUbE3q6gLfPsJrOHez+yAa4MJ2J3wTZBNXjbbdvV/0zycr4BL5Drtu25Dx62pSSuqMnOC39+AVXTYMPIlqTdkuT+pmNmjbuAPnAiPG6ouIWKI/Ngt/m+ZDclKT1Zw5GJ0DOW66kV5Uiu8BuQzWygmNy016o7AQ8Gjy9qcA6Ud3PA39PjkQc+DEXPdvBkHvPXO5OWwC/i8tM0ja7JpaZPGP8=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 751cebd9-7b35-46be-0431-08d816a95b0a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 12:39:50.8090
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NLiVITWOJzttNzWnX+aFlNoYNmvhsxk0rQ5aLv4lUo/rd3WlD+tL/RYu4y/qiU7gmFVLwyBOB+qC4ZS5L4BP1Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4702
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 10:31:51AM -0700, Bart Van Assche wrote:
-> On 2020-06-19 13:47, Luis Chamberlain wrote:
-> > This goes tested with:
->        ^^^^
->        got?
-> 
-> > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> > index 7ff2ea5cd05e..e6e2d25fdbd6 100644
-> > --- a/kernel/trace/blktrace.c
-> > +++ b/kernel/trace/blktrace.c
-> > @@ -524,10 +524,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
-> >  	if (!bt->msg_data)
-> >  		goto err;
-> >  
-> > -	ret = -ENOENT;
-> > -
-> > -	dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> > -	if (!dir)
-> > +#ifdef CONFIG_BLK_DEBUG_FS
-> > +	/*
-> > +	 * When tracing whole make_request drivers (multiqueue) block devices,
-> > +	 * reuse the existing debugfs directory created by the block layer on
-> > +	 * init. For request-based block devices, all partitions block devices,
->                                                   ^^^^^^^^^^^^^^^^^^^^^
-> It seems like a word is missing from the comment? Or did you perhaps
-> want to refer to "all partition block devices"?
+On Fri, Jun 19, 2020 at 02:56:33PM -0700, Ralph Campbell wrote:
+> These patches apply to linux-5.8.0-rc1. Patches 1-3 should probably go
+> into 5.8, the others can be queued for 5.9. Patches 4-6 improve the HMM
+> self tests. Patch 7-8 prepare nouveau for the meat of this series which
+> adds support and testing for compound page mapping of system memory
+> (patches 9-11) and compound page migration to device private memory
+> (patches 12-16). Since these changes are split across mm core, nouveau,
+> and testing, I'm guessing Jason Gunthorpe's HMM tree would be appropriate.
 
-Yes, the later.
+You need to break this up into parts that go where they need to
+go. Nouveau rc changes should go to DRM or some series needs to
+explain the linkage
 
-> > +	 * and scsi-generic block devices we create a temporary new debugfs
-> > +	 * directory that will be removed once the trace ends.
-> > +	 */
-> > +	if (queue_is_mq(q) && bdev && bdev == bdev->bd_contains)
-> > +		dir = q->debugfs_dir;
-> > +	else
-> > +#endif
-> >  		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-> 
-> Can it happen that two different threads each try to set up block
-> tracing and hence that debugfs_create_dir() fails because a directory
-> with name buts->name already exists?
+> Ralph Campbell (16):
+>   mm: fix migrate_vma_setup() src_owner and normal pages
+>   nouveau: fix migrate page regression
+>   nouveau: fix mixed normal and device private page migration
+>   mm/hmm: fix test timeout on slower machines
+>   mm/hmm/test: remove redundant page table invalidate
+>   mm/hmm: test mixed normal and device private migrations
+>   nouveau: make nvkm_vmm_ctor() and nvkm_mmu_ptp_get() static
+>   nouveau/hmm: fault one page at a time
+>   mm/hmm: add output flag for compound page mapping
+>   nouveau/hmm: support mapping large sysmem pages
+>   hmm: add tests for HMM_PFN_COMPOUND flag
+>   mm/hmm: optimize migrate_vma_setup() for holes
 
-Great question, the answer is no. The reason is that we first use the
-mutex and then we check for q->blk_trace. If you hold the lock *and*
-you have checked for q->blk_trace and its NULL, you are sure you should
-not have a duplicate.
+Order things so it is hmm, test, noeveau
 
-Its why the commit log mentioned:
+>   mm: support THP migration to device private memory
+>   mm/thp: add THP allocation helper
+>   mm/hmm/test: add self tests for THP migration
+>   nouveau: support THP migration to private memory
 
-  The new clarifications on relying on the q->blk_trace_mutex *and* also
-  checking for q->blk_trace *prior* to processing a blktrace ensures the
-  debugfs directories are only created if no possible directory name
-  clashes are possible.
+This is another series, you should split it even if it has to go
+through the hmm tree
 
-These clarifications were prompted through discussions with Jan Kara
-on the patches he posted which you CC'd me on. I agreed with his
-patch *but* I suggested it would hold true only if check for the
-q->blk_trace first, and this is why my patch titled "blktrace: break
-out of blktrace setup on concurrent calls" got merged prior to Jan
-Kara's "blktrace: Avoid sparse warnings when assigning q->blk_trace".
-
-> >  	bt->dev = dev;
-> > @@ -565,8 +573,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
-> >  
-> >  	ret = 0;
-> >  err:
-> > -	if (dir && !bt->dir)
-> > -		dput(dir);
-> >  	if (ret)
-> >  		blk_trace_free(bt);
-> >  	return ret;
-> 
-> Shouldn't bt->dir be removed in this error path for make_request drivers?
-
-If there is an error, bt->dir will be removed still, as I never modified
-the removal of bt->dir in this patch.
-
-  Luis
+Jason
