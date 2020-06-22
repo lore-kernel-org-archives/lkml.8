@@ -6,132 +6,70 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A105C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A861C20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127E52073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgFVKuM (ORCPT
+        id S1727812AbgFVKuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:50:12 -0400
-Received: from mga01.intel.com ([192.55.52.88]:8792 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726919AbgFVKuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:50:12 -0400
-IronPort-SDR: XmpAACf/NJ9SEkMQG3MB7Bzz/DQGnz9QUX+wBRZn5hlIIqTfXs488OylMnKp2WErga/5kMylWo
- yCblGXls5w4g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="161804871"
-X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
-   d="scan'208";a="161804871"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 03:50:09 -0700
-IronPort-SDR: +QctP/WMWVDPHFonorsaeCyL/QQUU1bGcxijVpSxNK/A/KeR2KgCRegkpa/7mSusW3PgBzgVg8
- RK9uS0ItioJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
-   d="scan'208";a="384452378"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Jun 2020 03:50:09 -0700
-Received: from [10.249.226.81] (abudanko-mobl.ccr.corp.intel.com [10.249.226.81])
-        by linux.intel.com (Postfix) with ESMTP id 72E51580514;
-        Mon, 22 Jun 2020 03:50:04 -0700 (PDT)
-Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static polled
- file descriptors
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <be40edeb-0cb9-5e11-2a22-8392316cdced@linux.intel.com>
- <49eca46e-4d0e-2ae5-d7d9-e37a4d680270@linux.intel.com>
- <20200608084344.GA1520715@krava>
- <2d80a43a-54cf-3d12-92fd-066217c95d76@linux.intel.com>
- <20200608160758.GD1558310@krava>
- <bde9bcc3-9ec0-6e37-26f6-139b038ad3de@linux.intel.com>
- <20200615123048.GB2088119@krava>
- <8b29e324-eb8d-2266-562b-ca46aec76a3e@linux.intel.com>
- <20200615165802.GD2088119@krava>
- <8351b3ee-d345-a394-d687-443f2d2f7ec4@linux.intel.com>
- <20200622102142.GA2583819@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <cad3d9a6-da28-c627-de73-17169a7c36a1@linux.intel.com>
-Date:   Mon, 22 Jun 2020 13:50:03 +0300
+        Mon, 22 Jun 2020 06:50:17 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2348 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726919AbgFVKuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 06:50:14 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id A8AFB26D710A9753088E;
+        Mon, 22 Jun 2020 11:50:12 +0100 (IST)
+Received: from [127.0.0.1] (10.47.7.242) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 22 Jun
+ 2020 11:50:11 +0100
+Subject: Re: [PATCH v3] driver core: platform: expose numa_node to users in
+ sysfs
+To:     Barry Song <song.bao.hua@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <rafael@kernel.org>
+CC:     Robin Murphy <robin.murphy@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        Prime Zeng <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>
+References: <20200619030045.81956-1-song.bao.hua@hisilicon.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <dc66d5a7-fa26-4c56-7445-57f99d3a5018@huawei.com>
+Date:   Mon, 22 Jun 2020 11:48:44 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20200622102142.GA2583819@krava>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200619030045.81956-1-song.bao.hua@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.7.242]
+X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 19/06/2020 04:00, Barry Song wrote:
+> Some platform devices like ARM SMMU are memory-mapped and populated by ACPI/IORT.
+> In this case, NUMA topology of those platform devices are exported by firmware as
+> well. Software might care about the numa_node of those devices in order to achieve
+> NUMA locality.
 
-On 22.06.2020 13:21, Jiri Olsa wrote:
-> On Mon, Jun 22, 2020 at 12:47:19PM +0300, Alexey Budankov wrote:
-> 
-> SNIP
-> 
->>>>>>>> fdarray__del(array, fdkey);
->>>>>>>
->>>>>>> I think there's solution without having filterable type,
->>>>>>> I'm not sure why you think this is needed
->>>>>>>
->>>>>>> I'm busy with other things this week, but I think I can
->>>>>>> come up with some patch early next week if needed
->>>>>>
->>>>>> Friendly reminder.
->>>>>
->>>>> hm? I believe we discussed this in here:
->>>>>   https://lore.kernel.org/lkml/20200609145611.GI1558310@krava/
->>>>
->>>> Do you want it to be implemented like in the patch posted by the link?
->>>
->>> no idea.. looking for good solution ;-)
->>>
->>> how about switching completely to epoll? I tried and it
->>> does not look that bad
->>
->> Well, epoll() is perhaps possible but why does it want switching to epoll()?
->> What are the benefits and/or specific task being solved by this switch? 
-> 
-> epoll change fixes the same issues as the patch you took in v8
-> 
-> on top of it it's not a hack and wil make polling more user
-> friendly because of the clear interface
+Is it generally the case that the SMMU will be in the same NUMA node as 
+the endpoint device (which you're driving)? If so, we can get this info 
+from sysfs already for the endpoint, and also have a link from the 
+endpoint to the iommu for pci devices (which I assume you're interested in):
 
-Clear. The opposite thing is /proc/sys/fs/epoll/max_user_watches limit that
-will affect Perf tool usage additionally to the current process limit on 
-a number of simultaneously open file descriptors (ulimit -n). So move to 
-epoll() will impose one limit what can affect Perf tool scalability.
-
-> 
->>
->>>
->>> there might be some loose ends (interface change), but
->>> I think this would solve our problems with fdarray
->>
->> Your first patch accomodated in v8 actually avoids fds typing
->> and solves pos (=fdarray__add()) staleness issue with fdarray.
-> 
-> yea, it was a change meant for discussion (which never happened),
-> and I considered it to be more a hack than a solution
-> 
-> I suppose we can live with that for a while, but I'd like to
-> have clean solution for polling as well
-
-I wouldn't treat it as a hack but more as a fix because returned
-pos is now a part of interface that can be safely used in callers.
-Can we go with this fix for the patch set?
+root@(none)$ ls -l /sys/devices/pci0000:74/0000:74:02.0/ | grep iommu
+lrwxrwxrwx 1 root  root 0 Jun 22 10:33 iommu -> 
+../../platform/arm-smmu-v3.2.auto/iommu/smmu3.0x0000000140000000
+lrwxrwxrwx 1 root  root 0 Jun 22 10:33 iommu_group -> 
+../../../kernel/iommu_groups/0
+root@(none)$
 
 Thanks,
-Alexey
+John
