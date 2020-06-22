@@ -2,205 +2,191 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAF0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968E4206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIUhc/Kv"
+	by mail.kernel.org (Postfix) with ESMTP id 1E91B2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592835463;
+	bh=6aZVzghEekOMs48Xj9SPcAsI41owlasiNa+1PFH/xQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ny/R/wiYgfh0Z6CR2n3oYXuvgM5Ry/JLcKXjSb7+rsCJ37lrpASQDI/3e3oEgg229
+	 fo43V2SntFiM+xepXHCSt5IdKKW7TEA64KRhVHLgjP6TAKC20KLeB/cfmRJdFc6zx4
+	 rxoBjDu4wJBsdy+pytH3bGmjAKtEVIHyGtHgT+9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgFVOMR (ORCPT
+        id S1729194AbgFVORl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:12:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57893 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729065AbgFVOMQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:12:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592835134;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=XzaIiqtyzeH6xdyYCmO6Xb0gAjzqwiSwdYKPc2hzlCA=;
-        b=NIUhc/KvjvfJoNneekBj4w9IxaBP2sgTkfsVyfItY16bdqPPBj4u6O2xyxZCzfFTZsd1F5
-        ycB8ybqEJtooe/zoUwXCwNvyyOZtq7d7Mp4S8gmT3a8LMllPw/1v7MyzHjGh3kNbNIZsJ4
-        Y1jaloAsRSICLGpta4yFm/0iH7lmtJo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-PhNvIBVRM1a0F2SVErre5w-1; Mon, 22 Jun 2020 10:12:10 -0400
-X-MC-Unique: PhNvIBVRM1a0F2SVErre5w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 22 Jun 2020 10:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728328AbgFVORl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:17:41 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E7EA100CCC5;
-        Mon, 22 Jun 2020 14:12:08 +0000 (UTC)
-Received: from [10.36.113.213] (ovpn-113-213.ams2.redhat.com [10.36.113.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 763D360C47;
-        Mon, 22 Jun 2020 14:12:01 +0000 (UTC)
-Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
- don't read garbage memmaps
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-References: <20200619125923.22602-1-david@redhat.com>
- <20200619125923.22602-2-david@redhat.com>
- <20200622082635.GA93552@L-31X9LVDL-1304.local>
- <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
- <20200622092221.GA96699@L-31X9LVDL-1304.local>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <b2c82aca-a132-95fd-4081-d94c1d658eee@redhat.com>
-Date:   Mon, 22 Jun 2020 16:11:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 11A45206E2;
+        Mon, 22 Jun 2020 14:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592835460;
+        bh=6aZVzghEekOMs48Xj9SPcAsI41owlasiNa+1PFH/xQw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sQwwxEXPDuySCjGSfIf0Ac5y3pwt1qful+hh3iegD5uoo3SxpT4XbhTHRplQvTGE3
+         g1bMAp/LJud61L0FtmdDbirAB55pnxUomhJ+V0A7cweGN+2iBIlwcvh3plkR/nmHd2
+         heu8+bUa5it+Y0VtQWdDKoqFM1YqYKQtTQf43kv8=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0196D405FF; Mon, 22 Jun 2020 11:17:37 -0300 (-03)
+Date:   Mon, 22 Jun 2020 11:17:37 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH -v2] x86/msr: Move the F15h MSRs where they belong
+Message-ID: <20200622141737.GA30611@kernel.org>
+References: <20200621163323.14e8533f@canb.auug.org.au>
+ <20200621105350.GA28206@zn.tnic>
+ <20200622113824.6a3ab82f@canb.auug.org.au>
+ <20200622130407.GB32200@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20200622092221.GA96699@L-31X9LVDL-1304.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622130407.GB32200@zn.tnic>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.06.20 11:22, Wei Yang wrote:
-> On Mon, Jun 22, 2020 at 10:43:11AM +0200, David Hildenbrand wrote:
->> On 22.06.20 10:26, Wei Yang wrote:
->>> On Fri, Jun 19, 2020 at 02:59:20PM +0200, David Hildenbrand wrote:
->>>> Especially with memory hotplug, we can have offline sections (with a
->>>> garbage memmap) and overlapping zones. We have to make sure to only
->>>> touch initialized memmaps (online sections managed by the buddy) and that
->>>> the zone matches, to not move pages between zones.
->>>>
->>>> To test if this can actually happen, I added a simple
->>>> 	BUG_ON(page_zone(page_i) != page_zone(page_j));
->>>> right before the swap. When hotplugging a 256M DIMM to a 4G x86-64 VM and
->>>> onlining the first memory block "online_movable" and the second memory
->>>> block "online_kernel", it will trigger the BUG, as both zones (NORMAL
->>>> and MOVABLE) overlap.
->>>>
->>>> This might result in all kinds of weird situations (e.g., double
->>>> allocations, list corruptions, unmovable allocations ending up in the
->>>> movable zone).
->>>>
->>>> Fixes: e900a918b098 ("mm: shuffle initial free memory to improve memory-side-cache utilization")
->>>> Acked-by: Michal Hocko <mhocko@suse.com>
->>>> Cc: stable@vger.kernel.org # v5.2+
->>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>>> Cc: Michal Hocko <mhocko@suse.com>
->>>> Cc: Minchan Kim <minchan@kernel.org>
->>>> Cc: Huang Ying <ying.huang@intel.com>
->>>> Cc: Wei Yang <richard.weiyang@gmail.com>
->>>> Cc: Mel Gorman <mgorman@techsingularity.net>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>> mm/shuffle.c | 18 +++++++++---------
->>>> 1 file changed, 9 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/mm/shuffle.c b/mm/shuffle.c
->>>> index 44406d9977c77..dd13ab851b3ee 100644
->>>> --- a/mm/shuffle.c
->>>> +++ b/mm/shuffle.c
->>>> @@ -58,25 +58,25 @@ module_param_call(shuffle, shuffle_store, shuffle_show, &shuffle_param, 0400);
->>>>  * For two pages to be swapped in the shuffle, they must be free (on a
->>>>  * 'free_area' lru), have the same order, and have the same migratetype.
->>>>  */
->>>> -static struct page * __meminit shuffle_valid_page(unsigned long pfn, int order)
->>>> +static struct page * __meminit shuffle_valid_page(struct zone *zone,
->>>> +						  unsigned long pfn, int order)
->>>> {
->>>> -	struct page *page;
->>>> +	struct page *page = pfn_to_online_page(pfn);
->>>
->>> Hi, David and Dan,
->>>
->>> One thing I want to confirm here is we won't have partially online section,
->>> right? We can add a sub-section to system, but we won't manage it by buddy.
->>
->> Hi,
->>
->> there is still a BUG with sub-section hot-add (devmem), which broke
->> pfn_to_online_page() in corner cases (especially, see the description in
->> include/linux/mmzone.h). We can have a boot-memory section partially
->> populated and marked online. Then, we can hot-add devmem, marking the
->> remaining pfns valid - and as the section is maked online, also as online.
+Em Mon, Jun 22, 2020 at 03:04:07PM +0200, Borislav Petkov escreveu:
+> On Mon, Jun 22, 2020 at 11:38:24AM +1000, Stephen Rothwell wrote:
+> > I applied that patch to the tip tree merge today.
+> > 
+> > Tested-by: Stephen Rothwell <sfr@canb.auug.org.au> # build tested
 > 
-> Oh, yes, I see this description.
+> Here's v2 instead, addressing acme's request. I didn't rebase the
+> x86/cleanups branch because I'd like to have this case documented.
 > 
-> This means we could have section marked as online, but with a sub-section even
-> not added.
-> 
-> While the good news is even the sub-section is not added, but its memmap is
-> populated for an early section. So the page returned from pfn_to_online_page()
-> is a valid one.
-> 
-> But what would happen, if the sub-section is removed after added? Would
-> section_deactivate() release related memmap to this "struct page"?
+> acme, ACK?
 
-Just to clarify now that I get your point: No it would not, as it is an
-early section, and the early section is not completely empty.
+So this reverts the change you made to the tools copy of that file and
+then does the change you need to the kernel sources, ok.
+
+In the future the change will be made just in the kernel files, as
+kernel developers don't have to have the burden of checking if tooling
+continues to work when they change kernel files.
+
+That way later the perf developers get the warning in the perf build
+process, see how this change in a file that is a copy from the kernel
+sources affects tooling, and act upon it, simply updating the copy or
+doing that + extra tooling adjustments, perhaps a new feature, etc.
+
+Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
+ 
+> Thx.
+> 
+> ---
+> From c1c1a26bc631fafb68ed30c5164d0231acc500ee Mon Sep 17 00:00:00 2001
+> From: Borislav Petkov <bp@suse.de>
+> Date: Sun, 21 Jun 2020 12:41:53 +0200
+> 
+> 1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
+> 
+> moved the three F15h power MSRs to the architectural list but that was
+> wrong as they belong in the family 0x15 list. That also caused:
+> 
+>   In file included from trace/beauty/tracepoints/x86_msr.c:10:
+>   perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: error: initialized field overwritten [-Werror=override-init]
+>     292 |  [0xc0010280 - x86_AMD_V_KVM_MSRs_offset] = "F15H_PTSC",
+>         |                                             ^~~~~~~~~~~
+>   perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: note: (near initialization for 'x86_AMD_V_KVM_MSRs[640]')
+> 
+> due to MSR_F15H_PTSC ending up being defined twice. Move them where they
+> belong and drop the duplicate.
+> 
+> Also, drop the respective tools/ changes of the msr-index.h copy the
+> above commit added because perf tool developers prefer to go through
+> those changes themselves in order to figure out whether changes to the
+> kernel headers would need additional handling in perf.
+> 
+> Fixes: 1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Link: https://lkml.kernel.org/r/20200621163323.14e8533f@canb.auug.org.au
+> ---
+>  arch/x86/include/asm/msr-index.h       | 5 ++---
+>  tools/arch/x86/include/asm/msr-index.h | 5 +----
+>  2 files changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index eb9537254920..63ed8fe35738 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -422,11 +422,8 @@
+>  #define MSR_AMD_PERF_CTL		0xc0010062
+>  #define MSR_AMD_PERF_STATUS		0xc0010063
+>  #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
+> -#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
+> -#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+>  #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
+>  #define MSR_AMD64_OSVW_STATUS		0xc0010141
+> -#define MSR_F15H_PTSC			0xc0010280
+>  #define MSR_AMD_PPIN_CTL		0xc00102f0
+>  #define MSR_AMD_PPIN			0xc00102f1
+>  #define MSR_AMD64_CPUID_FN_1		0xc0011004
+> @@ -469,6 +466,8 @@
+>  #define MSR_F16H_DR0_ADDR_MASK		0xc0011027
+>  
+>  /* Fam 15h MSRs */
+> +#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
+> +#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+>  #define MSR_F15H_PERF_CTL		0xc0010200
+>  #define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
+>  #define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
+> diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+> index 7dfd45bb6cdb..ef452b817f44 100644
+> --- a/tools/arch/x86/include/asm/msr-index.h
+> +++ b/tools/arch/x86/include/asm/msr-index.h
+> @@ -414,18 +414,15 @@
+>  #define MSR_AMD64_PATCH_LEVEL		0x0000008b
+>  #define MSR_AMD64_TSC_RATIO		0xc0000104
+>  #define MSR_AMD64_NB_CFG		0xc001001f
+> +#define MSR_AMD64_CPUID_FN_1		0xc0011004
+>  #define MSR_AMD64_PATCH_LOADER		0xc0010020
+>  #define MSR_AMD_PERF_CTL		0xc0010062
+>  #define MSR_AMD_PERF_STATUS		0xc0010063
+>  #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
+> -#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
+> -#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
+>  #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
+>  #define MSR_AMD64_OSVW_STATUS		0xc0010141
+> -#define MSR_F15H_PTSC			0xc0010280
+>  #define MSR_AMD_PPIN_CTL		0xc00102f0
+>  #define MSR_AMD_PPIN			0xc00102f1
+> -#define MSR_AMD64_CPUID_FN_1		0xc0011004
+>  #define MSR_AMD64_LS_CFG		0xc0011020
+>  #define MSR_AMD64_DC_CFG		0xc0011022
+>  #define MSR_AMD64_BU_CFG2		0xc001102a
+> -- 
+> 2.21.0
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
 
 -- 
-Thanks,
 
-David / dhildenb
-
+- Arnaldo
