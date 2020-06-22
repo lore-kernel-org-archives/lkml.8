@@ -2,92 +2,121 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE09FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7F520706
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9DC20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HHxqYWRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbgFVTAe convert rfc822-to-8bit (ORCPT
+        id S1730424AbgFVS7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:00:34 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40195 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730584AbgFVTAa (ORCPT
+        Mon, 22 Jun 2020 14:59:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42328 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730382AbgFVS7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:00:30 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t25so16597335oij.7;
-        Mon, 22 Jun 2020 12:00:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z59w5oiWxqTwMyQwuHYI8ey8CfTBnQaiPGy2tHrE1Oc=;
-        b=kRY6YDHpfLQEAztOC4Ywab6ilMvAmuAuWiSaXVUn22uJIEJvwHqhtDAmO1fj9jbNyJ
-         vz/LORpkiccAZOWYd5g8RUBpXOuoEbDEsbkt3YCI0M7Bwn2vhJenHHnJrhaasYTnEw+g
-         xGiHdj0fKc+xPIPCLO8bqHQiW7QH8vQ9YZrA1WG5eIEoUKQJE3udQJp8zP2SQH110Wdm
-         kiFl0W4FTpTaT8pj4AmDHWXXlaJ5A+OU+ee75dycJODC3q4AlZkiuI6Tjg5kIJD2XQXg
-         E9gimX1+bDJO6XJCCAtxiApHioh2dJMfVkMZ/Yu7zOiDad9BownqzrWLcyogJZoFnO8O
-         T40A==
-X-Gm-Message-State: AOAM532j3Dc4/LmfOzxI+9KevQH3wGW9+uFiueQ9yA+WoavbRng15CrH
-        HAz13jDPsMWz5ExnrIZH6fu+ANYsR5O/Ww7HJRO2sA==
-X-Google-Smtp-Source: ABdhPJwI07nEdURLpondejh5pGqI08dfdmqHKC9L6PmNZ7ntBKOHDPWXFaqyU2HpzIfswjDrRVT+XKP5PPe58sUQIKQ=
-X-Received: by 2002:aca:849:: with SMTP id 70mr13140333oii.153.1592852428711;
- Mon, 22 Jun 2020 12:00:28 -0700 (PDT)
+        Mon, 22 Jun 2020 14:59:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxVxG024952;
+        Mon, 22 Jun 2020 13:59:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592852371;
+        bh=R4dHNQasNqNWmy1suWpwALJni0NAZjJCL1xLlVBfBvI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=HHxqYWRoEpduU5G8rIYDuyeZFRkM54wTXrqz1qP8Ht4RTEfMR2Fle02O/oKZy9UpI
+         0ofAX5vRJy4jnjTqRhWZ41udc2snaHgVW9O85R39VCcw15d3obUAmD7k3RT6kEb0ku
+         OgUNSYGGJ6iUbg/21GfF1dRymfqnAvmtIauZGTIs=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MIxVBE038082
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 13:59:31 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
+ Jun 2020 13:59:31 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 22 Jun 2020 13:59:31 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxUXS088136;
+        Mon, 22 Jun 2020 13:59:31 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v29 13/16] leds: lp5523: Update the lp5523 code to add multicolor brightness function
+Date:   Mon, 22 Jun 2020 13:59:16 -0500
+Message-ID: <20200622185919.2131-14-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200622185919.2131-1-dmurphy@ti.com>
+References: <20200622185919.2131-1-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <CAMuHMdXHT9y09L19j2K=oQ1W+7x=SE7MEyjj6r1i=DPcokvWzg@mail.gmail.com>
- <20200617074023.30356-1-navid.emamdoost@gmail.com> <CAMuHMdULgdhgoydX-nnVSyCEBd4zkCgSyVZ+ojFzGM0gky6OJQ@mail.gmail.com>
- <CAMpxmJXV-Ujx2zgXxiYWOED2CYz_89aAiUUiqak1JbtNJKgSFg@mail.gmail.com>
-In-Reply-To: <CAMpxmJXV-Ujx2zgXxiYWOED2CYz_89aAiUUiqak1JbtNJKgSFg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 22 Jun 2020 21:00:17 +0200
-Message-ID: <CAMuHMdV6oSWCt3+r-7X3VT7MkpxenYMvH1gHinU9nJUvKO3bsw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: rcar: handle pm_runtime_get_sync failure case
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        mccamant@cs.umn.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+Add the multicolor brightness call back to support the multicolor
+framework.  This call back allows setting  brightness on grouped channels
+in a single function.
 
-On Mon, Jun 22, 2020 at 6:54 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> śr., 17 cze 2020 o 09:43 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
-> > On Wed, Jun 17, 2020 at 9:40 AM Navid Emamdoost
-> > <navid.emamdoost@gmail.com> wrote:
-> > > Calling pm_runtime_get_sync increments the counter even in case of
-> > > failure, causing incorrect ref count. Call pm_runtime_put if
-> > > pm_runtime_get_sync fails.
-> > >
-> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Is this stable material?
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/leds-lp5523.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-No, it cannot happen anyway.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index b076c16df9ab..9776dc72a764 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -791,6 +791,25 @@ static ssize_t store_master_fader_leds(struct device *dev,
+ 	return ret;
+ }
+ 
++static int lp5523_multicolor_brightness(struct lp55xx_led *led)
++{
++	struct lp55xx_chip *chip = led->chip;
++	int ret;
++	int i;
++
++	mutex_lock(&chip->lock);
++	for (i = 0; i < led->mc_cdev.num_colors; i++) {
++		ret = lp55xx_write(chip,
++				   LP5523_REG_LED_PWM_BASE +
++				   led->mc_cdev.subled_info[i].channel,
++				   led->mc_cdev.subled_info[i].brightness);
++		if (ret)
++			break;
++	}
++	mutex_unlock(&chip->lock);
++	return ret;
++}
++
+ static int lp5523_led_brightness(struct lp55xx_led *led)
+ {
+ 	struct lp55xx_chip *chip = led->chip;
+@@ -857,6 +876,7 @@ static struct lp55xx_device_config lp5523_cfg = {
+ 	.max_channel  = LP5523_MAX_LEDS,
+ 	.post_init_device   = lp5523_post_init_device,
+ 	.brightness_fn      = lp5523_led_brightness,
++	.multicolor_brightness_fn = lp5523_multicolor_brightness,
+ 	.set_led_current    = lp5523_set_led_current,
+ 	.firmware_cb        = lp5523_firmware_loaded,
+ 	.run_engine         = lp5523_run_engine,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
