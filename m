@@ -2,120 +2,133 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF594C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1825C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8990920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C677920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:41:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j9dDq1D5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgFVTk6 (ORCPT
+        id S1728535AbgFVTlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:40:58 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9154 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgFVTk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:40:57 -0400
-IronPort-SDR: bDFNHcrkkwTVLHcqJAVsIhF+D5EQz8IBOT+h3PIExNcPygWH8I0b57hHUyvT+qLL63ao6JeFLI
- jpB+FhXvdFAQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="141358938"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="141358938"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 12:40:56 -0700
-IronPort-SDR: O2b/9H8givv7m7N6NdtbF7yIVm6rD/0I5UzGQRLHIHJLsztvgSIXbC7QNG8I+x4aNniWrNxrWX
- DnQr+RzAI2QA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="264595386"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 12:40:55 -0700
-Date:   Mon, 22 Jun 2020 12:40:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Ben Gardon <bgardon@google.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: [PATCH 10/21] KVM: x86/mmu: Make __GFP_ZERO a property of the
- memory cache
-Message-ID: <20200622194055.GC6151@linux.intel.com>
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
- <20200605213853.14959-11-sean.j.christopherson@intel.com>
- <CANgfPd9_BR_2NThfEs8faDxWeooZ6OeF2HAB5mUmted5sHwDPg@mail.gmail.com>
+        Mon, 22 Jun 2020 15:41:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728447AbgFVTlQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:41:16 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A90C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Tp0FvdeMkD0In5KDxlOtCuC1dG7VeQNXQJo7C/sHai0=; b=j9dDq1D51Tu300HC9aIqfHqXrc
+        5GsiBOxLP8aOZOMTrBrw86raw9grYGO9RU3QoRxrQjM3MbPncZPIaJD7nCx/iEAoDicUJ488gskqF
+        eKwEUyWCBQf64/YzbovPa0zFNLCfqtjJnlx19cxHCWZ8896i6pjLHmHKaIqmqVGsz0kSFlRQzk6NS
+        mxeKG9aoT9a5UtJ2faJ1aBOjtDzXAhrIfw/e8DdYA26SNjVODiL+Jq5iHY/kkANiCJ7NtGhAFQ7vv
+        ia9YZKF88jbmGSh5r/VTE2oYtypW6d/g9eZaFjimuuiyH4z3nX4+kaRhyxw6GQIaL3PT4DMvV0w4d
+        aYc+m9vA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnSJL-0002yS-CW; Mon, 22 Jun 2020 19:40:56 +0000
+Subject: Re: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
+ each syscall
+To:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jann Horn <jannh@google.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200622193146.2985288-1-keescook@chromium.org>
+ <20200622193146.2985288-4-keescook@chromium.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <87a7b943-ed15-8521-773e-c182a37ee61e@infradead.org>
+Date:   Mon, 22 Jun 2020 12:40:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANgfPd9_BR_2NThfEs8faDxWeooZ6OeF2HAB5mUmted5sHwDPg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200622193146.2985288-4-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 11:57:32AM -0700, Ben Gardon wrote:
-> > ---
-> >  arch/x86/include/asm/kvm_host.h | 1 +
-> >  arch/x86/kvm/mmu/mmu.c          | 7 ++++++-
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index e7a427547557..fb99e6776e27 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -251,6 +251,7 @@ struct kvm_kernel_irq_routing_entry;
-> >   */
-> >  struct kvm_mmu_memory_cache {
-> >         int nobjs;
-> > +       gfp_t gfp_zero;
-> This would make more sense to me if it could be used for general extra
-> gfp flags and was called gfp_flags or something, or it was a boolean
-> that was later translated into the flag being set. Storing the
-> gfp_zero flag here is a little counter-intuitive. Probably not worth
-> changing unless you're sending out a v2 for some other reason.
+On 6/22/20 12:31 PM, Kees Cook wrote:
+> This provides the ability for architectures to enable kernel stack base
+> address offset randomization. This feature is controlled by the boot
+> param "randomize_kstack_offset=on/off", with its default value set by
+> CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT.
+> 
+> Co-developed-by: Elena Reshetova <elena.reshetova@intel.com>
+> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+> Link: https://lore.kernel.org/r/20190415060918.3766-1-elena.reshetova@intel.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  Makefile                         |  4 ++++
+>  arch/Kconfig                     | 23 ++++++++++++++++++
+>  include/linux/randomize_kstack.h | 40 ++++++++++++++++++++++++++++++++
+>  init/main.c                      | 23 ++++++++++++++++++
+>  4 files changed, 90 insertions(+)
+>  create mode 100644 include/linux/randomize_kstack.h
 
-Ideally, this would be a generic gfp_flags field, but that's basically a
-non-starter for patch 5, which uses GFP_ATOMIC for the "oh crap the cache
-is empty" error handling.  Allowing arbitrary flags would be a mess.
-
-I went with storing a full gfp_t because that produces more optimal code.
-This isn't a super critical path and it's only a few cycles, but it seems
-worthwhile given the frequency with which this code will be called, and
-since this happens under mmu_lock.
+Hi,
+Please add documentation for the new kernel boot parameter to
+Documentation/admin-guide/kernel-parameters.txt.
 
 
-348             gfp_flags |= mc->gfp_zero;
-   0x00000000000058ab <+59>:    mov    0x4(%rbx),%eax
-   0x00000000000058ae <+62>:    or     $0x400cc0,%eax
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 1ea61290900a..1f52c9cfefca 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -883,6 +883,29 @@ config VMAP_STACK
+>  	  virtual mappings with real shadow memory, and KASAN_VMALLOC must
+>  	  be enabled.
+>  
+> +config HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+> +	def_bool n
+> +	help
+> +	  An arch should select this symbol if it can support kernel stack
+> +	  offset randomization with calls to add_random_kstack_offset()
+> +	  during syscall entry and choose_random_kstack_offset() during
+> +	  syscall exit. Downgrading of -fstack-protector-strong to
+> +	  -fstack-protector should also be applied to the entry code and
+> +	  closely examined, as the artificial stack bump looks like an array
+> +	  to the compiler, so it will attempt to add canary checks regardless
+> +	  of the static branch state.
+> +
+> +config RANDOMIZE_KSTACK_OFFSET_DEFAULT
+> +	bool "Randomize kernel stack offset on syscall entry"
+> +	depends on HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+> +	help
+> +	  The kernel stack offset can be randomized (after pt_regs) by
+> +	  roughly 5 bits of entropy, frustrating memory corruption
+> +	  attacks that depend on stack address determinism or
+> +	  cross-syscall address exposures. This feature is controlled
+> +	  by kernel boot param "randomize_kstack_offset=on/off", and this
+> +	  config chooses the default boot state.
 
-versus
 
-349                     gfp_flags |= __GFP_ZERO;
-   0x00000000000058a7 <+55>:    cmpb   $0x1,0x4(%rbx)
-   0x00000000000058ab <+59>:    mov    0x8(%rbx),%rdi <-- unrelated interleaved code
-   0x00000000000058af <+63>:    sbb    %eax,%eax
-   0x00000000000058b1 <+65>:    xor    %al,%al
-   0x00000000000058b3 <+67>:    add    $0x400dc0,%eax
+thanks.
+-- 
+~Randy
 
