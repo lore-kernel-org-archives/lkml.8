@@ -2,125 +2,136 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C94C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E41AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC81A20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3C2206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vlog8wtK"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="RE1Xhlmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgFVKVx (ORCPT
+        id S1727827AbgFVKWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:21:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60700 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726841AbgFVKVt (ORCPT
+        Mon, 22 Jun 2020 06:22:02 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:33529 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726841AbgFVKV4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:21:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592821308;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7joIPwEiAilajqHGw842bd9Lt4ifvDQJJQVf6KXFIi0=;
-        b=Vlog8wtKKPM7gcaKP+uec60BCzCVpmXRNVxXGMABib6jQs88iVbWNksMlelEo9A32hNw7a
-        k1/25yw8oSf15qj4vM/A0/XNkdV0FSvb8neN8esj21KgER/llsiPRvkjiz3GCT8Uv1GGPJ
-        3842iCf+KkdeRPw7ePF55kb/wwAH20U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-252-jzngVRJGPxGHYALO6apD1w-1; Mon, 22 Jun 2020 06:21:46 -0400
-X-MC-Unique: jzngVRJGPxGHYALO6apD1w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 162708018D9;
-        Mon, 22 Jun 2020 10:21:45 +0000 (UTC)
-Received: from krava (unknown [10.40.193.171])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 263117167B;
-        Mon, 22 Jun 2020 10:21:42 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 12:21:42 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static
- polled file descriptors
-Message-ID: <20200622102142.GA2583819@krava>
-References: <be40edeb-0cb9-5e11-2a22-8392316cdced@linux.intel.com>
- <49eca46e-4d0e-2ae5-d7d9-e37a4d680270@linux.intel.com>
- <20200608084344.GA1520715@krava>
- <2d80a43a-54cf-3d12-92fd-066217c95d76@linux.intel.com>
- <20200608160758.GD1558310@krava>
- <bde9bcc3-9ec0-6e37-26f6-139b038ad3de@linux.intel.com>
- <20200615123048.GB2088119@krava>
- <8b29e324-eb8d-2266-562b-ca46aec76a3e@linux.intel.com>
- <20200615165802.GD2088119@krava>
- <8351b3ee-d345-a394-d687-443f2d2f7ec4@linux.intel.com>
+        Mon, 22 Jun 2020 06:21:56 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id nJaFj10Rvn3JWnJaJjZhof; Mon, 22 Jun 2020 12:21:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1592821313; bh=L8WW833T8W2P1xOE2BDz+8QVVAqC2sMxUCnZhk49lAY=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=RE1Xhlmw/69K4sdCOhopK6M7uMg043puIeJvVyvz/zfWZ8AKsjtkaKWhsaEvcUSLw
+         Rd9LnmPp/kNYPjxBNBGAR0UoXfycBfu0RRvSkVZv8hHJSxb4dbje8LZuK4G9coaQbi
+         xzBNobZsXWxSCNd5hxr2fMGoj5aw2OJg5lo/LJvfRQKbJqIdnsFLmK/aNiohBIKhA6
+         WW/cKeEExueTGx8c+CTRpJd63i/8B3khh52QyJe+8Hve5Li0PEJctxL8Fwz+nLvdQ1
+         dnEiDC+6CNXkuR8W2fzuaa8Lmlj/0ilHkM1AJlMJHQGEWRxVHea8phMbFphh17Luve
+         J5f7uUvP0PxDw==
+Subject: Re: [PATCH] media: vsp1: Fix a reference count leak.
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        wu000273@umn.edu
+Cc:     kjlu@umn.edu,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Aditya Pakki <pakki001@umn.edu>
+References: <20200613232357.18155-1-wu000273@umn.edu>
+ <20200616020732.GK1629@pendragon.ideasonboard.com>
+ <20200616020956.GL1629@pendragon.ideasonboard.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <812c778d-2bdc-574c-eb72-fb2570ac2c11@xs4all.nl>
+Date:   Mon, 22 Jun 2020 12:21:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8351b3ee-d345-a394-d687-443f2d2f7ec4@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200616020956.GL1629@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfA+D8HR7+7RpJYj/+jTPeJo/BoeYGufrTWr4WgMf436hetOblzYq+W++Fi5KnZH0DPyhCPkrWZ9EQTA0giCxanUHOC1L2jUfwK4acs2xnMfpe0mclqyh
+ RrbxK91lFVarg61urjG1pMgo5jnNyO6RimmbO7EyvhECHWzcI6G/Ymb2k7hP9G/CyeljqVu5idrgw6g5SEbssrvVdSLuWyxV+ymwAweBKyPDnWhvOG6kX7Xp
+ 55F8XWZo8KcSUBUry3ZepkZ+nQS2SKLe4kPMtQmFmw7I8DWSfeg+R7w9CTbrA8D4ZFJzQO1+/7MR+LGOOipmBypDrNcf1N10QmNBE7JdPKu0HFapkrH3tgdg
+ N8U02pdN63PCLTZzcX5uvl7O6h47bFj0iNdyNOeoO694di2orXpvK5ACc4ACjv3fAbORjFawI/bGfQ69IqxsKiPVJ5Gac8o0b3fj65xPDtlWw+4iDxEmJ37T
+ CfHP5p/7EYyhUy+rWdafmdpTHhPEbAf7OQ3s6z3grCXAmSnpTvCngvOYnMM0G+0BRSTiXLyWL5Q8spBBoV9zTl53s2KsvMx95vevBQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 12:47:19PM +0300, Alexey Budankov wrote:
-
-SNIP
-
-> >>>>>> fdarray__del(array, fdkey);
-> >>>>>
-> >>>>> I think there's solution without having filterable type,
-> >>>>> I'm not sure why you think this is needed
-> >>>>>
-> >>>>> I'm busy with other things this week, but I think I can
-> >>>>> come up with some patch early next week if needed
-> >>>>
-> >>>> Friendly reminder.
-> >>>
-> >>> hm? I believe we discussed this in here:
-> >>>   https://lore.kernel.org/lkml/20200609145611.GI1558310@krava/
-> >>
-> >> Do you want it to be implemented like in the patch posted by the link?
-> > 
-> > no idea.. looking for good solution ;-)
-> > 
-> > how about switching completely to epoll? I tried and it
-> > does not look that bad
+On 16/06/2020 04:09, Laurent Pinchart wrote:
+> On Tue, Jun 16, 2020 at 05:07:34AM +0300, Laurent Pinchart wrote:
+>> Hi Qiushi,
+>>
+>> (CC'ing Rafael and Geert)
+>>
+>> Thank you for the patch.
+>>
+>> On Sat, Jun 13, 2020 at 06:23:57PM -0500, wu000273@umn.edu wrote:
+>>> From: Qiushi Wu <wu000273@umn.edu>
+>>>
+>>> pm_runtime_get_sync() increments the runtime PM usage counter even
+>>> when it returns an error code, causing incorrect ref count if
+>>> pm_runtime_put_noidle() is not called in error handling paths.
+>>> Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+>>>
+>>> Fixes: 1e6af546ee66 ("[media] v4l: vsp1: Implement runtime PM support")
+>>> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+>>
+>> https://lore.kernel.org/dri-devel/20200614134655.GA5960@pendragon.ideasonboard.com/
+>>
+>> I really wonder if mass-patching all drivers is the best way forward.
 > 
-> Well, epoll() is perhaps possible but why does it want switching to epoll()?
-> What are the benefits and/or specific task being solved by this switch? 
+> Also,
+> 
+> https://lore.kernel.org/linux-media/20200608052919.4984-1-dinghao.liu@zju.edu.cn/
 
-epoll change fixes the same issues as the patch you took in v8
+I also stop applying these patches. In part because of what Laurent says (I'd
+like to have some consensus on this as well), and in part because there are
+at least three different devs working on this (Qiushi Wu <wu000273@umn.edu>,
+Aditya Pakki <pakki001@umn.edu> and Dinghao Liu <dinghao.liu@zju.edu.cn>) and
+I am getting duplicate patches.
 
-on top of it it's not a hack and wil make polling more user
-friendly because of the clear interface
+So I stop applying these pm_runtime_get_sync() patches until it is clear that
+this is the way forward. Other ref count issues I will still apply, but it
+would be great if Qiushi Wu, Aditya Pakki and Dinghao Liu can work together
+to avoid duplicate patches.
+
+Regards,
+
+	Hans
 
 > 
-> > 
-> > there might be some loose ends (interface change), but
-> > I think this would solve our problems with fdarray
+>>> ---
+>>>  drivers/media/platform/vsp1/vsp1_drv.c | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+>>> index c650e45bb0ad..222c9e1261a0 100644
+>>> --- a/drivers/media/platform/vsp1/vsp1_drv.c
+>>> +++ b/drivers/media/platform/vsp1/vsp1_drv.c
+>>> @@ -846,8 +846,10 @@ static int vsp1_probe(struct platform_device *pdev)
+>>>  	pm_runtime_enable(&pdev->dev);
+>>>  
+>>>  	ret = pm_runtime_get_sync(&pdev->dev);
+>>> -	if (ret < 0)
+>>> +	if (ret < 0) {
+>>> +		pm_runtime_put_noidle(&pdev->dev);
+>>>  		goto done;
+>>> +	}
+>>>  
+>>>  	vsp1->version = vsp1_read(vsp1, VI6_IP_VERSION);
+>>>  	pm_runtime_put_sync(&pdev->dev);
 > 
-> Your first patch accomodated in v8 actually avoids fds typing
-> and solves pos (=fdarray__add()) staleness issue with fdarray.
-
-yea, it was a change meant for discussion (which never happened),
-and I considered it to be more a hack than a solution
-
-I suppose we can live with that for a while, but I'd like to
-have clean solution for polling as well
-
-jirka
 
