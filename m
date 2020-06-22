@@ -2,106 +2,124 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFADC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16515C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9BB22075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="CxR0MCFl"
+	by mail.kernel.org (Postfix) with ESMTP id F2C6D2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbgFVVqS (ORCPT
+        id S1730703AbgFVVqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:46:18 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:34164 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730494AbgFVVqR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:46:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1592862375; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=XVivtfrUoedverxihZDUvQXhbwIsW+Ph7W4Zuj41NTM=;
-        b=CxR0MCFl6PJNUHCHUUF4NaLFrzu7naZvhIfn6Lm6JwoZcjditrouo7ZpcUL1rCeRFGEFjr
-        kCaU21cgk8HIekGNqYAqaicVFFoGCrQgxI39HwYbNOvWv4es2JOe/xbqlEX3ayGZSJxFRM
-        khfX6DY8rWyRg/gN9IxIumrcgjcGbsI=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20Henrique?= <johnnyonflame@hotmail.com>
-Subject: [PATCH 1/2] pinctrl: ingenic: Enhance support for IRQ_TYPE_EDGE_BOTH
-Date:   Mon, 22 Jun 2020 23:45:47 +0200
-Message-Id: <20200622214548.265417-1-paul@crapouillou.net>
+        Mon, 22 Jun 2020 17:46:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:20658 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730609AbgFVVqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:46:20 -0400
+IronPort-SDR: 960zQAbJ6DlcoXtN01CxvZMaW6Rqv8KkEM4yLpQ6vkG90yQSLSrWGjXOICVGfhyyx6D0sMCjvq
+ fZPsM3a9yOJQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="141383801"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="141383801"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:46:17 -0700
+IronPort-SDR: NaFZINSRLZL0a/PTkHaBPxmWnkeLhBQ3jiZ/On3ot9F9N0sDZK+kbUNCPiHD93jUsPfGHOFD8O
+ dmtZ82DFiD3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="451984214"
+Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
+  by orsmga005.jf.intel.com with ESMTP; 22 Jun 2020 14:46:14 -0700
+Date:   Tue, 23 Jun 2020 00:46:13 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Pengfei Xu <pengfei.xu@intel.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Heng Su <heng.su@intel.com>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kai Svahn <kai.svahn@intel.com>
+Subject: Re: [PATCH v2] Kernel selftests: TPM2: upgrade TPM2 tests from
+ Python 2 to Python 3
+Message-ID: <20200622214613.GA22727@linux.intel.com>
+References: <20200618081502.15302-1-pengfei.xu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618081502.15302-1-pengfei.xu@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ingenic SoCs don't natively support registering an interrupt for both
-rising and falling edges. This has to be emulated in software.
+On Thu, Jun 18, 2020 at 04:15:02PM +0800, Pengfei Xu wrote:
+> Python 2 is no longer supported by the Python upstream project, so
+> upgrade TPM2 tests to Python 3.
+> 
+> Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
 
-Until now, this was emulated by switching back and forth between
-IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING according to the level of
-the GPIO. While this worked most of the time, when used with GPIOs that
-need debouncing, some events would be lost. For instance, between the
-time a falling-edge interrupt happens and the interrupt handler
-configures the hardware for rising-edge, the level of the pin may have
-already risen, and the rising-edge event is lost.
+Use "selftests: tpm: <short summary>".
 
-To address that issue, instead of switching back and forth between
-IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING, we now switch back and
-forth between IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_LEVEL_HIGH. Since we
-always switch in the interrupt handler, they actually permit to detect
-level changes. In the example above, if the pin level rises before
-switching the IRQ type from IRQ_TYPE_LEVEL_LOW to IRQ_TYPE_LEVEL_HIGH,
-a new interrupt will raise as soon as the handler exits, and the
-rising-edge event will be properly detected.
+> ---
+>  tools/testing/selftests/tpm2/test_smoke.sh |  4 +-
+>  tools/testing/selftests/tpm2/test_space.sh |  2 +-
+>  tools/testing/selftests/tpm2/tpm2.py       | 68 ++++++++++++++--------
+>  tools/testing/selftests/tpm2/tpm2_tests.py | 24 +++++---
+>  4 files changed, 61 insertions(+), 37 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+> index 663062701d5a..d05467f6d258 100755
+> --- a/tools/testing/selftests/tpm2/test_smoke.sh
+> +++ b/tools/testing/selftests/tpm2/test_smoke.sh
+> @@ -6,8 +6,8 @@ ksft_skip=4
+>  
+>  [ -f /dev/tpm0 ] || exit $ksft_skip
+>  
+> -python -m unittest -v tpm2_tests.SmokeTest
+> -python -m unittest -v tpm2_tests.AsyncTest
+> +python3 -m unittest -v tpm2_tests.SmokeTest
+> +python3 -m unittest -v tpm2_tests.AsyncTest
+>  
+>  CLEAR_CMD=$(which tpm2_clear)
+>  if [ -n $CLEAR_CMD ]; then
+> diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+> index 36c9d030a1c6..151c64e8ee9f 100755
+> --- a/tools/testing/selftests/tpm2/test_space.sh
+> +++ b/tools/testing/selftests/tpm2/test_space.sh
+> @@ -6,4 +6,4 @@ ksft_skip=4
+>  
+>  [ -f /dev/tpmrm0 ] || exit $ksft_skip
+>  
+> -python -m unittest -v tpm2_tests.SpaceTest
+> +python3 -m unittest -v tpm2_tests.SpaceTest
+> diff --git a/tools/testing/selftests/tpm2/tpm2.py b/tools/testing/selftests/tpm2/tpm2.py
+> index d0fcb66a88a6..b0ccc1499c53 100644
+> --- a/tools/testing/selftests/tpm2/tpm2.py
+> +++ b/tools/testing/selftests/tpm2/tpm2.py
+> @@ -247,14 +247,18 @@ class ProtocolError(Exception):
+>  class AuthCommand(object):
+>      """TPMS_AUTH_COMMAND"""
+>  
+> -    def __init__(self, session_handle=TPM2_RS_PW, nonce='', session_attributes=0,
+> -                 hmac=''):
+> +    def __init__(self, session_handle=TPM2_RS_PW, nonce=''.encode(),
+> +                 session_attributes=0, hmac=''.encode()):
+> +        if not isinstance(nonce, bytes):
+> +            nonce = nonce.encode()
+> +        if not isinstance(hmac, bytes):
+> +            hmac = hmac.encode()
 
-Cc: stable@vger.kernel.org
-Fixes: e72394e2ea19 ("pinctrl: ingenic: Merge GPIO functionality")
-Reported-by: João Henrique <johnnyonflame@hotmail.com>
-Tested-by: João Henrique <johnnyonflame@hotmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/pinctrl/pinctrl-ingenic.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This looks messy. Please, instead
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index fc0d10411aa9..241e563d5814 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1813,9 +1813,9 @@ static void ingenic_gpio_irq_ack(struct irq_data *irqd)
- 		 */
- 		high = ingenic_gpio_get_value(jzgc, irq);
- 		if (high)
--			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_FALLING);
-+			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_LOW);
- 		else
--			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_RISING);
-+			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_HIGH);
- 	}
- 
- 	if (jzgc->jzpc->info->version >= ID_JZ4760)
-@@ -1851,7 +1851,7 @@ static int ingenic_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
- 		 */
- 		bool high = ingenic_gpio_get_value(jzgc, irqd->hwirq);
- 
--		type = high ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
-+		type = high ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_LEVEL_HIGH;
- 	}
- 
- 	irq_set_type(jzgc, irqd->hwirq, type);
--- 
-2.27.0
+    def __init__(self, session_handle=TPM2_RS_PW, nonce=bytes(),
+                 session_attributes=0, hmac=bytes()):
+         self.session_handle = session_handle
+         self.nonce = nonce
+         self.session_attributes = session_attributes
 
+Applies also to other places.
+
+/Jarkko
