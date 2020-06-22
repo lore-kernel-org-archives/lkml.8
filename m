@@ -2,104 +2,88 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE3BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8984E25378
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:39:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="oGS+oYKR"
+	by mail.kernel.org (Postfix) with ESMTP id 3590A206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731086AbgFVCjB (ORCPT
+        id S1731075AbgFVCkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 22:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgFVCjA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 22:39:00 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4263C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 19:39:00 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qtrw5t3Gz9sSF;
-        Mon, 22 Jun 2020 12:38:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592793537;
-        bh=C+XPnt8YT4ROg3t+m1g63N4ADdJ53SFqw06cw583kO8=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=oGS+oYKRBQpfRPq8Pk2Nuugdgj4qSTDHQFL+bSORNItWK4d+g9XF1d9lK6QA/QgLp
-         Wjmvxq63Onw2H055haWSv/Tlr8mQXOOJRk2lKW3C5KkSZDgaHZXkOEy1xynUstSQYr
-         TspojzVthwbd3qboeJqFsmdrIgmfQQbi8UbskEfIpGRl65gKe0A8LzGGghZaRyZoMY
-         7lQhM/tMS+unTpdwir35+rLdUlYOGmAE37RfiZZDAQEtdRR5eShL0JHIUSrtcRrj2I
-         U08VMmXOS6kZvV94eJmAKqcexqTVk+Sa9RnK/ROhs3slwykOspcArduEFyn0R73T23
-         9Yg9+9a6CgmMA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [GIT PULL] libnvdimm for v5.8-rc2
-In-Reply-To: <CAPcyv4jA-_Wd4S6gM2jf_VhVsgsdR5rQTeAc3AEPr6SAvhq3eA@mail.gmail.com>
-References: <CAPcyv4jA-_Wd4S6gM2jf_VhVsgsdR5rQTeAc3AEPr6SAvhq3eA@mail.gmail.com>
-Date:   Mon, 22 Jun 2020 12:39:24 +1000
-Message-ID: <87zh8vbz8j.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Sun, 21 Jun 2020 22:40:47 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:14858 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726659AbgFVCkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 22:40:47 -0400
+Received: from localhost.localdomain (unknown [210.32.144.65])
+        by mail-app3 (Coremail) with SMTP id cC_KCgC3v+MRGvBe1AIKAQ--.9626S4;
+        Mon, 22 Jun 2020 10:40:21 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        YueHaibing <yuehaibing@huawei.com>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: sun8i-ce - Fix runtime PM imbalance in sun8i_ce_cipher_init
+Date:   Mon, 22 Jun 2020 10:40:08 +0800
+Message-Id: <20200622024014.11347-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgC3v+MRGvBe1AIKAQ--.9626S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF17ur48GF48JF1xGrg_yoWfuFg_Cr
+        97Ww4xJryjvryDXF1DXrW5XryFqryruFyDG3WvqFWxJa45uan8Gr97Jrn3u34xJw47uF1q
+        k392gr9xA3409jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
+        14v_Gr1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
+        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+        Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
+        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbpwZ7UUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcQBlZdtOvMDgAKsP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
-> Hi Linus, please pull from:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-> tags/libnvdimm-for-5.8-rc2
->
-> ...to receive a feature (papr_scm health retrieval) and a fix (sysfs
-> attribute visibility) for v5.8.
->
-> Vaibhav explains in the merge commit below why missing v5.8 would be
-> painful and I agreed to try a -rc2 pull because only cosmetics kept
-> this out of -rc1 and his initial versions were posted in more than
-> enough time for v5.8 consideration.
->
-> ===
->     These patches are tied to specific features that were committed to
->     customers in upcoming distros releases (RHEL and SLES) whose time-lines
->     are tied to 5.8 kernel release.
->
->     Being able to track the health of an nvdimm is critical for our
->     customers that are running workloads leveraging papr-scm nvdimms.
->     Missing the 5.8 kernel would mean missing the distro timelines and
->     shifting forward the availability of this feature in distro kernels by
->     at least 6 months.
-> ===
->
-> I notice that these do not have an ack from Michael, but I had been
-> assuming that he was deferring this to a libnvdimm subsystem decision
-> ever since v7 back at the end of May where he said "I don't have
-> strong opinions about the user API, it's really up to the nvdimm
-> folks." [1]
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a corresponding decrement is
+needed on the error handling path to keep the counter balanced.
 
-Yeah, sorry for not providing an actual ack, I didn't realise you were
-planning to send it for 5.8.
+Fix this by adding the missed function call.
 
-The arch parts of that series are pretty boring plumbing of hypervisor
-calls, so the important details were all the libnvdimm related issues
-IMO.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-So please consider this a belated ack and thanks for getting it merged.
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index a6abb701bfc6..3665a0a2038f 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -358,6 +358,7 @@ int sun8i_ce_cipher_init(struct crypto_tfm *tfm)
+ 
+ 	return 0;
+ error_pm:
++	pm_runtime_put_noidle(op->ce->dev);
+ 	crypto_free_sync_skcipher(op->fallback_tfm);
+ 	return err;
+ }
+-- 
+2.17.1
 
-cheers
