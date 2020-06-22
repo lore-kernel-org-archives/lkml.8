@@ -2,145 +2,130 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04DCB2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91762206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f3XIaZMm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XbuVYj9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgFVPkF (ORCPT
+        id S1729572AbgFVPkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:40:05 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15414 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729092AbgFVPkF (ORCPT
+        Mon, 22 Jun 2020 11:40:15 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47838 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729250AbgFVPkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:40:05 -0400
-X-UUID: a34d21fcf9f848ef86d638147d7f39eb-20200622
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4oG//lsr7WdU0sHSnJkzG35AGLgyMUzysVPRVO5h3hw=;
-        b=f3XIaZMmkgBYWROQTozQj3+ZVsPfU/Yg5qS8MN672i/M4VXosArM/LwD6peLJNWuIODscHcjy+zMy+WmZcwtKE2WMEFZ/b0b0qc2LIYfkbLeV4hu/mrjuOjZbbb5sfjSBPsXvTEKiBeY6WzAT6am6AP6ZVJS816FYtVwUEWQ3Bw=;
-X-UUID: a34d21fcf9f848ef86d638147d7f39eb-20200622
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 374711574; Mon, 22 Jun 2020 23:40:00 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 22 Jun 2020 23:39:55 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 22 Jun 2020 23:39:55 +0800
-Message-ID: <1592840399.1307.15.camel@mtkswgap22>
-Subject: Re: [PATCH v1 10/11] soc: mediatek: cmdq: add clear option in
- cmdq_pkt_wfe api
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        HS Liao <hs.liao@mediatek.com>
-Date:   Mon, 22 Jun 2020 23:39:59 +0800
-In-Reply-To: <8b469701-2295-2cb5-1b60-8681322db678@gmail.com>
-References: <1592749115-24158-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1592749115-24158-11-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <8b469701-2295-2cb5-1b60-8681322db678@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 22 Jun 2020 11:40:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MFbtfu031362;
+        Mon, 22 Jun 2020 15:40:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=c4dmr7gId2py12uyWP0rVSm+TykjfDw082cODL2KrW4=;
+ b=XbuVYj9SNnnF+fZtAEQefQ9lMfPXFk8quuE20c7oe1xtHTq0prnTHIaGwsTG/5xAibE5
+ mZ0hd62d1G9BCsn1NOOFZXh1bj6f0Y4VoGn0x7k+qrUck00pv+5dvNSBWhyUKMlQKicl
+ K2Ml6Djai0x3/6NuA8GXoLGxsvtLk0a5ImknyFouhr3nuXQmg4lCC10sy6o+2jWmwAiI
+ 7H2u5cwhKm9a2niloINgh/Z3d5Wq2FVwhuOBcndMTbSw17MV6s4MBhC7wshO1gyCDOVq
+ sMZJOYeL3xthMnVJJjq/AcjE3sy69uHK1qhxRp4tD2UC652eLyHWqnJS4v8SlTpTbvDs iw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 31sebbg4ww-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 15:40:07 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MFd4VP065013;
+        Mon, 22 Jun 2020 15:40:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 31svcv8q94-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 15:40:06 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05MFe5a8014046;
+        Mon, 22 Jun 2020 15:40:05 GMT
+Received: from [20.15.0.202] (/73.88.28.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Jun 2020 15:40:04 +0000
+Subject: Re: [PATCH 2/2] scsi: register sysfs for scsi/iscsi workqueues
+To:     Bob Liu <bob.liu@oracle.com>, linux-kernel@vger.kernel.org
+Cc:     tj@kernel.org, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+        lduncan@suse.com, lduncan@suse.com, maier@linux.ibm.com,
+        bblock@linux.ibm.com
+References: <20200611100717.27506-1-bob.liu@oracle.com>
+ <20200611100717.27506-2-bob.liu@oracle.com>
+From:   Mike Christie <michael.christie@oracle.com>
+Message-ID: <cf9ae940-87b2-c8a1-3dba-4d2b57ebe9dd@oracle.com>
+Date:   Mon, 22 Jun 2020 10:40:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200611100717.27506-2-bob.liu@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006220116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ adultscore=0 impostorscore=0 cotscore=-2147483648 mlxscore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ clxscore=1011 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006220116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWF0dGhpYXMsDQoNCnRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQpPbiBNb24sIDIwMjAt
-MDYtMjIgYXQgMTM6MTkgKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+IA0KPiBPbiAy
-MS8wNi8yMDIwIDE2OjE4LCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6DQo+ID4gQWRkIGNsZWFyIHBh
-cmFtZXRlciB0byBsZXQgY2xpZW50IGRlY2lkZSBpZg0KPiA+IGV2ZW50IHNob3VsZCBiZSBjbGVh
-ciB0byAwIGFmdGVyIEdDRSByZWNlaXZlIGl0Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IERl
-bm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiBSZXZpZXdl
-ZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICB8ICAgIDIgKy0NCj4gPiAgZHJpdmVycy9z
-b2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgICB8ICAgIDUgKysrLS0NCj4gPiAgaW5jbHVk
-ZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCB8ICAgIDMgKy0tDQo+ID4gIGluY2x1
-ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggICAgfCAgICA1ICsrKy0tDQo+ID4gIDQg
-ZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gPiBpbmRleCA3ZGFhYWJj
-MjZlYjEuLmEwNjViM2E0MTJjZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9jcnRjLmMNCj4gPiBAQCAtNDg4LDcgKzQ4OCw3IEBAIHN0YXRpYyB2b2lkIG10a19k
-cm1fY3J0Y19od19jb25maWcoc3RydWN0IG10a19kcm1fY3J0YyAqbXRrX2NydGMpDQo+ID4gIAlp
-ZiAobXRrX2NydGMtPmNtZHFfY2xpZW50KSB7DQo+ID4gIAkJY21kcV9oYW5kbGUgPSBjbWRxX3Br
-dF9jcmVhdGUobXRrX2NydGMtPmNtZHFfY2xpZW50LCBQQUdFX1NJWkUpOw0KPiA+ICAJCWNtZHFf
-cGt0X2NsZWFyX2V2ZW50KGNtZHFfaGFuZGxlLCBtdGtfY3J0Yy0+Y21kcV9ldmVudCk7DQo+ID4g
-LQkJY21kcV9wa3Rfd2ZlKGNtZHFfaGFuZGxlLCBtdGtfY3J0Yy0+Y21kcV9ldmVudCk7DQo+ID4g
-KwkJY21kcV9wa3Rfd2ZlKGNtZHFfaGFuZGxlLCBtdGtfY3J0Yy0+Y21kcV9ldmVudCwgZmFsc2Up
-Ow0KPiANCj4gVGhpcyBkb2VzIG5vdCBzZXQgQ01EUV9XRkVfVVBEQVRFIHdoaWxlIHRoZSBvbGQg
-Y29kZSBkaWQuIElzIHRoaXMgYSBidWcgZml4IG9yIGENCj4gYnVnIGluIHRoZSBjb2RlPw0KPiBJ
-ZiBpdCdzIGEgZml4LCBwbGVhc2UgcHJvdmlkZSBhIGZpeGVzIHRhZy4NCg0Kbm8gbmVlZCB0byB0
-byB1cGRhdGUgYWdhaW4gc2luY2UgZXZlbnQgYWx3YXlzIGNsZWFyIGJlZm9yZSB3YWl0Lg0KSSds
-bCBwcm92aWRlIGEgZml4IHRhZywgdGhhbmtzLg0KDQoNClJlZ2FyZHMsDQpEZW5uaXMNCg0KPiAN
-Cj4gVGhhbmtzLA0KPiBNYXR0aGlhcw0KPiANCj4gPiAgCQltdGtfY3J0Y19kZHBfY29uZmlnKGNy
-dGMsIGNtZHFfaGFuZGxlKTsNCj4gPiAgCQljbWRxX3BrdF9maW5hbGl6ZShjbWRxX2hhbmRsZSk7
-DQo+ID4gIAkJY21kcV9wa3RfZmx1c2hfYXN5bmMoY21kcV9oYW5kbGUsIGRkcF9jbWRxX2NiLCBj
-bWRxX2hhbmRsZSk7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1j
-bWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4g
-PiBpbmRleCAwMDlmODZhZTcyYzYuLjEzZjc4YzliNTkwMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
-ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+ICsrKyBiL2RyaXZlcnMvc29j
-L21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gQEAgLTMxNSwxNSArMzE1LDE2IEBAIGlu
-dCBjbWRxX3BrdF93cml0ZV9zX21hc2tfdmFsdWUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHU4IGhp
-Z2hfYWRkcl9yZWdfaWR4LA0KPiA+ICB9DQo+ID4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3Rfd3Jp
-dGVfc19tYXNrX3ZhbHVlKTsNCj4gPiAgDQo+ID4gLWludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNt
-ZHFfcGt0ICpwa3QsIHUxNiBldmVudCkNCj4gPiAraW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21k
-cV9wa3QgKnBrdCwgdTE2IGV2ZW50LCBib29sIGNsZWFyKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3Qg
-Y21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gPiArCXUzMiBjbGVhcl9vcHRpb24g
-PSBjbGVhciA/IENNRFFfV0ZFX1VQREFURSA6IDA7DQo+ID4gIA0KPiA+ICAJaWYgKGV2ZW50ID49
-IENNRFFfTUFYX0VWRU5UKQ0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+ICANCj4gPiAgCWlu
-c3Qub3AgPSBDTURRX0NPREVfV0ZFOw0KPiA+IC0JaW5zdC52YWx1ZSA9IENNRFFfV0ZFX09QVElP
-TjsNCj4gPiArCWluc3QudmFsdWUgPSBDTURRX1dGRV9PUFRJT04gfCBjbGVhcl9vcHRpb247DQo+
-ID4gIAlpbnN0LmV2ZW50ID0gZXZlbnQ7DQo+ID4gIA0KPiA+ICAJcmV0dXJuIGNtZHFfcGt0X2Fw
-cGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgv
-bWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNt
-ZHEtbWFpbGJveC5oDQo+ID4gaW5kZXggM2Y2YmMwZGZkNWRhLi40MmQyYTMwZTZhNzAgMTAwNjQ0
-DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+
-ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gPiBAQCAt
-MjcsOCArMjcsNyBAQA0KPiA+ICAgKiBiaXQgMTYtMjc6IHVwZGF0ZSB2YWx1ZQ0KPiA+ICAgKiBi
-aXQgMzE6IDEgLSB1cGRhdGUsIDAgLSBubyB1cGRhdGUNCj4gPiAgICovDQo+ID4gLSNkZWZpbmUg
-Q01EUV9XRkVfT1BUSU9OCQkJKENNRFFfV0ZFX1VQREFURSB8IENNRFFfV0ZFX1dBSVQgfCBcDQo+
-ID4gLQkJCQkJQ01EUV9XRkVfV0FJVF9WQUxVRSkNCj4gPiArI2RlZmluZSBDTURRX1dGRV9PUFRJ
-T04JCQkoQ01EUV9XRkVfV0FJVCB8IENNRFFfV0ZFX1dBSVRfVkFMVUUpDQo+ID4gIA0KPiA+ICAv
-KiogY21kcSBldmVudCBtYXhpbXVtICovDQo+ID4gICNkZWZpbmUgQ01EUV9NQVhfRVZFTlQJCQkw
-eDNmZg0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21k
-cS5oIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+IGluZGV4IDE4
-MzY0ZDgxZThmNy4uNGI1ZjVkMTU0YmFkIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgv
-c29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRp
-YXRlay9tdGstY21kcS5oDQo+ID4gQEAgLTE4MiwxMSArMTgyLDEyIEBAIGludCBjbWRxX3BrdF93
-cml0ZV9zX21hc2tfdmFsdWUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHU4IGhpZ2hfYWRkcl9yZWdf
-aWR4LA0KPiA+ICAvKioNCj4gPiAgICogY21kcV9wa3Rfd2ZlKCkgLSBhcHBlbmQgd2FpdCBmb3Ig
-ZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gPiAgICogQHBrdDoJdGhlIENNRFEg
-cGFja2V0DQo+ID4gLSAqIEBldmVudDoJdGhlIGRlc2lyZWQgZXZlbnQgdHlwZSB0byAid2FpdCBh
-bmQgQ0xFQVIiDQo+ID4gKyAqIEBldmVudDoJdGhlIGRlc2lyZWQgZXZlbnQgdHlwZSB0byB3YWl0
-DQo+ID4gKyAqIEBjbGVhcjoJY2xlYXIgZXZlbnQgb3Igbm90IGFmdGVyIGV2ZW50IGFycml2ZQ0K
-PiA+ICAgKg0KPiA+ICAgKiBSZXR1cm46IDAgZm9yIHN1Y2Nlc3M7IGVsc2UgdGhlIGVycm9yIGNv
-ZGUgaXMgcmV0dXJuZWQNCj4gPiAgICovDQo+ID4gLWludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNt
-ZHFfcGt0ICpwa3QsIHUxNiBldmVudCk7DQo+ID4gK2ludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNt
-ZHFfcGt0ICpwa3QsIHUxNiBldmVudCwgYm9vbCBjbGVhcik7DQo+ID4gIA0KPiA+ICAvKioNCj4g
-PiAgICogY21kcV9wa3RfY2xlYXJfZXZlbnQoKSAtIGFwcGVuZCBjbGVhciBldmVudCBjb21tYW5k
-IHRvIHRoZSBDTURRIHBhY2tldA0KPiA+IA0KDQo=
+On 6/11/20 5:07 AM, Bob Liu wrote:
+> This patch enable setting cpu affinity through "cpumask" for below
+> scsi/iscsi workqueues, so as to get better isolation.
+> - scsi_wq_*
+> - scsi_tmf_*
+> - iscsi_q_xx
+> - iscsi_eh
+> 
+> Signed-off-by: Bob Liu <bob.liu@oracle.com>
+> ---
+>   drivers/scsi/hosts.c                | 4 ++--
+>   drivers/scsi/libiscsi.c             | 2 +-
+>   drivers/scsi/scsi_transport_iscsi.c | 2 +-
+>   3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
+> index 1d669e4..4b9f80d 100644
+> --- a/drivers/scsi/hosts.c
+> +++ b/drivers/scsi/hosts.c
+> @@ -272,7 +272,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
+>   	if (shost->transportt->create_work_queue) {
+>   		snprintf(shost->work_q_name, sizeof(shost->work_q_name),
+>   			 "scsi_wq_%d", shost->host_no);
+> -		shost->work_q = create_singlethread_workqueue(
+> +		shost->work_q = create_singlethread_workqueue_noorder(
+>   					shost->work_q_name);
+>   		if (!shost->work_q) {
+>   			error = -EINVAL;
 
+This patch seems ok for the iscsi, fc, tmf, and non transport class scan 
+uses. We are either heavy handed with flushes or did not need ordering.
+
+I don't know about the zfcp use though, so I cc'd  the developers listed 
+as maintainers. It looks like for zfcp we can do:
+
+zfcp_scsi_rport_register->fc_remote_port_add->fc_remote_port_create->scsi_queue_work 
+to scan the scsi target on the rport.
+
+and then zfcp_scsi_rport_register can call zfcp_unit_queue_scsi_scan->
+scsi_queue_work which will scan for a specific lun.
+
+It looks ok if those are not ordered, but I would get their review to 
+make sure.
