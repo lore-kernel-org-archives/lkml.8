@@ -2,100 +2,188 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8005AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AED120716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE74020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:56:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GXv2ZNEa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbgFVP4Y (ORCPT
+        id S1729648AbgFVP4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:56:24 -0400
-Received: from sauhun.de ([88.99.104.3]:40430 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbgFVP4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:56:23 -0400
-Received: from localhost (p54b3337a.dip0.t-ipconnect.de [84.179.51.122])
-        by pokefinder.org (Postfix) with ESMTPSA id 141942C2062;
-        Mon, 22 Jun 2020 17:56:20 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 17:56:16 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] lib: update DEBUG_SHIRQ docs to match reality
-Message-ID: <20200622155616.4rbhhiuce36aqc4b@katana>
-References: <20200612124844.19422-1-wsa+renesas@sang-engineering.com>
- <CAHp75VdMPt60CKnP1HtkN8=3iY7+Kgrv6b9DTjcj-KMKaRknvw@mail.gmail.com>
- <20200613113924.GA5578@kunai>
- <CAHp75Vckh3NERodBs3e8wo3NxbrP=BPRY5g7MLmA4szqLFcfjA@mail.gmail.com>
+        Mon, 22 Jun 2020 11:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729095AbgFVP4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 11:56:30 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BF1C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:56:28 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so15254817wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:56:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kSMspTFGxKNsReoFaFuGJU3LuXpebLrE7bbL0ZZt+X8=;
+        b=GXv2ZNEabhbhSf7vXvuVC7lyGiiOvUukOmdBQvekLZ+qdVz/B7mzEhE04wmtCu7H94
+         qIYOIUGV8F0dtRgrSLsr5rKqVlXaYQeBBZrf9wZ9PJN6A9Nc0s2NntSKKdDrCaAXsiPO
+         gVRzXm592POsuRnrI3XFZcTrUI1TNYtkaMy8bYiGeIXhsa1o9OU7zUjkuC8AWYv5l6UL
+         2u2zSVTcVV8UJaFoj1wyD6ulvLAYuXpFag7UrU8M8CwMng4DJf9jLc2eIqyYQHcrX4ki
+         7U28cjIKDC29qqaXZxSSwbAS4nbEHpM0OBtChPCL6D+4OID6G3V3HXXXg7paO8R3kaoo
+         ZEjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kSMspTFGxKNsReoFaFuGJU3LuXpebLrE7bbL0ZZt+X8=;
+        b=HVyGw+M3tBcWKhgsk7yMTcPjtvOoDosCXRj4Xfq8vxkLkS3iXhijoZuQZiqyyHEQaf
+         sK+5LEORfmiRr0KF8I8e9vgXY/Lkx7gAHvvPp9CE1vIDX+zBERcVZWrl+XrsvOw67Umy
+         kX3IiJ99nOGU8HZ4Jc+R8wRdEE5Y5k5szDSdr7Au28Yb/Ho8O6cFU1s7tsXwggq2f8iA
+         Es++nBLoCdudvyTmy7Yw8GhDrjdkqsS4Ov4ta4SMAG0FDXAycN4X07Sg2lZ79yRd1bgK
+         bMLR3uZofQiBUx7gKGmsPwzhOP31fqFwrjgFa5Uuy0QA1M2vS40J4HaqTNrtbwb1oMVc
+         uNKA==
+X-Gm-Message-State: AOAM533eSgnfk1+vzFiGVHlPFf8zB8+UxW9ODQQtsayOD9wNyNRAx9WY
+        jjuW54nCraJ55StV5AneG6zdxVBPEjI=
+X-Google-Smtp-Source: ABdhPJxxJgkt35ckzF3UHxiybAvxxwtheduC5J/trxrNa8yKhlixDpRotx+E7cZGBlOIIJi0HzSYDA==
+X-Received: by 2002:adf:f34e:: with SMTP id e14mr19735827wrp.299.1592841387421;
+        Mon, 22 Jun 2020 08:56:27 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id n8sm15375134wrj.44.2020.06.22.08.56.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 08:56:26 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 16:56:24 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+        gregkh@linuxfoundation.org, jason.wessel@windriver.com,
+        dianders@chromium.org, jslaby@suse.com, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] tty: serial: Add poll_get_irq() to the polling
+ interface
+Message-ID: <20200622155624.he2vs2r3e5yzf3sl@holly.lan>
+References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
+ <1592835984-28613-3-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="m3chytxjt3ldrgkl"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vckh3NERodBs3e8wo3NxbrP=BPRY5g7MLmA4szqLFcfjA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1592835984-28613-3-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 22, 2020 at 07:56:19PM +0530, Sumit Garg wrote:
+> From: Daniel Thompson <daniel.thompson@linaro.org>
 
---m3chytxjt3ldrgkl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sumit, to some extent this mail is me yelling at myself two years ago
+although, in my defence, at the time I choose not to post it because I
+knew it wasn't right.
 
-Hi Andy,
-
-> > Maybe your case was like Krzysztof's case where the issue turned out to
-> > be the extra interrupt on deregistering after a deferred probe? He
-> > thought it was the initial interrupt but it wasn't.
->=20
-> Commit
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/drivers/iio/pressure/bmp280-core.c?id=3D97b31a6f5fb95b1ec6575b78a7240baddb=
-a34384
->=20
-> The relevant IRQ core code
-> https://elixir.bootlin.com/linux/latest/source/kernel/irq/manage.c#L1774
->=20
-> It runs it at deregistering, right.
-
-So, can I read this as an Acked-by?
-
-Kind regards,
-
-   Wolfram
+I'm a bit concerned to see the TODO: comment critiquing this interface
+being removed (from patch 3) without this patch being changed to
+address that comment.
 
 
---m3chytxjt3ldrgkl
-Content-Type: application/pgp-signature; name="signature.asc"
+> Add new API: poll_get_irq() to the polling interface in order for user
+> of polling interface to retrieve allocated IRQ corresponding to
+> underlying serial device.
+> 
+> Although, serial interface still works in polling mode but interrupt
+> associated with serial device can be leveraged for special purposes like
+> debugger(kgdb) entry.
+> 
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  drivers/tty/serial/serial_core.c | 18 ++++++++++++++++++
+>  include/linux/serial_core.h      |  1 +
+>  include/linux/tty_driver.h       |  1 +
+>  3 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index 66a5e2f..1bb033c 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -2470,6 +2470,23 @@ static void uart_poll_put_char(struct tty_driver *driver, int line, char ch)
+>  	port->ops->poll_put_char(port, ch);
+>  	uart_port_deref(port);
+>  }
+> +
+> +static int uart_poll_get_irq(struct tty_driver *driver, int line)
+> +{
+> +	struct uart_driver *drv = driver->driver_state;
+> +	struct uart_state *state = drv->state + line;
+> +	struct uart_port *port;
+> +	int ret = -ENODEV;
+> +
+> +	port = uart_port_ref(state);
+> +	if (port && port->ops->poll_get_irq) {
+> +		ret = port->ops->poll_get_irq(port);
+> +		uart_port_deref(port);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  #endif
+>  
+>  static const struct tty_operations uart_ops = {
+> @@ -2505,6 +2522,7 @@ static const struct tty_operations uart_ops = {
+>  	.poll_init	= uart_poll_init,
+>  	.poll_get_char	= uart_poll_get_char,
+>  	.poll_put_char	= uart_poll_put_char,
+> +	.poll_get_irq	= uart_poll_get_irq,
 
------BEGIN PGP SIGNATURE-----
+The TODO comments claimed this API was bogus because it doesn't permit
+a free and that can cause interoperation problems with the real serial
+driver. I'll cover some of that in a reply to patch 3 but for now.
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7w1JwACgkQFA3kzBSg
-KbaB7A/+NAwG03m74hhJ9sXauZk7atzG9V/IXj78LDII5tppdPI7qxPYtek0d9UZ
-XWwk7Tx0UUBDipc2kTVxiPM94sd4kyX2atfQEOSGANEDR/euI+4vff/W5RtSn8+7
-pDqOcVqiLaKLgK4Vw9XigfRV62hsaohNlrUBJMLNPC13KrfmVLB4hfGN9GrNjSWO
-OWUf6opnLyHcZxnK3Ox9eghk5YpCjRC47gCY/8lzH/Jsoa62CwaZEawLkKacSHBY
-tbNIJWLP7TbTbN8IJ9wwzEM8pTcwm7k7U/o4xDPmzucOcV82DKzW0wpqif6SLn/C
-FdZhGDhlHp7qv7qfKwC22QzDfJZo9vR5FDeHSslnbbd3VdGYCdezZN+NGPGN+vk1
-OWSAgIhmTl8LzkS0lbZxLFD1Q32OdjqFbLNrhBNjQdJjkzVQSz5JQFlP50zTUdj8
-QknWlNZhNlW3C8ewN96LpWPXKhSgQwpWjyGLfQlGDdXEjRpbAzgdIqc+iPvoYS4t
-BhtBtDrg8X819W209i2UfZhKvSmpbxh6lRsNA7KFfw6PXQ6E4mel7DRHx89UB0d7
-Z5Rw5ghGJv3KjDZI8tTZpE1nDsQc3JIZEx5J7cAl2WtK1sQfOd0Pxmm9LKxfnrAo
-/VV8FZzYo74halNxo4jmhcvraSKHvNSynboRu/uomdbcUc1itSA=
-=39pM
------END PGP SIGNATURE-----
+Anyhow, for this patch, what are the expected semantics for
+uart_poll_get_irq().
 
---m3chytxjt3ldrgkl--
+In particular how do they ensure correct interlocking with the real
+serial driver underlying it (if kgdb_nmi is active on a serial port
+then the underlying driver better not be active at the same time).
+
+
+Daniel.
+
+
+>  #endif
+>  };
+>  
+> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> index 92f5eba..8b132e6 100644
+> --- a/include/linux/serial_core.h
+> +++ b/include/linux/serial_core.h
+> @@ -78,6 +78,7 @@ struct uart_ops {
+>  	int		(*poll_init)(struct uart_port *);
+>  	void		(*poll_put_char)(struct uart_port *, unsigned char);
+>  	int		(*poll_get_char)(struct uart_port *);
+> +	int		(*poll_get_irq)(struct uart_port *);
+>  #endif
+>  };
+>  
+> diff --git a/include/linux/tty_driver.h b/include/linux/tty_driver.h
+> index 3584462..d6da5c5 100644
+> --- a/include/linux/tty_driver.h
+> +++ b/include/linux/tty_driver.h
+> @@ -295,6 +295,7 @@ struct tty_operations {
+>  	int (*poll_init)(struct tty_driver *driver, int line, char *options);
+>  	int (*poll_get_char)(struct tty_driver *driver, int line);
+>  	void (*poll_put_char)(struct tty_driver *driver, int line, char ch);
+> +	int (*poll_get_irq)(struct tty_driver *driver, int line);
+>  #endif
+>  	int (*proc_show)(struct seq_file *, void *);
+>  } __randomize_layout;
+> -- 
+> 2.7.4
+> 
