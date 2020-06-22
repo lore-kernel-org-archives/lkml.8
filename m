@@ -2,139 +2,147 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F657C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1013DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10EB020706
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF78920716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nLtn236B"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="ZyUnXi0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgFVLOW (ORCPT
+        id S1727946AbgFVLOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727976AbgFVLOR (ORCPT
+        Mon, 22 Jun 2020 07:14:33 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:40838 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727113AbgFVLOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:14:17 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1419C061796
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:14:16 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q2so13807644wrv.8
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=F2NPYrA8TUG18okYjngm1OvmY6lDQ7IMqBV+pKwmot4=;
-        b=nLtn236Bgp7j+T7xS0LPk9VLrZZImPxcZ6gFAZYJ3N1bHZSz1E5GQ4TEJT8G20RfCQ
-         MS4aVbAniQ+9H72EomJ5hdm2NP4KrYJKH0RIZfN3WJMyfvqWUeznrda2MmXxlwj7btvI
-         C8TBX5Ddskw+7yUhdwcaS7aDKYZxdhd+nUWhHt44lbCZlS2heyumAnbmfPD232tnhHa+
-         RsdXX/TNDJFnk6DDrLmGI4McnKCRGp4PsEp3qy/unez3LfPOYhk0IyDouqfImTsg9Ci8
-         puG3o8kGeuNaKf+NWdxVHjlu67/C8+8ZYasu8p3pIUoCipTdnEW+x3TVQssBDEuFKTHy
-         OfWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=F2NPYrA8TUG18okYjngm1OvmY6lDQ7IMqBV+pKwmot4=;
-        b=jsJMvH4Fg8/aAs+WvZRVm+8cfYaQk2J1Vah5byq+oMCeZzXfUEdqqeuet1Vw6Kuso4
-         46j/B34be0vlpsYHJGUYpIDLxdYcAweepBWV1PvYH49Hh0VZhhvIjDa4qdYIgQQQkloA
-         9VdjyJ0rIPg1hzGj5GtmigFZk2lmVjdTszqjfHbCgsbMRORZlRbwJyXrNUoYBT+ZsBNw
-         y6FeusIAwG1ujckRRnuT7ehthcffosIBpLjev8q6swQUIGI7uM9OiewFAy6vev3N2/PO
-         i1uZZIUtbH4zSW+ZaBAFvsTKTSqB2Zoy3NSMq9lzY3lnTk5FM9uW1CukKDhSIK6/zt4X
-         eDFg==
-X-Gm-Message-State: AOAM533D4dOqUUDtY9wBMnxpcxNem108dmo5HbDhPQA+AMNdJaPx+C56
-        aGZ8QhghUdeeSpwtH4C05beYug==
-X-Google-Smtp-Source: ABdhPJynq2QWsup2B5/k+Cvj+7u07Ik3g+ZkD7wIB2mFdHcEV2OSczDPFFH6HCrWh10XnRML412UBw==
-X-Received: by 2002:adf:ef89:: with SMTP id d9mr4101818wro.124.1592824455563;
-        Mon, 22 Jun 2020 04:14:15 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id q1sm2904444wro.82.2020.06.22.04.14.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 04:14:15 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 12:14:13 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>
-Subject: Re: [PATCH 1/3] mfd: ds1374: Introduce Dallas/Maxim DS1374 MFD core
- driver
-Message-ID: <20200622111413.GV954398@dell>
-References: <HK2PR01MB328111AB2520315A7D4A1172FA970@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+        Mon, 22 Jun 2020 07:14:31 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MB8QW8013162;
+        Mon, 22 Jun 2020 04:14:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=1QW1IxHoD3xSCenyj2u+wxcmHv8yzEDbcY1yUBAWXI0=;
+ b=ZyUnXi0Cd/8gUahYpuripPgvK9oZAlKCp0+NqAc6R+y+6EVL4us+6UTAkNYWwZfmC/me
+ eS7ICzwW6EQNgJlI90bWAxFL8ZDhGDimL920NIxXwX2wITVc/OqzrtxCx3l9ZFDbmjNt
+ /Lt1oygBy+0pIQU7o+IV16n5Fv+Kwg/5ZBYXbe/sD11wwBhy0XB0Jy13v/xHQWW9iVw4
+ n2B5qCDfaWs7em4Bm2unKEMTgQ1FB2lZ2Llnvsutz/xZvfs8UsDnYkMoc3miw9IIiCDV
+ VmceCTcIMPfXQXU9fhy4YT4ja0cBkhwCETDIp+slAvMI4aFBBlhAjVOLKToEzb8MTQ5J TQ== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 31shynqpa2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 04:14:28 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Jun
+ 2020 04:14:26 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 22 Jun 2020 04:14:26 -0700
+Received: from NN-LT0049.marvell.com (unknown [10.193.39.36])
+        by maili.marvell.com (Postfix) with ESMTP id 2EBE23F703F;
+        Mon, 22 Jun 2020 04:14:21 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Yuval Mintz <yuval.mintz@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "Ram Amrani" <ram.amrani@marvell.com>,
+        Tomer Tayar <tomer.tayar@marvell.com>,
+        Alexander Lobakin <alobakin@marvell.com>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net 1/9] net: qed: fix left elements count calculation
+Date:   Mon, 22 Jun 2020 14:14:05 +0300
+Message-ID: <20200622111413.7006-2-alobakin@marvell.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200622111413.7006-1-alobakin@marvell.com>
+References: <20200622111413.7006-1-alobakin@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <HK2PR01MB328111AB2520315A7D4A1172FA970@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-22_04:2020-06-22,2020-06-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020, Johnson CH Chen (陳昭勳) wrote:
+qed_chain_get_element_left{,_u32} returned 0 when the difference
+between producer and consumer page count was equal to the total
+page count.
+Fix this by conditional expanding of producer value (vs
+unconditional). This allowed to eliminate normalizaton against
+total page count, which was the cause of this bug.
 
-> Dallas/Maxim DS1374 is a counter designed to continuously count
-> time in seconds. It provides an I2C interface to the host to
-> access RTC clock or Alarm/Watchdog timer.
-> 
-> Add MFD Core driver, supporting the I2C communication to RTC and
-> Watchdog devices.
-> 
-> Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
-> ---
->  drivers/mfd/Kconfig  |  11 +++++
->  drivers/mfd/Makefile |   2 +
->  drivers/mfd/ds1374.c | 101 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 114 insertions(+)
->  create mode 100644 drivers/mfd/ds1374.c
+Misc: replace open-coded constants with common defines.
 
-Not sure I see the point of this driver.
+Fixes: a91eb52abb50 ("qed: Revisit chain implementation")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+---
+ include/linux/qed/qed_chain.h | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-How/where is the device part registered?
-
-Is it DT only?  If not, what else?
-
-Also where are the bindings?
-
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 687e9c848053w.d16031f4b487 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1980,6 +1980,17 @@ config MFD_STM32_LPTIMER
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called stm32-lptimer.
->  
-> +config MFD_DS1374
-> +	tristate "Support for Dallas/Maxim DS1374"
-> +	depends on I2C
-> +	select MFD_CORE
-> +	help
-> +	  Say yes here to add support for Dallas/Maxim DS1374 Semiconductor.
-> +	  This driver provides RTC and watchdog.
-> +
-> +	  This driver can also be built as a module. If so, module will be
-> +	  called ds1374.
-> +
->  config MFD_STM32_TIMERS
->  	tristate "Support for STM32 Timers"
->  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
-
+diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
+index 733fad7dfbed..6d15040c642c 100644
+--- a/include/linux/qed/qed_chain.h
++++ b/include/linux/qed/qed_chain.h
+@@ -207,28 +207,34 @@ static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
+ 
+ static inline u16 qed_chain_get_elem_left(struct qed_chain *p_chain)
+ {
++	u16 elem_per_page = p_chain->elem_per_page;
++	u32 prod = p_chain->u.chain16.prod_idx;
++	u32 cons = p_chain->u.chain16.cons_idx;
+ 	u16 used;
+ 
+-	used = (u16) (((u32)0x10000 +
+-		       (u32)p_chain->u.chain16.prod_idx) -
+-		      (u32)p_chain->u.chain16.cons_idx);
++	if (prod < cons)
++		prod += (u32)U16_MAX + 1;
++
++	used = (u16)(prod - cons);
+ 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
+-		used -= p_chain->u.chain16.prod_idx / p_chain->elem_per_page -
+-		    p_chain->u.chain16.cons_idx / p_chain->elem_per_page;
++		used -= prod / elem_per_page - cons / elem_per_page;
+ 
+ 	return (u16)(p_chain->capacity - used);
+ }
+ 
+ static inline u32 qed_chain_get_elem_left_u32(struct qed_chain *p_chain)
+ {
++	u16 elem_per_page = p_chain->elem_per_page;
++	u64 prod = p_chain->u.chain32.prod_idx;
++	u64 cons = p_chain->u.chain32.cons_idx;
+ 	u32 used;
+ 
+-	used = (u32) (((u64)0x100000000ULL +
+-		       (u64)p_chain->u.chain32.prod_idx) -
+-		      (u64)p_chain->u.chain32.cons_idx);
++	if (prod < cons)
++		prod += (u64)U32_MAX + 1;
++
++	used = (u32)(prod - cons);
+ 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
+-		used -= p_chain->u.chain32.prod_idx / p_chain->elem_per_page -
+-		    p_chain->u.chain32.cons_idx / p_chain->elem_per_page;
++		used -= (u32)(prod / elem_per_page - cons / elem_per_page);
+ 
+ 	return p_chain->capacity - used;
+ }
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.21.0
+
