@@ -2,91 +2,122 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A123F23B5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B566525478
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hMUPfG1N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTVxwjJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731424AbgFVHgy (ORCPT
+        id S1731432AbgFVHiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:36:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49570 "EHLO
+        Mon, 22 Jun 2020 03:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731354AbgFVHgx (ORCPT
+        with ESMTP id S1731354AbgFVHiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:36:53 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DD2BC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:36:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y11so18113001ljm.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:36:53 -0700 (PDT)
+        Mon, 22 Jun 2020 03:38:54 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73BB8C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:38:53 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i16so11927377qtr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8jMd68d9AA5HKRSwD8btncLpXQpP12S2zPFIYOSY6iI=;
-        b=hMUPfG1NvzklTAO84EV2hfqw9q8vRlb17BtAPtKzrxDuauzTU9TdVJ19q+ctkvKrpJ
-         lxFGho4TmZSCcTAqrLqo0PGFQP/yJnE4m1KUetOuKUhCfEz2udC/n0gQX95fa0WugnBh
-         uJ3tPAQ+BvlkpYCkRfTxht7PjweJtsPxVEeObz84OElS05vMoHrkLRPgbGMb0E56Lynx
-         JOo/7zwJlYUdDziU+J0As7CSj+7FKn6bkoX8Rrha9nQRxh+5aIN3oec79oyQ3k5gNgVs
-         vtQXZ5EWcmOxfVuS1JZ5Ot4JY6CI0y1/BITzYt6ezNORuPBKyjz0NZUQ6u4OfmkmgBZa
-         G+DA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=pFf+0uM7OhIyngSgu5Yj3nmTerq75fKAoaRpUy4UdZc=;
+        b=bTVxwjJv+BTutnnXMZTcEX3+yPsFy6WBiq161bQHyVik5hKmDYVz6l3cXO9z35R9M7
+         ycQUCVSiaYVFbU6w+1WTRaBAZV9ldva9qanfc1jYpovqrquAv4/jL1+xXqTJAcoeou+o
+         PMLpwjGVL0NKZuj9lg1bwKpePJCe5tULsWUfkWfwapaMcELKPAhQ2LPuerMI+rpMbSgf
+         u0hUvagxULfqU5kCvRVB016gWF1LgC3hLeScJ/VigNKOGXvCrndZyv+jix5YCMWZXDqz
+         aQLT3gkFHPkujKYdmcrstb7SGKFiQhap0PPmpiazbezehuq/szKbWCDJRgkPbizzx3dj
+         pFBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8jMd68d9AA5HKRSwD8btncLpXQpP12S2zPFIYOSY6iI=;
-        b=lu6gAKH3qm68C/Ri5eROf4iktmpE+WRwe5CrIWvimnzIRgXw5g71kvwwOqKtAYG9wq
-         PoVJaLQI2WgsAVmnuPaOR6neszqjBUdB6fWh/i9sHmmLkmAeP1p164zxY4XC0RSdukx+
-         54E8FMcSeM8jhU/skm2KoLZzxvnG5m9Nhn+oBKiuhzWMUvXTXfBM+AQGAOkveSbvVY24
-         kHOoHfU71wR0glKv1fz73mWP8J4S/M79Cri+YHYcsk22VPQiy6wMhk/AlIfWux0gJxeH
-         6rrF+iH27Mblzj5vyHQM7bes4RxkM17OodeUQvPjZBXWEIQOOPIyRE2Me4oh1bqHvq+Z
-         Cn6Q==
-X-Gm-Message-State: AOAM5330JNqCRNbtv4tyXm0Zf3sSH/Ty8p+LNTAVHHvvRutJtLr+NhSg
-        yrSdk97yYR1zwSL8F62Se5yWt/kdsYpotMpCCkLaGg==
-X-Google-Smtp-Source: ABdhPJwHMBfbNH8fHLFwGb0U4Poyr72O07MbwbdDDd5vaN6Cets0kr4TApTjHKoHivQYCbHDp3CzGhYjAFPqe1YH+Rk=
-X-Received: by 2002:a05:651c:112e:: with SMTP id e14mr7364725ljo.338.1592811411727;
- Mon, 22 Jun 2020 00:36:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200616015024.287683-1-hengqing.hu@gmail.com>
-In-Reply-To: <20200616015024.287683-1-hengqing.hu@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 22 Jun 2020 09:36:40 +0200
-Message-ID: <CACRpkdZNS7JD4Po9d4TXzB=+bn9qUez-eFwUjp=cF3yE8nrE0w@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: fix npins for uart0 in kerncz_groups
-To:     Jacky Hu <hengqing.hu@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pFf+0uM7OhIyngSgu5Yj3nmTerq75fKAoaRpUy4UdZc=;
+        b=rZFHRrQJ5J5KOnyj1U8kztK/WEDhHXAKsCE2SefTHkDTXJu7ZIQaNDaxha6syv+WId
+         I8pUrS4hbBH6McBYHlXgFTpqSxQo01LiE95D48jJLZljLIqLdtBD2kkkr+DCk0zRaQBD
+         gvCjQohz43xHFY4WGUP3rreLyzAiI4v3LHUy0cav0rQPJmy9kDmxYlywhcnTAtmIb4fW
+         vZafEFtgbg1o5CG36oYfEPnzQ7I6ZcM1vSIYRPBRcu8GQmQhMpHktj8aVHHdUKfRn2z/
+         rTSdL2yqPEP0xBEiprCuusSONBREoy7D3m3OXylV8+zgZTDHxrYzhYilrzs64d0c5ZoE
+         J9rw==
+X-Gm-Message-State: AOAM531aJiUaZC3IKz3ZNpNml0nKbMK4cE7v6GXJehbul0VPjVbkN6Qq
+        uMRu/AOFHZ3L5WJJTuxJneA=
+X-Google-Smtp-Source: ABdhPJyOjIb0iw1iEKpl95OKmTjBr1Oy0RUGpwzNGuopcAG0sGqjFXgoB4uVMm0o57J4Hut2uISUIQ==
+X-Received: by 2002:ac8:3f75:: with SMTP id w50mr9210884qtk.123.1592811532729;
+        Mon, 22 Jun 2020 00:38:52 -0700 (PDT)
+Received: from ip-172-31-24-31.ec2.internal (ec2-54-234-246-66.compute-1.amazonaws.com. [54.234.246.66])
+        by smtp.gmail.com with ESMTPSA id p26sm632325qkm.76.2020.06.22.00.38.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 00:38:52 -0700 (PDT)
+From:   "Rodolfo C. Villordo" <rodolfovillordo@gmail.com>
+Cc:     rodolfovillordo@gmail.com, Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>,
+        Ben Chan <benchan@chromium.org>, Richard Yeh <rcy@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: gasket: replace symbolic permissions
+Date:   Mon, 22 Jun 2020 07:36:12 +0000
+Message-Id: <20200622073612.12282-1-rodolfovillordo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 3:50 AM Jacky Hu <hengqing.hu@gmail.com> wrote:
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
++               .attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
+warning detected by checkpatch.pl
 
-> uart0_pins is defined as:
-> static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
->
-> which npins is wronly specified as 9 later
->         {
->                 .name = "uart0",
->                 .pins = uart0_pins,
->                 .npins = 9,
->         },
->
-> npins should be 5 instead of 9 according to the definition.
->
-> Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+Unable to use __ATTR_RO(). Driver has multiple files using the same show
+function:
 
-Seems like an obvious bug so patch applied for fixes.
+$ grep GASKET_SYSFS_RO drivers/staging/gasket/*
+drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_page_table_entries, sysfs_show,
+drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_simple_page_table_entries, sysfs_show,
+drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_num_mapped_pages, sysfs_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(bar_offsets, gasket_sysfs_data_show, ATTR_BAR_OFFSETS),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(bar_sizes, gasket_sysfs_data_show, ATTR_BAR_SIZES),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(driver_version, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(framework_version, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(device_type, gasket_sysfs_data_show, ATTR_DEVICE_TYPE),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(revision, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(pci_address, gasket_sysfs_data_show, ATTR_PCI_ADDRESS),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(status, gasket_sysfs_data_show, ATTR_STATUS),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(is_device_owned, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(device_owner, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(write_open_count, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(reset_count, gasket_sysfs_data_show, ATTR_RESET_COUNT),
+drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(user_mem_ranges, gasket_sysfs_data_show,
+drivers/staging/gasket/gasket_interrupt.c:      GASKET_SYSFS_RO(interrupt_counts, interrupt_sysfs_show,
 
-Yours,
-Linus Walleij
+Signed-off-by: Rodolfo C. Villordo <rodolfovillordo@gmail.com>
+---
+ drivers/staging/gasket/gasket_sysfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/gasket/gasket_sysfs.h b/drivers/staging/gasket/gasket_sysfs.h
+index ab5aa351d555..d5e167dfbe76 100644
+--- a/drivers/staging/gasket/gasket_sysfs.h
++++ b/drivers/staging/gasket/gasket_sysfs.h
+@@ -71,7 +71,7 @@ struct gasket_sysfs_attribute {
+ 
+ #define GASKET_SYSFS_RO(_name, _show_function, _attr_type)                     \
+ 	{                                                                      \
+-		.attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
++		.attr = __ATTR(_name, 0444, _show_function, NULL),          \
+ 		.data.attr_type = _attr_type                                   \
+ 	}
+ 
+-- 
+2.17.1
+
