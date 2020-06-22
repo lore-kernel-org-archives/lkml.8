@@ -2,69 +2,159 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B310C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E55B20707
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592844929;
-	bh=sIM3ngkcdNobFLa2o3gIq/eh3RAapm1ixt6EyXbDul0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wzD2v5fgI06UoQq8mjsZ5NBH80+4JmIsRaCRtGHkmZ3FN1HZoAH3AmmLkJ+uGzXhc
-	 QynEdzWTcDKJhtvaplFBncvcDWMvHsw8R0A4H2YHA1x7VpyrnRsd2rJT6Uk3HNsoaU
-	 HERzx/69due1RHOlBBYMdqnlRzFaJ/FNkGhNBLYI=
+	by mail.kernel.org (Postfix) with ESMTP id 2A56D20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sWrhWVtJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbgFVQz2 (ORCPT
+        id S1729808AbgFVQzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729533AbgFVQzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:55:23 -0400
-Subject: Re: [GIT PULL] regulator fixes for v5.8-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592844923;
-        bh=sIM3ngkcdNobFLa2o3gIq/eh3RAapm1ixt6EyXbDul0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=c9yW4pFuzY5daoDuWXoAK2zPizxA7prU2p/VCSoeSFB2uHniTfFAWQ0CHhieQa755
-         hEVJOtGcSfcps1QEHlAoH5lsa+1AqemgCsVeHXA90tlQ/s/nn38uqpN8uVdDu/GUPI
-         7Ehv9IBFF3odQrZZoYTSax7obqzhJoYcMwW1ZjOM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200622114114.606FD206BE@mail.kernel.org>
-References: <20200622114114.606FD206BE@mail.kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200622114114.606FD206BE@mail.kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
- tags/regulator-fix-v5.8-rc2
-X-PR-Tracked-Commit-Id: 1b3bcca2085865c1facfbea9baf2f5cde5dc15e4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 751645789f7cffddb0715d51fd9e72986ad9ecaf
-Message-Id: <159284492368.20511.8305341733957282328.pr-tracker-bot@kernel.org>
-Date:   Mon, 22 Jun 2020 16:55:23 +0000
-To:     broonie@kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+        Mon, 22 Jun 2020 12:55:50 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:23597 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729533AbgFVQzu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:55:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592844949; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=E1xy9Gx0hTkrEu6KUPmiiRl49qJNoU7hD/Q9T7ORmy0=; b=sWrhWVtJMARvGzK0SJiMzEiLBwRi6bRZcrli88OPtvPDiOWW99gyHoD1DqACQe8cvbQUUetH
+ Q+WB5Q/dxK3Q5oEgA7QYvIQoVya/Ah7Og9B/LSNneuwFVJ38JDV7ncMLh6t+AgqFNsZbQP5p
+ 7YTCqP5b9EYSr6fdY7xr9YJQAsg=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5ef0e294c4bb4f886dba47fe (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 16:55:48
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BF774C433B6; Mon, 22 Jun 2020 16:55:46 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E005AC433CB;
+        Mon, 22 Jun 2020 16:55:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E005AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, tongtiangen <tongtiangen@huawei.com>
+Subject: [PATCH] drm/msm: Fix up the rest of the messed up address sizes
+Date:   Mon, 22 Jun 2020 10:55:38 -0600
+Message-Id: <20200622165539.9247-1-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 22 Jun 2020 12:40:20 +0100:
+msm_gem_address_space_create() changed to take a start/length instead
+of a start/end for the iova space but all of the callers were just
+cut and pasted from the old usage. Most of the mistakes have been fixed
+up so just catch up the rest.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v5.8-rc2
+Fixes: ccac7ce373c1 ("drm/msm: Refactor address space initialization")
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/751645789f7cffddb0715d51fd9e72986ad9ecaf
+ drivers/gpu/drm/msm/adreno/a2xx_gpu.c    | 2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c    | 2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 2 +-
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c | 2 +-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-Thank you!
-
+diff --git a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
+index 60f6472a3e58..6021f8d9efd1 100644
+--- a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
+@@ -408,7 +408,7 @@ a2xx_create_address_space(struct msm_gpu *gpu, struct platform_device *pdev)
+ 	struct msm_gem_address_space *aspace;
+ 
+ 	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
+-		SZ_16M + 0xfff * SZ_64K);
++		0xfff * SZ_64K);
+ 
+ 	if (IS_ERR(aspace) && !IS_ERR(mmu))
+ 		mmu->funcs->destroy(mmu);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 096be97ce9f9..21e77d67151f 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -1121,7 +1121,7 @@ static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
+ 		return -ENODEV;
+ 
+ 	mmu = msm_iommu_new(gmu->dev, domain);
+-	gmu->aspace = msm_gem_address_space_create(mmu, "gmu", 0x0, 0x7fffffff);
++	gmu->aspace = msm_gem_address_space_create(mmu, "gmu", 0x0, 0x80000000);
+ 	if (IS_ERR(gmu->aspace)) {
+ 		iommu_domain_free(domain);
+ 		return PTR_ERR(gmu->aspace);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index b8615d4fe8a3..680527e28d09 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -780,7 +780,7 @@ static int _dpu_kms_mmu_init(struct dpu_kms *dpu_kms)
+ 
+ 	mmu = msm_iommu_new(dpu_kms->dev->dev, domain);
+ 	aspace = msm_gem_address_space_create(mmu, "dpu1",
+-		0x1000, 0xfffffff);
++		0x1000, 0x100000000 - 0x1000);
+ 
+ 	if (IS_ERR(aspace)) {
+ 		mmu->funcs->destroy(mmu);
+diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+index 08897184b1d9..fc6a3f8134c7 100644
+--- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+@@ -514,7 +514,7 @@ struct msm_kms *mdp4_kms_init(struct drm_device *dev)
+ 			config->iommu);
+ 
+ 		aspace  = msm_gem_address_space_create(mmu,
+-			"mdp4", 0x1000, 0xffffffff);
++			"mdp4", 0x1000, 0x100000000 - 0x1000);
+ 
+ 		if (IS_ERR(aspace)) {
+ 			if (!IS_ERR(mmu))
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+index 54631fbd9389..8586d2cf1d94 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+@@ -641,7 +641,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+ 		mmu = msm_iommu_new(iommu_dev, config->platform.iommu);
+ 
+ 		aspace = msm_gem_address_space_create(mmu, "mdp5",
+-			0x1000, 0xffffffff);
++			0x1000, 0x100000000 - 0x1000);
+ 
+ 		if (IS_ERR(aspace)) {
+ 			if (!IS_ERR(mmu))
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.17.1
+
