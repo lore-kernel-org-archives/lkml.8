@@ -2,82 +2,99 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E39C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3C5C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99AB220767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051582073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:04:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WB45ecVU"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="A8hbsldP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbgFVVDi (ORCPT
+        id S1730335AbgFVVEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:03:38 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43943 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728378AbgFVVDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:03:37 -0400
-Received: from hanvin-mobl2.amr.corp.intel.com (fmdmzpr03-ext.fm.intel.com [192.55.54.38])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 05ML3Thf2226929
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 22 Jun 2020 14:03:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 05ML3Thf2226929
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020052301; t=1592859810;
-        bh=gAcZN4K7tT3pEj35SQPfJTCFHlhgLEiloeNEA/llr4s=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WB45ecVUjRtw8PwoaMRFLGLB1PDEauV6BytnSxQEy+Q6XX6ooRSoxKZJ9glj0sELV
-         gpKAsS3Smj0ORekCdN2DYhROWDOpcry2Scx3Xt9bwLjTA6u9gchCocNsAhsUWKy1EK
-         Ulnj4JsNBs4fBdItRnbrJWLokrXNT+JgCye18U6/XGtRRUX/gol7wK2CAzvRQVEHvc
-         k6khjt38AC+0YVqPvRuP3M5ye/mt9KLnLHhmdqb1jwPtkXnyc1mmVaO1b7iq1vj9+P
-         oPsMxA+Db6bsjYlGpa5iFHc+yXNxNp/5JogJEtMHarJpOdy/rcIczEPVZjFxnhaBws
-         2J7qoF9KNqazg==
-Subject: Re: [PATCH] initrd: Remove erroneous comment
-To:     Tom Rini <trini@konsulko.com>, ron minnich <rminnich@gmail.com>
-Cc:     lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-References: <20200619143056.24538-1-trini@konsulko.com>
- <CAP6exYJ64Hy9y3Dzh9Asrq8Y0oDWYk+tf4UAcasEc-ZxTY8DAw@mail.gmail.com>
- <20200622204034.GL27801@bill-the-cat>
- <CAP6exYLd0uFbVSbn28iS1OV=jULtg2f+7t1DAn-fvGoRSd5dng@mail.gmail.com>
- <20200622210145.GM27801@bill-the-cat>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <5d6dbaf4-26bf-d71a-595e-0b665d4ae614@zytor.com>
-Date:   Mon, 22 Jun 2020 14:03:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 17:04:12 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:34275 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730462AbgFVVEI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:04:08 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id ED0C7226E9;
+        Mon, 22 Jun 2020 23:03:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1592859846;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wfYhB7RXUqaiyvTYfdggr111rUrcCYz0SCl+kSO679c=;
+        b=A8hbsldPm59by1p7qTlAcpiW2fSii5BxN2YF47VruG1AmYjMUX4eqDZUOQQxmep9NxFX39
+        uT+Ax7VQ2X/P/ykjrQSXvklnP4V7D60C5H8xKLNj4OSXgQ/MBzKY/BH/eIHpUE2iUyrnhs
+        fJ0d/a0eA/3iWyoXCuolRflC+rhaLIA=
 MIME-Version: 1.0
-In-Reply-To: <20200622210145.GM27801@bill-the-cat>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 22 Jun 2020 23:03:59 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
+In-Reply-To: <0709f20bc61afb6656bc57312eb69f56@walle.cc>
+References: <20200609110136.GJ4106@dell>
+ <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
+ <0709f20bc61afb6656bc57312eb69f56@walle.cc>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <970bf15b1106df3355b13e06e8dc6f01@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22 14:01, Tom Rini wrote:
+Am 2020-06-14 12:26, schrieb Michael Walle:
+> Hi Rob,
 > 
-> I'm picky here because, well, there's a whole lot of moving parts in the
-> pre-kernel world.  In a strict sense, "UEFI" doesn't do anything with
-> the kernel but based on hpa's comments I assume that at least the
-> in-kernel UEFI stub does what Documentation/x86/booting.rst suggests to
-> do and consumes initrd=/file just like "initrd /file" in extlinux.conf,
-> etc do.  And since the EFI stub is cross-platform, it's worth noting
-> this too.
+> Am 2020-06-10 00:03, schrieb Rob Herring:
+> [..]
+>> Yes, we should use 'reg' whenever possible. If we don't have 'reg',
+>> then you shouldn't have a unit-address either and you can simply match
+>> on the node name (standard DT driver matching is with compatible,
+>> device_type, and node name (w/o unit-address)). We've generally been
+>> doing 'classname-N' when there's no 'reg' to do 'classname@N'.
+>> Matching on 'classname-N' would work with node name matching as only
+>> unit-addresses are stripped.
+> 
+> This still keeps me thinking. Shouldn't we allow the (MFD!) device
+> driver creator to choose between "classname@N" and "classname-N".
+> In most cases N might not be made up, but it is arbitrarily chosen;
+> for example you've chosen the bank for the ab8500 reg. It is not
+> a defined entity, like an I2C address if your parent is an I2C bus,
+> or a SPI chip select, or the memory address in case of MMIO. Instead
+> the device driver creator just chooses some "random" property from
+> the datasheet; another device creator might have chosen another
+> property. Wouldn't it make more sense, to just say this MFD provides
+> N pwm devices and the subnodes are matching based on pwm-{0,1..N-1}?
+> That would also be the logical consequence of the current MFD sub
+> device to OF node matching code, which just supports N=1.
 > 
 
-For what it's worth, normally boot loaders don't strip this from the
-kernel command line passed to the kernel, although there might be ones
-which do so. In general this is bad practice; it is better to let the
-initrd show in /proc/cmdline.
+Rob? Lee?
 
-	-hpa
-
+-michael
