@@ -2,89 +2,134 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7932C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35729207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872757;
-	bh=KJkwD6p1qCSl7EBe3fI9NMkvfieRs25n+b49quf8hic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ryVsa4seQJzgFftBIgLeg9rttvm/KUs4/aDDP00EqjzjUpzbhXypOh0Kkjz8s/vZ2
-	 Qy2ZiUn7OnwVadoKMapE3aLRjnaOvaTb+9UQJOTOHH9ISXnXdc5YRjYMUCXHuCvmC2
-	 fT/EB146edTEvCkRJchR+eQIlotClsyLj+vCDraY=
+	by mail.kernel.org (Postfix) with ESMTP id C0E1320706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:40:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmta/vZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732302AbgFWAjP (ORCPT
+        id S1732097AbgFWAkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731745AbgFWAhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:37:55 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4EFB208DB;
-        Tue, 23 Jun 2020 00:37:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872675;
-        bh=KJkwD6p1qCSl7EBe3fI9NMkvfieRs25n+b49quf8hic=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgSg/ZDKkEz4CkK4cNt9G8n3aO+wk4kFztAS0Wj2ax645TzFBxvDIYz2HAJuUVheO
-         RE0hkCvlen3xw0UjCzfOWrZdoM0pc4O27vRmqcXmNNnQ1faVklhoBad24uNg/5yxsr
-         zj2tbBoCPa5mYtIkADGVGlp/wCHiV0fBKNgpYFhY=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 05/23] torture: Set configfile variable to current scenario
-Date:   Mon, 22 Jun 2020 17:37:34 -0700
-Message-Id: <20200623003752.26872-5-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200623003731.GA26717@paulmck-ThinkPad-P72>
-References: <20200623003731.GA26717@paulmck-ThinkPad-P72>
+        Mon, 22 Jun 2020 20:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731631AbgFWAkO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:40:14 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D28C061795;
+        Mon, 22 Jun 2020 17:39:34 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id l63so138294oih.13;
+        Mon, 22 Jun 2020 17:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=68GP117GFRUsx6QpEeOc82reTKVBWwmz16vEIsvU5G4=;
+        b=gmta/vZGc8pQNwndeUZSBEuYDUhotgIBPf7X5ZvRpmklWY2K8gINbs+jySCeUE2nC2
+         Yqk/WGvdHJfIT3634Lxi3hX7KTOPzvm3eitow6IQwwD0mwkfrh6vZhy2JvLVNmAYIce0
+         7uh5OGP9Sf28c10JfHn7VlATpBKZRcod48KbG0O0T4Vimb7aPQSWPbreT7NjTfikH5NG
+         yTkdUaNB057OVAKh6yB5V/K20AzqE4Zgud+IB5xKV3l98uUJZeDjvf5mg/Xcb/5R+brM
+         zDJYeM4kDanPSnMH+RiQgzFK8KvNwVQ7ViETmlQHxJQIfggL81fdYQyS4lOG7hSmDwf2
+         KVQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=68GP117GFRUsx6QpEeOc82reTKVBWwmz16vEIsvU5G4=;
+        b=IDy/OwqfYMg40AyM6veAxuH9OaRnDN04Q4CPuGFdEm26ZmkeefbYSUiD5Zdte7dJlA
+         sjYojSw8aplBjAhxnfOaTzxxEumcHgnDdhoDG7jwhdD3Qs8kbvmmu7bMzbvQgtzOWel4
+         0WbM5wP7HHYTJ6cUiKICoIJEg5pzG+ZHTUybdlvbnNabkE+DuBSVwdsSiLZ3udnZiQ1A
+         uqwlCKOQcXEa4Y/ujOnE53midoCi67thDC4nY3dWt/aJCopca7rhru1LfnEVy5+D+YjT
+         L07ynI4mCE4rpjJkd+qff1eJ6yMvYAfIe3h9Zt76x/H3RbKFJbDALZyL2iiWsV6nAhoZ
+         DxfQ==
+X-Gm-Message-State: AOAM533ffLVZEq/CK7T1xMWfph2lOr9dXM7eR84El+WBHYJwvnqyxwQY
+        BtqMsdr8rxUTf94Wv9WpOKk=
+X-Google-Smtp-Source: ABdhPJx+RrYbJfFiUi0YzMQpliOjObSZz4xZivexdIDBHV5ROsp9MKcr19adXrjBQNGDfBB5c4pbkg==
+X-Received: by 2002:aca:5c1:: with SMTP id 184mr13713429oif.119.1592872773768;
+        Mon, 22 Jun 2020 17:39:33 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id y31sm3677828otb.41.2020.06.22.17.39.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 17:39:32 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 1/2] media: omap3isp: Remove cacheflush.h
+Date:   Mon, 22 Jun 2020 16:47:39 -0700
+Message-Id: <20200622234740.72825-2-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200622234740.72825-1-natechancellor@gmail.com>
+References: <20200622234740.72825-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+After mm.h was removed from the asm-generic version of cacheflush.h,
+s390 allyesconfig shows several warnings of the following nature:
 
-The torture-test recheck logic fails to set the configfile variable to
-the current scenario, so this commit properly initializes this variable.
-This change isn't critical given that all errors for a given scenario
-follow that scenario's heading, but it is easier on the eyes to repeat it.
-And this repetition also prevents confusion as to whether a given message
-goes with the previous heading or the next one.
+In file included from ./arch/s390/include/generated/asm/cacheflush.h:1,
+                 from drivers/media/platform/omap3isp/isp.c:42:
+./include/asm-generic/cacheflush.h:16:42: warning: 'struct mm_struct'
+declared inside parameter list will not be visible outside of this
+definition or declaration
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+As Geert and Laurent point out, this driver does not need this header in
+the two files that include it. Remove it so there are no warnings.
+
+Fixes: e0cf615d725c ("asm-generic: don't include <linux/mm.h> in cacheflush.h")
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- tools/testing/selftests/rcutorture/bin/kvm-recheck.sh | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/omap3isp/isp.c      | 2 --
+ drivers/media/platform/omap3isp/ispvideo.c | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-index 736f047..2261aa6 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-@@ -31,6 +31,7 @@ do
- 			head -1 $resdir/log
- 		fi
- 		TORTURE_SUITE="`cat $i/../TORTURE_SUITE`"
-+		configfile=`echo $i | sed -e 's,^.*/,,'`
- 		rm -f $i/console.log.*.diags
- 		kvm-recheck-${TORTURE_SUITE}.sh $i
- 		if test -f "$i/qemu-retval" && test "`cat $i/qemu-retval`" -ne 0 && test "`cat $i/qemu-retval`" -ne 137
+diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+index a4ee6b86663e..b91e472ee764 100644
+--- a/drivers/media/platform/omap3isp/isp.c
++++ b/drivers/media/platform/omap3isp/isp.c
+@@ -39,8 +39,6 @@
+  *	Troy Laramy <t-laramy@ti.com>
+  */
+ 
+-#include <asm/cacheflush.h>
+-
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+ #include <linux/delay.h>
+diff --git a/drivers/media/platform/omap3isp/ispvideo.c b/drivers/media/platform/omap3isp/ispvideo.c
+index 10c214bd0903..1ac9aef70dff 100644
+--- a/drivers/media/platform/omap3isp/ispvideo.c
++++ b/drivers/media/platform/omap3isp/ispvideo.c
+@@ -18,7 +18,6 @@
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+-#include <asm/cacheflush.h>
+ 
+ #include <media/v4l2-dev.h>
+ #include <media/v4l2-ioctl.h>
+
+base-commit: 27f11fea33608cbd321a97cbecfa2ef97dcc1821
 -- 
-2.9.5
+2.27.0
 
