@@ -2,141 +2,85 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1948CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F214320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A502075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgFVO03 (ORCPT
+        id S1729400AbgFVO0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:26:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46110 "EHLO mx2.suse.de"
+        Mon, 22 Jun 2020 10:26:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46034 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729362AbgFVO00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729358AbgFVO00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 10:26:26 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 79952C1A8;
+        by mx2.suse.de (Postfix) with ESMTP id 175B3C1B6;
         Mon, 22 Jun 2020 14:26:23 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v4 5/9] usb: xhci-pci: Add support for reset controllers
-Date:   Mon, 22 Jun 2020 12:38:14 +0200
-Message-Id: <20200622103817.476-6-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622103817.476-1-nsaenzjulienne@suse.de>
-References: <20200622103817.476-1-nsaenzjulienne@suse.de>
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        James Tai <james.tai@realtek.com>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v4 2/3] dt-bindings: arm: realtek: Document RTD1319 and Realtek Pym Particles EVB
+Date:   Mon, 22 Jun 2020 14:55:25 +0200
+Message-Id: <20200622125527.24207-3-afaerber@suse.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200622125527.24207-1-afaerber@suse.de>
+References: <20200622125527.24207-1-afaerber@suse.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some atypical users of xhci-pci might need to manually reset their xHCI
-controller before starting the HCD setup. Check if a reset controller
-device is available to the PCI bus and trigger a reset.
+From: James Tai <james.tai@realtek.com>
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Define compatible strings for Realtek RTD1319 SoC and Realtek Pym Particles
+EVB.
 
+Signed-off-by: James Tai <james.tai@realtek.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
-
-Changes since v3:
- - Now that DT is fixed we can use the actual xHCI device to get reset
-   controller, we previously used the bus device (not altering the
-   reviewed-bys as it doesn't really affect the integration with
-   xhci-pci).
-
-Changes since v2:
- - Also reset on resume
-
-Changes since v1:
- - Use proper reset API
- - Make code simpler
-
- drivers/usb/host/xhci-pci.c | 10 ++++++++++
- drivers/usb/host/xhci.h     |  2 ++
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index ef513c2fb843..f8b171825dfc 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -12,6 +12,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/acpi.h>
-+#include <linux/reset.h>
+ v3 -> v4:
+ * Renamed compatible from pymparticle to pym-particles
+ * Turned SoC comment into description
  
- #include "xhci.h"
- #include "xhci-trace.h"
-@@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	struct xhci_hcd *xhci;
- 	struct usb_hcd *hcd;
- 	struct xhci_driver_data *driver_data;
-+	struct reset_control *reset;
+ v2 -> v3: Unchanged
  
- 	driver_data = (struct xhci_driver_data *)id->driver_data;
- 	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
-@@ -347,6 +349,11 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 			return retval;
- 	}
+ v1 -> v2:
+ * Put string in alphabetical order
  
-+	reset = devm_reset_control_get_optional_exclusive(&dev->dev, NULL);
-+	if (IS_ERR(reset))
-+		return PTR_ERR(reset);
-+	reset_control_reset(reset);
+ Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+index 0b388016bbcd..e36e87df3521 100644
+--- a/Documentation/devicetree/bindings/arm/realtek.yaml
++++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+@@ -42,6 +42,12 @@ properties:
+               - synology,ds418 # Synology DiskStation DS418
+           - const: realtek,rtd1296
+ 
++      - description: RTD1319 SoC based boards
++        items:
++          - enum:
++              - realtek,pym-particles # Realtek Pym Particles EVB
++          - const: realtek,rtd1319
 +
- 	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
- 	pm_runtime_get_noresume(&dev->dev);
- 
-@@ -364,6 +371,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	/* USB 2.0 roothub is stored in the PCI device now. */
- 	hcd = dev_get_drvdata(&dev->dev);
- 	xhci = hcd_to_xhci(hcd);
-+	xhci->reset = reset;
- 	xhci->shared_hcd = usb_create_shared_hcd(&xhci_pci_hc_driver, &dev->dev,
- 						 pci_name(dev), hcd);
- 	if (!xhci->shared_hcd) {
-@@ -515,6 +523,8 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
- 	struct pci_dev		*pdev = to_pci_dev(hcd->self.controller);
- 	int			retval = 0;
- 
-+	reset_control_reset(xhci->reset);
-+
- 	/* The BIOS on systems with the Intel Panther Point chipset may or may
- 	 * not support xHCI natively.  That means that during system resume, it
- 	 * may switch the ports back to EHCI so that users can use their
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 2c6c4f8d1ee1..379ffa24877d 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1770,6 +1770,8 @@ struct xhci_hcd {
- 	/* optional clocks */
- 	struct clk		*clk;
- 	struct clk		*reg_clk;
-+	/* optional reset controller */
-+	struct reset_control *reset;
- 	/* data structures */
- 	struct xhci_device_context_array *dcbaa;
- 	struct xhci_ring	*cmd_ring;
+       - description: RTD1395 SoC based boards
+         items:
+           - enum:
 -- 
-2.27.0
+2.26.2
 
