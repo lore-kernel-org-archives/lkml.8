@@ -2,122 +2,168 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10E4E20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58DF20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="h7KFGvSL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Md8aji7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgFVOzr (ORCPT
+        id S1729275AbgFVO4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:55:47 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:62307 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728954AbgFVOzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:55:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592837746; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=OLSS+KRgX5n50AoMk56HGdDuDHRpwuXMsAFnQNuxhMo=; b=h7KFGvSLM1OmRnt+g4KFAKbPLmiEo+kFza4JIORfDQRdFu++YXIsGPPoTfNd6ozZZIOxePiw
- Xo8kGoHEeOwJB31co+/Ik622pzJ1VWpu+AwIYCI2z/tEo+KVzH8ZhB2W+KebZ9TW0aEqXfV3
- so2fBoXNXpb89tyJnQ3M+lbUY28=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5ef0c65cf3deea03f34047bf (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 14:55:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CA5CAC433CA; Mon, 22 Jun 2020 14:55:24 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2EBDC433C6;
-        Mon, 22 Jun 2020 14:55:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2EBDC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Joseph Chuang <joseph.chuang@cypress.com>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Subject: Re: drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1710:40: sparse: sparse: incorrect type in initializer (different base types)
-References: <202006190422.VymyEbuu%lkp@intel.com>
-        <87a70vgpkb.fsf@codeaurora.org>
-        <76e75ef2-850b-2860-f28b-ba773ee50117@cypress.com>
-Date:   Mon, 22 Jun 2020 17:55:20 +0300
-In-Reply-To: <76e75ef2-850b-2860-f28b-ba773ee50117@cypress.com> (Chi-Hsien
-        Lin's message of "Mon, 22 Jun 2020 22:48:18 +0800")
-Message-ID: <875zbjf8vb.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 22 Jun 2020 10:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729065AbgFVO4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:56:15 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA002C061573;
+        Mon, 22 Jun 2020 07:56:14 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j1so8534828pfe.4;
+        Mon, 22 Jun 2020 07:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xjagLTgBdJuS+lxCzj+HJEcO0dILS8d3HH+uOW/jYtg=;
+        b=Md8aji7v9v0IesqnKaESVzP6xZdACvIez0GIkPpCPmtWFsewspfffLO15ZBS7ofNeu
+         i5H6dE4LJi6O1A7RSHmuZV7nLXinxR9H7+KvrUlooYEHr0Aho3aIMdQBF+L2sXNjFY0Q
+         Gh3B3cagl5QtXpxT+COfqGy3PV+KOXHuG4NH1Uel+v8fSPemDaWeTlsS66xv1B1raMhj
+         hwwZkHtRYkYbQiX9vMs0U4oAYXI3hPYLW1fttm9Az0WpH9SpcI96Hsx+A8vJEbcEYtTY
+         motBNPnQH1XLgb+g1Es5sQUsaGzcdvH04dcVsVHiVlXm0B/C8j0Kl7aCzhOciJwAKT4l
+         3EcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xjagLTgBdJuS+lxCzj+HJEcO0dILS8d3HH+uOW/jYtg=;
+        b=FL/9ZUke9nYc9Lp4oVi1Ud/41UyP4RH0a3is0kph3vGq7fIrF3eJLPNmmaMDFFZCHk
+         Z/gTZKAOiS+aduXZF9Ce8EJwWQKM7dLK7/bL/jv+M41WM12ne6vlj8s87jAnl3Z8lYbb
+         LAIOMFTkppoLXghjwpu/v0X9CswnrRh3/zI7mSK9s1F1vUf+zmyYnuWhIGLRlTv46jQH
+         gt7G0UdKPZIABkxCvjHdnJxRSct1bMiojcFD/dSWRM+EbidxJp73QEu2yO25XZ9x4R/o
+         UH/mL89dvNL0ri7f/nGCBW54S2khd8LxeCmW35fAnR22f2AT4CccX/R3VtiNUZpkWll7
+         Z6Ag==
+X-Gm-Message-State: AOAM533sqtSmOWkXjqirdaFheEk1F9Z9/MthF6lE1oqwku/H1+NnPQ+v
+        I3cdCONVUa0KjdsBO3spC4gBcWbf37hQ97llIyI=
+X-Google-Smtp-Source: ABdhPJw6mQ+zxmpMSkJb+dlDQRkhgtNZHBFjiCPSrtowB9pYMq4Z4oApxfCZkPSIP1wpDoaef47WoTMB7FRH5DO4Uyo=
+X-Received: by 2002:a62:3103:: with SMTP id x3mr20128249pfx.130.1592837774307;
+ Mon, 22 Jun 2020 07:56:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <2713141.s8EVnczdoM@kreacher> <1821880.vZFEW4x2Ui@kreacher>
+In-Reply-To: <1821880.vZFEW4x2Ui@kreacher>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 22 Jun 2020 17:56:01 +0300
+Message-ID: <CAHp75VePDyPevCAOntFpTajf5zd9ocwjeWRz80WmCNtiDicpLg@mail.gmail.com>
+Subject: Re: [RFT][PATCH v2 2/4] ACPI: OSL: Add support for deferred unmapping
+ of ACPI memory
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chi-Hsien Lin <chi-hsien.lin@cypress.com> writes:
-
-> On 06/22/2020 10:09, Kalle Valo wrote:
->> + linux-wireless
->>
->> kernel test robot <lkp@intel.com> writes:
->>
->>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>> head:   5e857ce6eae7ca21b2055cca4885545e29228fe2
->>> commit: 9c29da3f4e7ef9810bdfaf3d8aa5e6d2e33136f8 brcmfmac: Fix P2P
->>> Group Formation failure via Go-neg method
->>> date:   6 weeks ago
->>> config: riscv-randconfig-s032-20200618 (attached as .config)
->>> compiler: riscv64-linux-gcc (GCC) 9.3.0
->>> reproduce:
->>>          # apt-get install sparse
->>>          # sparse version: v0.6.2-rc1-10-gc17b1b06-dirty
->>>          git checkout 9c29da3f4e7ef9810bdfaf3d8aa5e6d2e33136f8
->>>          # save the attached .config to linux build tree
->>>          make W=1 C=1 ARCH=riscv CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
->>>
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kernel test robot <lkp@intel.com>
->>>
->>>
->>> sparse warnings: (new ones prefixed by >>)
->>>
->>>>> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1710:40:
->>>>> sparse: sparse: incorrect type in initializer (different base
->>>>> types) @@ expected signed int [usertype] requested_dwell @@ got
->>>>> restricted __le32 [usertype] dwell_time @@
->>>>> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1710:40:
->>>>> sparse: expected signed int [usertype] requested_dwell
->>>>> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1710:40:
->>>>> sparse: got restricted __le32 [usertype] dwell_time
->>
->> Joseph, please send a followup patch to fix these.
-> Kalle,
+On Mon, Jun 22, 2020 at 5:06 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 >
-> The fix is this one
-> https://patchwork.kernel.org/patch/11598109/
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>
+> Implement acpi_os_unmap_deferred() and
+> acpi_os_release_unused_mappings() and set ACPI_USE_DEFERRED_UNMAPPING
+> to allow ACPICA to use deferred unmapping of memory in
+> acpi_ex_system_memory_space_handler() so as to avoid RCU-related
+> performance issues with memory opregions.
 
-Great, thanks.
+...
 
-> Do I need to submit a V2 with "Reported-by: kernel test robot
-> <lkp@intel.com>" tag?
+> +static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
+>  {
+> -       unsigned long refcount = --map->refcount;
+> +       if (--map->track.refcount)
+> +               return true;
+>
+> -       if (!refcount)
+> -               list_del_rcu(&map->list);
+> -       return refcount;
+> +       list_del_rcu(&map->list);
+> +
 
-No need to send v2. But you can reply to that patch (so that patchwork
-sees it) and ask me to add the tag during commit.
+> +       if (defer) {
+> +               INIT_LIST_HEAD(&map->track.gc);
+> +               list_add_tail(&map->track.gc, &unused_mappings);
+
+> +               return true;
+> +       }
+> +
+> +       return false;
+
+A nit:
+
+Effectively it returns a value of defer.
+
+  return defer;
+
+>  }
+
+...
+
+> @@ -416,26 +421,102 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
+>         }
+>
+>         mutex_lock(&acpi_ioremap_lock);
+> +
+>         map = acpi_map_lookup_virt(virt, size);
+
+A nit: should it be somewhere else (I mean in another patch)?
+
+>         if (!map) {
+
+...
+
+> +       /* Release the unused mappings in the list. */
+> +       while (!list_empty(&list)) {
+> +               struct acpi_ioremap *map;
+> +
+> +               map = list_entry(list.next, struct acpi_ioremap, track.gc);
+
+A nt: if __acpi_os_map_cleanup() (actually acpi_unmap() according to
+the code) has no side effects, can we use list_for_each_entry_safe()
+here?
+
+> +               list_del(&map->track.gc);
+> +               __acpi_os_map_cleanup(map);
+> +       }
+> +}
+
+...
+
+> @@ -472,16 +552,18 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+>                 return;
+>
+>         mutex_lock(&acpi_ioremap_lock);
+> +
+>         map = acpi_map_lookup(addr, gas->bit_width / 8);
+
+A nit: should it be somewhere else (I mean in another patch)?
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+With Best Regards,
+Andy Shevchenko
