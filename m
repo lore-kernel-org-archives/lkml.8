@@ -2,204 +2,121 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE63C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27348206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25649206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:34:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v+QT9yYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgFVIbn (ORCPT
+        id S1725976AbgFVIei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:31:43 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:50697 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgFVIbm (ORCPT
+        Mon, 22 Jun 2020 04:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbgFVIei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:31:42 -0400
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 99AAFC0009;
-        Mon, 22 Jun 2020 08:31:34 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 10:35:01 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Luis Oliveira <lolivei@synopsys.com>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: Re: [PATCH v2 3/6] media: ov5647: Add support for non-continuous
- clock mode
-Message-ID: <20200622083501.htr7mzngchyn7n7q@uno.localdomain>
-References: <cover.1589850165.git.roman.kovalivskyi@globallogic.com>
- <cd04fe908fc1a747949ee83044f4d2abc1885cee.1589850165.git.roman.kovalivskyi@globallogic.com>
- <20200519115707.GK20066@paasikivi.fi.intel.com>
- <20200618101326.zpcdcb3zdrtgz45t@uno.localdomain>
- <7d718df8-5256-3ff6-01ec-2f1a14f53580@globallogic.com>
+        Mon, 22 Jun 2020 04:34:38 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CE4C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:34:36 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id l17so14018178wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iumTCPIQ5JgGRCUXbn3oWrglqPPjaXK37FVM57bSflI=;
+        b=v+QT9yYRCkBvviTFtqwMM6R1p8xJCXCmU5EzRl2/Msz9xNSQiynSP58ZJxKiHqdLBl
+         jy01IszLE6KSujR5GrL121LclHi8zO/zEVfqMJ3dimS8VV0ImQUrb4VlTL26KGyGoYHp
+         SM3xUp0XJft9toVfWgGSrhZ83Kw1rGyFkY5DrWdEj/rEXGOeiJr/kdQb3bB79X8+jqCO
+         0lR/imQOAg8a75RJrLck4HJ5aumvhzFaxouUV/VKBjYBjUj7c0nPg6o2TI7jRQmXNpeI
+         BKXcPcUqfhcby73EdiXz1pX1DXxPU0qrYY1c9uyxMpnj3LU8lqZgl+Aj3DIHJUKti5nX
+         SKmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iumTCPIQ5JgGRCUXbn3oWrglqPPjaXK37FVM57bSflI=;
+        b=p9aycxVNiDjxTP+nFvEN/NwWFsQgvaaRqpAFBKwfqUlp6MGSLjELEyyjhoCjjbO7q9
+         xtwoyVFBEmBVR3n8qR304tJS5SblpUTMF4OV6vixmCgCSPh2ryrE5liogqWeiRaC1d0c
+         xfd77ILIkmKbQ8DmO0NKzEg8qpXtFtVlkZ9F+C2UpbUJTqjNeOBK7AAE703hs8DN5+XK
+         t1uy4CYL0Sl7YGfVRPOpK1IGm40/r/5jWD8dgss1oPhotxnRjse43Dm4/ewKwHOSbfq7
+         UnkwgIzdLMyxfPGGA1DvZvt3QKQOgg3pUCTtO8ghNc+M6xckahET/eCp4vNehlkGmUMe
+         BS/g==
+X-Gm-Message-State: AOAM532V/I+aNOLfhdw1/q1ZEVmE9LqTVPmxdlWRU9HfPI8cAOSiQ84f
+        epblccAevsMxh17K+mHnw10W3Q==
+X-Google-Smtp-Source: ABdhPJy8EF0FGsP5udLRcNjPlqG9OY1hIfHKLNuaRTjiy8Jh4ufHvnQFqnkLAt+MaeylObvSEY79jw==
+X-Received: by 2002:a1c:f714:: with SMTP id v20mr16932709wmh.81.1592814875416;
+        Mon, 22 Jun 2020 01:34:35 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id w17sm17477224wra.42.2020.06.22.01.34.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 01:34:34 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/1] ARM: dts: ux500: Supply nodes for the other 2 AB8500 PWM devices
+Date:   Mon, 22 Jun 2020 09:34:32 +0100
+Message-Id: <20200622083432.1491715-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7d718df8-5256-3ff6-01ec-2f1a14f53580@globallogic.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roman,
+As per 'struct mfd_cell ab8500_devs[]' there are not 1, but 3 PWM
+devices on the AB8500.  Until now, each of them have referenced
+the same Device Tree node.  This change ensures each device has
+their own.
 
-On Mon, Jun 22, 2020 at 10:00:46AM +0300, Roman Kovalivskyi wrote:
-> Hi Jacopo,
->
-> On 18.06.20 13:13, Jacopo Mondi wrote:
-> > Hi Roman, Sakari
-> >
-> > On Tue, May 19, 2020 at 02:57:07PM +0300, Sakari Ailus wrote:
-> >> Hi Roman,
-> >>
-> >> On Tue, May 19, 2020 at 04:16:18AM +0300, Roman Kovalivskyi wrote:
-> >>> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> >>>
-> >>> The driver was only supporting continuous clock mode
-> >>> although this was not stated anywhere.
-> >>> Non-continuous clock saves a small amount of power and
-> >>> on some SoCs is easier to interface with.
-> >>>
-> > not much to add to what Sakari said, apart for
-> >
-> >>> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> >>> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-> >>> ---
-> >>>  drivers/media/i2c/ov5647.c | 25 ++++++++++++++++++++++---
-> >>>  1 file changed, 22 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-> >>> index 796cc80f8ee1..10f35c637f91 100644
-> >>> --- a/drivers/media/i2c/ov5647.c
-> >>> +++ b/drivers/media/i2c/ov5647.c
-> >>> @@ -44,6 +44,7 @@
-> >>>  #define PWDN_ACTIVE_DELAY_MS	20
-> >>>
-> >>>  #define MIPI_CTRL00_CLOCK_LANE_GATE		BIT(5)
-> >>> +#define MIPI_CTRL00_LINE_SYNC_ENABLE		BIT(4)
-> >>>  #define MIPI_CTRL00_BUS_IDLE			BIT(2)
-> >>>  #define MIPI_CTRL00_CLOCK_LANE_DISABLE		BIT(0)
-> >>>
-> >>> @@ -95,6 +96,7 @@ struct ov5647 {
-> >>>  	int				power_count;
-> >>>  	struct clk			*xclk;
-> >>>  	struct gpio_desc		*pwdn;
-> >>> +	bool				is_clock_contiguous;
-> > the clock is 'continuous' not contigous :)
-> >
-> > I plan to upport more ov5647 patches soon, Roman are you planning a
-> > resend of this series or should I do so (keeping your signoffs of
-> > course)
-> >
-> > Thanks
-> >   j
->
-> I would be grateful if someone more competent would continue with this
-> patch series, so feel free to update it with v3.
+Due to recent `dtc` checks [0], nodes cannot share the same node
+name, so we are forced to rename the affected nodes by appending
+their associated numeric 'bank ID'.
 
-I think you did a very good job, I just happen to have a bit more time
-to dedicate to this.
+[0] ste-ab8500.dtsi:210.16-214.7: ERROR (duplicate_node_names):
+      /soc/prcmu@80157000/ab8500/ab8500-pwm: Duplicate node name
 
-I'll make sure I'll cc you and the cc list from your series.
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm/boot/dts/ste-ab8500.dtsi | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-Thanks
-  j
+diff --git a/arch/arm/boot/dts/ste-ab8500.dtsi b/arch/arm/boot/dts/ste-ab8500.dtsi
+index 3cd6ee6d50e0e..aab5719cc1a93 100644
+--- a/arch/arm/boot/dts/ste-ab8500.dtsi
++++ b/arch/arm/boot/dts/ste-ab8500.dtsi
+@@ -201,7 +201,19 @@ ab8500-sysctrl {
+ 					compatible = "stericsson,ab8500-sysctrl";
+ 				};
+ 
+-				ab8500-pwm {
++				ab8500-pwm-1 {
++					compatible = "stericsson,ab8500-pwm";
++					clocks = <&ab8500_clock AB8500_SYSCLK_INT>;
++					clock-names = "intclk";
++				};
++
++				ab8500-pwm-2 {
++					compatible = "stericsson,ab8500-pwm";
++					clocks = <&ab8500_clock AB8500_SYSCLK_INT>;
++					clock-names = "intclk";
++				};
++
++				ab8500-pwm-3 {
+ 					compatible = "stericsson,ab8500-pwm";
+ 					clocks = <&ab8500_clock AB8500_SYSCLK_INT>;
+ 					clock-names = "intclk";
+-- 
+2.25.1
 
->
-> >>>  };
-> >>>
-> >>>  static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
-> >>> @@ -274,9 +276,15 @@ static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
-> >>>
-> >>>  static int ov5647_stream_on(struct v4l2_subdev *sd)
-> >>>  {
-> >>> +	struct ov5647 *ov5647 = to_state(sd);
-> >>> +	u8 val = MIPI_CTRL00_BUS_IDLE;
-> >>>  	int ret;
-> >>>
-> >>> -	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, MIPI_CTRL00_BUS_IDLE);
-> >>> +	if (ov5647->is_clock_contiguous)
-> >>> +		val |= MIPI_CTRL00_CLOCK_LANE_GATE |
-> >>> +		       MIPI_CTRL00_LINE_SYNC_ENABLE;
-> >>> +
-> >>> +	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, val);
-> >>>  	if (ret < 0)
-> >>>  		return ret;
-> >>>
-> >>> @@ -573,7 +581,7 @@ static const struct v4l2_subdev_internal_ops ov5647_subdev_internal_ops = {
-> >>>  	.open = ov5647_open,
-> >>>  };
-> >>>
-> >>> -static int ov5647_parse_dt(struct device_node *np)
-> >>> +static int ov5647_parse_dt(struct ov5647 *sensor, struct device_node *np)
-> >>>  {
-> >>>  	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
-> >>>  	struct device_node *ep;
-> >>> @@ -586,6 +594,17 @@ static int ov5647_parse_dt(struct device_node *np)
-> >>>
-> >>>  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
-> >>>
-> >> Extra newline.
-> >>
-> >>> +	if (!ret) {
-> >>> +		of_node_put(ep);
-> >>> +		of_node_put(np);
-> >> Why to put np as well?
-> >>
-> >>> +		return ret;
-> >> Please add a label at the end; it makes error handling easier.
-> >>
-> >>> +	}
-> >>> +
-> >>> +	if (bus_cfg.bus_type == V4L2_MBUS_CSI2_DPHY
-> >>> +		|| bus_cfg.bus_type == V4L2_MBUS_CSI2_CPHY)
-> >> I bet this device is D-PHY only.
-> >>
-> >>> +		sensor->is_clock_contiguous = bus_cfg.bus.mipi_csi2.flags
-> >>> +			& V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
-> >> Now that you're making use of bus specific parameters, please set the bus
-> >> type first before calling v4l2_fwnode_endpoint_parse().
-> >>
-> >>> +
-> >>>  	of_node_put(ep);
-> >>>  	return ret;
-> >>>  }
-> >>> @@ -604,7 +623,7 @@ static int ov5647_probe(struct i2c_client *client)
-> >>>  		return -ENOMEM;
-> >>>
-> >>>  	if (IS_ENABLED(CONFIG_OF) && np) {
-> >>> -		ret = ov5647_parse_dt(np);
-> >>> +		ret = ov5647_parse_dt(sensor, np);
-> >>>  		if (ret) {
-> >>>  			dev_err(dev, "DT parsing error: %d\n", ret);
-> >>>  			return ret;
-> >> --
-> >> Kind regards,
-> >>
-> >> Sakari Ailus
->
->
-> --
->
-> Best regards,
-> Roman Kovalivskyi
->
