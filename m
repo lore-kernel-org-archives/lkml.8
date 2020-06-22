@@ -2,116 +2,118 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAE3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16A920760
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124002073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHFkvNQ3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URj6Gz7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgFVPrJ (ORCPT
+        id S1729545AbgFVPrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:47:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40784 "EHLO
+        Mon, 22 Jun 2020 11:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729196AbgFVPrI (ORCPT
+        with ESMTP id S1729250AbgFVPrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:47:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4F3C061573;
-        Mon, 22 Jun 2020 08:47:08 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j4so7741388plk.3;
-        Mon, 22 Jun 2020 08:47:08 -0700 (PDT)
+        Mon, 22 Jun 2020 11:47:23 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2103DC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:47:22 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id p18so14032498eds.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:47:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xc2mKgeExdGmIWqPOYOYWo2Adk+x5jGFKVodlRCWmyU=;
-        b=cHFkvNQ3kDK5qybk3Qkc7QMvYMDxnAW7w/x/z161hVHqWAJJ/0Mxy1ocu8GLKCHwwf
-         AL54f+6RUWVivK0X3t1NG3a0lB5qLdxCGOOb8sIzxjwbywiESpPsEbnWmuoFPAt7YEue
-         D83hrHNbHTPE0LkgCvRcCxjf7nPTEAVgTgiV+4R/1r9w/GwBO4vv3wN4UJF0jaOi0Cyw
-         wp86iZ1b5TX6/RDHzyacxQcruuDDIb/uVZJEbjmrFJu36VXuY3WhlUDx+iu+YZ2Cx65D
-         Mlc/2aK6I8TySALnESH8Q5RhFEavkhTc74hokrDyv/aYVOFILUOnwoLreHDmR/XWOEnf
-         E8eQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F8T5mZjCR5K6UE+9mip6AsTcYlxfqPfxEDZRXo68qXg=;
+        b=URj6Gz7DCNjVsfGxAkO2DOJQ4lhP8RnWB1oBTpMB1v+b9ngI15iZSGpciCEHPwhRtm
+         THavvnAHUL50ZpFzgz1EVT2okwJ6BeeZsAmcopLJMf5WZSkYA/QwaRG7z7H3s1k+eaJt
+         EF3a5YtgqK/aV1lCOq+EjGrCWYUgoTtReCeLcXg7FKh05Qp1sNZubqrc5zQ2ZDlWfUTu
+         AdbdhbrQpkW4BdEe8NFtAz6Y5DShUyx3KystsWglITp/okRj/QzsaCpNqC7cX1zVoc2L
+         wiT0IjoCZxuJsPhLG88KnO5MoJdfND8u4agst1e7U+g4Tcv381/zETGmFcbfvKl3zUm0
+         NAUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xc2mKgeExdGmIWqPOYOYWo2Adk+x5jGFKVodlRCWmyU=;
-        b=HX5/J01a8FMsMEm6Jco0K29JzMcNzvINPf1tkxiMGIjwxYs+Iv/J3GJ3pDC+SLOwGV
-         6ADNsOIIB4CizTLoWl36nBBv5iSti5uLZ45Ic+TyAXk3PieY+KDvZUcvnbzkSbjOI6JF
-         afm3endvgKmBbSW0PJ+rfZqT8yvh57pjhqCSN9ctzRbUlLhMW93Uo+gCB4U7H5yKt4GX
-         BWF8rnL7cXJHWGVyaJ068Gkj+TKvoVwg0iafe9r4aIzpdWbr6JLBMxOkf8Iiqfa1pWoI
-         Vew95qRNqw6vTtiFD8VH5URIhxt0tasLAc1SCSJC0yIddR4szjnspcvJGNq5rzpjh37y
-         Pn/Q==
-X-Gm-Message-State: AOAM531hC56usaaq382aSdD5/0l0SEOF3+F4we4KvgqxAm7GaWuiXpVn
-        3dAebcrDzDAuh0OPeVhLQm36Si8exPOYeXf2xJE=
-X-Google-Smtp-Source: ABdhPJz7jigT5zkg/O2S5/eaBk4kjsdhjro5aDd0v+PmSBHqwDtOO8xOJsJOC98Bakhoy/3YazfLdb/XwgY8UG1pf7Q=
-X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr18713382pjr.181.1592840828258;
- Mon, 22 Jun 2020 08:47:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F8T5mZjCR5K6UE+9mip6AsTcYlxfqPfxEDZRXo68qXg=;
+        b=Z5sAu0lCRHBoQXA8Nbj5f1rcQpmPUvx10dI1aAnl49bbdcpxikcI5af8baxy8/btyw
+         hDjh7hOLxj+5iWJphE3Qo9a+tbftErWLV5bCOuWRaeWxknmuW66ccjytXrfIslwO0c0p
+         ILmJNjR6GTvjOJyd1dXemAoVBoAK4pJDypxV1ZruOttzS0L03T7Vf2ICscWm3uecqNZP
+         bfH8Q/X6dul8UBAdxbYQINtJ35gv2zTdQpAJHCeLap6Ev2UeyWt9M0/e0tnu/gAqLYLP
+         k9EUWbxYfuAS1/JN0G0XLza87WWSgAws2vKAd8MiBB8sYaPEClm2d6WzIddv5h+fkIlL
+         maXA==
+X-Gm-Message-State: AOAM531kiZehrj7kp0qVaunYP6bmzsbFqAvHo5zX49m0nymR+akTcytZ
+        08d/LbeyfRZ5YplmD/x9jbVK5Ac/
+X-Google-Smtp-Source: ABdhPJxIEqQRDELoOstYIbkWotcJMHSYonzFQNZ+f6Fma7p8nFax+whEYuQyCld/TtQgaxDNa/YB8A==
+X-Received: by 2002:aa7:c790:: with SMTP id n16mr18225197eds.54.1592840840867;
+        Mon, 22 Jun 2020 08:47:20 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:74f4:a0e9:488b:65c7])
+        by smtp.gmail.com with ESMTPSA id s14sm4015599edq.36.2020.06.22.08.47.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 08:47:20 -0700 (PDT)
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: [PATCH] kbuild: run the checker after the compiler
+Date:   Mon, 22 Jun 2020 17:45:12 +0200
+Message-Id: <20200622154512.82758-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2713141.s8EVnczdoM@kreacher> <1821880.vZFEW4x2Ui@kreacher>
- <CAHp75VePDyPevCAOntFpTajf5zd9ocwjeWRz80WmCNtiDicpLg@mail.gmail.com> <CAJZ5v0hu9_TA0KAe=9ZCSG4_KijSYb=qnt8MYe9QYwGbz=pmBg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hu9_TA0KAe=9ZCSG4_KijSYb=qnt8MYe9QYwGbz=pmBg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Jun 2020 18:46:55 +0300
-Message-ID: <CAHp75VdQbH28ZyqkgPU_tq8WpHf152=4LpLCSLUji3MmywMiQw@mail.gmail.com>
-Subject: Re: [RFT][PATCH v2 2/4] ACPI: OSL: Add support for deferred unmapping
- of ACPI memory
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Bob Moore <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 6:28 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> On Mon, Jun 22, 2020 at 4:56 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Jun 22, 2020 at 5:06 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+Since the pre-git time the checker is run first, before the compiler.
+But if the source file contains some syntax error, the warnings from
+the compiler are more useful than those from sparse (and other
+checker most probably too).
 
-...
+So move the 'check' command to run after the compiler.
 
-> > > +               return true;
-> > > +       }
-> > > +
-> > > +       return false;
-> >
-> > A nit:
-> >
-> > Effectively it returns a value of defer.
-> >
-> >   return defer;
-> >
-> > >  }
->
-> Do you mean that one line of code could be saved?  Yes, it could.
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+---
+ scripts/Makefile.build | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yes. The question here would it make a cleaner way for the reader to
-understand the returned value?
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2e8810b7e5ed..7ba6a752d5bd 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -252,9 +252,9 @@ cmd_gen_ksymdeps = \
+ endif
+ 
+ define rule_cc_o_c
+-	$(call cmd,checksrc)
+ 	$(call cmd_and_fixdep,cc_o_c)
+ 	$(call cmd,gen_ksymdeps)
++	$(call cmd,checksrc)
+ 	$(call cmd,checkdoc)
+ 	$(call cmd,objtool)
+ 	$(call cmd,modversions_c)
+@@ -277,8 +277,8 @@ endif
+ 
+ # Built-in and composite module parts
+ $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+-	$(call cmd,force_checksrc)
+ 	$(call if_changed_rule,cc_o_c)
++	$(call cmd,force_checksrc)
+ 
+ cmd_mod = { \
+ 	echo $(if $($*-objs)$($*-y)$($*-m), $(addprefix $(obj)/, $($*-objs) $($*-y) $($*-m)), $(@:.mod=.o)); \
 
-(For the rest, nevermind, choose whatever suits better in your opinion)
-
+base-commit: 48778464bb7d346b47157d21ffde2af6b2d39110
 -- 
-With Best Regards,
-Andy Shevchenko
+2.27.0
+
