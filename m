@@ -2,111 +2,196 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B42C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF20C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F5D2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72BD20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frf3ht8X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y4vRIsQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgFVM1Y (ORCPT
+        id S1728149AbgFVM1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgFVM1Y (ORCPT
+        Mon, 22 Jun 2020 08:27:30 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50571 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728044AbgFVM12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:27:24 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9760C061794;
-        Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id l188so2183821qkf.10;
-        Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BRfwCdLw+lBhNQtLxGKp6oI5intMTV4VxPqzaekWRpw=;
-        b=frf3ht8XWmKO5bV4tGgU699ueXhbUG1Bs/wG77NbgVGaUlfPmHu9yEGG6nkTVxk8Oq
-         fSJgwEksfQDgTemix2H0rhOoECWZFyijjl8ddbUG35Q3bRzl047kT32V6EaKwVtCFF+R
-         omqcsThto5ndWEYwCmTZcbJE+TTywmmleD0FV+IzyBJWuxbOhgnA8/mblUBbfkO9rlN0
-         ADCjY+VxOrXexGxUOGklhvBKLZKLPqeDeqVFR5hOPx+TQysamwJmhy962hvAoq1mRxrL
-         y8cp3rw8z5DteqYsV+Rbe8vNAt7s64ttaU4AhAd0Iz7eAJpsxBpHnjLZ05wi0b0p+3Pp
-         zyQQ==
+        Mon, 22 Jun 2020 08:27:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592828846;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W2h10LpTAvNoSkQ5Wfs3ntSIZK6FE0PEMdGXqFWlN0Y=;
+        b=Y4vRIsQnNtDAwuF3Yi/p0dqPKhEL5wrWVvs/SERTYnkwDIcdXSm0l9uh0whU1ZaJKrrj3t
+        1uZDZdgW5wB35Bl9vwHOl92ZToLd9oh7hkmFwL3e6LmufjJClt4He8ZlQykS1dvqZE7UC2
+        1+nACv3BW1eikgKHIRxFPZZBGAr/x8k=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-435-G5HG_SQ0M9uGQRhRyvd_Dg-1; Mon, 22 Jun 2020 08:27:23 -0400
+X-MC-Unique: G5HG_SQ0M9uGQRhRyvd_Dg-1
+Received: by mail-qk1-f198.google.com with SMTP id s75so7060153qka.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BRfwCdLw+lBhNQtLxGKp6oI5intMTV4VxPqzaekWRpw=;
-        b=DClaWo+zoqyj+EaFufd/rmbvLu5RT4Hv1+iPf3m2sjESfuQnY4aC1l0UlyH2MgX2Kg
-         oMvlLWaWvvWaw1Tx8hSNPdEc444AiBUvMHyn1Imc54RlAo4Snas+bm1lKITxXQt2mTzQ
-         odltMFWyiCSmSmvP20Lbv/Uo7h1CheOP4Il0uDO4w/64KmkR+gUsNEcM7BaCPYYcqXMh
-         JJpdUBtMmTG/dW+SCz2nQZw/jK7WKKTTExXgly7xej/g2ib2PdVakHqYRAvmDQ53EoMT
-         FICsYMDq3SQ68PZd23nJpr6qc7XeDzeqB/i+EttJOu1zVS8o2So/N2JDDlKiYhZqaKDl
-         mSAw==
-X-Gm-Message-State: AOAM532mmpvKHdSqGZ3LwEp/+skDOvHbn1qW9fNRjOisOldruc93RCYD
-        agFshf3rMeqGn05CFH6WNJvk/t72UsmDcuoEdsU=
-X-Google-Smtp-Source: ABdhPJz1IrOnYmvEw3duZtLxZgFhm2K2p/F20WQvMA4Kr/6ekSopl6eRSUieG115zwp9mto13rbCGMwLpj6EjE5J5kc=
-X-Received: by 2002:a37:9942:: with SMTP id b63mr15775646qke.370.1592828843080;
- Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=W2h10LpTAvNoSkQ5Wfs3ntSIZK6FE0PEMdGXqFWlN0Y=;
+        b=f6gLkPWExRmgX+CTyXXiK9ClhiQRbsOfh+cYUf4gWzjsskuqrqmHWU75JwJEEwMI1Z
+         lIw+jZn/W0RYA9UbLiP30Tfx/SAWeJuSvNoxo0W5j86yPNY12+ImPN/mAjqInAFxnVQy
+         a4Iuo45vNVlOumtYPuR1mpMN63VHivoaQ4nTBapuUNoAz8WAlhdgOd0leoFm/9c1QmH7
+         TrNTyuR5N5tyRXmu08ZY87XXKq1Fd8+zg9Jq9b5dn5Wr4WM7/vBj1dxrCaMghfmuqtwm
+         bGxYMmcsq7/Lm1S1Ii9yYl/ZJt0nruoh84zBC0yYJX2Q/7KY/peZXLwrYuHROGB1Rb5u
+         A8CQ==
+X-Gm-Message-State: AOAM531MGyQU/W/WxmqAdioGZnhBpTCTu8IyJ+9vQazaTSy0ibxZYGMH
+        X3OFVeo6u6B334bN4yuNdC6+ghpCoNRKjzvLBtBJdAYHCu6vMufaQkibvM59xCA57vYoryZgcl4
+        itaH24xH4aVRN7zu1AU3ympUJ
+X-Received: by 2002:a37:57c3:: with SMTP id l186mr15256199qkb.498.1592828843117;
+        Mon, 22 Jun 2020 05:27:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwqVS/BGYYFeq6hAqLQIa8xxrqgAC/n0blfyZ/3TKrhs1/dEQRePf7h+6AbOmI33MYNzXvvAA==
+X-Received: by 2002:a37:57c3:: with SMTP id l186mr15256181qkb.498.1592828842808;
+        Mon, 22 Jun 2020 05:27:22 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id b196sm4114868qkg.11.2020.06.22.05.27.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 05:27:22 -0700 (PDT)
+Subject: Re: [PATCH v7 0/7] Add interrupt support to FPGA DFL drivers
+To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bhu@redhat.com, mtosatti@redhat.com, gregkh@linuxfoundation.org,
+        jun.j.tian@intel.com, hao.wu@intel.com
+References: <1592280528-6350-1-git-send-email-yilun.xu@intel.com>
+ <20200622064806.GA5101@yilunxu-OptiPlex-7050>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <c9a33ee6-67f2-36b8-0870-ebc038b929ce@redhat.com>
+Date:   Mon, 22 Jun 2020 05:27:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <5614531.lOV4Wx5bFT@harkonnen> <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl> <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl> <419762761.402939.1592827272368@mailbusiness.ionos.de>
-In-Reply-To: <419762761.402939.1592827272368@mailbusiness.ionos.de>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Mon, 22 Jun 2020 14:27:12 +0200
-Message-ID: <CAFLxGvyNazbyBpySuNA6SU-8tcvqYWKHsAHuhTLsofR=VoiEwQ@mail.gmail.com>
-Subject: Re: DMA Engine: Transfer From Userspace
-To:     Thomas Ruf <freelancer@rufusul.de>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Federico Vaga <federico.vaga@cern.ch>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200622064806.GA5101@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 2:02 PM Thomas Ruf <freelancer@rufusul.de> wrote:
-> > more the reason not do do so, why cant a kernel driver be added for your
-> > usage?
+In addition to reviewing, I have run these changes on the pac a10 card and while i do not have an afu using interrupts, I have exercised some of the new interfaces.
+
+The most useful i have submitted to selftests drivers/fpga.  In the future, this would be a good place to put other fpga unit tests. 
+
+The selftest patch depends on this change.
+
+So you can also add
+
+Tested-by: Tom Rix <trix@redhat.com>
+
+Tom
+
+On 6/21/20 11:48 PM, Xu Yilun wrote:
+> Hi Moritz:
 >
-> by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
-> now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
+> Could you please help review the patchset when you have time?
 >
-> just let me introduce myself and the project:
-> - coding in C since '91
-> - coding in C++ since '98
-> - a lot of stuff not relevant for this ;-)
-> - working as a freelancer since Nov '19
-> - implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
-> - last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
-> - subscribed to dmaengine on friday, saw the start of this discussion on saturday
-> - talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
-
-How do you preserve bounds? This is the main reason why vfio requires an iommu.
-
-> here the struct for the ioctl:
+> You have already reviewed the first 3 patches some time ago. The
+> comments are all fixed. Hao and Redhat guys also have done several
+> rounds of review. The patches are all Acked-by Hao, reviewed by
+> Marcelo & Tom.
 >
-> typedef struct {
->   unsigned int struct_size;
->   const void *src_user_ptr;
->   void *dst_user_ptr;
->   unsigned long length;
->   unsigned int timeout_in_ms;
-> } dma_sg_proxy_arg_t;
+> There is little change to the code for several months, seems it stays
+> ready and just need your final Ack.
+>
+> Actually this is the last feature for our first generation PAC A10 Card,
+> and is important for users to have the full support.
+>
+> We really need your help on code review ...
+>
+> Many thanks!
+> Yilun
+>
+> On Tue, Jun 16, 2020 at 12:08:41PM +0800, Xu Yilun wrote:
+>> This patchset add interrupt support to FPGA DFL drivers.
+>>
+>> With these patches, DFL driver will parse and assign interrupt resources
+>> for enumerated feature devices and their sub features.
+>>
+>> This patchset also introduces a set of APIs for user to monitor DFL
+>> interrupts. Three sub features (DFL FME error, DFL AFU error and user
+>> interrupt) drivers now support these APIs.
+>>
+>> Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+>>           driver, and add interrupt parsing and assignment for feature
+>>           sub devices.
+>> Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+>> Patch #3: DFL framework change. Add helper functions for feature sub
+>>           device drivers to handle interrupt and notify users.
+>> Patch #4: Add interrupt support for AFU error reporting sub feature.
+>> Patch #5: Add interrupt support for FME global error reporting sub
+>>           feature.
+>> Patch #6: Add interrupt support for a new sub feature, to handle user
+>>           interrupts implemented in AFU.
+>> Patch #7: Documentation for DFL interrupt handling.
+>>
+>> Main changes from v1:
+>>  - Early validating irq table for each feature in parse_feature_irq()
+>>    in Patch #1.
+>>  - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
+>>    instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
+>>    DFL_FPGA_FME/PORT_XXX_SET_IRQ param
+>>
+>> Main changes from v2:
+>>  - put parse_feature_irqs() inside create_feature_instance().
+>>  - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
+>>  - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
+>>
+>> Main changes from v3:
+>>  - rebased to 5.7-rc1.
+>>  - fail the dfl enumeration when irq parsing error happens.
+>>  - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
+>>    drivers.
+>>
+>> Main changes from v4:
+>>  - Minor fixes for Hao's comments.
+>>
+>> Main changes from v5:
+>>  - Remove unnecessary type casting in Patch #1 & #3.
+>>  - Minor fixes for Moritz's comments.
+>>
+>> Main changes from v6:
+>>  - Add the header file <linux/interrupt.h> for Patch #1, to fix build
+>>    error on ARCH=xtensa
+>>  - Minor fixes in Patch #2 & #3.
+>>
+>> Xu Yilun (7):
+>>   fpga: dfl: parse interrupt info for feature devices on enumeration
+>>   fpga: dfl: pci: add irq info for feature devices enumeration
+>>   fpga: dfl: introduce interrupt trigger setting API
+>>   fpga: dfl: afu: add interrupt support for port error reporting
+>>   fpga: dfl: fme: add interrupt support for global error reporting
+>>   fpga: dfl: afu: add AFU interrupt support
+>>   Documentation: fpga: dfl: add descriptions for interrupt related
+>>     interfaces.
+>>
+>>  Documentation/fpga/dfl.rst    |  19 +++
+>>  drivers/fpga/dfl-afu-error.c  |  17 +++
+>>  drivers/fpga/dfl-afu-main.c   |  32 +++++
+>>  drivers/fpga/dfl-fme-error.c  |  18 +++
+>>  drivers/fpga/dfl-fme-main.c   |   6 +
+>>  drivers/fpga/dfl-pci.c        |  76 +++++++++--
+>>  drivers/fpga/dfl.c            | 310 ++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/fpga/dfl.h            |  57 ++++++++
+>>  include/uapi/linux/fpga-dfl.h |  82 +++++++++++
+>>  9 files changed, 608 insertions(+), 9 deletions(-)
+>>
+>> -- 
+>> 2.7.4
 
-Is this on top of uio or a complete new subsystem?
-
--- 
-Thanks,
-//richard
