@@ -3,80 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB260C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C248920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D81020720
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbgFVI6M (ORCPT
+        id S1726118AbgFVI7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:58:12 -0400
-Received: from outbound-smtp32.blacknight.com ([81.17.249.64]:44972 "EHLO
-        outbound-smtp32.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725802AbgFVI6L (ORCPT
+        Mon, 22 Jun 2020 04:59:14 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:35842
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725802AbgFVI7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:58:11 -0400
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp32.blacknight.com (Postfix) with ESMTPS id D29F0BECB9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:58:09 +0100 (IST)
-Received: (qmail 27448 invoked from network); 22 Jun 2020 08:58:09 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 22 Jun 2020 08:58:09 -0000
-Date:   Mon, 22 Jun 2020 09:58:08 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Hugh Dickins <hughd@google.com>, akpm@linux-foundation.org,
-        alex.shi@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, liwang@redhat.com
-Subject: Re: [PATCH 2/2] mm, page_alloc: use unlikely() in task_capc()
-Message-ID: <20200622085808.GP3183@techsingularity.net>
-References: <b17acf5b-5e8a-3edf-5a64-603bf6177312@suse.cz>
- <20200616082649.27173-1-vbabka@suse.cz>
- <20200616082649.27173-2-vbabka@suse.cz>
- <alpine.LSU.2.11.2006161319030.1119@eggly.anvils>
- <4a24f7af-3aa5-6e80-4ae6-8f253b562039@suse.cz>
+        Mon, 22 Jun 2020 04:59:12 -0400
+X-IronPort-AV: E=Sophos;i="5.75,266,1589234400"; 
+   d="scan'208";a="352318332"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 10:59:08 +0200
+Date:   Mon, 22 Jun 2020 10:59:08 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Matthias Maennich <maennich@google.com>
+cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
+        cocci@systeme.lip6.fr, stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] scripts: add dummy report mode to add_namespace.cocci
+In-Reply-To: <20200622080345.GD260206@google.com>
+Message-ID: <alpine.DEB.2.22.394.2006221057220.2531@hadrien>
+References: <20200604164145.173925-1-maennich@google.com> <alpine.DEB.2.21.2006042130080.2577@hadrien> <bf757b9d-6a67-598b-ed6e-7ee24464abfa@linuxfoundation.org> <20200622080345.GD260206@google.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <4a24f7af-3aa5-6e80-4ae6-8f253b562039@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 11:55:07AM +0200, Vlastimil Babka wrote:
-> <SNIP>
+
+
+On Mon, 22 Jun 2020, Matthias Maennich wrote:
+
+> On Thu, Jun 04, 2020 at 02:39:18PM -0600, Shuah Khan wrote:
+> > On 6/4/20 1:31 PM, Julia Lawall wrote:
+> > >
+> > >
+> > > On Thu, 4 Jun 2020, Matthias Maennich wrote:
+> > >
+> > > > When running `make coccicheck` in report mode using the
+> > > > add_namespace.cocci file, it will fail for files that contain
+> > > > MODULE_LICENSE. Those match the replacement precondition, but spatch
+> > > > errors out as virtual.ns is not set.
+> > > >
+> > > > In order to fix that, add the virtual rule nsdeps and only do search and
+> > > > replace if that rule has been explicitly requested.
+> > > >
+> > > > In order to make spatch happy in report mode, we also need a dummy rule,
+> > > > as otherwise it errors out with "No rules apply". Using a script:python
+> > > > rule appears unrelated and odd, but this is the shortest I could come up
+> > > > with.
+> > > >
+> > > > Adjust scripts/nsdeps accordingly to set the nsdeps rule when run trough
+> > > > `make nsdeps`.
+> > > >
+> > > > Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> > > > Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
+> > > > Cc: YueHaibing <yuehaibing@huawei.com>
+> > > > Cc: jeyu@kernel.org
+> > > > Cc: cocci@systeme.lip6.fr
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Matthias Maennich <maennich@google.com>
+> > >
+> > > Acked-by: Julia Lawall <julia.lawall@inria.fr>
+> > >
+> > > Shuah reported the problem to me, so you could add
+> > >
+> > > Reported-by: Shuah Khan <skhan@linuxfoundation.org>
+> > >
+> >
+> > Very cool. No errors with this patch. Thanks for fixing it
+> > quickly.
 >
-> It makes no difference, at least on my gcc10 which seems to be smart enough to
-> do the right thing. But yeah, your suggestion is more readable and precise and
-> maybe can work better with a less smart compiler. Thanks.
-> 
-> ----8<----
-> From 615eea6f6abe288ffb708aa0d1bdfbeaf30a4cbd Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Tue, 16 Jun 2020 10:14:47 +0200
-> Subject: [PATCH] mm, page_alloc: use unlikely() in task_capc()
-> 
-> Hugh noted that task_capc() could use unlikely(), as most of the time there is
-> no capture in progress and we are in page freeing hot path. Indeed adding
-> unlikely() produces assembly that better matches the assumption and moves
-> all the tests away from the hot path.
-> 
-> I have also noticed that we don't need to test for cc->direct_compaction as the
-> only place we set current->task_capture is compact_zone_order() which also
-> always sets cc->direct_compaction true.
-> 
-> Suggested-by: Hugh Dickins <hughd@google.com>
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> Acked-by: Hugh Dickins <hughd@googlecom>
+> I am happy I could fix that and thanks for confirming. I assume your
+> Tested-by could be added?
 
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Yes, that would be fine.
 
--- 
-Mel Gorman
-SUSE Labs
+julia
+
+
+>
+> Is somebody willing to take this patch through their tree?
+>
+> Cheers,
+> Matthias
+>
+> >
+> > thanks,
+> > -- Shuah
+> >
+> >
+> >
+>
+
