@@ -2,342 +2,275 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F68C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C79EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B41512076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4122076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uFaTK3d5"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="b4uBcbjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgFVUCh (ORCPT
+        id S1728698AbgFVUDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgFVUCP (ORCPT
+        Mon, 22 Jun 2020 16:03:51 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:63405 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728435AbgFVUDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:02:15 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4535BC06179B
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:47:00 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g10so698114wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:47:00 -0700 (PDT)
+        Mon, 22 Jun 2020 16:03:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ODOSMs7hlDlueY6tO0Y70BJvb4BVdVy4itgUewuyPXQ=;
-        b=uFaTK3d56s7T4bkZ+sGL815DQdbAIf5cC8yFeAHB7iaBtf7T1St4qfhuFmFMJ7f6/r
-         t3xdDkBr2I+T39H09CDtHgv6oo/c7ibkh9AIfNq+39DuGI2KibjJMbijs4S4rv6k95+4
-         6HUte0FXf/ZEXY12mInPLRA8OUYmrEzkOssBKxRitUovbFgfMVJH8hUDZts6iIO67xB+
-         hRzNmZTbsoYDo6NjbpLWAxZnBVHBs6QniFGG65hb6aBZHA3jbq6CcBN3mIE/o93azWMy
-         O/MOwa8kjvX6+gA7jakig8mo/V8Q2EqgdgjEmdhoRH0dQD+FvrNICMjEFKXgNifncJAk
-         1dCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ODOSMs7hlDlueY6tO0Y70BJvb4BVdVy4itgUewuyPXQ=;
-        b=YraAWAe60G8/4I6ZyTw8qkZzuBMTZTbRNQl7i4cALUmnU6qz324LCM1Ixu/N07dP6K
-         99u2OBmNMIJ1jqMMPWqJcKzwmnvmHCJCyKxlwaXtDNUHh/2csqLVwQ2SkRuEoqXteBNP
-         5yCLPdYwOOxmjKPz+z40j2dMdphpzhCjzNWMu8YcJJyskIdnVEDNxkiTTgngYqorlWrV
-         D0oJOLaUtkffEdoSU7x8FueACDCGhx+Oh9LACN1d/X8wECS57mg5HNHyRRnjyfEH73Kx
-         m9EzSMXiRggtiNPx5cejsbMsyCp2t/1whJI6Qs1MkZP4W6ZJQ4LQOgVYTQ7mPsz+QIdb
-         Au8w==
-X-Gm-Message-State: AOAM5303fu0pQak915NwQLJSveSh02QCd2c3XC25MvK/Ba4rPtV1HawY
-        9sB8kPdGTqHINJp/LxXBG3c+zQ==
-X-Google-Smtp-Source: ABdhPJxEDVn/3oGDYMLsY0vvPxVE+iAjav6gvVGW8hxllefuYnkkGCqLpJrLn9luSaiJbbCUK8wrkw==
-X-Received: by 2002:a1c:4444:: with SMTP id r65mr1767496wma.129.1592855218748;
-        Mon, 22 Jun 2020 12:46:58 -0700 (PDT)
-Received: from [192.168.0.41] (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.googlemail.com with ESMTPSA id i17sm12945242wrc.34.2020.06.22.12.46.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 12:46:58 -0700 (PDT)
-Subject: Re: [PATCH v4 1/2] thermal: add support for the MCU controlled FAN on
- Khadas boards
-To:     Neil Armstrong <narmstrong@baylibre.com>, lee.jones@linaro.org
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com,
-        Amit Kucheria <amit.kucheria@linaro.org>
-References: <20200618133818.15857-1-narmstrong@baylibre.com>
- <20200618133818.15857-2-narmstrong@baylibre.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <53aa62a3-1d8e-bc91-1a2b-88c766276beb@linaro.org>
-Date:   Mon, 22 Jun 2020 21:46:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1592856228; x=1624392228;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EiUt6Oedptz4f3XfYR/pew/AoUF85rOaT6U9ZvC05Jc=;
+  b=b4uBcbjSlpaCjz4Efya5+fsfln0Qs+FIg2uVhm08aeW8Kw1QOQsSEanr
+   mcr3dYJyQO7btZIREiMiV9hROq7bi6rnmLYi++iuqrTzQpfpg+iSAfF7J
+   NfKc3wq2+6etUVzxZhLiC6w0NVWpAHf3hpgauu9I8pk0xAsYqIO3bI/X7
+   s=;
+IronPort-SDR: Mb5swMn+KcsFsZBMoka4+NcvherPj4dLUTzXSqCBvliS1qm01gNYlkmsZoG6juXvOsbsCPjMLQ
+ Cje3C9vWRVSA==
+X-IronPort-AV: E=Sophos;i="5.75,268,1589241600"; 
+   d="scan'208";a="46040836"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-cc689b93.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 Jun 2020 20:03:46 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-cc689b93.us-west-2.amazon.com (Postfix) with ESMTPS id DAFA1120F63;
+        Mon, 22 Jun 2020 20:03:45 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 22 Jun 2020 20:03:45 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 22 Jun 2020 20:03:35 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        "Matt Wilson" <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v4 00/18] Add support for Nitro Enclaves
+Date:   Mon, 22 Jun 2020 23:03:11 +0300
+Message-ID: <20200622200329.52996-1-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20200618133818.15857-2-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.145]
+X-ClientProxiedBy: EX13D12UWC002.ant.amazon.com (10.43.162.253) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2020 15:38, Neil Armstrong wrote:
-> The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
-> on-board microcontroller.
-> 
-> This implements the FAN control as thermal devices and as cell of the Khadas
-> MCU MFD driver.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
-> Hi Lee,
-> 
-> Could you apply this patch via the MFD tree since it depends on
-> the linux/mfd/khadas-mcu.h header ?
-> 
-> This patch is unchanged from the v3 serie.
-> 
-> Thanks,
-> Neil
-> 
->  drivers/thermal/Kconfig          |  11 ++
->  drivers/thermal/Makefile         |   1 +
->  drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
->  3 files changed, 186 insertions(+)
->  create mode 100644 drivers/thermal/khadas_mcu_fan.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 3eb2348e5242..0125561488c9 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -500,4 +500,15 @@ config SPRD_THERMAL
->  	help
->  	  Support for the Spreadtrum thermal sensor driver in the Linux thermal
->  	  framework.
-> +
-> +config KHADAS_MCU_FAN_THERMAL
-> +	tristate "Khadas MCU controller FAN cooling support"
-> +	depends on OF || COMPILE_TEST
-> +	depends on MFD_KHADAS_MCU
-> +	select MFD_CORE
-> +	select REGMAP
-> +	help
-> +	  If you say yes here you get support for the FAN controlled
-> +	  by the Microcontroller found on the Khadas VIM boards.
-> +
->  endif
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 0c8b84a09b9a..4b6aabaa7e31 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -61,3 +61,4 @@ obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
->  obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
->  obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
->  obj-$(CONFIG_SPRD_THERMAL)	+= sprd_thermal.o
-> +obj-$(CONFIG_KHADAS_MCU_FAN_THERMAL)	+= khadas_mcu_fan.o
-> diff --git a/drivers/thermal/khadas_mcu_fan.c b/drivers/thermal/khadas_mcu_fan.c
-> new file mode 100644
-> index 000000000000..6995b443cad4
-> --- /dev/null
-> +++ b/drivers/thermal/khadas_mcu_fan.c
-> @@ -0,0 +1,174 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Khadas MCU Controlled FAN driver
-> + *
-> + * Copyright (C) 2020 BayLibre SAS
-> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/khadas-mcu.h>
-> +#include <linux/regmap.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/thermal.h>
-> +
-> +#define MAX_LEVEL 3
-> +
-> +struct khadas_mcu_fan_ctx {
-> +	struct khadas_mcu *mcu;
-> +	unsigned int level;
-> +	struct thermal_cooling_device *cdev;
-> +};
-> +
-> +static int khadas_mcu_fan_set_level(struct khadas_mcu_fan_ctx *ctx,
-> +				    unsigned int level)
-> +{
-> +	int ret;
-> +
-> +	ret = regmap_write(ctx->mcu->regmap, KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
-> +			   level);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ctx->level = level;
-> +
-> +	return 0;
-> +}
-> +
-> +static int khadas_mcu_fan_get_max_state(struct thermal_cooling_device *cdev,
-> +					unsigned long *state)
-> +{
-> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-> +
-> +	if (!ctx)
-> +		return -EINVAL;
+Nitro Enclaves (NE) is a new Amazon Elastic Compute Cloud (EC2) capability
+that allows customers to carve out isolated compute environments within EC2
+instances [1].
 
-It is pointless to check 'ctx' is NULL, that was done at probe time.
+For example, an application that processes sensitive data and runs in a VM,
+can be separated from other applications running in the same VM. This
+application then runs in a separate VM than the primary VM, namely an enclave.
 
-> +	*state = MAX_LEVEL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int khadas_mcu_fan_get_cur_state(struct thermal_cooling_device *cdev,
-> +					unsigned long *state)
-> +{
-> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-> +
-> +	if (!ctx)
-> +		return -EINVAL;
+An enclave runs alongside the VM that spawned it. This setup matches low latency
+applications needs. The resources that are allocated for the enclave, such as
+memory and CPU, are carved out of the primary VM. Each enclave is mapped to a
+process running in the primary VM, that communicates with the NE driver via an
+ioctl interface.
 
-Ditto
+In this sense, there are two components:
 
-> +	*state = ctx->level;
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +khadas_mcu_fan_set_cur_state(struct thermal_cooling_device *cdev,
-> +			     unsigned long state)
-> +{
-> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-> +
-> +	if (!ctx || (state > MAX_LEVEL))
-> +		return -EINVAL;
+1. An enclave abstraction process - a user space process running in the primary
+VM guest  that uses the provided ioctl interface of the NE driver to spawn an
+enclave VM (that's 2 below).
 
-Ditto
+There is a NE emulated PCI device exposed to the primary VM. The driver for this
+new PCI device is included in the NE driver.
 
-> +	if (state == ctx->level)
-> +		return 0;
-> +
-> +	return khadas_mcu_fan_set_level(ctx, state);
-> +}
-> +
-> +static const struct thermal_cooling_device_ops khadas_mcu_fan_cooling_ops = {
-> +	.get_max_state = khadas_mcu_fan_get_max_state,
-> +	.get_cur_state = khadas_mcu_fan_get_cur_state,
-> +	.set_cur_state = khadas_mcu_fan_set_cur_state,
-> +};
-> +
-> +static int khadas_mcu_fan_probe(struct platform_device *pdev)
-> +{
-> +	struct khadas_mcu *mcu = dev_get_drvdata(pdev->dev.parent);
-> +	struct thermal_cooling_device *cdev;
-> +	struct device *dev = &pdev->dev;
-> +	struct khadas_mcu_fan_ctx *ctx;
-> +	int ret;
-> +
-> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +	ctx->mcu = mcu;
-> +	platform_set_drvdata(pdev, ctx);
-> +
-> +	cdev = devm_thermal_of_cooling_device_register(dev->parent,
-> +			dev->parent->of_node, "khadas-mcu-fan", ctx,
-> +			&khadas_mcu_fan_cooling_ops);
-> +	if (IS_ERR(cdev)) {
-> +		ret = PTR_ERR(cdev);
-> +		dev_err(dev,
-> +				"Failed to register khadas-mcu-fan as cooling device: %d\n",
-> +				ret);
-> +		return ret;
-> +	}
-> +	ctx->cdev = cdev;
-> +	thermal_cdev_update(cdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int khadas_mcu_fan_disable(struct device *dev)
-> +{
-> +	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
-> +	unsigned int level_save = ctx->level;
-> +	int ret;
-> +
-> +	ret = khadas_mcu_fan_set_level(ctx, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ctx->level = level_save;
+The ioctl logic is mapped to PCI device commands e.g. the NE_START_ENCLAVE ioctl
+maps to an enclave start PCI command. The PCI device commands are then
+translated into  actions taken on the hypervisor side; that's the Nitro
+hypervisor running on the host where the primary VM is running. The Nitro
+hypervisor is based on core KVM technology.
 
-Nitpicking : move the save section to suspend.
+2. The enclave itself - a VM running on the same host as the primary VM that
+spawned it. Memory and CPUs are carved out of the primary VM and are dedicated
+for the enclave VM. An enclave does not have persistent storage attached.
 
-> +	return 0;
-> +}
-> +
-> +static void khadas_mcu_fan_shutdown(struct platform_device *pdev)
-> +{
-> +	khadas_mcu_fan_disable(&pdev->dev);
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int khadas_mcu_fan_suspend(struct device *dev)
-> +{
-> +	return khadas_mcu_fan_disable(dev);
-> +}
-> +
-> +static int khadas_mcu_fan_resume(struct device *dev)
-> +{
-> +	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +	return khadas_mcu_fan_set_level(ctx, ctx->level);
+The memory regions carved out of the primary VM and given to an enclave need to
+be aligned 2 MiB / 1 GiB physically contiguous memory regions (or multiple of
+this size e.g. 8 MiB). The memory can be allocated e.g. by using hugetlbfs from
+user space [2][3]. The memory size for an enclave needs to be at least 64 MiB.
+The enclave memory and CPUs need to be from the same NUMA node.
 
-Out of curiosity, did you check the fan is not continuously spinning
-after a resume when the suspend happened during a mitigation phase?
+An enclave runs on dedicated cores. CPU 0 and its CPU siblings need to remain
+available for the primary VM. A CPU pool has to be set for NE purposes by an
+user with admin capability. See the cpu list section from the kernel
+documentation [4] for how a CPU pool format looks.
 
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(khadas_mcu_fan_pm, khadas_mcu_fan_suspend,
-> +			 khadas_mcu_fan_resume);
-> +
-> +static const struct platform_device_id khadas_mcu_fan_id_table[] = {
-> +	{ .name = "khadas-mcu-fan-ctrl", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(platform, khadas_mcu_fan_id_table);
-> +
-> +static struct platform_driver khadas_mcu_fan_driver = {
-> +	.probe		= khadas_mcu_fan_probe,
-> +	.shutdown	= khadas_mcu_fan_shutdown,
-> +	.driver	= {
-> +		.name		= "khadas-mcu-fan-ctrl",
-> +		.pm		= &khadas_mcu_fan_pm,
-> +	},
-> +	.id_table	= khadas_mcu_fan_id_table,
-> +};
-> +
-> +module_platform_driver(khadas_mcu_fan_driver);
-> +
-> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
-> +MODULE_DESCRIPTION("Khadas MCU FAN driver");
-> +MODULE_LICENSE("GPL");
-> 
+An enclave communicates with the primary VM via a local communication channel,
+using virtio-vsock [5]. The primary VM has virtio-pci vsock emulated device,
+while the enclave VM has a virtio-mmio vsock emulated device. The vsock device
+uses eventfd for signaling. The enclave VM sees the usual interfaces - local
+APIC and IOAPIC - to get interrupts from virtio-vsock device. The virtio-mmio
+device is placed in memory below the typical 4 GiB.
 
+The application that runs in the enclave needs to be packaged in an enclave
+image together with the OS ( e.g. kernel, ramdisk, init ) that will run in the
+enclave VM. The enclave VM has its own kernel and follows the standard Linux
+boot protocol.
+
+The kernel bzImage, the kernel command line, the ramdisk(s) are part of the
+Enclave Image Format (EIF); plus an EIF header including metadata such as magic
+number, eif version, image size and CRC.
+
+Hash values are computed for the entire enclave image (EIF), the kernel and
+ramdisk(s). That's used, for example, to check that the enclave image that is
+loaded in the enclave VM is the one that was intended to be run.
+
+These crypto measurements are included in a signed attestation document
+generated by the Nitro Hypervisor and further used to prove the identity of the
+enclave; KMS is an example of service that NE is integrated with and that checks
+the attestation doc.
+
+The enclave image (EIF) is loaded in the enclave memory at offset 8 MiB. The
+init process in the enclave connects to the vsock CID of the primary VM and a
+predefined port - 9000 - to send a heartbeat value - 0xb7. This mechanism is
+used to check in the primary VM that the enclave has booted.
+
+If the enclave VM crashes or gracefully exits, an interrupt event is received by
+the NE driver. This event is sent further to the user space enclave process
+running in the primary VM via a poll notification mechanism. Then the user space
+enclave process can exit.
+
+Thank you.
+
+Andra
+
+[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
+[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+[3] https://lwn.net/Articles/807108/
+[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
+[5] https://man7.org/linux/man-pages/man7/vsock.7.html
+
+---
+
+Patch Series Changelog
+
+The patch series is built on top of v5.8-rc2.
+
+v3 -> v4
+
+* Rebase on top of v5.8-rc2.
+* Add NE API version and the corresponding ioctl call.
+* Add enclave / image load flags options.
+* Decouple NE ioctl interface from KVM API.
+* Remove the "packed" attribute and include padding in the NE data structures.
+* Update documentation based on the changes from v4.
+* Update sample to match the updates in v4.
+* Remove the NE CPU pool init during NE kernel module loading.
+* Setup the NE CPU pool at runtime via a sysfs file for the kernel parameter.
+* Check if the enclave memory and CPUs are from the same NUMA node.
+* Add minimum enclave memory size definition.
+* v3: https://lore.kernel.org/lkml/20200525221334.62966-1-andraprs@amazon.com/ 
+
+v2 -> v3
+
+* Rebase on top of v5.7-rc7.
+* Add changelog to each patch in the series.
+* Remove "ratelimited" from the logs that are not in the ioctl call paths.
+* Update static calls sanity checks.
+* Remove file ops that do nothing for now.
+* Remove GPL additional wording as SPDX-License-Identifier is already in place.
+* v2: https://lore.kernel.org/lkml/20200522062946.28973-1-andraprs@amazon.com/
+
+v1 -> v2
+
+* Rebase on top of v5.7-rc6.
+* Adapt codebase based on feedback from v1.
+* Update ioctl number definition - major and minor.
+* Add sample / documentation for the ioctl interface basic flow usage.
+* Update cover letter to include more context on the NE overall.
+* Add fix for the enclave / vcpu fd creation error cleanup path.
+* Add fix reported by kbuild test robot <lkp@intel.com>.
+* v1: https://lore.kernel.org/lkml/20200421184150.68011-1-andraprs@amazon.com/
+
+---
+
+Andra Paraschiv (18):
+  nitro_enclaves: Add ioctl interface definition
+  nitro_enclaves: Define the PCI device interface
+  nitro_enclaves: Define enclave info for internal bookkeeping
+  nitro_enclaves: Init PCI device driver
+  nitro_enclaves: Handle PCI device command requests
+  nitro_enclaves: Handle out-of-band PCI device events
+  nitro_enclaves: Init misc device providing the ioctl interface
+  nitro_enclaves: Add logic for enclave vm creation
+  nitro_enclaves: Add logic for enclave vcpu creation
+  nitro_enclaves: Add logic for enclave image load info
+  nitro_enclaves: Add logic for enclave memory region set
+  nitro_enclaves: Add logic for enclave start
+  nitro_enclaves: Add logic for enclave termination
+  nitro_enclaves: Add Kconfig for the Nitro Enclaves driver
+  nitro_enclaves: Add Makefile for the Nitro Enclaves driver
+  nitro_enclaves: Add sample for ioctl interface usage
+  nitro_enclaves: Add overview documentation
+  MAINTAINERS: Add entry for the Nitro Enclaves driver
+
+ Documentation/nitro_enclaves/ne_overview.rst  |   87 ++
+ .../userspace-api/ioctl/ioctl-number.rst      |    5 +-
+ MAINTAINERS                                   |   13 +
+ drivers/virt/Kconfig                          |    2 +
+ drivers/virt/Makefile                         |    2 +
+ drivers/virt/nitro_enclaves/Kconfig           |   16 +
+ drivers/virt/nitro_enclaves/Makefile          |   11 +
+ drivers/virt/nitro_enclaves/ne_misc_dev.c     | 1364 +++++++++++++++++
+ drivers/virt/nitro_enclaves/ne_misc_dev.h     |  115 ++
+ drivers/virt/nitro_enclaves/ne_pci_dev.c      |  626 ++++++++
+ drivers/virt/nitro_enclaves/ne_pci_dev.h      |  264 ++++
+ include/linux/nitro_enclaves.h                |   11 +
+ include/uapi/linux/nitro_enclaves.h           |  137 ++
+ samples/nitro_enclaves/.gitignore             |    2 +
+ samples/nitro_enclaves/Makefile               |   16 +
+ samples/nitro_enclaves/ne_ioctl_sample.c      |  520 +++++++
+ 16 files changed, 3190 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/nitro_enclaves/ne_overview.rst
+ create mode 100644 drivers/virt/nitro_enclaves/Kconfig
+ create mode 100644 drivers/virt/nitro_enclaves/Makefile
+ create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.c
+ create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.h
+ create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.c
+ create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.h
+ create mode 100644 include/linux/nitro_enclaves.h
+ create mode 100644 include/uapi/linux/nitro_enclaves.h
+ create mode 100644 samples/nitro_enclaves/.gitignore
+ create mode 100644 samples/nitro_enclaves/Makefile
+ create mode 100644 samples/nitro_enclaves/ne_ioctl_sample.c
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.20.1 (Apple Git-117)
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
+
