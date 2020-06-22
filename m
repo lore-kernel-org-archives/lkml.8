@@ -2,77 +2,110 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0924F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80F72073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbgFVV7f (ORCPT
+        id S1730998AbgFVV7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:59:35 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9787 "EHLO mga01.intel.com"
+        Mon, 22 Jun 2020 17:59:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53698 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730765AbgFVV7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:59:34 -0400
-IronPort-SDR: YNpJ5+bxd3wR5TagIo+MocH5MLJ33w30QuLwM5b3d+ENgpuIArwMY94DxJWs0uPpEsPBzgxI+S
- s5T2NqnVsbfg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="161967180"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="161967180"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:59:33 -0700
-IronPort-SDR: mRBtvo2zY+7y2bE8mNE0Cb73kyWqwyHB4DbRHe1Bz/S/GoLN87diVCPnqSis7qkGJ9CjHSEBN9
- fHonmyKnmF8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="263121248"
-Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
-  by fmsmga007.fm.intel.com with ESMTP; 22 Jun 2020 14:59:23 -0700
-Date:   Tue, 23 Jun 2020 00:59:22 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Christophe Ricard <christophe-h.ricard@st.com>
-Subject: Re: [PATCH v11 3/8] tpm: tpm_tis: Add retry in case of protocol
- failure or data integrity (on I2C only) failure.
-Message-ID: <20200622215922.GE22727@linux.intel.com>
-References: <20200618134344.243537-1-amirmizi6@gmail.com>
- <20200618134344.243537-4-amirmizi6@gmail.com>
+        id S1727006AbgFVV7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:59:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7BD9EAF27;
+        Mon, 22 Jun 2020 21:59:46 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 527CB602E5; Mon, 22 Jun 2020 23:59:46 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 23:59:46 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Alexander Lobakin <alobakin@pm.me>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Tom Herbert <therbert@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 1/3] net: ethtool: add missing string for
+ NETIF_F_GSO_TUNNEL_REMCSUM
+Message-ID: <20200622215946.gbnx7mfavwvr4odz@lion.mk-sys.cz>
+References: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
+ <zFTHRjNWlu4eUUW2ctoeitCl16HlqxNz83PXnzZU-JKukUxUlXl_jpYe8H8tWNgKP1cTbxEogXn3YHD9rmYj3v5h8vLvaQFYePM56sQrrzw=@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ukcnb7vrxz63kxvz"
 Content-Disposition: inline
-In-Reply-To: <20200618134344.243537-4-amirmizi6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <zFTHRjNWlu4eUUW2ctoeitCl16HlqxNz83PXnzZU-JKukUxUlXl_jpYe8H8tWNgKP1cTbxEogXn3YHD9rmYj3v5h8vLvaQFYePM56sQrrzw=@pm.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 04:43:38PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> Added a retry mechanism on any protocol error. In addition, a retry is
-> added in case of a data integrity issue in the I2C bus protocol. The check
-> is performed after sending a command to the TPM and after receiving a
-> response from the TPM.
 
-No chance to merge this without reasoning why on any protocol error we
-should retry. It's not reasoned here. Unfotunately, with this premise I
-cannot merge this.
+--ukcnb7vrxz63kxvz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-/Jarkko
+On Fri, Jun 19, 2020 at 06:49:46PM +0000, Alexander Lobakin wrote:
+> Commit e585f2363637 ("udp: Changes to udp_offload to support remote
+> checksum offload") added new GSO type and a corresponding netdev
+> feature, but missed Ethtool's 'netdev_features_strings' table.
+> Give it a name so it will be exposed to userspace and become available
+> for manual configuration.
+>=20
+> Fixes: e585f2363637 ("udp: Changes to udp_offload to support remote
+> checksum offload")
+> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+
+> ---
+>  net/ethtool/common.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+> index 47f63526818e..aaecfc916a4d 100644
+> --- a/net/ethtool/common.c
+> +++ b/net/ethtool/common.c
+> @@ -40,6 +40,7 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT=
+][ETH_GSTRING_LEN] =3D {
+>  	[NETIF_F_GSO_UDP_TUNNEL_BIT] =3D	 "tx-udp_tnl-segmentation",
+>  	[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT] =3D "tx-udp_tnl-csum-segmentation",
+>  	[NETIF_F_GSO_PARTIAL_BIT] =3D	 "tx-gso-partial",
+> +	[NETIF_F_GSO_TUNNEL_REMCSUM_BIT] =3D "tx-tunnel-remcsum-segmentation",
+>  	[NETIF_F_GSO_SCTP_BIT] =3D	 "tx-sctp-segmentation",
+>  	[NETIF_F_GSO_ESP_BIT] =3D		 "tx-esp-segmentation",
+>  	[NETIF_F_GSO_UDP_L4_BIT] =3D	 "tx-udp-segmentation",
+> --=20
+> 2.27.0
+>=20
+>=20
+
+--ukcnb7vrxz63kxvz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7xKcsACgkQ538sG/LR
+dpWNKwf/QdBGGinjjKlg/fu7WpCNDZy4TRdo2Xsj8e7xjLwz2VDwPTfi6rd3b9gs
+Er+QqT8QkiMp/k9ogx1In9HDsF/n0GHlf0eiMiKyohCLRErFCSqoGZpyI91nSXSV
+tcK3idI0gye+lvZK8Pwfo5BwmKbASHlrRQFx3kMBfL8HP1GrqCZUqR1s/yCdbD57
+mJ1Yqm6acb8tqhLEwuANViRSs+GLcdAGtWj0+f9ePxmkwn+HneMoSFGBDeRkIkgI
+CLZ9pmk2h00iSwUjqaCnHzONg6sRifTwTs/c0WQdvRE93W/gMNMXagF0oqWn4x6x
+OnzGTDD/TYunjjLUc+iYnFMh7d3Zyw==
+=9S6W
+-----END PGP SIGNATURE-----
+
+--ukcnb7vrxz63kxvz--
