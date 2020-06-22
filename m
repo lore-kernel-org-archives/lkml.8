@@ -2,171 +2,208 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC5EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D6820716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 172182074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y2pyWuv8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OFzgfBlw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbgFVQCg (ORCPT
+        id S1729595AbgFVQDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:02:36 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50099 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729804AbgFVQCa (ORCPT
+        Mon, 22 Jun 2020 12:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729871AbgFVQDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:02:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592841749;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XCUVrs1HEs3cDPWkLQt5NRK2RuPmGi2jCX5YSWGwgt0=;
-        b=Y2pyWuv8y4y7DeesnEqg7rKrbZKyH9m272EQxEqiPQfROE4uMNamvvzdiNs/Zeo9JeK3Qh
-        3gQ69RaReqRd+/Vueo4xbLXOj7nBXvIvcFGdO7QxZHcoKQ1PgIm7GJ5hTGEq/bZjHu0Nlk
-        dX7FNygXPLIY7kqts+82e48dJOlvaKo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-UU-l60LuMMe5-s72qaE3Bw-1; Mon, 22 Jun 2020 12:02:23 -0400
-X-MC-Unique: UU-l60LuMMe5-s72qaE3Bw-1
-Received: by mail-wr1-f69.google.com with SMTP id d6so11097826wrn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:02:22 -0700 (PDT)
+        Mon, 22 Jun 2020 12:03:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 153CAC061796
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:03:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id t194so90792wmt.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:03:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=G7tyEQo0BCpuFpa+wLLnML4BSViFafq4hYNcPsQY6yA=;
+        b=OFzgfBlwCkrOzvIyVR98+1/FXds75qvrmXjxqkeiZis2MHuM8t8xekOzHXDkzHuUqC
+         /Um6dZ6t4Srg/Fp14boWWHax79dKiFmIXrhDSdg8YDHvC8v2X46ysLHrIqLc49O3yk9v
+         g4GxaTx1Hr78vxDccYzfFtECXgXqX1pOyPLoVzuHjWHax5i8FNFSYgOjRmkBoSzvoPVx
+         XED1CZ5vMKFHce07Ux4WKGnUSF5k2sMmuddM43Ab1B4iGGnPLHMWo4w5jJUdbh43V0nD
+         vSTgBCy/aJDKy9zjT6fEMZ1n9SGFXHZd5sC9LdGsI7hzu2crXDasuj1vY44cIQm7vTNE
+         sCmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XCUVrs1HEs3cDPWkLQt5NRK2RuPmGi2jCX5YSWGwgt0=;
-        b=cqjKNxNPhD3MQw7Ab1AlI0ihjVE++WMH6akWzAsB8c2W1em3zxFuWoK53TVvUWNINU
-         r2Fil3YBFhZWEjPRJaDs7hlf9w3D81wPr0OXx3vLwhSJ/9HxNHoGZe3MuDVgNbT0xzJE
-         wgkdpfTy1vJGlqpiCWyFUJ3HmadkIJlaVg5BUqXIFB+V0A8RSZxLKTKqToNErhjCW3XH
-         qS3+uWn8+e6yWWxwDryGFPAjSM3KDjkrGFBqxa+9pHD/1SwxNsKqv1Z7wkwMfcoRZt3F
-         TiGfhnqjd1tzn2BIlCIbO+JKXK54Heb0a0V19etpsgp08b+tCWdi+tDbToLxtnLV3niV
-         3hvQ==
-X-Gm-Message-State: AOAM531zA1Wl+Tj+uzahnhlk2OSdIpOWkIH0YDAuKkZnWPmzSG6PmrO5
-        0NBPhp6hS9cgGXi6d1qkPF3uQ0ZvLIFiV1Uu9lBidzocuztCvx2csJPVhX2Xv1Itay9ohFSsque
-        QDq/ePMAUxoyuKRRGaRy4h/J0
-X-Received: by 2002:a5d:698e:: with SMTP id g14mr21196192wru.301.1592841741813;
-        Mon, 22 Jun 2020 09:02:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw7AC2zXM9wMhdUYjep6D0hT7FOv+53GJXD/KBgo/7Gd1G2Y6F8d5neAkpIP+MhZ51pJS/Z0w==
-X-Received: by 2002:a5d:698e:: with SMTP id g14mr21196154wru.301.1592841741539;
-        Mon, 22 Jun 2020 09:02:21 -0700 (PDT)
-Received: from localhost ([151.48.138.186])
-        by smtp.gmail.com with ESMTPSA id q128sm17358370wma.38.2020.06.22.09.02.20
+        bh=G7tyEQo0BCpuFpa+wLLnML4BSViFafq4hYNcPsQY6yA=;
+        b=cxkmmJXYHG3vecjb3pQCbIhMAUfxgVpFGgZTlY9IN54XKCwjlahuaTDMW2B3jfR741
+         qEHM7k8e+TLuDEjhwRpk45++ffXJ8yQSorC+qCbLUSSRSdFuX0RaB5Oe8BEF62sRvRex
+         nP8/U051ediv7A8WTlvX+ccuzHp88xJDcfRdb1kThSbkFOuvwAPUjYEH79zh4bRE5911
+         sqiYBKWaiLQEEptrnHJoGCiZJpBV93N4u8pstn+PtOs3Fvj616q2KRJhqJ3EqiseyNZe
+         BkMBoseLhhz3b9LP8AOmM4oyGO+XrkbKyJh1BM2UErDtOVW3hJe0C61VC4rcE/toUsnw
+         klXQ==
+X-Gm-Message-State: AOAM532qSbFl0A/f1eTCOKT+34RHiF4+LdYFX4bd8mG67dUUDrAiRXzH
+        OKiVNk3r6vTil8k91KxNIDQ0Kw==
+X-Google-Smtp-Source: ABdhPJwTHUBPzo//TrGs0VsDrKoOp6hfyS3KNMezVrR1B8EvnSENYTaLkUxTvt8cK17P23kZv45cqA==
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr18818319wml.70.1592841782682;
+        Mon, 22 Jun 2020 09:03:02 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id j18sm18502577wrn.59.2020.06.22.09.03.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 09:02:20 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 18:02:17 +0200
-From:   Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: mt7612 suspend/resume issue
-Message-ID: <20200622160217.GD27892@localhost.localdomain>
-References: <20200618090556.pepjdbnba2gqzcbe@butterfly.localdomain>
- <20200618111859.GC698688@lore-desk.lan>
- <20200619150132.2zrc3ojqhtbn432u@butterfly.localdomain>
- <20200621205412.GB271428@localhost.localdomain>
- <CAHcwAbR4govGK3RPyfKWRgFRhFanWtpJLrB_PEjcoiBDJ3_Adg@mail.gmail.com>
- <20200622145338.GB27892@localhost.localdomain>
- <CAHcwAbR1W_aOaozr=m48UCWKPr1m71bk-c+kwkGd6A2GTLGF6A@mail.gmail.com>
+        Mon, 22 Jun 2020 09:03:02 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 17:03:00 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+        gregkh@linuxfoundation.org, jason.wessel@windriver.com,
+        dianders@chromium.org, jslaby@suse.com, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] kgdb: Add request_nmi() to the io ops table for
+ kgdboc
+Message-ID: <20200622160300.avgfhnfkpqzqqtsr@holly.lan>
+References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
+ <1592835984-28613-4-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bjuZg6miEcdLYP6q"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHcwAbR1W_aOaozr=m48UCWKPr1m71bk-c+kwkGd6A2GTLGF6A@mail.gmail.com>
+In-Reply-To: <1592835984-28613-4-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 22, 2020 at 07:56:20PM +0530, Sumit Garg wrote:
+> From: Daniel Thompson <daniel.thompson@linaro.org>
+> 
+> Add request_nmi() callback to install a non-maskable interrupt handler
+> corresponding to IRQ retrieved from polling interface. If NMI handler
+> installation fails due to missing support from underlying irqchip driver
+> then fallback to install it as normal interrupt handler.
+> 
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  drivers/tty/serial/kgdboc.c | 35 +++++++++++++++++++++++++++++++++++
+>  include/linux/kgdb.h        |  7 +++++++
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
+> index 84ffede..263afae 100644
+> --- a/drivers/tty/serial/kgdboc.c
+> +++ b/drivers/tty/serial/kgdboc.c
+> @@ -19,6 +19,9 @@
+>  #include <linux/console.h>
+>  #include <linux/vt_kern.h>
+>  #include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdesc.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/serial_core.h>
+> @@ -390,12 +393,44 @@ static void kgdboc_post_exp_handler(void)
+>  	kgdboc_restore_input();
+>  }
+>  
+> +static int kgdb_tty_irq;
+> +
+> +static int kgdboc_request_nmi(irq_handler_t fn, void *dev_id)
+> +{
+> +	int irq, res;
+> +
+> +	/* Better to avoid double allocation in the tty driver! */
+> +	if (kgdb_tty_irq)
+> +		return 0;
+> +
+> +	if (!kgdb_tty_driver->ops->poll_get_irq)
+> +		return -ENODEV;
+> +
+> +	irq =
+> +	    kgdb_tty_driver->ops->poll_get_irq(kgdb_tty_driver, kgdb_tty_line);
+> +	if (irq <= 0)
+> +		return irq ? irq : -ENODEV;
+> +
+> +	irq_set_status_flags(irq, IRQ_NOAUTOEN);
+> +	res = request_nmi(irq, fn, IRQF_PERCPU, "kgdboc", dev_id);
 
---bjuZg6miEcdLYP6q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why do we need IRQF_PERCPU here. A UART interrupt is not normally
+per-cpu?
 
-> On Mon, Jun 22, 2020 at 4:53 PM Lorenzo Bianconi
-> <lorenzo.bianconi@redhat.com> wrote:
-> > > On Sun, Jun 21, 2020 at 10:54 PM Lorenzo Bianconi <lorenzo@kernel.org=
-> wrote:
-> > > > > > +static int __maybe_unused
-> > > > > > +mt76x2e_suspend(struct pci_dev *pdev, pm_message_t state)
-> > > > > > +{
-> > > > > > +   struct mt76_dev *mdev =3D pci_get_drvdata(pdev);
-> > > > > > +   struct mt76x02_dev *dev =3D container_of(mdev, struct mt76x=
-02_dev, mt76);
-> > > > > > +   int i, err;
-> > > >
-> > > > can you please double-check what is the PCI state requested during =
-suspend?
-> > >
-> > > Do you mean ACPI S3 (this is the state the system enters)?  If not,
-> > > what should I check and where?
-> >
-> > yes, right. Just for debugging, can you please force the card in PCI_D0=
- during the
-> > suspend?
->=20
-> Do you want me to do this:
->=20
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> index 5543e242fb9b..e558342cce03 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-> @@ -119,9 +119,8 @@ mt76x2e_suspend(struct pci_dev *pdev, pm_message_t st=
-ate)
->=20
->      mt76x02_dma_reset(dev);
->=20
-> -    pci_enable_wake(pdev, pci_choose_state(pdev, state), true);
->      pci_save_state(pdev);
-> -    err =3D pci_set_power_state(pdev, pci_choose_state(pdev, state));
-> +    err =3D pci_set_power_state(pdev, PCI_D0);
->      if (err)
->          goto restore;
 
-I think you can just substitute pci_choose_state(pdev, state) with PCI_D0, =
-not
-removing pci_enable_wake()
+> +	if (res) {
+> +		res = request_irq(irq, fn, IRQF_SHARED, "kgdboc", dev_id);
 
-Regards,
-Lorenzo
+IRQF_SHARED?
 
->=20
-> ?
->=20
-> --=20
->   Best regards,
->     Oleksandr Natalenko (post-factum)
->     Principal Software Maintenance Engineer
->=20
+Currrently there is nothing that prevents concurrent activation of
+ttyNMI0 and the underlying serial driver. Using IRQF_SHARED means it
+becomes possible for both drivers to try to service the same interrupt.
+That risks some rather "interesting" problems.
 
---bjuZg6miEcdLYP6q
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Daniel.
 
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXvDWBwAKCRA6cBh0uS2t
-rNHqAP9TnaCtdI/P+S0pzYktL3HWcUDwojePvhLOFUPT9cUTIQEAz0LLtfRL8dJ+
-nzlc0/5SI1eF0RoUKiJLONdzkKKyiA8=
-=rs8D
------END PGP SIGNATURE-----
 
---bjuZg6miEcdLYP6q--
-
+> +		WARN_ON(res);
+> +	}
+> +
+> +	enable_irq(irq);
+> +
+> +	kgdb_tty_irq = irq;
+> +	return 0;
+> +}
+> +
+>  static struct kgdb_io kgdboc_io_ops = {
+>  	.name			= "kgdboc",
+>  	.read_char		= kgdboc_get_char,
+>  	.write_char		= kgdboc_put_char,
+>  	.pre_exception		= kgdboc_pre_exp_handler,
+>  	.post_exception		= kgdboc_post_exp_handler,
+> +	.request_nmi		= kgdboc_request_nmi,
+>  };
+>  
+>  #if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
+> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> index 529116b..b32b044 100644
+> --- a/include/linux/kgdb.h
+> +++ b/include/linux/kgdb.h
+> @@ -16,6 +16,7 @@
+>  #include <linux/linkage.h>
+>  #include <linux/init.h>
+>  #include <linux/atomic.h>
+> +#include <linux/interrupt.h>
+>  #ifdef CONFIG_HAVE_ARCH_KGDB
+>  #include <asm/kgdb.h>
+>  #endif
+> @@ -276,6 +277,10 @@ struct kgdb_arch {
+>   * the I/O driver.
+>   * @post_exception: Pointer to a function that will do any cleanup work
+>   * for the I/O driver.
+> + * @request_nmi: Pointer to a function that can install an non-maskable
+> + * interrupt handler that will be called when a character is pending and that
+> + * can be cleared by calling @read_char until it returns NO_POLL_CHAR. If NMI
+> + * installation fails then fallback to install normal interrupt handler.
+>   * @cons: valid if the I/O device is a console; else NULL.
+>   */
+>  struct kgdb_io {
+> @@ -287,6 +292,8 @@ struct kgdb_io {
+>  	void			(*deinit) (void);
+>  	void			(*pre_exception) (void);
+>  	void			(*post_exception) (void);
+> +	int			(*request_nmi)(irq_handler_t nmi_handler,
+> +					       void *dev_id);
+>  	struct console		*cons;
+>  };
+>  
+> -- 
+> 2.7.4
+> 
