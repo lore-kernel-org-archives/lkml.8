@@ -2,54 +2,55 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69095C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A8520776
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4756B20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592865798;
+	bh=ZG0oMv+HAmfDvF6gKBVrwMs/TY/KDebSAxhQTCOFCJQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZsBS9dwtIaEHbW9KHbj08/RS+vdvF78a0rtQOsM8WzpXeK10SOEFLBD1VRAfJIBuf
+	 VooAXu7hqkF2t4kZG3wHnPXGdxtH8SWpMaEzGnaWnqF9bQ/v6P0wE+Iz+qIgPOz4ej
+	 vn21o/zfd/WGuSt5moGteV+OCkAtWvaGCpUmBi5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbgFVWnM (ORCPT
+        id S1731333AbgFVWnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:43:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:27425 "EHLO mga18.intel.com"
+        Mon, 22 Jun 2020 18:43:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731257AbgFVWnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:43:03 -0400
-IronPort-SDR: BK4wVfy6VI4xy6hiq4aFkiBX2tN6zZOeoF2q0IhcFY+PhjkqXlsnD7JrL0bgwzedZL5zj8BFQX
- Vb7m2h8+MWrw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131303581"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="131303581"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 15:42:56 -0700
-IronPort-SDR: yUjHnqK5JTkgowcRt++MR9EaaYSccOy3UC0ftAPH/xvR5GHLMP/c39MAb9DR0L30VDKdDcguLk
- 4iJaIiK628VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="264634948"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 15:42:56 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 15/15] KVM: VMX: Rename vmx_uret_msr's "index" to "slot"
-Date:   Mon, 22 Jun 2020 15:42:49 -0700
-Message-Id: <20200622224249.29562-16-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200622224249.29562-1-sean.j.christopherson@intel.com>
-References: <20200622224249.29562-1-sean.j.christopherson@intel.com>
+        id S1731275AbgFVWnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:43:06 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22EBA2078E;
+        Mon, 22 Jun 2020 22:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592865786;
+        bh=ZG0oMv+HAmfDvF6gKBVrwMs/TY/KDebSAxhQTCOFCJQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ci3EMpbouBoHNIOqrEXL813Y6Uhev2BcUCnKV5JtCD/fquS/TEwbJ+OHF02UUKYU0
+         2dR5Iw6HdvcHvup2srVfNxf5ZKOLwq9wMkpmkubEJ4BTD+AjqTEwZb4lAKSDP3ufmt
+         7zsUjkBWy9r5+gdTaT0ajC7QW3aS7PiQmcxjcDw4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     peterz@infradead.org
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        jolsa@redhat.com, alexey.budankov@linux.intel.com,
+        songliubraving@fb.com, acme@redhat.com, allison@lohutok.net,
+        sashal@kernel.org
+Subject: [PATCH v3 03/14] tools/kernel.h: extend with dummy RCU functions
+Date:   Mon, 22 Jun 2020 18:42:47 -0400
+Message-Id: <20200622224258.1208588-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200622224258.1208588-1-sashal@kernel.org>
+References: <20200622224258.1208588-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,71 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename "index" to "slot" in struct vmx_uret_msr to align with the
-terminology used by common x86's kvm_user_return_msrs, and to avoid
-conflating "MSR's ECX index" with "MSR's index into an array".
+These calls were added by 108c14858b9e ("locking/lockdep: Add support
+for dynamic keys") and require no special handling in userspace, so just
+add empty function definitions.
 
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx/vmx.c | 8 ++++----
- arch/x86/kvm/vmx/vmx.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ tools/include/linux/kernel.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e958c911dcf8..b335296ca02d 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -630,7 +630,7 @@ static inline int __vmx_find_uret_msr(struct vcpu_vmx *vmx, u32 msr)
- 	int i;
+diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
+index a7e54a08fb54c..902d3b9ab4c17 100644
+--- a/tools/include/linux/kernel.h
++++ b/tools/include/linux/kernel.h
+@@ -117,4 +117,11 @@ int scnprintf_pad(char * buf, size_t size, const char * fmt, ...);
+ #define current_gfp_context(k) 0
+ #define synchronize_rcu()
  
- 	for (i = 0; i < vmx->nr_uret_msrs; ++i)
--		if (vmx_uret_msrs_list[vmx->guest_uret_msrs[i].index] == msr)
-+		if (vmx_uret_msrs_list[vmx->guest_uret_msrs[i].slot] == msr)
- 			return i;
- 	return -1;
- }
-@@ -654,7 +654,7 @@ static int vmx_set_guest_uret_msr(struct vcpu_vmx *vmx,
- 	msr->data = data;
- 	if (msr - vmx->guest_uret_msrs < vmx->nr_active_uret_msrs) {
- 		preempt_disable();
--		ret = kvm_set_user_return_msr(msr->index, msr->data, msr->mask);
-+		ret = kvm_set_user_return_msr(msr->slot, msr->data, msr->mask);
- 		preempt_enable();
- 		if (ret)
- 			msr->data = old_msr_data;
-@@ -1151,7 +1151,7 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
- 	if (!vmx->guest_uret_msrs_loaded) {
- 		vmx->guest_uret_msrs_loaded = true;
- 		for (i = 0; i < vmx->nr_active_uret_msrs; ++i)
--			kvm_set_user_return_msr(vmx->guest_uret_msrs[i].index,
-+			kvm_set_user_return_msr(vmx->guest_uret_msrs[i].slot,
- 						vmx->guest_uret_msrs[i].data,
- 						vmx->guest_uret_msrs[i].mask);
- 
-@@ -6900,7 +6900,7 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
- 		if (wrmsr_safe(index, data_low, data_high) < 0)
- 			continue;
- 
--		vmx->guest_uret_msrs[j].index = i;
-+		vmx->guest_uret_msrs[j].slot = i;
- 		vmx->guest_uret_msrs[j].data = 0;
- 		switch (index) {
- 		case MSR_IA32_TSX_CTRL:
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 338469fcd8cf..57027072e21f 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -34,7 +34,7 @@ struct vmx_msrs {
- };
- 
- struct vmx_uret_msr {
--	unsigned index;
-+	unsigned int slot; /* The MSR's slot in kvm_user_return_msrs. */
- 	u64 data;
- 	u64 mask;
- };
++static __maybe_unused int system_state;
++#define SYSTEM_SCHEDULING 0
++
++#define might_sleep()
++#define rcu_read_lock()
++#define rcu_read_unlock()
++
+ #endif
 -- 
-2.26.0
+2.25.1
 
