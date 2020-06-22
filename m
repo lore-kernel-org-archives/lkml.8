@@ -2,70 +2,91 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A562C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03EE42076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:44:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592858689;
-	bh=kS6Uoybp+uv0rgW5ZPADRgzJ/JhDOOrsBOC9xmxRys8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gXVsC3GWKj3VP6DOLsvJr9hRP8LVlWC0X/uSTLruEkwdEg6EQeyw3r+jmyTglG1mw
-	 +WZl3ClZ1QZbQHxVDEDmKAmLSAGiJ7/H1DbSI/TO9v9mQCKeu2hSdCyPKVRCoR7lvS
-	 PMSNfJ8ct/d7vAQjFCTTUXj9kdHuYmPIfCyklNOg=
+	by mail.kernel.org (Postfix) with ESMTP id 82A312075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbgFVUor (ORCPT
+        id S1728775AbgFVUp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbgFVUor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:44:47 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 741D62076A;
-        Mon, 22 Jun 2020 20:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592858686;
-        bh=kS6Uoybp+uv0rgW5ZPADRgzJ/JhDOOrsBOC9xmxRys8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XmS8lT0PlQFUncpet6RPPNKJiTytxgchIQppj2jc87hagFVBEo+8Ql/sDjA93gw2V
-         xppXiWF4HGNFdnANH9VrVtroo6KHFOiae3pLMuLElLUvR+1kWmdgBhcC1GTEZDN2mH
-         Yikpwe2t+9MOfh2+wE9RxWptGDpvy8zmZqVX78Qk=
-Date:   Mon, 22 Jun 2020 13:44:44 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Li Heng <liheng40@huawei.com>
-Cc:     <vishal@chelsio.com>, <davem@davemloft.net>,
-        <hariprasad@chelsio.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH resend] net: cxgb4: fix return error value in t4_prep_fw
-Message-ID: <20200622134444.78f3fd74@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <1592621361-39925-1-git-send-email-liheng40@huawei.com>
-References: <1592621361-39925-1-git-send-email-liheng40@huawei.com>
+        Mon, 22 Jun 2020 16:45:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41695 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728490AbgFVUp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:45:56 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 9so20939820ljc.8;
+        Mon, 22 Jun 2020 13:45:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vLDSApuJ0v81hqVWKGC7U58iC5Y/D0ks2PXVy/bBVsQ=;
+        b=FiYtyG5untV4L2JXWPRu6KC0XcsQkGXsgN0+mJrmDW1FxdFAv0PKHylmeCL/D3bnqv
+         OEIODFq7l3xIq/4Lppb94Qa0mUchDq3RVFUCtEL3x1obpntPHVPkKvW1VXY0zsnbpXn5
+         Q2sJz8ySSRnM5iD5IlS4SkB/bXIq2E4NI2Vx1idcfDfMsyeTRMwhKp4KF3KljL42XJ70
+         VBW/riOUPO20fZ9CSPil3YYisGuWCwVff4wuNgLcKPZfQ/0WOQcvE/Vuw7TbxFMvAeEk
+         4omYbj8CRWw+HpdOr/WHct7oojzspZN16u6xFfbUp/AHjZrQ+kItA+SvYnpZS/W35G61
+         U3xg==
+X-Gm-Message-State: AOAM531qZSZQSJkDpm414j2SpCBfvKNW8s7F4SKRpDjhLrr9Js9QmzSi
+        +/L6OEEAvRMqRxSmHbOdJDA=
+X-Google-Smtp-Source: ABdhPJwzB6UHwxJ1YrbwAUcm9GmVOZcbiVSJ0aSHpBEom2b+5l+RnXEAmCW0zZ8jMyLXZ9LGfBSzcA==
+X-Received: by 2002:a2e:96cd:: with SMTP id d13mr9076836ljj.251.1592858753330;
+        Mon, 22 Jun 2020 13:45:53 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id j18sm3691359lfj.68.2020.06.22.13.45.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 13:45:52 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Alan Cox <alan@linux.intel.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Denis Efremov <efremov@linux.com>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] drm/gma500: Fix direction check in psb_accel_2d_copy()
+Date:   Mon, 22 Jun 2020 23:45:37 +0300
+Message-Id: <20200622204537.26792-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 20 Jun 2020 10:49:21 +0800 Li Heng wrote:
-> t4_prep_fw goto bye tag with positive return value when something
-> bad happened and which can not free resource in adap_init0.
-> so fix it to return negative value.
-> 
-> Fixes: 16e47624e76b ("cxgb4: Add new scheme to update T4/T5 firmware")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Li Heng <liheng40@huawei.com>
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+psb_accel_2d_copy() checks direction PSB_2D_COPYORDER_BR2TL twice.
+Based on psb_accel_2d_copy_direction() results, PSB_2D_COPYORDER_TL2BR
+should be checked instead in the second direction check.
 
-I don't remember signing off on this..
+Fixes: 4d8d096e9ae8 ("gma500: introduce the framebuffer support code")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/gpu/drm/gma500/accel_2d.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/gma500/accel_2d.c b/drivers/gpu/drm/gma500/accel_2d.c
+index adc0507545bf..8dc86aac54d2 100644
+--- a/drivers/gpu/drm/gma500/accel_2d.c
++++ b/drivers/gpu/drm/gma500/accel_2d.c
+@@ -179,8 +179,8 @@ static int psb_accel_2d_copy(struct drm_psb_private *dev_priv,
+ 		src_x += size_x - 1;
+ 		dst_x += size_x - 1;
+ 	}
+-	if (direction == PSB_2D_COPYORDER_BR2TL ||
+-	    direction == PSB_2D_COPYORDER_BL2TR) {
++	if (direction == PSB_2D_COPYORDER_BL2TR ||
++	    direction == PSB_2D_COPYORDER_TL2BR) {
+ 		src_y += size_y - 1;
+ 		dst_y += size_y - 1;
+ 	}
+-- 
+2.26.2
 
