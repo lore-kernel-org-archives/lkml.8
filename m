@@ -2,165 +2,258 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBD120720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FDCB206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:06:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b0ZHTCkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgFVOEl (ORCPT
+        id S1729162AbgFVOGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:04:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:2595 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbgFVOEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:04:41 -0400
-IronPort-SDR: iqa4QpTOgI2HCOfD0GqlnNRGY65hTJqx4cZGOBpjKOZ0c8sPZ5slJYCeKTA0JPC7dQ9MeKAVoN
- MMqEGAQba7yQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="143722055"
-X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
-   d="scan'208";a="143722055"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 07:04:27 -0700
-IronPort-SDR: aXrCfGK+5ji+k8fktbTwquET9TEeawxHkrJoSAAYaTmAlcpw/eH40IQh+/CgITwIeIVaKXC9X8
- jLEl1oUF/Syw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
-   d="scan'208";a="278768409"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 22 Jun 2020 07:04:27 -0700
-Received: from [10.249.226.81] (abudanko-mobl.ccr.corp.intel.com [10.249.226.81])
-        by linux.intel.com (Postfix) with ESMTP id 9933E580342;
-        Mon, 22 Jun 2020 07:04:23 -0700 (PDT)
-Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static polled
- file descriptors
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200608084344.GA1520715@krava>
- <2d80a43a-54cf-3d12-92fd-066217c95d76@linux.intel.com>
- <20200608160758.GD1558310@krava>
- <bde9bcc3-9ec0-6e37-26f6-139b038ad3de@linux.intel.com>
- <20200615123048.GB2088119@krava>
- <8b29e324-eb8d-2266-562b-ca46aec76a3e@linux.intel.com>
- <20200615165802.GD2088119@krava>
- <8351b3ee-d345-a394-d687-443f2d2f7ec4@linux.intel.com>
- <20200622102142.GA2583819@krava>
- <cad3d9a6-da28-c627-de73-17169a7c36a1@linux.intel.com>
- <20200622121120.GA2584593@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <99674766-0cb6-7790-3ef6-90cfaf377822@linux.intel.com>
-Date:   Mon, 22 Jun 2020 17:04:21 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 10:06:30 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24521 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728769AbgFVOGa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:06:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592834787;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=bkuQUt54c4HERTLkyfVzhD95WU+1lwkvTOymJRRDpIg=;
+        b=b0ZHTCklub5YXOCCrNfBAnEaPxiFeHSbx7nYQ2ZuLe3sxMv71TGK2L0910GVIUNI6xkvVc
+        3q9OVELLEFxcarxNOWTU49PJjXAaxFTPEVK+xltoLBc60C4X80aPV9D3QeuYqMHLmIhaN8
+        gzaJdHEDFDZGGRi77djtvXeMbrW2Qeg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-L6PAQ7nsNbq6AW2eaN7o-w-1; Mon, 22 Jun 2020 10:06:25 -0400
+X-MC-Unique: L6PAQ7nsNbq6AW2eaN7o-w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB0C6107ACCD;
+        Mon, 22 Jun 2020 14:06:22 +0000 (UTC)
+Received: from [10.36.113.213] (ovpn-113-213.ams2.redhat.com [10.36.113.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E559A5C1BD;
+        Mon, 22 Jun 2020 14:06:16 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
+ don't read garbage memmaps
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Huang Ying <ying.huang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>
+References: <20200619125923.22602-1-david@redhat.com>
+ <20200619125923.22602-2-david@redhat.com>
+ <20200622082635.GA93552@L-31X9LVDL-1304.local>
+ <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
+ <20200622092221.GA96699@L-31X9LVDL-1304.local>
+ <34f36733-805e-cc61-38da-2ee578ae096c@redhat.com>
+ <20200622131003.GA98415@L-31X9LVDL-1304.local>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <0f4edc1f-1ce2-95b4-5866-5c4888db7c65@redhat.com>
+Date:   Mon, 22 Jun 2020 16:06:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200622121120.GA2584593@krava>
+In-Reply-To: <20200622131003.GA98415@L-31X9LVDL-1304.local>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.06.2020 15:11, Jiri Olsa wrote:
-> On Mon, Jun 22, 2020 at 01:50:03PM +0300, Alexey Budankov wrote:
->>
->> On 22.06.2020 13:21, Jiri Olsa wrote:
->>> On Mon, Jun 22, 2020 at 12:47:19PM +0300, Alexey Budankov wrote:
->>>
->>> SNIP
->>>
->>>>>>>>>> fdarray__del(array, fdkey);
->>>>>>>>>
->>>>>>>>> I think there's solution without having filterable type,
->>>>>>>>> I'm not sure why you think this is needed
->>>>>>>>>
->>>>>>>>> I'm busy with other things this week, but I think I can
->>>>>>>>> come up with some patch early next week if needed
->>>>>>>>
->>>>>>>> Friendly reminder.
->>>>>>>
->>>>>>> hm? I believe we discussed this in here:
->>>>>>>   https://lore.kernel.org/lkml/20200609145611.GI1558310@krava/
+On 22.06.20 15:10, Wei Yang wrote:
+> On Mon, Jun 22, 2020 at 11:51:34AM +0200, David Hildenbrand wrote:
+>> On 22.06.20 11:22, Wei Yang wrote:
+>>> On Mon, Jun 22, 2020 at 10:43:11AM +0200, David Hildenbrand wrote:
+>>>> On 22.06.20 10:26, Wei Yang wrote:
+>>>>> On Fri, Jun 19, 2020 at 02:59:20PM +0200, David Hildenbrand wrote:
+>>>>>> Especially with memory hotplug, we can have offline sections (with a
+>>>>>> garbage memmap) and overlapping zones. We have to make sure to only
+>>>>>> touch initialized memmaps (online sections managed by the buddy) and that
+>>>>>> the zone matches, to not move pages between zones.
 >>>>>>
->>>>>> Do you want it to be implemented like in the patch posted by the link?
+>>>>>> To test if this can actually happen, I added a simple
+>>>>>> 	BUG_ON(page_zone(page_i) != page_zone(page_j));
+>>>>>> right before the swap. When hotplugging a 256M DIMM to a 4G x86-64 VM and
+>>>>>> onlining the first memory block "online_movable" and the second memory
+>>>>>> block "online_kernel", it will trigger the BUG, as both zones (NORMAL
+>>>>>> and MOVABLE) overlap.
+>>>>>>
+>>>>>> This might result in all kinds of weird situations (e.g., double
+>>>>>> allocations, list corruptions, unmovable allocations ending up in the
+>>>>>> movable zone).
+>>>>>>
+>>>>>> Fixes: e900a918b098 ("mm: shuffle initial free memory to improve memory-side-cache utilization")
+>>>>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>>>>> Cc: stable@vger.kernel.org # v5.2+
+>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>>>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>>>> Cc: Minchan Kim <minchan@kernel.org>
+>>>>>> Cc: Huang Ying <ying.huang@intel.com>
+>>>>>> Cc: Wei Yang <richard.weiyang@gmail.com>
+>>>>>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>>>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>>>> ---
+>>>>>> mm/shuffle.c | 18 +++++++++---------
+>>>>>> 1 file changed, 9 insertions(+), 9 deletions(-)
+>>>>>>
+>>>>>> diff --git a/mm/shuffle.c b/mm/shuffle.c
+>>>>>> index 44406d9977c77..dd13ab851b3ee 100644
+>>>>>> --- a/mm/shuffle.c
+>>>>>> +++ b/mm/shuffle.c
+>>>>>> @@ -58,25 +58,25 @@ module_param_call(shuffle, shuffle_store, shuffle_show, &shuffle_param, 0400);
+>>>>>>  * For two pages to be swapped in the shuffle, they must be free (on a
+>>>>>>  * 'free_area' lru), have the same order, and have the same migratetype.
+>>>>>>  */
+>>>>>> -static struct page * __meminit shuffle_valid_page(unsigned long pfn, int order)
+>>>>>> +static struct page * __meminit shuffle_valid_page(struct zone *zone,
+>>>>>> +						  unsigned long pfn, int order)
+>>>>>> {
+>>>>>> -	struct page *page;
+>>>>>> +	struct page *page = pfn_to_online_page(pfn);
 >>>>>
->>>>> no idea.. looking for good solution ;-)
+>>>>> Hi, David and Dan,
 >>>>>
->>>>> how about switching completely to epoll? I tried and it
->>>>> does not look that bad
+>>>>> One thing I want to confirm here is we won't have partially online section,
+>>>>> right? We can add a sub-section to system, but we won't manage it by buddy.
 >>>>
->>>> Well, epoll() is perhaps possible but why does it want switching to epoll()?
->>>> What are the benefits and/or specific task being solved by this switch? 
->>>
->>> epoll change fixes the same issues as the patch you took in v8
->>>
->>> on top of it it's not a hack and wil make polling more user
->>> friendly because of the clear interface
->>
->> Clear. The opposite thing is /proc/sys/fs/epoll/max_user_watches limit that
->> will affect Perf tool usage additionally to the current process limit on 
->> a number of simultaneously open file descriptors (ulimit -n). So move to 
->> epoll() will impose one limit what can affect Perf tool scalability.
-> 
-> hum, I dont think this will be a problem:
-> 
->     Allowing top 4% of low memory (per user) to be allocated in epoll watches,
->     we have:
-> 
->     LOMEM    MAX_WATCHES (per user)
->     512MB    ~178000
->     1GB      ~356000
->     2GB      ~712000
-> 
-> my laptop has 19841945 allowed watches per user
-> 
->>
->>>
+>>>> Hi,
 >>>>
->>>>>
->>>>> there might be some loose ends (interface change), but
->>>>> I think this would solve our problems with fdarray
->>>>
->>>> Your first patch accomodated in v8 actually avoids fds typing
->>>> and solves pos (=fdarray__add()) staleness issue with fdarray.
+>>>> there is still a BUG with sub-section hot-add (devmem), which broke
+>>>> pfn_to_online_page() in corner cases (especially, see the description in
+>>>> include/linux/mmzone.h). We can have a boot-memory section partially
+>>>> populated and marked online. Then, we can hot-add devmem, marking the
+>>>> remaining pfns valid - and as the section is maked online, also as online.
 >>>
->>> yea, it was a change meant for discussion (which never happened),
->>> and I considered it to be more a hack than a solution
+>>> Oh, yes, I see this description.
 >>>
->>> I suppose we can live with that for a while, but I'd like to
->>> have clean solution for polling as well
+>>> This means we could have section marked as online, but with a sub-section even
+>>> not added.
+>>>
+>>> While the good news is even the sub-section is not added, but its memmap is
+>>> populated for an early section. So the page returned from pfn_to_online_page()
+>>> is a valid one.
+>>>
+>>> But what would happen, if the sub-section is removed after added? Would
+>>> section_deactivate() release related memmap to this "struct page"?
 >>
->> I wouldn't treat it as a hack but more as a fix because returned
->> pos is now a part of interface that can be safely used in callers.
->> Can we go with this fix for the patch set?
+>> If devmem is removed, the memmap will be freed and the sub-sections are
+>> marked as non-present. So this works as expected.
+>>
 > 
-> apart from this one I still have a problem with that stat factoring
-> having 1 complicated function deal with both fork and no fork processing,
-> which I already commented on, but you ignored ;-)
+> Sorry, I may not catch your point. If my understanding is correct, the
+> above behavior happens in function section_deactivate().
+> 
+> Let me draw my understanding of function section_deactivate():
+> 
+>     section_deactivate(pfn, nr_pages)
+>         clear_subsection_map(pfn, nr_pages)
+> 	depopulate_section_memmap(pfn, nr_pages)
+> 
+> Since we just remove a sub-section, I skipped some un-related codes. These two
+> functions would:
+> 
+>   * clear bitmap in ms->usage->subsection_map
+>   * free memmap for the sub-section
+> 
+> While since the section is not empty, ms->section_mem_map is not set no null.
 
-Not an issue at all, lets split that func, dispatch_events() I suppose,
-as you see it.
+Let me clarify, sub-section hotremove works differently when overlying
+with (online) boot memory within a section.
 
-> 
-> I'll try to go through that once more, and post some comments
-> 
-> jirka
-> 
+Early sections (IOW, boot memory) are never partially removed. See
+mm/sparse.c:section_deactivate(). We only free a early memmap when the
+section is completely empty. Also see how
+include/linux/mmzone.h:pfn_valid() handles early sections.
 
+So when we have a partially present section with boot memory, we
+a) marked the whole section present and online (there is only a single
+   bit)
+b) allocated the memmap for the whole section
+c) Only exposed the relevant pages to the buddy. The memmap of non-
+   present parts in a section were initialized and are reserved.
+
+pfn_valid() will return for all non-present pfns valid, because there is
+a memmap. pfn_to_online_page() will return for all pfns "true", because
+we only have a single bit for the whole section. This has been the case
+before sub-section hotplug and is still the case. It simply looks like
+just another memory hole for which we have a memmap.
+
+Now, with devmem it is possible to suddenly change these sub-section
+holes (memmaps) to become ZONE_DEVICE memory. pfn_to_online_page() would
+have to detect that and report a "false". Possible fixes were already
+discussed (e.g., sub-section online map instead of a single bit).
+
+Again, the zone check safes us from the worst, just as in the case of
+all other pfn walkers that use (as documented) pfn_to_online_page(). It
+still needs a fix as dicussed, but it seems to work reasonably fine like
+that for now.
+
+-- 
 Thanks,
-Alexey
+
+David / dhildenb
 
