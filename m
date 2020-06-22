@@ -2,122 +2,128 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A579FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B566525478
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797092245F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTVxwjJv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xs8pQ0Q/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbgFVHiz (ORCPT
+        id S1731444AbgFVHkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:38:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731354AbgFVHiy (ORCPT
+        Mon, 22 Jun 2020 03:40:33 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56648 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731354AbgFVHkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:38:54 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73BB8C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:38:53 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id i16so11927377qtr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pFf+0uM7OhIyngSgu5Yj3nmTerq75fKAoaRpUy4UdZc=;
-        b=bTVxwjJv+BTutnnXMZTcEX3+yPsFy6WBiq161bQHyVik5hKmDYVz6l3cXO9z35R9M7
-         ycQUCVSiaYVFbU6w+1WTRaBAZV9ldva9qanfc1jYpovqrquAv4/jL1+xXqTJAcoeou+o
-         PMLpwjGVL0NKZuj9lg1bwKpePJCe5tULsWUfkWfwapaMcELKPAhQ2LPuerMI+rpMbSgf
-         u0hUvagxULfqU5kCvRVB016gWF1LgC3hLeScJ/VigNKOGXvCrndZyv+jix5YCMWZXDqz
-         aQLT3gkFHPkujKYdmcrstb7SGKFiQhap0PPmpiazbezehuq/szKbWCDJRgkPbizzx3dj
-         pFBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pFf+0uM7OhIyngSgu5Yj3nmTerq75fKAoaRpUy4UdZc=;
-        b=rZFHRrQJ5J5KOnyj1U8kztK/WEDhHXAKsCE2SefTHkDTXJu7ZIQaNDaxha6syv+WId
-         I8pUrS4hbBH6McBYHlXgFTpqSxQo01LiE95D48jJLZljLIqLdtBD2kkkr+DCk0zRaQBD
-         gvCjQohz43xHFY4WGUP3rreLyzAiI4v3LHUy0cav0rQPJmy9kDmxYlywhcnTAtmIb4fW
-         vZafEFtgbg1o5CG36oYfEPnzQ7I6ZcM1vSIYRPBRcu8GQmQhMpHktj8aVHHdUKfRn2z/
-         rTSdL2yqPEP0xBEiprCuusSONBREoy7D3m3OXylV8+zgZTDHxrYzhYilrzs64d0c5ZoE
-         J9rw==
-X-Gm-Message-State: AOAM531aJiUaZC3IKz3ZNpNml0nKbMK4cE7v6GXJehbul0VPjVbkN6Qq
-        uMRu/AOFHZ3L5WJJTuxJneA=
-X-Google-Smtp-Source: ABdhPJyOjIb0iw1iEKpl95OKmTjBr1Oy0RUGpwzNGuopcAG0sGqjFXgoB4uVMm0o57J4Hut2uISUIQ==
-X-Received: by 2002:ac8:3f75:: with SMTP id w50mr9210884qtk.123.1592811532729;
-        Mon, 22 Jun 2020 00:38:52 -0700 (PDT)
-Received: from ip-172-31-24-31.ec2.internal (ec2-54-234-246-66.compute-1.amazonaws.com. [54.234.246.66])
-        by smtp.gmail.com with ESMTPSA id p26sm632325qkm.76.2020.06.22.00.38.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:38:52 -0700 (PDT)
-From:   "Rodolfo C. Villordo" <rodolfovillordo@gmail.com>
-Cc:     rodolfovillordo@gmail.com, Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>,
-        Ben Chan <benchan@chromium.org>, Richard Yeh <rcy@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: gasket: replace symbolic permissions
-Date:   Mon, 22 Jun 2020 07:36:12 +0000
-Message-Id: <20200622073612.12282-1-rodolfovillordo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 22 Jun 2020 03:40:32 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05M7dnKn051599;
+        Mon, 22 Jun 2020 02:39:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592811589;
+        bh=fCZLwQLl1dKhVCSvVo/xXTvv6C6GozmwvIPOhBfSi/E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Xs8pQ0Q/z2kF47RXVYwcxp3ebVDuwTw5B53iXjLItRa1zbNtLMqK7u3ccbqJhWp9Q
+         WO7zQb1pQDNBRko6aWK8U15hduAmgqEvWpXRqnH9/D4yIa0Ijzlzd89y7JjbsPPEBE
+         bcFzG5wP6I8wmXh4o9BE7FWaobdC3yMkCocAPJpw=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05M7dni8071605
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 02:39:49 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
+ Jun 2020 02:39:48 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 22 Jun 2020 02:39:48 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05M7dkWn038301;
+        Mon, 22 Jun 2020 02:39:47 -0500
+Subject: Re: [PATCH 0/2] arm64: dts: ti: k3: add platforms chipid module nodes
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Nishanth Menon <nm@ti.com>
+CC:     Dave Gerlach <d-gerlach@ti.com>, <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200613164346.28852-1-grygorii.strashko@ti.com>
+ <8b8f7f92-571d-4a44-4858-7d79676a6375@ti.com>
+ <1dcd2e6c-924d-8151-8100-0b42f154a59c@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <35f0f680-f612-0c14-024c-7f2251650d85@ti.com>
+Date:   Mon, 22 Jun 2020 10:39:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <1dcd2e6c-924d-8151-8100-0b42f154a59c@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
-+               .attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
-warning detected by checkpatch.pl
+On 19/06/2020 19:26, Grygorii Strashko wrote:
+> 
+> 
+> On 15/06/2020 10:47, Peter Ujfalusi wrote:
+>> Hi Grygorii,
+>>
+>> On 13/06/2020 19.43, Grygorii Strashko wrote:
+>>> Hi Tero,
+>>>
+>>> Hence k3 platforms chipid module driver was merged, there is follow 
+>>> up series
+>>> to add corresponding DT chipid nodes.
+>>>
+>>> [1] https://lkml.org/lkml/2020/5/29/979
+>>>
+>>> Grygorii Strashko (2):
+>>>    arm64: dts: ti: k3-am65-wakeup: add k3 platforms chipid module node
+>>>    arm64: dts: ti: k3-j721e-mcu-wakeup: add k3 platforms chipid 
+>>> module node
+>>
+>> Can you also send a patch to enable the socinfo build?
+> 
+> Posted.
+> 
+>>
+>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+>> index 8dd05b2a925c..1d3710e3626a 100644
+>> --- a/arch/arm64/Kconfig.platforms
+>> +++ b/arch/arm64/Kconfig.platforms
+>> @@ -98,6 +98,7 @@ config ARCH_K3
+>>       select TI_SCI_PROTOCOL
+>>       select TI_SCI_INTR_IRQCHIP
+>>       select TI_SCI_INTA_IRQCHIP
+>> +    select TI_K3_SOCINFO
+>>       help
+>>         This enables support for Texas Instruments' K3 multicore SoC
+>>         architecture.
+>>
+>> With this added:
+>> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Tero: FYI. There is no dependecies for this series.
 
-Unable to use __ATTR_RO(). Driver has multiple files using the same show
-function:
+Queued for 5.9, thanks.
 
-$ grep GASKET_SYSFS_RO drivers/staging/gasket/*
-drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_page_table_entries, sysfs_show,
-drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_simple_page_table_entries, sysfs_show,
-drivers/staging/gasket/apex_driver.c:   GASKET_SYSFS_RO(node_0_num_mapped_pages, sysfs_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(bar_offsets, gasket_sysfs_data_show, ATTR_BAR_OFFSETS),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(bar_sizes, gasket_sysfs_data_show, ATTR_BAR_SIZES),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(driver_version, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(framework_version, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(device_type, gasket_sysfs_data_show, ATTR_DEVICE_TYPE),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(revision, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(pci_address, gasket_sysfs_data_show, ATTR_PCI_ADDRESS),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(status, gasket_sysfs_data_show, ATTR_STATUS),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(is_device_owned, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(device_owner, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(write_open_count, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(reset_count, gasket_sysfs_data_show, ATTR_RESET_COUNT),
-drivers/staging/gasket/gasket_core.c:   GASKET_SYSFS_RO(user_mem_ranges, gasket_sysfs_data_show,
-drivers/staging/gasket/gasket_interrupt.c:      GASKET_SYSFS_RO(interrupt_counts, interrupt_sysfs_show,
+-Tero
 
-Signed-off-by: Rodolfo C. Villordo <rodolfovillordo@gmail.com>
----
- drivers/staging/gasket/gasket_sysfs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Best regards,
+> grygorii
 
-diff --git a/drivers/staging/gasket/gasket_sysfs.h b/drivers/staging/gasket/gasket_sysfs.h
-index ab5aa351d555..d5e167dfbe76 100644
---- a/drivers/staging/gasket/gasket_sysfs.h
-+++ b/drivers/staging/gasket/gasket_sysfs.h
-@@ -71,7 +71,7 @@ struct gasket_sysfs_attribute {
- 
- #define GASKET_SYSFS_RO(_name, _show_function, _attr_type)                     \
- 	{                                                                      \
--		.attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
-+		.attr = __ATTR(_name, 0444, _show_function, NULL),          \
- 		.data.attr_type = _attr_type                                   \
- 	}
- 
--- 
-2.17.1
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
