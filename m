@@ -2,101 +2,161 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0827CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE39F2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:43:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P2K7//hF"
+	by mail.kernel.org (Postfix) with ESMTP id A099E2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:44:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgFVQnV (ORCPT
+        id S1729828AbgFVQoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729458AbgFVQnV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:43:21 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4126C061573;
-        Mon, 22 Jun 2020 09:43:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=CaWTfYYdh6pgg+kLLYceaxurrT4fdWAXB5VzJ6H/HiY=; b=P2K7//hF5X8GRKGgwW+CrGu9PQ
-        8PNkj2zc+d53x14aH4UACX4ayn/1LH4vyXz++oUmlOfXaWiRhP/LXZe/fQRX6zXLnlFIdTC9BfoM4
-        c/x1xMnQZ2378YnXhtPHacHNr6pqum23NPrJbZZtO+cP8/TIsARCI+iTtTFyqGdlkclbvQAk40Add
-        eyBkRcMnG+VzCG9lX756znLjB3MAMUxCaEs9XmH64xCTVly8Buca0nlg0/PFsiEjmqBhcnUrhM0YM
-        chsk7a11HgtmExEUcXUVms8rZzYDQ7FqoeG6FFh6OmkqLUK3gO5yh4VTjXFZIXMHKCcXRrsH2NV6L
-        NYRDSqhw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnPXE-0007n0-BS; Mon, 22 Jun 2020 16:43:04 +0000
-Subject: Re: [PATCH 4/5] Huawei BMA: Adding Huawei BMA driver: cdev_veth_drv
-To:     yunaixin03610@163.com, netdev@vger.kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, wuguanping@huawei.com,
-        wangqindong@huawei.com
-References: <20200622160311.1533-1-yunaixin03610@163.com>
- <20200622160311.1533-5-yunaixin03610@163.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5a1badbb-19f7-09b5-0bb6-c2624e227b80@infradead.org>
-Date:   Mon, 22 Jun 2020 09:43:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 12:44:06 -0400
+Received: from mga03.intel.com ([134.134.136.65]:18796 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729438AbgFVQoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:44:05 -0400
+IronPort-SDR: tiiWc0VP6O/xy1DAUitSzI9p2sx7En6Vq4Mz/tfg0eeD1rt9/JpU4Rk+EJihNcTHGO+2fvtOnF
+ pgyytZdJyVSQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="143772327"
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="scan'208";a="143772327"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 09:44:05 -0700
+IronPort-SDR: I07O327acEObODDOkSnvkghGTXIsdXgEnVHjFwH77DEkY3rXF7nycQnoSf86gA7luIdxeFofnC
+ fsRPTpqABm1w==
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="scan'208";a="281020612"
+Received: from rchatre-mobl1.jf.intel.com ([10.54.70.7])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 09:44:05 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     kuo-lang.tseng@intel.com, ravi.v.shankar@intel.com,
+        mingo@redhat.com, babu.moger@amd.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH V7 4/4] x86/resctrl: Use appropriate API for strings terminated by newline
+Date:   Mon, 22 Jun 2020 09:43:31 -0700
+Message-Id: <0ac672f328dcd8137c4b20b5314c85629c300005.1592841671.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1592841671.git.reinette.chatre@intel.com>
+References: <cover.1592841671.git.reinette.chatre@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622160311.1533-5-yunaixin03610@163.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 9:03 AM, yunaixin03610@163.com wrote:
-> diff --git a/drivers/net/ethernet/huawei/bma/Makefile b/drivers/net/ethernet/huawei/bma/Makefile
-> index e6e46d820082..c626618f47fb 100644
-> --- a/drivers/net/ethernet/huawei/bma/Makefile
-> +++ b/drivers/net/ethernet/huawei/bma/Makefile
-> @@ -5,3 +5,4 @@
->  obj-$(CONFIG_BMA) += edma_drv/
->  obj-$(CONFIG_BMA) += cdev_drv/
->  obj-$(CONFIG_BMA) += veth_drv/
-> +obj-$(CONFIG_BMA) += cdev_veth_drv/
-> \ No newline at end of file
+The user input to files in the resctrl filesystem are expected to be
+terminated with a newline. Testing the user input includes a test for
+the presence of a newline and then replacing the newline with NUL
+byte followed by comparison using strcmp().
 
-Please fix the "No newline" warning.
+sysfs_streq() exists to test if strings are equal, treating both NUL and
+newline-then-NUL as equivalent string terminations. Even more,
+sysfs_match_string() exists to match a given string in an array using
+sysfs_streq().
 
-> diff --git a/drivers/net/ethernet/huawei/bma/cdev_veth_drv/Kconfig b/drivers/net/ethernet/huawei/bma/cdev_veth_drv/Kconfig
-> new file mode 100644
-> index 000000000000..97829c5487c2
-> --- /dev/null
-> +++ b/drivers/net/ethernet/huawei/bma/cdev_veth_drv/Kconfig
-> @@ -0,0 +1,11 @@
-> +#
-> +# Huawei BMA software driver configuration
-> +#
-> +
-> +config BMA
-> +	tristate "Huawei BMA Software Communication Driver"
-> +
-> +	---help---
+Replace existing strcmp() comparisons of strings that are terminated
+with a newline with more appropriate sysfs_streq() via the
+sysfs_match_string() API that can perform the match across the different
+mode strings that are already maintained in an array.
 
-Juse use
-	help
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+Changes since V6:
+- Add Andy's Reviewed-by tag
 
-> +	  This driver supports Huawei BMA Software. It is used 
-> +	  to communication between Huawei BMA and BMC software.
-> +
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 28 ++++++++++----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
-
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 25c7379ddb0b..dfd3c6f58901 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1414,13 +1414,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+ 				   char *buf, size_t nbytes, loff_t off)
+ {
+ 	struct rdtgroup *rdtgrp;
+-	enum rdtgrp_mode mode;
+ 	int ret = 0;
++	int user_m;
+ 
+-	/* Valid input requires a trailing newline */
+-	if (nbytes == 0 || buf[nbytes - 1] != '\n')
++	if (nbytes == 0)
+ 		return -EINVAL;
+-	buf[nbytes - 1] = '\0';
+ 
+ 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
+ 	if (!rdtgrp) {
+@@ -1430,29 +1428,25 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+ 
+ 	rdt_last_cmd_clear();
+ 
+-	mode = rdtgrp->mode;
++	user_m = sysfs_match_string(rdt_mode_str, buf);
+ 
+-	if ((!strcmp(buf, "shareable") && mode == RDT_MODE_SHAREABLE) ||
+-	    (!strcmp(buf, "exclusive") && mode == RDT_MODE_EXCLUSIVE) ||
+-	    (!strcmp(buf, "pseudo-locksetup") &&
+-	     mode == RDT_MODE_PSEUDO_LOCKSETUP) ||
+-	    (!strcmp(buf, "pseudo-locked") && mode == RDT_MODE_PSEUDO_LOCKED))
++	/* Do nothing and return success if user asks for current mode */
++	if (user_m == rdtgrp->mode)
+ 		goto out;
+ 
+-	if (mode == RDT_MODE_PSEUDO_LOCKED) {
++	if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
+ 		rdt_last_cmd_puts("Cannot change pseudo-locked group\n");
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+-	if (!strcmp(buf, "shareable")) {
++	if (user_m == RDT_MODE_SHAREABLE) {
+ 		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
+ 			ret = rdtgroup_locksetup_exit(rdtgrp);
+ 			if (ret)
+ 				goto out;
+ 		}
+-		rdtgrp->mode = RDT_MODE_SHAREABLE;
+-	} else if (!strcmp(buf, "exclusive")) {
++	} else if (user_m == RDT_MODE_EXCLUSIVE) {
+ 		if (!rdtgroup_mode_test_exclusive(rdtgrp)) {
+ 			ret = -EINVAL;
+ 			goto out;
+@@ -1462,16 +1456,16 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+ 			if (ret)
+ 				goto out;
+ 		}
+-		rdtgrp->mode = RDT_MODE_EXCLUSIVE;
+-	} else if (!strcmp(buf, "pseudo-locksetup")) {
++	} else if (user_m == RDT_MODE_PSEUDO_LOCKSETUP) {
+ 		ret = rdtgroup_locksetup_enter(rdtgrp);
+ 		if (ret)
+ 			goto out;
+-		rdtgrp->mode = RDT_MODE_PSEUDO_LOCKSETUP;
+ 	} else {
+ 		rdt_last_cmd_puts("Unknown or unsupported mode\n");
+ 		ret = -EINVAL;
++		goto out;
+ 	}
++	rdtgrp->mode = user_m;
+ 
+ out:
+ 	rdtgroup_kn_unlock(of->kn);
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.26.2
+
