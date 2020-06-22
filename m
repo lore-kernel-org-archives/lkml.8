@@ -2,133 +2,246 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28477C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AEEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05E4220738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3E320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gguJfFy+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fKYxb8a5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgFVR4P (ORCPT
+        id S1730208AbgFVR5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:56:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39336 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730122AbgFVR4N (ORCPT
+        Mon, 22 Jun 2020 13:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730124AbgFVR5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:56:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592848571;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ySuDF4uW5IhgSc5+6f1wy6JDv5FU7nQ5DALwzLWqkuw=;
-        b=gguJfFy+YoxyW7ozl7feWl/wCpcIYgp7MXEl8NAHBukC0TEd6r/4ndO8ja+dTXKVGPagIg
-        midZbYNGkD9JPd3C0Gl7scN0AYTaN5vBjMUVn6uLmnJFdJf8xfNlmCKO8Khivv6O77Ki7E
-        KeXatbTweYI4XVoAnGtENzn6Boo23Tc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-AWUGfKRlOj6DKO4q4ct8zA-1; Mon, 22 Jun 2020 13:56:09 -0400
-X-MC-Unique: AWUGfKRlOj6DKO4q4ct8zA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F1718005AD;
-        Mon, 22 Jun 2020 17:56:08 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-116-193.rdu2.redhat.com [10.10.116.193])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E8AD6FDD1;
-        Mon, 22 Jun 2020 17:56:04 +0000 (UTC)
-Subject: Re: [PATCH v4] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
-References: <20200618171941.9475-1-longman@redhat.com>
- <20200618225810.GJ2005@dread.disaster.area>
- <20200618230405.GK2005@dread.disaster.area>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <14d9c969-3fbe-ed1f-6821-050fc2c6289e@redhat.com>
-Date:   Mon, 22 Jun 2020 13:56:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 22 Jun 2020 13:57:15 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE9AC061797
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:57:14 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id c194so16437941oig.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:57:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M3GEVdXIf0tk+DXRvjn8ivHe3tRnJ1flWGbCBgMSqFc=;
+        b=fKYxb8a5H/16u9zlWS8iJSngzhsQi8W1gBgVdQKgopZCmgNRKW4ShQtq754r/X5ZHq
+         fy6m5ZY5hX4E0YahT9PIK9K0hD3j10Uy59Ms3GAKtrVZaffV73Avh9kzG2xPwcQpE2jN
+         8f9MCiTyTnGs+lgdJ4+REJgssZ4aoLmVB39814XTPl2qPHqWj/gzwk+XimPFIVVEHUvp
+         JzsFN060SsfLCwR1b2ZTOFv/2dloiWXa9fBsxadwXtQFyVQEwAdDKS6LxeGJ6e36GFJZ
+         nvfChvHXG4x7H6NJ79akzQS3olwqvZy18fNlsxK0nyMeuPuAZK5+wYZs67khpZMIQQqQ
+         mHaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M3GEVdXIf0tk+DXRvjn8ivHe3tRnJ1flWGbCBgMSqFc=;
+        b=qHSo93NbHBD+/m1nohCkUCJUgMCAUW9mkqY0ivqCXIn1MAWIu4pC0HiVHDufkAW4Ao
+         XvYeJwQ8yWknKqOELTUvZtUVvourUvqL2cyPfzkiYkCL7hDXrmOQmlqZX/70KjQVvgW+
+         Sf9TRVwGoEV6gohAeO5iKB+RH9S4YDvvKycH2eeTHejT4Ul1Y4z6f1an5hCW4Tk0AXAh
+         0Z+M3CzM5ydITJ3TgX9rVfR+6Ij5iOU2VNnr1gwIsNZEuxGjgf0hloTxgLSjarTdRUYO
+         cfHSS7IhiAb28CydzjfiXrp49A+m0aXRz5c2bMib4FgD6y8Q5UPHH0tBJdoX9f8dchXm
+         63GA==
+X-Gm-Message-State: AOAM53330LBsGAXrH0fatyeb00fYWm6trvW9rEmUGWJ5t2QQvUNWivKG
+        Bq4UBTSD8+N4Wq5fIIqC1eWaWg==
+X-Google-Smtp-Source: ABdhPJxkLE5HD8rZWtgYIPepWBzqCb0jDBaJuqVva8yCjfKKXg5Nh77NsC5ouVeAKrFlZLLucadR5A==
+X-Received: by 2002:aca:7213:: with SMTP id p19mr13643738oic.58.1592848634118;
+        Mon, 22 Jun 2020 10:57:14 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k7sm3510087oon.29.2020.06.22.10.57.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 10:57:13 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 10:54:28 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Martin Botka <martin.botka1@gmail.com>
+Subject: Re: [PATCH v2 8/8] arm64: dts: qcom: Add support for Sony Xperia
+ 10/10 Plus (Ganges platform)
+Message-ID: <20200622175428.GU128451@builder.lan>
+References: <20200622075749.21925-1-konradybcio@gmail.com>
+ <20200622075749.21925-9-konradybcio@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200618230405.GK2005@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622075749.21925-9-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/20 7:04 PM, Dave Chinner wrote:
-> On Fri, Jun 19, 2020 at 08:58:10AM +1000, Dave Chinner wrote:
->> On Thu, Jun 18, 2020 at 01:19:41PM -0400, Waiman Long wrote:
->>> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
->>> index 379cbff438bc..1b94b9bfa4d7 100644
->>> --- a/fs/xfs/xfs_super.c
->>> +++ b/fs/xfs/xfs_super.c
->>> @@ -913,11 +913,33 @@ xfs_fs_freeze(
->>>   	struct super_block	*sb)
->>>   {
->>>   	struct xfs_mount	*mp = XFS_M(sb);
->>> +	unsigned long		pflags;
->>> +	int			ret;
->>>   
->>> +	/*
->>> +	 * A fs_reclaim pseudo lock is added to check for potential deadlock
->>> +	 * condition with fs reclaim. The following lockdep splat was hit
->>> +	 * occasionally. This is actually a false positive as the allocation
->>> +	 * is being done only after the frozen filesystem is no longer dirty.
->>> +	 * One way to avoid this splat is to add GFP_NOFS to the affected
->>> +	 * allocation calls. This is what PF_MEMALLOC_NOFS is for.
->>> +	 *
->>> +	 *       CPU0                    CPU1
->>> +	 *       ----                    ----
->>> +	 *  lock(sb_internal);
->>> +	 *                               lock(fs_reclaim);
->>> +	 *                               lock(sb_internal);
->>> +	 *  lock(fs_reclaim);
->>> +	 *
->>> +	 *  *** DEADLOCK ***
->>> +	 */
->> The lockdep splat is detailed in the commit message - it most
->> definitely does not need to be repeated in full here because:
->>
->> 	a) it doesn't explain why the splat occurring is, and
->> 	b) we most definitely don't care about how the lockdep check
->> 	   that triggered it is implemented.
-> I should have added this:
->
-> 	c) a lot of people don't understand what lockdep reports
-> 	   are telling them is a problem.
->
-> I get a lot of questions like "I saw this lockdep thing, but I can't
-> work out what it actually means, so can you have a look at it
-> Dave?". Hence I think directly quoting something people tend not to
-> understand to explain the problem they didn't understand isn't the
-> best approach to improving understanding of the problem...
+On Mon 22 Jun 00:57 PDT 2020, Konrad Dybcio wrote:
 
-OK, how about simplifying the comment to as follows:
+> From: Martin Botka <martin.botka1@gmail.com>
+> 
+> Add device tree support for the Sony Xperia 10 and 10
+> Plus smartphones. They are all based on the Sony Ganges
+> platform (sdm630/636) and share a lot of common code.
+> The differences are really minor, so a Ganges-common DTSI
+> has been created to reduce clutter.
+> 
+> 10 - Kirin
+> 10 Plus - Mermaid
+> 
+> This platform is based on SoMC Nile, but there are some
+> major differences when it comes to pin configuration and
+> panel setup (among others).
+> 
+> The boards currently support:
+> * Screen console
+> * SDHCI
+> * I2C
+> * pstore log dump
+> * GPIO keys
+> * PSCI idle states
+> 
+> Signed-off-by: Martin Botka <martin.botka1@gmail.com>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> Tested-by: Martin Botka <martin.botka1@gmail.com>
 
-        /*
-          * Disable fs reclaim in memory allocation for fs freeze to avoid
-          * causing a possible circular locking dependency lockdep splat
-          * involving fs reclaim.
-          */
+Same comments as on patch 7 regarding the model, but apart from that
+this looks good.
 
-Does that look good enough for you?
+Happy to see these patches on the list, keep up the good work!
 
-Cheers,
-Longman
+Regards,
+Bjorn
 
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |  2 +
+>  .../qcom/sdm630-sony-xperia-ganges-kirin.dts  | 13 ++++++
+>  .../dts/qcom/sdm630-sony-xperia-ganges.dtsi   | 40 +++++++++++++++++++
+>  .../sdm636-sony-xperia-ganges-mermaid.dts     | 20 ++++++++++
+>  4 files changed, 75 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 1cad7cb07574..c98bafe03a96 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -16,9 +16,11 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-ganges-kirin.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-voyager.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm636-sony-xperia-ganges-mermaid.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
+> new file mode 100644
+> index 000000000000..246710a01046
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
+> @@ -0,0 +1,13 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2020, Martin Botka
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sdm630-sony-xperia-ganges.dtsi"
+> +
+> +/ {
+> +	model = "SoMC Kirin-RoW";
+> +	compatible = "sony,kirin-row", "qcom,sdm630", "qcom,sdm630-mtp";
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
+> new file mode 100644
+> index 000000000000..ea051b3d14b8
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
+> @@ -0,0 +1,40 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2020, Martin Botka
+> + */
+> +
+> +/dts-v1/;
+> +
+> +/* Ganges is very similar to Nile, but
+> + * there are some differences that will need
+> + * to be addresed when more peripherals are
+> + * enabled upstream. Hence the separate DTSI.
+> + */
+> +#include "sdm630-sony-xperia-nile.dtsi"
+> +
+> +/ {
+> +	chosen {
+> +		framebuffer@9d400000 {
+> +			reg = <0 0x9d400000 0 (2520 * 1080 * 4)>;
+> +			height = <2520>;
+> +		};
+> +	};
+> +
+> +	soc {
+> +
+> +		i2c@c175000 {
+> +			status = "okay";
+> +
+> +			/* Novatek touchscreen */
+> +		};
+> +
+> +		/* Yes, this is intentional.
+> +		 * Ganges devices only use gpio-keys for
+> +		 * Volume Down, but currently there's an
+> +		 * issue with it that has to be resolved.
+> +		 * Until then, let's not make the kernel panic
+> +		 */
+> +		/delete-node/ gpio-keys;
+> +	};
+> +
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts b/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
+> new file mode 100644
+> index 000000000000..96b7782d58de
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
+> @@ -0,0 +1,20 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2020, Martin Botka
+> + */
+> +
+> +/dts-v1/;
+> +
+> +/* Mermaid uses sdm636, but it's different ever so slightly
+> + * that we can ignore it for the time being. Sony also commonizes
+> + * the Ganges platform as a whole in downstream kernels.
+> + */
+> +#include "sdm630-sony-xperia-ganges.dtsi"
+> +
+> +/ {
+> +	model = "SoMC Mermaid-RoW";
+> +	compatible = "sony,mermaid-row", "qcom,sdm636", "qcom,sdm636-mtp";
+> +
+> +	qcom,msm-id = <345 0>;
+> +	qcom,pmic-id = <0x1001b 0x101011a 0x00 0x00 0x1001b 0x201011a 0x00 0x00 0x1001b 0x102001a 0x00 0x00>;
+> +};
+> -- 
+> 2.27.0
+> 
