@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF5FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B9BC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7272083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465672083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUHC8Q2J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfHjRzSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbgFVH6c (ORCPT
+        id S1728188AbgFVH6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
+        Mon, 22 Jun 2020 03:58:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729179AbgFVH6U (ORCPT
+        with ESMTP id S1726087AbgFVH6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:58:20 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75B5EC061795;
-        Mon, 22 Jun 2020 00:58:19 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id m21so12831887eds.13;
-        Mon, 22 Jun 2020 00:58:19 -0700 (PDT)
+        Mon, 22 Jun 2020 03:58:08 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50982C061794;
+        Mon, 22 Jun 2020 00:58:08 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l12so17018156ejn.10;
+        Mon, 22 Jun 2020 00:58:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dmx5+PM1K/5lxm0AgMbX1KNeUymmqik8gyqWBBLElnA=;
-        b=CUHC8Q2Jkg0GOviutIXExhCi05jWxbOmiRenHTLCNcDmwKfVksOFQJ8GaizrfKh9l/
-         UsSh/rjFAxAyU441iNMkO1wbkAdKlEqZ0YxGKh1n0X1jjoEiuK6hu0huN/RG6O58J87u
-         WLgPeLufnHz1YEB143HeDfRNx1koIfRx4P3JMTr7/PIWVdOPo3ZPHS5Ro8lJ+1XpNrkt
-         iYOlRYdc8HF3QzqP4wWkFKnDZNwX2T58hwPUQj8HKoYvAg6h5qaWzlYq1yGdz1luI35p
-         6/xDDEBN1MEpEeeAnlAwmgup3U9end7xLmd5pDiU1O8oA5wWtwgvGIIHhvWelgpQxp4p
-         e94A==
+        bh=eiejwDFTvJMEkJRlhJWHS4e+pJENQgUp64+8rC+QnJo=;
+        b=LfHjRzSvT0JFIF/cX6TspmWWLKvURk/Mx+4vw7txwvVzLGKwwkwE1zhalfT1rywNXm
+         LzuklDcWu9ol/UlsSiY0+llQWq+tBz/04igIgqYj4w+VOieh2uQm2UeNQvqh67lCnzRm
+         rr0YiPJGiAU+81lNVrMqA8cvHLOaRGJ0iJcYfZ/FmpdAmWct8hB1+P4kaGe0e2KDZjFa
+         +c/1vGQBm/MyEmIxONS2V40P8q1vy97kjbNPLiwG4M1QaXx9yhbMi0S1LzrYL091AEgJ
+         hWquIdJUYIEV0+883oRhfoKOkI7KY8E0sEjNbZWT40fpYk1PBmJcsCRTR4xcBjUSa3YV
+         otTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dmx5+PM1K/5lxm0AgMbX1KNeUymmqik8gyqWBBLElnA=;
-        b=Mgwpm84VzI2qzKsnz3tss34DqX6cW+t1pCXnR3dPWlQlE8fPLlcCFf/10HCr7UOEBK
-         xzzeSLMQqPOpF6n7xByek6uFQpX1Yz37StVkh23ts7iHYRuhaJjzyyTYRhgHARDRh3zQ
-         a2Kya4OQDkdlYJeWKycN9BmlXQ+MUmAXnX39IJhT92PaOQonIz79Bmuo52zwcZlG+bMK
-         QChTkR1mS90D2qetdu0yJ0Bi6kd9L+/Wkg+4UkDTjl4NiWQK/B/dYGZPRDi0yLdDlcGA
-         kCXkdOvE8AQ2fjugUIGng1FZUld+oe+YPqYd5MTzAtrRn9U1DZZh5dauk5EWzvO9vW/s
-         JhvQ==
-X-Gm-Message-State: AOAM531Z7w8q4a7bs4Qry9MaVEj1k4MnAhv61+/tbJ118J9B3zrJMHcp
-        9aL6XY/mp/FE6zH2uy3vgHU=
-X-Google-Smtp-Source: ABdhPJxAaBjZs/NLzrsnd0Ru5pgSNCKpG8vAggElJQHx909DFc0kWahikFLSTaog5OX6gYZZxyPO5Q==
-X-Received: by 2002:aa7:cb52:: with SMTP id w18mr15951223edt.1.1592812698183;
-        Mon, 22 Jun 2020 00:58:18 -0700 (PDT)
+        bh=eiejwDFTvJMEkJRlhJWHS4e+pJENQgUp64+8rC+QnJo=;
+        b=ivvY8tz8UuPICF+DAbKxDx41KAjTID5c5gYILf505cjZlsiqhOWv19si9pF9DWraqv
+         wiIJu7VoVxnCuunywOPkesYIygqTc/LWIrOVTf6JnvSK3P401xZfCjg56PgXBz5jKq66
+         AW1FCbK9ok54nFYpTiURvTuzaPgqPo47KwmVYQxXvBb5xxRjBV1//A7U6iMu1yA7Klrh
+         ThxccQmXRHJMb2jq8PC4u1SGUDztmFcrGw9BYSNwSyIulC0/J5ikO/wQytMiLi/idLxj
+         9BT5OyZTna4oyJK88i9KeNMC5HL8mh9rZHtGACcvnTViBHyQuIJFeX7/bDrRGX0rSTbg
+         jiuQ==
+X-Gm-Message-State: AOAM531IilLAGO6gyvd+PLHK8ydEFYQlj4+k+8PbV2rUVL90RfTsNlDr
+        ikLJ2bPhPTc88+NtlD6nJx0=
+X-Google-Smtp-Source: ABdhPJz/t5Uvra5A68B2Pe//dC7qmj3Yq3Nzkz1t4so4Jfd2fJkglXDYOumaGRjW9hUl1EWdD94Ctg==
+X-Received: by 2002:a17:906:8688:: with SMTP id g8mr4695866ejx.505.1592812687070;
+        Mon, 22 Jun 2020 00:58:07 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id b4sm10511606ejp.40.2020.06.22.00.58.16
+        by smtp.googlemail.com with ESMTPSA id b4sm10511606ejp.40.2020.06.22.00.58.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:58:17 -0700 (PDT)
+        Mon, 22 Jun 2020 00:58:06 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -74,273 +74,159 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>
-Subject: [PATCH v2 7/8] arm64: dts: qcom: Add support for Sony Xperia XA2/Plus/Ultra (Nile platform)
-Date:   Mon, 22 Jun 2020 09:57:45 +0200
-Message-Id: <20200622075749.21925-8-konradybcio@gmail.com>
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v2 4/8] clk: qcom: smd: Add support for SDM660 rpm clocks
+Date:   Mon, 22 Jun 2020 09:57:42 +0200
+Message-Id: <20200622075749.21925-5-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200622075749.21925-1-konradybcio@gmail.com>
 References: <20200622075749.21925-1-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree support for the Sony Xperia XA2, XA2 Plus and
-XA2 Ultra smartphones. They are all based on the Sony Nile
-platform (sdm630) and share a lot of common code. The
-differences are really minor, so a Nile-common DTSI
-has been created to reduce clutter.
-
-XA2 - Pioneer
-XA2 Plus - Voyager
-XA2 Ultra - Discovery
-
-The boards currently support:
-* Screen console
-* SDHCI
-* I2C
-* pstore log dump
-* GPIO keys
-* PSCI idle states
+Add rpm smd clocks, PMIC and bus clocks which are required on
+SDM630/660 (and APQ variants) for clients to vote on.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-Tested-by: Łukasz Patron <priv.luk@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/Makefile             |   3 +
- .../sdm630-sony-xperia-nile-discovery.dts     |  13 ++
- .../qcom/sdm630-sony-xperia-nile-pioneer.dts  |  13 ++
- .../qcom/sdm630-sony-xperia-nile-voyager.dts  |  20 +++
- .../dts/qcom/sdm630-sony-xperia-nile.dtsi     | 135 ++++++++++++++++++
- 5 files changed, 184 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
+ .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+ drivers/clk/qcom/clk-smd-rpm.c                | 77 +++++++++++++++++++
+ include/dt-bindings/clock/qcom,rpmcc.h        | 10 +++
+ 3 files changed, 88 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 0f2c33d611df..1cad7cb07574 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -16,6 +16,9 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-voyager.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
-new file mode 100644
-index 000000000000..1312eebe76a1
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2020, Konrad Dybcio
-+ */
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index 90a1349bc713..2ced7807d574 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -20,6 +20,7 @@ Required properties :
+ 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8998", "qcom,rpmcc"
+ 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
++                        "qcom,rpmcc-sdm660", "qcom,rpmcc"
+ 
+ - #clock-cells : shall contain 1
+ 
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index 52f63ad787ba..4ae9e79e602e 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -766,15 +766,92 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
+ 	.num_clks = ARRAY_SIZE(msm8998_clks),
+ };
+ 
++/* sdm660 */
++DEFINE_CLK_SMD_RPM_BRANCH(sdm660, bi_tcxo, bi_tcxo_a, QCOM_SMD_RPM_MISC_CLK, 0,
++								19200000);
++DEFINE_CLK_SMD_RPM(sdm660, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
++DEFINE_CLK_SMD_RPM(sdm660, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
++DEFINE_CLK_SMD_RPM(sdm660, cnoc_periph_clk, cnoc_periph_a_clk,
++						QCOM_SMD_RPM_BUS_CLK, 0);
++DEFINE_CLK_SMD_RPM(sdm660, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
++DEFINE_CLK_SMD_RPM(sdm660, mmssnoc_axi_clk, mmssnoc_axi_a_clk,
++						   QCOM_SMD_RPM_MMAXI_CLK, 0);
++DEFINE_CLK_SMD_RPM(sdm660, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
++DEFINE_CLK_SMD_RPM(sdm660, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
++DEFINE_CLK_SMD_RPM(sdm660, aggre2_noc_clk, aggre2_noc_a_clk,
++						QCOM_SMD_RPM_AGGR_CLK, 2);
++DEFINE_CLK_SMD_RPM_QDSS(sdm660, qdss_clk, qdss_a_clk,
++						QCOM_SMD_RPM_MISC_CLK, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, rf_clk1, rf_clk1_a, 4);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, div_clk1, div_clk1_a, 11);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, ln_bb_clk1, ln_bb_clk1_a, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, ln_bb_clk2, ln_bb_clk2_a, 2);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, ln_bb_clk3, ln_bb_clk3_a, 3);
 +
-+/dts-v1/;
-+
-+#include "sdm630-sony-xperia-nile.dtsi"
-+
-+/ {
-+	model = "SoMC Discovery-RoW";
-+	compatible = "sony,discovery-row", "qcom,sdm630", "qcom,sdm630-mtp";
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(sdm660, rf_clk1_pin, rf_clk1_a_pin, 4);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(sdm660, ln_bb_clk1_pin,
++							ln_bb_clk1_pin_a, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(sdm660, ln_bb_clk2_pin,
++							ln_bb_clk2_pin_a, 2);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(sdm660, ln_bb_clk3_pin,
++							ln_bb_clk3_pin_a, 3);
++static struct clk_smd_rpm *sdm660_clks[] = {
++	[RPM_SMD_XO_CLK_SRC] = &sdm660_bi_tcxo,
++	[RPM_SMD_XO_A_CLK_SRC] = &sdm660_bi_tcxo_a,
++	[RPM_SMD_SNOC_CLK] = &sdm660_snoc_clk,
++	[RPM_SMD_SNOC_A_CLK] = &sdm660_snoc_a_clk,
++	[RPM_SMD_CNOC_CLK] = &sdm660_cnoc_clk,
++	[RPM_SMD_CNOC_A_CLK] = &sdm660_cnoc_a_clk,
++	[RPM_SMD_CNOC_PERIPH_CLK] = &sdm660_cnoc_periph_clk,
++	[RPM_SMD_CNOC_PERIPH_A_CLK] = &sdm660_cnoc_periph_a_clk,
++	[RPM_SMD_BIMC_CLK] = &sdm660_bimc_clk,
++	[RPM_SMD_BIMC_A_CLK] = &sdm660_bimc_a_clk,
++	[RPM_SMD_MMSSNOC_AXI_CLK] = &sdm660_mmssnoc_axi_clk,
++	[RPM_SMD_MMSSNOC_AXI_CLK_A] = &sdm660_mmssnoc_axi_a_clk,
++	[RPM_SMD_IPA_CLK] = &sdm660_ipa_clk,
++	[RPM_SMD_IPA_A_CLK] = &sdm660_ipa_a_clk,
++	[RPM_SMD_CE1_CLK] = &sdm660_ce1_clk,
++	[RPM_SMD_CE1_A_CLK] = &sdm660_ce1_a_clk,
++	[RPM_SMD_AGGR2_NOC_CLK] = &sdm660_aggre2_noc_clk,
++	[RPM_SMD_AGGR2_NOC_A_CLK] = &sdm660_aggre2_noc_a_clk,
++	[RPM_SMD_QDSS_CLK] = &sdm660_qdss_clk,
++	[RPM_SMD_QDSS_A_CLK] = &sdm660_qdss_a_clk,
++	[RPM_SMD_RF_CLK1] = &sdm660_rf_clk1,
++	[RPM_SMD_RF_CLK1_A] = &sdm660_rf_clk1_a,
++	[RPM_SMD_DIV_CLK1] = &sdm660_div_clk1,
++	[RPM_SMD_DIV_A_CLK1] = &sdm660_div_clk1_a,
++	[RPM_SMD_LN_BB_CLK] = &sdm660_ln_bb_clk1,
++	[RPM_SMD_LN_BB_A_CLK] = &sdm660_ln_bb_clk1_a,
++	[RPM_SMD_LN_BB_CLK2] = &sdm660_ln_bb_clk2,
++	[RPM_SMD_LN_BB_CLK2_A] = &sdm660_ln_bb_clk2_a,
++	[RPM_SMD_LN_BB_CLK3] = &sdm660_ln_bb_clk3,
++	[RPM_SMD_LN_BB_CLK3_A] = &sdm660_ln_bb_clk3_a,
++	[RPM_SMD_RF_CLK1_PIN] = &sdm660_rf_clk1_pin,
++	[RPM_SMD_RF_CLK1_A_PIN] = &sdm660_rf_clk1_a_pin,
++	[RPM_SMD_LN_BB_CLK1_PIN] = &sdm660_ln_bb_clk1_pin,
++	[RPM_SMD_LN_BB_CLK1_A_PIN] = &sdm660_ln_bb_clk1_pin_a,
++	[RPM_SMD_LN_BB_CLK2_PIN] = &sdm660_ln_bb_clk2_pin,
++	[RPM_SMD_LN_BB_CLK2_A_PIN] = &sdm660_ln_bb_clk2_pin_a,
++	[RPM_SMD_LN_BB_CLK3_PIN] = &sdm660_ln_bb_clk3_pin,
++	[RPM_SMD_LN_BB_CLK3_A_PIN] = &sdm660_ln_bb_clk3_pin_a,
 +};
-diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
-new file mode 100644
-index 000000000000..76f20ad5273f
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2020, Konrad Dybcio
-+ */
 +
-+/dts-v1/;
-+
-+#include "sdm630-sony-xperia-nile.dtsi"
-+
-+/ {
-+	model = "SoMC Pioneer-RoW";
-+	compatible = "sony,pioneer-row", "qcom,sdm630", "qcom,sdm630-mtp";
++static const struct rpm_smd_clk_desc rpm_clk_sdm660 = {
++	.clks = sdm660_clks,
++	.num_clks = ARRAY_SIZE(sdm660_clks),
 +};
-diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
-new file mode 100644
-index 000000000000..82e54a73d172
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
-@@ -0,0 +1,20 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2020, Konrad Dybcio
-+ */
 +
-+/dts-v1/;
+ static const struct of_device_id rpm_smd_clk_match_table[] = {
+ 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
+ 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
+ 	{ .compatible = "qcom,rpmcc-msm8976", .data = &rpm_clk_msm8976 },
+ 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
+ 	{ .compatible = "qcom,rpmcc-msm8998", .data = &rpm_clk_msm8998 },
++	{ .compatible = "qcom,rpmcc-sdm660",  .data = &rpm_clk_sdm660  },
+ 	{ .compatible = "qcom,rpmcc-qcs404",  .data = &rpm_clk_qcs404  },
+ 	{ }
+ };
 +
-+#include "sdm630-sony-xperia-nile.dtsi"
-+
-+/ {
-+	model = "SoMC Voyager-RoW";
-+	compatible = "sony,voyager-row", "qcom,sdm630", "qcom,sdm630-mtp";
-+
-+	chosen {
-+		framebuffer@9d400000 {
-+			reg = <0 0x9d400000 0 (2160 * 1080 * 4)>;
-+			height = <2160>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-new file mode 100644
-index 000000000000..af75ab211b5f
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2020, Konrad Dybcio
-+ */
-+
-+/dts-v1/;
-+
-+#include "sdm630.dtsi"
-+#include "pm660.dtsi"
-+#include "pm660l.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/input/gpio-keys.h>
-+
-+/ {
-+	/* required for bootloader to select correct board */
-+	qcom,msm-id = <318 0>;
-+	qcom,board-id = <8 1>;
-+	qcom,pmic-id = <0x1001b 0x101011a 0x00 0x00 0x1001b 0x201011a 0x00 0x00>;
-+
-+	/* This part enables graphical output via bootloader-enabled display */
-+	chosen {
-+		bootargs = "earlycon=tty0 console=tty0";
-+
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		stdout-path = "framebuffer0";
-+
-+		framebuffer0: framebuffer@9d400000 {
-+		compatible = "simple-framebuffer";
-+		reg = <0 0x9d400000 0 (1920 * 1080 * 4)>;
-+		width = <1080>;
-+		height = <1920>;
-+		stride = <(1080 * 4)>;
-+		format = "a8r8g8b8";
-+		status= "okay";
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ramoops@ffc00000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0xffc00000 0x0 0x100000>;
-+			record-size = <0x10000>;
-+			console-size = <0x60000>;
-+			ftrace-size = <0x10000>;
-+			pmsg-size = <0x20000>;
-+			ecc-size = <16>;
-+			status = "okay";
-+		};
-+
-+		debug_region@ffb00000 {
-+			reg = <0x00 0xffb00000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		removed_region@85800000 {
-+			reg = <0x00 0x85800000 0x00 0x3700000>;
-+			no-map;
-+		};
-+	};
-+
-+	soc {
-+		gpio_keys {
-+			status = "okay";
-+			compatible = "gpio-keys";
-+			input-name = "gpio-keys";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			autorepeat;
-+
-+			camera_focus {
-+				label = "Camera Focus";
-+				gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-+				linux,input-type = <1>;
-+				linux,code = <KEY_CAMERA_FOCUS>;
-+				debounce-interval = <15>;
-+			};
-+
-+			camera_snapshot {
-+				label = "Camera Snapshot";
-+				gpios = <&tlmm 113 GPIO_ACTIVE_LOW>;
-+				linux,input-type = <1>;
-+				linux,code = <KEY_CAMERA>;
-+				debounce-interval = <15>;
-+			};
-+
-+			vol_down {
-+				label = "Volume Down";
-+				gpios = <&pm660l_gpios 7 GPIO_ACTIVE_LOW>;
-+				linux,input-type = <1>;
-+				linux,code = <KEY_VOLUMEDOWN>;
-+				gpio-key,wakeup;
-+				debounce-interval = <15>;
-+			};
-+		};
-+
-+		sdhci@c0c4000 {
-+			status = "okay";
-+
-+			/* SoMC Nile platform's eMMC doesn't support HS200 mode */
-+			/delete-property/ mmc-hs200-1_8v;
-+		};
-+
-+		i2c@c175000 {
-+			status = "okay";
-+
-+			/* Synaptics touchscreen */
-+		};
-+
-+		i2c@c176000 {
-+			status = "okay";
-+
-+			/* SMB1351 charger */
-+		};
-+
-+		/* I2C3, 4, 5, 7 and 8 are disabled on this board. */
-+
-+		i2c@c1b6000 {
-+			status = "okay";
-+
-+			/* NXP NFC */
-+		};
-+
-+		serial@c1af000 {
-+			status = "okay";
-+		};
-+	};
-+};
+ MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
+ 
+ static struct clk_hw *qcom_smdrpm_clk_hw_get(struct of_phandle_args *clkspec,
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index ae74c43c485d..d1afa634b58d 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -133,5 +133,15 @@
+ #define RPM_SMD_RF_CLK3_A			87
+ #define RPM_SMD_RF_CLK3_PIN			88
+ #define RPM_SMD_RF_CLK3_A_PIN			89
++#define RPM_SMD_MMSSNOC_AXI_CLK			90
++#define RPM_SMD_MMSSNOC_AXI_CLK_A		91
++#define RPM_SMD_CNOC_PERIPH_CLK			92
++#define RPM_SMD_CNOC_PERIPH_A_CLK		93
++#define RPM_SMD_LN_BB_CLK3			94
++#define RPM_SMD_LN_BB_CLK3_A			95
++#define RPM_SMD_LN_BB_CLK1_PIN			96
++#define RPM_SMD_LN_BB_CLK1_A_PIN		97
++#define RPM_SMD_LN_BB_CLK2_PIN			98
++#define RPM_SMD_LN_BB_CLK2_A_PIN		99
+ 
+ #endif
 -- 
 2.27.0
 
