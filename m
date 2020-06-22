@@ -2,481 +2,124 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3420C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 709C7206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE6F20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:00:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MqPCIqVf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LtwMFa0j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgFVKzx (ORCPT
+        id S1727086AbgFVLAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbgFVKzu (ORCPT
+        Mon, 22 Jun 2020 07:00:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51302 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727810AbgFVLAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:55:50 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5EE0C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:55:48 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x6so16152088wrm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:55:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=KoWfZGUWw5C18ooOV0MLNeymXgRwlrvLzPcWKgUELZ8=;
-        b=MqPCIqVfeX6FnZR0P6Nv/pkU/Oo/r0qpdBVkZ41DKtClDNp2XknFMQblxt6Kl4dOLf
-         500zLlXFEy7KVKZbNIyzTbGNL1FbqwZeuw5h2neOFh9FU+hFKFVoHMrebkUMRS7NSCnf
-         /Iep0kf+yLJ7awueDHIC9Qd1hkolYp1hIpg/iyOAbK6Lnd92wZ8sy/rYW9+wYz0i0jg+
-         Wa75paKy6HV6VvhOnYDFIPxB1IFJxktZmHTgch1QVs/FZl/5aZ5koo9CYDQCiTC6+Aor
-         9cqRS/n4IqkLdeBVrK9GjEPtlvYUM/t7ygvmJ3LdUMEZ34Bo/eI4jG4LQQpddCqALScL
-         NtPQ==
+        Mon, 22 Jun 2020 07:00:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592823600;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h8E9QgTr5DUSmPQUcgFY/pyHg2J7mDIdAy0q0CM6YVs=;
+        b=LtwMFa0jhS1Q6rUkiuSDTD7VCgOQUrucnd2zx9QUHli6D6NSgx3jLhDgDStH0y6MaFIwJd
+        vquXFJ7ADcT/5UDhw4xgT/9FjUKSIsiA7nWL8Xq/zVNjKGIzSxzGiw9VCJGjQMlJvQPIB8
+        US/AWURjEvKv1GDqENkm4m6D9G2+LPI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-WNi59jGoNS2t_2yFWveAMQ-1; Mon, 22 Jun 2020 06:59:56 -0400
+X-MC-Unique: WNi59jGoNS2t_2yFWveAMQ-1
+Received: by mail-wm1-f69.google.com with SMTP id e15so2904802wme.8
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:59:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=KoWfZGUWw5C18ooOV0MLNeymXgRwlrvLzPcWKgUELZ8=;
-        b=h4WHUwbBtEWfWFhbK8q3LibWIWdLB9QaKYtPm+VTjO2HVDh/CCcgvDXCaNbsYNN7dW
-         ++msOttAyMe+CkG1/5TJbItwxraOlSFpKAme/oitMi6DjDaBWYqz/XFUT1mL9UHU4Ql5
-         TeTnDbAjqmfMU2iBbdUInG4JWmL6EoU3nrbdcQ6epYQD4/ZyFjzHmQwnbUziAFbUuLjM
-         KXfYw3aqy27hNOPX4PJKwj3o6XEmwC2LdjknWEiK7i0JtnCX29USllw+FMCIAbiFYZS9
-         A9dpp9GgMh6ayaqVpDTOnWPd1MaWNcFtTGoid75wdUs2Fw11V5yig0y9K61dwNrJ2bni
-         IYkg==
-X-Gm-Message-State: AOAM532kpknL3K2EiUUjydzgEztzdPkmqEszur4ER4Z3G1T5uUxngg6G
-        A7U3HS7nHUPabhaO0gKMOuza3A==
-X-Google-Smtp-Source: ABdhPJwUK4AwBpQhsM0+AFV5S7K5kK/5FkSGHnjSyKX7rVYVRGIgnKd20aMohuBX+6UliHE+X1ez0A==
-X-Received: by 2002:adf:9286:: with SMTP id 6mr18654037wrn.361.1592823347358;
-        Mon, 22 Jun 2020 03:55:47 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id c20sm10890766wrb.65.2020.06.22.03.55.45
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=h8E9QgTr5DUSmPQUcgFY/pyHg2J7mDIdAy0q0CM6YVs=;
+        b=TyhasNCI4tcmP3dsPD2uLg/5p6PvN8XcF8RwD3MIuuIo75LB8m8yR6sQGFdqzC9IKh
+         lUHI/Bw9xCcVZXhC5/oizrRhbk5v6sCxZMY2+fJfQu5MtxzIRk0dZ/VEOlyzrB7nFWlY
+         OOtkCGe8Z1yqBJ1qOogotGBmQqpsDgpm6ydNb4lJFZ+Rq7q3uL0VhMhNWfZXW60z1mu9
+         TYEsBH/t8sZgQ09UKjQZSuUjXtp2aP3ZIJmIi7+D0ATucS50WJmdq7gs3Sb9ZA+2wJ1K
+         N422R8GOvhx2uhXq/Al+1cyL5HglB6xhe6VVFV9tNELRIzw0zw76SHkyGQCqCR5L6dwK
+         RxAA==
+X-Gm-Message-State: AOAM530qzvYCheFePCSDCcCq9v5kGfh6yZnRtw9xdGtsrKbSrYY+EKc6
+        TIQ3ZDQOV2rV5bAOajYPpVEp7T1iIQUGKHgS0M9cqqX0m0Qj9MBrbNddziCsrAsSAqs6qId8C/l
+        JDea9PH4dKeWJDoiESqFneZY9
+X-Received: by 2002:a1c:9ec4:: with SMTP id h187mr17658377wme.27.1592823595583;
+        Mon, 22 Jun 2020 03:59:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzU0bX7wm+ozkWz+5aBqs2YpW0BK97Ao8m+ZhEht7Htjof/4aAVnlwSlLaDsim2jqnkq0PV2A==
+X-Received: by 2002:a1c:9ec4:: with SMTP id h187mr17658362wme.27.1592823595363;
+        Mon, 22 Jun 2020 03:59:55 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id u13sm15951613wmm.6.2020.06.22.03.59.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 03:55:46 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 11:55:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [RFC PATCH 04/10] mfd: Add base driver for Netronix embedded
- controller
-Message-ID: <20200622105544.GU954398@dell>
-References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
- <20200620224222.1312520-3-j.neuschaefer@gmx.net>
+        Mon, 22 Jun 2020 03:59:54 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, xudong.hao@intel.com,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        kvm list <kvm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Subject: Re: selftests: kvm: Test results on x86_64
+In-Reply-To: <CA+G9fYvVfSEBsZCaiMCpCKfJNdbFzrKGdXR0KeRYG+nhDiEpuA@mail.gmail.com>
+References: <CA+G9fYvVfSEBsZCaiMCpCKfJNdbFzrKGdXR0KeRYG+nhDiEpuA@mail.gmail.com>
+Date:   Mon, 22 Jun 2020 12:59:53 +0200
+Message-ID: <87r1u7fjrq.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200620224222.1312520-3-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 21 Jun 2020, Jonathan Neuschäfer wrote:
-
-Description of the device here please.
-
-> Third-party hardware documentation is available at
-
-'\n'
-
-> https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-controller
-
-Indent this with a couple of spaces.
-
-> The EC supports interrupts, but the driver doesn't make use of them so
-> far.
-> 
-> Known problems:
-> - The reboot handler is installed in such a way that it directly calls
->   into the i2c subsystem to send the reboot command to the EC. This
->   means that the reboot handler may sleep, which is not allowed.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> ---
->  drivers/mfd/Kconfig       |   7 ++
->  drivers/mfd/Makefile      |   1 +
->  drivers/mfd/ntxec.c       | 188 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/ntxec.h |  30 ++++++
->  4 files changed, 226 insertions(+)
->  create mode 100644 drivers/mfd/ntxec.c
->  create mode 100644 include/linux/mfd/ntxec.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index a37d7d1713820..78410b928648e 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -978,6 +978,13 @@ config MFD_VIPERBOARD
->  	  You need to select the mfd cell drivers separately.
->  	  The drivers do not support all features the board exposes.
-> 
-> +config MFD_NTXEC
-> +	bool "Netronix Embedded Controller"
-> +	depends on I2C && OF
-> +	help
-> +	  Say yes here if you want to support the embedded controller of
-> +	  certain e-book readers designed by the ODM Netronix.
-
-s/of certain/found in certain/.
-
->  config MFD_RETU
->  	tristate "Nokia Retu and Tahvo multi-function device"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9367a92f795a6..19d9391ed6f32 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -218,6 +218,7 @@ obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
->  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
->  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
->  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
-> +obj-$(CONFIG_MFD_NTXEC)		+= ntxec.o
->  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
->  obj-$(CONFIG_MFD_RK808)		+= rk808.o
->  obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
-> diff --git a/drivers/mfd/ntxec.c b/drivers/mfd/ntxec.c
-> new file mode 100644
-> index 0000000000000..82adea34ea746
-> --- /dev/null
-> +++ b/drivers/mfd/ntxec.c
-> @@ -0,0 +1,188 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright 2020 Jonathan Neuschäfer
-> +//
-> +// MFD driver for the usually MSP430-based embedded controller used in certain
-> +// Netronix ebook reader board designs
-
-Only the SPDX line should contain C++ style comments.
-
-Description at the top, copyright after.
-
-An "MFD driver" isn't really a thing.  Please describe the device.
-
-> +#include <asm/unaligned.h>
-> +#include <linux/delay.h>
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/ntxec.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pm.h>
-> +#include <linux/reboot.h>
-> +#include <linux/types.h>
-> +
-> +
-
-No need for double line spacing.
-
-> +#define NTXEC_VERSION		0x00
-> +#define NTXEC_POWEROFF		0x50
-> +#define NTXEC_POWERKEEP		0x70
-> +#define NTXEC_RESET		0x90
-
-Are these registers?  Might be worth pre/post-fixing with _REG.
-
-> +/* Register access */
-> +
-> +int ntxec_read16(struct ntxec *ec, u8 addr)
-> +{
-> +	u8 request[1] = { addr };
-> +	u8 response[2];
-> +	int res;
-> +
-> +	struct i2c_msg msgs[] = {
-> +		{
-> +			.addr = ec->client->addr,
-> +			.flags = ec->client->flags,
-> +			.len = sizeof(request),
-> +			.buf = request
-> +		}, {
-> +			.addr = ec->client->addr,
-> +			.flags = ec->client->flags | I2C_M_RD,
-> +			.len = sizeof(response),
-> +			.buf = response
-> +		}
-> +	};
-> +
-> +	res = i2c_transfer(ec->client->adapter, msgs, ARRAY_SIZE(msgs));
-> +	if (res < 0)
-> +		return res;
-> +	if (res != ARRAY_SIZE(msgs))
-> +		return -EIO;
-> +
-> +	return get_unaligned_be16(response);
-> +}
-> +EXPORT_SYMBOL(ntxec_read16);
-> +
-> +int ntxec_write16(struct ntxec *ec, u8 addr, u16 value)
-> +{
-> +	u8 request[3] = { addr, };
-> +	int res;
-> +
-> +	put_unaligned_be16(value, request + 1);
-> +
-> +	res = i2c_transfer_buffer_flags(ec->client, request, sizeof(request),
-> +					ec->client->flags);
-> +	if (res < 0)
-> +		return res;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(ntxec_write16);
-> +
-> +int ntxec_read8(struct ntxec *ec, u8 addr)
-> +{
-> +	int res = ntxec_read16(ec, addr);
-> +
-> +	if (res < 0)
-> +		return res;
-> +
-> +	return (res >> 8) & 0xff;
-> +}
-> +EXPORT_SYMBOL(ntxec_read8);
-> +
-> +int ntxec_write8(struct ntxec *ec, u8 addr, u8 value)
-> +{
-> +	return ntxec_write16(ec, addr, value << 8);
-> +}
-> +EXPORT_SYMBOL(ntxec_write8);
-
-Why are you hand-rolling your own accessors?
-
-> +
-> +
-> +/* Reboot/poweroff handling */
-
-These comments seem to be stating the obvious.
-
-Please remove them.
-
-> +static struct ntxec *poweroff_restart_instance;
-> +
-> +static void ntxec_poweroff(void)
-> +{
-> +	ntxec_write8(poweroff_restart_instance, NTXEC_POWEROFF, 0x01);
-
-All magic numbers should be defined?
-
-> +	msleep(5000);
-
-Why 5000?
-
-> +}
-> +
-> +static int ntxec_restart(struct notifier_block *nb,
-> +		unsigned long action, void *data)
-> +{
-> +	/* FIXME: The I2C driver sleeps, but restart handlers may not sleep */
-
-Then this is not allowed.
-
-You need to fix this *before* submitting upstream.
-
-> +	ntxec_write8(poweroff_restart_instance, NTXEC_RESET, 0xff);
-> +	/* TODO: delay? */
-
-TODO *before* submitting upstream.  This is not a development branch.
-
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block ntxec_restart_handler = {
-> +	.notifier_call = ntxec_restart,
-> +	.priority = 128
-> +};
-> +
-> +
-> +/* Driver setup */
-> +
-> +static int ntxec_probe(struct i2c_client *client,
-> +			    const struct i2c_device_id *ids)
-> +{
-> +	struct ntxec *ec;
-> +	int res;
-
-What does 'res' mean?
-
-> +	ec = devm_kmalloc(&client->dev, sizeof(*ec), GFP_KERNEL);
-> +	if (!ec)
-> +		return -ENOMEM;
-> +
-> +	ec->dev = &client->dev;
-> +	ec->client = client;
-
-You don't need both (if any).
-
-> +	/* Determine the firmware version */
-> +	res = ntxec_read16(ec, NTXEC_VERSION);
-> +	if (res < 0) {
-> +		dev_dbg(ec->dev, "Failed to read firmware version number\n");
-
-Why dbg?
-
-> +		return res;
-> +	}
-> +	ec->version = res;
-> +
-> +	dev_info(ec->dev,
-> +		 "Netronix embedded controller version %04x detected.\n",
-> +		 ec->version);
-> +
-> +	/* For now, we don't support the new register layout. */
-> +	if (ntxec_has_new_layout(ec))
-> +		return -EOPNOTSUPP;
-
-What is the new layout?
-
-Why don't you support it?
-
-> +	if (of_device_is_system_power_controller(ec->dev->of_node)) {
-> +		/*
-> +		 * Set the 'powerkeep' bit. This is necessary on some boards
-> +		 * in order to keep the system running.
-> +		 */
-> +		res = ntxec_write8(ec, NTXEC_POWERKEEP, 0x08);
-> +		if (res < 0)
-> +			return res;
-> +
-> +		/* Install poweroff handler */
-> +		WARN_ON(poweroff_restart_instance);
-
-Why WARN?
-
-> +		poweroff_restart_instance = ec;
-> +		if (pm_power_off != NULL)
-
-if (pm_power_off)
-
-> +			/* TODO: Refactor among all poweroff drivers */
-
-Nope.
-
-> +			dev_err(ec->dev, "pm_power_off already assigned\n");
-
-Error, but execution carries on anyway?
-
-> +		else
-> +			pm_power_off = ntxec_poweroff;
-> +
-> +		/* Install board reset handler */
-> +		res = register_restart_handler(&ntxec_restart_handler);
-> +		if (res < 0)
-
-Is >0 valid?
-
-> +			dev_err(ec->dev,
-> +				"Failed to register restart handler: %d\n", res);
-> +	}
-> +
-> +	i2c_set_clientdata(client, ec);
-
-Where do you use this?
-
-> +	return devm_of_platform_populate(ec->dev);
-> +}
-> +
-> +static const struct of_device_id of_ntxec_match_table[] = {
-> +	{ .compatible = "netronix,ntxec", },
-> +	{}
-> +};
-
-Use .probe_new() and drop this.
-
-> +static struct i2c_driver ntxec_driver = {
-> +	.driver	= {
-> +		.name	= "ntxec",
-> +		.of_match_table = of_ntxec_match_table,
-> +	},
-> +	.probe		= ntxec_probe,
-
-Nothing to .remove()?
-
-> +};
-> +builtin_i2c_driver(ntxec_driver);
-
-Only built-in?
-
-> diff --git a/include/linux/mfd/ntxec.h b/include/linux/mfd/ntxec.h
-> new file mode 100644
-> index 0000000000000..9f9d6f2141751
-> --- /dev/null
-> +++ b/include/linux/mfd/ntxec.h
-> @@ -0,0 +1,30 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright 2020 Jonathan Neuschäfer
-> + *
-> + * MFD access functions for the Netronix embedded controller.
-
-No such thing as an MFD.
-
-"Embedded Controller"
-
-> + */
-> +
-> +#ifndef NTXEC_H
-> +#define NTXEC_H
-> +
-> +#include <linux/types.h>
-> +
-> +struct ntxec {
-> +	struct device *dev;
-> +	struct i2c_client *client;
-> +	u16 version;
-> +	/* TODO: Add a mutex to protect actions consisting of multiple accesses? */
-
-No TODOs.  Please fix before upstreaming.
-
-> +};
-> +
-> +static inline bool ntxec_has_new_layout(struct ntxec *ec)
-> +{
-> +	return ec->version == 0xe916;
-
-Why don't you just check for the devices you *do* support?
-
-> +}
-> +
-> +int ntxec_read16(struct ntxec *ec, u8 addr);
-> +int ntxec_write16(struct ntxec *ec, u8 addr, u16 value);
-> +int ntxec_read8(struct ntxec *ec, u8 addr);
-> +int ntxec_write8(struct ntxec *ec, u8 addr, u8 value);
-> +
-> +#endif
-
-#endif /* NTXEC_H */
+Naresh Kamboju <naresh.kamboju@linaro.org> writes:
+
+> FYI,
+> Linaro test farm selftests kvm test cases results.
+>   * kvm_mmio_warning_test — SKIP
+>   * kvm_svm_vmcall_test — SKIP
+>   * kvm_clear_dirty_log_test — PASS
+>   * kvm_cr4_cpuid_sync_test — PASS
+>   * kvm_debug_regs — PASS
+>   * kvm_demand_paging_test — PASS
+>   * kvm_dirty_log_test — PASS
+>   * kvm_evmcs_test — PASS
+>   * kvm_hyperv_cpuid — PASS
+>   * kvm_ * kvm_create_max_vcpus — PASS
+>   * kvm_platform_info_test — PASS
+>   * kvm_set_memory_region_test — PASS
+>   * kvm_set_sregs_test — PASS
+>   * kvm_smm_test — PASS
+>   * kvm_state_test — PASS
+>   * kvm_steal_time — PASS
+>   * kvm_sync_regs_test — PASS
+>   * kvm_vmx_close_while_nested_test — PASS
+>   * kvm_vmx_dirty_log_test — PASS
+>   * kvm_vmx_preemption_timer_test — PASS
+>   * kvm_vmx_set_nested_state_test — PASS
+>   * kvm_vmx_tsc_adjust_test — PASS
+>   * kvm_xss_msr_test — PASS
+
+[...]
+
+Thanks you! It would be great to see which particular commit was tested
+here and how often you run these tests in general, which git/branch you
+follow. Also, you can improve your subject line by adding [PASS] or
+[FAIL] so we can see if there's a problem to deal with.
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Vitaly
+
