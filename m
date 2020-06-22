@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D11BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09084C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 034412073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE76A2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbgFVULu (ORCPT
+        id S1730655AbgFVUL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:11:50 -0400
+        Mon, 22 Jun 2020 16:11:59 -0400
 Received: from mga12.intel.com ([192.55.52.136]:60195 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730308AbgFVUJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:09:13 -0400
-IronPort-SDR: 32/SRsXPg2r+gNtqNXZVPDlaBM8A3F8ZgSmQcS2v0YC+A2GP+hQ6NsMCroZbm8OOE2b5nTbIuc
- 3DrZfMjrx1HQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123527722"
+        id S1728414AbgFVUJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:09:10 -0400
+IronPort-SDR: 4zf05FCz+6oUe10j13qoFxGw29G3P/pqs/h2mbYLjyA5lh7AjtRXbdaZbPoG6P/qKukwMQxI5r
+ yG8waYFuxKNg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123527706"
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="123527722"
+   d="scan'208";a="123527706"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:09:11 -0700
-IronPort-SDR: IRgUCTEaPJr/2/orSxWBxKSmIS60menKPUWxbbZ7C2802ZcPzS1mSvGZqhNP3PjvlDU4QyUDeZ
- zZbdgzTcmLcA==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:09:09 -0700
+IronPort-SDR: 7Itfxvv2aheJLHIDm/tOG1YJSBC1YatgMQJ2jtcxorZG/eb1vhKi44LxguEPJeqMDA4znYdgLA
+ jt2O81YKXI1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="318877068"
+   d="scan'208";a="318877052"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 13:09:10 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 13:09:08 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
@@ -55,9 +55,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Peter Shier <pshier@google.com>,
         Junaid Shahid <junaids@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH v2 06/21] KVM: x86/mmu: Move fast_page_fault() call above mmu_topup_memory_caches()
-Date:   Mon, 22 Jun 2020 13:08:07 -0700
-Message-Id: <20200622200822.4426-7-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 03/21] KVM: x86/mmu: Use consistent "mc" name for kvm_mmu_memory_cache locals
+Date:   Mon, 22 Jun 2020 13:08:04 -0700
+Message-Id: <20200622200822.4426-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200622200822.4426-1-sean.j.christopherson@intel.com>
 References: <20200622200822.4426-1-sean.j.christopherson@intel.com>
@@ -68,40 +68,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid refilling the memory caches and potentially slow reclaim/swap when
-handling a fast page fault, which does not need to allocate any new
-objects.
+Use "mc" for local variables to shorten line lengths and provide
+consistent names, which will be especially helpful when some of the
+helpers are moved to common KVM code in future patches.
+
+No functional change intended.
 
 Reviewed-by: Ben Gardon <bgardon@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 5e773564ab20..4b4c3234d623 100644
+index cbc101663a89..36c90f004ef4 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4095,6 +4095,9 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
- 	if (page_fault_handle_page_track(vcpu, error_code, gfn))
- 		return RET_PF_EMULATE;
+@@ -1060,27 +1060,27 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
+ 	local_irq_enable();
+ }
  
-+	if (fast_page_fault(vcpu, gpa, error_code))
-+		return RET_PF_RETRY;
-+
- 	r = mmu_topup_memory_caches(vcpu);
- 	if (r)
- 		return r;
-@@ -4102,9 +4105,6 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
- 	if (lpage_disallowed)
- 		max_level = PG_LEVEL_4K;
+-static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
++static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
+ {
+ 	void *obj;
  
--	if (fast_page_fault(vcpu, gpa, error_code))
--		return RET_PF_RETRY;
--
- 	mmu_seq = vcpu->kvm->mmu_notifier_seq;
- 	smp_rmb();
+-	if (cache->nobjs >= min)
++	if (mc->nobjs >= min)
+ 		return 0;
+-	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
+-		if (cache->kmem_cache)
+-			obj = kmem_cache_zalloc(cache->kmem_cache, GFP_KERNEL_ACCOUNT);
++	while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
++		if (mc->kmem_cache)
++			obj = kmem_cache_zalloc(mc->kmem_cache, GFP_KERNEL_ACCOUNT);
+ 		else
+ 			obj = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
+ 		if (!obj)
+-			return cache->nobjs >= min ? 0 : -ENOMEM;
+-		cache->objects[cache->nobjs++] = obj;
++			return mc->nobjs >= min ? 0 : -ENOMEM;
++		mc->objects[mc->nobjs++] = obj;
+ 	}
+ 	return 0;
+ }
  
+-static int mmu_memory_cache_free_objects(struct kvm_mmu_memory_cache *cache)
++static int mmu_memory_cache_free_objects(struct kvm_mmu_memory_cache *mc)
+ {
+-	return cache->nobjs;
++	return mc->nobjs;
+ }
+ 
+ static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
+@@ -1395,10 +1395,10 @@ static struct kvm_rmap_head *gfn_to_rmap(struct kvm *kvm, gfn_t gfn,
+ 
+ static bool rmap_can_add(struct kvm_vcpu *vcpu)
+ {
+-	struct kvm_mmu_memory_cache *cache;
++	struct kvm_mmu_memory_cache *mc;
+ 
+-	cache = &vcpu->arch.mmu_pte_list_desc_cache;
+-	return mmu_memory_cache_free_objects(cache);
++	mc = &vcpu->arch.mmu_pte_list_desc_cache;
++	return mmu_memory_cache_free_objects(mc);
+ }
+ 
+ static int rmap_add(struct kvm_vcpu *vcpu, u64 *spte, gfn_t gfn)
 -- 
 2.26.0
 
