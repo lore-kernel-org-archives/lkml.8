@@ -2,166 +2,123 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A840C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7215F20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AEC720767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CjobsTwj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PhMXOA29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbgFVXEW (ORCPT
+        id S1731471AbgFVXEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
+        Mon, 22 Jun 2020 19:04:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731371AbgFVXEV (ORCPT
+        with ESMTP id S1731282AbgFVXEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:04:21 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36C1C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:04:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j4so8250631plk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:04:20 -0700 (PDT)
+        Mon, 22 Jun 2020 19:04:52 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F2A1C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:04:52 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh7so8233950plb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:04:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SzgCWMDg2RKJ2NhPQUi7yzswSotPjadK1/0BdT/7pNM=;
-        b=CjobsTwjEzfFB7mg3yto+C37iPxoADkBtXnwx5Zwh1qhWDXJI9D8xzTYannQoMeE59
-         wYG8uphNg+tfYmpQDrje8+ZiMkr9C6zDHh05LXr1dxnbGcD7rcatVqb208oPrAX1xxqB
-         rMhirMwPU0VMi65dec2Qn/HinSWsI/vcDRVsMIGJs+5yaNri6IK5LoQwvGPcoK+2WLMn
-         sqYEhxjSdosxf/hM9s6W6CVJJi/xnF0Je9pZD+TXn6ArUzc0GmkZz3Hco2I6Im31YEfK
-         tis4ESU+TFUPNnp/+ik9M+TOUIBnySvS0k8SDIEYVkUGO+TUFQ8DH2mreAVwZRufQBL7
-         psPQ==
+         :cc;
+        bh=VqNx5+2kiVG9gpFn3910S15vAkYBqDSSedKViD8vzv4=;
+        b=PhMXOA29UjdzLB+31VLcjALbAfnuSCUduSik9FZHJh5NxaVg0Ze3ovaJuHS6uF5tOP
+         BraZMyN9v0GrizeBmPjb+zv8Akwh25gsoP/yBmHWTJu61OLd+BYRA6M4+11FDOfmpb8R
+         1oovTnRunpqHNHYygJvCh5+K/rrVDPOIAocDGPEKTab9E8fpHhzHI4F22vH11k2kWiOs
+         QYJUl/zF2QvPUc3JTuCoS4rpwMK9ClrXFVhn37aTvwU/z2mwIqEzeuYKoF/1Sud3lFtS
+         lew7XOE9/h8akBhb6Ty6i9DQ8T04WtAo+VzBd+qGy91923p+SFsaHaUiwiRNYJIDBiKo
+         ddOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SzgCWMDg2RKJ2NhPQUi7yzswSotPjadK1/0BdT/7pNM=;
-        b=p9j3kbyzt/c+S7+j4LrAxC0Ths/sF8IBW2TwgV8j2NoDry6Qbp/NJSp5viaQ0aTypy
-         HAee+od4553f0ZV80FB9wp3oir1ysH00tAZkysaQCPhkgc7fZhgvAFcEOKFqUSvDgPbg
-         rmwO6EkWrgl56JXgpXj3iq4oTkAGn8rdutD13rK8plRpaNPCcG54BHUo4FypPKLLrQYs
-         Pjg14RUoVhUVn0oyQhGQOJ2hHF2EAKOXIyulkB2RJNuv2otDaBYXsvgknUUX+vhUUHIK
-         6lMvuBH3XPrN3KqJoOTRQnAkUYbAppQKgUfiQ5CU8NAVbArLrbGAfNGjdZzSi+jOxnUn
-         anOw==
-X-Gm-Message-State: AOAM5336BNcZVz3Vple+f6Vqebn/fWK+DXV3vztROMGMK+KtGrH8j1JC
-        KrrK6miMzAb6kSMiXJ7AG4nrUShpV0sGzrIhJcBI0g==
-X-Google-Smtp-Source: ABdhPJy9ExQlGK27NrlHcsj2o4KqK8zQSxV/IYN84Vo7oDdUJkzL59yBK014EWuci7pcT/EaZ13XpTPNDdTLyCE+wNI=
-X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr21225140plm.179.1592867060019;
- Mon, 22 Jun 2020 16:04:20 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=VqNx5+2kiVG9gpFn3910S15vAkYBqDSSedKViD8vzv4=;
+        b=q2Lyt2N52KariXaSJ1dyWomN8/nwmh2RH+UYjm8UwdB/0VOa+gvL+1wNb1tRoUws9e
+         7ZfghI9n8xWGRvklqfmHDvOh8HQv7uGuc6I0NaK9kgfB/E92aHVsqd87ZqJaB52e0L8/
+         PWg95Qd2t5QBJN3bNUWjMjs9pPdZPmJetSV4evMLdmo8z7bHbYSLh22yeE7igxzl2zNq
+         BGzW2q/PUi5LBMj4TjKU5xHI7hSN5JOaAu9AXKBX4DHVBsMlxoF6VsRjkxmgQ/N186jj
+         6JSaX9J3nCME0/F21mSVBrpJFL5pVTJy42yFVRtjAfAcQemBGdwuLsQPy3O8msTslTRS
+         Ecmw==
+X-Gm-Message-State: AOAM530POHvSU6drvHoKV0WHLfiklkkqsQPwQ66he2wvrlaIC3cOQZEp
+        3tTZTcJK+3tN+q3AMYei1kSCS9TKgsV3zR62t3Id3g==
+X-Google-Smtp-Source: ABdhPJyAXHvfGosb+Hbd1OCZD4musz44ks3XUKHwlc3h/XC8VXif5udxUpRvvtysGawHTGaOgDrNushmDeejEo/jrew=
+X-Received: by 2002:a17:902:49:: with SMTP id 67mr21218818pla.205.1592867091804;
+ Mon, 22 Jun 2020 16:04:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200617210613.95432-1-ndesaulniers@google.com> <20200617212705.tq2q6bi446gydymo@google.com>
-In-Reply-To: <20200617212705.tq2q6bi446gydymo@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 22 Jun 2020 16:04:07 -0700
-Message-ID: <CAKwvOdniambW9_nVbDnd4A_+bdDdZMd2V1Q=Xw5EJYDGeh=eyQ@mail.gmail.com>
-Subject: Re: [PATCH] vmlinux.lds: consider .text.{hot|unlikely}.* part of
- .text too
-To:     =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+References: <20200622205341.2987797-1-keescook@chromium.org>
+ <20200622205341.2987797-2-keescook@chromium.org> <20200622220043.6j3vl6v7udmk2ppp@google.com>
+ <202006221524.CEB86E036B@keescook> <20200622225237.ybol4qmz4mhkmlqc@google.com>
+ <202006221555.45BB6412F@keescook>
+In-Reply-To: <202006221555.45BB6412F@keescook>
+From:   =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+Date:   Mon, 22 Jun 2020 16:04:40 -0700
+Message-ID: <CAFP8O3KdGc9TtziFX7UzmxA-=wfPzm5oi6NCEwRiyyrp+JD3Xg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] vmlinux.lds.h: Add .gnu.version* to DISCARDS
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        "# 3.4.x" <stable@vger.kernel.org>, Jian Cai <jiancai@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 2:27 PM F=C4=81ng-ru=C3=AC S=C3=B2ng <maskray@googl=
-e.com> wrote:
+On Mon, Jun 22, 2020 at 3:57 PM Kees Cook <keescook@chromium.org> wrote:
 >
->
-> On 2020-06-17, Nick Desaulniers wrote:
-> >ld.bfd's internal linker script considers .text.hot AND .text.hot.* to
-> >be part of .text, as well as .text.unlikely and .text.unlikely.*.
->
-> >ld.lld will produce .text.hot.*/.text.unlikely.* sections.
->
-> Correction to this sentence. lld is not relevant here.
->
-> -ffunction-sections combined with profile-guided optimization can
-> produce .text.hot.* .text.unlikely.* sections.  Newer clang may produce
-> .text.hot. .text.unlikely. (without suffix, but with a trailing dot)
-> when -fno-unique-section-names is specified, as an optimization to make
-> .strtab smaller.
-
-Then why was the bug report reporting https://reviews.llvm.org/D79600
-as the result of a bisection, if LLD is not relevant?  Was the
-bisection wrong?
-
-The upstream report wasn't initially public, for no good reason.  So I
-didn't include it, but if we end up taking v1, this should have
-
-Link: https://bugs.chromium.org/p/chromium/issues/detail?id=3D1084760
-
-The kernel doesn't use -fno-unique-section-names; is that another flag
-that's added by CrOS' compiler wrapper?
-https://source.chromium.org/chromiumos/chromiumos/codesearch/+/master:src/t=
-hird_party/toolchain-utils/compiler_wrapper/config.go;l=3D110
-Looks like no.  It doesn't use `-fno-unique-section-names` or
-`-ffunction-sections`.
-
-
->
-> We've already seen that GCC can place main in .text.startup without
-> -ffunction-sections. There may be other non -ffunction-sections cases
-> for .text.hot.* or .text.unlikely.*. So it is definitely a good idea to
-> be more specific even if we don't care about -ffunction-sections for
-> now.
->
-> >Make sure to group these together.  Otherwise these orphan sections may
-> >be placed outside of the the _stext/_etext boundaries.
+> On Mon, Jun 22, 2020 at 03:52:37PM -0700, Fangrui Song wrote:
+> > > And it's not in the output:
+> > >
+> > > $ readelf -Vs arch/x86/boot/compressed/vmlinux | grep version
+> > > No version information found in this file.
+> > >
+> > > So... for the kernel we need to silence it right now.
 > >
-> >Cc: stable@vger.kernel.org
-> >Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=
-=3Dadd44f8d5c5c05e08b11e033127a744d61c26aee
-> >Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=
-=3D1de778ed23ce7492c523d5850c6c6dbb34152655
-> >Link: https://reviews.llvm.org/D79600
-> >Reported-by: Jian Cai <jiancai@google.com>
-> >Debugged-by: Luis Lozano <llozano@google.com>
-> >Suggested-by: F=C4=81ng-ru=C3=AC S=C3=B2ng <maskray@google.com>
-> >Tested-by: Luis Lozano <llozano@google.com>
-> >Tested-by: Manoj Gupta <manojgupta@google.com>
-> >Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> >---
-> > include/asm-generic/vmlinux.lds.h | 4 +++-
-> > 1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vml=
-inux.lds.h
-> >index d7c7c7f36c4a..fe5aaef169e3 100644
-> >--- a/include/asm-generic/vmlinux.lds.h
-> >+++ b/include/asm-generic/vmlinux.lds.h
-> >@@ -560,7 +560,9 @@
-> >  */
-> > #define TEXT_TEXT                                                     \
-> >               ALIGN_FUNCTION();                                       \
-> >-              *(.text.hot TEXT_MAIN .text.fixup .text.unlikely)       \
-> >+              *(.text.hot .text.hot.*)                                \
-> >+              *(TEXT_MAIN .text.fixup)                                \
-> >+              *(.text.unlikely .text.unlikely.*)                      \
-> >               NOINSTR_TEXT                                            \
-> >               *(.text..refcount)                                      \
-> >               *(.ref.text)                                            \
-> >--
-> >2.27.0.290.gba653c62da-goog
-> >
+> > Re-link with -M (or -Map file) to check where .gnu.version{,_d,_r} input
+> > sections come from?
+>
+> It's not reporting it correctly:
+>
+> .gnu.version_d  0x00000000008966b0        0x0
+>  .gnu.version_d
+>                 0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
+>
+> .gnu.version    0x00000000008966b0        0x0
+>  .gnu.version   0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
+>
+> .gnu.version_r  0x00000000008966b0        0x0
+>  .gnu.version_r
+>                 0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
+>
+> it just reports whatever file is listed on the link command line first.
+>
+> > If it is a bug, we should probably figure out which version of binutils
+> > has fixed the bug.
+>
+> I see this with binutils 2.34...
+>
+> --
+> Kees Cook
 
+:( It deserves a binutils bug
+(https://sourceware.org/bugzilla/enter_bug.cgi?product=binutils ) and
+a comment..
 
+With the description adjusted to say that this works around a bug
 
---
-Thanks,
-~Nick Desaulniers
+Reviewed-by: Fangrui Song <maskray@google.com>
