@@ -2,730 +2,703 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF48C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DDCC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28EB520809
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592813318;
-	bh=mbIKrpJLshHqLYZVHv+PJKx50P7/trTUm/Xa4eetgYU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=y1WvICOIARog3kUmehKmfMfe2h9ufUo5fCY/pF+hmWsDnTxLR6Vu9EwdYUWePgwXZ
-	 gY9EkQ75V3hGo47aXKEkN4ZJ2BV8qz80YKq1dO9ioQdQLDeci+yoOPPEiU1v3vYbrm
-	 IJYzvG22e9wMo651+fDWhCWOKQOXImd3gjZZR90w=
+	by mail.kernel.org (Postfix) with ESMTP id 83D46208B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726459AbgFVIIg (ORCPT
+        id S1726384AbgFVII1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726356AbgFVII3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:08:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Mon, 22 Jun 2020 04:08:27 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:44998 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgFVIIV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 04:08:21 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D23208B8;
-        Mon, 22 Jun 2020 08:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592813305;
-        bh=mbIKrpJLshHqLYZVHv+PJKx50P7/trTUm/Xa4eetgYU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=f92Yr2FuKnYqiUjrolYWsCYoQ9/VXjwXf6yCVmZ5apW3L0LYQbAvabCS9iAjVGX4v
-         Z53o1kFRU3WxT4weBfa3V5x0SDhZj1F2TDiKzAbDOTC83+fz/RKnDsIPCiTXYqeLOy
-         BcCxkvsSwnCD1FWyJPgZ+XLd4S28Ko3R+L4FejbM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.14.185
-Date:   Mon, 22 Jun 2020 10:08:15 +0200
-Message-Id: <1592813295201255@kroah.com>
-X-Mailer: git-send-email 2.27.0
+        by asavdk3.altibox.net (Postfix) with ESMTPS id AAE3720021;
+        Mon, 22 Jun 2020 10:08:03 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 10:08:02 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>,
+        Bhushan Shah <bshah@kde.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Luca Weiss <luca@z3ntu.xyz>,
+        Martijn Braam <martijn@brixit.nl>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 3/5] drm: panel: Add Xingbangda XBD599 panel (ST7703
+ controller)
+Message-ID: <20200622080802.GA650963@ravnborg.org>
+References: <20200617003209.670819-1-megous@megous.com>
+ <20200617003209.670819-4-megous@megous.com>
+ <20200620212529.GB74146@ravnborg.org>
+ <20200620223010.fqjwijiixxkewk3p@core.my.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200620223010.fqjwijiixxkewk3p@core.my.home>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=edQTgYMH c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=IkcTkHD0fZMA:10 a=J_fg_7IlAAAA:8 a=e5mUnYsNAAAA:8
+        a=rpfOPJV_7YADzv3fI4AA:9 a=9TJecaD38D1O3S5X:21 a=qYyW2_D2GT2v-q_M:21
+        a=QEXdDO2ut3YA:10 a=zGOw-GkVl6h1W4ZARoUA:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.14.185 kernel.
-
-All users of the 4.14 kernel series must upgrade.
-
-The updated 4.14.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.14.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt |    6 
- Documentation/virtual/kvm/api.txt                                   |    2 
- Makefile                                                            |   15 
- arch/alpha/include/asm/uaccess.h                                    |    8 
- arch/arm/kernel/ptrace.c                                            |    4 
- arch/arm/mach-tegra/tegra.c                                         |    4 
- arch/arm/mm/proc-macros.S                                           |    3 
- arch/arm64/include/asm/kvm_host.h                                   |    6 
- arch/m68k/include/asm/mac_via.h                                     |    1 
- arch/m68k/mac/config.c                                              |   21 
- arch/m68k/mac/via.c                                                 |    6 
- arch/mips/Makefile                                                  |   13 
- arch/mips/boot/compressed/Makefile                                  |    2 
- arch/mips/configs/loongson3_defconfig                               |    2 
- arch/mips/include/asm/kvm_host.h                                    |    6 
- arch/mips/include/asm/mipsregs.h                                    |    2 
- arch/mips/kernel/genex.S                                            |    6 
- arch/mips/kernel/mips-cm.c                                          |    6 
- arch/mips/kernel/setup.c                                            |   10 
- arch/mips/kernel/time.c                                             |   70 +++
- arch/mips/kernel/vmlinux.lds.S                                      |    2 
- arch/openrisc/include/asm/uaccess.h                                 |    8 
- arch/powerpc/kernel/dt_cpu_ftrs.c                                   |    8 
- arch/powerpc/kernel/prom.c                                          |   19 
- arch/powerpc/platforms/cell/spufs/file.c                            |  113 +++-
- arch/powerpc/sysdev/xive/common.c                                   |    5 
- arch/sh/include/asm/uaccess.h                                       |    7 
- arch/sparc/kernel/ptrace_32.c                                       |  228 ++++------
- arch/sparc/kernel/ptrace_64.c                                       |   17 
- arch/x86/boot/compressed/head_32.S                                  |    5 
- arch/x86/boot/compressed/head_64.S                                  |    1 
- arch/x86/include/asm/cpufeatures.h                                  |    1 
- arch/x86/include/asm/nospec-branch.h                                |    1 
- arch/x86/include/asm/uaccess.h                                      |   12 
- arch/x86/kernel/cpu/bugs.c                                          |   94 ++--
- arch/x86/kernel/process.c                                           |   28 -
- arch/x86/kernel/process.h                                           |    2 
- arch/x86/kernel/reboot.c                                            |    8 
- arch/x86/kernel/time.c                                              |    4 
- arch/x86/kernel/vmlinux.lds.S                                       |    4 
- arch/x86/kvm/mmu.c                                                  |   37 +
- arch/x86/kvm/svm.c                                                  |    6 
- arch/x86/kvm/vmx.c                                                  |    2 
- arch/x86/mm/init.c                                                  |    2 
- arch/x86/pci/fixup.c                                                |    4 
- block/blk-mq.c                                                      |    8 
- drivers/acpi/cppc_acpi.c                                            |    1 
- drivers/acpi/device_pm.c                                            |    2 
- drivers/acpi/evged.c                                                |   22 
- drivers/acpi/scan.c                                                 |   28 -
- drivers/acpi/sysfs.c                                                |    4 
- drivers/char/agp/intel-gtt.c                                        |    4 
- drivers/clocksource/dw_apb_timer.c                                  |    5 
- drivers/clocksource/dw_apb_timer_of.c                               |    6 
- drivers/cpuidle/sysfs.c                                             |    6 
- drivers/crypto/cavium/nitrox/nitrox_main.c                          |    4 
- drivers/crypto/ccp/Kconfig                                          |    3 
- drivers/crypto/chelsio/chcr_algo.c                                  |    2 
- drivers/crypto/talitos.c                                            |    2 
- drivers/crypto/virtio/virtio_crypto_algs.c                          |   21 
- drivers/firmware/efi/efivars.c                                      |    4 
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c                             |    2 
- drivers/gpu/drm/bridge/adv7511/adv7511_audio.c                      |   12 
- drivers/gpu/drm/i915/i915_gem_execbuffer.c                          |   17 
- drivers/gpu/drm/nouveau/nouveau_drm.c                               |    2 
- drivers/gpu/drm/radeon/radeon_drv.c                                 |    2 
- drivers/gpu/vga/vga_switcheroo.c                                    |  142 +-----
- drivers/input/mouse/synaptics.c                                     |    1 
- drivers/macintosh/windfarm_pm112.c                                  |   21 
- drivers/md/dm-crypt.c                                               |    2 
- drivers/md/md.c                                                     |    3 
- drivers/media/cec/cec-adap.c                                        |    8 
- drivers/media/i2c/ov5640.c                                          |    4 
- drivers/media/platform/rcar-fcp.c                                   |    5 
- drivers/media/tuners/si2157.c                                       |   15 
- drivers/media/usb/dvb-usb/dibusb-mb.c                               |    2 
- drivers/media/usb/go7007/snd-go7007.c                               |   35 -
- drivers/mmc/core/sdio.c                                             |    3 
- drivers/mmc/host/sdhci-esdhc-imx.c                                  |    2 
- drivers/mmc/host/sdhci-msm.c                                        |   10 
- drivers/mmc/host/via-sdmmc.c                                        |    7 
- drivers/mtd/nand/brcmnand/brcmnand.c                                |   11 
- drivers/mtd/nand/pasemi_nand.c                                      |    4 
- drivers/net/can/usb/kvaser_usb.c                                    |    6 
- drivers/net/ethernet/allwinner/sun4i-emac.c                         |    4 
- drivers/net/ethernet/amazon/ena/ena_com.c                           |    6 
- drivers/net/ethernet/broadcom/genet/bcmgenet.c                      |    4 
- drivers/net/ethernet/ibm/ibmvnic.c                                  |    8 
- drivers/net/ethernet/intel/e1000/e1000_main.c                       |    4 
- drivers/net/ethernet/intel/e1000e/e1000.h                           |    1 
- drivers/net/ethernet/intel/e1000e/netdev.c                          |   16 
- drivers/net/ethernet/intel/igb/igb_ethtool.c                        |    3 
- drivers/net/ethernet/intel/ixgbe/ixgbe_common.c                     |    2 
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c                       |    3 
- drivers/net/ethernet/nxp/lpc_eth.c                                  |    3 
- drivers/net/ethernet/qlogic/qede/qede.h                             |    2 
- drivers/net/ethernet/qlogic/qede/qede_main.c                        |   11 
- drivers/net/macvlan.c                                               |    4 
- drivers/net/vmxnet3/vmxnet3_ethtool.c                               |    2 
- drivers/net/vxlan.c                                                 |    4 
- drivers/net/wireless/ath/ath9k/hif_usb.c                            |   58 +-
- drivers/net/wireless/ath/ath9k/hif_usb.h                            |    6 
- drivers/net/wireless/ath/ath9k/htc_drv_init.c                       |   10 
- drivers/net/wireless/ath/ath9k/htc_drv_txrx.c                       |    6 
- drivers/net/wireless/ath/ath9k/htc_hst.c                            |    3 
- drivers/net/wireless/ath/ath9k/wmi.c                                |    5 
- drivers/net/wireless/ath/ath9k/wmi.h                                |    3 
- drivers/net/wireless/ath/carl9170/fw.c                              |    4 
- drivers/net/wireless/ath/carl9170/main.c                            |   21 
- drivers/net/wireless/ath/wcn36xx/main.c                             |    6 
- drivers/net/wireless/broadcom/b43/main.c                            |    2 
- drivers/net/wireless/broadcom/b43legacy/main.c                      |    1 
- drivers/net/wireless/broadcom/b43legacy/xmit.c                      |    1 
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c          |    3 
- drivers/net/wireless/marvell/mwifiex/cfg80211.c                     |   14 
- drivers/net/wireless/realtek/rtlwifi/usb.c                          |    8 
- drivers/nvme/host/core.c                                            |   16 
- drivers/pci/probe.c                                                 |   24 -
- drivers/pci/quirks.c                                                |  207 +++++++--
- drivers/pinctrl/samsung/pinctrl-exynos.c                            |    9 
- drivers/platform/x86/hp-wmi.c                                       |   10 
- drivers/power/reset/vexpress-poweroff.c                             |    1 
- drivers/spi/spi-bcm-qspi.c                                          |    8 
- drivers/spi/spi-bcm2835.c                                           |    4 
- drivers/spi/spi-bcm2835aux.c                                        |    4 
- drivers/spi/spi-dw-mid.c                                            |   16 
- drivers/spi/spi-dw.c                                                |   15 
- drivers/spi/spi-pxa2xx.c                                            |    5 
- drivers/spi/spi.c                                                   |    4 
- drivers/staging/android/ion/ion_heap.c                              |    4 
- drivers/staging/greybus/sdio.c                                      |   10 
- drivers/tty/serial/imx.c                                            |   22 
- drivers/video/fbdev/w100fb.c                                        |    2 
- drivers/w1/masters/omap_hdq.c                                       |   10 
- drivers/xen/pvcalls-back.c                                          |    3 
- fs/btrfs/file-item.c                                                |    6 
- fs/btrfs/inode.c                                                    |   10 
- fs/btrfs/send.c                                                     |   67 ++
- fs/ext4/ext4_extents.h                                              |    9 
- fs/ext4/fsync.c                                                     |   28 -
- fs/ext4/xattr.c                                                     |    7 
- fs/fat/inode.c                                                      |    6 
- fs/fs-writeback.c                                                   |    1 
- fs/nilfs2/segment.c                                                 |    2 
- fs/overlayfs/copy_up.c                                              |    2 
- fs/proc/inode.c                                                     |    2 
- fs/proc/self.c                                                      |    2 
- fs/proc/thread_self.c                                               |    2 
- include/linux/kgdb.h                                                |    2 
- include/linux/mm.h                                                  |    1 
- include/linux/pci_ids.h                                             |    2 
- include/linux/string.h                                              |   60 ++
- include/linux/sunrpc/gss_api.h                                      |    1 
- include/linux/sunrpc/svcauth_gss.h                                  |    3 
- include/linux/uaccess.h                                             |    2 
- include/linux/vga_switcheroo.h                                      |    6 
- include/sound/hdaudio.h                                             |    3 
- include/uapi/linux/kvm.h                                            |    2 
- kernel/audit.c                                                      |   52 +-
- kernel/audit.h                                                      |    2 
- kernel/auditfilter.c                                                |   16 
- kernel/compat.c                                                     |    6 
- kernel/cpu_pm.c                                                     |    4 
- kernel/debug/debug_core.c                                           |    1 
- kernel/events/core.c                                                |   23 -
- kernel/exit.c                                                       |   31 -
- kernel/sched/fair.c                                                 |    2 
- lib/mpi/longlong.h                                                  |    2 
- lib/strncpy_from_user.c                                             |   23 -
- lib/strnlen_user.c                                                  |   23 -
- mm/huge_memory.c                                                    |   31 +
- mm/slub.c                                                           |    4 
- mm/util.c                                                           |   18 
- net/bluetooth/hci_event.c                                           |    1 
- net/ipv6/ipv6_sockglue.c                                            |   13 
- net/netfilter/nft_nat.c                                             |    4 
- net/sunrpc/auth_gss/gss_mech_switch.c                               |   12 
- net/sunrpc/auth_gss/svcauth_gss.c                                   |   18 
- security/integrity/evm/evm_crypto.c                                 |    2 
- security/integrity/ima/ima.h                                        |    7 
- security/integrity/ima/ima_policy.c                                 |    3 
- security/keys/internal.h                                            |   11 
- security/keys/keyctl.c                                              |   16 
- security/smack/smackfs.c                                            |   10 
- sound/core/pcm_native.c                                             |    5 
- sound/isa/es1688/es1688.c                                           |    4 
- sound/pci/hda/hda_intel.c                                           |   35 +
- sound/pci/hda/hda_intel.h                                           |    3 
- sound/pci/hda/patch_realtek.c                                       |    6 
- sound/usb/card.c                                                    |   20 
- sound/usb/usbaudio.h                                                |    2 
- tools/lib/api/fs/fs.c                                               |   17 
- tools/lib/api/fs/fs.h                                               |   12 
- tools/objtool/check.c                                               |    6 
- tools/perf/builtin-probe.c                                          |    3 
- tools/perf/util/dso.c                                               |   16 
- tools/perf/util/dso.h                                               |    1 
- tools/perf/util/probe-event.c                                       |   24 -
- tools/perf/util/probe-finder.c                                      |    1 
- tools/perf/util/symbol.c                                            |    2 
- tools/testing/selftests/networking/timestamping/rxtimestamp.c       |    1 
- 201 files changed, 1647 insertions(+), 923 deletions(-)
-
-Abhinav Ratna (1):
-      PCI: Add ACS quirk for iProc PAXB
-
-Abhishek Sahu (1):
-      PCI: Generalize multi-function power dependency device links
-
-Adrian Hunter (1):
-      perf symbols: Fix debuginfo search for Ubuntu
-
-Al Viro (2):
-      sparc32: fix register window handling in genregs32_[gs]et()
-      sparc64: fix misuses of access_process_vm() in genregs32_[sg]et()
-
-Alexander Sverdlin (1):
-      macvlan: Skip loopback packets in RX handler
-
-Anders Roxell (1):
-      power: vexpress: add suppress_bind_attrs to true
-
-Andrea Arcangeli (1):
-      mm: thp: make the THP mapcount atomic against __split_huge_pmd_locked()
-
-Andy Shevchenko (3):
-      spi: No need to assign dummy value in spi_unregister_controller()
-      spi: dw: Zero DMA Tx and Rx configurations on stack
-      platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
-
-Anthony Steinhauser (3):
-      x86/speculation: Prevent rogue cross-process SSBD shutdown
-      x86/speculation: Avoid force-disabling IBPB based on STIBP and enhanced IBRS.
-      x86/speculation: PR_SPEC_FORCE_DISABLE enforcement for indirect branches.
-
-Ard Biesheuvel (3):
-      efi/efivars: Add missing kobject_put() in sysfs entry creation error path
-      ACPI: GED: add support for _Exx / _Lxx handler methods
-      ACPI: GED: use correct trigger type field in _Exx / _Lxx handling
-
-Arnd Bergmann (1):
-      crypto: ccp -- don't "select" CONFIG_DMADEVICES
-
-Arthur Kiyanovski (1):
-      net: ena: fix error returning in ena_com_get_hash_function()
-
-Arvind Sankar (2):
-      x86/boot: Correct relocation destination on old linkers
-      x86/mm: Stop printing BRK addresses
-
-Ashok Raj (2):
-      PCI: Add ACS quirk for Intel Root Complex Integrated Endpoints
-      PCI: Program MPS for RCiEP devices
-
-Barret Rhoden (1):
-      perf: Add cond_resched() to task_function_call()
-
-Bhupesh Sharma (1):
-      net: qed*: Reduce RX and TX default ring count when running inside kdump kernel
-
-Bjorn Helgaas (2):
-      PCI: Make ACS quirk implementations more uniform
-      PCI: Unify ACS quirk desired vs provided checking
-
-Bob Haarman (1):
-      x86_64: Fix jiffies ODR violation
-
-Bogdan Togorean (1):
-      drm: bridge: adv7511: Extend list of audio sample rates
-
-Brad Love (1):
-      media: si2157: Better check for running tuner in init
-
-Casey Schaufler (1):
-      Smack: slab-out-of-bounds in vsscanf
-
-Chris Wilson (1):
-      agp/intel: Reinforce the barrier after GTT updates
-
-Christian Lamparter (1):
-      carl9170: remove P2P_GO support
-
-Christoph Hellwig (2):
-      staging: android: ion: use vmap instead of vm_map_ram
-      nvme: refine the Qemu Identify CNS quirk
-
-Christophe JAILLET (3):
-      crypto: cavium/nitrox - Fix 'nitrox_get_first_device()' when ndevlist is fully iterated
-      video: fbdev: w100fb: Fix a potential double free.
-      wcn36xx: Fix error handling path in 'wcn36xx_probe()'
-
-Christophe Leroy (1):
-      lib: Reduce user_access_begin() boundaries in strncpy_from_user() and strnlen_user()
-
-Chuhong Yuan (2):
-      ALSA: es1688: Add the missed snd_card_free()
-      media: go7007: fix a miss of snd_card_free
-
-Colin Ian King (1):
-      media: dvb: return -EREMOTEIO on i2c transfer failure.
-
-Cédric Le Goater (1):
-      powerpc/xive: Clear the page tables for the ESB IO mapping
-
-Dan Carpenter (2):
-      media: cec: silence shift wrapping warning in __cec_s_log_addrs()
-      rtlwifi: Fix a double free in _rtl_usb_tx_urb_setup()
-
-Daniel Axtens (1):
-      string.h: fix incompatibility between FORTIFY_SOURCE and KASAN
-
-Daniel Thompson (1):
-      kgdb: Fix spurious true from in_dbg_master()
-
-Dennis Kadioglu (1):
-      Input: synaptics - add a second working PNP_ID for Lenovo T470s
-
-Devulapally Shiva Krishna (1):
-      Crypto/chcr: fix for ccm(aes) failed test
-
-Dmitry Osipenko (1):
-      ARM: tegra: Correct PL310 Auxiliary Control Register initialization
-
-Doug Berger (1):
-      net: bcmgenet: set Rx mode before starting netif
-
-Douglas Anderson (2):
-      kgdb: Prevent infinite recursive entries to the debugger
-      kernel/cpu_pm: Fix uninitted local in cpu_pm
-
-Eric Biggers (2):
-      ext4: fix race between ext4_sync_parent() and rename()
-      dm crypt: avoid truncating the logical block size
-
-Eric W. Biederman (1):
-      proc: Use new_inode not new_inode_pseudo
-
-Evan Green (1):
-      spi: pxa2xx: Apply CS clk quirk to BXT
-
-Feng Kan (1):
-      PCI: Add ACS quirk for Ampere root ports
-
-Filipe Manana (2):
-      btrfs: do not ignore error from btrfs_next_leaf() when inserting checksums
-      btrfs: fix wrong file range cleanup after an error filling dealloc range
-
-Finn Thain (1):
-      m68k: mac: Don't call via_flush_cache() on Mac IIfx
-
-Fredrik Strupe (1):
-      ARM: 8977/1: ptrace: Fix mask for thumb breakpoint hook
-
-Giuliano Procida (1):
-      blk-mq: move _blk_mq_update_nr_hw_queues synchronize_rcu call
-
-Greg Kroah-Hartman (1):
-      Linux 4.14.185
-
-Guoqing Jiang (1):
-      md: don't flush workqueue unconditionally in md_open
-
-H. Nikolaus Schaller (1):
-      w1: omap-hdq: cleanup to add missing newline for some dev_dbg
-
-Haibo Chen (1):
-      mmc: sdhci-esdhc-imx: fix the mask for tuning start point
-
-Hangbin Liu (1):
-      ipv6: fix IPV6_ADDRFORM operation logic
-
-Harshad Shirwadkar (1):
-      ext4: fix EXT_MAX_EXTENT/INDEX to check for zeroed eh_max
-
-Hill Ma (1):
-      x86/reboot/quirks: Add MacBook6,1 reboot quirk
-
-Hou Zhiqiang (1):
-      PCI: Disable MSI for Freescale Layerscape PCIe RC mode
-
-Hsin-Yu Chao (1):
-      Bluetooth: Add SCO fallback for invalid LMP parameters error
-
-Hui Wang (1):
-      ALSA: hda/realtek - add a pintbl quirk for several Lenovo machines
-
-Ido Schimmel (1):
-      vxlan: Avoid infinite loop when suppressing NS messages with invalid options
-
-Jaehoon Chung (1):
-      brcmfmac: fix wrong location to get firmware feature
-
-Jann Horn (1):
-      exit: Move preemption fixup up, move blocking operations down
-
-Jeffle Xu (1):
-      ext4: fix error pointer dereference
-
-Jens Axboe (1):
-      sched/fair: Don't NUMA balance for kthreads
-
-Jeremy Kerr (1):
-      powerpc/spufs: fix copy_to_user while atomic
-
-Jesper Dangaard Brouer (1):
-      ixgbe: Fix XDP redirect on archs with PAGE_SIZE above 4K
-
-Jia-Ju Bai (1):
-      net: vmxnet3: fix possible buffer overflow caused by bad DMA value in vmxnet3_get_rss()
-
-Jiaxun Yang (2):
-      MIPS: Truncate link address into 32bit for 32bit kernel
-      PCI: Don't disable decoding when mmio_always_on is set
-
-Jitao Shi (1):
-      dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-
-Jon Doron (1):
-      x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
-
-Jonathan Bakker (1):
-      pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs
-
-Juergen Gross (1):
-      xen/pvcalls-back: test for errors when calling backend_connect()
-
-Julien Thierry (1):
-      objtool: Ignore empty alternatives
-
-Justin Chen (1):
-      spi: bcm-qspi: when tx/rx buffer is NULL set to 0
-
-Kai Huang (1):
-      kvm: x86: Fix L1TF mitigation for shadow MMU
-
-Kai-Heng Feng (2):
-      e1000e: Disable TSO for buffer overrun workaround
-      igb: Report speed and duplex as unknown when device is runtime suspended
-
-Kees Cook (1):
-      e1000: Distribute switch variables for initialization
-
-Kevin Buettner (1):
-      PCI: Avoid FLR for AMD Starship USB 3.0
-
-Kieran Bingham (1):
-      media: platform: fcp: Set appropriate DMA parameters
-
-Krzysztof Struczynski (1):
-      ima: Fix ima digest hash table key calculation
-
-Larry Finger (3):
-      b43legacy: Fix case where channel status is corrupted
-      b43: Fix connection problem with WPA3
-      b43_legacy: Fix connection problem with WPA3
-
-Linus Torvalds (2):
-      make 'user_access_begin()' do 'access_ok()'
-      Fix 'acccess_ok()' on alpha and SH
-
-Linus Walleij (1):
-      ARM: 8978/1: mm: make act_mm() respect THREAD_SIZE
-
-Longpeng(Mike) (3):
-      crypto: virtio: Fix use-after-free in virtio_crypto_skcipher_finalize_req()
-      crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
-      crypto: virtio: Fix dest length calculation in __virtio_crypto_skcipher_do_req()
-
-Lukas Wunner (7):
-      spi: bcm2835aux: Fix controller unregister order
-      spi: dw: Fix controller unregister order
-      spi: Fix controller unregister order
-      spi: pxa2xx: Fix controller unregister order
-      spi: bcm2835: Fix controller unregister order
-      vga_switcheroo: Deduplicate power state tracking
-      vga_switcheroo: Use device link for HDA controller
-
-Marc Zyngier (1):
-      KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
-
-Marcos Paulo de Souza (1):
-      btrfs: send: emit file capabilities after chown
-
-Marcos Scriven (1):
-      PCI: Avoid FLR for AMD Matisse HD Audio & USB 3.0
-
-Masahiro Yamada (1):
-      kbuild: force to build vmlinux if CONFIG_MODVERSION=y
-
-Masami Hiramatsu (3):
-      perf probe: Accept the instance number of kretprobe event
-      perf probe: Do not show the skipped events
-      perf probe: Fix to check blacklist address correctly
-
-Masashi Honma (1):
-      ath9k_htc: Silence undersized packet warnings
-
-Michael Ellerman (3):
-      drivers/macintosh: Fix memleak in windfarm_pm112 driver
-      powerpc/64s: Don't let DT CPU features set FSCR_DSCR
-      powerpc/64s: Save FSCR to init_task.thread.fscr after feature init
-
-Michał Mirosław (1):
-      ALSA: pcm: disallow linking stream to itself
-
-Miquel Raynal (1):
-      mtd: rawnand: pasemi: Fix the probe error path
-
-Nathan Chancellor (1):
-      lib/mpi: Fix 64-bit MIPS build with Clang
-
-NeilBrown (2):
-      sunrpc: svcauth_gss_register_pseudoflavor must reject duplicate registrations.
-      sunrpc: clean up properly in gss_mech_unregister()
-
-OGAWA Hirofumi (1):
-      fat: don't allow to mount if the FAT length == 0
-
-Omar Sandoval (1):
-      btrfs: fix error handling when submitting direct I/O bio
-
-Pablo Neira Ayuso (1):
-      netfilter: nft_nat: return EOPNOTSUPP if type or flags are not supported
-
-Pali Rohár (1):
-      mwifiex: Fix memory corruption in dump_station
-
-Paolo Bonzini (3):
-      KVM: x86: only do L1TF workaround on affected processors
-      KVM: nSVM: fix condition for filtering async PF
-      KVM: nSVM: leave ASID aside in copy_vmcb_control_area
-
-Paul Moore (2):
-      audit: fix a net reference leak in audit_send_reply()
-      audit: fix a net reference leak in audit_list_rules_send()
-
-Punit Agrawal (1):
-      e1000e: Relax condition to trigger reset for ME workaround
-
-Qiujun Huang (4):
-      ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
-      ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-      ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-      ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-
-Qiushi Wu (3):
-      ACPI: sysfs: Fix reference count leak in acpi_sysfs_add_hotplug_profile()
-      ACPI: CPPC: Fix reference count leak in acpi_cppc_processor_probe()
-      cpuidle: Fix three reference count leaks
-
-Rafael J. Wysocki (1):
-      ACPI: PM: Avoid using power resources if there are none for D0
-
-Roberto Sassu (2):
-      ima: Directly assign the ima_default_policy pointer to ima_rules
-      evm: Fix possible memory leak in evm_calc_hmac_or_hash()
-
-Ryusuke Konishi (1):
-      nilfs2: fix null pointer dereference at nilfs_segctor_do_construct()
-
-Sasha Levin (1):
-      spi: dw: fix possible race condition
-
-Sean Christopherson (2):
-      KVM: x86/mmu: Consolidate "is MMIO SPTE" code
-      KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
-
-Serge Semin (8):
-      spi: dw: Enable interrupts in accordance with DMA xfer mode
-      clocksource: dw_apb_timer: Make CPU-affiliation being optional
-      clocksource: dw_apb_timer_of: Fix missing clockevent timers
-      spi: dw: Fix Rx-only DMA transfers
-      mips: cm: Fix an invalid error code of INTVN_*_ERR
-      mips: MAAR: Use more precise address mask
-      mips: Add udelay lpj numbers adjustment
-      spi: dw: Return any value retrieved from the dma_transfer callback
-
-Stafford Horne (1):
-      arch/openrisc: Fix issues with access_ok()
-
-Stephane Eranian (1):
-      tools api fs: Make xxx__mountpoint() more scalable
-
-Su Kang Yin (1):
-      crypto: talitos - fix ECB and CBC algs ivsize
-
-Takashi Iwai (1):
-      ALSA: usb-audio: Fix inconsistent card PM state after resume
-
-Tejun Heo (1):
-      cgroup, blkcg: Prepare some symbols for module and !CONFIG_CGROUP usages
-
-Thomas Falcon (1):
-      drivers/net/ibmvnic: Update VNIC protocol version reporting
-
-Thomas Lendacky (1):
-      x86/speculation: Add support for STIBP always-on preferred mode
-
-Tiezhu Yang (2):
-      MIPS: Loongson: Build ATI Radeon GPU driver as module
-      MIPS: Make sparse_init() using top-down allocation
-
-Tomi Valkeinen (1):
-      media: ov5640: fix use of destroyed mutex
-
-Ulf Hansson (3):
-      mmc: sdio: Fix potential NULL pointer error in mmc_sdio_init_card()
-      staging: greybus: sdio: Respect the cmd->busy_timeout from the mmc core
-      mmc: via-sdmmc: Respect the cmd->busy_timeout from the mmc core
-
-Uwe Kleine-König (1):
-      serial: imx: Fix handling of TC irq in combination with DMA
-
-Veerabhadrarao Badiganti (2):
-      mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
-      mmc: sdhci-msm: Set SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk
-
-Waiman Long (2):
-      mm: add kvfree_sensitive() for freeing sensitive data objects
-      x86/speculation: Change misspelled STIPB to STIBP
-
-Wang Hai (1):
-      mm/slub: fix a memory leak in sysfs_slab_add()
-
-Wei Yongjun (1):
-      net: lpc-enet: fix error return code in lpc_mii_init()
-
-Will Deacon (1):
-      x86: uaccess: Inhibit speculation past access_ok() in user_access_begin()
-
-Xiaochun Lee (1):
-      x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs
-
-Xiaolong Huang (1):
-      can: kvaser_usb: kvaser_usb_leaf: Fix some info-leaks to USB devices
-
-Xie XiuQi (1):
-      ixgbe: fix signed-integer-overflow warning
-
-Xing Li (2):
-      KVM: MIPS: Define KVM_ENTRYHI_ASID to cpu_asid_mask(&boot_cpu_data)
-      KVM: MIPS: Fix VPN2_MASK definition for variable cpu_vmbits
-
-YuanJunQing (1):
-      MIPS: Fix IRQ tracing when call handle_fpe() and handle_msa_fpe()
-
-Yunjian Wang (1):
-      net: allwinner: Fix use correct return type for ndo_start_xmit()
-
-Yuxuan Shui (1):
-      ovl: initialize error in ovl_copy_xattr
-
-tannerlove (1):
-      selftests/net: in rxtimestamp getopt_long needs terminating null entry
-
-Álvaro Fernández Rojas (1):
-      mtd: rawnand: brcmnand: fix hamming oob layout
-
+On Sun, Jun 21, 2020 at 12:30:10AM +0200, Ondřej Jirman wrote:
+> On Sat, Jun 20, 2020 at 11:25:29PM +0200, Sam Ravnborg wrote:
+> > Hi Ondrej et al.
+> > 
+> > On Wed, Jun 17, 2020 at 02:32:07AM +0200, Ondrej Jirman wrote:
+> > > From: Icenowy Zheng <icenowy@aosc.io>
+> > > 
+> > > Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI IPS LCD panel made by
+> > > Xingbangda, which is used on PinePhone final assembled phones.
+> > > 
+> > > It is based on Sitronix ST7703 LCD controller.
+> > 
+> > I am a little late to the game here - so sorry if this has been
+> > discussed before.
+> > We already have panel-rocktech-jh057n00900.c which is a panle driver
+> > based on st7703.
+> > Why is it we need a new driver?
+> 
+> No reason other than the driver not being named after the controller,
+> so I didn't notice.
+> 
+> > Would it not be better to have one st7703 driver that suipports both
+> > panels?
+> >
+> > The driver would need dedicated init functions depending on the panel.
+> > But a lot could also be shared.
+> 
+> I guess I can move the code there. 
+In the same process the river should then be renamed to follow other
+sitronix based drivers.
+So the next developer will recognize this and use the correct driver.
+
+	Sam
+
+> 
+> regards,
+> 	o.
+> 
+> > 	Sam
+> > 
+> > > 
+> > > Add support for it.
+> > > 
+> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > ---
+> > >  drivers/gpu/drm/panel/Kconfig                 |  10 +
+> > >  drivers/gpu/drm/panel/Makefile                |   1 +
+> > >  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 535 ++++++++++++++++++
+> > >  3 files changed, 546 insertions(+)
+> > >  create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
+> > > 
+> > > diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> > > index 39055c1f0e2f..b7bc157b0612 100644
+> > > --- a/drivers/gpu/drm/panel/Kconfig
+> > > +++ b/drivers/gpu/drm/panel/Kconfig
+> > > @@ -395,6 +395,16 @@ config DRM_PANEL_SITRONIX_ST7701
+> > >  	  ST7701 controller for 480X864 LCD panels with MIPI/RGB/SPI
+> > >  	  system interfaces.
+> > >  
+> > > +config DRM_PANEL_SITRONIX_ST7703
+> > > +	tristate "Sitronix ST7703 panel driver"
+> > > +	depends on OF
+> > > +	depends on DRM_MIPI_DSI
+> > > +	depends on BACKLIGHT_CLASS_DEVICE
+> > > +	help
+> > > +	  Say Y here if you want to enable support for the Sitronix
+> > > +	  ST7703 controller for 720X1440 LCD panels with MIPI/RGB/SPI
+> > > +	  system interfaces.
+> > > +
+> > >  config DRM_PANEL_SITRONIX_ST7789V
+> > >  	tristate "Sitronix ST7789V panel"
+> > >  	depends on OF && SPI
+> > > diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> > > index de74f282c433..47f4789a8685 100644
+> > > --- a/drivers/gpu/drm/panel/Makefile
+> > > +++ b/drivers/gpu/drm/panel/Makefile
+> > > @@ -41,6 +41,7 @@ obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
+> > >  obj-$(CONFIG_DRM_PANEL_SHARP_LS037V7DW01) += panel-sharp-ls037v7dw01.o
+> > >  obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) += panel-sharp-ls043t1le01.o
+> > >  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) += panel-sitronix-st7701.o
+> > > +obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7703) += panel-sitronix-st7703.o
+> > >  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
+> > >  obj-$(CONFIG_DRM_PANEL_SONY_ACX424AKP) += panel-sony-acx424akp.o
+> > >  obj-$(CONFIG_DRM_PANEL_SONY_ACX565AKM) += panel-sony-acx565akm.o
+> > > diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+> > > new file mode 100644
+> > > index 000000000000..dbd46b6c0b46
+> > > --- /dev/null
+> > > +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+> > > @@ -0,0 +1,535 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * DRM driver for Sitronix ST7703 MIPI DSI panel
+> > > + *
+> > > + * Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
+> > > + * Copyright (C) 2019-2020 Icenowy Zheng <icenowy@aosc.io>
+> > > + *
+> > > + * Based on panel-rocktech-jh057n00900.c, which is:
+> > > + *   Copyright (C) Purism SPC 2019
+> > > + */
+> > > +
+> > > +#include <linux/delay.h>
+> > > +#include <linux/gpio/consumer.h>
+> > > +#include <linux/mod_devicetable.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of_device.h>
+> > > +#include <linux/regulator/consumer.h>
+> > > +
+> > > +#include <drm/drm_mipi_dsi.h>
+> > > +#include <drm/drm_modes.h>
+> > > +#include <drm/drm_panel.h>
+> > > +#include <drm/drm_print.h>
+> > > +
+> > > +/* Manufacturer specific DCS commands */
+> > > +#define ST7703_CMD_SETDISP	0xB2
+> > > +#define ST7703_CMD_SETRGBIF	0xB3
+> > > +#define ST7703_CMD_SETCYC	0xB4
+> > > +#define ST7703_CMD_SETBGP	0xB5
+> > > +#define ST7703_CMD_SETVCOM	0xB6
+> > > +#define ST7703_CMD_SETOTP	0xB7
+> > > +#define ST7703_CMD_SETPOWER_EXT	0xB8
+> > > +#define ST7703_CMD_SETEXTC	0xB9
+> > > +#define ST7703_CMD_SETMIPI	0xBA
+> > > +#define ST7703_CMD_SETVDC	0xBC
+> > > +#define ST7703_CMD_UNK_BF	0xBF
+> > > +#define ST7703_CMD_SETSCR	0xC0
+> > > +#define ST7703_CMD_SETPOWER	0xC1
+> > > +#define ST7703_CMD_UNK_C6	0xC6
+> > > +#define ST7703_CMD_SETPANEL	0xCC
+> > > +#define ST7703_CMD_RDID1	0xDA
+> > > +#define ST7703_CMD_RDID2	0xDB
+> > > +#define ST7703_CMD_RDID3	0xDC
+> > > +#define ST7703_CMD_SETGAMMA	0xE0
+> > > +#define ST7703_CMD_SETEQ	0xE3
+> > > +#define ST7703_CMD_SETGIP1	0xE9
+> > > +#define ST7703_CMD_SETGIP2	0xEA
+> > > +
+> > > +struct st7703_panel_desc {
+> > > +	const struct drm_display_mode *mode;
+> > > +	unsigned int lanes;
+> > > +	unsigned long flags;
+> > > +	enum mipi_dsi_pixel_format format;
+> > > +	const char *const *supply_names;
+> > > +	unsigned int num_supplies;
+> > > +};
+> > > +
+> > > +struct st7703 {
+> > > +	struct device *dev;
+> > > +	struct drm_panel panel;
+> > > +	struct gpio_desc *reset_gpio;
+> > > +	struct regulator_bulk_data *supplies;
+> > > +	const struct st7703_panel_desc *desc;
+> > > +	bool prepared;
+> > > +};
+> > > +
+> > > +static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
+> > > +{
+> > > +	return container_of(panel, struct st7703, panel);
+> > > +}
+> > > +
+> > > +#define dsi_dcs_write_seq(dsi, cmd, seq...) do {			\
+> > > +		static const u8 d[] = { seq };				\
+> > > +		int ret;						\
+> > > +		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
+> > > +		if (ret < 0)						\
+> > > +			return ret;					\
+> > > +	} while (0)
+> > > +
+> > > +
+> > > +static int st7703_init_sequence(struct st7703 *ctx)
+> > > +{
+> > > +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> > > +	struct device *dev = ctx->dev;
+> > > +
+> > > +	/*
+> > > +	 * Init sequence was supplied by the panel vendor.
+> > > +	 */
+> > > +
+> > > +	/* Magic sequence to unlock user commands below. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xF1, 0x12, 0x83);
+> > > +
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
+> > > +			  0x33, /* VC_main = 0, Lane_Number = 3 (4 lanes) */
+> > > +			  0x81, /* DSI_LDO_SEL = 1.7V, RTERM = 90 Ohm */
+> > > +			  0x05, /* IHSRX = x6 (Low High Speed driving ability) */
+> > > +			  0xF9, /* TX_CLK_SEL = fDSICLK/16 */
+> > > +			  0x0E, /* HFP_OSC (min. HFP number in DSI mode) */
+> > > +			  0x0E, /* HBP_OSC (min. HBP number in DSI mode) */
+> > > +			  /* The rest is undocumented in ST7703 datasheet */
+> > > +			  0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> > > +			  0x44, 0x25, 0x00, 0x91, 0x0a, 0x00, 0x00, 0x02,
+> > > +			  0x4F, 0x11, 0x00, 0x00, 0x37);
+> > > +
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
+> > > +			  0x25, /* PCCS = 2, ECP_DC_DIV = 1/4 HSYNC */
+> > > +			  0x22, /* DT = 15ms XDK_ECP = x2 */
+> > > +			  0x20, /* PFM_DC_DIV = /1 */
+> > > +			  0x03  /* ECP_SYNC_EN = 1, VGX_SYNC_EN = 1 */);
+> > > +
+> > > +	/* RGB I/F porch timing */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
+> > > +			  0x10, /* VBP_RGB_GEN */
+> > > +			  0x10, /* VFP_RGB_GEN */
+> > > +			  0x05, /* DE_BP_RGB_GEN */
+> > > +			  0x05, /* DE_FP_RGB_GEN */
+> > > +			  /* The rest is undocumented in ST7703 datasheet */
+> > > +			  0x03, 0xFF,
+> > > +			  0x00, 0x00,
+> > > +			  0x00, 0x00);
+> > > +
+> > > +	/* Source driving settings. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
+> > > +			  0x73, /* N_POPON */
+> > > +			  0x73, /* N_NOPON */
+> > > +			  0x50, /* I_POPON */
+> > > +			  0x50, /* I_NOPON */
+> > > +			  0x00, /* SCR[31,24] */
+> > > +			  0xC0, /* SCR[23,16] */
+> > > +			  0x08, /* SCR[15,8] */
+> > > +			  0x70, /* SCR[7,0] */
+> > > +			  0x00  /* Undocumented */);
+> > > +
+> > > +	/* NVDDD_SEL = -1.8V, VDDD_SEL = out of range (possibly 1.9V?) */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
+> > > +
+> > > +	/*
+> > > +	 * SS_PANEL = 1 (reverse scan), GS_PANEL = 0 (normal scan)
+> > > +	 * REV_PANEL = 1 (normally black panel), BGR_PANEL = 1 (BGR)
+> > > +	 */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
+> > > +
+> > > +	/* Zig-Zag Type C column inversion. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> > > +
+> > > +	/* Set display resolution. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP,
+> > > +			  0xF0, /* NL = 240 */
+> > > +			  0x12, /* RES_V_LSB = 0, BLK_CON = VSSD,
+> > > +				 * RESO_SEL = 720RGB
+> > > +				 */
+> > > +			  0xF0  /* WHITE_GND_EN = 1 (GND),
+> > > +				 * WHITE_FRAME_SEL = 7 frames,
+> > > +				 * ISC = 0 frames
+> > > +				 */);
+> > > +
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
+> > > +			  0x00, /* PNOEQ */
+> > > +			  0x00, /* NNOEQ */
+> > > +			  0x0B, /* PEQGND */
+> > > +			  0x0B, /* NEQGND */
+> > > +			  0x10, /* PEQVCI */
+> > > +			  0x10, /* NEQVCI */
+> > > +			  0x00, /* PEQVCI1 */
+> > > +			  0x00, /* NEQVCI1 */
+> > > +			  0x00, /* reserved */
+> > > +			  0x00, /* reserved */
+> > > +			  0xFF, /* reserved */
+> > > +			  0x00, /* reserved */
+> > > +			  0xC0, /* ESD_DET_DATA_WHITE = 1, ESD_WHITE_EN = 1 */
+> > > +			  0x10  /* SLPIN_OPTION = 1 (no need vsync after sleep-in)
+> > > +				 * VEDIO_NO_CHECK_EN = 0
+> > > +				 * ESD_WHITE_GND_EN = 0
+> > > +				 * ESD_DET_TIME_SEL = 0 frames
+> > > +				 */);
+> > > +
+> > > +	/* Undocumented command. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_UNK_C6, 0x01, 0x00, 0xFF, 0xFF, 0x00);
+> > > +
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
+> > > +			  0x74, /* VBTHS, VBTLS: VGH = 17V, VBL = -11V */
+> > > +			  0x00, /* FBOFF_VGH = 0, FBOFF_VGL = 0 */
+> > > +			  0x32, /* VRP  */
+> > > +			  0x32, /* VRN */
+> > > +			  0x77, /* reserved */
+> > > +			  0xF1, /* APS = 1 (small),
+> > > +				 * VGL_DET_EN = 1, VGH_DET_EN = 1,
+> > > +				 * VGL_TURBO = 1, VGH_TURBO = 1
+> > > +				 */
+> > > +			  0xFF, /* VGH1_L_DIV, VGL1_L_DIV (1.5MHz) */
+> > > +			  0xFF, /* VGH1_R_DIV, VGL1_R_DIV (1.5MHz) */
+> > > +			  0xCC, /* VGH2_L_DIV, VGL2_L_DIV (2.6MHz) */
+> > > +			  0xCC, /* VGH2_R_DIV, VGL2_R_DIV (2.6MHz) */
+> > > +			  0x77, /* VGH3_L_DIV, VGL3_L_DIV (4.5MHz) */
+> > > +			  0x77  /* VGH3_R_DIV, VGL3_R_DIV (4.5MHz) */);
+> > > +
+> > > +	/* Reference voltage. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP,
+> > > +			  0x07, /* VREF_SEL = 4.2V */
+> > > +			  0x07  /* NVREF_SEL = 4.2V */);
+> > > +
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM,
+> > > +			  0x2C, /* VCOMDC_F = -0.67V */
+> > > +			  0x2C  /* VCOMDC_B = -0.67V */);
+> > > +
+> > > +	/* Undocumented command. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_UNK_BF, 0x02, 0x11, 0x00);
+> > > +
+> > > +	/* This command is to set forward GIP timing. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
+> > > +			  0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
+> > > +			  0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> > > +			  0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> > > +			  0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> > > +			  0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> > > +			  0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> > > +			  0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> > > +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> > > +
+> > > +	/* This command is to set backward GIP timing. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
+> > > +			  0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> > > +			  0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> > > +			  0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> > > +			  0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> > > +			  0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> > > +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> > > +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
+> > > +			  0xA5, 0x00, 0x00, 0x00, 0x00);
+> > > +
+> > > +	/* Adjust the gamma characteristics of the panel. */
+> > > +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
+> > > +			  0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
+> > > +			  0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
+> > > +			  0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
+> > > +			  0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
+> > > +			  0x12, 0x18);
+> > > +
+> > > +	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int st7703_read_id(struct st7703 *ctx)
+> > > +{
+> > > +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> > > +	u8 id1, id2, id3;
+> > > +	int ret;
+> > > +
+> > > +	ret = mipi_dsi_dcs_read(dsi, ST7703_CMD_RDID1, &id1, 1);
+> > > +	if (ret < 0) {
+> > > +		DRM_DEV_ERROR(ctx->dev, "could not read ID1\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = mipi_dsi_dcs_read(dsi, ST7703_CMD_RDID2, &id2, 1);
+> > > +	if (ret < 0) {
+> > > +		DRM_DEV_ERROR(ctx->dev, "could not read ID2\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = mipi_dsi_dcs_read(dsi, ST7703_CMD_RDID3, &id3, 1);
+> > > +	if (ret < 0) {
+> > > +		DRM_DEV_ERROR(ctx->dev, "could not read ID3\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	DRM_DEV_INFO(ctx->dev,
+> > > +		     "manufacturer: %02x version: %02x driver: %02x\n",
+> > > +		     id1, id2, id3);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int st7703_prepare(struct drm_panel *panel)
+> > > +{
+> > > +	struct st7703 *ctx = panel_to_st7703(panel);
+> > > +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> > > +	int ret;
+> > > +
+> > > +	if (ctx->prepared)
+> > > +		return 0;
+> > > +
+> > > +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> > > +
+> > > +	ret = regulator_bulk_enable(ctx->desc->num_supplies, ctx->supplies);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	/* Wait for regulators to stabilize. */
+> > > +	usleep_range(10000, 20000);
+> > > +
+> > > +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> > > +
+> > > +	/* There needs to be at least 15ms post-reset delay. */
+> > > +	usleep_range(15000, 20000);
+> > > +
+> > > +	ret = st7703_read_id(ctx);
+> > > +	if (ret < 0)
+> > > +		goto err_poweroff;
+> > > +
+> > > +	ret = st7703_init_sequence(ctx);
+> > > +	if (ret < 0) {
+> > > +		DRM_DEV_ERROR(ctx->dev,
+> > > +			      "Panel init sequence failed (%d)\n", ret);
+> > > +		goto err_poweroff;
+> > > +	}
+> > > +
+> > > +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+> > > +	if (ret < 0) {
+> > > +		DRM_DEV_ERROR(ctx->dev,
+> > > +			      "Failed to exit sleep mode (%d)\n", ret);
+> > > +		goto err_poweroff;
+> > > +	}
+> > > +
+> > > +	msleep(120);
+> > > +
+> > > +	ret = mipi_dsi_dcs_set_display_on(dsi);
+> > > +	if (ret) {
+> > > +		DRM_DEV_ERROR(ctx->dev,
+> > > +			      "Failed to turn on the display (%d)\n", ret);
+> > > +		goto err_poweroff;
+> > > +	}
+> > > +
+> > > +	ctx->prepared = true;
+> > > +
+> > > +	return 0;
+> > > +
+> > > +err_poweroff:
+> > > +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> > > +	regulator_bulk_disable(ctx->desc->num_supplies, ctx->supplies);
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int st7703_enable(struct drm_panel *panel)
+> > > +{
+> > > +	/*
+> > > +	 * Avoid flicker by waiting for slightly more than 1
+> > > +	 * frame's interval.
+> > > +	 */
+> > > +	msleep(50);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int st7703_unprepare(struct drm_panel *panel)
+> > > +{
+> > > +	struct st7703 *ctx = panel_to_st7703(panel);
+> > > +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> > > +	int ret;
+> > > +
+> > > +	if (!ctx->prepared)
+> > > +		return 0;
+> > > +
+> > > +	ret = mipi_dsi_dcs_set_display_off(dsi);
+> > > +	if (ret < 0)
+> > > +		DRM_DEV_ERROR(ctx->dev,
+> > > +			      "Failed to turn off the display (%d)\n", ret);
+> > > +
+> > > +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+> > > +	if (ret < 0)
+> > > +		DRM_DEV_ERROR(ctx->dev,
+> > > +			      "Failed to enter sleep mode (%d)\n", ret);
+> > > +
+> > > +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> > > +	regulator_bulk_disable(ctx->desc->num_supplies, ctx->supplies);
+> > > +	ctx->prepared = false;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int st7703_get_modes(struct drm_panel *panel,
+> > > +			    struct drm_connector *connector)
+> > > +{
+> > > +	struct st7703 *ctx = panel_to_st7703(panel);
+> > > +	struct drm_display_mode *mode;
+> > > +
+> > > +	mode = drm_mode_duplicate(connector->dev, ctx->desc->mode);
+> > > +	if (!mode) {
+> > > +		DRM_DEV_ERROR(ctx->dev, "Failed to add mode\n");
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > > +	drm_mode_set_name(mode);
+> > > +
+> > > +	connector->display_info.width_mm = mode->width_mm;
+> > > +	connector->display_info.height_mm = mode->height_mm;
+> > > +	drm_mode_probed_add(connector, mode);
+> > > +
+> > > +	return 1;
+> > > +}
+> > > +
+> > > +static const struct drm_panel_funcs st7703_drm_funcs = {
+> > > +	.prepare   = st7703_prepare,
+> > > +	.enable    = st7703_enable,
+> > > +	.unprepare = st7703_unprepare,
+> > > +	.get_modes = st7703_get_modes,
+> > > +};
+> > > +
+> > > +static const struct drm_display_mode xbd599_mode = {
+> > > +	.hdisplay    = 720,
+> > > +	.hsync_start = 720 + 40,
+> > > +	.hsync_end   = 720 + 40 + 40,
+> > > +	.htotal	     = 720 + 40 + 40 + 40,
+> > > +	.vdisplay    = 1440,
+> > > +	.vsync_start = 1440 + 18,
+> > > +	.vsync_end   = 1440 + 18 + 10,
+> > > +	.vtotal	     = 1440 + 18 + 10 + 17,
+> > > +	.vrefresh    = 60,
+> > > +	.clock	     = 69000,
+> > > +	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> > > +
+> > > +	.width_mm    = 68,
+> > > +	.height_mm   = 136,
+> > > +	.type        = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
+> > > +};
+> > > +
+> > > +static const char * const xbd599_supply_names[] = {
+> > > +	"iovcc",
+> > > +	"vcc",
+> > > +};
+> > > +
+> > > +static const struct st7703_panel_desc xbd599_desc = {
+> > > +	.mode = &xbd599_mode,
+> > > +	.lanes = 4,
+> > > +	.flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
+> > > +	.format = MIPI_DSI_FMT_RGB888,
+> > > +	.supply_names = xbd599_supply_names,
+> > > +	.num_supplies = ARRAY_SIZE(xbd599_supply_names),
+> > > +};
+> > > +
+> > > +static int st7703_probe(struct mipi_dsi_device *dsi)
+> > > +{
+> > > +	const struct st7703_panel_desc *desc;
+> > > +	struct device *dev = &dsi->dev;
+> > > +	struct st7703 *ctx;
+> > > +	int i, ret;
+> > > +
+> > > +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> > > +	if (!ctx)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	ctx->dev = dev;
+> > > +	ctx->desc = desc = of_device_get_match_data(dev);
+> > > +
+> > > +	dsi->mode_flags = desc->flags;
+> > > +	dsi->format = desc->format;
+> > > +	dsi->lanes = desc->lanes;
+> > > +
+> > > +	ctx->supplies = devm_kcalloc(&dsi->dev, desc->num_supplies,
+> > > +					sizeof(*ctx->supplies),
+> > > +					GFP_KERNEL);
+> > > +	if (!ctx->supplies)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	for (i = 0; i < desc->num_supplies; i++)
+> > > +		ctx->supplies[i].supply = desc->supply_names[i];
+> > > +
+> > > +	ret = devm_regulator_bulk_get(&dsi->dev, desc->num_supplies,
+> > > +				      ctx->supplies);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> > > +	if (IS_ERR(ctx->reset_gpio)) {
+> > > +		DRM_DEV_ERROR(dev, "Can't get reset gpio\n");
+> > > +		return PTR_ERR(ctx->reset_gpio);
+> > > +	}
+> > > +
+> > > +	mipi_dsi_set_drvdata(dsi, ctx);
+> > > +
+> > > +	drm_panel_init(&ctx->panel, &dsi->dev, &st7703_drm_funcs,
+> > > +		       DRM_MODE_CONNECTOR_DSI);
+> > > +
+> > > +	ret = drm_panel_of_backlight(&ctx->panel);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	drm_panel_add(&ctx->panel);
+> > > +
+> > > +	ret = mipi_dsi_attach(dsi);
+> > > +	if (ret < 0) {
+> > > +		drm_panel_remove(&ctx->panel);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void st7703_shutdown(struct mipi_dsi_device *dsi)
+> > > +{
+> > > +	struct st7703 *ctx = mipi_dsi_get_drvdata(dsi);
+> > > +	int ret;
+> > > +
+> > > +	ret = drm_panel_unprepare(&ctx->panel);
+> > > +	if (ret < 0)
+> > > +		DRM_DEV_ERROR(&dsi->dev,
+> > > +			      "Failed to unprepare panel (%d)\n", ret);
+> > > +}
+> > > +
+> > > +static int st7703_remove(struct mipi_dsi_device *dsi)
+> > > +{
+> > > +	struct st7703 *ctx = mipi_dsi_get_drvdata(dsi);
+> > > +	int ret;
+> > > +
+> > > +	st7703_shutdown(dsi);
+> > > +
+> > > +	ret = mipi_dsi_detach(dsi);
+> > > +	if (ret < 0)
+> > > +		DRM_DEV_ERROR(&dsi->dev,
+> > > +			      "Failed to detach from DSI host (%d)\n", ret);
+> > > +
+> > > +	drm_panel_remove(&ctx->panel);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct of_device_id st7703_of_match[] = {
+> > > +	{ .compatible = "xingbangda,xbd599", .data = &xbd599_desc },
+> > > +	{ /* sentinel */ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, st7703_of_match);
+> > > +
+> > > +static struct mipi_dsi_driver st7703_driver = {
+> > > +	.probe	= st7703_probe,
+> > > +	.remove = st7703_remove,
+> > > +	.shutdown = st7703_shutdown,
+> > > +	.driver = {
+> > > +		.name = "st7703",
+> > > +		.of_match_table = st7703_of_match,
+> > > +	},
+> > > +};
+> > > +module_mipi_dsi_driver(st7703_driver);
+> > > +
+> > > +MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.io>");
+> > > +MODULE_DESCRIPTION("DRM driver for Sitronix ST7703 MIPI DSI panel");
+> > > +MODULE_LICENSE("GPL v2");
+> > > -- 
+> > > 2.27.0
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
