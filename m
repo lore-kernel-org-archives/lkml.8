@@ -2,2597 +2,656 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BD9206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="dzXY/1rr"
+	by mail.kernel.org (Postfix) with ESMTP id CE0AF206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgFVKfG (ORCPT
+        id S1727084AbgFVKjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:35:06 -0400
-Received: from mail-bn7nam10on2131.outbound.protection.outlook.com ([40.107.92.131]:28129
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727020AbgFVKfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:35:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y9b6JsGPXGLMA8EeJxIxtG7VRFtS67yPd/rKPaGhMaPoFdEF8cflHd74ZHXHTIMz67Fy8HuXbC74l/5LEFW8aHl2zHbTM+0wj0SgxUlIXNgJyJ/UsffOo93jq+xngQZqtkqCyYkQaGbWYw9Tf2bAEWA1e5vDC+wY0O0OeWDpOjmSgFthb4qy7lR9VG90IDvZSD26Eyce2SxARHxD/RHckf9635KxxICcmgH+S3K4uLQBhgYXmGIU7iIrhWie8XGgV6iCmhQkY7qg85b2MGpP+RbOjNqLA51I5ljfKMPEgx+pj/cruKNHNp36u8yuA6UR2kJq0yY8PQ0i4N8/XQOfYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QGiOjgdCtkURKw8Ml3FEzCSyvSIfzYnbxtLVR71Et38=;
- b=NKfhDri8H8iJNEiSKLc86U1IDo8IprHuENQ+VLs+DR1P6XuQIk+yyBtUx2K6VIn/+reabyhSeDPYWZZNlBgcVWx24bKkmBWO1M3LDK6F1u5CP3NEbF+0rCG+CCCayaw435SWC+lg3fdzD1qpBY/UKoyyZwj0vqtCx9C9Aav56XnjXLhr6co1H2plbn57hvgW9XhMK7LpFjiUV5B00JG6Cj5Zx9pyQy23ktDgS5jNREJizCzdR2ldvhoOhT/06u07rPSLqLP/ytx1iY/ejAoEZ1nKsw4TKQQiAV4CD+AxJrPqBhlN5vbu/tCQfEk1f9h9NazoNZELXT20I5TzB/5P2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QGiOjgdCtkURKw8Ml3FEzCSyvSIfzYnbxtLVR71Et38=;
- b=dzXY/1rrjJWjFfjdhKFcznUNkGhIqz72WpoMnTcaFcUJm0e+uNw39TRuxSDlfKJhRRp/4YQKkmJud6vyyiR8N9n8QfrmsRUSukT0GDvzkA2qvzBVw91/4hrOEEbAaiJwr8umJo6G87bFn+VgSSdwfthIVPlI4fwL7B7mO9c2wkI=
-Authentication-Results: analogixsemi.com; dkim=none (message not signed)
- header.d=none;analogixsemi.com; dmarc=none action=none
- header.from=analogixsemi.com;
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by BY5PR04MB6980.namprd04.prod.outlook.com (2603:10b6:a03:228::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
- 2020 10:32:31 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::844e:398b:2165:631b]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::844e:398b:2165:631b%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 10:32:31 +0000
-Date:   Mon, 22 Jun 2020 18:32:23 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v13 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
- DP
-Message-ID: <20200622103223.GA3734@xin-VirtualBox>
-References: <cover.1591345160.git.xji@analogixsemi.com>
- <a18316c118c7b8ac201911b0b96d41c84653a00f.1591345160.git.xji@analogixsemi.com>
- <20200621080925.GH74146@ravnborg.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200621080925.GH74146@ravnborg.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK2PR02CA0199.apcprd02.prod.outlook.com
- (2603:1096:201:20::11) To BY5PR04MB6739.namprd04.prod.outlook.com
- (2603:10b6:a03:229::8)
+        Mon, 22 Jun 2020 06:39:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:1291 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbgFVKjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 06:39:13 -0400
+IronPort-SDR: iFnXhuXawHNq8gCLQm79VdBUChc+kV4x564gKfw2y8mkRMWup7x6z7CDQxqrIZglYrRqBu6Oki
+ 12Ndq4Qx+PmA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="123374668"
+X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
+   d="gz'50?scan'50,208,50";a="123374668"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 03:16:10 -0700
+IronPort-SDR: pylplAVI6CE7ssZaBqO6Kv9eKrLUzZ/KVPN4bFAMt0JTyV9JQKBU1UnuPQm7slfSUPvfmU7ZBG
+ vz6Wr6GbXGhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
+   d="gz'50?scan'50,208,50";a="292807130"
+Received: from lkp-server01.sh.intel.com (HELO f484c95e4fd1) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 22 Jun 2020 03:16:08 -0700
+Received: from kbuild by f484c95e4fd1 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jnJUl-0000Df-Pg; Mon, 22 Jun 2020 10:16:07 +0000
+Date:   Mon, 22 Jun 2020 18:15:09 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Paul Burton <paulburton@kernel.org>
+Subject: arch/mips/sgi-ip27/ip27-init.c:123:2: error: implicit declaration of
+ function 'register_smp_ops'
+Message-ID: <202006221807.LKWp5nW9%lkp@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK2PR02CA0199.apcprd02.prod.outlook.com (2603:1096:201:20::11) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3109.21 via Frontend Transport; Mon, 22 Jun 2020 10:32:29 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fe0697e3-aa6e-4136-409a-08d816979118
-X-MS-TrafficTypeDiagnostic: BY5PR04MB6980:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR04MB69800254CC278EA3E54C0525C7970@BY5PR04MB6980.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1751;
-X-Forefront-PRVS: 0442E569BC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mrsp/3AG2z1a26dVWTj/jUxcrSLO7iOUAOzihplSP+j5SK5nkpr5/xQvD56A5FYt9QCyfvdocZ7TC2vI+Vw5pHFTCMeptya81gSCD83o8pdk+zXVlbEcN9rEc+LdIK2kD5Cxj25UahrzgE52q1pI2Wj7yVpDoE/YczRAdklYHwNCCZkTHiCef6t5cHOs9A29fbhaIhh9iZPDT6xSsn6pNIcop6zot6ZyUMcplnwN9+rD/lru6W1GIoDCmFa2x3cmmTGf7oAibXrzahLRw8QM8nxNOx3SICbIxNWaU0G4wPhIO1+u3sxu9AwKnp+gw+M0nFlhQwWvT0rJvFQ+Jqck4n0ZhRcaRJ+T/f5aRJci1Jo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(346002)(366004)(54906003)(83380400001)(33716001)(5660300002)(1076003)(6666004)(30864003)(956004)(86362001)(2906002)(26005)(4326008)(6496006)(107886003)(66946007)(9686003)(66476007)(66556008)(186003)(16526019)(33656002)(8676002)(52116002)(7416002)(508600001)(55016002)(8936002)(966005)(6916009)(559001)(579004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: +uG1mrxVM+8/hdAwSj7SJqe1vi0/h0aBcGxEdaUXDDy4dayalL8NPi6Z0wQoDr7iSvNpKByMAwq1foI9M5OFQyS3I+g8Fd4Xu3rS9QmHKuSuhFFI9JSnoPhHyWMmfQkou/k3vEHz8j7gmRLyjxKGCcrRhMLCk49u16+63qpGBPfeiEpR5p6Zi9gv7P9p6lo4UwZdknOZJVcy4CRe3/VimwmHhcJyVchnUFHslAnE3QLRE4MyDs5r7QasmApDwrMRNRcr/cDJzy+GvdjsWcnablnL2AGeEjMoeBWSq4zkdU13P3wADkl9p1765ZnbxS35/4f+Kbf0pBOEZ3pJlEwqBTzN66mi0iHHw4VDOhqezTSq9/E79KG1Ghy3k0nu+4fWRTh+rgYpTLMt4TzJpZe7yy6TPFjaen7EWDqf0XjipaaL0kcnHBzlVGdrpkroE0rmzDcFDnuCLwnbg0kJaslccroqBrPMEdQF56rB3GsRtZuUU7udPItLUygeUNFpe37p
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe0697e3-aa6e-4136-409a-08d816979118
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 10:32:30.9047
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K5opbeZ5uWXxGdGCwODLK16+hbfUzD39iJyy/xsqPHyvPKiRoiYVUlu6hp53BcA6XvjJRrJ2zN3OCBrz34LNMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6980
+Content-Type: multipart/mixed; boundary="MGYHOYXEY6WxJCY8"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 10:09:25AM +0200, Sam Ravnborg wrote:
-> Hi Xin.
-> 
-> 
-> On Tue, Jun 09, 2020 at 03:19:50PM +0800, Xin Ji wrote:
-> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-> > for portable device. It converts MIPI DSI/DPI to DisplayPort 1.3 4K.
-> > 
-> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
-> 
-> The bridge driver now implements the bridge functions for get_edid +
-> detect which is good.
-> But the bridge driver also needs to check the flags argument
-> of anx7625_bridge_attach() so the connector creation is optional.
-> This is required to prepare the bridge driver to fully support a
-> chain of bridges and is mandatory for new bridge drivers.
-> 
-> Futhermore the bridge driver needs to be converted to use the bridge
-> panel. See what other bridge drivers do.
-> In short - the drm_panel shall be replaced by a bridge in your
-> platform data structure.
-> Usual this end up in less code after the conversion.
-> 
-> 	Sam
-> 
-Hi Sam, thanks for your comments.
-1. I'll add flags argument check in anx7625_bridge_attach().
-2. Do you mean panel bridge, related interface is
-"devm_drm_panel_bridge_add(...)"? If it is, do I still need call
-drm_panel_prepare()/drm_panel_unprepare() to enable/disable panel power?
 
-Thanks,
-Xin
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > ---
-> >  drivers/gpu/drm/bridge/analogix/Kconfig   |    9 +
-> >  drivers/gpu/drm/bridge/analogix/Makefile  |    1 +
-> >  drivers/gpu/drm/bridge/analogix/anx7625.c | 1999 +++++++++++++++++++++++++++++
-> >  drivers/gpu/drm/bridge/analogix/anx7625.h |  397 ++++++
-> >  4 files changed, 2406 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
-> > index e1fa7d8..024ea2a 100644
-> > --- a/drivers/gpu/drm/bridge/analogix/Kconfig
-> > +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
-> > @@ -25,3 +25,12 @@ config DRM_ANALOGIX_ANX78XX
-> >  config DRM_ANALOGIX_DP
-> >  	tristate
-> >  	depends on DRM
-> > +
-> > +config DRM_ANALOGIX_ANX7625
-> > +	tristate "Analogix Anx7625 MIPI to DP interface support"
-> > +	depends on DRM
-> > +	depends on OF
-> > +	help
-> > +	  ANX7625 is an ultra-low power 4K mobile HD transmitter
-> > +	  designed for portable devices. It converts MIPI/DPI to
-> > +	  DisplayPort1.3 4K.
-> > diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
-> > index 97669b3..44da392 100644
-> > --- a/drivers/gpu/drm/bridge/analogix/Makefile
-> > +++ b/drivers/gpu/drm/bridge/analogix/Makefile
-> > @@ -1,5 +1,6 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> >  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o analogix-i2c-dptx.o
-> >  obj-$(CONFIG_DRM_ANALOGIX_ANX6345) += analogix-anx6345.o
-> > +obj-$(CONFIG_DRM_ANALOGIX_ANX7625) += anx7625.o
-> >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
-> >  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
-> > diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> > new file mode 100644
-> > index 0000000..db37f68
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> > @@ -0,0 +1,1999 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright(c) 2020, Analogix Semiconductor. All rights reserved.
-> > + *
-> > + */
-> > +#include <linux/gcd.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/types.h>
-> > +#include <linux/workqueue.h>
-> > +
-> > +#include <linux/of_gpio.h>
-> > +#include <linux/of_graph.h>
-> > +#include <linux/of_platform.h>
-> > +
-> > +#include <drm/drm_atomic_helper.h>
-> > +#include <drm/drm_bridge.h>
-> > +#include <drm/drm_crtc_helper.h>
-> > +#include <drm/drm_dp_helper.h>
-> > +#include <drm/drm_edid.h>
-> > +#include <drm/drm_mipi_dsi.h>
-> > +#include <drm/drm_panel.h>
-> > +#include <drm/drm_print.h>
-> > +#include <drm/drm_probe_helper.h>
-> > +
-> > +#include <video/display_timing.h>
-> > +
-> > +#include "anx7625.h"
-> > +
-> > +/*
-> > + * There is a sync issue while access I2C register between AP(CPU) and
-> > + * internal firmware(OCM), to avoid the race condition, AP should access
-> > + * the reserved slave address before slave address occurs changes.
-> > + */
-> > +static int i2c_access_workaround(struct anx7625_data *ctx,
-> > +				 struct i2c_client *client)
-> > +{
-> > +	u8 offset;
-> > +	struct device *dev = &client->dev;
-> > +	int ret;
-> > +
-> > +	if (client == ctx->last_client)
-> > +		return 0;
-> > +
-> > +	ctx->last_client = client;
-> > +
-> > +	if (client == ctx->i2c.tcpc_client)
-> > +		offset = RSVD_00_ADDR;
-> > +	else if (client == ctx->i2c.tx_p0_client)
-> > +		offset = RSVD_D1_ADDR;
-> > +	else if (client == ctx->i2c.tx_p1_client)
-> > +		offset = RSVD_60_ADDR;
-> > +	else if (client == ctx->i2c.rx_p0_client)
-> > +		offset = RSVD_39_ADDR;
-> > +	else if (client == ctx->i2c.rx_p1_client)
-> > +		offset = RSVD_7F_ADDR;
-> > +	else
-> > +		offset = RSVD_00_ADDR;
-> > +
-> > +	ret = i2c_smbus_write_byte_data(client, offset, 0x00);
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev,
-> > +			      "fail to access i2c id=%x\n:%x",
-> > +			      client->addr, offset);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_reg_read(struct anx7625_data *ctx,
-> > +			    struct i2c_client *client, u8 reg_addr)
-> > +{
-> > +	int ret;
-> > +	struct device *dev = &client->dev;
-> > +
-> > +	i2c_access_workaround(ctx, client);
-> > +
-> > +	ret = i2c_smbus_read_byte_data(client, reg_addr);
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "read i2c fail id=%x:%x\n",
-> > +			      client->addr, reg_addr);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_reg_block_read(struct anx7625_data *ctx,
-> > +				  struct i2c_client *client,
-> > +				  u8 reg_addr, u8 len, u8 *buf)
-> > +{
-> > +	int ret;
-> > +	struct device *dev = &client->dev;
-> > +
-> > +	i2c_access_workaround(ctx, client);
-> > +
-> > +	ret = i2c_smbus_read_i2c_block_data(client, reg_addr, len, buf);
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "read i2c block fail id=%x:%x\n",
-> > +			      client->addr, reg_addr);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_reg_write(struct anx7625_data *ctx,
-> > +			     struct i2c_client *client,
-> > +			     u8 reg_addr, u8 reg_val)
-> > +{
-> > +	int ret;
-> > +	struct device *dev = &client->dev;
-> > +
-> > +	i2c_access_workaround(ctx, client);
-> > +
-> > +	ret = i2c_smbus_write_byte_data(client, reg_addr, reg_val);
-> > +
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "fail to write i2c id=%x\n:%x",
-> > +			      client->addr, reg_addr);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_write_or(struct anx7625_data *ctx,
-> > +			    struct i2c_client *client,
-> > +			    u8 offset, u8 mask)
-> > +{
-> > +	int val;
-> > +
-> > +	val = anx7625_reg_read(ctx, client, offset);
-> > +	if (val < 0)
-> > +		return val;
-> > +
-> > +	return anx7625_reg_write(ctx, client, offset, (val | (mask)));
-> > +}
-> > +
-> > +static int anx7625_write_and(struct anx7625_data *ctx,
-> > +			     struct i2c_client *client,
-> > +			     u8 offset, u8 mask)
-> > +{
-> > +	int val;
-> > +
-> > +	val = anx7625_reg_read(ctx, client, offset);
-> > +	if (val < 0)
-> > +		return val;
-> > +
-> > +	return anx7625_reg_write(ctx, client, offset, (val & (mask)));
-> > +}
-> > +
-> > +static int anx7625_write_and_or(struct anx7625_data *ctx,
-> > +				struct i2c_client *client,
-> > +				u8 offset, u8 and_mask, u8 or_mask)
-> > +{
-> > +	int val;
-> > +
-> > +	val = anx7625_reg_read(ctx, client, offset);
-> > +	if (val < 0)
-> > +		return val;
-> > +
-> > +	return anx7625_reg_write(ctx, client,
-> > +				 offset, (val & and_mask) | (or_mask));
-> > +}
-> > +
-> > +static int anx7625_read_ctrl_status_p0(struct anx7625_data *ctx)
-> > +{
-> > +	return anx7625_reg_read(ctx, ctx->i2c.rx_p0_client, AP_AUX_CTRL_STATUS);
-> > +}
-> > +
-> > +static int wait_aux_op_finish(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int val;
-> > +	int ret;
-> > +
-> > +	ret = readx_poll_timeout(anx7625_read_ctrl_status_p0,
-> > +				 ctx, val,
-> > +				 (!(val & AP_AUX_CTRL_OP_EN) || (val < 0)),
-> > +				 2000,
-> > +				 2000 * 150);
-> > +	if (ret) {
-> > +		DRM_DEV_ERROR(dev, "aux operation fail!\n");
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	val = anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
-> > +			       AP_AUX_CTRL_STATUS);
-> > +	if (val < 0 || (val & 0x0F)) {
-> > +		DRM_DEV_ERROR(dev, "aux status %02x\n", val);
-> > +		val = -EIO;
-> > +	}
-> > +
-> > +	return val;
-> > +}
-> > +
-> > +static int anx7625_video_mute_control(struct anx7625_data *ctx,
-> > +				      u8 status)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (status) {
-> > +		/* Set mute on flag */
-> > +		ret = anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
-> > +				       AP_AV_STATUS, AP_MIPI_MUTE);
-> > +		/* Clear mipi RX en */
-> > +		ret |= anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
-> > +					 AP_AV_STATUS, (u8)~AP_MIPI_RX_EN);
-> > +	} else {
-> > +		/* Mute off flag */
-> > +		ret = anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
-> > +					AP_AV_STATUS, (u8)~AP_MIPI_MUTE);
-> > +		/* Set MIPI RX EN */
-> > +		ret |= anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
-> > +					AP_AV_STATUS, AP_MIPI_RX_EN);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_config_audio_input(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int ret;
-> > +
-> > +	/* Channel num */
-> > +	ret = anx7625_reg_write(ctx, ctx->i2c.tx_p2_client,
-> > +				AUDIO_CHANNEL_STATUS_6, I2S_CH_2 << 5);
-> > +
-> > +	/* FS */
-> > +	ret |= anx7625_write_and_or(ctx, ctx->i2c.tx_p2_client,
-> > +				    AUDIO_CHANNEL_STATUS_4,
-> > +				    0xf0, AUDIO_FS_48K);
-> > +	/* Word length */
-> > +	ret |= anx7625_write_and_or(ctx, ctx->i2c.tx_p2_client,
-> > +				    AUDIO_CHANNEL_STATUS_5,
-> > +				    0xf0, AUDIO_W_LEN_24_24MAX);
-> > +	/* I2S */
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.tx_p2_client,
-> > +				AUDIO_CHANNEL_STATUS_6, I2S_SLAVE_MODE);
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.tx_p2_client,
-> > +				 AUDIO_CONTROL_REGISTER, ~TDM_TIMING_MODE);
-> > +	/* Audio change flag */
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
-> > +				AP_AV_STATUS, AP_AUDIO_CHG);
-> > +
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "fail to config audio.\n");
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/* Reduction of fraction a/b */
-> > +static void anx7625_reduction_of_a_fraction(unsigned long *a, unsigned long *b)
-> > +{
-> > +	unsigned long gcd_num;
-> > +	unsigned long tmp_a, tmp_b;
-> > +	u32 i = 1;
-> > +
-> > +	gcd_num = gcd(*a, *b);
-> > +	*a /= gcd_num;
-> > +	*b /= gcd_num;
-> > +
-> > +	tmp_a = *a;
-> > +	tmp_b = *b;
-> > +
-> > +	while ((*a > MAX_UNSIGNED_24BIT) || (*b > MAX_UNSIGNED_24BIT)) {
-> > +		i++;
-> > +		*a = tmp_a / i;
-> > +		*b = tmp_b / i;
-> > +	}
-> > +
-> > +	/*
-> > +	 * In the end, make a, b larger to have higher ODFC PLL
-> > +	 * output frequency accuracy
-> > +	 */
-> > +	while ((*a < MAX_UNSIGNED_24BIT) && (*b < MAX_UNSIGNED_24BIT)) {
-> > +		*a <<= 1;
-> > +		*b <<= 1;
-> > +	}
-> > +
-> > +	*a >>= 1;
-> > +	*b >>= 1;
-> > +}
-> > +
-> > +static int anx7625_calculate_m_n(u32 pixelclock,
-> > +				 unsigned long *m,
-> > +				 unsigned long *n,
-> > +				 u8 *post_divider)
-> > +{
-> > +	if (pixelclock > PLL_OUT_FREQ_ABS_MAX / POST_DIVIDER_MIN) {
-> > +		/* Pixel clock frequency is too high */
-> > +		DRM_ERROR("pixelclock too high, act(%d), maximum(%lu)\n",
-> > +			  pixelclock,
-> > +			  PLL_OUT_FREQ_ABS_MAX / POST_DIVIDER_MIN);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (pixelclock < PLL_OUT_FREQ_ABS_MIN / POST_DIVIDER_MAX) {
-> > +		/* Pixel clock frequency is too low */
-> > +		DRM_ERROR("pixelclock too low, act(%d), maximum(%lu)\n",
-> > +			  pixelclock,
-> > +			  PLL_OUT_FREQ_ABS_MIN / POST_DIVIDER_MAX);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	for (*post_divider = 1;
-> > +		pixelclock < (PLL_OUT_FREQ_MIN / (*post_divider));)
-> > +		*post_divider += 1;
-> > +
-> > +	if (*post_divider > POST_DIVIDER_MAX) {
-> > +		for (*post_divider = 1;
-> > +			(pixelclock <
-> > +			 (PLL_OUT_FREQ_ABS_MIN / (*post_divider)));)
-> > +			*post_divider += 1;
-> > +
-> > +		if (*post_divider > POST_DIVIDER_MAX) {
-> > +			DRM_ERROR("cannot find property post_divider(%d)\n",
-> > +				  *post_divider);
-> > +			return -EDOM;
-> > +		}
-> > +	}
-> > +
-> > +	/* Patch to improve the accuracy */
-> > +	if (*post_divider == 7) {
-> > +		/* 27,000,000 is not divisible by 7 */
-> > +		*post_divider = 8;
-> > +	} else if (*post_divider == 11) {
-> > +		/* 27,000,000 is not divisible by 11 */
-> > +		*post_divider = 12;
-> > +	} else if ((*post_divider == 13) || (*post_divider == 14)) {
-> > +		/* 27,000,000 is not divisible by 13 or 14 */
-> > +		*post_divider = 15;
-> > +	}
-> > +
-> > +	if (pixelclock * (*post_divider) > PLL_OUT_FREQ_ABS_MAX) {
-> > +		DRM_ERROR("act clock(%u) large than maximum(%lu)\n",
-> > +			  pixelclock * (*post_divider),
-> > +			  PLL_OUT_FREQ_ABS_MAX);
-> > +		return -EDOM;
-> > +	}
-> > +
-> > +	*m = pixelclock;
-> > +	*n = XTAL_FRQ / (*post_divider);
-> > +
-> > +	anx7625_reduction_of_a_fraction(m, n);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int anx7625_odfc_config(struct anx7625_data *ctx,
-> > +			       u8 post_divider)
-> > +{
-> > +	int ret;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	/* Config input reference clock frequency 27MHz/19.2MHz */
-> > +	ret = anx7625_write_and(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_16,
-> > +				~(REF_CLK_27000KHZ << MIPI_FREF_D_IND));
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_16,
-> > +				(REF_CLK_27000KHZ << MIPI_FREF_D_IND));
-> > +	/* Post divider */
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.rx_p1_client,
-> > +				 MIPI_DIGITAL_PLL_8, 0x0f);
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_8,
-> > +				post_divider << 4);
-> > +
-> > +	/* Add patch for MIS2-125 (5pcs ANX7625 fail ATE MBIST test) */
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_7,
-> > +				 ~MIPI_PLL_VCO_TUNE_REG_VAL);
-> > +
-> > +	/* Reset ODFC PLL */
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_7,
-> > +				 ~MIPI_PLL_RESET_N);
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_7,
-> > +				MIPI_PLL_RESET_N);
-> > +
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "IO error.\n");
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_dsi_video_timing_config(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +	unsigned long m, n;
-> > +	u16 htotal;
-> > +	int ret;
-> > +	u8 post_divider = 0;
-> > +
-> > +	ret = anx7625_calculate_m_n(ctx->dt.pixelclock.min * 1000,
-> > +				    &m, &n, &post_divider);
-> > +
-> > +	if (ret) {
-> > +		DRM_DEV_ERROR(dev, "cannot get property m n value.\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "compute M(%lu), N(%lu), divider(%d).\n",
-> > +			     m, n, post_divider);
-> > +
-> > +	/* Configure pixel clock */
-> > +	ret = anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, PIXEL_CLOCK_L,
-> > +				(ctx->dt.pixelclock.min / 1000) & 0xFF);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, PIXEL_CLOCK_H,
-> > +				 (ctx->dt.pixelclock.min / 1000) >> 8);
-> > +	/* Lane count */
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.rx_p1_client,
-> > +			MIPI_LANE_CTRL_0, 0xfc);
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client,
-> > +				MIPI_LANE_CTRL_0, 3);
-> > +
-> > +	/* Htotal */
-> > +	htotal = ctx->dt.hactive.min + ctx->dt.hfront_porch.min +
-> > +		ctx->dt.hback_porch.min + ctx->dt.hsync_len.min;
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_TOTAL_PIXELS_L, htotal & 0xFF);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_TOTAL_PIXELS_H, htotal >> 8);
-> > +	/* Hactive */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_ACTIVE_PIXELS_L, ctx->dt.hactive.min & 0xFF);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_ACTIVE_PIXELS_H, ctx->dt.hactive.min >> 8);
-> > +	/* HFP */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_FRONT_PORCH_L, ctx->dt.hfront_porch.min);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_FRONT_PORCH_H,
-> > +			ctx->dt.hfront_porch.min >> 8);
-> > +	/* HWS */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_SYNC_WIDTH_L, ctx->dt.hsync_len.min);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_SYNC_WIDTH_H, ctx->dt.hsync_len.min >> 8);
-> > +	/* HBP */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_BACK_PORCH_L, ctx->dt.hback_porch.min);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			HORIZONTAL_BACK_PORCH_H, ctx->dt.hback_porch.min >> 8);
-> > +	/* Vactive */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE_LINES_L,
-> > +			ctx->dt.vactive.min);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE_LINES_H,
-> > +			ctx->dt.vactive.min >> 8);
-> > +	/* VFP */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			VERTICAL_FRONT_PORCH, ctx->dt.vfront_porch.min);
-> > +	/* VWS */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			VERTICAL_SYNC_WIDTH, ctx->dt.vsync_len.min);
-> > +	/* VBP */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
-> > +			VERTICAL_BACK_PORCH, ctx->dt.vback_porch.min);
-> > +	/* M value */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +			MIPI_PLL_M_NUM_23_16, (m >> 16) & 0xff);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +			MIPI_PLL_M_NUM_15_8, (m >> 8) & 0xff);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +			MIPI_PLL_M_NUM_7_0, (m & 0xff));
-> > +	/* N value */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +			MIPI_PLL_N_NUM_23_16, (n >> 16) & 0xff);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +			MIPI_PLL_N_NUM_15_8, (n >> 8) & 0xff);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client, MIPI_PLL_N_NUM_7_0,
-> > +			(n & 0xff));
-> > +	/* Diff */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +			MIPI_DIGITAL_ADJ_1, 0x3D);
-> > +
-> > +	ret |= anx7625_odfc_config(ctx, post_divider - 1);
-> > +
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "mipi dsi setup IO error.\n");
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_swap_dsi_lane3(struct anx7625_data *ctx)
-> > +{
-> > +	int val;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	/* Swap MIPI-DSI data lane 3 P and N */
-> > +	val = anx7625_reg_read(ctx, ctx->i2c.rx_p1_client, MIPI_SWAP);
-> > +	if (val < 0) {
-> > +		DRM_DEV_ERROR(dev, "IO error : access MIPI_SWAP.\n");
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	val |= (1 << MIPI_SWAP_CH3);
-> > +	return anx7625_reg_write(ctx, ctx->i2c.rx_p1_client, MIPI_SWAP, val);
-> > +}
-> > +
-> > +static int anx7625_api_dsi_config(struct anx7625_data *ctx)
-> > +
-> > +{
-> > +	int val, ret;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	/* Swap MIPI-DSI data lane 3 P and N */
-> > +	ret = anx7625_swap_dsi_lane3(ctx);
-> > +	if (ret < 0) {
-> > +		DRM_DEV_ERROR(dev, "IO error : swap dsi lane 3 fail.\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* DSI clock settings */
-> > +	val = (0 << MIPI_HS_PWD_CLK)		|
-> > +		(0 << MIPI_HS_RT_CLK)		|
-> > +		(0 << MIPI_PD_CLK)		|
-> > +		(1 << MIPI_CLK_RT_MANUAL_PD_EN)	|
-> > +		(1 << MIPI_CLK_HS_MANUAL_PD_EN)	|
-> > +		(0 << MIPI_CLK_DET_DET_BYPASS)	|
-> > +		(0 << MIPI_CLK_MISS_CTRL)	|
-> > +		(0 << MIPI_PD_LPTX_CH_MANUAL_PD_EN);
-> > +	ret = anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +				MIPI_PHY_CONTROL_3, val);
-> > +
-> > +	/*
-> > +	 * Decreased HS prepare timing delay from 160ns to 80ns work with
-> > +	 *     a) Dragon board 810 series (Qualcomm AP)
-> > +	 *     b) Moving Pixel DSI source (PG3A pattern generator +
-> > +	 *	P332 D-PHY Probe) default D-PHY timing
-> > +	 *	5ns/step
-> > +	 */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +				 MIPI_TIME_HS_PRPR, 0x10);
-> > +
-> > +	/* Enable DSI mode*/
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_18,
-> > +				SELECT_DSI << MIPI_DPI_SELECT);
-> > +
-> > +	ret |= anx7625_dsi_video_timing_config(ctx);
-> > +	if (ret < 0) {
-> > +		DRM_DEV_ERROR(dev, "dsi video timing config fail\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Toggle m, n ready */
-> > +	ret = anx7625_write_and(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_6,
-> > +				~(MIPI_M_NUM_READY | MIPI_N_NUM_READY));
-> > +	usleep_range(1000, 1100);
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client, MIPI_DIGITAL_PLL_6,
-> > +				MIPI_M_NUM_READY | MIPI_N_NUM_READY);
-> > +
-> > +	/* Configure integer stable register */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +				 MIPI_VIDEO_STABLE_CNT, 0x02);
-> > +	/* Power on MIPI RX */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +				 MIPI_LANE_CTRL_10, 0x00);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
-> > +				 MIPI_LANE_CTRL_10, 0x80);
-> > +
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "IO error : mipi dsi enable init fail.\n");
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_dsi_config(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int ret;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "config dsi.\n");
-> > +
-> > +	/* DSC disable */
-> > +	ret = anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
-> > +				R_DSC_CTRL_0, ~DSC_EN);
-> > +
-> > +	ret |= anx7625_api_dsi_config(ctx);
-> > +
-> > +	if (ret < 0) {
-> > +		DRM_DEV_ERROR(dev, "IO error : api dsi config error.\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Set MIPI RX EN */
-> > +	ret = anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
-> > +			       AP_AV_STATUS, AP_MIPI_RX_EN);
-> > +	/* Clear mute flag */
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
-> > +				 AP_AV_STATUS, (u8)~AP_MIPI_MUTE);
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "IO error : enable mipi rx fail.\n");
-> > +	else
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "success to config DSI\n");
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static void anx7625_dp_start(struct anx7625_data *ctx)
-> > +{
-> > +	int ret;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	if (!ctx->display_timing_valid) {
-> > +		DRM_DEV_ERROR(dev, "mipi not set display timing yet.\n");
-> > +		return;
-> > +	}
-> > +
-> > +	anx7625_config_audio_input(ctx);
-> > +
-> > +	ret = anx7625_dsi_config(ctx);
-> > +
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "MIPI phy setup error.\n");
-> > +}
-> > +
-> > +static void anx7625_dp_stop(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int ret;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "stop dp output\n");
-> > +
-> > +	/*
-> > +	 * Video disable: 0x72:08 bit 7 = 0;
-> > +	 * Audio disable: 0x70:87 bit 0 = 0;
-> > +	 */
-> > +	ret = anx7625_write_and(ctx, ctx->i2c.tx_p0_client, 0x87, 0xfe);
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.tx_p2_client, 0x08, 0x7f);
-> > +
-> > +	ret |= anx7625_video_mute_control(ctx, 1);
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "IO error : mute video fail\n");
-> > +}
-> > +
-> > +static int sp_tx_rst_aux(struct anx7625_data *ctx)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = anx7625_write_or(ctx, ctx->i2c.tx_p2_client, RST_CTRL2,
-> > +			       AUX_RST);
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.tx_p2_client, RST_CTRL2,
-> > +				 ~AUX_RST);
-> > +	return ret;
-> > +}
-> > +
-> > +static int sp_tx_aux_wr(struct anx7625_data *ctx, u8 offset)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				AP_AUX_BUFF_START, offset);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				 AP_AUX_COMMAND, 0x04);
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
-> > +				AP_AUX_CTRL_STATUS, AP_AUX_CTRL_OP_EN);
-> > +	return (ret | wait_aux_op_finish(ctx));
-> > +}
-> > +
-> > +static int sp_tx_aux_rd(struct anx7625_data *ctx, u8 len_cmd)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				AP_AUX_COMMAND, len_cmd);
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
-> > +				AP_AUX_CTRL_STATUS, AP_AUX_CTRL_OP_EN);
-> > +	return (ret | wait_aux_op_finish(ctx));
-> > +}
-> > +
-> > +static int sp_tx_get_edid_block(struct anx7625_data *ctx)
-> > +{
-> > +	int c = 0;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	sp_tx_aux_wr(ctx, 0x7e);
-> > +	sp_tx_aux_rd(ctx, 0x01);
-> > +	c = anx7625_reg_read(ctx, ctx->i2c.rx_p0_client, AP_AUX_BUFF_START);
-> > +	if (c < 0) {
-> > +		DRM_DEV_ERROR(dev, "IO error : access AUX BUFF.\n");
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, " EDID Block = %d\n", c + 1);
-> > +
-> > +	if (c > MAX_EDID_BLOCK)
-> > +		c = 1;
-> > +
-> > +	return c;
-> > +}
-> > +
-> > +static int edid_read(struct anx7625_data *ctx,
-> > +		     u8 offset, u8 *pblock_buf)
-> > +{
-> > +	int ret, cnt;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	for (cnt = 0; cnt <= EDID_TRY_CNT; cnt++) {
-> > +		sp_tx_aux_wr(ctx, offset);
-> > +		/* Set I2C read com 0x01 mot = 0 and read 16 bytes */
-> > +		ret = sp_tx_aux_rd(ctx, 0xf1);
-> > +
-> > +		if (ret) {
-> > +			sp_tx_rst_aux(ctx);
-> > +			DRM_DEV_DEBUG_DRIVER(dev, "edid read fail, reset!\n");
-> > +		} else {
-> > +			ret = anx7625_reg_block_read(ctx, ctx->i2c.rx_p0_client,
-> > +						     AP_AUX_BUFF_START,
-> > +						     MAX_DPCD_BUFFER_SIZE,
-> > +						     pblock_buf);
-> > +			if (ret > 0)
-> > +				break;
-> > +		}
-> > +	}
-> > +
-> > +	if (cnt > EDID_TRY_CNT)
-> > +		return -EIO;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int segments_edid_read(struct anx7625_data *ctx,
-> > +			      u8 segment, u8 *buf, u8 offset)
-> > +{
-> > +	u8 cnt;
-> > +	int ret;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	/* Write address only */
-> > +	ret = anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				AP_AUX_ADDR_7_0, 0x30);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				 AP_AUX_COMMAND, 0x04);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				 AP_AUX_CTRL_STATUS,
-> > +				 AP_AUX_CTRL_ADDRONLY | AP_AUX_CTRL_OP_EN);
-> > +
-> > +	ret |= wait_aux_op_finish(ctx);
-> > +	/* Write segment address */
-> > +	ret |= sp_tx_aux_wr(ctx, segment);
-> > +	/* Data read */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				 AP_AUX_ADDR_7_0, 0x50);
-> > +	if (ret) {
-> > +		DRM_DEV_ERROR(dev, "IO error : aux initial fail.\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	for (cnt = 0; cnt <= EDID_TRY_CNT; cnt++) {
-> > +		sp_tx_aux_wr(ctx, offset);
-> > +		/* Set I2C read com 0x01 mot = 0 and read 16 bytes */
-> > +		ret = sp_tx_aux_rd(ctx, 0xf1);
-> > +
-> > +		if (ret) {
-> > +			ret = sp_tx_rst_aux(ctx);
-> > +			DRM_DEV_ERROR(dev, "segment read fail, reset!\n");
-> > +		} else {
-> > +			ret = anx7625_reg_block_read(ctx, ctx->i2c.rx_p0_client,
-> > +						     AP_AUX_BUFF_START,
-> > +						     MAX_DPCD_BUFFER_SIZE, buf);
-> > +			if (ret > 0)
-> > +				break;
-> > +		}
-> > +	}
-> > +
-> > +	if (cnt > EDID_TRY_CNT)
-> > +		return -EIO;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int sp_tx_edid_read(struct anx7625_data *ctx,
-> > +			   u8 *pedid_blocks_buf)
-> > +{
-> > +	u8 offset, edid_pos;
-> > +	int count, blocks_num;
-> > +	u8 pblock_buf[MAX_DPCD_BUFFER_SIZE];
-> > +	u8 i, j;
-> > +	u8 g_edid_break = 0;
-> > +	int ret;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	/* Address initial */
-> > +	ret = anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				AP_AUX_ADDR_7_0, 0x50);
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				 AP_AUX_ADDR_15_8, 0);
-> > +	ret |= anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
-> > +				 AP_AUX_ADDR_19_16, 0xf0);
-> > +	if (ret < 0) {
-> > +		DRM_DEV_ERROR(dev, "access aux channel IO error.\n");
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	blocks_num = sp_tx_get_edid_block(ctx);
-> > +	if (blocks_num < 0)
-> > +		return blocks_num;
-> > +
-> > +	count = 0;
-> > +
-> > +	do {
-> > +		switch (count) {
-> > +		case 0:
-> > +		case 1:
-> > +			for (i = 0; i < 8; i++) {
-> > +				offset = (i + count * 8) * MAX_DPCD_BUFFER_SIZE;
-> > +				g_edid_break = edid_read(ctx, offset,
-> > +							 pblock_buf);
-> > +
-> > +				if (g_edid_break)
-> > +					break;
-> > +
-> > +				memcpy(&pedid_blocks_buf[offset],
-> > +				       pblock_buf,
-> > +				       MAX_DPCD_BUFFER_SIZE);
-> > +			}
-> > +
-> > +			break;
-> > +		case 2:
-> > +			offset = 0x00;
-> > +
-> > +			for (j = 0; j < 8; j++) {
-> > +				edid_pos = (j + count * 8) *
-> > +					MAX_DPCD_BUFFER_SIZE;
-> > +
-> > +				if (g_edid_break == 1)
-> > +					break;
-> > +
-> > +				segments_edid_read(ctx, count / 2,
-> > +						   pblock_buf, offset);
-> > +				memcpy(&pedid_blocks_buf[edid_pos],
-> > +				       pblock_buf,
-> > +				       MAX_DPCD_BUFFER_SIZE);
-> > +				offset = offset + 0x10;
-> > +			}
-> > +
-> > +			break;
-> > +		case 3:
-> > +			offset = 0x80;
-> > +
-> > +			for (j = 0; j < 8; j++) {
-> > +				edid_pos = (j + count * 8) *
-> > +					MAX_DPCD_BUFFER_SIZE;
-> > +				if (g_edid_break == 1)
-> > +					break;
-> > +
-> > +				segments_edid_read(ctx, count / 2,
-> > +						   pblock_buf, offset);
-> > +				memcpy(&pedid_blocks_buf[edid_pos],
-> > +				       pblock_buf,
-> > +				       MAX_DPCD_BUFFER_SIZE);
-> > +				offset = offset + 0x10;
-> > +			}
-> > +
-> > +			break;
-> > +		default:
-> > +			break;
-> > +		}
-> > +
-> > +		count++;
-> > +
-> > +	} while (blocks_num >= count);
-> > +
-> > +	/* Check edid data */
-> > +	if (!drm_edid_is_valid((struct edid *)pedid_blocks_buf)) {
-> > +		DRM_DEV_ERROR(dev, "WARNING! edid check fail!\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Reset aux channel */
-> > +	sp_tx_rst_aux(ctx);
-> > +
-> > +	return (blocks_num + 1);
-> > +}
-> > +
-> > +static void anx7625_power_on(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	if (!ctx->pdata.low_power_mode) {
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "not low power mode!\n");
-> > +		return;
-> > +	}
-> > +
-> > +	/* Power on pin enable */
-> > +	gpiod_set_value(ctx->pdata.gpio_p_on, 1);
-> > +	usleep_range(10000, 11000);
-> > +	/* Power reset pin enable */
-> > +	gpiod_set_value(ctx->pdata.gpio_reset, 1);
-> > +	usleep_range(10000, 11000);
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "power on !\n");
-> > +}
-> > +
-> > +static void anx7625_power_standby(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	if (!ctx->pdata.low_power_mode) {
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "not low power mode!\n");
-> > +		return;
-> > +	}
-> > +
-> > +	gpiod_set_value(ctx->pdata.gpio_reset, 0);
-> > +	usleep_range(1000, 1100);
-> > +	gpiod_set_value(ctx->pdata.gpio_p_on, 0);
-> > +	usleep_range(1000, 1100);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "power down\n");
-> > +}
-> > +
-> > +/* Basic configurations of ANX7625 */
-> > +static void anx7625_config(struct anx7625_data *ctx)
-> > +{
-> > +	anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +			  XTAL_FRQ_SEL, XTAL_FRQ_27M);
-> > +}
-> > +
-> > +static void anx7625_disable_pd_protocol(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int ret;
-> > +
-> > +	/* Reset main ocm */
-> > +	ret = anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, 0x88, 0x40);
-> > +	/* Disable PD */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				 AP_AV_STATUS, AP_DISABLE_PD);
-> > +	/* Release main ocm */
-> > +	ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, 0x88, 0x00);
-> > +
-> > +	if (ret < 0)
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "disable PD feature fail.\n");
-> > +	else
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "disable PD feature succeeded.\n");
-> > +}
-> > +
-> > +static int anx7625_ocm_loading_check(struct anx7625_data *ctx)
-> > +{
-> > +	int ret;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	/* Check interface workable */
-> > +	ret = anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
-> > +			       FLASH_LOAD_STA);
-> > +	if (ret < 0) {
-> > +		DRM_DEV_ERROR(dev, "IO error : access flash load.\n");
-> > +		return ret;
-> > +	}
-> > +	if ((ret & FLASH_LOAD_STA_CHK) != FLASH_LOAD_STA_CHK)
-> > +		return -ENODEV;
-> > +
-> > +	anx7625_disable_pd_protocol(ctx);
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "Firmware ver %02x%02x,",
-> > +			     anx7625_reg_read(ctx,
-> > +					      ctx->i2c.rx_p0_client,
-> > +					      OCM_FW_VERSION),
-> > +			     anx7625_reg_read(ctx,
-> > +					      ctx->i2c.rx_p0_client,
-> > +					      OCM_FW_REVERSION));
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "Driver version %s\n",
-> > +			     ANX7625_DRV_VERSION);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void anx7625_power_on_init(struct anx7625_data *ctx)
-> > +{
-> > +	int retry_count, i;
-> > +
-> > +	for (retry_count = 0; retry_count < 3; retry_count++) {
-> > +		anx7625_power_on(ctx);
-> > +		anx7625_config(ctx);
-> > +
-> > +		for (i = 0; i < OCM_LOADING_TIME; i++) {
-> > +			if (!anx7625_ocm_loading_check(ctx))
-> > +				return;
-> > +			usleep_range(1000, 1100);
-> > +		}
-> > +		anx7625_power_standby(ctx);
-> > +	}
-> > +}
-> > +
-> > +static void anx7625_chip_control(struct anx7625_data *ctx, int state)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "before set, power_state(%d).\n",
-> > +			     atomic_read(&ctx->power_status));
-> > +
-> > +	if (!ctx->pdata.low_power_mode)
-> > +		return;
-> > +
-> > +	if (state) {
-> > +		atomic_inc(&ctx->power_status);
-> > +		if (atomic_read(&ctx->power_status) == 1)
-> > +			anx7625_power_on_init(ctx);
-> > +	} else {
-> > +		if (atomic_read(&ctx->power_status)) {
-> > +			atomic_dec(&ctx->power_status);
-> > +
-> > +			if (atomic_read(&ctx->power_status) == 0)
-> > +				anx7625_power_standby(ctx);
-> > +		}
-> > +	}
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "after set, power_state(%d).\n",
-> > +			     atomic_read(&ctx->power_status));
-> > +}
-> > +
-> > +static void anx7625_init_gpio(struct anx7625_data *platform)
-> > +{
-> > +	struct device *dev = &platform->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "init gpio\n");
-> > +
-> > +	/* Gpio for chip power enable */
-> > +	platform->pdata.gpio_p_on =
-> > +		devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_LOW);
-> > +	/* Gpio for chip reset */
-> > +	platform->pdata.gpio_reset =
-> > +		devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> > +
-> > +	if (platform->pdata.gpio_p_on && platform->pdata.gpio_reset) {
-> > +		platform->pdata.low_power_mode = 1;
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "low power mode, pon %d, reset %d.\n",
-> > +				     desc_to_gpio(platform->pdata.gpio_p_on),
-> > +				     desc_to_gpio(platform->pdata.gpio_reset));
-> > +	} else {
-> > +		platform->pdata.low_power_mode = 0;
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "not low power mode.\n");
-> > +	}
-> > +}
-> > +
-> > +static void anx7625_stop_dp_work(struct anx7625_data *ctx)
-> > +{
-> > +	ctx->hpd_status = 0;
-> > +	ctx->hpd_high_cnt = 0;
-> > +	ctx->display_timing_valid = 0;
-> > +
-> > +	ctx->slimport_edid_p.edid_block_num = -1;
-> > +
-> > +	if (ctx->pdata.low_power_mode == 0)
-> > +		anx7625_disable_pd_protocol(ctx);
-> > +}
-> > +
-> > +static void anx7625_start_dp_work(struct anx7625_data *ctx)
-> > +{
-> > +	int ret;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	if (ctx->hpd_high_cnt >= 2) {
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "filter useless HPD\n");
-> > +		return;
-> > +	}
-> > +
-> > +	ctx->hpd_high_cnt++;
-> > +
-> > +	/* Not support HDCP */
-> > +	ret = anx7625_write_and(ctx, ctx->i2c.rx_p1_client, 0xee, 0x9f);
-> > +
-> > +	/* Try auth flag */
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client, 0xec, 0x10);
-> > +	/* Interrupt for DRM */
-> > +	ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client, 0xff, 0x01);
-> > +	if (ret < 0)
-> > +		return;
-> > +
-> > +	ret = anx7625_reg_read(ctx, ctx->i2c.rx_p1_client, 0x86);
-> > +	if (ret < 0)
-> > +		return;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "Secure OCM version=%02x\n", ret);
-> > +}
-> > +
-> > +static int anx7625_read_hpd_status_p0(struct anx7625_data *ctx)
-> > +{
-> > +	return anx7625_reg_read(ctx, ctx->i2c.rx_p0_client, SYSTEM_STSTUS);
-> > +}
-> > +
-> > +static void anx7625_hpd_polling(struct anx7625_data *ctx)
-> > +{
-> > +	int ret, val;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	if (atomic_read(&ctx->power_status) != 1) {
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "No need to poling HPD status.\n");
-> > +		return;
-> > +	}
-> > +
-> > +	ret = readx_poll_timeout(anx7625_read_hpd_status_p0,
-> > +				 ctx, val,
-> > +				 ((val & HPD_STATUS) || (val < 0)),
-> > +				 5000,
-> > +				 5000 * 100);
-> > +	if (ret) {
-> > +		DRM_DEV_ERROR(dev, "HPD polling timeout!\n");
-> > +	} else {
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "HPD raise up.\n");
-> > +		anx7625_reg_write(ctx, ctx->i2c.tcpc_client,
-> > +				  INTR_ALERT_1, 0xFF);
-> > +		anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				  INTERFACE_CHANGE_INT, 0);
-> > +	}
-> > +
-> > +	anx7625_start_dp_work(ctx);
-> > +}
-> > +
-> > +static void anx7625_disconnect_check(struct anx7625_data *ctx)
-> > +{
-> > +	if (atomic_read(&ctx->power_status) == 0)
-> > +		anx7625_stop_dp_work(ctx);
-> > +}
-> > +
-> > +static void anx7625_low_power_mode_check(struct anx7625_data *ctx,
-> > +					 int state)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "low power mode check, state(%d).\n", state);
-> > +
-> > +	if (ctx->pdata.low_power_mode) {
-> > +		anx7625_chip_control(ctx, state);
-> > +		if (state)
-> > +			anx7625_hpd_polling(ctx);
-> > +		else
-> > +			anx7625_disconnect_check(ctx);
-> > +	}
-> > +}
-> > +
-> > +static void dp_hpd_change_handler(struct anx7625_data *ctx, bool on)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	/* HPD changed */
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "dp_hpd_change_default_func: %d\n",
-> > +			     (u32)on);
-> > +
-> > +	if (on == 0) {
-> > +		DRM_DEV_DEBUG_DRIVER(dev, " HPD low\n");
-> > +		anx7625_stop_dp_work(ctx);
-> > +	} else {
-> > +		DRM_DEV_DEBUG_DRIVER(dev, " HPD high\n");
-> > +		anx7625_start_dp_work(ctx);
-> > +	}
-> > +
-> > +	ctx->hpd_status = 1;
-> > +}
-> > +
-> > +static int anx7625_hpd_change_detect(struct anx7625_data *ctx)
-> > +{
-> > +	int intr_vector, status;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "power_status=%d\n",
-> > +			     (u32)atomic_read(&ctx->power_status));
-> > +
-> > +	status = anx7625_reg_write(ctx, ctx->i2c.tcpc_client,
-> > +				   INTR_ALERT_1, 0xFF);
-> > +	if (status < 0) {
-> > +		DRM_DEV_ERROR(dev, "cannot clear alert reg.\n");
-> > +		return status;
-> > +	}
-> > +
-> > +	intr_vector = anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
-> > +				       INTERFACE_CHANGE_INT);
-> > +	if (intr_vector < 0) {
-> > +		DRM_DEV_ERROR(dev, "cannot access interrupt change reg.\n");
-> > +		return intr_vector;
-> > +	}
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "0x7e:0x44=%x\n", intr_vector);
-> > +	status = anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
-> > +				   INTERFACE_CHANGE_INT,
-> > +				   intr_vector & (~intr_vector));
-> > +	if (status < 0) {
-> > +		DRM_DEV_ERROR(dev, "cannot clear interrupt change reg.\n");
-> > +		return status;
-> > +	}
-> > +
-> > +	if (!(intr_vector & HPD_STATUS_CHANGE))
-> > +		return -ENOENT;
-> > +
-> > +	status = anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
-> > +				  SYSTEM_STSTUS);
-> > +	if (status < 0) {
-> > +		DRM_DEV_ERROR(dev, "cannot clear interrupt status.\n");
-> > +		return status;
-> > +	}
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "0x7e:0x45=%x\n", status);
-> > +	dp_hpd_change_handler(ctx, status & HPD_STATUS);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void anx7625_work_func(struct work_struct *work)
-> > +{
-> > +	int event;
-> > +	struct anx7625_data *ctx = container_of(work,
-> > +						struct anx7625_data, work);
-> > +
-> > +	mutex_lock(&ctx->lock);
-> > +	event = anx7625_hpd_change_detect(ctx);
-> > +	mutex_unlock(&ctx->lock);
-> > +	if (event < 0)
-> > +		return;
-> > +
-> > +	if (ctx->bridge_attached)
-> > +		drm_helper_hpd_irq_event(ctx->connector.dev);
-> > +}
-> > +
-> > +static irqreturn_t anx7625_intr_hpd_isr(int irq, void *data)
-> > +{
-> > +	struct anx7625_data *ctx = (struct anx7625_data *)data;
-> > +
-> > +	if (atomic_read(&ctx->power_status) != 1)
-> > +		return IRQ_NONE;
-> > +
-> > +	queue_work(ctx->workqueue, &ctx->work);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int anx7625_parse_dt(struct device *dev,
-> > +			    struct anx7625_platform_data *pdata)
-> > +{
-> > +	struct device_node *np = dev->of_node;
-> > +	struct device_node *panel_node, *out_ep;
-> > +
-> > +	pdata->node.mipi_dsi_host_node = of_graph_get_remote_node(np, 0, 0);
-> > +	if (!pdata->node.mipi_dsi_host_node) {
-> > +		DRM_DEV_ERROR(dev, "fail to get internal panel.\n");
-> > +		return -EPROBE_DEFER;
-> > +	}
-> > +
-> > +	of_node_put(pdata->node.mipi_dsi_host_node);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "found dsi host node.\n");
-> > +
-> > +	pdata->node.panel_node = of_graph_get_port_by_id(np, 1);
-> > +	if (!pdata->node.panel_node) {
-> > +		DRM_DEV_ERROR(dev, "fail to get panel node.\n");
-> > +		return -EPROBE_DEFER;
-> > +	}
-> > +
-> > +	of_node_put(pdata->node.panel_node);
-> > +	out_ep = of_get_child_by_name(pdata->node.panel_node,
-> > +				      "endpoint");
-> > +	if (!out_ep) {
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "cannot get endpoint.\n");
-> > +		return -EPROBE_DEFER;
-> > +	}
-> > +
-> > +	panel_node = of_graph_get_remote_port_parent(out_ep);
-> > +	of_node_put(out_ep);
-> > +	pdata->panel = of_drm_find_panel(panel_node);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "get panel node.\n");
-> > +
-> > +	of_node_put(panel_node);
-> > +	if (IS_ERR_OR_NULL(pdata->panel))
-> > +		return -EPROBE_DEFER;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static inline struct anx7625_data *connector_to_anx7625(struct drm_connector *c)
-> > +{
-> > +	return container_of(c, struct anx7625_data, connector);
-> > +}
-> > +
-> > +static inline struct anx7625_data *bridge_to_anx7625(struct drm_bridge *bridge)
-> > +{
-> > +	return container_of(bridge, struct anx7625_data, bridge);
-> > +}
-> > +
-> > +static void anx7625_post_disable(struct drm_bridge *bridge)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int ret;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "post disable\n");
-> > +
-> > +	if (!ctx->pdata.panel)
-> > +		return;
-> > +
-> > +	ret = drm_panel_unprepare(ctx->pdata.panel);
-> > +	if (ret)
-> > +		DRM_DEV_ERROR(dev, "fail to unprepare panel: %d\n", ret);
-> > +	else
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "backlight unprepared.\n");
-> > +
-> > +	atomic_set(&ctx->panel_power, 0);
-> > +}
-> > +
-> > +static void anx7625_pre_enable(struct drm_bridge *bridge)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int ret;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "pre enable\n");
-> > +
-> > +	if (!ctx->pdata.panel)
-> > +		return;
-> > +
-> > +	ret = drm_panel_prepare(ctx->pdata.panel);
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dev, "fail to prepare panel: %d\n", ret);
-> > +	else
-> > +		DRM_DEV_DEBUG_DRIVER(dev, "backlight prepared.\n");
-> > +	atomic_set(&ctx->panel_power, 1);
-> > +}
-> > +
-> > +static struct edid *anx7625_get_edid(struct anx7625_data *ctx)
-> > +{
-> > +	int turn_off_flag = 0;
-> > +	struct device *dev = &ctx->client->dev;
-> > +	struct s_edid_data *p_edid = &ctx->slimport_edid_p;
-> > +
-> > +	if (ctx->slimport_edid_p.edid_block_num > 0)
-> > +		return (struct edid *)&ctx->slimport_edid_p.edid_raw_data;
-> > +
-> > +	if (ctx->pdata.panel && atomic_read(&ctx->panel_power) == 0) {
-> > +		turn_off_flag = 1;
-> > +		anx7625_pre_enable(&ctx->bridge);
-> > +	}
-> > +
-> > +	anx7625_low_power_mode_check(ctx, 1);
-> > +	p_edid->edid_block_num = sp_tx_edid_read(ctx, p_edid->edid_raw_data);
-> > +	anx7625_low_power_mode_check(ctx, 0);
-> > +
-> > +	if (ctx->pdata.panel && turn_off_flag == 1)
-> > +		anx7625_post_disable(&ctx->bridge);
-> > +
-> > +	if (p_edid->edid_block_num < 1) {
-> > +		DRM_DEV_ERROR(dev, "Fail to read EDID.\n");
-> > +		return NULL;
-> > +	}
-> > +
-> > +	return (struct edid *)&ctx->slimport_edid_p.edid_raw_data;
-> > +}
-> > +
-> > +static int anx7625_get_modes(struct drm_connector *connector)
-> > +{
-> > +	struct anx7625_data *ctx = connector_to_anx7625(connector);
-> > +	int err, num_modes;
-> > +	struct edid *p_edid;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm get modes\n");
-> > +
-> > +	p_edid = anx7625_get_edid(ctx);
-> > +	if (!p_edid) {
-> > +		DRM_DEV_ERROR(dev, "Fail to get EDID\n");
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	err = drm_connector_update_edid_property(connector, p_edid);
-> > +	if (err) {
-> > +		DRM_DEV_ERROR(dev, "Fail to update EDID property: %d\n", err);
-> > +		return err;
-> > +	}
-> > +
-> > +	num_modes = drm_add_edid_modes(connector, p_edid);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "num_modes(%d)\n", num_modes);
-> > +
-> > +	return num_modes;
-> > +}
-> > +
-> > +static enum drm_mode_status
-> > +anx7625_connector_mode_valid(struct drm_connector *connector,
-> > +			     struct drm_display_mode *mode)
-> > +{
-> > +	struct anx7625_data *ctx = connector_to_anx7625(connector);
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm modes valid verify\n");
-> > +
-> > +	if (mode->clock > SUPPORT_PIXEL_CLOCK)
-> > +		return MODE_CLOCK_HIGH;
-> > +
-> > +	return MODE_OK;
-> > +}
-> > +
-> > +static struct drm_connector_helper_funcs anx7625_connector_helper_funcs = {
-> > +	.get_modes = anx7625_get_modes,
-> > +	.mode_valid = anx7625_connector_mode_valid,
-> > +};
-> > +
-> > +static enum drm_connector_status anx7625_sink_detect(struct anx7625_data *ctx)
-> > +{
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "sink detect, return connected\n");
-> > +
-> > +	return connector_status_connected;
-> > +}
-> > +
-> > +static enum drm_connector_status anx7625_detect(struct drm_connector *connector,
-> > +						bool force)
-> > +{
-> > +	struct anx7625_data *ctx = connector_to_anx7625(connector);
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm connector detect\n");
-> > +
-> > +	return anx7625_sink_detect(ctx);
-> > +}
-> > +
-> > +static const struct drm_connector_funcs anx7625_connector_funcs = {
-> > +	.fill_modes = drm_helper_probe_single_connector_modes,
-> > +	.detect = anx7625_detect,
-> > +	.destroy = drm_connector_cleanup,
-> > +	.reset = drm_atomic_helper_connector_reset,
-> > +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> > +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> > +};
-> > +
-> > +static int anx7625_attach_dsi(struct anx7625_data *ctx)
-> > +{
-> > +	struct mipi_dsi_host *host;
-> > +	struct mipi_dsi_device *dsi;
-> > +	struct device_node *mipi_host_node;
-> > +	struct device *dev = &ctx->client->dev;
-> > +	const struct mipi_dsi_device_info info = {
-> > +		.type = "anx7625",
-> > +		.channel = 0,
-> > +		.node = NULL,
-> > +	};
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "attach dsi\n");
-> > +
-> > +	mipi_host_node = ctx->pdata.node.mipi_dsi_host_node;
-> > +
-> > +	if (!mipi_host_node) {
-> > +		DRM_DEV_ERROR(dev, "dsi host is not configured.\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	host = of_find_mipi_dsi_host_by_node(mipi_host_node);
-> > +	if (!host) {
-> > +		DRM_DEV_ERROR(dev, "fail to find dsi host.\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	dsi = mipi_dsi_device_register_full(host, &info);
-> > +	if (IS_ERR(dsi)) {
-> > +		DRM_DEV_ERROR(dev, "fail to create dsi device.\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	dsi->lanes = 4;
-> > +	dsi->format = MIPI_DSI_FMT_RGB888;
-> > +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO	|
-> > +		MIPI_DSI_MODE_VIDEO_SYNC_PULSE	|
-> > +		MIPI_DSI_MODE_EOT_PACKET	|
-> > +		MIPI_DSI_MODE_VIDEO_HSE;
-> > +
-> > +	if (mipi_dsi_attach(dsi) < 0) {
-> > +		DRM_DEV_ERROR(dev, "fail to attach dsi to host.\n");
-> > +		mipi_dsi_device_unregister(dsi);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ctx->dsi = dsi;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "attach dsi succeeded.\n");
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void anx7625_bridge_detach(struct drm_bridge *bridge)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +
-> > +	if (ctx->dsi) {
-> > +		mipi_dsi_detach(ctx->dsi);
-> > +		mipi_dsi_device_unregister(ctx->dsi);
-> > +	}
-> > +
-> > +	if (ctx->bridge_attached)
-> > +		drm_connector_unregister(&ctx->connector);
-> > +}
-> > +
-> > +static int anx7625_bridge_attach(struct drm_bridge *bridge,
-> > +				 enum drm_bridge_attach_flags flags)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	int err;
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm attach\n");
-> > +	if (!bridge->encoder) {
-> > +		DRM_DEV_ERROR(dev, "Parent encoder object not found");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	err = drm_connector_init(bridge->dev, &ctx->connector,
-> > +				 &anx7625_connector_funcs,
-> > +				 DRM_MODE_CONNECTOR_eDP);
-> > +	if (err) {
-> > +		DRM_DEV_ERROR(dev, "Fail to initialize connector: %d\n", err);
-> > +		return err;
-> > +	}
-> > +
-> > +	drm_connector_helper_add(&ctx->connector,
-> > +				 &anx7625_connector_helper_funcs);
-> > +
-> > +	err = drm_connector_register(&ctx->connector);
-> > +	if (err) {
-> > +		DRM_DEV_ERROR(dev, "Fail to register connector: %d\n", err);
-> > +		return err;
-> > +	}
-> > +
-> > +	ctx->connector.polled = DRM_CONNECTOR_POLL_HPD;
-> > +
-> > +	err = drm_connector_attach_encoder(&ctx->connector, bridge->encoder);
-> > +	if (err) {
-> > +		DRM_DEV_ERROR(dev, "Fail to attach encoder: %d\n", err);
-> > +		drm_connector_unregister(&ctx->connector);
-> > +		return err;
-> > +	}
-> > +
-> > +	err = anx7625_attach_dsi(ctx);
-> > +	if (err) {
-> > +		DRM_DEV_ERROR(dev, "Fail to attach to dsi : %d\n", err);
-> > +		drm_connector_unregister(&ctx->connector);
-> > +		return err;
-> > +	}
-> > +
-> > +	ctx->bridge_attached = 1;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static enum drm_mode_status
-> > +anx7625_bridge_mode_valid(struct drm_bridge *bridge,
-> > +			  const struct drm_display_mode *mode)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm mode checking\n");
-> > +
-> > +	/* Max 1200p at 5.4 Ghz, one lane, pixel clock 300M */
-> > +	if (mode->clock > SUPPORT_PIXEL_CLOCK) {
-> > +		DRM_DEV_DEBUG_DRIVER(dev,
-> > +				     "drm mode invalid, pixelclock too high.\n");
-> > +		return MODE_CLOCK_HIGH;
-> > +	}
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm mode valid.\n");
-> > +
-> > +	return MODE_OK;
-> > +}
-> > +
-> > +static void anx7625_bridge_mode_set(struct drm_bridge *bridge,
-> > +				    const struct drm_display_mode *old_mode,
-> > +				    const struct drm_display_mode *mode)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm mode set\n");
-> > +
-> > +	ctx->dt.pixelclock.min = mode->clock;
-> > +	ctx->dt.hactive.min = mode->hdisplay;
-> > +	ctx->dt.hsync_len.min = mode->hsync_end - mode->hsync_start;
-> > +	ctx->dt.hfront_porch.min = mode->hsync_start - mode->hdisplay;
-> > +	ctx->dt.hback_porch.min = mode->htotal - mode->hsync_end;
-> > +	ctx->dt.vactive.min = mode->vdisplay;
-> > +	ctx->dt.vsync_len.min = mode->vsync_end - mode->vsync_start;
-> > +	ctx->dt.vfront_porch.min = mode->vsync_start - mode->vdisplay;
-> > +	ctx->dt.vback_porch.min = mode->vtotal - mode->vsync_end;
-> > +
-> > +	ctx->display_timing_valid = 1;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "pixelclock(%d).\n", ctx->dt.pixelclock.min);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "hactive(%d), hsync(%d), hfp(%d), hbp(%d)\n",
-> > +			     ctx->dt.hactive.min,
-> > +			     ctx->dt.hsync_len.min,
-> > +			     ctx->dt.hfront_porch.min,
-> > +			     ctx->dt.hback_porch.min);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "vactive(%d), vsync(%d), vfp(%d), vbp(%d)\n",
-> > +			     ctx->dt.vactive.min,
-> > +			     ctx->dt.vsync_len.min,
-> > +			     ctx->dt.vfront_porch.min,
-> > +			     ctx->dt.vback_porch.min);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "hdisplay(%d),hsync_start(%d).\n",
-> > +			     mode->hdisplay,
-> > +			     mode->hsync_start);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "hsync_end(%d),htotal(%d).\n",
-> > +			     mode->hsync_end,
-> > +			     mode->htotal);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "vdisplay(%d),vsync_start(%d).\n",
-> > +			     mode->vdisplay,
-> > +			     mode->vsync_start);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "vsync_end(%d),vtotal(%d).\n",
-> > +			     mode->vsync_end,
-> > +			     mode->vtotal);
-> > +}
-> > +
-> > +static bool anx7625_bridge_mode_fixup(struct drm_bridge *bridge,
-> > +				      const struct drm_display_mode *mode,
-> > +				      struct drm_display_mode *adj)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +	u32 hsync, hfp, hbp, hblanking;
-> > +	u32 adj_hsync, adj_hfp, adj_hbp, adj_hblanking, delta_adj;
-> > +	u32 vref, adj_clock;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm mode fixup set\n");
-> > +
-> > +	hsync = mode->hsync_end - mode->hsync_start;
-> > +	hfp = mode->hsync_start - mode->hdisplay;
-> > +	hbp = mode->htotal - mode->hsync_end;
-> > +	hblanking = mode->htotal - mode->hdisplay;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "before mode fixup\n");
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "hsync(%d), hfp(%d), hbp(%d), clock(%d)\n",
-> > +			     hsync, hfp, hbp, adj->clock);
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "hsync_start(%d), hsync_end(%d), htot(%d)\n",
-> > +			     adj->hsync_start, adj->hsync_end, adj->htotal);
-> > +
-> > +	adj_hfp = hfp;
-> > +	adj_hsync = hsync;
-> > +	adj_hbp = hbp;
-> > +	adj_hblanking = hblanking;
-> > +
-> > +	/* HFP needs to be even */
-> > +	if (hfp & 0x1) {
-> > +		adj_hfp += 1;
-> > +		adj_hblanking += 1;
-> > +	}
-> > +
-> > +	/* HBP needs to be even */
-> > +	if (hbp & 0x1) {
-> > +		adj_hbp -= 1;
-> > +		adj_hblanking -= 1;
-> > +	}
-> > +
-> > +	/* HSYNC needs to be even */
-> > +	if (hsync & 0x1) {
-> > +		if (adj_hblanking < hblanking)
-> > +			adj_hsync += 1;
-> > +		else
-> > +			adj_hsync -= 1;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Once illegal timing detected, use default HFP, HSYNC, HBP
-> > +	 * This adjusting made for built-in eDP panel, for the externel
-> > +	 * DP monitor, may need return false.
-> > +	 */
-> > +	if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
-> > +		adj_hsync = SYNC_LEN_DEF;
-> > +		adj_hfp = HFP_HBP_DEF;
-> > +		adj_hbp = HFP_HBP_DEF;
-> > +		vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
-> > +		if (hblanking < HBLANKING_MIN) {
-> > +			delta_adj = HBLANKING_MIN - hblanking;
-> > +			adj_clock = vref * delta_adj * adj->vtotal;
-> > +			adj->clock += DIV_ROUND_UP(adj_clock, 1000);
-> > +		} else {
-> > +			delta_adj = hblanking - HBLANKING_MIN;
-> > +			adj_clock = vref * delta_adj * adj->vtotal;
-> > +			adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
-> > +		}
-> > +
-> > +		DRM_WARN("illegal hblanking timing, use default.\n");
-> > +		DRM_WARN("hfp(%d), hbp(%d), hsync(%d).\n", hfp, hbp, hsync);
-> > +	} else if (adj_hfp < HP_MIN) {
-> > +		/* Adjust hfp if hfp less than HP_MIN */
-> > +		delta_adj = HP_MIN - adj_hfp;
-> > +		adj_hfp = HP_MIN;
-> > +
-> > +		/*
-> > +		 * Balance total HBlanking pixel, if HBP does not have enough
-> > +		 * space, adjust HSYNC length, otherwise adjust HBP
-> > +		 */
-> > +		if ((adj_hbp - delta_adj) < HP_MIN)
-> > +			/* HBP not enough space */
-> > +			adj_hsync -= delta_adj;
-> > +		else
-> > +			adj_hbp -= delta_adj;
-> > +	} else if (adj_hbp < HP_MIN) {
-> > +		delta_adj = HP_MIN - adj_hbp;
-> > +		adj_hbp = HP_MIN;
-> > +
-> > +		/*
-> > +		 * Balance total HBlanking pixel, if HBP hasn't enough space,
-> > +		 * adjust HSYNC length, otherwize adjust HBP
-> > +		 */
-> > +		if ((adj_hfp - delta_adj) < HP_MIN)
-> > +			/* HFP not enough space */
-> > +			adj_hsync -= delta_adj;
-> > +		else
-> > +			adj_hfp -= delta_adj;
-> > +	}
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "after mode fixup\n");
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "hsync(%d), hfp(%d), hbp(%d), clock(%d)\n",
-> > +			     adj_hsync, adj_hfp, adj_hbp, adj->clock);
-> > +
-> > +	/* Reconstruct timing */
-> > +	adj->hsync_start = adj->hdisplay + adj_hfp;
-> > +	adj->hsync_end = adj->hsync_start + adj_hsync;
-> > +	adj->htotal = adj->hsync_end + adj_hbp;
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "hsync_start(%d), hsync_end(%d), htot(%d)\n",
-> > +			     adj->hsync_start, adj->hsync_end, adj->htotal);
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +static void anx7625_bridge_enable(struct drm_bridge *bridge)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int ret;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm enable\n");
-> > +
-> > +	anx7625_low_power_mode_check(ctx, 1);
-> > +
-> > +	if (WARN_ON(!atomic_read(&ctx->power_status)))
-> > +		return;
-> > +
-> > +	if (ctx->pdata.panel) {
-> > +		ret = drm_panel_enable(ctx->pdata.panel);
-> > +		if (ret < 0) {
-> > +			DRM_DEV_ERROR(dev, "fail to enable panel: %d.\n", ret);
-> > +			return;
-> > +		}
-> > +	}
-> > +
-> > +	anx7625_dp_start(ctx);
-> > +}
-> > +
-> > +static void anx7625_bridge_disable(struct drm_bridge *bridge)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +	int ret;
-> > +
-> > +	if (WARN_ON(!atomic_read(&ctx->power_status)))
-> > +		return;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm disable\n");
-> > +
-> > +	if (ctx->pdata.panel) {
-> > +		ret = drm_panel_disable(ctx->pdata.panel);
-> > +		if (ret < 0)
-> > +			DRM_DEV_ERROR(dev, "fail to disable panel: %d.\n", ret);
-> > +	}
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm disable\n");
-> > +
-> > +	anx7625_dp_stop(ctx);
-> > +
-> > +	anx7625_low_power_mode_check(ctx, 0);
-> > +}
-> > +
-> > +static enum drm_connector_status
-> > +anx7625_bridge_detect(struct drm_bridge *bridge)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm bridge detect\n");
-> > +
-> > +	return anx7625_sink_detect(ctx);
-> > +}
-> > +
-> > +static struct edid *anx7625_bridge_get_edid(struct drm_bridge *bridge,
-> > +					    struct drm_connector *connector)
-> > +{
-> > +	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +	struct device *dev = &ctx->client->dev;
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "drm bridge get edid\n");
-> > +
-> > +	return anx7625_get_edid(ctx);
-> > +}
-> > +
-> > +static const struct drm_bridge_funcs anx7625_bridge_funcs = {
-> > +	.attach = anx7625_bridge_attach,
-> > +	.detach = anx7625_bridge_detach,
-> > +	.disable = anx7625_bridge_disable,
-> > +	.post_disable = anx7625_post_disable,
-> > +	.pre_enable = anx7625_pre_enable,
-> > +	.mode_valid = anx7625_bridge_mode_valid,
-> > +	.mode_set = anx7625_bridge_mode_set,
-> > +	.mode_fixup = anx7625_bridge_mode_fixup,
-> > +	.enable = anx7625_bridge_enable,
-> > +	.detect = anx7625_bridge_detect,
-> > +	.get_edid = anx7625_bridge_get_edid,
-> > +};
-> > +
-> > +static int anx7625_register_i2c_dummy_clients(struct anx7625_data *ctx,
-> > +					      struct i2c_client *client)
-> > +{
-> > +	ctx->i2c.tx_p0_client = i2c_new_dummy_device(client->adapter,
-> > +						     TX_P0_ADDR >> 1);
-> > +	if (!ctx->i2c.tx_p0_client)
-> > +		return -ENOMEM;
-> > +
-> > +	ctx->i2c.tx_p1_client = i2c_new_dummy_device(client->adapter,
-> > +						     TX_P1_ADDR >> 1);
-> > +	if (!ctx->i2c.tx_p1_client)
-> > +		goto free_tx_p0;
-> > +
-> > +	ctx->i2c.tx_p2_client = i2c_new_dummy_device(client->adapter,
-> > +						     TX_P2_ADDR >> 1);
-> > +	if (!ctx->i2c.tx_p2_client)
-> > +		goto free_tx_p1;
-> > +
-> > +	ctx->i2c.rx_p0_client = i2c_new_dummy_device(client->adapter,
-> > +						     RX_P0_ADDR >> 1);
-> > +	if (!ctx->i2c.rx_p0_client)
-> > +		goto free_tx_p2;
-> > +
-> > +	ctx->i2c.rx_p1_client = i2c_new_dummy_device(client->adapter,
-> > +						     RX_P1_ADDR >> 1);
-> > +	if (!ctx->i2c.rx_p1_client)
-> > +		goto free_rx_p0;
-> > +
-> > +	ctx->i2c.rx_p2_client = i2c_new_dummy_device(client->adapter,
-> > +						     RX_P2_ADDR >> 1);
-> > +	if (!ctx->i2c.rx_p2_client)
-> > +		goto free_rx_p1;
-> > +
-> > +	ctx->i2c.tcpc_client = i2c_new_dummy_device(client->adapter,
-> > +						    TCPC_INTERFACE_ADDR >> 1);
-> > +	if (!ctx->i2c.tcpc_client)
-> > +		goto free_rx_p2;
-> > +
-> > +	return 0;
-> > +
-> > +free_rx_p2:
-> > +	i2c_unregister_device(ctx->i2c.rx_p2_client);
-> > +free_rx_p1:
-> > +	i2c_unregister_device(ctx->i2c.rx_p1_client);
-> > +free_rx_p0:
-> > +	i2c_unregister_device(ctx->i2c.rx_p0_client);
-> > +free_tx_p2:
-> > +	i2c_unregister_device(ctx->i2c.tx_p2_client);
-> > +free_tx_p1:
-> > +	i2c_unregister_device(ctx->i2c.tx_p1_client);
-> > +free_tx_p0:
-> > +	i2c_unregister_device(ctx->i2c.tx_p0_client);
-> > +
-> > +	return -ENOMEM;
-> > +}
-> > +
-> > +static void anx7625_unregister_i2c_dummy_clients(struct anx7625_data *ctx)
-> > +{
-> > +	i2c_unregister_device(ctx->i2c.tx_p0_client);
-> > +	i2c_unregister_device(ctx->i2c.tx_p1_client);
-> > +	i2c_unregister_device(ctx->i2c.tx_p2_client);
-> > +	i2c_unregister_device(ctx->i2c.rx_p0_client);
-> > +	i2c_unregister_device(ctx->i2c.rx_p1_client);
-> > +	i2c_unregister_device(ctx->i2c.rx_p2_client);
-> > +	i2c_unregister_device(ctx->i2c.tcpc_client);
-> > +}
-> > +
-> > +static int anx7625_i2c_probe(struct i2c_client *client,
-> > +			     const struct i2c_device_id *id)
-> > +{
-> > +	struct anx7625_data *platform;
-> > +	struct anx7625_platform_data *pdata;
-> > +	int ret = 0;
-> > +	struct device *dev = &client->dev;
-> > +
-> > +	if (!i2c_check_functionality(client->adapter,
-> > +				     I2C_FUNC_SMBUS_I2C_BLOCK)) {
-> > +		DRM_DEV_ERROR(dev, "anx7625's i2c bus doesn't support\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	platform = kzalloc(sizeof(*platform), GFP_KERNEL);
-> > +	if (!platform) {
-> > +		DRM_DEV_ERROR(dev, "fail to allocate driver data\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	pdata = &platform->pdata;
-> > +
-> > +	ret = anx7625_parse_dt(dev, pdata);
-> > +	if (ret) {
-> > +		DRM_DEV_ERROR(dev, "fail to parse devicetree.\n");
-> > +		goto free_platform;
-> > +	}
-> > +
-> > +	platform->client = client;
-> > +	i2c_set_clientdata(client, platform);
-> > +
-> > +	anx7625_init_gpio(platform);
-> > +
-> > +	atomic_set(&platform->power_status, 0);
-> > +
-> > +	mutex_init(&platform->lock);
-> > +
-> > +	platform->pdata.intp_irq = client->irq;
-> > +	if (platform->pdata.intp_irq) {
-> > +		INIT_WORK(&platform->work, anx7625_work_func);
-> > +		platform->workqueue = create_workqueue("anx7625_work");
-> > +		if (!platform->workqueue) {
-> > +			DRM_DEV_ERROR(dev, "fail to create work queue\n");
-> > +			ret = -ENOMEM;
-> > +			goto free_platform;
-> > +		}
-> > +
-> > +		ret = devm_request_threaded_irq(dev, platform->pdata.intp_irq,
-> > +						NULL, anx7625_intr_hpd_isr,
-> > +						IRQF_TRIGGER_FALLING |
-> > +						IRQF_ONESHOT,
-> > +						"anx7625-intp", platform);
-> > +		if (ret) {
-> > +			DRM_DEV_ERROR(dev, "fail to request irq\n");
-> > +			goto free_wq;
-> > +		}
-> > +	}
-> > +
-> > +	if (anx7625_register_i2c_dummy_clients(platform, client) != 0) {
-> > +		ret = -ENOMEM;
-> > +		DRM_DEV_ERROR(dev, "fail to reserve I2C bus.\n");
-> > +		goto free_wq;
-> > +	}
-> > +
-> > +	if (platform->pdata.low_power_mode == 0) {
-> > +		anx7625_disable_pd_protocol(platform);
-> > +		atomic_set(&platform->power_status, 1);
-> > +	}
-> > +
-> > +	/* Add work function */
-> > +	if (platform->pdata.intp_irq)
-> > +		queue_work(platform->workqueue, &platform->work);
-> > +
-> > +	platform->bridge.funcs = &anx7625_bridge_funcs;
-> > +	platform->bridge.of_node = client->dev.of_node;
-> > +	drm_bridge_add(&platform->bridge);
-> > +
-> > +	DRM_DEV_DEBUG_DRIVER(dev, "probe done\n");
-> > +
-> > +	return 0;
-> > +
-> > +free_wq:
-> > +	if (platform->workqueue)
-> > +		destroy_workqueue(platform->workqueue);
-> > +
-> > +free_platform:
-> > +	kfree(platform);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int anx7625_i2c_remove(struct i2c_client *client)
-> > +{
-> > +	struct anx7625_data *platform = i2c_get_clientdata(client);
-> > +
-> > +	drm_bridge_remove(&platform->bridge);
-> > +
-> > +	if (platform->pdata.intp_irq)
-> > +		destroy_workqueue(platform->workqueue);
-> > +
-> > +	anx7625_unregister_i2c_dummy_clients(platform);
-> > +
-> > +	kfree(platform);
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct i2c_device_id anx7625_id[] = {
-> > +	{"anx7625", 0},
-> > +	{}
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(i2c, anx7625_id);
-> > +
-> > +static const struct of_device_id anx_match_table[] = {
-> > +	{.compatible = "analogix,anx7625",},
-> > +	{},
-> > +};
-> > +
-> > +static struct i2c_driver anx7625_driver = {
-> > +	.driver = {
-> > +		.name = "anx7625",
-> > +		.of_match_table = anx_match_table,
-> > +	},
-> > +	.probe = anx7625_i2c_probe,
-> > +	.remove = anx7625_i2c_remove,
-> > +
-> > +	.id_table = anx7625_id,
-> > +};
-> > +
-> > +module_i2c_driver(anx7625_driver);
-> > +
-> > +MODULE_DESCRIPTION("MIPI2DP anx7625 driver");
-> > +MODULE_AUTHOR("Xin Ji <xji@analogixsemi.com>");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_VERSION(ANX7625_DRV_VERSION);
-> > diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.h b/drivers/gpu/drm/bridge/analogix/anx7625.h
-> > new file mode 100644
-> > index 0000000..79e6534
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/bridge/analogix/anx7625.h
-> > @@ -0,0 +1,397 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright(c) 2020, Analogix Semiconductor. All rights reserved.
-> > + *
-> > + */
-> > +
-> > +#ifndef __ANX7625_H__
-> > +#define __ANX7625_H__
-> > +
-> > +#define ANX7625_DRV_VERSION "0.1.04"
-> > +
-> > +/* Loading OCM re-trying times */
-> > +#define OCM_LOADING_TIME 10
-> > +
-> > +/*********  ANX7625 Register  **********/
-> > +#define TX_P0_ADDR				0x70
-> > +#define TX_P1_ADDR				0x7A
-> > +#define TX_P2_ADDR				0x72
-> > +
-> > +#define RX_P0_ADDR				0x7e
-> > +#define RX_P1_ADDR				0x84
-> > +#define RX_P2_ADDR				0x54
-> > +
-> > +#define RSVD_00_ADDR				0x00
-> > +#define RSVD_D1_ADDR				0xD1
-> > +#define RSVD_60_ADDR				0x60
-> > +#define RSVD_39_ADDR				0x39
-> > +#define RSVD_7F_ADDR				0x7F
-> > +
-> > +#define TCPC_INTERFACE_ADDR			0x58
-> > +
-> > +/* Clock frequency in Hz */
-> > +#define XTAL_FRQ        (27 * 1000000)
-> > +
-> > +#define  POST_DIVIDER_MIN	1
-> > +#define  POST_DIVIDER_MAX	16
-> > +#define  PLL_OUT_FREQ_MIN	520000000UL
-> > +#define  PLL_OUT_FREQ_MAX	730000000UL
-> > +#define  PLL_OUT_FREQ_ABS_MIN	300000000UL
-> > +#define  PLL_OUT_FREQ_ABS_MAX	800000000UL
-> > +#define  MAX_UNSIGNED_24BIT	16777215UL
-> > +
-> > +/***************************************************************/
-> > +/* Register definition of device address 0x58 */
-> > +
-> > +#define PRODUCT_ID_L 0x02
-> > +#define PRODUCT_ID_H 0x03
-> > +
-> > +#define INTR_ALERT_1  0xCC
-> > +#define INTR_SOFTWARE_INT BIT(3)
-> > +#define INTR_RECEIVED_MSG BIT(5)
-> > +
-> > +#define SYSTEM_STSTUS 0x45
-> > +#define INTERFACE_CHANGE_INT 0x44
-> > +#define HPD_STATUS_CHANGE 0x80
-> > +#define HPD_STATUS 0x80
-> > +
-> > +/******** END of I2C Address 0x58 ********/
-> > +
-> > +/***************************************************************/
-> > +/* Register definition of device address 0x70 */
-> > +#define  I2C_ADDR_70_DPTX              0x70
-> > +
-> > +#define SP_TX_LINK_BW_SET_REG 0xA0
-> > +#define SP_TX_LANE_COUNT_SET_REG 0xA1
-> > +
-> > +#define M_VID_0 0xC0
-> > +#define M_VID_1 0xC1
-> > +#define M_VID_2 0xC2
-> > +#define N_VID_0 0xC3
-> > +#define N_VID_1 0xC4
-> > +#define N_VID_2 0xC5
-> > +
-> > +/***************************************************************/
-> > +/* Register definition of device address 0x72 */
-> > +#define AUX_RST	0x04
-> > +#define RST_CTRL2 0x07
-> > +
-> > +#define SP_TX_TOTAL_LINE_STA_L 0x24
-> > +#define SP_TX_TOTAL_LINE_STA_H 0x25
-> > +#define SP_TX_ACT_LINE_STA_L 0x26
-> > +#define SP_TX_ACT_LINE_STA_H 0x27
-> > +#define SP_TX_V_F_PORCH_STA 0x28
-> > +#define SP_TX_V_SYNC_STA 0x29
-> > +#define SP_TX_V_B_PORCH_STA 0x2A
-> > +#define SP_TX_TOTAL_PIXEL_STA_L 0x2B
-> > +#define SP_TX_TOTAL_PIXEL_STA_H 0x2C
-> > +#define SP_TX_ACT_PIXEL_STA_L 0x2D
-> > +#define SP_TX_ACT_PIXEL_STA_H 0x2E
-> > +#define SP_TX_H_F_PORCH_STA_L 0x2F
-> > +#define SP_TX_H_F_PORCH_STA_H 0x30
-> > +#define SP_TX_H_SYNC_STA_L 0x31
-> > +#define SP_TX_H_SYNC_STA_H 0x32
-> > +#define SP_TX_H_B_PORCH_STA_L 0x33
-> > +#define SP_TX_H_B_PORCH_STA_H 0x34
-> > +
-> > +#define SP_TX_VID_CTRL 0x84
-> > +#define SP_TX_BPC_MASK 0xE0
-> > +#define SP_TX_BPC_6    0x00
-> > +#define SP_TX_BPC_8    0x20
-> > +#define SP_TX_BPC_10   0x40
-> > +#define SP_TX_BPC_12   0x60
-> > +
-> > +#define VIDEO_BIT_MATRIX_12 0x4c
-> > +
-> > +#define AUDIO_CHANNEL_STATUS_1 0xd0
-> > +#define AUDIO_CHANNEL_STATUS_2 0xd1
-> > +#define AUDIO_CHANNEL_STATUS_3 0xd2
-> > +#define AUDIO_CHANNEL_STATUS_4 0xd3
-> > +#define AUDIO_CHANNEL_STATUS_5 0xd4
-> > +#define AUDIO_CHANNEL_STATUS_6 0xd5
-> > +#define TDM_SLAVE_MODE 0x10
-> > +#define I2S_SLAVE_MODE 0x08
-> > +
-> > +#define AUDIO_CONTROL_REGISTER 0xe6
-> > +#define TDM_TIMING_MODE 0x08
-> > +
-> > +#define I2C_ADDR_72_DPTX              0x72
-> > +
-> > +#define HP_MIN			8
-> > +#define HBLANKING_MIN		80
-> > +#define SYNC_LEN_DEF		32
-> > +#define HFP_HBP_DEF		((HBLANKING_MIN - SYNC_LEN_DEF) / 2)
-> > +#define VIDEO_CONTROL_0	0x08
-> > +
-> > +#define  ACTIVE_LINES_L         0x14
-> > +#define  ACTIVE_LINES_H         0x15  /* Bit[7:6] are reserved */
-> > +#define  VERTICAL_FRONT_PORCH   0x16
-> > +#define  VERTICAL_SYNC_WIDTH    0x17
-> > +#define  VERTICAL_BACK_PORCH    0x18
-> > +
-> > +#define  HORIZONTAL_TOTAL_PIXELS_L    0x19
-> > +#define  HORIZONTAL_TOTAL_PIXELS_H    0x1A  /* Bit[7:6] are reserved */
-> > +#define  HORIZONTAL_ACTIVE_PIXELS_L   0x1B
-> > +#define  HORIZONTAL_ACTIVE_PIXELS_H   0x1C  /* Bit[7:6] are reserved */
-> > +#define  HORIZONTAL_FRONT_PORCH_L     0x1D
-> > +#define  HORIZONTAL_FRONT_PORCH_H     0x1E  /* Bit[7:4] are reserved */
-> > +#define  HORIZONTAL_SYNC_WIDTH_L      0x1F
-> > +#define  HORIZONTAL_SYNC_WIDTH_H      0x20  /* Bit[7:4] are reserved */
-> > +#define  HORIZONTAL_BACK_PORCH_L      0x21
-> > +#define  HORIZONTAL_BACK_PORCH_H      0x22  /* Bit[7:4] are reserved */
-> > +
-> > +/******** END of I2C Address 0x72 *********/
-> > +/***************************************************************/
-> > +/* Register definition of device address 0x7e */
-> > +
-> > +#define  I2C_ADDR_7E_FLASH_CONTROLLER  0x7E
-> > +
-> > +#define FLASH_LOAD_STA 0x05
-> > +#define FLASH_LOAD_STA_CHK	BIT(7)
-> > +
-> > +#define  XTAL_FRQ_SEL    0x3F
-> > +/* bit field positions */
-> > +#define  XTAL_FRQ_SEL_POS    5
-> > +/* bit field values */
-> > +#define  XTAL_FRQ_19M2   (0 << XTAL_FRQ_SEL_POS)
-> > +#define  XTAL_FRQ_27M    (4 << XTAL_FRQ_SEL_POS)
-> > +
-> > +#define  R_DSC_CTRL_0    0x40
-> > +#define  READ_STATUS_EN  7
-> > +#define  CLK_1MEG_RB     6  /* 1MHz clock reset; 0=reset, 0=reset release */
-> > +#define  DSC_BIST_DONE   1  /* Bit[5:1]: 1=DSC MBIST pass */
-> > +#define  DSC_EN          0x01  /* 1=DSC enabled, 0=DSC disabled */
-> > +
-> > +#define OCM_FW_VERSION   0x31
-> > +#define OCM_FW_REVERSION 0x32
-> > +
-> > +#define AP_AUX_ADDR_7_0   0x11
-> > +#define AP_AUX_ADDR_15_8  0x12
-> > +#define AP_AUX_ADDR_19_16 0x13
-> > +
-> > +/* Bit[0:3] AUX status, bit 4 op_en, bit 5 address only */
-> > +#define AP_AUX_CTRL_STATUS 0x14
-> > +#define AP_AUX_CTRL_OP_EN 0x10
-> > +#define AP_AUX_CTRL_ADDRONLY 0x20
-> > +
-> > +#define AP_AUX_BUFF_START 0x15
-> > +#define PIXEL_CLOCK_L 0x25
-> > +#define PIXEL_CLOCK_H 0x26
-> > +
-> > +#define AP_AUX_COMMAND 0x27  /* com+len */
-> > +/* Bit 0&1: 3D video structure */
-> > +/* 0x01: frame packing,  0x02:Line alternative, 0x03:Side-by-side(full) */
-> > +#define AP_AV_STATUS 0x28
-> > +#define AP_VIDEO_CHG  BIT(2)
-> > +#define AP_AUDIO_CHG  BIT(3)
-> > +#define AP_MIPI_MUTE  BIT(4) /* 1:MIPI input mute, 0: ummute */
-> > +#define AP_MIPI_RX_EN BIT(5) /* 1: MIPI RX input in  0: no RX in */
-> > +#define AP_DISABLE_PD BIT(6)
-> > +#define AP_DISABLE_DISPLAY BIT(7)
-> > +/***************************************************************/
-> > +/* Register definition of device address 0x84 */
-> > +#define  MIPI_PHY_CONTROL_3            0x03
-> > +#define  MIPI_HS_PWD_CLK               7
-> > +#define  MIPI_HS_RT_CLK                6
-> > +#define  MIPI_PD_CLK                   5
-> > +#define  MIPI_CLK_RT_MANUAL_PD_EN      4
-> > +#define  MIPI_CLK_HS_MANUAL_PD_EN      3
-> > +#define  MIPI_CLK_DET_DET_BYPASS       2
-> > +#define  MIPI_CLK_MISS_CTRL            1
-> > +#define  MIPI_PD_LPTX_CH_MANUAL_PD_EN  0
-> > +
-> > +#define  MIPI_LANE_CTRL_0		0x05
-> > +#define  MIPI_TIME_HS_PRPR		0x08
-> > +
-> > +/*
-> > + * After MIPI RX protocol layer received video frames,
-> > + * Protocol layer starts to reconstruct video stream from PHY
-> > + */
-> > +#define  MIPI_VIDEO_STABLE_CNT           0x0A
-> > +
-> > +#define  MIPI_LANE_CTRL_10               0x0F
-> > +#define  MIPI_DIGITAL_ADJ_1   0x1B
-> > +
-> > +#define  MIPI_PLL_M_NUM_23_16   0x1E
-> > +#define  MIPI_PLL_M_NUM_15_8    0x1F
-> > +#define  MIPI_PLL_M_NUM_7_0     0x20
-> > +#define  MIPI_PLL_N_NUM_23_16   0x21
-> > +#define  MIPI_PLL_N_NUM_15_8    0x22
-> > +#define  MIPI_PLL_N_NUM_7_0     0x23
-> > +
-> > +#define  MIPI_DIGITAL_PLL_6     0x2A
-> > +/* Bit[7:6]: VCO band control, only effective */
-> > +#define  MIPI_M_NUM_READY        0x10
-> > +#define  MIPI_N_NUM_READY        0x08
-> > +#define  STABLE_INTEGER_CNT_EN   0x04
-> > +#define  MIPI_PLL_TEST_BIT       0
-> > +/* Bit[1:0]: test point output select - */
-> > +/* 00: VCO power, 01: dvdd_pdt, 10: dvdd, 11: vcox */
-> > +
-> > +#define  MIPI_DIGITAL_PLL_7      0x2B
-> > +#define  MIPI_PLL_FORCE_N_EN     7
-> > +#define  MIPI_PLL_FORCE_BAND_EN  6
-> > +
-> > +#define  MIPI_PLL_VCO_TUNE_REG   4
-> > +/* Bit[5:4]: VCO metal capacitance - */
-> > +/* 00: +20% fast, 01: +10% fast (default), 10: typical, 11: -10% slow */
-> > +#define  MIPI_PLL_VCO_TUNE_REG_VAL   0x30
-> > +
-> > +#define  MIPI_PLL_PLL_LDO_BIT    2
-> > +/* Bit[3:2]: vco_v2i power - */
-> > +/* 00: 1.40V, 01: 1.45V (default), 10: 1.50V, 11: 1.55V */
-> > +#define  MIPI_PLL_RESET_N        0x02
-> > +#define  MIPI_FRQ_FORCE_NDET     0
-> > +
-> > +#define  MIPI_ALERT_CLR_0        0x2D
-> > +#define  HS_link_error_clear     7
-> > +/* This bit itself is S/C, and it clears 0x84:0x31[7] */
-> > +
-> > +#define  MIPI_ALERT_OUT_0        0x31
-> > +#define  check_sum_err_hs_sync   7
-> > +/* This bit is cleared by 0x84:0x2D[7] */
-> > +
-> > +#define  MIPI_DIGITAL_PLL_8    0x33
-> > +#define  MIPI_POST_DIV_VAL     4
-> > +/* N means divided by (n+1), n = 0~15 */
-> > +#define  MIPI_EN_LOCK_FRZ      3
-> > +#define  MIPI_FRQ_COUNTER_RST  2
-> > +#define  MIPI_FRQ_SET_REG_8    1
-> > +/* Bit 0 is reserved */
-> > +
-> > +#define  MIPI_DIGITAL_PLL_9    0x34
-> > +
-> > +#define  MIPI_DIGITAL_PLL_16   0x3B
-> > +#define  MIPI_FRQ_FREEZE_NDET          7
-> > +#define  MIPI_FRQ_REG_SET_ENABLE       6
-> > +#define  MIPI_REG_FORCE_SEL_EN         5
-> > +#define  MIPI_REG_SEL_DIV_REG          4
-> > +#define  MIPI_REG_FORCE_PRE_DIV_EN     3
-> > +/* Bit 2 is reserved */
-> > +#define  MIPI_FREF_D_IND               1
-> > +#define  REF_CLK_27000KHZ    1
-> > +#define  REF_CLK_19200KHZ    0
-> > +#define  MIPI_REG_PLL_PLL_TEST_ENABLE  0
-> > +
-> > +#define  MIPI_DIGITAL_PLL_18  0x3D
-> > +#define  FRQ_COUNT_RB_SEL       7
-> > +#define  REG_FORCE_POST_DIV_EN  6
-> > +#define  MIPI_DPI_SELECT        5
-> > +#define  SELECT_DSI  1
-> > +#define  SELECT_DPI  0
-> > +#define  REG_BAUD_DIV_RATIO     0
-> > +
-> > +#define  H_BLANK_L            0x3E
-> > +/* For DSC only */
-> > +#define  H_BLANK_H            0x3F
-> > +/* For DSC only; note: bit[7:6] are reserved */
-> > +#define  MIPI_SWAP  0x4A
-> > +#define  MIPI_SWAP_CH0    7
-> > +#define  MIPI_SWAP_CH1    6
-> > +#define  MIPI_SWAP_CH2    5
-> > +#define  MIPI_SWAP_CH3    4
-> > +#define  MIPI_SWAP_CLK    3
-> > +/* Bit[2:0] are reserved */
-> > +
-> > +/******** END of I2C Address 0x84 *********/
-> > +
-> > +/* DPCD regs */
-> > +#define DPCD_DPCD_REV                  0x00
-> > +#define DPCD_MAX_LINK_RATE             0x01
-> > +#define DPCD_MAX_LANE_COUNT            0x02
-> > +
-> > +/*********  ANX7625 Register End  **********/
-> > +
-> > +/***************** Display *****************/
-> > +enum audio_fs {
-> > +	AUDIO_FS_441K  = 0x00,
-> > +	AUDIO_FS_48K   = 0x02,
-> > +	AUDIO_FS_32K   = 0x03,
-> > +	AUDIO_FS_882K  = 0x08,
-> > +	AUDIO_FS_96K   = 0x0a,
-> > +	AUDIO_FS_1764K = 0x0c,
-> > +	AUDIO_FS_192K  = 0x0e
-> > +};
-> > +
-> > +enum audio_wd_len {
-> > +	AUDIO_W_LEN_16_20MAX = 0x02,
-> > +	AUDIO_W_LEN_18_20MAX = 0x04,
-> > +	AUDIO_W_LEN_17_20MAX = 0x0c,
-> > +	AUDIO_W_LEN_19_20MAX = 0x08,
-> > +	AUDIO_W_LEN_20_20MAX = 0x0a,
-> > +	AUDIO_W_LEN_20_24MAX = 0x03,
-> > +	AUDIO_W_LEN_22_24MAX = 0x05,
-> > +	AUDIO_W_LEN_21_24MAX = 0x0d,
-> > +	AUDIO_W_LEN_23_24MAX = 0x09,
-> > +	AUDIO_W_LEN_24_24MAX = 0x0b
-> > +};
-> > +
-> > +#define I2S_CH_2	0x01
-> > +#define TDM_CH_4	0x03
-> > +#define TDM_CH_6	0x05
-> > +#define TDM_CH_8	0x07
-> > +
-> > +#define MAX_DPCD_BUFFER_SIZE	16
-> > +
-> > +#define ONE_BLOCK_SIZE      128
-> > +#define FOUR_BLOCK_SIZE     (128 * 4)
-> > +
-> > +#define MAX_EDID_BLOCK	3
-> > +#define EDID_TRY_CNT	3
-> > +#define SUPPORT_PIXEL_CLOCK	300000
-> > +
-> > +struct s_edid_data {
-> > +	int edid_block_num;
-> > +	u8 edid_raw_data[FOUR_BLOCK_SIZE];
-> > +};
-> > +
-> > +/***************** Display End *****************/
-> > +
-> > +struct anx7625_device_node {
-> > +	struct device_node *mipi_dsi_host_node;
-> > +	struct device_node *panel_node;
-> > +};
-> > +
-> > +struct anx7625_platform_data {
-> > +	struct gpio_desc *gpio_p_on;
-> > +	struct gpio_desc *gpio_reset;
-> > +	struct drm_panel *panel;
-> > +	int intp_irq;
-> > +	u32 low_power_mode;
-> > +	struct anx7625_device_node node;
-> > +};
-> > +
-> > +struct anx7625_i2c_client {
-> > +	struct i2c_client *tx_p0_client;
-> > +	struct i2c_client *tx_p1_client;
-> > +	struct i2c_client *tx_p2_client;
-> > +	struct i2c_client *rx_p0_client;
-> > +	struct i2c_client *rx_p1_client;
-> > +	struct i2c_client *rx_p2_client;
-> > +	struct i2c_client *tcpc_client;
-> > +};
-> > +
-> > +struct anx7625_data {
-> > +	struct anx7625_platform_data pdata;
-> > +	atomic_t power_status;
-> > +	atomic_t panel_power;
-> > +	int hpd_status;
-> > +	int hpd_high_cnt;
-> > +	/* Lock for work queue */
-> > +	struct mutex lock;
-> > +	struct i2c_client *client;
-> > +	struct anx7625_i2c_client i2c;
-> > +	struct i2c_client *last_client;
-> > +	struct s_edid_data slimport_edid_p;
-> > +	struct work_struct work;
-> > +	struct workqueue_struct *workqueue;
-> > +	char edid_block;
-> > +	struct display_timing dt;
-> > +	u8 display_timing_valid;
-> > +	struct drm_bridge bridge;
-> > +	u8 bridge_attached;
-> > +	struct drm_connector connector;
-> > +	struct mipi_dsi_device *dsi;
-> > +};
-> > +
-> > +#endif  /* __ANX7625_H__ */
-> > -- 
-> > 2.7.4
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Hi Thomas,
+
+FYI, the error/warning still remains.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   625d3449788f85569096780592549d0340e9c0c7
+commit: c823f416097879515a02f3d97aecc1204ffc0773 MIPS: SGI-IP27: move registering of smp ops into IP27 specific code
+date:   8 months ago
+config: mips-randconfig-r021-20200622 (attached as .config)
+compiler: mips64-linux-gcc (GCC) 9.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        git checkout c823f416097879515a02f3d97aecc1204ffc0773
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=mips 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   arch/mips/sgi-ip27/ip27-init.c:118:13: warning: no previous prototype for 'plat_mem_setup' [-Wmissing-prototypes]
+     118 | void __init plat_mem_setup(void)
+         |             ^~~~~~~~~~~~~~
+   arch/mips/sgi-ip27/ip27-init.c: In function 'plat_mem_setup':
+>> arch/mips/sgi-ip27/ip27-init.c:123:2: error: implicit declaration of function 'register_smp_ops' [-Werror=implicit-function-declaration]
+     123 |  register_smp_ops(&ip27_smp_ops);
+         |  ^~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+vim +/register_smp_ops +123 arch/mips/sgi-ip27/ip27-init.c
+
+   117	
+   118	void __init plat_mem_setup(void)
+   119	{
+   120		u64 p, e, n_mode;
+   121		nasid_t nid;
+   122	
+ > 123		register_smp_ops(&ip27_smp_ops);
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--MGYHOYXEY6WxJCY8--
