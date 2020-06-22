@@ -2,85 +2,89 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E19C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 743822073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA002073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZWvQZSn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbgFVQsJ (ORCPT
+        id S1730027AbgFVQs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:48:09 -0400
-Received: from muru.com ([72.249.23.125]:58714 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729492AbgFVQsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:48:07 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C73F08140;
-        Mon, 22 Jun 2020 16:48:58 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 09:48:04 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH 0/3] pinctrl: single: support #pinctrl-cells = 2
-Message-ID: <20200622164804.GN37466@atomide.com>
-References: <20200618125057.41252-1-drew@beagleboard.org>
- <20200622161132.GM37466@atomide.com>
- <20200622164628.GA510359@x1>
+        Mon, 22 Jun 2020 12:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729492AbgFVQs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:48:26 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3823CC061573;
+        Mon, 22 Jun 2020 09:48:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=BrA6e9Pl0lgGnSBNPXFINOYzmqpmgi0UVxl9CB0xQ/8=; b=ZWvQZSn5KNZaPrVUa67GFcqEqL
+        /blvNZ/bNLp/o7RXq/ylNNY2aWZE2DovjOw1XnNIVhCJUVZxeQexl4pXg6DQpjErJEjae3wDZ/tn0
+        hm30mRptxfgQPD6ntYecY20sPolsiZoXp/YyKVHwa/b87Fl2Ddplg15+ootEZ8YYWEfgx9w1QsWHj
+        kwspysoeyB1rx97ofZrNnEzRS3G7WVr+FS7q7g05mPwlM+na9XtdxfgNw8rghH4RndcC3Gol8AN0X
+        4ZQuekN/yNTUdQfkrRK35Cc7PDRVd3n0xxz6jU+sUaaw58e33AebsrCviImFbkDpm7TVauHJFTd+z
+        LwvJiFEw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnPTU-0007dG-P9; Mon, 22 Jun 2020 16:39:13 +0000
+Subject: Re: [PATCH 1/5] Huawei BMA: Adding Huawei BMA driver: host_edma_drv
+To:     yunaixin03610@163.com, netdev@vger.kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, wuguanping@huawei.com,
+        wangqindong@huawei.com
+References: <20200622160311.1533-1-yunaixin03610@163.com>
+ <20200622160311.1533-2-yunaixin03610@163.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ca9b537a-c90a-4156-8e43-65ad9ddfca23@infradead.org>
+Date:   Mon, 22 Jun 2020 09:39:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622164628.GA510359@x1>
+In-Reply-To: <20200622160311.1533-2-yunaixin03610@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Drew Fustini <drew@beagleboard.org> [200622 16:47]:
-> On Mon, Jun 22, 2020 at 09:11:32AM -0700, Tony Lindgren wrote:
-> > * Drew Fustini <drew@beagleboard.org> [200618 05:52]:
-> > > Currently, pinctrl-single only allows #pinctrl-cells = 1.
-> > > 
-> > > This series will allow pinctrl-single to also support #pinctrl-cells = 2
-> > > 
-> > > If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
-> > > pcs_parse_one_pinctrl_entry() does an OR operation on to get the
-> > > value to store in the register.
-> > >     
-> > > To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
-> > > omap.h is modified to keep pin conf and pin mux values separate.
-> > 
-> > Hmm to me it looks like the order of the patches is the
-> > wrong way around here. Don't we need to first change
-> > pinctrl-single.c, and then only after that update the
-> > dts? And make sure the pinctrl-single.c change does not
-> > break anything without changing the dts :)
-> > 
-> > Regards,
-> > 
-> > Tony
-> 
-> Thanks for pointing this out.
-> 
-> I'll submit new version where:
-> [PATCH 1/3] pinctrl: single: parse #pinctrl-cells = 2
-> [PATCH 2/3] ARM: dts: change AM33XX_PADCONF macro separate conf and mux
-> [PATCH 3/3] ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
+On 6/22/20 9:03 AM, yunaixin03610@163.com wrote:
+> diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig b/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
+> new file mode 100644
+> index 000000000000..97829c5487c2
+> --- /dev/null
+> +++ b/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
+> @@ -0,0 +1,11 @@
+> +#
+> +# Huawei BMA software driver configuration
+> +#
+> +
+> +config BMA
+> +	tristate "Huawei BMA Software Communication Driver"
+> +
+> +	---help---
 
-OK thanks. Otherwise sounds like git bisect will break for booting.
+Juse use
+	help
 
-Regards,
+Use of ---help--- is being phased out (removed).
 
-Tony
+> +	  This driver supports Huawei BMA Software. It is used 
+> +	  to communication between Huawei BMA and BMC software.
+> +
+
+thanks.
+-- 
+~Randy
+
