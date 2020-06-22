@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9008AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5AE2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616F420720
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="16VBF2La"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="A0YsIPLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgFVJmr (ORCPT
+        id S1727962AbgFVJmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40752 "EHLO
+        Mon, 22 Jun 2020 05:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgFVJlj (ORCPT
+        with ESMTP id S1727098AbgFVJlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:41:39 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B01CC061798
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:39 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g18so6882555wrm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:39 -0700 (PDT)
+        Mon, 22 Jun 2020 05:41:37 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BCCC061797
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:35 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so15932740wrs.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iUydfUf825zuTrP/3rZhTozCzOm5XJhrM7EVYTY3Zy4=;
-        b=16VBF2LawpzpJUoGplW1VMeRQBY+6kIReg/qh3Of8JJozgK7KV3a/y36LFnx7JJaGG
-         +hsOoIVXR9n9Bwou+9lQTjVGf6VkErBZk56xecuHPO9LNdA3N6A87+7oJpGaJZr91+Ep
-         BI6yveOiwM810Bvvg/LZCi0sL3+aPo8rBLYFEgvj1FYJqgvMM+hLxuy3zExLOJZWyH7g
-         i9vpiSlC5Y0qhPNWicv+/56I51GI/LMpey2/OgWMvENvikCSExdgLe04MjH5nquwHbgt
-         vxVipAPH8T2Nok3B4y9B9ucBQNKyRuG9bYn8DcPmhCNY+VwarjwpEe+1IYtpzERMpzWD
-         8lyQ==
+        bh=GfxRtzTQEG/5B2vcAI0+WR3x7R55kmvGCSrvKLTEK2Q=;
+        b=A0YsIPLNyYjq0ssEvXKicqSfckLBHv0GVryALC9d+AV98+m0KCKKpxY0AwyeTaC/SV
+         4ewNSwSYjUQsP4yxHm8UWF9gryWmZ5NreLHL6eNRWjMmIjJRCWiNutTjs4Dj5nQbR/al
+         xKYExJnhmZzF3ijNBmLN0+9cPyr9XfVrG4iIqj5hbRDxQ5onbhon50y62e0SSGhWhkuw
+         rmocxlBQDpuSpCL4KghX633TaDScTSjnEqyd5R5g43WJlC81zN4EIN3Bn8mQId8I8MeF
+         8+2wsc96b1npN8idQoXobDeawhU/GfrNBYEANPkdYosOat1y3XLGX18/UsW4P4z0HqDS
+         YNGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iUydfUf825zuTrP/3rZhTozCzOm5XJhrM7EVYTY3Zy4=;
-        b=ax9gStpxW5N9gqQpSuKnJb6SsHnGyORfYhx1LZfijIO/feF4vTOeZu8Btaa5eWH5ci
-         oG90DhLe3WrSHwjCYjesC3PbrMipYdANrXBlrywOT9e1AGw5h2wxbjfHZKmgvHfaQRjp
-         RfitQbyi8Q86rE2YmJfuRMh2GaGHs4DixFu2+wX80NQxFLITi4vDc70/MIwA8WB266qZ
-         dRl0/AlttT1qtJ0pUmk7ftIpakPPnOoMjioiDL5tvciSYPEl4rnfRwozfeuyTzmFNxyn
-         1hc07W6+uy81uvUsT1zL7s5O2TEbuAbP0Sw/Z9QAh82wUnK1/WJJc6sEqCcgWjDOzn26
-         SyuQ==
-X-Gm-Message-State: AOAM533IJMQZwwbfKU5/QExeifD21+LUE9WeNIkaKOaPM1neaDbJvMoO
-        1jD3XvQwlZ2BNHZn7xbUuqk/dg==
-X-Google-Smtp-Source: ABdhPJw/YDc8BRLdz6R7EQpjrH3iix+fo/75QLcqChmbsRSUxGbc0J2kOfOhJKAo3W+XevgouG/a8A==
-X-Received: by 2002:adf:8168:: with SMTP id 95mr17445453wrm.104.1592818898066;
-        Mon, 22 Jun 2020 02:41:38 -0700 (PDT)
+        bh=GfxRtzTQEG/5B2vcAI0+WR3x7R55kmvGCSrvKLTEK2Q=;
+        b=dHcZtCdtR2ppS7xruof1XHxfF1v8us7hZM3cG4mbLDqMHwzrhiuy9gSBVPvEwa69Zv
+         00PwXnHznTz2GVXKhdmvlMMnWVAlXjOE+JnhVCikwdNAAFnHVge3bsecbmY98/rdDXP9
+         1KA3dCav1RpDQv6Y62a6PiEtm5xVUZPyV6p0zQwBMKUWruoxzpGq+SRLpnzjBhs3dp5t
+         nbkcAQ2YJa9l5s91ntC5poNMtzxWv7Vri1Ah0QQlSGo4Ffj94Zs6cCyZXninmAAO0xVu
+         Sv0aC/hl1GUXsTA4odew7WcDZgSCZbWrfJ6kgHiaCrXyO2CfgerYFfxYCUcURsUo08Tj
+         qs7w==
+X-Gm-Message-State: AOAM530LnJFKmJMXPQmwUp9xKWXobFCfO0PQ9Ptmd2IGuhSim3P9m8s8
+        45SW3ggPzdvPcu22U9F4/l6n9A==
+X-Google-Smtp-Source: ABdhPJwe0PlqLfQqK/nfnfTmRDAPWRDDBJzvm26MZsgDYSHOQIM+GwOvMWfHdMQjezh7QNqFssNhEA==
+X-Received: by 2002:a5d:4bd2:: with SMTP id l18mr400661wrt.119.1592818894547;
+        Mon, 22 Jun 2020 02:41:34 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.36
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:37 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:34 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -93,9 +93,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 09/15] net: phy: delay PHY driver probe until PHY registration
-Date:   Mon, 22 Jun 2020 11:37:38 +0200
-Message-Id: <20200622093744.13685-10-brgl@bgdev.pl>
+Subject: [PATCH 07/15] net: phy: split out the PHY driver request out of phy_device_create()
+Date:   Mon, 22 Jun 2020 11:37:36 +0200
+Message-Id: <20200622093744.13685-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -108,119 +108,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Currently the PHY ID is read without taking the PHY out of reset. This
-can only work if no resets are defined. This change delays the ID read
-until we're actually registering the PHY device - this is needed because
-earlier (when creating the device) we don't have a struct device yet
-with resets already configured.
-
-While we could use the of_ helpers for GPIO and resets, we will be adding
-PHY regulator support layer on and there are no regulator APIs that work
-without struct device.
-
-This means that phy_device_create() now only instantiates the device but
-doesn't request the relevant driver. If no phy_id is passed to
-phy_device_create() (for that we introduce a new define: PHY_ID_NONE)
-then the ID will be read inside phy_device_register().
+Move the code requesting the PHY driver module out of phy_device_create()
+into a separate helper. This will be later reused when we delay the
+module loading.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/phy_device.c | 47 +++++++++++++++++++-----------------
- include/linux/phy.h          |  1 +
- 2 files changed, 26 insertions(+), 22 deletions(-)
+ drivers/net/phy/phy_device.c | 71 ++++++++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 32 deletions(-)
 
 diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index eccbf6aea63d..94944fffa9bb 100644
+index f6985db08340..8037a9663a85 100644
 --- a/drivers/net/phy/phy_device.c
 +++ b/drivers/net/phy/phy_device.c
-@@ -658,12 +658,6 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
- 	INIT_DELAYED_WORK(&dev->state_queue, phy_state_machine);
- 	device_initialize(&mdiodev->dev);
+@@ -558,7 +558,7 @@ static const struct device_type mdio_bus_phy_type = {
+ 	.pm = MDIO_BUS_PHY_PM_OPS,
+ };
  
--	ret = phy_request_driver_module(dev);
--	if (ret) {
--		phy_device_free(dev);
--		dev = ERR_PTR(ret);
--	}
--
- 	return dev;
- }
- EXPORT_SYMBOL(phy_device_create);
-@@ -813,30 +807,29 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
+-static int phy_request_driver_module(struct phy_device *dev, u32 phy_id)
++static int phy_do_request_driver_module(struct phy_device *dev, u32 phy_id)
+ {
+ 	int ret;
+ 
+@@ -578,6 +578,40 @@ static int phy_request_driver_module(struct phy_device *dev, u32 phy_id)
  	return 0;
  }
  
-+static int phy_device_read_id(struct phy_device *phydev)
++static int phy_request_driver_module(struct phy_device *phydev)
 +{
-+	struct mdio_device *mdiodev = &phydev->mdio;
++	int ret;
 +
-+	phydev->c45_ids.devices_in_package = 0;
-+	memset(phydev->c45_ids.device_ids, 0xff,
-+	       sizeof(phydev->c45_ids.device_ids));
++	/* Request the appropriate module unconditionally; don't
++	 * bother trying to do so only if it isn't already loaded,
++	 * because that gets complicated. A hotplug event would have
++	 * done an unconditional modprobe anyway.
++	 * We don't do normal hotplug because it won't work for MDIO
++	 * -- because it relies on the device staying around for long
++	 * enough for the driver to get loaded. With MDIO, the NIC
++	 * driver will get bored and give up as soon as it finds that
++	 * there's no driver _already_ loaded.
++	 */
++	if (phydev->is_c45) {
++		const int num_ids = ARRAY_SIZE(phydev->c45_ids.device_ids);
++		int i;
 +
-+	return get_phy_id(mdiodev->bus, mdiodev->addr, &phydev->phy_id,
-+			  phydev->is_c45, &phydev->c45_ids);
-+}
++		for (i = 1; i < num_ids; i++) {
++			if (phydev->c45_ids.device_ids[i] == 0xffffffff)
++				continue;
 +
- /**
-- * get_phy_device - reads the specified PHY device and returns its @phy_device
-- *		    struct
-+ * get_phy_device - create a phy_device withoug PHY ID
-  * @bus: the target MII bus
-  * @addr: PHY address on the MII bus
-  * @is_c45: If true the PHY uses the 802.3 clause 45 protocol
-  *
-- * Description: Reads the ID registers of the PHY at @addr on the
-- *   @bus, then allocates and returns the phy_device to represent it.
-+ * Allocates a new phy_device for @addr on the @bus.
-  */
- struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
- {
--	struct phy_c45_device_ids c45_ids;
--	u32 phy_id = 0;
--	int r;
--
--	c45_ids.devices_in_package = 0;
--	memset(c45_ids.device_ids, 0xff, sizeof(c45_ids.device_ids));
--
--	r = get_phy_id(bus, addr, &phy_id, is_c45, &c45_ids);
--	if (r)
--		return ERR_PTR(r);
--
--	return phy_device_create(bus, addr, phy_id, is_c45, &c45_ids);
-+	return phy_device_create(bus, addr, PHY_ID_NONE, is_c45, NULL);
- }
- EXPORT_SYMBOL(get_phy_device);
- 
-@@ -855,6 +848,16 @@ int phy_device_register(struct phy_device *phydev)
- 	/* Deassert the reset signal */
- 	phy_device_reset(phydev, 0);
- 
-+	if (phydev->phy_id == PHY_ID_NONE) {
-+		err = phy_device_read_id(phydev);
-+		if (err)
-+			goto err_unregister_mdio;
++			ret = phy_do_request_driver_module(phydev,
++						phydev->c45_ids.device_ids[i]);
++			if (ret)
++				break;
++		}
++	} else {
++		ret = phy_do_request_driver_module(phydev, phydev->phy_id);
 +	}
 +
-+	err = phy_request_driver_module(phydev);
-+	if (err)
-+		goto err_unregister_mdio;
++	return ret;
++}
 +
- 	/* Run all of the fixups for this PHY */
- 	err = phy_scan_fixups(phydev);
- 	if (err) {
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c05d0fb5c00..2a695cd90c7c 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -742,6 +742,7 @@ struct phy_driver {
+ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
+ 				     bool is_c45,
+ 				     struct phy_c45_device_ids *c45_ids)
+@@ -622,38 +656,11 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
  
- #define PHY_ANY_ID "MATCH ANY PHY"
- #define PHY_ANY_UID 0xffffffff
-+#define PHY_ID_NONE 0
+ 	mutex_init(&dev->lock);
+ 	INIT_DELAYED_WORK(&dev->state_queue, phy_state_machine);
++	device_initialize(&mdiodev->dev);
  
- #define PHY_ID_MATCH_EXACT(id) .phy_id = (id), .phy_id_mask = GENMASK(31, 0)
- #define PHY_ID_MATCH_MODEL(id) .phy_id = (id), .phy_id_mask = GENMASK(31, 4)
+-	/* Request the appropriate module unconditionally; don't
+-	 * bother trying to do so only if it isn't already loaded,
+-	 * because that gets complicated. A hotplug event would have
+-	 * done an unconditional modprobe anyway.
+-	 * We don't do normal hotplug because it won't work for MDIO
+-	 * -- because it relies on the device staying around for long
+-	 * enough for the driver to get loaded. With MDIO, the NIC
+-	 * driver will get bored and give up as soon as it finds that
+-	 * there's no driver _already_ loaded.
+-	 */
+-	if (is_c45 && c45_ids) {
+-		const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
+-		int i;
+-
+-		for (i = 1; i < num_ids; i++) {
+-			if (c45_ids->device_ids[i] == 0xffffffff)
+-				continue;
+-
+-			ret = phy_request_driver_module(dev,
+-						c45_ids->device_ids[i]);
+-			if (ret)
+-				break;
+-		}
+-	} else {
+-		ret = phy_request_driver_module(dev, phy_id);
+-	}
+-
+-	if (!ret) {
+-		device_initialize(&mdiodev->dev);
+-	} else {
+-		kfree(dev);
++	ret = phy_request_driver_module(dev);
++	if (ret) {
++		phy_device_free(dev);
+ 		dev = ERR_PTR(ret);
+ 	}
+ 
 -- 
 2.26.1
 
