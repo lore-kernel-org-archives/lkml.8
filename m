@@ -2,112 +2,83 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54313C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A117D20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pcF1W0cf"
+	by mail.kernel.org (Postfix) with ESMTP id 319D620732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592837149;
+	bh=+6eMmHPTrb0d3gg0bQJassvP7E5X7KeEpWp5glz92jw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PNC2woiRVyr756liT4chxmy0BV0nhAhTba/yZiX9q7KtvBYKFE4To/oNz3hCV7WAz
+	 Q1ohWSCgrSKNCqq7BhFhm0qyxzyH0uRF45Pxb4KEYb8aa7VH9GhTlCjEyA6Al1Ul8j
+	 4hdwDsAZSDn9jX0tGtfqJNWOiYC9FR9QsA1xs30E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbgFVOoS (ORCPT
+        id S1729205AbgFVOpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbgFVOoS (ORCPT
+        Mon, 22 Jun 2020 10:45:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46884 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728293AbgFVOpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:44:18 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB68C061573;
-        Mon, 22 Jun 2020 07:44:18 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k6so7659441pll.9;
-        Mon, 22 Jun 2020 07:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xbPnTXWG3FTmKbDopj7bVz9XNFpW3F1DzJqvbTKH2Zo=;
-        b=pcF1W0cfpODtkp7D7/LY/drAOVyuL7/KWS4xrre+BLffHK5GwrwZ/jtRVNPLawPUHr
-         2w7Zg1KkePSaczW2TgAvo1f10hhwTkc5L6QXRLiYvoAHMwQesbaJZlP5ggnkEPJpauk9
-         jANIZKgBR8/lM4d3ssU6hi3gTyTMXYpx+azF6yAL2U/cxfc/1LTRhwclFfGELpDMOg8s
-         lCyCmTMuc7Ibbt3RxO99mUbcSvQPt8zJehCJRRX1JL/QJC9l7CMppcOFUVk6YlbgUaro
-         7hOyzU9L5qYM17r5TNWnIVSmhMNESGu+U4bDOe50Vhj6LI7fjFmFcArTfotx+vY3SuiN
-         e8qQ==
+        Mon, 22 Jun 2020 10:45:47 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 25so15799861oiy.13;
+        Mon, 22 Jun 2020 07:45:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xbPnTXWG3FTmKbDopj7bVz9XNFpW3F1DzJqvbTKH2Zo=;
-        b=shFA2oreCk5VNpvJuje3TYL9XQj3s5Hq5s1rxguIe18NavLvvG+/HSJFSmcaGX1MMr
-         +jTV1Cxryp9z8ZtxkuD6GLBVsneOdepXd8L2r5KHZOBKyKL7IR53QIMcaOYoAzXVT8RP
-         pXre7NVDVbz/JaJsVICgx5jzAjQqHjRgyDtEKkSbgAE9rVormssalnkni5NIsalu5u6/
-         6bRPg95Y9sF9rxbfWxx23ySH/HDYc+5MqyERN63S6ARTfkjLEO3SkbWMTVd7G1ATlut0
-         21NjK/cMDjVfL0K3HKqhvVfUy1NmHaME8yUKV8rfU7BXc4m/F2mtGOPLfmo4STUhYe31
-         ZW2A==
-X-Gm-Message-State: AOAM531mqkMmMLMnRoGUo1KYs7b4RD1yxjwJAHsfhCZCAmrTZhx6g7EU
-        99R8gkI7dJD+CkHvthu80aSiid1aIS+apifxG28=
-X-Google-Smtp-Source: ABdhPJxDUtDkhHtkqwhq4HY8M/nWiY/fsbrbIXC4HEmYrBR2T4oIo8B1Gv3zIv6X55ZAHTGyTenpahian5FNO7Ri6AA=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr19166666pjq.228.1592837057666;
- Mon, 22 Jun 2020 07:44:17 -0700 (PDT)
+        bh=+6eMmHPTrb0d3gg0bQJassvP7E5X7KeEpWp5glz92jw=;
+        b=P/E4loQdZAgAtU3oSllDp91RdVqRlakUsBEaSmWhvMETX+dnmy/CT5OaGTg0RXvoce
+         ObKiDFgqFG5c6L9iCt0eFMAZZFCBZzGPqFadjDILsc8JfsVVzl9xxYPpnnO2a5YY6gyT
+         m/yaoznCeD/vrqg5KwFsX1gDHvXqX+w5mGJcDiVc3QDXDCP6dCefbfRmw98W5Y4eP7Y0
+         NMSHjBFwQ/KdRtdjGQJI7e32uFeBGxT6Bsxj3CUwT50PcvulgQWTDBd3uJBXWgdTbcdL
+         M7pEGzX86jw3rSmcN3xuAcu7IxTqdA/YlCyWTEvb+z90cHnVgcGisosxTXFNVRNSnuf5
+         JAkA==
+X-Gm-Message-State: AOAM531vYX+EIndKy9ZYNJDWskVRSRKnNqozMs4e0eHJVT4b8gw9ASvh
+        xB937uf786ZMgloVleS0sQCjVO9lUSp2VAyjseJYNg==
+X-Google-Smtp-Source: ABdhPJz3XIhgbNdrEjLxuwZV8l3ADfdcwxIkEAbudMbN4QUSwurz6C7DjucnqYBFfKoN8iUAdhq9pCK6M2zUIPPYoVY=
+X-Received: by 2002:aca:ab92:: with SMTP id u140mr12382604oie.68.1592837145739;
+ Mon, 22 Jun 2020 07:45:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622103817.476-1-nsaenzjulienne@suse.de> <20200622103817.476-7-nsaenzjulienne@suse.de>
-In-Reply-To: <20200622103817.476-7-nsaenzjulienne@suse.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Jun 2020 17:44:05 +0300
-Message-ID: <CAHp75Vcpo49BUe+cApfbB2BXFLz0SyLjWkO_6Uw=sYEcJEBMPg@mail.gmail.com>
-Subject: Re: [PATCH v4 6/9] Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        USB <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        tim.gover@raspberrypi.org, linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <CAHmME9rmAznrAmEQTOaLeMM82iMFTfCNfpxDGXw4CJjuVEF_gQ@mail.gmail.com>
+ <20200615104332.901519-1-Jason@zx2c4.com> <CAHmME9oemScgo2mg8fzqtJCbKJfu-op0WvG5RcpBCS1hHNmpZw@mail.gmail.com>
+In-Reply-To: <CAHmME9oemScgo2mg8fzqtJCbKJfu-op0WvG5RcpBCS1hHNmpZw@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 22 Jun 2020 16:45:33 +0200
+Message-ID: <CAJZ5v0gPQ_5R0AQAN2TMb3m12N9egUst0+MDXTak_u0Tn13+Bw@mail.gmail.com>
+Subject: Re: [PATCH] acpi: disallow loading configfs acpi tables when locked down
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 5:26 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+Hi,
+
+On Wed, Jun 17, 2020 at 12:20 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 >
-> This reverts commit c65822fef4adc0ba40c37a47337376ce75f7a7bc.
+> Hi Rafael, Len,
 >
-> The initialization of Raspberry Pi 4's USB chip is now handled through a
-> reset controller. No need to directly call the firmware routine trough a
+> Looks like I should have CC'd you on this patch. This is probably
+> something we should get into 5.8-rc2, so that it can then get put into
+> stable kernels, as some people think this is security sensitive.
+> Bigger picture is this:
+>
+> https://data.zx2c4.com/american-unsigned-language-2.gif
+> https://data.zx2c4.com/american-unsigned-language-2-fedora-5.8.png
 
-trough -> through.
+I was offline during the last week, sorry.
 
-> pci quirk.
-
-pci -> PCI.
-
-...
-
-> -
-> -#include <soc/bcm2835/raspberrypi-firmware.h>
-> -
-
-Leave one blank line here.
-
->  #include "pci-quirks.h"
->  #include "xhci-ext-caps.h"
-
--- 
-With Best Regards,
-Andy Shevchenko
+Applied as 5.8-rc material with some subject/changelog edits, thanks!
