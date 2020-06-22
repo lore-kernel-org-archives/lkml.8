@@ -2,140 +2,96 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55263C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEB820708
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yh6uQc0T"
+	by mail.kernel.org (Postfix) with ESMTP id 289C720732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592837987;
+	bh=omX85vo/MUb3fVCU5fZbatl+q0rGgAnWht2MRheY7WY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=VUU08PPrjIhGUdkZZz9B/JeUfP9o7Ax2v3LjAEpXEvGNUu3104OgnqNYF0dK2cY3v
+	 yNyBs/APNJsIROdJ8Q21QK/E0oxyg8NkYADC0fGbrquiiuHuOeL1nYPjHx8/ky4k/a
+	 hRMZAqw1cjeaTqx20flMNeL7u5NOEglU1/HPUjxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbgFVO5I (ORCPT
+        id S1729291AbgFVO7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:57:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728824AbgFVO5I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:57:08 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45AABC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:57:08 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id h190so1388658vkh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:57:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DaQaRL/n2na4izh2TsmRyDKAg7niGqHtN8UJRlkcUNk=;
-        b=Yh6uQc0Tk44UUcYHHPdxzcHe4JMuPLNwLsMpf1hfB3Jh8Tu5KzLiUZOVxNrSzFNeRC
-         1VX+uZFI62Ls1+BJbg7pP2QF3IogycASPqdpS7cK4qx+8UL3mK0h3koU2KF86qJLyXNp
-         ISsh8AdquX9pm+IhFbc8LzxKYCLQ8dhUJwD7E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DaQaRL/n2na4izh2TsmRyDKAg7niGqHtN8UJRlkcUNk=;
-        b=OddyixyEqS1drP9zHfM4nNRcSwEC5oemezzlYfWGgptPqYT3fKVWemWZ+4+6m92kWZ
-         0Htl7TKqZ8MfiHJrFaSId2ayy1S5F6dTpHu79UN8CJpK6P7FFVLOgfu1LvY58Vxm+Axs
-         B3mWf42pMUpqWBSsu0Nt8dAR0LbBycW2AIVkprx3KmoABFE9AXx8zU7JTqpAnTIpvCR5
-         xRGBemDUZnQUfXi97f+0PAg0jbQtbrpCEDT1OZygHjUglr7aNBwDFmj4pqo7EtNbTojq
-         mV7LppVk5gTrWtkg6E328RnPmsr2Jo07irHPQeVFETABl7YxxXfKxoXPVzKRBHJgwPoF
-         LOIQ==
-X-Gm-Message-State: AOAM533Iu+1rwjjUReGyb2xxKhq9nkHhLPhPMd3RdNtogmEwyk1zk96O
-        IJkCS8HNBNj/XQHtM14MLtxpnmtu4QQ=
-X-Google-Smtp-Source: ABdhPJwzx4bwvEx8BZEUPSrKMIh+8QmnD0QjCLcI6BKhT70C1hhApMLhkSyj6qtokstyBbn1SfE87w==
-X-Received: by 2002:a1f:9e8a:: with SMTP id h132mr9462823vke.14.1592837827205;
-        Mon, 22 Jun 2020 07:57:07 -0700 (PDT)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id x16sm2083598vko.54.2020.06.22.07.57.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 07:57:06 -0700 (PDT)
-Received: by mail-vk1-f173.google.com with SMTP id s192so4024493vkh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:57:06 -0700 (PDT)
-X-Received: by 2002:ac5:ce86:: with SMTP id 6mr16311424vke.75.1592837825897;
- Mon, 22 Jun 2020 07:57:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200619141958.1.I58d549fded1fd2299543ede6a103fe2bb94c805d@changeid>
-In-Reply-To: <20200619141958.1.I58d549fded1fd2299543ede6a103fe2bb94c805d@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 22 Jun 2020 07:56:54 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VCX27cMs4q+jJ528UdEM93yZ96+kYTQPgU3ZqZ-whgEw@mail.gmail.com>
-Message-ID: <CAD=FV=VCX27cMs4q+jJ528UdEM93yZ96+kYTQPgU3ZqZ-whgEw@mail.gmail.com>
-Subject: Re: [PATCH] tpm_tis_spi: Prefer async probe
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 22 Jun 2020 10:59:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728824AbgFVO7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:59:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B08A20708;
+        Mon, 22 Jun 2020 14:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592837985;
+        bh=omX85vo/MUb3fVCU5fZbatl+q0rGgAnWht2MRheY7WY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=HW/qIQW2aCc7KWWu1VOJjtYZbEW8t77d/oYyniNwqDxclRl6Ssg4odqksOL4lkbBm
+         tbsWBsGAqgAlegUUnsWE/GWyqTfmKLt1UGU0nFUB35Lg73dlHeHBb/Lv6C6Z0DmeRq
+         3HET/xbKKhmSaLLuNHq5StAzp5BHwtOF4DGjijAk=
+Date:   Mon, 22 Jun 2020 15:59:42 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Alok Chauhan <alokc@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org
+In-Reply-To: <20200620022233.64716-1-swboyd@chromium.org>
+References: <20200620022233.64716-1-swboyd@chromium.org>
+Subject: Re: [PATCH v1 0/2] Some small spi geni cleanups
+Message-Id: <159283798285.27744.2994917540889451941.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 19 Jun 2020 19:22:31 -0700, Stephen Boyd wrote:
+> To follow onto Doug's latest spi geni series[1] this simplifies and
+> reduces the code a little more.
+> 
+> [1] https://lore.kernel.org/r/20200618150626.237027-1-dianders@chromium.org
+> 
+> Stephen Boyd (2):
+>   spi: spi-geni-qcom: Simplify setup_fifo_xfer()
+>   spi: spi-geni-qcom: Don't set {tx,rx}_rem_bytes unnecessarily
+> 
+> [...]
 
-On Fri, Jun 19, 2020 at 2:20 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> On a Chromebook I'm working on I noticed a big (~1 second) delay
-> during bootup where nothing was happening.  Right around this big
-> delay there were messages about the TPM:
->
-> [    2.311352] tpm_tis_spi spi0.0: TPM ready IRQ confirmed on attempt 2
-> [    3.332790] tpm_tis_spi spi0.0: Cr50 firmware version: ...
->
-> I put a few printouts in and saw that tpm_tis_spi_init() (specifically
-> tpm_chip_register() in that function) was taking the lion's share of
-> this time, though ~115 ms of the time was in cr50_print_fw_version().
->
-> Let's make a one-line change to prefer async probe for tpm_tis_spi.
-> There's no reason we need to block other drivers from probing while we
-> load.
->
-> NOTES:
-> * It's possible that other hardware runs through the init sequence
->   faster than Cr50 and this isn't such a big problem for them.
->   However, even if they are faster they are still doing _some_
->   transfers over a SPI bus so this should benefit everyone even if to
->   a lesser extent.
-> * It's possible that there are extra delays in the code that could be
->   optimized out.  I didn't dig since once I enabled async probe they
->   no longer impacted me.
+Applied to
 
-I will note that I did continue to dig into the delays, actually.  I
-haven't fully resolved all of them, but I'm fairly sure that most of
-them are actually inefficiencies in the SPI driver on my platform,
-which seems to have a lot of overhead in starting a new transfer.
-I'll work on fixing that, but in any case we should still do the async
-probe because it's very safe and gives a perf boost.  Why do I say
-it's safe?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-1. It's not like our probe order was defined by anything anyway.  When
-we probe is at the whim of when the SPI controller probes and that can
-be any time.
+Thanks!
 
-2. If someone needs to access the TPM from another driver then they
-have to handle the fact that it might not have probed yet anyway
-because perhaps the SPI controller hasn't probed yet.
+[1/2] spi: spi-geni-qcom: Simplify setup_fifo_xfer()
+      commit: 0d574c6b59c6ac0ae5b581a2ffb813d446a50a3d
+[2/2] spi: spi-geni-qcom: Don't set {tx,rx}_rem_bytes unnecessarily
+      (no commit info)
 
-3. There may be other drivers probing at the same time as us anyway
-because _they_ used async probe.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-While I won't say that it's impossible to tickle a bug by turning on
-async probe, I would assert that in almost all cases the bug was
-already there and needed to be fixed anyway.  ;-)
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
--Doug
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
