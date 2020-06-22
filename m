@@ -2,132 +2,239 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEEBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6FE620767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE8F2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbgFVUKE (ORCPT
+        id S1730694AbgFVUKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:10:04 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50112 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730463AbgFVUKB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:10:01 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jnSlP-0005N4-Mn; Mon, 22 Jun 2020 20:09:55 +0000
-Date:   Mon, 22 Jun 2020 22:09:55 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Todd Kjos <tkjos@google.com>
-Cc:     gregkh@linuxfoundation.org, christian@brauner.io, arve@android.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        maco@google.com, joel@joelfernandes.org, kernel-team@android.com
-Subject: Re: [PATCH] binder: fix null deref of proc->context
-Message-ID: <20200622200955.unq7elx2ry2vrnfe@wittgenstein>
-References: <20200622200715.114382-1-tkjos@google.com>
+        Mon, 22 Jun 2020 16:10:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:60228 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730398AbgFVUJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:09:20 -0400
+IronPort-SDR: JlNSqNDTt6hkRNdhEyTMBvF1mWtUTrtJ8glwuDrXjm8TuGC8Kmg4ECs2sajrZBAfGM2G1lZvQO
+ o9u1aVIPiHdg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123527765"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="123527765"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:09:19 -0700
+IronPort-SDR: uOWgutU0NhkNbxo4dxkmPSH+BQ4h4gI/D1dS/19ylmJ1RwaR+nX1tAa97IaxrcZ/2aH1pbmTv9
+ IOuOkg7of9kQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="318877113"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 13:09:18 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Gardon <bgardon@google.com>,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: [PATCH v2 15/21] KVM: Move x86's MMU memory cache helpers to common KVM code
+Date:   Mon, 22 Jun 2020 13:08:16 -0700
+Message-Id: <20200622200822.4426-16-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200622200822.4426-1-sean.j.christopherson@intel.com>
+References: <20200622200822.4426-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200622200715.114382-1-tkjos@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 01:07:15PM -0700, Todd Kjos wrote:
-> The binder driver makes the assumption proc->context pointer is invariant after
-> initialization (as documented in the kerneldoc header for struct proc).
-> However, in commit f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-> proc->context is set to NULL during binder_deferred_release().
-> 
-> Another proc was in the middle of setting up a transaction to the dying
-> process and crashed on a NULL pointer deref on "context" which is a local
-> set to &proc->context:
-> 
->     new_ref->data.desc = (node == context->binder_context_mgr_node) ? 0 : 1;
-> 
-> Here's the stack:
-> 
-> [ 5237.855435] Call trace:
-> [ 5237.855441] binder_get_ref_for_node_olocked+0x100/0x2ec
-> [ 5237.855446] binder_inc_ref_for_node+0x140/0x280
-> [ 5237.855451] binder_translate_binder+0x1d0/0x388
-> [ 5237.855456] binder_transaction+0x2228/0x3730
-> [ 5237.855461] binder_thread_write+0x640/0x25bc
-> [ 5237.855466] binder_ioctl_write_read+0xb0/0x464
-> [ 5237.855471] binder_ioctl+0x30c/0x96c
-> [ 5237.855477] do_vfs_ioctl+0x3e0/0x700
-> [ 5237.855482] __arm64_sys_ioctl+0x78/0xa4
-> [ 5237.855488] el0_svc_common+0xb4/0x194
-> [ 5237.855493] el0_svc_handler+0x74/0x98
-> [ 5237.855497] el0_svc+0x8/0xc
-> 
-> The fix is to move the kfree of the binder_device to binder_free_proc()
-> so the binder_device is freed when we know there are no references
-> remaining on the binder_proc.
-> 
-> Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-> Signed-off-by: Todd Kjos <tkjos@google.com>
+Move x86's memory cache helpers to common KVM code so that they can be
+reused by arm64 and MIPS in future patches.
 
-Thanks, looks good to me!
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
+Reviewed-by: Ben Gardon <bgardon@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu/mmu.c   | 53 --------------------------------------
+ include/linux/kvm_host.h |  7 +++++
+ virt/kvm/kvm_main.c      | 55 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 62 insertions(+), 53 deletions(-)
 
-Christian
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index b85d3e8e8403..a627437f73fd 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1060,47 +1060,6 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
+ 	local_irq_enable();
+ }
+ 
+-static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+-					       gfp_t gfp_flags)
+-{
+-	gfp_flags |= mc->gfp_zero;
+-
+-	if (mc->kmem_cache)
+-		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+-	else
+-		return (void *)__get_free_page(gfp_flags);
+-}
+-
+-static int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
+-{
+-	void *obj;
+-
+-	if (mc->nobjs >= min)
+-		return 0;
+-	while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
+-		obj = mmu_memory_cache_alloc_obj(mc, GFP_KERNEL_ACCOUNT);
+-		if (!obj)
+-			return mc->nobjs >= min ? 0 : -ENOMEM;
+-		mc->objects[mc->nobjs++] = obj;
+-	}
+-	return 0;
+-}
+-
+-static int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc)
+-{
+-	return mc->nobjs;
+-}
+-
+-static void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
+-{
+-	while (mc->nobjs) {
+-		if (mc->kmem_cache)
+-			kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
+-		else
+-			free_page((unsigned long)mc->objects[--mc->nobjs]);
+-	}
+-}
+-
+ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu, bool maybe_indirect)
+ {
+ 	int r;
+@@ -1132,18 +1091,6 @@ static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
+ 	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
+ }
+ 
+-static void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
+-{
+-	void *p;
+-
+-	if (WARN_ON(!mc->nobjs))
+-		p = mmu_memory_cache_alloc_obj(mc, GFP_ATOMIC | __GFP_ACCOUNT);
+-	else
+-		p = mc->objects[--mc->nobjs];
+-	BUG_ON(!p);
+-	return p;
+-}
+-
+ static struct pte_list_desc *mmu_alloc_pte_list_desc(struct kvm_vcpu *vcpu)
+ {
+ 	return kvm_mmu_memory_cache_alloc(&vcpu->arch.mmu_pte_list_desc_cache);
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 62ec926c78a0..d35e397dad6a 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -816,6 +816,13 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *vcpu, bool usermode_vcpu_not_eligible);
+ void kvm_flush_remote_tlbs(struct kvm *kvm);
+ void kvm_reload_remote_mmus(struct kvm *kvm);
+ 
++#ifdef KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE
++int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min);
++int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc);
++void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc);
++void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc);
++#endif
++
+ bool kvm_make_vcpus_request_mask(struct kvm *kvm, unsigned int req,
+ 				 struct kvm_vcpu *except,
+ 				 unsigned long *vcpu_bitmap, cpumask_var_t tmp);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 7b6013f2ba19..9f019b552dcf 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -341,6 +341,61 @@ void kvm_reload_remote_mmus(struct kvm *kvm)
+ 	kvm_make_all_cpus_request(kvm, KVM_REQ_MMU_RELOAD);
+ }
+ 
++#ifdef KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE
++static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
++					       gfp_t gfp_flags)
++{
++	gfp_flags |= mc->gfp_zero;
++
++	if (mc->kmem_cache)
++		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
++	else
++		return (void *)__get_free_page(gfp_flags);
++}
++
++int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
++{
++	void *obj;
++
++	if (mc->nobjs >= min)
++		return 0;
++	while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
++		obj = mmu_memory_cache_alloc_obj(mc, GFP_KERNEL_ACCOUNT);
++		if (!obj)
++			return mc->nobjs >= min ? 0 : -ENOMEM;
++		mc->objects[mc->nobjs++] = obj;
++	}
++	return 0;
++}
++
++int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc)
++{
++	return mc->nobjs;
++}
++
++void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
++{
++	while (mc->nobjs) {
++		if (mc->kmem_cache)
++			kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
++		else
++			free_page((unsigned long)mc->objects[--mc->nobjs]);
++	}
++}
++
++void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
++{
++	void *p;
++
++	if (WARN_ON(!mc->nobjs))
++		p = mmu_memory_cache_alloc_obj(mc, GFP_ATOMIC | __GFP_ACCOUNT);
++	else
++		p = mc->objects[--mc->nobjs];
++	BUG_ON(!p);
++	return p;
++}
++#endif
++
+ static void kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+ {
+ 	mutex_init(&vcpu->mutex);
+-- 
+2.26.0
 
-> ---
->  drivers/android/binder.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index e47c8a4c83db..f50c5f182bb5 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -4686,8 +4686,15 @@ static struct binder_thread *binder_get_thread(struct binder_proc *proc)
->  
->  static void binder_free_proc(struct binder_proc *proc)
->  {
-> +	struct binder_device *device;
-> +
->  	BUG_ON(!list_empty(&proc->todo));
->  	BUG_ON(!list_empty(&proc->delivered_death));
-> +	device = container_of(proc->context, struct binder_device, context);
-> +	if (refcount_dec_and_test(&device->ref)) {
-> +		kfree(proc->context->name);
-> +		kfree(device);
-> +	}
->  	binder_alloc_deferred_release(&proc->alloc);
->  	put_task_struct(proc->tsk);
->  	binder_stats_deleted(BINDER_STAT_PROC);
-> @@ -5406,7 +5413,6 @@ static int binder_node_release(struct binder_node *node, int refs)
->  static void binder_deferred_release(struct binder_proc *proc)
->  {
->  	struct binder_context *context = proc->context;
-> -	struct binder_device *device;
->  	struct rb_node *n;
->  	int threads, nodes, incoming_refs, outgoing_refs, active_transactions;
->  
-> @@ -5423,12 +5429,6 @@ static void binder_deferred_release(struct binder_proc *proc)
->  		context->binder_context_mgr_node = NULL;
->  	}
->  	mutex_unlock(&context->context_mgr_node_lock);
-> -	device = container_of(proc->context, struct binder_device, context);
-> -	if (refcount_dec_and_test(&device->ref)) {
-> -		kfree(context->name);
-> -		kfree(device);
-> -	}
-> -	proc->context = NULL;
->  	binder_inner_proc_lock(proc);
->  	/*
->  	 * Make sure proc stays alive after we
-> -- 
-> 2.27.0.111.gc72c7da667-goog
-> 
