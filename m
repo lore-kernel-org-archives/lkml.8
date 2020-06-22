@@ -2,131 +2,125 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4134C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F41025405
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A996225403
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592803991;
-	bh=LlY20qnm761fwobPyLQcFs7yCjutoOfn/Lec+Ma6ywc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OdKKPzdCDdnmeAtKemkFnZPmXvywnVlfz6M7KCCRNmnVQ9OT0IvhnkMMWMAEdijjD
-	 lqZ0JwfnYDQnAR+34i9BARiHr8h8tu99Or/Q+8kGQGr/U4n4ThA/0daX05psQsvZCB
-	 /12EcV/FgCPR2KNpMREgCpyRtcRyj7pvp/phxIXM=
+	s=default; t=1592804084;
+	bh=GrdjXVaRbPN9gVQRuaOrbDVj0urS/Yt31tCI6xoLn7A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sBP75ZnwCbLb9MMDjeHg/DpbM+EqTiR/G+DuBJNGuA/nY2Do3sOpGuD1ulzwWILn2
+	 fONJtaO8iE7AV6Bhs13P2oDOupINVx5vixUwTAm5DOPwWclHt7BAZgvI4dw0KEeNai
+	 melpH3n/EJwOoNpp1dpxffN7B+VM768VWmGdlicg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbgFVFdK (ORCPT
+        id S1731207AbgFVFen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 01:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgFVFdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 01:33:09 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C14F25403;
-        Mon, 22 Jun 2020 05:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592803989;
-        bh=LlY20qnm761fwobPyLQcFs7yCjutoOfn/Lec+Ma6ywc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DkOk2StEX2MqAuyXo6cvvRGNmU5lOPgoP82DRRuUq6wSIvWp1z8LtKcyIX+LapHd1
-         2uwlOsmtOfegoQgFFwBoggbbnRzNWcg9O5d+KAFASEzNJEh9HrQqFd7X8fTtxEUqAv
-         REqcSnDWPidAtAT1DF1Afzfa8bzyleR2zhLiBoyU=
-Date:   Mon, 22 Jun 2020 11:03:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ALSA: compress: document the compress audio state
- machine
-Message-ID: <20200622053304.GD2324254@vkoul-mobl>
-References: <20200619045449.3966868-1-vkoul@kernel.org>
- <20200619045449.3966868-2-vkoul@kernel.org>
- <8e322574-14bc-aaaa-5fdb-751cb8b97fff@linux.intel.com>
+        Mon, 22 Jun 2020 01:34:43 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:60021 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgFVFen (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 01:34:43 -0400
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 05M5YHTq010632;
+        Mon, 22 Jun 2020 14:34:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 05M5YHTq010632
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592804058;
+        bh=l1Wp8QkA57im+NZmeXieOSoL1AHhaVcvQ4yMPx1u/lw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zka7rOiFfK4LJYPLBtdXrDwXPFTimfyqIuYntf3jwVO3e07ZfWV6HGUDX2cTVBDSg
+         HS9b4J7EJsJBcwSgfbhCmVQFxQHmNHVODfq98QIpUoe2UI7kRregJKUfD6aAObmfTg
+         Y3k7cM2+ut1N69s9dHw9A51qgCTCd+HlK0g/RAXLCBG8lBsJ6bYC/5yWj8I31H4EBA
+         u5gidbiT0P96mHIZb9EH9HzduDTeY9EZkvY7RZjXPYfxvdRW6un3aA/Ik1YIZnPoP4
+         tsZP1cvfDjNsUNO0+NxXssOhHD4GPBes/FE9Dx0nrOztTHByzfCfMCDWvQc2UrTrc2
+         xspEZ8Zs8mH3A==
+X-Nifty-SrcIP: [209.85.221.171]
+Received: by mail-vk1-f171.google.com with SMTP id s6so3661635vkb.9;
+        Sun, 21 Jun 2020 22:34:17 -0700 (PDT)
+X-Gm-Message-State: AOAM530mnAtZ/G1XVqkaU+olnDoj1x7Ey52CE2q0c5m/QXi0l/kZ/KtL
+        yOHmwd97ulkJOhCjShGrhrFzLEIVenlIDMMg9EM=
+X-Google-Smtp-Source: ABdhPJwh6BZWfd4rlU2RWuyudUqoKaTL84W4xch0jXewj8b3Y2FY7i6N6lJ2HXvrwYHzcQc/HZddEaokfWVLepAfzoU=
+X-Received: by 2002:a1f:1f04:: with SMTP id f4mr14462230vkf.73.1592804056188;
+ Sun, 21 Jun 2020 22:34:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e322574-14bc-aaaa-5fdb-751cb8b97fff@linux.intel.com>
+References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
+ <20200618233958.GV8681@bombadil.infradead.org> <877dw3apn8.fsf@x220.int.ebiederm.org>
+ <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com> <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 22 Jun 2020 14:33:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARr4aWTUqcS5TGdQ-7C_u=PFQVMMuakQ2Oro3-43fYu9w@mail.gmail.com>
+Message-ID: <CAK7LNARr4aWTUqcS5TGdQ-7C_u=PFQVMMuakQ2Oro3-43fYu9w@mail.gmail.com>
+Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc dentries
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
+        "joe.jin@oracle.com" <joe.jin@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Pierre,
+On Fri, Jun 19, 2020 at 11:14 PM Eric W. Biederman
+<ebiederm@xmission.com> wrote:
+>
+>
+> Junxiao Bi <junxiao.bi@oracle.com> reported:
+> > When debugging some performance issue, i found that thousands of threads exit
+> > around same time could cause a severe spin lock contention on proc dentry
+> > "/proc/$parent_process_pid/task/", that's because threads needs to clean up
+> > their pid file from that dir when exit.
+>
+> Matthew Wilcox <willy@infradead.org> reported:
+> > We've looked at a few different ways of fixing this problem.
+>
+> The flushing of the proc dentries from the dcache is an optmization,
+> and is not necessary for correctness.  Eventually cache pressure will
+> cause the dentries to be freed even if no flushing happens.  Some
+> light testing when I refactored the proc flushg[1] indicated that at
+> least the memory footprint is easily measurable.
+>
+> An optimization that causes a performance problem due to a thundering
+> herd of threads is no real optimization.
+>
+> Modify the code to only flush the /proc/<tgid>/ directory when all
+> threads in a process are killed at once.  This continues to flush
+> practically everything when the process is reaped as the threads live
+> under /proc/<tgid>/task/<tid>.
+>
+> There is a rare possibility that a debugger will access /proc/<tid>/,
+> which this change will no longer flush, but I believe such accesses
+> are sufficiently rare to not be observed in practice.
+>
+> [1] 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
+> Link: https://lkml.kernel.org/r/54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com
 
-On 19-06-20, 09:22, Pierre-Louis Bossart wrote:
-> 
-> > +
-> > +                                        +----------+
-> > +                                        |          |
-> > +                                        |   OPEN   |
-> > +                                        |          |
-> > +                                        +----------+
-> > +                                             |
-> > +                                             |
-> > +                                             | compr_set_params()
-> > +                                             |
-> > +                                             V
-> > +                                        +----------+
-> > +                compr_drain_notify()    |          |
-> > +              +------------------------>|   SETUP  |
-> > +              |                         |          |
-> > +              |                         +----------+
-> > +              |                              |
-> > +              |                              |
-> > +              |                              | compr_write()
-> > +              |                              |
-> > +              |                              V
-> > +              |                         +----------+
-> > +              |                         |          |
-> > +              |                         |  PREPARE |
-> > +              |                         |          |
-> > +              |                         +----------+
-> > +              |                              |
-> > +              |                              |
-> > +              |                              | compr_start()
-> > +              |                              |
-> > +              |                              V
-> > +        +----------+                    +----------+     compr_pause()      +----------+
-> > +        |          |                    |          |----------------------->|          |
-> > +        |  DRAIN   |<-------------------|  RUNNING |                        |  PAUSE   |
-> > +        |          |                    |          |<-----------------------|          |
-> > +        +----------+                    +----------+     compr_resume()     +----------+
-> > +              |                              |
-> > +              |                              |
-> > +              |                              | compr_free()
-> > +              |                              |
-> > +              |                              V
-> > +              |                         +----------+
-> > +              |     compr_free()        |          |
-> > +              +------------------------>|          |
-> > +                                        |   STOP   |
-> > +                                        |          |
-> > +                                        +----------+
-> 
-> 
-> The STOP state doesn't seem quite right to me, sorry.
 
-We should call it free, Will update
+> Reported-by: Masahiro Yamada <masahiroy@kernel.org>
 
-> the direction of the DRAIN-STOP comp_free() arrow seems wrong? Of if it is
-> correct, then something's missing to exit the STOP state so that the stream
-> can be opened again.
+I did not report this.
 
-Once stream is freed, it can't be opened again.
 
-But we have trigger stop which is not comprehended here, I will add
-compr_stop() above which would transition to SETUP state. And a stopped
-stream can be freed up as well, so one more transition from SETUP to
-FREE.
 
-Thanks for reviewing
+
+
+> Reported-by: Matthew Wilcox <willy@infradead.org>
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+
+
 -- 
-~Vinod
+Best Regards
+Masahiro Yamada
