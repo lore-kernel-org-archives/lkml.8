@@ -2,385 +2,181 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8630FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE01EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6845920732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46042073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbgFVO2Y (ORCPT
+        id S1729902AbgFVO2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:28:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45454 "EHLO mx2.suse.de"
+        Mon, 22 Jun 2020 10:28:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45100 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729296AbgFVO0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:26:22 -0400
+        id S1729311AbgFVO0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:26:19 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7DB44C1B1;
-        Mon, 22 Jun 2020 14:26:18 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        James Tai <james.tai@realtek.com>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v4 3/3] arm64: dts: realtek: Add RTD1319 SoC and Realtek Pym Particles EVB
-Date:   Mon, 22 Jun 2020 14:55:26 +0200
-Message-Id: <20200622125527.24207-4-afaerber@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200622125527.24207-1-afaerber@suse.de>
-References: <20200622125527.24207-1-afaerber@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 26683C1BE;
+        Mon, 22 Jun 2020 14:26:15 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
+        wahrenst@gmx.net, p.zabel@pengutronix.de
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v4 8/9] Revert "firmware: raspberrypi: Introduce vl805 init routine"
+Date:   Mon, 22 Jun 2020 12:38:17 +0200
+Message-Id: <20200622103817.476-9-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200622103817.476-1-nsaenzjulienne@suse.de>
+References: <20200622103817.476-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Tai <james.tai@realtek.com>
+This reverts commit fbbc5ff3f7f9f4cad562e530ae2cf5d8964fe6d3.
 
-Add Device Trees for Realtek RTD1319 SoC family, RTD1319 SoC and
-Realtek Pym Particles EVB.
+The vl805 init routine has moved into drivers/reset/reset-raspberrypi.c
 
-Signed-off-by: James Tai <james.tai@realtek.com>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- v3 -> v4:
- * Updated Realtek copyright for 2 out of 3 files from v3
- * Renamed from rtd1319-pymparticle.dts to rtd1319-pymparticles.dts
- * Updated compatible from pymparticle to pym-particles
- * Updated PMU compatible from armv8-pmuv3 to cortex-a55-pmu (Robin)
- 
- v2 -> v3:
- * Add virtual maintenance interrupt for architecture timer
- * Correct the GIC redistributor address range
- 
- v1 -> v2:
- * Reserve the boot ROM address
- * Reserve boot loader address
- * Reserve audio/video FW address
- * Reserve RPC and ring buffer address
- * Reserve TEE address
- * Support 1 GiB RAM by default
- * Reduce rbus range to 2 MiB
- * Apply the syscon for ISO,MISC,CRT,SB2,SCPU_WRAPPER
- * Adjust compatible strings order in document
- 
- arch/arm64/boot/dts/realtek/Makefile          |   2 +
- .../boot/dts/realtek/rtd1319-pymparticles.dts |  43 ++++
- arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 +
- arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 213 ++++++++++++++++++
- 4 files changed, 270 insertions(+)
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
- create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+ drivers/firmware/raspberrypi.c             | 61 ----------------------
+ include/soc/bcm2835/raspberrypi-firmware.h |  7 ---
+ 2 files changed, 68 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
-index ef8d8fcbaa05..83708596726d 100644
---- a/arch/arm64/boot/dts/realtek/Makefile
-+++ b/arch/arm64/boot/dts/realtek/Makefile
-@@ -9,6 +9,8 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
+diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
+index ef8098856a47..a3e85186f8e6 100644
+--- a/drivers/firmware/raspberrypi.c
++++ b/drivers/firmware/raspberrypi.c
+@@ -12,8 +12,6 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+-#include <linux/pci.h>
+-#include <linux/delay.h>
+ #include <soc/bcm2835/raspberrypi-firmware.h>
  
- dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
+ #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
+@@ -21,8 +19,6 @@
+ #define MBOX_DATA28(msg)		((msg) & ~0xf)
+ #define MBOX_CHAN_PROPERTY		8
  
-+dtb-$(CONFIG_ARCH_REALTEK) += rtd1319-pymparticles.dtb
-+
- dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-bpi-m4.dtb
- dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-lionskin.dtb
+-#define VL805_PCI_CONFIG_VERSION_OFFSET		0x50
+-
+ static struct platform_device *rpi_hwmon;
+ static struct platform_device *rpi_clk;
  
-diff --git a/arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts b/arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts
-new file mode 100644
-index 000000000000..e0b3c3707a85
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Copyright (c) 2019-2020 Realtek Semiconductor Corp.
-+ */
-+
-+/dts-v1/;
-+
-+#include "rtd1319.dtsi"
-+
-+/ {
-+	compatible = "realtek,pym-particles", "realtek,rtd1319";
-+	model = "Realtek Pym Particles EVB";
-+
-+	memory@2e000 {
-+		device_type = "memory";
-+		reg = <0x2e000 0x3ffd2000>; /* boot ROM to 1 GiB or 2 GiB */
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:460800n8";
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+	};
-+};
-+
-+/* debug console (J1) */
-+&uart0 {
-+	status = "okay";
-+};
-+
-+/* M.2 slots (CON2, CON8) and J14 */
-+&uart1 {
-+	status = "disabled";
-+};
-+
-+/* GPIO connector (T1) */
-+&uart2 {
-+	status = "disabled";
-+};
-diff --git a/arch/arm64/boot/dts/realtek/rtd1319.dtsi b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-new file mode 100644
-index 000000000000..1dcee00009cd
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Realtek RTD1319 SoC
-+ *
-+ * Copyright (c) 2019 Realtek Semiconductor Corp.
-+ */
-+
-+#include "rtd13xx.dtsi"
-+
-+/ {
-+	compatible = "realtek,rtd1319";
-+};
-diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-new file mode 100644
-index 000000000000..8c5b6fc7b8eb
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-@@ -0,0 +1,213 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Realtek RTD13xx SoC family
-+ *
-+ * Copyright (c) 2019-2020 Realtek Semiconductor Corp.
-+ */
-+
-+/memreserve/	0x0000000000000000 0x000000000002e000; /* Boot ROM */
-+/memreserve/	0x000000000002e000 0x0000000000100000; /* Boot loader */
-+/memreserve/	0x000000000f400000 0x0000000000500000; /* Video FW */
-+/memreserve/	0x000000000f900000 0x0000000000500000; /* Audio FW */
-+/memreserve/	0x0000000010000000 0x0000000000014000; /* Audio FW RAM */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		rpc_comm: rpc@3f000 {
-+			reg = <0x3f000 0x1000>;
-+		};
-+
-+		rpc_ringbuf: rpc@1ffe000 {
-+			reg = <0x1ffe000 0x4000>;
-+		};
-+
-+		tee: tee@10100000 {
-+			reg = <0x10100000 0xf00000>;
-+			no-map;
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x200>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x300>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		l2: l2-cache {
-+			compatible = "cache";
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	arm_pmu: pmu {
-+		compatible = "arm,cortex-a55-pmu";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	osc27M: osc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <27000000>;
-+		clock-output-names = "osc27M";
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x00000000 0x0002e000>, /* boot ROM */
-+			 <0xff100000 0xff100000 0x00200000>, /* GIC */
-+			 <0x98000000 0x98000000 0x00200000>; /* rbus */
-+
-+		rbus: bus@98000000 {
-+			compatible = "simple-bus";
-+			reg = <0x98000000 0x200000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x98000000 0x200000>;
-+
-+			crt: syscon@0 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x0 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x0 0x1000>;
-+			};
-+
-+			iso: syscon@7000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x7000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x7000 0x1000>;
-+			};
-+
-+			sb2: syscon@1a000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1a000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1a000 0x1000>;
-+			};
-+
-+			misc: syscon@1b000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1b000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1b000 0x1000>;
-+			};
-+
-+			scpu_wrapper: syscon@1d000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1d000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1d000 0x1000>;
-+			};
-+		};
-+
-+		gic: interrupt-controller@ff100000 {
-+			compatible = "arm,gic-v3";
-+			reg = <0xff100000 0x10000>,
-+			      <0xff140000 0x80000>;
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+	};
-+};
-+
-+&iso {
-+	uart0: serial0@800 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x800 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <432000000>;
-+		status = "disabled";
-+	};
-+};
-+
-+&misc {
-+	uart1: serial1@200 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x200 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <432000000>;
-+		status = "disabled";
-+	};
-+
-+	uart2: serial2@400 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x400 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <432000000>;
-+		status = "disabled";
-+	};
-+};
+@@ -284,63 +280,6 @@ struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)
+ }
+ EXPORT_SYMBOL_GPL(rpi_firmware_get);
+ 
+-/*
+- * The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip that
+- * implements xHCI. After a PCI reset, VL805's firmware may either be loaded
+- * directly from an EEPROM or, if not present, by the SoC's co-processor,
+- * VideoCore. RPi4's VideoCore OS contains both the non public firmware load
+- * logic and the VL805 firmware blob. This function triggers the aforementioned
+- * process.
+- */
+-int rpi_firmware_init_vl805(struct pci_dev *pdev)
+-{
+-	struct device_node *fw_np;
+-	struct rpi_firmware *fw;
+-	u32 dev_addr, version;
+-	int ret;
+-
+-	fw_np = of_find_compatible_node(NULL, NULL,
+-					"raspberrypi,bcm2835-firmware");
+-	if (!fw_np)
+-		return 0;
+-
+-	fw = rpi_firmware_get(fw_np);
+-	of_node_put(fw_np);
+-	if (!fw)
+-		return -ENODEV;
+-
+-	/*
+-	 * Make sure we don't trigger a firmware load unnecessarily.
+-	 *
+-	 * If something went wrong with PCI, this whole exercise would be
+-	 * futile as VideoCore expects from us a configured PCI bus. Just take
+-	 * the faulty version (likely ~0) and let xHCI's registration fail
+-	 * further down the line.
+-	 */
+-	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET, &version);
+-	if (version)
+-		goto exit;
+-
+-	dev_addr = pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
+-		   PCI_FUNC(pdev->devfn) << 12;
+-
+-	ret = rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
+-				    &dev_addr, sizeof(dev_addr));
+-	if (ret)
+-		return ret;
+-
+-	/* Wait for vl805 to startup */
+-	usleep_range(200, 1000);
+-
+-	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
+-			      &version);
+-exit:
+-	pci_info(pdev, "VL805 firmware version %08x\n", version);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
+-
+ static const struct of_device_id rpi_firmware_of_match[] = {
+ 	{ .compatible = "raspberrypi,bcm2835-firmware", },
+ 	{},
+diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
+index 3025aca3c358..cc9cdbc66403 100644
+--- a/include/soc/bcm2835/raspberrypi-firmware.h
++++ b/include/soc/bcm2835/raspberrypi-firmware.h
+@@ -10,7 +10,6 @@
+ #include <linux/of_device.h>
+ 
+ struct rpi_firmware;
+-struct pci_dev;
+ 
+ enum rpi_firmware_property_status {
+ 	RPI_FIRMWARE_STATUS_REQUEST = 0,
+@@ -142,7 +141,6 @@ int rpi_firmware_property(struct rpi_firmware *fw,
+ int rpi_firmware_property_list(struct rpi_firmware *fw,
+ 			       void *data, size_t tag_size);
+ struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node);
+-int rpi_firmware_init_vl805(struct pci_dev *pdev);
+ #else
+ static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 tag,
+ 					void *data, size_t len)
+@@ -160,11 +158,6 @@ static inline struct rpi_firmware *rpi_firmware_get(struct device_node *firmware
+ {
+ 	return NULL;
+ }
+-
+-static inline int rpi_firmware_init_vl805(struct pci_dev *pdev)
+-{
+-	return 0;
+-}
+ #endif
+ 
+ #endif /* __SOC_RASPBERRY_FIRMWARE_H__ */
 -- 
-2.26.2
+2.27.0
 
