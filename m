@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD6AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEFA20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666A920720
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731176AbgFVXqP (ORCPT
+        id S1731245AbgFVXqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:46:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54764 "EHLO
+        Mon, 22 Jun 2020 19:46:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54809 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730678AbgFVXqI (ORCPT
+        with ESMTP id S1731110AbgFVXqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:46:08 -0400
+        Mon, 22 Jun 2020 19:46:12 -0400
 Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jnW8c-0005DO-65; Mon, 22 Jun 2020 23:46:06 +0000
+        id 1jnW8g-0005DO-Er; Mon, 22 Jun 2020 23:46:10 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Christian Brauner <christian.brauner@ubuntu.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        linux-csky@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: [PATCH 04/17] sparc: unconditionally enable HAVE_COPY_THREAD_TLS
-Date:   Tue, 23 Jun 2020 01:43:13 +0200
-Message-Id: <20200622234326.906346-5-christian.brauner@ubuntu.com>
+        Greentime Hu <green.hu@gmail.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Vincent Chen <deanbo422@gmail.com>
+Subject: [PATCH 13/17] nds32: switch to copy_thread_tls()
+Date:   Tue, 23 Jun 2020 01:43:22 +0200
+Message-Id: <20200622234326.906346-14-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200622234326.906346-1-christian.brauner@ubuntu.com>
 References: <20200622234326.906346-1-christian.brauner@ubuntu.com>
@@ -46,71 +46,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that both sparc and sparc64 support copy_thread_tls() and don't rely
-on do_fork() anymore, turn on HAVE_COPY_THREAD_TLS unconditionally. Once
-all architectures are switched over this macro will be removed and
-the old do_fork() calling convention fully abandoned in favor of the
-cleaner struct kernel_clone_args one.
+Use the copy_thread_tls() calling convention which passes tls through a
+register. This is required so we can remove the copy_thread{_tls}() split
+and remove the HAVE_COPY_THREAD_TLS macro.
 
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: Nick Hu <nickhu@andestech.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: David S. Miller <davem@davemloft.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: linux-csky@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
-Link: https://lore.kernel.org/r/20200512171527.570109-4-christian.brauner@ubuntu.com
 ---
- arch/sparc/Kconfig             | 2 +-
- arch/sparc/kernel/process_32.c | 7 ++++---
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ arch/nds32/Kconfig          | 1 +
+ arch/nds32/kernel/process.c | 7 ++++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index e2bb4956e130..66213c0cb557 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -48,6 +48,7 @@ config SPARC
- 	select LOCKDEP_SMALL if LOCKDEP
- 	select NEED_DMA_MAP_STATE
- 	select NEED_SG_DMA_LENGTH
+diff --git a/arch/nds32/Kconfig b/arch/nds32/Kconfig
+index e30298e99e1b..7b6eaca81cce 100644
+--- a/arch/nds32/Kconfig
++++ b/arch/nds32/Kconfig
+@@ -48,6 +48,7 @@ config NDS32
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_DYNAMIC_FTRACE
 +	select HAVE_COPY_THREAD_TLS
+ 	help
+ 	  Andes(nds32) Linux support.
  
- config SPARC32
- 	def_bool !64BIT
-@@ -94,7 +95,6 @@ config SPARC64
- 	select ARCH_HAS_PTE_SPECIAL
- 	select PCI_DOMAINS if PCI
- 	select ARCH_HAS_GIGANTIC_PAGE
--	select HAVE_COPY_THREAD_TLS
+diff --git a/arch/nds32/kernel/process.c b/arch/nds32/kernel/process.c
+index 9712fd474f2c..7dbb1bf64165 100644
+--- a/arch/nds32/kernel/process.c
++++ b/arch/nds32/kernel/process.c
+@@ -149,8 +149,9 @@ void flush_thread(void)
+ DEFINE_PER_CPU(struct task_struct *, __entry_task);
  
- config ARCH_PROC_KCORE_TEXT
- 	def_bool y
-diff --git a/arch/sparc/kernel/process_32.c b/arch/sparc/kernel/process_32.c
-index 229a10bab74a..3e1f7b639e9a 100644
---- a/arch/sparc/kernel/process_32.c
-+++ b/arch/sparc/kernel/process_32.c
-@@ -273,8 +273,9 @@ clone_stackframe(struct sparc_stackf __user *dst,
- extern void ret_from_fork(void);
- extern void ret_from_kernel_thread(void);
- 
--int copy_thread(unsigned long clone_flags, unsigned long sp,
--		unsigned long arg, struct task_struct *p)
-+int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
-+		    unsigned long arg, struct task_struct *p,
+ asmlinkage void ret_from_fork(void) __asm__("ret_from_fork");
+-int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+-		unsigned long stk_sz, struct task_struct *p)
++int copy_thread_tls(unsigned long clone_flags, unsigned long stack_start,
++		    unsigned long stk_sz, struct task_struct *p,
 +		    unsigned long tls)
  {
- 	struct thread_info *ti = task_thread_info(p);
- 	struct pt_regs *childregs, *regs = current_pt_regs();
-@@ -376,7 +377,7 @@ int copy_thread(unsigned long clone_flags, unsigned long sp,
- 	regs->u_regs[UREG_I1] = 0;
+ 	struct pt_regs *childregs = task_pt_regs(p);
  
- 	if (clone_flags & CLONE_SETTLS)
--		childregs->u_regs[UREG_G7] = regs->u_regs[UREG_I3];
-+		childregs->u_regs[UREG_G7] = tls;
- 
- 	return 0;
- }
+@@ -170,7 +171,7 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+ 		childregs->uregs[0] = 0;
+ 		childregs->osp = 0;
+ 		if (clone_flags & CLONE_SETTLS)
+-			childregs->uregs[25] = childregs->uregs[3];
++			childregs->uregs[25] = tls;
+ 	}
+ 	/* cpu context switching  */
+ 	p->thread.cpu_context.pc = (unsigned long)ret_from_fork;
 -- 
 2.27.0
 
