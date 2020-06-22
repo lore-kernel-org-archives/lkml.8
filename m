@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1824620716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B6B20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="2GosbQAa"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JohkqRDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgFVJle (ORCPT
+        id S1728017AbgFVJn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40692 "EHLO
+        Mon, 22 Jun 2020 05:43:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgFVJl3 (ORCPT
+        with ESMTP id S1726876AbgFVJl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:41:29 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894CEC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:28 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g10so14196789wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:28 -0700 (PDT)
+        Mon, 22 Jun 2020 05:41:26 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80B3C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:24 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 17so461708wmo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XLmPOYVdaqe+y9UvFG8JqfkTSyC/6Nk+DJj6OjGJzDQ=;
-        b=2GosbQAaXiA/JCZI+g11JdzSxLyfN527ZSvaJacFgJHvRnRrhvLEPiWmyJFet6DLEb
-         hARZd6Itp8Ly0hWe26lMW947wIjwj7XUtHNewIkPpHDfvslkT6iaZRGzwVc1+AdkfN9E
-         77J7zDnRp2cYGiifSFx4PYoShheiwsluJXswRLqt8WCuWUWb6Embtw6Z9mU9W3xNZj5+
-         FkCtTAjDmKfNu78ysMk7zie06INp6h4obBSJsjUfKcugxIeYOlBAJsbCB32uIVigpa55
-         H1TopXYcKvoxi2/iyqbeMnFO353y8FNqh6Aqq/dcIb9ZhBcMg37bYYwmNiEdTQ26X7wA
-         iCKA==
+        bh=jZFWs1jjiaVnSG438fJkY7s38xrX7YeHfB9snWv0f6M=;
+        b=JohkqRDOkStLwOQBjn7GAxxxqeMmpsJpexC5Nvm3ZMZvZkzc6ARClZYDLYdCfBzdNP
+         R+QJVrGl3nve0LVt+ru6aBGSu24D+tdHE1WXHHZuvA5Ccg3nHihCl36U5ScPUL7gEh57
+         udVFjmWNOm6E0bczq/erJCZqK+GBkdblmTaRS2wxUujd7J+4fpcSfkvXc70p5jeaQvh0
+         r7uqyKqpQR2LYCzlfV/PSR3Z3SvvEaicHAEj11kmaMKkCWH4prC3PqUu8JFXFO7jY4OE
+         2ZItHe0laJ0Lf9dSzMlvGGUIslglMGg/vMwUmi0/DI2fZnDGPbhyK9nizsa0eDmyC4EL
+         qmEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XLmPOYVdaqe+y9UvFG8JqfkTSyC/6Nk+DJj6OjGJzDQ=;
-        b=CcDqcR/tHzg8ixhzgbBwao3Kqk7dPeZEnbsKmCZP4TaTWkq/9S1maH/rphILSVzGNL
-         YLLxX4EIvSsmdgSUiCOXQzsJisW6vhZyrS+UJByeIuV2HIDepmBmWZsxKvlHPQnvBbqR
-         a0o2h5H8Q45bn4ObAXC4YpVqnSHCe3BIsEURL0Kmvg4lyZ7814R6i4ppCxcUs8vSJypS
-         74koWw5gktNBVHNmxILYxB1FccFsjA1VNsi9fJ1vKVFEaGziA8xuPcOKt+55U+TIfYtC
-         7aCk8yESC8I3TWXHlRpOWSRfpH27CnCWvOulVj45IfSktj5MyFWMdCsm2/REL3uLESAf
-         MjSQ==
-X-Gm-Message-State: AOAM531iP7v0VAv7GkunNMgMMMWnkXZtms7pzFka/FcogaCt2RU+qfkR
-        UivB9U0GIwwPc8UX88gRhRS4ag==
-X-Google-Smtp-Source: ABdhPJzDaXbcIaH5nH0mryMVoe9yjbkPdBB2oGScnXDu1GQppXU4cUVJs6lCaQVoAVfhbUhW/QgYFw==
-X-Received: by 2002:a1c:f204:: with SMTP id s4mr18359072wmc.159.1592818887262;
-        Mon, 22 Jun 2020 02:41:27 -0700 (PDT)
+        bh=jZFWs1jjiaVnSG438fJkY7s38xrX7YeHfB9snWv0f6M=;
+        b=YVQL0MJbkEVNtvBsJIAfYJqGGgT8moecVquEWhAkXXXbW9Tx+XhYrGP4eO+Il3I9U/
+         s4i4fdi3hgS2ZlqVU1x8LhZFoU6hurZcVRdLxwpCu0oAI8reIESXK/+SXXTvSJ8eGLr7
+         +8cvEidUcpdfsqIOtTgOb1b0IU0OqAOSq/Rlih6ZnW3IRuHWrJM6Wts0NYzkAAb694cw
+         e6K7t7oaQj+p/SRY4jDXkBxVqpRRsiphB+Zmyp/U24NoWgyTuJxwdXKR9hs+Ca76oRbm
+         YVEM8zT3zOv6l/xol+4/iIBMKasdGZaNhCkAQVDJIaYmmDfCQAB7A6BqyKFfN9FXIroE
+         EFFQ==
+X-Gm-Message-State: AOAM532xrh5+rKQDRjYhNAAeAJQBC79tFqMnl18hqEfhC9oXyWaM4Z3o
+        0Ygb4Um6rJFmStc+X0dbSn9/Bg==
+X-Google-Smtp-Source: ABdhPJyC1ihQ/cFNQCt/b68/kb0LNRNlp3xUizgD1UJeHr9htbQzK5ESNt14EIs0DoIuJdIEW8DsUQ==
+X-Received: by 2002:a05:600c:2294:: with SMTP id 20mr18307854wmf.51.1592818883659;
+        Mon, 22 Jun 2020 02:41:23 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.25
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:26 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:23 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -93,9 +93,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 03/15] net: phy: arrange headers in phy_device.c alphabetically
-Date:   Mon, 22 Jun 2020 11:37:32 +0200
-Message-Id: <20200622093744.13685-4-brgl@bgdev.pl>
+Subject: [PATCH 01/15] net: phy: arrange headers in mdio_bus.c alphabetically
+Date:   Mon, 22 Jun 2020 11:37:30 +0200
+Message-Id: <20200622093744.13685-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -113,14 +113,14 @@ allows to easily see if given header is already included.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/phy_device.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/phy/mdio_bus.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 04946de74fa0..1b4df12c70ad 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -9,28 +9,28 @@
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 6ceee82b2839..296cf9771483 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -8,32 +8,32 @@
  
  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
@@ -131,38 +131,44 @@ index 04946de74fa0..1b4df12c70ad 100644
 -#include <linux/slab.h>
 -#include <linux/interrupt.h>
 -#include <linux/init.h>
-+#include <linux/bitmap.h>
  #include <linux/delay.h>
--#include <linux/netdevice.h>
+ #include <linux/device.h>
 +#include <linux/errno.h>
- #include <linux/etherdevice.h>
--#include <linux/skbuff.h>
++#include <linux/etherdevice.h>
 +#include <linux/ethtool.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
 +#include <linux/init.h>
 +#include <linux/interrupt.h>
 +#include <linux/io.h>
 +#include <linux/kernel.h>
-+#include <linux/mdio.h>
 +#include <linux/mii.h>
- #include <linux/mm.h>
- #include <linux/module.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/netdevice.h>
+ #include <linux/of_device.h>
+-#include <linux/of_mdio.h>
+ #include <linux/of_gpio.h>
+-#include <linux/netdevice.h>
+-#include <linux/etherdevice.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
+ #include <linux/reset.h>
+ #include <linux/skbuff.h>
++#include <linux/slab.h>
+ #include <linux/spinlock.h>
+-#include <linux/mm.h>
+-#include <linux/module.h>
 -#include <linux/mii.h>
 -#include <linux/ethtool.h>
--#include <linux/bitmap.h>
-+#include <linux/netdevice.h>
- #include <linux/phy.h>
- #include <linux/phy_led_triggers.h>
- #include <linux/sfp.h>
--#include <linux/mdio.h>
+-#include <linux/phy.h>
 -#include <linux/io.h>
-+#include <linux/skbuff.h>
-+#include <linux/slab.h>
 +#include <linux/string.h>
  #include <linux/uaccess.h>
 +#include <linux/unistd.h>
  
- MODULE_DESCRIPTION("PHY library");
- MODULE_AUTHOR("Andy Fleming");
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/mdio.h>
 -- 
 2.26.1
 
