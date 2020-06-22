@@ -6,87 +6,85 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA102C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 744E020716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90209206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgFVNG1 (ORCPT
+        id S1728431AbgFVNHg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgFVNG1 (ORCPT
+        Mon, 22 Jun 2020 09:07:36 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51805 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbgFVNHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:06:27 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D644C061794;
-        Mon, 22 Jun 2020 06:06:27 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 3576D2C8;
-        Mon, 22 Jun 2020 13:06:25 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 07:06:23 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Tony Fischetti <tony.fischetti@gmail.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Joe Perches <joe@perches.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
- Documentation/process
-Message-ID: <20200622070623.086f1623@lwn.net>
-In-Reply-To: <CANiq72=Y+beqZ8Dmieo_GKbyaLN8Nf1n3bVntj_o90Cn-nADRQ@mail.gmail.com>
-References: <20200621133630.46435-1-grandmaster@al2klimov.de>
-        <CANiq72kA==S-G481VHx2qrKkJmaVK7ZOuYmin4xVr3XKB8x8ug@mail.gmail.com>
-        <b7ba0047-8993-d3bf-327c-1fb70bc0282c@al2klimov.de>
-        <CANiq72=Y+beqZ8Dmieo_GKbyaLN8Nf1n3bVntj_o90Cn-nADRQ@mail.gmail.com>
-Organization: LWN.net
+        Mon, 22 Jun 2020 09:07:11 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 463C54000B;
+        Mon, 22 Jun 2020 13:07:05 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200620151001.GL304147@lunn.ch>
+References: <20200619122300.2510533-1-antoine.tenart@bootlin.com> <20200619122300.2510533-6-antoine.tenart@bootlin.com> <20200620151001.GL304147@lunn.ch>
+Subject: Re: [PATCH net-next v3 5/8] net: phy: mscc: 1588 block initialization
+To:     Andrew Lunn <andrew@lunn.ch>
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        richardcochran@gmail.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        allan.nielsen@microchip.com, foss@0leil.net
+Message-ID: <159283122502.1456598.2577905456018345790@kwain>
+Date:   Mon, 22 Jun 2020 15:07:05 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 01:43:12 +0200
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+Hi Andrew,
 
-> > * The script should not be neccessary once all of my changes[1] arrive
-> > in torvalds/master. Instead reviewers should say like C'mon dude, what's
-> > this new plain-HTTP link doing in your patch? We have 2020! Look at e.g.
-> > 93431e0607e5 .  
+Quoting Andrew Lunn (2020-06-20 17:10:01)
+> On Fri, Jun 19, 2020 at 02:22:57PM +0200, Antoine Tenart wrote:
+> > From: Quentin Schulz <quentin.schulz@bootlin.com>
+> > 
+> > This patch adds the first parts of the 1588 support in the MSCC PHY,
+> > with registers definition and the 1588 block initialization.
+> > 
+> > Those PHYs are distributed in hardware packages containing multiple
+> > times the PHY. The VSC8584 for example is composed of 4 PHYs. With
+> > hardware packages, parts of the logic is usually common and one of the
+> > PHY has to be used for some parts of the initialization. Following this
+> > logic, the 1588 blocks of those PHYs are shared between two PHYs and
+> > accessing the registers has to be done using the "base" PHY of the
+> > group. This is handled thanks to helpers in the PTP code (and locks).
+> > We also need the MDIO bus lock while performing a single read or write
+> > to the 1588 registers as the read/write are composed of multiple MDIO
+> > transactions (and we don't want other threads updating the page).
 > 
-> In an ideal world, yes, but that won't happen unless enforced somehow.
-> 
-> Nevertheless, even in such a case, it would be best to have a script
-> to check the entire tree from time to time.
+> Locking sounds complex. I assume LOCKDEP was your friend in getting
+> this correct and deadlock free.
 
-As has been noted elsewhere, checkpatch.pl seems like the appropriate
-place to make this check.  As for "the entire tree"...if this job gets
-completed, "git grep" should be a fine way to do that.
+I agree, locking is not straight forward. But it's actually not that
+complex:
+
+- The MDIO bus lock is used for all TS/PHC register access.
+- There is one lock for PHC operations and one for timestamping
+  operations. The two are never used in the same function. We could use
+  the same lock; introducing more waiting.
+- There is one shared lock for GPIO operations. It is only used in
+  PHC functions, in two places.
+
+And I realized I can remove the locks from vsc8584_ptp_init, as PHC/TS
+helpers are not registered until the PHY is initialized.
 
 Thanks,
+Antoine
 
-jon
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
