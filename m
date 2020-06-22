@@ -2,125 +2,142 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6183DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75124C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3524620720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:27:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="K3O6Gsly";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="BQnFsvhb"
+	by mail.kernel.org (Postfix) with ESMTP id 57453206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgFVJ1x (ORCPT
+        id S1726893AbgFVJaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:27:53 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:8083 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgFVJ1w (ORCPT
+        Mon, 22 Jun 2020 05:30:14 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:47471 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbgFVJaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:27:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592818073; x=1624354073;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=K3O6GslyGctxyNUdJ6wjmrY9YfVARh2CRCMfMyn2BuPPBRETE7reNlCE
-   uKSOs6aK8Tfbh7uXtut8rR85wj0Jkd9K/0jPXBDnoMjTjmQ8E29jlNBCl
-   /CqaZg9xEr59byw4TvPqQtGKe+eRDT5jsjjWgArbwZq+bNrhUAvP7im14
-   XvsWw4UKSMOQUkVN/+mWJuoVaDYSRcaD5oW+VcS4pEDwkrNwuzyZ/ti5Y
-   WhgNIXxItuswvngAc3bCphQNxYp3OXIvvTktf17b9ul+AentEqv3Udkk4
-   efA+VkmL84SVfGL5WKurYc2MQaGYiqib+UjWVRPirfGjlGdxh337RXL7n
-   w==;
-IronPort-SDR: 5LYhldSt8a6aQxAXm0nDykJ3atwG0vcxgd2j/UyBzZtGDoOgqkjsd/Po0vrMce1SnmRnfMFPGg
- z1XCsKVcw9asgAgDBcvvsu6myKt1w4TuIxIVSLFSL/UDcoTe8DqSTOeCFPsue5VIpfP3UXjfLZ
- hhIQVzEhefIs+NVh8FSp0mO8r9MpmXjs/A4+ON0IEqVNFjSGF4hz0H4VmiCx6l0Ve4PzNk2OPX
- hVd29gbvzoDiLhioFIxmXDTxxggvloYQUcLXrDj51nsF6l3M8KTxbOBfNG5l2nhi9EodOYOuHw
- YMQ=
-X-IronPort-AV: E=Sophos;i="5.75,266,1589212800"; 
-   d="scan'208";a="140839681"
-Received: from mail-co1nam04lp2053.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.53])
-  by ob1.hgst.iphmx.com with ESMTP; 22 Jun 2020 17:27:52 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CmtP7eCuwHNUVmFhfcu/rTvYBNWcFIZTapyXt8xQzWgc+q9CeH0O8yRUsnLJKaSmfunNq+1wbL1wTDyB6gO3nDVRbWCIDYMWgByk5h9WlFDZv20hHYq7tS/Zm9OtmDT6tYJqmY6S/Gx1GuECx/zdrzpn/172kAlpfnK1oRdyS3cfMQgIwNvkbzfNeXcboEiR9ILxJWbBRjd1w5q0EFWGrAbcd0s/msGI+3bWM+BGgrJF8oGIejIv0GjVt8a9gcFjEaW8h4KQdiVLT+GkP1DB9E+S56CCRTR9L/jEDos6gJ3HYs2sOiFCb9GOQJfq89uvz7fGzyRq4OTZSUXfCkjh0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=RIkrZGCrw3U59vzP0jNlgQ9eNBLevVNuuppHAlCnraj0QrP4Z0RxTMNl0t8T+SPEk8uoUGw0oW9xtS/lxhTJHQfxaQAG6IpkZbtlvzxN7WLju/LFdxSyBM7WayhPzIER33Mf2PgTd0/U5oAbbBMIrhV0F1c0+L2Jv2zPO4cV3xcasCwtd5nZqAGjkNSprckJGcfw1I8L33KaGrQN+Me1hyWZoAR5vGiRm7SmyEse3iljytNS/ZIpdzbVelAy6i3X/3O7aPFWyQ1DdMQUstzWdUjAjWEIEVL13pPLSNNQUDw58oDPyo5PgYkLsH67r4Z7o35wnBjM1xRN2TOyOWmYrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=BQnFsvhbN6yItHpfPAbE48SlxoZwA63H+jV/735aDzoLlv2ZxeOhkIEeSY3mnR37/MHdXI2tfhClvAtMg7tmbl1r+RHAug31oW8D8EBgzsyExGNrzubvTLxNClDqvKTz0ihNwX1atYRgtMtyYOLMNABiBoyJJHbz3UdHOZ+BzF4=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4400.namprd04.prod.outlook.com
- (2603:10b6:805:39::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Mon, 22 Jun
- 2020 09:27:50 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 09:27:50 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 06/10] block: simplify sb_is_blkdev_sb
-Thread-Topic: [PATCH 06/10] block: simplify sb_is_blkdev_sb
-Thread-Index: AQHWRtLf4x63MmkTG0SMepHCfcXZ6g==
-Date:   Mon, 22 Jun 2020 09:27:50 +0000
-Message-ID: <SN4PR0401MB35984F063818E0BD65D475439B970@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200620071644.463185-1-hch@lst.de>
- <20200620071644.463185-7-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1597:de01:e494:6330:3987:7eb6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 524b16ff-de87-47fa-3678-08d8168e88aa
-x-ms-traffictypediagnostic: SN6PR04MB4400:
-x-microsoft-antispam-prvs: <SN6PR04MB44003F093AC8F9DB44B1D1399B970@SN6PR04MB4400.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 0442E569BC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: g/PFv2H/lWohY6Y00FH3sL9ZaHK1MXGCr0ONGgxcy/HJj7cOVaggHLJB+ziVECqA6B+wc00Q6h4tJibG/yeI8zomQuRTzXkfpD0RrUMgSOp9MUnTxmQwIB+TML0kknd40ajnFOBzsgbGe09xYoxvqlGmdsw4VCrw908u/V/3nabVmOhAiB2p2BNz2Ay+5brOIH/ZekWJXBLIrsOEF/gCqfqu8lzkRxjePZJohEZTch+aSNQMalAExW44B5dD8l8KY1KIaari5PWCwn6fsq4sf1G0eQPToFiTjg7l3b5iM0mm7wvENMNQm9EA+Bp+t1gZhluq0X8iZl2xKfey4Nawpg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(39860400002)(366004)(396003)(7696005)(66946007)(186003)(8676002)(8936002)(6506007)(4326008)(33656002)(19618925003)(4270600006)(86362001)(9686003)(5660300002)(55016002)(76116006)(54906003)(91956017)(558084003)(52536014)(110136005)(66556008)(66476007)(66446008)(478600001)(316002)(64756008)(2906002)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: OvoOb5wAvaA9OUcpcvb0KsuI9Nutui1J6vHrz/PoHTnj8Qjuy26+o7rfBN/l2sAMgCsUGiYaxubNSBb9Q7ZIWxq3m8g8PnGLgWmcBvNBckwZJrmP61uE1Gzqq/gIwR25aK6IqccW18qE5V5lc+DC8vEG2MhUpnPZv4motfPErs1a1W7OuLHtyjRkhpoZEsqrZ1MIiuNM13qk9bZMigKCeNhTgE/7CIoFAgVhPPrg+e8BeRfnnKK7YWCwvk9dhWk+8CiS29KivjI3ZfE9DcMvvG8Z//Tw0Aa4zzb8qZFtWANCUup/rWg6J96BC6h5tf8/z5BWrHWmvYy5Ogs9VvGXYfnMW0Y20HUQq3/vO0gy5/Qb2F6Yxnv0qGjSQ5UMqesrqIwKzbuG1vi9ynHVjQFWXFkATtCRN4pzD/TeE0WdaK3y4EAQ65vJHLODmxu39/YgnWII2zCO1YlRwzyU5OIplZA9TZk0ohZDbvTVcqye3tgYX2NCobfsLXz+TXhm8qXPhMYCyu/LWvbuxvXQX4VA7Bk++9Hi4M9WFPt75mqQQSSCVYy/pHCHJNDcXeAs2dgY
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 22 Jun 2020 05:30:13 -0400
+Received: by mail-io1-f72.google.com with SMTP id m11so12105939ioj.14
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:30:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=y6d+8mqZsCB5fv3nyzzC3YvhcX1zZRURP+KDtTPm8uQ=;
+        b=jH35Jih/s5Jmxkws4lVZ5evSPvIsmrTEtSPkHZmO9oGV85g6v7hJyFGw3ehrRLH8DS
+         Hhwr4jnpOIAhIEgrXRusazEI+vgAMmotdu3tJksKJTpAwHSepdOWA74FRoP2bmaks/sJ
+         471Rmaz1eCuQdXbBlNtYYBeyjQfLpMTXTNSEhxF4X2yZeUkvOhzXIhhXxDvb626iIRWn
+         z5qRUBii6ksGxOuq2D48LSMCySPAsFdLzaX0hqB7ta7uo4XxBPiWXGsUEQ4IoMtNvzVh
+         5q+b1E1s3pNDw0fhPNBjn34sQJqhn/S/XGaxP0covft7SQKBRiANTfGuY0Evwh0s5oNa
+         yAVw==
+X-Gm-Message-State: AOAM532ieBrOFwY0C/P8KEyWJ3gxBZg0iuNN2b5qjSRPvrIHB2o3CTU7
+        081iP02njSNeSJ3vROggiwjdwb2VY0O68Z2i8ybOeycNV2yP
+X-Google-Smtp-Source: ABdhPJzhFnjmYwgimrnVMBiTmAAXlEyHzTVcudgvl1qpTyANamrFaH6gyQq7grxFCFtK3Z4UBKZLlv8OVFvqHFhLujNtgTI8yRtc
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 524b16ff-de87-47fa-3678-08d8168e88aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 09:27:50.5900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zshfANwsCqVY/uiGl2SROrC2WWzFC49/qnOe62huTUj65CKjJb6FbPbTUB/GuXYvCSL+BTlSG1WV/61p5oFSKR4y/DC2URSeDw0sR8RJ+yU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4400
+X-Received: by 2002:a02:cdc4:: with SMTP id m4mr16943490jap.57.1592818212975;
+ Mon, 22 Jun 2020 02:30:12 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 02:30:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c6b93705a8a8e304@google.com>
+Subject: WARNING in warn_bad_map
+From:   syzbot <syzbot+42a07faa5923cfaeb9c9@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+        mptcp@lists.01.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11124521100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=42a07faa5923cfaeb9c9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+42a07faa5923cfaeb9c9@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+Bad mapping: ssn=2478501 map_seq=0 map_data_len=32748
+WARNING: CPU: 0 PID: 20706 at net/mptcp/subflow.c:581 warn_bad_map.isra.0.part.0+0x7d/0xb0 net/mptcp/subflow.c:581
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 20706 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:105 [inline]
+ fixup_bug arch/x86/kernel/traps.c:100 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:197
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:216
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:warn_bad_map.isra.0.part.0+0x7d/0xb0 net/mptcp/subflow.c:581
+Code: 48 c1 ea 03 0f b6 14 02 48 89 d8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 1c 8b 13 44 89 e6 48 c7 c7 20 5c fe 88 e8 4b 2e 6b f9 <0f> 0b 48 83 c4 08 5b 5d 41 5c c3 48 89 df 89 4c 24 04 e8 7c 3f d9
+RSP: 0018:ffffc90006f2f420 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff88809e4fe43c RCX: 0000000000000000
+RDX: 0000000000040000 RSI: ffffffff815d5ba7 RDI: fffff52000de5e76
+RBP: ffff88809e4fe444 R08: ffff8880850aa580 R09: 0000000000000001
+R10: ffffffff8c347a27 R11: fffffbfff1868f44 R12: 000000000025d1a5
+R13: ffff88809e4fe400 R14: ffff88809e4fe444 R15: ffff88809e4fe43c
+ warn_bad_map net/mptcp/subflow.c:613 [inline]
+ validate_mapping net/mptcp/subflow.c:613 [inline]
+ get_mapping_status net/mptcp/subflow.c:728 [inline]
+ subflow_check_data_avail net/mptcp/subflow.c:766 [inline]
+ mptcp_subflow_data_available+0x145b/0x1aa0 net/mptcp/subflow.c:862
+ subflow_data_ready+0x10b/0x170 net/mptcp/subflow.c:903
+ tcp_data_ready+0xe8/0x230 net/ipv4/tcp_input.c:4776
+ tcp_data_queue+0x1161/0x4760 net/ipv4/tcp_input.c:4842
+ tcp_rcv_established+0x905/0x1d90 net/ipv4/tcp_input.c:5735
+ tcp_v4_do_rcv+0x605/0x8b0 net/ipv4/tcp_ipv4.c:1629
+ sk_backlog_rcv include/net/sock.h:996 [inline]
+ __release_sock+0x134/0x3a0 net/core/sock.c:2548
+ release_sock+0x54/0x1b0 net/core/sock.c:3064
+ mptcp_sendmsg+0x11f9/0x17f0 net/mptcp/protocol.c:872
+ inet_sendmsg+0x99/0xe0 net/ipv4/af_inet.c:814
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ sock_write_iter+0x288/0x3c0 net/socket.c:999
+ call_write_iter include/linux/fs.h:1917 [inline]
+ do_iter_readv_writev+0x51e/0x790 fs/read_write.c:694
+ do_iter_write fs/read_write.c:999 [inline]
+ do_iter_write+0x18b/0x600 fs/read_write.c:980
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1072
+ do_writev+0x27f/0x300 fs/read_write.c:1115
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca59
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f5887229c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 000000000050e320 RCX: 000000000045ca59
+RDX: 0000000000000001 RSI: 0000000020000200 RDI: 0000000000000004
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000d43 R14: 00000000004cb67f R15: 00007f588722a6d4
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
