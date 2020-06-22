@@ -2,120 +2,103 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5195C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B09BC20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D542074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:08:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X+zIOwQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbgFVQIF (ORCPT
+        id S1729828AbgFVQIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:08:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:49234 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbgFVQIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:08:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF4DA31B;
-        Mon, 22 Jun 2020 09:08:03 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CA053F71E;
-        Mon, 22 Jun 2020 09:07:55 -0700 (PDT)
-Subject: Re: [PATCH v2] dma-pool: Fix too large DMA pools on medium systems
-To:     David Rientjes <rientjes@google.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200608132217.29945-1-geert@linux-m68k.org>
- <20200620200936.GA106151@roeck-us.net>
- <CAMuHMdX3mBDm9iHk+jhbGfmo+dbix=3tp5z2ewyddWxM1tdqGQ@mail.gmail.com>
- <c0889f5c-34ae-2314-6530-a9240e0901f2@roeck-us.net>
- <alpine.DEB.2.22.394.2006211308500.195301@chino.kir.corp.google.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <1287bffd-3363-0764-0309-32222b2b8c9a@arm.com>
-Date:   Mon, 22 Jun 2020 17:07:55 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 12:08:45 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35248 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726328AbgFVQIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:08:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592842123;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=oLt4zilRnLpSNkiF0C8oekFwW4sIceZdS9Lxg4NGfQA=;
+        b=X+zIOwQ8lKRqow7O8kpUKjELqX+MtcdM3skTior4cv7zfv7AmK8lNqfc9Y7GoepUIC36+g
+        Z+3bz4cwxpkNpPV7HAJO/L2DaKZTYdWY1IxH7YSIUge8b81A6bTn9p3cG6sgJBiAj6SuLA
+        3i+Ka4CUFbXufcW0PKWhWbQaVErj9AQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-IPnes8dvMvar_MJTs1dysA-1; Mon, 22 Jun 2020 12:08:35 -0400
+X-MC-Unique: IPnes8dvMvar_MJTs1dysA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 545F5A0BD9;
+        Mon, 22 Jun 2020 16:08:33 +0000 (UTC)
+Received: from dell-r430-03.lab.eng.brq.redhat.com (dell-r430-03.lab.eng.brq.redhat.com [10.37.153.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ECEC45BACD;
+        Mon, 22 Jun 2020 16:08:31 +0000 (UTC)
+From:   Igor Mammedov <imammedo@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, kvm@vger.kernel.org, wanpengli@tencent.com
+Subject: [PATCH] kvm: lapic: fix broken vcpu hotplug
+Date:   Mon, 22 Jun 2020 12:08:30 -0400
+Message-Id: <20200622160830.426022-1-imammedo@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2006211308500.195301@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-21 21:20, David Rientjes wrote:
-> On Sun, 21 Jun 2020, Guenter Roeck wrote:
-> 
->>>> This patch results in a boot failure in some of my powerpc boot tests,
->>>> specifically those testing boots from mptsas1068 devices. Error message:
->>>>
->>>> mptsas 0000:00:02.0: enabling device (0000 -> 0002)
->>>> mptbase: ioc0: Initiating bringup
->>>> ioc0: LSISAS1068 A0: Capabilities={Initiator}
->>>> mptbase: ioc0: ERROR - Unable to allocate Reply, Request, Chain Buffers!
->>>> mptbase: ioc0: ERROR - didn't initialize properly! (-3)
->>>> mptsas: probe of 0000:00:02.0 failed with error -3
->>>>
->>>> Configuration is bamboo:44x/bamboo_defconfig plus various added drivers.
->>>> Qemu command line is
->>>>
->>>> qemu-system-ppc -kernel vmlinux -M bamboo \
->>>>       -m 256 -no-reboot -snapshot -device mptsas1068,id=scsi \
->>>>       -device scsi-hd,bus=scsi.0,drive=d0,wwn=0x5000c50015ea71ac -drive \
->>>>       file=rootfs.ext2,format=raw,if=none,id=d0 \
->>>>       --append "panic=-1 slub_debug=FZPUA root=/dev/sda  mem=256M console=ttyS0" \
->>>>       -monitor none -nographic
->>>>
->>>> canyonlands_defconfig with sam460ex machine and otherwise similar command line
->>>> fails as well.
->>>>
->>>> Reverting this patch fixes the problem.
->>>
->>> This looks like the minimum value of 128 KiB is not sufficient, and the
->>> bug is in the intention of 1d659236fb43c4d2 ("dma-pool: scale the
->>> default DMA coherent pool size with memory capacity")?
->>> Before, there was a single pool of (fixed) 256 KiB size, now there are
->>> up to three coherent pools (DMA, DMA32, and kernel), albeit of smaller
->>> size (128 KiB each).
->>>
->>> Can you print the requested size in drivers/message/fusion/mptbase.c:
->>> PrimeIocFifos()?
->>
->> 172928 bytes
->>
->>> Does replacing all SZ_128K by SZ_256K in my patch help?
->>
->> Yes, it does.
->>
-> 
-> The new coherent pools should auto expand when they are close to being
-> depleted but there's no guarantee that it can be done fast enough.
+Guest fails to online hotplugged CPU with error
+  smpboot: do_boot_cpu failed(-1) to wakeup CPU#4
 
-More to the point, it's never going to help if the pool is empty and one 
-allocation is simply larger than the entire thing ;)
+It's caused by the fact that kvm_apic_set_state(), which used to call
+recalculate_apic_map() unconditionally and pulled hotplugged CPU into
+apic map, is updating map conditionally [1] on state change which doesn't
+happen in this case and apic map update is skipped.
 
-Another angle, though, is to question why this driver is making such a 
-large allocation with GFP_ATOMIC in the first place. At a glance it 
-looks like there's no reason at all other than that it's still using the 
-legacy pci_alloc_consistent() API, since every path to that appears to 
-have CAN_SLEEP passed as its flag - modernising that would arguably be 
-an even better long-term win.
+Note:
+new CPU during kvm_arch_vcpu_create() is not visible to
+kvm_recalculate_apic_map(), so all related update calls endup
+as NOP and only follow up kvm_apic_set_state() used to trigger map
+update that counted in hotplugged CPU.
+Fix issue by forcing unconditional update from kvm_apic_set_state(),
+like it used to be.
 
-Robin.
+1)
+Fixes: (4abaffce4d25a KVM: LAPIC: Recalculate apic map in batch)
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+---
+PS:
+it's alternative to full revert of [1], I've posted earlier
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2205600.html
+so fii free to pick up whatever is better by now
+---
+ arch/x86/kvm/lapic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Switching the min size to be the previous min size (256KB) seems like the
-> best option and it matches what
-> Documentation/admin-guide/kernel-parameters.txt still stays.
-> 
-> I'll also send a patch to point in the right direction when this happens.
-> 
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 34a7e0533dad..5696831d4005 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2556,6 +2556,7 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 	int r;
+ 
++	apic->vcpu->kvm->arch.apic_map_dirty = true;
+ 	kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
+ 	/* set SPIV separately to get count of SW disabled APICs right */
+ 	apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV)));
+-- 
+2.26.2
+
