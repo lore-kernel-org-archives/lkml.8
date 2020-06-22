@@ -2,91 +2,100 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94578C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE975C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9AE2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912A42070E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpeSo4v1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgFVNBv (ORCPT
+        id S1728262AbgFVNCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:01:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728116AbgFVNBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:01:51 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 22 Jun 2020 09:02:10 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24582 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728137AbgFVNCI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:02:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592830927;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dszT79NgiiYmLxEO+86hQusN0IhnJ9bqFLtWEsnu6g8=;
+        b=KpeSo4v1GOSlHcq5qwkj8e51mX8Oh+6dx2iPku8NhHhUJ/rEMlSfdCI5Dtk97+Evzx4XiQ
+        H6UQ+zCLbkCop0uEHhWh4Xbyx4URWgYn07c153hGI+4XC1xILXEtanwYKgmt22qsjEvS/m
+        3/A0cMLeulTRAnK6CW/mtdtugDasnAw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318--SFhCDsyMk-SGmLQ_Bm6Zw-1; Mon, 22 Jun 2020 09:02:04 -0400
+X-MC-Unique: -SFhCDsyMk-SGmLQ_Bm6Zw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B8B20732;
-        Mon, 22 Jun 2020 13:01:50 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 09:01:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ming Lei <tom.leiming@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: kprobe: __blkdev_put probe is missed
-Message-ID: <20200622090148.6e0f2ac9@oasis.local.home>
-In-Reply-To: <20200622002753.GC670933@T590>
-References: <20200618125438.GA191266@T590>
-        <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
-        <20200618231901.GA196099@T590>
-        <20200619141239.56f6dda0976453b790190ff7@kernel.org>
-        <20200619072859.GA205278@T590>
-        <20200619081954.3d72a252@oasis.local.home>
-        <20200619133240.GA351476@T590>
-        <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
-        <20200619232820.GE353853@T590>
-        <20200620103747.fb83f804083ef9956740acee@kernel.org>
-        <20200622002753.GC670933@T590>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E7F019200D0;
+        Mon, 22 Jun 2020 13:01:59 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.236])
+        by smtp.corp.redhat.com (Postfix) with SMTP id EB9B76FDD1;
+        Mon, 22 Jun 2020 13:01:56 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 22 Jun 2020 15:01:59 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 15:01:55 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Dominique Martinet <asmadeus@codewreck.org>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        linux-kernel@vger.kernel.org, ebiederm@xmission.com,
+        akpm@linux-foundation.org, liuzhiqiang26@huawei.com,
+        joel@joelfernandes.org, paulmck@linux.vnet.ibm.com,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] kernel/signal.c: Export symbol __lock_task_sighand
+Message-ID: <20200622130155.GE6516@redhat.com>
+References: <20200621133704.77896-1-alexander.kapshuk@gmail.com>
+ <20200622062527.GA6516@redhat.com>
+ <20200622083905.c3nurmkbo5yhd6lj@wittgenstein>
+ <20200622102401.GA12377@nautica>
+ <20200622113610.okzntx7jmnk6n7au@wittgenstein>
+ <20200622120259.GD6516@redhat.com>
+ <20200622122925.khcilncycuzb4xki@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622122925.khcilncycuzb4xki@wittgenstein>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 08:27:53 +0800
-Ming Lei <ming.lei@redhat.com> wrote:
+On 06/22, Christian Brauner wrote:
+>
+> It is a supported case however unlikely. I just tried to answer
+> Dominique's specific question pointing out that even in that unlikely
+> case sighand_struct is stable.
 
-> Can you kprobe guys improve the implementation for covering this case?
-> For example, put probe on 3) in case the above situation is recognized.
+I too tried to say this, but apparently just added more confusion ;)
 
-To do so would require solving the halting problem.
+> Just as an fyi, CLONE_SIGHAND with CLONE_VM but without CLONE_THREAD is
+> actually used quite a bit, e.g. in newlib, in stress-ng, and in criu.
 
-  https://en.wikipedia.org/wiki/Halting_problem
+OK,
 
-Or perhaps reading the DWARF output of the compiler to determine if it
-optimized the location you are looking for.
+> you'd want CLONE_VM which enforces
+> CLONE_SIGHAND so that would be another use-case afaict.
 
-The first case is impossible to solve, the second would take a lot of
-work, (are you going to fund it?)
+Cough no ;) CLONE_SIGHAND requires CLONE_VM, not vice versa.
 
-Your comment about tracing internals is valid, but if you can't
-understand the optimization of the compiler on the kernel, I suggest
-you stick with the static trace events. kprobes can be added virtual
-anywhere in the kernel. It's very function requires a kprobe *user* to
-understand the internals of the kernel as well as its executable binary
-code, and not expect the kprobe to figure it out for you.
+> > But this doesn't really matter. I mean, even if you race with another
+> > thread doing exec/exit/whatever, current->sighand is stable. Unless, again,
+> > current has already exited (called exit_notify()).
 
-We are all for adding infrastructure to make kprobes easier. But
-figuring out that the kernel optimized a function call so that we can
-add some wrapper to *simulate* the optimized out function call is
-something I believe is out of scope for a kprobe. In fact, I would call
-that a feature! I would like to know that a function was optimized out.
-When I add a kprobe, I'm more interested in what the compiler actually
-did to the kernel than what the source code shows us. That is very
-useful information.
+Oleg.
 
--- Steve
