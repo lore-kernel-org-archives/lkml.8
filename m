@@ -2,155 +2,104 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D627EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDAE12076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771F92076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:58:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQdkvhEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgFVTzW convert rfc822-to-8bit (ORCPT
+        id S1728523AbgFVT6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:55:22 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:35006 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728469AbgFVTzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:55:21 -0400
-Received: from dggemi401-hub.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 2A294B9ADE7E2F007BED;
-        Tue, 23 Jun 2020 03:55:18 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
- dggemi401-hub.china.huawei.com ([10.3.17.134]) with mapi id 14.03.0487.000;
- Tue, 23 Jun 2020 03:55:14 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin King <colin.king@canonical.com>
-CC:     Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][next] mm/zswap: fix a couple of memory leaks and rework
- kzalloc failure check
-Thread-Topic: [PATCH][next] mm/zswap: fix a couple of memory leaks and
- rework kzalloc failure check
-Thread-Index: AQHWSKrZL+ewyBWBGU2y0eVQs72K+KjkblmAgACdXuA=
-Date:   Mon, 22 Jun 2020 19:55:14 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD2514C4B@DGGEMI525-MBS.china.huawei.com>
-References: <20200622153546.49880-1-colin.king@canonical.com>
- <20200622182816.GF4151@kadam>
-In-Reply-To: <20200622182816.GF4151@kadam>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.202.192]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 22 Jun 2020 15:58:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbgFVT6g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:58:36 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05FDC0617BB
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:58:34 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i27so20740482ljb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nHSFCQ5+cQ8OGh51wncqKzKnMeiEdXuW0XPalgJJm0s=;
+        b=WQdkvhEcVZnm+GQQuLrVNL+AlI4jUEwnJ7v0hmSqrLb34OLYuQqujv78GPwIWmwdal
+         8YSY4XbjIGiccH5xGfzU9dv+BtI13WXalpqseoHo9kl9WqU1Eo9Q2PxdF4UVEnVstsKa
+         34Jn8j+9WBQf38ZGaxFVI1Fm3JUp6tHgsqsvzQSJcD7JROpW9sbh13AFnN1WIFPHT3Y7
+         rRj6Oc3AqvXAdXjOz9P1jb7piKLrambsacW1gG5EJjoeWzz/6dtEiLwqkzxEf1rbl4yz
+         bWNIe6Z1mrDcTOHT5z9+0lwvyhrqxLY/o/bYGFQ7MCIqyULdnNm1wTIfxm6d8xUVJSS3
+         5ZXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nHSFCQ5+cQ8OGh51wncqKzKnMeiEdXuW0XPalgJJm0s=;
+        b=aVC5UzaQOoDjQg6ArtF+0rE1YJdLkznnxrCXJy4QjhwMClg+JoATT2cmU6VMc4D0GA
+         eoXF8HajsdHTuhSp/zG/HFv1j+acifqqMCVzowDTvfukgrmbLCkn8D2vcBgK8TSZFD25
+         e+ox+b+S01klpTdXw8fuRJqf+8kztVtSqpOJmz3AOJ50cRbWu3Th66PYrUyF8XrOSaxL
+         fEAv+/fFp7HLUUqQj+HWVOIRxCP9C+eXSWV/wuTt3bO/bqpYFsGXZozu/wcCDbU3WgNW
+         sdfbS0lO8a+plSAnbELAsQeYJXc3lrB3ipzn160vK2xzou3qCXBc2UjR6nLEuB2+zF8w
+         obaQ==
+X-Gm-Message-State: AOAM531RcBx6EXAr1HouqWz6sIbKHBk5vMEgLuYnRq8LMTRz3JFRBD76
+        NCWHTp2x5SKdjzNixQv1uaU=
+X-Google-Smtp-Source: ABdhPJy8lJXP0jTFUAshbb+9yLIxUhZnDctLlz+GdGwCHouL8FWtsrqxWEUjVRhoAMHuPRgeWRzfqA==
+X-Received: by 2002:a2e:9049:: with SMTP id n9mr8719266ljg.118.1592855913450;
+        Mon, 22 Jun 2020 12:58:33 -0700 (PDT)
+Received: from pc636.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id f24sm2864472ljk.125.2020.06.22.12.58.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 12:58:31 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 1/1] mm/vmalloc: update the header about KVA rework
+Date:   Mon, 22 Jun 2020 21:58:21 +0200
+Message-Id: <20200622195821.4796-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Reflect an information about an author, date
+and year when the KVA rework has been done.
 
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ mm/vmalloc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> -----Original Message-----
-> From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
-> Sent: Tuesday, June 23, 2020 6:28 AM
-> To: Colin King <colin.king@canonical.com>
-> Cc: Seth Jennings <sjenning@redhat.com>; Dan Streetman
-> <ddstreet@ieee.org>; Vitaly Wool <vitaly.wool@konsulko.com>; Andrew
-> Morton <akpm@linux-foundation.org>; Song Bao Hua (Barry Song)
-> <song.bao.hua@hisilicon.com>; Stephen Rothwell <sfr@canb.auug.org.au>;
-> linux-mm@kvack.org; kernel-janitors@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH][next] mm/zswap: fix a couple of memory leaks and
-> rework kzalloc failure check
-> 
-> On Mon, Jun 22, 2020 at 04:35:46PM +0100, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > kzalloc failures return NULL on out of memory errors, so replace the
-> > IS_ERR_OR_NULL check with the usual null pointer check.  Fix two memory
-> > leaks with on acomp and acomp_ctx by ensuring these objects are free'd
-> > on the error return path.
-> >
-> > Addresses-Coverity: ("Resource leak")
-> > Fixes: d4f86abd6e35 ("mm/zswap: move to use crypto_acomp API for
-> hardware acceleration")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-
-
-Colin, thanks for your patch. I am sorry I did the same thing with you here:
-https://lkml.org/lkml/2020/6/22/347
-
-
-> > ---
-> >  mm/zswap.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/mm/zswap.c b/mm/zswap.c
-> > index 0d914ba6b4a0..14839cbac7ff 100644
-> > --- a/mm/zswap.c
-> > +++ b/mm/zswap.c
-> > @@ -433,23 +433,23 @@ static int zswap_cpu_comp_prepare(unsigned int
-> cpu, struct hlist_node *node)
-> >  		return 0;
-> >
-> >  	acomp_ctx = kzalloc(sizeof(*acomp_ctx), GFP_KERNEL);
-> > -	if (IS_ERR_OR_NULL(acomp_ctx)) {
-> > +	if (!acomp_ctx) {
-> >  		pr_err("Could not initialize acomp_ctx\n");
-> >  		return -ENOMEM;
-> >  	}
-> >  	acomp = crypto_alloc_acomp(pool->tfm_name, 0, 0);
-> > -	if (IS_ERR_OR_NULL(acomp)) {
-> > +	if (!acomp) {
-> 
-> This should be IS_ERR(acomp).  Please preserve the error code.
-> 
-> >  		pr_err("could not alloc crypto acomp %s : %ld\n",
-> >  				pool->tfm_name, PTR_ERR(acomp));
-> > -		return -ENOMEM;
-> > +		goto free_acomp_ctx;
-> >  	}
-> >  	acomp_ctx->acomp = acomp;
-> >
-> >  	req = acomp_request_alloc(acomp_ctx->acomp);
-> > -	if (IS_ERR_OR_NULL(req)) {
-> > +	if (!req) {
-> >  		pr_err("could not alloc crypto acomp %s : %ld\n",
-> >  		       pool->tfm_name, PTR_ERR(acomp));
-> > -		return -ENOMEM;
-> > +		goto free_acomp;
-> >  	}
-> >  	acomp_ctx->req = req;
-> >
-> > @@ -462,6 +462,12 @@ static int zswap_cpu_comp_prepare(unsigned int
-> cpu, struct hlist_node *node)
-> >  	*per_cpu_ptr(pool->acomp_ctx, cpu) = acomp_ctx;
-> >
-> >  	return 0;
-> > +
-> > +free_acomp:
-> > +	kfree(acomp);
-> 
-> The kfree() isn't correct.  It needs to be:
-> 
-> 	crypto_free_acomp(acomp);
-> 
-> > +free_acomp_ctx:
-> > +	kfree(acomp_ctx);
-> > +	return -ENOMEM;
-> 
-> regards,
-> dan carpenter
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 1e94497b7388..3c3b6ec26f9c 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -7,6 +7,7 @@
+  *  SMP-safe vmalloc/vfree/ioremap, Tigran Aivazian <tigran@veritas.com>, May 2000
+  *  Major rework to support vmap/vunmap, Christoph Hellwig, SGI, August 2002
+  *  Numa awareness, Christoph Lameter, SGI, June 2005
++ *  Improving global KVA allocator, Uladzislau Rezki, Sony, May 2019
+  */
+ 
+ #include <linux/vmalloc.h>
+-- 
+2.20.1
 
