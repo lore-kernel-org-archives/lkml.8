@@ -2,162 +2,191 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8646C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B1F20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11AF2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592854155;
+	bh=8XngoO5s6nbk2/eY/xj65QtRkSs83Kw/AMva1ZV8/d8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hgtBieAtlyNzx99ZYUS6jezCyCkLuCMkVxbf85/j2Y4SaJcpXkhxfBfTZjGqK3/Ub
+	 F7LV+JOgmZ+4QaB0ZyE02HlDHwOOJPraIJS3f5S/Kxl7zeKCmhHi8Vbw7daa/knrcP
+	 XEROrpPHBjfUl70yUaxtROB8IC1MBhkgzZ2BkAAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgFVT2X (ORCPT
+        id S1728361AbgFVT3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:28:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9776 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728068AbgFVT2W (ORCPT
+        Mon, 22 Jun 2020 15:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbgFVT3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:28:22 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MJ3Xte040410;
-        Mon, 22 Jun 2020 15:28:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31t02gcctq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 15:28:20 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05MJ3dEj040633;
-        Mon, 22 Jun 2020 15:28:20 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31t02gcctb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 15:28:20 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MJKTEs032724;
-        Mon, 22 Jun 2020 19:28:18 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 31sa37uv0r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 19:28:18 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MJSFg865863762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 19:28:15 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8626211C05C;
-        Mon, 22 Jun 2020 19:28:15 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C21511C058;
-        Mon, 22 Jun 2020 19:28:14 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.202.125])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Jun 2020 19:28:14 +0000 (GMT)
-Message-ID: <1592854093.4987.15.camel@linux.ibm.com>
-Subject: Re: [PATCH v2] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Bruno Meneguele <bmeneg@redhat.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     erichte@linux.ibm.com, nayna@linux.ibm.com, stable@vger.kernel.org
-Date:   Mon, 22 Jun 2020 15:28:13 -0400
-In-Reply-To: <20200622172754.10763-1-bmeneg@redhat.com>
-References: <20200622172754.10763-1-bmeneg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 22 Jun 2020 15:29:12 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B606C061573;
+        Mon, 22 Jun 2020 12:29:12 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e8so3424359pgc.5;
+        Mon, 22 Jun 2020 12:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=weFW+qBZEi0cjMZ8qKBQnrqgCTJqFGMu4e+wMxpY3S0=;
+        b=hOHzZhnjPlVmB1AgzeDEpstCV1xfdjrYDO6AA94oOzYU+zA51t/S6ljcFBEau4qMa0
+         BsvmBQd0s7lyOaJO17brRHx/rKD5X8w9joeMEqDt6hl3p5Gc/7weN30i8amCtoU1GXgj
+         wN4ubXQaixPbfVkRu47J/wD+RtYmL4LQpTtfUdBbIRTUFqGE+3BuWmb5b3lm46Jb3eoD
+         nFJ5hWenHRXHY+bHEQTbSuUIt+ph8vnfLPJGBW8wW2zGCCSG6X/M2c1o7phpj2ZuKqGC
+         8+kVSaQ1fcNlZFxxsNPUZ8z2e8XeRnkC6u3NvbZ7oYcg8JTWaft30Ob0Kq5Hvbo1ymSa
+         2Mxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=weFW+qBZEi0cjMZ8qKBQnrqgCTJqFGMu4e+wMxpY3S0=;
+        b=WeoLH8Ifma99128/j4vstF85Ad2X5rK9iIzu5IzMKLWThbbG67tMvFoGyvMFPaFhBN
+         oxFS36IdM/tut8OY/6fAq2/2B82Qbf1aTzFjGUp8MkWQ87Hxav0v71aLmMTXwCUSlZeW
+         JXc6A/vjaGThukHh3TCqNBmC09Ex/YmW5eWutTwRsHQYZh6R2wtmShGBU4B1Zrfv6cuM
+         Xz6aYF7BURQP+UJ+SABibQ4BUzgGEX1GLYyH3s4EB+fok3sef7B5jtA4xkO6o9wPCRsv
+         +Ikt/bEuc2fgeqXD2PXnf8Q3H2l6CzStKXzipzO3CeMMzuhANHzMTdxyZIZ+azVJ/aej
+         tjDg==
+X-Gm-Message-State: AOAM531KgB0pD0enm31sFW3Z/wxIg0In+2OBkgzB5dvlmVBmTQ89IQ1Q
+        9qp0lb0qMXCElyj+b7Sv3LUT3KbF
+X-Google-Smtp-Source: ABdhPJzFByGxHqIqF8a8PWWKyVKm/TgcNYGpi4+R2KSq9pZvcj79Qg87brfTOkdQg+2rJVHd2ZlhZw==
+X-Received: by 2002:a63:29c8:: with SMTP id p191mr14727856pgp.333.1592854151907;
+        Mon, 22 Jun 2020 12:29:11 -0700 (PDT)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id mu17sm264603pjb.53.2020.06.22.12.29.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 12:29:10 -0700 (PDT)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        David Rientjes <rientjes@google.com>,
+        Arjun Roy <arjunroy@google.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v8 0/4]  introduce memory hinting API for external process
+Date:   Mon, 22 Jun 2020 12:28:56 -0700
+Message-Id: <20200622192900.22757-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_11:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- phishscore=0 adultscore=0 clxscore=1011 cotscore=-2147483648 mlxscore=0
- bulkscore=0 mlxlogscore=999 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-22 at 14:27 -0300, Bruno Meneguele wrote:
-> IMA_APPRAISE_BOOTPARAM has been marked as dependent on !IMA_ARCH_POLICY in
-> compile time, enforcing the appraisal whenever the kernel had the arch
-> policy option enabled.
-> 
-> However it breaks systems where the option is actually set but the system
-> wasn't booted in a "secure boot" platform. In this scenario, anytime the
-> an appraisal policy (i.e. ima_policy=appraisal_tcb) is used it will be
-> forced, giving no chance to the user set the 'fix' state (ima_appraise=fix)
-> to actually measure system's files.
-> 
-> This patch remove this compile time dependency and move it to a runtime
-> decision, based on the arch policy loading failure/success.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
-> Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
-> ---
-> changes from v1:
-> 	- removed "ima:" prefix from pr_info() message
-> 
->  security/integrity/ima/Kconfig      | 2 +-
->  security/integrity/ima/ima_policy.c | 8 ++++++--
->  2 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> index edde88dbe576..62dc11a5af01 100644
-> --- a/security/integrity/ima/Kconfig
-> +++ b/security/integrity/ima/Kconfig
-> @@ -232,7 +232,7 @@ config IMA_APPRAISE_REQUIRE_POLICY_SIGS
->  
->  config IMA_APPRAISE_BOOTPARAM
->  	bool "ima_appraise boot parameter"
-> -	depends on IMA_APPRAISE && !IMA_ARCH_POLICY
-> +	depends on IMA_APPRAISE
->  	default y
->  	help
->  	  This option enables the different "ima_appraise=" modes
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index e493063a3c34..c876617d4210 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -733,11 +733,15 @@ void __init ima_init_policy(void)
->  	 * (Highest priority)
->  	 */
->  	arch_entries = ima_init_arch_policy();
-> -	if (!arch_entries)
-> +	if (!arch_entries) {
->  		pr_info("No architecture policies found\n");
-> -	else
-> +	} else {
-> +		/* Force appraisal, preventing runtime xattr changes */
-> +		pr_info("setting IMA appraisal to enforced\n");
-> +		ima_appraise = IMA_APPRAISE_ENFORCE;
->  		add_rules(arch_policy_entry, arch_entries,
->  			  IMA_DEFAULT_POLICY | IMA_CUSTOM_POLICY);
-> +	}
->  
->  	/*
->  	 * Insert the builtin "secure_boot" policy rules requiring file
+Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+application could give hints to kernel what memory range are preferred to be
+reclaimed. However, in some platform(e.g., Android), the information
+required to make the hinting decision is not known to the app.
+Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+and that daemon must be able to initiate reclaim on its own without any app
+involvement.
 
-CONFIG_IMA_APPRAISE_BOOTPARAM controls the "ima_appraise" mode bits.  
-The mode bits are or'ed with the MODULES, FIRMWARE, POLICY, and KEXEC
-bits, which have already been set in ima_init_arch_policy().
+To solve the concern, this patch introduces new syscall - process_madvise(2).
+Bascially, it's same with madvise(2) syscall but it has some differences.
 
-From ima.h:
-/* Appraise integrity measurements */
-#define IMA_APPRAISE_ENFORCE    0x01
-#define IMA_APPRAISE_FIX        0x02
-#define IMA_APPRAISE_LOG        0x04
-#define IMA_APPRAISE_MODULES    0x08
-#define IMA_APPRAISE_FIRMWARE   0x10
-#define IMA_APPRAISE_POLICY     0x20
-#define IMA_APPRAISE_KEXEC      0x40
+1. It needs pidfd of target process to provide the hint
+2. It supports only MADV_{COLD|PAGEOUT} at this moment.
+   Other hints in madvise will be opened when there are explicit requests from
+   community to prevent unexpected bugs we couldn't support.
+3. Only privileged processes can do something for other process's address
+   space.
 
-As Nayna pointed out, only when an architecture specific "secure boot"
-policy is loaded, is this applicable. 
+For more detail of the new API, please see "mm: introduce external memory hinting API"
+description in this patchset.
 
-Mimi
+* from v7 -  http://lore.kernel.org/r/20200302193630.68771-1-minchan@kernel.org
+  * dropping pid support from new syscall and fold releated patches into syscall patch
+  * dropping KSM patch by discussion - Oleksandr, I lost the discussion.
+    Please resend the single patch against of the patchset if you resolves the discussion.
+    https://lore.kernel.org/linux-api/20200302193630.68771-8-minchan@kernel.org/
+
+* from v6 - https://lore.kernel.org/linux-api/20200219014433.88424-1-minchan@kernel.org/
+  * fix comments and descriptions - Suren
+  * Add Reviewed-by - Suren
+  * fix build break reported by 0-day
+
+* from v5 - https://lore.kernel.org/linux-mm/20200214170520.160271-1-minchan@kernel.org/
+  * use null task and requestor's mm for io_madvise - Jann and Jens
+  * use right commit description for moving pidfd_get_pid - Christoph
+
+* from v4 - https://lore.kernel.org/linux-mm/20200212233946.246210-1-minchan@kernel.org/
+  * pass mm down to functions, not accessing task->mm - Jann
+  * clean up - Alexander
+  * add Reviewed-by - Alexander, SeongJae
+  * patch reordering
+
+* from v3 - https://lore.kernel.org/linux-mm/20200128001641.5086-1-minchan@kernel.org/
+  * verify task->mm aftere access_mm - Oleg
+  * split some patches for easy review - Alexander
+  * clean up fatal signal checking - Suren
+
+* from v2 - https://lore.kernel.org/linux-mm/20200116235953.163318-1-minchan@kernel.org/
+  * check signal callee and caller to bail out - Kirill Tkhai
+  * put more clarification for justification of new API
+
+* from v1 - https://lore.kernel.org/linux-mm/20200110213433.94739-1-minchan@kernel.org/
+  * fix syscall number - SeongJae
+  * use get_pid_task - Kirill Tkhai
+  * extend API to support pid as well as pidfd - Kirill Tkhai
+
+Minchan Kim (4):
+  mm/madvise: pass task and mm to do_madvise
+  pid: move pidfd_get_pid() to pid.c
+  mm/madvise: introduce process_madvise() syscall: an external memory
+    hinting API
+  mm/madvise: check fatal signal pending of target process
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+ arch/arm/tools/syscall.tbl                  |   1 +
+ arch/arm64/include/asm/unistd.h             |   2 +-
+ arch/arm64/include/asm/unistd32.h           |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   2 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+ fs/io_uring.c                               |   2 +-
+ include/linux/compat.h                      |   4 +
+ include/linux/mm.h                          |   3 +-
+ include/linux/pid.h                         |   1 +
+ include/linux/syscalls.h                    |   2 +
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ kernel/exit.c                               |  17 --
+ kernel/pid.c                                |  17 ++
+ kernel/sys_ni.c                             |   2 +
+ mm/madvise.c                                | 190 +++++++++++++++++---
+ 28 files changed, 217 insertions(+), 46 deletions(-)
+
+-- 
+2.27.0.111.gc72c7da667-goog
 
