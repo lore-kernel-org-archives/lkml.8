@@ -2,145 +2,185 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A97AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0109220706
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CF220708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GlEhc70t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbgFVXOP (ORCPT
+        id S1731229AbgFVXPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:14:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47566 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730985AbgFVXOO (ORCPT
+        Mon, 22 Jun 2020 19:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730985AbgFVXPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:14:14 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MN1AJi056068;
-        Mon, 22 Jun 2020 19:14:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31tyrxk9fn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 19:14:00 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05MN1v4N059847;
-        Mon, 22 Jun 2020 19:13:59 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31tyrxk9ff-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 19:13:59 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MMk4Zo005614;
-        Mon, 22 Jun 2020 22:49:00 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma05wdc.us.ibm.com with ESMTP id 31sa38jynt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 22:49:00 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MMmxx528770752
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 22:48:59 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82C77C6055;
-        Mon, 22 Jun 2020 22:48:59 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A083C6057;
-        Mon, 22 Jun 2020 22:48:58 +0000 (GMT)
-Received: from DESKTOP-AV6EVPG.localdomain (unknown [9.160.111.155])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Jun 2020 22:48:58 +0000 (GMT)
-From:   Maurizio Drocco <maurizio.drocco@ibm.com>
-To:     zohar@linux.ibm.com
-Cc:     Silviu.Vlasceanu@huawei.com, dmitry.kasatkin@gmail.com,
-        jejb@linux.ibm.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, maurizio.drocco@ibm.com,
-        mdrocco@linux.vnet.ibm.com, roberto.sassu@huawei.com,
-        serge@hallyn.com
-Subject: [PATCH] ima: extend boot_aggregate with kernel measurements
-Date:   Mon, 22 Jun 2020 00:50:19 -0400
-Message-Id: <20200622045019.1636-1-maurizio.drocco@ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <1592856871.4987.21.camel@linux.ibm.com>
-References: <1592856871.4987.21.camel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_15:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 phishscore=0 spamscore=0 mlxscore=0 impostorscore=0
- cotscore=-2147483648 suspectscore=1 mlxlogscore=999 clxscore=1015
- priorityscore=1501 bulkscore=0 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006220148
+        Mon, 22 Jun 2020 19:15:41 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9983C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:15:40 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f9so299778pfn.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=8ffW2wUqNPKCctA4KQ6FwdGe8r/TZEjq1PeDi/0NFK0=;
+        b=GlEhc70tdhL49iFtKY6F5A2HLSZ6Nn50tCeFu2kaMvTNZM35VupKPqb8ILvJBqcgzD
+         g9AunA0OO8zrexaCntdxguDr9bb9Un+Y/zuuICMSarL/X4zO8tworfy0xAL6E68lXQPW
+         RpQ+mlpTtMYKExX9fEzesbuuB49zTy9mq0r5OTvCRLepMbClRi8zR+3Fz7mcD7rhY2tK
+         bLW1N3EU/cObSf88kIGVdWPoMubg6fJx9cwGSMgFiSIGD5b5o059pCNobF5G7LSQIpXC
+         CTQO71Wqk32OnnAcOyU3u6p8P7lwWEOTG6hdZbuj+tuUC8WQkQyP4wDweRvCCk4U4Ct8
+         JJoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=8ffW2wUqNPKCctA4KQ6FwdGe8r/TZEjq1PeDi/0NFK0=;
+        b=XGBKZo1QO3V1FWOqenFSavmJ2/hBUXkbHG5mVjh5cDIEqBg3hr1c8q7doBZVO1wUyN
+         qH1bvRJuLfOJ7ob85y4O8idtLkJnB4Ur04SHpn6WOof/Fi7Yi+JrABt/Tk4Stp/MnfJx
+         YhVJ/D3Hp/qhx2DKTXjyPTIzxzGnwqHK2KeRG9A7l7nLhlgE5cxFOy5ttLPbXynC8Fvt
+         Ty/JQQJvU1zcgPtoZNbv12WrhMpXSNaYbIkG0fCu9lGnoE80yf6kaVnas/Jj4+R7NRaP
+         u6Ivtds4AES0GBF9cOkRvI4pWSq1U6EFXSuhXALZW9LBwwB775qGRHLuJWCDyh4vHLe7
+         UDFw==
+X-Gm-Message-State: AOAM531IW9mEr4Ffhvzr+ugHWBwGsaeZr5nBq5e8D5oThyEpyARyxCgs
+        lKRxCfUic4pjVrVb9NTjkMda+Q==
+X-Google-Smtp-Source: ABdhPJwMB531qddra4+QBFxIKie7qQPWZ5+ksC7ABlaLqh0dyoEbJom3LN9U9cRYe8OSxoSWC7b1Fw==
+X-Received: by 2002:a63:4c48:: with SMTP id m8mr15136063pgl.290.1592867740181;
+        Mon, 22 Jun 2020 16:15:40 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id 6sm14829509pfi.170.2020.06.22.16.15.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 16:15:39 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 16:15:36 -0700
+From:   =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        "# 3.4.x" <stable@vger.kernel.org>, Jian Cai <jiancai@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vmlinux.lds: consider .text.{hot|unlikely}.* part of
+ .text too
+Message-ID: <20200622231536.7jcshis5mdn3vr54@google.com>
+References: <20200617210613.95432-1-ndesaulniers@google.com>
+ <20200617212705.tq2q6bi446gydymo@google.com>
+ <CAKwvOdniambW9_nVbDnd4A_+bdDdZMd2V1Q=Xw5EJYDGeh=eyQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKwvOdniambW9_nVbDnd4A_+bdDdZMd2V1Q=Xw5EJYDGeh=eyQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IMA is not considering TPM registers 8-9 when calculating the boot
-aggregate. When registers 8-9 are used to store measurements of the
-kernel and its command line (e.g., grub2 bootloader with tpm module
-enabled), IMA should include them in the boot aggregate. Registers
-8-9 are only included in non-SHA1 boot_aggregate digests to avoid
-ambiguity.
+On 2020-06-22, Nick Desaulniers wrote:
+>On Wed, Jun 17, 2020 at 2:27 PM Fāng-ruì Sòng <maskray@google.com> wrote:
+>>
+>>
+>> On 2020-06-17, Nick Desaulniers wrote:
+>> >ld.bfd's internal linker script considers .text.hot AND .text.hot.* to
+>> >be part of .text, as well as .text.unlikely and .text.unlikely.*.
+>>
+>> >ld.lld will produce .text.hot.*/.text.unlikely.* sections.
+>>
+>> Correction to this sentence. lld is not relevant here.
+>>
+>> -ffunction-sections combined with profile-guided optimization can
+>> produce .text.hot.* .text.unlikely.* sections.  Newer clang may produce
+>> .text.hot. .text.unlikely. (without suffix, but with a trailing dot)
+>> when -fno-unique-section-names is specified, as an optimization to make
+>> .strtab smaller.
+>
+>Then why was the bug report reporting https://reviews.llvm.org/D79600
+>as the result of a bisection, if LLD is not relevant?  Was the
+>bisection wrong?
 
-Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
----
- security/integrity/ima/ima.h        |  2 +-
- security/integrity/ima/ima_crypto.c | 15 ++++++++++++++-
- 2 files changed, 15 insertions(+), 2 deletions(-)
+https://reviews.llvm.org/D79600 is an LLVM codegen change, unrelated to LLD..
+(As described in the patch, LLD's -z keep-text-section-prefix only
+recognizes ".text.exit.*", not ".text.exit")
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index df93ac258e01..9d94080bdad8 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -30,7 +30,7 @@
- 
- enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
- 		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
--enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
-+enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
- 
- /* digest size for IMA, fits SHA1 or MD5 */
- #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 220b14920c37..d02917d85033 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -823,13 +823,26 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
- 	if (rc != 0)
- 		return rc;
- 
--	/* cumulative sha1 over tpm registers 0-7 */
-+	/* cumulative digest over tpm registers 0-7 */
- 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
- 		ima_pcrread(i, &d);
- 		/* now accumulate with current aggregate */
- 		rc = crypto_shash_update(shash, d.digest,
- 					 crypto_shash_digestsize(tfm));
- 	}
-+	/*
-+	 * extend cumulative digest over tpm registers 8-9, which contain
-+	 * measurement for the kernel command line (reg. 8) and image (reg. 9)
-+	 * in a typical PCR allocation. Registers 8-9 are only included in
-+	 * non-SHA1 boot_aggregate digests to avoid ambiguity.
-+	 */
-+	if (alg_id != TPM_ALG_SHA1) {
-+		for (i = TPM_PCR8; i < TPM_PCR10; i++) {
-+			ima_pcrread(i, &d);
-+			rc = crypto_shash_update(shash, d.digest,
-+						crypto_shash_digestsize(tfm));
-+		}
-+	}
- 	if (!rc)
- 		crypto_shash_final(shash, digest);
- 	return rc;
--- 
-2.17.1
+>The upstream report wasn't initially public, for no good reason.  So I
+>didn't include it, but if we end up taking v1, this should have
+>
+>Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1084760
 
+Thanks for making it public.
+
+>The kernel doesn't use -fno-unique-section-names; is that another flag
+>that's added by CrOS' compiler wrapper?
+>https://source.chromium.org/chromiumos/chromiumos/codesearch/+/master:src/third_party/toolchain-utils/compiler_wrapper/config.go;l=110
+>Looks like no.  It doesn't use `-fno-unique-section-names` or
+>`-ffunction-sections`.
+
+-fno-unique-section-names is a very rare option. It is not supported by GCC (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95095 ).
+clang users use it very rarely, probably because not many people care
+about additional strings taken by section names ".text.hot.a" ".text.hot.b" ".text.hot.c"
+in the string table ".strtab" (clang since some point of 2018 uses
+.strtab instead of .shstrtab which enables more string sharing).
+
+>
+>
+
+>
+>>
+>> We've already seen that GCC can place main in .text.startup without
+>> -ffunction-sections. There may be other non -ffunction-sections cases
+>> for .text.hot.* or .text.unlikely.*. So it is definitely a good idea to
+>> be more specific even if we don't care about -ffunction-sections for
+>> now.
+>>
+>> >Make sure to group these together.  Otherwise these orphan sections may
+>> >be placed outside of the the _stext/_etext boundaries.
+>> >
+>> >Cc: stable@vger.kernel.org
+>> >Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=add44f8d5c5c05e08b11e033127a744d61c26aee
+>> >Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=1de778ed23ce7492c523d5850c6c6dbb34152655
+>> >Link: https://reviews.llvm.org/D79600
+>> >Reported-by: Jian Cai <jiancai@google.com>
+>> >Debugged-by: Luis Lozano <llozano@google.com>
+>> >Suggested-by: Fāng-ruì Sòng <maskray@google.com>
+>> >Tested-by: Luis Lozano <llozano@google.com>
+>> >Tested-by: Manoj Gupta <manojgupta@google.com>
+>> >Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>> >---
+>> > include/asm-generic/vmlinux.lds.h | 4 +++-
+>> > 1 file changed, 3 insertions(+), 1 deletion(-)
+>> >
+>> >diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+>> >index d7c7c7f36c4a..fe5aaef169e3 100644
+>> >--- a/include/asm-generic/vmlinux.lds.h
+>> >+++ b/include/asm-generic/vmlinux.lds.h
+>> >@@ -560,7 +560,9 @@
+>> >  */
+>> > #define TEXT_TEXT                                                     \
+>> >               ALIGN_FUNCTION();                                       \
+>> >-              *(.text.hot TEXT_MAIN .text.fixup .text.unlikely)       \
+>> >+              *(.text.hot .text.hot.*)                                \
+>> >+              *(TEXT_MAIN .text.fixup)                                \
+>> >+              *(.text.unlikely .text.unlikely.*)                      \
+>> >               NOINSTR_TEXT                                            \
+>> >               *(.text..refcount)                                      \
+>> >               *(.ref.text)                                            \
+>> >--
+>> >2.27.0.290.gba653c62da-goog
+>> >
+>
+>
+>
+>--
+>Thanks,
+>~Nick Desaulniers
