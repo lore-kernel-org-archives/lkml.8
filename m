@@ -2,136 +2,160 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B23C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1553225306
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:03:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XEZMjmeO"
+	by mail.kernel.org (Postfix) with ESMTP id A14D022BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592809549;
+	bh=B8KgTSCiuvD2DUeXfT07K9LQ3YpjlNpWmmBMHHAftkQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=MZ/F8OwctEuZqUSrIClEkB7t8mPYiKKD1rtZfTQorYQeKoOtb5aP3GtDwqlOCRgCs
+	 wbBCz6hTFh9oNgGB8Gdh9vRvFGdedtiHn72OuyjzXbLLAzGEc3f9nyVL+QyD3p9EDt
+	 mYldd5czdBzrVNIWylrrWzQtW0bQiv/LS0A8UKwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbgFVHDW (ORCPT
+        id S1731297AbgFVHFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:03:22 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47115 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725933AbgFVHDW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:03:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592809400;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=U+EnoCo/DNRMCFbiEUaexLmXaduHsUapaeU/K9eoWik=;
-        b=XEZMjmeOiop2Pf0uTa1uj7VM2L26BAMAM5VE1sDRldwY8aeDyx5friXT5fAAOiX33H4Avu
-        mMyt4qZ4/EmvoedOfH/WeKHqXTT1rw/MJrJL3ONCO7/ke9wgq4nR8uU0qERWczkfp04WXZ
-        YDghqeX8/LfqhU1kMNbPZXf/7D0TRt8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-q6bkYDYvPLOKJIeOxRhBFQ-1; Mon, 22 Jun 2020 03:03:16 -0400
-X-MC-Unique: q6bkYDYvPLOKJIeOxRhBFQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 22 Jun 2020 03:05:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726843AbgFVHFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 03:05:48 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28195107ACF2;
-        Mon, 22 Jun 2020 07:03:15 +0000 (UTC)
-Received: from [10.36.113.213] (ovpn-113-213.ams2.redhat.com [10.36.113.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE0CF19D7C;
-        Mon, 22 Jun 2020 07:03:11 +0000 (UTC)
-Subject: Re: [PATCH v1 1/2] mm: drop vm_total_pages
-To:     Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200619132410.23859-1-david@redhat.com>
- <20200619132410.23859-2-david@redhat.com> <20200621144621.GF6571@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <2d388e8e-6888-85d3-3584-b20438d58d16@redhat.com>
-Date:   Mon, 22 Jun 2020 09:03:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B73222C3;
+        Mon, 22 Jun 2020 07:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592809547;
+        bh=B8KgTSCiuvD2DUeXfT07K9LQ3YpjlNpWmmBMHHAftkQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=adw9FyaMkAXyD+TVvO7IZyR8UoBEeIx67hLCJQrDYYx5d2/h/7aaZWKzpgpJ25w+R
+         tvn97XK6Qaa08iN2rjR7VT+H7es+ZysPX5S1tldUQL9OQIrIUmHnp6rfbLPurN/Pb1
+         mWFdNR9TgHgrE3oGHgopSJ/LQYSqCtDLaId4cmXI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200621144621.GF6571@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1591687933-19495-5-git-send-email-Anson.Huang@nxp.com>
+References: <1591687933-19495-1-git-send-email-Anson.Huang@nxp.com> <1591687933-19495-5-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH V2 4/9] clk: imx: Support building i.MX common clock driver as module
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux-imx@nxp.com
+To:     Anson Huang <Anson.Huang@nxp.com>, abel.vesa@nxp.com,
+        aisheng.dong@nxp.com, allison@lohutok.net, arnd@arndb.de,
+        daniel.baluta@nxp.com, festevam@gmail.com, fugang.duan@nxp.com,
+        gregkh@linuxfoundation.org, info@metux.net, kernel@pengutronix.de,
+        leonard.crestez@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@armlinux.org.uk, mturquette@baylibre.com,
+        oleksandr.suvorov@toradex.com, peng.fan@nxp.com,
+        s.hauer@pengutronix.de, sfr@canb.auug.org.au, shawnguo@kernel.org,
+        stefan.agner@toradex.com, tglx@linutronix.de, yuehaibing@huawei.com
+Date:   Mon, 22 Jun 2020 00:05:46 -0700
+Message-ID: <159280954666.62212.15832087518734077634@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.06.20 16:46, Mike Rapoport wrote:
-> On Fri, Jun 19, 2020 at 03:24:09PM +0200, David Hildenbrand wrote:
->> The global variable "vm_total_pages" is a relict from older days. There
->> is only a single user that reads the variable - build_all_zonelists() -
->> and the first thing it does is updating it. Use a local variable in
->> build_all_zonelists() instead and drop the local variable.
-> 
-> Nit:                                       ^ global
+Quoting Anson Huang (2020-06-09 00:32:08)
+> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+> index 1af8cff..1291f9b 100644
+> --- a/drivers/clk/imx/Makefile
+> +++ b/drivers/clk/imx/Makefile
+> @@ -1,25 +1,10 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> =20
+> -obj-$(CONFIG_MXC_CLK) +=3D \
+> -       clk.o \
+> -       clk-busy.o \
+> -       clk-composite-8m.o \
+> -       clk-cpu.o \
+> -       clk-composite-7ulp.o \
+> -       clk-divider-gate.o \
+> -       clk-fixup-div.o \
+> -       clk-fixup-mux.o \
+> -       clk-frac-pll.o \
+> -       clk-gate-exclusive.o \
+> -       clk-gate2.o \
+> -       clk-pfd.o \
+> -       clk-pfdv2.o \
+> -       clk-pllv1.o \
+> -       clk-pllv2.o \
+> -       clk-pllv3.o \
+> -       clk-pllv4.o \
+> -       clk-sscg-pll.o \
+> -       clk-pll14xx.o
+> +mxc-clk-objs +=3D clk.o clk-busy.o clk-composite-8m.o clk-cpu.o clk-comp=
+osite-7ulp.o \
+> +               clk-divider-gate.o clk-fixup-div.o clk-fixup-mux.o clk-fr=
+ac-pll.o \
+> +               clk-gate-exclusive.o clk-gate2.o clk-pfd.o clk-pfdv2.o cl=
+k-pllv1.o \
+> +               clk-pllv2.o clk-pllv3.o clk-pllv4.o clk-sscg-pll.o clk-pl=
+l14xx.o
+> +obj-$(CONFIG_MXC_CLK) +=3D mxc-clk.o
 
-Indeed, @Andrew, can you fix this up?
+I enjoyed it when the files were all on their own line. Can you keep it
+like that and just add mxc-clk-objs +=3D to all the lines and remove the
+trailing slash?
 
-Thanks!
+> =20
+>  mxc-clk-scu-objs +=3D clk-scu.o clk-lpcg-scu.o
+>  obj-$(CONFIG_MXC_CLK_SCU) +=3D mxc-clk-scu.o
+> diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-com=
+posite-8m.c
+> index d2b5af8..73e064b 100644
+> --- a/drivers/clk/imx/clk-composite-8m.c
+> +++ b/drivers/clk/imx/clk-composite-8m.c
+> @@ -243,3 +243,4 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const cha=
+r *name,
+>         kfree(mux);
+>         return ERR_CAST(hw);
+>  }
+> +EXPORT_SYMBOL_GPL(imx8m_clk_hw_composite_flags);
 
+Are all these files including <linux/export.h>? Because they should
+unless they're using something from <linux/module.h> like
+MODULE_LICENSE().
 
--- 
-Thanks,
+> diff --git a/drivers/clk/imx/clk.c b/drivers/clk/imx/clk.c
+> index 87ab8db..cc894b5 100644
+> --- a/drivers/clk/imx/clk.c
+> +++ b/drivers/clk/imx/clk.c
+> @@ -143,16 +148,24 @@ void imx_cscmr1_fixup(u32 *val)
+>  static int imx_keep_uart_clocks;
+>  static struct clk ** const *imx_uart_clocks;
+> =20
+> -static int __init imx_keep_uart_clocks_param(char *str)
+> +static int __maybe_unused imx_keep_uart_clocks_param(char *str)
+>  {
+>         imx_keep_uart_clocks =3D 1;
+> =20
+>         return 0;
+>  }
+> +
+> +#ifdef MODULE
+> +__setup_param("earlycon", imx_keep_uart_earlycon,
+> +             imx_keep_uart_clocks_param);
+> +__setup_param("earlyprintk", imx_keep_uart_earlyprintk,
+> +             imx_keep_uart_clocks_param);
 
-David / dhildenb
+Why not fix __setup_param() to take the same number of arguments in
+either case? That macro looks broken.
 
+> +#else
+>  __setup_param("earlycon", imx_keep_uart_earlycon,
+>               imx_keep_uart_clocks_param, 0);
+>  __setup_param("earlyprintk", imx_keep_uart_earlyprintk,
+>               imx_keep_uart_clocks_param, 0);
+> +#endif
+> =20
+>  void imx_register_uart_clocks(struct clk ** const clks[])
+>  {
