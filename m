@@ -5,68 +5,84 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D717F206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9B5206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgFVJPO (ORCPT
+        id S1726695AbgFVJP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:15:14 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:46442 "EHLO inva020.nxp.com"
+        Mon, 22 Jun 2020 05:15:27 -0400
+Received: from smtp.asem.it ([151.1.184.197]:62611 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgFVJPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:15:14 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 869911A0B94;
-        Mon, 22 Jun 2020 11:15:12 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 069CF1A0A69;
-        Mon, 22 Jun 2020 11:15:08 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6E2F6402E3;
-        Mon, 22 Jun 2020 17:15:02 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: fsl_easrc: Fix uninitialized scalar variable in fsl_easrc_set_ctx_format
-Date:   Mon, 22 Jun 2020 17:03:31 +0800
-Message-Id: <1592816611-16297-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726070AbgFVJP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:15:26 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000332222.MSG 
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:15:23 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
+ Jun 2020 11:15:20 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Mon, 22 Jun 2020 11:15:20 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v1 1/1] pci: controller: cadence: fix wrong path in comment
+Date:   Mon, 22 Jun 2020 11:15:20 +0200
+Message-ID: <20200622091520.9336-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020E.5EF076A9.0066,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "ret" in fsl_easrc_set_ctx_format is not initialized, then
-the unknown value maybe returned by this function.
+This comment still refers to the old driver pathname,
+when all PCI drivers were located directly under the
+drivers/pci directory.
 
-Fixes: 955ac624058f ("ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Anyway the function name itself is enough, so we can
+remove the overabundant path reference.
+
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- sound/soc/fsl/fsl_easrc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
-index 2f6b3d8bfcfc..03b3aef41d34 100644
---- a/sound/soc/fsl/fsl_easrc.c
-+++ b/sound/soc/fsl/fsl_easrc.c
-@@ -1132,7 +1132,7 @@ static int fsl_easrc_set_ctx_format(struct fsl_asrc_pair *ctx,
- 	struct fsl_easrc_ctx_priv *ctx_priv = ctx->private;
- 	struct fsl_easrc_data_fmt *in_fmt = &ctx_priv->in_params.fmt;
- 	struct fsl_easrc_data_fmt *out_fmt = &ctx_priv->out_params.fmt;
--	int ret;
-+	int ret = 0;
- 
- 	/* Get the bitfield values for input data format */
- 	if (in_raw_format && out_raw_format) {
+v1: - after the suggestion of Bjorn, remove the whole comment line related to
+      the wrong path
+    - add: Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+ drivers/pci/controller/cadence/pcie-cadence-ep.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 1c15c8352125..690eefd328ea 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -276,7 +276,6 @@ static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 intx)
+ 	cdns_pcie_ep_assert_intx(ep, fn, intx, true);
+ 	/*
+ 	 * The mdelay() value was taken from dra7xx_pcie_raise_legacy_irq()
+-	 * from drivers/pci/dwc/pci-dra7xx.c
+ 	 */
+ 	mdelay(1);
+ 	cdns_pcie_ep_assert_intx(ep, fn, intx, false);
 -- 
-2.21.0
+2.17.1
 
