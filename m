@@ -2,174 +2,259 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1014C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC97C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C46242075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B550F207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DQ6ELPvm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOabQXPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbgFVHUx (ORCPT
+        id S1731358AbgFVHU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
+        Mon, 22 Jun 2020 03:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726850AbgFVHUw (ORCPT
+        with ESMTP id S1726850AbgFVHU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:20:52 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B76AC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:20:51 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id j189so14713878oih.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:20:51 -0700 (PDT)
+        Mon, 22 Jun 2020 03:20:57 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD86C061797
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:20:56 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r18so7749247pgk.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xG+oHj42wv9Ow+aMX6QciQsE3KcoMnu1/UDDDC1/A0c=;
-        b=DQ6ELPvmOPXnks11F9qg3tkEUduOM9A/Ef9NvE+zYiZV3cqa+iGW+0fPxdX4gPH+Ni
-         lyCRdIQbrViT3RMf/3XXu0jnWxKQsCbx+u2ecpfuLjNe5+6MeU34VmEzVJ2SmmKdJ53n
-         VaNtzq/nJwrt55vD+AI9ozHOJzomQWsoD4nebke/Qs59gyl146FmXMtc/dmPSUCAPlOx
-         y9ySQx2QYnwTLDhky4frz8VFAbhlyqrEZfmWI0b685ub/+4S70s0pvOqLPByuMfJOmgQ
-         aYleEY8/nzrDz73YByO161hI1k8BvZxzw8JErllUuQCFpxlMyBOfyDTvZDrFdAzDJCuV
-         LRRQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=TKu4b/neMK0AHW1Fq9DdzM2DE1aRPxbJSRBuKY9XmU0=;
+        b=dOabQXPqHS/z/a9D5rdE5KrM3vn8itgNDR0a3+kEkRWP3H2bx2ES8qpaN4zEhx+cR3
+         vEX23sObt6hSims2SkDI/mvhwaM+MbhQTHPTgGq+024E8nae97F2AepZZhS3Qe5kypxE
+         DDjmY8Tr7n24Dkh3lU89LvP8G8xF57Hv7FnTpGCzVjMBo5IgBkWBdw8yB+eUP3qPDZC7
+         r3AflGoV/k/N+kFjiA4YIdpMVNg8DpeeIu1PZbGclRJgZ/kM4oV/F0pp89IA+OCP2m/C
+         UDSzQulhXOamap2+671hN87wU7wfct91jvLWvsJ4o0C9qAAgGC7wsSTMmayjp6iLx0vF
+         vzaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xG+oHj42wv9Ow+aMX6QciQsE3KcoMnu1/UDDDC1/A0c=;
-        b=rDq4nxnwGMXuyNwPQ6rSuXX2kNS6ajChjpFf8Xl8qCQJMAGEVakU5aVN3DwL23sulq
-         SiMkHYun/bBsJzdk3pVdSdzYgBT5Zd1/AUWt496q74c7leVqmL5vp9SGoGTMFawKmNvK
-         80XC+ZW24xuImtN/wXbd5XuTRrY58CoZ0cHz29AtnwGMIWfUgqQzc8iL5kb1Ln4oPxms
-         X/ljmnj+QSWtf9kH9xOCUxYOP3m/7CTeKmb5F59BQlYxO96ebSROD+BH1nns9ISidD/g
-         CQ9ETmuUWWv081EPO4kRbwrkS9ogzWEZbI7XirJZrWv5q6TkxNeUuLTcKxceG3Ahd94D
-         E41w==
-X-Gm-Message-State: AOAM533qwBL5r66wV546vp0nBh9It+TPEMAqfK3k4NvyGKYDOpb7Eyt+
-        JkOYR+vUDRQxzHPgAD4H8YD+uNrDRLs=
-X-Google-Smtp-Source: ABdhPJyaT9e1ETCmEqEXJIpxScdU0iSWpSXJawfXO7LJM8baYQd1Il2JfOdOUumRj0tjlJHxooO/tw==
-X-Received: by 2002:aca:bc82:: with SMTP id m124mr11223096oif.53.1592810450258;
-        Mon, 22 Jun 2020 00:20:50 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e68sm3121837ote.56.2020.06.22.00.20.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:20:49 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 00:18:04 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loic.pallardy@st.com,
-        arnaud.pouliquen@st.com, s-anna@ti.com
-Subject: Re: [PATCH v4 3/9] remoteproc: Introducing function rproc_attach()
-Message-ID: <20200622071804.GE149351@builder.lan>
-References: <20200601175139.22097-1-mathieu.poirier@linaro.org>
- <20200601175139.22097-4-mathieu.poirier@linaro.org>
- <20200622070727.GD149351@builder.lan>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TKu4b/neMK0AHW1Fq9DdzM2DE1aRPxbJSRBuKY9XmU0=;
+        b=kep3K9i7oJyJmxEIMHBKEdgj4+OW+m6+lMLC/xYLAbEcaNPLggCVScDfI3T3ysmDQF
+         wra6rTg+d4FK/oxfUmXjdjX2V6iTaqfHwKrsIl65oUQkamIqnFl/5/SUY6gorZSPVfqM
+         RK4nJ9KOwFppUaQ9iF7my/KWaNbqJgyicaqDm5jHK8hys8XykCm+QCObjmyS0yl8wOuN
+         KdQ/Gzqw9pmm7rKm1/8vNVcnDSwGwEwEFq3B2/IUvkdlFidAFKUYJJLrE+obEk6viccb
+         MwoUwW98fQJYYtV5GVKu+ZNB6ek2uG+IkrTIYocFctOCEN9gwfVLaD9JtbVpa0/Cdvit
+         WOYw==
+X-Gm-Message-State: AOAM5307zJHy1AkbOhesLR6UKRyF4hEEHeYkkki60IO2YoH4aQiNB2rM
+        LGLG9ayK0UcX3zB0k8tf/GqYig==
+X-Google-Smtp-Source: ABdhPJyYR8Nknc0FZ9ccI1tVx2q5D4kHN+UZFFBUA1ZWvJytIH+NFRNcKQk49YOzhWQilC3NG7MZ4Q==
+X-Received: by 2002:aa7:96e9:: with SMTP id i9mr19604759pfq.232.1592810455513;
+        Mon, 22 Jun 2020 00:20:55 -0700 (PDT)
+Received: from localhost ([122.172.111.76])
+        by smtp.gmail.com with ESMTPSA id 26sm5161063pfp.35.2020.06.22.00.20.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jun 2020 00:20:54 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 12:50:52 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bbasu@nvidia.com, mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ Patch v3 3/4] cpufreq: Add Tegra194 cpufreq
+ driver
+Message-ID: <20200622072052.uryxo4hri6gzrkku@vireshk-i7>
+References: <1592775274-27513-1-git-send-email-sumitg@nvidia.com>
+ <1592775274-27513-4-git-send-email-sumitg@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622070727.GD149351@builder.lan>
+In-Reply-To: <1592775274-27513-4-git-send-email-sumitg@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 22 Jun 00:07 PDT 2020, Bjorn Andersson wrote:
+On 22-06-20, 03:04, Sumit Gupta wrote:
+> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
+> new file mode 100644
+> index 0000000..8de8000
+> --- /dev/null
+> +++ b/drivers/cpufreq/tegra194-cpufreq.c
+> @@ -0,0 +1,403 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
 
-> On Mon 01 Jun 10:51 PDT 2020, Mathieu Poirier wrote:
-> 
-> > Introducing function rproc_attach() to enact the same actions as
-> > rproc_start(), but without the steps related to the handling of
-> > a firmware image.  That way we can properly deal with scenarios
-> > where the remoteproc core needs to attach with a remote processsor
-> > that has been booted by another entity.
-> > 
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > ---
-> >  drivers/remoteproc/remoteproc_core.c | 42 ++++++++++++++++++++++++++++
-> >  1 file changed, 42 insertions(+)
-> > 
-> > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> > index 9f04c30c4aaf..0b323f6b554b 100644
-> > --- a/drivers/remoteproc/remoteproc_core.c
-> > +++ b/drivers/remoteproc/remoteproc_core.c
-> > @@ -1370,6 +1370,48 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
-> >  	return ret;
-> >  }
-> >  
-> > +static int __maybe_unused rproc_attach(struct rproc *rproc)
-> > +{
-> > +	struct device *dev = &rproc->dev;
-> > +	int ret;
-> > +
-> 
-> For the case where we're going DETACHED -> RUNNING - > OFFLINE we
-> need to consider the pm_runtime (and prepare/unprepare) state of the
-> device as well...
-> 
+                    2020
 
-Missed that you do indeed pm_runtime_get() in the calling function, so I
-think we're good on that part. Still need how to actually implement
-that (and the prepare/unprepare), in particular if we're moving into
-detaching a remoteproc.
+> + */
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <asm/smp_plat.h>
+> +
+> +#include <soc/tegra/bpmp.h>
+> +#include <soc/tegra/bpmp-abi.h>
+> +
+> +#define KHZ                     1000
+> +#define REF_CLK_MHZ             408 /* 408 MHz */
+> +#define US_DELAY                500
+> +#define US_DELAY_MIN            2
+> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
+> +#define MAX_CNT                 ~0U
+> +
+> +/* cpufreq transisition latency */
+> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
+> +
+> +#define LOOP_FOR_EACH_CPU_OF_CLUSTER(cl) for (cpu = (cl * 2); \
+> +					cpu < ((cl + 1) * 2); cpu++)
 
-> 
-> Apart from that I think this looks good.
-> 
+Both latency and this loop are used only once in the code, maybe just open code
+it. Also you should have passed cpu as a parameter to the macro, even if it
+works fine without it, for better readability.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> +
+> +u16 map_freq_to_ndiv(struct mrq_cpu_ndiv_limits_response *nltbl, u32 freq)
 
-Regards,
-Bjorn
+Unused routine
 
-> Regards,
-> Bjorn
-> 
-> > +	ret = rproc_prepare_subdevices(rproc);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to prepare subdevices for %s: %d\n",
-> > +			rproc->name, ret);
-> > +		goto out;
-> > +	}
-> > +
-> > +	/* Attach to the remote processor */
-> > +	ret = rproc_attach_device(rproc);
-> > +	if (ret) {
-> > +		dev_err(dev, "can't attach to rproc %s: %d\n",
-> > +			rproc->name, ret);
-> > +		goto unprepare_subdevices;
-> > +	}
-> > +
-> > +	/* Start any subdevices for the remote processor */
-> > +	ret = rproc_start_subdevices(rproc);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to probe subdevices for %s: %d\n",
-> > +			rproc->name, ret);
-> > +		goto stop_rproc;
-> > +	}
-> > +
-> > +	rproc->state = RPROC_RUNNING;
-> > +
-> > +	dev_info(dev, "remote processor %s is now attached\n", rproc->name);
-> > +
-> > +	return 0;
-> > +
-> > +stop_rproc:
-> > +	rproc->ops->stop(rproc);
-> > +unprepare_subdevices:
-> > +	rproc_unprepare_subdevices(rproc);
-> > +out:
-> > +	return ret;
-> > +}
-> > +
-> >  /*
-> >   * take a firmware and boot a remote processor with it.
-> >   */
-> > -- 
-> > 2.20.1
-> > 
+> +{
+> +	return DIV_ROUND_UP(freq * nltbl->pdiv * nltbl->mdiv,
+> +			    nltbl->ref_clk_hz / KHZ);
+> +}
+
+> +static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
+> +{
+> +	struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
+> +	int cl = get_cpu_cluster(policy->cpu);
+> +	u32 cpu;
+> +
+> +	if (cl >= data->num_clusters)
+> +		return -EINVAL;
+> +
+> +	policy->cur = tegra194_fast_get_speed(policy->cpu); /* boot freq */
+> +
+> +	/* set same policy for all cpus in a cluster */
+> +	LOOP_FOR_EACH_CPU_OF_CLUSTER(cl)
+> +		cpumask_set_cpu(cpu, policy->cpus);
+> +
+> +	policy->freq_table = data->tables[cl];
+> +	policy->cpuinfo.transition_latency = TEGRA_CPUFREQ_TRANSITION_LATENCY;
+> +
+> +	return 0;
+> +}
+
+> +static int tegra194_cpufreq_set_target(struct cpufreq_policy *policy,
+> +				       unsigned int index)
+> +{
+> +	struct cpufreq_frequency_table *tbl = policy->freq_table + index;
+> +
+> +	on_each_cpu_mask(policy->cpus, set_cpu_ndiv, tbl, true);
+
+I am still a bit confused. While setting the frequency you are calling this
+routine for each CPU of the policy (cluster). Does that mean that CPUs within a
+cluster can actually run at different frequencies at any given point of time ?
+
+If cpufreq terms, a cpufreq policy represents a group of CPUs that change
+frequency together, i.e. they share the clk line. If all CPUs in your system can
+do DVFS separately, then you must have policy per CPU, instead of cluster.
+
+> +static void tegra194_cpufreq_free_resources(void)
+> +{
+> +	flush_workqueue(read_counters_wq);
+
+Why is this required exactly? I see that you add the work request and
+immediately flush it, then why would you need to do this separately ?
+
+> +	destroy_workqueue(read_counters_wq);
+> +}
+> +
+> +static struct cpufreq_frequency_table *
+> +init_freq_table(struct platform_device *pdev, struct tegra_bpmp *bpmp,
+> +		unsigned int cluster_id)
+> +{
+> +	struct cpufreq_frequency_table *freq_table;
+> +	struct mrq_cpu_ndiv_limits_response resp;
+> +	unsigned int num_freqs, ndiv, delta_ndiv;
+> +	struct mrq_cpu_ndiv_limits_request req;
+> +	struct tegra_bpmp_message msg;
+> +	u16 freq_table_step_size;
+> +	int err, index;
+> +
+> +	memset(&req, 0, sizeof(req));
+> +	req.cluster_id = cluster_id;
+> +
+> +	memset(&msg, 0, sizeof(msg));
+> +	msg.mrq = MRQ_CPU_NDIV_LIMITS;
+> +	msg.tx.data = &req;
+> +	msg.tx.size = sizeof(req);
+> +	msg.rx.data = &resp;
+> +	msg.rx.size = sizeof(resp);
+> +
+> +	err = tegra_bpmp_transfer(bpmp, &msg);
+
+So the firmware can actually return different frequency tables for the clusters,
+right ? Else you could have received the table only once and used it for all the
+CPUs.
+
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	/*
+> +	 * Make sure frequency table step is a multiple of mdiv to match
+> +	 * vhint table granularity.
+> +	 */
+> +	freq_table_step_size = resp.mdiv *
+> +			DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
+> +
+> +	dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
+> +		cluster_id, freq_table_step_size);
+> +
+> +	delta_ndiv = resp.ndiv_max - resp.ndiv_min;
+> +
+> +	if (unlikely(delta_ndiv == 0))
+> +		num_freqs = 1;
+> +	else
+> +		/* We store both ndiv_min and ndiv_max hence the +1 */
+> +		num_freqs = delta_ndiv / freq_table_step_size + 1;
+> +
+> +	num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
+> +
+> +	freq_table = devm_kcalloc(&pdev->dev, num_freqs + 1,
+> +				  sizeof(*freq_table), GFP_KERNEL);
+> +	if (!freq_table)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for (index = 0, ndiv = resp.ndiv_min;
+> +			ndiv < resp.ndiv_max;
+> +			index++, ndiv += freq_table_step_size) {
+> +		freq_table[index].driver_data = ndiv;
+> +		freq_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
+> +	}
+> +
+> +	freq_table[index].driver_data = resp.ndiv_max;
+> +	freq_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
+> +	freq_table[index].frequency = CPUFREQ_TABLE_END;
+> +
+> +	return freq_table;
+> +}
+
+-- 
+viresh
