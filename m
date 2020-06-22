@@ -2,298 +2,174 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD76DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61D02071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF917206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592839687;
+	bh=YnHPgJqw8Zmqnuh2F9azOANz5078hmhWIbZgAwtFJqw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bDh2pq5MHAzuX4SixHdgf8nIxDPEBp7vRLSOKsLq5eojOIIb+vsAIMzNI9gMynwPH
+	 +4z6hCTtKF334ZfCZXX8KNTS5nh0OHl5mOzX1EK92VphiefG9NhJjnCtpYWrmQopcP
+	 FkiRz3mIdUtggeWzpj18EP1+ULi86M3k4anPnwG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgFVP0M convert rfc822-to-8bit (ORCPT
+        id S1729280AbgFVP2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:26:12 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:48863 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729049AbgFVP0L (ORCPT
+        Mon, 22 Jun 2020 11:28:06 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39324 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728293AbgFVP2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:26:11 -0400
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7C089240008;
-        Mon, 22 Jun 2020 15:26:05 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 22 Jun 2020 11:28:05 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g5so13358718otg.6;
+        Mon, 22 Jun 2020 08:28:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i2c95N6ci/w7OThvHcf5Fy4XsnnDSG6ckQoNsGPl1eo=;
+        b=f7vKEfOXl4WaAdH5q0JB9U8HDfCF6CPBxTeblqh57+TPvlampTHUIY7bwvNXwqklSW
+         waBCl43ICIL8FfprfAyq5EQG8NbbaHzlB2o/OrDLPz6v4gsX+Ox+foy1Wsz+lh4A89ls
+         SiEUIBbvHjxBzELGSqOWrzy8x7a4/iKMxGqQQl7wlgZHZXYYSThoqiqNEUAgCjJ0cEfa
+         5ihyLa2DRzY4d2rtF8imVjRjFoNshZIeqwgtS85coVZYHbe4yu5Xv7v2oZiJ0v4kddFe
+         gbB4//xCRGLa6gNVuhgZNqlHchqMluJvhhbJ5nxen826ZDVallCReJJJlc/LchAYmwbm
+         ynKA==
+X-Gm-Message-State: AOAM531cafPIiCs1bMyB/vpi1UFjH4He0txYcePvV4689kR4nZhhdP9+
+        MEPaZo0itaJxHQq4e2NyPXZcOm+hrLW1I5twc04=
+X-Google-Smtp-Source: ABdhPJwPycask6rXfFgrsgFmggHDR562yU+PZHy41snSPCHC1tppXmJo1aa1PK+69GQNrvfUgNROeNC4pvEbtPnx6sM=
+X-Received: by 2002:a05:6830:10ca:: with SMTP id z10mr13946922oto.167.1592839684757;
+ Mon, 22 Jun 2020 08:28:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <f7b8b3fe41ba9e395eb0bb6bee9a020c@0leil.net>
-References: <20200619122300.2510533-1-antoine.tenart@bootlin.com> <20200619122300.2510533-6-antoine.tenart@bootlin.com> <f7b8b3fe41ba9e395eb0bb6bee9a020c@0leil.net>
-Subject: Re: [PATCH net-next v3 5/8] net: phy: mscc: 1588 block initialization
-To:     Quentin Schulz <foss@0leil.net>
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, richardcochran@gmail.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com
-Message-ID: <159283956449.1456598.3334254941386336677@kwain>
-Date:   Mon, 22 Jun 2020 17:26:04 +0200
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <2713141.s8EVnczdoM@kreacher> <1821880.vZFEW4x2Ui@kreacher> <CAHp75VePDyPevCAOntFpTajf5zd9ocwjeWRz80WmCNtiDicpLg@mail.gmail.com>
+In-Reply-To: <CAHp75VePDyPevCAOntFpTajf5zd9ocwjeWRz80WmCNtiDicpLg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 22 Jun 2020 17:27:53 +0200
+Message-ID: <CAJZ5v0hu9_TA0KAe=9ZCSG4_KijSYb=qnt8MYe9QYwGbz=pmBg@mail.gmail.com>
+Subject: Re: [RFT][PATCH v2 2/4] ACPI: OSL: Add support for deferred unmapping
+ of ACPI memory
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Bob Moore <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Quentin,
-
-Quoting Quentin Schulz (2020-06-21 18:57:14)
-> 
-> Feels weird to review my own patches a year later having written them,
-> almost nostalgic :)
-
-:)
-
-> On 2020-06-19 14:22, Antoine Tenart wrote:
-> [...]
-> > @@ -373,6 +374,21 @@ struct vsc8531_private {
-> >       unsigned long ingr_flows;
-> >       unsigned long egr_flows;
-> >  #endif
+On Mon, Jun 22, 2020 at 4:56 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Jun 22, 2020 at 5:06 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > Implement acpi_os_unmap_deferred() and
+> > acpi_os_release_unused_mappings() and set ACPI_USE_DEFERRED_UNMAPPING
+> > to allow ACPICA to use deferred unmapping of memory in
+> > acpi_ex_system_memory_space_handler() so as to avoid RCU-related
+> > performance issues with memory opregions.
+>
+> ...
+>
+> > +static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
+> >  {
+> > -       unsigned long refcount = --map->refcount;
+> > +       if (--map->track.refcount)
+> > +               return true;
+> >
+> > -       if (!refcount)
+> > -               list_del_rcu(&map->list);
+> > -       return refcount;
+> > +       list_del_rcu(&map->list);
 > > +
-> > +     bool input_clk_init;
-> > +     struct vsc85xx_ptp *ptp;
+>
+> > +       if (defer) {
+> > +               INIT_LIST_HEAD(&map->track.gc);
+> > +               list_add_tail(&map->track.gc, &unused_mappings);
+>
+> > +               return true;
+> > +       }
 > > +
-> > +     /* For multiple port PHYs; the MDIO address of the base PHY in the
-> > +      * pair of two PHYs that share a 1588 engine. PHY0 and PHY2 are 
-> > coupled.
-> > +      * PHY1 and PHY3 as well. PHY0 and PHY1 are base PHYs for their
-> > +      * respective pair.
-> > +      */
-> > +     unsigned int ts_base_addr;
-> > +     u8 ts_base_phy;
+> > +       return false;
+>
+> A nit:
+>
+> Effectively it returns a value of defer.
+>
+>   return defer;
+>
+> >  }
+
+Do you mean that one line of code could be saved?  Yes, it could.
+
+>
+> ...
+>
+> > @@ -416,26 +421,102 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
+> >         }
+> >
+> >         mutex_lock(&acpi_ioremap_lock);
 > > +
-> 
-> I hate myself now for this bad naming. After reading the code, 
-> ts_base_addr is the address
-> of the base PHY (of a pair) on the MDIO bus and ts_base_phy is the 
-> "internal" (package)
-> address of the base PHy (of a pair). This is not very explicit.
-> 
-> Would ts_base_phy renamed into a ts_base_pkg_addr work better?
-> 
-> > +     /* ts_lock: used for per-PHY timestamping operations.
-> > +      */
-> 
-> I don't remember exactly the comment best practices in net anymore, but 
-> one line
-> comment instead?
+> >         map = acpi_map_lookup_virt(virt, size);
+>
+> A nit: should it be somewhere else (I mean in another patch)?
 
-If you look at next patches, you'll see the comment is then multi-lines,
-as other members are added to the structure. I'll fix it anyway.
+Do you mean the extra empty line?
 
-> [...]
-> 
-> >  #endif /* _MSCC_PHY_H_ */
-> > diff --git a/drivers/net/phy/mscc/mscc_main.c 
-> > b/drivers/net/phy/mscc/mscc_main.c
-> > index 052a0def6e83..87ddae514627 100644
-> > --- a/drivers/net/phy/mscc/mscc_main.c
-> > +++ b/drivers/net/phy/mscc/mscc_main.c
-> > @@ -1299,11 +1299,29 @@ static void vsc8584_get_base_addr(struct
-> > phy_device *phydev)
-> >       __phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
-> >       mutex_unlock(&phydev->mdio.bus->mdio_lock);
-> > 
-> > -     if (val & PHY_ADDR_REVERSED)
-> > +     /* In the package, there are two pairs of PHYs (PHY0 + PHY2 and
-> > +      * PHY1 + PHY3). The first PHY of each pair (PHY0 and PHY1) is
-> > +      * the base PHY for timestamping operations.
-> > +      */
-> > +     if (val & PHY_ADDR_REVERSED) {
-> >               vsc8531->base_addr = phydev->mdio.addr + addr;
-> > -     else
-> > +             vsc8531->ts_base_addr = phydev->mdio.addr;
-> > +             vsc8531->ts_base_phy = addr;
-> > +             if (addr > 1) {
-> > +                     vsc8531->ts_base_addr += 2;
-> > +                     vsc8531->ts_base_phy += 2;
-> > +             }
-> > +     } else {
-> >               vsc8531->base_addr = phydev->mdio.addr - addr;
-> > 
-> > +             vsc8531->ts_base_addr = phydev->mdio.addr;
-> > +             vsc8531->ts_base_phy = addr;
-> 
-> The two lines above are identical in both conditions, what about moving
-> them just before the if (val & PHY_ADDR_REVERSED) line?
+No, I don't think so, or the code style after this patch would not
+look consistent.
 
-That's right, I'll fix it for v4.
-
-> [...]
-> 
-> > +static const u32 vsc85xx_egr_latency[] = {
-> > +     /* Copper Egress */
-> > +     1272, /* 1000Mbps */
-> > +     12516, /* 100Mbps */
-> > +     125444, /* 10Mbps */
-> > +     /* Fiber Egress */
-> > +     1277, /* 1000Mbps */
-> > +     12537, /* 100Mbps */
-> > +     /* Copper Egress when MACsec ON */
-> > +     3496, /* 1000Mbps */
-> > +     34760, /* 100Mbps */
-> > +     347844, /* 10Mbps */
-> > +     /* Fiber Egress when MACsec ON */
-> > +     3502, /* 1000Mbps */
-> > +     34780, /* 100Mbps */
-> > +};
+> >         if (!map) {
+>
+> ...
+>
+> > +       /* Release the unused mappings in the list. */
+> > +       while (!list_empty(&list)) {
+> > +               struct acpi_ioremap *map;
 > > +
-> > +static const u32 vsc85xx_ingr_latency[] = {
-> > +     /* Copper Ingress */
-> > +     208, /* 1000Mbps */
-> > +     304, /* 100Mbps */
-> > +     2023, /* 10Mbps */
-> > +     /* Fiber Ingress */
-> > +     98, /* 1000Mbps */
-> > +     197, /* 100Mbps */
-> > +     /* Copper Ingress when MACsec ON */
-> > +     2408, /* 1000Mbps */
-> > +     22300, /* 100Mbps */
-> > +     222009, /* 10Mbps */
-> > +     /* Fiber Ingress when MACsec ON */
-> > +     2299, /* 1000Mbps */
-> > +     22192, /* 100Mbps */
-> > +};
-> > +
-> 
-> Wouldn't it make more sense to separate the latencies into two different
-> arrays? One for non-MACsec and one with? No idx "hack" later in the 
-> function that way.
+> > +               map = list_entry(list.next, struct acpi_ioremap, track.gc);
+>
+> A nt: if __acpi_os_map_cleanup() (actually acpi_unmap() according to
+> the code) has no side effects, can we use list_for_each_entry_safe()
+> here?
 
-Removing the "idx += 5" means having an added logic on the struct to
-used to retrieve the delay (I'll use two extra variables). But I do
-agree because that will improve the latency definition, and that alone
-is better.
+I actually prefer a do .. while version of this which saves the
+initial check (which has been carried out already).
 
-> [...]
-> 
-> > +static int vsc85xx_eth1_conf(struct phy_device *phydev, enum ts_blk 
-> > blk,
-> > +                          bool enable)
-> > +{
-> > +     struct vsc8531_private *vsc8531 = phydev->priv;
-> > +     u32 val = ANA_ETH1_FLOW_ADDR_MATCH2_DEST;
-> > +
-> > +     if (vsc8531->ptp->rx_filter == HWTSTAMP_FILTER_PTP_V2_L2_EVENT) {
-> > +             /* PTP over Ethernet multicast address for SYNC and DELAY msg */
-> > +             u8 ptp_multicast[6] = {0x01, 0x1b, 0x19, 0x00, 0x00, 0x00};
-> > +
-> 
-> I think this is actually part of "the" standard:
-> https://en.wikipedia.org/wiki/Precision_Time_Protocol#Message_transport
-> 
-> So would it make sense to make it available to all drivers via one of 
-> the
-> include/linux/ptp_*.h?
-
-That's right. I had a look and only two drivers (including this one)
-seems to be using the PTP over Ethernet multicast address. Also that
-would mean adding a new header (there are none, to my knowledge, where
-this would fit) for a single line definition.
-
-I don't know, I believe this is a good idea, but maybe a bit to early?
-
-> [...]
-> 
-> > +static bool vsc8584_is_1588_input_clk_configured(struct phy_device 
-> > *phydev)
-> > +{
-> > +     struct vsc8531_private *vsc8531 = phydev->priv;
-> > +
-> > +     if (vsc8531->ts_base_addr != phydev->mdio.addr) {
-> > +             struct mdio_device *dev;
-> > +
-> > +             dev = phydev->mdio.bus->mdio_map[vsc8531->ts_base_addr];
-> > +             phydev = container_of(dev, struct phy_device, mdio);
-> > +             vsc8531 = phydev->priv;
-> > +     }
-> > +
-> > +     return vsc8531->input_clk_init;
+> > +               list_del(&map->track.gc);
+> > +               __acpi_os_map_cleanup(map);
+> > +       }
 > > +}
+>
+> ...
+>
+> > @@ -472,16 +552,18 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+> >                 return;
+> >
+> >         mutex_lock(&acpi_ioremap_lock);
 > > +
-> > +static void vsc8584_set_input_clk_configured(struct phy_device 
-> > *phydev)
-> > +{
-> > +     struct vsc8531_private *vsc8531 = phydev->priv;
-> > +
-> > +     if (vsc8531->ts_base_addr != phydev->mdio.addr) {
-> > +             struct mdio_device *dev;
-> > +
-> > +             dev = phydev->mdio.bus->mdio_map[vsc8531->ts_base_addr];
-> > +             phydev = container_of(dev, struct phy_device, mdio);
-> > +             vsc8531 = phydev->priv;
-> > +     }
-> > +
-> > +     vsc8531->input_clk_init = true;
-> > +}
-> 
-> Duplicated code here.
-> Maybe:
-> 
-> static struct vsc8531_private * vsc8584_get_ts_base_phydev(struct 
-> phy_device *phydev)
-> {
->         struct vsc8531_private *vsc8531 = phydev->priv;
->         if (vsc8531->ts_base_addr != phydev->mdio.addr) {
->                 struct mdio_device *dev;
-> 
->                 dev = phydev->mdio.bus->mdio_map[vsc8531->ts_base_addr];
->                 phydev = container_of(dev, struct phy_device, mdio);
->                 vsc8531 = phydev->priv;
->         }
->         return vsc8531;
-> }
+> >         map = acpi_map_lookup(addr, gas->bit_width / 8);
+>
+> A nit: should it be somewhere else (I mean in another patch)?
 
-I'll do something of the like for v4. I'll still keep the is_configured
-and set_configured helpers as I don't want to expose the base PHY
-private structure outside of those helpers.
+Nope.
 
-> [...]
-> 
-> > diff --git a/drivers/net/phy/mscc/mscc_ptp.h 
-> > b/drivers/net/phy/mscc/mscc_ptp.h
-> [...]
-> > +
-> > +struct vsc85xx_ptphdr {
-> > +     u8 tsmt; /* transportSpecific | messageType */
-> > +     u8 ver;  /* reserved0 | versionPTP */
-> > +     __be16 msglen;
-> > +     u8 domain;
-> > +     u8 rsrvd1;
-> > +     __be16 flags;
-> > +     __be64 correction;
-> > +     __be32 rsrvd2;
-> > +     __be64 clk_identity;
-> > +     __be16 src_port_id;
-> > +     __be16 seq_id;
-> > +     u8 ctrl;
-> > +     u8 log_interval;
-> > +} __attribute__((__packed__));
-> > +
-> 
-> AFAICT, this is also part of "the" standard:
-> http://wiki.hevs.ch/uit/index.php5/Standards/Ethernet_PTP/frames#PTP_Header
-> Would maybe be better to have it in one of the header files in include/?
-
-Having common definitions when multiple drivers do use the same struct,
-or defined values is good. However if like here it is used in a single
-driver, and especially for this kind of representation, I don't believe
-that would add any value.
-
-Thanks,
-Antoine
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks!
