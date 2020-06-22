@@ -7,180 +7,161 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E682BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A840C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4BD2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7215F20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CDLwChJW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CjobsTwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbgFVXCQ (ORCPT
+        id S1731449AbgFVXEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52398 "EHLO
+        Mon, 22 Jun 2020 19:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731406AbgFVXCO (ORCPT
+        with ESMTP id S1731371AbgFVXEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:02:14 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57700C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:02:13 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m26so10590975lfo.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:02:13 -0700 (PDT)
+        Mon, 22 Jun 2020 19:04:21 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36C1C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:04:20 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id j4so8250631plk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:04:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ecq4FS9wELzuVh2aNsJmKpLPD9PbAHLuJOkUzY8Xxes=;
-        b=CDLwChJW595HajdiJojE/+eW1r1r4swlZKiMJEBB/xgJUPsRe7eatKhRtaAggFj9bD
-         7SzxCuD4enZovjYeo6u5UKDTYtZFs1omXlP2i+IVjYWh2nOQGvAi5LMciy5upiypKr7f
-         6bDx5tB2jaerpTT/GcWq7hUccgf2L0SGDaRwyd7yQUj89bOAQNLhWjsjc5Qjs342fZc/
-         bIgLxa6HcvwPEPhx8OlcMZ5e1H7GcWzrjte7ozSnnSwPsbx68QHWcfWv8QUnQ60N7/iJ
-         8KFigh54NcYqABzqIEhNuYZAOZowoa/IpyLCdxifXX1tDDo3gS8+ZXm5JFFXy74iFeV/
-         v/gg==
+         :cc:content-transfer-encoding;
+        bh=SzgCWMDg2RKJ2NhPQUi7yzswSotPjadK1/0BdT/7pNM=;
+        b=CjobsTwjEzfFB7mg3yto+C37iPxoADkBtXnwx5Zwh1qhWDXJI9D8xzTYannQoMeE59
+         wYG8uphNg+tfYmpQDrje8+ZiMkr9C6zDHh05LXr1dxnbGcD7rcatVqb208oPrAX1xxqB
+         rMhirMwPU0VMi65dec2Qn/HinSWsI/vcDRVsMIGJs+5yaNri6IK5LoQwvGPcoK+2WLMn
+         sqYEhxjSdosxf/hM9s6W6CVJJi/xnF0Je9pZD+TXn6ArUzc0GmkZz3Hco2I6Im31YEfK
+         tis4ESU+TFUPNnp/+ik9M+TOUIBnySvS0k8SDIEYVkUGO+TUFQ8DH2mreAVwZRufQBL7
+         psPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ecq4FS9wELzuVh2aNsJmKpLPD9PbAHLuJOkUzY8Xxes=;
-        b=tgpWi2bFjBvSTauTdV75orERM8/SroxChqGreGd/DJ3tUWlFlGh63uYJv7YxFr+lRP
-         jRlF11pzqmj2ejS17kotxJ0b31vTn7C/Zbu9uQ56fnPhrOL9vg+o9AVx87YRe4g49ynN
-         fh84qFRQ00UeAt30s+j3MVZoXtMKJyOvaFZlVitizIMnvEY4pAVE08JYBi4/napwNHE7
-         SWqBrtoVmb3wijd2SkjjW0fNiAYGtp8+J+qvv4RCK9+yBsB7vPrAtQHHiwfeDWnRNEGW
-         jK3AyDbZiKO+a1Yjxlht+xa+pouXt9z9SkmOo0xRZSH5xATHzKqJaozsczrdTnYQFZ/m
-         TzhQ==
-X-Gm-Message-State: AOAM5323tHzgkihrTl8ebrxe+7hHgPcnOy+2k9yTm+PPISx1f3H2be3h
-        xEreNYDPB/Y5fnbRc33HTJ48T5x1thT47mOENOLBfqL1
-X-Google-Smtp-Source: ABdhPJzpXmJeWyudmGnFcSJwgw8D3FpyMLH8rnnQyE9NCv3nyMOzGL3CkYp5ze+ga7o74BuYJeUW/t+chDaZtbSGJBY=
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr10346942lfn.122.1592866931554;
- Mon, 22 Jun 2020 16:02:11 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SzgCWMDg2RKJ2NhPQUi7yzswSotPjadK1/0BdT/7pNM=;
+        b=p9j3kbyzt/c+S7+j4LrAxC0Ths/sF8IBW2TwgV8j2NoDry6Qbp/NJSp5viaQ0aTypy
+         HAee+od4553f0ZV80FB9wp3oir1ysH00tAZkysaQCPhkgc7fZhgvAFcEOKFqUSvDgPbg
+         rmwO6EkWrgl56JXgpXj3iq4oTkAGn8rdutD13rK8plRpaNPCcG54BHUo4FypPKLLrQYs
+         Pjg14RUoVhUVn0oyQhGQOJ2hHF2EAKOXIyulkB2RJNuv2otDaBYXsvgknUUX+vhUUHIK
+         6lMvuBH3XPrN3KqJoOTRQnAkUYbAppQKgUfiQ5CU8NAVbArLrbGAfNGjdZzSi+jOxnUn
+         anOw==
+X-Gm-Message-State: AOAM5336BNcZVz3Vple+f6Vqebn/fWK+DXV3vztROMGMK+KtGrH8j1JC
+        KrrK6miMzAb6kSMiXJ7AG4nrUShpV0sGzrIhJcBI0g==
+X-Google-Smtp-Source: ABdhPJy9ExQlGK27NrlHcsj2o4KqK8zQSxV/IYN84Vo7oDdUJkzL59yBK014EWuci7pcT/EaZ13XpTPNDdTLyCE+wNI=
+X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr21225140plm.179.1592867060019;
+ Mon, 22 Jun 2020 16:04:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-3-rajatja@google.com>
- <20200619161009.GH42799@otc-nc-03>
-In-Reply-To: <20200619161009.GH42799@otc-nc-03>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 22 Jun 2020 16:01:34 -0700
-Message-ID: <CACK8Z6FZ560vfMYH8idaea31_9dq4Vvo7LiMASnxZKZJtX89wg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] pci: acs: Enable PCI_ACS_TB for untrusted/external-facing
- devices
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
+References: <20200617210613.95432-1-ndesaulniers@google.com> <20200617212705.tq2q6bi446gydymo@google.com>
+In-Reply-To: <20200617212705.tq2q6bi446gydymo@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 22 Jun 2020 16:04:07 -0700
+Message-ID: <CAKwvOdniambW9_nVbDnd4A_+bdDdZMd2V1Q=Xw5EJYDGeh=eyQ@mail.gmail.com>
+Subject: Re: [PATCH] vmlinux.lds: consider .text.{hot|unlikely}.* part of
+ .text too
+To:     =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        "# 3.4.x" <stable@vger.kernel.org>, Jian Cai <jiancai@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ashok,
-
-On Fri, Jun 19, 2020 at 9:10 AM Raj, Ashok <ashok.raj@intel.com> wrote:
->
-> Hi Rajat
+On Wed, Jun 17, 2020 at 2:27 PM F=C4=81ng-ru=C3=AC S=C3=B2ng <maskray@googl=
+e.com> wrote:
 >
 >
-> On Mon, Jun 15, 2020 at 06:17:41PM -0700, Rajat Jain wrote:
-> > When enabling ACS, currently the bit "translation blocking" was
-> > not getting changed at all. Set it to disable translation blocking
+> On 2020-06-17, Nick Desaulniers wrote:
+> >ld.bfd's internal linker script considers .text.hot AND .text.hot.* to
+> >be part of .text, as well as .text.unlikely and .text.unlikely.*.
 >
-> Maybe you meant "enable translation blocking" ?
+> >ld.lld will produce .text.hot.*/.text.unlikely.* sections.
+>
+> Correction to this sentence. lld is not relevant here.
+>
+> -ffunction-sections combined with profile-guided optimization can
+> produce .text.hot.* .text.unlikely.* sections.  Newer clang may produce
+> .text.hot. .text.unlikely. (without suffix, but with a trailing dot)
+> when -fno-unique-section-names is specified, as an optimization to make
+> .strtab smaller.
 
-Oops, yes.
+Then why was the bug report reporting https://reviews.llvm.org/D79600
+as the result of a bisection, if LLD is not relevant?  Was the
+bisection wrong?
+
+The upstream report wasn't initially public, for no good reason.  So I
+didn't include it, but if we end up taking v1, this should have
+
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=3D1084760
+
+The kernel doesn't use -fno-unique-section-names; is that another flag
+that's added by CrOS' compiler wrapper?
+https://source.chromium.org/chromiumos/chromiumos/codesearch/+/master:src/t=
+hird_party/toolchain-utils/compiler_wrapper/config.go;l=3D110
+Looks like no.  It doesn't use `-fno-unique-section-names` or
+`-ffunction-sections`.
+
 
 >
-> Keep the commit log simple:
+> We've already seen that GCC can place main in .text.startup without
+> -ffunction-sections. There may be other non -ffunction-sections cases
+> for .text.hot.* or .text.unlikely.*. So it is definitely a good idea to
+> be more specific even if we don't care about -ffunction-sections for
+> now.
 >
-> When enabling ACS, enable translation blocking for external facing ports
-> and untrusted devices.
+> >Make sure to group these together.  Otherwise these orphan sections may
+> >be placed outside of the the _stext/_etext boundaries.
+> >
+> >Cc: stable@vger.kernel.org
+> >Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=
+=3Dadd44f8d5c5c05e08b11e033127a744d61c26aee
+> >Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=
+=3D1de778ed23ce7492c523d5850c6c6dbb34152655
+> >Link: https://reviews.llvm.org/D79600
+> >Reported-by: Jian Cai <jiancai@google.com>
+> >Debugged-by: Luis Lozano <llozano@google.com>
+> >Suggested-by: F=C4=81ng-ru=C3=AC S=C3=B2ng <maskray@google.com>
+> >Tested-by: Luis Lozano <llozano@google.com>
+> >Tested-by: Manoj Gupta <manojgupta@google.com>
+> >Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> >---
+> > include/asm-generic/vmlinux.lds.h | 4 +++-
+> > 1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> >diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vml=
+inux.lds.h
+> >index d7c7c7f36c4a..fe5aaef169e3 100644
+> >--- a/include/asm-generic/vmlinux.lds.h
+> >+++ b/include/asm-generic/vmlinux.lds.h
+> >@@ -560,7 +560,9 @@
+> >  */
+> > #define TEXT_TEXT                                                     \
+> >               ALIGN_FUNCTION();                                       \
+> >-              *(.text.hot TEXT_MAIN .text.fixup .text.unlikely)       \
+> >+              *(.text.hot .text.hot.*)                                \
+> >+              *(TEXT_MAIN .text.fixup)                                \
+> >+              *(.text.unlikely .text.unlikely.*)                      \
+> >               NOINSTR_TEXT                                            \
+> >               *(.text..refcount)                                      \
+> >               *(.ref.text)                                            \
+> >--
+> >2.27.0.290.gba653c62da-goog
+> >
 
-Ack. Will change in the next iteration (currently waiting to see if
-there are any more comments).
 
-Thanks & Regards,
 
-Rajat
-
->
-> > too for all external facing or untrusted devices. This is OK
-> > because ATS is only allowed on internal devces.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> >  drivers/pci/pci.c    |  4 ++++
-> >  drivers/pci/quirks.c | 11 +++++++++++
-> >  2 files changed, 15 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index d2ff987585855..79853b52658a2 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -3330,6 +3330,10 @@ static void pci_std_enable_acs(struct pci_dev *dev)
-> >       /* Upstream Forwarding */
-> >       ctrl |= (cap & PCI_ACS_UF);
-> >
-> > +     if (dev->external_facing || dev->untrusted)
-> > +             /* Translation Blocking */
-> > +             ctrl |= (cap & PCI_ACS_TB);
-> > +
-> >       pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> >  }
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index b341628e47527..6294adeac4049 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
-> >       }
-> >  }
-> >
-> > +/*
-> > + * Currently this quirk does the equivalent of
-> > + * PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV
-> > + *
-> > + * Currently missing, it also needs to do equivalent of PCI_ACS_TB,
-> > + * if dev->external_facing || dev->untrusted
-> > + */
-> >  static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
-> >  {
-> >       if (!pci_quirk_intel_pch_acs_match(dev))
-> > @@ -4973,6 +4980,10 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
-> >       ctrl |= (cap & PCI_ACS_CR);
-> >       ctrl |= (cap & PCI_ACS_UF);
-> >
-> > +     if (dev->external_facing || dev->untrusted)
-> > +             /* Translation Blocking */
-> > +             ctrl |= (cap & PCI_ACS_TB);
-> > +
-> >       pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
-> >
-> >       pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
-> > --
-> > 2.27.0.290.gba653c62da-goog
-> >
+--
+Thanks,
+~Nick Desaulniers
