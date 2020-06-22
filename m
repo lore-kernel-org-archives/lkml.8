@@ -2,140 +2,157 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23669C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7B920767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RbmyUukt"
+	by mail.kernel.org (Postfix) with ESMTP id 083552076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbgFVULP (ORCPT
+        id S1730574AbgFVUJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:11:15 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29956 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730600AbgFVUJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:09:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592856554;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UZYhBvbDDNRy7VCCeT+Z/3+KFjbOGADAaOoqLREGB6A=;
-        b=RbmyUuktvhr1x2PKsi4icDgaAfQrLVPOi1BWV+0/+ws1RZqJxlFm6K+DEySZJrnq/Jz3D7
-        cAdZg1gw3vBr93IV9uLSPgVCopxx0t2dNAJ7DSMwv7/lKnrVMXU+F/Z2Kel8PVRN/I9JxI
-        A9ovSrsUurTmc4wiKTgtsxHr9VDaZrM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-477-i68MNScaNN2_TUS01uOEkw-1; Mon, 22 Jun 2020 16:09:10 -0400
-X-MC-Unique: i68MNScaNN2_TUS01uOEkw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D035109AEA7;
-        Mon, 22 Jun 2020 20:08:26 +0000 (UTC)
-Received: from Whitewolf.redhat.com (ovpn-117-166.rdu2.redhat.com [10.10.117.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 594DF5C662;
-        Mon, 22 Jun 2020 20:08:22 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Dave Airlie <airlied@redhat.com>, Takashi Iwai <tiwai@suse.de>,
-        James Jones <jajones@nvidia.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v5 08/10] drm/nouveau/kms/nv50-: Expose nv50_outp_atom in disp.h
-Date:   Mon, 22 Jun 2020 16:07:28 -0400
-Message-Id: <20200622200730.120716-9-lyude@redhat.com>
-In-Reply-To: <20200622200730.120716-1-lyude@redhat.com>
-References: <20200622200730.120716-1-lyude@redhat.com>
+        Mon, 22 Jun 2020 16:09:14 -0400
+Received: from mga12.intel.com ([192.55.52.136]:60195 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728530AbgFVUJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:09:07 -0400
+IronPort-SDR: LFVSAjT7u+N5vZPa59QDReV12rIKpjnkbs0ZPYtCAaByNwjoV647sWDA9DyO2iqQvLylDTOiKB
+ iudShdzF19fg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123527692"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="123527692"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:09:05 -0700
+IronPort-SDR: ACiGxnvdRH5yHzKRcBqEkHkrUW0Xmd5fP+wZakk5PUawdwmWwHSjFB8CI8ofv1H3JKPtVSPmv8
+ o5YF/XigfYJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="318877033"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 13:09:05 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Gardon <bgardon@google.com>,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: [PATCH v2 00/21] KVM: Cleanup and unify kvm_mmu_memory_cache usage
+Date:   Mon, 22 Jun 2020 13:08:01 -0700
+Message-Id: <20200622200822.4426-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to make sure that we flush disable updates at the right time
-when disabling CRCs, we'll need to be able to look at the outp state to
-see if we're changing it at the same time that we're disabling CRCs.
+Note, patch 18 will conflict with the p4d rework in 5.8.  I originally
+stated I would send v2 only after that got pulled into Paolo's tree, but
+I got my timing wrong, i.e. I was thinking that would have already
+happened.  I'll send v3 if necessary.  I wanted to get v2 out there now
+that I actually compile tested other architectures.
 
-So, expose the struct in disp.h.
+Marc, I interpreted your "nothing caught fire" as Tested-by for the arm64
+patches, let me know if that's not what you intended.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 18 ------------------
- drivers/gpu/drm/nouveau/dispnv50/disp.h | 14 ++++++++++++++
- 2 files changed, 14 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 368069a5b181a..090882794f7d6 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -57,24 +57,6 @@
- 
- #include <subdev/bios/dp.h>
- 
--/******************************************************************************
-- * Atomic state
-- *****************************************************************************/
--
--struct nv50_outp_atom {
--	struct list_head head;
--
--	struct drm_encoder *encoder;
--	bool flush_disable;
--
--	union nv50_outp_atom_mask {
--		struct {
--			bool ctrl:1;
--		};
--		u8 mask;
--	} set, clr;
--};
--
- /******************************************************************************
-  * EVO channel
-  *****************************************************************************/
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.h b/drivers/gpu/drm/nouveau/dispnv50/disp.h
-index 696e70a6b98b6..c7b72fa850995 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.h
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.h
-@@ -71,6 +71,20 @@ struct nv50_dmac {
- 	struct mutex lock;
- };
- 
-+struct nv50_outp_atom {
-+	struct list_head head;
-+
-+	struct drm_encoder *encoder;
-+	bool flush_disable;
-+
-+	union nv50_outp_atom_mask {
-+		struct {
-+			bool ctrl:1;
-+		};
-+		u8 mask;
-+	} set, clr;
-+};
-+
- int nv50_dmac_create(struct nvif_device *device, struct nvif_object *disp,
- 		     const s32 *oclass, u8 head, void *data, u32 size,
- 		     u64 syncbuf, struct nv50_dmac *dmac);
+This series resurrects Christoffer Dall's series[1] to provide a common
+MMU memory cache implementation that can be shared by x86, arm64 and MIPS.
+
+It also picks up a suggested change from Ben Gardon[2] to clear shadow
+page tables during initial allocation so as to avoid clearing entire
+pages while holding mmu_lock.
+
+The front half of the patches do house cleaning on x86's memory cache
+implementation in preparation for moving it to common code, along with a
+fair bit of cleanup on the usage.  The middle chunk moves the patches to
+common KVM, and the last two chunks convert arm64 and MIPS to the common
+implementation.
+
+Fully tested on x86 only.  Compile tested patches 14-21 on arm64, MIPS,
+s390 and PowerPC.
+
+v2:
+  - Rebase to kvm-5.8-2, commit 49b3deaad345 ("Merge tag ...").
+  - Use an asm-generic kvm_types.h for s390 and PowerPC instead of an
+    empty arch-specific file. [Marc]
+  - Explicit document "GFP_PGTABLE_USER == GFP_KERNEL_ACCOUNT | GFP_ZERO"
+    in the arm64 conversion patch. [Marc]
+  - Collect review tags. [Ben]
+
+[1] https://lkml.kernel.org/r/20191105110357.8607-1-christoffer.dall@arm
+[2] https://lkml.kernel.org/r/20190926231824.149014-4-bgardon@google.com
+
+Sean Christopherson (21):
+  KVM: x86/mmu: Track the associated kmem_cache in the MMU caches
+  KVM: x86/mmu: Consolidate "page" variant of memory cache helpers
+  KVM: x86/mmu: Use consistent "mc" name for kvm_mmu_memory_cache locals
+  KVM: x86/mmu: Remove superfluous gotos from mmu_topup_memory_caches()
+  KVM: x86/mmu: Try to avoid crashing KVM if a MMU memory cache is empty
+  KVM: x86/mmu: Move fast_page_fault() call above
+    mmu_topup_memory_caches()
+  KVM: x86/mmu: Topup memory caches after walking GVA->GPA
+  KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
+  KVM: x86/mmu: Separate the memory caches for shadow pages and gfn
+    arrays
+  KVM: x86/mmu: Make __GFP_ZERO a property of the memory cache
+  KVM: x86/mmu: Zero allocate shadow pages (outside of mmu_lock)
+  KVM: x86/mmu: Skip filling the gfn cache for guaranteed direct MMU
+    topups
+  KVM: x86/mmu: Prepend "kvm_" to memory cache helpers that will be
+    global
+  KVM: Move x86's version of struct kvm_mmu_memory_cache to common code
+  KVM: Move x86's MMU memory cache helpers to common KVM code
+  KVM: arm64: Drop @max param from mmu_topup_memory_cache()
+  KVM: arm64: Use common code's approach for __GFP_ZERO with memory
+    caches
+  KVM: arm64: Use common KVM implementation of MMU memory caches
+  KVM: MIPS: Drop @max param from mmu_topup_memory_cache()
+  KVM: MIPS: Account pages used for GPA page tables
+  KVM: MIPS: Use common KVM implementation of MMU memory caches
+
+ arch/arm64/include/asm/kvm_host.h  |  11 ---
+ arch/arm64/include/asm/kvm_types.h |   8 ++
+ arch/arm64/kvm/arm.c               |   2 +
+ arch/arm64/kvm/mmu.c               |  54 +++---------
+ arch/mips/include/asm/kvm_host.h   |  11 ---
+ arch/mips/include/asm/kvm_types.h  |   7 ++
+ arch/mips/kvm/mmu.c                |  44 ++--------
+ arch/powerpc/include/asm/Kbuild    |   1 +
+ arch/s390/include/asm/Kbuild       |   1 +
+ arch/x86/include/asm/kvm_host.h    |  14 +---
+ arch/x86/include/asm/kvm_types.h   |   7 ++
+ arch/x86/kvm/mmu/mmu.c             | 129 +++++++++--------------------
+ arch/x86/kvm/mmu/paging_tmpl.h     |  10 +--
+ include/asm-generic/kvm_types.h    |   5 ++
+ include/linux/kvm_host.h           |   7 ++
+ include/linux/kvm_types.h          |  19 +++++
+ virt/kvm/kvm_main.c                |  55 ++++++++++++
+ 17 files changed, 175 insertions(+), 210 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_types.h
+ create mode 100644 arch/mips/include/asm/kvm_types.h
+ create mode 100644 arch/x86/include/asm/kvm_types.h
+ create mode 100644 include/asm-generic/kvm_types.h
+
 -- 
-2.26.2
+2.26.0
 
