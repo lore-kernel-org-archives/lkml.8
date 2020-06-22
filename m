@@ -2,219 +2,116 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43607C43462
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D150C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE384207BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26ABD206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:25:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="UNo4j/9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgFVNUz (ORCPT
+        id S1728926AbgFVNZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:20:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44856 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728110AbgFVNUy (ORCPT
+        Mon, 22 Jun 2020 09:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727963AbgFVNZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:20:54 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e5so12975300ote.11;
-        Mon, 22 Jun 2020 06:20:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cNbCZePewB/NCeRQ/HjjQVdjTqtr6FT4ufoTE5WeBks=;
-        b=Um0I1bp8pKmyNz+iK348XCgJAHLh8LQwaElwCNvzehEj2YXdRUkjJd0ONF9q3ewi6X
-         QjI9W2mpMvis+EIhu41ooY4furMT+eg9aaUF3u/LpD+PSBgU+kBtpnnJmFoVVIh0bfCm
-         c3dL4J7gvlfaE591dXAgMk1NW80g+2HcHGP0mMMSGWgyfeeo1slLRVR8Ax9RZL8p/rT1
-         WZ8iSpk1pbF851rP8JNWts3BICrIAMBPDTfkbSO9hBmZ1IGxk8hSznp3c8G2XaClKq7F
-         JjSICYn6nA6V/ku5yaB9raRrGhXRdp/CtGkv4Nii+2cGVolmDPkDvy7ZUojNbGb+NNpN
-         701Q==
-X-Gm-Message-State: AOAM533ey/GD7wP9XjmIteEBOJv4kfeYfWoJd0uLfx3wtWDF1UNEkIJx
-        t2neTnKCAyiErjQfN9zTgWsdgTUFJnvH2o61qDW2y83K
-X-Google-Smtp-Source: ABdhPJwy+Yi8KHmAGOzBAm8bJ3ozF1WWqSPJIfnMPauTIGbQnsCX1P57DWNx9KdRsKPFlAHhNl56piop7ircPAUa4XU=
-X-Received: by 2002:a9d:c29:: with SMTP id 38mr13077246otr.107.1592832050916;
- Mon, 22 Jun 2020 06:20:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200617120510.25071-1-aford173@gmail.com>
-In-Reply-To: <20200617120510.25071-1-aford173@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 22 Jun 2020 15:20:39 +0200
-Message-ID: <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        aford@beaconembedded.com, Magnus Damm <magnus.damm@gmail.com>,
+        Mon, 22 Jun 2020 09:25:33 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8943C061573;
+        Mon, 22 Jun 2020 06:25:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZDUlSn5jU53cp1tPLasRfOKgYW9o5ByHt6T8w7VHSbw=; b=UNo4j/9Z7nm29li5UdbbUkY9c
+        BXrIyp0PeDMrh6/1rXFa1s/DpyaYpRW5Lt9ksPHRtAqAdpZcTZZWWNtCMF8x40/5UTtYyHsykxjUF
+        mm/gZ7W433GtXJ+Z2/zaXZOPGErm5Z2bOB10MbLP1Rb1ouo//+R5TzOhHSGabBxPvEXUinAyQkcCR
+        byltfJLzMVgXau1qeBFwL69UWxbYxNxJY9Z4Ig4G++P8d6kFrTXSmtq6JrwslQlQPppJhcKXQ9vwF
+        V/ZabrP5MxwiPCAIWb+si1ZrVfHlO4GeZGIi7xDcfy+s9yzfzTjSZln5pQX8JTfYkNeCtQjEg9X/H
+        oaOBDhPZQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58964)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jnMRj-0000Fn-Nl; Mon, 22 Jun 2020 14:25:11 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jnMRd-00005S-0R; Mon, 22 Jun 2020 14:25:05 +0100
+Date:   Mon, 22 Jun 2020 14:25:04 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 13/15] net: phy: mdio: add support for PHY supply
+ regulator
+Message-ID: <20200622132504.GH1551@shell.armlinux.org.uk>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-14-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622093744.13685-14-brgl@bgdev.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+On Mon, Jun 22, 2020 at 11:37:42AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Currently many MAC drivers control the regulator supplying the PHY but
+> this is conceptually wrong. The regulator should be defined as a property
+> of the PHY node on the MDIO bus and controlled by the MDIO sub-system.
+> 
+> Add support for an optional PHY regulator which will be enabled before
+> optional deasserting of the reset signal.
 
-Thanks for your patch!
+I wonder if this is the right place for this - MDIO devices do not have
+to be PHYs - they can be switches, and using "phy-supply" for a switch
+doesn't seem logical.
 
-On Wed, Jun 17, 2020 at 2:05 PM Adam Ford <aford173@gmail.com> wrote:
-> Beacon EmebddedWorks, formerly Logic PD is introducing a new
-
-EmbeddedWorks
-
-> SOM and development kit based on the RZ/G2M SoC from Renesas.
->
-> The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
-> cellular radio.
->
-> The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
-> along with a vareity of push buttons and LED's.
-
-variety
-
-Are schematics for this kit available? That would make it easier to review
-the DTS.
-
-Please add the DTB to arch/arm64/boot/dts/renesas/Makefile, else it
-won't be built :-)
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
-> @@ -0,0 +1,733 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2020, Compass Electronics Group, LLC
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/clk/versaclock.h>
-
-This depends on "[PATCH V3 2/3] dt: Add additional option bindings for
-IDT VersaClock", which hasn't been accepted yet, AFAIK.
-
-> +
-> +/ {
-> +       aliases {
-> +               serial0 = &scif2;
-> +               serial1 = &hscif0;
-> +               serial2 = &hscif1;
-> +               serial3 = &scif0;
-> +               serial4 = &hscif2;
-> +               serial5 = &scif5;
-> +               spi0 = &msiof0;
-> +               spi1 = &msiof1;
-> +               spi2 = &msiof2;
-> +               spi3 = &msiof3;
-
-Please drop the spiX aliases, as they are not needed.
-
-> +               ethernet0 = &avb;
-> +       };
-
-> +       leds {
-> +               compatible = "gpio-leds";
-> +               pinctrl-0 = <&led_pins>;
-> +               pinctrl-names = "default";
-> +
-> +               led0 {
-> +                       gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-> +                       label = "LED0";
-> +                       linux,default-trigger = "heartbeat";
-> +               };
-> +               led1 {
-> +                       gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
-> +                       label = "LED1";
-> +                       linux,default-trigger = "heartbeat";
-> +               };
-> +               led2 {
-> +                       gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>;
-> +                       label = "LED2";
-> +                       linux,default-trigger = "heartbeat";
-> +               };
-> +               led3 {
-> +                       gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
-> +                       label = "LED3";
-> +                       linux,default-trigger = "heartbeat";
-
-Lots of heartbeats ;-)
-
-> +               };
-> +       };
-
-> +&ehci0 {
-> +       dr_mode = "otg";
-> +       status = "okay";
-> +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 3>, <&versaclock6_bb 4>;
-
-What's the purpose of the 3rd and 4th clock?
-
-> +};
-> +
-> +&ehci1 {
-> +       status = "okay";
-> +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 4>;
-
-What's the purpose of the 3rd clock?
-
-> +};
-
-> +       msiof1_pins: msiof1 {
-> +               groups = "msiof1_clk_g", "msiof1_rxd_g", "msiof1_txd_g";
-> +               function = "msiof1";
-> +       };
-
-What is msiof1 connected to?
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
-
-> +       eeprom@50 {
-> +               compatible = "microchip, at24c64", "atmel,24c64";
-
-Bogus space after the first comma.
-
-> +               pagesize = <32>;
-> +               read-only;      /* Manufacturing EEPROM programmed at factory */
-> +               reg = <0x50>;
-> +       };
-
-> new file mode 100644
-> index 000000000000..e7ed5d480618
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1-beacon-rzg2m-kit.dts
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2020, Compass Electronics Group, LLC
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "r8a774a1.dtsi"
-> +#include "beacon-renesom-som.dtsi"
-> +#include "beacon-renesom-baseboard.dtsi"
-> +
-> +/ {
-> +       model = "Beacon Embedded Works RZ/G2M Development Kit";
-> +       compatible =    "beacon,beacon-rzg2m", "renesas,r8a774a1";
-> +};
-
-Please include a patch to add "beacon,beacon-rzg2m" to
-Documentation/devicetree/bindings/arm/renesas.yaml.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+However, I can see the utility of having having a supply provided for
+all mdio devices, so it seems to me to be a naming issue.  Andrew?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
