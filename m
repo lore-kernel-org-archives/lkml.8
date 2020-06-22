@@ -2,92 +2,113 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A4AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C047C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58AE3206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:15:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OTqVZBcm"
+	by mail.kernel.org (Postfix) with ESMTP id 05C69206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgFVPPH (ORCPT
+        id S1729232AbgFVPRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:15:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729278AbgFVPPH (ORCPT
+        Mon, 22 Jun 2020 11:17:38 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:39900 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728070AbgFVPRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:15:07 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05036C061573;
-        Mon, 22 Jun 2020 08:15:07 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0a2500329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:2500:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8AA271EC02B9;
-        Mon, 22 Jun 2020 17:15:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592838905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=poCjt5Hnl2yRbfjwza7dJmmzO9NHIwqXjUHnukTHB7k=;
-        b=OTqVZBcmrQ4C/T8Pc6e4GzXfK3N3Ei8V1CKLAm443rbMtEtWDzOBDD3UXhEa581dDQdKgG
-        S53OljfjyDy6zfTko/ld3OsUeGy2gkvxl7LzdEgS8AVgVrXMpwoUgVHmyaKDtDw9SgGNUg
-        0ic4YC7Vxn7e8HylaUZPP0pIkejMXjU=
-Date:   Mon, 22 Jun 2020 17:15:02 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Mon, 22 Jun 2020 11:17:37 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jnOCV-0005Cb-Cu; Mon, 22 Jun 2020 09:17:35 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jnOCR-0000y0-78; Mon, 22 Jun 2020 09:17:35 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH -v2] x86/msr: Move the F15h MSRs where they belong
-Message-ID: <20200622151502.GE32200@zn.tnic>
-References: <20200621163323.14e8533f@canb.auug.org.au>
- <20200621105350.GA28206@zn.tnic>
- <20200622113824.6a3ab82f@canb.auug.org.au>
- <20200622130407.GB32200@zn.tnic>
- <20200622141737.GA30611@kernel.org>
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
+        "joe.jin\@oracle.com" <joe.jin@oracle.com>
+References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
+        <20200618233958.GV8681@bombadil.infradead.org>
+        <877dw3apn8.fsf@x220.int.ebiederm.org>
+        <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
+        <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
+        <CAK7LNARr4aWTUqcS5TGdQ-7C_u=PFQVMMuakQ2Oro3-43fYu9w@mail.gmail.com>
+Date:   Mon, 22 Jun 2020 10:13:09 -0500
+In-Reply-To: <CAK7LNARr4aWTUqcS5TGdQ-7C_u=PFQVMMuakQ2Oro3-43fYu9w@mail.gmail.com>
+        (Masahiro Yamada's message of "Mon, 22 Jun 2020 14:33:39 +0900")
+Message-ID: <87366n3zi2.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200622141737.GA30611@kernel.org>
+Content-Type: text/plain
+X-XM-SPF: eid=1jnOCR-0000y0-78;;;mid=<87366n3zi2.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19ZgWqSSIIIXle/OLCQxkd+7UIjr08oNT0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc dentries
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:17:37AM -0300, Arnaldo Carvalho de Melo wrote:
-> So this reverts the change you made to the tools copy of that file and
-> then does the change you need to the kernel sources, ok.
+Masahiro Yamada <masahiroy@kernel.org> writes:
+
+> On Fri, Jun 19, 2020 at 11:14 PM Eric W. Biederman
+> <ebiederm@xmission.com> wrote:
+>>
+>>
+>> Junxiao Bi <junxiao.bi@oracle.com> reported:
+>> > When debugging some performance issue, i found that thousands of threads exit
+>> > around same time could cause a severe spin lock contention on proc dentry
+>> > "/proc/$parent_process_pid/task/", that's because threads needs to clean up
+>> > their pid file from that dir when exit.
+>>
+>> Matthew Wilcox <willy@infradead.org> reported:
+>> > We've looked at a few different ways of fixing this problem.
+>>
+>> The flushing of the proc dentries from the dcache is an optmization,
+>> and is not necessary for correctness.  Eventually cache pressure will
+>> cause the dentries to be freed even if no flushing happens.  Some
+>> light testing when I refactored the proc flushg[1] indicated that at
+>> least the memory footprint is easily measurable.
+>>
+>> An optimization that causes a performance problem due to a thundering
+>> herd of threads is no real optimization.
+>>
+>> Modify the code to only flush the /proc/<tgid>/ directory when all
+>> threads in a process are killed at once.  This continues to flush
+>> practically everything when the process is reaped as the threads live
+>> under /proc/<tgid>/task/<tid>.
+>>
+>> There is a rare possibility that a debugger will access /proc/<tid>/,
+>> which this change will no longer flush, but I believe such accesses
+>> are sufficiently rare to not be observed in practice.
+>>
+>> [1] 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
+>> Link: https://lkml.kernel.org/r/54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com
 >
-> In the future the change will be made just in the kernel files, as
-> kernel developers don't have to have the burden of checking if tooling
-> continues to work when they change kernel files.
+>
+>> Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> I did not report this.
 
-Always nice to have less work. :-)
+Thank you for catching this.
 
-> That way later the perf developers get the warning in the perf build
-> process, see how this change in a file that is a copy from the kernel
-> sources affects tooling, and act upon it, simply updating the copy or
-> doing that + extra tooling adjustments, perhaps a new feature, etc.
+I must have cut&pasted the wrong email address by mistake.
 
-Nice.
+My apologies.
 
-> Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Thanks, queueing.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Eric
