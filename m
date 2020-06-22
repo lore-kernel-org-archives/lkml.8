@@ -2,177 +2,127 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A294AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D14C12076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SES/20h2"
+	by mail.kernel.org (Postfix) with ESMTP id 70B38207BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592843492;
+	bh=NtdWqKvTd/VNjC32MyidJh32ZtdjWCh87PdbDpZ7sKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UB4pHKPAvNhfPBzE5pzSZ96oQ5K4yJeJuUT0xsid7MURFmsONJTQ+L2ZKmyFSk5dC
+	 LIr5tiIal8YbkRo1Q1H6S3GyYOB27pZiUOgWfnbyufGRJDI7YJxwmmbJQSTLXpmzG8
+	 d5cLk4wgPWQeBOa5qP0FBkpt2VudmxRBO5Bic3rI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgFVQ3o (ORCPT
+        id S1729637AbgFVQba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:29:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26935 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729461AbgFVQ3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:29:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592843380;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FzLtoFQh/vN8wW8Srx1684Gpm2Q4p3etHyJcn3zpZ2o=;
-        b=SES/20h2yInAsrMv7r4Ya1RbXif0kBWzMBJdlucvZ+Crp83Xw4Z5adKHfeHFFM01gjkzGB
-        DS2HlEhEOJ6gp+OXK2Mvay16FytNSpFUGjOuz8GysRdZO3XEBwSOmNVfsb8nl8UITjGrOY
-        JwURziTAgY5Ld2Iea0r7JeMFNf4Gnyo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-gGmXMi4nMOuLe1-Cqpwnwg-1; Mon, 22 Jun 2020 12:29:32 -0400
-X-MC-Unique: gGmXMi4nMOuLe1-Cqpwnwg-1
-Received: by mail-wm1-f70.google.com with SMTP id p24so61919wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:29:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FzLtoFQh/vN8wW8Srx1684Gpm2Q4p3etHyJcn3zpZ2o=;
-        b=FheoP7HoW+i6fIlH1cQJYqFc+2WGy+qkTcL/+Ux4lNmq40bYgsLT/ucajfftHQdZPK
-         atxueRBE00qdagoCGb1o281cJcA8GmMrC6O4KhicZZ2653D0lnlqr1PpusGLiQSlnzcH
-         DQo9/OTCEZGqbyoI69HqmridrhiO9/th/ZAwUeioena8A6h4QNAfYs4pXy3LLnSw/clp
-         oLs2JgGeQB/cPUEzPETGk5LNzTHYEB259S0vmX2B3lB7v1zj6MG5yPF8kv1zeF8ywJwh
-         e3AoqqvGavW2T3e1HBE817LB87MWoOrFXI897T+pXcyZtzl9On4YWuUGJmBrQgO4Mihg
-         JhbA==
-X-Gm-Message-State: AOAM531jJqzD3vaetMAB8kboU0nPaApM12MXypfxw7JCxKdmytbzSkdm
-        g4REoA56OUtbvQUvdQwc7WzX14NwmahSJF/06tJZzBIxamT4szc9FABa+bgM3wdHRZqW9FNs/sw
-        Xp8B2Uo+IQ4eZbvp4PS29jVPC
-X-Received: by 2002:a5d:470a:: with SMTP id y10mr7567520wrq.405.1592843371378;
-        Mon, 22 Jun 2020 09:29:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzTk56uu9uLED/XFyQTjpJIlBSf9Yjq+4mD8Dsvqij6CkK9q6rGvTmvotw6Je15SfiT50Mhig==
-X-Received: by 2002:a5d:470a:: with SMTP id y10mr7567504wrq.405.1592843371111;
-        Mon, 22 Jun 2020 09:29:31 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-18-124.red.bezeqint.net. [79.178.18.124])
-        by smtp.gmail.com with ESMTPSA id x205sm98811wmx.21.2020.06.22.09.29.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 09:29:30 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 12:29:28 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-Message-ID: <20200622122546-mutt-send-email-mst@kernel.org>
-References: <20200611113404.17810-1-mst@redhat.com>
- <20200611113404.17810-3-mst@redhat.com>
- <20200611152257.GA1798@char.us.oracle.com>
- <CAJaqyWdwXMX0JGhmz6soH2ZLNdaH6HEdpBM8ozZzX9WUu8jGoQ@mail.gmail.com>
- <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
- <20200622114622-mutt-send-email-mst@kernel.org>
- <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
+        Mon, 22 Jun 2020 12:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729456AbgFVQba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:31:30 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86592076E;
+        Mon, 22 Jun 2020 16:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592843490;
+        bh=NtdWqKvTd/VNjC32MyidJh32ZtdjWCh87PdbDpZ7sKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uS9RmRKKg6cbZw423vs5FcQnWsi7YT0RlqRxjPGYrJ1YkpGxdE7hCMPmvue+1UKsv
+         q7FiVl5YXb5KS8sT2YFq+bE8d9vL5H2c0Jea0CajCNxmVEm7WNMndSea2W4sHn/XwT
+         sZRU0R+5yRkdlQLAJoeO4bRi5Gy0gqIDF6jPAdDE=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3B5A8405FF; Mon, 22 Jun 2020 13:31:27 -0300 (-03)
+Date:   Mon, 22 Jun 2020 13:31:27 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Andreas Gerstmayr <agerstmayr@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Michael Petlan <mpetlan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf flamegraph: explicitly set utf-8 encoding
+Message-ID: <20200622163127.GB30611@kernel.org>
+References: <20200619130745.153113-1-agerstmayr@redhat.com>
+ <20200619153232.203537-1-agerstmayr@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
+In-Reply-To: <20200619153232.203537-1-agerstmayr@redhat.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 06:11:21PM +0200, Eugenio Perez Martin wrote:
-> On Mon, Jun 22, 2020 at 5:55 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Fri, Jun 19, 2020 at 08:07:57PM +0200, Eugenio Perez Martin wrote:
-> > > On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
-> > > <eperezma@redhat.com> wrote:
-> > > >
-> > > > On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
-> > > > <konrad.wilk@oracle.com> wrote:
-> > > > >
-> > > > > On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
-> > > > > > As testing shows no performance change, switch to that now.
-> > > > >
-> > > > > What kind of testing? 100GiB? Low latency?
-> > > > >
-> > > >
-> > > > Hi Konrad.
-> > > >
-> > > > I tested this version of the patch:
-> > > > https://lkml.org/lkml/2019/10/13/42
-> > > >
-> > > > It was tested for throughput with DPDK's testpmd (as described in
-> > > > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html)
-> > > > and kernel pktgen. No latency tests were performed by me. Maybe it is
-> > > > interesting to perform a latency test or just a different set of tests
-> > > > over a recent version.
-> > > >
-> > > > Thanks!
-> > >
-> > > I have repeated the tests with v9, and results are a little bit different:
-> > > * If I test opening it with testpmd, I see no change between versions
-> >
-> >
-> > OK that is testpmd on guest, right? And vhost-net on the host?
-> >
-> 
-> Hi Michael.
-> 
-> No, sorry, as described in
-> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html.
-> But I could add to test it in the guest too.
-> 
-> These kinds of raw packets "bursts" do not show performance
-> differences, but I could test deeper if you think it would be worth
-> it.
+Em Fri, Jun 19, 2020 at 05:32:31PM +0200, Andreas Gerstmayr escreveu:
+> on some platforms the default encoding is not utf-8,
+> which causes an UnicodeDecodeError when reading the flamegraph template
+> and writing the flamegraph
 
-Oh ok, so this is without guest, with virtio-user.
-It might be worth checking dpdk within guest too just
-as another data point.
+Thanks, applied.
 
-> > > * If I forward packets between two vhost-net interfaces in the guest
-> > > using a linux bridge in the host:
-> >
-> > And here I guess you mean virtio-net in the guest kernel?
+- Arnaldo
+ 
+> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+> ---
 > 
-> Yes, sorry: Two virtio-net interfaces connected with a linux bridge in
-> the host. More precisely:
-> * Adding one of the interfaces to another namespace, assigning it an
-> IP, and starting netserver there.
-> * Assign another IP in the range manually to the other virtual net
-> interface, and start the desired test there.
+> changelog v2: also write to stdout with utf-8 encoding
 > 
-> If you think it would be better to perform then differently please let me know.
+>  tools/perf/scripts/python/flamegraph.py | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+> index 61f3be9add6b..65780013f745 100755
+> --- a/tools/perf/scripts/python/flamegraph.py
+> +++ b/tools/perf/scripts/python/flamegraph.py
+> @@ -17,6 +17,7 @@
+>  from __future__ import print_function
+>  import sys
+>  import os
+> +import io
+>  import argparse
+>  import json
+>  
+> @@ -81,7 +82,7 @@ class FlameGraphCLI:
+>  
+>          if self.args.format == "html":
+>              try:
+> -                with open(self.args.template) as f:
+> +                with io.open(self.args.template, encoding="utf-8") as f:
+>                      output_str = f.read().replace("/** @flamegraph_json **/",
+>                                                    json_str)
+>              except IOError as e:
+> @@ -93,11 +94,12 @@ class FlameGraphCLI:
+>              output_fn = self.args.output or "stacks.json"
+>  
+>          if output_fn == "-":
+> -            sys.stdout.write(output_str)
+> +            with io.open(sys.stdout.fileno(), "w", encoding="utf-8", closefd=False) as out:
+> +                out.write(output_str)
+>          else:
+>              print("dumping data to {}".format(output_fn))
+>              try:
+> -                with open(output_fn, "w") as out:
+> +                with io.open(output_fn, "w", encoding="utf-8") as out:
+>                      out.write(output_str)
+>              except IOError as e:
+>                  print("Error writing output file: {}".format(e), file=sys.stderr)
+> -- 
+> 2.25.4
+> 
 
+-- 
 
-Not sure why you bother with namespaces since you said you are
-using L2 bridging. I guess it's unimportant.
-
-> >
-> > >   - netperf UDP_STREAM shows a performance increase of 1.8, almost
-> > > doubling performance. This gets lower as frame size increase.
-> > >   - rests of the test goes noticeably worse: UDP_RR goes from ~6347
-> > > transactions/sec to 5830
-> >
-> > OK so it seems plausible that we still have a bug where an interrupt
-> > is delayed. That is the main difference between pmd and virtio.
-> > Let's try disabling event index, and see what happens - that's
-> > the trickiest part of interrupts.
-> >
-> 
-> Got it, will get back with the results.
-> 
-> Thank you very much!
-> 
-> >
-> >
-> > >   - TCP_STREAM goes from ~10.7 gbps to ~7Gbps
-> > >   - TCP_RR from 6223.64 transactions/sec to 5739.44
-> >
-
+- Arnaldo
