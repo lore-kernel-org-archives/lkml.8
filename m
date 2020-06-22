@@ -2,131 +2,205 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C960BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8580206EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B90206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:02:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="cY9JURAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgFVMBW (ORCPT
+        id S1728045AbgFVMCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:01:22 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:44191 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgFVMBV (ORCPT
+        Mon, 22 Jun 2020 08:02:13 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:58701 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727901AbgFVMCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:01:21 -0400
-Received: from oxbsgw05.schlund.de ([172.19.248.8]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1M1YpJ-1jqMCo0ArD-0033vK; Mon, 22 Jun 2020 14:01:13 +0200
-Date:   Mon, 22 Jun 2020 14:01:12 +0200 (CEST)
-From:   Thomas Ruf <freelancer@rufusul.de>
-Reply-To: Thomas Ruf <freelancer@rufusul.de>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Federico Vaga <federico.vaga@cern.ch>
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <419762761.402939.1592827272368@mailbusiness.ionos.de>
-In-Reply-To: <20200622044733.GB2324254@vkoul-mobl>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl>
-Subject: Re: DMA Engine: Transfer From Userspace
+        Mon, 22 Jun 2020 08:02:11 -0400
+X-Greylist: delayed 729 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jun 2020 08:02:10 EDT
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 05MC0mJU031409;
+        Mon, 22 Jun 2020 21:00:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05MC0mJU031409
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592827249;
+        bh=eg9cS/iFCnkIuPhMhc6OKqBZdWFocu0SvTBatQL6K2w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cY9JURAWYJCcDpn5iJg7WHds4bmraJRN/tkBHgBGZqeLL+SkQxaooE6WJrzfAZKCv
+         IO9uEd+I7TMg7rAbSrTRfDt2IhW8ZHKTqIIV8YNaaekSUt4ThlE0jqFyRojcfMjuPs
+         P1aAzK6TuBw4C7ybGfVXh1dX2vtEemRq7wTBjo9S/viYGCUF68t+FgAbnUKCXf+W2u
+         ZXOPk+L41yoOvWckMKSAhsob324NKewwglQby1BKLNHraHatLmHwXMTH4QQYSoaie9
+         vcu3wQz6992wDnXWWpOKheSzZ6D2pv3Kf3AJ/wJF334SEbJkaTOUjFO/IF6px+fmaQ
+         2mtl9CRpHCpBA==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        - <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: ASoC: Convert UniPhier AIO audio system to json-schema
+Date:   Mon, 22 Jun 2020 21:00:39 +0900
+Message-Id: <20200622120039.453616-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:vqrA2vYCx1uDKgThEtFbc6VetceM3TsFmqGIYceaPIpVSI5rnwV
- jzWDzPXiDwgkQcxT8pv7GNOBsNYxsO/aTbTl5MNduvTJdzN9E6ySMEGq9oulNx6DLewTTcv
- IbU4Es9KWA2nfkMVzCo7BgUNM53vUPbRVBWn7phzqGV5XbJ5InGXp3ohszv7FweaB3T5dOO
- f+WHDbV6ksaSSCy2OFiOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lTMpz7zt9FY=:e3CrO0pQcDG1ENDm9Agbim
- LwkiEWdidKgMtWnZDC8zwqgwno/NN/u8G3gEE20lZ5xSADOOVvtmlERnTktRfO5tyTYSmh8n7
- Ci/bOL3IPq6DsCeABXLzgZmgztWYL4eweH5DAooRRW6OsJ3wRuaeoEUfkYW1ui1A/GTLBZODp
- Jx7u/j22nPeBWtglUP1HIpR8+a4EFa1/XNsoaH08duAM9TJPdMbuNRuHRKlMHK6zydC7pSBC+
- rZQlQoCaBAmW3ssdjmE19Wm/34T83NC2B5klDwiyectWnyd8ePvTMi4TOxiEDo3QWopZB0P7j
- nhxRXY51XylKbKU2/97HJcNZFszNsZiX8Sf4asmlAY7eZLbAms/DPibtm/MnK4dHiacP3uPDY
- T28T6jQI3bL6c1fK40b732tQVaKVPgNIW2erI6FQb9jYN/EdAu1LhEej5ZjtXOHah7nYECNnH
- y/w0sJOyHKExCrLGfoa8cnYEsLRhVpDx5WwMG9N64aAjE8X3WUFgIABV41qfsPiHLeNSvLNs0
- nln7TCGJaBomeqtuvUVU4DO4TRGzRBvrYK1JGwyv0ia21roRhM0AzEB9x0NVgklAy2PkOBTsz
- Pz5IDdqG4rTp1Ug4UImXvTwN9UL4J/7JB7YHryyuK30/yliYD9vNqnqPDE/aRFGoVjt1BJneS
- CRCHRXwb5aVF0B1w9JnBF49oiuc2wLveoUu15sNWEPzWAl86c8vN1a8SpZP2p8/ZfE/b+zgBt
- 4xbMXbOpOjgyQobS/RxjY8tXSBdJ5PY1jyz99Se/+HbRnUsgKQ3XYUZMm6bCa7P7Rr4xV/eQ+
- HM4o8+RoiCUpmz+eX6bc97AQn4xtRY4jyu2Htz2tlcQUpPa7zM=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
-> 
-> On 21-06-20, 22:36, Federico Vaga wrote:
-> > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
-> > > On 19-06-20, 16:31, Dave Jiang wrote:
-> > > > 
-> > > > 
-> > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> > > > > Hello,
-> > > > >
-> > > > > is there the possibility of using a DMA engine channel from userspace?
-> > > > >
-> > > > > Something like:
-> > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
-> > > > > - read() or write() to trigger the transfer
-> > > > >
-> > > > 
-> > > > I may have supposedly promised Vinod to look into possibly providing
-> > > > something like this in the future. But I have not gotten around to do that
-> > > > yet. Currently, no such support.
-> > > 
-> > > And I do still have serious reservations about this topic :) Opening up
-> > > userspace access to DMA does not sound very great from security point of
-> > > view.
-> > 
-> > I was thinking about a dedicated module, and not something that the DMA engine
-> > offers directly. You load the module only if you need it (like the test module)
-> 
-> But loading that module would expose dma to userspace. 
-> > 
-> > > Federico, what use case do you have in mind?
-> > 
-> > Userspace drivers
-> 
-> more the reason not do do so, why cant a kernel driver be added for your
-> usage?
+Convert the UniPhier AIO audio system binding to DT schema format.
 
-by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
-now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-just let me introduce myself and the project:
-- coding in C since '91
-- coding in C++ since '98
-- a lot of stuff not relevant for this ;-)
-- working as a freelancer since Nov '19
-- implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
-- last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
-- subscribed to dmaengine on friday, saw the start of this discussion on saturday
-- talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
+ .../sound/socionext,uniphier-aio.yaml         | 73 +++++++++++++++++++
+ .../bindings/sound/uniphier,aio.txt           | 45 ------------
+ 2 files changed, 73 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/uniphier,aio.txt
 
-here the struct for the ioctl:
+diff --git a/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml b/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
+new file mode 100644
+index 000000000000..bea8b06ff1b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/socionext,uniphier-aio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UniPhier AIO audio system
++
++maintainers:
++  - <alsa-devel@alsa-project.org>
++
++properties:
++  compatible:
++    enum:
++      - socionext,uniphier-ld11-aio
++      - socionext,uniphier-ld20-aio
++      - socionext,uniphier-pxs2-aio
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clock-names:
++    const: aio
++
++  clocks:
++    maxItems: 1
++
++  reset-names:
++    const: aio
++
++  resets:
++    maxItems: 1
++
++  socionext,syscon:
++    description: |
++      Specifies a phandle to soc-glue, which is used for changing mode of S/PDIF
++      signal pin to output from Hi-Z. This property is optional if you use I2S
++      signal pins only.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++  "#sound-dai-cells":
++    const: 1
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clock-names
++  - clocks
++  - reset-names
++  - resets
++  - "#sound-dai-cells"
++
++examples:
++  - |
++    audio@56000000 {
++        compatible = "socionext,uniphier-ld20-aio";
++        reg = <0x56000000 0x80000>;
++        interrupts = <0 144 4>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_aout>;
++        clock-names = "aio";
++        clocks = <&sys_clk 40>;
++        reset-names = "aio";
++        resets = <&sys_rst 40>;
++        #sound-dai-cells = <1>;
++        socionext,syscon = <&soc_glue>;
++    };
+diff --git a/Documentation/devicetree/bindings/sound/uniphier,aio.txt b/Documentation/devicetree/bindings/sound/uniphier,aio.txt
+deleted file mode 100644
+index 4ce68ed6f2f2..000000000000
+--- a/Documentation/devicetree/bindings/sound/uniphier,aio.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-Socionext UniPhier SoC audio driver
+-
+-The Socionext UniPhier audio subsystem consists of I2S and S/PDIF blocks in
+-the same register space.
+-
+-Required properties:
+-- compatible      : should be one of the following:
+-		    "socionext,uniphier-ld11-aio"
+-		    "socionext,uniphier-ld20-aio"
+-		    "socionext,uniphier-pxs2-aio"
+-- reg             : offset and length of the register set for the device.
+-- interrupts      : should contain I2S or S/PDIF interrupt.
+-- pinctrl-names   : should be "default".
+-- pinctrl-0       : defined I2S signal pins for an external codec chip.
+-- clock-names     : should include following entries:
+-                    "aio"
+-- clocks          : a list of phandle, should contain an entry for each
+-                    entry in clock-names.
+-- reset-names     : should include following entries:
+-                    "aio"
+-- resets          : a list of phandle, should contain an entry for each
+-                    entry in reset-names.
+-- #sound-dai-cells: should be 1.
+-
+-Optional properties:
+-- socionext,syscon: a phandle, should contain soc-glue.
+-                    The soc-glue is used for changing mode of S/PDIF signal pin
+-                    to Output from Hi-Z. This property is optional if you use
+-                    I2S signal pins only.
+-
+-Example:
+-	audio {
+-		compatible = "socionext,uniphier-ld20-aio";
+-		reg = <0x56000000 0x80000>;
+-		interrupts = <0 144 4>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_aout>;
+-		clock-names = "aio";
+-		clocks = <&sys_clk 40>;
+-		reset-names = "aio";
+-		resets = <&sys_rst 40>;
+-		#sound-dai-cells = <1>;
+-
+-		socionext,syscon = <&sg>;
+-	};
+-- 
+2.25.1
 
-typedef struct {
-  unsigned int struct_size;
-  const void *src_user_ptr;
-  void *dst_user_ptr;
-  unsigned long length;
-  unsigned int timeout_in_ms;
-} dma_sg_proxy_arg_t;
-
-best regards,
-Thomas
