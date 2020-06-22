@@ -2,182 +2,124 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A71C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A27D92076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A92720767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+NZ8mdC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxR59Vld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgFVQ0Z (ORCPT
+        id S1729551AbgFVQ1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:26:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46880 "EHLO
+        Mon, 22 Jun 2020 12:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729414AbgFVQ0Q (ORCPT
+        with ESMTP id S1728185AbgFVQ1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:26:16 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE37EC061573;
-        Mon, 22 Jun 2020 09:26:15 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id i14so224787ejr.9;
-        Mon, 22 Jun 2020 09:26:15 -0700 (PDT)
+        Mon, 22 Jun 2020 12:27:21 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16043C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:27:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 9so20053844ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PRSeEGx+iywHLMnsI0Db78lh59FwNXwM+BHCFN43KFc=;
-        b=f+NZ8mdCqpTVLxe0XpcWX6E7uh+0QvDFVNbCU9PB5B4i5e02vkxaxW+aSFXxz5fIHW
-         pScwkQjC7YTqsVUwQbbjNTS0MAXhFigofiYrVWF31kSDTVZn9O8g5lUSCWyfkSAQ5coT
-         Xk1tDsPBAuOVtRD71vCjMQsQH3Jz9HljxZetviSYdJK00R9Sb9dK41zOn3U2Po79yBBQ
-         LxWsPsyl11fMbopq2gFSVevQfbZPIW1bkubUuu7gmztEmfNV/aC1wcWCbitTEJxlGoCi
-         Vd2XkiVBy3Dd9S3j2NiTk7qkrN+rmsM5gbNlFGfwqBLPQz7CElMHttc4ZS+IyoniuSpg
-         wheg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WUQt+wIXHVUSOm3OqSTrOTjz+yLUhP4e6aO1d0qpuNk=;
+        b=pxR59VldgupkQAkqc/a4MUaHT2ekxmVgXcm2e2zkbWexhzWuNRPC3ovhWnSWEX8Xuj
+         iVs7a7AuZS0NGz5SPfi+Rw/FUFSBhlzk9BbHEMOTjJIWuXwhfaxjfWu981YlZtLUTTI+
+         TqL/d1mHkpIJMEF8/NBLKRz9eJKYs71gEd3CgF/XnVHeT0Espsf8KiJkYeb6ILTenv1d
+         rA2BuxpX7ljYgf81pghFJAPU2ulF0J+HeBjmvFtR43IZJiEnIW04HDqVPYLjBblVq9AX
+         4MdrFniVZ1V6D5VwHTS0/xzS1N/xVGCQyMnTOYMEpTwc2rAPl6QvAtKkezuvo6vlAteC
+         +B7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PRSeEGx+iywHLMnsI0Db78lh59FwNXwM+BHCFN43KFc=;
-        b=Jhduz6V/KB+6kU+FbTGSjO/YfDQLJucbBx3qmPLJVxc2T2mCiUSVDQ+HNeRaRCrfPq
-         N6eK7XhYDtNF3M4TuQKphIEMJlDeohjR4rxL1L2cQeiWyhsJSzqO7fn+YfE/NRsHVHFL
-         xNZGscSiE6aXAcAafpC6mTBXZTjPYGzqjALWf/vh5wCFR99i2VPEiyUCFQY99ge6nJYp
-         3t637ZzbfXzl/A4Oi8RFrFxN27gKkzO7YfPmjZKeTdmYRe2zl+lZDlC0NkMfsKEX1rol
-         GFU0cTCFMqE43OCGkdptajh4rx/krDXnNmyIMI4x6OENETWE9JEFFpKJfs1D33PEHae4
-         +s8Q==
-X-Gm-Message-State: AOAM5305VIYJsuuHRAjK4711Kd5zg9X0SqA9JMjBnwT5A9Bg8LdT+N3C
-        9BjGCUggVEUy7inxaTnPJ0g=
-X-Google-Smtp-Source: ABdhPJwR1x0eenUZ7pJJzQxRie8s6Q1SAZSIMaSKDxT+sCSr1QeFQ5qBZAPEp1gWydFVNWHfkV+PKg==
-X-Received: by 2002:a17:906:e298:: with SMTP id gg24mr16183015ejb.120.1592843174601;
-        Mon, 22 Jun 2020 09:26:14 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:74f4:a0e9:488b:65c7])
-        by smtp.gmail.com with ESMTPSA id p6sm11948424ejb.71.2020.06.22.09.26.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 09:26:14 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] spi: fsl: add missing __iomem annotation
-Date:   Mon, 22 Jun 2020 18:26:11 +0200
-Message-Id: <20200622162611.83694-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WUQt+wIXHVUSOm3OqSTrOTjz+yLUhP4e6aO1d0qpuNk=;
+        b=M8GB2J1zd9USZRqAgnV6tA43K8cx3U2u6Zp52pQzLi5dt5NSowEgNpZMfbHvLoyRvD
+         +tf6O+PN4USoGyFiS+7jta7Mg9TsGaUnhyDp9aBPIdrYcz/XceNSZJQ+Zvu68SqZswCd
+         3M7E+1RZrVzTCgBSDybojGwYR1RCDACApBdLkQ186KOEBHjEzdrzuHerD+SD0+n/0Ff6
+         CLYcYBOa9hGvGdfVYpR3vcP3+t5k/2mK28N372ZYsQZlLqWuf7lH+fBmkXxHZsiVYcp2
+         a+HF2rTsw32mwl+6gz9rzZ2m7mB7ULep8cduUJI+QTghZdmyhmegAKSfyTsyPi+4T+cp
+         Ws4w==
+X-Gm-Message-State: AOAM533v1uYR3HzS++bnk3ESXiEwmJm0vM7JoyOqK6dkOgeJ62gzWaS2
+        KxZ1kYGGhV+fGUa/++rWO86AXdiGei7Al4Ew31g=
+X-Google-Smtp-Source: ABdhPJwqhgUpYfxCY6qwT/+WVfdXybhQ0h6vrxKeoNAXjDDg+a0Y8QUr4TAASbB95XF9/b6DVf6vOUozb9QT6/2oSEg=
+X-Received: by 2002:a2e:8682:: with SMTP id l2mr2099748lji.68.1592843239437;
+ Mon, 22 Jun 2020 09:27:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1592362839-4050-1-git-send-email-jrdr.linux@gmail.com>
+In-Reply-To: <1592362839-4050-1-git-send-email-jrdr.linux@gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Mon, 22 Jun 2020 22:05:35 +0530
+Message-ID: <CAFqt6zbQ-AJK_3NHmaOVXYUaD7ajvEvogMAOrse-99+vPi7xNw@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/virt/fsl_hypervisor: Correcting error handling path
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, mchehab+samsung@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The field mspi->reg_base is annotated as an __iomem pointer. Good.
+On Wed, Jun 17, 2020 at 8:22 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+>
+> First, when memory allocation for sg_list_unaligned failed, there
+> is no point of calling put_pages() as we haven't pinned any pages.
+>
+> Second, if get_user_pages_fast() failed we should unpinned num_pinned
+> pages, no point of checking till num_pages.
+>
+> This will address both.
+>
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
 
-However, this field is often assigned to a temporary variable:
-before being used. For example:
-	struct fsl_spi_reg *reg_base = mspi->reg_base;
+Any suggestion, what is the right tree to take this patch forward ?
 
-But this variable is missing the __iomem annotation.
-So, add the missing __iomem and make sparse & the bot happier.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- drivers/spi/spi-fsl-spi.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 67f022b8c81d..299e9870cf58 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -90,7 +90,7 @@ static void fsl_spi_change_mode(struct spi_device *spi)
- {
- 	struct mpc8xxx_spi *mspi = spi_master_get_devdata(spi->master);
- 	struct spi_mpc8xxx_cs *cs = spi->controller_state;
--	struct fsl_spi_reg *reg_base = mspi->reg_base;
-+	struct fsl_spi_reg __iomem *reg_base = mspi->reg_base;
- 	__be32 __iomem *mode = &reg_base->mode;
- 	unsigned long flags;
- 
-@@ -291,7 +291,7 @@ static int fsl_spi_cpu_bufs(struct mpc8xxx_spi *mspi,
- 				struct spi_transfer *t, unsigned int len)
- {
- 	u32 word;
--	struct fsl_spi_reg *reg_base = mspi->reg_base;
-+	struct fsl_spi_reg __iomem *reg_base = mspi->reg_base;
- 
- 	mspi->count = len;
- 
-@@ -309,7 +309,7 @@ static int fsl_spi_bufs(struct spi_device *spi, struct spi_transfer *t,
- 			    bool is_dma_mapped)
- {
- 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(spi->master);
--	struct fsl_spi_reg *reg_base;
-+	struct fsl_spi_reg __iomem *reg_base;
- 	unsigned int len = t->len;
- 	u8 bits_per_word;
- 	int ret;
-@@ -440,7 +440,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
- static int fsl_spi_setup(struct spi_device *spi)
- {
- 	struct mpc8xxx_spi *mpc8xxx_spi;
--	struct fsl_spi_reg *reg_base;
-+	struct fsl_spi_reg __iomem *reg_base;
- 	int retval;
- 	u32 hw_mode;
- 	struct spi_mpc8xxx_cs *cs = spi_get_ctldata(spi);
-@@ -495,7 +495,7 @@ static void fsl_spi_cleanup(struct spi_device *spi)
- 
- static void fsl_spi_cpu_irq(struct mpc8xxx_spi *mspi, u32 events)
- {
--	struct fsl_spi_reg *reg_base = mspi->reg_base;
-+	struct fsl_spi_reg __iomem *reg_base = mspi->reg_base;
- 
- 	/* We need handle RX first */
- 	if (events & SPIE_NE) {
-@@ -530,7 +530,7 @@ static irqreturn_t fsl_spi_irq(s32 irq, void *context_data)
- 	struct mpc8xxx_spi *mspi = context_data;
- 	irqreturn_t ret = IRQ_NONE;
- 	u32 events;
--	struct fsl_spi_reg *reg_base = mspi->reg_base;
-+	struct fsl_spi_reg __iomem *reg_base = mspi->reg_base;
- 
- 	/* Get interrupt events(tx/rx) */
- 	events = mpc8xxx_spi_read_reg(&reg_base->event);
-@@ -550,7 +550,7 @@ static irqreturn_t fsl_spi_irq(s32 irq, void *context_data)
- static void fsl_spi_grlib_cs_control(struct spi_device *spi, bool on)
- {
- 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(spi->master);
--	struct fsl_spi_reg *reg_base = mpc8xxx_spi->reg_base;
-+	struct fsl_spi_reg __iomem *reg_base = mpc8xxx_spi->reg_base;
- 	u32 slvsel;
- 	u16 cs = spi->chip_select;
- 
-@@ -568,7 +568,7 @@ static void fsl_spi_grlib_probe(struct device *dev)
- 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
- 	struct spi_master *master = dev_get_drvdata(dev);
- 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(master);
--	struct fsl_spi_reg *reg_base = mpc8xxx_spi->reg_base;
-+	struct fsl_spi_reg __iomem *reg_base = mpc8xxx_spi->reg_base;
- 	int mbits;
- 	u32 capabilities;
- 
-@@ -594,7 +594,7 @@ static struct spi_master *fsl_spi_probe(struct device *dev,
- 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
- 	struct spi_master *master;
- 	struct mpc8xxx_spi *mpc8xxx_spi;
--	struct fsl_spi_reg *reg_base;
-+	struct fsl_spi_reg __iomem *reg_base;
- 	u32 regval;
- 	int ret = 0;
- 
-
-base-commit: 48778464bb7d346b47157d21ffde2af6b2d39110
--- 
-2.27.0
-
+> ---
+> v2:
+>         Added review tag.
+>
+>  drivers/virt/fsl_hypervisor.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/virt/fsl_hypervisor.c b/drivers/virt/fsl_hypervisor.c
+> index 1b0b11b..ea344d7 100644
+> --- a/drivers/virt/fsl_hypervisor.c
+> +++ b/drivers/virt/fsl_hypervisor.c
+> @@ -157,7 +157,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
+>
+>         unsigned int i;
+>         long ret = 0;
+> -       int num_pinned; /* return value from get_user_pages() */
+> +       int num_pinned = 0; /* return value from get_user_pages() */
+>         phys_addr_t remote_paddr; /* The next address in the remote buffer */
+>         uint32_t count; /* The number of bytes left to copy */
+>
+> @@ -293,7 +293,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
+>
+>  exit:
+>         if (pages) {
+> -               for (i = 0; i < num_pages; i++)
+> +               for (i = 0; i < num_pinned; i++)
+>                         if (pages[i])
+>                                 put_page(pages[i]);
+>         }
+> --
+> 1.9.1
+>
