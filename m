@@ -2,130 +2,107 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D6DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACE1F2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A302075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QenmLRX+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sK9YTPQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgFVTT1 (ORCPT
+        id S1728195AbgFVTTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:19:27 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35308 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbgFVTTI (ORCPT
+        Mon, 22 Jun 2020 15:19:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728231AbgFVTTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:19:08 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MJJ4j7058975;
-        Mon, 22 Jun 2020 14:19:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592853544;
-        bh=hKmsnsG2bTOy7pD5+hWZMOG+5FbGRBrRbGqY/PWyMA8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=QenmLRX+1qFTlpmNZtutRANQ+1qODbYqew/ISaKuRuo/gxIf33CsYBLZ1yXtRJ8Zy
-         zjitUBx88Ipdy8DN3OF4h/dLxmtJz5d64gpRjiVo45T68xlAG4hdkx0/KWD6cAnZbp
-         o+YgTCHrxHtuS3a6EZrqgU7VKj5ocdZT6E/lS/Lk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MJJ46s059543
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 14:19:04 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Jun 2020 14:19:04 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 22 Jun 2020 14:19:03 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MJJ3UW116564;
-        Mon, 22 Jun 2020 14:19:03 -0500
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
-CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <sspatil@android.com>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v13 1/4] power_supply: Add additional health properties to the header
-Date:   Mon, 22 Jun 2020 14:18:34 -0500
-Message-ID: <20200622191837.9326-2-r-rivera-matos@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622191837.9326-1-r-rivera-matos@ti.com>
-References: <20200622191837.9326-1-r-rivera-matos@ti.com>
+        Mon, 22 Jun 2020 15:19:35 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73435C061797
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:19:34 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id i74so16666884oib.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:19:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jus7DNDunfIMFweSDWGPXAjkcv1IrAfG0u9GMpZ5ilM=;
+        b=sK9YTPQH86hVUZWWh2ZdcBb/PzqD9yI/NEShdhMoHRASS6z2MQFuV6zJtyVmEmyShb
+         coR9ZTY2FwG+evLcoI8Xy/beUUMV7wx4p7cx+UhqlCK35HpYDK1SyF92VVmLiRfAXp8B
+         2j9XssWJSfYZgGjNy1U2ueJoZrxdEaxhLypxJksE2wmHI06gQ0zbTpvj2lMCI2eI9cDj
+         4MzmooZ1MTZ4due3PgoKScdqrTgVxMjuPS2sNa5ZgyO5Hl1206ARWa9Thadj3mEXHe5G
+         9R6sGw7oWmxfrvh7aFq0SGY8TlufZwdrpYZVJrmXb7BFnxF9xRLL8c8bL17qYI0/hsts
+         WwSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jus7DNDunfIMFweSDWGPXAjkcv1IrAfG0u9GMpZ5ilM=;
+        b=G6P9/Dg7P1CFeSDzPE49vOjvknm9SWt+X2vp+CY7ulmQBWSJrlwJ5IHMSk+Auy/4tC
+         9kroPOOq8Brc1PiGvFxcxod4sa6LtUFIoK91zElayTPZPsq5qXKF4lKMk84Q020Bs5TX
+         AVBUb0JWIx7EwdxhgFg56HiOmdi6AqmgaJ7Zmdz63vqy/ChkzWqICylENO2l69r/Uysr
+         07aWeG24igclOqLyoRaiwfFGPCTgKfZWKeQWXyZAgixQgims3qiL0luS1udlGnsDhHYr
+         OB8bIRyO2Pf8twiBTt6IXgH2L5yom4E0MHrzHpRItnNMcHZIPkBFh6leW7zJDlyrpY/q
+         aAaQ==
+X-Gm-Message-State: AOAM531kabGFexGKQ+2ohGVaybNSb/sGfCSBOPbd8yCFhDeJnPqt9kRF
+        m9btwAiAxf8qyoo+BAFaPmsHFg==
+X-Google-Smtp-Source: ABdhPJyOBaULh6qkKqzgj2z7VWM3cokDJpP59eooGuNB9sW1HfLepA6lCCyygGhAzkFdIUOln482kw==
+X-Received: by 2002:a05:6808:487:: with SMTP id z7mr14223890oid.166.1592853572847;
+        Mon, 22 Jun 2020 12:19:32 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m84sm3348294oif.32.2020.06.22.12.19.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 12:19:32 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/5]  remoteproc: qcom: PIL info support
+Date:   Mon, 22 Jun 2020 12:19:37 -0700
+Message-Id: <20200622191942.255460-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
+Introduce support for filling out the relocation information in IMEM, to aid
+post mortem debug tools to locate the various remoteprocs.
 
-Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+Bjorn Andersson (5):
+  dt-bindings: remoteproc: Add Qualcomm PIL info binding
+  remoteproc: qcom: Introduce helper to store pil info in IMEM
+  remoteproc: qcom: Update PIL relocation info on load
+  arm64: dts: qcom: qcs404: Add IMEM and PIL info region
+  arm64: dts: qcom: sdm845: Add IMEM and PIL info region
 
-HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken
-from JEITA specification JISC8712:2015
+ .../bindings/remoteproc/qcom,pil-info.yaml    |  44 ++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  15 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  15 ++
+ drivers/remoteproc/Kconfig                    |   8 ++
+ drivers/remoteproc/Makefile                   |   1 +
+ drivers/remoteproc/qcom_pil_info.c            | 129 ++++++++++++++++++
+ drivers/remoteproc/qcom_pil_info.h            |   9 ++
+ drivers/remoteproc/qcom_q6v5_adsp.c           |  16 ++-
+ drivers/remoteproc/qcom_q6v5_mss.c            |   3 +
+ drivers/remoteproc/qcom_q6v5_pas.c            |  15 +-
+ drivers/remoteproc/qcom_q6v5_wcss.c           |  14 +-
+ drivers/remoteproc/qcom_wcnss.c               |  14 +-
+ 12 files changed, 271 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+ create mode 100644 drivers/remoteproc/qcom_pil_info.c
+ create mode 100644 drivers/remoteproc/qcom_pil_info.h
 
-Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/ABI/testing/sysfs-class-power | 3 ++-
- drivers/power/supply/power_supply_sysfs.c   | 3 +++
- include/linux/power_supply.h                | 3 +++
- 3 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 216d61a22f1e..40213c73bc9c 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -205,7 +205,8 @@ Description:
- 		Valid values: "Unknown", "Good", "Overheat", "Dead",
- 			      "Over voltage", "Unspecified failure", "Cold",
- 			      "Watchdog timer expire", "Safety timer expire",
--			      "Over current", "Calibration required"
-+			      "Over current", "Calibration required", "Warm",
-+			      "Cool", "Hot"
- 
- What:		/sys/class/power_supply/<supply_name>/precharge_current
- Date:		June 2017
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index bc79560229b5..4d6e1d5015d6 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -101,6 +101,9 @@ static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
- 	[POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE]   = "Safety timer expire",
- 	[POWER_SUPPLY_HEALTH_OVERCURRENT]	    = "Over current",
- 	[POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED]  = "Calibration required",
-+	[POWER_SUPPLY_HEALTH_WARM]		    = "Warm",
-+	[POWER_SUPPLY_HEALTH_COOL]		    = "Cool",
-+	[POWER_SUPPLY_HEALTH_HOT]		    = "Hot",
- };
- 
- static const char * const POWER_SUPPLY_TECHNOLOGY_TEXT[] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index ac1345a48ad0..b5ee35d3c304 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -62,6 +62,9 @@ enum {
- 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_OVERCURRENT,
- 	POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED,
-+	POWER_SUPPLY_HEALTH_WARM,
-+	POWER_SUPPLY_HEALTH_COOL,
-+	POWER_SUPPLY_HEALTH_HOT,
- };
- 
- enum {
 -- 
-2.27.0
+2.26.2
 
