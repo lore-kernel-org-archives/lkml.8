@@ -2,185 +2,185 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E01C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5F7B2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NNrUMfRc"
+	by mail.kernel.org (Postfix) with ESMTP id 688912073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgFVQg0 (ORCPT
+        id S1729821AbgFVQhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:36:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729564AbgFVQgZ (ORCPT
+        Mon, 22 Jun 2020 12:37:13 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:40740 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729522AbgFVQhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:36:25 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEDBC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:36:25 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l10so17356145wrr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=l7qnGp8eXWyKDR94OzmgxJ4xkgDrlETWZved9OLJ9b0=;
-        b=NNrUMfRcL/bjFmEj8CIkfaerDCm4gAZ1IT554W0OffUTMy/qhBgOB40YJPLijR/4Sy
-         fKKiLDQuiwYNhILJlr+S41qYNa/Vi4U9sGXqznJ0V8QrPgG2RE8XnULpnvhWf5Ayhogd
-         BSFbuPcbe2jxPx37C0Qn9EaAMJ+yyCr1J2O5UBf3fXopTm0OWpVsrTUgP8wU8EvEXL7i
-         0/v6ij7ZKc7JX/I6RKJJWC4NLdJi9fFtIWolNir/9lNUik3FhGwS4wHRb2q31a6y8r+l
-         usYd2YMK1f4QeDx0B4fIk5zuoDScXYsjnhBOrgNFG6bFeIBDyK3uVyRiIZzY7Yw8M01b
-         dgrA==
+        Mon, 22 Jun 2020 12:37:12 -0400
+Received: by mail-io1-f69.google.com with SMTP id f25so6001381ioh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:37:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l7qnGp8eXWyKDR94OzmgxJ4xkgDrlETWZved9OLJ9b0=;
-        b=aY1XH6KGgJy1pTr6rRjKdf/eIVLULaVmknc962aAe/8MLK742ZuL6SoK+Ci/vG+SuR
-         n70O6Dez/t5Kd8scYZz9TENCEZpi44mM4CEMuJmnuIAl9KFKIR2uhrwCYiHeXzPlK1Z4
-         XS/U91ZA0Tt1Xpq5D7D2NpXXLTr/XzBkjwvBDc2M+Uaveb5dlUrVf1JjkdVSHBaPRJkf
-         56mfFJrkKQTDZbqW+VRfGBDZM/foXHSfr4ryH5wcWBCR7yjfJLc6AeLPts+B0fy5ig0X
-         NH7KBJc7Z+wZS1Ro9AygFwYqzhn7PW3mHwC8Pn318B14rsNXFTilJjo6v4wUnDWVJmPG
-         eLAQ==
-X-Gm-Message-State: AOAM531csqgIRhnd9MzxNiyN7SO0sKnqBumZZums1Cn+zdnkNs6Vk5Gg
-        xPlr76qSapplJ7JoJBqQFZjeTQ==
-X-Google-Smtp-Source: ABdhPJxiPaB2rOcPGD2Hn5ZfNLYvxtnEYvt39GYXaCE/xoEbkf8epVMP/fFWmoGVYuwco4Dg+SrpMw==
-X-Received: by 2002:a5d:4682:: with SMTP id u2mr17458044wrq.407.1592843784283;
-        Mon, 22 Jun 2020 09:36:24 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id z12sm20524905wrg.9.2020.06.22.09.36.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 09:36:23 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 17:36:21 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-        gregkh@linuxfoundation.org, jason.wessel@windriver.com,
-        dianders@chromium.org, jslaby@suse.com, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] serial: kgdb_nmi: Add support for interrupt based
- fallback
-Message-ID: <20200622163621.s2322lmlv674bsds@holly.lan>
-References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
- <1592835984-28613-5-git-send-email-sumit.garg@linaro.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=OQVd837vUUZyqXrdrpMrwkGptseXear+Lwmn/fPWLqI=;
+        b=BdKHouhDArNZtt9SZLMsiFgLJ9s7GIXKqYdqkXj0xmRdNRwahU96Qvn4/RCAXvOISv
+         djJhLUXzv9VZH1LrhqgJHOQ0nfiwj3dPCeZct+R/gZBt5EMWDM/WFwoXDgEe1Twxtx6T
+         JOL3T0RR07B2hOrmCqplIn1TgMmrbZOeZq3vKjMgcY+C3Ti29mU46Kq6u8VoJVVngIEZ
+         seA7Hh2GjVubchbDyDiLlXkFiQWxQsI6X3U5cahynlIp4c5jG+mYSxSYizCd6dozKbYr
+         SPCp0WCHh8xwkGPxSvxbFzRA1ZOybzzSWfvBt1xpsLA8VgWmV7AGzASq4tsv1ZO3829X
+         R9fw==
+X-Gm-Message-State: AOAM533i2XyCXpmNl9lcY8MYPqRUh4cX87K2jwpuE5oaaVM1Q+eTK1dj
+        Sdq8odAUU7KQ4WaiFjjcJhI4EWLu1y6R3v9moDQkWH5o5qMW
+X-Google-Smtp-Source: ABdhPJxEmIkHYx2hokP1bZua0PeGWC0tmgsT0u4JgSZw2AqRkRYXgEBDQxl2p2O+m0XOVe5/yula3g/KrqtE+D5Qsae4AXOa2W6H
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592835984-28613-5-git-send-email-sumit.garg@linaro.org>
+X-Received: by 2002:a02:a70d:: with SMTP id k13mr19171288jam.100.1592843830829;
+ Mon, 22 Jun 2020 09:37:10 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 09:37:10 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b8269a05a8aeda77@google.com>
+Subject: KASAN: use-after-free Read in tipc_udp_nl_dump_remoteip (2)
+From:   syzbot <syzbot+3039ddf6d7b13daf3787@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 07:56:21PM +0530, Sumit Garg wrote:
-> From: Daniel Thompson <daniel.thompson@linaro.org>
-> 
-> Add a generic NMI fallback to support kgdb NMI console feature which can
-> be overridden by arch specific implementation.
+Hello,
 
-arch_kgdb_ops.enable_nmi should probably be killed off. Given we now
-have request_nmi() I'm dubious there are any good reasons to use this
-API.
+syzbot found the following crash on:
+
+HEAD commit:    67c20de3 net: Add MODULE_DESCRIPTION entries to network mo..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=13ff86a5100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=45c80de7244166e1
+dashboard link: https://syzkaller.appspot.com/bug?extid=3039ddf6d7b13daf3787
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1126c695100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122afe35100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3039ddf6d7b13daf3787@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
+BUG: KASAN: use-after-free in tipc_udp_nl_dump_remoteip+0xb92/0xba0 net/tipc/udp_media.c:467
+Read of size 2 at addr ffff8880a7da0c14 by task syz-executor132/7030
+
+CPU: 0 PID: 7030 Comm: syz-executor132 Not tainted 5.8.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
+ tipc_udp_nl_dump_remoteip+0xb92/0xba0 net/tipc/udp_media.c:467
+ genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
+ netlink_dump+0x50b/0xe70 net/netlink/af_netlink.c:2245
+ __netlink_dump_start+0x63f/0x910 net/netlink/af_netlink.c:2353
+ genl_family_rcv_msg_dumpit.isra.0+0x296/0x300 net/netlink/genetlink.c:638
+ genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
+ genl_rcv_msg+0x781/0x9c0 net/netlink/genetlink.c:753
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4452c9
+Code: Bad RIP value.
+RSP: 002b:00007ffd2abff858 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004452c9
+RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
+RBP: 000000000000f7f6 R08: 0000000000000000 R09: 00000000004002e0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402460
+R13: 00000000004024f0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 7032:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
+ __kmalloc_reserve.isra.0+0x39/0xe0 net/core/skbuff.c:142
+ __alloc_skb+0xef/0x5a0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
+ netlink_sendmsg+0x97b/0xe10 net/netlink/af_netlink.c:1893
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 7032:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ skb_free_head+0x8b/0xa0 net/core/skbuff.c:590
+ skb_release_data+0x617/0x8a0 net/core/skbuff.c:610
+ skb_release_all+0x46/0x60 net/core/skbuff.c:664
+ __kfree_skb net/core/skbuff.c:678 [inline]
+ consume_skb net/core/skbuff.c:837 [inline]
+ consume_skb+0xf3/0x3f0 net/core/skbuff.c:831
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x53f/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff8880a7da0c00
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 20 bytes inside of
+ 512-byte region [ffff8880a7da0c00, ffff8880a7da0e00)
+The buggy address belongs to the page:
+page:ffffea00029f6800 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea000261b188 ffffea0002884808 ffff8880aa000a80
+raw: 0000000000000000 ffff8880a7da0000 0000000100000004 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a7da0b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880a7da0b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8880a7da0c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff8880a7da0c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a7da0d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
-Daniel.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-> This common fallback mechanism utilizes kgdb IO based interrupt in order
-> to support entry into kgdb if a user types in kgdb_nmi_magic sequence. So
-> during NMI console init, NMI handler is installed corresponding to kgdb
-> IO based NMI which is invoked when a character is pending and that can be
-> cleared by calling @read_char until it returns NO_POLL_CHAR.
-> 
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  drivers/tty/serial/kgdb_nmi.c | 47 ++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 40 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/kgdb_nmi.c b/drivers/tty/serial/kgdb_nmi.c
-> index b32c6b1..2580f39 100644
-> --- a/drivers/tty/serial/kgdb_nmi.c
-> +++ b/drivers/tty/serial/kgdb_nmi.c
-> @@ -42,9 +42,46 @@ MODULE_PARM_DESC(magic, "magic sequence to enter NMI debugger (default $3#33)");
->  static atomic_t kgdb_nmi_num_readers = ATOMIC_INIT(0);
->  static struct console *orig_dbg_cons;
->  
-> +static int kgdb_nmi_poll_one_knock(void);
-> +
-> +static irqreturn_t kgdb_handle_nmi(int irq, void *dev_id)
-> +{
-> +	int ret;
-> +
-> +	if (kgdb_nmi_knock < 0) {
-> +		kgdb_breakpoint();
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	ret = kgdb_nmi_poll_one_knock();
-> +	if (ret == NO_POLL_CHAR)
-> +		return IRQ_NONE;
-> +
-> +	while (ret != 1) {
-> +		ret = kgdb_nmi_poll_one_knock();
-> +		if (ret == NO_POLL_CHAR)
-> +			return IRQ_HANDLED;
-> +	}
-> +
-> +	kgdb_breakpoint();
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static int kgdb_nmi_console_setup(struct console *co, char *options)
->  {
-> -	arch_kgdb_ops.enable_nmi(1);
-> +	int res;
-> +
-> +	if (arch_kgdb_ops.enable_nmi) {
-> +		arch_kgdb_ops.enable_nmi(1);
-> +	} else if (dbg_io_ops->request_nmi) {
-> +		res = dbg_io_ops->request_nmi(kgdb_handle_nmi, co);
-> +		if (res) {
-> +			pr_err("ttyNMI0: Cannot request nmi/irq\n");
-> +			return res;
-> +		}
-> +	} else {
-> +		return -ENODEV;
-> +	}
->  
->  	/* The NMI console uses the dbg_io_ops to issue console messages. To
->  	 * avoid duplicate messages during kdb sessions we must inform kdb's
-> @@ -328,9 +365,6 @@ int kgdb_register_nmi_console(void)
->  {
->  	int ret;
->  
-> -	if (!arch_kgdb_ops.enable_nmi)
-> -		return 0;
-> -
->  	kgdb_nmi_tty_driver = alloc_tty_driver(1);
->  	if (!kgdb_nmi_tty_driver) {
->  		pr_err("%s: cannot allocate tty\n", __func__);
-> @@ -380,9 +414,8 @@ int kgdb_unregister_nmi_console(void)
->  {
->  	int ret;
->  
-> -	if (!arch_kgdb_ops.enable_nmi)
-> -		return 0;
-> -	arch_kgdb_ops.enable_nmi(0);
-> +	if (arch_kgdb_ops.enable_nmi)
-> +		arch_kgdb_ops.enable_nmi(0);
->  
->  	ret = unregister_console(&kgdb_nmi_console);
->  	if (ret)
-> -- 
-> 2.7.4
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
