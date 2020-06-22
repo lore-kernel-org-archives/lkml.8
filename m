@@ -2,155 +2,134 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A315C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E06C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A41E2536D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03961208C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NnuIzdx0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JFIZ6jAv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731051AbgFVC2n (ORCPT
+        id S1731048AbgFVCa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 22:28:43 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:29868 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731021AbgFVC2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 22:28:43 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200622022840epoutp023faa3974554b7d571cf3f3d15be9117c~avLjkMwEb1873418734epoutp02n
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:28:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200622022840epoutp023faa3974554b7d571cf3f3d15be9117c~avLjkMwEb1873418734epoutp02n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592792920;
-        bh=j+KRWMeL94ow0fZi3QmpG8KRcj/J1YvaKWgzqFi+vCo=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=NnuIzdx0fIwbuHSXKIaEvDbrClT0LOud+TmJyA/QUlnMCM1qkJB0HkFg0+nRIx4ml
-         qZRTYAv7CxjzcklgIK3Fn2fIQC7nP7dD1mMU39QNiEzkhwhIEktjgxr57CSFKgRht3
-         lnSQB/Ah1xM3+X1wi8rft7Cmh9tYi/h5mXIb7W4U=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20200622022840epcas5p10a3c21e7709fe8d6ea90fcb62f48d7ef~avLjLH_5K0180201802epcas5p1U;
-        Mon, 22 Jun 2020 02:28:40 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CF.25.09475.75710FE5; Mon, 22 Jun 2020 11:28:40 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200622022838epcas5p3a8f55c596b3cd46eff780b6ee0eb5401~avLiI7e252477724777epcas5p31;
-        Mon, 22 Jun 2020 02:28:38 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200622022838epsmtrp2da2cd61dc0dbdd2aa40d91a0218c6f3d~avLiINBU91717117171epsmtrp2q;
-        Mon, 22 Jun 2020 02:28:38 +0000 (GMT)
-X-AuditID: b6c32a4b-389ff70000002503-15-5ef01757445b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        58.43.08303.65710FE5; Mon, 22 Jun 2020 11:28:38 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200622022835epsmtip1654e0d7c668f83c7483fdd7fe7074415~avLfAmfOH2921629216epsmtip1h;
-        Mon, 22 Jun 2020 02:28:35 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Tamseel Shams'" <m.shams@samsung.com>, <kgene@kernel.org>,
-        <krzk@kernel.org>, <gregkh@linuxfoundation.org>, <jslaby@suse.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200617105907.7143-1-m.shams@samsung.com>
-Subject: RE: [PATCH] serial: samsung: fix spelling mistake
-Date:   Mon, 22 Jun 2020 07:58:32 +0530
-Message-ID: <00c701d6483c$d6587f90$83097eb0$@samsung.com>
-MIME-Version: 1.0
+        Sun, 21 Jun 2020 22:30:58 -0400
+Received: from mail-eopbgr80079.outbound.protection.outlook.com ([40.107.8.79]:54145
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726673AbgFVCa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 22:30:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aQcQcz400JEaexoGPij60ae34UwvcdUeyeP/j+DZfGwMhErWz2/F6KRvEYqbsyUxpO8rdwbMCzbXeNxqW/S/ftzWAAoQ0mTSfy5b8HsAUF4nOwVJKkqWM3EbxI3SqRLaJmq7Z0g/xm0Uf/w76bjxaldKQ52kNOEYNthQJ0zNLwaewdu4ASUq9EqL6H0z6tnsS5usf0VczwIOly9mSvNsjRQ6fNasjM2m21h3CG9tDr2mEYdy+ihUEfbpl8Te5IuM4/B0xRpDSeLVKL67QBNarPlgW4PqYFSH8tqROw2BjUnF0AUVirr+lqtg8StJbSaOZ7Eqflf3pHmPZTOPwWII4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=73jt1F3KV88NMeCNyBvm/hoCJDumCGLgq5gvnGZw4EI=;
+ b=a6ofFqGFuniLtPxWYW4Lb5nC1QwtHPC5IB/MVF4Szjvl2iW/N/JG+ijs5kD+3+kCqiwVi88rCxY+zaXDkLjMfl8ZzSlrCp7TM50UWIOkWWTpilKP9JEmQ5v1fl8gc/znmubvz5aj/j2zM+LCCYdgoDV5exwuMHw27PjNGt9knk8cGnkE/lDlFaaiiveXfdj39HvVWQJuTnZmVx8sHL01CGVBU2pHpFzUvDIEJW/ihvkVycFW/jMBa+o8CxJxeJwFA82fkUX5N93NVNwGCFnb+BxLrAp1lL6sULD6GTjHuoVrLucQsxXn3bPNyR2vmU/uI4eTfMrKzHujwfJHNTSJ+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=73jt1F3KV88NMeCNyBvm/hoCJDumCGLgq5gvnGZw4EI=;
+ b=JFIZ6jAvx3jJQcqIlCR6vA9XkDGzxVjKkS3Sqd3PbmuFbKrDeZ2XYWQLXJmRHTqEVCNdXtCrAi1ZFJKPsIek1rKRJJ6r0K9yLXdOFc5Y4a97mExQZm0xpGuzFHbyLDTgezimcuM5OZIuXeNgmHCv8acxzuAQfMSL7wH9bMi2ml4=
+Received: from AM0PR04MB4772.eurprd04.prod.outlook.com (2603:10a6:208:c2::17)
+ by AM0PR04MB6804.eurprd04.prod.outlook.com (2603:10a6:208:189::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Mon, 22 Jun
+ 2020 02:30:54 +0000
+Received: from AM0PR04MB4772.eurprd04.prod.outlook.com
+ ([fe80::e906:2df6:5f0f:8c01]) by AM0PR04MB4772.eurprd04.prod.outlook.com
+ ([fe80::e906:2df6:5f0f:8c01%2]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 02:30:54 +0000
+From:   Jiafei Pan <jiafei.pan@nxp.com>
+To:     Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Vladimir Oltean <olteanv@gmail.com>
+CC:     "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        Colin King <colin.king@canonical.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>
+Subject: RE: [EXT] Re: stress-ng --hrtimers hangs system
+Thread-Topic: [EXT] Re: stress-ng --hrtimers hangs system
+Thread-Index: AQHWOzjXl4hxTFW9UUeYcrHfuUnL/6jKAZSAgAaAYICAAN+6AIACzZKQgA0ORICAAsYkQA==
+Date:   Mon, 22 Jun 2020 02:30:53 +0000
+Message-ID: <AM0PR04MB4772E9C0733F81FACF24C58D8A970@AM0PR04MB4772.eurprd04.prod.outlook.com>
+References: <4781d250-9a29-cef3-268d-7d83c98bf16a@gmail.com>
+ <87y2ovzcmd.fsf@kurt>
+ <AM0PR04MB47726B40110E1B02471EEEDF8A810@AM0PR04MB4772.eurprd04.prod.outlook.com>
+ <11546107.O9o76ZdvQC@kmk0>
+In-Reply-To: <11546107.O9o76ZdvQC@kmk0>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 50126e90-4720-458b-98b3-08d816544994
+x-ms-traffictypediagnostic: AM0PR04MB6804:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6804A5E2DC3BBB4B23F2720C8A970@AM0PR04MB6804.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0442E569BC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rKf0L/P2VlmrzcfVo8hzWfgMdXPAAYy2GBMtm9Mzo/NXkS1kFlOaohpJpGIeX9fTJPfI5lxG7RB2zTAgwqWPsslGQIx0U25bd4GnVNoQNrqATlYpWcsXlcrTIylmMuXq+X03QakUm+6VA+PBaRnxIRvEdrGo+IhWeZZa81kKSc3oyPZRTAkNui86zK/GOaVoyyoNsxrT79f2IFYFSF74OhQnVVKzalspqYy9Q/GuQTN428DHd7rvbeno0ZOUL7cPFHCxHzXOcETaRhwq60KB2pZ+aXZgFKQfbs6wKjDvkplEHmhPOXFNZ/Hs+oTw6oVI
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4772.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(39860400002)(376002)(366004)(66946007)(54906003)(86362001)(110136005)(4326008)(7696005)(316002)(66446008)(64756008)(478600001)(2906002)(71200400001)(66556008)(52536014)(33656002)(53546011)(6506007)(44832011)(8676002)(8936002)(4744005)(5660300002)(66476007)(76116006)(26005)(186003)(9686003)(55016002)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: JhG85oJBsEU3jYnpeuSorIngFeSUaVDb55l9FQ3G+IEP3FSxc2vtqMQIbzFn7xReB8nW78fWBHyIhQ+/TZCyl6FSVoW1Kb2FwWJhefwH7CrXzB2uZIpiVhIM+uIbkkfIOQaDAVHHVF4NTgnwJ571HbN5JUpht+UgLizizaSwTfcEAfhj8sQ7wJUXrk2UAYw8iQ7RxHjHBZwPUoAQt2v6ILl2K/5IE29La+NFM93SmIsXSYv/HNE3j2+QR5vqPk5+Z3zlJpG2nG1Wj+XF4TUk0r5peB0GZS+OIsyuE5khGCptTAs01HkELWJJSFCnmgYmMuFJcyXNer0aiXoHMjza08h1V5cVJJiTNnoZgVDuFj24HIwLg7OSy41JeMZYMeZcl+azveIgNLp2SI5qCeelQAilYbPyxw9vScoHqWrq62GPFUPO/IIr3mznM79YLH1EfR9a/H0jAfyf7hVkJl1mKLWsso4Z4lWIo0aGq8WahN4=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHKng1dpmBVsT1kIn4KbhhNPgyntAIoJRNTqOn8EuA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7bCmum6E+Ic4gw8bmC2aF69ns5iy4QOT
-        Rf/j18wW589vYLfY9Pgaq8XlXXPYLGac38dkcWZxL7vF3dbF7A6cHptWdbJ57J+7ht1j85J6
-        j74tqxg91m+5yuLxeZNcAFsUl01Kak5mWWqRvl0CV8aqVWuZC9ZwVez7dJqlgfE6RxcjJ4eE
-        gInEjGML2bsYuTiEBHYzSqy/3coG4XxilOi+e4kVwvnMKHH96xxGmJZHZ/ZDVe1ilLj5pgGq
-        /w2jxOEt19lAqtgEdCV2LG4DqxIRaGWUOPvgAZjDLDCZUeLjwwOsIFWcAhYSZ8/3sYDYwgJW
-        EkeOXWUCsVkEVCV+7GxgBrF5BSwlJvxoYIOwBSVOznwCVs8soC2xbOFrZoibFCR+Pl0GNlME
-        aM7EjjOsEDXiEkd/9jCDLJYQWMohsXXJGjaIBheJSW8XskDYwhKvjm9hh7ClJD6/2wtUwwFk
-        Z0v07DKGCNdILJ13DKrcXuLAlTksICXMApoS63fpQ6zik+j9/YQJopNXoqNNCKJaVaL53VWo
-        TmmJid3drBC2h8S/28uYJzAqzkLy2Cwkj81C8sAshGULGFlWMUqmFhTnpqcWmxYY56WW6xUn
-        5haX5qXrJefnbmIEpykt7x2Mjx580DvEyMTBeIhRgoNZSYT3dcC7OCHelMTKqtSi/Pii0pzU
-        4kOM0hwsSuK8Sj/OxAkJpCeWpGanphakFsFkmTg4pRqYpB57XZY78kZaQHl9F3fW5uOS3+Mi
-        1f6YbdVqVvBLcOS3zriwcGt5cHnxibIWRYEFK9KU7XepLG78fHFNIevjlGyHk1MclW1iKlyz
-        684um///1VqT4ACP97sMjrz9yeOj1aTL+TZ3lsCG580id587ukhWbzwuEa6keu4eh8Jj29wD
-        956m5MQumHZOo+vM/0y2Cx4lsV+fGJsdzb93ztdhJ8NpFgZePR6B3nrppF9NX8xSmdsWr70m
-        nigavV1R9AfTk+dvD7+4fexE14UCtW9G824cWCV77qG4+5xN1YH1d9IDm+Y+LV89mcX756OY
-        Ldpbd8jUd+bpLI/fmNJpYnR2oYjA2U4dKzYfo2Vf/29UYinOSDTUYi4qTgQAjpPKJ8IDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWy7bCSnG6Y+Ic4gxkvLSyaF69ns5iy4QOT
-        Rf/j18wW589vYLfY9Pgaq8XlXXPYLGac38dkcWZxL7vF3dbF7A6cHptWdbJ57J+7ht1j85J6
-        j74tqxg91m+5yuLxeZNcAFsUl01Kak5mWWqRvl0CV8a+7dNYC1q4Kloe2jUwrufoYuTkkBAw
-        kXh0Zj8biC0ksINRYvZsY4i4tMT1jRPYIWxhiZX/ngPZXEA1rxgl1mx4zAySYBPQldixuI0N
-        JCEi0M0o0X/pB5jDLDCVUeLYhAZmiJZORonP786zgrRwClhInD3fxwJiCwtYSRw5dpUJxGYR
-        UJX4sbMBbCyvgKXEhB8NbBC2oMTJmU/A6pkFtCWe3nwKZy9b+JoZ4j4FiZ9Pl4HNFwGaObHj
-        DCtEjbjE0Z89zBMYhWchGTULyahZSEbNQtKygJFlFaNkakFxbnpusWGBUV5quV5xYm5xaV66
-        XnJ+7iZGcLRpae1g3LPqg94hRiYOxkOMEhzMSiK8rwPexQnxpiRWVqUW5ccXleakFh9ilOZg
-        URLn/TprYZyQQHpiSWp2ampBahFMlomDU6qBKeX0JnX2pxsLpi6YvHua6J2NkWpZjZufHjHa
-        5C6/g5fDuWZ5RZr+uUmC+3+3ZNxfMPlOxIyDj76d+Z/Hv7d22h8Ds6a3DMb189/6tPy6ab/P
-        UoVZ0GW+1SzFJ3ozL71i2qLyW95Edv3m6YlSBy9eYv3llFjfWeMU8qJb7v68JK2Ny1ZYu9U4
-        N8w65RKSt3tTkaUs1+EbYRcE3j1jOuKuk8La+/+DXnN6dEJPeMP87eFnX85m3Lb71H+NxNtd
-        Ux+l9QvfdtGL4+W6uc7u9UOxSWbuAZXartwJZz4w6jVxyB/R/sTy/XzVikofG5PdPGpblaTV
-        og5bMkQIFKlxVF+rjtnbZlpvGPTzLfPNs3cblViKMxINtZiLihMBu4+y6yUDAAA=
-X-CMS-MailID: 20200622022838epcas5p3a8f55c596b3cd46eff780b6ee0eb5401
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200617111707epcas5p3fcb86caeac4a852d44f37ae40759c8a1
-References: <CGME20200617111707epcas5p3fcb86caeac4a852d44f37ae40759c8a1@epcas5p3.samsung.com>
-        <20200617105907.7143-1-m.shams@samsung.com>
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50126e90-4720-458b-98b3-08d816544994
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 02:30:53.9914
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gFr5mHAN6AvojbpaIgLl+h154USEmKZ1S6N0krfoB6BcIXWmLastZlmYwhD7aahYHN014o86Uc+CBGyygen9wA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6804
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tamseel,
+Thanks Kurt for your confirmation.
 
-> -----Original Message-----
-> From: Tamseel Shams <m.shams=40samsung.com>
-> Sent: 17 June 2020 16:29
-> To: kgene=40kernel.org; krzk=40kernel.org; gregkh=40linuxfoundation.org;
-> jslaby=40suse.com
-> Cc: linux-arm-kernel=40lists.infradead.org; linux-samsung-soc=40vger.kern=
-el.org;
-> linux-serial=40vger.kernel.org; linux-kernel=40vger.kernel.org;
-> alim.akhtar=40samsung.com; Tamseel Shams <m.shams=40samsung.com>
-> Subject: =5BPATCH=5D serial: samsung: fix spelling mistake
->=20
-> There is a spelling mistake in a comment. Fix it.
->=20
-> Signed-off-by: Tamseel Shams <m.shams=40samsung.com>
-> ---
-Reviewed-by: Alim Akhtar <alim.akhtar=40samsung.com>
+Best Regards,
+Jiafei.
 
->  drivers/tty/serial/samsung_tty.c =7C 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsun=
-g_tty.c
-> index 6ef614d8648c..050a47fecdef 100644
-> --- a/drivers/tty/serial/samsung_tty.c
-> +++ b/drivers/tty/serial/samsung_tty.c
-> =40=40 -6,7 +6,7 =40=40
->   *	http://armlinux.simtec.co.uk/
->   */
->=20
-> -/* Hote on 2410 error handling
-> +/* Note on 2410 error handling
->   *
->   * The s3c2410 manual has a love/hate affair with the contents of the
->   * UERSTAT register in the UART blocks, and keeps marking some of the
-> --
-> 2.17.1
+-----Original Message-----
+From: Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>=20
+Sent: Saturday, June 20, 2020 4:08 PM
+To: Vladimir Oltean <olteanv@gmail.com>; Jiafei Pan <jiafei.pan@nxp.com>
+Cc: linux-rt-users@vger.kernel.org; lkml <linux-kernel@vger.kernel.org>; rc=
+u@vger.kernel.org; Colin King <colin.king@canonical.com>; Jiafei Pan <jiafe=
+i.pan@nxp.com>
+Subject: Re: [EXT] Re: stress-ng --hrtimers hangs system
+
+Caution: EXT Email
+
+Hi Jiafei,
+
+On Friday, June 12, 2020 2:49:17 AM CEST Jiafei Pan wrote:
+> Hi, Kurt,
+>
+> May I know whether you used "root" user to run stress-ng? using "root"
+> user will change the scheduler to be "SCHED_RR", so would you please=20
+> share test result with root and non-root users? Thanks.
+
+Performed the test now as root and non-root user. Same result: No problem.
+
+Thanks,
+Kurt
+
 
 
