@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09994C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6FE82076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D738C20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbgFVUVB (ORCPT
+        id S1730527AbgFVUVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:21:01 -0400
+        Mon, 22 Jun 2020 16:21:10 -0400
 Received: from mga07.intel.com ([134.134.136.100]:62017 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbgFVUUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:20:38 -0400
-IronPort-SDR: jAAIWjmKGLn8U41LUUN7vDcbZTOdIzNKp5rxxzHiuyBcJbJmGyT/lcFEOloD714MrZSXG9hhEI
- umQR7+48gHNw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209057482"
+        id S1728443AbgFVUUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:20:37 -0400
+IronPort-SDR: l++Z9FGEOun75Bma4YL2fqDjTbkidsGgIqjwxyGG+gFMkhv8npLztpRvT8+JcTqQ99C4Vw7Uf3
+ fut/k88NdSjg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209057476"
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="209057482"
+   d="scan'208";a="209057476"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:20:37 -0700
-IronPort-SDR: WJTSeeBv8SkuO1JJWrdwFHVGCL0wNFlb6EBPUSrlb7v8/+Eny0F4WBU0SZs0/T2i76/1aldOAB
- twFu4wbCCDCQ==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:20:36 -0700
+IronPort-SDR: qjf8BmVwwTKKh/NfBlovYCte1uRmUHIAlDQbELvRqqYzpAqCUiCRvslgcuqZ7mrybfQy+OIqW5
+ 7GhoD3xuUE8Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="478506333"
+   d="scan'208";a="478506318"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Jun 2020 13:20:37 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 22 Jun 2020 13:20:36 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -44,9 +44,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] KVM: x86/mmu: Make kvm_mmu_page definition and accessor internal-only
-Date:   Mon, 22 Jun 2020 13:20:32 -0700
-Message-Id: <20200622202034.15093-5-sean.j.christopherson@intel.com>
+Subject: [PATCH 1/6] KVM: x86/mmu: Move mmu_audit.c and mmutrace.h into the mmu/ sub-directory
+Date:   Mon, 22 Jun 2020 13:20:29 -0700
+Message-Id: <20200622202034.15093-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200622202034.15093-1-sean.j.christopherson@intel.com>
 References: <20200622202034.15093-1-sean.j.christopherson@intel.com>
@@ -57,145 +57,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make 'struct kvm_mmu_page' MMU-only, nothing outside of the MMU should
-be poking into the gory details of shadow pages.
+Move mmu_audit.c and mmutrace.h under mmu/ where they belong.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 46 ++-----------------------------
- arch/x86/kvm/mmu/mmu_internal.h | 48 +++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+), 44 deletions(-)
+ arch/x86/kvm/{ => mmu}/mmu_audit.c | 0
+ arch/x86/kvm/{ => mmu}/mmutrace.h  | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename arch/x86/kvm/{ => mmu}/mmu_audit.c (100%)
+ rename arch/x86/kvm/{ => mmu}/mmutrace.h (99%)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f8998e97457f..86933c467a1e 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -322,43 +322,6 @@ struct kvm_rmap_head {
- 	unsigned long val;
- };
+diff --git a/arch/x86/kvm/mmu_audit.c b/arch/x86/kvm/mmu/mmu_audit.c
+similarity index 100%
+rename from arch/x86/kvm/mmu_audit.c
+rename to arch/x86/kvm/mmu/mmu_audit.c
+diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmu/mmutrace.h
+similarity index 99%
+rename from arch/x86/kvm/mmutrace.h
+rename to arch/x86/kvm/mmu/mmutrace.h
+index ffcd96fc02d0..9d15bc0c535b 100644
+--- a/arch/x86/kvm/mmutrace.h
++++ b/arch/x86/kvm/mmu/mmutrace.h
+@@ -387,7 +387,7 @@ TRACE_EVENT(
+ #endif /* _TRACE_KVMMMU_H */
  
--struct kvm_mmu_page {
--	struct list_head link;
--	struct hlist_node hash_link;
--	struct list_head lpage_disallowed_link;
--
--	bool unsync;
--	u8 mmu_valid_gen;
--	bool mmio_cached;
--	bool lpage_disallowed; /* Can't be replaced by an equiv large page */
--
--	/*
--	 * The following two entries are used to key the shadow page in the
--	 * hash table.
--	 */
--	union kvm_mmu_page_role role;
--	gfn_t gfn;
--
--	u64 *spt;
--	/* hold the gfn of each spte inside spt */
--	gfn_t *gfns;
--	int root_count;          /* Currently serving as active root */
--	unsigned int unsync_children;
--	struct kvm_rmap_head parent_ptes; /* rmap pointers to parent sptes */
--	DECLARE_BITMAP(unsync_child_bitmap, 512);
--
--#ifdef CONFIG_X86_32
--	/*
--	 * Used out of the mmu-lock to avoid reading spte values while an
--	 * update is in progress; see the comments in __get_spte_lockless().
--	 */
--	int clear_spte_count;
--#endif
--
--	/* Number of writes since the last time traversal visited this page.  */
--	atomic_t write_flooding_count;
--};
--
- struct kvm_pio_request {
- 	unsigned long linear_rip;
- 	unsigned long count;
-@@ -384,6 +347,8 @@ struct kvm_mmu_root_info {
+ #undef TRACE_INCLUDE_PATH
+-#define TRACE_INCLUDE_PATH .
++#define TRACE_INCLUDE_PATH mmu
+ #undef TRACE_INCLUDE_FILE
+ #define TRACE_INCLUDE_FILE mmutrace
  
- #define KVM_MMU_NUM_PREV_ROOTS 3
- 
-+struct kvm_mmu_page;
-+
- /*
-  * x86 supports 4 paging modes (5-level 64-bit, 4-level 64-bit, 3-level 32-bit,
-  * and 2-level 32-bit).  The kvm_mmu structure abstracts the details of the
-@@ -1557,13 +1522,6 @@ static inline gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
- 	return gpa;
- }
- 
--static inline struct kvm_mmu_page *page_header(hpa_t shadow_page)
--{
--	struct page *page = pfn_to_page(shadow_page >> PAGE_SHIFT);
--
--	return (struct kvm_mmu_page *)page_private(page);
--}
--
- static inline u16 kvm_read_ldt(void)
- {
- 	u16 ldt;
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index d7938c37c7de..8afa60f0a1a5 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -2,6 +2,54 @@
- #ifndef __KVM_X86_MMU_INTERNAL_H
- #define __KVM_X86_MMU_INTERNAL_H
- 
-+#include <linux/types.h>
-+
-+#include <asm/kvm_host.h>
-+
-+struct kvm_mmu_page {
-+	struct list_head link;
-+	struct hlist_node hash_link;
-+	struct list_head lpage_disallowed_link;
-+
-+	bool unsync;
-+	u8 mmu_valid_gen;
-+	bool mmio_cached;
-+	bool lpage_disallowed; /* Can't be replaced by an equiv large page */
-+
-+	/*
-+	 * The following two entries are used to key the shadow page in the
-+	 * hash table.
-+	 */
-+	union kvm_mmu_page_role role;
-+	gfn_t gfn;
-+
-+	u64 *spt;
-+	/* hold the gfn of each spte inside spt */
-+	gfn_t *gfns;
-+	int root_count;          /* Currently serving as active root */
-+	unsigned int unsync_children;
-+	struct kvm_rmap_head parent_ptes; /* rmap pointers to parent sptes */
-+	DECLARE_BITMAP(unsync_child_bitmap, 512);
-+
-+#ifdef CONFIG_X86_32
-+	/*
-+	 * Used out of the mmu-lock to avoid reading spte values while an
-+	 * update is in progress; see the comments in __get_spte_lockless().
-+	 */
-+	int clear_spte_count;
-+#endif
-+
-+	/* Number of writes since the last time traversal visited this page.  */
-+	atomic_t write_flooding_count;
-+};
-+
-+static inline struct kvm_mmu_page *page_header(hpa_t shadow_page)
-+{
-+	struct page *page = pfn_to_page(shadow_page >> PAGE_SHIFT);
-+
-+	return (struct kvm_mmu_page *)page_private(page);
-+}
-+
- void kvm_mmu_gfn_disallow_lpage(struct kvm_memory_slot *slot, gfn_t gfn);
- void kvm_mmu_gfn_allow_lpage(struct kvm_memory_slot *slot, gfn_t gfn);
- bool kvm_mmu_slot_gfn_write_protect(struct kvm *kvm,
 -- 
 2.26.0
 
