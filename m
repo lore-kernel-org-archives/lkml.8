@@ -4,230 +4,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B158C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E135E2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A571D20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbgFVJVy (ORCPT
+        id S1727021AbgFVJW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:21:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:60988 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgFVJVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:21:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C4E21FB;
-        Mon, 22 Jun 2020 02:21:52 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.15.132])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A11063F6CF;
-        Mon, 22 Jun 2020 02:21:50 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 10:21:47 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] arm64/panic: Unify all three existing notifier blocks
-Message-ID: <20200622092147.GC88608@C02TD0UTHF1T.local>
-References: <1592802265-23783-1-git-send-email-anshuman.khandual@arm.com>
+        Mon, 22 Jun 2020 05:22:26 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:59222 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726608AbgFVJWZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:22:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0U0KYLA._1592817741;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0KYLA._1592817741)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 22 Jun 2020 17:22:22 +0800
+Date:   Mon, 22 Jun 2020 17:22:21 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Huang Ying <ying.huang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
+ don't read garbage memmaps
+Message-ID: <20200622092221.GA96699@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200619125923.22602-1-david@redhat.com>
+ <20200619125923.22602-2-david@redhat.com>
+ <20200622082635.GA93552@L-31X9LVDL-1304.local>
+ <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592802265-23783-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anshuman,
+On Mon, Jun 22, 2020 at 10:43:11AM +0200, David Hildenbrand wrote:
+>On 22.06.20 10:26, Wei Yang wrote:
+>> On Fri, Jun 19, 2020 at 02:59:20PM +0200, David Hildenbrand wrote:
+>>> Especially with memory hotplug, we can have offline sections (with a
+>>> garbage memmap) and overlapping zones. We have to make sure to only
+>>> touch initialized memmaps (online sections managed by the buddy) and that
+>>> the zone matches, to not move pages between zones.
+>>>
+>>> To test if this can actually happen, I added a simple
+>>> 	BUG_ON(page_zone(page_i) != page_zone(page_j));
+>>> right before the swap. When hotplugging a 256M DIMM to a 4G x86-64 VM and
+>>> onlining the first memory block "online_movable" and the second memory
+>>> block "online_kernel", it will trigger the BUG, as both zones (NORMAL
+>>> and MOVABLE) overlap.
+>>>
+>>> This might result in all kinds of weird situations (e.g., double
+>>> allocations, list corruptions, unmovable allocations ending up in the
+>>> movable zone).
+>>>
+>>> Fixes: e900a918b098 ("mm: shuffle initial free memory to improve memory-side-cache utilization")
+>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>> Cc: stable@vger.kernel.org # v5.2+
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>>> Cc: Michal Hocko <mhocko@suse.com>
+>>> Cc: Minchan Kim <minchan@kernel.org>
+>>> Cc: Huang Ying <ying.huang@intel.com>
+>>> Cc: Wei Yang <richard.weiyang@gmail.com>
+>>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>> mm/shuffle.c | 18 +++++++++---------
+>>> 1 file changed, 9 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/mm/shuffle.c b/mm/shuffle.c
+>>> index 44406d9977c77..dd13ab851b3ee 100644
+>>> --- a/mm/shuffle.c
+>>> +++ b/mm/shuffle.c
+>>> @@ -58,25 +58,25 @@ module_param_call(shuffle, shuffle_store, shuffle_show, &shuffle_param, 0400);
+>>>  * For two pages to be swapped in the shuffle, they must be free (on a
+>>>  * 'free_area' lru), have the same order, and have the same migratetype.
+>>>  */
+>>> -static struct page * __meminit shuffle_valid_page(unsigned long pfn, int order)
+>>> +static struct page * __meminit shuffle_valid_page(struct zone *zone,
+>>> +						  unsigned long pfn, int order)
+>>> {
+>>> -	struct page *page;
+>>> +	struct page *page = pfn_to_online_page(pfn);
+>> 
+>> Hi, David and Dan,
+>> 
+>> One thing I want to confirm here is we won't have partially online section,
+>> right? We can add a sub-section to system, but we won't manage it by buddy.
+>
+>Hi,
+>
+>there is still a BUG with sub-section hot-add (devmem), which broke
+>pfn_to_online_page() in corner cases (especially, see the description in
+>include/linux/mmzone.h). We can have a boot-memory section partially
+>populated and marked online. Then, we can hot-add devmem, marking the
+>remaining pfns valid - and as the section is maked online, also as online.
 
-On Mon, Jun 22, 2020 at 10:34:25AM +0530, Anshuman Khandual wrote:
-> Currently there are three different registered panic notifier blocks. This
-> unifies all of them into a single one i.e arm64_panic_block, hence reducing
-> code duplication and required calling sequence during panic. This preserves
-> the existing dump sequence. While here, just use device_initcall() instead
-> of __initcall().
+Oh, yes, I see this description.
 
-I think it's worth pointing out that __initcall() is a legacy alias for
-device_initcall(), so that's pure cleanup with no functional
-implications. Per <linux/initcall.h>:
+This means we could have section marked as online, but with a sub-section even
+not added.
 
-| #define __initcall(fn) device_initcall(fn)
+While the good news is even the sub-section is not added, but its memmap is
+populated for an early section. So the page returned from pfn_to_online_page()
+is a valid one.
 
-The patch looks sound, and I'm not too worried either way, so:
+But what would happen, if the sub-section is removed after added? Would
+section_deactivate() release related memmap to this "struct page"?
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+>
+>This is, however, a different problem to solve and affects most other
+>pfn walkers as well. The "if (page_zone(page) != zone)" checks guards us
+>from most harm, as the devmem zone won't match.
+>
 
-I'll leave this to Catalin and Will.
+Yes, a different problem, just jump into my mind. Hope this won't affect this
+patch.
 
-Mark.
+>Thanks!
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
 
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Steve Capper <steve.capper@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> Applies on 5.8-rc2.
-> 
-> Changes in V2:
-> 
-> - Replaced __initcall() directly with device_initcall()
-> - Added static for dump_kernel_offset()
-> 
-> Changes in V1: (https://patchwork.kernel.org/patch/11606291/)
-> 
->  arch/arm64/include/asm/cpufeature.h |  1 +
->  arch/arm64/include/asm/memory.h     |  1 +
->  arch/arm64/kernel/cpufeature.c      | 15 +--------------
->  arch/arm64/kernel/setup.c           | 24 ++++++++++++++----------
->  arch/arm64/mm/init.c                | 18 +-----------------
->  5 files changed, 18 insertions(+), 41 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-> index 5d1f4ae42799..e375529ca9fc 100644
-> --- a/arch/arm64/include/asm/cpufeature.h
-> +++ b/arch/arm64/include/asm/cpufeature.h
-> @@ -774,6 +774,7 @@ static inline unsigned int get_vmid_bits(u64 mmfr1)
->  }
->  
->  u32 get_kvm_ipa_limit(void);
-> +void dump_cpu_features(void);
->  
->  #endif /* __ASSEMBLY__ */
->  
-> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-> index a1871bb32bb1..2a88cb734d06 100644
-> --- a/arch/arm64/include/asm/memory.h
-> +++ b/arch/arm64/include/asm/memory.h
-> @@ -322,6 +322,7 @@ static inline void *phys_to_virt(phys_addr_t x)
->  	__is_lm_address(__addr) && pfn_valid(virt_to_pfn(__addr));	\
->  })
->  
-> +void dump_mem_limit(void);
->  #endif /* !ASSEMBLY */
->  
->  /*
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 4ae41670c2e6..5ec61175c634 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -119,24 +119,11 @@ static inline void finalize_system_capabilities(void)
->  	static_branch_enable(&arm64_const_caps_ready);
->  }
->  
-> -static int dump_cpu_hwcaps(struct notifier_block *self, unsigned long v, void *p)
-> +void dump_cpu_features(void)
->  {
->  	/* file-wide pr_fmt adds "CPU features: " prefix */
->  	pr_emerg("0x%*pb\n", ARM64_NCAPS, &cpu_hwcaps);
-> -	return 0;
-> -}
-> -
-> -static struct notifier_block cpu_hwcaps_notifier = {
-> -	.notifier_call = dump_cpu_hwcaps
-> -};
-> -
-> -static int __init register_cpu_hwcaps_dumper(void)
-> -{
-> -	atomic_notifier_chain_register(&panic_notifier_list,
-> -				       &cpu_hwcaps_notifier);
-> -	return 0;
->  }
-> -__initcall(register_cpu_hwcaps_dumper);
->  
->  DEFINE_STATIC_KEY_ARRAY_FALSE(cpu_hwcap_keys, ARM64_NCAPS);
->  EXPORT_SYMBOL(cpu_hwcap_keys);
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 93b3844cf442..c793276ec7ad 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -400,11 +400,7 @@ static int __init topology_init(void)
->  }
->  subsys_initcall(topology_init);
->  
-> -/*
-> - * Dump out kernel offset information on panic.
-> - */
-> -static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
-> -			      void *p)
-> +static void dump_kernel_offset(void)
->  {
->  	const unsigned long offset = kaslr_offset();
->  
-> @@ -415,17 +411,25 @@ static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
->  	} else {
->  		pr_emerg("Kernel Offset: disabled\n");
->  	}
-> +}
-> +
-> +static int arm64_panic_block_dump(struct notifier_block *self,
-> +				  unsigned long v, void *p)
-> +{
-> +	dump_kernel_offset();
-> +	dump_cpu_features();
-> +	dump_mem_limit();
->  	return 0;
->  }
->  
-> -static struct notifier_block kernel_offset_notifier = {
-> -	.notifier_call = dump_kernel_offset
-> +static struct notifier_block arm64_panic_block = {
-> +	.notifier_call = arm64_panic_block_dump
->  };
->  
-> -static int __init register_kernel_offset_dumper(void)
-> +static int __init register_arm64_panic_block(void)
->  {
->  	atomic_notifier_chain_register(&panic_notifier_list,
-> -				       &kernel_offset_notifier);
-> +				       &arm64_panic_block);
->  	return 0;
->  }
-> -__initcall(register_kernel_offset_dumper);
-> +device_initcall(register_arm64_panic_block);
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 1e93cfc7c47a..6c3eb424c613 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -563,27 +563,11 @@ void free_initmem(void)
->  	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
->  }
->  
-> -/*
-> - * Dump out memory limit information on panic.
-> - */
-> -static int dump_mem_limit(struct notifier_block *self, unsigned long v, void *p)
-> +void dump_mem_limit(void)
->  {
->  	if (memory_limit != PHYS_ADDR_MAX) {
->  		pr_emerg("Memory Limit: %llu MB\n", memory_limit >> 20);
->  	} else {
->  		pr_emerg("Memory Limit: none\n");
->  	}
-> -	return 0;
-> -}
-> -
-> -static struct notifier_block mem_limit_notifier = {
-> -	.notifier_call = dump_mem_limit,
-> -};
-> -
-> -static int __init register_mem_limit_dumper(void)
-> -{
-> -	atomic_notifier_chain_register(&panic_notifier_list,
-> -				       &mem_limit_notifier);
-> -	return 0;
->  }
-> -__initcall(register_mem_limit_dumper);
-> -- 
-> 2.20.1
-> 
+-- 
+Wei Yang
+Help you, Help me
