@@ -2,93 +2,176 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FF1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E93220656
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8D520656
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OhjlVEmB"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="N3ALkBp9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgFVSHY (ORCPT
+        id S1730252AbgFVSIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:07:24 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26432 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730046AbgFVSHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:07:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592849242; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=DpNd2zXh5ar+PR5dcDtX1KuMP2pD3jdm3Qo6Wkx+K3M=; b=OhjlVEmBvMHdrUu7xMyA7S936CX10oD6wfQonJpfZgHOjCC6N6VDjDhIZ5veP99BqT2cj1+v
- Vb61PII97Gyn5tNt89ZJ6RY2Fyhf+HSgxeTNf5+HkuT91vMfKcYUQml9Dg+XHao/wk+lx/0h
- hpXdRcBlqS8YkDdz2klw5X+0oYo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5ef0f34dfe1db4db897ebb78 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 18:07:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 31B07C43395; Mon, 22 Jun 2020 18:07:09 +0000 (UTC)
-Received: from localhost (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2FC5C433C8;
-        Mon, 22 Jun 2020 18:07:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2FC5C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: [PATCH] rcu/tree: Remove CONFIG_PREMPT_RCU check in force_qs_rnp
-Date:   Mon, 22 Jun 2020 23:37:03 +0530
-Message-Id: <1592849223-17774-1-git-send-email-neeraju@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 22 Jun 2020 14:08:12 -0400
+Received: from mail.efficios.com ([167.114.26.124]:35224 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729860AbgFVSIL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 14:08:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 3D7922B6F2D;
+        Mon, 22 Jun 2020 14:08:10 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ZXtbc0lA3bhQ; Mon, 22 Jun 2020 14:08:10 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id EC6AF2B6ED8;
+        Mon, 22 Jun 2020 14:08:09 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EC6AF2B6ED8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1592849289;
+        bh=yRiGtquXYPCKnEyIARANnhxrsJ53NZMKmbMlMj8D3uI=;
+        h=From:To:Date:Message-Id;
+        b=N3ALkBp9RQZIFWtwiMynZtPjd5HMR4YvsfQd5dMx7+3BByTANsJvoOnfcy4t4k6mn
+         4FX2u5Jb+xUmHHKn+SLffg+HzkmktZbIvbJWTy70pTjKnu8qPc/R8IBG8zkDYAYAaa
+         FiRvuXeP7ZtXLHJQXUcwNLbkzfOqZkFyxlo17UCFIWOhjXhRLjvHxNXB7W5XljCk9+
+         ny0jcbAXT8ft0Yf/5ijh5ajg2l7wybGLFtVTIVifBw48K87tXc72DjrYRkWbaT/ZWm
+         6snoEqzILBd9C8gcQhwiSAT60Q0V/YyJLaFWU9dtOO+W9S7Ae6F+0+CkbdEt+MQ1zg
+         Kn6NjoxJWL3yQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 7WF-2it4VbFd; Mon, 22 Jun 2020 14:08:09 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 9B8562B6F27;
+        Mon, 22 Jun 2020 14:08:09 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Carlos O'Donell <carlos@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Turner <pjt@google.com>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: [PATCH 2/3] Linux: Use rseq in sched_getcpu if available (v9)
+Date:   Mon, 22 Jun 2020 14:08:02 -0400
+Message-Id: <20200622180803.1449-3-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200622180803.1449-1-mathieu.desnoyers@efficios.com>
+References: <20200622180803.1449-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove CONFIG_PREMPT_RCU check in force_qs_rnp(). Originally,
-this check was required to skip executing fqs failsafe
-for rcu-sched, which was added in commit a77da14ce9af ("rcu:
-Yet another fix for preemption and CPU hotplug"). However,
-this failsafe has been removed, since then. So, cleanup the
-code to avoid any confusion around the need for boosting,
-for !CONFIG_PREMPT_RCU.
+When available, use the cpu_id field from __rseq_abi on Linux to
+implement sched_getcpu().  Fall-back on the vgetcpu vDSO if unavailable.
 
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+Benchmarks:
+
+x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
+
+glibc sched_getcpu():                     13.7 ns (baseline)
+glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
+
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Joseph Myers <joseph@codesourcery.com>
+CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Paul Turner <pjt@google.com>
+CC: libc-alpha@sourceware.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
 ---
- kernel/rcu/tree.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Changes since v1:
+- rseq is only used if both __NR_rseq and RSEQ_SIG are defined.
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 6226bfb..57c904b 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2514,8 +2514,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
- 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 		rcu_state.cbovldnext |= !!rnp->cbovldmask;
- 		if (rnp->qsmask == 0) {
--			if (!IS_ENABLED(CONFIG_PREEMPT_RCU) ||
--			    rcu_preempt_blocked_readers_cgp(rnp)) {
-+			if (rcu_preempt_blocked_readers_cgp(rnp)) {
- 				/*
- 				 * No point in scanning bits because they
- 				 * are all zero.  But we might need to
+Changes since v2:
+- remove duplicated __rseq_abi extern declaration.
+
+Changes since v3:
+- update ChangeLog.
+
+Changes since v4:
+- Use atomic_load_relaxed to load the __rseq_abi.cpu_id field, a
+  consequence of the fact that __rseq_abi is not volatile anymore.
+- Include atomic.h which provides atomic_load_relaxed.
+
+Changes since v5:
+- Use __ASSUME_RSEQ to detect rseq availability.
+
+Changes since v6:
+- Remove use of __ASSUME_RSEQ.
+
+Changes since v7:
+- Fix incorrect merge with commit d0def09ff6 ("linux: Fix vDSO macros
+  build with time64 interfaces")
+
+Changes since v8:
+- Update patch title.
+- Add /* RSEQ_SIG */ for #else and #endif.
+---
+ sysdeps/unix/sysv/linux/sched_getcpu.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+index c019cfb3cf..c0f992e056 100644
+--- a/sysdeps/unix/sysv/linux/sched_getcpu.c
++++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+@@ -18,10 +18,12 @@
+ #include <errno.h>
+ #include <sched.h>
+ #include <sysdep.h>
++#include <atomic.h>
+ #include <sysdep-vdso.h>
++#include <sys/rseq.h>
+ 
+-int
+-sched_getcpu (void)
++static int
++vsyscall_sched_getcpu (void)
+ {
+   unsigned int cpu;
+   int r = -1;
+@@ -32,3 +34,19 @@ sched_getcpu (void)
+ #endif
+   return r == -1 ? r : cpu;
+ }
++
++#ifdef RSEQ_SIG
++int
++sched_getcpu (void)
++{
++  int cpu_id = atomic_load_relaxed (&__rseq_abi.cpu_id);
++
++  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
++}
++#else /* RSEQ_SIG */
++int
++sched_getcpu (void)
++{
++  return vsyscall_sched_getcpu ();
++}
++#endif /* RSEQ_SIG */
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
 
