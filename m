@@ -2,241 +2,807 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80386C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF0220707
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491E520707
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:52:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="y/k/kI/B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fbwA4J9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgFVRvm (ORCPT
+        id S1730233AbgFVRwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:51:42 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:33626 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730038AbgFVRvl (ORCPT
+        Mon, 22 Jun 2020 13:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730038AbgFVRwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:51:41 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MHZH8r029291;
-        Mon, 22 Jun 2020 19:51:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=+PZsq8pFjVtQXiwxiX30dj4ToQd67jSm/ujam/GPUnM=;
- b=y/k/kI/BEZfSRPgEhSyAorUbrMGEkO40uaKtDL8O28sh8GMZGDJ3spw0kOITNq3TjC05
- Pf9ajyufwqEAi9TkLiHhBTrcIxr8lcQz2sW2GfSUvlcIldl+a5ROUcLW7VfK2/f+UlPt
- 9WN1s9AvXJBjuJIUDJOfmb8p1ZFNQ61tOGhLyJzxz8/d5G9vi3MRjaYBTCENajpuZHUh
- WA4LmlyW/zXB1rlnGXZLau9/Q5MF6kW/C8ew7CcULefBV65QXNqkQh4FDxdM3TE0T7vV
- sM3o6KFA2y8UrF/Y4crFHoHMqDqg27eEwrdbVtLqz8yxjY7oFbygxGstdX/mIIppLxv0 7g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31s9bhts7w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 19:51:30 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4BD7410002A;
-        Mon, 22 Jun 2020 19:51:28 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 10DFD2C90A2;
-        Mon, 22 Jun 2020 19:51:28 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
- 2020 19:51:26 +0200
-Subject: Re: [PATCH v7 3/5] remoteproc: Add support for runtime PM
-To:     Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "od@zcrc.me" <od@zcrc.me>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <20200515104340.10473-1-paul@crapouillou.net>
- <20200515104340.10473-3-paul@crapouillou.net>
- <035bf8ad-3ef0-8314-ae5c-a94a24c230c8@ti.com>
- <P2TQAQ.3VDG3B8W2EPF3@crapouillou.net>
- <daa239fe-afd4-ff2e-3d5c-db09434cac95@ti.com>
- <9XPMBQ.UM94FDID8MZW@crapouillou.net>
- <107dc1d3-05c6-61be-b82c-197f0c43cdba@ti.com>
- <VUEPBQ.GMXO6YRLF7N22@crapouillou.net> <20200611043951.GA3251@builder.lan>
- <b877e6cf-b519-0926-01d2-ff5a41f0ef15@ti.com>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <1e526a91-9322-c1dd-79aa-b47ffcf11694@st.com>
-Date:   Mon, 22 Jun 2020 19:51:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 13:52:07 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28BDBC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:52:07 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id a3so16420424oid.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gyStxgnpSqifZ8c3HBqYc5J8pnKIVYH35U8lmYMJ7jk=;
+        b=fbwA4J9wfXF95PPt3w9A096GauYkF0/XlfGCDFkeJunPtkQaapGJvjjDvEoJwF/qG/
+         PMEmMNX+K/R7aRhuz4KC8t0fwc5L/AAM3apR+lxU2tzU1dQtL93VfY8d/hT2FnHhQH7C
+         lWziA4ll00ds/HrTULDG+AP+ZDs5DNRaXGKE2buPBdEJdLvM8ZhhlZ/ApJXRyaLvOb4S
+         S9UiCsKqx9Q6J2LA5AdZXnjut1PRdJwF5EaMfplpYEv+8hULFphTKn7fFBV0M2aBq7D0
+         dz3Nk4S9uZjPTP3oF9KYzYI7fqYPExL9jcWa6nmcARuouud2/KYRQNkFIJGT5RXJ8nVk
+         x+GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gyStxgnpSqifZ8c3HBqYc5J8pnKIVYH35U8lmYMJ7jk=;
+        b=CkCnQxnbbrSgzcoKkKn6UDdJjNKf4J4Ta5qnYI4umrBszYEsP3VUWPfvPMYSGN4C/n
+         VBK4JBxtKRIE8rgkHLH0wUAz8R6GZzFYoM1wME25jk+MblB86f84eaJ0uVnwFu9maVMn
+         oEejSCWtyWTh8P7NxfZe/rZmvmf8IFoFLjmYCOa8DNL6WDRqyizn46A5lqPC/FHz7OfB
+         QIPVOPe1KE61Hm5IJiPTIRU+TJfQca3I1+Uaeey37cFMXtHvnuHd8Ln9vCmhQzgtK7ne
+         jP1EH8LOOZouMM5oNtWyDapjKOg13gutdlb/cVzJ9lFHNk3H8ZglENOm1AW5eQf3Je8r
+         kDXw==
+X-Gm-Message-State: AOAM530I7OlZJYisiZezQAVjl+qg9xY4YhI46vqyWrMhTIO7X8aqkrtu
+        0vCtur0Va1V5PPxIhEm581RQjA==
+X-Google-Smtp-Source: ABdhPJyfltPBhu3eaC9kM9p80xwYU9I1q64okMJong+bG17ksEZrRUM85sMszQ24jhcf+oIHRkmTew==
+X-Received: by 2002:a05:6808:6c9:: with SMTP id m9mr13638525oih.137.1592848326285;
+        Mon, 22 Jun 2020 10:52:06 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 1sm3421302otr.30.2020.06.22.10.52.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 10:52:05 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 10:49:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 6/8] arm64: dts: qcom: sdm630: Add sdm630 dts file
+Message-ID: <20200622174920.GS128451@builder.lan>
+References: <20200622075749.21925-1-konradybcio@gmail.com>
+ <20200622075749.21925-7-konradybcio@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b877e6cf-b519-0926-01d2-ff5a41f0ef15@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_10:2020-06-22,2020-06-22 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622075749.21925-7-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, 
+On Mon 22 Jun 00:57 PDT 2020, Konrad Dybcio wrote:
 
-On 6/11/20 11:17 PM, Suman Anna wrote:
-> On 6/10/20 11:39 PM, Bjorn Andersson wrote:
->> On Wed 10 Jun 02:40 PDT 2020, Paul Cercueil wrote:
->>
->>> Hi,
->>>
->>> Le lun. 8 juin 2020 à 18:10, Suman Anna <s-anna@ti.com> a écrit :
->>>> Hi Paul,
->>>>
->>>> On 6/8/20 5:46 PM, Paul Cercueil wrote:
->>>>> Hi Suman,
->>>>>
->>>>>>>> On 5/15/20 5:43 AM, Paul Cercueil wrote:
->>>>>>>>> Call pm_runtime_get_sync() before the firmware is loaded, and
->>>>>>>>> pm_runtime_put() after the remote processor has been stopped.
->>>>>>>>>
->>>>>>>>> Even though the remoteproc device has no PM
->>>>>>>>> callbacks, this allows the
->>>>>>>>> parent device's PM callbacks to be properly called.
->>>>>>>>
->>>>>>>> I see this patch staged now for 5.8, and the latest
->>>>>>>> -next branch has broken the pm-runtime autosuspend
->>>>>>>> feature we have in the OMAP remoteproc driver. See
->>>>>>>> commit 5f31b232c674 ("remoteproc/omap: Add support
->>>>>>>> for runtime auto-suspend/resume").
->>>>>>>>
->>>>>>>> What was the original purpose of this patch, because
->>>>>>>> there can be differing backends across different
->>>>>>>> SoCs.
->>>>>>>
->>>>>>> Did you try pm_suspend_ignore_children()? It looks like it
->>>>>>> was made for your use-case.
->>>>>>
->>>>>> Sorry for the delay in getting back. So, using
->>>>>> pm_suspend_ignore_children() does fix my current issue.
->>>>>>
->>>>>> But I still fail to see the original purpose of this patch in
->>>>>> the remoteproc core especially given that the core itself does
->>>>>> not have any callbacks. If the sole intention was to call the
->>>>>> parent pdev's callbacks, then I feel that state-machine is
->>>>>> better managed within that particular platform driver itself,
->>>>>> as the sequencing/device management can vary with different
->>>>>> platform drivers.
->>>>>
->>>>> The problem is that with Ingenic SoCs some clocks must be enabled in
->>>>> order to load the firmware, and the core doesn't give you an option
->>>>> to register a callback to be called before loading it.
->>>>
->>>> Yep, I have similar usage in one of my remoteproc drivers (see
->>>> keystone_remoteproc.c), and I think this all stems from the need to
->>>> use/support loading into a processor's internal memories. My driver does
->>>> leverage the pm-clks backend plugged into pm_runtime, so you won't see
->>>> explicit calls on the clocks.
->>>>
->>>> I guess the question is what exact PM features you are looking for with
->>>> the Ingenic SoC. I do see you are using pm_runtime autosuspend, and your
->>>> callbacks are managing the clocks, but reset is managed only in
->>>> start/stop.
->>>>
->>>>> The first version of my patchset added .prepare/.unprepare
->>>>> callbacks to the struct rproc_ops, but the feedback from the
->>>>> maintainers was that I should do it via runtime PM. However, it was
->>>>> not possible to keep it contained in the driver, since again the
->>>>> core doesn't provide a "prepare" callback, so no place to call
->>>>> pm_runtime_get_sync().
->>>> FWIW, the .prepare/.unprepare callbacks is actually now part of the
->>>> rproc core. Looks like multiple developers had a need for this, and this
->>>> functionality went in at the same time as your driver :). Not sure if
->>>> you looked up the prior patches, I leveraged the patch that Loic had
->>>> submitted a long-time ago, and a revised version of it is now part of
->>>> 5.8-rc1.
->>>
->>> WTF maintainers, you refuse my patchset for adding a .prepare/.unprepare,
->>> ask me to do it via runtime PM, then merge another patchset that adds these
->>> callback. At least be constant in your decisions.
->>>
->>
->> Sorry, I missed this when applying the two patches, but you're of course
->> right.
->>
->>> Anyway, now we have two methods added to linux-next for doing the exact same
->>> thing. What should we do about it?
->>>
->>
->> I like the pm_runtime approach and as it was Arnaud that asked you to
->> change it, perhaps he and Loic can agree on updating the ST driver so we
->> can drop the prepare/unprepare ops again?
+> Add devicetree files for SDM630 SoC and its pin configuration.
+> This commit adds basic nodes like cpu, psci and other required
+> configuration for booting up from eMMC to the serial console.
 > 
-> These callbacks were added primarily in preparation for the TI K3 rproc 
-> drivers, not just ST (the patch was resurrected from a very old patch 
-> from Loic).
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm630-pins.dtsi | 268 ++++++
+>  arch/arm64/boot/dts/qcom/sdm630.dtsi      | 991 ++++++++++++++++++++++
+>  2 files changed, 1259 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-pins.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm630.dtsi
 > 
-> I still think prepare/unprepare is actually better suited to scale well 
-> for the long term. This pm_runtime logic will now make the early-boot 
-> scenarios complicated, as you would have to match its status, but all 
-> actual operations are on the actual parent remoteproc platform device 
-> and not the child remoteproc device. I think it serves to mess up the 
-> state-machines of different platform drivers due to additional refcounts 
-> acquired and maybe performing some operations out of sequence to what a 
-> platform driver wants esp. if there is automated backend usage like 
-> genpd, pm_clks etc. I am yet to review Mathieu's latest MCU sync series, 
-> but the concept of different sync_ops already scales w.r.t the 
-> prepare/unprepare.
+> diff --git a/arch/arm64/boot/dts/qcom/sdm630-pins.dtsi b/arch/arm64/boot/dts/qcom/sdm630-pins.dtsi
+> new file mode 100644
+> index 000000000000..55d80458f447
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm630-pins.dtsi
 
+Please just add these to the tlmm node directly in sdm630.dtsi. We used
+to do it like this but are moving away from it.
 
-> 
-> As for my K3 drivers, the callbacks are doing more than just turning on 
-> clocks, as the R5Fs in general as a complex power-on sequence. I do not 
-> have remoteproc auto-suspend atm on the K3 drivers, but that typically 
-> means shutting down and restoring the core and would involve all the 
-> hardware-specific sequences, so the rpm callback implementations will be 
-> more than just clocks.
-> 
-> I looked through the patch history on the Ingenic remoteproc driver, and 
-> the only reason for either of runtime pm usage or prepare/unprepare ops 
-> usage is to ensure that clocks do not stay enabled in the case the 
-> processor is not loaded/started. The driver is using auto-boot, so when 
-> it probes, in general we expect the remoteproc to be running. So, the 
-> only failure case is if there is no firmware. Otherwise, Paul could have 
-> just used clk_bulk API in probe and remove.
-> 
-> Anyway, I will provide some additional review comments on the pm_runtime 
-> usage within the Ingenic rproc driver.
+> @@ -0,0 +1,268 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2020, Konrad Dybcio
+> + */
+> +
+> + &tlmm {
+> +	blsp1_uart1_default: blsp1_uart1_default {
 
-Sorry for the late answer...
+Please don't use '_' in the node name, i.e. this needs to be:
+	blsp1_uart1_default: blsp1-uart1-default {
 
-Prepare/unprepare was proposed by Loïc for the memory management series.
-We abandoned it and migrated the memory registrations in parse_fw ops.
-So we don't use it anymore in ST.
+> +		config {
 
-I suggested the pm-runtime before TI patchset, as it was matching
-with Ingenic driver need. 
-Now with the additional need introduced by Suman, seems that it is not sufficient
-for the K3-r5, due to the memory initialization.
+You can flatten this by skipping the "config" node and just put the
+properties directly in the blsp1_uart1_default node.
 
-Anyway do we have to choice between the 2 implementations?
-Look to me that the pm_runtime could be used to manage the power for the
-remoteproc device (and perhaps associated power domain).
-While the .prepare is more for additional resources
-which ,need to be initialized before loading the firmware (such as some specific
-system resources).
+[..]
+> diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+> new file mode 100644
+> index 000000000000..4bf84c44068c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+> @@ -0,0 +1,991 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2020, Konrad Dybcio
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/qcom,gcc-sdm660.h>
+> +#include <dt-bindings/clock/qcom,rpmcc.h>
+> +#include <dt-bindings/gpio/gpio.h>
+
+Please sort these alphabetically.
+
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. SDM630";
+> +	compatible = "qcom,sdm630";
+
+These are expected to be overridden by the .dts anyways, so you
+can/should omit them from here.
+
+> +
+> +	interrupt-parent = <&intc>;
+> +
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	chosen { };
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		/* We expect the bootloader to fill in the reg */
+> +		reg = <0 0 0 0>;
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		wlan_msa_guard: wlan_msa_guard@85600000 {
+
+As above, no '_' in node names.
+
+> +			reg = <0x0 0x85600000 0x0 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		wlan_msa_mem: wlan_msa_mem@85700000 {
+> +			reg = <0x0 0x85700000 0x0 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		qhee_code: qhee_code@85800000 {
+> +			reg = <0x0 0x85800000 0x0 0x3700000>;
+> +			no-map;
+> +		};
+> +
+> +		smem_region: smem-mem@86000000 {
+> +			reg = <0 0x86000000 0 0x200000>;
+> +			no-map;
+> +		};
+> +
+> +		tz_mem: memory@86200000 {
+> +			reg = <0x0 0x86200000 0x0 0x3300000>;
+> +			no-map;
+> +		};
+> +
+> +		modem_fw_mem: modem_fw_region@8ac00000 {
+> +			reg = <0x0 0x8ac00000 0x0 0x7e00000>;
+> +			no-map;
+> +		};
+> +
+> +		adsp_fw_mem: adsp_fw_region@92a00000 {
+> +			reg = <0x0 0x92a00000 0x0 0x1e00000>;
+> +			no-map;
+> +		};
+> +
+> +		pil_mba_mem: pil_mba_region@94800000 {
+> +			reg = <0x0 0x94800000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +
+> +		buffer_mem: buffer_region@94a00000 {
+> +			reg = <0x0 0x94a00000 0x0 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		venus_fw_mem: venus_fw_region@9f800000 {
+> +			reg = <0x0 0x9f800000 0x0 0x800000>;
+> +			no-map;
+> +		};
+> +
+> +		secure_region2: secure_region2@f7c00000 {
+> +			reg = <0x0 0xf7c00000 0x0 0x5c00000>;
+> +			no-map;
+> +		};
+> +
+> +		adsp_mem: adsp_region@f6000000 {
+> +			reg = <0x0 0xf6000000 0x0 0x800000>;
+> +			no-map;
+> +		};
+> +
+> +		qseecom_ta_mem: qseecom_ta_region@fec00000 {
+> +			reg = <0x0 0xfec00000 0x0 0x1000000>;
+> +			no-map;
+> +		};
+> +
+> +		qseecom_mem: qseecom_region@f6800000 {
+> +			reg = <0x0 0xf6800000 0x0 0x1400000>;
+> +			no-map;
+> +		};
+> +
+> +		secure_display_memory: secure_region@f5c00000 {
+> +			reg = <0x0 0xf5c00000 0x0 0x5c00000>;
+> +			no-map;
+> +		};
+> +
+> +		cont_splash_mem: cont_splash_region@9d400000 {
+> +			reg = <0x0 0x9d400000 0x0 0x23ff000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	clocks {
+> +		xo_board: xo_board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <19200000>;
+> +			clock-output-names = "xo_board";
+> +		};
+> +
+> +		sleep_clk: sleep_clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <32764>;
+> +			clock-output-names = "sleep_clk";
+> +		};
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&PERF_CPU_SLEEP_0
+> +						&PERF_CPU_SLEEP_1
+> +						&PERF_CLUSTER_SLEEP_0
+> +						&PERF_CLUSTER_SLEEP_1
+> +						&PERF_CLUSTER_SLEEP_2>;
+> +			capacity-dmips-mhz = <1126>;
+> +			#cooling-cells = <2>;
+> +			next-level-cache = <&L2_1>;
+> +			L2_1: l2-cache {
+> +				compatible = "cache";
+> +				cache-level = <2>;
+> +			};
+> +		};
+> +
+> +		CPU1: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x101>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&PERF_CPU_SLEEP_0
+> +						&PERF_CPU_SLEEP_1
+> +						&PERF_CLUSTER_SLEEP_0
+> +						&PERF_CLUSTER_SLEEP_1
+> +						&PERF_CLUSTER_SLEEP_2>;
+> +			capacity-dmips-mhz = <1126>;
+> +			#cooling-cells = <2>;
+> +			next-level-cache = <&L2_1>;
+> +		};
+> +
+> +		CPU2: cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x102>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&PERF_CPU_SLEEP_0
+> +						&PERF_CPU_SLEEP_1
+> +						&PERF_CLUSTER_SLEEP_0
+> +						&PERF_CLUSTER_SLEEP_1
+> +						&PERF_CLUSTER_SLEEP_2>;
+> +			capacity-dmips-mhz = <1126>;
+> +			#cooling-cells = <2>;
+> +			next-level-cache = <&L2_1>;
+> +		};
+> +
+> +		CPU3: cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x103>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&PERF_CPU_SLEEP_0
+> +						&PERF_CPU_SLEEP_1
+> +						&PERF_CLUSTER_SLEEP_0
+> +						&PERF_CLUSTER_SLEEP_1
+> +						&PERF_CLUSTER_SLEEP_2>;
+> +			capacity-dmips-mhz = <1126>;
+> +			#cooling-cells = <2>;
+> +			next-level-cache = <&L2_1>;
+> +		};
+> +
+> +		CPU4: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&PWR_CPU_SLEEP_0
+> +						&PWR_CPU_SLEEP_1
+> +						&PWR_CLUSTER_SLEEP_0
+> +						&PWR_CLUSTER_SLEEP_1
+> +						&PWR_CLUSTER_SLEEP_2>;
+> +			capacity-dmips-mhz = <1024>;
+> +			#cooling-cells = <2>;
+> +			next-level-cache = <&L2_0>;
+> +			L2_0: l2-cache {
+> +				compatible = "cache";
+> +				cache-level = <2>;
+> +			};
+> +		};
+> +
+> +		CPU5: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&PWR_CPU_SLEEP_0
+> +						&PWR_CPU_SLEEP_1
+> +						&PWR_CLUSTER_SLEEP_0
+> +						&PWR_CLUSTER_SLEEP_1
+> +						&PWR_CLUSTER_SLEEP_2>;
+> +			capacity-dmips-mhz = <1024>;
+> +			#cooling-cells = <2>;
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		CPU6: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x2>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&PWR_CPU_SLEEP_0
+> +						&PWR_CPU_SLEEP_1
+> +						&PWR_CLUSTER_SLEEP_0
+> +						&PWR_CLUSTER_SLEEP_1
+> +						&PWR_CLUSTER_SLEEP_2>;
+> +			capacity-dmips-mhz = <1024>;
+> +			#cooling-cells = <2>;
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		CPU7: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x3>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&PWR_CPU_SLEEP_0
+> +						&PWR_CPU_SLEEP_1
+> +						&PWR_CLUSTER_SLEEP_0
+> +						&PWR_CLUSTER_SLEEP_1
+> +						&PWR_CLUSTER_SLEEP_2>;
+> +			capacity-dmips-mhz = <1024>;
+> +			#cooling-cells = <2>;
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&CPU4>;
+> +				};
+> +
+> +				core1 {
+> +					cpu = <&CPU5>;
+> +				};
+> +
+> +				core2 {
+> +					cpu = <&CPU6>;
+> +				};
+> +
+> +				core3 {
+> +					cpu = <&CPU7>;
+> +				};
+> +			};
+> +
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&CPU0>;
+> +				};
+> +
+> +				core1 {
+> +					cpu = <&CPU1>;
+> +				};
+> +
+> +				core2 {
+> +					cpu = <&CPU2>;
+> +				};
+> +
+> +				core3 {
+> +					cpu = <&CPU3>;
+> +				};
+> +			};
+> +		};
+> +
+> +		idle-states {
+> +			entry-method = "psci";
+> +
+> +			PWR_CPU_SLEEP_0: cpu-sleep-0-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "pwr-retention";
+> +				arm,psci-suspend-param = <0x40000002>;
+> +				entry-latency-us = <338>;
+> +				exit-latency-us = <423>;
+> +				min-residency-us = <200>;
+> +			};
+> +
+> +			PWR_CPU_SLEEP_1: cpu-sleep-0-1 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "pwr-power-collapse";
+> +				arm,psci-suspend-param = <0x40000003>;
+> +				entry-latency-us = <515>;
+> +				exit-latency-us = <1821>;
+> +				min-residency-us = <1000>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			PERF_CPU_SLEEP_0: cpu-sleep-1-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "perf-retention";
+> +				arm,psci-suspend-param = <0x40000002>;
+> +				entry-latency-us = <154>;
+> +				exit-latency-us = <87>;
+> +				min-residency-us = <200>;
+> +			};
+> +
+> +			PERF_CPU_SLEEP_1: cpu-sleep-1-1 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "perf-power-collapse";
+> +				arm,psci-suspend-param = <0x40000003>;
+> +				entry-latency-us = <262>;
+> +				exit-latency-us = <301>;
+> +				min-residency-us = <1000>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			PWR_CLUSTER_SLEEP_0: cluster-sleep-0-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "pwr-cluster-dynamic-retention";
+> +				arm,psci-suspend-param = <0x400000F2>;
+> +				entry-latency-us = <284>;
+> +				exit-latency-us = <384>;
+> +				min-residency-us = <9987>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			PWR_CLUSTER_SLEEP_1: cluster-sleep-0-1 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "pwr-cluster-retention";
+> +				arm,psci-suspend-param = <0x400000F3>;
+> +				entry-latency-us = <338>;
+> +				exit-latency-us = <423>;
+> +				min-residency-us = <9987>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			PWR_CLUSTER_SLEEP_2: cluster-sleep-0-2 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "pwr-cluster-retention";
+> +				arm,psci-suspend-param = <0x400000F4>;
+> +				entry-latency-us = <515>;
+> +				exit-latency-us = <1821>;
+> +				min-residency-us = <9987>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			PERF_CLUSTER_SLEEP_0: cluster-sleep-1-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "perf-cluster-dynamic-retention";
+> +				arm,psci-suspend-param = <0x400000F2>;
+> +				entry-latency-us = <272>;
+> +				exit-latency-us = <329>;
+> +				min-residency-us = <9987>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			PERF_CLUSTER_SLEEP_1: cluster-sleep-1-1 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "perf-cluster-retention";
+> +				arm,psci-suspend-param = <0x400000F3>;
+> +				entry-latency-us = <332>;
+> +				exit-latency-us = <368>;
+> +				min-residency-us = <9987>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			PERF_CLUSTER_SLEEP_2: cluster-sleep-1-2 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "perf-cluster-retention";
+> +				arm,psci-suspend-param = <0x400000F4>;
+> +				entry-latency-us = <545>;
+> +				exit-latency-us = <1609>;
+> +				min-residency-us = <9987>;
+> +				local-timer-stop;
+> +			};
+> +		};
+> +	};
+> +
+> +	firmware {
+> +		scm {
+> +			compatible = "qcom,scm-msm8998", "qcom,scm";
+> +		};
+> +	};
+> +
+> +	tcsr_mutex: hwlock {
+> +		compatible = "qcom,tcsr-mutex";
+> +		syscon = <&tcsr_mutex_block 0 0x1000>;
+> +		#hwlock-cells = <1>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	rpm-glink {
+> +		compatible = "qcom,glink-rpm";
+> +
+> +		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+> +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+> +		mboxes = <&apcs_glb 0>;
+> +
+> +		rpm_requests: rpm-requests {
+> +			compatible = "qcom,rpm-sdm660";
+> +			qcom,glink-channels = "rpm_requests";
+> +
+> +			rpmcc: clock-controller {
+> +				compatible = "qcom,rpmcc-sdm660", "qcom,rpmcc";
+> +				#clock-cells = <1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	smem: smem {
+> +		compatible = "qcom,smem";
+> +		memory-region = <&smem_region>;
+> +		hwlocks = <&tcsr_mutex 3>;
+> +	};
+> +
+> +	tcsr_mutex_block: syscon@1f40000 {
+> +		compatible = "syscon";
+> +		reg = <0 0x1f40000 0 0x20000>;
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupts = <GIC_PPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 1 0xf08>,
+> +				 <GIC_PPI 2 0xf08>,
+> +				 <GIC_PPI 3 0xf08>,
+> +				 <GIC_PPI 0 0xf08>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		compatible = "simple-bus";
+> +
+> +		gcc: clock-controller@100000 {
+> +			compatible = "qcom,gcc-sdm630";
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			#power-domain-cells = <1>;
+> +			reg = <0x100000 0x94000>;
+
+Please pad the address to 8 digits to make it faster to check the sort
+order of these.
+
+And then please sort your nodes based on address (and then name for
+nodes without reg).
+
+> +
+> +			clock-names = "xo", "sleep_clk";
+> +			clocks = <&xo_board>,
+> +					<&sleep_clk>;
+> +		};
+> +
+> +		rng: rng@793000 {
+> +			compatible = "qcom,prng-ee";
+> +			reg = <0x793000 0x1000>;
+> +			clocks = <&gcc GCC_PRNG_AHB_CLK>;
+> +			clock-names = "core";
+> +		};
+> +
+> +		intc: interrupt-controller@17a00000 {
+> +			compatible = "arm,gic-v3";
+> +			reg = <0x17a00000 0x10000>,	   /* GICD */
+> +				  <0x17b00000 0x100000>;	  /* GICR * 8 */
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			interrupt-controller;
+> +			#redistributor-regions = <1>;
+> +			redistributor-stride = <0x0 0x20000>;
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		restart@10ac000 {
+> +			compatible = "qcom,pshold";
+> +			reg = <0x10ac000 0x4>;
+> +		};
+> +
+> +		tcsr_mutex_regs: syscon@1f40000 {
+> +			compatible = "syscon";
+> +			reg = <0x01f40000 0x20000>;
+> +		};
+> +
+> +		rpm_msg_ram: memory@778000 {
+> +			compatible = "qcom,rpm-msg-ram";
+> +			reg = <0x778000 0x7000>;
+> +		};
+> +
+> +		qfprom: qfprom@780000 {
+> +			compatible = "qcom,qfprom";
+> +			reg = <0x780000 0x621c>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +		};
+> +
+> +		apcs_glb: mailbox@17911000 {
+> +			compatible = "qcom,msm8998-apcs-hmss-global";
+
+Please make sure there's a proper compatible for this.
+
+> +			reg = <0x17911000 0x1000>;
+> +
+> +			#mbox-cells = <1>;
+> +		};
+> +
+> +		tlmm: pinctrl@3000000 {
+> +			compatible = "qcom,sdm630-pinctrl";
+> +			reg = <0x3000000 0xc00000>;
+> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <0x2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x2>;
+> +		};
+> +
+> +		spmi_bus: spmi@800f000 {
+> +			compatible = "qcom,spmi-pmic-arb";
+> +			reg =	<0x0800f000 0x1000>,
+> +				<0x08400000 0x1000000>,
+> +				<0x09400000 0x1000000>,
+> +				<0x0a400000 0x220000>,
+> +				<0x0800a000 0x3000>;
+> +			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
+> +			interrupt-names = "periph_irq";
+> +			interrupts = <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>;
+> +			qcom,ee = <0>;
+> +			qcom,channel = <0>;
+> +			#address-cells = <2>;
+> +			#size-cells = <0>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <4>;
+> +			cell-index = <0>;
+> +		};
+> +
+> +		timer@17920000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			compatible = "arm,armv7-timer-mem";
+> +			reg = <0x17920000 0x1000>;
+> +			clock-frequency = <19200000>;
+> +
+> +			frame@17921000 {
+> +				frame-number = <0>;
+> +				interrupts = <0 8 0x4>,
+> +						<0 7 0x4>;
+> +				reg = <0x17921000 0x1000>,
+> +					<0x17922000 0x1000>;
+> +			};
+> +
+> +			frame@17923000 {
+> +				frame-number = <1>;
+> +				interrupts = <0 9 0x4>;
+> +				reg = <0x17923000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17924000 {
+> +				frame-number = <2>;
+> +				interrupts = <0 10 0x4>;
+> +				reg = <0x17924000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17925000 {
+> +				frame-number = <3>;
+> +				interrupts = <0 11 0x4>;
+> +				reg = <0x17925000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17926000 {
+> +				frame-number = <4>;
+> +				interrupts = <0 12 0x4>;
+> +				reg = <0x17926000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17927000 {
+> +				frame-number = <5>;
+> +				interrupts = <0 13 0x4>;
+> +				reg = <0x17927000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17928000 {
+> +				frame-number = <6>;
+> +				interrupts = <0 14 0x4>;
+> +				reg = <0x17928000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		sdhc_1: sdhci@c0c4000 {
+> +			compatible = "qcom,sdm630-sdhci", "qcom,sdhci-msm-v5";
+> +			reg = <0xc0c4000 0x1000>,
+> +				<0xc0c5000 0x1000>;
+> +			reg-names = "hc", "cqhci";
+> +
+> +			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
+> +
+> +			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+> +					<&gcc GCC_SDCC1_AHB_CLK>,
+> +					<&xo_board>;
+> +			clock-names = "core", "iface", "xo";
+> +
+> +			pinctrl-names = "default", "sleep";
+> +			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on &sdc1_rclk_on>;
+> +			pinctrl-1 = <&sdc1_clk_off &sdc1_cmd_off &sdc1_data_off &sdc1_rclk_off>;
+> +
+> +			bus-width = <8>;
+> +			non-removable;
+> +
+> +			mmc-ddr-1_8v;
+> +			mmc-hs200-1_8v;
+> +			mmc-hs400-1_8v;
+
+These are board properties, consider pushing them out to the individual
+.dts files.
+
+> +
+> +			status = "disabled";
+> +		};
+> +
 
 Regards,
-Arnaud
-
-> 
-> regards
-> Suman
-> 
+Bjorn
