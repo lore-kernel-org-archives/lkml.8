@@ -2,148 +2,149 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67653C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5F920767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B0E2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VSMd8vBl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jxiFrV3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgFVUID (ORCPT
+        id S1730500AbgFVUII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:08:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45459 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728307AbgFVUID (ORCPT
+        Mon, 22 Jun 2020 16:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728973AbgFVUIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:08:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592856482;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lSAb/eseSEs/+a9Bniw5lJiSCdPpLF6HO9i3q2ob+7o=;
-        b=VSMd8vBlhchYnlBQMSRcY32KLu5ADBJqf3fS66anXUP8QF0l72K+Z1GqUmssPbpp1JQnA3
-        e/4aZvzy98dY84A5fGJL154hO6GDM+qpTbCNFdaPxelb8BYOpkRCMbzH4tr4BjE25uiWPq
-        NDWWk6KC96oG3MMTT58OxLfD/94sh7U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-n7C1-OBbOuaTO5iqvTMmYg-1; Mon, 22 Jun 2020 16:07:58 -0400
-X-MC-Unique: n7C1-OBbOuaTO5iqvTMmYg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AED5A18A8221;
-        Mon, 22 Jun 2020 20:07:56 +0000 (UTC)
-Received: from Whitewolf.redhat.com (ovpn-117-166.rdu2.redhat.com [10.10.117.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 046A95C1BD;
-        Mon, 22 Jun 2020 20:07:54 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v5 01/10] drm/vblank: Register drmm cleanup action once per drm_vblank_crtc
-Date:   Mon, 22 Jun 2020 16:07:21 -0400
-Message-Id: <20200622200730.120716-2-lyude@redhat.com>
-In-Reply-To: <20200622200730.120716-1-lyude@redhat.com>
-References: <20200622200730.120716-1-lyude@redhat.com>
+        Mon, 22 Jun 2020 16:08:05 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ACCCC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:08:05 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id n24so20757271lji.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O1iewzZxKxZsHCFE1IpIKZAcHdEXX0k0VhJhMjCxJRk=;
+        b=jxiFrV3w0j5aLn+vYERXrsFANe18BmkW8WhpfbwrqvZCR3QlASLHN+s0dvUKCC7S0Z
+         HHlQLoUjWeB77nDpLPWTX2cD+NqKKStkAUVgrU+ZbFo1WfJUCp3PbvnavLvRJJfywm9B
+         PS8KIdxPs6dMefugAy/F3KfgHucAWcr7w9gXuUdcHllmvBB4qZe8A4Bp1EsirM9H8PWJ
+         v3uvp+OkmO1pC5tsQ4XX81pf9YCj8Gokg9OWfBfubRYEyWUdvxonrCWsPW+wes77jqgR
+         h6ape1nNvKoIrkpKbq7TDwpAj4bHv9zDGppyQfT3YxAm8q0kqdPmVMD48RqJ0ih/c0dw
+         +hLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O1iewzZxKxZsHCFE1IpIKZAcHdEXX0k0VhJhMjCxJRk=;
+        b=j+5WmGtb8NeCDZ3tITGZUZJePnjShqIB+uvhyGov4CM4mk3OT2kUw10dJXH9lnKF0e
+         9QxTGbnlocJ7+1xSNBYflNI/9Dtw5zzcCLGY1/5IluUpoincro2QB6Pe5SeFRzpysg6H
+         aY1XmVr8P6kWGJg+W3zUFIXrZ6cSvTGj9qrrJxYQqduyWxCdXkA9vaeI+oCFMCdhEc9h
+         kFUCRZnnPMbBDwjz10yL8bp1jTqhq7glF0UL2PG5+mBgQS5U03a96A5WWY4Xnli6BjTK
+         mlv7ITQfL6zh095dp1rKOcsOED/s5tDct7hd26hCOXz44ec/qwNzJa4hSpMN5jnmtw+S
+         lbUA==
+X-Gm-Message-State: AOAM532lMOUkOPOZXJij5IUmOF0TD9DojIEl1n/PCiLo0dsyXfeIwe2Z
+        n2ri7Zy7HnmO6whOKZZEy2bdig5hBg5Oi0xSmS+3KA==
+X-Google-Smtp-Source: ABdhPJy5dWzQBSNi9Zt/usqkY9agJUTDidKHpdWxCl7nmtqE+I17wPTUgLZYCHA4VjDO1Von9AZ6ddnuU6GBJyOUNKU=
+X-Received: by 2002:a2e:9a44:: with SMTP id k4mr9089871ljj.139.1592856483831;
+ Mon, 22 Jun 2020 13:08:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200622193146.2985288-1-keescook@chromium.org> <20200622193146.2985288-4-keescook@chromium.org>
+In-Reply-To: <20200622193146.2985288-4-keescook@chromium.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 22 Jun 2020 22:07:37 +0200
+Message-ID: <CAG48ez0pRtMZs3Hc3R2+XGHRwt9nZAGZu6vDpPBMbE+Askr_+Q@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
+ each syscall
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we'll be allocating resources for kthread_create_worker() in the
-next commit (which could fail and require us to clean up the mess),
-let's simplify the cleanup process a bit by registering a
-drm_vblank_init_release() action for each drm_vblank_crtc so they're
-still cleaned up if we fail to initialize one of them.
+On Mon, Jun 22, 2020 at 9:31 PM Kees Cook <keescook@chromium.org> wrote:
+> This provides the ability for architectures to enable kernel stack base
+> address offset randomization. This feature is controlled by the boot
+> param "randomize_kstack_offset=on/off", with its default value set by
+> CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT.
+[...]
+> +#define add_random_kstack_offset() do {                                        \
+> +       if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
+> +                               &randomize_kstack_offset)) {            \
+> +               u32 offset = this_cpu_read(kstack_offset);              \
+> +               u8 *ptr = __builtin_alloca(offset & 0x3FF);             \
+> +               asm volatile("" : "=m"(*ptr));                          \
+> +       }                                                               \
+> +} while (0)
 
-Changes since v3:
-* Use drmm_add_action_or_reset() - Daniel Vetter
+clang generates better code here if the mask is stack-aligned -
+otherwise it needs to round the stack pointer / the offset:
 
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/drm_vblank.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+$ cat alloca_align.c
+#include <alloca.h>
+void callee(void);
 
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 85e5f2db16085..ce5c1e1d29963 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -492,16 +492,12 @@ static void vblank_disable_fn(struct timer_list *t)
- 
- static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
- {
--	unsigned int pipe;
--
--	for (pipe = 0; pipe < dev->num_crtcs; pipe++) {
--		struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
-+	struct drm_vblank_crtc *vblank = ptr;
- 
--		drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
--			    drm_core_check_feature(dev, DRIVER_MODESET));
-+	drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
-+		    drm_core_check_feature(dev, DRIVER_MODESET));
- 
--		del_timer_sync(&vblank->disable_timer);
--	}
-+	del_timer_sync(&vblank->disable_timer);
- }
- 
- /**
-@@ -511,7 +507,7 @@ static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
-  *
-  * This function initializes vblank support for @num_crtcs display pipelines.
-  * Cleanup is handled automatically through a cleanup function added with
-- * drmm_add_action().
-+ * drmm_add_action_or_reset().
-  *
-  * Returns:
-  * Zero on success or a negative error code on failure.
-@@ -530,10 +526,6 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
- 
- 	dev->num_crtcs = num_crtcs;
- 
--	ret = drmm_add_action(dev, drm_vblank_init_release, NULL);
--	if (ret)
--		return ret;
--
- 	for (i = 0; i < num_crtcs; i++) {
- 		struct drm_vblank_crtc *vblank = &dev->vblank[i];
- 
-@@ -542,6 +534,11 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
- 		init_waitqueue_head(&vblank->queue);
- 		timer_setup(&vblank->disable_timer, vblank_disable_fn, 0);
- 		seqlock_init(&vblank->seqlock);
-+
-+		ret = drmm_add_action_or_reset(dev, drm_vblank_init_release,
-+					       vblank);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	return 0;
--- 
-2.26.2
+void alloca_blah(unsigned long rand) {
+  asm volatile(""::"r"(alloca(rand & MASK)));
+  callee();
+}
+$ clang -O3 -c -o alloca_align.o alloca_align.c -DMASK=0x3ff
+$ objdump -d alloca_align.o
+[...]
+   0: 55                    push   %rbp
+   1: 48 89 e5              mov    %rsp,%rbp
+   4: 81 e7 ff 03 00 00    and    $0x3ff,%edi
+   a: 83 c7 0f              add    $0xf,%edi
+   d: 83 e7 f0              and    $0xfffffff0,%edi
+  10: 48 89 e0              mov    %rsp,%rax
+  13: 48 29 f8              sub    %rdi,%rax
+  16: 48 89 c4              mov    %rax,%rsp
+  19: e8 00 00 00 00        callq  1e <alloca_blah+0x1e>
+  1e: 48 89 ec              mov    %rbp,%rsp
+  21: 5d                    pop    %rbp
+  22: c3                    retq
+$ clang -O3 -c -o alloca_align.o alloca_align.c -DMASK=0x3f0
+$ objdump -d alloca_align.o
+[...]
+   0: 55                    push   %rbp
+   1: 48 89 e5              mov    %rsp,%rbp
+   4: 48 89 e0              mov    %rsp,%rax
+   7: 81 e7 f0 03 00 00    and    $0x3f0,%edi
+   d: 48 29 f8              sub    %rdi,%rax
+  10: 48 89 c4              mov    %rax,%rsp
+  13: e8 00 00 00 00        callq  18 <alloca_blah+0x18>
+  18: 48 89 ec              mov    %rbp,%rsp
+  1b: 5d                    pop    %rbp
+  1c: c3                    retq
+$
 
+(From a glance at the assembly, gcc seems to always assume that the
+length may be misaligned.)
+
+Maybe this should be something along the lines of
+__builtin_alloca(offset & (0x3ff & ARCH_STACK_ALIGN_MASK)) (with
+appropriate definitions of the stack alignment mask depending on the
+architecture's choice of stack alignment for kernel code).
