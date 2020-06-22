@@ -2,115 +2,134 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1943C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2DB2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CDB20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:23:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="KcZNn7vr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T/gZ4H2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729965AbgFVRWq (ORCPT
+        id S1730041AbgFVRXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:22:46 -0400
-Received: from mail-am6eur05on2087.outbound.protection.outlook.com ([40.107.22.87]:14048
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729777AbgFVRWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:22:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b32HDAZmwsH/NLWCZc/Zk6bNZargd3hU2zPWGcLBWCGRvPYZkOIan7/fnJx1rHLL+QNTooNq0swR54m9+zevU450gphPknF4v0CvvJou0sG75G6KVAjV+cj8o5oBlU8c8o8zBaEczoBH3LflZqsKqELwyqGm1+tED23zOBwvvfEWm43fYTLtxeLUJqw+wdPid5sPRhYi/YkRVqZf+M9yqdC7w/K/LJj66/koS1bAlsAtooCi4n5AhxoAANZqZoCn9UmgZBWTvftf2BqpYsY7StDR9qCAqS6Dfp/3iFGHFnr9RpRZzrenZuCLWeldzmMZOyRFTQTCe3nzUpDMuAGtsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZKectm0+qs0cuBJgP3c2OnTQLlbCMRvDxj3UBNyQf/U=;
- b=nljlTZAxM0J/LpRw+Ft+9xwR/7mL1E17IULqimWDAJauOUSbpJoZKKKWkAzdUSxkwlcLyCZXQ+4+hd1vrYRy1W2LIepkPqMuKQ9kalXJxSNx29/AqkFoLGx1ewyUptdC2+gDi3iJUgXynI9s1Y1/yb6Y1/n4MNIJwq8t7ajyKJDsVAUXxy0ZVBMmu6onuMrdzFQ/K6JJ5MVygyt9de8V1efXeBAGCXNdkMhEB8TG/AeVQGxQn1AHEsq/VMQhZbn/S4NtfxWOVnv6QmLKCasxbvVrAfX18OfgSOeBP67GFFp5/MNnoUWf6LdpOCbvs+s0GgPJQH9lCfeAqqbpcfB2jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZKectm0+qs0cuBJgP3c2OnTQLlbCMRvDxj3UBNyQf/U=;
- b=KcZNn7vrUQ/BTAeCGx2kR4KEOqZSxIBX/VgfX6MiQy27+TcKoruyyptu2AXlinm04N3FKkGqP7Re99hbf+aAJ/FarJURJMyvVhbDiyeVz2zbldGXstBDZ+hvuyOUe8IOQCC0gLK0eG99sidAq2MqXkOpDsDTTnwbz88xZfbREB4=
-Authentication-Results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB6494.eurprd05.prod.outlook.com (2603:10a6:803:100::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
- 2020 17:22:41 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 17:22:41 +0000
-Date:   Mon, 22 Jun 2020 14:22:33 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH 08/16] nouveau/hmm: fault one page at a time
-Message-ID: <20200622172233.GA2874652@mellanox.com>
-References: <20200619215649.32297-1-rcampbell@nvidia.com>
- <20200619215649.32297-9-rcampbell@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619215649.32297-9-rcampbell@nvidia.com>
-X-ClientProxiedBy: BL0PR02CA0015.namprd02.prod.outlook.com
- (2603:10b6:207:3c::28) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Mon, 22 Jun 2020 13:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729977AbgFVRXF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 13:23:05 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CBAC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:23:05 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id h22so134375pjf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BqM48ZdR4QdYBTv2c7+F0igShsRmPGqVwAJTalrh3Vo=;
+        b=T/gZ4H2J+UpNQ96H4IQLTAW9jVMnZlvLzxm2OhJBDlYjOIQCD2FlzsoigqacLWJAhC
+         FAIymS/2Mdmvf5jp+PMPTZPszQlLdMUtLLlxEwYzzRg8451YxoBJQ2B6yep7Gr3zpQtx
+         oME5SyrfsBCu+p9qDBNWb5W0Ik4fADMMt3L3iqomKhLtenk4gH6tWYsAJe0N4bqlw6TY
+         e4kzYPrOVngrkzYP4ZO7qK52KTWkEaDOe/Hc26SYciu91gstYIuQ457fS2tO+3Fhc++S
+         J3tpbd0xhmS8RbKKoltaGvNLCIjSjHM0jjaUbZ0vQp8KhiEYCwyRbniMeg/jqRQHieMg
+         4n/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BqM48ZdR4QdYBTv2c7+F0igShsRmPGqVwAJTalrh3Vo=;
+        b=ZTV/+eXsFWnHDzYEmsrfoyuBq4aelQRw2/bcmz07wVU7F3dn1m4SSem2E+6QzyNEvq
+         1dAOGG31mG8k0n0D7UBSTvjAolzHgSoULPPb0ko6ReG7KK/hZQxnMSoYpqr7bB0b3k5X
+         7KHzrW4/GGs15xiyFKJu16MGKPN7PafmlE5BY/cmiymif5hdsrsw93xiLTM58/nZTPxl
+         gyYR8up5AyfvRFJwgePmzOHMWAOqfZFLt7NhxF0FADe3q/E32egjDlJANWiYFo+H8KgK
+         g4huNy2a1s4EpJEjHFoauoGZ8EKor0Agu1Kwsv2hFzz2RM3dnEUo8maiglZo/CyS41xC
+         Pdnw==
+X-Gm-Message-State: AOAM533ZzZ8bW1QH8vai6OPqv210C3i9hVFil1wyRUKwlW1Os6MeK3j/
+        vKbl7ROruULLmFp9ZMgXshmzMOx20LmZ3MnBjwgjxw==
+X-Google-Smtp-Source: ABdhPJzO+nq25CgrrJ901vreSYdCENCWSbB928SD41OoQSYC+oteTUNy5xrcCBXr3eXVXoqswpT2QCJu88gHklh2Xeo=
+X-Received: by 2002:a17:90a:1e:: with SMTP id 30mr18013542pja.25.1592846584932;
+ Mon, 22 Jun 2020 10:23:04 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (193.47.165.251) by BL0PR02CA0015.namprd02.prod.outlook.com (2603:10b6:207:3c::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 17:22:41 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jnQ9R-00C3sG-M6; Mon, 22 Jun 2020 14:22:33 -0300
-X-Originating-IP: [193.47.165.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5b2c37c8-af36-454b-70db-08d816d0de49
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6494:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB6494E2ABEC536D22A63FCAD5CF970@VI1PR05MB6494.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 0442E569BC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IXvycNDMc5RMGwlYeJ+YnrJ2D7KgM9glamVnejhokPj9xPAbBRcQ3M89m9TBZsQ7rHDPqrs04awCLTPLHLCZSb6PhUL02Czkfi4pMMPhQSsqM858WUuAnaCe6Wz0eoBGuPea15JTPk+A4eYTY9b9oKlm2KGUe+XRB+ymDulbsQUSb++UVAsYL9bBtumX2CfpxyBtBPk8CITWIHtULrPamyK3Poy3uX0cZ7zWgQF7X9T5n7rm4TqW7Mm+YSOvOeqTOUEP3xl1+9AmbATV/11zuVK+Px33RfL2WZfbMK9XyDfI5f9GYrQszHzEaij1bZkoMGcZspyu/6WFx6Wsvc4MLA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(366004)(376002)(136003)(6916009)(2906002)(8676002)(83380400001)(4744005)(478600001)(5660300002)(1076003)(7416002)(26005)(66946007)(66556008)(66476007)(54906003)(186003)(316002)(33656002)(36756003)(4326008)(86362001)(2616005)(8936002)(426003)(9746002)(9786002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: gvDYLvKbgVwEl33Rn7X5Vj0i9U+FbAJvJ83QtIxWJBG7X4MHCyaGvmiPtUKNxlzNQ+2kNjZ5bkZuuDUvhiqjayML65bWjCxDZWC7feFyxhE2WOa+iPnFTcsjghcPnh2lHYxd8fz5zeZMQrmbASfV+D37O4OBd6pXUseJyxspg3C6Xn+UZnd2sOwc3J7mC7qXSLo9pnbEZBEulJK/YEwqp852mvnXSFnl3HOWTqb3CR2wC8Kf49WrB9WoTWbYF0U5hv6d/BSvf3GEJPsf7sWAXOYjGCHwfuKWc2GuGnvh1N33YfmJD7T23FCAC23r8L5vhh3+ZFJkesHI4NMpDoGFX9RZyP5TiYQhaSSYyNHpkzg6ozlp0v1MYuDbmJr0r/b7uF+/yh+DZcanDg3OtzgrUnVS0KmcL/72vebQU4GSa8BbxAONkDPiTdihFEUm8N3tdwJvDIcXkH80UZHF9XIq1TpKAbLDBlp1ZwmF9cAnENQOrXnzjla7jtOPg4jGR/5S
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b2c37c8-af36-454b-70db-08d816d0de49
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 17:22:41.4756
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ksDzDYTK5UipZwivhJaLjYXw3npL9JnP4FtxxXu4Hc8+RTV4sV2D4QgcPk9P592aaA+WDWxMbSxQ43IZnRJQ9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6494
+References: <20200620033007.1444705-1-keescook@chromium.org> <20200620033007.1444705-11-keescook@chromium.org>
+In-Reply-To: <20200620033007.1444705-11-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 22 Jun 2020 10:22:53 -0700
+Message-ID: <CAKwvOd=N3HQNZfKMQ7eZWdawwNn13=YNNgMO0WAng2ERYX4Juw@mail.gmail.com>
+Subject: Re: [PATCH v2 10/16] KVM: PPC: Book3S PR: Remove uninitialized_var() usage
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org,
+        Network Development <netdev@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 02:56:41PM -0700, Ralph Campbell wrote:
-> The SVM page fault handler groups faults into a range of contiguous
-> virtual addresses and requests hmm_range_fault() to populate and
-> return the page frame number of system memory mapped by the CPU.
-> In preparation for supporting large pages to be mapped by the GPU,
-> process faults one page at a time. In addition, use the hmm_range
-> default_flags to fix a corner case where the input hmm_pfns array
-> is not reinitialized after hmm_range_fault() returns -EBUSY and must
-> be called again.
+On Fri, Jun 19, 2020 at 8:30 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> "unused variable"). If the compiler thinks it is uninitialized, either
+> simply initialize the variable or make compiler changes. As a precursor
+> to removing[2] this[3] macro[4], just remove this variable since it was
+> actually unused:
+>
+> arch/powerpc/kvm/book3s_pr.c:1832:16: warning: unused variable 'vrsave' [-Wunused-variable]
+>         unsigned long vrsave;
+>                       ^
+>
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+>
+> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+> Fixes: f05ed4d56e9c ("KVM: PPC: Split out code from book3s.c into book3s_pr.c")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Are you sure? hmm_range_fault is pretty expensive per call..
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Jason
+> ---
+>  arch/powerpc/kvm/book3s_pr.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+> index ef54f917bdaf..ed12dfbf9bb5 100644
+> --- a/arch/powerpc/kvm/book3s_pr.c
+> +++ b/arch/powerpc/kvm/book3s_pr.c
+> @@ -1828,9 +1828,6 @@ static int kvmppc_vcpu_run_pr(struct kvm_vcpu *vcpu)
+>  {
+>         struct kvm_run *run = vcpu->run;
+>         int ret;
+> -#ifdef CONFIG_ALTIVEC
+> -       unsigned long uninitialized_var(vrsave);
+> -#endif
+>
+>         /* Check if we can run the vcpu at all */
+>         if (!vcpu->arch.sane) {
+> --
+
+-- 
+Thanks,
+~Nick Desaulniers
