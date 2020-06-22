@@ -2,117 +2,160 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184ECC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAB9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9C220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:34:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bsEelNyo"
+	by mail.kernel.org (Postfix) with ESMTP id 0A2772075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592829426;
+	bh=r5svSCiyIzDvzTqMLcCy0GUx0cxm9wgDl1oWlW8d7PM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nm3O+mt5DorWjQKBjBFZ/gczQWjc/H7OCbwIpY1FQHZffyNk1D+BEIXPTI+KnUiHn
+	 k/AdTc775h+OytL2oVs0pss5IGRmrNM2AYLJlBQ/AHsFh3jiPRi5ISSX4zIo5gsdBb
+	 olWU0aeWcvmqq2wnFnnJWT0ESXUijeLwZSZFR4LU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgFVMd7 (ORCPT
+        id S1728192AbgFVMhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:33:59 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:54294 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728226AbgFVMd5 (ORCPT
+        Mon, 22 Jun 2020 08:37:04 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37863 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728126AbgFVMhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:33:57 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id D29E52E157C;
-        Mon, 22 Jun 2020 15:33:54 +0300 (MSK)
-Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id tvXDMbdFDa-XriKD4Bn;
-        Mon, 22 Jun 2020 15:33:54 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1592829234; bh=A9zAd0jKr1HJJKM0vzPcK7UnodFtieRjTMmElMPUxBU=;
-        h=Message-ID:References:Date:To:From:Subject:In-Reply-To;
-        b=bsEelNyo6pu+0UTIojw04wNkSSXzilBSqb+HOXjDxZEoDzE171u4gsLxUDkmvUaFf
-         GEFo1kDGc8ZCSG3oHu1UfhXC1Sypd98uq4t5HgZdNAUTuOUJfQep/wE2of2G0Dkxzz
-         QXgExn2gOPUOPYO+oG8g2sZnhLrzMAMQOAtsmPoc=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:14::1:13])
-        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id hleZ2ieHdd-XrkOkvx2;
-        Mon, 22 Jun 2020 15:33:53 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: [PATCH 4/4] scripts/decode_stacktrace: guess path to vmlinux by
- release name
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Mon, 22 Jun 2020 15:33:53 +0300
-Message-ID: <159282923334.248444.2399153100007347838.stgit@buzz>
-In-Reply-To: <159282922499.248444.4883465570858385250.stgit@buzz>
-References: <159282922499.248444.4883465570858385250.stgit@buzz>
-User-Agent: StGit/0.22-39-gd257
+        Mon, 22 Jun 2020 08:37:03 -0400
+Received: by mail-pj1-f65.google.com with SMTP id m2so8557643pjv.2;
+        Mon, 22 Jun 2020 05:37:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XBnvpozQh8NlbXbb2Id9vk4JGCe+27nJySmmknsgIeQ=;
+        b=mcEXm759s4PueCz78P9k2X48Nki1maAlVrRxBHyaIXYy1URODH6qaj00RCb6YQ8MZ2
+         P+xbx+Fd97fqikveIhcsmLAypu2rj5k5CB/BwUM8LEwWDjrpxRq+eZGtp3q9lwuuzd+9
+         mV7Ttcy2Rqt3drm0lqH7NC3/Ve5uuyWW/FqKY8Cni8/qffMRqownVCfxMImaturncwLV
+         07/RSIi7/+RYdI3SEovUHqp1vNmGvBEelB8KrBJGZwJKIJBDSRIbZShoB+1p/aqkLWdl
+         UA50vDNukSvvgXxwZeNKKc0Bx/HY/V/lwqrcA10z51EIemWONSGDzMayJBo050Py/8ow
+         OKiQ==
+X-Gm-Message-State: AOAM531TAnJm2Z7ZDherPlJaElECNBAPE0cLNZCswGyeRNhcQQYtJ0jW
+        K6OMbqKGWpwhKpTKi0KeQ9Q=
+X-Google-Smtp-Source: ABdhPJyrKfaLQ3639cZrtv1SHn9cay5HXy5MKWY132MuQMsHcqSjbmonrxxCryowUAKdi5d5SomNKg==
+X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr17854178pjr.181.1592829422425;
+        Mon, 22 Jun 2020 05:37:02 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id y4sm13839956pfr.182.2020.06.22.05.37.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 05:37:00 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 9C42940430; Mon, 22 Jun 2020 12:36:59 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 12:36:59 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        martin.petersen@oracle.com, jejb@linux.ibm.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v7 6/8] blktrace: fix debugfs use after free
+Message-ID: <20200622123659.GV11244@42.do-not-panic.com>
+References: <20200619204730.26124-1-mcgrof@kernel.org>
+ <20200619204730.26124-7-mcgrof@kernel.org>
+ <75c3a94d-dcd1-05e4-47c6-db65f074136a@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75c3a94d-dcd1-05e4-47c6-db65f074136a@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add option decode_stacktrace -r <release> to specify only release name.
-This is enough to guess standard paths to vmlinux and modules:
+On Sat, Jun 20, 2020 at 10:31:51AM -0700, Bart Van Assche wrote:
+> On 2020-06-19 13:47, Luis Chamberlain wrote:
+> > This goes tested with:
+>        ^^^^
+>        got?
+> 
+> > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> > index 7ff2ea5cd05e..e6e2d25fdbd6 100644
+> > --- a/kernel/trace/blktrace.c
+> > +++ b/kernel/trace/blktrace.c
+> > @@ -524,10 +524,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+> >  	if (!bt->msg_data)
+> >  		goto err;
+> >  
+> > -	ret = -ENOENT;
+> > -
+> > -	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> > -	if (!dir)
+> > +#ifdef CONFIG_BLK_DEBUG_FS
+> > +	/*
+> > +	 * When tracing whole make_request drivers (multiqueue) block devices,
+> > +	 * reuse the existing debugfs directory created by the block layer on
+> > +	 * init. For request-based block devices, all partitions block devices,
+>                                                   ^^^^^^^^^^^^^^^^^^^^^
+> It seems like a word is missing from the comment? Or did you perhaps
+> want to refer to "all partition block devices"?
 
-$ echo -e 'schedule+0x0/0x0\ntap_open+0x0/0x0 [tap]' |
-	./scripts/decode_stacktrace.sh -r 5.4.0-37-generic
-schedule (kernel/sched/core.c:4138)
-tap_open (drivers/net/tap.c:502) tap
+Yes, the later.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- scripts/decode_stacktrace.sh |   29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+> > +	 * and scsi-generic block devices we create a temporary new debugfs
+> > +	 * directory that will be removed once the trace ends.
+> > +	 */
+> > +	if (queue_is_mq(q) && bdev && bdev == bdev->bd_contains)
+> > +		dir = q->debugfs_dir;
+> > +	else
+> > +#endif
+> >  		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> 
+> Can it happen that two different threads each try to set up block
+> tracing and hence that debugfs_create_dir() fails because a directory
+> with name buts->name already exists?
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index 7f18ac10af03..4bdcb6d8c605 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -5,14 +5,33 @@
- 
- if [[ $# < 1 ]]; then
- 	echo "Usage:"
--	echo "	$0 <vmlinux> [base path] [modules path]"
-+	echo "	$0 -r <release> | <vmlinux> [base path] [modules path]"
- 	exit 1
- fi
- 
--vmlinux=$1
--basepath=${2-auto}
--modpath=$3
--release=""
-+if [[ $1 == "-r" ]] ; then
-+	vmlinux=""
-+	basepath="auto"
-+	modpath=""
-+	release=$2
-+
-+	for fn in {,/usr/lib/debug}/boot/vmlinux-$release{,.debug} /lib/modules/$release{,/build}/vmlinux ; do
-+		if [ -e "$fn" ] ; then
-+			vmlinux=$fn
-+			break
-+		fi
-+	done
-+
-+	if [[ $vmlinux == "" ]] ; then
-+		echo "ERROR! vmlinux image for release $release is not found" >&2
-+		exit 2
-+	fi
-+else
-+	vmlinux=$1
-+	basepath=${2-auto}
-+	modpath=$3
-+	release=""
-+fi
- 
- declare -A cache
- declare -A modcache
+Great question, the answer is no. The reason is that we first use the
+mutex and then we check for q->blk_trace. If you hold the lock *and*
+you have checked for q->blk_trace and its NULL, you are sure you should
+not have a duplicate.
 
+Its why the commit log mentioned:
+
+  The new clarifications on relying on the q->blk_trace_mutex *and* also
+  checking for q->blk_trace *prior* to processing a blktrace ensures the
+  debugfs directories are only created if no possible directory name
+  clashes are possible.
+
+These clarifications were prompted through discussions with Jan Kara
+on the patches he posted which you CC'd me on. I agreed with his
+patch *but* I suggested it would hold true only if check for the
+q->blk_trace first, and this is why my patch titled "blktrace: break
+out of blktrace setup on concurrent calls" got merged prior to Jan
+Kara's "blktrace: Avoid sparse warnings when assigning q->blk_trace".
+
+> >  	bt->dev = dev;
+> > @@ -565,8 +573,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+> >  
+> >  	ret = 0;
+> >  err:
+> > -	if (dir && !bt->dir)
+> > -		dput(dir);
+> >  	if (ret)
+> >  		blk_trace_free(bt);
+> >  	return ret;
+> 
+> Shouldn't bt->dir be removed in this error path for make_request drivers?
+
+If there is an error, bt->dir will be removed still, as I never modified
+the removal of bt->dir in this patch.
+
+  Luis
