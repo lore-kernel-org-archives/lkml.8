@@ -2,126 +2,91 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 059AA20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12951206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="yMwSFW9z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RDuEtnf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgFVJEo (ORCPT
+        id S1726500AbgFVJGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgFVJEo (ORCPT
+        Mon, 22 Jun 2020 05:06:05 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:12172 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725991AbgFVJGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:04:44 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B77C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:04:43 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id d64so1074953vke.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hwidXab7KcGUBateRVXW8zpxh0rBFCmS1LBPPNCnOFs=;
-        b=yMwSFW9zn/x4voNySBTlnA26fMQCe4mTWRT02T7FplbayAJ04otvMsASKWc9/mo6jF
-         NCbgO3o4LZvSVnMWo9ZAGeT9aIS+j2p5q35tzoV5hI3hUXT3n8foHNu96J0NmK7XFhXY
-         RJfsg3taQ+egVgLEXi1g5+mL2IkbqBXh/nZZJjhIpgb4GvqfNp6PJ4I/fzS4uzN0512k
-         dg2OvIB1wckClNQPR8wJEj8enOKvi5Q4CyvYEB4mhiJN1sqhfaCzn67EX5enZ4fWse1B
-         xLZQVxhTmpkbhDcoqyGRAbHCvd/kj555Mht2nywkotfdw/kw5emLe8bAM/VNLUxmX0pk
-         aFPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hwidXab7KcGUBateRVXW8zpxh0rBFCmS1LBPPNCnOFs=;
-        b=Sr3Guj4Eg7MtuG6Al5x7FQlUhSFT2PKeungFs5n+bMTB3lVgJai6qHyassclzcWxP/
-         XvXI8xkZXh29AMozsFhro3ZRkYGw0qb4ZCKfM1YM2JX1YVa/CG17UgWfIIn5RCzh9p0c
-         uMMpUjqZjLIJyop4Ta/n0ifJPYFMZTJGMAvzL7OFtqceEh3tpFym1VAMJ0gb4yoMNesb
-         s2yP42iWP94Zu8cJDTGJmj/Ix/LCbCZtFWTQ9UXSnNWPlqPadU3mmv8JqxgBV0MxV4RC
-         H370YMsmeX0xhN+8TcSAdqMaOaqtAlTwquSNpNgaNdVOqT+hucn7gn1XRu/+JAgZC4Mo
-         v5Eg==
-X-Gm-Message-State: AOAM531pEGiBrEpm+FKdSZMSvos0rTiEDL9CS0K80lZ3KtngR+R+yghS
-        saSVDEy3GBUCRQfwbg3JAbBPKQMQVQ1X4Hq93zNbWw==
-X-Google-Smtp-Source: ABdhPJyYmko8VFPBAPnfwHC3JEX6GmA+fgmMjI/QiUkeFxLgLTGx8SZ1A85OHGZzC1aUZkecXh9bz8L+3a6d3inzdaY=
-X-Received: by 2002:a1f:b202:: with SMTP id b2mr15315183vkf.86.1592816682850;
- Mon, 22 Jun 2020 02:04:42 -0700 (PDT)
+        Mon, 22 Jun 2020 05:06:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592816764; h=Message-ID: Subject: Cc: To: From: Date:
+ Content-Transfer-Encoding: Content-Type: MIME-Version: Sender;
+ bh=fB96uV2NdnKSNrO0LJe7BUAqV2cVEReSBjWYNNIxyrg=; b=RDuEtnf7dWFDl+m2/nV27WC/kYpqcgsee6jrHBSaB80GhlC6lZNoMH1mQq1A/3YvlhKh+onm
+ bFzEuCKqNvN8nWq3pjWsWdpZQMDCCatGOulChxwsZLZY4a9AJbx9Xla3SR8v3ax7QubWEbYL
+ 1I5EP0qxe9Zjslsr7+jNnRRvLnU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5ef0747686de6ccd44179518 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 09:05:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8C7DEC433CA; Mon, 22 Jun 2020 09:05:57 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 569D3C433C6;
+        Mon, 22 Jun 2020 09:05:57 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200618133818.15857-1-narmstrong@baylibre.com>
- <20200618133818.15857-2-narmstrong@baylibre.com> <20200618162849.GH954398@dell>
-In-Reply-To: <20200618162849.GH954398@dell>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Mon, 22 Jun 2020 14:34:31 +0530
-Message-ID: <CAHLCerOvR2adMOyADyQhhm6TrLd=eaCoMMUzk+nJH-6mwgr7GQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] thermal: add support for the MCU controlled FAN on
- Khadas boards
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 22 Jun 2020 14:35:57 +0530
+From:   bgodavar@codeaurora.org
+List-Id: <linux-firmware.lore.kernel.org>
+To:     linux-firmware@kernel.org
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, gubbaven@codeaurora.org,
+        abhishekpandit@chromium.org
+Subject: Update WCN3991 FW with new enhancements
+Message-ID: <251806a04b162259103050eb11c48bf1@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 9:58 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Thu, 18 Jun 2020, Neil Armstrong wrote:
->
-> > The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
-> > on-board microcontroller.
-> >
-> > This implements the FAN control as thermal devices and as cell of the K=
-hadas
-> > MCU MFD driver.
-> >
-> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
->
-> Is this an Ack?
+The following changes since commit 
+887d2a103c2bdd267dbca5bed39b1b493d6cbe13:
 
-Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+   linux-firmware: Update firmware file for Intel Bluetooth AX200 
+(2020-06-10 08:32:52 -0400)
 
-> If so, do you require a pull-request?
+are available in the git repository at:
 
-I'll let Daniel comment about the PR but AFAICT, this can get merged
-through the MFD tree.
+   https://github.com/bgodavar/qca_wcn3991
 
+for you to fetch changes up to 24cc617d85a466ba58a94e3040690d0a43c83226:
 
-> > ---
-> > Hi Lee,
-> >
-> > Could you apply this patch via the MFD tree since it depends on
-> > the linux/mfd/khadas-mcu.h header ?
-> >
-> > This patch is unchanged from the v3 serie.
-> >
-> > Thanks,
-> > Neil
-> >
-> >  drivers/thermal/Kconfig          |  11 ++
-> >  drivers/thermal/Makefile         |   1 +
-> >  drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
-> >  3 files changed, 186 insertions(+)
-> >  create mode 100644 drivers/thermal/khadas_mcu_fan.c
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+   QCA: Update WCN3991 FW files (2020-06-22 14:20:47 +0530)
+
+----------------------------------------------------------------
+Balakrishna Godavarthi (1):
+       QCA: Update WCN3991 FW files
+
+  qca/crbtfw32.tlv | Bin 95784 -> 125896 bytes
+  qca/crnv32.bin   | Bin 5388 -> 5299 bytes
+  2 files changed, 0 insertions(+), 0 deletions(-)
+
+Regards
+Balakrishna
