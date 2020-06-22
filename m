@@ -2,208 +2,497 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E23C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 172182074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518522074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:03:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OFzgfBlw"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AYS9qYGJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgFVQDH (ORCPT
+        id S1729926AbgFVQDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729871AbgFVQDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:03:04 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 153CAC061796
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:03:04 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id t194so90792wmt.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=G7tyEQo0BCpuFpa+wLLnML4BSViFafq4hYNcPsQY6yA=;
-        b=OFzgfBlwCkrOzvIyVR98+1/FXds75qvrmXjxqkeiZis2MHuM8t8xekOzHXDkzHuUqC
-         /Um6dZ6t4Srg/Fp14boWWHax79dKiFmIXrhDSdg8YDHvC8v2X46ysLHrIqLc49O3yk9v
-         g4GxaTx1Hr78vxDccYzfFtECXgXqX1pOyPLoVzuHjWHax5i8FNFSYgOjRmkBoSzvoPVx
-         XED1CZ5vMKFHce07Ux4WKGnUSF5k2sMmuddM43Ab1B4iGGnPLHMWo4w5jJUdbh43V0nD
-         vSTgBCy/aJDKy9zjT6fEMZ1n9SGFXHZd5sC9LdGsI7hzu2crXDasuj1vY44cIQm7vTNE
-         sCmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=G7tyEQo0BCpuFpa+wLLnML4BSViFafq4hYNcPsQY6yA=;
-        b=cxkmmJXYHG3vecjb3pQCbIhMAUfxgVpFGgZTlY9IN54XKCwjlahuaTDMW2B3jfR741
-         qEHM7k8e+TLuDEjhwRpk45++ffXJ8yQSorC+qCbLUSSRSdFuX0RaB5Oe8BEF62sRvRex
-         nP8/U051ediv7A8WTlvX+ccuzHp88xJDcfRdb1kThSbkFOuvwAPUjYEH79zh4bRE5911
-         sqiYBKWaiLQEEptrnHJoGCiZJpBV93N4u8pstn+PtOs3Fvj616q2KRJhqJ3EqiseyNZe
-         BkMBoseLhhz3b9LP8AOmM4oyGO+XrkbKyJh1BM2UErDtOVW3hJe0C61VC4rcE/toUsnw
-         klXQ==
-X-Gm-Message-State: AOAM532qSbFl0A/f1eTCOKT+34RHiF4+LdYFX4bd8mG67dUUDrAiRXzH
-        OKiVNk3r6vTil8k91KxNIDQ0Kw==
-X-Google-Smtp-Source: ABdhPJwTHUBPzo//TrGs0VsDrKoOp6hfyS3KNMezVrR1B8EvnSENYTaLkUxTvt8cK17P23kZv45cqA==
-X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr18818319wml.70.1592841782682;
-        Mon, 22 Jun 2020 09:03:02 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id j18sm18502577wrn.59.2020.06.22.09.03.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 09:03:02 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 17:03:00 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-        gregkh@linuxfoundation.org, jason.wessel@windriver.com,
-        dianders@chromium.org, jslaby@suse.com, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] kgdb: Add request_nmi() to the io ops table for
- kgdboc
-Message-ID: <20200622160300.avgfhnfkpqzqqtsr@holly.lan>
-References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
- <1592835984-28613-4-git-send-email-sumit.garg@linaro.org>
+        Mon, 22 Jun 2020 12:03:42 -0400
+Received: from m12-14.163.com ([220.181.12.14]:39745 "EHLO m12-14.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729451AbgFVQDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:03:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=aBZ55
+        DdLXOeFAkq40SnAjMUVas1G/20105e6JvO5NkI=; b=AYS9qYGJaN9IkUSZOXd5t
+        wyAtCXg2GSE7d/iauOv3rWGvGlqU+wVGRqjv2141z8NMQaWu0ZdUbUsMe2fjQN5e
+        KVP3zLrZ7VRCzhd/emuOweRhNJUiCK3w9lb8Wdh5M/eEXz00FYIheTecvJ4IfEXP
+        Ib9en3ViGsabozBAYwxu6A=
+Received: from SZA191027643-PM.china.huawei.com (unknown [120.235.53.225])
+        by smtp10 (Coremail) with SMTP id DsCowABnbelA1vBeGrmZHw--.17892S4;
+        Tue, 23 Jun 2020 00:03:19 +0800 (CST)
+From:   yunaixin03610@163.com
+To:     netdev@vger.kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, wuguanping@huawei.com,
+        wangqindong@huawei.com
+Cc:     yunaixin <yunaixin03610@163.com>
+Subject: [PATCH 2/5] Huawei BMA: Adding Huawei BMA driver: host_cdev_drv
+Date:   Tue, 23 Jun 2020 00:03:08 +0800
+Message-Id: <20200622160311.1533-3-yunaixin03610@163.com>
+X-Mailer: git-send-email 2.26.2.windows.1
+In-Reply-To: <20200622160311.1533-1-yunaixin03610@163.com>
+References: <20200622160311.1533-1-yunaixin03610@163.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592835984-28613-4-git-send-email-sumit.garg@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: DsCowABnbelA1vBeGrmZHw--.17892S4
+X-Coremail-Antispam: 1Uf129KBjvAXoW3trW5Aw1fCrWDtw1DGw45Jrb_yoW8Gr1kuo
+        ZaqrnxAr1rGw4Yyw1F9rn5ArWUu3W3A3W5Cr4rWFn3Wa15J3WrXw12krW3X3W7ur4YkF4r
+        Za4DXrWrGayFqrWkn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+        AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU8SdyUUUUU
+X-Originating-IP: [120.235.53.225]
+X-CM-SenderInfo: 51xqtxx0lqijqwrqqiywtou0bp/1tbiVAhL5lUMNXJTLwAAsT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 07:56:20PM +0530, Sumit Garg wrote:
-> From: Daniel Thompson <daniel.thompson@linaro.org>
-> 
-> Add request_nmi() callback to install a non-maskable interrupt handler
-> corresponding to IRQ retrieved from polling interface. If NMI handler
-> installation fails due to missing support from underlying irqchip driver
-> then fallback to install it as normal interrupt handler.
-> 
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  drivers/tty/serial/kgdboc.c | 35 +++++++++++++++++++++++++++++++++++
->  include/linux/kgdb.h        |  7 +++++++
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> index 84ffede..263afae 100644
-> --- a/drivers/tty/serial/kgdboc.c
-> +++ b/drivers/tty/serial/kgdboc.c
-> @@ -19,6 +19,9 @@
->  #include <linux/console.h>
->  #include <linux/vt_kern.h>
->  #include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdesc.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/serial_core.h>
-> @@ -390,12 +393,44 @@ static void kgdboc_post_exp_handler(void)
->  	kgdboc_restore_input();
->  }
->  
-> +static int kgdb_tty_irq;
-> +
-> +static int kgdboc_request_nmi(irq_handler_t fn, void *dev_id)
-> +{
-> +	int irq, res;
-> +
-> +	/* Better to avoid double allocation in the tty driver! */
-> +	if (kgdb_tty_irq)
-> +		return 0;
-> +
-> +	if (!kgdb_tty_driver->ops->poll_get_irq)
-> +		return -ENODEV;
-> +
-> +	irq =
-> +	    kgdb_tty_driver->ops->poll_get_irq(kgdb_tty_driver, kgdb_tty_line);
-> +	if (irq <= 0)
-> +		return irq ? irq : -ENODEV;
-> +
-> +	irq_set_status_flags(irq, IRQ_NOAUTOEN);
-> +	res = request_nmi(irq, fn, IRQF_PERCPU, "kgdboc", dev_id);
+From: yunaixin <yunaixin03610@163.com>
 
-Why do we need IRQF_PERCPU here. A UART interrupt is not normally
-per-cpu?
+The BMA software is a system management software offered by Huawei. It supports the status monitoring, performance monitoring, and event monitoring of various components, including server CPUs, memory, hard disks, NICs, IB cards, PCIe cards, RAID controller cards, and optical modules.
+
+This host_cdev_drv driver is one of the communication driver used by BMA software. It depends on the host_edma_drv driver. The host_cdev_drv driver will create 4 char devices(hwbmc0, hwbmc1, hwbmc2, hwbmc3) once loaded. These char devices offer interfaces, including open, close, read, write and poll, to upper level applications. BMA uses them to send/receive ipmi commons to/from BMC.
+
+Signed-off-by: yunaixin <yunaixin03610@163.com>
+---
+ drivers/net/ethernet/huawei/bma/Kconfig       |   1 +
+ drivers/net/ethernet/huawei/bma/Makefile      |   1 +
+ .../net/ethernet/huawei/bma/cdev_drv/Kconfig  |  11 +
+ .../net/ethernet/huawei/bma/cdev_drv/Makefile |   2 +
+ .../ethernet/huawei/bma/cdev_drv/bma_cdev.c   | 369 ++++++++++++++++++
+ 5 files changed, 384 insertions(+)
+ create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig
+ create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/Makefile
+ create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c
+
+diff --git a/drivers/net/ethernet/huawei/bma/Kconfig b/drivers/net/ethernet/huawei/bma/Kconfig
+index 0e6e9fcc9e42..7abbb47fb5b2 100644
+--- a/drivers/net/ethernet/huawei/bma/Kconfig
++++ b/drivers/net/ethernet/huawei/bma/Kconfig
+@@ -1 +1,2 @@
+ source "drivers/net/ethernet/huawei/bma/edma_drv/Kconfig"
++source "drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig"
+diff --git a/drivers/net/ethernet/huawei/bma/Makefile b/drivers/net/ethernet/huawei/bma/Makefile
+index 8582fb3998fb..c9bbcbf2a388 100644
+--- a/drivers/net/ethernet/huawei/bma/Makefile
++++ b/drivers/net/ethernet/huawei/bma/Makefile
+@@ -3,3 +3,4 @@
+ # 
+ 
+ obj-$(CONFIG_BMA) += edma_drv/
++obj-$(CONFIG_BMA) += cdev_drv/
+\ No newline at end of file
+diff --git a/drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig b/drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig
+new file mode 100644
+index 000000000000..97829c5487c2
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig
+@@ -0,0 +1,11 @@
++#
++# Huawei BMA software driver configuration
++#
++
++config BMA
++	tristate "Huawei BMA Software Communication Driver"
++
++	---help---
++	  This driver supports Huawei BMA Software. It is used 
++	  to communication between Huawei BMA and BMC software.
++
+diff --git a/drivers/net/ethernet/huawei/bma/cdev_drv/Makefile b/drivers/net/ethernet/huawei/bma/cdev_drv/Makefile
+new file mode 100644
+index 000000000000..49ac00a5fff2
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/cdev_drv/Makefile
+@@ -0,0 +1,2 @@
++obj-$(CONFIG_BMA) += host_cdev_drv.o
++host_cdev_drv-y := bma_cdev.o
+diff --git a/drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c b/drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c
+new file mode 100644
+index 000000000000..0348a83005d6
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c
+@@ -0,0 +1,369 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Huawei iBMA driver.
++ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/poll.h>
++#include <linux/device.h>
++#include <linux/cdev.h>
++#include <linux/miscdevice.h>
++#include <linux/netdevice.h>
++#include "../edma_drv/bma_include.h"
++#include "../include/bma_ker_intf.h"
++
++#define CDEV_NAME_PREFIX	"hwibmc"
++
++#ifdef DRV_VERSION
++#define CDEV_VERSION		MICRO_TO_STR(DRV_VERSION)
++#else
++#define CDEV_VERSION		"0.3.4"
++#endif
++
++#define CDEV_DEFAULT_NUM	4
++#define CDEV_MAX_NUM		8
++
++#define CDEV_NAME_MAX_LEN	32
++#define CDEV_INVALID_ID		(0xffffffff)
++
++struct cdev_statistics_s {
++	unsigned int recv_bytes;
++	unsigned int send_bytes;
++	unsigned int send_pkgs;
++	unsigned int recv_pkgs;
++	unsigned int send_failed_count;
++	unsigned int recv_failed_count;
++	unsigned int open_status;
++};
++
++struct cdev_dev {
++	struct miscdevice dev_struct;
++	struct cdev_statistics_s s;
++	char dev_name[CDEV_NAME_MAX_LEN];
++	dev_t dev_id;
++	void *dev_data;
++	atomic_t open;
++	int type;
++};
++
++struct cdev_dev_set {
++	struct cdev_dev dev_list[CDEV_MAX_NUM];
++	int dev_num;
++	unsigned int init_time;
++};
++
++int dev_num = CDEV_DEFAULT_NUM;	/* the dev num want to create */
++int debug = DLOG_ERROR;                  /* debug switch */
++module_param(dev_num, int, 0640);
++MODULE_PARM_DESC(dev_num, "cdev num you want");
++MODULE_PARM_DESC(debug, "Debug switch (0=close debug, 1=open debug)");
++
++#define CDEV_LOG(level, fmt, args...) do {\
++	if (debug >= (level)) {\
++		netdev_info(0, "edma_cdev: %s, %d, " fmt "\n", \
++		__func__, __LINE__, ## args);\
++	} \
++} while (0)
++
++static int cdev_open(struct inode *inode, struct file *filp);
++static int cdev_release(struct inode *inode, struct file *filp);
++static unsigned int cdev_poll(struct file *file, poll_table *wait);
++static ssize_t cdev_read(struct file *filp, char __user  *data, size_t count,
++			 loff_t *ppos);
++static ssize_t cdev_write(struct file *filp, const char __user *data,
++			  size_t count, loff_t *ppos);
++
++struct cdev_dev_set g_cdev_set;
++
++#define GET_PRIVATE_DATA(f) (((struct cdev_dev *)((f)->private_data))->dev_data)
++
++module_param_call(debug, &edma_param_set_debug, &param_get_int, &debug, 0644);
++
++static int cdev_param_get_statics(char *buf, const struct kernel_param *kp)
++{
++	int len = 0;
++	int i = 0;
++	__kernel_time_t running_time = 0;
++
++	if (!buf)
++		return 0;
++
++	GET_SYS_SECONDS(running_time);
++	running_time -= g_cdev_set.init_time;
++	len += sprintf(buf + len,
++		       "============================CDEV_DRIVER_INFO=======================\n");
++	len += sprintf(buf + len, "version      :%s\n", CDEV_VERSION);
++
++	len += sprintf(buf + len, "running_time :%luD %02lu:%02lu:%02lu\n",
++		       running_time / (SECONDS_PER_DAY),
++		       running_time % (SECONDS_PER_DAY) / SECONDS_PER_HOUR,
++		       running_time % SECONDS_PER_HOUR / SECONDS_PER_MINUTE,
++		       running_time % SECONDS_PER_MINUTE);
++
++	for (i = 0; i < g_cdev_set.dev_num; i++) {
++		len += sprintf(buf + len,
++			       "===================================================\n");
++		len += sprintf(buf + len, "name      :%s\n",
++			       g_cdev_set.dev_list[i].dev_name);
++		len +=
++		    sprintf(buf + len, "dev_id    :%08x\n",
++			    g_cdev_set.dev_list[i].dev_id);
++		len += sprintf(buf + len, "type      :%u\n",
++			       g_cdev_set.dev_list[i].type);
++		len += sprintf(buf + len, "status    :%s\n",
++			       g_cdev_set.dev_list[i].s.open_status ==
++			       1 ? "open" : "close");
++		len += sprintf(buf + len, "send_pkgs :%u\n",
++			       g_cdev_set.dev_list[i].s.send_pkgs);
++		len +=
++		    sprintf(buf + len, "send_bytes:%u\n",
++			    g_cdev_set.dev_list[i].s.send_bytes);
++		len += sprintf(buf + len, "send_failed_count:%u\n",
++			       g_cdev_set.dev_list[i].s.send_failed_count);
++		len += sprintf(buf + len, "recv_pkgs :%u\n",
++			       g_cdev_set.dev_list[i].s.recv_pkgs);
++		len += sprintf(buf + len, "recv_bytes:%u\n",
++			       g_cdev_set.dev_list[i].s.recv_bytes);
++		len += sprintf(buf + len, "recv_failed_count:%u\n",
++			       g_cdev_set.dev_list[i].s.recv_failed_count);
++	}
++
++	return len;
++}
++module_param_call(statistics, NULL, cdev_param_get_statics, &debug, 0444);
++MODULE_PARM_DESC(statistics, "Statistics info of cdev driver,readonly");
++
++const struct file_operations g_bma_cdev_fops = {
++	.owner = THIS_MODULE,
++	.open = cdev_open,
++	.release = cdev_release,
++	.poll = cdev_poll,
++	.read = cdev_read,
++	.write = cdev_write,
++};
++
++static int __init bma_cdev_init(void)
++{
++	int i = 0;
++
++	int ret = 0;
++	int err_count = 0;
++
++	if (!bma_intf_check_edma_supported())
++		return -ENXIO;
++
++	if (dev_num <= 0 || dev_num > CDEV_MAX_NUM)
++		return -EINVAL;
++
++	memset(&g_cdev_set, 0, sizeof(struct cdev_dev_set));
++	g_cdev_set.dev_num = dev_num;
++
++	for (i = 0; i < dev_num; i++) {
++		struct cdev_dev *pdev = &g_cdev_set.dev_list[i];
++
++		sprintf(pdev->dev_name, "%s%d", CDEV_NAME_PREFIX, i);
++		pdev->dev_struct.name = pdev->dev_name;
++		pdev->dev_struct.minor = MISC_DYNAMIC_MINOR;
++		pdev->dev_struct.fops = &g_bma_cdev_fops;
++
++		pdev->dev_id = CDEV_INVALID_ID;
++
++		ret = misc_register(&pdev->dev_struct);
++
++		if (ret) {
++			CDEV_LOG(DLOG_DEBUG, "misc_register failed %d", i);
++			err_count++;
++			continue;
++		}
++
++		pdev->dev_id = MKDEV(MISC_MAJOR, pdev->dev_struct.minor);
++
++		ret = bma_intf_register_type(TYPE_CDEV + i, 0, INTR_DISABLE,
++					     &pdev->dev_data);
++
++		if (ret) {
++			CDEV_LOG(DLOG_ERROR,
++				 "cdev %d open failed ,result = %d",
++				 i, ret);
++			misc_deregister(&pdev->dev_struct);
++			pdev->dev_id = CDEV_INVALID_ID;
++			err_count++;
++			continue;
++		} else {
++			pdev->type = TYPE_CDEV + i;
++			atomic_set(&pdev->open, 1);
++		}
++
++		CDEV_LOG(DLOG_DEBUG, "%s id is %08x", pdev->dev_struct.name,
++			 pdev->dev_id);
++	}
++
++	if (err_count == dev_num) {
++		CDEV_LOG(DLOG_ERROR, "init cdev failed!");
++		return -EFAULT;
++	}
++	GET_SYS_SECONDS(g_cdev_set.init_time);
++	return 0;
++}
++
++static void __exit bma_cdev_exit(void)
++{
++	while (dev_num--) {
++		struct cdev_dev *pdev = &g_cdev_set.dev_list[dev_num];
++
++		if (pdev->dev_id != CDEV_INVALID_ID) {
++			if (pdev->dev_data && pdev->type != 0)
++				(void)bma_intf_unregister_type(&pdev->dev_data);
++
++			(void)misc_deregister
++				(&g_cdev_set.dev_list[dev_num].dev_struct);
++		}
++	}
++}
++
++int cdev_open(struct inode *inode_prt, struct file *filp)
++{
++	int i = 0;
++	struct cdev_dev *pdev = NULL;
++
++	if (!inode_prt)
++		return -EFAULT;
++	if (!filp)
++		return -EFAULT;
++
++	if (dev_num <= 0) {
++		CDEV_LOG(DLOG_ERROR, "dev_num error");
++		return -EFAULT;
++	}
++
++	for (i = 0; i < dev_num; i++) {
++		pdev = &g_cdev_set.dev_list[i];
++
++		if (pdev->dev_id == inode_prt->i_rdev)
++			break;
++	}
++
++	if (i == dev_num) {
++		CDEV_LOG(DLOG_ERROR, "can not find dev id %08x",
++			 inode_prt->i_rdev);
++		return -ENODEV;
++	}
++	/*each device can be opened only onece */
++	if (atomic_dec_and_test(&pdev->open) == 0) {
++		CDEV_LOG(DLOG_ERROR, "%s is already opened",
++			 pdev->dev_name);
++			atomic_inc(&pdev->open);
++			return -EBUSY;	/* already opened */
++	}
++
++	filp->private_data = &g_cdev_set.dev_list[i];
++	bma_intf_set_open_status(pdev->dev_data, DEV_OPEN);
++	((struct cdev_dev *)filp->private_data)->s.open_status++;
++
++	return 0;
++}
++
++int cdev_release(struct inode *inode_prt, struct file *filp)
++{
++	struct cdev_dev *pdev = NULL;
++
++	if (!filp)
++		return 0;
++
++	pdev = (struct cdev_dev *)filp->private_data;
++	if (pdev) {
++		((struct cdev_dev *)filp->private_data)->s.open_status--;
++		bma_intf_set_open_status(pdev->dev_data, DEV_CLOSE);
++		atomic_inc(&pdev->open);
++		filp->private_data = NULL;
++	}
++
++	return 0;
++}
++
++unsigned int cdev_poll(struct file *filp, poll_table *wait)
++{
++	unsigned int mask = 0;
++	wait_queue_head_t *queue_head = NULL;
++
++	if (!filp)
++		return 0;
++	queue_head = (wait_queue_head_t *)
++	    bma_cdev_get_wait_queue(GET_PRIVATE_DATA(filp));
++
++	if (!queue_head)
++		return 0;
++
++	poll_wait(filp, queue_head, wait);
++
++	if (bma_cdev_check_recv(GET_PRIVATE_DATA(filp)))
++		mask |= (POLLIN | POLLRDNORM);
++
++	CDEV_LOG(DLOG_DEBUG, "poll return %08x", mask);
++
++	return mask;
++}
++
++ssize_t cdev_read(struct file *filp, char __user *data, size_t count,
++		  loff_t *ppos)
++{
++	int ret = 0;
++
++	CDEV_LOG(DLOG_DEBUG, "data is %p,count is %u", data,
++		 (unsigned int)count);
++
++	if (!data || count <= 0)
++		return -EFAULT;
++
++	ret = bma_cdev_recv_msg(GET_PRIVATE_DATA(filp), data, count);
++
++	if (ret > 0) {
++		((struct cdev_dev *)filp->private_data)->s.recv_bytes += ret;
++		((struct cdev_dev *)filp->private_data)->s.recv_pkgs++;
++	} else {
++		((struct cdev_dev *)filp->private_data)->s.recv_failed_count++;
++	}
++
++	return ret;
++}
++
++ssize_t cdev_write(struct file *filp, const char __user *data, size_t count,
++		   loff_t *ppos)
++{
++	int ret = 0;
++
++	if (!data || count <= 0)
++		return -EFAULT;
++
++	CDEV_LOG(DLOG_DEBUG, "data is %p,count is %u", data,
++		 (unsigned int)count);
++	ret = bma_cdev_add_msg(GET_PRIVATE_DATA(filp), data, count);
++
++	if (ret > 0) {
++		((struct cdev_dev *)filp->private_data)->s.send_bytes += ret;
++		((struct cdev_dev *)filp->private_data)->s.send_pkgs++;
++	} else {
++		((struct cdev_dev *)filp->private_data)->s.send_failed_count++;
++	}
++
++	return ret;
++}
++
++MODULE_AUTHOR("HUAWEI TECHNOLOGIES CO., LTD.");
++MODULE_DESCRIPTION("HUAWEI CDEV DRIVER");
++MODULE_LICENSE("GPL");
++MODULE_VERSION(CDEV_VERSION);
++
++module_init(bma_cdev_init);
++module_exit(bma_cdev_exit);
+-- 
+2.26.2.windows.1
 
 
-> +	if (res) {
-> +		res = request_irq(irq, fn, IRQF_SHARED, "kgdboc", dev_id);
-
-IRQF_SHARED?
-
-Currrently there is nothing that prevents concurrent activation of
-ttyNMI0 and the underlying serial driver. Using IRQF_SHARED means it
-becomes possible for both drivers to try to service the same interrupt.
-That risks some rather "interesting" problems.
-
-
-Daniel.
-
-
-> +		WARN_ON(res);
-> +	}
-> +
-> +	enable_irq(irq);
-> +
-> +	kgdb_tty_irq = irq;
-> +	return 0;
-> +}
-> +
->  static struct kgdb_io kgdboc_io_ops = {
->  	.name			= "kgdboc",
->  	.read_char		= kgdboc_get_char,
->  	.write_char		= kgdboc_put_char,
->  	.pre_exception		= kgdboc_pre_exp_handler,
->  	.post_exception		= kgdboc_post_exp_handler,
-> +	.request_nmi		= kgdboc_request_nmi,
->  };
->  
->  #if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
-> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> index 529116b..b32b044 100644
-> --- a/include/linux/kgdb.h
-> +++ b/include/linux/kgdb.h
-> @@ -16,6 +16,7 @@
->  #include <linux/linkage.h>
->  #include <linux/init.h>
->  #include <linux/atomic.h>
-> +#include <linux/interrupt.h>
->  #ifdef CONFIG_HAVE_ARCH_KGDB
->  #include <asm/kgdb.h>
->  #endif
-> @@ -276,6 +277,10 @@ struct kgdb_arch {
->   * the I/O driver.
->   * @post_exception: Pointer to a function that will do any cleanup work
->   * for the I/O driver.
-> + * @request_nmi: Pointer to a function that can install an non-maskable
-> + * interrupt handler that will be called when a character is pending and that
-> + * can be cleared by calling @read_char until it returns NO_POLL_CHAR. If NMI
-> + * installation fails then fallback to install normal interrupt handler.
->   * @cons: valid if the I/O device is a console; else NULL.
->   */
->  struct kgdb_io {
-> @@ -287,6 +292,8 @@ struct kgdb_io {
->  	void			(*deinit) (void);
->  	void			(*pre_exception) (void);
->  	void			(*post_exception) (void);
-> +	int			(*request_nmi)(irq_handler_t nmi_handler,
-> +					       void *dev_id);
->  	struct console		*cons;
->  };
->  
-> -- 
-> 2.7.4
-> 
