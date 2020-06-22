@@ -2,114 +2,82 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D71DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC5102082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:32:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X4t7jax6"
+	by mail.kernel.org (Postfix) with ESMTP id 04BCB206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592854537;
+	bh=QfRYrK8z5849Hl/Iv9wWsynxoV1oaehOiifKZ4mfpNY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2vDMaUJU58q0DEUlN63NSlh/aWa6tbufo7mBstrDJe04L107ZxPpjw9H2+zDFyjex
+	 4Dm7nLnlE8E1u81wD9PhisznS71KkPuXlsDTWFaB8PnOO7rk0xpS/uJitke4gUqkxf
+	 ZePC8I1D7ONQ66GP52BYKyEQDKWHw5F1+DQ6fhsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgFVTcU (ORCPT
+        id S1728333AbgFVTff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgFVTcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:32:18 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E60C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:32:18 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id t6so14083502otk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kDvWJFrzfpWbkxz8YXuc2rLUJQ0CoVh8mMluFwhFK9g=;
-        b=X4t7jax66/02t8oexfXxT0PX6kXxK5rECyLccSKXxOoR/BkGQMHjqxEkJEN2Mm/X5C
-         YlhyuvZzjl2K51NtRfnqMTHkwxtI8Uq0QybiLU6lXgXwrWDYh7IL84D9cm5G/+7ATEVl
-         OCOfKFp6jJAOR6rkGn2vefwW2qKFVjRwzEs4z6NnDS7PLZU3CwM5YdQVmZ2xtadDm/Fb
-         vtQUapslp69ZExR2yYVeVqY7DHLy0vGOCzFNzhhDzqVrZRt45QgeZ3lmcFYM8mkvG4JR
-         5t2QO9VHFSR/CJ0E+pOVnXztmWWnD7FvUKEfCiGiWNgIgeoVy/op0sPXg6XwEFxkZpWB
-         yNMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kDvWJFrzfpWbkxz8YXuc2rLUJQ0CoVh8mMluFwhFK9g=;
-        b=A0FPX4Fdhu4SNtHXtFqLYDJoUmIZe6XxUS2ScPOi65g7a5h1l5VUAtGLrWqnkwI1PG
-         JoLe28KX27L3QHqQiTYVUa7qZq7uV9S2h/y8z0QLo4SapM9w2cL14veUA7t3bsrWbWc8
-         MGayeX/Hrcz6lduxq4Gro9OCdP8SKYjsp0c3yFPhLhTBWY42pUN8l51lifF5jAihcJrG
-         mNFriauRFLwaGWWvYO1VeBztPipneA2+o2hLajDPS2cWftxyRJIVmCdvUJ0GKnTXmAja
-         nBbxGv3upE35VlLvwzFu73X9plorxkYAJASXsp3/A7h2Tv4Mni4DuA33Qe/42/aRSNJ0
-         JWjQ==
-X-Gm-Message-State: AOAM53194hXHw5aespQXzkXFCZAd5Qq4KXk2ui+MwOB+pOGoCmeQEb1C
-        HwjKro+vgGiDOKjE0PIEAtmUZg==
-X-Google-Smtp-Source: ABdhPJw1Yikg9xiPvrCpS0EyuUZHl3QTpNdEklGCVVNVy0Q/IhIJ13yL7Nwk/uZDAT74cBkAEULrRg==
-X-Received: by 2002:a9d:67c1:: with SMTP id c1mr14225076otn.27.1592854337928;
-        Mon, 22 Jun 2020 12:32:17 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a10sm3630772ooo.39.2020.06.22.12.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:32:17 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 12:29:32 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, john.stultz@linaro.org
-Subject: Re: [PATCH] soc: qcom: rpmh-rsc: Set suppress_bind_attrs flag
-Message-ID: <20200622192932.GV128451@builder.lan>
-References: <1592808805-2437-1-git-send-email-mkshah@codeaurora.org>
- <159281658960.62212.15968925558324290917@swboyd.mtv.corp.google.com>
+        Mon, 22 Jun 2020 15:35:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728143AbgFVTff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:35:35 -0400
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB12A206E2;
+        Mon, 22 Jun 2020 19:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592854535;
+        bh=QfRYrK8z5849Hl/Iv9wWsynxoV1oaehOiifKZ4mfpNY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JfokhTk1gxTrybajXHO0w4B3ciBNWwU36SoEDCyE/+X6vK5Et00KAkjVxKNN0XkgA
+         W8G1f60AQ7oE2E7AwqAtU5bKVib0D7X1scKH4ZmxBAWYF9E55FYjVEoj7/qyFR74V7
+         bGedwatZMKBKP00o8oIw6WbbODkDwYbay9WLC3tw=
+Date:   Mon, 22 Jun 2020 12:35:33 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH] [net] dcb_doit: remove redundant skb check
+Message-ID: <20200622123533.4fd450b6@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20200621165657.9814-1-gaurav1086@gmail.com>
+References: <20200621165657.9814-1-gaurav1086@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159281658960.62212.15968925558324290917@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 22 Jun 02:03 PDT 2020, Stephen Boyd wrote:
-
-> Quoting Maulik Shah (2020-06-21 23:53:25)
-> > rpmh-rsc driver is fairly core to system and should not be removable
-> > once its probed. However it allows to unbind driver from sysfs using
-> > below command which results into a crash on sc7180.
+On Sun, 21 Jun 2020 12:56:28 -0400 Gaurav Singh wrote:
+> Remove the redundant null check for skb.
 > 
-> What is the crash? The world falls apart because rpmh APIs start
-> referencing pointers that point to freed memory?
-> 
+> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 
-Presumably the devm_of_platform_populate() will cause said drivers to be
-dismantled as well - but I think it's safe to say that that code path
-isn't well tested...
+Thanks for the patch, it looks correct, but could you describe your
+proof / reasoning based on which this change is correct?
 
-I've applied the patch, but would have preferred that some time was
-spent to make sure that things are unloadable as well.
+Please post non-bug fixes like this with a [net-next] rather than [net]
+tag (https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html).
 
-Regards,
-Bjorn
+> diff --git a/net/dcb/dcbnl.c b/net/dcb/dcbnl.c
+> index d2a4553bcf39..84dde5a2066e 100644
+> --- a/net/dcb/dcbnl.c
+> +++ b/net/dcb/dcbnl.c
+> @@ -1736,7 +1736,7 @@ static int dcb_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
+>  	struct net_device *netdev;
+>  	struct dcbmsg *dcb = nlmsg_data(nlh);
+>  	struct nlattr *tb[DCB_ATTR_MAX + 1];
+> -	u32 portid = skb ? NETLINK_CB(skb).portid : 0;
+> +	u32 portid = NETLINK_CB(skb).portid;
+>  	int ret = -EINVAL;
+>  	struct sk_buff *reply_skb;
+>  	struct nlmsghdr *reply_nlh = NULL;
 
-> > 
-> > echo 18200000.rsc > /sys/bus/platform/drivers/rpmh/unbind
-> > 
-> > Lets prevent unbind at runtime by setting suppress_bind_attrs flag.
-> 
-> Ok. But when the Android module brigade comes knocking they'll have to
-> revert this change and solve this problem too. Have fun!
-> 
-> > 
-> > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> > ---
-> 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
