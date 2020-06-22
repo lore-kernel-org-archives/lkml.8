@@ -2,123 +2,258 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E64C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA37C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE872073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:36:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YqBN6UfV"
+	by mail.kernel.org (Postfix) with ESMTP id CFF3020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgFVOgv (ORCPT
+        id S1729396AbgFVOhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:36:51 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:53877 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbgFVOgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:36:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592836609; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=JSt09Fbrzf0H+Eep97NqWj/jsb72fCfRDnOyEo7TatI=; b=YqBN6UfVf79fddUt8mb1hXxQTZlUTrkuRDZvF707TVzqE8vBIy2dQu3bbQAv+2IWBeWC0dYN
- yvHnUPAPKbOVkA5q4BvDhoZAjJTKQBV380PZOefxWhCSYgtzO89TRBxu1WjdlNYcB8bUUT4R
- o2XVpXJ+k6MORgmKVGKM+JR1CIg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5ef0c1ffa3d8a4474323a507 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 14:36:47
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 85EF2C433CB; Mon, 22 Jun 2020 14:36:46 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E361C433CA;
-        Mon, 22 Jun 2020 14:36:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E361C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Roman Mamedov <rm@romanrm.net>
-Cc:     Qiujun Huang <hqjagain@gmail.com>, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        anenbupt@gmail.com, syzkaller-bugs@googlegroups.com
-Subject: Re: [BISECTED REGRESSION] ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-References: <20200404041838.10426-1-hqjagain@gmail.com>
-        <20200404041838.10426-6-hqjagain@gmail.com>
-        <20200621020428.6417d6fb@natsu>
-Date:   Mon, 22 Jun 2020 17:36:41 +0300
-In-Reply-To: <20200621020428.6417d6fb@natsu> (Roman Mamedov's message of "Sun,
-        21 Jun 2020 02:04:28 +0500")
-Message-ID: <87lfkff9qe.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 22 Jun 2020 10:37:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729359AbgFVOg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:36:59 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EDEEC061795;
+        Mon, 22 Jun 2020 07:36:59 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id E0FB02A1D2C
+Subject: Re: [PATCH v3 2/2] media: vimc: Add a control to display info on test
+ image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+References: <20200618190506.11892-1-kgupta@es.iitr.ac.in>
+ <20200618190506.11892-3-kgupta@es.iitr.ac.in>
+ <d62583ab-7dd3-9a37-c94d-99fae0f29357@collabora.com>
+ <20200621203256.GA13040@kaaira-HP-Pavilion-Notebook>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <a8fb5c4c-4994-f53d-838d-0c10d796b997@collabora.com>
+Date:   Mon, 22 Jun 2020 16:36:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200621203256.GA13040@kaaira-HP-Pavilion-Notebook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Roman Mamedov <rm@romanrm.net> writes:
 
-> On Sat,  4 Apr 2020 12:18:38 +0800
-> Qiujun Huang <hqjagain@gmail.com> wrote:
->
->> In ath9k_hif_usb_rx_cb interface number is assumed to be 0.
->> usb_ifnum_to_if(urb->dev, 0)
->> But it isn't always true.
->> 
->> The case reported by syzbot:
->> https://lore.kernel.org/linux-usb/000000000000666c9c05a1c05d12@google.com
->> usb 2-1: new high-speed USB device number 2 using dummy_hcd
->> usb 2-1: config 1 has an invalid interface number: 2 but max is 0
->> usb 2-1: config 1 has no interface number 0
->> usb 2-1: New USB device found, idVendor=0cf3, idProduct=9271, bcdDevice=
->> 1.08
->> usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
->> general protection fault, probably for non-canonical address
->> 0xdffffc0000000015: 0000 [#1] SMP KASAN
->> KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000af]
->> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
->> 
->> Call Trace
->> __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
->> usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
->> dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
->> call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
->> expire_timers kernel/time/timer.c:1449 [inline]
->> __run_timers kernel/time/timer.c:1773 [inline]
->> __run_timers kernel/time/timer.c:1740 [inline]
->> run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
->> __do_softirq+0x21e/0x950 kernel/softirq.c:292
->> invoke_softirq kernel/softirq.c:373 [inline]
->> irq_exit+0x178/0x1a0 kernel/softirq.c:413
->> exiting_irq arch/x86/include/asm/apic.h:546 [inline]
->> smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
->> apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
->> 
->> Reported-and-tested-by: syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com
->> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
->
-> This causes complete breakage of ath9k operation across all the stable kernel
-> series it got backported to, and I guess the mainline as well. Please see:
-> https://bugzilla.kernel.org/show_bug.cgi?id=208251
-> https://bugzilla.redhat.com/show_bug.cgi?id=1848631
 
-So there's no fix for this? I was under impression that someone fixed
-this, but maybe I'm mixing with something else.
+On 21.06.20 22:32, Kaaira Gupta wrote:
+> On Sat, Jun 20, 2020 at 12:05:28PM +0200, Dafna Hirschfeld wrote:
+>> Hi, thanks for the patch
+>>
+>> On 18.06.20 21:05, Kaaira Gupta wrote:
+>>> Add a control in VIMC to display information such as the correct oder of
+>>> colors for a given test pattern, brightness, hue, saturation, contrast
+>>> and, width and height at sensor over test image; and display that
+>>> information.
+>>>
+>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+>>> ---
+>>>    drivers/media/test-drivers/vimc/Kconfig       |  2 +
+>>>    drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+>>>    drivers/media/test-drivers/vimc/vimc-sensor.c | 47 ++++++++++++++++++-
+>>>    3 files changed, 49 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+>>> index 4068a67585f9..da4b2ad6e40c 100644
+>>> --- a/drivers/media/test-drivers/vimc/Kconfig
+>>> +++ b/drivers/media/test-drivers/vimc/Kconfig
+>>> @@ -2,6 +2,8 @@
+>>>    config VIDEO_VIMC
+>>>    	tristate "Virtual Media Controller Driver (VIMC)"
+>>>    	depends on VIDEO_DEV && VIDEO_V4L2
+>>> +	select FONT_SUPPORT
+>>> +	select FONT_8x16
+>>>    	select MEDIA_CONTROLLER
+>>>    	select VIDEO_V4L2_SUBDEV_API
+>>>    	select VIDEOBUF2_VMALLOC
+>>> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+>>> index ae163dec2459..afda52253402 100644
+>>> --- a/drivers/media/test-drivers/vimc/vimc-common.h
+>>> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+>>> @@ -20,6 +20,7 @@
+>>>    #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+>>>    #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+>>>    #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+>>> +#define VIMC_CID_SHOW_INFO		(VIMC_CID_VIMC_BASE + 2)
+>>>    #define VIMC_FRAME_MAX_WIDTH 4096
+>>>    #define VIMC_FRAME_MAX_HEIGHT 2160
+>>> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>> index a2f09ac9a360..f5352b115aac 100644
+>>> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>> @@ -5,6 +5,7 @@
+>>>     * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>>>     */
+>>> +#include <linux/font.h>
+>>>    #include <linux/v4l2-mediabus.h>
+>>>    #include <linux/vmalloc.h>
+>>>    #include <media/v4l2-ctrls.h>
+>>> @@ -19,6 +20,7 @@ struct vimc_sen_device {
+>>>    	struct v4l2_subdev sd;
+>>>    	struct tpg_data tpg;
+>>>    	u8 *frame;
+>>> +	bool show_info;
+>>
+>> I see that vivid saves the 'v4l2_ctrl*' of the controls,
+>> maybe you should also do that instead of saving a boolean,
+> 
+> Hi, I don't understand..isn't boolean the control?
 
-If this is not fixed can someone please submit a patch to revert the
-offending commit (or commits) so that we get ath9k working again?
+You can see that vivid saves the controls as 'v4l2_ctrl*' and
+then the value of the control can be read from the 'cur.val' field.
+Note also that the mutex lock: "mutex_lock(dev->ctrl_hdl_user_vid.lock);"
+when reading the values. This way you have don't have to set the value
+yourself, the framework takes care of it. You only have to read the value.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> 
+>>
+>>>    	/* The active format */
+>>>    	struct v4l2_mbus_framefmt mbus_format;
+>>>    	struct v4l2_ctrl_handler hdl;
+>>> @@ -185,10 +187,29 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
+>>>    static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+>>>    				    const void *sink_frame)
+>>>    {
+>>> +	u8 *basep[TPG_MAX_PLANES][2];
+>>> +	char *order;
+>>> +	char str[100];
+>>> +	int line = 1;
+>>
+>> Those vars declarations can be inside the 'if (vsen->show_info)'
+> 
+> I declared it outside because I felt all declarations should be
+> together?
+
+Not crucial, but I think it is nicer to declare variables in the most inner scope where
+they are used.
+
+> 
+>>
+>>>    	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+>>>    						    ved);
+>>> -
+>>>    	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+>>> +	if (vsen->show_info) {
+>>> +		tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+>>> +		order = tpg_g_color_order(&vsen->tpg);
+>>> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, order);
+>>> +		snprintf(str, sizeof(str), " brightness %3d, contrast %3d, saturation %3d, hue %d ",
+>>> +			 vsen->tpg.brightness,
+>>> +			 vsen->tpg.contrast,
+>>> +			 vsen->tpg.saturation,
+>>> +			 vsen->tpg.hue);
+>>> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
+>>> +
+>>> +		snprintf(str, sizeof(str), " sensor size: %dx%d",
+>>> +			 vsen->mbus_format.width, vsen->mbus_format.height);
+>>> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
+>>> +	}
+>>> +
+>>>    	return vsen->frame;
+>>>    }
+>>> @@ -200,6 +221,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>>>    	if (enable) {
+>>>    		const struct vimc_pix_map *vpix;
+>>>    		unsigned int frame_size;
+>>> +		const struct font_desc *font = find_font("VGA8x16");
+>>> +
+>>> +		if (font == NULL) {
+>> Using 'if (!font)' is the way to check null pointer, instead of compering to null. Running checkpatch.pl with '--strict'
+>> will catch that.
+> 
+> I didn't do that to be consistent with vivid's style of code. Plus I
+> thought it makes it more clear to read. Should i change this?
+
+I don't know why vivid do it this way.
+Again, it is not that crucial, but in general it is better to send a patch that passes the issues
+found in checkpatch.
+
+Thanks,
+Dafna
+
+> 
+>>> +			pr_err("vimc: could not find font\n");
+>> 'dev_err' should be used instead of 'pr_err'.
+> 
+> yes sorry, i didn't now the difference.
+> 
+>>
+>> Also, maybe checking the font here is a bit late, since the user already
+>> wants to stream and expect the info to be shown.
+>> Maybe it is better to check the font on 'vimc_sen_s_ctrl'.
+> 
+> Like show the control only of font is available?
+> 
+> I think showing the error is enough maybe?
+> 
+>>
+>> Thanks,
+>> Dafna
+>>
+>>> +			vsen->show_info = 0;
+>>> +		} else {
+>>> +			tpg_set_font(font->data);
+>>> +		}
+>>>    		/* Calculate the frame size */
+>>>    		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+>>> @@ -269,6 +298,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+>>>    	case V4L2_CID_SATURATION:
+>>>    		tpg_s_saturation(&vsen->tpg, ctrl->val);
+>>>    		break;
+>>> +	case VIMC_CID_SHOW_INFO:
+>>> +		vsen->show_info = ctrl->val;
+>>> +		break;
+>>>    	default:
+>>>    		return -EINVAL;
+>>>    	}
+>>> @@ -307,6 +339,17 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+>>>    	.qmenu = tpg_pattern_strings,
+>>>    };
+>>> +static const struct v4l2_ctrl_config vimc_sen_ctrl_show_info = {
+>>> +	.ops = &vimc_sen_ctrl_ops,
+>>> +	.id = VIMC_CID_SHOW_INFO,
+>>> +	.name = "Show Information",
+>>> +	.type = V4L2_CTRL_TYPE_BOOLEAN,
+>>> +	.min = 0,
+>>> +	.max = 1,
+>>> +	.step = 1,
+>>> +	.def = 1,
+>>> +};
+>>> +
+>>>    static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>>>    					    const char *vcfg_name)
+>>>    {
+>>> @@ -323,6 +366,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>>>    	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+>>>    	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
+>>> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_show_info, NULL);
+>>>    	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>>>    			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+>>>    	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>>> @@ -362,6 +406,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>>>    	/* Initialize the frame format */
+>>>    	vsen->mbus_format = fmt_default;
+>>> +	vsen->show_info = vimc_sen_ctrl_show_info.def;
+>>>    	return &vsen->ved;
+>>>
