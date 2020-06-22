@@ -2,168 +2,158 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA197C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0177C433E5
 	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D5A2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3CF2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="krWaNh6m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgFVNKJ (ORCPT
+        id S1728513AbgFVNKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:10:09 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:41738 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728318AbgFVNKJ (ORCPT
+        Mon, 22 Jun 2020 09:10:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728478AbgFVNKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:10:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0U0OSU9i_1592831403;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0OSU9i_1592831403)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 22 Jun 2020 21:10:04 +0800
-Date:   Mon, 22 Jun 2020 21:10:03 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
- don't read garbage memmaps
-Message-ID: <20200622131003.GA98415@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200619125923.22602-1-david@redhat.com>
- <20200619125923.22602-2-david@redhat.com>
- <20200622082635.GA93552@L-31X9LVDL-1304.local>
- <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
- <20200622092221.GA96699@L-31X9LVDL-1304.local>
- <34f36733-805e-cc61-38da-2ee578ae096c@redhat.com>
+        Mon, 22 Jun 2020 09:10:17 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7012C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 06:10:16 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 97so12989942otg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 06:10:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F+fxtByV8XJfBDQUCtfrNN7N2L9LcG9m+MouCilHhEg=;
+        b=krWaNh6mktbYPiJFXjhvO2GGm/lh3IAexn5C5zlaHNYtpbtuX6nEX3dHxttasrcEBQ
+         r2Ke+i7ksGb0Zg3OHvJLCRpJCmj5t2cPKaC6n/Bu7vNWbIwo7oyAMpXdzNjOz75YkXz9
+         FKnRmUSO+pL/YuFF4vDZJ4m0WKsQyvSwGoT0I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F+fxtByV8XJfBDQUCtfrNN7N2L9LcG9m+MouCilHhEg=;
+        b=E4+D7AdXG8Cr8w1Jr0LYilNn69I6tD4zle0RRCirYxzHJcygn/o4DUjX0EkO7XiQHq
+         eFiDHAU4ma/lzQDHgmyw3AMubxpAZ6b0myPje/2S++pD4jjNILwDmqgqbwkycY4CAd4i
+         Eu/08psPmAZRfI6jszghSQ3lyX3z70P15TK8CfvItOa2yyw0iZT6I4HFQy0/L+4oQoTR
+         +KoCpgoe4uPlo7Iya0H93lht0eKMraFWBucA3sKweTz4BpZMo04B4tcSmyxn+qWFW0Na
+         CCPISJHu1xqvfoU1eLZwuOLodinCuep8k1XysqGpM3gu46nwJ+yZX0zGPMGoFXKvICeP
+         k4Yg==
+X-Gm-Message-State: AOAM53234jAWAWWJ6gwfgLTeDzdO6eU5Cs5Xn2hjRCn6B86mUscl3c+B
+        yAVoC+FG2THkep0uf9R2aZH5yEdlNsQ=
+X-Google-Smtp-Source: ABdhPJyjusKa9MNNUvgVPN1Brt+5rS5MpDfHDvGY2ZjIvRhWpfbzMm4RN0SawC1O1JKd17C8J/Dg6g==
+X-Received: by 2002:a05:6830:2045:: with SMTP id f5mr14747631otp.130.1592831415035;
+        Mon, 22 Jun 2020 06:10:15 -0700 (PDT)
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com. [209.85.161.49])
+        by smtp.gmail.com with ESMTPSA id t8sm3354588oor.42.2020.06.22.06.10.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 06:10:14 -0700 (PDT)
+Received: by mail-oo1-f49.google.com with SMTP id k36so1079688ooi.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 06:10:13 -0700 (PDT)
+X-Received: by 2002:a4a:3e48:: with SMTP id t69mr1635161oot.38.1592831412617;
+ Mon, 22 Jun 2020 06:10:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34f36733-805e-cc61-38da-2ee578ae096c@redhat.com>
+References: <20200520082723.96136-1-acourbot@chromium.org> <20200520082723.96136-8-acourbot@chromium.org>
+ <1592549952.23952.3.camel@mtksdaap41>
+In-Reply-To: <1592549952.23952.3.camel@mtksdaap41>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Mon, 22 Jun 2020 22:10:00 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MUiGtbBhfEoCVeTkQe1XrDea7wRUkybxtqQEThtQmJTwQ@mail.gmail.com>
+Message-ID: <CAPBb6MUiGtbBhfEoCVeTkQe1XrDea7wRUkybxtqQEThtQmJTwQ@mail.gmail.com>
+Subject: Re: [PATCH 07/10] media: mtk-vcodec: venc: remove redundant code
+To:     Tiffany Lin <tiffany.lin@mediatek.com>
+Cc:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Rui Wang <gtk_ruiwang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:51:34AM +0200, David Hildenbrand wrote:
->On 22.06.20 11:22, Wei Yang wrote:
->> On Mon, Jun 22, 2020 at 10:43:11AM +0200, David Hildenbrand wrote:
->>> On 22.06.20 10:26, Wei Yang wrote:
->>>> On Fri, Jun 19, 2020 at 02:59:20PM +0200, David Hildenbrand wrote:
->>>>> Especially with memory hotplug, we can have offline sections (with a
->>>>> garbage memmap) and overlapping zones. We have to make sure to only
->>>>> touch initialized memmaps (online sections managed by the buddy) and that
->>>>> the zone matches, to not move pages between zones.
->>>>>
->>>>> To test if this can actually happen, I added a simple
->>>>> 	BUG_ON(page_zone(page_i) != page_zone(page_j));
->>>>> right before the swap. When hotplugging a 256M DIMM to a 4G x86-64 VM and
->>>>> onlining the first memory block "online_movable" and the second memory
->>>>> block "online_kernel", it will trigger the BUG, as both zones (NORMAL
->>>>> and MOVABLE) overlap.
->>>>>
->>>>> This might result in all kinds of weird situations (e.g., double
->>>>> allocations, list corruptions, unmovable allocations ending up in the
->>>>> movable zone).
->>>>>
->>>>> Fixes: e900a918b098 ("mm: shuffle initial free memory to improve memory-side-cache utilization")
->>>>> Acked-by: Michal Hocko <mhocko@suse.com>
->>>>> Cc: stable@vger.kernel.org # v5.2+
->>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>>>> Cc: Michal Hocko <mhocko@suse.com>
->>>>> Cc: Minchan Kim <minchan@kernel.org>
->>>>> Cc: Huang Ying <ying.huang@intel.com>
->>>>> Cc: Wei Yang <richard.weiyang@gmail.com>
->>>>> Cc: Mel Gorman <mgorman@techsingularity.net>
->>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>>> ---
->>>>> mm/shuffle.c | 18 +++++++++---------
->>>>> 1 file changed, 9 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/mm/shuffle.c b/mm/shuffle.c
->>>>> index 44406d9977c77..dd13ab851b3ee 100644
->>>>> --- a/mm/shuffle.c
->>>>> +++ b/mm/shuffle.c
->>>>> @@ -58,25 +58,25 @@ module_param_call(shuffle, shuffle_store, shuffle_show, &shuffle_param, 0400);
->>>>>  * For two pages to be swapped in the shuffle, they must be free (on a
->>>>>  * 'free_area' lru), have the same order, and have the same migratetype.
->>>>>  */
->>>>> -static struct page * __meminit shuffle_valid_page(unsigned long pfn, int order)
->>>>> +static struct page * __meminit shuffle_valid_page(struct zone *zone,
->>>>> +						  unsigned long pfn, int order)
->>>>> {
->>>>> -	struct page *page;
->>>>> +	struct page *page = pfn_to_online_page(pfn);
->>>>
->>>> Hi, David and Dan,
->>>>
->>>> One thing I want to confirm here is we won't have partially online section,
->>>> right? We can add a sub-section to system, but we won't manage it by buddy.
->>>
->>> Hi,
->>>
->>> there is still a BUG with sub-section hot-add (devmem), which broke
->>> pfn_to_online_page() in corner cases (especially, see the description in
->>> include/linux/mmzone.h). We can have a boot-memory section partially
->>> populated and marked online. Then, we can hot-add devmem, marking the
->>> remaining pfns valid - and as the section is maked online, also as online.
->> 
->> Oh, yes, I see this description.
->> 
->> This means we could have section marked as online, but with a sub-section even
->> not added.
->> 
->> While the good news is even the sub-section is not added, but its memmap is
->> populated for an early section. So the page returned from pfn_to_online_page()
->> is a valid one.
->> 
->> But what would happen, if the sub-section is removed after added? Would
->> section_deactivate() release related memmap to this "struct page"?
+On Fri, Jun 19, 2020 at 3:59 PM Tiffany Lin <tiffany.lin@mediatek.com> wrote:
 >
->If devmem is removed, the memmap will be freed and the sub-sections are
->marked as non-present. So this works as expected.
+> On Wed, 2020-05-20 at 17:27 +0900, Alexandre Courbot wrote:
+> > vidioc_try_fmt() does clamp height and width when called on the OUTPUT
+> > queue, so clamping them prior to calling this function is redundant. Set
+> > the queue's parameters after calling vidioc_try_fmt() so we can use the
+> > values it computed.
+> >
 >
-
-Sorry, I may not catch your point. If my understanding is correct, the
-above behavior happens in function section_deactivate().
-
-Let me draw my understanding of function section_deactivate():
-
-    section_deactivate(pfn, nr_pages)
-        clear_subsection_map(pfn, nr_pages)
-	depopulate_section_memmap(pfn, nr_pages)
-
-Since we just remove a sub-section, I skipped some un-related codes. These two
-functions would:
-
-  * clear bitmap in ms->usage->subsection_map
-  * free memmap for the sub-section
-
-While since the section is not empty, ms->section_mem_map is not set no null.
-
-Per my understanding, the section present state is set in ms->section_mem_map
-with SECTION_MARKED_PRESENT. It looks we don't clear it when just remote a
-sub-section.
-
-Do I miss something?
-
->-- 
->Thanks,
+> vidioc_try_fmt clamps height and width only when f->type ==
+> V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE
 >
->David / dhildenb
+> Does this cleanup pass v4l2 compliance test?
 
--- 
-Wei Yang
-Help you, Help me
+It doesn't result in more tests failing at least. :) But although I
+cannot test with a pristine upstream version, it seems like some tests
+are not passing to begin with. If you have different results with a
+true upstream I would like to hear about it. Otherwise I am willing to
+help with getting all the tests in the green.
+
+Regarding this particular patch, you are right that we may end up
+writing an unclamped size in q_data. It's probably better to drop it
+for now.
+
+> I recall compliance test will try different fmt and make sure driver
+> response enough information?
+>
+>
+> > Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> > ---
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_enc.c   | 16 ++++------------
+> >  1 file changed, 4 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> > index 05743a745a11..f0af78f112db 100644
+> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> > @@ -449,7 +449,6 @@ static int vidioc_venc_s_fmt_out(struct file *file, void *priv,
+> >       struct mtk_q_data *q_data;
+> >       int ret, i;
+> >       const struct mtk_video_fmt *fmt;
+> > -     struct v4l2_pix_format_mplane *pix_fmt_mp = &f->fmt.pix_mp;
+> >
+> >       vq = v4l2_m2m_get_vq(ctx->m2m_ctx, f->type);
+> >       if (!vq) {
+> > @@ -474,20 +473,13 @@ static int vidioc_venc_s_fmt_out(struct file *file, void *priv,
+> >               f->fmt.pix.pixelformat = fmt->fourcc;
+> >       }
+> >
+> > -     pix_fmt_mp->height = clamp(pix_fmt_mp->height,
+> > -                             MTK_VENC_MIN_H,
+> > -                             MTK_VENC_MAX_H);
+> > -     pix_fmt_mp->width = clamp(pix_fmt_mp->width,
+> > -                             MTK_VENC_MIN_W,
+> > -                             MTK_VENC_MAX_W);
+> > -
+> > -     q_data->visible_width = f->fmt.pix_mp.width;
+> > -     q_data->visible_height = f->fmt.pix_mp.height;
+> > -     q_data->fmt = fmt;
+> > -     ret = vidioc_try_fmt(f, q_data->fmt);
+> > +     ret = vidioc_try_fmt(f, fmt);
+> >       if (ret)
+> >               return ret;
+> >
+> > +     q_data->fmt = fmt;
+> > +     q_data->visible_width = f->fmt.pix_mp.width;
+> > +     q_data->visible_height = f->fmt.pix_mp.height;
+> >       q_data->coded_width = f->fmt.pix_mp.width;
+> >       q_data->coded_height = f->fmt.pix_mp.height;
+> >
+>
