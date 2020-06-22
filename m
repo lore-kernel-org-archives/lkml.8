@@ -2,210 +2,104 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 305BA25376
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8984E25378
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:39:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="oGS+oYKR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731064AbgFVCij (ORCPT
+        id S1731086AbgFVCjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 22:38:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:51961 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgFVCii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 22:38:38 -0400
-IronPort-SDR: YZ9+yFhwDv6e5NaSTk2Ps81coVqmVMrFFPck9LDVeGmnTdLsv02HFSgfZ8GFiE1+PBmcQ4FiP7
- qT3YxR2ohEcw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="142704079"
-X-IronPort-AV: E=Sophos;i="5.75,265,1589266800"; 
-   d="scan'208";a="142704079"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 19:38:38 -0700
-IronPort-SDR: kLI/D8Q8tZxkRPPFuiYPaE98ZUv1IOQQhFqpjbEvK2nvhnQsDpBIUcqoVcKllluunqSdvOAhbn
- t3Z8I20xo8XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,265,1589266800"; 
-   d="scan'208";a="422482828"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jun 2020 19:38:31 -0700
-Date:   Sun, 21 Jun 2020 22:28:28 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Zeng, Xin" <xin.zeng@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-Message-ID: <20200622022827.GA18338@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200602165527.34137955@x1.home>
- <20200603031948.GB12300@joy-OptiPlex-7040>
- <20200602215528.7a1008f0@x1.home>
- <20200603052443.GC12300@joy-OptiPlex-7040>
- <20200603102628.017e2896@x1.home>
- <20200605102224.GB2936@work-vm>
- <20200605083149.1809e783@x1.home>
- <20200605143950.GG2897@work-vm>
- <20200610003731.GA13961@joy-OptiPlex-7040>
- <20200619164046.2bdc2f67@w520.home>
+        Sun, 21 Jun 2020 22:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgFVCjA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 22:39:00 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4263C061794
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 19:39:00 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qtrw5t3Gz9sSF;
+        Mon, 22 Jun 2020 12:38:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1592793537;
+        bh=C+XPnt8YT4ROg3t+m1g63N4ADdJ53SFqw06cw583kO8=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=oGS+oYKRBQpfRPq8Pk2Nuugdgj4qSTDHQFL+bSORNItWK4d+g9XF1d9lK6QA/QgLp
+         Wjmvxq63Onw2H055haWSv/Tlr8mQXOOJRk2lKW3C5KkSZDgaHZXkOEy1xynUstSQYr
+         TspojzVthwbd3qboeJqFsmdrIgmfQQbi8UbskEfIpGRl65gKe0A8LzGGghZaRyZoMY
+         7lQhM/tMS+unTpdwir35+rLdUlYOGmAE37RfiZZDAQEtdRR5eShL0JHIUSrtcRrj2I
+         U08VMmXOS6kZvV94eJmAKqcexqTVk+Sa9RnK/ROhs3slwykOspcArduEFyn0R73T23
+         9Yg9+9a6CgmMA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [GIT PULL] libnvdimm for v5.8-rc2
+In-Reply-To: <CAPcyv4jA-_Wd4S6gM2jf_VhVsgsdR5rQTeAc3AEPr6SAvhq3eA@mail.gmail.com>
+References: <CAPcyv4jA-_Wd4S6gM2jf_VhVsgsdR5rQTeAc3AEPr6SAvhq3eA@mail.gmail.com>
+Date:   Mon, 22 Jun 2020 12:39:24 +1000
+Message-ID: <87zh8vbz8j.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619164046.2bdc2f67@w520.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 04:40:46PM -0600, Alex Williamson wrote:
-> On Tue, 9 Jun 2020 20:37:31 -0400
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
-> 
-> > On Fri, Jun 05, 2020 at 03:39:50PM +0100, Dr. David Alan Gilbert wrote:
-> > > > > > I tried to simplify the problem a bit, but we keep going backwards.  If
-> > > > > > the requirement is that potentially any source device can migrate to any
-> > > > > > target device and we cannot provide any means other than writing an
-> > > > > > opaque source string into a version attribute on the target and
-> > > > > > evaluating the result to determine compatibility, then we're requiring
-> > > > > > userspace to do an exhaustive search to find a potential match.  That
-> > > > > > sucks.     
-> > > > >  
-> > hi Alex and Dave,
-> > do you think it's good for us to put aside physical devices and mdev aggregation
-> > for the moment, and use Alex's original idea that
-> > 
-> > +  Userspace should regard two mdev devices compatible when ALL of below
-> > +  conditions are met:
-> > +  (0) The mdev devices are of the same type
-> > +  (1) success when reading from migration_version attribute of one mdev device.
-> > +  (2) success when writing migration_version string of one mdev device to
-> > +  migration_version attribute of the other mdev device.
-> 
-> I think Pandora's box is already opened, if we can't articulate how
-> this solution would evolve to support features that we know are coming,
-> why should we proceed with this approach?  We've already seen interest
-> in breaking rule (0) in this thread, so we can't focus the solution on
-> mdev devices.
-> 
-> Maybe the best we can do is to compare one instance of a device to
-> another instance of a device, without any capability to predict
-> compatibility prior to creating devices, in the case on mdev.  The
-> string would need to include not only the device and vendor driver
-> compatibility, but also anything that has modified the state of the
-> device, such as creation time or post-creation time configuration.  The
-> user is left on their own for creating a compatible device, or
-> filtering devices to determine which might be, or which might generate,
-> compatible devices.  It's not much of a solution, I wonder if anyone
-> would even use it.
-> 
-> > and what about adding another sysfs attribute for vendors to put
-> > recommended migration compatible device type. e.g.
-> > #cat /sys/bus/pci/devices/0000:00:02.0/mdev_supported_types/i915-GVTg_V5_8/migration_compatible_devices
-> > parent id: 8086 591d
-> > mdev_type: i915-GVTg_V5_8
-> > 
-> > vendors are free to define the format and conent of this migration_compatible_devices
-> > and it's even not to be a full list.
-> > 
-> > before libvirt or user to do live migration, they have to read and test
-> > migration_version attributes of src/target devices to check migration compatibility.
-> 
-> AFAICT, free-form, vendor defined attributes are useless to libvirt.
-> Vendors could already put this information in the description attribute
-> and have it ignored by userspace tools due to the lack of defined
-> format.  It's also not clear what value this provides when it's
-> necessarily incomplete, a driver written today cannot know what future
-> drivers might be compatible with its migration data.  Thanks,
+Dan Williams <dan.j.williams@intel.com> writes:
+> Hi Linus, please pull from:
 >
-hi Alex
-maybe the problem can be divided into two pieces:
-(1) how to create/locate two migration compatible devices. For normal
-users, the most common and safest way to do it is to find a exact duplication
-of the source device. so for mdev, it's probably to create a target mdev
-of the same parent pci id, mdev type and creation parameters as the
-source mdev; and for physical devices, it's to locate a target device of the
-same pci id as the source device, plus some extra constraints (e.g. the
-target NVMe device is configured to the same remote device as the source
-NVMe device; or the target QAT device is supporting equal encryption
-algorithm set as the source QAT device...).
-I think a possible solution for this piece is to let vendor drivers provide a
-creating/locating script to find such exact duplication of source device.
-Then before libvirt is about to do live migration, it can use this script to
-create a target vm of exactly duplicated configuration of the source vm.
+>   git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+> tags/libnvdimm-for-5.8-rc2
+>
+> ...to receive a feature (papr_scm health retrieval) and a fix (sysfs
+> attribute visibility) for v5.8.
+>
+> Vaibhav explains in the merge commit below why missing v5.8 would be
+> painful and I agreed to try a -rc2 pull because only cosmetics kept
+> this out of -rc1 and his initial versions were posted in more than
+> enough time for v5.8 consideration.
+>
+> ===
+>     These patches are tied to specific features that were committed to
+>     customers in upcoming distros releases (RHEL and SLES) whose time-lines
+>     are tied to 5.8 kernel release.
+>
+>     Being able to track the health of an nvdimm is critical for our
+>     customers that are running workloads leveraging papr-scm nvdimms.
+>     Missing the 5.8 kernel would mean missing the distro timelines and
+>     shifting forward the availability of this feature in distro kernels by
+>     at least 6 months.
+> ===
+>
+> I notice that these do not have an ack from Michael, but I had been
+> assuming that he was deferring this to a libnvdimm subsystem decision
+> ever since v7 back at the end of May where he said "I don't have
+> strong opinions about the user API, it's really up to the nvdimm
+> folks." [1]
 
-(2) how to identify two devices are migration compatible after they are
-created and even they are not exactly identical (e.g. their parent
-devices are of minor difference in hardware SKUs). This identification is
-necessary even after in step (1) when libvirt has created/located two
-identical devices and are about to start live migration.
-Also, users are free to create/configure target devices and use the
-read-and-test interfaces defined in this series to check if they are
-live migration compatible.
-The read and test behavior in this patch set can grant vendor drivers the
-freedom to decide whether to support migration between only exact identical
-devices or able to support migration between devices of minor
-difference. 
+Yeah, sorry for not providing an actual ack, I didn't realise you were
+planning to send it for 5.8.
 
-So, do you think we can let this series focus on the second piece of
-problem and leave the first piece to other future series.
+The arch parts of that series are pretty boring plumbing of hypervisor
+calls, so the important details were all the libnvdimm related issues
+IMO.
 
-Thanks
-Yan
+So please consider this a belated ack and thanks for getting it merged.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+cheers
