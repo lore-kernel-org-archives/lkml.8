@@ -2,78 +2,128 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF66C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68933C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F29F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4771420732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgFVO2T (ORCPT
+        id S1729886AbgFVO2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:28:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45790 "EHLO mx2.suse.de"
+        Mon, 22 Jun 2020 10:28:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45100 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbgFVO0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:26:24 -0400
+        id S1729335AbgFVO0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:26:22 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E4AB5C1C9;
-        Mon, 22 Jun 2020 14:26:20 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 12:02:57 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Cc:     Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Hellwig <hch@lst.de>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: AMD IOMMU + SME + amdgpu regression
-Message-ID: <20200622100257.GD31822@suse.de>
-References: <1591915710.rakbpzst8h.none.ref@localhost>
- <1591915710.rakbpzst8h.none@localhost>
+        by mx2.suse.de (Postfix) with ESMTP id 6C125C1D2;
+        Mon, 22 Jun 2020 14:26:19 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
+        wahrenst@gmx.net, p.zabel@pengutronix.de
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v4 1/9] dt-bindings: reset: Add a binding for the RPi Firmware reset controller
+Date:   Mon, 22 Jun 2020 12:38:10 +0200
+Message-Id: <20200622103817.476-2-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200622103817.476-1-nsaenzjulienne@suse.de>
+References: <20200622103817.476-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591915710.rakbpzst8h.none@localhost>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+The firmware running on the RPi VideoCore can be used to reset and
+initialize HW controlled by the firmware.
 
-On Thu, Jun 11, 2020 at 07:05:21PM -0400, Alex Xu (Hello71) wrote:
-> I am using an ASRock B450 Pro4 with Ryzen 1600 and ASUS RX 480. I don't 
-> understand this code at all, but let me know what I can do to 
-> troubleshoot.
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Does it boot without SME enabled?
+---
+Changes since v2:
+ - Add include file for reset IDs
 
+Changes since v1:
+ - Correct cells binding as per Florian's comment
+ - Change compatible string to be more generic
 
-Regards,
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+ .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
 
-	Joerg
+diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+index b48ed875eb8e..23a885af3a28 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
++++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+@@ -39,6 +39,22 @@ properties:
+       - compatible
+       - "#clock-cells"
+ 
++  reset:
++    type: object
++
++    properties:
++      compatible:
++        const: raspberrypi,firmware-reset
++
++      "#reset-cells":
++        const: 1
++        description: >
++          The argument is the ID of the firmware reset line to affect.
++
++    required:
++      - compatible
++      - "#reset-cells"
++
+     additionalProperties: false
+ 
+ required:
+@@ -55,5 +71,10 @@ examples:
+             compatible = "raspberrypi,firmware-clocks";
+             #clock-cells = <1>;
+         };
++
++        reset: reset {
++            compatible = "raspberrypi,firmware-reset";
++            #reset-cells = <1>;
++        };
+     };
+ ...
+diff --git a/include/dt-bindings/reset/raspberrypi,firmware-reset.h b/include/dt-bindings/reset/raspberrypi,firmware-reset.h
+new file mode 100644
+index 000000000000..1a4f4c792723
+--- /dev/null
++++ b/include/dt-bindings/reset/raspberrypi,firmware-reset.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2020 Nicolas Saenz Julienne
++ * Author: Nicolas Saenz Julienne <nsaenzjulienne@suse.com>
++ */
++
++#ifndef _DT_BINDINGS_RASPBERRYPI_FIRMWARE_RESET_H
++#define _DT_BINDINGS_RASPBERRYPI_FIRMWARE_RESET_H
++
++#define RASPBERRYPI_FIRMWARE_RESET_ID_USB	0
++#define RASPBERRYPI_FIRMWARE_RESET_NUM_IDS	1
++
++#endif
+-- 
+2.27.0
+
