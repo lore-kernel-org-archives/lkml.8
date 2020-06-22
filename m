@@ -2,130 +2,95 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32122C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC1620720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:26:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z0yrcSnq"
+	by mail.kernel.org (Postfix) with ESMTP id 49C5420767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592868431;
+	bh=VjnZP0UJkWtMoh9mmcu3OkA3Gx/ME5wU7WbuTuzTSAc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=bIv4bNiZU65hDB007YvPWQ/OHyeIKRzqaTjm/WUSBnn1FhBCC+H89vkzbG0UhbpLO
+	 SCA2a+txsD/3vuZLTNX7FCKNvS6qHqU59RsIdAuSzpC0ITVpHzZ/6jyGkeLfBZADXt
+	 QIcufxJOJuZkmFp+zZmdlG/8T9yz/pOnf6CIDwvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbgFVX0w (ORCPT
+        id S1731334AbgFVX1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:26:52 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16982 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbgFVX0v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:26:51 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef13e0e0000>; Mon, 22 Jun 2020 16:26:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 22 Jun 2020 16:26:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 16:26:51 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
- 2020 23:26:41 +0000
-Subject: Re: [PATCH 09/16] mm/hmm: add output flag for compound page mapping
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-References: <20200619215649.32297-1-rcampbell@nvidia.com>
- <20200619215649.32297-10-rcampbell@nvidia.com>
- <20200622172520.GB2874652@mellanox.com>
- <15ba19a9-5f71-546b-bdea-31e65fc39693@nvidia.com>
- <20200622231835.GD2874652@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <f5ae2cdd-5774-8d1e-5a30-657b611568b8@nvidia.com>
-Date:   Mon, 22 Jun 2020 16:26:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 22 Jun 2020 19:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727061AbgFVX1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 19:27:09 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03BC720720;
+        Mon, 22 Jun 2020 23:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592868429;
+        bh=VjnZP0UJkWtMoh9mmcu3OkA3Gx/ME5wU7WbuTuzTSAc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hgFD1DX6czqgIEETk2kVqM+1UIrM+d7Mrklck6xgMzPEBxJXgiKHMuQNMKxk1Gg9M
+         vvNdhwCabDH4RWBK4ixED2gLoynkSXtVYF42Qyi8rA2sXENDPyYiyMMNtvIP9fRYVA
+         T5VtVluO7ZzAcLS7jdvFIftPWWHXVaoGPZm200vU=
+Date:   Mon, 22 Jun 2020 18:32:39 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] libperf: Use struct_size() helper
+Message-ID: <20200622233239.GA12892@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200622231835.GD2874652@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592868366; bh=+OkYuEGtBWmCdamoI5RkV/30Ug8LA8Bd48QQ050WpCg=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Z0yrcSnqqy39UtthHbXgST4onrT+geCMj9CZGPtxxEjYRjvnZ/kvuaig9BtbS5ewN
-         4PIcptsE5rT/Cya1Dawz6nY7KqIoA4ZCnrFgV8aylqKRcIyulrCQdQucOix/auD69Y
-         o+5+eqPgRY6cWpvS5AVPdQy8HhlNirNtE6d1O6Ay43A0Ufmn/YhE81mHzy6s8SVxj6
-         l2dqTvOK7OV8EoRMMdgr944mPz2zbtHk7IGwF+944sFLpQW5BPEzArNOBM6eKvlkia
-         GV7w1FT1kKnHhScFUsDCR2TRDrVQdKPPziglWU4Q7P8t1qWhtZohHk+jb9zgeiNkMI
-         oeV7F+nI1CdpQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes. Also, remove unnecessary
+variable _size_.
 
-On 6/22/20 4:18 PM, Jason Gunthorpe wrote:
-> On Mon, Jun 22, 2020 at 11:10:05AM -0700, Ralph Campbell wrote:
->>
->> On 6/22/20 10:25 AM, Jason Gunthorpe wrote:
->>> On Fri, Jun 19, 2020 at 02:56:42PM -0700, Ralph Campbell wrote:
->>>> hmm_range_fault() returns an array of page frame numbers and flags for
->>>> how the pages are mapped in the requested process' page tables. The PFN
->>>> can be used to get the struct page with hmm_pfn_to_page() and the page size
->>>> order can be determined with compound_order(page) but if the page is larger
->>>> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
->>>> using a larger page size. To be fully general, hmm_range_fault() would need
->>>> to return the mapping size to handle cases like a 1GB compound page being
->>>> mapped with 2MB PMD entries. However, the most common case is the mapping
->>>> size is the same as the underlying compound page size.
->>>> Add a new output flag to indicate this so that callers know it is safe to
->>>> use a large device page table mapping if one is available.
->>>
->>> But what size should the caller use?
->>>
->>> You already explained that the caller cannot use compound_ordet() to
->>> get the size, so what should it be?
->>>
->>> Probably this needs to be two flags, PUD and PMD, and the caller should
->>> use the PUD and PMD sizes to figure out how big it is?
->>>
->>> Jason
->>>
->>
->> I guess I didn't explain it as clearly as I thought. :-)
->>
->> The page size *can* be determined with compound_order(page) but without the
->> flag, the caller doesn't know how much of that page is being mapped by the
->> CPU. The flag says the CPU is mapping the whole compound page (based on compound_order)
->> and that the caller can use device mappings up to the size of compound_order(page).
-> 
-> No, I got it, I just don't like the assumption that just because a PMD
-> or PUD points to a page that the only possible value for
-> compound_page() is PMD or PUD respectively. Partial mapping should be
-> possible in both cases, if not today, then maybe down the road with
-> some of the large page work that has been floating about
-> 
-> It seems much safer to just directly encode the PUD/PMD size in the
-> flags
-> 
-> Jason
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-That is fine with me. I'll make that change for v2.
-I was just trying to minimize the number of flags being added.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ tools/lib/perf/threadmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
+index e92c368b0a6c..86d9dabd7fe5 100644
+--- a/tools/lib/perf/threadmap.c
++++ b/tools/lib/perf/threadmap.c
+@@ -6,6 +6,7 @@
+ #include <string.h>
+ #include <asm/bug.h>
+ #include <stdio.h>
++#include <linux/overflow.h>
+ 
+ static void perf_thread_map__reset(struct perf_thread_map *map, int start, int nr)
+ {
+@@ -17,10 +18,9 @@ static void perf_thread_map__reset(struct perf_thread_map *map, int start, int n
+ 
+ struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, int nr)
+ {
+-	size_t size = sizeof(*map) + sizeof(map->map[0]) * nr;
+ 	int start = map ? map->nr : 0;
+ 
+-	map = realloc(map, size);
++	map = realloc(map, struct_size(map, map, nr));
+ 	/*
+ 	 * We only realloc to add more items, let's reset new items.
+ 	 */
+-- 
+2.27.0
 
