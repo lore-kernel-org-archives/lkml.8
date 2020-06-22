@@ -2,76 +2,120 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62686C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF594C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36D3F2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592854704;
-	bh=DXvjdrGQ3yYXZ1xMpIwoepraEtPiiR6PIBhKLza1dM0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1hmAQAIkx/Bwe4KB/cMwkPfS5EwfTsLZQXg69l7CAV+l8LMlc8whYEKVE4cY9BWEE
-	 33Bif4O2yB8sJCmf5JGGhGk2ShqaPiP+XUocGxlLiPpd1YXVJkwc8UaksQkAatJR16
-	 1qQ+wAe5Opeoo34EPdLCGH42OLgBeHYDlXo6ShsM=
+	by mail.kernel.org (Postfix) with ESMTP id 8990920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgFVTiW (ORCPT
+        id S1728450AbgFVTk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:38:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48712 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 15:40:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9154 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgFVTiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:38:22 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5F320767;
-        Mon, 22 Jun 2020 19:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592854701;
-        bh=DXvjdrGQ3yYXZ1xMpIwoepraEtPiiR6PIBhKLza1dM0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HXBkK8BBRowssIsPcViuIc2erjgv1vbRDujwCNEAmaEiPrcKCiJxeoS3KlgTjKCpO
-         TjjeL/3iKIxC1go1llmqI7y2NVXGa+FrcEp6/ZbR+R33ZvzDMNZEBJ5EnboqDvHQNn
-         rdhKn9NTeuL+RA6oQne/v7bJqM5Yov5ESc4lvhNc=
-Date:   Mon, 22 Jun 2020 12:38:20 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     yunaixin03610@163.com
-Cc:     netdev@vger.kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, wuguanping@huawei.com,
-        wangqindong@huawei.com
-Subject: Re: [PATCH 0/5] Adding Huawei BMA drivers
-Message-ID: <20200622123820.3f7d8e3e@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200622160311.1533-1-yunaixin03610@163.com>
-References: <20200622160311.1533-1-yunaixin03610@163.com>
+        id S1728068AbgFVTk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:40:57 -0400
+IronPort-SDR: bDFNHcrkkwTVLHcqJAVsIhF+D5EQz8IBOT+h3PIExNcPygWH8I0b57hHUyvT+qLL63ao6JeFLI
+ jpB+FhXvdFAQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="141358938"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="141358938"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 12:40:56 -0700
+IronPort-SDR: O2b/9H8givv7m7N6NdtbF7yIVm6rD/0I5UzGQRLHIHJLsztvgSIXbC7QNG8I+x4aNniWrNxrWX
+ DnQr+RzAI2QA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="264595386"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 12:40:55 -0700
+Date:   Mon, 22 Jun 2020 12:40:55 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH 10/21] KVM: x86/mmu: Make __GFP_ZERO a property of the
+ memory cache
+Message-ID: <20200622194055.GC6151@linux.intel.com>
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
+ <20200605213853.14959-11-sean.j.christopherson@intel.com>
+ <CANgfPd9_BR_2NThfEs8faDxWeooZ6OeF2HAB5mUmted5sHwDPg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANgfPd9_BR_2NThfEs8faDxWeooZ6OeF2HAB5mUmted5sHwDPg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 00:03:06 +0800 yunaixin03610@163.com wrote:
-> From: yunaixin <yunaixin03610@163.com>
-> 
-> This patch set contains 5 communication drivers for Huawei BMA software.
-> The BMA software is a system management software. It supports the status
-> monitoring, performance monitoring, and event monitoring of various
-> components, including server CPUs, memory, hard disks, NICs, IB cards,
-> PCIe cards, RAID controller cards, and optical modules.
-> 
-> These 5 drivers are used to send/receive message through PCIe channel in
-> different ways by BMA software.
+On Wed, Jun 10, 2020 at 11:57:32AM -0700, Ben Gardon wrote:
+> > ---
+> >  arch/x86/include/asm/kvm_host.h | 1 +
+> >  arch/x86/kvm/mmu/mmu.c          | 7 ++++++-
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index e7a427547557..fb99e6776e27 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -251,6 +251,7 @@ struct kvm_kernel_irq_routing_entry;
+> >   */
+> >  struct kvm_mmu_memory_cache {
+> >         int nobjs;
+> > +       gfp_t gfp_zero;
+> This would make more sense to me if it could be used for general extra
+> gfp flags and was called gfp_flags or something, or it was a boolean
+> that was later translated into the flag being set. Storing the
+> gfp_zero flag here is a little counter-intuitive. Probably not worth
+> changing unless you're sending out a v2 for some other reason.
 
-Please make sure patches build cleanly with W=1 C=1 flags and recent
-version of gcc (preferably gcc-10).
+Ideally, this would be a generic gfp_flags field, but that's basically a
+non-starter for patch 5, which uses GFP_ATOMIC for the "oh crap the cache
+is empty" error handling.  Allowing arbitrary flags would be a mess.
 
-Please address errors which checkpatch points out.
+I went with storing a full gfp_t because that produces more optimal code.
+This isn't a super critical path and it's only a few cycles, but it seems
+worthwhile given the frequency with which this code will be called, and
+since this happens under mmu_lock.
 
-Please do no use static inline in C sources, only headers. Compiler
-will know when to inline, anyway.
+
+348             gfp_flags |= mc->gfp_zero;
+   0x00000000000058ab <+59>:    mov    0x4(%rbx),%eax
+   0x00000000000058ae <+62>:    or     $0x400cc0,%eax
+
+versus
+
+349                     gfp_flags |= __GFP_ZERO;
+   0x00000000000058a7 <+55>:    cmpb   $0x1,0x4(%rbx)
+   0x00000000000058ab <+59>:    mov    0x8(%rbx),%rdi <-- unrelated interleaved code
+   0x00000000000058af <+63>:    sbb    %eax,%eax
+   0x00000000000058b1 <+65>:    xor    %al,%al
+   0x00000000000058b3 <+67>:    add    $0x400dc0,%eax
+
