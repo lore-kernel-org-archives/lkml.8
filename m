@@ -2,103 +2,132 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8631FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D542074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631D52076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:09:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X+zIOwQ8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fDTCalao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgFVQIp (ORCPT
+        id S1729832AbgFVQJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:08:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35248 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726328AbgFVQIo (ORCPT
+        Mon, 22 Jun 2020 12:09:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729390AbgFVQJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:08:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592842123;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=oLt4zilRnLpSNkiF0C8oekFwW4sIceZdS9Lxg4NGfQA=;
-        b=X+zIOwQ8lKRqow7O8kpUKjELqX+MtcdM3skTior4cv7zfv7AmK8lNqfc9Y7GoepUIC36+g
-        Z+3bz4cwxpkNpPV7HAJO/L2DaKZTYdWY1IxH7YSIUge8b81A6bTn9p3cG6sgJBiAj6SuLA
-        3i+Ka4CUFbXufcW0PKWhWbQaVErj9AQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-IPnes8dvMvar_MJTs1dysA-1; Mon, 22 Jun 2020 12:08:35 -0400
-X-MC-Unique: IPnes8dvMvar_MJTs1dysA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 545F5A0BD9;
-        Mon, 22 Jun 2020 16:08:33 +0000 (UTC)
-Received: from dell-r430-03.lab.eng.brq.redhat.com (dell-r430-03.lab.eng.brq.redhat.com [10.37.153.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ECEC45BACD;
-        Mon, 22 Jun 2020 16:08:31 +0000 (UTC)
-From:   Igor Mammedov <imammedo@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, kvm@vger.kernel.org, wanpengli@tencent.com
-Subject: [PATCH] kvm: lapic: fix broken vcpu hotplug
-Date:   Mon, 22 Jun 2020 12:08:30 -0400
-Message-Id: <20200622160830.426022-1-imammedo@redhat.com>
+        Mon, 22 Jun 2020 12:09:11 -0400
+X-Greylist: delayed 1203 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 22 Jun 2020 09:09:11 PDT
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 825BDC061573;
+        Mon, 22 Jun 2020 09:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=K1w3Es33FaLd3FA+vAkCOuYJ1kplKwwrQTokMapYqC0=; b=fDTCalao2peu2NLnAdq19qtI3f
+        7xJ07Z+bHK77ohChgt0obakRXIoDNi3awvxbpCn9mGVATs47NnLz5u7unGufj6xu2g6HCGVZn6INe
+        jJwS1XK2kiNAsxJiMJsARGDvRjkibUFvZZHzIMRUZNK6S+4DPyn+seczDEURTZbUMd1GlZnnWaoxA
+        5hH+TZYCsY5sN8ZyKJDpZLcvCZgGqEO2xmnUJ13fkqcY3zX2gboWkcy+pMpyf7DpmReYIkirdZiws
+        KPr00MTv6CiwGuRfF4BEoXSdjae4yaGNBLIadclcqfPYQ4lf/IOVyAOcztojtvm+FLzlxqZuymGyk
+        c2KU+8Iw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnOga-0004Pe-P7; Mon, 22 Jun 2020 15:48:41 +0000
+Date:   Mon, 22 Jun 2020 16:48:40 +0100
+From:   willy@casper.infradead.org
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
+        "joe.jin@oracle.com" <joe.jin@oracle.com>,
+        Wengang Wang <wen.gang.wang@oracle.com>
+Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc
+ dentries
+Message-ID: <20200622154840.GA13945@casper.infradead.org>
+References: <877dw3apn8.fsf@x220.int.ebiederm.org>
+ <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
+ <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
+ <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
+ <87k1036k9y.fsf@x220.int.ebiederm.org>
+ <68a1f51b-50bf-0770-2367-c3e1b38be535@oracle.com>
+ <87blle4qze.fsf@x220.int.ebiederm.org>
+ <20200620162752.GF8681@bombadil.infradead.org>
+ <39e9f488-110c-588d-d977-413da3dc5dfa@oracle.com>
+ <87d05r2kl3.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d05r2kl3.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guest fails to online hotplugged CPU with error
-  smpboot: do_boot_cpu failed(-1) to wakeup CPU#4
+On Mon, Jun 22, 2020 at 10:20:40AM -0500, Eric W. Biederman wrote:
+> Junxiao Bi <junxiao.bi@oracle.com> writes:
+> > On 6/20/20 9:27 AM, Matthew Wilcox wrote:
+> >> On Fri, Jun 19, 2020 at 05:42:45PM -0500, Eric W. Biederman wrote:
+> >>> Junxiao Bi <junxiao.bi@oracle.com> writes:
+> >>>> Still high lock contention. Collect the following hot path.
+> >>> A different location this time.
+> >>>
+> >>> I know of at least exit_signal and exit_notify that take thread wide
+> >>> locks, and it looks like exit_mm is another.  Those don't use the same
+> >>> locks as flushing proc.
+> >>>
+> >>>
+> >>> So I think you are simply seeing a result of the thundering herd of
+> >>> threads shutting down at once.  Given that thread shutdown is fundamentally
+> >>> a slow path there is only so much that can be done.
+> >>>
+> >>> If you are up for a project to working through this thundering herd I
+> >>> expect I can help some.  It will be a long process of cleaning up
+> >>> the entire thread exit process with an eye to performance.
+> >> Wengang had some tests which produced wall-clock values for this problem,
+> >> which I agree is more informative.
+> >>
+> >> I'm not entirely sure what the customer workload is that requires a
+> >> highly threaded workload to also shut down quickly.  To my mind, an
+> >> overall workload is normally composed of highly-threaded tasks that run
+> >> for a long time and only shut down rarely (thus performance of shutdown
+> >> is not important) and single-threaded tasks that run for a short time.
+> >
+> > The real workload is a Java application working in server-agent mode, issue
+> > happened in agent side, all it do is waiting works dispatching from server and
+> > execute. To execute one work, agent will start lots of short live threads, there
+> > could be a lot of threads exit same time if there were a lots of work to
+> > execute, the contention on the exit path caused a high %sys time which impacted
+> > other workload.
+> 
+> If I understand correctly, the Java VM is not exiting.  Just some of
+> it's threads.
+> 
+> That is a very different problem to deal with.  That are many
+> optimizations that are possible when _all_ of the threads are exiting
+> that are not possible when _many_ threads are exiting.
 
-It's caused by the fact that kvm_apic_set_state(), which used to call
-recalculate_apic_map() unconditionally and pulled hotplugged CPU into
-apic map, is updating map conditionally [1] on state change which doesn't
-happen in this case and apic map update is skipped.
+Ah!  Now I get it.  This explains why the dput() lock contention was
+so important.  A new thread starting would block on that lock as it
+tried to create its new /proc/$pid/task/ directory.
 
-Note:
-new CPU during kvm_arch_vcpu_create() is not visible to
-kvm_recalculate_apic_map(), so all related update calls endup
-as NOP and only follow up kvm_apic_set_state() used to trigger map
-update that counted in hotplugged CPU.
-Fix issue by forcing unconditional update from kvm_apic_set_state(),
-like it used to be.
+Terminating thousands of threads but not the entire process isn't going
+to hit many of the locks (eg exit_signal() and exit_mm() aren't going
+to be called).  So we need a more sophisticated micro benchmark that is
+continually starting threads and asking dozens-to-thousands of them to
+stop at the same time.  Otherwise we'll try to fix lots of scalability
+problems that our customer doesn't care about.
 
-1)
-Fixes: (4abaffce4d25a KVM: LAPIC: Recalculate apic map in batch)
-Signed-off-by: Igor Mammedov <imammedo@redhat.com>
----
-PS:
-it's alternative to full revert of [1], I've posted earlier
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2205600.html
-so fii free to pick up whatever is better by now
----
- arch/x86/kvm/lapic.c | 1 +
- 1 file changed, 1 insertion(+)
+> Do you know if it is simply the cpu time or if it is the lock contention
+> that is the problem?  If it is simply the cpu time we should consider if
+> some of the locks that can be highly contended should become mutexes.
+> Or perhaps something like Matthew's cpu pinning idea.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 34a7e0533dad..5696831d4005 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2556,6 +2556,7 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	int r;
- 
-+	apic->vcpu->kvm->arch.apic_map_dirty = true;
- 	kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
- 	/* set SPIV separately to get count of SW disabled APICs right */
- 	apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV)));
--- 
-2.26.2
-
+If we're not trying to optimise for the entire process going down, then
+we definitely don't want my CPU pinning idea.
