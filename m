@@ -2,160 +2,179 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F69FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1712075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACE92074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592842478;
-	bh=vlXb0he7pqig0yrMwjbg6EIoSMB1nOlAGWT1Rzsij1U=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=gwJyEHpl7NNOjBJTvsc4HvEUW+1qQOXBQuux1qt1VxIDhnMOuPjRnTXrpZCzj3F6D
-	 GmNGocAQ0qWUUSMSruhm+xqmT4F4NrtLbk3aKQBzMdC29kRT3DTT56pNshnJeXMytX
-	 +56zPKbvcm/SuyzBeTWnW+6fP+9oERkwedFQPRf0=
+	s=default; t=1592842789;
+	bh=7CNmm4AwjmhFuwMT+ZusQGNpZT+eRVQyax7OgVJmhTw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LZ997kH7SzlbHk+VCeWfm1qo9JFo5yIJt5RtvOieOlmaIQpiOK9s5V47pwU7j/kjf
+	 NgKXLpQkiKJtqPZr697dyfbtfNDKF/ZyoRmqFe5GygLsKxh5rYiKJcXU3PYbFe3/wf
+	 8aZwwnBJo0PV7MyAqnkPr8q4ExZRqtyI951yjlg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbgFVQOh (ORCPT
+        id S1729482AbgFVQTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:14:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbgFVQOg (ORCPT
+        Mon, 22 Jun 2020 12:19:47 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:41069 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729275AbgFVQTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:14:36 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A37BC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:14:36 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id c194so16123512oig.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VVaCcZG58WyWvPJ2lYOGRecBDq8B1jl/4gBvyhUrQn8=;
-        b=hjOqsA1J9Nge6aShoubXb7xlmkqcvD0u8sQ/uIBCrC8e0bV/fPKVmzQKXoxiz+uH8G
-         7zaQSSlnpNs4/FKAMUbEFx657gJcZzY8dAVSe7rNcGm1tEoKepIA1gNYRSHak7eU5pAR
-         4AR1Bq0GeXrG+kCCO+BaDcpqAhMClQ+vJiEU0=
+        Mon, 22 Jun 2020 12:19:47 -0400
+Received: by mail-oo1-f65.google.com with SMTP id y45so3470008ooi.8;
+        Mon, 22 Jun 2020 09:19:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VVaCcZG58WyWvPJ2lYOGRecBDq8B1jl/4gBvyhUrQn8=;
-        b=WLiKa6vWQDr3FEVC2HR2efTZyfkgXQ3RKfMX5lYu+osjqqah7DQw0RU/T3z6hZEq6z
-         qO55Pv/lO+FFwZHzpHElFLwVJj8aR8IQ54HJ3c07cOpreXc5PTKpRCFPdVMcZ2RYEcHi
-         XHGFVKQKRvWOe2wvuLfFjnzZIZapWXV0OKW+LQCKNfrM0/whBLFsckEHAtqklQ0UZIEM
-         4nyItEF5RNR6rJAwkyrJTFChdo6OpalFkQVOmACm63ej0d9ysoReg/V5LdqLkeqjiwJn
-         69LfEZrkdHNUdj9HKaIl//NHRdiJac7vWb2H+guhISfcidifiyfPi6vYc0gRaVOhyE3L
-         jV8w==
-X-Gm-Message-State: AOAM532ydpbgRfePC9j2yoyP4z8cCMyFPuQIulEvWMdhbL+hyv/+sowo
-        lmGFu7MhX1vaYdUIqRAULmXWtw==
-X-Google-Smtp-Source: ABdhPJzm8MU3zV30ZHzDJEy4NbsU5cQabBWx/boBq5HyQvshlDpCIao3+byLMx0/z0YzJ18pFAP0XA==
-X-Received: by 2002:aca:6008:: with SMTP id u8mr13575129oib.58.1592842475938;
-        Mon, 22 Jun 2020 09:14:35 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id 35sm3365700otd.68.2020.06.22.09.14.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 09:14:35 -0700 (PDT)
-Subject: Re: [PATCH] scripts: add dummy report mode to add_namespace.cocci
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
-        cocci@systeme.lip6.fr, stable@vger.kernel.org,
-        skhan@linuxfoundation.org
-References: <20200604164145.173925-1-maennich@google.com>
- <alpine.DEB.2.21.2006042130080.2577@hadrien>
- <bf757b9d-6a67-598b-ed6e-7ee24464abfa@linuxfoundation.org>
- <20200622080345.GD260206@google.com>
- <0eda607e-4083-46d2-acb8-63cfa2697a71@linuxfoundation.org>
- <20200622150605.GA3828014@kroah.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <f09e32dc-8f17-d09a-b2e4-fb4c0699838e@linuxfoundation.org>
-Date:   Mon, 22 Jun 2020 10:14:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2Uo7tLE8Ng0ljtCXTtGcEJjxCELargRdsGzsyXemCgs=;
+        b=M7FCNXrYOqADFhXb+HDsMyqQDdUL7Rvl0WJZD5MP3UCiqTlV3YxTBO5tJ+O0QdH9Sq
+         KBAnm3p5HwWtyfzVaDnPd1tt5m1/phfq+pwVQEhCNa93TyIiRNUsL/xA3QBZ0p5YezTN
+         c0GbD0yHz6Yk4fGzcuxH36tk4zIVreAfB96qKwe+w5fJy/OhOA5EYGzT52XW8u3AG3hf
+         xrJfigNYyqrbljdbfNYv66abAHbuJxe8f14GdhusfOdGSTMVOojUMW3v+bMH4tHrNR7k
+         NzdwqG7fBHzjIO4SvpVik6QqPhUTSWswTAWphPd+N3EFAc0VH1ZFAK1TfHaOxLmdmlFD
+         dMyQ==
+X-Gm-Message-State: AOAM530xajK5zX5/hvrcycpl36yuntaPbs5DViwwLVsqps6nO3/tx3qx
+        OMbaKsFjYoNwMsQBLFhwXFY8Un16wQXV0bpD917DlpDQ
+X-Google-Smtp-Source: ABdhPJyJzMY+Ig5hfxqT84WrgEl4O2KCn/CA1QUseO7PZisUGMIMg9J9c1cy446Z1L7TJd1n36X5db7QuPeGS55+Gmc=
+X-Received: by 2002:a4a:5744:: with SMTP id u65mr14858682ooa.1.1592842786408;
+ Mon, 22 Jun 2020 09:19:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200622150605.GA3828014@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200616040442.21515-1-yu.c.chen@intel.com>
+In-Reply-To: <20200616040442.21515-1-yu.c.chen@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 22 Jun 2020 18:19:35 +0200
+Message-ID: <CAJZ5v0gBVBAjdCOXsM-Fa-iAkuv2JMi2mVkG5w7ADcg9dWencA@mail.gmail.com>
+Subject: Re: [PATCH][v2] PM / s2idle: Clear _TIF_POLLING_NRFLAG before suspend
+ to idle
+To:     Chen Yu <yu.c.chen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rui Zhang <rui.zhang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 9:06 AM, Greg Kroah-Hartman wrote:
-> On Mon, Jun 22, 2020 at 08:46:18AM -0600, Shuah Khan wrote:
->> On 6/22/20 2:03 AM, Matthias Maennich wrote:
->>> On Thu, Jun 04, 2020 at 02:39:18PM -0600, Shuah Khan wrote:
->>>> On 6/4/20 1:31 PM, Julia Lawall wrote:
->>>>>
->>>>>
->>>>> On Thu, 4 Jun 2020, Matthias Maennich wrote:
->>>>>
->>>>>> When running `make coccicheck` in report mode using the
->>>>>> add_namespace.cocci file, it will fail for files that contain
->>>>>> MODULE_LICENSE. Those match the replacement precondition, but spatch
->>>>>> errors out as virtual.ns is not set.
->>>>>>
->>>>>> In order to fix that, add the virtual rule nsdeps and only
->>>>>> do search and
->>>>>> replace if that rule has been explicitly requested.
->>>>>>
->>>>>> In order to make spatch happy in report mode, we also need a
->>>>>> dummy rule,
->>>>>> as otherwise it errors out with "No rules apply". Using a script:python
->>>>>> rule appears unrelated and odd, but this is the shortest I
->>>>>> could come up
->>>>>> with.
->>>>>>
->>>>>> Adjust scripts/nsdeps accordingly to set the nsdeps rule
->>>>>> when run trough
->>>>>> `make nsdeps`.
->>>>>>
->>>>>> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
->>>>>> Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
->>>>>> Cc: YueHaibing <yuehaibing@huawei.com>
->>>>>> Cc: jeyu@kernel.org
->>>>>> Cc: cocci@systeme.lip6.fr
->>>>>> Cc: stable@vger.kernel.org
->>>>>> Signed-off-by: Matthias Maennich <maennich@google.com>
->>>>>
->>>>> Acked-by: Julia Lawall <julia.lawall@inria.fr>
->>>>>
->>>>> Shuah reported the problem to me, so you could add
->>>>>
->>>>> Reported-by: Shuah Khan <skhan@linuxfoundation.org>
->>>>>
->>>>
->>>> Very cool. No errors with this patch. Thanks for fixing it
->>>> quickly.
->>>
->>> I am happy I could fix that and thanks for confirming. I assume your
->>> Tested-by could be added?
->>
->> Yes
->>
->> Tested-by: Shuah Khan <skhan@linuxfoundation.org>
->>>
->>> Is somebody willing to take this patch through their tree?
->>>
->>
->> My guess is that these go through kbuild git??
-> 
-> If you want to take this, that's fine with me.  But as I had the
-> original file come through my tree, I can take it too.  It's up to you,
-> either is ok with me.
-> 
+On Tue, Jun 16, 2020 at 6:03 AM Chen Yu <yu.c.chen@intel.com> wrote:
+>
+> Suspend to idle was found to not work on Goldmont CPU recently.
+> And the issue was triggered due to:
+>
+> 1. On Goldmont the CPU in idle can only be woken up via IPIs,
+>    not POLLING mode:
+>    Commit 08e237fa56a1 ("x86/cpu: Add workaround for MONITOR
+>    instruction erratum on Goldmont based CPUs")
+> 2. When the CPU is entering suspend to idle process, the
+>    _TIF_POLLING_NRFLAG is kept on, due to cpuidle_enter_s2idle()
+>    doesn't properly match call_cpuidle().
+> 3. Commit b2a02fc43a1f ("smp: Optimize send_call_function_single_ipi()")
+>    makes use of _TIF_POLLING_NRFLAG to avoid sending IPIs to
+>    idle CPUs.
+> 4. As a result, some IPIs related functions might not work
+>    well during suspend to idle on Goldmont. For example, one
+>    suspected victim:
+>    tick_unfreeze() -> timekeeping_resume() -> hrtimers_resume()
+>    -> clock_was_set() -> on_each_cpu() might wait forever,
+>    because the IPIs will not be sent to the CPUs which are
+>    sleeping with _TIF_POLLING_NRFLAG set, and Goldmont CPU
+>    could not be woken up by only setting _TIF_NEED_RESCHED
+>    on the monitor address.
+>
+> I don't find a way in Ubuntu to update the firmware of Goldmont
+> and check if the issue was gone, a fix patch would do no harm.
+> Clear the _TIF_POLLING_NRFLAG flag before entering suspend to idle,
+> and let the driver's enter_s2idle() to decide whether to set
+> _TIF_POLLING_NRFLAG or not. So that to avoid the scenario described
+> above and keep the context consistent with before. Also adjust
+> the naming to be consistent with call_cpuidle().
+>
+> Fixes: b2a02fc43a1f ("smp: Optimize send_call_function_single_ipi()")
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 
-Great. Please take this through your tree.
+Peter, any more comments here?
 
-thanks,
--- Shuah
+> ---
+> v2: According to Peter's review, v1 is racy, if someone already
+>     set TIF_NEED_RESCHED this patch just clear POLLING and go to sleep.
+>     Check TIF_NEED_RESCHED before entering suspend to idle and
+>     adjust the naming to be consistent with call_cpuidle().
+> --
+>  drivers/cpuidle/cpuidle.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index c149d9e20dfd..b003767abebd 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/sched.h>
+>  #include <linux/sched/clock.h>
+> +#include <linux/sched/idle.h>
+>  #include <linux/notifier.h>
+>  #include <linux/pm_qos.h>
+>  #include <linux/cpu.h>
+> @@ -133,8 +134,8 @@ int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+>  }
+>
+>  #ifdef CONFIG_SUSPEND
+> -static void enter_s2idle_proper(struct cpuidle_driver *drv,
+> -                               struct cpuidle_device *dev, int index)
+> +static void s2idle_enter(struct cpuidle_driver *drv,
+> +                        struct cpuidle_device *dev, int index)
+>  {
+>         ktime_t time_start, time_end;
+>
+> @@ -168,6 +169,15 @@ static void enter_s2idle_proper(struct cpuidle_driver *drv,
+>         dev->states_usage[index].s2idle_usage++;
+>  }
+>
+> +static int call_s2idle(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+> +                      int index)
+> +{
+> +       if (!current_clr_polling_and_test())
+> +               s2idle_enter(drv, dev, index);
+> +
+> +       return index;
+
+Is the value returned here used at all?
+
+> +}
+> +
+>  /**
+>   * cpuidle_enter_s2idle - Enter an idle state suitable for suspend-to-idle.
+>   * @drv: cpuidle driver for the given CPU.
+> @@ -187,7 +197,7 @@ int cpuidle_enter_s2idle(struct cpuidle_driver *drv, struct cpuidle_device *dev)
+>          */
+>         index = find_deepest_state(drv, dev, U64_MAX, 0, true);
+>         if (index > 0)
+> -               enter_s2idle_proper(drv, dev, index);
+> +               call_s2idle(drv, dev, index);
+
+I'm wondering why this can't be
+
+    if (index > 0 && !current_clr_polling_and_test())
+            enter_s2idle_proper(drv, dev, index);
+
+>         return index;
+>  }
+> --
