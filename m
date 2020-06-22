@@ -2,112 +2,103 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D81020720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29375206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgFVI7O (ORCPT
+        id S1726398AbgFVJAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:59:14 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:35842
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725802AbgFVI7M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:59:12 -0400
-X-IronPort-AV: E=Sophos;i="5.75,266,1589234400"; 
-   d="scan'208";a="352318332"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 10:59:08 +0200
-Date:   Mon, 22 Jun 2020 10:59:08 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Matthias Maennich <maennich@google.com>
-cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
-        cocci@systeme.lip6.fr, stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] scripts: add dummy report mode to add_namespace.cocci
-In-Reply-To: <20200622080345.GD260206@google.com>
-Message-ID: <alpine.DEB.2.22.394.2006221057220.2531@hadrien>
-References: <20200604164145.173925-1-maennich@google.com> <alpine.DEB.2.21.2006042130080.2577@hadrien> <bf757b9d-6a67-598b-ed6e-7ee24464abfa@linuxfoundation.org> <20200622080345.GD260206@google.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 22 Jun 2020 05:00:11 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46820 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgFVJAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:00:11 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 900BE1A0B85;
+        Mon, 22 Jun 2020 11:00:09 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 66EB51A0B76;
+        Mon, 22 Jun 2020 11:00:05 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 26CA8402CA;
+        Mon, 22 Jun 2020 16:59:59 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: fsl_mqs: Fix unchecked return value for clk_prepare_enable
+Date:   Mon, 22 Jun 2020 16:48:45 +0800
+Message-Id: <1592815725-853-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix unchecked return value for clk_prepare_enable.
 
+And because clk_prepare_enable and clk_disable_unprepare should
+check input clock parameter is NULL or not, then we don't need
+to check it before calling the function.
 
-On Mon, 22 Jun 2020, Matthias Maennich wrote:
+Fixes: 9e28f6532c61 ("ASoC: fsl_mqs: Add MQS component driver")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_mqs.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-> On Thu, Jun 04, 2020 at 02:39:18PM -0600, Shuah Khan wrote:
-> > On 6/4/20 1:31 PM, Julia Lawall wrote:
-> > >
-> > >
-> > > On Thu, 4 Jun 2020, Matthias Maennich wrote:
-> > >
-> > > > When running `make coccicheck` in report mode using the
-> > > > add_namespace.cocci file, it will fail for files that contain
-> > > > MODULE_LICENSE. Those match the replacement precondition, but spatch
-> > > > errors out as virtual.ns is not set.
-> > > >
-> > > > In order to fix that, add the virtual rule nsdeps and only do search and
-> > > > replace if that rule has been explicitly requested.
-> > > >
-> > > > In order to make spatch happy in report mode, we also need a dummy rule,
-> > > > as otherwise it errors out with "No rules apply". Using a script:python
-> > > > rule appears unrelated and odd, but this is the shortest I could come up
-> > > > with.
-> > > >
-> > > > Adjust scripts/nsdeps accordingly to set the nsdeps rule when run trough
-> > > > `make nsdeps`.
-> > > >
-> > > > Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-> > > > Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
-> > > > Cc: YueHaibing <yuehaibing@huawei.com>
-> > > > Cc: jeyu@kernel.org
-> > > > Cc: cocci@systeme.lip6.fr
-> > > > Cc: stable@vger.kernel.org
-> > > > Signed-off-by: Matthias Maennich <maennich@google.com>
-> > >
-> > > Acked-by: Julia Lawall <julia.lawall@inria.fr>
-> > >
-> > > Shuah reported the problem to me, so you could add
-> > >
-> > > Reported-by: Shuah Khan <skhan@linuxfoundation.org>
-> > >
-> >
-> > Very cool. No errors with this patch. Thanks for fixing it
-> > quickly.
->
-> I am happy I could fix that and thanks for confirming. I assume your
-> Tested-by could be added?
-
-Yes, that would be fine.
-
-julia
-
-
->
-> Is somebody willing to take this patch through their tree?
->
-> Cheers,
-> Matthias
->
-> >
-> > thanks,
-> > -- Shuah
-> >
-> >
-> >
->
+diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
+index 0c813a45bba7..69aeb0e71844 100644
+--- a/sound/soc/fsl/fsl_mqs.c
++++ b/sound/soc/fsl/fsl_mqs.c
+@@ -265,12 +265,20 @@ static int fsl_mqs_remove(struct platform_device *pdev)
+ static int fsl_mqs_runtime_resume(struct device *dev)
+ {
+ 	struct fsl_mqs *mqs_priv = dev_get_drvdata(dev);
++	int ret;
+ 
+-	if (mqs_priv->ipg)
+-		clk_prepare_enable(mqs_priv->ipg);
++	ret = clk_prepare_enable(mqs_priv->ipg);
++	if (ret) {
++		dev_err(dev, "failed to enable ipg clock\n");
++		return ret;
++	}
+ 
+-	if (mqs_priv->mclk)
+-		clk_prepare_enable(mqs_priv->mclk);
++	ret = clk_prepare_enable(mqs_priv->mclk);
++	if (ret) {
++		dev_err(dev, "failed to enable mclk clock\n");
++		clk_disable_unprepare(mqs_priv->ipg);
++		return ret;
++	}
+ 
+ 	if (mqs_priv->use_gpr)
+ 		regmap_write(mqs_priv->regmap, IOMUXC_GPR2,
+@@ -292,11 +300,8 @@ static int fsl_mqs_runtime_suspend(struct device *dev)
+ 		regmap_read(mqs_priv->regmap, REG_MQS_CTRL,
+ 			    &mqs_priv->reg_mqs_ctrl);
+ 
+-	if (mqs_priv->mclk)
+-		clk_disable_unprepare(mqs_priv->mclk);
+-
+-	if (mqs_priv->ipg)
+-		clk_disable_unprepare(mqs_priv->ipg);
++	clk_disable_unprepare(mqs_priv->mclk);
++	clk_disable_unprepare(mqs_priv->ipg);
+ 
+ 	return 0;
+ }
+-- 
+2.21.0
 
