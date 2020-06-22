@@ -2,75 +2,153 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8892C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB52620706
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC4A206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:40:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iEGUuJhL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgFVIkB (ORCPT
+        id S1726893AbgFVIk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:40:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59265 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFVIkB (ORCPT
+        Mon, 22 Jun 2020 04:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbgFVIkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:40:01 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jnHzj-0005fp-CR; Mon, 22 Jun 2020 08:39:59 +0000
-Date:   Mon, 22 Jun 2020 10:39:57 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        linux-kernel@vger.kernel.org, oleg@redhat.com,
-        ebiederm@xmission.com, akpm@linux-foundation.org,
-        liuzhiqiang26@huawei.com, joel@joelfernandes.org,
-        paulmck@linux.vnet.ibm.com, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] kernel/signal.c: Export symbol __lock_task_sighand
-Message-ID: <20200622083957.lfgz4j2dop5ryiz6@wittgenstein>
-References: <20200621133704.77896-1-alexander.kapshuk@gmail.com>
- <20200621135437.GA18092@nautica>
+        Mon, 22 Jun 2020 04:40:25 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A00B6C061796
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:40:24 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id x18so18287688lji.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hFeVIaukde5cEJYosI/nKt2dPH3w8UvOLbWUnlXHsBU=;
+        b=iEGUuJhLh3+NwbCNxjkkRe9EVuTa6QWYy1pemvrk9YZZt2QLagctJEfbVbcJm3GNqL
+         XdU1vFbZpQJ9MY0yMrL+JM4jrBltzKfZAMow7TO4U8iz6WgaI8qShnkMrXigDZZFvxFD
+         RBeIyRDTs+ycv/eO6kZtT1jPgvH7GJzZTAARh2+PpD0kHr0BSQrlEMwIN/jE38mW6Pmo
+         YWEGWjwW5DsbhEW7jBaTCQuGWx+25ofFPoeJ2n7vJPcWvNpCNABDJHi4v2Mken1RB6r6
+         C9kML6zezbYAd/Hnqn1IPXNudHg0e+N4TYUl/2iU8PsJJWpYOTULbYAMymthaJOFfY7R
+         idaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hFeVIaukde5cEJYosI/nKt2dPH3w8UvOLbWUnlXHsBU=;
+        b=nsrSdAlW/a6kO+li1a2fj30MN/ZARPH5X+jNL2wm1pFuazG3AXo/0Ziidggm+os/hs
+         91kgRq/XTTTNOFCeuFW/WD/7CGzsQ0ky0CfrJuLkb9O5AC7uQh1sP+T7BELRW6jlVDfq
+         zA7WipDuZpjI075mm5cE5EvMdteRb4GIkAKfHCiEF5M27xajkNHew94FWwJxAY7fbhX/
+         1UrZhA5Ov6LbvdQw+qBf7W1RFQO0idH2fv74+OK0x+D6BX7EDEhZDtosyj9gwz4yLF7X
+         zF7Rz/HJVbGQ4rhpSl1hNoxB5R5xWJs5T5STQFI9App8H5lfIphlwMaqhjcA675nrMEH
+         c+WA==
+X-Gm-Message-State: AOAM532WwKflVOHYByW6PFvpB1BchNSdtTuRdm0hrigj+npgiOQM9O4I
+        8R02dtSHfhN124NHgwyxeSfePQfgS6P6ha1U1af+Ow==
+X-Google-Smtp-Source: ABdhPJwBhI+o3WaB0VdNYziKJq6W2qVP2mYiDJ3QR8uHR3AWB7nuaFJazUewFMpxfNUCL74ZyOyKvTbpGiVkpD6bBkQ=
+X-Received: by 2002:a2e:9786:: with SMTP id y6mr7668442lji.398.1592815222900;
+ Mon, 22 Jun 2020 01:40:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200621135437.GA18092@nautica>
+References: <cover.1591684754.git.amit.kucheria@linaro.org>
+ <bf5ca7777fbb6f5e2d374a9a72d1e17d485bd8ea.1591684754.git.amit.kucheria@linaro.org>
+ <20200621071841.GF128451@builder.lan>
+In-Reply-To: <20200621071841.GF128451@builder.lan>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 22 Jun 2020 14:10:11 +0530
+Message-ID: <CAP245DWL0zRuV1LXq-FqMPX3BUFqLWwMFZpGrtr+Tg7SccQctw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm8250: Add thermal zones and
+ throttling support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 03:54:37PM +0200, Dominique Martinet wrote:
-> Alexander Kapshuk wrote on Sun, Jun 21, 2020:
-> > Export symbol __lock_task_sighand, so it is accessible from code compiled
-> > as modules.
-> > This fixes the following modpost error:
-> > ERROR: modpost: "__lock_task_sighand" [net/9p/9pnet.ko] undefined!
-> 
-> This can't fix something that's not broken (yet)! :)
-> 
-> I think it'd make more sense to describe why you think we should export
-> it, rather than describe a precise usecase e.g. justify why this would
-> be interesting to use from modules (e.g. it would help modules like 9p
-> take a lock on the current signal handler safely and cleanly through
-> lock_task_sighand())
-> 
-> 
-> 
-> Christian, Andrew - assuming this passes reviews from someone else I'm
-> not sure how to go forward with this; it'd be simpler for me if I could
-> take it in the 9p tree as I need it for the patch Alexander pointed at,
-> but I'm not normally touching any file outside of the 9p tree.
-> Is it better to let either of you take it normally (I think it'd be
-> you?) and wait for that to land, or can I take it in my tree for the
-> next merge window?
+On Sun, Jun 21, 2020 at 12:51 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Mon 08 Jun 23:44 PDT 2020, Amit Kucheria wrote:
+>
+> > sm8250 has 24 thermal sensors split across two tsens controllers. Add
+> > the thermal zones to expose them and wireup the cpus to throttle on
+> > crossing passive temperature thresholds.
+> >
+> > Update the comment in the drivers to list the SoCs it supports.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sm8250.dtsi | 766 +++++++++++++++++++++++++++
+> >  drivers/thermal/qcom/tsens-v2.c      |   2 +-
+> >  2 files changed, 767 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> > index deaa8415c7b72..5cd18cd8a675b 100644
+> > --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> > @@ -8,6 +8,7 @@
+> >  #include <dt-bindings/clock/qcom,rpmh.h>
+> >  #include <dt-bindings/power/qcom-rpmpd.h>
+> >  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> > +#include <dt-bindings/thermal/thermal.h>
+> >
+> >  / {
+> >       interrupt-parent = <&intc>;
+> > @@ -86,6 +87,7 @@ CPU0: cpu@0 {
+> >                       enable-method = "psci";
+> >                       next-level-cache = <&L2_0>;
+> >                       qcom,freq-domain = <&cpufreq_hw 0>;
+> > +                     #cooling-cells = <2>;
+>
+> This doesn't apply to linux-next.
+>
+> The problem seems to be that, as pointed out when I submitted that
+> patch, the previously anonymous "cpufreq hardware" is now replaced by
+> the "EPSS" hardware block.
 
-Hm, I don't think the patch is really needed though; see my other mail. :)
+I'll take a look.
 
-Christian
+> So we need a new driver (or update the existing one) to support this new
+> hardware block.
+>
+> Presumably though, without this there's not much cooling anyways - which
+> is sad, as your patch looks good.
+>
+> >                       L2_0: l2-cache {
+> >                             compatible = "cache";
+> >                             next-level-cache = <&L3_0>;
+> [..]
+> > diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
+> > index b293ed32174b5..58cac8f2a358c 100644
+> > --- a/drivers/thermal/qcom/tsens-v2.c
+> > +++ b/drivers/thermal/qcom/tsens-v2.c
+> > @@ -26,7 +26,7 @@
+> >  #define TM_TRDY_OFF                  0x00e4
+> >  #define TM_WDOG_LOG_OFF              0x013c
+> >
+> > -/* v2.x: 8996, 8998, sdm845 */
+> > +/* v2.x: 8996, 8998, sc7180, sdm845, sm8150, sm8250 */
+>
+> Even though it's trivial, can you please send this through the tsens
+> tree instead, so we don't end up having unnecessary merge conflicts.
+>
+
+Will do. Thanks for the review.
