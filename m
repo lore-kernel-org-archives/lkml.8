@@ -2,690 +2,150 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09538C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F48A206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4Wy42xw"
+	by mail.kernel.org (Postfix) with ESMTP id DF34E20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgFVJSt (ORCPT
+        id S1726951AbgFVJTV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:18:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgFVJSs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:18:48 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1757C061794;
-        Mon, 22 Jun 2020 02:18:47 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a1so3224915ejg.12;
-        Mon, 22 Jun 2020 02:18:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U8viaQ28MqH3vvneejom+lGd1FfL5hS23Z5UcdaVjrc=;
-        b=Q4Wy42xwjTJZ04TjtQ/+a48bVQqZA+W7D3dpFOD2JkXmf0dUr3K50+AH6y0MVSMf2t
-         TJBPSLZWefr6lJUjTTTk86EJs7/35SBIBt+5vuJUwUDDX8PjlJnxoJQkBWDXmrudy7ew
-         292JOwnn6bFFFkPrHEZR09xLfuIQSVdyQ8sYhUO1IdEx0ugWM0ZVuAtVOIu900JDaMIo
-         BDXIzPPY/qCwG2gGL0GsLjBNU8iPownCzF0hXBEgRl6+L9AF7G9NI672q2DqgqAy9puX
-         W3HrFfFB4WpN41+h8tE1hHyec5rKf0kcye+t6sVruDjinJyBSDQnHCyOGk0DXKtjXxdE
-         NJjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U8viaQ28MqH3vvneejom+lGd1FfL5hS23Z5UcdaVjrc=;
-        b=e1JATyGQJeraPXflJpG4TQ5r98tVONXiBJo937TdoMs5GCPAZQ1u53N/J/AgXfzv2U
-         acPvN4A6aVLtO0kf6e7HUwOPv0A5whGausVfVlWk3CLGvw4T/5RecDD7u2rakhTg7Otc
-         k1XL5ilaKkuCHnhgOSZFOb94JMPRzZs6kJQSgG6Nhk8ZmdKT2RRj5gYViGV/P7FGqC9e
-         XqgecGrRr+5wKsCx60BK/CGZWFUr4ao7ljyZ4zPqHC/4cwoZ1557mGqr49n6RmshQe5H
-         8O6CTsqzHD7PCF0vlzeiiWBnUs2L/oq2iKXK+k9oq5dQlmAZA3laCB32yiorPWxmTTbT
-         Xeig==
-X-Gm-Message-State: AOAM530MzWfeMBDzDt3CxF/ZmpnFMBGaL8/c+D2N1IejioAntXwO6kyj
-        2CvaUwf6aYjaKCvBQU8iEsk=
-X-Google-Smtp-Source: ABdhPJybZ2vRoEpViSoFvijrKjm8RsBxdM8WBrG0rwDGqXp/Ha3FhLNPQZZ6TWCOPHrnZ3XnEEIp+Q==
-X-Received: by 2002:a17:906:f1ca:: with SMTP id gx10mr14448994ejb.542.1592817526518;
-        Mon, 22 Jun 2020 02:18:46 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id u23sm11752222eds.73.2020.06.22.02.18.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:18:46 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 1/1] clk: qcom: gcc-msm8994: Add missing clocks, resets and GDSCs
-Date:   Mon, 22 Jun 2020 11:18:42 +0200
-Message-Id: <20200622091843.57589-1-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 22 Jun 2020 05:19:21 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:48852 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbgFVJTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:19:21 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jnIbd-0004j2-S3; Mon, 22 Jun 2020 11:19:09 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net
+Cc:     kuba@kernel.org, robh+dt@kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v5 3/3] net: phy: mscc: handle the clkout control on some phy variants
+Date:   Mon, 22 Jun 2020 11:19:08 +0200
+Message-ID: <12647360.rPbPzDV4QW@diego>
+In-Reply-To: <20200618164015.GF1551@shell.armlinux.org.uk>
+References: <20200618121139.1703762-1-heiko@sntech.de> <1723854.ZAnHLLU950@diego> <20200618164015.GF1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-changes since v1:
-- refrain from reordering defines in the header
+Am Donnerstag, 18. Juni 2020, 18:40:15 CEST schrieb Russell King - ARM Linux admin:
+> On Thu, Jun 18, 2020 at 06:01:29PM +0200, Heiko Stübner wrote:
+> > Am Donnerstag, 18. Juni 2020, 17:47:48 CEST schrieb Russell King - ARM Linux admin:
+> > > On Thu, Jun 18, 2020 at 05:41:54PM +0200, Heiko Stübner wrote:
+> > > > Though I'm not sure how this fits in the whole bringup of ethernet phys.
+> > > > Like the phy is dependent on the underlying ethernet controller to
+> > > > actually turn it on.
+> > > > 
+> > > > I guess we should check the phy-state and if it's not accessible, just
+> > > > keep the values and if it's in a suitable state do the configuration.
+> > > > 
+> > > > Calling a vsc8531_config_clkout() from both the vsc8531_config_init()
+> > > > as well as the clk_(un-)prepare  and clk_set_rate functions and being
+> > > > protected by a check against phy_is_started() ?
+> > > 
+> > > It sounds like it doesn't actually fit the clk API paradym then.  I
+> > > see that Rob suggested it, and from the DT point of view, it makes
+> > > complete sense, but then if the hardware can't actually be used in
+> > > the way the clk API expects it to be used, then there's a semantic
+> > > problem.
+> > > 
+> > > What is this clock used for?
+> > 
+> > It provides a source for the mac-clk for the actual transfers, here to
+> > provide the 125MHz clock needed for the RGMII interface .
+> > 
+> > So right now the old rk3368-lion devicetree just declares a stub
+> > fixed-clock and instructs the soc's clock controller to use it [0] .
+> > And in the cover-letter here, I show the update variant with using
+> > the clock defined here.
+> > 
+> > 
+> > I've added the idea from my previous mail like shown below [1].
+> > which would take into account the phy-state.
+> > 
+> > But I guess I'll wait for more input before spamming people with v6.
+> 
+> Let's get a handle on exactly what this is.
+> 
+> The RGMII bus has two clocks: RXC and TXC, which are clocked at one
+> of 125MHz, 25MHz or 2.5MHz depending on the RGMII data rate.  Some
+> PHYs replace TXC with GTX clock, which always runs at 125MHz.  These
+> clocks are not what you're referring to.
+> 
+> You are referring to another commonly provided clock between the MAC
+> and the PHY, something which is not unique to your PHY.
+> 
+> We seem to be heading down a path where different PHYs end up doing
+> different things in DT for what is basically the same hardware setup,
+> which really isn't good. :(
+> 
+> We have at803x using:
+> 
+> qca,clk-out-frequency
+> qca,clk-out-strength
+> qca,keep-pll-enabled
+> 
+> which are used to control the CLK_25M output pin on the device, which
+> may be used to provide a reference clock for the MAC side, selecting
+> between 25M, 50M, 62.5M and 125MHz.  This was introduced in November
+> 2019, so not that long ago.
 
-This change adds GDSCs, resets and most of the missing
-clocks to the msm8994 GCC driver. The remaining ones
-are of local_vote_clk and gate_clk type, which are not
-yet supported upstream. Also reorder them to match the
-original downstream driver.
+Because it was not that old, was the reason I followed that example in
+my v1 :-) 
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- drivers/clk/qcom/gcc-msm8994.c               | 388 ++++++++++++++++++-
- include/dt-bindings/clock/qcom,gcc-msm8994.h |  36 ++
- 2 files changed, 423 insertions(+), 1 deletion(-)
+And Andrew then suggested to at least try to use a common property
+for the target frequency that other phys could migrate to.
 
-diff --git a/drivers/clk/qcom/gcc-msm8994.c b/drivers/clk/qcom/gcc-msm8994.c
-index b7fc8c7ba195..144d2ba7a9be 100644
---- a/drivers/clk/qcom/gcc-msm8994.c
-+++ b/drivers/clk/qcom/gcc-msm8994.c
-@@ -20,6 +20,7 @@
- #include "clk-rcg.h"
- #include "clk-branch.h"
- #include "reset.h"
-+#include "gdsc.h"
- 
- enum {
- 	P_XO,
-@@ -1772,6 +1773,32 @@ static struct clk_branch gcc_gp3_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_lpass_q6_axi_clk = {
-+	.halt_reg = 0x0280,
-+	.clkr = {
-+		.enable_reg = 0x0280,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_lpass_q6_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_q6_bimc_axi_clk = {
-+	.halt_reg = 0x0284,
-+	.clkr = {
-+		.enable_reg = 0x0284,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_mss_q6_bimc_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_pcie_0_aux_clk = {
- 	.halt_reg = 0x1ad4,
- 	.clkr = {
-@@ -1790,6 +1817,32 @@ static struct clk_branch gcc_pcie_0_aux_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_pcie_0_cfg_ahb_clk = {
-+	.halt_reg = 0x1ad0,
-+	.clkr = {
-+		.enable_reg = 0x1ad0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_pcie_0_cfg_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_0_mstr_axi_clk = {
-+	.halt_reg = 0x1acc,
-+	.clkr = {
-+		.enable_reg = 0x1acc,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_pcie_0_mstr_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_pcie_0_pipe_clk = {
- 	.halt_reg = 0x1ad8,
- 	.halt_check = BRANCH_HALT_DELAY,
-@@ -1809,6 +1862,20 @@ static struct clk_branch gcc_pcie_0_pipe_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_pcie_0_slv_axi_clk = {
-+	.halt_reg = 0x1ac8,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1ac8,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_pcie_0_slv_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_pcie_1_aux_clk = {
- 	.halt_reg = 0x1b54,
- 	.clkr = {
-@@ -1827,6 +1894,32 @@ static struct clk_branch gcc_pcie_1_aux_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_pcie_1_cfg_ahb_clk = {
-+	.halt_reg = 0x1b54,
-+	.clkr = {
-+		.enable_reg = 0x1b54,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_pcie_1_cfg_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_1_mstr_axi_clk = {
-+	.halt_reg = 0x1b50,
-+	.clkr = {
-+		.enable_reg = 0x1b50,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_pcie_1_mstr_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_pcie_1_pipe_clk = {
- 	.halt_reg = 0x1b58,
- 	.halt_check = BRANCH_HALT_DELAY,
-@@ -1846,6 +1939,19 @@ static struct clk_branch gcc_pcie_1_pipe_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_pcie_1_slv_axi_clk = {
-+	.halt_reg = 0x1b48,
-+	.clkr = {
-+		.enable_reg = 0x1b48,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_pcie_1_slv_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_pdm2_clk = {
- 	.halt_reg = 0x0ccc,
- 	.clkr = {
-@@ -1864,6 +1970,19 @@ static struct clk_branch gcc_pdm2_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_pdm_ahb_clk = {
-+	.halt_reg = 0x0cc4,
-+	.clkr = {
-+		.enable_reg = 0x0cc4,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_pdm_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_sdcc1_apps_clk = {
- 	.halt_reg = 0x04c4,
- 	.clkr = {
-@@ -1899,6 +2018,23 @@ static struct clk_branch gcc_sdcc1_ahb_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_sdcc2_ahb_clk = {
-+	.halt_reg = 0x0508,
-+	.clkr = {
-+		.enable_reg = 0x0508,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_sdcc2_ahb_clk",
-+			.parent_names = (const char *[]){
-+				"periph_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_sdcc2_apps_clk = {
- 	.halt_reg = 0x0504,
- 	.clkr = {
-@@ -1917,6 +2053,23 @@ static struct clk_branch gcc_sdcc2_apps_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_sdcc3_ahb_clk = {
-+	.halt_reg = 0x0548,
-+	.clkr = {
-+		.enable_reg = 0x0548,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_sdcc3_ahb_clk",
-+			.parent_names = (const char *[]){
-+				"periph_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_sdcc3_apps_clk = {
- 	.halt_reg = 0x0544,
- 	.clkr = {
-@@ -1935,6 +2088,23 @@ static struct clk_branch gcc_sdcc3_apps_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_sdcc4_ahb_clk = {
-+	.halt_reg = 0x0588,
-+	.clkr = {
-+		.enable_reg = 0x0588,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_sdcc4_ahb_clk",
-+			.parent_names = (const char *[]){
-+				"periph_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_sdcc4_apps_clk = {
- 	.halt_reg = 0x0584,
- 	.clkr = {
-@@ -1989,6 +2159,19 @@ static struct clk_branch gcc_sys_noc_usb3_axi_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_tsif_ahb_clk = {
-+	.halt_reg = 0x0d84,
-+	.clkr = {
-+		.enable_reg = 0x0d84,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_tsif_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_tsif_ref_clk = {
- 	.halt_reg = 0x0d88,
- 	.clkr = {
-@@ -2007,6 +2190,19 @@ static struct clk_branch gcc_tsif_ref_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_ufs_ahb_clk = {
-+	.halt_reg = 0x1d4c,
-+	.clkr = {
-+		.enable_reg = 0x1d4c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_ufs_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_ufs_axi_clk = {
- 	.halt_reg = 0x1d48,
- 	.clkr = {
-@@ -2043,6 +2239,34 @@ static struct clk_branch gcc_ufs_rx_cfg_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_ufs_rx_symbol_0_clk = {
-+	.halt_reg = 0x1d60,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1d60,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_ufs_rx_symbol_0_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_rx_symbol_1_clk = {
-+	.halt_reg = 0x1d64,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1d64,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_ufs_rx_symbol_1_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_ufs_tx_cfg_clk = {
- 	.halt_reg = 0x1d50,
- 	.clkr = {
-@@ -2061,6 +2285,47 @@ static struct clk_branch gcc_ufs_tx_cfg_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_ufs_tx_symbol_0_clk = {
-+	.halt_reg = 0x1d58,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1d58,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_ufs_tx_symbol_0_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_tx_symbol_1_clk = {
-+	.halt_reg = 0x1d5c,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1d5c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_ufs_tx_symbol_1_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_usb2_hs_phy_sleep_clk = {
-+	.halt_reg = 0x04ac,
-+	.clkr = {
-+		.enable_reg = 0x04ac,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_usb2_hs_phy_sleep_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_usb30_master_clk = {
- 	.halt_reg = 0x03c8,
- 	.clkr = {
-@@ -2097,6 +2362,19 @@ static struct clk_branch gcc_usb30_mock_utmi_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_usb30_sleep_clk = {
-+	.halt_reg = 0x03cc,
-+	.clkr = {
-+		.enable_reg = 0x03cc,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_usb30_sleep_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_usb3_phy_aux_clk = {
- 	.halt_reg = 0x1408,
- 	.clkr = {
-@@ -2115,6 +2393,19 @@ static struct clk_branch gcc_usb3_phy_aux_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_usb_hs_ahb_clk = {
-+	.halt_reg = 0x0488,
-+	.clkr = {
-+		.enable_reg = 0x0488,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_usb_hs_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_usb_hs_system_clk = {
- 	.halt_reg = 0x0484,
- 	.clkr = {
-@@ -2133,6 +2424,59 @@ static struct clk_branch gcc_usb_hs_system_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk = {
-+	.halt_reg = 0x1a84,
-+	.clkr = {
-+		.enable_reg = 0x1a84,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data)
-+		{
-+			.name = "gcc_usb_phy_cfg_ahb2phy_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct gdsc pcie_gdsc = {
-+		.gdscr = 0x1e18,
-+		.pd = {
-+			.name = "pcie",
-+		},
-+		.pwrsts = PWRSTS_OFF_ON,
-+};
-+
-+static struct gdsc pcie_0_gdsc = {
-+		.gdscr = 0x1ac4,
-+		.pd = {
-+			.name = "pcie_0",
-+		},
-+		.pwrsts = PWRSTS_OFF_ON,
-+};
-+
-+static struct gdsc pcie_1_gdsc = {
-+		.gdscr = 0x1b44,
-+		.pd = {
-+			.name = "pcie_1",
-+		},
-+		.pwrsts = PWRSTS_OFF_ON,
-+};
-+
-+static struct gdsc usb30_gdsc = {
-+		.gdscr = 0x3c4,
-+		.pd = {
-+			.name = "usb30",
-+		},
-+		.pwrsts = PWRSTS_OFF_ON,
-+};
-+
-+static struct gdsc ufs_gdsc = {
-+		.gdscr = 0x1d44,
-+		.pd = {
-+			.name = "ufs",
-+		},
-+		.pwrsts = PWRSTS_OFF_ON,
-+};
-+
- static struct clk_regmap *gcc_msm8994_clocks[] = {
- 	[GPLL0_EARLY] = &gpll0_early.clkr,
- 	[GPLL0] = &gpll0.clkr,
-@@ -2233,26 +2577,64 @@ static struct clk_regmap *gcc_msm8994_clocks[] = {
- 	[GCC_GP1_CLK] = &gcc_gp1_clk.clkr,
- 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
- 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
-+	[GCC_LPASS_Q6_AXI_CLK] = &gcc_lpass_q6_axi_clk.clkr,
-+	[GCC_MSS_Q6_BIMC_AXI_CLK] = &gcc_mss_q6_bimc_axi_clk.clkr,
- 	[GCC_PCIE_0_AUX_CLK] = &gcc_pcie_0_aux_clk.clkr,
-+	[GCC_PCIE_0_CFG_AHB_CLK] = &gcc_pcie_0_cfg_ahb_clk.clkr,
-+	[GCC_PCIE_0_MSTR_AXI_CLK] = &gcc_pcie_0_mstr_axi_clk.clkr,
- 	[GCC_PCIE_0_PIPE_CLK] = &gcc_pcie_0_pipe_clk.clkr,
-+	[GCC_PCIE_0_SLV_AXI_CLK] = &gcc_pcie_0_slv_axi_clk.clkr,
- 	[GCC_PCIE_1_AUX_CLK] = &gcc_pcie_1_aux_clk.clkr,
-+	[GCC_PCIE_1_CFG_AHB_CLK] = &gcc_pcie_1_cfg_ahb_clk.clkr,
-+	[GCC_PCIE_1_MSTR_AXI_CLK] = &gcc_pcie_1_mstr_axi_clk.clkr,
- 	[GCC_PCIE_1_PIPE_CLK] = &gcc_pcie_1_pipe_clk.clkr,
-+	[GCC_PCIE_1_SLV_AXI_CLK] = &gcc_pcie_1_slv_axi_clk.clkr,
- 	[GCC_PDM2_CLK] = &gcc_pdm2_clk.clkr,
-+	[GCC_PDM_AHB_CLK] = &gcc_pdm_ahb_clk.clkr,
-+	[GCC_SDCC1_AHB_CLK] = &gcc_sdcc1_ahb_clk.clkr,
- 	[GCC_SDCC1_APPS_CLK] = &gcc_sdcc1_apps_clk.clkr,
-+	[GCC_SDCC2_AHB_CLK] = &gcc_sdcc2_ahb_clk.clkr,
- 	[GCC_SDCC2_APPS_CLK] = &gcc_sdcc2_apps_clk.clkr,
-+	[GCC_SDCC3_AHB_CLK] = &gcc_sdcc3_ahb_clk.clkr,
- 	[GCC_SDCC3_APPS_CLK] = &gcc_sdcc3_apps_clk.clkr,
-+	[GCC_SDCC4_AHB_CLK] = &gcc_sdcc4_ahb_clk.clkr,
- 	[GCC_SDCC4_APPS_CLK] = &gcc_sdcc4_apps_clk.clkr,
--	[GCC_SDCC1_AHB_CLK] = &gcc_sdcc1_ahb_clk.clkr,
- 	[GCC_SYS_NOC_UFS_AXI_CLK] = &gcc_sys_noc_ufs_axi_clk.clkr,
- 	[GCC_SYS_NOC_USB3_AXI_CLK] = &gcc_sys_noc_usb3_axi_clk.clkr,
-+	[GCC_TSIF_AHB_CLK] = &gcc_tsif_ahb_clk.clkr,
- 	[GCC_TSIF_REF_CLK] = &gcc_tsif_ref_clk.clkr,
-+	[GCC_UFS_AHB_CLK] = &gcc_ufs_ahb_clk.clkr,
- 	[GCC_UFS_AXI_CLK] = &gcc_ufs_axi_clk.clkr,
- 	[GCC_UFS_RX_CFG_CLK] = &gcc_ufs_rx_cfg_clk.clkr,
-+	[GCC_UFS_RX_SYMBOL_0_CLK] = &gcc_ufs_rx_symbol_0_clk.clkr,
-+	[GCC_UFS_RX_SYMBOL_1_CLK] = &gcc_ufs_rx_symbol_1_clk.clkr,
- 	[GCC_UFS_TX_CFG_CLK] = &gcc_ufs_tx_cfg_clk.clkr,
-+	[GCC_UFS_TX_SYMBOL_0_CLK] = &gcc_ufs_tx_symbol_0_clk.clkr,
-+	[GCC_UFS_TX_SYMBOL_1_CLK] = &gcc_ufs_tx_symbol_1_clk.clkr,
-+	[GCC_USB2_HS_PHY_SLEEP_CLK] = &gcc_usb2_hs_phy_sleep_clk.clkr,
- 	[GCC_USB30_MASTER_CLK] = &gcc_usb30_master_clk.clkr,
- 	[GCC_USB30_MOCK_UTMI_CLK] = &gcc_usb30_mock_utmi_clk.clkr,
-+	[GCC_USB30_SLEEP_CLK] = &gcc_usb30_sleep_clk.clkr,
- 	[GCC_USB3_PHY_AUX_CLK] = &gcc_usb3_phy_aux_clk.clkr,
-+	[GCC_USB_HS_AHB_CLK] = &gcc_usb_hs_ahb_clk.clkr,
- 	[GCC_USB_HS_SYSTEM_CLK] = &gcc_usb_hs_system_clk.clkr,
-+	[GCC_USB_PHY_CFG_AHB2PHY_CLK] = &gcc_usb_phy_cfg_ahb2phy_clk.clkr,
-+};
-+
-+static struct gdsc *gcc_msm8994_gdscs[] = {
-+	[PCIE_GDSC] = &pcie_gdsc,
-+	[PCIE_0_GDSC] = &pcie_0_gdsc,
-+	[PCIE_1_GDSC] = &pcie_1_gdsc,
-+	[USB30_GDSC] = &usb30_gdsc,
-+	[UFS_GDSC] = &ufs_gdsc,
-+};
-+
-+static const struct qcom_reset_map gcc_msm8994_resets[] = {
-+	[USB3_PHY_RESET] = { 0x1400 },
-+	[USB3PHY_PHY_RESET] = { 0x1404 },
-+	[PCIE_PHY_0_RESET] = { 0x1b18 },
-+	[PCIE_PHY_1_RESET] = { 0x1b98 },
-+	[QUSB2_PHY_RESET] = { 0x04b8 },
- };
- 
- static const struct regmap_config gcc_msm8994_regmap_config = {
-@@ -2267,6 +2649,10 @@ static const struct qcom_cc_desc gcc_msm8994_desc = {
- 	.config = &gcc_msm8994_regmap_config,
- 	.clks = gcc_msm8994_clocks,
- 	.num_clks = ARRAY_SIZE(gcc_msm8994_clocks),
-+	.resets = gcc_msm8994_resets,
-+	.num_resets = ARRAY_SIZE(gcc_msm8994_resets),
-+	.gdscs = gcc_msm8994_gdscs,
-+	.num_gdscs = ARRAY_SIZE(gcc_msm8994_gdscs),
- };
- 
- static const struct of_device_id gcc_msm8994_match_table[] = {
-diff --git a/include/dt-bindings/clock/qcom,gcc-msm8994.h b/include/dt-bindings/clock/qcom,gcc-msm8994.h
-index 938969309e00..507b8d6effd2 100644
---- a/include/dt-bindings/clock/qcom,gcc-msm8994.h
-+++ b/include/dt-bindings/clock/qcom,gcc-msm8994.h
-@@ -126,5 +126,41 @@
- #define GCC_USB3_PHY_AUX_CLK			116
- #define GCC_USB_HS_SYSTEM_CLK			117
- #define GCC_SDCC1_AHB_CLK			118
-+#define GCC_LPASS_Q6_AXI_CLK		119
-+#define GCC_MSS_Q6_BIMC_AXI_CLK		120
-+#define GCC_PCIE_0_CFG_AHB_CLK		121
-+#define GCC_PCIE_0_MSTR_AXI_CLK		122
-+#define GCC_PCIE_0_SLV_AXI_CLK		123
-+#define GCC_PCIE_1_CFG_AHB_CLK		124
-+#define GCC_PCIE_1_MSTR_AXI_CLK		125
-+#define GCC_PCIE_1_SLV_AXI_CLK		126
-+#define GCC_PDM_AHB_CLK				127
-+#define GCC_SDCC2_AHB_CLK			128
-+#define GCC_SDCC3_AHB_CLK			129
-+#define GCC_SDCC4_AHB_CLK			130
-+#define GCC_TSIF_AHB_CLK			131
-+#define GCC_UFS_AHB_CLK				132
-+#define GCC_UFS_RX_SYMBOL_0_CLK		133
-+#define GCC_UFS_RX_SYMBOL_1_CLK		134
-+#define GCC_UFS_TX_SYMBOL_0_CLK		135
-+#define GCC_UFS_TX_SYMBOL_1_CLK		136
-+#define GCC_USB2_HS_PHY_SLEEP_CLK	137
-+#define GCC_USB30_SLEEP_CLK			138
-+#define GCC_USB_HS_AHB_CLK			139
-+#define GCC_USB_PHY_CFG_AHB2PHY_CLK	140
-+
-+/* GDSCs */
-+#define PCIE_GDSC			0
-+#define PCIE_0_GDSC			1
-+#define PCIE_1_GDSC			2
-+#define USB30_GDSC			3
-+#define UFS_GDSC			4
-+
-+/* Resets */
-+#define USB3_PHY_RESET			0
-+#define USB3PHY_PHY_RESET		1
-+#define PCIE_PHY_0_RESET		2
-+#define PCIE_PHY_1_RESET		3
-+#define QUSB2_PHY_RESET			4
- 
- #endif
--- 
-2.27.0
+
+> Broadcom PHYs configure their 125MHz clock through the PHY device
+> flags passed from the MAC at attach/connect time.
+> 
+> There's the dp83867 and dp83869 configuration (I'm not sure I can
+> make sense of it from reading the code) using ti,clk-output-sel -
+> but it looks like it's the same kind of thing.  Introduced February
+> 2018 into one driver, and November 2019 in the other.
+> 
+> It seems the Micrel PHYs produce a 125MHz clock irrespective of any
+> configuration (maybe configured by firmware, or hardware strapping?)
+> 
+> So it seems we have four ways of doing the same thing today, and now
+> the suggestion is to implement a fifth different way.  I think there
+> needs to be some consolidation here, maybe choosing one approach and
+> sticking with it.
+> 
+> Hence, I disagree with Rob - we don't need a fifth approach, we need
+> to choose one approach and decide that's our policy for this and
+> apply it evenly across the board, rather than making up something
+> different each time a new PHY comes along.
+
+@Dave, @Andrew: what's you opinion here?
+
+As Russell above (and Florian in the binding patch) pointed out,
+integrating this into the clock-framework may prove difficult not only
+for consistency but also for dependency reasons.
+
+Personally I'm fine with either solution, I just want to achieve a working
+ethernet on my board :-D .
+
+
+Thanks
+Heiko
+
 
