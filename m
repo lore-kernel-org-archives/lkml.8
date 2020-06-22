@@ -2,148 +2,88 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F03DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DD8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE8172541D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264A220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bv4KyCep"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qWtPBdjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgFVGj1 (ORCPT
+        id S1726810AbgFVGlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:39:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgFVGjZ (ORCPT
+        Mon, 22 Jun 2020 02:41:03 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:13483 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726738AbgFVGlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 02:39:25 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70B50C061794
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 23:39:25 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 64so1275168oti.5
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 23:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dNuMdqRwrLz9vD8xRJNwtGlXJp39SHPqNF0e6VyJIxM=;
-        b=bv4KyCepxXxyrUB07sqH9I911+MDHV9RKlAjq4QDoSgiSZCLomrGM4kqhCvgqbIm7w
-         x2cWkwy2Krx0Y9QOlBsAlJ6SjOlyuxDncP/pKu/83xR+NkBtQ2aZdoH9bsO2vsGLmq7/
-         DoIODaVtZPysg9dV78iybpIHuMrxrbPvwDiOfkJOh2aB8KlSRthYpFKSMOXaGr/4y8Ox
-         UkHhPvRFEpsyYr932fUEedU2G90zwQc7Rf8WMfx5EdWBDJHZCCyPwzwYOktLytK2+LX2
-         B7OpdS+q+tBaaTSK1BOzaxe0iUkKbz5oAnQypR/G41UqpUPCDQBv8nr0St5JfmymPvap
-         lPvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dNuMdqRwrLz9vD8xRJNwtGlXJp39SHPqNF0e6VyJIxM=;
-        b=somBJifjxApC/plgnE7ic9QjsG/w//3AEPsaTL+PoSkC/kDcEKiBoLBBDGgstIVeT2
-         Esv7G6r9W8HZgz45T6aSZSqUIeMjct2KC03uVLk6PrJNeDPHTTAHy3N14x1Vlvk0sVAd
-         mFCZ77nEyBsAwHpvDWRgwcLS+N/nBg8nkGvrBQPtzFgzGlSJSbpePvBO0wOX5FOYC5cw
-         uJcYAiw1v6QtJbgd6jJhWByPpRE6YUDue0za9AfZjMSx2+xTUijQ0VBGQGCSFwuZNsnY
-         h40Di7cWc51UiJXu6y/oS52MxvI9K8+yL5j2iyt+X8ncBdsXr6e1dzA2Z8b7b44Srfdc
-         AnDw==
-X-Gm-Message-State: AOAM530j7gF/finR+eXg1Yjcva2BkA/pUPSEuPDDjiypIAqWDvNRQqNT
-        GvUZNHtdm3WGnu7uU4DfG12nsQ==
-X-Google-Smtp-Source: ABdhPJxZt/4YFmgo2Vjb5O1nD5Di+/baUjXE79Mc3ZjNakah/nGTgnxw3LywvkYef71WhQyQxS1EDA==
-X-Received: by 2002:a05:6830:1e61:: with SMTP id m1mr12271701otr.13.1592807964696;
-        Sun, 21 Jun 2020 23:39:24 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g12sm3271301oos.8.2020.06.21.23.39.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 23:39:24 -0700 (PDT)
-Date:   Sun, 21 Jun 2020 23:36:38 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loic.pallardy@st.com,
-        arnaud.pouliquen@st.com, s-anna@ti.com
-Subject: Re: [PATCH v4 2/9] remoteproc: Add new attach() remoteproc operation
-Message-ID: <20200622063638.GC149351@builder.lan>
-References: <20200601175139.22097-1-mathieu.poirier@linaro.org>
- <20200601175139.22097-3-mathieu.poirier@linaro.org>
+        Mon, 22 Jun 2020 02:41:02 -0400
+X-UUID: 113fd86292b8463c85841b09498296b0-20200622
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0UhSaCVwkP3dmW3o9DgNK5ccp+DPXmFQmtvdUVswH80=;
+        b=qWtPBdjl9k/PCosEmtEsrJEKPx1Z5Nw/LEaqF0mP8Uthy38jppjiIb89uAoKy9HhMBiJ/2bqkZIGj7SlJko/GjLnHXiPKB8zkdDEo9Yu1PpAJGtFwQ8A1T3zQtxyBHN5YqS/9Or71SN9DuJwqT/hrCHt1EHohp+ox6rdW4IEeSs=;
+X-UUID: 113fd86292b8463c85841b09498296b0-20200622
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 781094810; Mon, 22 Jun 2020 14:40:56 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 22 Jun 2020 14:40:53 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 22 Jun 2020 14:40:53 +0800
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <wsd_upstream@mediatek.com>, <wen.su@mediatek.com>
+Subject: [RESEND v2 0/4] Add Support for MediaTek PMIC MT6359 Regulator
+Date:   Mon, 22 Jun 2020 14:40:46 +0800
+Message-ID: <1592808050-14260-1-git-send-email-Wen.Su@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601175139.22097-3-mathieu.poirier@linaro.org>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 01 Jun 10:51 PDT 2020, Mathieu Poirier wrote:
+VGhpcyBwYXRjaHNldCBhZGQgc3VwcG9ydCB0byBNVDYzNTkgUE1JQyByZWd1bGF0b3IuIE1UNjM1
+OSBpcyBwcmltYXJ5DQpQTUlDIGZvciBNVDY3NzkgcGxhdGZvcm0uDQoNCkNoYW5nZXMgc2luY2Ug
+djI6DQotIHJlbW92ZSBvcGVuIGNvZGluZyBpbiB0aGUgbXQ2MzU5IHJlZ3VsYXRvciBmb3Igdm9s
+dF90YWJsZSB0eXBlIHJlZ3VsYXRvcnMNCi0gcmVmaW5lIGNvZGluZyBzdHlsZSBpbiB0aGUgbXQ2
+MzU5IHJlZ3VsYXRvciB0byBhdm9pZCB1c2luZyB0ZXJuZXJ5IG9wZXJhdG9yDQotIHJlbW92ZSB1
+bm5lY2Vzc2FyeSByZWplY3Qgb3BlcmF0aW9uIGluIG10NjM1OSByZWd1bGF0b3Igc2V0IG1vZGUg
+ZnVuY3Rpb24NCg0Kd2VuLnN1ICg0KToNCiAgZHQtYmluZGluZ3M6IHJlZ3VsYXRvcjogQWRkIGRv
+Y3VtZW50IGZvciBNVDYzNTkgcmVndWxhdG9yDQogIG1mZDogQWRkIGZvciBQTUlDIE1UNjM1OSBy
+ZWdpc3RlcnMgZGVmaW5pdGlvbg0KICByZWd1bGF0b3I6IG10NjM1OTogQWRkIHN1cHBvcnQgZm9y
+IE1UNjM1OSByZWd1bGF0b3INCiAgYXJtNjQ6IGR0czogbXQ2MzU5OiBhZGQgUE1JQyBNVDYzNTkg
+cmVsYXRlZCBub2Rlcw0KDQogLi4uL2JpbmRpbmdzL3JlZ3VsYXRvci9tdDYzNTktcmVndWxhdG9y
+LnR4dCAgICAgICAgfCAgNTkgKysNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NjM1
+OS5kdHNpICAgICAgICAgICB8IDMxMiArKysrKysrKw0KIGRyaXZlcnMvcmVndWxhdG9yL0tjb25m
+aWcgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICsNCiBkcml2ZXJzL3JlZ3VsYXRvci9N
+YWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQogZHJpdmVycy9yZWd1bGF0
+b3IvbXQ2MzU5LXJlZ3VsYXRvci5jICAgICAgICAgICAgICAgfCA4NTkgKysrKysrKysrKysrKysr
+KysrKysrDQogaW5jbHVkZS9saW51eC9tZmQvbXQ2MzU5L3JlZ2lzdGVycy5oICAgICAgICAgICAg
+ICAgfCA1MzEgKysrKysrKysrKysrKw0KIGluY2x1ZGUvbGludXgvcmVndWxhdG9yL210NjM1OS1y
+ZWd1bGF0b3IuaCAgICAgICAgIHwgIDU4ICsrDQogNyBmaWxlcyBjaGFuZ2VkLCAxODI5IGluc2Vy
+dGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3JlZ3VsYXRvci9tdDYzNTktcmVndWxhdG9yLnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NjM1OS5kdHNpDQogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvcmVndWxhdG9yL210NjM1OS1yZWd1bGF0b3IuYw0KIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBpbmNsdWRlL2xpbnV4L21mZC9tdDYzNTkvcmVnaXN0ZXJzLmgNCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgaW5jbHVkZS9saW51eC9yZWd1bGF0b3IvbXQ2MzU5LXJlZ3VsYXRvci5oDQo=
 
-> Add an new attach() operation in order to properly deal with
-> scenarios where the remoteproc core needs to attach to a
-> remote processor that has been booted by another entity.
-> 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  drivers/remoteproc/remoteproc_internal.h | 8 ++++++++
->  include/linux/remoteproc.h               | 2 ++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index 4ba7cb59d3e8..fc710866f8ce 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -79,6 +79,14 @@ static inline int rproc_unprepare_device(struct rproc *rproc)
->  	return 0;
->  }
->  
-> +static inline int rproc_attach_device(struct rproc *rproc)
-> +{
-> +	if (rproc->ops->attach)
-> +		return rproc->ops->attach(rproc);
-> +
-> +	return 0;
-
-Afaict we don't allow the registration of a remoteproc in DETACHED state
-without an "attach" function specified and as such we shouldn't be able
-to end up here.
-
-On the other hand I think it would make sense to have a system where
-"attach" simply just means bring up the communication with the remote
-processor, so let's keep it as is and we can adjust it as necessary
-later.
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> +}
-> +
->  static inline
->  int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
->  {
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 21182ad2d059..bf6a310ba870 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -359,6 +359,7 @@ enum rsc_handling_status {
->   * @unprepare:	unprepare device after stop
->   * @start:	power on the device and boot it
->   * @stop:	power off the device
-> + * @attach:	attach to a device that his already powered up
->   * @kick:	kick a virtqueue (virtqueue id given as a parameter)
->   * @da_to_va:	optional platform hook to perform address translations
->   * @parse_fw:	parse firmware to extract information (e.g. resource table)
-> @@ -379,6 +380,7 @@ struct rproc_ops {
->  	int (*unprepare)(struct rproc *rproc);
->  	int (*start)(struct rproc *rproc);
->  	int (*stop)(struct rproc *rproc);
-> +	int (*attach)(struct rproc *rproc);
->  	void (*kick)(struct rproc *rproc, int vqid);
->  	void * (*da_to_va)(struct rproc *rproc, u64 da, size_t len);
->  	int (*parse_fw)(struct rproc *rproc, const struct firmware *fw);
-> -- 
-> 2.20.1
-> 
