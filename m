@@ -2,137 +2,151 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A62C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18ED720767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F782075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AIdF2grK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UEb5/483"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730538AbgFVUGr (ORCPT
+        id S1728620AbgFVUH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:06:47 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:64196 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728452AbgFVUGq (ORCPT
+        Mon, 22 Jun 2020 16:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728311AbgFVUHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:06:46 -0400
+        Mon, 22 Jun 2020 16:07:25 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F415C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:07:25 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id m63so21228248ybc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592856405; x=1624392405;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dhX5V0GqezWrUqw0t1fAesVT7r5tLsi4pWKqMw8Vja0=;
-  b=AIdF2grKv2iBPy/ZRs4jq1dpTsSqf7twLxPBnhzQp4dGf3HNURKThudr
-   10FRt9qt9pjz21ffR6BgK0gYGNU6esunndhM7kajAjArYx534Bo+Jy/dt
-   WSV6yU3DfRDIY0vEGcR5CkLlLJjoUQeoDwJsmNrHuYLvQsFtiVzV7uOmZ
-   U=;
-IronPort-SDR: 8K/wjNAkTviTaTXV0uRLcpluwsNNje5KkaZUyySdZNc6901rap/Po1q+CXE75qcQGgMImplhPa
- 9ZpBV4FR5UIA==
-X-IronPort-AV: E=Sophos;i="5.75,268,1589241600"; 
-   d="scan'208";a="46041765"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 Jun 2020 20:06:45 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com (Postfix) with ESMTPS id 96BD6A0361;
-        Mon, 22 Jun 2020 20:06:44 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 22 Jun 2020 20:06:44 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.175) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 22 Jun 2020 20:06:35 +0000
-From:   Andra Paraschiv <andraprs@amazon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        "Matt Wilson" <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>,
-        Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v4 18/18] MAINTAINERS: Add entry for the Nitro Enclaves driver
-Date:   Mon, 22 Jun 2020 23:03:29 +0300
-Message-ID: <20200622200329.52996-19-andraprs@amazon.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200622200329.52996-1-andraprs@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
-MIME-Version: 1.0
-X-Originating-IP: [10.43.161.175]
-X-ClientProxiedBy: EX13D18UWA001.ant.amazon.com (10.43.160.11) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=It7WCF6NWrKCb1o5ESqK7iLOhdQgrtGmLe61alVmR2g=;
+        b=UEb5/483PkOmcAISuyZiEKoIS2sTKiWdGS7v5XwnZPqL+4W/mlTtQ5dsTdsAyVnSqc
+         iFYEyb8WoZeCD+2dF9umxv6lEs8j5/CMBNv8eFU2+67hQo90DV0H4s8MA2OaqoD/7KQA
+         P7h/4EI0h7HaVREHrSPnj89Wvg9ONYLnKDlW3FFoAXVwEihCRnfqLic9KngVzI51Mp/7
+         iz0ijx0jhB2GYI0T2yLdZR/orC2MKjj7MT+PdnyK83DfbOpiNVVrsl7204IHfyK22VZP
+         sU3Cb//VqPvn/7GKibIY8vB23nWl5eKmVvB7sFFwlcUYyRi6niFGWMfvl9hgS3HldNOS
+         JejA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=It7WCF6NWrKCb1o5ESqK7iLOhdQgrtGmLe61alVmR2g=;
+        b=gKRHkzFyvIouANv47UNaobPhkxa1P4dXGljBfkFu1GhrA41OeK/sdAJ127Jgg4yYRx
+         mOX3AhCsFWn1SUzIpEDL2XSxovY0YAirjM6JYeEO48tgZeBSIf9w0Tazx2367thBbk+X
+         jKdVClPmLMEzlwD59nolbTIzmwrPGD5U/1EG7QV38Zi1aIrw/G/0E4iiZbnEdXlsJugS
+         uMTq0nSeXN06gvt2TZq7KMby+2SFcd1qavaQE0CVU+I3j37PM68XZwzSTzGT++lxUU6v
+         esHoXSJb+wxmiFKGhuy1ersfxqXG9pLYMfFG9dXhRtHJHsqOHMhz5qH7uRYszY/10Nzf
+         UJHQ==
+X-Gm-Message-State: AOAM530zPs8jRgY5e5cid3txqQgx05Y9mKrWPtdhATON7i1+slsUL4YP
+        F+8z66YvDWKumqJ41n8ySjVtTRb+9A==
+X-Google-Smtp-Source: ABdhPJx6ELeChahDdZ0u3OPPvd1qphCT9C4jSsP2Sv6Z0wKlHq8A1zfdhi/DqKl6nOvrNIZ8kLh9lOODXQ==
+X-Received: by 2002:a25:400e:: with SMTP id n14mr27690222yba.424.1592856444249;
+ Mon, 22 Jun 2020 13:07:24 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 13:07:15 -0700
+Message-Id: <20200622200715.114382-1-tkjos@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+Subject: [PATCH] binder: fix null deref of proc->context
+From:   Todd Kjos <tkjos@google.com>
+To:     tkjos@google.com, gregkh@linuxfoundation.org, christian@brauner.io,
+        arve@android.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, maco@google.com
+Cc:     joel@joelfernandes.org, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+The binder driver makes the assumption proc->context pointer is invariant after
+initialization (as documented in the kerneldoc header for struct proc).
+However, in commit f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+proc->context is set to NULL during binder_deferred_release().
+
+Another proc was in the middle of setting up a transaction to the dying
+process and crashed on a NULL pointer deref on "context" which is a local
+set to &proc->context:
+
+    new_ref->data.desc = (node == context->binder_context_mgr_node) ? 0 : 1;
+
+Here's the stack:
+
+[ 5237.855435] Call trace:
+[ 5237.855441] binder_get_ref_for_node_olocked+0x100/0x2ec
+[ 5237.855446] binder_inc_ref_for_node+0x140/0x280
+[ 5237.855451] binder_translate_binder+0x1d0/0x388
+[ 5237.855456] binder_transaction+0x2228/0x3730
+[ 5237.855461] binder_thread_write+0x640/0x25bc
+[ 5237.855466] binder_ioctl_write_read+0xb0/0x464
+[ 5237.855471] binder_ioctl+0x30c/0x96c
+[ 5237.855477] do_vfs_ioctl+0x3e0/0x700
+[ 5237.855482] __arm64_sys_ioctl+0x78/0xa4
+[ 5237.855488] el0_svc_common+0xb4/0x194
+[ 5237.855493] el0_svc_handler+0x74/0x98
+[ 5237.855497] el0_svc+0x8/0xc
+
+The fix is to move the kfree of the binder_device to binder_free_proc()
+so the binder_device is freed when we know there are no references
+remaining on the binder_proc.
+
+Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+Signed-off-by: Todd Kjos <tkjos@google.com>
 ---
-Changelog
+ drivers/android/binder.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-v3 -> v4
-
-* No changes.
-
-v2 -> v3
-
-* Update file entries to be in alphabetical order.
-
-v1 -> v2
-
-* No changes.
----
- MAINTAINERS | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7b5ffd646c6b..66f35c4de16f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12115,6 +12115,19 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git
- F:	arch/nios2/
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index e47c8a4c83db..f50c5f182bb5 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -4686,8 +4686,15 @@ static struct binder_thread *binder_get_thread(struct binder_proc *proc)
  
-+NITRO ENCLAVES (NE)
-+M:	Andra Paraschiv <andraprs@amazon.com>
-+M:	Alexandru Vasile <lexnv@amazon.com>
-+M:	Alexandru Ciobotaru <alcioa@amazon.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Supported
-+W:	https://aws.amazon.com/ec2/nitro/nitro-enclaves/
-+F:	Documentation/nitro_enclaves/
-+F:	drivers/virt/nitro_enclaves/
-+F:	include/linux/nitro_enclaves.h
-+F:	include/uapi/linux/nitro_enclaves.h
-+F:	samples/nitro_enclaves/
+ static void binder_free_proc(struct binder_proc *proc)
+ {
++	struct binder_device *device;
 +
- NOHZ, DYNTICKS SUPPORT
- M:	Frederic Weisbecker <fweisbec@gmail.com>
- M:	Thomas Gleixner <tglx@linutronix.de>
+ 	BUG_ON(!list_empty(&proc->todo));
+ 	BUG_ON(!list_empty(&proc->delivered_death));
++	device = container_of(proc->context, struct binder_device, context);
++	if (refcount_dec_and_test(&device->ref)) {
++		kfree(proc->context->name);
++		kfree(device);
++	}
+ 	binder_alloc_deferred_release(&proc->alloc);
+ 	put_task_struct(proc->tsk);
+ 	binder_stats_deleted(BINDER_STAT_PROC);
+@@ -5406,7 +5413,6 @@ static int binder_node_release(struct binder_node *node, int refs)
+ static void binder_deferred_release(struct binder_proc *proc)
+ {
+ 	struct binder_context *context = proc->context;
+-	struct binder_device *device;
+ 	struct rb_node *n;
+ 	int threads, nodes, incoming_refs, outgoing_refs, active_transactions;
+ 
+@@ -5423,12 +5429,6 @@ static void binder_deferred_release(struct binder_proc *proc)
+ 		context->binder_context_mgr_node = NULL;
+ 	}
+ 	mutex_unlock(&context->context_mgr_node_lock);
+-	device = container_of(proc->context, struct binder_device, context);
+-	if (refcount_dec_and_test(&device->ref)) {
+-		kfree(context->name);
+-		kfree(device);
+-	}
+-	proc->context = NULL;
+ 	binder_inner_proc_lock(proc);
+ 	/*
+ 	 * Make sure proc stays alive after we
 -- 
-2.20.1 (Apple Git-117)
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
+2.27.0.111.gc72c7da667-goog
 
