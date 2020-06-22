@@ -2,99 +2,109 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE71DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7085C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB8D12071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD5C20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgFVMoG (ORCPT
+        id S1728051AbgFVMoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:44:06 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33882 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbgFVMoF (ORCPT
+        Mon, 22 Jun 2020 08:44:05 -0400
+Received: from relay-b03.edpnet.be ([212.71.1.220]:38203 "EHLO
+        relay-b03.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbgFVMoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 08:44:05 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n5so12934875otj.1;
-        Mon, 22 Jun 2020 05:44:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r2pqvv2p5cRl0AhDVTKno1VFxc+4Nq9uvMsZtz+prlQ=;
-        b=s4dz0FOugkhxBAMcD5bmrMHu4dTR+dLFun5g4NR9kaXk0bA1tOmYZp7PUgAsxbXKQO
-         4pnJ0PJh1TwiZamtxLWQezii3yOO8YxZGxAnFAJMXYiWXiSckQEWASad8FxZkWPaNOWW
-         h/v/F00s5Zb5UC1kgj9i/qT4aSygsfJfmJ5YkOlsAioU9fIJ/p5DzLeS94NeXRiAJNhe
-         r6OxQMNvhSQJiq9k92YxM88hlOGpQiBERSPNEff7vsGL9vgzzC6sR72cUEp0UpOsEMjX
-         zPXG/sKkpBNXp1zmXSMrSs9MFdEQY3eOjCqKT6MyzlQxTYiHfi6HonRvfnJ50phfVzx8
-         XYbg==
-X-Gm-Message-State: AOAM5321CKz51wMpl02xjJFH2R0xGlMOZvcpkLo22bCfJ+uSDwUfQxLB
-        sA0Na10Aao4H4POJYzBmHXYojX9WTUJbUTSgoBpwzl/K
-X-Google-Smtp-Source: ABdhPJw4yDjoqiFgwYIZto3QPv/0I1Fk2APtBoVYh9DzLxLoLlAnngyuwUVSS/JT/zAgdNlJOqTm0EjuaYuPCovg2jM=
-X-Received: by 2002:a9d:62c2:: with SMTP id z2mr13446164otk.145.1592829844736;
- Mon, 22 Jun 2020 05:44:04 -0700 (PDT)
+X-ASG-Debug-ID: 1592829841-0a8818764c3f730001-xx1T2L
+Received: from zotac.vandijck-laurijssen.be ([213.219.130.186]) by relay-b03.edpnet.be with ESMTP id mMlQkBHN7OIDwHyk; Mon, 22 Jun 2020 14:44:02 +0200 (CEST)
+X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
+X-Barracuda-Effective-Source-IP: UNKNOWN[213.219.130.186]
+X-Barracuda-Apparent-Source-IP: 213.219.130.186
+Received: from x1.vandijck-laurijssen.be (x1.vandijck-laurijssen.be [IPv6:fd01::1a1d:eaff:fe02:d339])
+        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id 78A2DF6A211;
+        Mon, 22 Jun 2020 14:43:54 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 14:43:47 +0200
+From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        wg@grandegger.com, kernel@martin.sperl.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
+Message-ID: <20200622124347.GC3077@x1.vandijck-laurijssen.be>
+X-ASG-Orig-Subj: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
+Mail-Followup-To: Marc Kleine-Budde <mkl@pengutronix.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        wg@grandegger.com, kernel@martin.sperl.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
+ <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
+ <20200617165902.GB14228@x1.vandijck-laurijssen.be>
+ <2e80e2ed-d63d-5cc6-e1c6-e0c9e75c218e@pengutronix.de>
+ <20200618123055.GA17496@x1.vandijck-laurijssen.be>
+ <c8267280-e7a9-8171-d714-fa392ccb5537@pengutronix.de>
+ <20200622102559.GA3077@x1.vandijck-laurijssen.be>
+ <c5fc46c1-abaf-cf67-abb6-0077bafdff3a@pengutronix.de>
+ <20200622123031.GB3077@x1.vandijck-laurijssen.be>
 MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591555267-21822-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 22 Jun 2020 14:43:53 +0200
-Message-ID: <CAMuHMdUWawKp_gcedDHFx3zbs2iST7HSrFR9zK4j0Gq7HixD3Q@mail.gmail.com>
-Subject: Re: [PATCH 06/11] arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0
- sub board support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200622123031.GB3077@x1.vandijck-laurijssen.be>
+User-Agent: Mutt/1.5.22 (2013-10-16)
+X-Barracuda-Connect: UNKNOWN[213.219.130.186]
+X-Barracuda-Start-Time: 1592829841
+X-Barracuda-URL: https://212.71.1.220:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at edpnet.be
+X-Barracuda-Scan-Msg-Size: 907
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: SPAM GLOBAL 1.0000 1.0000 4.3430
+X-Barracuda-Spam-Score: 4.34
+X-Barracuda-Spam-Status: No, SCORE=4.34 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.82728
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Marc,
 
-On Sun, Jun 7, 2020 at 8:42 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> The HiHope RZ/G2M sub board sits below the HiHope RZ/G2M Rev.3.0/4.0
-> main board.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+I get RX-0: FIFO overflows in listen-only mode (back-to-back burst of
+the single other node).
+The SPI peripheral does not use DMA :-(.
+Do you have, by accident, some freescale SPI fixes lying around?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+It's not the biggest problem on my side, but is proves the system not
+being guarded against load.
 
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts
+Kurt
 
-> +
-> +/* SW43 should be OFF, if in ON state SATA port will be activated */
-
-Looks like having this comment in r8a774a1-hihope-rzg2m-rev2-ex.dts
-would be useful, too?
-
-> +&pciec1 {
-> +       status = "okay";
-> +};
-> --
-> 2.17.1
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On ma, 22 jun 2020 14:30:31 +0200, Kurt Van Dijck wrote:
+> 
+> On ma, 22 jun 2020 12:55:41 +0200, Marc Kleine-Budde wrote:
+> > On 6/22/20 12:25 PM, Kurt Van Dijck wrote:
+> > > I got my board up with a 5.7, despite device-tree problems completely
+> > > unrelated to CAN.
+> > 
+> > \o/
+> > 
+> > > It seems to work well with a fully-loaded CAN bus (cangen -g0 ...).
+> > > So that is a real improvement.
+> > 
+> > Can I add your Tested-by?
+> yes.
+> > 
+> > > I will need to add the listen-only mode soon.
+> > 
+> > Patches are always welcome!
+> > 
+> > regards,
+> > Marc
