@@ -2,104 +2,115 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A795CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 930DE207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460492168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KCkExZY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbgFVCGA (ORCPT
+        id S1726700AbgFVCPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 22:06:00 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:9664 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731026AbgFVCF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 22:05:59 -0400
-Received: from localhost.localdomain (unknown [210.32.144.65])
-        by mail-app3 (Coremail) with SMTP id cC_KCgDnEnjhEfBeyJcJAQ--.40864S4;
-        Mon, 22 Jun 2020 10:05:25 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: sprd: Fix runtime PM imbalance on error
-Date:   Mon, 22 Jun 2020 10:05:18 +0800
-Message-Id: <20200622020520.5334-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgDnEnjhEfBeyJcJAQ--.40864S4
-X-Coremail-Antispam: 1UD129KBjvJXoWrKrWrZF17ur48GF48JF1xGrg_yoW8JrWrpr
-        W0gF90kFW7XrZagF4DArsxXFy5W3yft3y5JFWjk3WfZFs8X3Wktr45JF1FqF48JrWkJF4f
-        Jw4qya9xCFy0yF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9v1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6r4UMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbpwZ7UUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcQBlZdtOvMDgAIsN
+        Sun, 21 Jun 2020 22:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgFVCPc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 22:15:32 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 554FEC061794
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 19:15:32 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so6916141plo.7
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 19:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=37v9Z2NUuqEmIDRz9ZfwrUOtyxz3ECbT8f4zSnYfHZc=;
+        b=KCkExZY40XAQKmTnsGnTWfYUJmKzA95HBhZPmuw4lTsn4xCJnetK+8GlvM7qExsTOC
+         sJDkwc5T2E3UE65Rsuug+L2NIui/rPi/53fkrggYqHqNlRY0hcxeHraOQlXwZTsy6/bR
+         bkuYWgOaY8rseIJFqUMnkRIMJ6s7qeBdjBVpy3o85QNt6uJbxibtRPi3m2MkRzWrHSTX
+         UZLNOgU2+YgL5nePf9spvJZwxbe8a27Uxsys08U547TxFci9p2HHbZinkjGICt6NYo8P
+         1PpNKCDWrVMrM6Ngqr4HPLa5YCWL0H3nc4oQBDfMq1uSlxSnd+MROhX0O2+cwJ+SWnfp
+         jsVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=37v9Z2NUuqEmIDRz9ZfwrUOtyxz3ECbT8f4zSnYfHZc=;
+        b=L2dt7ydDcLav7HcKy4SlTZBgamUQEkgRYgPyXImlVLeTpfhgd0uF2HvuCMydtH/Oyc
+         aQ4wa0yT0f6eDImHwfit++p3A0pWAiHcm5bhyynmIRcWS82/XV4Uy5eLmJMh/f8QCOAW
+         4ua3HrD9ZG2BznxSx5Atrf/IVAFOfxjWHlVXKEXcNIpY/10xuP8CEhhlKTT2l1uShEmv
+         0awBqeaM+NPpP/pha8JJivrvg0UZODZ1r4vQQShRHNSWRON6G1+o0oDe2VdiwfPZjv18
+         rgzFGqx9Vn2mMUOCJsI89JRvDxh++r8MsbLih9nUfH08O/NxOz0mtN8C5kvOGyXW6JlZ
+         m3iQ==
+X-Gm-Message-State: AOAM532bq/nESD/KpqdUVJqUcYNmktI7ubyViXm+KGXK7cLl2Xk4PaQu
+        HSAHJgS8g4K0FyWqgChQmY3ppw==
+X-Google-Smtp-Source: ABdhPJwPS+7RGBWUpT0GPEFKZ75DSVusV7wLo1l1FDO1Kr7CAcaD4Qq1njDS7a2sV/pjaNpTCmEjIg==
+X-Received: by 2002:a17:902:fe12:: with SMTP id g18mr18694335plj.25.1592792131751;
+        Sun, 21 Jun 2020 19:15:31 -0700 (PDT)
+Received: from localhost ([122.172.111.76])
+        by smtp.gmail.com with ESMTPSA id gp4sm11449615pjb.26.2020.06.21.19.15.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jun 2020 19:15:31 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 07:45:28 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Sibi Sankar <sibis@codeaurora.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: opp: core: Add missing export to core.c
+Message-ID: <20200622021528.gmpnvjhvq66oqhit@vireshk-i7>
+References: <566735.1592672602@turing-police>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <566735.1592672602@turing-police>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a corresponding decrement is
-needed on the error handling path to keep the counter balanced.
+On 20-06-20, 13:03, Valdis Klētnieks wrote:
+> After this commit, a 'make allmodconfig' fails due to a missing export.
+> commit 5f2430fb40c74db85764c8a472ecd6849025dd3f
+> Author: Sibi Sankar <sibis@codeaurora.org>
+> Date:   Sat Jun 6 03:03:31 2020 +0530
+> 
+>     cpufreq: qcom: Update the bandwidth levels on frequency change
+> 
+> ERROR: modpost: "dev_pm_opp_adjust_voltage" [drivers/cpufreq/qcom-cpufreq-hw.ko] undefined!
+> 
+> Provide the export.
+> 
+> Fixes: 5f2430fb40c7 ("cpufreq: qcom: Update the bandwidth levels on frequency change")
+> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 6937bf45f497..c9336aac74e9 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -2302,6 +2302,7 @@ int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
+>  	dev_pm_opp_put_opp_table(opp_table);
+>  	return r;
+>  }
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_adjust_voltage);
+> 
+>  /**
+>   * dev_pm_opp_enable() - Enable a specific OPP
+> 
 
-Fix this by adding the missed function call.
+Applied with reworded logs.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/i2c/busses/i2c-sprd.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
-index 19cda6742423..675f72a3fd60 100644
---- a/drivers/i2c/busses/i2c-sprd.c
-+++ b/drivers/i2c/busses/i2c-sprd.c
-@@ -285,8 +285,10 @@ static int sprd_i2c_master_xfer(struct i2c_adapter *i2c_adap,
- 	int im, ret;
- 
- 	ret = pm_runtime_get_sync(i2c_dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2c_dev->dev);
- 		return ret;
-+	}
- 
- 	for (im = 0; im < num - 1; im++) {
- 		ret = sprd_i2c_handle_msg(i2c_adap, &msgs[im], 0);
-@@ -571,8 +573,10 @@ static int sprd_i2c_remove(struct platform_device *pdev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(i2c_dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2c_dev->dev);
- 		return ret;
-+	}
- 
- 	i2c_del_adapter(&i2c_dev->adap);
- 	clk_disable_unprepare(i2c_dev->clk);
 -- 
-2.17.1
-
+viresh
