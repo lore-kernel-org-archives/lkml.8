@@ -2,185 +2,171 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C08C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3011C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9CF82073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B15206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rUqHnhOb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PbXo+AAU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbgFVV3K (ORCPT
+        id S1730545AbgFVVaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:29:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
+        Mon, 22 Jun 2020 17:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730568AbgFVV3J (ORCPT
+        with ESMTP id S1730460AbgFVVaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:29:09 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8A7C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:29:07 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id k15so3473923lfc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:29:07 -0700 (PDT)
+        Mon, 22 Jun 2020 17:30:19 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC662C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:30:19 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id j4so8147018plk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:30:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=umdWjH1ky+XmZZj0sm8b6f6B8XCVb8FTSoaNh4N336Y=;
-        b=rUqHnhObUca52Ets+8Fc+3aHjatnCWxqYD8OVOF3UfR6z5eh4yI3+b/i1CmYPXZhnu
-         ZjQ/0AZYcCZCZ+8mFv7NUCaX+H94Uvz0A8WPwCrw2oF1QuzMhigtABomWAZN4vMMn/WB
-         iM2slPaQvce+bUMlBGEyIPf1qUUI7+hNeH755x1Lub1WxaWcLdJmrjY+zNoqxFMVbRTY
-         5TZMO7fLQ2Z69Xg1Nm0PWDLhxZOLhyFEEd062QJ7+Wvk7JSYQP/eDu5x7TfzSHlFOXHZ
-         eY1+w+K4cp3Uz7xoQzXPEocD+Dxl3OsZHr0DV3s7K21R+lP+7b+2wFucveD8wYDZGKF4
-         oGKg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pLN2RaPddxRloDpN+pRwQoiNiSyh25YEOfza1Wb+VHE=;
+        b=PbXo+AAUJ5jVd5yBXYTaqNpkqWjS+viBecyCQ4cn0lZ7K1T7oe9cXDqosUKpFoYZZu
+         FtVG00wDnjPQEg/jKU5F5eqvyPGU1ZgCNOYpKqeywY4h2JUzArVp7p4RLYBb0oVl4kmj
+         3ANK8t3QGcMtwG+m1ybJ7nlXfeTZQpbBr6POo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=umdWjH1ky+XmZZj0sm8b6f6B8XCVb8FTSoaNh4N336Y=;
-        b=rz7G40j64+b0GgLDToXRvx85HIYCncZV+Xj3wwE8Ktv2YoRrx5pDUaSip3zH44s9hO
-         LL8Fq1qW8RvZ/KfiDt5KuPrgB8Yt92yyi1cQH+JBDPVsoTpCWeViYxAd/8CTeCO0D+8+
-         74R1bs1qNa4hYzxvaePMPF5hphmjpF+K8D5IdRzbvjy/M60t42tcuf8qMmOkYbIlBekO
-         2jcXO8+PndNWffQW/fKG+qhPpZcFtlGimpe7v/ld08CNg126vNNNlAGBL+KMdZCCpQt4
-         vC4TBLU3OU1kuwfED+POC8Za5iNqHsSI2uzrMqvtmJU1UZ8GGPaAMKwWVkC6CXKfMuBd
-         9hSQ==
-X-Gm-Message-State: AOAM533RtgXcuWzln4djBcsYYglWbOHsNLTqCuxdfkVcfRJqryDxliTx
-        wvOvyqcyC7Y9kxpus6JJaBtQAmHRmJRSdQrooYAAgQ==
-X-Google-Smtp-Source: ABdhPJy3nOR0wjchd+j1NHjop2IkMr3XrhTqYeEOyjbug3rDK3yReNMgtsM1uZTpzmtzwrYjZlH3mwndQC12cbTUYdA=
-X-Received: by 2002:a19:4301:: with SMTP id q1mr10843586lfa.96.1592861345936;
- Mon, 22 Jun 2020 14:29:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pLN2RaPddxRloDpN+pRwQoiNiSyh25YEOfza1Wb+VHE=;
+        b=n7O/rANtgkxi1i5KIROsvXHwDIrj47tvDnk8K+EgPuhQEKdasJaYHnuBCdiflpPqnQ
+         U7mtUj6SW/kwbq/Mb9/rGjbYWBhLvT/rMPiYm5lP3UDI5R3zff++31qSwQ0CLP4Nrbgy
+         EFV0G6Ffi/NlcLk6Jv1aJHj0Ys0C3PcWBkVetsa/mkIogFcxOQ2z2tLjKjcOsi861y4u
+         Q9mVWowG+ZfiGRjv18BCQ3tVK91EjdhpyXBmmCB39tupdaYo3VacDatQPtsrTxhsNVy1
+         qyryP2qURRwu0JrAwuQHakKFJ2QAzY3lxWXHohxUvaqvD8tWmNfBMJYqZTOqSPbl/M8q
+         LuKA==
+X-Gm-Message-State: AOAM530VJjPNevtfg69hEdopstSri73ulMURR5MlStpCHC+StNF0SjlU
+        aq/4LVt05f2CP3S6MzrZoDu3gQ==
+X-Google-Smtp-Source: ABdhPJw7w1NVvAhJYf89+YhAFuDDc20voExouq/QieTMXvtk2w4TSXX7wfv4gqLDVHJ1o0sg4pMirg==
+X-Received: by 2002:a17:902:6908:: with SMTP id j8mr18923742plk.124.1592861419296;
+        Mon, 22 Jun 2020 14:30:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p11sm15103897pfq.10.2020.06.22.14.30.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 14:30:18 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 14:30:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
+ each syscall
+Message-ID: <202006221426.CEEE0B8@keescook>
+References: <20200622193146.2985288-1-keescook@chromium.org>
+ <20200622193146.2985288-4-keescook@chromium.org>
+ <CAG48ez0pRtMZs3Hc3R2+XGHRwt9nZAGZu6vDpPBMbE+Askr_+Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-18-guro@fb.com>
- <CALvZod5NCCpt2rkyXXr69OnVXb9ew7875vAV=iWZdqJhXcKEWQ@mail.gmail.com>
- <20200622203739.GD301338@carbon.dhcp.thefacebook.com> <CALvZod5powO1Zph0+iO+=gtNb7=MQqfHwYkdb-+PkaVCGhuf=g@mail.gmail.com>
- <20200622211356.GF301338@carbon.dhcp.thefacebook.com>
-In-Reply-To: <20200622211356.GF301338@carbon.dhcp.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 22 Jun 2020 14:28:54 -0700
-Message-ID: <CALvZod4aEgbP-CPd3=dC3922SGiYBdEMCm_tsGt5xZUx1ekTDQ@mail.gmail.com>
-Subject: Re: [PATCH v6 17/19] mm: memcg/slab: use a single set of kmem_caches
- for all allocations
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0pRtMZs3Hc3R2+XGHRwt9nZAGZu6vDpPBMbE+Askr_+Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 2:15 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Mon, Jun 22, 2020 at 02:04:29PM -0700, Shakeel Butt wrote:
-> > On Mon, Jun 22, 2020 at 1:37 PM Roman Gushchin <guro@fb.com> wrote:
-> > >
-> > > On Mon, Jun 22, 2020 at 12:21:28PM -0700, Shakeel Butt wrote:
-> > > > On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
-> > > > >
-> > > > > Instead of having two sets of kmem_caches: one for system-wide and
-> > > > > non-accounted allocations and the second one shared by all accounted
-> > > > > allocations, we can use just one.
-> > > > >
-> > > > > The idea is simple: space for obj_cgroup metadata can be allocated
-> > > > > on demand and filled only for accounted allocations.
-> > > > >
-> > > > > It allows to remove a bunch of code which is required to handle
-> > > > > kmem_cache clones for accounted allocations. There is no more need
-> > > > > to create them, accumulate statistics, propagate attributes, etc.
-> > > > > It's a quite significant simplification.
-> > > > >
-> > > > > Also, because the total number of slab_caches is reduced almost twice
-> > > > > (not all kmem_caches have a memcg clone), some additional memory
-> > > > > savings are expected. On my devvm it additionally saves about 3.5%
-> > > > > of slab memory.
-> > > > >
-> > > > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > > > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> > > > > ---
-> > > > [snip]
-> > > > >  static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
-> > > > >                                               struct obj_cgroup *objcg,
-> > > > > -                                             size_t size, void **p)
-> > > > > +                                             gfp_t flags, size_t size,
-> > > > > +                                             void **p)
-> > > > >  {
-> > > > >         struct page *page;
-> > > > >         unsigned long off;
-> > > > >         size_t i;
-> > > > >
-> > > > > +       if (!objcg)
-> > > > > +               return;
-> > > > > +
-> > > > > +       flags &= ~__GFP_ACCOUNT;
-> > > > >         for (i = 0; i < size; i++) {
-> > > > >                 if (likely(p[i])) {
-> > > > >                         page = virt_to_head_page(p[i]);
-> > > > > +
-> > > > > +                       if (!page_has_obj_cgroups(page) &&
-> > > >
-> > > > The page is already linked into the kmem_cache, don't you need
-> > > > synchronization for memcg_alloc_page_obj_cgroups().
-> > >
-> > > Hm, yes, in theory we need it. I guess the reason behind why I've never seen any issues
-> > > here is the SLUB percpu partial list.
-> > >
-> > > So in theory we need something like:
-> > >
-> > > diff --git a/mm/slab.h b/mm/slab.h
-> > > index 0a31600a0f5c..44bf57815816 100644
-> > > --- a/mm/slab.h
-> > > +++ b/mm/slab.h
-> > > @@ -237,7 +237,10 @@ static inline int memcg_alloc_page_obj_cgroups(struct page *page,
-> > >         if (!vec)
-> > >                 return -ENOMEM;
-> > >
-> > > -       page->obj_cgroups = (struct obj_cgroup **) ((unsigned long)vec | 0x1UL);
-> > > +       if (cmpxchg(&page->obj_cgroups, 0,
-> > > +                   (struct obj_cgroup **) ((unsigned long)vec | 0x1UL)))
-> > > +               kfree(vec);
-> > > +
-> > >         return 0;
-> > >  }
-> > >
-> > >
-> > > But I wonder if we might put it under #ifdef CONFIG_SLAB?
-> > > Or any other ideas how to make it less expensive?
-> > >
-> > > > What's the reason to remove this from charge_slab_page()?
-> > >
-> > > Because at charge_slab_page() we don't know if we'll ever need
-> > > page->obj_cgroups. Some caches might have only few or even zero
-> > > accounted objects.
-> > >
-> >
-> > If slab_pre_alloc_hook() returns a non-NULL objcg then we definitely
-> > need page->obj_cgroups.  The charge_slab_page() happens between
-> > slab_pre_alloc_hook() & slab_post_alloc_hook(), so, we should be able
-> > to tell if page->obj_cgroups is needed.
->
-> Yes, but the opposite is not always true: we can reuse the existing page
-> without allocated page->obj_cgroups. In this case charge_slab_page() is
-> not involved at all.
->
+On Mon, Jun 22, 2020 at 10:07:37PM +0200, Jann Horn wrote:
+> On Mon, Jun 22, 2020 at 9:31 PM Kees Cook <keescook@chromium.org> wrote:
+> > This provides the ability for architectures to enable kernel stack base
+> > address offset randomization. This feature is controlled by the boot
+> > param "randomize_kstack_offset=on/off", with its default value set by
+> > CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT.
+> [...]
+> > +#define add_random_kstack_offset() do {                                        \
+> > +       if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
+> > +                               &randomize_kstack_offset)) {            \
+> > +               u32 offset = this_cpu_read(kstack_offset);              \
+> > +               u8 *ptr = __builtin_alloca(offset & 0x3FF);             \
+> > +               asm volatile("" : "=m"(*ptr));                          \
+> > +       }                                                               \
+> > +} while (0)
+> 
+> clang generates better code here if the mask is stack-aligned -
+> otherwise it needs to round the stack pointer / the offset:
 
-Hmm yeah, you are right. I missed that.
+Interesting. I was hoping to avoid needing to know the architecture
+stack alignment (leaving it up to the compiler).
 
->
-> Or do you mean that we can minimize the amount of required synchronization
-> by allocating some obj_cgroups vectors from charge_slab_page()?
+> 
+> $ cat alloca_align.c
+> #include <alloca.h>
+> void callee(void);
+> 
+> void alloca_blah(unsigned long rand) {
+>   asm volatile(""::"r"(alloca(rand & MASK)));
+>   callee();
+> }
+> $ clang -O3 -c -o alloca_align.o alloca_align.c -DMASK=0x3ff
+> $ objdump -d alloca_align.o
+> [...]
+>    0: 55                    push   %rbp
+>    1: 48 89 e5              mov    %rsp,%rbp
+>    4: 81 e7 ff 03 00 00    and    $0x3ff,%edi
+>    a: 83 c7 0f              add    $0xf,%edi
+>    d: 83 e7 f0              and    $0xfffffff0,%edi
+>   10: 48 89 e0              mov    %rsp,%rax
+>   13: 48 29 f8              sub    %rdi,%rax
+>   16: 48 89 c4              mov    %rax,%rsp
+>   19: e8 00 00 00 00        callq  1e <alloca_blah+0x1e>
+>   1e: 48 89 ec              mov    %rbp,%rsp
+>   21: 5d                    pop    %rbp
+>   22: c3                    retq
+> $ clang -O3 -c -o alloca_align.o alloca_align.c -DMASK=0x3f0
+> $ objdump -d alloca_align.o
+> [...]
+>    0: 55                    push   %rbp
+>    1: 48 89 e5              mov    %rsp,%rbp
+>    4: 48 89 e0              mov    %rsp,%rax
+>    7: 81 e7 f0 03 00 00    and    $0x3f0,%edi
+>    d: 48 29 f8              sub    %rdi,%rax
+>   10: 48 89 c4              mov    %rax,%rsp
+>   13: e8 00 00 00 00        callq  18 <alloca_blah+0x18>
+>   18: 48 89 ec              mov    %rbp,%rsp
+>   1b: 5d                    pop    %rbp
+>   1c: c3                    retq
+> $
+> 
+> (From a glance at the assembly, gcc seems to always assume that the
+> length may be misaligned.)
 
-One optimization would be to always pre-allocate page->obj_cgroups for
-kmem_caches with SLAB_ACCOUNT.
+Right -- this is why I didn't bother with it, since it didn't seem to
+notice what I'd already done to the alloca() argument. (But from what I
+could measure on cycle counts, the additional ALU didn't seem to really
+make much difference ... it _would_ be nice to avoid it, of course.)
+
+> Maybe this should be something along the lines of
+> __builtin_alloca(offset & (0x3ff & ARCH_STACK_ALIGN_MASK)) (with
+> appropriate definitions of the stack alignment mask depending on the
+> architecture's choice of stack alignment for kernel code).
+
+Is that explicitly selected anywhere in the kernel? I thought the
+alignment was left up to the compiler (as in I've seen bugs fixed where
+the kernel had to deal with the alignment choices the compiler was
+making...)
+
+-- 
+Kees Cook
