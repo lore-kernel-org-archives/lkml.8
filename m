@@ -2,110 +2,100 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AA1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80F72073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5E720702
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:00:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IxhcvSlp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730998AbgFVV7t (ORCPT
+        id S1730892AbgFVWAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:59:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53698 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgFVV7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:59:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7BD9EAF27;
-        Mon, 22 Jun 2020 21:59:46 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 527CB602E5; Mon, 22 Jun 2020 23:59:46 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 23:59:46 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Tom Herbert <therbert@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 1/3] net: ethtool: add missing string for
- NETIF_F_GSO_TUNNEL_REMCSUM
-Message-ID: <20200622215946.gbnx7mfavwvr4odz@lion.mk-sys.cz>
-References: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
- <zFTHRjNWlu4eUUW2ctoeitCl16HlqxNz83PXnzZU-JKukUxUlXl_jpYe8H8tWNgKP1cTbxEogXn3YHD9rmYj3v5h8vLvaQFYePM56sQrrzw=@pm.me>
+        Mon, 22 Jun 2020 18:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730731AbgFVWAl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:00:41 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2517C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:00:40 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id k15so14525652otp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ssWsAVdFC4LIGEQJ/VJ7yId3i3p45oukKnw+xo78VEk=;
+        b=IxhcvSlpNYuQCTw0Lrdo+5HWUpG9/oG2cIvSJU0AysEb6Q3+C20QYbWhQXjpDm0NCG
+         HeaMsWI9CrY+bNkFIdUMzjpo+EWdLOU+nr8+nbnw+UhwvLwYjBPL5eSHzdKl4u+Bq3Wv
+         /G81w2Dj1ahzwZoNeOTnviQP/sjuRpbD1NxhB1VDIfn16Xrj7CGbl/hAj/ef6g9SB9i0
+         pRBkBtd9UBh3MPHPS8Y5qHYgmYNiETTTxYWq5lfx3AfLDp9ThVGPBywsw3QFRd7mMDVY
+         GqPgQHuyHGcA4wrw/LzCJX5S4Ay0Hmvzbu06ZvUHfOvkZskWpB+6h9oz8gvf8r+zJ82j
+         oCLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ssWsAVdFC4LIGEQJ/VJ7yId3i3p45oukKnw+xo78VEk=;
+        b=nuHwBoo9lH//cSxoq+atJ27muFUWcjZX3K+7gTfhmLEnX6rwKa8y4oIhK+j6zIOkGq
+         b6SZCorLZ5OWi4h681VDVp0VcdbtWIApjGxLtjtr+LDJSqQjFe2WjXmenkxdXWMDzcYn
+         Vu2Ol9pGxg3kwNnKBtfOWbhqg8Tzs533f1w6MBbYktWfOlFnuoZeH3sKaARZcqXzdqHP
+         ykU05Ry9S1/TrXYCBdaKQBnmwC6PXg3FsaAx5YWqCqW5YAnYdM6Rbtu/UFezQpJE3Nbi
+         EBEEpGM5L0an7SMYwOs2IEUb7N9kvwYrM6KaVlQQLy8G6EcI3m2eU+BWOhHNmhIuzKRr
+         yG+g==
+X-Gm-Message-State: AOAM533XL9w9c7fHlKKwXx57Ade6I/pub7ExZ3Z5fCP5DczfON81DytV
+        cpA5pSP83kSd0rWwTsKxjQvKSs4HqNM=
+X-Google-Smtp-Source: ABdhPJyYxWll1PhMA3qiAlsU+2CmqUgM/1ltQs5y0nw479HtQmeyac4j2CB/TDEIlkRuphVxnksC/Q==
+X-Received: by 2002:a4a:e74a:: with SMTP id n10mr15925806oov.71.1592863238529;
+        Mon, 22 Jun 2020 15:00:38 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v2sm3594714otb.70.2020.06.22.15.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 15:00:37 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] arm64: defconfig: Enable Qualcomm SM8250 pinctrl driver
+Date:   Mon, 22 Jun 2020 15:00:48 -0700
+Message-Id: <20200622220048.717073-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ukcnb7vrxz63kxvz"
-Content-Disposition: inline
-In-Reply-To: <zFTHRjNWlu4eUUW2ctoeitCl16HlqxNz83PXnzZU-JKukUxUlXl_jpYe8H8tWNgKP1cTbxEogXn3YHD9rmYj3v5h8vLvaQFYePM56sQrrzw=@pm.me>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The SM8250 pinctrl driver provides pin configuration, pin muxing and
+GPIO pin control for many pins on the SM8250 SoC.
 
---ukcnb7vrxz63kxvz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri, Jun 19, 2020 at 06:49:46PM +0000, Alexander Lobakin wrote:
-> Commit e585f2363637 ("udp: Changes to udp_offload to support remote
-> checksum offload") added new GSO type and a corresponding netdev
-> feature, but missed Ethtool's 'netdev_features_strings' table.
-> Give it a name so it will be exposed to userspace and become available
-> for manual configuration.
->=20
-> Fixes: e585f2363637 ("udp: Changes to udp_offload to support remote
-> checksum offload")
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index b3d13e1a052a..bbbaaab5a4fa 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -469,6 +469,7 @@ CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
+ CONFIG_PINCTRL_SC7180=y
+ CONFIG_PINCTRL_SDM845=y
+ CONFIG_PINCTRL_SM8150=y
++CONFIG_PINCTRL_SM8250=y
+ CONFIG_GPIO_ALTERA=m
+ CONFIG_GPIO_DWAPB=y
+ CONFIG_GPIO_MB86S7X=y
+-- 
+2.26.2
 
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-
-> ---
->  net/ethtool/common.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-> index 47f63526818e..aaecfc916a4d 100644
-> --- a/net/ethtool/common.c
-> +++ b/net/ethtool/common.c
-> @@ -40,6 +40,7 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT=
-][ETH_GSTRING_LEN] =3D {
->  	[NETIF_F_GSO_UDP_TUNNEL_BIT] =3D	 "tx-udp_tnl-segmentation",
->  	[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT] =3D "tx-udp_tnl-csum-segmentation",
->  	[NETIF_F_GSO_PARTIAL_BIT] =3D	 "tx-gso-partial",
-> +	[NETIF_F_GSO_TUNNEL_REMCSUM_BIT] =3D "tx-tunnel-remcsum-segmentation",
->  	[NETIF_F_GSO_SCTP_BIT] =3D	 "tx-sctp-segmentation",
->  	[NETIF_F_GSO_ESP_BIT] =3D		 "tx-esp-segmentation",
->  	[NETIF_F_GSO_UDP_L4_BIT] =3D	 "tx-udp-segmentation",
-> --=20
-> 2.27.0
->=20
->=20
-
---ukcnb7vrxz63kxvz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7xKcsACgkQ538sG/LR
-dpWNKwf/QdBGGinjjKlg/fu7WpCNDZy4TRdo2Xsj8e7xjLwz2VDwPTfi6rd3b9gs
-Er+QqT8QkiMp/k9ogx1In9HDsF/n0GHlf0eiMiKyohCLRErFCSqoGZpyI91nSXSV
-tcK3idI0gye+lvZK8Pwfo5BwmKbASHlrRQFx3kMBfL8HP1GrqCZUqR1s/yCdbD57
-mJ1Yqm6acb8tqhLEwuANViRSs+GLcdAGtWj0+f9ePxmkwn+HneMoSFGBDeRkIkgI
-CLZ9pmk2h00iSwUjqaCnHzONg6sRifTwTs/c0WQdvRE93W/gMNMXagF0oqWn4x6x
-OnzGTDD/TYunjjLUc+iYnFMh7d3Zyw==
-=9S6W
------END PGP SIGNATURE-----
-
---ukcnb7vrxz63kxvz--
