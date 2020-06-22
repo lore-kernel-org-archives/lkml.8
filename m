@@ -2,138 +2,110 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55087C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3343F2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4742020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MNyJjwmB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="b3bvo3nZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbgFVSKC (ORCPT
+        id S1730296AbgFVSKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:10:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729873AbgFVSKC (ORCPT
+        Mon, 22 Jun 2020 14:10:19 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9745 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729873AbgFVSKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:10:02 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA661C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:10:01 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c21so10167798lfb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fj6T6vWIu+7/zMEXZA/hWOf/ZtxjF8z8xDJ7BJ6W0P0=;
-        b=MNyJjwmBp7DllDG0Dl5Oec25nmm80IFwxUsVhL96ER3oAiK3RcA3WQj9qi8eQu9mVb
-         ks1WFCScTP4gLWuknMHVAkon/VmQWMNwHVw3MDr+FK4EHkFxDTJpUTB5As/QR7S13v7g
-         uPljpnRH+KPhwVNLrLcX9N1BHJRK3qr8CNuPajZPiVHe3+KEN0Ndw/YIXvfDCYVR8Rx1
-         InhvhQmsUWQELNWpfG0VaQZb19NeIFEUNFen+Lf/8XwC/JZXI5v0DYnnDXEHKUfSlZZZ
-         rbvTAvp92GmxMxb7pwEYp9IpX3LvVE+bpIvhd0cUd49vNH+sZ0h7NcVFKU4QzBVFiTQH
-         Pa1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fj6T6vWIu+7/zMEXZA/hWOf/ZtxjF8z8xDJ7BJ6W0P0=;
-        b=H6s8VKChltk+6jojAs3u4xiAHQ0pENc7hCZEYPobqEWJHcKXYvddgzHoHjGARdte5q
-         CUvTGOaDq+Hcpw+JbnW1pRiDXcsBXdfceAIHAendSH1Rn4A2dOrKd9BA/CNUN3Bap9ES
-         lffArOvrDpg+grklVq2iOHiYJ86rzlGe43fESkM2fTn/NgpYpl/tlXN7DC9lNWE11G9s
-         PUgMmcunyTEjQujOGkkVPQyRvQ6/ZfMTUP/focXGOmkt+jVF8YKZ/VBZsvG0wT/Sxe/M
-         MbgrimPPik9Hor7wPHY0JQYBmqpirmCJ+xdfK+dk3DwRra1XoUqzauiSyIzgdFfClhzp
-         GCzQ==
-X-Gm-Message-State: AOAM530AuS4ApjhpqFBnCwsPR8w8Zz2CVCW0+UIYs9B20Ht34TibWy61
-        A2OMNZcYQ0crsraYEzWf5TM/vunaNF0fhMJ3YIge2g==
-X-Google-Smtp-Source: ABdhPJxXDeGb1uizBd27egpvFtr2RKQ3SI3nhBEIjsWi6IrwEvf6HGYQB1DUElDoEzbVkH591OEe9QkQjyq8GHl5PTI=
-X-Received: by 2002:a05:6512:482:: with SMTP id v2mr10359032lfq.3.1592849400059;
- Mon, 22 Jun 2020 11:10:00 -0700 (PDT)
+        Mon, 22 Jun 2020 14:10:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef0f3fd0001>; Mon, 22 Jun 2020 11:10:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 11:10:18 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 11:10:18 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
+ 2020 18:10:10 +0000
+Subject: Re: [PATCH 09/16] mm/hmm: add output flag for compound page mapping
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
+ <20200619215649.32297-10-rcampbell@nvidia.com>
+ <20200622172520.GB2874652@mellanox.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <15ba19a9-5f71-546b-bdea-31e65fc39693@nvidia.com>
+Date:   Mon, 22 Jun 2020 11:10:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-11-guro@fb.com>
- <CALvZod4Bfx3j+=spRSct5_cBL4U+XFF228iZt3EdkGqf4kokrQ@mail.gmail.com> <20200622180153.GB301338@carbon.dhcp.thefacebook.com>
-In-Reply-To: <20200622180153.GB301338@carbon.dhcp.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 22 Jun 2020 11:09:47 -0700
-Message-ID: <CALvZod6A3ibpurMsuj+8F3DXYh7sb3L8eNmHf_NUTpvQCiDDmw@mail.gmail.com>
-Subject: Re: [PATCH v6 10/19] mm: memcg/slab: deprecate memory.kmem.slabinfo
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200622172520.GB2874652@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592849405; bh=0DzYL4HLsgFlf9gIOFWj4t2vhG+UWKyfEYszVntTpO0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=b3bvo3nZKLlyLX4zT4vNK4ze9NrK0gTJTIt60jX7RdpK17Jd5c/zeIaUarno5eSu/
+         cAYlkDVzSTDAL6h9v2srTDkNO87bgqoWwrkJ2wqJnsOZYPpnjlXw5FI7riq8c7sCAY
+         PbJ8bmgwZA0AQU6g4GUBy7MnKThdRMg/F72BluBAuDdD8Zz2IXDlW0E5mEBiaXhzPE
+         RgzgjZXu5xXgj4/27EEk4mjouwk6d1IQwBiDJ0mWrWFEVM700uvC5EzWt1MnQpQjz9
+         HtF/Se4o8UOcnGkz+RN3s0mJzlFrwHPIwmxmvn71XEg515EyZlfpV9DYIN85f1wPAb
+         ZqD40jApIS9Qg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:02 AM Roman Gushchin <guro@fb.com> wrote:
->
-> On Mon, Jun 22, 2020 at 10:12:46AM -0700, Shakeel Butt wrote:
-> > On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
-> > >
-> > > Deprecate memory.kmem.slabinfo.
-> > >
-> > > An empty file will be presented if corresponding config options are
-> > > enabled.
-> > >
-> > > The interface is implementation dependent, isn't present in cgroup v2,
-> > > and is generally useful only for core mm debugging purposes. In other
-> > > words, it doesn't provide any value for the absolute majority of users.
-> > >
-> > > A drgn-based replacement can be found in tools/cgroup/slabinfo.py .
-> > > It does support cgroup v1 and v2, mimics memory.kmem.slabinfo output
-> > > and also allows to get any additional information without a need
-> > > to recompile the kernel.
-> > >
-> > > If a drgn-based solution is too slow for a task, a bpf-based tracing
-> > > tool can be used, which can easily keep track of all slab allocations
-> > > belonging to a memory cgroup.
-> > >
-> > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> >
-> > Hi Roman,
-> >
-> > I am not against removing the memory.kmem.slabinfo interface but I
-> > would like to have an alternative solution more accessible than
-> > tools/cgroup/slabinfo.py.
-> >
-> > In our case, we don't have ssh access and if we need something for
-> > debugging, it is much more preferable to provide a file to read to
-> > SREs. After the review, that file will be added to a whitelist and
-> > then we can directly read that file through automated tools without
-> > approval for each request.
-> >
-> > I am just wondering if a file interface can be provided for whatever
-> > tools/cgroup/slabinfo.py is providing.
-> >
-> > Shakeel
->
-> Hello, Shakeel!
->
-> I understand your point, but Idk how much we wanna make this code a part
-> of the kernel and the cgroup interface.
 
-No need for the cgroup interface. I was thinking of a new interface
-like /proc/slabinfo_full which tells active objects for each
-kmem_cache and memcg pair.
+On 6/22/20 10:25 AM, Jason Gunthorpe wrote:
+> On Fri, Jun 19, 2020 at 02:56:42PM -0700, Ralph Campbell wrote:
+>> hmm_range_fault() returns an array of page frame numbers and flags for
+>> how the pages are mapped in the requested process' page tables. The PFN
+>> can be used to get the struct page with hmm_pfn_to_page() and the page size
+>> order can be determined with compound_order(page) but if the page is larger
+>> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
+>> using a larger page size. To be fully general, hmm_range_fault() would need
+>> to return the mapping size to handle cases like a 1GB compound page being
+>> mapped with 2MB PMD entries. However, the most common case is the mapping
+>> size is the same as the underlying compound page size.
+>> Add a new output flag to indicate this so that callers know it is safe to
+>> use a large device page table mapping if one is available.
+> 
+> But what size should the caller use?
+> 
+> You already explained that the caller cannot use compound_ordet() to
+> get the size, so what should it be?
+> 
+> Probably this needs to be two flags, PUD and PMD, and the caller should
+> use the PUD and PMD sizes to figure out how big it is?
+> 
+> Jason
+> 
 
-> The problem is that reading
-> from it will be really slow in comparison to all other cgroup interface
-> files. Idk if Google's version of SLAB has a list of all slab pages,
-> but if not (as in generic SLUB case), it requires scanning of the whole RAM.
+I guess I didn't explain it as clearly as I thought. :-)
 
-That's a bummer. Does drgn-based script scan the whole RAM?
+The page size *can* be determined with compound_order(page) but without the
+flag, the caller doesn't know how much of that page is being mapped by the
+CPU. The flag says the CPU is mapping the whole compound page (based on compound_order)
+and that the caller can use device mappings up to the size of compound_order(page).
