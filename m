@@ -6,64 +6,102 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C431C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5180C2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8694E206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgFVNJJ (ORCPT
+        id S1728357AbgFVNJN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 22 Jun 2020 09:09:13 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:51871 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727940AbgFVNJJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 09:09:09 -0400
-Received: from ms.lwn.net ([45.79.88.28]:37444 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgFVNJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:09:09 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id ADE672C8;
-        Mon, 22 Jun 2020 13:09:08 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 07:09:07 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@collabora.com>,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com, rdunlap@infradead.org,
-        dongli.zhang@oracle.com
-Subject: Re: [PATCH v4] docs: block: Create blk-mq documentation
-Message-ID: <20200622070907.3d2bb187@lwn.net>
-In-Reply-To: <d7b3b500-cb3c-1348-61c9-9e14767fa4ac@kernel.dk>
-References: <20200620002036.113000-1-andrealmeid@collabora.com>
-        <d7b3b500-cb3c-1348-61c9-9e14767fa4ac@kernel.dk>
-Organization: LWN.net
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 2DAA324001A;
+        Mon, 22 Jun 2020 13:09:05 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200620150045.GA2054@localhost>
+References: <20200619122300.2510533-1-antoine.tenart@bootlin.com> <20200619122300.2510533-7-antoine.tenart@bootlin.com> <20200620150045.GA2054@localhost>
+Subject: Re: [PATCH net-next v3 6/8] net: phy: mscc: timestamping and PHC support
+To:     Richard Cochran <richardcochran@gmail.com>
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        allan.nielsen@microchip.com, foss@0leil.net
+Message-ID: <159283134527.1456598.6263985916427354928@kwain>
+Date:   Mon, 22 Jun 2020 15:09:05 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 20 Jun 2020 15:21:05 -0600
-Jens Axboe <axboe@kernel.dk> wrote:
+Hello Richard,
 
-> On 6/19/20 6:20 PM, André Almeida wrote:
-> > Create a documentation providing a background and explanation around the
-> > operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
-> > 
-> > The reference for writing this documentation was the source code and
-> > "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
-> > Systems", by Axboe et al.  
+Quoting Richard Cochran (2020-06-20 17:00:45)
+> On Fri, Jun 19, 2020 at 02:22:58PM +0200, Antoine Tenart wrote:
 > 
-> This looks fine to me now - Jon, would you care to queue it up?
-> You can add my:
+> > +static void vsc85xx_dequeue_skb(struct vsc85xx_ptp *ptp)
+> > +{
+> > +     struct skb_shared_hwtstamps shhwtstamps;
+> > +     struct vsc85xx_ts_fifo fifo;
+> > +     struct sk_buff *skb;
+> > +     u8 skb_sig[16], *p;
+> > +     int i, len;
+> > +     u32 reg;
+> > +
+> > +     memset(&fifo, 0, sizeof(fifo));
+> > +     p = (u8 *)&fifo;
+> > +
+> > +     reg = vsc85xx_ts_read_csr(ptp->phydev, PROCESSOR,
+> > +                               MSCC_PHY_PTP_EGR_TS_FIFO(0));
+> > +     if (reg & PTP_EGR_TS_FIFO_EMPTY)
+> > +             return;
+> > +
+> > +     *p++ = reg & 0xff;
+> > +     *p++ = (reg >> 8) & 0xff;
+> > +
+> > +     /* Read the current FIFO item. Reading FIFO6 pops the next one. */
+> > +     for (i = 1; i < 7; i++) {
+> > +             reg = vsc85xx_ts_read_csr(ptp->phydev, PROCESSOR,
+> > +                                       MSCC_PHY_PTP_EGR_TS_FIFO(i));
+> > +             *p++ = reg & 0xff;
+> > +             *p++ = (reg >> 8) & 0xff;
+> > +             *p++ = (reg >> 16) & 0xff;
+> > +             *p++ = (reg >> 24) & 0xff;
+> > +     }
+> > +
+> > +     len = skb_queue_len(&ptp->tx_queue);
+> > +     if (len < 1)
+> > +             return;
+> > +
+> > +     while (len--) {
+> > +             skb = __skb_dequeue(&ptp->tx_queue);
+> > +             if (!skb)
+> > +                     return;
+> > +
+> > +             /* Can't get the signature of the packet, won't ever
+> > +              * be able to have one so let's dequeue the packet.
+> > +              */
+> > +             if (get_sig(skb, skb_sig) < 0)
+> > +                     continue;
 > 
-> Reviewed-by: Jens Axboe <axboe@kernel.dk>
+> This leaks the skb.
 
-Done.
+That's right, thanks for pointing this out! I'll fix it.
 
 Thanks,
+Antoine
 
-jon
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
