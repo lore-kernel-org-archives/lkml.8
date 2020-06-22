@@ -3,120 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD936C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F7C20707
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:59:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rwo9R4gF"
+	by mail.kernel.org (Postfix) with ESMTP id 9939420767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592845170;
+	bh=iHVIGWwZ7iCmJ0kpqwmqira3sl8mshmr1Tv09brXRRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SvLmP59lJ8z3ysAj4aopUiYi1NqGsw2Iek/VTXd/ryBudpipHx5SuNmjgBqH58NRu
+	 L0IS2wuDDlcfqeauZokgAMQD0ZMye5caWizvXG9Mcu9q47RM2J0DhRc9mkNwXp7vds
+	 Ga+mGVSKYLEoqqxB0ZhpDySV4b3Goeal4hOh3vr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729886AbgFVQ7B (ORCPT
+        id S1729870AbgFVQ73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:59:01 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3554 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729563AbgFVQ7B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:59:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef0e3480000>; Mon, 22 Jun 2020 09:58:48 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 22 Jun 2020 09:59:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 09:59:01 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
- 2020 16:58:54 +0000
-Subject: Re: [PATCH 00/16] mm/hmm/nouveau: THP mapping and migration
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-References: <20200619215649.32297-1-rcampbell@nvidia.com>
- <20200622123947.GC2590509@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <05bcdcd7-d17b-9092-1a9c-759fb0eab728@nvidia.com>
-Date:   Mon, 22 Jun 2020 09:58:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 22 Jun 2020 12:59:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729492AbgFVQ72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:59:28 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2058720767;
+        Mon, 22 Jun 2020 16:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592845168;
+        bh=iHVIGWwZ7iCmJ0kpqwmqira3sl8mshmr1Tv09brXRRA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fvuU7bpPPM1WeIUKGL3DNrXKcSvDMj3FgWWxcSP2i46wr9gyQhX/e/gqnWJesG8WX
+         zSp3mwAJlpIBxYUk2w/9pgzrKFfAgHuYRohTuS3h7XlGlrc0HL82IxIwJ9plwzSXd0
+         pqsTz3oOemw2cp8if/IjP3i8XA7GHybNSnNfoTU0=
+Date:   Mon, 22 Jun 2020 17:59:26 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] regmap fixes for v5.8-rc2
+Message-ID: <20200622165926.GN4560@sirena.org.uk>
+References: <20200622114015.60DD1206BE@mail.kernel.org>
+ <20200622120905.GE4560@sirena.org.uk>
+ <CAHk-=wg1YafzVFcCAe52cG+gHuaJBGORGb3mZ+-9QqZ2LOmzag@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622123947.GC2590509@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592845128; bh=17rmJOZx2NuUvyVDIKMt8wguy1oUyTRKNcnhF9ewJgU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=rwo9R4gFj7zEIuYXLuR8sMIDq669bABVnTdSwAYO0cdeo2tW8lCTawdU2ufryO5gF
-         TihfxNdj7WV0NLbF2cwCoY+9bQwqoKgpyRQZbZDBnr8oRJto2vtsDB8nq3YKnbCXjK
-         S/uT/aAPAzmPVQU3ymyYvZSxHqUFtJxS3GDJvYhevPLnQs68Nm7fcnzgheqizzkEKG
-         6aC/rTKNMF2zZNlj8LJaUFNmhRIkIEe5FrlRhUYZ+1anzI+NOgdtFQf5t2jPzzFcOB
-         R1Z68hKNEXvJIC2clDRCVFbEeB2PSf95gbtf8ZlCxVHaGZSk2HTN7djCwV/nWvvK6u
-         W8sju/hNTpTkQ==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QQNwO3VdVfodZayb"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wg1YafzVFcCAe52cG+gHuaJBGORGb3mZ+-9QqZ2LOmzag@mail.gmail.com>
+X-Cookie: laser, n.:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 6/22/20 5:39 AM, Jason Gunthorpe wrote:
-> On Fri, Jun 19, 2020 at 02:56:33PM -0700, Ralph Campbell wrote:
->> These patches apply to linux-5.8.0-rc1. Patches 1-3 should probably go
->> into 5.8, the others can be queued for 5.9. Patches 4-6 improve the HMM
->> self tests. Patch 7-8 prepare nouveau for the meat of this series which
->> adds support and testing for compound page mapping of system memory
->> (patches 9-11) and compound page migration to device private memory
->> (patches 12-16). Since these changes are split across mm core, nouveau,
->> and testing, I'm guessing Jason Gunthorpe's HMM tree would be appropriate.
-> 
-> You need to break this up into parts that go where they need to
-> go. Nouveau rc changes should go to DRM or some series needs to
-> explain the linkage
-> 
->> Ralph Campbell (16):
->>    mm: fix migrate_vma_setup() src_owner and normal pages
->>    nouveau: fix migrate page regression
->>    nouveau: fix mixed normal and device private page migration
->>    mm/hmm: fix test timeout on slower machines
->>    mm/hmm/test: remove redundant page table invalidate
->>    mm/hmm: test mixed normal and device private migrations
->>    nouveau: make nvkm_vmm_ctor() and nvkm_mmu_ptp_get() static
->>    nouveau/hmm: fault one page at a time
->>    mm/hmm: add output flag for compound page mapping
->>    nouveau/hmm: support mapping large sysmem pages
->>    hmm: add tests for HMM_PFN_COMPOUND flag
->>    mm/hmm: optimize migrate_vma_setup() for holes
-> 
-> Order things so it is hmm, test, noeveau
-> 
->>    mm: support THP migration to device private memory
->>    mm/thp: add THP allocation helper
->>    mm/hmm/test: add self tests for THP migration
->>    nouveau: support THP migration to private memory
-> 
-> This is another series, you should split it even if it has to go
-> through the hmm tree
-> 
-> Jason
+--QQNwO3VdVfodZayb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks. I thought there was probably a better way to submit this but
-I posted everything so people could see how it all fit together.
+On Mon, Jun 22, 2020 at 09:46:24AM -0700, Linus Torvalds wrote:
 
+> That said, automating the mailing is *not* incompatible with having a
+> real name in the "From" line. Can you please make your scripting at
+> least say "Mark Brown <broonie@kernel.org>" rather than just
+> "broonie@kernel.org".
+
+Sure, will do - my MTA fills it in on one machine and not the other it
+seems and I tested on the wrong one.
+
+--QQNwO3VdVfodZayb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7w420ACgkQJNaLcl1U
+h9D1TQf7B9y80G/x+UG0+uXWlOEA/9MoQY2/K6Rfby74+QCwXvbVM+L16b0HaY5f
+EVJYTfKZht6KxJHVJsStvLpz7nLBcsjBDfKa1cihoD8Z8Z0eJ3Ss8s8V/v7WBTcS
+gRUC/i31J4hDQwEtX7rKlfyYGrrrQ88jGPIf4/YEtMT9duNumAtZ51EUUWU4hn/6
+Cfgevbn44GlYFxO0oKgd87KLYuLvsbHF4HjsfigaiJcaynZn6ptQZzfwzU8j3tB+
+jkgBUMYwUEwS7uKhKu+CtUkP7o+YigoV4+f76KrVUvV0zLcKtcT04a3xY0zV9nyy
+1ZJkjl/gTeVxWfBH6cNopbtJF1b3+Q==
+=59KW
+-----END PGP SIGNATURE-----
+
+--QQNwO3VdVfodZayb--
