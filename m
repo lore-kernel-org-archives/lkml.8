@@ -2,151 +2,148 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A62C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67653C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F782075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5F920767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UEb5/483"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VSMd8vBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgFVUH0 (ORCPT
+        id S1728967AbgFVUID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:07:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728311AbgFVUHZ (ORCPT
+        Mon, 22 Jun 2020 16:08:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45459 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728307AbgFVUID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:07:25 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F415C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:07:25 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id m63so21228248ybc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=It7WCF6NWrKCb1o5ESqK7iLOhdQgrtGmLe61alVmR2g=;
-        b=UEb5/483PkOmcAISuyZiEKoIS2sTKiWdGS7v5XwnZPqL+4W/mlTtQ5dsTdsAyVnSqc
-         iFYEyb8WoZeCD+2dF9umxv6lEs8j5/CMBNv8eFU2+67hQo90DV0H4s8MA2OaqoD/7KQA
-         P7h/4EI0h7HaVREHrSPnj89Wvg9ONYLnKDlW3FFoAXVwEihCRnfqLic9KngVzI51Mp/7
-         iz0ijx0jhB2GYI0T2yLdZR/orC2MKjj7MT+PdnyK83DfbOpiNVVrsl7204IHfyK22VZP
-         sU3Cb//VqPvn/7GKibIY8vB23nWl5eKmVvB7sFFwlcUYyRi6niFGWMfvl9hgS3HldNOS
-         JejA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=It7WCF6NWrKCb1o5ESqK7iLOhdQgrtGmLe61alVmR2g=;
-        b=gKRHkzFyvIouANv47UNaobPhkxa1P4dXGljBfkFu1GhrA41OeK/sdAJ127Jgg4yYRx
-         mOX3AhCsFWn1SUzIpEDL2XSxovY0YAirjM6JYeEO48tgZeBSIf9w0Tazx2367thBbk+X
-         jKdVClPmLMEzlwD59nolbTIzmwrPGD5U/1EG7QV38Zi1aIrw/G/0E4iiZbnEdXlsJugS
-         uMTq0nSeXN06gvt2TZq7KMby+2SFcd1qavaQE0CVU+I3j37PM68XZwzSTzGT++lxUU6v
-         esHoXSJb+wxmiFKGhuy1ersfxqXG9pLYMfFG9dXhRtHJHsqOHMhz5qH7uRYszY/10Nzf
-         UJHQ==
-X-Gm-Message-State: AOAM530zPs8jRgY5e5cid3txqQgx05Y9mKrWPtdhATON7i1+slsUL4YP
-        F+8z66YvDWKumqJ41n8ySjVtTRb+9A==
-X-Google-Smtp-Source: ABdhPJx6ELeChahDdZ0u3OPPvd1qphCT9C4jSsP2Sv6Z0wKlHq8A1zfdhi/DqKl6nOvrNIZ8kLh9lOODXQ==
-X-Received: by 2002:a25:400e:: with SMTP id n14mr27690222yba.424.1592856444249;
- Mon, 22 Jun 2020 13:07:24 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 13:07:15 -0700
-Message-Id: <20200622200715.114382-1-tkjos@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH] binder: fix null deref of proc->context
-From:   Todd Kjos <tkjos@google.com>
-To:     tkjos@google.com, gregkh@linuxfoundation.org, christian@brauner.io,
-        arve@android.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, maco@google.com
-Cc:     joel@joelfernandes.org, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 22 Jun 2020 16:08:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592856482;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lSAb/eseSEs/+a9Bniw5lJiSCdPpLF6HO9i3q2ob+7o=;
+        b=VSMd8vBlhchYnlBQMSRcY32KLu5ADBJqf3fS66anXUP8QF0l72K+Z1GqUmssPbpp1JQnA3
+        e/4aZvzy98dY84A5fGJL154hO6GDM+qpTbCNFdaPxelb8BYOpkRCMbzH4tr4BjE25uiWPq
+        NDWWk6KC96oG3MMTT58OxLfD/94sh7U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-n7C1-OBbOuaTO5iqvTMmYg-1; Mon, 22 Jun 2020 16:07:58 -0400
+X-MC-Unique: n7C1-OBbOuaTO5iqvTMmYg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AED5A18A8221;
+        Mon, 22 Jun 2020 20:07:56 +0000 (UTC)
+Received: from Whitewolf.redhat.com (ovpn-117-166.rdu2.redhat.com [10.10.117.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 046A95C1BD;
+        Mon, 22 Jun 2020 20:07:54 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RFC v5 01/10] drm/vblank: Register drmm cleanup action once per drm_vblank_crtc
+Date:   Mon, 22 Jun 2020 16:07:21 -0400
+Message-Id: <20200622200730.120716-2-lyude@redhat.com>
+In-Reply-To: <20200622200730.120716-1-lyude@redhat.com>
+References: <20200622200730.120716-1-lyude@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The binder driver makes the assumption proc->context pointer is invariant after
-initialization (as documented in the kerneldoc header for struct proc).
-However, in commit f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-proc->context is set to NULL during binder_deferred_release().
+Since we'll be allocating resources for kthread_create_worker() in the
+next commit (which could fail and require us to clean up the mess),
+let's simplify the cleanup process a bit by registering a
+drm_vblank_init_release() action for each drm_vblank_crtc so they're
+still cleaned up if we fail to initialize one of them.
 
-Another proc was in the middle of setting up a transaction to the dying
-process and crashed on a NULL pointer deref on "context" which is a local
-set to &proc->context:
+Changes since v3:
+* Use drmm_add_action_or_reset() - Daniel Vetter
 
-    new_ref->data.desc = (node == context->binder_context_mgr_node) ? 0 : 1;
-
-Here's the stack:
-
-[ 5237.855435] Call trace:
-[ 5237.855441] binder_get_ref_for_node_olocked+0x100/0x2ec
-[ 5237.855446] binder_inc_ref_for_node+0x140/0x280
-[ 5237.855451] binder_translate_binder+0x1d0/0x388
-[ 5237.855456] binder_transaction+0x2228/0x3730
-[ 5237.855461] binder_thread_write+0x640/0x25bc
-[ 5237.855466] binder_ioctl_write_read+0xb0/0x464
-[ 5237.855471] binder_ioctl+0x30c/0x96c
-[ 5237.855477] do_vfs_ioctl+0x3e0/0x700
-[ 5237.855482] __arm64_sys_ioctl+0x78/0xa4
-[ 5237.855488] el0_svc_common+0xb4/0x194
-[ 5237.855493] el0_svc_handler+0x74/0x98
-[ 5237.855497] el0_svc+0x8/0xc
-
-The fix is to move the kfree of the binder_device to binder_free_proc()
-so the binder_device is freed when we know there are no references
-remaining on the binder_proc.
-
-Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-Signed-off-by: Todd Kjos <tkjos@google.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/android/binder.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/drm_vblank.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index e47c8a4c83db..f50c5f182bb5 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -4686,8 +4686,15 @@ static struct binder_thread *binder_get_thread(struct binder_proc *proc)
+diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+index 85e5f2db16085..ce5c1e1d29963 100644
+--- a/drivers/gpu/drm/drm_vblank.c
++++ b/drivers/gpu/drm/drm_vblank.c
+@@ -492,16 +492,12 @@ static void vblank_disable_fn(struct timer_list *t)
  
- static void binder_free_proc(struct binder_proc *proc)
+ static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
  {
-+	struct binder_device *device;
-+
- 	BUG_ON(!list_empty(&proc->todo));
- 	BUG_ON(!list_empty(&proc->delivered_death));
-+	device = container_of(proc->context, struct binder_device, context);
-+	if (refcount_dec_and_test(&device->ref)) {
-+		kfree(proc->context->name);
-+		kfree(device);
-+	}
- 	binder_alloc_deferred_release(&proc->alloc);
- 	put_task_struct(proc->tsk);
- 	binder_stats_deleted(BINDER_STAT_PROC);
-@@ -5406,7 +5413,6 @@ static int binder_node_release(struct binder_node *node, int refs)
- static void binder_deferred_release(struct binder_proc *proc)
- {
- 	struct binder_context *context = proc->context;
--	struct binder_device *device;
- 	struct rb_node *n;
- 	int threads, nodes, incoming_refs, outgoing_refs, active_transactions;
+-	unsigned int pipe;
+-
+-	for (pipe = 0; pipe < dev->num_crtcs; pipe++) {
+-		struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
++	struct drm_vblank_crtc *vblank = ptr;
  
-@@ -5423,12 +5429,6 @@ static void binder_deferred_release(struct binder_proc *proc)
- 		context->binder_context_mgr_node = NULL;
- 	}
- 	mutex_unlock(&context->context_mgr_node_lock);
--	device = container_of(proc->context, struct binder_device, context);
--	if (refcount_dec_and_test(&device->ref)) {
--		kfree(context->name);
--		kfree(device);
+-		drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
+-			    drm_core_check_feature(dev, DRIVER_MODESET));
++	drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
++		    drm_core_check_feature(dev, DRIVER_MODESET));
+ 
+-		del_timer_sync(&vblank->disable_timer);
 -	}
--	proc->context = NULL;
- 	binder_inner_proc_lock(proc);
- 	/*
- 	 * Make sure proc stays alive after we
++	del_timer_sync(&vblank->disable_timer);
+ }
+ 
+ /**
+@@ -511,7 +507,7 @@ static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
+  *
+  * This function initializes vblank support for @num_crtcs display pipelines.
+  * Cleanup is handled automatically through a cleanup function added with
+- * drmm_add_action().
++ * drmm_add_action_or_reset().
+  *
+  * Returns:
+  * Zero on success or a negative error code on failure.
+@@ -530,10 +526,6 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
+ 
+ 	dev->num_crtcs = num_crtcs;
+ 
+-	ret = drmm_add_action(dev, drm_vblank_init_release, NULL);
+-	if (ret)
+-		return ret;
+-
+ 	for (i = 0; i < num_crtcs; i++) {
+ 		struct drm_vblank_crtc *vblank = &dev->vblank[i];
+ 
+@@ -542,6 +534,11 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
+ 		init_waitqueue_head(&vblank->queue);
+ 		timer_setup(&vblank->disable_timer, vblank_disable_fn, 0);
+ 		seqlock_init(&vblank->seqlock);
++
++		ret = drmm_add_action_or_reset(dev, drm_vblank_init_release,
++					       vblank);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	return 0;
 -- 
-2.27.0.111.gc72c7da667-goog
+2.26.2
 
