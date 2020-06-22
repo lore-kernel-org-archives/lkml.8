@@ -2,117 +2,127 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22816C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6671EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA23B2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4332073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rKyi28V8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKrUDlJ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730832AbgFVWAt (ORCPT
+        id S1730932AbgFVWAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
+        Mon, 22 Jun 2020 18:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730764AbgFVWAs (ORCPT
+        with ESMTP id S1730764AbgFVWAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:00:48 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16761C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:00:48 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id h22so553424pjf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:00:48 -0700 (PDT)
+        Mon, 22 Jun 2020 18:00:51 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20745C061573;
+        Mon, 22 Jun 2020 15:00:51 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id j10so5338761qtq.11;
+        Mon, 22 Jun 2020 15:00:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+ibN7k/GXiEaOSwLAh6eIG551wxCB5ccPWNe8L96H7k=;
-        b=rKyi28V8bhsI6UdHiPApRpohgn8p9zbUYrz2P0iYhKTjCcEJ0SOmXPvMi9V0vqatco
-         3zGbkaHV1kl3gjnsYSypuWOI+JtV9XpVsv3Jeu0SnNN+SeL0YE0KynN2aVt1nh04yijm
-         G/C/99Dy4+IUjMHHYJ8lWES1GjdSu8WOBoyF3D+RYqCj3m4myhdwFBquvPI2hsmIKrmL
-         33wQPAhshvvESXgStFXk9rxa2pjnZaUkd+Q9aIz9ygCq46QtquvxTGU/990uwrOkfAER
-         0cwAeoV+9N8KJqc7YQRvBKbadq3s7A4/URqpvXSyDalxch6c40Ae3ataIYbj3r3H0OcS
-         0uYQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rbwmv8Z/FP9ApAgbdwjt0jN7D1r57JUmODU4nLA9Mcw=;
+        b=nKrUDlJ7NDzZ8GaINJaqizcT2hUYM1B1AOlOLE5hLf2MkYHTa+JsOUWbm9L6OKsRO6
+         BAq2ynKZpJKaTqMDiZOyAsJXS8n8XbyM00GCctUp8qkzaHZETysYgvhuQt+8x9J/OMDQ
+         NDa1SlTFEPPbJhY5rE4Dq09q/fIFj+83HTEat5Gz5lU4LYvx6OmHDEggXu/2if8NR8vi
+         QzNYHmrG0xCS6HMsmMAIqEdAk0UMIqieoCUakd+ddd4S1GERmhDeQno+fVC1YEzDkG8f
+         J5Jy+QRr8KhtDf7K029eNhajQyRVq4rAHT5wHjQ246Pyrmpl7dvHNxcYAQgI9A4AleDX
+         UQZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+ibN7k/GXiEaOSwLAh6eIG551wxCB5ccPWNe8L96H7k=;
-        b=BI1aVMj8oD3oSXMRg5cK5Sibqb6lE+mDD1m+sDSVx8db+SQ0h8Qi34DM2pwY4z6TqK
-         Ei8QzPwxLu7ls40wfCP/SCdwv3cKt0EaKLUoXE5MrLzWTQsRWBjmYLnVf/v0MA7stiWI
-         aNBth2qW+5seqHvMFLN/fknm5FSgV4aQEDYiBatErp7ZSKrAK17Y0CmPjKXT/0NRrtUH
-         4oLFB+3Nvp7yVMkDEYrKTmzveCUS52Zi92cCAMShmhyB6aJv+sn8uz2VREez1FlrZC+A
-         T1f69dSOYavJwR0uI1HBaUpupiwMSdXyy9MVVXeOm2dX5mmRPKC49ToFmyM9NQJdr+F5
-         O0tg==
-X-Gm-Message-State: AOAM533td4nDOKPveqEKIL0Ki9xKdKh7Un4hVZG9L3bHIZgpDptpM6C7
-        mOuwlwC0MaaOzuRiBxwV4JDh8Q==
-X-Google-Smtp-Source: ABdhPJymp3j075dghUf8mE+rb8FWDpg5HB71a1UeOscamGOdT4UZapUDia7WzmBwV1WReNldwXQ4fw==
-X-Received: by 2002:a17:902:ee15:: with SMTP id z21mr21435821plb.233.1592863247373;
-        Mon, 22 Jun 2020 15:00:47 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id 130sm14647760pfw.176.2020.06.22.15.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 15:00:46 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 15:00:43 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] vmlinux.lds.h: Add .gnu.version* to DISCARDS
-Message-ID: <20200622220043.6j3vl6v7udmk2ppp@google.com>
-References: <20200622205341.2987797-1-keescook@chromium.org>
- <20200622205341.2987797-2-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rbwmv8Z/FP9ApAgbdwjt0jN7D1r57JUmODU4nLA9Mcw=;
+        b=W7JWDUtjGIzGx5dUp5yu7O8L0lzpMm2t3snKDOSGpAlWS9LWHs4IoxJVNy+ltiIcOO
+         9Nxex/qG5PbsZO7g86/oNswhXeDwcfL5OO6OdKUFqlS8+deJjGcTtGJIXhKP7b+/TUOJ
+         h5iqdPj4EJGQheXqUwQwmPQ8hEYrOXKObXbixDMEMYSB/RSUKTX2icUybqRzaJTcjs2d
+         7C5TfaPK3WpWpLp9Yi8RfXpJKIXpeupztJ3Annt3ca/iccoAWpiDc2FqNTveG/Xjtwvi
+         eBmn9ANFVTV9NfeyRRAR85xLbt61ohzUl86WEiiRpkYru9p6d0JTov1cBIZ6u/qAtztT
+         2wWw==
+X-Gm-Message-State: AOAM530WZDRVptGbcXEVfTXD+nww5wXgQOCQY7H4UKlajAq7fO6n2fwA
+        YHFVNXmPe1UP88PO4CcOPehHObaapVNaef3cADs=
+X-Google-Smtp-Source: ABdhPJyQpreJkF/hhbWDo7VT/jh/R4iAx7O6bLCYL2yAbMWc51SRvtco/EIZHB+pJK+3kFoGtNuigG9tWLHVONVsNCE=
+X-Received: by 2002:ac8:5188:: with SMTP id c8mr18989475qtn.1.1592863250268;
+ Mon, 22 Jun 2020 15:00:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200622205341.2987797-2-keescook@chromium.org>
+References: <20200621043737.pb6JV%akpm@linux-foundation.org>
+ <20a39fd4-622d-693c-c8d6-1fbab12af62a@gmail.com> <202006221445.36E03CCBE9@keescook>
+In-Reply-To: <202006221445.36E03CCBE9@keescook>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Tue, 23 Jun 2020 00:00:39 +0200
+Message-ID: <CAFLxGvw4NeBw3tDEnvL4USxgp--=vT1iXc6-tzAd_NkWCmUNFA@mail.gmail.com>
+Subject: Re: mmotm 2020-06-20-21-36 uploaded (lkdtm/bugs.c)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Randy Dunlap <rd.dunlab@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>, Michal Hocko <mhocko@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        mm-commits@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22, Kees Cook wrote:
->For vmlinux linking, no architecture uses the .gnu.version* section,
->so remove it via the common DISCARDS macro in preparation for adding
->--orphan-handling=warn more widely.
+On Mon, Jun 22, 2020 at 11:51 PM Kees Cook <keescook@chromium.org> wrote:
 >
->Signed-off-by: Kees Cook <keescook@chromium.org>
->---
-> include/asm-generic/vmlinux.lds.h | 1 +
-> 1 file changed, 1 insertion(+)
+> On Mon, Jun 22, 2020 at 08:37:17AM -0700, Randy Dunlap wrote:
+> > On 6/20/20 9:37 PM, akpm@linux-foundation.org wrote:
+> > > The mm-of-the-moment snapshot 2020-06-20-21-36 has been uploaded to
+> > >
+> > >    http://www.ozlabs.org/~akpm/mmotm/
+> > >
+> > > mmotm-readme.txt says
+> > >
+> > > README for mm-of-the-moment:
+> > >
+> > > http://www.ozlabs.org/~akpm/mmotm/
+> > >
+> > > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > > more than once a week.
+> >
+> > drivers/misc/lkdtm/bugs.c has build errors when building UML for i386
+> > (allmodconfig or allyesconfig):
+> >
+> >
+> > In file included from ../drivers/misc/lkdtm/bugs.c:17:0:
+> > ../arch/x86/um/asm/desc.h:7:0: warning: "LDT_empty" redefined
+> >  #define LDT_empty(info) (\
+> >
+> > In file included from ../arch/um/include/asm/mmu.h:10:0,
+> >                  from ../include/linux/mm_types.h:18,
+> >                  from ../include/linux/sched/signal.h:13,
+> >                  from ../drivers/misc/lkdtm/bugs.c:11:
+> > ../arch/x86/um/asm/mm_context.h:65:0: note: this is the location of the previous definition
+> >  #define LDT_empty(info) (_LDT_empty(info))
 >
->diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
->index db600ef218d7..6fbe9ed10cdb 100644
->--- a/include/asm-generic/vmlinux.lds.h
->+++ b/include/asm-generic/vmlinux.lds.h
->@@ -934,6 +934,7 @@
-> 	*(.discard)							\
-> 	*(.discard.*)							\
-> 	*(.modinfo)							\
->+	*(.gnu.version*)						\
-> 	}
+> The LKDTM test landed a while ago:
+> b09511c253e5 ("lkdtm: Add a DOUBLE_FAULT crash type on x86")
 >
-> /**
->-- 
->2.25.1
+> and nothing has touched arch/x86/um/asm/desc.h nor
+> arch/x86/um/asm/mm_context.h in a while either.
+>
+> Regardless, it seems arch/x86/um/asm/desc.h is not needed any more?
 
-I wonder what lead to .gnu.version{,_d,_r} sections in the kernel.
+True that, we can rip the file.
 
-tools/lib/bpf/libbpf_internal.h uses `.symver` directive and
--Wl,--version-script, which may lead to .gnu.version{,_d}, but this only
-applies to the userspace libbpf.so
-
-libperf.so has a similar -Wl,--version-script.
-
-Linking vmlinux does not appear to use any symbol versioning.
+-- 
+Thanks,
+//richard
