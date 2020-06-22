@@ -2,79 +2,77 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF61DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6BC206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C884C206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghMVxlaP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTA7ISWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgFVLmj (ORCPT
+        id S1727903AbgFVLoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59506 "EHLO
+        Mon, 22 Jun 2020 07:44:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727812AbgFVLmi (ORCPT
+        with ESMTP id S1727806AbgFVLoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:42:38 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F4D3C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:42:38 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id dr13so17665301ejc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:42:38 -0700 (PDT)
+        Mon, 22 Jun 2020 07:44:04 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2059BC061794;
+        Mon, 22 Jun 2020 04:44:04 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id q22so5181821pgk.2;
+        Mon, 22 Jun 2020 04:44:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7upxflk/uwJVnOQq07I5O9Zu6T4Dkf7XpY3Ofg5BkHw=;
-        b=ghMVxlaPyonKoJJOfRxJExOvV0K8wNSBlse7HxWMbjvPxZ4RBiT32xPB4EPv/0UahD
-         IO9Et0CBfyfpODfLEOQsnQKO0fIXxmv5kRpsxmwl9T/wj9/fyREskXB5vKWpVImS/x58
-         9I6I38qDYvjYJE0+XIh2N3gBmI3/HyRGSfi7DXUIDoMZ+NcHtMLs/Om5HJF96zob06Ef
-         +MAC7gLF6bSg/YlqWToFg7nRaQKSGc4tDP0T9F2GIZdwm6AX/5Rc2M9879zSUG4op/0C
-         UnwW70xr9aiMzehroKpOQXR3EA4vqe0P8OzbpsyFx7Vwjcz+u79GMqDkYbZ3IUl6iHqN
-         KKMQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZPn01r6wkXnMIHGh/thIPTlSxs28rdWp4NIXuzwx0oQ=;
+        b=FTA7ISWLI4A9wg3ouOgx4YNdJh6le0da9LW3IxYp8AUgvV84ghq39qDPNlErkkjgkS
+         6n7yR++UXq0RhCO0bGYxDcWQroLp4MJjinLXikt6ktxSaHE/xdx5pw/9+UsYUCPzzmFX
+         T6OMMHt1MG63b9lVgOhZOhTtk32Q5L9/wy1Exz6sY/Qyatk2ZF19UdaVS/buFpsSwc7k
+         aXe2ikHii5w35iVohD4NaSMTeNPAlrs8BVKDEu9exIIN8KCozhA/23oWq/xoD8NMLQ84
+         3IeJMkoPknDdeGaM0E04h/LLzw9sYnbt7+O7iONBdNFqdMti8nPM0+NtuJlulUrRX1sM
+         vGuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7upxflk/uwJVnOQq07I5O9Zu6T4Dkf7XpY3Ofg5BkHw=;
-        b=dlXYz4R4X7G0tNcjES/2pLSqW0FBSnYt6V3/HfoYCCBVEM666IIDIDi4Ud/xkm3Are
-         OYWLeZiL7fdYuvXW7+Rzg2BvluZzbfrcrPfZAccMvxY4H89ZVkucyUp21I4C00ifg1RV
-         7UqStpMxUKEuSXGdFKTG2acJfxdHduS2H4n5F5C59Dp+SzaMKrbRDkOVkFWBuR/BXdmH
-         3tRT2G++n2a+NymE7lJIOFcpS36BTXm9s869yU0w/VXub520CRw7bbMYUv9RvXErZlwp
-         QgE7krcDybTuRUp/zofxXyVw1S6WOoQtjR4LQMnmWdyr7kSKP+XAj8gpspR1BmB+nqrP
-         1e9A==
-X-Gm-Message-State: AOAM531gOuf7/DkN/ZORAA/fdgyHKH5ex5NDLAbzqYKO2HpE9Usq0Ydu
-        8CsAoRUFHP/LRyfx2yYIdlnYptoB
-X-Google-Smtp-Source: ABdhPJzey7sdhU9e0ZLMqY4kyXrz+v29VhwoJu+pL72vZIhn/WiBCAk1LhXgqwfeu3wKoyioj1VZxA==
-X-Received: by 2002:a17:906:35ca:: with SMTP id p10mr14893131ejb.392.1592826157033;
-        Mon, 22 Jun 2020 04:42:37 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:c5d2:e67d:372a:5e48])
-        by smtp.gmail.com with ESMTPSA id lo20sm5784749ejb.62.2020.06.22.04.42.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZPn01r6wkXnMIHGh/thIPTlSxs28rdWp4NIXuzwx0oQ=;
+        b=amQfkCQm789lwhXUWBjEHLwWxmdl72oNUTVCi9RXgbdhgCiojzOtUjwCeKHKk78D33
+         fERu5M9Vy/OILP+4rb11sSq4RvqY5W8mqDdnU/FK7c1P8D7CbbwtvKEy23EEN48BV/QT
+         NPTRPXzwsz/Boh26WapaJN3yhzyhgqkbDLxpGgI2tBEtTghmNjq09ni+/bNXgaSNYuNe
+         u7K1xpTPUuPp21txK4j9toi3HMxk5zwMUfLFpNsuCDmdEa6kKxitw1wcyd4q2cDzVB90
+         rSBS8nQsSdKVhvN2VyaskmeaQLVUmVw/nuN1w2MFEE3way3WjVTxNo9iN1Z8C4x1qEIv
+         yJpw==
+X-Gm-Message-State: AOAM5328MWziSqhcijB+ZiMf3vDGQieYlgS/q4nzREtNmTV/l0nVYtLx
+        uzY0RQGUlinU1Aj3igaHIWg=
+X-Google-Smtp-Source: ABdhPJyMdkCLlkB48Di9E70YagohvSIbysJTGd9ixEwryDW489vir8n7x1GTRBGyvbi/fqwswBpNbQ==
+X-Received: by 2002:a62:ee08:: with SMTP id e8mr18838245pfi.93.1592826243593;
+        Mon, 22 Jun 2020 04:44:03 -0700 (PDT)
+Received: from varodek.localdomain ([2401:4900:b8b:123e:d7ae:5602:b3d:9c0])
+        by smtp.gmail.com with ESMTPSA id j17sm14081032pjy.22.2020.06.22.04.43.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 04:42:36 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] fix annotation of io{read,write}{16,32}be()
-Date:   Mon, 22 Jun 2020 13:42:32 +0200
-Message-Id: <20200622114232.80039-1-luc.vanoostenryck@gmail.com>
+        Mon, 22 Jun 2020 04:44:02 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, netdev@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/5] ethernet: dec: tulip: use generic power management
+Date:   Mon, 22 Jun 2020 17:12:23 +0530
+Message-Id: <20200622114228.60027-1-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <202006182001.EmefYezC%lkp@intel.com>
-References: <202006182001.EmefYezC%lkp@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,42 +80,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These accessors must be used to read/write a big-endian bus.
-The value returned or written is native-endian.
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-However, these accessors are defined using be{16,32}_to_cpu()
-or cpu_to_be{16,32}() to make the endian conversion but these
-expect a __be{16,32} when none is present. Keeping them would
-need a force cast that would solve nothing at all.
+The purpose of this patch series is to remove legacy power management
+callbacks and invocation of PCI helper functions, from tulip ethernet drivers.
 
-So, do the conversion using swab{16,32}, like done in asm-generic
-for similar situations.
+With legacy PM, drivers themselves are responsible for handling the device's
+power states. And they do this with the help of PCI helper functions like
+pci_enable/disable_device(), pci_set/restore_state(), pci_set_powr_state(), etc.
+which is not recommended.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- arch/alpha/include/asm/io.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+In generic PM, all the required tasks are handled by PCI core and drivers need
+to perform device-specific operations only.
 
-diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
-index a4d0c19f1e79..640e1a2f57b4 100644
---- a/arch/alpha/include/asm/io.h
-+++ b/arch/alpha/include/asm/io.h
-@@ -489,10 +489,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
- }
- #endif
- 
--#define ioread16be(p) be16_to_cpu(ioread16(p))
--#define ioread32be(p) be32_to_cpu(ioread32(p))
--#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
--#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
-+#define ioread16be(p) swab16(ioread16(p))
-+#define ioread32be(p) swab32(ioread32(p))
-+#define iowrite16be(v,p) iowrite16(swab16(v), (p))
-+#define iowrite32be(v,p) iowrite32(swab32(v), (p))
- 
- #define inb_p		inb
- #define inw_p		inw
+All patches are compile-tested only.
+
+Vaibhav Gupta (5):
+  tulip: dmfe: use generic power management
+  tulip: windbond-840: use generic power management
+  tulip: de2104x: use generic power management
+  tulip: tulip_core: use generic power management
+  tulip: uli526x: use generic power management
+
+ drivers/net/ethernet/dec/tulip/de2104x.c     | 25 +++-------
+ drivers/net/ethernet/dec/tulip/dmfe.c        | 49 ++++---------------
+ drivers/net/ethernet/dec/tulip/tulip_core.c  | 51 +++++---------------
+ drivers/net/ethernet/dec/tulip/uli526x.c     | 48 +++---------------
+ drivers/net/ethernet/dec/tulip/winbond-840.c | 26 +++-------
+ 5 files changed, 45 insertions(+), 154 deletions(-)
+
 -- 
 2.27.0
 
