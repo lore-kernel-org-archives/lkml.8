@@ -2,149 +2,183 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7067C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B566C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8129F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B9C2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:59:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lP9wwldV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dkym1vj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbgFVU6Z (ORCPT
+        id S1730410AbgFVU7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33046 "EHLO
+        Mon, 22 Jun 2020 16:59:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728545AbgFVU6U (ORCPT
+        with ESMTP id S1728545AbgFVU7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:58:20 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 387C4C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:58:20 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id u14so430593pjj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:58:20 -0700 (PDT)
+        Mon, 22 Jun 2020 16:59:18 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B08BC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:59:18 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id q19so19432672eja.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=q1OBEWaxVovTEcB37uBYgE/K0BmOSSCdkkUrY0xJrlc=;
-        b=lP9wwldVbiqOOceUWdcR1/C7JaoksAFC1AGEd2IpbVdS5COWrufq97/Clbs06ahpr2
-         Ig8zhhzjxNxRym5ybzFNeTJC+U+BpytAyxPh75t0lBs4bq76eLYcLhgFjiDqgxE0E80I
-         P1GfY/nA+xqh4eaMGNkWsygArj3VzHmI8Q4wY=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ue6RX1kZyda1DPpFigD1OeuukeL7pPeF2wvAH0GA2VY=;
+        b=dkym1vj9zdd7rMScujOzBH+n5zSUImzcl8fkefcL95zAazkbsX7vGYegoDlXZAiJjp
+         1T8TSg4lk64NcB1aHngfYacsQqyz14guMB15lLw7Ymz9vtZszKE8X22zoeQztWLd7X19
+         rOUsu2SemPtv4aD7aOOwAMG0WTqRwMRtRyCnDi9XGvKxGjSOuyCJ1jW3yAQVG6dWSwfh
+         wU+MRH9J25QBZWT6xzvco/EDTSVwc4daP9mKhdCvL6LZQqmNqGnkfqgzwvsMCZMol9Gb
+         z0onUgjDpzbUmHzKcM6dMfrh+Qnp5uLZRJrx0JMxnl7aXPjFgenSPK44bNJaAou2fMFl
+         Du1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=q1OBEWaxVovTEcB37uBYgE/K0BmOSSCdkkUrY0xJrlc=;
-        b=ewQcnx4BZoISyyQTnIoxj3DykUUduS0mnNP9qr1/wDy5DFffXlxpgPY/RI/C614er3
-         VVivKSqdiiDS8deT8hfzNwKau2O+QFK0bsdMzAaUa4BKqL5YdpAhzU9TPhh05hdCszD4
-         0Sz8ZvkoYoRJ7fSXJvRX5GVP4C/PCGTLLEx6k3XQssVHBxnMx4ACQIrLkdqRwf0zbn9f
-         ApPv8kRwYtRUs03qvZfSupurK8XhuTGnFH2c165XcSWEVqrHgRM3iXna4eN4p/k0yK5s
-         Rw05p0GPcCDyUsa6aYOoySr2tDR4AAE+jefmXYcKFxCzimISUp7I5AeX60OH6WT+cZti
-         yFVg==
-X-Gm-Message-State: AOAM530giU5o+w7rzqFu7DF5f4bijHB2PZzNEv4A+yhXAOWNntYy1Y6l
-        snEU+JVP2N04BdL+Tc0kvnAwQA==
-X-Google-Smtp-Source: ABdhPJw8ZfE/t9NOYRfv219EhLime3UVPPpW1/MOsNhWaFmvHsPXrFNhzxDZ8zzY52sAlFVq4jY/Yw==
-X-Received: by 2002:a17:90a:e387:: with SMTP id b7mr20930337pjz.176.1592859499822;
-        Mon, 22 Jun 2020 13:58:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i3sm12146531pgj.52.2020.06.22.13.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 13:58:17 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64/build: Warn on orphan section placement
-Date:   Mon, 22 Jun 2020 13:58:15 -0700
-Message-Id: <20200622205815.2988115-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200622205815.2988115-1-keescook@chromium.org>
-References: <20200622205815.2988115-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ue6RX1kZyda1DPpFigD1OeuukeL7pPeF2wvAH0GA2VY=;
+        b=I+/aDAvTiof+hejtS2I0ZHjeOhIlUTx5YormBZZiBdMZ1DQhOSMApsOy3a+d3qZ0Kf
+         mv/E4pNseNswaZ9D1HqzVsGpko11U7F+XPs7v6/0E+K8W0OxzqIhu1rhk4pMdqYVFfYj
+         YNlCOAiODcf8204jumWE12zI+epa/MuE+U6vnidjxHQ/Zq1YkSbWHRzJtGMqt5U1KI36
+         l3u0XXr3yrxD7EY1GHo+8PehBUGe84bfj7kCVmdxDx0ZFAtOOB16+gGLVpeKMqmhwa4t
+         oA6BPMM+HUiItQkgGqvAdQdF7v2ShMIApMAZq/XTrZzNQTtG2qPm0kPlxwvQ+M/XHgH/
+         oeEg==
+X-Gm-Message-State: AOAM5317qvjWxX6R/weEFJhOhyR3CGK9HVGcRASCPWEOjGeXTu1nGguK
+        7xoqyjf1RjH97mhBkpRbcxBkBnPJFOHyHPJhGN8tuA==
+X-Google-Smtp-Source: ABdhPJzse9DfN8Nz5ThbenHOI2v0XiBpuFPUioEgUupH8j5Vk0OR0LZg+RqtEegE5FEvyG1Kaw/D7BMEw+Bb38GkToA=
+X-Received: by 2002:a17:906:4155:: with SMTP id l21mr10680726ejk.438.1592859556870;
+ Mon, 22 Jun 2020 13:59:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200622200715.114382-1-tkjos@google.com> <20200622200955.unq7elx2ry2vrnfe@wittgenstein>
+ <CAHRSSExVfUhkXzhuEUvUP-CTwSE7ExWwYCL8K_N+YABW9C1BzQ@mail.gmail.com>
+In-Reply-To: <CAHRSSExVfUhkXzhuEUvUP-CTwSE7ExWwYCL8K_N+YABW9C1BzQ@mail.gmail.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Mon, 22 Jun 2020 13:59:04 -0700
+Message-ID: <CAHRSSEzms6-4zvTXDG6PTcgHx1vev343DRWXxV2kZDqpop1=GQ@mail.gmail.com>
+Subject: Re: [PATCH] binder: fix null deref of proc->context
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't want to depend on the linker's orphan section placement
-heuristics as these can vary between linkers, and may change between
-versions. All sections need to be explicitly named in the linker
-script.
+On Mon, Jun 22, 2020 at 1:18 PM Todd Kjos <tkjos@google.com> wrote:
+>
+> On Mon, Jun 22, 2020 at 1:09 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Mon, Jun 22, 2020 at 01:07:15PM -0700, Todd Kjos wrote:
+> > > The binder driver makes the assumption proc->context pointer is invariant after
+> > > initialization (as documented in the kerneldoc header for struct proc).
+> > > However, in commit f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+> > > proc->context is set to NULL during binder_deferred_release().
+> > >
+> > > Another proc was in the middle of setting up a transaction to the dying
+> > > process and crashed on a NULL pointer deref on "context" which is a local
+> > > set to &proc->context:
+> > >
+> > >     new_ref->data.desc = (node == context->binder_context_mgr_node) ? 0 : 1;
+> > >
+> > > Here's the stack:
+> > >
+> > > [ 5237.855435] Call trace:
+> > > [ 5237.855441] binder_get_ref_for_node_olocked+0x100/0x2ec
+> > > [ 5237.855446] binder_inc_ref_for_node+0x140/0x280
+> > > [ 5237.855451] binder_translate_binder+0x1d0/0x388
+> > > [ 5237.855456] binder_transaction+0x2228/0x3730
+> > > [ 5237.855461] binder_thread_write+0x640/0x25bc
+> > > [ 5237.855466] binder_ioctl_write_read+0xb0/0x464
+> > > [ 5237.855471] binder_ioctl+0x30c/0x96c
+> > > [ 5237.855477] do_vfs_ioctl+0x3e0/0x700
+> > > [ 5237.855482] __arm64_sys_ioctl+0x78/0xa4
+> > > [ 5237.855488] el0_svc_common+0xb4/0x194
+> > > [ 5237.855493] el0_svc_handler+0x74/0x98
+> > > [ 5237.855497] el0_svc+0x8/0xc
+> > >
+> > > The fix is to move the kfree of the binder_device to binder_free_proc()
+> > > so the binder_device is freed when we know there are no references
+> > > remaining on the binder_proc.
+> > >
+> > > Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+> > > Signed-off-by: Todd Kjos <tkjos@google.com>
+>
+> Forgot to include stable. The issue was introduced in 5.6, so fix needed in 5.7.
+> Cc: stable@vger.kernel.org # 5.7
 
-Explicitly include debug sections when they're present. Add .eh_frame*
-to discard as it seems that these are still generated even though
--fno-asynchronous-unwind-tables is being specified. Add .plt and
-.data.rel.ro to discards as they are not actually used. Add .got.plt
-to the image as it does appear to be mapped near .data. Finally enable
-orphan section warnings.
+Turns out the patch with the issue was also backported to 5.4.y, so
+the fix is needed there too.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/Makefile             | 4 ++++
- arch/arm64/kernel/vmlinux.lds.S | 5 ++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index a0d94d063fa8..3e628983445a 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -29,6 +29,10 @@ LDFLAGS_vmlinux	+= --fix-cortex-a53-843419
-   endif
- endif
- 
-+# We never want expected sections to be placed heuristically by the
-+# linker. All sections should be explicitly named in the linker script.
-+LDFLAGS_vmlinux += --orphan-handling=warn
-+
- ifeq ($(CONFIG_ARM64_USE_LSE_ATOMICS), y)
-   ifneq ($(CONFIG_ARM64_LSE_ATOMICS), y)
- $(warning LSE atomics not supported by binutils)
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index 5427f502c3a6..c9ecb3b2007d 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -94,7 +94,8 @@ SECTIONS
- 	/DISCARD/ : {
- 		*(.interp .dynamic)
- 		*(.dynsym .dynstr .hash .gnu.hash)
--		*(.eh_frame)
-+		*(.plt) *(.data.rel.ro)
-+		*(.eh_frame) *(.init.eh_frame)
- 	}
- 
- 	. = KIMAGE_VADDR + TEXT_OFFSET;
-@@ -209,6 +210,7 @@ SECTIONS
- 	_data = .;
- 	_sdata = .;
- 	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_ALIGN)
-+	.got.plt : ALIGN(8) { *(.got.plt) }
- 
- 	/*
- 	 * Data written with the MMU off but read with the MMU on requires
-@@ -244,6 +246,7 @@ SECTIONS
- 	_end = .;
- 
- 	STABS_DEBUG
-+	DWARF_DEBUG
- 
- 	HEAD_SYMBOLS
- }
--- 
-2.25.1
-
+>
+>
+> >
+> >
+> > Thanks, looks good to me!
+> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> >
+> > Christian
+> >
+> > > ---
+> > >  drivers/android/binder.c | 14 +++++++-------
+> > >  1 file changed, 7 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > > index e47c8a4c83db..f50c5f182bb5 100644
+> > > --- a/drivers/android/binder.c
+> > > +++ b/drivers/android/binder.c
+> > > @@ -4686,8 +4686,15 @@ static struct binder_thread *binder_get_thread(struct binder_proc *proc)
+> > >
+> > >  static void binder_free_proc(struct binder_proc *proc)
+> > >  {
+> > > +     struct binder_device *device;
+> > > +
+> > >       BUG_ON(!list_empty(&proc->todo));
+> > >       BUG_ON(!list_empty(&proc->delivered_death));
+> > > +     device = container_of(proc->context, struct binder_device, context);
+> > > +     if (refcount_dec_and_test(&device->ref)) {
+> > > +             kfree(proc->context->name);
+> > > +             kfree(device);
+> > > +     }
+> > >       binder_alloc_deferred_release(&proc->alloc);
+> > >       put_task_struct(proc->tsk);
+> > >       binder_stats_deleted(BINDER_STAT_PROC);
+> > > @@ -5406,7 +5413,6 @@ static int binder_node_release(struct binder_node *node, int refs)
+> > >  static void binder_deferred_release(struct binder_proc *proc)
+> > >  {
+> > >       struct binder_context *context = proc->context;
+> > > -     struct binder_device *device;
+> > >       struct rb_node *n;
+> > >       int threads, nodes, incoming_refs, outgoing_refs, active_transactions;
+> > >
+> > > @@ -5423,12 +5429,6 @@ static void binder_deferred_release(struct binder_proc *proc)
+> > >               context->binder_context_mgr_node = NULL;
+> > >       }
+> > >       mutex_unlock(&context->context_mgr_node_lock);
+> > > -     device = container_of(proc->context, struct binder_device, context);
+> > > -     if (refcount_dec_and_test(&device->ref)) {
+> > > -             kfree(context->name);
+> > > -             kfree(device);
+> > > -     }
+> > > -     proc->context = NULL;
+> > >       binder_inner_proc_lock(proc);
+> > >       /*
+> > >        * Make sure proc stays alive after we
+> > > --
+> > > 2.27.0.111.gc72c7da667-goog
+> > >
