@@ -3,115 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED95C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC23C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9886320720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592869642;
-	bh=zuAl0hZaesLweDDqN9N64XfiecF7aWEc6rnzWcjyJNE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SmclNay+oopG58VB6yeQBk5BCQz0SkiZ3s22gzsYLnY2+BJpavQ8bbmYFBBYk76tT
-	 lp49lkwnaToZiVWDWGZpetUlvGB+WgzNbgcsBF38DuS0YngcufJ+X6Jj73NC42Yc8z
-	 lMvmZQ0ElCEbhhx0td6+1s8dANCu8cmIDjE3vEfw=
+	by mail.kernel.org (Postfix) with ESMTP id 1E1DE20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WM25xbl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731507AbgFVXrV (ORCPT
+        id S1731516AbgFVXr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731477AbgFVXrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:47:11 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 22 Jun 2020 19:47:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60775 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730658AbgFVXqH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 19:46:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592869566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=A3Sr9mNHVM8s9WUTsyWY81eoKGneWkQuZ36cxKIntEs=;
+        b=WM25xbl3CeNLf/+a1h5dC0VNJYOBN6955c0D+EF1foUL6pFbDN7zlYQgN7j0CysGJf4pWi
+        mycGa2VNxbr54LU3C8gTrZWCw3PN5ZY+70hrH2GsPR8jC6mJuGtPaLG4gCtBKaNBiHwNtU
+        E2Q9Qg/07P3RZlRvKeWs8og0OV211mU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-LXVPb2CoMgOtLk5LQrxHpw-1; Mon, 22 Jun 2020 19:45:54 -0400
+X-MC-Unique: LXVPb2CoMgOtLk5LQrxHpw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAEE0207BC;
-        Mon, 22 Jun 2020 23:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592869631;
-        bh=zuAl0hZaesLweDDqN9N64XfiecF7aWEc6rnzWcjyJNE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=V6xcK0T46oJBmyvem6+iGQS/7nBYzaRFJxGNHfqHqRwvQluS9j6fK/wSYce/HhyW7
-         NyskHl15RmCBvINQMJsWvfRQM3U2UHdLdapQjTbGvebpc1U9XDhtuZa8y/nvc3QvqK
-         stt7ZjXoOjZkxh+MvRQ3yqcL/wMZ+ECqpnXcqQa4=
-Date:   Tue, 23 Jun 2020 08:47:06 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ming Lei <tom.leiming@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: kprobe: __blkdev_put probe is missed
-Message-Id: <20200623084706.e6e99e99d7da6690e7a6c199@kernel.org>
-In-Reply-To: <20200622090148.6e0f2ac9@oasis.local.home>
-References: <20200618125438.GA191266@T590>
-        <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
-        <20200618231901.GA196099@T590>
-        <20200619141239.56f6dda0976453b790190ff7@kernel.org>
-        <20200619072859.GA205278@T590>
-        <20200619081954.3d72a252@oasis.local.home>
-        <20200619133240.GA351476@T590>
-        <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
-        <20200619232820.GE353853@T590>
-        <20200620103747.fb83f804083ef9956740acee@kernel.org>
-        <20200622002753.GC670933@T590>
-        <20200622090148.6e0f2ac9@oasis.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45101107ACCA;
+        Mon, 22 Jun 2020 23:45:51 +0000 (UTC)
+Received: from virtlab423.virt.lab.eng.bos.redhat.com (virtlab423.virt.lab.eng.bos.redhat.com [10.19.152.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3812D5C583;
+        Mon, 22 Jun 2020 23:45:46 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com
+Subject: [PATCH v2 0/3] Preventing job distribution to isolated CPUs        
+Date:   Mon, 22 Jun 2020 19:45:07 -0400
+Message-Id: <20200622234510.240834-1-nitesh@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 09:01:48 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+                                                                           
+Testing                                                                    
+=======                                                                    
+* Patch 1:                                                                 
+  Fix for cpumask_local_spread() is tested by creating VFs, loading        
+  iavf module and by adding a tracepoint to confirm that only housekeeping 
+  CPUs are picked when an appropriate profile is set up and all remaining  
+  CPUs when no CPU isolation is configured.                                
+                                                                           
+* Patch 2:                                                                 
+  To test the PCI fix, I hotplugged a virtio-net-pci from qemu console     
+  and forced its addition to a specific node to trigger the code path that 
+  includes the proposed fix and verified that only housekeeping CPUs       
+  are included via tracepoint.                                             
+                                                                           
+* Patch 3:                                                                 
+  To test the fix in store_rps_map(), I tried configuring an isolated      
+  CPU by writing to /sys/class/net/en*/queues/rx*/rps_cpus which           
+  resulted in 'write error: Invalid argument' error. For the case          
+  where a non-isolated CPU is writing in rps_cpus the above operation      
+  succeeded without any error.                                             
+                                                                           
+                                                                           
+Changes from v1:                                                           
+===============                                                            
+- Included the suggestions made by Bjorn Helgaas in the commit messages.    
+- Included the 'Reviewed-by' and 'Acked-by' received for Patch-2.          
+                                                                           
+[1] https://patchwork.ozlabs.org/project/netdev/patch/51102eebe62336c6a4e584c7a503553b9f90e01c.camel@marvell.com/
+                                                                           
+Alex Belits (3):                                                           
+  lib: Restrict cpumask_local_spread to houskeeping CPUs                   
+  PCI: Restrict probe functions to housekeeping CPUs                       
+  net: Restrict receive packets queuing to housekeeping CPUs               
+                                                                           
+ drivers/pci/pci-driver.c |  5 ++++-                                       
+ lib/cpumask.c            | 43 +++++++++++++++++++++++-----------------    
+ net/core/net-sysfs.c     | 10 +++++++++-                                  
+ 3 files changed, 38 insertions(+), 20 deletions(-)                        
+                                                                           
+--
 
-> On Mon, 22 Jun 2020 08:27:53 +0800
-> Ming Lei <ming.lei@redhat.com> wrote:
-> 
-> > Can you kprobe guys improve the implementation for covering this case?
-> > For example, put probe on 3) in case the above situation is recognized.
-> 
-> To do so would require solving the halting problem.
-> 
->   https://en.wikipedia.org/wiki/Halting_problem
-> 
-> Or perhaps reading the DWARF output of the compiler to determine if it
-> optimized the location you are looking for.
-
-As far as I can see, gcc-9.3 doesn't generate this information :(
-Maybe the optimizer forgot to push the tail-call callsite information
-to dwarf generator when making a recursive tail-call to a loop.
-
-> The first case is impossible to solve, the second would take a lot of
-> work, (are you going to fund it?)
-
-What I can provide is "--skip-prologue" option for the perf-probe
-which will be similar to the "-P" option. If the compiler correctly
-generates the information, we can enable it automatically. But
-as far as I can see, it doesn't.
-
-[OT] DWARF has its option(and GNU extension) but it seems not correctly
-implemented yet.
- 
-http://www.dwarfstd.org/ShowIssue.php?issue=100909.2
-
-What I found on __blkdev_put and the callers, the "tail-call to other
-function" were recorded as a call-site DIE with DW_AT_tail_call. But
-if the "tail-call to itself (recursive call)" was expanded as a loop,
-it was just disappeared. No call-site information, nor the DW_AT_tail_call.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
