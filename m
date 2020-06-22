@@ -2,142 +2,116 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3742C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D354C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1AC02076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2D320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qyfkzOIs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CZ4Hx50p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgFVRAI (ORCPT
+        id S1730034AbgFVRAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:00:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52174 "EHLO
+        Mon, 22 Jun 2020 13:00:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729677AbgFVRAG (ORCPT
+        with ESMTP id S1729865AbgFVRAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:00:06 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87101C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:00:06 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t6so598360pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:00:06 -0700 (PDT)
+        Mon, 22 Jun 2020 13:00:13 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F7E9C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:00:13 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c17so20124525lji.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:00:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5BGCSUQL5tzelRNBUzUtnoDU4FBOgbBEZDAqmf1y2tY=;
-        b=qyfkzOIs3IOcHqZGIEiR8JGq0nJVsevXD15ku29SFyXssZXEUC3c86hg9Gv/KJ2BHe
-         y3Hp8Hq1zqOS9OOFR3gNNpt0Qv7Nm37wmlte3OKeZWdMeR9NA90wXNwkm6gxb1GWESrg
-         FV+TpCchSKop95+zTyCexbHOPt326ZBObp2o6QnHWx5CQujP1LVI+R0x75IanRkYHnnq
-         8sIguoxvjbcrJCtaYT0jWDLSWi2vPjWi4gWLpfFDTJyQet65QDVBdYYTPy34m1tTALHH
-         MyJ02UqH4YfMYS1tNdV8DEY2h1OHgS9vwRBU8tnsCUN5ZqCoUAJ9paYX1bhDXSLYsgvR
-         L24A==
+        bh=nQdYXJJ8aajHEyxPlujyQj7k2waV2Qojg9Cpu5IO7Ac=;
+        b=CZ4Hx50pgYSwjX86Sz3Ki8gsPln+cIso6QohnxyYMXqgFyLQUuuasfGy+DnE+mfAea
+         CNOOqSN/KbV/EeEVGSBT4EQ8zq4H4ekwe7blTVPm24QVg590wmVnzrAGoT+xkvETsqbo
+         yTh+b9i1xqIMhXUkOljpe+dU6JzWpwcwWSWILoAmRlQhbgpr5yAHJnkCL6cWxaXXLgjK
+         C4c15V4srZutZn9om8u86xB9Jpu6auEEE4G2L/s61Xmb2X3JOl8ji7orGkY116hmLbnt
+         4cm48rmPk7ETc0JBTN/7BrPnCbDw8dC3lJ5OsiNYj1SlmP6jK0fKzF2XMw6ibOPsMOz9
+         ZyaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5BGCSUQL5tzelRNBUzUtnoDU4FBOgbBEZDAqmf1y2tY=;
-        b=SkOjMuxX8OuXCdpqI1psUADD0vuFVh0tCdkxW7BgfZc4ZxAcH3Gq0u5Ej950hsobFX
-         AQVrdR2fanAdJiUbvvnM6WQZGPWdGW7LgBy21EfzdtXIm8mqQJH4kdSOv8PF0YbIbDUv
-         2AX2sf1DCFaGL52kZlQXk9LVJRDNaAnhUB3D5hYmMHxydML51+1g+ic+4A+PohjFtouU
-         sYJ/RqsjlDG56TPSqtKYmMVCGeJoqL/CC83p0sloVNNZ5ZR2t2A1kqYHLwkNPrWC6oCp
-         dD0Xh3LPu7AEWFuEqeKnnbxFIRoSBpLS9J50977b/dVfC6nQ0LhPKHuKJ4Nk3h8pvHcn
-         2TPg==
-X-Gm-Message-State: AOAM5302r1hdRMy+tk9UiExzcbK+SmvuwdcS2Xo+qNSicxw0/PEV6OnD
-        4OhuJfD1yd2fDsmXRkjglWH67Jzf92NpIoMhkCJbVw==
-X-Google-Smtp-Source: ABdhPJzRctk7sbdkIMQOmqVpecK2ZcMwEAt3JEckAnE+NdDNoij2Ixhlu/aU/MySqDydTtISB1suO3tr/npvXJ5DjBc=
-X-Received: by 2002:aa7:9abc:: with SMTP id x28mr21131306pfi.39.1592845205633;
- Mon, 22 Jun 2020 10:00:05 -0700 (PDT)
+        bh=nQdYXJJ8aajHEyxPlujyQj7k2waV2Qojg9Cpu5IO7Ac=;
+        b=hKVwh0X1qyp2r0FTfn5PlydFfTUnCnd3WAFOglWX6QFmQ0y/mbxU9F+wzZWFZj8IbE
+         hzLwpatWIdRVRl9Cq7Hu4RucVM3wsMY6ViWeU4l0QehUnS3dHSymFGz/sdS2ftKhobVS
+         ewtGyKtg6Rld2p38iCVes+gFj3L9hILkVAvlQgYfmSWNFYIVFNKJRd7VxA973zYag6/J
+         cQ/oa9nuD42mYsU5s9V7HWHFMqmPfh6y/dQD9BBBlfsE7fVzDBDM3+IeKcWOO2oLJbjO
+         KvhjIi/Ma96rypNqxfcg3aCWntaBxdy/rFpjc1ekPJS4tQPLqDc89cd0ZBwsEY0OC1Nw
+         7/EQ==
+X-Gm-Message-State: AOAM5315ujlUKFCJiUkk29eM4J2Mn8I6P6z7jvb9gKIicXPygbpKZZ1B
+        33lwxE+fDmOhuAzNuSf/c0fKhj4QmbsOm+J1zRrf0g==
+X-Google-Smtp-Source: ABdhPJxCjr67KOVAvgelXLOnHbou/HOig3TyYJq0uDo7cKOOn21uwlrk4DgmE0FNmEKeeYB5Anah1zrf1c4T3gJX0FM=
+X-Received: by 2002:a2e:910c:: with SMTP id m12mr9485607ljg.332.1592845211583;
+ Mon, 22 Jun 2020 10:00:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200620033007.1444705-1-keescook@chromium.org> <20200620033007.1444705-2-keescook@chromium.org>
-In-Reply-To: <20200620033007.1444705-2-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 22 Jun 2020 09:59:54 -0700
-Message-ID: <CAKwvOd=a+aSb5Scg=jD-jDfvnKJjOCVQ8CidgEo-39g2b2z-3A@mail.gmail.com>
-Subject: Re: [PATCH v2 01/16] docs: deprecated.rst: Add uninitialized_var()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200615161927.12637-1-sjpark@amazon.com> <20200622084054.23445-1-sjpark@amazon.com>
+In-Reply-To: <20200622084054.23445-1-sjpark@amazon.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 22 Jun 2020 10:00:00 -0700
+Message-ID: <CALvZod7j=8YJ2OJtujrdKVP3CmvG9jSLGnKvMMcVX5fWYhEpoQ@mail.gmail.com>
+Subject: Re: [PATCH v16 00/14] Introduce Data Access MONitor (DAMON)
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>, Jonathan.Cameron@huawei.com,
+        Andrea Arcangeli <aarcange@redhat.com>, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Qian Cai <cai@lca.pw>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>, dwmw@amazon.com,
+        foersleo@amazon.de, Ian Rogers <irogers@google.com>,
+        jolsa@redhat.com, "Kirill A. Shutemov" <kirill@shutemov.name>,
+        mark.rutland@arm.com, Mel Gorman <mgorman@suse.de>,
+        Minchan Kim <minchan@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, namhyung@kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, sblbir@amazon.com,
+        shuah@kernel.org, sj38.park@gmail.com, snu@amazon.de,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Huang Ying <ying.huang@intel.com>,
+        David Hildenbrand <david@redhat.com>, linux-damon@amazon.com,
+        Linux MM <linux-mm@kvack.org>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 8:30 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Nothing should be using this macro, and the entire idea of tricking the
-> compiler into silencing such warnings is a mistake.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Hi SeongJae,
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-> ---
->  Documentation/process/deprecated.rst | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+On Mon, Jun 22, 2020 at 1:42 AM SeongJae Park <sjpark@amazon.com> wrote:
 >
-> diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-> index 652e2aa02a66..943a926ecbbb 100644
-> --- a/Documentation/process/deprecated.rst
-> +++ b/Documentation/process/deprecated.rst
-> @@ -51,6 +51,24 @@ to make sure their systems do not continue running in the face of
->  "unreachable" conditions. (For example, see commits like `this one
->  <https://git.kernel.org/linus/d4689846881d160a4d12a514e991a740bcb5d65a>`_.)
+> Last week, this patchset received 5 'Reviewed-by' tags, but no further comments
+> for changes.  I updated the documentation, but the change is only small.  For
+> the reason, I'm only asking more reviews rather than posting the whole series
+> again.  Any comment is welcome.
 >
-> +uninitialized_var()
-> +-------------------
-> +For any compiler warnings about uninitialized variables, just add
-> +an initializer. Using the uninitialized_var() macro (or similar
-> +warning-silencing tricks) is dangerous as it papers over `real bugs
-> +<https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/>`_
-> +(or can in the future), and suppresses unrelated compiler warnings
-> +(e.g. "unused variable"). If the compiler thinks it is uninitialized,
-> +either simply initialize the variable or make compiler changes. Keep in
-> +mind that in most cases, if an initialization is obviously redundant,
-> +the compiler's dead-store elimination pass will make sure there are no
-> +needless variable writes.
-> +
-> +As Linus has said, this macro
-> +`must <https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/>`_
-> +`be <https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/>`_
-> +`removed <https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/>`_.
-> +
->  open-coded arithmetic in allocator arguments
->  --------------------------------------------
->  Dynamic size calculations (especially multiplication) should not be
-> --
-> 2.25.1
 >
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200620033007.1444705-2-keescook%40chromium.org.
+> Thanks,
+> SeongJae Park
 
 
+This is on my review TODO list and I will get to it in a couple of
+days. No need to post new versions.
 
--- 
-Thanks,
-~Nick Desaulniers
+thanks,
+Shakeel
