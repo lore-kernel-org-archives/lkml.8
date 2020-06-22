@@ -2,271 +2,164 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C447C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2877C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 676E720760
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD34720706
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:01:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rxCKkG6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgFVKAR (ORCPT
+        id S1727107AbgFVKBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:00:17 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2347 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726990AbgFVKAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:00:16 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 29053AA4E1028E86C6D6;
-        Mon, 22 Jun 2020 11:00:14 +0100 (IST)
-Received: from localhost (10.52.127.176) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 22 Jun
- 2020 11:00:13 +0100
-Date:   Mon, 22 Jun 2020 10:59:23 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Barry Song <song.bao.hua@hisilicon.com>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        Seth Jennings <sjenning@redhat.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-crypto@vger.kernel.org>, <akpm@linux-foundation.org>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>
-Subject: Re: [PATCH 1/3] crypto: permit users to specify numa node of acomp
- hardware
-Message-ID: <20200622105923.0000710b@Huawei.com>
-In-Reply-To: <20200622024901.12632-2-song.bao.hua@hisilicon.com>
-References: <20200622024901.12632-1-song.bao.hua@hisilicon.com>
-        <20200622024901.12632-2-song.bao.hua@hisilicon.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 22 Jun 2020 06:01:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbgFVKBH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 06:01:07 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D53C061797
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:01:06 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x16so5120463wmj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:01:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0a5wnHY7CslRA6Iynsfhb3yG1izm8FY/pWdetFoi42c=;
+        b=rxCKkG6SfwCZOTa1iL5Lojz3NDEQwyb2IxWpdYBFS7nvwaSmH3nUs6LKzmpIqO9fmz
+         T0E4/NHNhWS1FxOj6Knq7vaDIfED18iz4zDTKFADfGdZ87o9VBNoHn9xKkFZ5ABiLuMo
+         spikJGn8iabnLkYyJ4CKFueyLxhkCPXnn+tT0IIM62ri0cxtQBzPXWPE2OKAi+/WB4Hb
+         Zm7iXcDn1Km9OIDru3YUscj0Ip3rFJhgBzUhsF68MWUFQB29eaTMLMdCy2o5sHrQdX4O
+         +4gvt10n83RfLFmg67wO7WMqC6KCkbs7hPXvMxFl4ifmIlhRhWH6of7y0Q6ilwx8joXN
+         aa9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0a5wnHY7CslRA6Iynsfhb3yG1izm8FY/pWdetFoi42c=;
+        b=EqDxKAZa7JUUvcF0iwyFSJ9JNqNDVObeDxdQbMDF2C82U4qx/d/o7c0AYrF2u3uBsE
+         Se7wQTvK3dnGzbzSpJsLwzTfdrex85OyjLyt4hzwPDN2tI/XWQH+2tAm8nVowYsBTwKg
+         /UDq4dKGUzZ3zJAckCvh5iOpM/dIOi4b35WodBsMQ5l4e8JNguj/JYgWUBae1P1VfUl8
+         Yp8kzQs1hMpF37eR4BiUCniR6ukZ5nH/U3qapJbzwWj7yp0JOZcMeTGNCyHAoiksFijk
+         No3olQr8RIPp8QM+Zdqs+bjPPJ8Aa4hckSIbVKldELdgDASIDv30lRpAyesMZjVqa3DX
+         /Lmg==
+X-Gm-Message-State: AOAM532u60dG7h3mZ+sDxu1sv7y+fjjq3dPSQ9/eEjn+qWC2tr2a21Ta
+        lVlD8xVS1hKCm4mgZYNQ7TUqbg==
+X-Google-Smtp-Source: ABdhPJwltFZXM/3VYa9tIy2MbCHj//CBC2paauuUY5AwGyYeKiWa1AZvShK5hzeRuXlvCn791GVruA==
+X-Received: by 2002:a1c:c1:: with SMTP id 184mr17443220wma.74.1592820065387;
+        Mon, 22 Jun 2020 03:01:05 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id x205sm16822187wmx.21.2020.06.22.03.01.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 03:01:04 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 00/11] net: improve devres helpers
+Date:   Mon, 22 Jun 2020 12:00:45 +0200
+Message-Id: <20200622100056.10151-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.127.176]
-X-ClientProxiedBy: lhreml708-chm.china.huawei.com (10.201.108.57) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 14:48:59 +1200
-Barry Song <song.bao.hua@hisilicon.com> wrote:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> For a Linux server with NUMA, there are possibly multiple (de)compressors
-> which are either local or remote to some NUMA node. Some drivers will
-> automatically use the (de)compressor near the CPU calling acomp_alloc().
-> However, it is not necessarily correct because users who send acomp_req
-> could be from different NUMA node with the CPU which allocates acomp.
-> 
-> Just like kernel has kmalloc() and kmalloc_node(), here crypto can have
-> same support.
-> 
-> Cc: Seth Jennings <sjenning@redhat.com>
-> Cc: Dan Streetman <ddstreet@ieee.org>
-> Cc: Vitaly Wool <vitaly.wool@konsulko.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+When I first submitted the series adding devm_register_netdev() I was
+told during review that it should check if the underlying struct net_device
+is managed too before proceeding. I initially accepted this as the right
+approach but in the back of my head something seemed wrong about this.
+I started looking around and noticed how devm_mdiobus_register()
+is implemented.
 
-Hi Barry,
+It turned out that struct mii_bus contains information about whether it's
+managed or not and the release callback of devm_mdiobus_alloc() is responsible
+for calling mdiobus_unregister(). This seems wrong to me as managed structures
+shouldn't care about who manages them. It's devres' code task to correctly undo
+whatever it registers/allocates.
 
-Seems sensible to me.  A few trivial comments inline.
+With this series I propose to make the release callbacks of mdiobus devm
+helpers only release the resources they actually allocate themselves as it the
+standard in devm routines. I also propose to not check whether the structures
+passed to devm_mdiobus_register() and devm_register_netdev() are already
+managed as they could have been allocated over devres as part of bigger
+memory chunk. I see this as an unnecessary limitation.
 
-Thanks,
+First two patches aim at removing the only use of devm_mdiobus_free(). It
+modifies the ixgbe driver. I only compile tested it as I don't have the
+relevant hw.
 
-Jonathan
+Next two patches relax devm_register_netdev() - we stop checking whether
+struct net_device was registered using devm_etherdev_alloc().
 
-> ---
->  crypto/acompress.c         |  8 ++++++++
->  crypto/api.c               | 22 ++++++++++++++--------
->  crypto/internal.h          | 23 +++++++++++++++++++----
->  include/crypto/acompress.h |  7 +++++++
->  include/linux/crypto.h     |  3 ++-
->  5 files changed, 50 insertions(+), 13 deletions(-)
-> 
-> diff --git a/crypto/acompress.c b/crypto/acompress.c
-> index 84a76723e851..c32c72048a1c 100644
-> --- a/crypto/acompress.c
-> +++ b/crypto/acompress.c
-> @@ -109,6 +109,14 @@ struct crypto_acomp *crypto_alloc_acomp(const char *alg_name, u32 type,
->  }
->  EXPORT_SYMBOL_GPL(crypto_alloc_acomp);
->  
-> +struct crypto_acomp *crypto_alloc_acomp_node(const char *alg_name, u32 type,
-> +					u32 mask, int node)
-> +{
-> +	return crypto_alloc_tfm_node(alg_name, &crypto_acomp_type, type, mask,
-> +				node);
-> +}
-> +EXPORT_SYMBOL_GPL(crypto_alloc_acomp_node);
-> +
->  struct acomp_req *acomp_request_alloc(struct crypto_acomp *acomp)
->  {
->  	struct crypto_tfm *tfm = crypto_acomp_tfm(acomp);
-> diff --git a/crypto/api.c b/crypto/api.c
-> index edcf690800d4..4ecf712286af 100644
-> --- a/crypto/api.c
-> +++ b/crypto/api.c
-> @@ -433,8 +433,9 @@ struct crypto_tfm *crypto_alloc_base(const char *alg_name, u32 type, u32 mask)
->  }
->  EXPORT_SYMBOL_GPL(crypto_alloc_base);
->  
-> -void *crypto_create_tfm(struct crypto_alg *alg,
-> -			const struct crypto_type *frontend)
-> +void *crypto_create_tfm_node(struct crypto_alg *alg,
-> +			const struct crypto_type *frontend,
-> +			int node)
->  {
->  	char *mem;
->  	struct crypto_tfm *tfm = NULL;
-> @@ -451,6 +452,7 @@ void *crypto_create_tfm(struct crypto_alg *alg,
->  
->  	tfm = (struct crypto_tfm *)(mem + tfmsize);
->  	tfm->__crt_alg = alg;
-> +	tfm->node = node;
->  
->  	err = frontend->init_tfm(tfm);
->  	if (err)
-> @@ -472,7 +474,7 @@ void *crypto_create_tfm(struct crypto_alg *alg,
->  out:
->  	return mem;
->  }
-> -EXPORT_SYMBOL_GPL(crypto_create_tfm);
-> +EXPORT_SYMBOL_GPL(crypto_create_tfm_node);
->  
->  struct crypto_alg *crypto_find_alg(const char *alg_name,
->  				   const struct crypto_type *frontend,
-> @@ -490,11 +492,13 @@ struct crypto_alg *crypto_find_alg(const char *alg_name,
->  EXPORT_SYMBOL_GPL(crypto_find_alg);
->  
->  /*
-> - *	crypto_alloc_tfm - Locate algorithm and allocate transform
-> + *	crypto_alloc_tfm_node - Locate algorithm and allocate transform
->   *	@alg_name: Name of algorithm
->   *	@frontend: Frontend algorithm type
->   *	@type: Type of algorithm
->   *	@mask: Mask for type comparison
-> + *	@node: NUMA node in which users desire to put requests, if node is
-> + *		NUMA_NO_NODE, it means users have no special requirement.
->   *
->   *	crypto_alloc_tfm() will first attempt to locate an already loaded
->   *	algorithm.  If that fails and the kernel supports dynamically loadable
-> @@ -509,8 +513,10 @@ EXPORT_SYMBOL_GPL(crypto_find_alg);
->   *
->   *	In case of error the return value is an error pointer.
->   */
-> -void *crypto_alloc_tfm(const char *alg_name,
-> -		       const struct crypto_type *frontend, u32 type, u32 mask)
-> +
-> +void *crypto_alloc_tfm_node(const char *alg_name,
-> +		       const struct crypto_type *frontend, u32 type, u32 mask,
-> +		       int node)
->  {
->  	void *tfm;
->  	int err;
-> @@ -524,7 +530,7 @@ void *crypto_alloc_tfm(const char *alg_name,
->  			goto err;
->  		}
->  
-> -		tfm = crypto_create_tfm(alg, frontend);
-> +		tfm = crypto_create_tfm_node(alg, frontend, node);
->  		if (!IS_ERR(tfm))
->  			return tfm;
->  
-> @@ -542,7 +548,7 @@ void *crypto_alloc_tfm(const char *alg_name,
->  
->  	return ERR_PTR(err);
->  }
-> -EXPORT_SYMBOL_GPL(crypto_alloc_tfm);
-> +EXPORT_SYMBOL_GPL(crypto_alloc_tfm_node);
->  
->  /*
->   *	crypto_destroy_tfm - Free crypto transform
-> diff --git a/crypto/internal.h b/crypto/internal.h
-> index ff06a3bd1ca1..1b92a5a61852 100644
-> --- a/crypto/internal.h
-> +++ b/crypto/internal.h
-> @@ -68,13 +68,28 @@ void crypto_remove_final(struct list_head *list);
->  void crypto_shoot_alg(struct crypto_alg *alg);
->  struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
->  				      u32 mask);
-> -void *crypto_create_tfm(struct crypto_alg *alg,
-> -			const struct crypto_type *frontend);
-> +void *crypto_create_tfm_node(struct crypto_alg *alg,
-> +			const struct crypto_type *frontend, int node);
-> +
-> +static inline void *crypto_create_tfm(struct crypto_alg *alg,
-> +			const struct crypto_type *frontend)
-> +{
-> +	return crypto_create_tfm_node(alg, frontend, NUMA_NO_NODE);
-> +}
-> +
->  struct crypto_alg *crypto_find_alg(const char *alg_name,
->  				   const struct crypto_type *frontend,
->  				   u32 type, u32 mask);
-> -void *crypto_alloc_tfm(const char *alg_name,
-> -		       const struct crypto_type *frontend, u32 type, u32 mask);
-> +
-> +void *crypto_alloc_tfm_node(const char *alg_name,
-> +		       const struct crypto_type *frontend, u32 type, u32 mask,
-> +		       int node);
-> +
-> +static inline void *crypto_alloc_tfm(const char *alg_name,
-> +		       const struct crypto_type *frontend, u32 type, u32 mask)
-> +{
-> +	return crypto_alloc_tfm_node(alg_name, frontend, type, mask, NUMA_NO_NODE);
-> +}
->  
->  int crypto_probing_notify(unsigned long val, void *v);
->  
-> diff --git a/include/crypto/acompress.h b/include/crypto/acompress.h
-> index 2b4d2b06ccbd..b1a78687014a 100644
-> --- a/include/crypto/acompress.h
-> +++ b/include/crypto/acompress.h
-> @@ -106,6 +106,13 @@ struct acomp_alg {
->   */
->  struct crypto_acomp *crypto_alloc_acomp(const char *alg_name, u32 type,
->  					u32 mask);
-> +/**
-> + * crypto_alloc_acomp_node() -- allocate ACOMPRESS tfm handle with desired NUMA
-> + *				node
+We then document the mdio devres helper that's missing in devres.rst list
+and un-inline the current implementation of devm_mdiobus_register().
 
-Given slightly relaxed view on 80 chars now in place, I'd put that on one line.
+Patch 8 re-implements the devres helpers for mdio conforming to common
+devres patterns.
 
-Also kernel-doc needs to be complete so though it's tedious you should document
-the other parameters.
+Patches 9 and 10 provide devm_of_mdiobus_register() and the last patch
+adds its first user.
 
-> + * @node:	specifies the NUMA node the ZIP hardware belongs to
-> + */
-> +struct crypto_acomp *crypto_alloc_acomp_node(const char *alg_name, u32 type,
-> +					u32 mask, int node);
->  
->  static inline struct crypto_tfm *crypto_acomp_tfm(struct crypto_acomp *tfm)
->  {
-> diff --git a/include/linux/crypto.h b/include/linux/crypto.h
-> index 763863dbc079..c1a47ce4c09e 100644
-> --- a/include/linux/crypto.h
-> +++ b/include/linux/crypto.h
-> @@ -593,8 +593,9 @@ int crypto_has_alg(const char *name, u32 type, u32 mask);
->   */
->  
->  struct crypto_tfm {
-> -
+Bartosz Golaszewski (11):
+  net: ethernet: ixgbe: check the return value of ixgbe_mii_bus_init()
+  net: ethernet: ixgbe: don't call devm_mdiobus_free()
+  net: devres: relax devm_register_netdev()
+  net: devres: rename the release callback of devm_register_netdev()
+  Documentation: devres: add missing mdio helper
+  phy: un-inline devm_mdiobus_register()
+  phy: mdio: add kerneldoc for __devm_mdiobus_register()
+  net: phy: don't abuse devres in devm_mdiobus_register()
+  of: mdio: remove the 'extern' keyword from function declarations
+  of: mdio: provide devm_of_mdiobus_register()
+  net: ethernet: mtk-star-emac: use devm_of_mdiobus_register()
 
-Stray change. Shouldn't be in this patch.
+ .../driver-api/driver-model/devres.rst        |  3 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |  6 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c  | 14 +---
+ drivers/net/ethernet/mediatek/mtk_star_emac.c | 13 +--
+ drivers/net/ethernet/realtek/r8169_main.c     |  2 +-
+ drivers/net/phy/Makefile                      |  2 +-
+ drivers/net/phy/mdio_bus.c                    | 73 ----------------
+ drivers/net/phy/mdio_devres.c                 | 83 +++++++++++++++++++
+ drivers/of/of_mdio.c                          | 43 ++++++++++
+ include/linux/of_mdio.h                       | 40 ++++-----
+ include/linux/phy.h                           | 21 +----
+ net/devres.c                                  | 23 +----
+ 12 files changed, 167 insertions(+), 156 deletions(-)
+ create mode 100644 drivers/net/phy/mdio_devres.c
 
-
->  	u32 crt_flags;
-> +
-> +	int node;
->  	
->  	void (*exit)(struct crypto_tfm *tfm);
->  	
-
+-- 
+2.26.1
 
