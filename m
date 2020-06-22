@@ -2,159 +2,113 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B310C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C126C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A56D20707
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093E620707
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:56:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sWrhWVtJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UARv+KNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgFVQzu (ORCPT
+        id S1729873AbgFVQ44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:55:50 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:23597 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729533AbgFVQzu (ORCPT
+        Mon, 22 Jun 2020 12:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729519AbgFVQ4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:55:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592844949; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=E1xy9Gx0hTkrEu6KUPmiiRl49qJNoU7hD/Q9T7ORmy0=; b=sWrhWVtJMARvGzK0SJiMzEiLBwRi6bRZcrli88OPtvPDiOWW99gyHoD1DqACQe8cvbQUUetH
- Q+WB5Q/dxK3Q5oEgA7QYvIQoVya/Ah7Og9B/LSNneuwFVJ38JDV7ncMLh6t+AgqFNsZbQP5p
- 7YTCqP5b9EYSr6fdY7xr9YJQAsg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
- 5ef0e294c4bb4f886dba47fe (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 16:55:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BF774C433B6; Mon, 22 Jun 2020 16:55:46 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E005AC433CB;
-        Mon, 22 Jun 2020 16:55:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E005AC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, tongtiangen <tongtiangen@huawei.com>
-Subject: [PATCH] drm/msm: Fix up the rest of the messed up address sizes
-Date:   Mon, 22 Jun 2020 10:55:38 -0600
-Message-Id: <20200622165539.9247-1-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 22 Jun 2020 12:56:55 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C070C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:56:54 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id o4so10048599lfi.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G56zBNbNj4Y3AhZRviN3/Dliwnmszp2+kuGZcYcuXG4=;
+        b=UARv+KNJ4IB6uvPhHnkaASaBO2vDIEAMREBIbByZVBFC0SPsL8qncmblpxRoI4JhYN
+         ILm+FhPJQkpJwbeD0auf/LVMUJ3xxZ8g0aHv4vAlokd+dgstpyte3AuJDIZoFnK+DMRO
+         Tb03VRZG77XLcq1guQ+3SH1IgIfRyqMHwejTPNXu9o+nDnqpLZqfJmXI/fki9tbO5xqA
+         QeodAxelUumcXGY6AVNRpVSNNsN8GrcWs/SZjX+Zs58UN7nty71TfQMCBEDWyLM378YW
+         37HUgm+71D1TUTxh4Ek8uRoPMHYAD3VINYLco9JXvyMnrpyVcjo90UXk8IR6+Eky1Gv1
+         BlIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G56zBNbNj4Y3AhZRviN3/Dliwnmszp2+kuGZcYcuXG4=;
+        b=IpIK1iu8FYCZgwKT0lpJ0CecHZJlfjAz3f2+P4Jznkf+JnUW3YWS7wGCPVkQc73Kat
+         pwYs3eL2x8kj/tl87IPCVqX1JJ4kDut7T8a7ddgsRl7W7Km/NttPcJd1WKcdrXSab+cT
+         mxuIdY4VCK8PyIPCEErcB8+1Lr99GegeUJHTVEG2ArqTHwPZYe5gHeg6dHt0hTt9mfI4
+         51QdlJKYmIWzEbpcni4mMg+6il747V0ZZIzzXV5WzFZwmgF3B9SO0l4AsxpNP4McW2qp
+         IZVbcQvodpiVEn8eXLyBBa5dD+dCkSfDeOXXroEpfLuHelqDz+0Bjuu4s1mHVhhZbHAu
+         zgwg==
+X-Gm-Message-State: AOAM530ufBAe0RBkwRxflBI0PFiso+m+n4xuwm37cHBTIvCbkDu8hV91
+        WUksQofU7NXnpUlcpgKjlFjHXrFIFUSaqZH9Uxt6tg==
+X-Google-Smtp-Source: ABdhPJx+G3gCV2EIKYJWvVKwOMIN3Vwwb/ohIo/VPRgtLAyZMxdbSuPNlS7zIdjKZJLVvxtayYF2h3DUTcApcYcZ3w0=
+X-Received: by 2002:a05:6512:10c3:: with SMTP id k3mr10462732lfg.33.1592845012258;
+ Mon, 22 Jun 2020 09:56:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-13-guro@fb.com>
+In-Reply-To: <20200608230654.828134-13-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 22 Jun 2020 09:56:41 -0700
+Message-ID: <CALvZod6xjB6kioQ8uRT3VoMQYmT-b4Z-wue0CPim3J8u12KZtA@mail.gmail.com>
+Subject: Re: [PATCH v6 12/19] mm: memcg/slab: use a single set of kmem_caches
+ for all accounted allocations
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-msm_gem_address_space_create() changed to take a start/length instead
-of a start/end for the iova space but all of the callers were just
-cut and pasted from the old usage. Most of the mistakes have been fixed
-up so just catch up the rest.
+On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> This is fairly big but mostly red patch, which makes all accounted
+> slab allocations use a single set of kmem_caches instead of
+> creating a separate set for each memory cgroup.
+>
+> Because the number of non-root kmem_caches is now capped by the number
+> of root kmem_caches, there is no need to shrink or destroy them
+> prematurely. They can be perfectly destroyed together with their
+> root counterparts. This allows to dramatically simplify the
+> management of non-root kmem_caches and delete a ton of code.
+>
+> This patch performs the following changes:
+> 1) introduces memcg_params.memcg_cache pointer to represent the
+>    kmem_cache which will be used for all non-root allocations
+> 2) reuses the existing memcg kmem_cache creation mechanism
+>    to create memcg kmem_cache on the first allocation attempt
+> 3) memcg kmem_caches are named <kmemcache_name>-memcg,
+>    e.g. dentry-memcg
+> 4) simplifies memcg_kmem_get_cache() to just return memcg kmem_cache
+>    or schedule it's creation and return the root cache
+> 5) removes almost all non-root kmem_cache management code
+>    (separate refcounter, reparenting, shrinking, etc)
+> 6) makes slab debugfs to display root_mem_cgroup css id and never
+>    show :dead and :deact flags in the memcg_slabinfo attribute.
+>
+> Following patches in the series will simplify the kmem_cache creation.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Fixes: ccac7ce373c1 ("drm/msm: Refactor address space initialization")
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+This is a very satisfying patch.
 
- drivers/gpu/drm/msm/adreno/a2xx_gpu.c    | 2 +-
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c    | 2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 2 +-
- drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c | 2 +-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-index 60f6472a3e58..6021f8d9efd1 100644
---- a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-@@ -408,7 +408,7 @@ a2xx_create_address_space(struct msm_gpu *gpu, struct platform_device *pdev)
- 	struct msm_gem_address_space *aspace;
- 
- 	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
--		SZ_16M + 0xfff * SZ_64K);
-+		0xfff * SZ_64K);
- 
- 	if (IS_ERR(aspace) && !IS_ERR(mmu))
- 		mmu->funcs->destroy(mmu);
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 096be97ce9f9..21e77d67151f 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -1121,7 +1121,7 @@ static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
- 		return -ENODEV;
- 
- 	mmu = msm_iommu_new(gmu->dev, domain);
--	gmu->aspace = msm_gem_address_space_create(mmu, "gmu", 0x0, 0x7fffffff);
-+	gmu->aspace = msm_gem_address_space_create(mmu, "gmu", 0x0, 0x80000000);
- 	if (IS_ERR(gmu->aspace)) {
- 		iommu_domain_free(domain);
- 		return PTR_ERR(gmu->aspace);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index b8615d4fe8a3..680527e28d09 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -780,7 +780,7 @@ static int _dpu_kms_mmu_init(struct dpu_kms *dpu_kms)
- 
- 	mmu = msm_iommu_new(dpu_kms->dev->dev, domain);
- 	aspace = msm_gem_address_space_create(mmu, "dpu1",
--		0x1000, 0xfffffff);
-+		0x1000, 0x100000000 - 0x1000);
- 
- 	if (IS_ERR(aspace)) {
- 		mmu->funcs->destroy(mmu);
-diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-index 08897184b1d9..fc6a3f8134c7 100644
---- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-@@ -514,7 +514,7 @@ struct msm_kms *mdp4_kms_init(struct drm_device *dev)
- 			config->iommu);
- 
- 		aspace  = msm_gem_address_space_create(mmu,
--			"mdp4", 0x1000, 0xffffffff);
-+			"mdp4", 0x1000, 0x100000000 - 0x1000);
- 
- 		if (IS_ERR(aspace)) {
- 			if (!IS_ERR(mmu))
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index 54631fbd9389..8586d2cf1d94 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -641,7 +641,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
- 		mmu = msm_iommu_new(iommu_dev, config->platform.iommu);
- 
- 		aspace = msm_gem_address_space_create(mmu, "mdp5",
--			0x1000, 0xffffffff);
-+			0x1000, 0x100000000 - 0x1000);
- 
- 		if (IS_ERR(aspace)) {
- 			if (!IS_ERR(mmu))
--- 
-2.17.1
-
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
