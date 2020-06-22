@@ -2,375 +2,146 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73308C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D441C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5269A20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F7C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgFVODX (ORCPT
+        id S1729283AbgFVODs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:03:23 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57362 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729088AbgFVODV (ORCPT
+        Mon, 22 Jun 2020 10:03:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:48833 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729056AbgFVODs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:03:21 -0400
-Received: from 89-64-85-91.dynamic.chello.pl (89.64.85.91) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 053a9db2a1335a90; Mon, 22 Jun 2020 16:03:17 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
-Subject: [RFT][PATCH v2 3/4] ACPICA: Preserve memory opregion mappings if supported by OS
-Date:   Mon, 22 Jun 2020 16:01:55 +0200
-Message-ID: <13749323.0m2ImmhSHx@kreacher>
-In-Reply-To: <2713141.s8EVnczdoM@kreacher>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher>
+        Mon, 22 Jun 2020 10:03:48 -0400
+Received: from oxbsgw03.schlund.de ([172.19.248.4]) by
+ mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MnWx3-1j6aAT0ClJ-00jd9a; Mon, 22 Jun 2020 16:03:40 +0200
+Date:   Mon, 22 Jun 2020 16:03:39 +0200 (CEST)
+From:   Thomas Ruf <freelancer@rufusul.de>
+Reply-To: Thomas Ruf <freelancer@rufusul.de>
+To:     Federico Vaga <federico.vaga@cern.ch>
+Cc:     Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <1170180786.545332.1592834619871@mailbusiness.ionos.de>
+In-Reply-To: <20200622123019.z3i2tjcfliwkbzkx@cwe-513-vol689.cern.ch>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+ <419762761.402939.1592827272368@mailbusiness.ionos.de>
+ <20200622123019.z3i2tjcfliwkbzkx@cwe-513-vol689.cern.ch>
+Subject: Re: DMA Engine: Transfer From Userspace
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:31RXAG7PmVL1FE5xGz3AStAC9Xv0UuQ9JmV597Q0V535hVtCO15
+ qFcMAQVxLBdvcojAEY/HAcXk2/v1LffyGmRKwOcMjDPxv1TNQItERQW5xNZJNThgVGyZQWP
+ yqZ2n6Ep96mK1hedTPxmHWHVTQ5Ve3KtM03PkhCW2h1sD2Bqx13NeKtTMYcY3EfQncCLzVV
+ 0KxpIt0OGGtmlmBDcKKkw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bI90LEGy+q8=:5xY2M9HbXHeSqe9cHrm3ZD
+ uXuN4WQr/R09VjR8EpTnulAa1PhQ9WRfYGff67asf8X+x3EQzm5KLHqTeZuqtnumlgCju57fT
+ Hhf6YMuQhzSlOe1xfNNopzZaBusM7lgHNeOk7vb0WjaOgpkq9oUq3dE3w2v0C9K4InZa6/WHj
+ 6MtAysRQCKXAJTb1aVu4D3kGyRmjicJ+BWuaKOUlAWB2VglvRSSibv1JoxnraxxmtMW0xSu8G
+ Q/OvaNiRDWbz0JkPN9LflgbM+xqkjOQXb4XUGFDrIFSlsgQT0AV5xdh9DxhucVAzxtL0mKCnF
+ tAWep70U97swA1d43NazLwv2Xv7mwboDRH2xuhg68+nq6iiSKtmOX0kksY+JepJaHKqhwZN52
+ q+K3HolxE5uIrlc01jyWQqKQ731V4tWE7yE7BKt8NIy/QxGv5zhAfM/e2FewYOC4SJavB8VtM
+ mGpnEKbH67SAtcJVEMpO45/9l0KWWkEXNWDXk652vTQvkC/7sZ6v5T1Q/yHOIjgE+XzrMqimq
+ WSYLuP7oCy8PzNLk4yyAFPoyQY1MG8iYy2YIF3gR9IBcr37V2AIex5iChqsak4fQTj+se+twr
+ p9P/BeobPtB/trAqd0LWmgMNtDqvM9yN1klSMz/ShsmzbNoEfsLTvVXjgsIFQcdpEDBw8R1rl
+ yxB/2igy2/9NDZhNYOjw/PcydZBtVdz+WEEwyxXHstS5K7iiibzss65lRMTncLROEL3U17j4U
+ 0Np3CGf/dGxIDxgAGhgR4ksT77NDB2zgrRNn5SLXEum+zkvUcafKR7fy1T8e7ZL/1NVeCGxA+
+ nZZiuSYIXtEt5358Xmu/kzIZ4fzi/BdfOdgRfSt9pZW7yl1+nI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-The ACPICA's strategy with respect to the handling of memory mappings
-associated with memory operation regions is to avoid mapping the
-entire region at once which may be problematic at least in principle
-(for example, it may lead to conflicts with overlapping mappings
-having different attributes created by drivers).  It may also be
-wasteful, because memory opregions on some systems take up vast
-chunks of address space while the fields in those regions actually
-accessed by AML are sparsely distributed.
+> On 22 June 2020 at 14:30 Federico Vaga <federico.vaga@cern.ch> wrote:
+> 
+> 
+> On Mon, Jun 22, 2020 at 02:01:12PM +0200, Thomas Ruf wrote:
+> >> On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
+> >>
+> >> On 21-06-20, 22:36, Federico Vaga wrote:
+> >> > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
+> >> > > On 19-06-20, 16:31, Dave Jiang wrote:
+> >> > > >
+> >> > > >
+> >> > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> >> > > > > Hello,
+> >> > > > >
+> >> > > > > is there the possibility of using a DMA engine channel from userspace?
+> >> > > > >
+> >> > > > > Something like:
+> >> > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
+> >> > > > > - read() or write() to trigger the transfer
+> >> > > > >
+> >> > > >
+> >> > > > I may have supposedly promised Vinod to look into possibly providing
+> >> > > > something like this in the future. But I have not gotten around to do that
+> >> > > > yet. Currently, no such support.
+> >> > >
+> >> > > And I do still have serious reservations about this topic :) Opening up
+> >> > > userspace access to DMA does not sound very great from security point of
+> >> > > view.
+> >> >
+> >> > I was thinking about a dedicated module, and not something that the DMA engine
+> >> > offers directly. You load the module only if you need it (like the test module)
+> >>
+> >> But loading that module would expose dma to userspace.
+> >> >
+> >> > > Federico, what use case do you have in mind?
+> >> >
+> >> > Userspace drivers
+> >>
+> >> more the reason not do do so, why cant a kernel driver be added for your
+> >> usage?
+> >
+> >by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
+> >now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
+> 
+> Not sure to get what you mean by "DMA_SG is gone". Can I have a reference?
 
-For this reason, a one-page "window" is mapped for a given opregion
-on the first memory access through it and if that "window" does not
-cover an address range accessed through that opregion subsequently,
-it is unmapped and a new "window" is mapped to replace it.  Next,
-if the new "window" is not sufficient to access memory through the
-opregion in question in the future, it will be replaced with yet
-another "window" and so on.  That may lead to a suboptimal sequence
-of memory mapping and unmapping operations, for example if two fields
-in one opregion separated from each other by a sufficiently wide
-chunk of unused address space are accessed in an alternating pattern.
+here the link to the mailinglist when DMA_SG was removed:
+https://www.spinics.net/lists/dmaengine/msg13778.html
 
-The situation may still be suboptimal if the deferred unmapping
-introduced previously is supported by the OS layer.  For instance,
-the alternating memory access pattern mentioned above may produce
-a relatively long list of mappings to release with substantial
-duplication among the entries in it, which could be avoided if
-acpi_ex_system_memory_space_handler() did not release the mapping
-used by it previously as soon as the current access was not covered
-by it.
+> >just let me introduce myself and the project:
+> >- coding in C since '91
+> >- coding in C++ since '98
+> >- a lot of stuff not relevant for this ;-)
+> >- working as a freelancer since Nov '19
+> >- implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
+> >- last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
+> >- subscribed to dmaengine on friday, saw the start of this discussion on saturday
+> >- talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
+> >
+> >here the struct for the ioctl:
+> >
+> >typedef struct {
+> >  unsigned int struct_size;
+> >  const void *src_user_ptr;
+> >  void *dst_user_ptr;
+> >  unsigned long length;
+> >  unsigned int timeout_in_ms;
+> >} dma_sg_proxy_arg_t;
+> 
+> Yes, roughly this is what I was thinking about
 
-In order to improve that, modify acpi_ex_system_memory_space_handler()
-to take advantage of the memory mappings reference counting at the OS
-level if a suitable interface is provided.
+cool, i really hope i get my stuff upstream!
 
-Namely, if ACPI_USE_FAST_PATH_MAPPING is set, the OS is expected to
-implement acpi_os_map_memory_fast_path() that will return NULL if
-there is no mapping covering the given address range known to it.
-If such a mapping is there, however, its reference counter will be
-incremented and a pointer representing the requested virtual address
-will be returned right away without any additional consequences.
-
-That allows acpi_ex_system_memory_space_handler() to acquire
-additional references to all new memory mappings with the help
-of acpi_os_map_memory_fast_path() so as to retain them until the
-memory opregions associated with them go away.  The function will
-still use a new "window" mapping if the current one does not
-cover the address range at hand, but it will avoid unmapping the
-current one right away by adding it to a list of "known" mappings
-associated with the given memory opregion which will be deleted at
-the opregion deactivation time.  The mappings in that list can be
-used every time a "new window" is needed so as to avoid overhead
-related to the mapping and unmapping of memory.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/acpica/acinterp.h |   4 +
- drivers/acpi/acpica/evrgnini.c |   7 +-
- drivers/acpi/acpica/exregion.c | 159 ++++++++++++++++++++++++++++++++-
- 3 files changed, 162 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/acpi/acpica/acinterp.h b/drivers/acpi/acpica/acinterp.h
-index 1f1026fb06e9..db9c279baa2e 100644
---- a/drivers/acpi/acpica/acinterp.h
-+++ b/drivers/acpi/acpica/acinterp.h
-@@ -479,8 +479,12 @@ void acpi_ex_pci_cls_to_string(char *dest, u8 class_code[3]);
- 
- u8 acpi_is_valid_space_id(u8 space_id);
- 
-+struct acpi_mem_space_context *acpi_ex_alloc_mem_space_context(void);
-+
- void acpi_ex_unmap_region_memory(struct acpi_mem_space_context *mem_info);
- 
-+void acpi_ex_unmap_all_region_mappings(struct acpi_mem_space_context *mem_info);
-+
- /*
-  * exregion - default op_region handlers
-  */
-diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
-index 9f33114a74ca..f6c5feea10bc 100644
---- a/drivers/acpi/acpica/evrgnini.c
-+++ b/drivers/acpi/acpica/evrgnini.c
-@@ -46,10 +46,10 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
- 			local_region_context =
- 			    (struct acpi_mem_space_context *)*region_context;
- 
--			/* Delete a cached mapping if present */
-+			/* Delete memory mappings if present */
- 
- 			if (local_region_context->mapped_length) {
--				acpi_ex_unmap_region_memory(local_region_context);
-+				acpi_ex_unmap_all_region_mappings(local_region_context);
- 			}
- 			ACPI_FREE(local_region_context);
- 			*region_context = NULL;
-@@ -59,8 +59,7 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
- 
- 	/* Create a new context */
- 
--	local_region_context =
--	    ACPI_ALLOCATE_ZEROED(sizeof(struct acpi_mem_space_context));
-+	local_region_context = acpi_ex_alloc_mem_space_context();
- 	if (!(local_region_context)) {
- 		return_ACPI_STATUS(AE_NO_MEMORY);
- 	}
-diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregion.c
-index af777b7fccb0..9d97b6a67074 100644
---- a/drivers/acpi/acpica/exregion.c
-+++ b/drivers/acpi/acpica/exregion.c
-@@ -14,6 +14,40 @@
- #define _COMPONENT          ACPI_EXECUTER
- ACPI_MODULE_NAME("exregion")
- 
-+struct acpi_mem_mapping {
-+	acpi_physical_address physical_address;
-+	u8 *logical_address;
-+	acpi_size length;
-+	struct acpi_mem_mapping *next_mm;
-+};
-+
-+struct acpi_mm_context {
-+	struct acpi_mem_space_context mem_info;
-+	struct acpi_mem_mapping *first_mm;
-+};
-+
-+/*****************************************************************************
-+ *
-+ * FUNCTION:    acpi_ex_alloc_mem_space_context
-+ *
-+ * PARAMETERS:  None
-+ *
-+ * RETURN:      Pointer to a new region context object.
-+ *
-+ * DESCRIPTION: Allocate memory for memory operation region representation.
-+ *
-+ ****************************************************************************/
-+struct acpi_mem_space_context *acpi_ex_alloc_mem_space_context(void)
-+{
-+	ACPI_FUNCTION_TRACE(acpi_ex_alloc_mem_space_context);
-+
-+#ifdef ACPI_USE_FAST_PATH_MAPPING
-+	return ACPI_ALLOCATE_ZEROED(sizeof(struct acpi_mm_context));
-+#else
-+	return ACPI_ALLOCATE_ZEROED(sizeof(struct acpi_mem_space_context));
-+#endif
-+}
-+
- /*****************************************************************************
-  *
-  * FUNCTION:    acpi_ex_unmap_region_memory
-@@ -40,6 +74,44 @@ void acpi_ex_unmap_region_memory(struct acpi_mem_space_context *mem_info)
- 	return_VOID;
- }
- 
-+/*****************************************************************************
-+ *
-+ * FUNCTION:    acpi_ex_unmap_all_region_mappings
-+ *
-+ * PARAMETERS:  mem_info            - Region specific context
-+ *
-+ * RETURN:      None
-+ *
-+ * DESCRIPTION: Unmap all mappings associated with a memory operation region.
-+ *
-+ ****************************************************************************/
-+void acpi_ex_unmap_all_region_mappings(struct acpi_mem_space_context *mem_info)
-+{
-+#ifdef ACPI_USE_FAST_PATH_MAPPING
-+	struct acpi_mm_context *mm_context = (struct acpi_mm_context *)mem_info;
-+	struct acpi_mem_mapping *mm;
-+#endif
-+
-+	ACPI_FUNCTION_TRACE(acpi_ex_unmap_all_region_mappings);
-+
-+	acpi_ex_unmap_region_memory(mem_info);
-+
-+#ifdef ACPI_USE_FAST_PATH_MAPPING
-+	while (mm_context->first_mm) {
-+		mm = mm_context->first_mm;
-+		mm_context->first_mm = mm->next_mm;
-+#ifdef ACPI_USE_DEFERRED_UNMAPPING
-+		acpi_os_unmap_deferred(mm->logical_address, mm->length);
-+#else
-+		acpi_os_unmap_memory(mm->logical_address, mm->length);
-+#endif
-+		ACPI_FREE(mm);
-+	}
-+#endif /* ACPI_USE_FAST_PATH_MAPPING */
-+
-+	return_VOID;
-+}
-+
- /*******************************************************************************
-  *
-  * FUNCTION:    acpi_ex_system_memory_space_handler
-@@ -70,6 +142,10 @@ acpi_ex_system_memory_space_handler(u32 function,
- 	u32 length;
- 	acpi_size map_length;
- 	acpi_size page_boundary_map_length;
-+#ifdef ACPI_USE_FAST_PATH_MAPPING
-+	struct acpi_mm_context *mm_context = (struct acpi_mm_context *)mem_info;
-+	struct acpi_mem_mapping *mm;
-+#endif
- #ifdef ACPI_MISALIGNMENT_NOT_SUPPORTED
- 	u32 remainder;
- #endif
-@@ -128,7 +204,7 @@ acpi_ex_system_memory_space_handler(u32 function,
- 					 mem_info->mapped_length))) {
- 		/*
- 		 * The request cannot be resolved by the current memory mapping;
--		 * Delete the existing mapping and create a new one.
-+		 * Delete the current cached mapping and get a new one.
- 		 */
- 		if (mem_info->mapped_length) {
- 
-@@ -137,6 +213,36 @@ acpi_ex_system_memory_space_handler(u32 function,
- 			acpi_ex_unmap_region_memory(mem_info);
- 		}
- 
-+#ifdef ACPI_USE_FAST_PATH_MAPPING
-+		/*
-+		 * Look for an existing saved mapping matching the address range
-+		 * at hand.  If found, make the OS layer bump up the reference
-+		 * counter of that mapping, cache it and carry out the access.
-+		 */
-+		for (mm = mm_context->first_mm; mm; mm = mm->next_mm) {
-+			if (address < mm->physical_address)
-+				continue;
-+
-+			if ((u64)address + length >
-+					(u64)mm->physical_address + mm->length)
-+				continue;
-+
-+			/*
-+			 * When called on a known-existing memory mapping,
-+			 * acpi_os_map_memory_fast_path() must return the same
-+			 * logical address as before or NULL.
-+			 */
-+			if (!acpi_os_map_memory_fast_path(mm->physical_address,
-+							  mm->length))
-+				continue;
-+
-+			mem_info->mapped_logical_address = mm->logical_address;
-+			mem_info->mapped_physical_address = mm->physical_address;
-+			mem_info->mapped_length = mm->length;
-+			goto access;
-+		}
-+#endif /* ACPI_USE_FAST_PATH_MAPPING */
-+
- 		/*
- 		 * October 2009: Attempt to map from the requested address to the
- 		 * end of the region. However, we will never map more than one
-@@ -168,9 +274,8 @@ acpi_ex_system_memory_space_handler(u32 function,
- 
- 		/* Create a new mapping starting at the address given */
- 
--		mem_info->mapped_logical_address =
--		    acpi_os_map_memory(address, map_length);
--		if (!mem_info->mapped_logical_address) {
-+		logical_addr_ptr = acpi_os_map_memory(address, map_length);
-+		if (!logical_addr_ptr) {
- 			ACPI_ERROR((AE_INFO,
- 				    "Could not map memory at 0x%8.8X%8.8X, size %u",
- 				    ACPI_FORMAT_UINT64(address),
-@@ -181,10 +286,56 @@ acpi_ex_system_memory_space_handler(u32 function,
- 
- 		/* Save the physical address and mapping size */
- 
-+		mem_info->mapped_logical_address = logical_addr_ptr;
- 		mem_info->mapped_physical_address = address;
- 		mem_info->mapped_length = map_length;
-+
-+#ifdef ACPI_USE_FAST_PATH_MAPPING
-+		/*
-+		 * Create a new mm list entry to save the new mapping for
-+		 * removal at the operation region deactivation time.
-+		 */
-+		mm = ACPI_ALLOCATE_ZEROED(sizeof(*mm));
-+		if (!mm) {
-+			/*
-+			 * No room to save the new mapping, but this is not
-+			 * critical.  Just log the error and carry out the
-+			 * access as requested.
-+			 */
-+			ACPI_ERROR((AE_INFO,
-+				    "Not enough memory to save memory mapping at 0x%8.8X%8.8X, size %u",
-+				    ACPI_FORMAT_UINT64(address),
-+				    (u32)map_length));
-+			goto access;
-+		}
-+		/*
-+		 * Bump up the new mapping's reference counter in the OS layer
-+		 * to prevent it from getting dropped prematurely.
-+		 */
-+		if (!acpi_os_map_memory_fast_path(address, map_length)) {
-+			/*
-+			 * Something has gone wrong, but this is not critical.
-+			 * Log the error, free the mm list entry that won't be
-+			 * used and carry out the access as requested.
-+			 */
-+			ACPI_ERROR((AE_INFO,
-+				    "Unable to save memory mapping at 0x%8.8X%8.8X, size %u",
-+				    ACPI_FORMAT_UINT64(address),
-+				    (u32)map_length));
-+			ACPI_FREE(mm);
-+			goto access;
-+		}
-+		mm->physical_address = address;
-+		mm->logical_address = logical_addr_ptr;
-+		mm->length = map_length;
-+		mm->next_mm = mm_context->first_mm;
-+		mm_context->first_mm = mm;
- 	}
- 
-+access:
-+#else /* !ACPI_USE_FAST_PATH_MAPPING */
-+	}
-+#endif /* !ACPI_USE_FAST_PATH_MAPPING */
- 	/*
- 	 * Generate a logical pointer corresponding to the address we want to
- 	 * access
--- 
-2.26.2
-
-
-
-
+Best regards,
+Thomas
