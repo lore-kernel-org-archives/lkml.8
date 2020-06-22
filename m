@@ -2,102 +2,106 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4617BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFADC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 127A32075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592862282;
-	bh=/aLLjvO2Ei7tSkktHMp36wTpSxd9jKlcG+dbuAYiODw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iPOn/C03HrjoL3SXUOQLSZ0KcFmZZvWtAvIv3okILdOwk31UbBurzea7IaTDqSP7c
-	 zot2PFl2G8iecEArY9MdYX2L9DkYxG4RwWli7Lt3UBGN8CfvQE2DQjxiHSUUsS8m+x
-	 xikhZMwnL3Y7ARSuynecftSPUt0MEm1WSSS6S1qs=
+	by mail.kernel.org (Postfix) with ESMTP id E9BB22075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="CxR0MCFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbgFVVok (ORCPT
+        id S1730634AbgFVVqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:44:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727015AbgFVVok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:44:40 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C58A22075A;
-        Mon, 22 Jun 2020 21:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592862279;
-        bh=/aLLjvO2Ei7tSkktHMp36wTpSxd9jKlcG+dbuAYiODw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Sko3tfyKyexkmAphNm7aLC5lw5ejCsvu/y7x88Xvnmo6Bp8BXv6ZbOKzGjQGvMkYt
-         s+nZta1H0FcRTgk2n+8elnBz7Tq72ZCL+Nr1fhkmbt0rG6gMAOKkgUStuNE9kolPKQ
-         3av0CjWqVdgrbHbBj4bNzNgVEqdvTvGbfT5cO3u8=
-Date:   Mon, 22 Jun 2020 14:44:37 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Alexander Lobakin <alobakin@marvell.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Yuval Mintz <yuval.mintz@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Ram Amrani" <ram.amrani@marvell.com>,
-        Tomer Tayar <tomer.tayar@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net 9/9] net: qed: fix "maybe uninitialized" warning
-Message-ID: <20200622144437.770e09e0@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200622111413.7006-10-alobakin@marvell.com>
-References: <20200622111413.7006-1-alobakin@marvell.com>
-        <20200622111413.7006-10-alobakin@marvell.com>
+        Mon, 22 Jun 2020 17:46:18 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:34164 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730494AbgFVVqR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:46:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1592862375; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=XVivtfrUoedverxihZDUvQXhbwIsW+Ph7W4Zuj41NTM=;
+        b=CxR0MCFl6PJNUHCHUUF4NaLFrzu7naZvhIfn6Lm6JwoZcjditrouo7ZpcUL1rCeRFGEFjr
+        kCaU21cgk8HIekGNqYAqaicVFFoGCrQgxI39HwYbNOvWv4es2JOe/xbqlEX3ayGZSJxFRM
+        khfX6DY8rWyRg/gN9IxIumrcgjcGbsI=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jo=C3=A3o=20Henrique?= <johnnyonflame@hotmail.com>
+Subject: [PATCH 1/2] pinctrl: ingenic: Enhance support for IRQ_TYPE_EDGE_BOTH
+Date:   Mon, 22 Jun 2020 23:45:47 +0200
+Message-Id: <20200622214548.265417-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 14:14:13 +0300 Alexander Lobakin wrote:
-> Variable 'abs_ppfid' in qed_dev.c:qed_llh_add_mac_filter() always gets
-> printed, but is initialized only under 'ref_cnt == 1' condition. This
-> results in:
-> 
-> In file included from ./include/linux/kernel.h:15:0,
->                  from ./include/asm-generic/bug.h:19,
->                  from ./arch/x86/include/asm/bug.h:86,
->                  from ./include/linux/bug.h:5,
->                  from ./include/linux/io.h:11,
->                  from drivers/net/ethernet/qlogic/qed/qed_dev.c:35:
-> drivers/net/ethernet/qlogic/qed/qed_dev.c: In function 'qed_llh_add_mac_filter':
-> ./include/linux/printk.h:358:2: warning: 'abs_ppfid' may be used uninitialized
-> in this function [-Wmaybe-uninitialized]
->   printk(KERN_NOTICE pr_fmt(fmt), ##__VA_ARGS__)
->   ^~~~~~
-> drivers/net/ethernet/qlogic/qed/qed_dev.c:983:17: note: 'abs_ppfid' was declared
-> here
->   u8 filter_idx, abs_ppfid;
->                  ^~~~~~~~~
-> 
-> ...under W=1+.
-> 
-> Fix this by initializing it with zero.
-> 
-> Fixes: 79284adeb99e ("qed: Add llh ppfid interface and 100g support for
-> offload protocols")
-> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-> Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Ingenic SoCs don't natively support registering an interrupt for both
+rising and falling edges. This has to be emulated in software.
 
-Please don't wrap Fixes tags:
+Until now, this was emulated by switching back and forth between
+IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING according to the level of
+the GPIO. While this worked most of the time, when used with GPIOs that
+need debouncing, some events would be lost. For instance, between the
+time a falling-edge interrupt happens and the interrupt handler
+configures the hardware for rising-edge, the level of the pin may have
+already risen, and the rising-edge event is lost.
 
-Fixes tag: Fixes: 79284adeb99e ("qed: Add llh ppfid interface and 100g support for
-Has these problem(s):
-	- Subject has leading but no trailing parentheses
-	- Subject has leading but no trailing quotes
+To address that issue, instead of switching back and forth between
+IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING, we now switch back and
+forth between IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_LEVEL_HIGH. Since we
+always switch in the interrupt handler, they actually permit to detect
+level changes. In the example above, if the pin level rises before
+switching the IRQ type from IRQ_TYPE_LEVEL_LOW to IRQ_TYPE_LEVEL_HIGH,
+a new interrupt will raise as soon as the handler exits, and the
+rising-edge event will be properly detected.
+
+Cc: stable@vger.kernel.org
+Fixes: e72394e2ea19 ("pinctrl: ingenic: Merge GPIO functionality")
+Reported-by: João Henrique <johnnyonflame@hotmail.com>
+Tested-by: João Henrique <johnnyonflame@hotmail.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index fc0d10411aa9..241e563d5814 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -1813,9 +1813,9 @@ static void ingenic_gpio_irq_ack(struct irq_data *irqd)
+ 		 */
+ 		high = ingenic_gpio_get_value(jzgc, irq);
+ 		if (high)
+-			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_FALLING);
++			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_LOW);
+ 		else
+-			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_RISING);
++			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_HIGH);
+ 	}
+ 
+ 	if (jzgc->jzpc->info->version >= ID_JZ4760)
+@@ -1851,7 +1851,7 @@ static int ingenic_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
+ 		 */
+ 		bool high = ingenic_gpio_get_value(jzgc, irqd->hwirq);
+ 
+-		type = high ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
++		type = high ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_LEVEL_HIGH;
+ 	}
+ 
+ 	irq_set_type(jzgc, irqd->hwirq, type);
+-- 
+2.27.0
+
