@@ -2,97 +2,118 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD13C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8362073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123C120760
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgFVQYf (ORCPT
+        id S1729597AbgFVQZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:24:35 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:59208 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729479AbgFVQYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:24:34 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jnPFJ-0001B5-RR; Mon, 22 Jun 2020 10:24:33 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jnPFI-00036S-V4; Mon, 22 Jun 2020 10:24:33 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>
-References: <87pn9u6h8c.fsf@x220.int.ebiederm.org>
-        <87k1026h4x.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgczNRMP-DK3Ga-e_HXvZMBbQNxthdGt=MqMZ0CFDHHcg@mail.gmail.com>
-Date:   Mon, 22 Jun 2020 11:20:11 -0500
-In-Reply-To: <CAHk-=wgczNRMP-DK3Ga-e_HXvZMBbQNxthdGt=MqMZ0CFDHHcg@mail.gmail.com>
-        (Linus Torvalds's message of "Sat, 20 Jun 2020 11:58:13 -0700")
-Message-ID: <87eeq7xebo.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 22 Jun 2020 12:25:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49938 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729414AbgFVQZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:25:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DA327C22A;
+        Mon, 22 Jun 2020 16:25:04 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 17:25:01 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        ????????? <jaewon31.kim@samsung.com>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "minchan@kernel.org" <minchan@kernel.org>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>,
+        ????????? <ytk.lee@samsung.com>,
+        ????????? <cmlaika.kim@samsung.com>
+Subject: Re: [PATCH v4] page_alloc: consider highatomic reserve in watermark
+ fast
+Message-ID: <20200622162501.GJ3129@suse.de>
+References: <20200622091107.GC31426@dhcp22.suse.cz>
+ <20200619235958.11283-1-jaewon31.kim@samsung.com>
+ <CGME20200619055816epcas1p184da90b01aff559fe3cd690ebcd921ca@epcms1p6>
+ <20200622094020epcms1p639cc33933fbb7a9d578adb16a6ea0734@epcms1p6>
+ <20200622100439.GQ3183@techsingularity.net>
+ <20200622142304.GD31426@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jnPFI-00036S-V4;;;mid=<87eeq7xebo.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+6wsbR3bkAf75/oFgf7QvXKVQ+hcFeirM=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 1/2] exec: Don't set group_exit_task during a coredump
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200622142304.GD31426@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+On Mon, Jun 22, 2020 at 04:23:04PM +0200, Michal Hocko wrote:
+> On Mon 22-06-20 11:04:39, Mel Gorman wrote:
+> > On Mon, Jun 22, 2020 at 06:40:20PM +0900, ????????? wrote:
+> > > >But more importantly, I have hard time to follow why we need both
+> > > >zone_watermark_fast and zone_watermark_ok now. They should be
+> > > >essentially the same for anything but order == 0. For order 0 the
+> > > >only difference between the two is that zone_watermark_ok checks for
+> > > >ALLOC_HIGH resp ALLOC_HARDER, ALLOC_OOM. So what is exactly fast about
+> > > >the former and why do we need it these days?
+> > > > 
+> > > 
+> > > I think the author, Mel, may ansewr. But I think the wmark_fast may
+> > > fast by 1) not checking more condition about wmark and 2) using inline
+> > > rather than function. According to description on commit 48ee5f3696f6,
+> > > it seems to bring about 4% improvement.
+> > > 
+> > 
+> > The original intent was that watermark checks were expensive as some of the
+> > calculations are only necessary when a zone is relatively low on memory
+> > and the check does not always have to be 100% accurate. This is probably
+> > still true given that __zone_watermark_ok() makes a number of calculations
+> > depending on alloc flags even if a zone is almost completely free.
+> 
+> OK, so we are talking about 
+> 	if (alloc_flags & ALLOC_HIGH)
+> 		min -= min / 2;
+> 
+> 	if (unlikely((alloc_flags & (ALLOC_HARDER|ALLOC_OOM))) {
+> 		/*
+> 		 * OOM victims can try even harder than normal ALLOC_HARDER
+> 		 * users on the grounds that it's definitely going to be in
+> 		 * the exit path shortly and free memory. Any allocation it
+> 		 * makes during the free path will be small and short-lived.
+> 		 */
+> 		if (alloc_flags & ALLOC_OOM)
+> 			min -= min / 2;
+> 		else
+> 			min -= min / 4;
+> 	}
+> 
+> Is this something even measurable and something that would justify a
+> complex code? If we really want to keep it even after these changes
+> which are making the two closer in the cost then can we have it
+> documented at least?
 
-> On Fri, Jun 19, 2020 at 11:36 AM Eric W. Biederman
-> <ebiederm@xmission.com> wrote:
->>
->> Instead test SIGNAL_GROUP_COREDUMP in signal_group_exit().
->
-> You say "instead", but the patch itself doesn't agree:
->
->>  static inline int signal_group_exit(const struct signal_struct *sig)
->>  {
->> -       return  (sig->flags & SIGNAL_GROUP_EXIT) ||
->> +       return  (sig->flags & (SIGNAL_GROUP_EXIT | SIGNAL_GROUP_COREDUMP)) ||
->>                 (sig->group_exit_task != NULL);
->>  }
->
-> it does it _in_addition_to_.
+It was originally documented as being roughly 4% for a page allocator
+micro-benchmark but that was 4 years ago and I do not even remember what
+type of machine that was on. Chances are the relative cost is different
+now but I haven't measured it as the microbenchmark in question doesn't
+even compile with recent kernels. For many allocations, the bulk of the
+allocation cost is zeroing the page so I have no particular objection
+to zone_watermark_fast being removed if it makes the code easier to
+read. While I have not looked recently, the cost of allocation in general
+and the increasing scope of the zone->lock with larger NUMA nodes for
+high-order allocations like THP are more of a concern than two branches
+and potentially two minor calculations.
 
-Hmm.  I think I can change that line to:
->> Instead add a test for SIGNAL_GROUP_COREDUMP in signal_group_exit().
-
-Does that read better?
-
-> I think the whole test for "sig->group_exit_task != NULL" should be
-> removed for this commit to make sense.
-
-The code change is designed not to have a behavioral change in
-signal_group_exit().  As de_thread also sets sig->group_exit_task
-the test for sig->group_exit_task needs to remain in signal_group_exit()
-for the behavior of signal_group_exit() to remain unchanged.
-
-
-
-Why do you think the test sig->group_exit_task != NULL should be removed
-for the commit to make sense?
-
-Eric
+-- 
+Mel Gorman
+SUSE Labs
