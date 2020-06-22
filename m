@@ -2,108 +2,110 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3094EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30557C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0CB20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="V4GkxOoL"
+	by mail.kernel.org (Postfix) with ESMTP id 1BE3A2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgFVPdd (ORCPT
+        id S1729325AbgFVPf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:33:33 -0400
-Received: from mail.efficios.com ([167.114.26.124]:48590 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729341AbgFVPdc (ORCPT
+        Mon, 22 Jun 2020 11:35:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42931 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729224AbgFVPf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:33:32 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 689812B5439;
-        Mon, 22 Jun 2020 11:33:31 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id CPehp3O9YD6P; Mon, 22 Jun 2020 11:33:31 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 21AE72B5438;
-        Mon, 22 Jun 2020 11:33:31 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 21AE72B5438
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1592840011;
-        bh=qKn3NIaqc59Pct1rdS+sjFcxV4/S01BfHPl2vuKIfiU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=V4GkxOoLBqwoTp8GzcAqrsBAlGjRr1twqCyDWlPas+U7JPBEdd6Ub92DrmBl0hjwm
-         mJc5yxrXTOLH2MDWMXhAo54QuDypBwi/cacuoPsMLAJPwhPhs67zhBhpxLKQtEg5Hd
-         RpKS9TDGBxfwqnSyhjPq8e2VqCpq8v/QLkaqzssPxyulLwGINhLl2SFnqMZOvjUKlb
-         l51Q7JShGWYLg85pUmWT4tKeMtoEXm3vgrZdM0Ilbj73IH49oahAXnFz2dRlnulnGg
-         KF6JGexhFprmz+ImCzMqOmMpgjKPFmwablY5gxZzQhxpKRl+w536h2nQWw+I8xHGbD
-         iUyVyO3tUN5aw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id qJ1zYRJkj2A7; Mon, 22 Jun 2020 11:33:31 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 0F32A2B5437;
-        Mon, 22 Jun 2020 11:33:31 -0400 (EDT)
-Date:   Mon, 22 Jun 2020 11:33:31 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Joseph Myers <joseph@codesourcery.com>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>
-Message-ID: <79974973.8453.1592840011012.JavaMail.zimbra@efficios.com>
-In-Reply-To: <alpine.DEB.2.21.2006112026090.18393@digraph.polyomino.org.uk>
-References: <20200527185130.5604-1-mathieu.desnoyers@efficios.com> <20200527185130.5604-2-mathieu.desnoyers@efficios.com> <87d06gxsla.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.2006031718070.7179@digraph.polyomino.org.uk> <188671972.53608.1591269056445.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.2006041745360.8237@digraph.polyomino.org.uk> <419546979.1229.1591897672174.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.2006112026090.18393@digraph.polyomino.org.uk>
-Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup
- and thread creation (v20)
+        Mon, 22 Jun 2020 11:35:58 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jnOU6-00034z-Ab; Mon, 22 Jun 2020 15:35:46 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, linux-mm@kvack.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] mm/zswap: fix a couple of memory leaks and rework kzalloc failure check
+Date:   Mon, 22 Jun 2020 16:35:46 +0100
+Message-Id: <20200622153546.49880-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v20)
-Thread-Index: LemSq8R3trB8bb1KZi/muKx7JuxCcw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 11, 2020, at 4:26 PM, Joseph Myers joseph@codesourcery.com wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> On Thu, 11 Jun 2020, Mathieu Desnoyers wrote:
-> 
->> I managed to get a repository up and running for librseq, and have integrated
->> the rseq.2 man page with comments from Michael Kerrisk here:
->> 
->> https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/man/rseq.2
->> 
->> Is that a suitable URL ? Can we simply point to it from glibc's manual ?
-> 
-> Yes, that seems something reasonable to link to.
+kzalloc failures return NULL on out of memory errors, so replace the
+IS_ERR_OR_NULL check with the usual null pointer check.  Fix two memory
+leaks with on acomp and acomp_ctx by ensuring these objects are free'd
+on the error return path.
 
-OK, I'll point to that then. I've been waiting for Michael Kerrisk to act on
-rseq(2) for more than a year now, and this is getting in the way of upstreaming
-rseq support into glibc 2.32.
+Addresses-Coverity: ("Resource leak")
+Fixes: d4f86abd6e35 ("mm/zswap: move to use crypto_acomp API for hardware acceleration")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ mm/zswap.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-Thanks,
-
-Mathieu
-
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 0d914ba6b4a0..14839cbac7ff 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -433,23 +433,23 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
+ 		return 0;
+ 
+ 	acomp_ctx = kzalloc(sizeof(*acomp_ctx), GFP_KERNEL);
+-	if (IS_ERR_OR_NULL(acomp_ctx)) {
++	if (!acomp_ctx) {
+ 		pr_err("Could not initialize acomp_ctx\n");
+ 		return -ENOMEM;
+ 	}
+ 	acomp = crypto_alloc_acomp(pool->tfm_name, 0, 0);
+-	if (IS_ERR_OR_NULL(acomp)) {
++	if (!acomp) {
+ 		pr_err("could not alloc crypto acomp %s : %ld\n",
+ 				pool->tfm_name, PTR_ERR(acomp));
+-		return -ENOMEM;
++		goto free_acomp_ctx;
+ 	}
+ 	acomp_ctx->acomp = acomp;
+ 
+ 	req = acomp_request_alloc(acomp_ctx->acomp);
+-	if (IS_ERR_OR_NULL(req)) {
++	if (!req) {
+ 		pr_err("could not alloc crypto acomp %s : %ld\n",
+ 		       pool->tfm_name, PTR_ERR(acomp));
+-		return -ENOMEM;
++		goto free_acomp;
+ 	}
+ 	acomp_ctx->req = req;
+ 
+@@ -462,6 +462,12 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
+ 	*per_cpu_ptr(pool->acomp_ctx, cpu) = acomp_ctx;
+ 
+ 	return 0;
++
++free_acomp:
++	kfree(acomp);
++free_acomp_ctx:
++	kfree(acomp_ctx);
++	return -ENOMEM;
+ }
+ 
+ static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.27.0
+
