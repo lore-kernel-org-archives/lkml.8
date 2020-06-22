@@ -2,121 +2,184 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 130A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5735206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592828369;
-	bh=k3rXEplySMMeVAnP4t/Y1+QV1CCc3J629pWXJH8mggo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ii81/9CtpnUM0PQk58I7OKV4VAoYmtkaa8Cuc1ka3r7LPq7KFKGpUpGxgr7quyuZ0
-	 5N85MfexyUk+8RXXa1BLSWqTobYubYc2KekoT6sDpQ1WLZbheXoUpYFAOjdJkf7302
-	 DXYhsSOzyHZ5LVqLxZfilU8PSBzVdl4S9NSmqGKk=
+	by mail.kernel.org (Postfix) with ESMTP id 4F3A720716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LGBFM9gH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgFVMT2 (ORCPT
+        id S1728140AbgFVMVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbgFVMT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:19:27 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 22 Jun 2020 08:21:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37654 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728034AbgFVMVz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:21:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592828513;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fYzKPLPflHMIJ/16U5Az3dx3A/vPm3mOqM/+lY1oto8=;
+        b=LGBFM9gHHA27Nhl9ePu0I1rkhPgYpledGtAi4M5mMa4+2vU8tvrIMl843jeHo6KcEolT05
+        YR8KvLDvU8Ycq+THqBUTZIhmgyDIthu1kEZB7nQg2adm37LpY4gGcyZzxsvMS0abzGPDpp
+        P2jawBmrar/k36LIWZZ3p73O5UoaxAc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242--JYeqed9MDebFqPIERQNlQ-1; Mon, 22 Jun 2020 08:21:49 -0400
+X-MC-Unique: -JYeqed9MDebFqPIERQNlQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE86E206FA;
-        Mon, 22 Jun 2020 12:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592828366;
-        bh=k3rXEplySMMeVAnP4t/Y1+QV1CCc3J629pWXJH8mggo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xSJtdwv9eAvTUT95oJigMtBjsFtfi2waSbGaDwIVd8LdfXBzDB2glSzPYAbxYDNuE
-         B2EcDDe2jlQI/JF0wreZdZaU9MabBD6PtUJ0naEts9Tfx2fFivyv/ink0WOmPyq8OF
-         LQisnrxMXf7OEQ/SpNMYfeBHbSFSM7vTz3Vmlnhc=
-Received: by pali.im (Postfix)
-        id 6B1A27CD; Mon, 22 Jun 2020 14:19:24 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 14:19:24 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: drivers/pci/controller/pci-aardvark.c:350:2: error: implicit
- declaration of function 'gpiod_set_value_cansleep'
-Message-ID: <20200622121924.7u3t6b5ffzlryqhm@pali>
-References: <202006211118.LxtENQfl%lkp@intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E8A10100A8F9;
+        Mon, 22 Jun 2020 12:21:47 +0000 (UTC)
+Received: from ovpn-115-200.ams2.redhat.com (ovpn-115-200.ams2.redhat.com [10.36.115.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B38C10013D2;
+        Mon, 22 Jun 2020 12:21:41 +0000 (UTC)
+Message-ID: <d57b5443b2d693be984f8df19253a1f656ae1f95.camel@redhat.com>
+Subject: Re: [PATCH v2 01/11] KVM: x86: Add helper functions for illegal GPA
+ checking and page fault injection
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     Yuan Yao <yuan.yao@linux.intel.com>
+Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, thomas.lendacky@amd.com,
+        babu.moger@amd.com
+Date:   Mon, 22 Jun 2020 14:21:38 +0200
+In-Reply-To: <20200622044453.6t5ssz6hwvnaujwf@yy-desk-7060>
+References: <20200619153925.79106-1-mgamal@redhat.com>
+         <20200619153925.79106-2-mgamal@redhat.com>
+         <20200622044453.6t5ssz6hwvnaujwf@yy-desk-7060>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006211118.LxtENQfl%lkp@intel.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday 21 June 2020 11:05:22 kernel test robot wrote:
-> >> drivers/pci/controller/pci-aardvark.c:350:2: error: implicit declaration of function 'gpiod_set_value_cansleep' [-Werror,-Wimplicit-function-declaration]
->            gpiod_set_value_cansleep(pcie->reset_gpio, 1);
->            ^
->    drivers/pci/controller/pci-aardvark.c:350:2: note: did you mean 'gpio_set_value_cansleep'?
->    include/linux/gpio.h:188:20: note: 'gpio_set_value_cansleep' declared here
->    static inline void gpio_set_value_cansleep(unsigned gpio, int value)
->                       ^
-> >> drivers/pci/controller/pci-aardvark.c:1074:21: error: implicit declaration of function 'devm_gpiod_get_from_of_node' [-Werror,-Wimplicit-function-declaration]
->            pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
->                               ^
-> >> drivers/pci/controller/pci-aardvark.c:1076:14: error: use of undeclared identifier 'GPIOD_OUT_LOW'
->                                                           GPIOD_OUT_LOW,
->                                                           ^
->    20 warnings and 3 errors generated.
+On Mon, 2020-06-22 at 12:44 +0800, Yuan Yao wrote:
+> On Fri, Jun 19, 2020 at 05:39:15PM +0200, Mohammed Gamal wrote:
+> > This patch adds two helper functions that will be used to support
+> > virtualizing
+> > MAXPHYADDR in both kvm-intel.ko and kvm.ko.
+> > 
+> > kvm_fixup_and_inject_pf_error() injects a page fault for a user-
+> > specified GVA,
+> > while kvm_mmu_is_illegal_gpa() checks whether a GPA exceeds vCPU
+> > address limits.
+> > 
+> > Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >  arch/x86/kvm/mmu.h |  6 ++++++
+> >  arch/x86/kvm/x86.c | 21 +++++++++++++++++++++
+> >  arch/x86/kvm/x86.h |  1 +
+> >  3 files changed, 28 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+> > index 0ad06bfe2c2c..555237dfb91c 100644
+> > --- a/arch/x86/kvm/mmu.h
+> > +++ b/arch/x86/kvm/mmu.h
+> > @@ -4,6 +4,7 @@
+> >  
+> >  #include <linux/kvm_host.h>
+> >  #include "kvm_cache_regs.h"
+> > +#include "cpuid.h"
+> >  
+> >  #define PT64_PT_BITS 9
+> >  #define PT64_ENT_PER_PAGE (1 << PT64_PT_BITS)
+> > @@ -158,6 +159,11 @@ static inline bool is_write_protection(struct
+> > kvm_vcpu *vcpu)
+> >  	return kvm_read_cr0_bits(vcpu, X86_CR0_WP);
+> >  }
+> >  
+> > +static inline bool kvm_mmu_is_illegal_gpa(struct kvm_vcpu *vcpu,
+> > gpa_t gpa)
+> > +{
+> > +        return (gpa >= BIT_ULL(cpuid_maxphyaddr(vcpu)));
+> > +}
+> > +
+> >  /*
+> >   * Check if a given access (described through the I/D, W/R and U/S
+> > bits of a
+> >   * page fault error code pfec) causes a permission fault with the
+> > given PTE
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 00c88c2f34e4..ac8642e890b1 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -10693,6 +10693,27 @@ u64 kvm_spec_ctrl_valid_bits(struct
+> > kvm_vcpu *vcpu)
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_spec_ctrl_valid_bits);
+> >  
+> > +void kvm_fixup_and_inject_pf_error(struct kvm_vcpu *vcpu, gva_t
+> > gva, u16 error_code)
+> > +{
+> > +	struct x86_exception fault;
+> > +
+> > +	if (!(error_code & PFERR_PRESENT_MASK) ||
+> > +	    vcpu->arch.walk_mmu->gva_to_gpa(vcpu, gva, error_code,
+> > &fault) != UNMAPPED_GVA) {
+> > +		/*
+> > +		 * If vcpu->arch.walk_mmu->gva_to_gpa succeeded, the
+> > page
+> > +		 * tables probably do not match the TLB.  Just proceed
+> > +		 * with the error code that the processor gave.
+> > +		 */
+> > +		fault.vector = PF_VECTOR;
+> > +		fault.error_code_valid = true;
+> > +		fault.error_code = error_code;
+> > +		fault.nested_page_fault = false;
+> > +		fault.address = gva;
+> > +	}
+> > +	vcpu->arch.walk_mmu->inject_page_fault(vcpu, &fault);
 > 
-> vim +/gpiod_set_value_cansleep +350 drivers/pci/controller/pci-aardvark.c
+> Should this "vcpu->arch.walk_mmu->inject_page_fault(vcpu, &fault)"
+> inside the last brace?
+> Otherwise an uninitialized fault variable will be passed to the
+> walk_mmu->inject_page_fault.
+
+Good catch. You're right. Will fix it in v3
+
 > 
->    335	
->    336	static void advk_pcie_issue_perst(struct advk_pcie *pcie)
->    337	{
->    338		u32 reg;
->    339	
->    340		if (!pcie->reset_gpio)
->    341			return;
->    342	
->    343		/* PERST does not work for some cards when link training is enabled */
->    344		reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
->    345		reg &= ~LINK_TRAINING_EN;
->    346		advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
->    347	
->    348		/* 10ms delay is needed for some cards */
->    349		dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
->  > 350		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
->    351		usleep_range(10000, 11000);
->    352		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
->    353	}
->    354	
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvm_fixup_and_inject_pf_error);
+> > +
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_fast_mmio);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_inj_virq);
+> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> > index 6eb62e97e59f..239ae0f3e40b 100644
+> > --- a/arch/x86/kvm/x86.h
+> > +++ b/arch/x86/kvm/x86.h
+> > @@ -272,6 +272,7 @@ int kvm_mtrr_get_msr(struct kvm_vcpu *vcpu, u32
+> > msr, u64 *pdata);
+> >  bool kvm_mtrr_check_gfn_range_consistency(struct kvm_vcpu *vcpu,
+> > gfn_t gfn,
+> >  					  int page_num);
+> >  bool kvm_vector_hashing_enabled(void);
+> > +void kvm_fixup_and_inject_pf_error(struct kvm_vcpu *vcpu, gva_t
+> > gva, u16 error_code);
+> >  int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t
+> > cr2_or_gpa,
+> >  			    int emulation_type, void *insn, int
+> > insn_len);
+> >  fastpath_t handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu);
+> > -- 
+> > 2.26.2
+> > 
 
-Hello!
-
-Could you try to test following patch if it fixes above problems?
-
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 90ff291c24f0..01f1fcbb8770 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/delay.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-
-Both GPIOD_OUT_LOW and gpiod_set_value_cansleep() are defined in
-linux/gpio/consumer.h header file.
-
-I do not have s390 box nor s390 cross compiler to do verification.
