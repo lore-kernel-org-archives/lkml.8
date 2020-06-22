@@ -2,133 +2,115 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1825C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86432C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C677920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:41:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j9dDq1D5"
+	by mail.kernel.org (Postfix) with ESMTP id 636BF20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592855613;
+	bh=Pk37DB5gTmRlkyLSKbdhMhYz8yBgnO8vdFTIo8FufqI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=jaMwdP8bSLCRFADe5wzqyy1NVur3APZdNtaMlAuMCrz8CHdRqSSw4hTU2xupSIHPs
+	 YP5DPMpo6LLxArfylpf5jgHFLYoW4s8zBdSZc0UXjrX0XglpaOVnKxMoR6FxWbc8wt
+	 nydf6uxiOrV5rFDtkxDLAnjTs+oW/IquBn75+Isg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgFVTlR (ORCPT
+        id S1728375AbgFVTxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728447AbgFVTlQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:41:16 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A90C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:41:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Tp0FvdeMkD0In5KDxlOtCuC1dG7VeQNXQJo7C/sHai0=; b=j9dDq1D51Tu300HC9aIqfHqXrc
-        5GsiBOxLP8aOZOMTrBrw86raw9grYGO9RU3QoRxrQjM3MbPncZPIaJD7nCx/iEAoDicUJ488gskqF
-        eKwEUyWCBQf64/YzbovPa0zFNLCfqtjJnlx19cxHCWZ8896i6pjLHmHKaIqmqVGsz0kSFlRQzk6NS
-        mxeKG9aoT9a5UtJ2faJ1aBOjtDzXAhrIfw/e8DdYA26SNjVODiL+Jq5iHY/kkANiCJ7NtGhAFQ7vv
-        ia9YZKF88jbmGSh5r/VTE2oYtypW6d/g9eZaFjimuuiyH4z3nX4+kaRhyxw6GQIaL3PT4DMvV0w4d
-        aYc+m9vA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnSJL-0002yS-CW; Mon, 22 Jun 2020 19:40:56 +0000
-Subject: Re: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
- each syscall
-To:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200622193146.2985288-1-keescook@chromium.org>
- <20200622193146.2985288-4-keescook@chromium.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <87a7b943-ed15-8521-773e-c182a37ee61e@infradead.org>
-Date:   Mon, 22 Jun 2020 12:40:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 15:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728050AbgFVTx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:53:29 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78A452075A;
+        Mon, 22 Jun 2020 19:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592855609;
+        bh=Pk37DB5gTmRlkyLSKbdhMhYz8yBgnO8vdFTIo8FufqI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=102LvjAaeM5gEuJmFB+TgfaS9hA+iL2XSR7pm+FE0WNX58jHaMZXGsyFOE/N6F/oT
+         L7fSEXLmnTsTquoUUnQsbwWy0xG8XPvs434WkXHUPRVjCYKOEzEKKrvOWjPZ0ka4uq
+         yJbRq9dYRqMRY/CecHiuxMgIzKa1N4GOxQh3xDhg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5CCF63522FA9; Mon, 22 Jun 2020 12:53:29 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 12:53:29 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200622195329.GN9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200618175719.GT2723@paulmck-ThinkPad-P72>
+ <20200618183448.GA15136@pc636>
+ <20200618190359.GU2723@paulmck-ThinkPad-P72>
+ <20200618203557.GB16976@pc636>
+ <20200618203821.GU8681@bombadil.infradead.org>
+ <20200618211709.GA17263@pc636>
+ <20200618213427.GV2723@paulmck-ThinkPad-P72>
+ <20200619154652.GA19990@pc636>
+ <20200619162555.GJ2723@paulmck-ThinkPad-P72>
+ <20200622190406.GA3787@pc636>
 MIME-Version: 1.0
-In-Reply-To: <20200622193146.2985288-4-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622190406.GA3787@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 12:31 PM, Kees Cook wrote:
-> This provides the ability for architectures to enable kernel stack base
-> address offset randomization. This feature is controlled by the boot
-> param "randomize_kstack_offset=on/off", with its default value set by
-> CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT.
+On Mon, Jun 22, 2020 at 09:04:06PM +0200, Uladzislau Rezki wrote:
+> > > > 
+> > > > Very good.  When does kfree_rcu() and friends move out of kernel/rcu?
+> > > > 
+> > > Do you mean to move the whole logic of kfree_rcu() from top to down to mm/?
+> > 
+> > I do mean exactly that.
+> > 
+> > That was my goal some years back when Rao Shoaib was making the first
+> > attempt along these lines, and it remains my goal.  After all, if this
+> > effort is at all successful, the coupling between kfree_rcu() with
+> > slab/slob/slub will become much tighter than that between kfree_rcu()
+> > and RCU.
+> > 
+> > There will need to be some additional RCU APIs used by kfree_rcu(),
+> > for example, something to tell RCU how many blocks are awaiting a
+> > grace period.  But these are narrow and easily defined APIs.
+> >
+> I also think that k[v]free_rcu() should reside somewhere under "mm/".
+> Currently they are defined as macros under "linux/rcupdate.h". So i
+> am not sure if definitions should stay there or moved also.
+
+I am not as worried about the high-level macros as I am about the code
+that does the bulk of the work, but they should still move as well.
+Otherwise, changes involving both the macros and the underlying
+implementation are harder than needed.
+
+> Implementation of the k[v]free_rcu() is under rcu/tree.c and for tiny
+> variant is under rcutiny.h. It can be moved to the mm/slab_common.c
+> or independent files can be created. I think, mm people should consult
+> what is the best way to go :)
 > 
-> Co-developed-by: Elena Reshetova <elena.reshetova@intel.com>
-> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
-> Link: https://lore.kernel.org/r/20190415060918.3766-1-elena.reshetova@intel.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  Makefile                         |  4 ++++
->  arch/Kconfig                     | 23 ++++++++++++++++++
->  include/linux/randomize_kstack.h | 40 ++++++++++++++++++++++++++++++++
->  init/main.c                      | 23 ++++++++++++++++++
->  4 files changed, 90 insertions(+)
->  create mode 100644 include/linux/randomize_kstack.h
+> Any thoughts on it?
 
-Hi,
-Please add documentation for the new kernel boot parameter to
-Documentation/admin-guide/kernel-parameters.txt.
+I don't have any opinion on exactly where in mm the underlying
+implementation code should go.  You suggestion of mm/slab_common.c
+seems fine to me.  ;-)
 
-
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 1ea61290900a..1f52c9cfefca 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -883,6 +883,29 @@ config VMAP_STACK
->  	  virtual mappings with real shadow memory, and KASAN_VMALLOC must
->  	  be enabled.
->  
-> +config HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
-> +	def_bool n
-> +	help
-> +	  An arch should select this symbol if it can support kernel stack
-> +	  offset randomization with calls to add_random_kstack_offset()
-> +	  during syscall entry and choose_random_kstack_offset() during
-> +	  syscall exit. Downgrading of -fstack-protector-strong to
-> +	  -fstack-protector should also be applied to the entry code and
-> +	  closely examined, as the artificial stack bump looks like an array
-> +	  to the compiler, so it will attempt to add canary checks regardless
-> +	  of the static branch state.
-> +
-> +config RANDOMIZE_KSTACK_OFFSET_DEFAULT
-> +	bool "Randomize kernel stack offset on syscall entry"
-> +	depends on HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
-> +	help
-> +	  The kernel stack offset can be randomized (after pt_regs) by
-> +	  roughly 5 bits of entropy, frustrating memory corruption
-> +	  attacks that depend on stack address determinism or
-> +	  cross-syscall address exposures. This feature is controlled
-> +	  by kernel boot param "randomize_kstack_offset=on/off", and this
-> +	  config chooses the default boot state.
-
-
-thanks.
--- 
-~Randy
-
+							Thanx, Paul
