@@ -2,28 +2,29 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 415C52083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE9D207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbgFVUnm (ORCPT
+        id S1728777AbgFVUnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:43:42 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:36544 "EHLO
+        Mon, 22 Jun 2020 16:43:47 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:45973 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728311AbgFVUnm (ORCPT
+        by vger.kernel.org with ESMTP id S1728311AbgFVUnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:43:42 -0400
+        Mon, 22 Jun 2020 16:43:47 -0400
 Received: from [37.163.98.205] (port=42634 helo=melee.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.93)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1jnTI2-00062o-Ok; Mon, 22 Jun 2020 22:43:39 +0200
+        id 1jnTI6-00062o-LV; Mon, 22 Jun 2020 22:43:43 +0200
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>
@@ -31,10 +32,12 @@ Cc:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
         Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH v3 0/4] mfd: lp87565: convert DT to yaml, ignore ENx pins and add LP87524-Q1
-Date:   Mon, 22 Jun 2020 22:43:25 +0200
-Message-Id: <20200622204329.11147-1-luca@lucaceresoli.net>
+Subject: [PATCH v3 1/4] regulator: lp87565: enable voltage regardless of ENx pin
+Date:   Mon, 22 Jun 2020 22:43:26 +0200
+Message-Id: <20200622204329.11147-2-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200622204329.11147-1-luca@lucaceresoli.net>
+References: <20200622204329.11147-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -52,39 +55,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This driver enables outputs by setting bit EN_BUCKn in the BUCKn_CTRL1
+register. However, if bit EN_PIN_CTRLn in the same register is set, the
+output is actually enabled only if EN_BUCKn is set AND an enable pin is
+active. Since the driver does not touch EN_PIN_CTRLn, the choice is left to
+the hardware, which in turn gets this bit from OTP memory, and in absence
+of OTP data it uses a default value that is documented in the datasheet for
+LP8752x, but not for LP8756x.
 
-the first patch in this series is a small but significant variation in how
-the lp87565 driver enables the output rails, to allow the kernel to always
-know when it is enabling an output. However it can change existing
-behaviour (depending on the hardware setup) and thus it should be carefully
-evaluated.
+Thus the driver doesn't really "know" whether it is actually enabling the
+output or not.
 
-The following patches are a fairly straightforward addition of a new chip
-variant along DT bindings conversion to yaml.
+In order to make sure activation is always driver-controlled, just clear
+the EN_PIN_CTRLn bit. Now all activation solely depend on the EN_BUCKn bit.
 
-v3 fixes the yaml errors present in v2.
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-RFC,v1: https://lkml.org/lkml/2020/6/3/908
-v2: https://lkml.org/lkml/2020/6/17/492
+---
 
-Luca
+As discussed in RFC,v1 [0] there is a potential regression on existing
+hardware, see the discussion for more details. So far Mark Brown kind of
+approved the idea behind this patch, but more discussion about the correct
+way to handle this situation would be greatly appreciated.
 
-Luca Ceresoli (4):
-  regulator: lp87565: enable voltage regardless of ENx pin
-  dt-bindings: mfd: lp87565: convert to yaml
-  dt-bindings: mfd: lp87565: add LP87524-Q1 variant
-  mfd: lp87565: add LP87524-Q1 variant
+[0] https://lkml.org/lkml/2020/6/3/907
 
- .../devicetree/bindings/mfd/lp87565.txt       |  79 ------
- .../devicetree/bindings/mfd/ti,lp875xx.yaml   | 225 ++++++++++++++++++
- drivers/mfd/lp87565.c                         |   4 +
- drivers/regulator/lp87565-regulator.c         |  21 +-
- include/linux/mfd/lp87565.h                   |   1 +
- 5 files changed, 249 insertions(+), 81 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/ti,lp875xx.yaml
+Changes in v3: none
+Changes in v2: none
+---
+ drivers/regulator/lp87565-regulator.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
+index 5d525dacf959..fbed6bc80c1a 100644
+--- a/drivers/regulator/lp87565-regulator.c
++++ b/drivers/regulator/lp87565-regulator.c
+@@ -11,8 +11,8 @@
+ 
+ #include <linux/mfd/lp87565.h>
+ 
+-#define LP87565_REGULATOR(_name, _id, _of, _ops, _n, _vr, _vm, _er, _em, \
+-			 _delay, _lr, _cr)				\
++#define LP87565_REGULATOR(_name, _id, _of, _ops, _n, _vr, _vm,		\
++			  _er, _em, _ev, _delay, _lr, _cr)		\
+ 	[_id] = {							\
+ 		.desc = {						\
+ 			.name			= _name,		\
+@@ -28,6 +28,7 @@
+ 			.vsel_mask		= _vm,			\
+ 			.enable_reg		= _er,			\
+ 			.enable_mask		= _em,			\
++			.enable_val		= _ev,			\
+ 			.ramp_delay		= _delay,		\
+ 			.linear_ranges		= _lr,			\
+ 			.n_linear_ranges	= ARRAY_SIZE(_lr),	\
+@@ -121,38 +122,54 @@ static const struct lp87565_regulator regulators[] = {
+ 	LP87565_REGULATOR("BUCK0", LP87565_BUCK_0, "buck0", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK0_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK0_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
+ 	LP87565_REGULATOR("BUCK1", LP87565_BUCK_1, "buck1", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK1_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK1_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK1_CTRL_2),
+ 	LP87565_REGULATOR("BUCK2", LP87565_BUCK_2, "buck2", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK2_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK2_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK2_CTRL_2),
+ 	LP87565_REGULATOR("BUCK3", LP87565_BUCK_3, "buck3", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK3_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK3_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK3_CTRL_2),
+ 	LP87565_REGULATOR("BUCK10", LP87565_BUCK_10, "buck10", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK0_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK0_CTRL_1,
+ 			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL |
++			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2,
++			  LP87565_BUCK_CTRL_1_EN |
+ 			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
+ 	LP87565_REGULATOR("BUCK23", LP87565_BUCK_23, "buck23", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK2_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK2_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK2_CTRL_2),
+ 	LP87565_REGULATOR("BUCK3210", LP87565_BUCK_3210, "buck3210",
+ 			  lp87565_buck_ops, 256, LP87565_REG_BUCK0_VOUT,
+ 			  LP87565_BUCK_VSET, LP87565_REG_BUCK0_CTRL_1,
+ 			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL |
++			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2,
++			  LP87565_BUCK_CTRL_1_EN |
+ 			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
+ };
 -- 
 2.27.0
 
