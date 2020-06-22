@@ -5,45 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD290C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA053C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEA62073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA252076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbgFVV6n (ORCPT
+        id S1730954AbgFVV6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:58:43 -0400
-Received: from mga12.intel.com ([192.55.52.136]:5659 "EHLO mga12.intel.com"
+        Mon, 22 Jun 2020 17:58:47 -0400
+Received: from mga11.intel.com ([192.55.52.93]:15508 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730930AbgFVV6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:58:39 -0400
-IronPort-SDR: oFhWc1wJXvfzxzHSMsKAbAQjza5eaQQ1ecoKplYpgSScsC8PGLq/1Hgdy6mUETAcdxpoiDVID+
- 45SNCGdAf7FA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123554287"
+        id S1730906AbgFVV6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:58:37 -0400
+IronPort-SDR: QQxdv6LbPjaiE59QSRhse+K4QCqHu1mP9OCgznEageAnfi3kQH9yNeiF0mNXouFy44frjAYVSh
+ CebDg3GOSzTw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142148022"
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="123554287"
+   d="scan'208";a="142148022"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:58:36 -0700
-IronPort-SDR: fB/8J8qmlJt3Mr8TDqDQuuvyalAq2ZmOkiO7NhpiF3bDkTPLf6lQM1x6Qd4gxfwwatzPe8zc2A
- oSsBIiFzpoAQ==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:58:35 -0700
+IronPort-SDR: B9InyO7f4ezvFwZ/O9lxBgG3IMgwTpagGSEEb+Op2XfgvkNqYbZEdHYm6amzgCI3BT5DfKTYf5
+ airZ6FUD4QNQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="353605289"
-Received: from jekeller-desk.amr.corp.intel.com ([10.166.241.33])
-  by orsmga001.jf.intel.com with ESMTP; 22 Jun 2020 14:58:36 -0700
-From:   Jacob Keller <jacob.e.keller@intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH] checkpatch: use $root/.git when seeding camel case
-Date:   Mon, 22 Jun 2020 14:58:34 -0700
-Message-Id: <20200622215834.2858106-1-jacob.e.keller@intel.com>
-X-Mailer: git-send-email 2.25.2
+   d="scan'208";a="300987323"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Jun 2020 14:58:35 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] KVM: x86/mmu: Make .write_log_dirty a nested operation
+Date:   Mon, 22 Jun 2020 14:58:32 -0700
+Message-Id: <20200622215832.22090-5-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200622215832.22090-1-sean.j.christopherson@intel.com>
+References: <20200622215832.22090-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,78 +57,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When seeding the camel case file, checkpatch.pl uses the $root directory
-in order to find the acceptable list of allowed camel case words.
+Move .write_log_dirty() into kvm_x86_nested_ops to help differentiate it
+from the non-nested dirty log hooks.  And because it's a nested-only
+operation.
 
-However, if the current directory is a git repository, checkpatch.pl
-attempts to seed using the local git directory.
-
-This is problematic if checkpatch.pl is passed a --root and is being run
-from within another git repository. Rather than seeding from the
-provided root tree, checkpatch.pl will seed using the local files. If
-the current git repository isn't a kernel tree, this can lead to
-unexpected warnings about camel case issues.
-
-Always honor the $root parameter when seeding camelcase files by using
-"$root/.git" and changing directory to the $root before invoking git.
-
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Joe Perches <joe@perches.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
-This is a resend of an old patch that appears to have never been picked up.
-It was originally reviewed at the following locations a few years ago:
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/mmu/paging_tmpl.h  |  2 +-
+ arch/x86/kvm/vmx/nested.c       | 38 +++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c          | 38 ---------------------------------
+ 4 files changed, 40 insertions(+), 40 deletions(-)
 
-https://patchwork.ozlabs.org/project/intel-wired-lan/patch/20160505231108.1934-1-jacob.e.keller@intel.com/
-https://lore.kernel.org/netdev/20190315010334.5707-1-jacob.e.keller@intel.com/
-
-The motivation is that we use checkpatch.pl on code in a separate git
-repository that will eventually be submitted upstream. As part of this, we
-provide the --root argument to specify the target kernel tree. The camelcase
-then gets seeded incorrectly and --strict begins warning about a lot of
-cases that aren't errors.
-
-The current workaround is that we cd to the kernel tree and run checkpatch
-from there.. but this breaks if we want to use a .checkpatch.conf file as it
-won't get picked up from the original directory.
-
-This patch simply fixes the camelcase seeding to honor the git tree at the
-$root if one is provided.
-
-I opted to stick with "cd $root &&" instead of "git -C", since there are no other usages
-of "git -C" in the checkpatch.pl currently, despite "git -C" being from git
-1.8.5,  and being ~7 years old.
-
- scripts/checkpatch.pl | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 4c820607540b..c5646e456325 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -919,8 +919,8 @@ sub seed_camelcase_includes {
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 446ea70a554d..4e6219cb3933 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1220,7 +1220,6 @@ struct kvm_x86_ops {
+ 	void (*enable_log_dirty_pt_masked)(struct kvm *kvm,
+ 					   struct kvm_memory_slot *slot,
+ 					   gfn_t offset, unsigned long mask);
+-	int (*write_log_dirty)(struct kvm_vcpu *vcpu, gpa_t l2_gpa);
  
- 	$camelcase_seeded = 1;
+ 	/* pmu operations of sub-arch */
+ 	const struct kvm_pmu_ops *pmu_ops;
+@@ -1281,6 +1280,7 @@ struct kvm_x86_nested_ops {
+ 			 struct kvm_nested_state __user *user_kvm_nested_state,
+ 			 struct kvm_nested_state *kvm_state);
+ 	bool (*get_vmcs12_pages)(struct kvm_vcpu *vcpu);
++	int (*write_log_dirty)(struct kvm_vcpu *vcpu, gpa_t l2_gpa);
  
--	if (-e ".git") {
--		my $git_last_include_commit = `${git_command} log --no-merges --pretty=format:"%h%n" -1 -- include`;
-+	if (-e "$root/.git") {
-+		my $git_last_include_commit = `cd $root && ${git_command} log --no-merges --pretty=format:"%h%n" -1 -- include`;
- 		chomp $git_last_include_commit;
- 		$camelcase_cache = ".checkpatch-camelcase.git.$git_last_include_commit";
- 	} else {
-@@ -947,9 +947,10 @@ sub seed_camelcase_includes {
- 		return;
- 	}
+ 	int (*enable_evmcs)(struct kvm_vcpu *vcpu,
+ 			    uint16_t *vmcs_version);
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 60e7b2308876..c733196fd45b 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -260,7 +260,7 @@ static int FNAME(update_accessed_dirty_bits)(struct kvm_vcpu *vcpu,
+ 				!(pte & PT_GUEST_DIRTY_MASK)) {
+ 			trace_kvm_mmu_set_dirty_bit(table_gfn, index, sizeof(pte));
+ #if PTTYPE == PTTYPE_EPT
+-			if (kvm_x86_ops.write_log_dirty(vcpu, addr))
++			if (kvm_x86_ops.nested_ops->write_log_dirty(vcpu, addr))
+ 				return -EINVAL;
+ #endif
+ 			pte |= PT_GUEST_DIRTY_MASK;
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index adb11b504d5c..db9abcbeefd1 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3205,6 +3205,43 @@ static bool nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
+ 	return true;
+ }
  
--	if (-e ".git") {
--		$files = `${git_command} ls-files "include/*.h"`;
-+	if (-e "$root/.git") {
-+		$files = `cd $root && ${git_command} ls-files "include/*.h"`;
- 		@include_files = split('\n', $files);
-+		@include_files = map("$root/$_", @include_files);
- 	}
++static int nested_vmx_write_pml_buffer(struct kvm_vcpu *vcpu, gpa_t gpa)
++{
++	struct vmcs12 *vmcs12;
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	gpa_t dst;
++
++	if (WARN_ON_ONCE(!is_guest_mode(vcpu)))
++		return 0;
++
++	if (WARN_ON_ONCE(vmx->nested.pml_full))
++		return 1;
++
++	/*
++	 * Check if PML is enabled for the nested guest. Whether eptp bit 6 is
++	 * set is already checked as part of A/D emulation.
++	 */
++	vmcs12 = get_vmcs12(vcpu);
++	if (!nested_cpu_has_pml(vmcs12))
++		return 0;
++
++	if (vmcs12->guest_pml_index >= PML_ENTITY_NUM) {
++		vmx->nested.pml_full = true;
++		return 1;
++	}
++
++	gpa &= ~0xFFFull;
++	dst = vmcs12->pml_address + sizeof(u64) * vmcs12->guest_pml_index;
++
++	if (kvm_write_guest_page(vcpu->kvm, gpa_to_gfn(dst), &gpa,
++				 offset_in_page(dst), sizeof(gpa)))
++		return 0;
++
++	vmcs12->guest_pml_index--;
++
++	return 0;
++}
++
+ /*
+  * Intel's VMX Instruction Reference specifies a common set of prerequisites
+  * for running VMX instructions (except VMXON, whose prerequisites are
+@@ -6503,6 +6540,7 @@ struct kvm_x86_nested_ops vmx_nested_ops = {
+ 	.get_state = vmx_get_nested_state,
+ 	.set_state = vmx_set_nested_state,
+ 	.get_vmcs12_pages = nested_get_vmcs12_pages,
++	.write_log_dirty = nested_vmx_write_pml_buffer,
+ 	.enable_evmcs = nested_enable_evmcs,
+ 	.get_evmcs_version = nested_get_evmcs_version,
+ };
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index adf83047bb21..8bf06a59f356 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7501,43 +7501,6 @@ static void vmx_flush_log_dirty(struct kvm *kvm)
+ 	kvm_flush_pml_buffers(kvm);
+ }
  
- 	foreach my $file (@include_files) {
+-static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu, gpa_t gpa)
+-{
+-	struct vmcs12 *vmcs12;
+-	struct vcpu_vmx *vmx = to_vmx(vcpu);
+-	gpa_t dst;
+-
+-	if (WARN_ON_ONCE(!is_guest_mode(vcpu)))
+-		return 0;
+-
+-	if (WARN_ON_ONCE(vmx->nested.pml_full))
+-		return 1;
+-
+-	/*
+-	 * Check if PML is enabled for the nested guest. Whether eptp bit 6 is
+-	 * set is already checked as part of A/D emulation.
+-	 */
+-	vmcs12 = get_vmcs12(vcpu);
+-	if (!nested_cpu_has_pml(vmcs12))
+-		return 0;
+-
+-	if (vmcs12->guest_pml_index >= PML_ENTITY_NUM) {
+-		vmx->nested.pml_full = true;
+-		return 1;
+-	}
+-
+-	gpa &= ~0xFFFull;
+-	dst = vmcs12->pml_address + sizeof(u64) * vmcs12->guest_pml_index;
+-
+-	if (kvm_write_guest_page(vcpu->kvm, gpa_to_gfn(dst), &gpa,
+-				 offset_in_page(dst), sizeof(gpa)))
+-		return 0;
+-
+-	vmcs12->guest_pml_index--;
+-
+-	return 0;
+-}
+-
+ static void vmx_enable_log_dirty_pt_masked(struct kvm *kvm,
+ 					   struct kvm_memory_slot *memslot,
+ 					   gfn_t offset, unsigned long mask)
+@@ -7966,7 +7929,6 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
+ 	.slot_disable_log_dirty = vmx_slot_disable_log_dirty,
+ 	.flush_log_dirty = vmx_flush_log_dirty,
+ 	.enable_log_dirty_pt_masked = vmx_enable_log_dirty_pt_masked,
+-	.write_log_dirty = vmx_write_pml_buffer,
+ 
+ 	.pre_block = vmx_pre_block,
+ 	.post_block = vmx_post_block,
 -- 
-2.25.2
+2.26.0
 
