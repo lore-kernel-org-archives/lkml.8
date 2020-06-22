@@ -2,88 +2,80 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E984AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B62C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C81552075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B97slECk"
+	by mail.kernel.org (Postfix) with ESMTP id BE58F2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbgFVRch (ORCPT
+        id S1730119AbgFVRcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729971AbgFVRcg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:32:36 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795FFC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:32:36 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id k15so3097411lfc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:32:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fZsJVwDrOxKrBzWWAsZN0Wz485qfczm0ojFoE3HuC8Y=;
-        b=B97slECk7p+UApt7HEu2L46Awqn4jeXNqhBPxYKtyGhSPTh/Jb//7y7zBEyWqWevtW
-         dLu6Fx/khrwGC8lHn/tYWNwJ80sqbHHvLODpaOthDRf94MI7UD5vDelpS1d7e8K+AN4Y
-         OvGhfdZg2Y5xvmbRCoxIgStQPCgOasGuzQTvsk9WYHueX6/I5DLiLN7DpRfmRup6J2uf
-         gHz0bN2X6saHrWIY+6Odwb9Sczp0L2zGJy7l800XdroTPsjy5Tqw5haIST4edmoy6qNB
-         vmq48Z/I4HSgRZiS2eaXV6maEJlz0qtfrnuXhZB5bN2FvaE8tiTxPRKEMQ78FNo6fXD+
-         pTkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fZsJVwDrOxKrBzWWAsZN0Wz485qfczm0ojFoE3HuC8Y=;
-        b=K9PkirkM/HJzJ9H58MyMnwCyROUnCbKJCGh1FO4Qp1Oq1fAXXXoXDgn5mAj83/aMfs
-         0K6W8UJyCoj0Zv7Maze/+n9jM1Bv3B2ljhYl4ikOxQ5Fgt9zxpbHN5GSOFQiqavTuIYA
-         rBeRsffpqdZLyWPHnElGb7f+BilgL+5AhAq52TH29siUpb7ewB9XY2mTdpuJdZuCQfG5
-         5UzSKwUM4Erumq1TMpmE4u6PCmN3iZw1yFlyc3qlKvxIA9M0C3iEoPiKBnVLZKjLEFIE
-         bm5iYkRWa5wGFaE961w6YU04ULJp5Z0YpqQFVyJE0qNhK4IGz84zKqeZITNb7ITn5Nvk
-         Jbig==
-X-Gm-Message-State: AOAM531ORLexdgS22Zj4vbEAEhW1ZBekSR0JjFz4Er2dWPXjW2l03BLy
-        pAcI++4HluBlS70HplSIoIm96IyqAjGl4igyJBpIWA==
-X-Google-Smtp-Source: ABdhPJx0uWPE+mHRbsfaQ2QHd0ZSFRs9zLnEbwP/Zl1FPpJTvIlUyLTOw+ivd5xB2DSTieKirftUU/0t2M1cu4jIdNw=
-X-Received: by 2002:a19:4301:: with SMTP id q1mr10373314lfa.96.1592847154742;
- Mon, 22 Jun 2020 10:32:34 -0700 (PDT)
+        Mon, 22 Jun 2020 13:32:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59846 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729957AbgFVRcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 13:32:54 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 791CB6476C5AEFFEEC27;
+        Tue, 23 Jun 2020 01:32:48 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 23 Jun 2020 01:32:39 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <will@kernel.org>, <robin.murphy@arm.com>
+CC:     <joro@8bytes.org>, <trivial@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <maz@kernel.org>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH 0/4] iommu/arm-smmu-v3: Improve cmdq lock efficiency
+Date:   Tue, 23 Jun 2020 01:28:36 +0800
+Message-ID: <1592846920-45338-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-17-guro@fb.com>
-In-Reply-To: <20200608230654.828134-17-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 22 Jun 2020 10:32:23 -0700
-Message-ID: <CALvZod76FnujSBu50CP_4T=k2P8BEA3aivvF5TyH7f901VKnqw@mail.gmail.com>
-Subject: Re: [PATCH v6 16/19] mm: memcg/slab: remove redundant check in memcg_accumulate_slabinfo()
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
->
-> memcg_accumulate_slabinfo() is never called with a non-root
-> kmem_cache as a first argument, so the is_root_cache(s) check
-> is redundant and can be removed without any functional change.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+As mentioned in [0], the CPU may consume many cycles processing
+arm_smmu_cmdq_issue_cmdlist(). One issue we find is the cmpxchg() loop to
+get space on the queue takes approx 25% of the cycles for this function.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+This series removes that cmpxchg().
+
+For my NVMe test with 3x NVMe SSDs, I'm getting a ~24% throughput
+increase:
+Before: 1310 IOPs
+After: 1630 IOPs
+
+I also have a test harness to check the rate of DMA map+unmaps we can
+achieve:
+
+CPU count	32	64	128
+Before:		63187	19418	10169
+After:		93287	44789	15862
+
+(unit is map+unmaps per CPU per second)
+
+[0] https://lore.kernel.org/linux-iommu/B926444035E5E2439431908E3842AFD24B86DB@DGGEMI525-MBS.china.huawei.com/T/#ma02e301c38c3e94b7725e685757c27e39c7cbde3
+
+John Garry (4):
+  iommu/arm-smmu-v3: Fix trivial typo
+  iommu/arm-smmu-v3: Calculate bits for prod and owner
+  iommu/arm-smmu-v3: Always issue a CMD_SYNC per batch
+  iommu/arm-smmu-v3: Remove cmpxchg() in arm_smmu_cmdq_issue_cmdlist()
+
+ drivers/iommu/arm-smmu-v3.c | 233 +++++++++++++++++++++++-------------
+ 1 file changed, 151 insertions(+), 82 deletions(-)
+
+-- 
+2.26.2
+
