@@ -2,64 +2,127 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB327C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80397C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90120206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5900C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Ar12fiHu";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CcAdmpiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgFVJNX convert rfc822-to-8bit (ORCPT
+        id S1726912AbgFVJNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:13:23 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:57572 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725919AbgFVJNX (ORCPT
+        Mon, 22 Jun 2020 05:13:36 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:56143 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgFVJNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:13:23 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21574153-1500050 
-        for multiple; Mon, 22 Jun 2020 10:13:19 +0100
-Content-Type: text/plain; charset="utf-8"
+        Mon, 22 Jun 2020 05:13:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592817215; x=1624353215;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=Ar12fiHuffRjjjvTshYvvyqYs4aZvIEHmtbMdUhtHFJnaz4+GtAF1pkk
+   dTZu86ybhWtGuA3n96Ezu0zj0hLGnhsS10uDLBuUlGJXNZYFZyeB1vRyS
+   YhZaxklLDlF1cKKQQKQebDqSuVKkBzwA3E2b8dxC1XHfQ351ymsh8wY7t
+   gfJ0z/9Q4xWTN0agcCZACl6BMX+/nAxhWxg92CnXviCTvOzPRZNBmhlaQ
+   puxBoVZSGwGhd2Gv5lhb6SyUSPmJB7aMHEZ46cLN6ujaFs1ArtUvGdbZM
+   wbOjHHFJkj6pwKVqJuMXQ1oqXs7gc5XlqWkkfkMbNVSJk4l7vRmBQicCt
+   g==;
+IronPort-SDR: RrGvQU8q5IGBu6OfzlsLJQQGO5UBH8VfLqulGZGwKNy3F/8ZtyZZWjdhcqfv1seUnd+4sZl1+N
+ fNJHZ/Hxq0iC4PsrzMmQwhzWwCEzrPScoyJP8kqp+JIR0PiH9VSNYpYy2QRmUNGvcFSIGdyu3X
+ Iy7JgQNtfmHK8vJWBt/hMUQ7ucIRPUarJerXjVfA694B1glzuYuuW2MNOnuu7dikmgnTxb7ma1
+ hh8p7hnccA9DI2KubCBP5V+k4VzUlhbS5SoCmZC43M7J5IVg1AlwIZdA8bzTvr5fvUxefQCH+3
+ Dlg=
+X-IronPort-AV: E=Sophos;i="5.75,266,1589212800"; 
+   d="scan'208";a="144914296"
+Received: from mail-co1nam11lp2176.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.176])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Jun 2020 17:13:34 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hYgklLXCzcoLo2S12il7TrYZ3ZnnppfsLke0HCDh8K7dScHA7W66kvFYPnvadM+82cHMb1ZBaxrQtG6jP0sbP3p5WNvpQDJBVL4NZPrrMI4PdbqZo0scUJWKe97tzTzgcuCeFJSNX1DWsd9NRtYRSGQux5hRR0gQmtZzpFxoOvYBxA3+lhJ6Lw3WLEoKqHZwCEzEYBQuUEWr1NEc5yPGHy2crIOC5FuRpFBQcyVjZWQ2W/UaRoJu8pQUoGMKAAMWXLXBSSLG/VHW3JdZ4tDwa75yb5QA9Y8vYCZVmIJASPt8DjqwWm75qyBl9yqyiunuBzygrDbJV3bnyoHcq6wnAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=YhVepdjy9Qvs3DtYp0vnW93kyPE3np69pZmwkIhwHV453F112o34Llns5oc24M/L8Fa0aJwkgeW1hRGZQKrPSNQx7bRbAAdeQVvhq+jzPyj1uKxt1aseIAGE/dtyDzFaFiaCkxMB0MAM/P29OJJEjORorNLlgqYwfCMeInImULWrtP35SNXP31CML1NakbrQsjfpP0TDyxer1ePmklhtU5jMzn6Zl7rfy0u7OMFtSgb44URxh4hmnU9+HqHBtCBxvENItWt5kjVh8R2PMNISMtNvreUZvKXSwnt3051WDNCaEJEixKB1sSelxBMIiavSLNNU/8TuEhkbwOist3enUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=CcAdmpiLTYnajJr+jrR4SxIsukBn27H1K3ylcURULAA7phfMVLds2GkG8Oj/ksbzvKvg14pmqeijqBfzVLo2NV/9nvy5EJ2hNRk/X9E5ekaPmGykZg4cqLRqzu+JwEgZFtffM1bXJvXA99rejDbabL5YiwONqjUtcmnl986L1RY=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB4543.namprd04.prod.outlook.com
+ (2603:10b6:805:a5::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
+ 2020 09:13:33 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 09:13:33 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/10] fs: remove the HAVE_UNLOCKED_IOCTL and
+ HAVE_COMPAT_IOCTL defines
+Thread-Topic: [PATCH 04/10] fs: remove the HAVE_UNLOCKED_IOCTL and
+ HAVE_COMPAT_IOCTL defines
+Thread-Index: AQHWRtLk07J/z97FM0KhM1fAg4IfLQ==
+Date:   Mon, 22 Jun 2020 09:13:33 +0000
+Message-ID: <SN4PR0401MB359820B05E3FADDAD67BDC639B970@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200620071644.463185-1-hch@lst.de>
+ <20200620071644.463185-5-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1597:de01:e494:6330:3987:7eb6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d5308ef6-5a6f-4756-bc92-08d8168c89a2
+x-ms-traffictypediagnostic: SN6PR04MB4543:
+x-microsoft-antispam-prvs: <SN6PR04MB4543A6FE58529EFB4CCD31A99B970@SN6PR04MB4543.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 0442E569BC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HRtWKDwHwNcM6E/CHFMr+PF9ZqWW76NDuTrNZ5UKWjokgS6zZbZhs8TNsf/edQ+xuKOxPUazqH/Zp83wSYXbeEUhGFwdo63KdrKwuFexscP+14o5uHFpgJWILeArszA7dDXZcule5cR4ly+1V4x/GDTpzF8QZsXY8LPkFY9xCdFa+7JSSkTU7+d9PipxnlwYYZDVr9W0nRyF6ehnxOQZr8IUJY/HYLgFOzQHUSDj9pFrR+vQGQZohx/PpJqRACXIfb6Kj3ojg7/IuBYxlqaut3waa+/HLarGGi+PT0EuhdTwyZJr219lEh1kDSYceB+es+XcSuDXhUmprtpOL62y0w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(8936002)(558084003)(478600001)(2906002)(9686003)(8676002)(76116006)(91956017)(66446008)(64756008)(66476007)(33656002)(71200400001)(186003)(66946007)(66556008)(86362001)(19618925003)(55016002)(7696005)(4326008)(6506007)(4270600006)(54906003)(110136005)(5660300002)(316002)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: BtYxPlYzJ9PFlHwyWbNyq6tIDHtrL6qGyIfAYh+w6P1PUfodc43QJl/rigYz5JrZ8RGbKu+e3R+VwpBEB1XIi1qpkwEA44sGovXjFpG53SY2z3n0bSYRolEOn0H/iCLd6OqTNP7h+Hiq2u9/LwW9PNA8mn3DxYnkkjzxFS0/W5oDxgDCSg4S8Ac3NUvmrnFNaQxdU+3BwrLoha8f88cM4beNX/QuaW7tC5t6pdQOh3diDT6p0skVuNknd12qoENuX/r2IQHB5s/piboXt96tePLNDHHj0t3NAbCxr4CkEeCzmGicbQcLV7CK3IIlFZaQ+UEwNdt8ZlwCOXHA/Dgbp0JqoYov/bfKEr+iH4zH+svIRtu+0YJ42BpCZjl7Pu5cXcDz89up5Cd71Paikp4DLm0KcM9sO50JmZHTnt8KKiMCTm7KBoFam35FJSP2PKd9VGKd1XiSrKrRer0e9LgU33SnPE/qYq5HSs9Jj1ahbsn3hszLJEUED/wjIQg7nJeQNGROCWpBC/iVJBUDNB38vKjCJbd1rdgThXtbntavGNXxV9tNECa3rH2VviMXshOt
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200622085258.GA22686@duo.ucw.cz>
-References: <20200622085258.GA22686@duo.ucw.cz>
-To:     Pavel Machek <pavel@ucw.cz>, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        kernel list <linux-kernel@vger.kernel.org>,
-        rodrigo.vivi@intel.com
-Subject: Re: [Intel-gfx] v5.8-rc1 on thinkpad x220, intel graphics: interface frozen, can still switch to text console
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-Message-ID: <159281719363.11575.10607533427539631904@build.alporthouse.com>
-User-Agent: alot/0.8.1
-Date:   Mon, 22 Jun 2020 10:13:13 +0100
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5308ef6-5a6f-4756-bc92-08d8168c89a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 09:13:33.1834
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tzWcFSQkExRGDE9enl8hBoiFrIJxmV/vtl9TabmnM3vnus3g1WVRIDz9EEuI/bkVCJHVwQ4B+3CNghUYlwt8OJPzwp3gwcPc+sJNP7woA3Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4543
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Pavel Machek (2020-06-22 09:52:59)
-> Hi!
-> 
-> Linux duo 5.8.0-rc1+ #117 SMP PREEMPT Mon Jun 15 16:13:54 CEST 2020 x86_64 GNU/Linux
-> 
-> [133747.719711] [  17456]     0 17456     4166      271    65536        0             0 sshd
-> [133747.719718] [  17466]  1000 17466     4166      289    65536        0             0 sshd
-> [133747.719724] [  17468]  1000 17468   433587   303033  2588672        0             0 unison
-> [133747.719730] [  18023]  1000 18023     1316       16    40960        0             0 sleep
-> [133747.719737] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),task=chromium,pid=27368,uid=1000
-> [133747.719795] Out of memory: Killed process 27368 (chromium) total-vm:6686908kB, anon-rss:647056kB, file-rss:0kB, shmem-rss:7452kB, UID:1000 pgtables:5304kB oom_score_adj:300
-> [133747.799893] oom_reaper: reaped process 27368 (chromium), now anon-rss:0kB, file-rss:0kB, shmem-rss:6836kB
-> [136841.820558] i915 0000:00:02.0: [drm] Resetting chip for stopped heartbeat on rcs0
-> [136841.924333] i915 0000:00:02.0: [drm] Xorg[3016] context reset due
-> to GPU hang
-
-If that was the first occurrence it would have pointed to the error
-state containing more information on the cause of the hang.
-Attach /sys/class/drm/card0/error
--Chris
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
