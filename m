@@ -2,130 +2,93 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE12C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE63C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A4F20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285C420716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:33:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ouAAR+rF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgFVMc1 (ORCPT
+        id S1728176AbgFVMdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:32:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:50688 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbgFVMc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:32:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 657271F1;
-        Mon, 22 Jun 2020 05:32:25 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF82F3F71E;
-        Mon, 22 Jun 2020 05:32:23 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 13:32:21 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pranith Kumar <bobby.prani@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:SECURITY SUBSYSTEM" 
-        <linux-security-module@vger.kernel.org>
-Subject: Re: [RFC PATCH] security: Add a config option to disable security
- mitigations
-Message-ID: <20200622123220.5qdykbd3rtjfsjkq@e107158-lin.cambridge.arm.com>
-References: <20200618010755.4179-1-bobby.prani@gmail.com>
+        Mon, 22 Jun 2020 08:33:50 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:50712 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728044AbgFVMdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:33:49 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id BED762E15E0;
+        Mon, 22 Jun 2020 15:33:46 +0300 (MSK)
+Received: from sas2-32987e004045.qloud-c.yandex.net (sas2-32987e004045.qloud-c.yandex.net [2a02:6b8:c08:b889:0:640:3298:7e00])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id HW0XVSmIOX-XjXq6q2p;
+        Mon, 22 Jun 2020 15:33:46 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1592829226; bh=fvyycw4re93HVkcugbpWZ1oaVNue5Odc1T1ODvb5EyM=;
+        h=Message-ID:Date:To:From:Subject;
+        b=ouAAR+rF5wdOu1HwL6djC2b7CCeeKodAkhQm+wq4N7Uyt0RiG5RASQ7OXrcAzXaRR
+         En5DsLTDc7iQfTO20jg9ZkB3ABcIQlmwt8olPhoc1NJg0QLunk+mR+yTtkIYh9w87G
+         IS8TSNNyWvn9wJ1ovBxcpV8mmx4DPIYBqnz6KY1Q=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:14::1:13])
+        by sas2-32987e004045.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id CkFvV9sfDr-Xjl8SaSZ;
+        Mon, 22 Jun 2020 15:33:45 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: [PATCH 1/4] scripts/decode_stacktrace: skip missing symbols
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Mon, 22 Jun 2020 15:33:45 +0300
+Message-ID: <159282922499.248444.4883465570858385250.stgit@buzz>
+User-Agent: StGit/0.22-39-gd257
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200618010755.4179-1-bobby.prani@gmail.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/17/20 18:07, Pranith Kumar wrote:
-> Instead of having to pass 'mitigations=off' on the kernel command line,
-> add a config option that has a similar effect.
-> 
-> Adding this makes it easier to disable mitigations in scenarios where
-> you cannot modify the command line or are unable to pass a command line
-> while booting.
+For now script turns missing symbols into '0' and make bogus decode.
+Skip them instead. Also simplify parsing output of 'nm'.
 
-Better wait to hear from others too, but I think if you want a config, then it
-better support all possible variations of the option too, not just the 'off'
-one.
+Before:
 
-> 
-> Signed-off-by: Pranith Kumar <bobby.prani@gmail.com>
-> ---
->  kernel/cpu.c     | 2 +-
->  security/Kconfig | 8 ++++++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 6ff2578ecf17..584eb39585d6 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -2542,7 +2542,7 @@ early_param("mitigations", mitigations_parse_cmdline);
->  /* mitigations=off */
->  bool cpu_mitigations_off(void)
->  {
-> -	return cpu_mitigations == CPU_MITIGATIONS_OFF;
-> +	return cpu_mitigations == CPU_MITIGATIONS_OFF || IS_ENABLED(CONFIG_DISABLE_MITIGATIONS);
->  }
+$ echo 'xxx+0x0/0x0' | ./scripts/decode_stacktrace.sh vmlinux ""
+xxx (home/khlebnikov/src/linux/./arch/x86/include/asm/processor.h:398)
 
-So if cmdline asked for this to be auto, but the config is compiled with off
-then the config always wins according to this.
+After:
 
-This conflict makes me think this is probably going to be a bad idea because
-2 points of control would create a confusion of which one should be honored.
+$ echo 'xxx+0x0/0x0' | ./scripts/decode_stacktrace.sh vmlinux ""
+xxx+0x0/0x0
 
-You can set the cmdline in the config too, have you tried this?
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ scripts/decode_stacktrace.sh |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-On arm64, I can add additional cmdline paramter in the config
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 66a6d511b524..6ec8d6dff86c 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -56,7 +56,11 @@ parse_symbol() {
+ 	if [[ "${cache[$module,$name]+isset}" == "isset" ]]; then
+ 		local base_addr=${cache[$module,$name]}
+ 	else
+-		local base_addr=$(nm "$objfile" | grep -i ' t ' | awk "/ $name\$/ {print \$1}" | head -n1)
++		local base_addr=$(nm "$objfile" | awk '$3 == "'$name'" && ($2 == "t" || $2 == "T") {print $1; exit}')
++		if [[ $base_addr == "" ]] ; then
++			# address not found
++			return
++		fi
+ 		cache[$module,$name]="$base_addr"
+ 	fi
+ 	# Let's start doing the math to get the exact address into the
 
-	Boot options --> Default kernel command string
-
-On x86 I found this too
-
-	Processor type and features --> Built-in kernel command line
-
-Beside that, you can always use kexec to boot a new kernel with extra cmdline
-option
-
-The command I used in the past (from memory, so worth double checking)
-
-	kexec --command-line "$(cat /proc/cmdline) migrations=off" -f Image
-
->  EXPORT_SYMBOL_GPL(cpu_mitigations_off);
->  
-> diff --git a/security/Kconfig b/security/Kconfig
-> index cd3cc7da3a55..90b8e9c89a6d 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -65,6 +65,14 @@ config PAGE_TABLE_ISOLATION
->  
->  	  See Documentation/x86/pti.rst for more details.
->  
-> +config DISABLE_MITIGATIONS
-> +	bool "Disable kernel security mitigations"
-> +	default n
-
-No need for default n in general as it is the default anyway :)
-
-HTH.
-
-Thanks
-
---
-Qais Yousef
