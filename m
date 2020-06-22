@@ -2,199 +2,182 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0800C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A71C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A2720767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27D92076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:26:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+NZ8mdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgFVQ0U (ORCPT
+        id S1729813AbgFVQ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:26:20 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:37924 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729696AbgFVQ0S (ORCPT
+        Mon, 22 Jun 2020 12:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729414AbgFVQ0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:26:18 -0400
-Received: by mail-io1-f70.google.com with SMTP id l13so523959ioj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:26:16 -0700 (PDT)
+        Mon, 22 Jun 2020 12:26:16 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE37EC061573;
+        Mon, 22 Jun 2020 09:26:15 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id i14so224787ejr.9;
+        Mon, 22 Jun 2020 09:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRSeEGx+iywHLMnsI0Db78lh59FwNXwM+BHCFN43KFc=;
+        b=f+NZ8mdCqpTVLxe0XpcWX6E7uh+0QvDFVNbCU9PB5B4i5e02vkxaxW+aSFXxz5fIHW
+         pScwkQjC7YTqsVUwQbbjNTS0MAXhFigofiYrVWF31kSDTVZn9O8g5lUSCWyfkSAQ5coT
+         Xk1tDsPBAuOVtRD71vCjMQsQH3Jz9HljxZetviSYdJK00R9Sb9dK41zOn3U2Po79yBBQ
+         LxWsPsyl11fMbopq2gFSVevQfbZPIW1bkubUuu7gmztEmfNV/aC1wcWCbitTEJxlGoCi
+         Vd2XkiVBy3Dd9S3j2NiTk7qkrN+rmsM5gbNlFGfwqBLPQz7CElMHttc4ZS+IyoniuSpg
+         wheg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cyZIF2H3aZtPptScOAlkeBePbmCsuB1UBF8HW0TTVUY=;
-        b=W1dSPNDY82/PtvaCQFQ7O752cYiRRD/ZzIi7Mokb6I6NLv9yHwGYhk7zvR5v7xCDvH
-         6higqeO5VDW6CUyeqsvyRwh/I2wdvygxBswvk7N56EhKeZWAK6p09fN0NpwDOnDsO49p
-         1UZYqsP4O3VnyAHJWW5IcQzuagNyNQsG61TOXx8WdG6PsvAw4ckq/bxtDxncu7vFIk5R
-         gUg2zLr6dJ9FBOq6TFHGsMGEtMbD8x4aerh71H5D7vlSNH6mGHFjrNO/oe/qx+xhN37a
-         IvDXaWalLHdSonD2zPCjsghwg0RCadwIupy/iqLTEIjTqtYFvDDrZ18GtIzsUE/ytvEV
-         XAtA==
-X-Gm-Message-State: AOAM53197ESUt51SmH/GQmq/PTRiBn0sojjLmX5stygTGq88mqnt/UfZ
-        0Vhi8kp8PMD9+rG8zcLE3l9umhYhyNM3to92Gzoo3Vw4jI9m
-X-Google-Smtp-Source: ABdhPJzITwe4jo35y6Eyr/qfMjz1XRwKjxWX3nuFeeThepVTl89xSbaXQ+KuyGv8PjGf47gJ3ptDg3s++/wMo40l9Kyu3ZDIudV6
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRSeEGx+iywHLMnsI0Db78lh59FwNXwM+BHCFN43KFc=;
+        b=Jhduz6V/KB+6kU+FbTGSjO/YfDQLJucbBx3qmPLJVxc2T2mCiUSVDQ+HNeRaRCrfPq
+         N6eK7XhYDtNF3M4TuQKphIEMJlDeohjR4rxL1L2cQeiWyhsJSzqO7fn+YfE/NRsHVHFL
+         xNZGscSiE6aXAcAafpC6mTBXZTjPYGzqjALWf/vh5wCFR99i2VPEiyUCFQY99ge6nJYp
+         3t637ZzbfXzl/A4Oi8RFrFxN27gKkzO7YfPmjZKeTdmYRe2zl+lZDlC0NkMfsKEX1rol
+         GFU0cTCFMqE43OCGkdptajh4rx/krDXnNmyIMI4x6OENETWE9JEFFpKJfs1D33PEHae4
+         +s8Q==
+X-Gm-Message-State: AOAM5305VIYJsuuHRAjK4711Kd5zg9X0SqA9JMjBnwT5A9Bg8LdT+N3C
+        9BjGCUggVEUy7inxaTnPJ0g=
+X-Google-Smtp-Source: ABdhPJwR1x0eenUZ7pJJzQxRie8s6Q1SAZSIMaSKDxT+sCSr1QeFQ5qBZAPEp1gWydFVNWHfkV+PKg==
+X-Received: by 2002:a17:906:e298:: with SMTP id gg24mr16183015ejb.120.1592843174601;
+        Mon, 22 Jun 2020 09:26:14 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:74f4:a0e9:488b:65c7])
+        by smtp.gmail.com with ESMTPSA id p6sm11948424ejb.71.2020.06.22.09.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 09:26:14 -0700 (PDT)
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] spi: fsl: add missing __iomem annotation
+Date:   Mon, 22 Jun 2020 18:26:11 +0200
+Message-Id: <20200622162611.83694-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:1496:: with SMTP id 144mr12910815iou.6.1592843175940;
- Mon, 22 Jun 2020 09:26:15 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 09:26:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000af56a105a8aeb369@google.com>
-Subject: KMSAN: uninit-value in hash_net6_add
-From:   syzbot <syzbot+5d32b2edaf5048e61de0@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        glider@google.com, jeremy@azazel.net, kadlec@netfilter.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The field mspi->reg_base is annotated as an __iomem pointer. Good.
 
-syzbot found the following crash on:
+However, this field is often assigned to a temporary variable:
+before being used. For example:
+	struct fsl_spi_reg *reg_base = mspi->reg_base;
 
-HEAD commit:    f0d5ec90 kmsan: apply __no_sanitize_memory to dotraplinkag..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=172113cd100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=86e4f8af239686c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=5d32b2edaf5048e61de0
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+But this variable is missing the __iomem annotation.
+So, add the missing __iomem and make sparse & the bot happier.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5d32b2edaf5048e61de0@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in __read_once_size include/linux/compiler.h:206 [inline]
-BUG: KMSAN: uninit-value in hash_net6_add+0x14f9/0x40c0 net/netfilter/ipset/ip_set_hash_gen.h:892
-CPU: 0 PID: 828 Comm: syz-executor.2 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- __read_once_size include/linux/compiler.h:206 [inline]
- hash_net6_add+0x14f9/0x40c0 net/netfilter/ipset/ip_set_hash_gen.h:892
- hash_net6_uadt+0xab6/0xd80 net/netfilter/ipset/ip_set_hash_net.c:343
- call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1732
- ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1820
- ip_set_uadd+0xf6/0x110 net/netfilter/ipset/ip_set_core.c:1845
- nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2469
- nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2362
- ___sys_sendmsg net/socket.c:2416 [inline]
- __sys_sendmsg+0x623/0x750 net/socket.c:2449
- __do_sys_sendmsg net/socket.c:2458 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2456
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2456
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca59
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f55d9193c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004fe420 RCX: 000000000045ca59
-RDX: 0000000000000000 RSI: 00000000200002c0 RDI: 0000000000000003
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000946 R14: 00000000004cc0e0 R15: 00007f55d91946d4
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
- ip6_netmask include/linux/netfilter/ipset/pfxlen.h:49 [inline]
- hash_net6_uadt+0x9a8/0xd80 net/netfilter/ipset/ip_set_hash_net.c:334
- call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1732
- ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1820
- ip_set_uadd+0xf6/0x110 net/netfilter/ipset/ip_set_core.c:1845
- nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2469
- nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2362
- ___sys_sendmsg net/socket.c:2416 [inline]
- __sys_sendmsg+0x623/0x750 net/socket.c:2449
- __do_sys_sendmsg net/socket.c:2458 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2456
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2456
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- ip_set_get_ipaddr6+0x26a/0x300 net/netfilter/ipset/ip_set_core.c:325
- hash_net6_uadt+0x4a6/0xd80 net/netfilter/ipset/ip_set_hash_net.c:320
- call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1732
- ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1820
- ip_set_uadd+0xf6/0x110 net/netfilter/ipset/ip_set_core.c:1845
- nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2469
- nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2362
- ___sys_sendmsg net/socket.c:2416 [inline]
- __sys_sendmsg+0x623/0x750 net/socket.c:2449
- __do_sys_sendmsg net/socket.c:2458 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2456
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2456
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2802 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4436
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
- netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1893
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2362
- ___sys_sendmsg net/socket.c:2416 [inline]
- __sys_sendmsg+0x623/0x750 net/socket.c:2449
- __do_sys_sendmsg net/socket.c:2458 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2456
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2456
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
-
-
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/spi/spi-fsl-spi.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 67f022b8c81d..299e9870cf58 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -90,7 +90,7 @@ static void fsl_spi_change_mode(struct spi_device *spi)
+ {
+ 	struct mpc8xxx_spi *mspi = spi_master_get_devdata(spi->master);
+ 	struct spi_mpc8xxx_cs *cs = spi->controller_state;
+-	struct fsl_spi_reg *reg_base = mspi->reg_base;
++	struct fsl_spi_reg __iomem *reg_base = mspi->reg_base;
+ 	__be32 __iomem *mode = &reg_base->mode;
+ 	unsigned long flags;
+ 
+@@ -291,7 +291,7 @@ static int fsl_spi_cpu_bufs(struct mpc8xxx_spi *mspi,
+ 				struct spi_transfer *t, unsigned int len)
+ {
+ 	u32 word;
+-	struct fsl_spi_reg *reg_base = mspi->reg_base;
++	struct fsl_spi_reg __iomem *reg_base = mspi->reg_base;
+ 
+ 	mspi->count = len;
+ 
+@@ -309,7 +309,7 @@ static int fsl_spi_bufs(struct spi_device *spi, struct spi_transfer *t,
+ 			    bool is_dma_mapped)
+ {
+ 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(spi->master);
+-	struct fsl_spi_reg *reg_base;
++	struct fsl_spi_reg __iomem *reg_base;
+ 	unsigned int len = t->len;
+ 	u8 bits_per_word;
+ 	int ret;
+@@ -440,7 +440,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ static int fsl_spi_setup(struct spi_device *spi)
+ {
+ 	struct mpc8xxx_spi *mpc8xxx_spi;
+-	struct fsl_spi_reg *reg_base;
++	struct fsl_spi_reg __iomem *reg_base;
+ 	int retval;
+ 	u32 hw_mode;
+ 	struct spi_mpc8xxx_cs *cs = spi_get_ctldata(spi);
+@@ -495,7 +495,7 @@ static void fsl_spi_cleanup(struct spi_device *spi)
+ 
+ static void fsl_spi_cpu_irq(struct mpc8xxx_spi *mspi, u32 events)
+ {
+-	struct fsl_spi_reg *reg_base = mspi->reg_base;
++	struct fsl_spi_reg __iomem *reg_base = mspi->reg_base;
+ 
+ 	/* We need handle RX first */
+ 	if (events & SPIE_NE) {
+@@ -530,7 +530,7 @@ static irqreturn_t fsl_spi_irq(s32 irq, void *context_data)
+ 	struct mpc8xxx_spi *mspi = context_data;
+ 	irqreturn_t ret = IRQ_NONE;
+ 	u32 events;
+-	struct fsl_spi_reg *reg_base = mspi->reg_base;
++	struct fsl_spi_reg __iomem *reg_base = mspi->reg_base;
+ 
+ 	/* Get interrupt events(tx/rx) */
+ 	events = mpc8xxx_spi_read_reg(&reg_base->event);
+@@ -550,7 +550,7 @@ static irqreturn_t fsl_spi_irq(s32 irq, void *context_data)
+ static void fsl_spi_grlib_cs_control(struct spi_device *spi, bool on)
+ {
+ 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(spi->master);
+-	struct fsl_spi_reg *reg_base = mpc8xxx_spi->reg_base;
++	struct fsl_spi_reg __iomem *reg_base = mpc8xxx_spi->reg_base;
+ 	u32 slvsel;
+ 	u16 cs = spi->chip_select;
+ 
+@@ -568,7 +568,7 @@ static void fsl_spi_grlib_probe(struct device *dev)
+ 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+ 	struct spi_master *master = dev_get_drvdata(dev);
+ 	struct mpc8xxx_spi *mpc8xxx_spi = spi_master_get_devdata(master);
+-	struct fsl_spi_reg *reg_base = mpc8xxx_spi->reg_base;
++	struct fsl_spi_reg __iomem *reg_base = mpc8xxx_spi->reg_base;
+ 	int mbits;
+ 	u32 capabilities;
+ 
+@@ -594,7 +594,7 @@ static struct spi_master *fsl_spi_probe(struct device *dev,
+ 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+ 	struct spi_master *master;
+ 	struct mpc8xxx_spi *mpc8xxx_spi;
+-	struct fsl_spi_reg *reg_base;
++	struct fsl_spi_reg __iomem *reg_base;
+ 	u32 regval;
+ 	int ret = 0;
+ 
+
+base-commit: 48778464bb7d346b47157d21ffde2af6b2d39110
+-- 
+2.27.0
+
