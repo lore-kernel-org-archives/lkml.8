@@ -2,139 +2,163 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C768C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C7A206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F98206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:45:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUtwn2A8"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EUOcYlug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgFVKpA (ORCPT
+        id S1727873AbgFVKpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:45:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59173 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgFVKo7 (ORCPT
+        Mon, 22 Jun 2020 06:45:38 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:33345 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727040AbgFVKpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:44:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592822697;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bd6LBfF9XDzhgzHssZPSe+Lg08kndjqNduL115ZBJfw=;
-        b=OUtwn2A8AKlen5Py0TTiKV8rDITUrAP3LgQJQWn2sjtsEIScpICL8oWCifQK0QGeQ7VL2s
-        is4b6aHLwk9LBVNWnNjLSGqYn+o0A5PfDgheUuSPF1gDaMX21eqeuRkyLHou6EFLf5vEdb
-        AQ1DkvVMn5odd6NT/Uh5zI9or5nhQq4=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-C9mPxLFGMlmXkgHNwDcgZw-1; Mon, 22 Jun 2020 06:44:54 -0400
-X-MC-Unique: C9mPxLFGMlmXkgHNwDcgZw-1
-Received: by mail-qk1-f200.google.com with SMTP id i62so3336657qkd.18
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:44:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bd6LBfF9XDzhgzHssZPSe+Lg08kndjqNduL115ZBJfw=;
-        b=nj5lRJ/c72ZsQH/zwp6ZVumQprByKxL3NxSQHuFDIaDfchkENTw+zc60VsHpkWzMCW
-         7Y1web5kRCVj8UhPe0EXzUzhBFQRFxeSGueIPaRw0TMFSCl2oz8rYbzjVGGQEHp+QdlS
-         soulb3L436kOA4NreROTMPTfJ8q7KV/D244IH8oe5FrURPEU1UuxxSX1Isc/y3LaI11C
-         EtLt+y6ue6PCW1Otu+zuH+0W9SnkXHoHncXP6j7vKYXDRZElkU9HgiZZTDhqCatkyyeq
-         ZOLhjqcIEk8znPSkLdZ1ZYPQrC5IE23dR8TzikWZaAwlwBdTthwaJqxjbw8Mp2aVF2pB
-         Aj5A==
-X-Gm-Message-State: AOAM530jnh+GYi2UcM9p7jHxWnD8yJUFfv0Au9AsQcKIZkiyrgwstM6w
-        0h1BESGaWIZE7FwryzBzjsqeujTLZi2bK7509u/NDSsRu9TIOV0kjmLzCcZcJcaz6Nwrj1CtkbB
-        6KbNKSSJmCLHb+dC5ZaxKjEupgibLAKJlUMjg1mee
-X-Received: by 2002:a37:65cc:: with SMTP id z195mr3486052qkb.89.1592822694164;
-        Mon, 22 Jun 2020 03:44:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyvnEcVAiDygOEo8OJvdbTYJXbYK5OuvbLC8XhYldjJDXeH7okBCt6wSTRbluvWc7hxWfBdRNbg+6gCp7JsIUc=
-X-Received: by 2002:a37:65cc:: with SMTP id z195mr3486036qkb.89.1592822693924;
- Mon, 22 Jun 2020 03:44:53 -0700 (PDT)
+        Mon, 22 Jun 2020 06:45:38 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id nJx5j1DAgn3JWnJx8jZqbi; Mon, 22 Jun 2020 12:45:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1592822735; bh=K6dDGbPeZnB4V7J7X8liUUoj+zo4D+OAMLsTP5S9VG0=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=EUOcYlugfhEZH4PUDGfvhPmDuKTAX0LMpu1yII4FUeP5ReW9fbj6nhj8g50KzWa6h
+         tyWOqo7RIdFWhMpc9vgY8YaNC3iGXBSNvCsZW75iINEGMJlcbpSLzMG1b4+V0QmKMB
+         pr8exVkE7OkPDXjgcOgAykp6YhX6q8cOhMilf5oeeA/Fqc3XZvtwJrIoO/a8KEW8hQ
+         00csB9E0zZLk/kHJ34UsayMsGxUo6PwWDAjKKE6M9NBRPiiZDn8n+rJzjjDqYsWLwh
+         FN/fB0W9hGIj+F+LHXIxuOG1E4dgANhp7zCsSgs5bQen1BRpt1dxlikbC9y41O6sVt
+         NsfWtE/GObhrA==
+Subject: Re: [PATCH v3 1/2] media: tpg: Add function to return colors' order
+ of test image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20200618190506.11892-1-kgupta@es.iitr.ac.in>
+ <20200618190506.11892-2-kgupta@es.iitr.ac.in>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8268357e-6b47-a11c-c00f-3c8fa0582a7d@xs4all.nl>
+Date:   Mon, 22 Jun 2020 12:45:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200611113404.17810-1-mst@redhat.com> <20200611113404.17810-3-mst@redhat.com>
- <20200611152257.GA1798@char.us.oracle.com> <CAJaqyWdwXMX0JGhmz6soH2ZLNdaH6HEdpBM8ozZzX9WUu8jGoQ@mail.gmail.com>
- <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com> <b6347dad-89e8-61f6-6394-65c301f91dd7@redhat.com>
-In-Reply-To: <b6347dad-89e8-61f6-6394-65c301f91dd7@redhat.com>
-From:   Eugenio Perez Martin <eperezma@redhat.com>
-Date:   Mon, 22 Jun 2020 12:44:17 +0200
-Message-ID: <CAJaqyWdo1J-EoGUj3e2jM6USo0SEOM3xydoaYMhta0Y_YPyS_g@mail.gmail.com>
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200618190506.11892-2-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBGEHq4TD8y/cZBxbGCbRynvE5tYPNrCmi3CFgjYWZW2cb8zM7Ou+MCIat4poGCWSWFl6elS+Af/3aeQTY9P+lUvLX9+TUAfW9YXZ01nct6ffdWi8LRB
+ UbhOuFHQO+IqWJRoBVIvvvil2ees4It0CeOK+WSaP+77dMfqkUzIHzgxzibkLC+yr+S9Zd9J2pGskgxZDXOScDR7K2rIMsX23AWIEpScGs1qDYlOFsJtMqCg
+ XTtOjD+tEDi9MHbYA0tq+Ho7g/TEoKJRqIurDboVEJH+jjKxbQXJFOuPQM4y069H48fkVoMC/vXkD6YAi6J8dpwrHWGFnya5jj7v/8PJLGTJ0AepS+9PMEeM
+ xBGkSR/kQqoopQvTZuT0esUq5nymIjh+aCrkiu1Is4ztbpQmTA4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:07 AM Jason Wang <jasowang@redhat.com> wrote:
->
->
-> On 2020/6/20 =E4=B8=8A=E5=8D=882:07, Eugenio Perez Martin wrote:
-> > On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
-> > <eperezma@redhat.com> wrote:
-> >> On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
-> >> <konrad.wilk@oracle.com> wrote:
-> >>> On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
-> >>>> As testing shows no performance change, switch to that now.
-> >>> What kind of testing? 100GiB? Low latency?
-> >>>
-> >> Hi Konrad.
-> >>
-> >> I tested this version of the patch:
-> >> https://lkml.org/lkml/2019/10/13/42
-> >>
-> >> It was tested for throughput with DPDK's testpmd (as described in
-> >> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html)
-> >> and kernel pktgen. No latency tests were performed by me. Maybe it is
-> >> interesting to perform a latency test or just a different set of tests
-> >> over a recent version.
-> >>
-> >> Thanks!
-> > I have repeated the tests with v9, and results are a little bit differe=
-nt:
-> > * If I test opening it with testpmd, I see no change between versions
-> > * If I forward packets between two vhost-net interfaces in the guest
-> > using a linux bridge in the host:
-> >    - netperf UDP_STREAM shows a performance increase of 1.8, almost
-> > doubling performance. This gets lower as frame size increase.
-> >    - rests of the test goes noticeably worse: UDP_RR goes from ~6347
-> > transactions/sec to 5830
-> >    - TCP_STREAM goes from ~10.7 gbps to ~7Gbps
->
->
-> Which direction did you mean here? Guest TX or RX?
+On 18/06/2020 21:05, Kaaira Gupta wrote:
+> Currently there is no method to know the correct order of the colors for
+> a test image generated by tpg. Write a function that returns a string of
+> colors' order given a tpg. It returns a NULL pointer in case of test
+> patterns which do not have a well defined colors' order. Hence add a
+> NULL check for text in tpg_gen_text().
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> ---
+>  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 32 +++++++++++++++++--
+>  include/media/tpg/v4l2-tpg.h                  |  1 +
+>  2 files changed, 31 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> index 50f1e0b28b25..31e6044a4104 100644
+> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> @@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+>  	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
+>  	unsigned div = step;
+>  	unsigned first = 0;
+> -	unsigned len = strlen(text);
+> +	unsigned len;
+>  	unsigned p;
+>  
+> -	if (font8x16 == NULL || basep == NULL)
+> +	if (font8x16 == NULL || basep == NULL || text == NULL)
+>  		return;
+>  
+> +	len = strlen(text);
+> +
+>  	/* Checks if it is possible to show string */
+>  	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
+>  		return;
+> @@ -2006,6 +2008,32 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+>  }
+>  EXPORT_SYMBOL_GPL(tpg_gen_text);
+>  
+> +char *tpg_g_color_order(const struct tpg_data *tpg)
 
-Hi Jason.
+This returns a const char *.
 
-For both I created a linux bridge in the host, attach two guest
-interfaces with vhost-net, and make the netperf run on them.
+> +{
+> +	#define COLORBAR(order) #order "white, yellow, cyan, green, magenta, red, blue, black"
+> +
+> +	switch (tpg->pattern) {
+> +	case TPG_PAT_75_COLORBAR:
+> +	case TPG_PAT_100_COLORBAR:
+> +	case TPG_PAT_CSC_COLORBAR:
+> +		return COLORBAR(Left to right:);
+> +	case TPG_PAT_100_HCOLORBAR:
 
->
->
-> >    - TCP_RR from 6223.64 transactions/sec to 5739.44
->
->
-> Perf diff might help. I think we can start from the RR result which
-> should be easier. Maybe you can test it for each patch then you may see
-> which patch is the source of the regression.
->
+Just combine this with the other and just return the sequence:
 
-Ok, I will look for differences.
+		return "White, Yellow, Cyan, Green, Magenta, Red, Blue, Black";
 
-Thanks!
+It's obvious from the pattern that three are from left to right and one is from
+top to bottom. No need to mention that here.
 
-> Thanks
->
+Regards,
+
+	Hans
+
+> +		return COLORBAR(Top to bottom:);
+> +	case TPG_PAT_BLACK:
+> +		return "Black";
+> +	case TPG_PAT_WHITE:
+> +		return "White";
+> +	case TPG_PAT_RED:
+> +		return "Red";
+> +	case TPG_PAT_GREEN:
+> +		return "Green";
+> +	case TPG_PAT_BLUE:
+> +		return "Blue";
+> +	default:
+> +		return NULL;
+> +	}
+> +}
+> +
+>  void tpg_update_mv_step(struct tpg_data *tpg)
+>  {
+>  	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
+> diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
+> index eb191e85d363..4f79cac87b85 100644
+> --- a/include/media/tpg/v4l2-tpg.h
+> +++ b/include/media/tpg/v4l2-tpg.h
+> @@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
+>  bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
+>  void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
+>  		const struct v4l2_rect *compose);
+> +char *tpg_g_color_order(const struct tpg_data *tpg);
+>  
+>  static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
+>  {
+> 
 
