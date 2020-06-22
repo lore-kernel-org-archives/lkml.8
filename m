@@ -2,39 +2,40 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABFA0206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54C8206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgFVUUi (ORCPT
+        id S1730233AbgFVUUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:20:38 -0400
+        Mon, 22 Jun 2020 16:20:40 -0400
 Received: from mga07.intel.com ([134.134.136.100]:62017 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbgFVUUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:20:37 -0400
-IronPort-SDR: rpPC6FH9qWpRYypU/6l+4vVDhStTbgIYVyScAsZrdFpD1A1LCVjQUOBC+1g+78SJCR6VHy3L1z
- QRSbqRz5Udiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209057474"
+        id S1728405AbgFVUUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:20:38 -0400
+IronPort-SDR: 14EiUioMudJk2WbJSp9pqKN4X/69z+8m7SSKyPS0oh9BekVlPRGZeexSWErxh+7c+O/4i9mM65
+ D31X2qgIrGlw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209057478"
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="209057474"
+   d="scan'208";a="209057478"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:20:36 -0700
-IronPort-SDR: IIknzzp2CyZi4jR/40NntXy9138dMaGyEd1yeTT7VXR8VLoz6c8hb1nfpUfRP1ZHEwfK0e6wZN
- 9eKCRXf06pkw==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:20:37 -0700
+IronPort-SDR: hzneaYKWdbFqDgO86FFAqkfHdm3eXSQgVqOEziU3h1Vc8K7wRn2HYICMYNdFzV6k4+RCtHluyK
+ jC2j5GXmFsqA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="478506313"
+   d="scan'208";a="478506327"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Jun 2020 13:20:36 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 22 Jun 2020 13:20:37 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -43,10 +44,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] KVM: x86/mmu: Files and sp helper cleanups
-Date:   Mon, 22 Jun 2020 13:20:28 -0700
-Message-Id: <20200622202034.15093-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 2/6] KVM: x86/mmu: Move kvm_mmu_available_pages() into mmu.c
+Date:   Mon, 22 Jun 2020 13:20:30 -0700
+Message-Id: <20200622202034.15093-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200622202034.15093-1-sean.j.christopherson@intel.com>
+References: <20200622202034.15093-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,32 +57,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move more files to the mmu/ directory, and an mmu_internal.h to share
-stuff amongst the mmu/ files, and clean up the helpers for retrieving a
-shadow page from a sptep and/or hpa.
+Move kvm_mmu_available_pages() from mmu.h to mmu.c, it has a single
+caller and has no business being exposed via mmu.h.
 
-Sean Christopherson (6):
-  KVM: x86/mmu: Move mmu_audit.c and mmutrace.h into the mmu/
-    sub-directory
-  KVM: x86/mmu: Move kvm_mmu_available_pages() into mmu.c
-  KVM: x86/mmu: Add MMU-internal header
-  KVM: x86/mmu: Make kvm_mmu_page definition and accessor internal-only
-  KVM: x86/mmu: Add sptep_to_sp() helper to wrap shadow page lookup
-  KVM: x86/mmu: Rename page_header() to to_shadow_page()
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu.h     | 9 ---------
+ arch/x86/kvm/mmu/mmu.c | 9 +++++++++
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
- arch/x86/include/asm/kvm_host.h    | 46 +---------------------
- arch/x86/kvm/mmu.h                 | 13 ------
- arch/x86/kvm/mmu/mmu.c             | 58 +++++++++++++++------------
- arch/x86/kvm/{ => mmu}/mmu_audit.c | 12 +++---
- arch/x86/kvm/mmu/mmu_internal.h    | 63 ++++++++++++++++++++++++++++++
- arch/x86/kvm/{ => mmu}/mmutrace.h  |  2 +-
- arch/x86/kvm/mmu/page_track.c      |  2 +-
- arch/x86/kvm/mmu/paging_tmpl.h     |  4 +-
- 8 files changed, 108 insertions(+), 92 deletions(-)
- rename arch/x86/kvm/{ => mmu}/mmu_audit.c (96%)
- create mode 100644 arch/x86/kvm/mmu/mmu_internal.h
- rename arch/x86/kvm/{ => mmu}/mmutrace.h (99%)
-
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 0ad06bfe2c2c..d46944488e72 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -64,15 +64,6 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
+ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
+ 				u64 fault_address, char *insn, int insn_len);
+ 
+-static inline unsigned long kvm_mmu_available_pages(struct kvm *kvm)
+-{
+-	if (kvm->arch.n_max_mmu_pages > kvm->arch.n_used_mmu_pages)
+-		return kvm->arch.n_max_mmu_pages -
+-			kvm->arch.n_used_mmu_pages;
+-
+-	return 0;
+-}
+-
+ static inline int kvm_mmu_reload(struct kvm_vcpu *vcpu)
+ {
+ 	if (likely(vcpu->arch.mmu->root_hpa != INVALID_PAGE))
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index fdd05c233308..1b4d45b8f462 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -2825,6 +2825,15 @@ static bool prepare_zap_oldest_mmu_page(struct kvm *kvm,
+ 	return kvm_mmu_prepare_zap_page(kvm, sp, invalid_list);
+ }
+ 
++static inline unsigned long kvm_mmu_available_pages(struct kvm *kvm)
++{
++	if (kvm->arch.n_max_mmu_pages > kvm->arch.n_used_mmu_pages)
++		return kvm->arch.n_max_mmu_pages -
++			kvm->arch.n_used_mmu_pages;
++
++	return 0;
++}
++
+ static int make_mmu_pages_available(struct kvm_vcpu *vcpu)
+ {
+ 	LIST_HEAD(invalid_list);
 -- 
 2.26.0
 
