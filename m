@@ -2,95 +2,104 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A795CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 125F92463D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930DE207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731023AbgFVCFP (ORCPT
+        id S1731036AbgFVCGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 22:05:15 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2525 "EHLO huawei.com"
+        Sun, 21 Jun 2020 22:06:00 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:9664 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726602AbgFVCFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 22:05:14 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 5E7D43C679A44B4457E8;
-        Mon, 22 Jun 2020 10:05:09 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Mon, 22 Jun 2020 10:05:07 +0800
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Mon, 22 Jun 2020 10:05:07 +0800
-Subject: Re: [PATCH net-next v1 5/5] hinic: add support to get eeprom
- information
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-References: <20200620094258.13181-1-luobin9@huawei.com>
- <20200620094258.13181-6-luobin9@huawei.com> <20200620160038.GQ304147@lunn.ch>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <14f91738-ae07-f56d-bf77-1cedb6d842d6@huawei.com>
-Date:   Mon, 22 Jun 2020 10:05:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20200620160038.GQ304147@lunn.ch>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+        id S1731026AbgFVCF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 22:05:59 -0400
+Received: from localhost.localdomain (unknown [210.32.144.65])
+        by mail-app3 (Coremail) with SMTP id cC_KCgDnEnjhEfBeyJcJAQ--.40864S4;
+        Mon, 22 Jun 2020 10:05:25 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Dejin Zheng <zhengdejin5@gmail.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: sprd: Fix runtime PM imbalance on error
+Date:   Mon, 22 Jun 2020 10:05:18 +0800
+Message-Id: <20200622020520.5334-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgDnEnjhEfBeyJcJAQ--.40864S4
+X-Coremail-Antispam: 1UD129KBjvJXoWrKrWrZF17ur48GF48JF1xGrg_yoW8JrWrpr
+        W0gF90kFW7XrZagF4DArsxXFy5W3yft3y5JFWjk3WfZFs8X3Wktr45JF1FqF48JrWkJF4f
+        Jw4qya9xCFy0yF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9v1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r4UMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
+        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbpwZ7UUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcQBlZdtOvMDgAIsN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/21 0:00, Andrew Lunn wrote:
->> +static int hinic_get_module_eeprom(struct net_device *netdev,
->> +				   struct ethtool_eeprom *ee, u8 *data)
->> +{
->> +	struct hinic_dev *nic_dev = netdev_priv(netdev);
->> +	u8 sfp_data[STD_SFP_INFO_MAX_SIZE];
-> 
-> sfp_data will contain whatever is on the stack.
-> 
->> +	u16 len;
->> +	int err;
->> +
->> +	if (!ee->len || ((ee->len + ee->offset) > STD_SFP_INFO_MAX_SIZE))
->> +		return -EINVAL;
->> +
->> +	memset(data, 0, ee->len);
-> 
-> This clears what you are going to return.
-> 
->> +
->> +	err = hinic_get_sfp_eeprom(nic_dev->hwdev, sfp_data, &len);
-> 
-> Upto len bytes of sfp_data now contain useful data. The rest of
-> sfp_data is still stack data.
-> 
-> 
->> +	if (err)
->> +		return err;
->> +
->> +	memcpy(data, sfp_data + ee->offset, ee->len);
-> 
-> If len < ee->len, you have just returned to user space some stack data.
-> 
->    Andrew
-> .
-> 
-The whole sfp_data will be assigned values in hinic_get_sfp_eeprom function,
-so stack data won't be returned to user space. Thanks for your review.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a corresponding decrement is
+needed on the error handling path to keep the counter balanced.
+
+Fix this by adding the missed function call.
+
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/i2c/busses/i2c-sprd.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
+index 19cda6742423..675f72a3fd60 100644
+--- a/drivers/i2c/busses/i2c-sprd.c
++++ b/drivers/i2c/busses/i2c-sprd.c
+@@ -285,8 +285,10 @@ static int sprd_i2c_master_xfer(struct i2c_adapter *i2c_adap,
+ 	int im, ret;
+ 
+ 	ret = pm_runtime_get_sync(i2c_dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(i2c_dev->dev);
+ 		return ret;
++	}
+ 
+ 	for (im = 0; im < num - 1; im++) {
+ 		ret = sprd_i2c_handle_msg(i2c_adap, &msgs[im], 0);
+@@ -571,8 +573,10 @@ static int sprd_i2c_remove(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(i2c_dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(i2c_dev->dev);
+ 		return ret;
++	}
+ 
+ 	i2c_del_adapter(&i2c_dev->adap);
+ 	clk_disable_unprepare(i2c_dev->clk);
+-- 
+2.17.1
+
