@@ -2,128 +2,142 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4482C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E15C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E09A206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8071A206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 03:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNeqMFnC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="blZfhzi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731175AbgFVDKa (ORCPT
+        id S1731190AbgFVDKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 23:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbgFVDK3 (ORCPT
+        Sun, 21 Jun 2020 23:10:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35978 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgFVDKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 23:10:29 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48A8C061794;
-        Sun, 21 Jun 2020 20:10:28 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id a6so3545909wmm.0;
-        Sun, 21 Jun 2020 20:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KaJJanZVJWZSvXqCSXtZ01YBvvSbfqMJxJAq4m8RlJ4=;
-        b=VNeqMFnCbwSDhvSCFusejCiUhY+v5LZqCDBVNZje9D1IEEtEkcxeteRTy8tVy9l+mx
-         vSRdmMpsr3gi37oT2S1aG4EoNGUD3BzIue7rxm9mwxva/939hEnI80BYzJZ9Za701Y1Y
-         5tc3Y6TURIOCEG4KTQzvj2d0Qe+hJo4l8fEiKGSKhyZkOJpgetkLOFazmrN/m0NYtTUa
-         j/Uc1ICNpneSm8ibtkR5Xwd0xsszxwgegINScmDJAEe2onCrZAwv9M4y914h7kQBUwIq
-         RQA5x+uJBccVCu+FwG4ztwbNfIPu0/zowaGIXWSxZH+CpP7jmP4wkkggdUQlCrHASpW8
-         i83A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=KaJJanZVJWZSvXqCSXtZ01YBvvSbfqMJxJAq4m8RlJ4=;
-        b=Cn6H+Ly7tNxDF8+TTdAcVfzXoX2o28yv9dDsC5Ymg51d0fIJ7nIiLUwJItVYnBO1Jh
-         cSs8/QKfPvsx+ekPhT0aF5tJiO66/fZHJ/joOI3/JEG+DreHp9TxLquameo+I+HHqt5p
-         mUo31ZY0Cc/OAF5JtGsIpbnvSgkgsuxqDSYCVRZ4ICugHoAOnMrz9zv4YAN/D8eQ05la
-         j7HiLGoRUgNv1R0dwHVmyk30xMp1Syk8EobFZrVKR79Vc3/gxC0t0PrDdiBOf06kKKkp
-         xNJrYlI4abs/FmJOSg39/3g0pgBu0zEFOoEEYTORRRmXpaXawZtrkGtxSqb7Yqosv0lp
-         qsDg==
-X-Gm-Message-State: AOAM5319WhMdk6x4AVeUrqYHSWDDWJeKg6h+kXRxCgHVf+DWsZ8DXQ/u
-        o7xx2yarfoHxW5JFQnGFrliunpXw8SI=
-X-Google-Smtp-Source: ABdhPJyO/HF2psz8EfCJjptSfq+BtoUhvsimoiOXrkuKyF8rU5I6IzwFBNCoetjrXbGXngkpnnPsNg==
-X-Received: by 2002:a1c:8048:: with SMTP id b69mr15645697wmd.169.1592795427324;
-        Sun, 21 Jun 2020 20:10:27 -0700 (PDT)
-Received: from localhost.localdomain ([45.124.203.15])
-        by smtp.gmail.com with ESMTPSA id y196sm10031766wmd.11.2020.06.21.20.10.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 20:10:26 -0700 (PDT)
-From:   Joel Stanley <joel@jms.id.au>
-To:     devicetree-compiler@vger.kernel.org,
-        David Gibson <david@gibson.dropbear.id.au>
-Cc:     linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v4 2/2] checks: Improve i2c reg property checking
-Date:   Mon, 22 Jun 2020 12:40:05 +0930
-Message-Id: <20200622031005.1890039-3-joel@jms.id.au>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622031005.1890039-1-joel@jms.id.au>
-References: <20200622031005.1890039-1-joel@jms.id.au>
+        Sun, 21 Jun 2020 23:10:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05M3AYL3156552;
+        Mon, 22 Jun 2020 03:10:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Z5AWohSIQN/10LPAph7pzNm6ZxTToaAIJFczhN/Pa+E=;
+ b=blZfhzi+2gWRAlKbpse8FO0ag3V/AcR4UdBHrU5YlLhO5C/XO2OqduP9jQNXaF/nQANB
+ QhYYXSzWisWkmaQwYuhZJpTUeO7qQCqLPwKONcb2VCYBehtf7rirH/6omwkk2WLxmxdB
+ liEKUtbxKkiTYku32AykzUnOhYaaKZy4gGkcDwNRCREiE9KqlAqEFXa5X7phbitGWLS2
+ mFy7A7z53HD12eeHew+Zd0RUlZUkC6nzatu9YJfrY/CSrhf3nlKdDQSzDJg1mJurwS9w
+ eyD+hdoEg1DB4DdjBTA3wjH6akNX0jrUfNbFQD7IsS9AIdWfvga86ImV2u11KcTFLAbL SA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31sebbc1g3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 03:10:33 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05M37VPh088556;
+        Mon, 22 Jun 2020 03:08:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 31sv1k30hn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 03:08:33 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05M38V6o019381;
+        Mon, 22 Jun 2020 03:08:31 GMT
+Received: from [192.168.0.110] (/183.246.145.120)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Jun 2020 03:08:31 +0000
+Subject: Re: [PATCH 1/2] workqueue: don't always set __WQ_ORDERED implicitly
+To:     linux-kernel@vger.kernel.org
+Cc:     tj@kernel.org, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+        lduncan@suse.com, michael.christie@oracle.com
+References: <20200611100717.27506-1-bob.liu@oracle.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <f926e5b0-b876-3dad-c1b2-33c250205452@oracle.com>
+Date:   Mon, 22 Jun 2020 11:08:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200611100717.27506-1-bob.liu@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=1 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006220023
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 cotscore=-2147483648 mlxscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=1 clxscore=1015
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006220023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i2c bindings in the kernel tree describe support for 10 bit
-addressing, which must be indicated with the I2C_TEN_BIT_ADDRESS flag.
-When this is set the address can be up to 10 bits. When it is not set
-the address is a maximum of 7 bits.
+ping..
 
-See Documentation/devicetree/bindings/i2c/i2c.txt.
-
-Take into account this flag when checking the address is valid.
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
-v2: Mask reg when checking the 10-bit size
-v3: Fix test
-v4: Add U to define
----
- checks.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/checks.c b/checks.c
-index 69b0156c940c..b7955dbd71ca 100644
---- a/checks.c
-+++ b/checks.c
-@@ -1023,6 +1023,7 @@ static void check_i2c_bus_bridge(struct check *c, struct dt_info *dti, struct no
- WARNING(i2c_bus_bridge, check_i2c_bus_bridge, NULL, &addr_size_cells);
- 
- #define I2C_OWN_SLAVE_ADDRESS	(1U << 30)
-+#define I2C_TEN_BIT_ADDRESS	(1U << 31)
- 
- static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
- {
-@@ -1057,10 +1058,13 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 		reg = fdt32_to_cpu(*(cells++));
- 		/* Ignore I2C_OWN_SLAVE_ADDRESS */
- 		reg &= ~I2C_OWN_SLAVE_ADDRESS;
--		if (reg > 0x3ff)
-+
-+		if ((reg & I2C_TEN_BIT_ADDRESS) && ((reg & ~I2C_TEN_BIT_ADDRESS) > 0x3ff))
- 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
- 				  reg);
--
-+		else if (reg > 0x7f)
-+			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\". Set I2C_TEN_BIT_ADDRESS for 10 bit addresses or fix the property",
-+				  reg);
- 	}
- }
- WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
--- 
-2.27.0
-
+On 6/11/20 6:07 PM, Bob Liu wrote:
+> Current code always set 'Unbound && max_active == 1' workqueues to ordered
+> implicitly, while this may be not an expected behaviour for some use cases.
+> 
+> E.g some scsi and iscsi workqueues(unbound && max_active = 1) want to be bind
+> to different cpu so as to get better isolation, but their cpumask can't be
+> changed because WQ_ORDERED is set implicitly.
+> 
+> This patch adds a flag __WQ_ORDERED_DISABLE and also
+> create_singlethread_workqueue_noorder() to offer an new option.
+> 
+> Signed-off-by: Bob Liu <bob.liu@oracle.com>
+> ---
+>  include/linux/workqueue.h | 4 ++++
+>  kernel/workqueue.c        | 4 +++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+> index e48554e..4c86913 100644
+> --- a/include/linux/workqueue.h
+> +++ b/include/linux/workqueue.h
+> @@ -344,6 +344,7 @@ enum {
+>  	__WQ_ORDERED		= 1 << 17, /* internal: workqueue is ordered */
+>  	__WQ_LEGACY		= 1 << 18, /* internal: create*_workqueue() */
+>  	__WQ_ORDERED_EXPLICIT	= 1 << 19, /* internal: alloc_ordered_workqueue() */
+> +	__WQ_ORDERED_DISABLE	= 1 << 20, /* internal: don't set __WQ_ORDERED implicitly */
+>  
+>  	WQ_MAX_ACTIVE		= 512,	  /* I like 512, better ideas? */
+>  	WQ_MAX_UNBOUND_PER_CPU	= 4,	  /* 4 * #cpus for unbound wq */
+> @@ -433,6 +434,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+>  #define create_singlethread_workqueue(name)				\
+>  	alloc_ordered_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, name)
+>  
+> +#define create_singlethread_workqueue_noorder(name)			\
+> +	alloc_workqueue("%s", WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | \
+> +			WQ_UNBOUND | __WQ_ORDERED_DISABLE, 1, (name))
+>  extern void destroy_workqueue(struct workqueue_struct *wq);
+>  
+>  struct workqueue_attrs *alloc_workqueue_attrs(void);
+> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> index 4e01c44..2167013 100644
+> --- a/kernel/workqueue.c
+> +++ b/kernel/workqueue.c
+> @@ -4237,7 +4237,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+>  	 * on NUMA.
+>  	 */
+>  	if ((flags & WQ_UNBOUND) && max_active == 1)
+> -		flags |= __WQ_ORDERED;
+> +		/* the caller may don't want __WQ_ORDERED to be set implicitly. */
+> +		if (!(flags & __WQ_ORDERED_DISABLE))
+> +			flags |= __WQ_ORDERED;
+>  
+>  	/* see the comment above the definition of WQ_POWER_EFFICIENT */
+>  	if ((flags & WQ_POWER_EFFICIENT) && wq_power_efficient)
+> 
