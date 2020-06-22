@@ -2,89 +2,67 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA302C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78406C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3D6720707
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656142073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbgFVRQ7 (ORCPT
+        id S1729910AbgFVRWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:16:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:45056 "EHLO mga07.intel.com"
+        Mon, 22 Jun 2020 13:22:10 -0400
+Received: from ms.lwn.net ([45.79.88.28]:38674 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729309AbgFVRQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:16:58 -0400
-IronPort-SDR: 86mAV5nhuhI2qHoZ+TnVsJ2aL9OvBy/Zw6fI7cDO/SATsH7OBXLYpabw9NQ64fjmFcRmTXWGW4
- uQY9ubV4wKWw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209013397"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="209013397"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 10:16:58 -0700
-IronPort-SDR: +l1MFBOMI9UhPmyFiCJ4R+cL2z3IkOTUTF9pRTc+CphmYwvRwUqLABqom5f94wtlmyqtCnrZds
- b2fHQJn3BHUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="300909504"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Jun 2020 10:16:55 -0700
-Date:   Tue, 23 Jun 2020 01:18:00 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rui Zhang <rui.zhang@intel.com>
-Subject: Re: [PATCH][v2] PM / s2idle: Clear _TIF_POLLING_NRFLAG before
- suspend to idle
-Message-ID: <20200622171759.GA26527@chenyu-office.sh.intel.com>
-References: <20200616040442.21515-1-yu.c.chen@intel.com>
- <CAJZ5v0gBVBAjdCOXsM-Fa-iAkuv2JMi2mVkG5w7ADcg9dWencA@mail.gmail.com>
+        id S1729605AbgFVRWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 13:22:10 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 202052C8;
+        Mon, 22 Jun 2020 17:22:10 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 11:22:09 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: Re: [PATCH] docs: f2fs: fix a broken table
+Message-ID: <20200622112209.71990f9c@lwn.net>
+In-Reply-To: <20200622171106.GA192855@gmail.com>
+References: <20200622073907.7608a73a@lwn.net>
+        <20200622171106.GA192855@gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gBVBAjdCOXsM-Fa-iAkuv2JMi2mVkG5w7ADcg9dWencA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
-On Mon, Jun 22, 2020 at 06:19:35PM +0200, Rafael J. Wysocki wrote:
-[cut]
-> > +{
-> > +       if (!current_clr_polling_and_test())
-> > +               s2idle_enter(drv, dev, index);
-> > +
-> > +       return index;
-> 
-> Is the value returned here used at all?
->
-It is not used for now IMO.
-> >          */
-> >         index = find_deepest_state(drv, dev, U64_MAX, 0, true);
-> >         if (index > 0)
-> > -               enter_s2idle_proper(drv, dev, index);
-> > +               call_s2idle(drv, dev, index);
-> 
-> I'm wondering why this can't be
-> 
->     if (index > 0 && !current_clr_polling_and_test())
->             enter_s2idle_proper(drv, dev, index);
-> 
-Yes, it should be simpler, but I guess Peter was trying to
-make call_s2idle() consistent with call_cpuidle(),
-and also s2idle_enter() is analogous to cpuidle_enter().
+On Mon, 22 Jun 2020 10:11:06 -0700
+Eric Biggers <ebiggers@kernel.org> wrote:
 
-Thanks,
-Chenyu
+> Someone already sent out a fix for this:
+> https://lkml.kernel.org/linux-doc/52f851cb5c9fd2ecae97deec7e168e66b8c295c3.1591137229.git.mchehab+huawei@kernel.org/
+> 
+> Is it intentional that you're sending out a different fix rather than applying
+> that one?
+
+It wasn't, actually, I'm just finding myself more than usually challenged
+these days.
+
+That said, removing the table entirely seems ... excessive.  It's not
+terrible the way it is, or we could make it:
+
+	test_dummy_encryption[=%s]
+
+if we really want to.
+
+jon
