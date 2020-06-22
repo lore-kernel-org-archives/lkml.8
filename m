@@ -2,268 +2,130 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87814C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AA8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 649CC2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31A62073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592829733;
+	bh=oGtTwHaGEYEjEDaRZxo4C/+w0rXCNGqG35wH3bXEspI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BRe6O5dxroyKoHNq/DjAXwPqlz3hMTo3tv+h+1FL9wumGAkI34p66eVZyO1DsCeop
+	 rW+sue4wdtM9scjfqs39PMcHWiZpBJR0td9uAHyyKohEWBvZd/Pa6wLSfFdCYSOXB6
+	 qGUu39peToo0MOqwE15GEsul6xOzeA2+KetjPUqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgFVMmB (ORCPT
+        id S1728316AbgFVMmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:42:01 -0400
-Received: from mail-n.franken.de ([193.175.24.27]:41500 "EHLO drew.franken.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728122AbgFVMmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:42:00 -0400
-X-Greylist: delayed 530 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jun 2020 08:41:59 EDT
-Received: from mb.fritz.box (ip4d15f5fc.dynamic.kabel-deutschland.de [77.21.245.252])
-        (Authenticated sender: lurchi)
-        by mail-n.franken.de (Postfix) with ESMTPSA id 44BD27220C6C8;
-        Mon, 22 Jun 2020 14:33:00 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: Strange problem with SCTP+IPv6
-From:   Michael Tuexen <Michael.Tuexen@lurchi.franken.de>
-In-Reply-To: <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
-Date:   Mon, 22 Jun 2020 14:32:57 +0200
-Cc:     minyard@acm.org, Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        linux-sctp@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <BCB69E7B-240A-4ED3-B434-0186B573E4D1@lurchi.franken.de>
-References: <20200621155604.GA23135@minyard.net>
- <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
-To:     Xin Long <lucien.xin@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 22 Jun 2020 08:42:12 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43082 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728122AbgFVMmL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:42:11 -0400
+Received: by mail-pf1-f195.google.com with SMTP id j12so6137587pfn.10;
+        Mon, 22 Jun 2020 05:42:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eZIvSoaeoetQ1jhe+tUmzTZniV3Vjg3TwcUn9XcJZg0=;
+        b=kKS1HW3YK3GVi03JECU2EME8lfjR3mBkTdbKVvWMzWUvIEwsf6AECkCYwx0twgIap8
+         qzak8v0OJZ3POjEGxBmW62nTtLc+M0tl+ta5lOjJrA6gEzGlJmXC1P5GVzQ0gkjz+2/D
+         4UEH0RklRd2ZiqnxHIO01s3lSkaFNBMqeL2+SexFASI67wYv6HW4G14e6GHUQf8dxfrU
+         D6skiRYGjxCjuuJ7Fxj6bFDoCtrfrGnox1bbgi/s0TkPY5xJmmkfpomlEvCqVvIiHutl
+         IWzO/ep9u0pfdgB/KisvDMLM+lUiQkB67QCdfuoXIobU0WDk0zcEHpeuhtWZNuRzugId
+         U5bQ==
+X-Gm-Message-State: AOAM5309INBlUrjpXgJ6v/jUlmD9m2A6S0533NDLcDzVPbKpEOhxeuZm
+        +L9uE83rmAvRkTCt36F+SuM=
+X-Google-Smtp-Source: ABdhPJzbR2A9IaZZuWZL9dXfY/ud3Lh1aZezzViYVOPeMiA3bWIwI/DKubiDM5mP3ixooEqRBs0niA==
+X-Received: by 2002:a63:5024:: with SMTP id e36mr12198090pgb.438.1592829730707;
+        Mon, 22 Jun 2020 05:42:10 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 137sm11288142pgg.72.2020.06.22.05.42.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 05:42:09 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 7D5A140430; Mon, 22 Jun 2020 12:42:08 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 12:42:08 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        martin.petersen@oracle.com, jejb@linux.ibm.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 8/8] block: create the request_queue debugfs_dir on
+ registration
+Message-ID: <20200622124208.GW11244@42.do-not-panic.com>
+References: <20200619204730.26124-1-mcgrof@kernel.org>
+ <20200619204730.26124-9-mcgrof@kernel.org>
+ <02112994-4cd7-c749-6bd7-66a772593c90@acm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02112994-4cd7-c749-6bd7-66a772593c90@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On 22. Jun 2020, at 14:01, Xin Long <lucien.xin@gmail.com> wrote:
+On Sat, Jun 20, 2020 at 11:07:43AM -0700, Bart Van Assche wrote:
+> On 2020-06-19 13:47, Luis Chamberlain wrote:
+> > We were only creating the request_queue debugfs_dir only
+> > for make_request block drivers (multiqueue), but never for
+> > request-based block drivers. We did this as we were only
+> > creating non-blktrace additional debugfs files on that directory
+> > for make_request drivers. However, since blktrace *always* creates
+> > that directory anyway, we special-case the use of that directory
+> > on blktrace. Other than this being an eye-sore, this exposes
+> > request-based block drivers to the same debugfs fragile
+> > race that used to exist with make_request block drivers
+> > where if we start adding files onto that directory we can later
+> > run a race with a double removal of dentries on the directory
+> > if we don't deal with this carefully on blktrace.
+> > 
+> > Instead, just simplify things by always creating the request_queue
+> > debugfs_dir on request_queue registration. Rename the mutex also to
+> > reflect the fact that this is used outside of the blktrace context.
 > 
-> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
->> 
->> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
->> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
->> then I make a connection to it using ::1, the connection will drop after
->> 2.5 seconds with an ECONNRESET error.
->> 
->> It only happens on SCTP, it doesn't have the issue if you connect to a
->> full IPv6 address instead of ::1, and it doesn't happen if you don't
->> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
->> I tried on an ARM system and x86_64.
->> 
->> I haven't dug into the kernel to see if I could find anything yet, but I
->> thought I would go ahead and report it.  I am attaching a reproducer.
->> Basically, compile the following code:
-> The code only set IPV6_V6ONLY on server side, so the client side will
-> still bind all the local ipv4 addresses (as you didn't call bind() to
-> bind any specific addresses ). Then after the connection is created,
-Let's focus on the loopback addresses ::1 and 127.0.0.1.
+> There are two changes in this patch: a bug fix and a rename of a mutex.
+> I don't like it to see two changes in a single patch.
 
-So the server will only use ::1. The client will send an INIT from
-::1 to ::1 and lists 127.0.0.1 and ::1. That is what I would expect.
-Is that happening?
+I thought about doing the split first, and I did it at first, but
+then I could hear Christoph yelling at me for it. So I merged the
+two together. Although it makes it more difficult for review,
+the changes do go together.
 
-The server would respond with an INIT-ACK from ::1 to ::1 and would
-not list any IP addresses. Especially not 127.0.0.1, since it is IPv6 only.
+Kind of late to split this as its already merged now.
 
-After the association has beed established, the client can't send
-any IPv4 packet to the server, since the server did not announce
-any. The server can't send any IPv4 packets since it is IPv6 only.
+> Additionally, is the new mutex name really better than the old name? The
+> proper way to use mutexes is to use mutexes to protect data instead of
+> code. Where is the documentation that mentions which member variable(s)
+> of which data structures are protected by the mutex formerly called
+> blk_trace_mutex?
 
-This is what I would expect and this scenario should just work.
-What am I missing?
+It does not exist, and that is the point. The debugfs_dir use after
+free showed us *when* that UAF can happen, and so care must be taken
+if we are to use the mutex to protect the debugfs_dir but also re-use
+the same directory for other block core shenanigans.
 
-Best regards
-Michael
-> the client will send HB on the v4 paths to the server. The server
-> will abort the connection, as it can't support v4.
-> 
-> So you can work around it by either:
-> 
->  - set IPV6_V6ONLY on client side.
-> 
-> or
-> 
->  - bind to the specific v6 addresses on the client side.
-> 
-> I don't see RFC said something about this.
-> So it may not be a good idea to change the current behaviour
-> to not establish the connection in this case, which may cause regression.
-> 
->> 
->>  gcc -g -o sctptest -Wall sctptest.c
->> 
->> and run it in one window as a server:
->> 
->>  ./sctptest a
->> 
->> (Pass in any option to be the server) and run the following in another
->> window as the client:
->> 
->>  ./sctptest
->> 
->> It disconnects after about 2.5 seconds.  If it works, it should just sit
->> there forever.
->> 
->> -corey
->> 
->> 
->> #include <stdio.h>
->> #include <stdbool.h>
->> #include <string.h>
->> #include <unistd.h>
->> #include <fcntl.h>
->> #include <sys/select.h>
->> #include <arpa/inet.h>
->> #include <netinet/sctp.h>
->> #include <sys/types.h>
->> #include <sys/socket.h>
->> #include <netdb.h>
->> 
->> static int
->> getaddr(const char *addr, const char *port, bool listen,
->>        struct addrinfo **rai)
->> {
->>    struct addrinfo *ai, hints;
->> 
->>    memset(&hints, 0, sizeof(hints));
->>    hints.ai_flags = AI_ADDRCONFIG;
->>    if (listen)
->>        hints.ai_flags |= AI_PASSIVE;
->>    hints.ai_family = AF_UNSPEC;
->>    hints.ai_socktype = SOCK_STREAM;
->>    hints.ai_protocol = IPPROTO_SCTP;
->>    if (getaddrinfo(addr, port, &hints, &ai)) {
->>        perror("getaddrinfo");
->>        return -1;
->>    }
->> 
->>    *rai = ai;
->>    return 0;
->> }
->> 
->> static int
->> waitread(int s)
->> {
->>    char data[1];
->>    ssize_t rv;
->> 
->>    rv = read(s, data, sizeof(data));
->>    if (rv == -1) {
->>        perror("read");
->>        return -1;
->>    }
->>    printf("Read %d bytes\n", (int) rv);
->>    return 0;
->> }
->> 
->> static int
->> do_server(void)
->> {
->>    int err, ls, s, optval;
->>    struct addrinfo *ai;
->> 
->>    printf("Server\n");
->> 
->>    err = getaddr("::", "3023", true, &ai);
->>    if (err)
->>        return err;
->> 
->>    ls = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
->>    if (ls == -1) {
->>        perror("socket");
->>        return -1;
->>    }
->> 
->>    optval = 1;
->>    if (setsockopt(ls, SOL_SOCKET, SO_REUSEADDR,
->>                   (void *)&optval, sizeof(optval)) == -1) {
->>        perror("setsockopt reuseaddr");
->>        return -1;
->>    }
->> 
->>    /* Comment this out and it will work. */
->>    if (setsockopt(ls, IPPROTO_IPV6, IPV6_V6ONLY, &optval,
->>                   sizeof(optval)) == -1) {
->>        perror("setsockopt ipv6 only");
->>        return -1;
->>    }
->> 
->>    err = bind(ls, ai->ai_addr, ai->ai_addrlen);
->>    if (err == -1) {
->>        perror("bind");
->>        return -1;
->>    }
->> 
->>    err = listen(ls, 5);
->>    if (err == -1) {
->>        perror("listen");
->>        return -1;
->>    }
->> 
->>    s = accept(ls, NULL, NULL);
->>    if (s == -1) {
->>        perror("accept");
->>        return -1;
->>    }
->> 
->>    close(ls);
->> 
->>    err = waitread(s);
->>    close(s);
->>    return err;
->> }
->> 
->> static int
->> do_client(void)
->> {
->>    int err, s;
->>    struct addrinfo *ai;
->> 
->>    printf("Client\n");
->> 
->>    err = getaddr("::1", "3023", false, &ai);
->>    if (err)
->>        return err;
->> 
->>    s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
->>    if (s == -1) {
->>        perror("socket");
->>        return -1;
->>    }
->> 
->>    err = connect(s, ai->ai_addr, ai->ai_addrlen);
->>    if (err == -1) {
->>        perror("connect");
->>        return -1;
->>    }
->> 
->>    err = waitread(s);
->>    close(s);
->>    return err;
->> }
->> 
->> int
->> main(int argc, char *argv[])
->> {
->>    int err;
->> 
->>    if (argc > 1)
->>        err = do_server();
->>    else
->>        err = do_client();
->>    return !!err;
->> }
->> 
+> Since the new name makes it even less clear which data
+> is protected by this mutex, is the new name really better than the old name?
 
+I thought the new name makes it crystal clear what is being protected. I
+can however add a comment to explain that the q->debugfs_mutex protects
+the q->debugfs_dir if it is created, otherwise it protects the ephemeral
+debugfs_dir directory which would otherwise be created in lieue of
+q->debugfs_dir, however the patch still lies under <debugfs_root>/block/.
+
+Let me know if you think that will help.
+
+  Luis
