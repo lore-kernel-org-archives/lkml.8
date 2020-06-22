@@ -2,85 +2,93 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D42C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E56520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E93220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:07:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OhjlVEmB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbgFVSG3 (ORCPT
+        id S1730244AbgFVSHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:06:29 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:56972 "EHLO smtp.al2klimov.de"
+        Mon, 22 Jun 2020 14:07:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:26432 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730099AbgFVSG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:06:29 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id D4F60467DC;
-        Mon, 22 Jun 2020 18:06:20 +0000 (UTC)
-Subject: Re: Good idea to rename files in include/uapi/ ?
-To:     Jan Engelhardt <jengelh@inai.de>
-Cc:     David Howells <dhowells@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <9feded75-4b45-2821-287b-af00ec5f910f@al2klimov.de>
- <174102.1592165965@warthog.procyon.org.uk>
- <nycvar.YFH.7.77.849.2006142244200.30230@n3.vanv.qr>
- <ab88e504-c139-231a-0294-953ffd1a9442@al2klimov.de>
- <nycvar.YFH.7.77.849.2006221336180.26495@n3.vanv.qr>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <482bbfe2-77c7-226c-98a9-d6505866123a@al2klimov.de>
-Date:   Mon, 22 Jun 2020 20:06:19 +0200
-MIME-Version: 1.0
-In-Reply-To: <nycvar.YFH.7.77.849.2006221336180.26495@n3.vanv.qr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: ++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+        id S1730046AbgFVSHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 14:07:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592849242; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=DpNd2zXh5ar+PR5dcDtX1KuMP2pD3jdm3Qo6Wkx+K3M=; b=OhjlVEmBvMHdrUu7xMyA7S936CX10oD6wfQonJpfZgHOjCC6N6VDjDhIZ5veP99BqT2cj1+v
+ Vb61PII97Gyn5tNt89ZJ6RY2Fyhf+HSgxeTNf5+HkuT91vMfKcYUQml9Dg+XHao/wk+lx/0h
+ hpXdRcBlqS8YkDdz2klw5X+0oYo=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5ef0f34dfe1db4db897ebb78 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 18:07:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 31B07C43395; Mon, 22 Jun 2020 18:07:09 +0000 (UTC)
+Received: from localhost (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2FC5C433C8;
+        Mon, 22 Jun 2020 18:07:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2FC5C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Neeraj Upadhyay <neeraju@codeaurora.org>
+Subject: [PATCH] rcu/tree: Remove CONFIG_PREMPT_RCU check in force_qs_rnp
+Date:   Mon, 22 Jun 2020 23:37:03 +0530
+Message-Id: <1592849223-17774-1-git-send-email-neeraju@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove CONFIG_PREMPT_RCU check in force_qs_rnp(). Originally,
+this check was required to skip executing fqs failsafe
+for rcu-sched, which was added in commit a77da14ce9af ("rcu:
+Yet another fix for preemption and CPU hotplug"). However,
+this failsafe has been removed, since then. So, cleanup the
+code to avoid any confusion around the need for boosting,
+for !CONFIG_PREMPT_RCU.
 
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+---
+ kernel/rcu/tree.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Am 22.06.20 um 13:37 schrieb Jan Engelhardt:
-> 
-> On Monday 2020-06-15 01:34, Alexander A. Klimov wrote:
->>>
->>> A header file rename is no problem. We even have dummy headers
->> Hmm.. if I understand all of you correctly, David, Stefano, Pablo and Al say
->> like no, not a good idea, but only you, Jan, say like should be no problem.
->>
->> Jan, do you have anything like commit messages in mainline or public emails
->> from maintainers confirming your opinion?
-> 
-> I had already given the commit with the (email) message:
-> 
->>> Just look at xt_MARK.h, all it does is include xt_mark.h. Cf.
->>> 28b949885f80efb87d7cebdcf879c99db12c37bd .
-In that commit no .h file disappeared.
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 6226bfb..57c904b 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2514,8 +2514,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
+ 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 		rcu_state.cbovldnext |= !!rnp->cbovldmask;
+ 		if (rnp->qsmask == 0) {
+-			if (!IS_ENABLED(CONFIG_PREEMPT_RCU) ||
+-			    rcu_preempt_blocked_readers_cgp(rnp)) {
++			if (rcu_preempt_blocked_readers_cgp(rnp)) {
+ 				/*
+ 				 * No point in scanning bits because they
+ 				 * are all zero.  But we might need to
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
