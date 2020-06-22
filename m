@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC80C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43959C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED8E12071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DF520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UtNEe+Y7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rox8r/P9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgFVJlt (ORCPT
+        id S1727821AbgFVJly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40742 "EHLO
+        Mon, 22 Jun 2020 05:41:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbgFVJlh (ORCPT
+        with ESMTP id S1727807AbgFVJlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:41:37 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70ED3C061796
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:37 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q5so3552830wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:37 -0700 (PDT)
+        Mon, 22 Jun 2020 05:41:49 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A80A1C061799
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:48 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g75so6115009wme.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yy6XgmLu+rdPXztYG22qHG3UQylFLO0aZanRZZZSG+U=;
-        b=UtNEe+Y7D5ArH7Qe/vs7TUd5yHPcILffWoYh4wTCQdtMBq36DtKsydxvi6z3a7HbGS
-         FB2blBliY4Y+cVZyVIBbNCz/TMBZbmhI+WrSDUrAZc+nT9RqNVT9ahaolMbn+oxd3MXf
-         1G7L1Tcb6rs72hInUAFR8sZDDUZyVq9WQ8aEF0wR9UhVHcEeuUBRsA99mkWAfVG8D7Fm
-         zKsJUFL1xKBJ0gZxZlQvxrVGukdEa54zY4pSR0TYGGrqagLXr4OzxpZFMV8ttxXXVHQU
-         uiUpPpCNqmeepGbSEiBWxIRbMBVFfKFJKOIFmK8bRZsbBYVxA3/rlPTyqTaIaGU38MYj
-         ac8w==
+        bh=39tcT1sImiChTRqBAQCitq8OvfITErWq/Xk+xRkWTtw=;
+        b=rox8r/P9m0M75MrSrW0gaefUbBrzsyQiQQ+nuSUyw7jmgK72RdIrEAET+9NDW80nJV
+         6NoN3fQgrn8u3TAuYWY9vEZmFhT+PYmy+pixzcxBMoxFYd2WlDCvoisyxCnl9XIvgl4L
+         2UaUBXGdTuKrvDtQtBHE5L7odP4nDBB7nbDPbFnH6FoanY0lq1FWTQXI+whJq1jJA2hU
+         Ot3SzrgslqAj4dfBjZPmBbOgClucsuSk5FJIDeFu2gEMTSGwLi4/f1DXekQJh5ClPfdx
+         IiB0mjGPZS7Om5sXsEMBsr/HJQuJgLUO0T+W94WaGsZzXwZOeddJTllPhKS2Nil1ZvIb
+         szOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yy6XgmLu+rdPXztYG22qHG3UQylFLO0aZanRZZZSG+U=;
-        b=qr5dQZyDAueuZGVfFvU9SG81i2r/GvChpW4xg/ORxl8hM0vFhHYTf9RAbosZwoF/hv
-         82yLQptSf3ejAgT+PqvQEOoMVu6p+xyMyaGJELMSVny/D5+buQz5OFNX0UKoHwzitimy
-         5D7aQpKxHTMIFj1U/GYl9HHPy3bSJu+HmXeVwBW5XrPOcoOE/w/b+vXDZOT06BKVspQy
-         0icObAvYZSjsXmXuGJnHmM30VE6V6AEY7/9iC1IxxkrgurEDtezLQnkJ7/wG8Sylbu4c
-         e3qtbgKEAkN2tlQLYQdX9tt5XREsGPtnNzYynBeeL6flsaJUEbCUXtKlqJafPYZZSFic
-         WZLw==
-X-Gm-Message-State: AOAM533i/u7o1KJlb+7dSZC3xKrB+oAplLwWUfT6K+hbbqI2j7OBBiCu
-        YE0mr8GWwp3Jlmn1Q7omHaj4cw==
-X-Google-Smtp-Source: ABdhPJyFGfPZiEZAaPA05Oy9u/8YECmNenqKkrnMxPg4aIkaLDansk5+kyg8mkF5tPJf9KrUB0gUSQ==
-X-Received: by 2002:a5d:6987:: with SMTP id g7mr17998302wru.79.1592818896247;
-        Mon, 22 Jun 2020 02:41:36 -0700 (PDT)
+        bh=39tcT1sImiChTRqBAQCitq8OvfITErWq/Xk+xRkWTtw=;
+        b=a2PspAuRrRK48emdX/4aGpFguSf6tBnVb81wdceNgi2FISJdQUp+8SJ7Kfp45y+izQ
+         wwYzliAM4WXvJ3kijTlyOnKG2yYFrq/677N+SVnkWaajPHU78EJCgNuSrZIvJLY2uaNs
+         /7WDAIzZh7qKx8Jv2Powuj381+RfhWgk9uicApEVjV7t9AGV9rKM0sHo1CFq61qfkeUZ
+         E0Fr8fV52+mQ3h5CKr30MdQ8ftA+mtQcnAXRUpNL0wxHZzyXLhA62RDwaxj08SLrVTl3
+         VrwSkudrnTWsNvc/y6g7dx8WajFcWH+FnIIjGeXR2CM/YSN0uT20GRoJK3ybT0Vh6BmK
+         i6Lw==
+X-Gm-Message-State: AOAM533HKVHrgOBwAmBL24xmA5FAe0+auEQqO+WZ4NHTubC6Xl3jgd0V
+        pb4nO2c2v/maUETNMjRVuECVqQ==
+X-Google-Smtp-Source: ABdhPJxuZnlfHnNwpXMmEqVCYAbLPujZmk1SV/mDkcx4Z73yrAJcet27yegyTxUrUHZ6wyfJf9ZIqA==
+X-Received: by 2002:a1c:2d54:: with SMTP id t81mr18695221wmt.154.1592818907355;
+        Mon, 22 Jun 2020 02:41:47 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.34
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:35 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:46 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -93,9 +93,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 08/15] net: phy: check the PHY presence in get_phy_id()
-Date:   Mon, 22 Jun 2020 11:37:37 +0200
-Message-Id: <20200622093744.13685-9-brgl@bgdev.pl>
+Subject: [PATCH 14/15] net: phy: add PHY regulator support
+Date:   Mon, 22 Jun 2020 11:37:43 +0200
+Message-Id: <20200622093744.13685-15-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -108,41 +108,164 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-get_phy_id() is only called from get_phy_device() so the check for the
-0x1fffffff value can be pulled into the former. This way it'll be easier
-to remove get_phy_device() later on.
+The MDIO sub-system now supports PHY regulators. Let's reuse the code
+to extend this support over to the PHY device.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/phy_device.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/phy/phy_device.c | 49 ++++++++++++++++++++++++++++--------
+ include/linux/phy.h          | 10 ++++++++
+ 2 files changed, 48 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 8037a9663a85..eccbf6aea63d 100644
+index 58923826838b..d755adb748a5 100644
 --- a/drivers/net/phy/phy_device.c
 +++ b/drivers/net/phy/phy_device.c
-@@ -806,6 +806,10 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
+@@ -827,7 +827,12 @@ int phy_device_register(struct phy_device *phydev)
  
- 	*phy_id |= phy_reg;
- 
-+	/* If the phy_id is mostly Fs, there is no device there */
-+	if ((*phy_id & 0x1fffffff) == 0x1fffffff)
-+		return -ENODEV;
+ 	err = mdiobus_register_device(&phydev->mdio);
+ 	if (err)
+-		return err;
++		goto err_out;
 +
++	/* Enable the PHY regulator */
++	err = phy_device_power_on(phydev);
++	if (err)
++		goto err_unregister_mdio;
+ 
+ 	/* Deassert the reset signal */
+ 	phy_device_reset(phydev, 0);
+@@ -846,22 +851,25 @@ int phy_device_register(struct phy_device *phydev)
+ 	err = phy_scan_fixups(phydev);
+ 	if (err) {
+ 		phydev_err(phydev, "failed to initialize\n");
+-		goto out;
++		goto err_reset;
+ 	}
+ 
+ 	err = device_add(&phydev->mdio.dev);
+ 	if (err) {
+ 		phydev_err(phydev, "failed to add\n");
+-		goto out;
++		goto err_reset;
+ 	}
+ 
  	return 0;
- }
  
-@@ -832,10 +836,6 @@ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
- 	if (r)
- 		return ERR_PTR(r);
- 
--	/* If the phy_id is mostly Fs, there is no device there */
--	if ((phy_id & 0x1fffffff) == 0x1fffffff)
--		return ERR_PTR(-ENODEV);
+- out:
++err_reset:
+ 	/* Assert the reset signal */
+ 	phy_device_reset(phydev, 1);
 -
- 	return phy_device_create(bus, addr, phy_id, is_c45, &c45_ids);
++	/* Disable the PHY regulator */
++	phy_device_power_off(phydev);
++err_unregister_mdio:
+ 	mdiobus_unregister_device(&phydev->mdio);
++err_out:
+ 	return err;
  }
- EXPORT_SYMBOL(get_phy_device);
+ EXPORT_SYMBOL(phy_device_register);
+@@ -883,6 +891,8 @@ void phy_device_remove(struct phy_device *phydev)
+ 
+ 	/* Assert the reset signal */
+ 	phy_device_reset(phydev, 1);
++	/* Disable the PHY regulator */
++	phy_device_power_off(phydev);
+ 
+ 	mdiobus_unregister_device(&phydev->mdio);
+ }
+@@ -1064,6 +1074,11 @@ int phy_init_hw(struct phy_device *phydev)
+ {
+ 	int ret = 0;
+ 
++	/* Enable the PHY regulator */
++	ret = phy_device_power_on(phydev);
++	if (ret)
++		return ret;
++
+ 	/* Deassert the reset signal */
+ 	phy_device_reset(phydev, 0);
+ 
+@@ -1644,6 +1659,8 @@ void phy_detach(struct phy_device *phydev)
+ 
+ 	/* Assert the reset signal */
+ 	phy_device_reset(phydev, 1);
++	/* Disable the PHY regulator */
++	phy_device_power_off(phydev);
+ }
+ EXPORT_SYMBOL(phy_detach);
+ 
+@@ -2684,13 +2701,18 @@ static int phy_probe(struct device *dev)
+ 
+ 	mutex_lock(&phydev->lock);
+ 
++	/* Enable the PHY regulator */
++	err = phy_device_power_on(phydev);
++	if (err)
++		goto out;
++
+ 	/* Deassert the reset signal */
+ 	phy_device_reset(phydev, 0);
+ 
+ 	if (phydev->drv->probe) {
+ 		err = phydev->drv->probe(phydev);
+ 		if (err)
+-			goto out;
++			goto out_reset;
+ 	}
+ 
+ 	/* Start out supporting everything. Eventually,
+@@ -2708,7 +2730,7 @@ static int phy_probe(struct device *dev)
+ 	}
+ 
+ 	if (err)
+-		goto out;
++		goto out_reset;
+ 
+ 	if (!linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+ 			       phydev->supported))
+@@ -2751,11 +2773,16 @@ static int phy_probe(struct device *dev)
+ 	/* Set the state to READY by default */
+ 	phydev->state = PHY_READY;
+ 
+-out:
+-	/* Assert the reset signal */
+-	if (err)
+-		phy_device_reset(phydev, 1);
++	mutex_unlock(&phydev->lock);
++
++	return 0;
+ 
++out_reset:
++	/* Assert the reset signal */
++	phy_device_reset(phydev, 1);
++	/* Disable the PHY regulator */
++	phy_device_power_off(phydev);
++out:
+ 	mutex_unlock(&phydev->lock);
+ 
+ 	return err;
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 01d24a934ad1..585ce8db32cf 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1291,6 +1291,16 @@ static inline void phy_device_reset(struct phy_device *phydev, int value)
+ 	mdio_device_reset(&phydev->mdio, value);
+ }
+ 
++static inline int phy_device_power_on(struct phy_device *phydev)
++{
++	return mdio_device_power_on(&phydev->mdio);
++}
++
++static inline int phy_device_power_off(struct phy_device *phydev)
++{
++	return mdio_device_power_off(&phydev->mdio);
++}
++
+ #define phydev_err(_phydev, format, args...)	\
+ 	dev_err(&_phydev->mdio.dev, format, ##args)
+ 
 -- 
 2.26.1
 
