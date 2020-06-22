@@ -2,123 +2,124 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEC720767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CED206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PhMXOA29"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XG1VeH52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbgFVXEx (ORCPT
+        id S1731346AbgFVXHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:04:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52820 "EHLO
+        Mon, 22 Jun 2020 19:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731282AbgFVXEw (ORCPT
+        with ESMTP id S1726977AbgFVXHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:04:52 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F2A1C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:04:52 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so8233950plb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:04:52 -0700 (PDT)
+        Mon, 22 Jun 2020 19:07:13 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E37C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:07:13 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ga6so594453pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:07:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VqNx5+2kiVG9gpFn3910S15vAkYBqDSSedKViD8vzv4=;
-        b=PhMXOA29UjdzLB+31VLcjALbAfnuSCUduSik9FZHJh5NxaVg0Ze3ovaJuHS6uF5tOP
-         BraZMyN9v0GrizeBmPjb+zv8Akwh25gsoP/yBmHWTJu61OLd+BYRA6M4+11FDOfmpb8R
-         1oovTnRunpqHNHYygJvCh5+K/rrVDPOIAocDGPEKTab9E8fpHhzHI4F22vH11k2kWiOs
-         QYJUl/zF2QvPUc3JTuCoS4rpwMK9ClrXFVhn37aTvwU/z2mwIqEzeuYKoF/1Sud3lFtS
-         lew7XOE9/h8akBhb6Ty6i9DQ8T04WtAo+VzBd+qGy91923p+SFsaHaUiwiRNYJIDBiKo
-         ddOA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=z20zxmu7BXaJTc0tzUXoDHwEuwGLB9cwURxhD+oh4+g=;
+        b=XG1VeH52GZUyvhcE9tbM4IoixaqvBmVHBTbaAPa1sHlwz6UTK5qC09lefX0IGKu1sw
+         vcczs5K9f5eGPiFG77ESmvfY4NW193Q4M2tAwPqTwmKe/Aw8vn4j561cnqYHf7qIoFQz
+         RUWRINhgB754vJIqeOOwfgYGnA7h4+Ot4qxfo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VqNx5+2kiVG9gpFn3910S15vAkYBqDSSedKViD8vzv4=;
-        b=q2Lyt2N52KariXaSJ1dyWomN8/nwmh2RH+UYjm8UwdB/0VOa+gvL+1wNb1tRoUws9e
-         7ZfghI9n8xWGRvklqfmHDvOh8HQv7uGuc6I0NaK9kgfB/E92aHVsqd87ZqJaB52e0L8/
-         PWg95Qd2t5QBJN3bNUWjMjs9pPdZPmJetSV4evMLdmo8z7bHbYSLh22yeE7igxzl2zNq
-         BGzW2q/PUi5LBMj4TjKU5xHI7hSN5JOaAu9AXKBX4DHVBsMlxoF6VsRjkxmgQ/N186jj
-         6JSaX9J3nCME0/F21mSVBrpJFL5pVTJy42yFVRtjAfAcQemBGdwuLsQPy3O8msTslTRS
-         Ecmw==
-X-Gm-Message-State: AOAM530POHvSU6drvHoKV0WHLfiklkkqsQPwQ66he2wvrlaIC3cOQZEp
-        3tTZTcJK+3tN+q3AMYei1kSCS9TKgsV3zR62t3Id3g==
-X-Google-Smtp-Source: ABdhPJyAXHvfGosb+Hbd1OCZD4musz44ks3XUKHwlc3h/XC8VXif5udxUpRvvtysGawHTGaOgDrNushmDeejEo/jrew=
-X-Received: by 2002:a17:902:49:: with SMTP id 67mr21218818pla.205.1592867091804;
- Mon, 22 Jun 2020 16:04:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=z20zxmu7BXaJTc0tzUXoDHwEuwGLB9cwURxhD+oh4+g=;
+        b=lrs6RXu6yz4hkC+LTRAt2h3/ryuwPepop/Rz87tHA9x0HU6w/QXvlhsCm+NRVFu9Ks
+         F2ONv69zKha+D/WAqGxdxGFGimNZS//2uiEYAr25Tpj+9o+k9VegZh80Z/G9Kzi6kXnP
+         DykSuYVo+myb0z2WfMVhSVtNyEPNfq/vzOcFVk/wnGk8PQJT/UTNCi0xuJQ6gaU9Iuja
+         t1I8j32CQFH5LOJQPW8osQ/Lqtkv3dAOTxAauNXWI8p4iZbtnAVDRFPYM3y64wiJl/AF
+         tyEGsR1nY31CKHk03LN9mesSZFeVAFJ654mrOZyB6Z6g/CstqN/ON0kDUvCE/vsy+Y41
+         TUJQ==
+X-Gm-Message-State: AOAM532ioSYQOdcjNYxaBoezeJayCdIrHd45S0MvgnDQyzfBmkPeAE5e
+        FacG4B1NLrrsnsO56HtVI6pn9Q==
+X-Google-Smtp-Source: ABdhPJx/PfvGuvPHST8NkvXqx8YdMlxhEJDw3qi2G3DLjazOqp+Vo/e1zvIb/b99UCM7dwt0/xj29g==
+X-Received: by 2002:a17:902:7611:: with SMTP id k17mr21505128pll.255.1592867232960;
+        Mon, 22 Jun 2020 16:07:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k126sm15106305pfd.129.2020.06.22.16.07.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 16:07:12 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 16:07:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jann Horn <jannh@google.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
+ each syscall
+Message-ID: <202006221604.871B13DE3@keescook>
+References: <20200622193146.2985288-1-keescook@chromium.org>
+ <20200622193146.2985288-4-keescook@chromium.org>
+ <20200622225615.GA3511702@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <20200622205341.2987797-1-keescook@chromium.org>
- <20200622205341.2987797-2-keescook@chromium.org> <20200622220043.6j3vl6v7udmk2ppp@google.com>
- <202006221524.CEB86E036B@keescook> <20200622225237.ybol4qmz4mhkmlqc@google.com>
- <202006221555.45BB6412F@keescook>
-In-Reply-To: <202006221555.45BB6412F@keescook>
-From:   =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
-Date:   Mon, 22 Jun 2020 16:04:40 -0700
-Message-ID: <CAFP8O3KdGc9TtziFX7UzmxA-=wfPzm5oi6NCEwRiyyrp+JD3Xg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] vmlinux.lds.h: Add .gnu.version* to DISCARDS
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622225615.GA3511702@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 3:57 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Jun 22, 2020 at 03:52:37PM -0700, Fangrui Song wrote:
-> > > And it's not in the output:
-> > >
-> > > $ readelf -Vs arch/x86/boot/compressed/vmlinux | grep version
-> > > No version information found in this file.
-> > >
-> > > So... for the kernel we need to silence it right now.
-> >
-> > Re-link with -M (or -Map file) to check where .gnu.version{,_d,_r} input
-> > sections come from?
->
-> It's not reporting it correctly:
->
-> .gnu.version_d  0x00000000008966b0        0x0
->  .gnu.version_d
->                 0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
->
-> .gnu.version    0x00000000008966b0        0x0
->  .gnu.version   0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
->
-> .gnu.version_r  0x00000000008966b0        0x0
->  .gnu.version_r
->                 0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
->
-> it just reports whatever file is listed on the link command line first.
->
-> > If it is a bug, we should probably figure out which version of binutils
-> > has fixed the bug.
->
-> I see this with binutils 2.34...
->
-> --
-> Kees Cook
+On Mon, Jun 22, 2020 at 06:56:15PM -0400, Arvind Sankar wrote:
+> On Mon, Jun 22, 2020 at 12:31:44PM -0700, Kees Cook wrote:
+> > +
+> > +#define add_random_kstack_offset() do {					\
+> > +	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+> > +				&randomize_kstack_offset)) {		\
+> > +		u32 offset = this_cpu_read(kstack_offset);		\
+> > +		u8 *ptr = __builtin_alloca(offset & 0x3FF);		\
+> > +		asm volatile("" : "=m"(*ptr));				\
+> > +	}								\
+> > +} while (0)
+> 
+> This feels a little fragile. ptr doesn't escape the block, so the
+> compiler is free to restore the stack immediately after this block. In
+> fact, given that all you've said is that the asm modifies *ptr, but
+> nothing uses that output, the compiler could eliminate the whole thing,
+> no?
+> 
+> https://godbolt.org/z/HT43F5
+> 
+> gcc restores the stack immediately, if no function calls come after it.
+> 
+> clang completely eliminates the code if no function calls come after.
 
-:( It deserves a binutils bug
-(https://sourceware.org/bugzilla/enter_bug.cgi?product=binutils ) and
-a comment..
+nothing uses the stack in your example. And adding a barrier (which is
+what the "=m" is, doesn't change it.
 
-With the description adjusted to say that this works around a bug
+> I'm not sure why function calls should affect it, though, given that
+> those functions can't possibly access ptr or the memory it points to.
 
-Reviewed-by: Fangrui Song <maskray@google.com>
+It seems to work correctly:
+https://godbolt.org/z/c3W5BW
+
+-- 
+Kees Cook
