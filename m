@@ -2,138 +2,142 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2AEC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0299220720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F0F2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="pOaARyiZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wcSTbWr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgFVMjz (ORCPT
+        id S1728185AbgFVMlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:39:55 -0400
-Received: from mail-eopbgr60066.outbound.protection.outlook.com ([40.107.6.66]:35809
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726889AbgFVMjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:39:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AP0fIm8eIL6gBjbXpBT2M1dc0zOUDdqi8tBmcGBJTKOM4RJxGyEPdmBL+X8ODzJdV3IShu1wH2GgrOM7zPAtUkL/yfDw7DowuheyVpF6ZeHt1C0IU/ryN4xtOK3zVZFCUnKuG0tRBPhl3ni7DyWBD956kVif0EjzOt2pd8z+PlbzKjhwbVdvAF3SKqaWBk7TRQpUlIO+paxcErBmxQEVkLKZbIFMEnXiriihLcpIO1cTOIZZo1wkDXmMvG4OW0xNlwxvfvtL+QijZZT7OS+ZImMURBM1d72iDH6r8+Dyl9rsvuMcn0LsZC29KtmyH8T4ypBqsTDrbfMBw4JnSOb9JA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p1K3W9D2CAIdaMZ2eJJRaCFYV5/wZE+UtaAcLp9SRgs=;
- b=T9EEnKTezHSS1HLgHSzQnTrwJhI/gEafwyffNFvEAgSn9xwFfnZotJ4xXxmnlVs52qH/eqlIsBUA4H1b2zuaoeTP0CPayKTRQPNnayHPbY0ZfwIM2JufHbIm9cEfp49wM+6vvFDXO6SZIhMrjPrp+Kidfdx/TAKJGzVCtEx6NHgq+UwCOJExkxsuBB/D7scTcz5WQpEB2+i8wS0Jfi7UZyFr94z5eU3Wnh4mEVNZLeS6cl565jUpI1gBbthcyfZSKMV2a/qWzkA8gWq2CXjhmWPmfn4NyLJEyJDRFBW29hKH3cP33NSXc8sziB0pQFnS3UyJ3KevnZgmLvZDRwQjAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p1K3W9D2CAIdaMZ2eJJRaCFYV5/wZE+UtaAcLp9SRgs=;
- b=pOaARyiZTEmm72NN0IdoN3cfSQp5FIJ1SGJv/d1SRevkRsh8Ni070O+5nwkdvkwM3QaQQvL1lBP5bV5fdjyIpyBKTp7FmyRAMWVoO1PJCT3vtwDIeVFglUivOZfKxmV/QoJa0ziSvdRBFQOGEH1bJKVoLtJmJ4Kiztp99sUMldM=
-Authentication-Results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB4702.eurprd05.prod.outlook.com (2603:10a6:802:5b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.25; Mon, 22 Jun
- 2020 12:39:50 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 12:39:50 +0000
-Date:   Mon, 22 Jun 2020 09:39:47 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH 00/16] mm/hmm/nouveau: THP mapping and migration
-Message-ID: <20200622123947.GC2590509@mellanox.com>
-References: <20200619215649.32297-1-rcampbell@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619215649.32297-1-rcampbell@nvidia.com>
-X-ClientProxiedBy: BL0PR01CA0031.prod.exchangelabs.com (2603:10b6:208:71::44)
- To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+        Mon, 22 Jun 2020 08:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgFVMlV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:41:21 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD2EDC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 05:41:21 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id jz3so8110446pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 05:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fq5dVVlXW8qg+ASmc5eHI9qkJpaHLFgd8jV55IoO3ds=;
+        b=wcSTbWr12KM0AKzvczAYGpY8oNBlPcfTlSqXSviRt6OVkzWhCDYP9/vasBpxVa159T
+         vZMShpuchPupvThg/UKN4QPPDmfiT1u7wmr3KcRRsd8+9ZzOLxdvwSYoiYH0M0ITVWIp
+         AEIqdLRy2K0grOOM48kvK15Np7sRxIjAz85bJKWF0mOFTFGhw6D80NKy8xkZQd4/1QzT
+         xPKuFKJQ7UKYWCA50gU9EcDEdbOMRxt86AZ9SH8u+auHNZsoUbF9YDee4c7i10JsZUqU
+         4tHiNTvD1eLzQbXCpmq19w5ln2UemzsLBWF0ThxGAFg581DionEgeCstmoE5U29SWFlh
+         bcuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fq5dVVlXW8qg+ASmc5eHI9qkJpaHLFgd8jV55IoO3ds=;
+        b=qKxlxEFu8X6wqpR23BU6gK10UEO+Au4trz3rbRqQficlC/Y0y+UPm9vN9qXvXwRh4m
+         W48F+dAfxPUWBj1fPONZQceXqNbKs10pEn2bsn/fDgTZA2wg16zg/aLBSlWw4ViM0RJs
+         QSsbxGPNEdCtlZn+4awCkigBjOOPHxboEGqf2hdK0lSvaLBcRGw25w/GIEdYihdiDez/
+         JVnGOYhsoZV+jrTX3NHWZfcJRLk5YcxCtvSRxP9SptTl6xXTGBda3IDRBYUHZqJlC+Uu
+         ejn7TSFLF4suynxVOzT22642X8wfZZcncTlUy9wHa+T+uHC7XU0AUG+TyjaXpTeoB6+W
+         +Y9w==
+X-Gm-Message-State: AOAM532Zefjs8YeYcbJ8vws4z6u38O03a+4ooaUGwethjcD4t1FelK1S
+        7010+6ZR59vwh6L4GXVzuS1Pyw==
+X-Google-Smtp-Source: ABdhPJwjlbEAiUJF8l5uuQoy02B2OXMWAyP1HFiJcPrgxtCoWUakvFFTfhJvx+tjDSCep+YvLypuKg==
+X-Received: by 2002:a17:90a:36d0:: with SMTP id t74mr16600778pjb.27.1592829680949;
+        Mon, 22 Jun 2020 05:41:20 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id i62sm14590581pfg.90.2020.06.22.05.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 05:41:19 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org
+Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v5 0/4] Qualcomm labibb regulator driver
+Date:   Mon, 22 Jun 2020 18:11:06 +0530
+Message-Id: <20200622124110.20971-1-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR01CA0031.prod.exchangelabs.com (2603:10b6:208:71::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 12:39:50 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jnLjn-00Bt6R-52; Mon, 22 Jun 2020 09:39:47 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 751cebd9-7b35-46be-0431-08d816a95b0a
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4702:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB470271E4FEB6E385D7F352E4CF970@VI1PR05MB4702.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0442E569BC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pMHw3hZKMymfaINzJj5CBQbB3lHLKD46VbCUtqy53Q69xeSoFrISsbudZYm57hKL9HTQ2aqcIF/xfOa/FUUzMRf1xqfNVpWhzzFzCC8Y3H8SKYuYThujhsTqUEbMAsyApFS0NAqn27AEC9b/g1IxXXtQ8MsiWJ8BrhtJhZ/WFz3vmNXBPmvidh4CmFzVmjzXhuighDOD15Fj6fiPd9zWPx3ekdsBnzLBPW7p/aZiCYNJWwMnXFrRMkShLdH5alaODiJ9a3i6xajnJzKgxdzxP1hqDSYpCpnXRRDjTHMexH5qIlPaTJdu8JFhRosCuiIOysewn81ExFVDOQA9JUhkJw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(376002)(396003)(39860400002)(8936002)(6916009)(186003)(26005)(1076003)(316002)(426003)(4326008)(8676002)(54906003)(83380400001)(2906002)(33656002)(5660300002)(9746002)(9786002)(36756003)(86362001)(2616005)(66476007)(66946007)(66556008)(478600001)(7416002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: tLNNxONQZO6jW+hpHfyZgIH4ekJEEY76iBbMYz/8FNO3wxQPzfWFq3Odq7G4TWT6ABx+FHBvHZwmz8kx3UjhKDksB7vj94wbWU+LQDYv0V5WvLaMkJQsXGFSj3jgmu7hDEXxHrbgpdUW5i93VB3NguMA1Oa4MKTWBVD8jNQNkdG3X/X8EP3XTWb4LgFI58kENa4x4U6n/zUmPWQvERH971WippoG425mD9tdpWq4Qo5C3n5urcpRbQurRf2Sj1MURdQfEwb10irvDYfWPCdshUbE3q6gLfPsJrOHez+yAa4MJ2J3wTZBNXjbbdvV/0zycr4BL5Drtu25Dx62pSSuqMnOC39+AVXTYMPIlqTdkuT+pmNmjbuAPnAiPG6ouIWKI/Ngt/m+ZDclKT1Zw5GJ0DOW66kV5Uiu8BuQzWygmNy016o7AQ8Gjy9qcA6Ud3PA39PjkQc+DEXPdvBkHvPXO5OWwC/i8tM0ja7JpaZPGP8=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 751cebd9-7b35-46be-0431-08d816a95b0a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 12:39:50.8090
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NLiVITWOJzttNzWnX+aFlNoYNmvhsxk0rQ5aLv4lUo/rd3WlD+tL/RYu4y/qiU7gmFVLwyBOB+qC4ZS5L4BP1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4702
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 02:56:33PM -0700, Ralph Campbell wrote:
-> These patches apply to linux-5.8.0-rc1. Patches 1-3 should probably go
-> into 5.8, the others can be queued for 5.9. Patches 4-6 improve the HMM
-> self tests. Patch 7-8 prepare nouveau for the meat of this series which
-> adds support and testing for compound page mapping of system memory
-> (patches 9-11) and compound page migration to device private memory
-> (patches 12-16). Since these changes are split across mm core, nouveau,
-> and testing, I'm guessing Jason Gunthorpe's HMM tree would be appropriate.
+This series adds a driver for LAB/IBB regulators found on some Qualcomm SoCs.
+These regulators provide positive and/or negative boost power supplies
+for LCD/LED display panels connected to the SoC.
 
-You need to break this up into parts that go where they need to
-go. Nouveau rc changes should go to DRM or some series needs to
-explain the linkage
+This series adds the support for pmi8998 PMIC found in SDM845 family of SoCs.
 
-> Ralph Campbell (16):
->   mm: fix migrate_vma_setup() src_owner and normal pages
->   nouveau: fix migrate page regression
->   nouveau: fix mixed normal and device private page migration
->   mm/hmm: fix test timeout on slower machines
->   mm/hmm/test: remove redundant page table invalidate
->   mm/hmm: test mixed normal and device private migrations
->   nouveau: make nvkm_vmm_ctor() and nvkm_mmu_ptp_get() static
->   nouveau/hmm: fault one page at a time
->   mm/hmm: add output flag for compound page mapping
->   nouveau/hmm: support mapping large sysmem pages
->   hmm: add tests for HMM_PFN_COMPOUND flag
->   mm/hmm: optimize migrate_vma_setup() for holes
+Changes from v4:
+- v4 Review comments incorporated
+  - simplified the driver: removed of_get_child_by_name(); use ENABLE_CTL
+    register and switch over to use the regulator_*_regmap helpers
+  - improved kerneldoc
+  - From the dt-bindings, removed interrupt-names, changed to dual license,
+    added unevaluatedProperties: false, removed interrupt-names, since there
+    is only one interrupt per node
+  - Since the Short Circuit handling needs more details from QC engineers,
+    drop the SC handling patch from this series, to submit it later
 
-Order things so it is hmm, test, noeveau
+Changes from v3:
+- Handled review comments from v3
+- In core, swapped the meaning of enable_time and poll_enabled_time; so we
+   wait for total enable_time delay, and poll in-between at poll_enabled_time
+   interval now.
+- fixed dt_bindings_check issues in dt-bindings patch.
+- Cleanup of register_labibb_regulator(), and adapted to updated meaning of
+   poll_enabled_time.
 
->   mm: support THP migration to device private memory
->   mm/thp: add THP allocation helper
->   mm/hmm/test: add self tests for THP migration
->   nouveau: support THP migration to private memory
+Changes from v2:
+- Review comments from v2
+- Moved the poll-to-check-enabled functionality to regulator core.
+- Used more core features to simplify enable/disable functions.
+- Moved the devicetree binding to yaml.
+- Updated interrupt-names and simplified handling.
 
-This is another series, you should split it even if it has to go
-through the hmm tree
+Changes from v1:
+- Incorporated review comments from v1
+- Changed from virtual-regulator based handling to individual regulator based
+  handling.
+- Reworked the core to merge most of enable/disable functions, combine the
+  regulator_ops into one and allow for future variations.
+- is_enabled() is now _really_ is_enabled()
+- Simplified the SC interrupt handling - use regmap_read_poll_timeout,
+  REGULATOR_EVENT_OVER_CURRENT handling and notification to clients.
 
-Jason
+Nisha Kumari (3):
+  dt-bindings: regulator: Add labibb regulator
+  arm64: dts: qcom: pmi8998: Add nodes for LAB and IBB regulators
+  regulator: qcom: Add labibb driver
+
+Sumit Semwal (1):
+  regulator: Allow regulators to verify enabled during enable()
+
+ .../regulator/qcom-labibb-regulator.yaml      |  70 +++++++
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi         |  12 ++
+ drivers/regulator/Kconfig                     |  10 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/core.c                      |  63 ++++++-
+ drivers/regulator/qcom-labibb-regulator.c     | 175 ++++++++++++++++++
+ include/linux/regulator/driver.h              |   5 +
+ 7 files changed, 335 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+ create mode 100644 drivers/regulator/qcom-labibb-regulator.c
+
+-- 
+2.27.0
+
