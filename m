@@ -2,171 +2,159 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B79EB20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JWy9yt7e"
+	by mail.kernel.org (Postfix) with ESMTP id 9FC5220767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592866438;
+	bh=aniZpcUjMLL1QVC8MdE4cj/DV6qxXRy9tU6pZJwm1U8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=CsexlHa97kPZSTs7KKRrioEo43YL5QHjHDjCs2VfmFf34o9hG10IQguNclKivEfAD
+	 x60LGYDe7GO6IGgFXniE5Df4FJu/OhGTMeVqjtyiJzmh7XYRLxwp29v8XIi1XCfh2W
+	 AlKC1D0YPJyTOgxr3PEVgmB+SG1xmdjITyjjmRuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbgFVWwm (ORCPT
+        id S1731140AbgFVWx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730970AbgFVWwl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:52:41 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7106BC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:52:41 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z63so9109710pfb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kBEna7C87CRIsVV64iTClb5tnnjO6hHTnZhKwH5ueDo=;
-        b=JWy9yt7eE/ncFipoANW28y2XJ1ZnUsCUUuye1QXLafBrvvAcNS3clpffhnGulTIYMe
-         yQSD7+sctvULb3ODOC4CGrVArxcrSDxdmlyEazwBC2vNPoVRada5mPERMx2utWUuE8IC
-         7QqNq8xQBK1BZ5eiQ2TdAr/PrvKG4QztdYaxHpm00pQ6uXk+DEajdAMH67OTmUZzmcFX
-         obfYPcV8hqhIuEKpG96WPafAtrVkZpW4N14+IAV7g02cYoVgu+iXnI/goqfYO5TXgytZ
-         IZbEdSgYLstiRglidMLv80uI/uPg+ljIMbgq/rtikaXP9Q4XLpgW4c9wr7CpyS2pqFl+
-         LN9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kBEna7C87CRIsVV64iTClb5tnnjO6hHTnZhKwH5ueDo=;
-        b=V4BKoHOGQLuDoYHZkv/WOtjHwRtomgPC22oMQrfDjbbGYdT6bY8z8l+a0Fymy+g7A1
-         tYw9d4hVMcbgs/ABnEz6snj/PEnm4ubm3MDD7M4/awiFPaRNWmvMu7ayEMz5F+7dN/Ce
-         jvNVaUwbBcPpyXngRLlaSVnCBGY5yYgCUj+7AUeL44LKNg7QpMQRmZX7CnINALnLyg2n
-         tWTNBV2HU91sQl7uaBnZGL3AHfheWZ+EGq+f/9rykRl/Cyot7iA8wzezSrPIpJYSRw4P
-         nP1+lMEeRlWRxj+5FvxyAMNpChsvCbSPRX4/ZVQd6eoAfKED1XQv0siPfKdm9qRGgNu6
-         aMBw==
-X-Gm-Message-State: AOAM530aOegVFIFLuNY8gJt5NfjpIkY1jCPfjBS1t/+ZEdlndiWGZiRK
-        2HbaWk0BdL9P0fC6HX7yfrctKg==
-X-Google-Smtp-Source: ABdhPJwz5jU1WSrwpcbUa1oaT8ThSDWk9hJYIDWJwP9tAwIGdsFlMwCr5T/Jn3VuSf6jbfPYduXDbA==
-X-Received: by 2002:a63:384a:: with SMTP id h10mr14717359pgn.176.1592866360771;
-        Mon, 22 Jun 2020 15:52:40 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id d7sm15198576pfh.78.2020.06.22.15.52.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 15:52:40 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 15:52:37 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        Mon, 22 Jun 2020 18:53:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730934AbgFVWx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:53:56 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ED3720738;
+        Mon, 22 Jun 2020 22:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592866436;
+        bh=aniZpcUjMLL1QVC8MdE4cj/DV6qxXRy9tU6pZJwm1U8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=dre2VRTHReSnQKn+Uw94A0GlJc3bXOZKkXpB7UtE/cAT7AOE83lUuFXpbq7V0msNV
+         D0sprullDl5w6gObAHJc2wQqFc4ckZ/ybV5u36AzOQY/gakBd5bPHw8F8cRFztfi0/
+         7Q/jggMpzehAw6GyNhMtwDrjT0Qe9n+8rMyVdr44=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5778A352306A; Mon, 22 Jun 2020 15:53:56 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 15:53:56 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, rcu@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] vmlinux.lds.h: Add .gnu.version* to DISCARDS
-Message-ID: <20200622225237.ybol4qmz4mhkmlqc@google.com>
-References: <20200622205341.2987797-1-keescook@chromium.org>
- <20200622205341.2987797-2-keescook@chromium.org>
- <20200622220043.6j3vl6v7udmk2ppp@google.com>
- <202006221524.CEB86E036B@keescook>
+Subject: Re: [PATCH] rcu/tree: Force quiescent state on callback overload
+Message-ID: <20200622225356.GT9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <1592764647-2452-1-git-send-email-neeraju@codeaurora.org>
+ <20200621195052.GF9247@paulmck-ThinkPad-P72>
+ <94686c2e-b589-2598-e658-42f13cec1216@codeaurora.org>
+ <20200622031325.GG9247@paulmck-ThinkPad-P72>
+ <b72302b1-f49a-84fb-6bb9-75dd5f16bd2c@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202006221524.CEB86E036B@keescook>
+In-Reply-To: <b72302b1-f49a-84fb-6bb9-75dd5f16bd2c@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22, Kees Cook wrote:
->On Mon, Jun 22, 2020 at 03:00:43PM -0700, Fangrui Song wrote:
->> On 2020-06-22, Kees Cook wrote:
->> > For vmlinux linking, no architecture uses the .gnu.version* section,
->> > so remove it via the common DISCARDS macro in preparation for adding
->> > --orphan-handling=warn more widely.
->> >
->> > Signed-off-by: Kees Cook <keescook@chromium.org>
->> > ---
->> > include/asm-generic/vmlinux.lds.h | 1 +
->> > 1 file changed, 1 insertion(+)
->> >
->> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
->> > index db600ef218d7..6fbe9ed10cdb 100644
->> > --- a/include/asm-generic/vmlinux.lds.h
->> > +++ b/include/asm-generic/vmlinux.lds.h
->> > @@ -934,6 +934,7 @@
->> > 	*(.discard)							\
->> > 	*(.discard.*)							\
->> > 	*(.modinfo)							\
->> > +	*(.gnu.version*)						\
->> > 	}
->> >
->> > /**
->> > --
->> > 2.25.1
->>
->> I wonder what lead to .gnu.version{,_d,_r} sections in the kernel.
->
->This looks like a bug in bfd.ld? There are no versioned symbols in any
->of the input files (and no output section either!)
->
->The link command is:
->$ ld -m elf_x86_64 --no-ld-generated-unwind-info -z noreloc-overflow -pie \
->--no-dynamic-linker   --orphan-handling=warn -T \
->arch/x86/boot/compressed/vmlinux.lds \
->arch/x86/boot/compressed/kernel_info.o \
->arch/x86/boot/compressed/head_64.o arch/x86/boot/compressed/misc.o \
->arch/x86/boot/compressed/string.o arch/x86/boot/compressed/cmdline.o \
->arch/x86/boot/compressed/error.o arch/x86/boot/compressed/piggy.o \
->arch/x86/boot/compressed/cpuflags.o \
->arch/x86/boot/compressed/early_serial_console.o \
->arch/x86/boot/compressed/kaslr.o arch/x86/boot/compressed/kaslr_64.o \
->arch/x86/boot/compressed/mem_encrypt.o \
->arch/x86/boot/compressed/pgtable_64.o arch/x86/boot/compressed/acpi.o \
->-o arch/x86/boot/compressed/vmlinux
->
->None of the inputs have the section:
->
->$ for i in arch/x86/boot/compressed/kernel_info.o \
->arch/x86/boot/compressed/head_64.o arch/x86/boot/compressed/misc.o \
->arch/x86/boot/compressed/string.o arch/x86/boot/compressed/cmdline.o \
->arch/x86/boot/compressed/error.o arch/x86/boot/compressed/piggy.o \
->arch/x86/boot/compressed/cpuflags.o \
->arch/x86/boot/compressed/early_serial_console.o \
->arch/x86/boot/compressed/kaslr.o arch/x86/boot/compressed/kaslr_64.o \
->arch/x86/boot/compressed/mem_encrypt.o \
->arch/x86/boot/compressed/pgtable_64.o arch/x86/boot/compressed/acpi.o \
->; do echo -n $i": "; readelf -Vs $i | grep 'version'; done
->arch/x86/boot/compressed/kernel_info.o: No version information found in this file.
->arch/x86/boot/compressed/head_64.o: No version information found in this file.
->arch/x86/boot/compressed/misc.o: No version information found in this file.
->arch/x86/boot/compressed/string.o: No version information found in this file.
->arch/x86/boot/compressed/cmdline.o: No version information found in this file.
->arch/x86/boot/compressed/error.o: No version information found in this file.
->arch/x86/boot/compressed/piggy.o: No version information found in this file.
->arch/x86/boot/compressed/cpuflags.o: No version information found in this file.
->arch/x86/boot/compressed/early_serial_console.o: No version information found in this file.
->arch/x86/boot/compressed/kaslr.o: No version information found in this file.
->arch/x86/boot/compressed/kaslr_64.o: No version information found in this file.
->arch/x86/boot/compressed/mem_encrypt.o: No version information found in this file.
->arch/x86/boot/compressed/pgtable_64.o: No version information found in this file.
->arch/x86/boot/compressed/acpi.o: No version information found in this file.
->
->And it's not in the output:
->
->$ readelf -Vs arch/x86/boot/compressed/vmlinux | grep version
->No version information found in this file.
->
->So... for the kernel we need to silence it right now.
+On Mon, Jun 22, 2020 at 09:16:24AM +0530, Neeraj Upadhyay wrote:
+> Hi Paul,
+> 
+> On 6/22/2020 8:43 AM, Paul E. McKenney wrote:
+> > On Mon, Jun 22, 2020 at 01:30:31AM +0530, Neeraj Upadhyay wrote:
+> > > Hi Paul,
+> > > 
+> > > On 6/22/2020 1:20 AM, Paul E. McKenney wrote:
+> > > > On Mon, Jun 22, 2020 at 12:07:27AM +0530, Neeraj Upadhyay wrote:
+> > > > > On callback overload, we want to force quiescent state immediately,
+> > > > > for the first and second fqs. Enforce the same, by including
+> > > > > RCU_GP_FLAG_OVLD flag, in fqsstart check.
+> > > > > 
+> > > > > Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> > > > 
+> > > > Good catch!
+> > > > 
+> > > > But what did you do to verify that this change does the right thing?
+> > > > 
+> > > > 						Thanx, Paul
+> > > > 
+> > > 
+> > > I haven't done a runtime verification of this code path; I posted this,
+> > > based on review of this code.
+> > 
+> > My concern is that under overload, the FQS scans would happen continuously
+> > rather than accelerating only the first such scan in a given grace period.
+> > This would of course result in a CPU-bound grace-period kthread, which
+> > users might not be all that happy with.
+> > 
+> > Or am I missing something subtle that prevents this?
+> 
+> Looks like under overload, only the first and second scans are accelerated?
+> 
+>     gf = 0;
+>     if (first_gp_fqs) {
+>          first_gp_fqs = false;
+>           gf = rcu_state.cbovld ? RCU_GP_FLAG_OVLD : 0;
+>     }
 
-Re-link with -M (or -Map file) to check where .gnu.version{,_d,_r} input
-sections come from?
+Very good, it does sound like you understand this, and it matches my
+analysis and passes light testing, so I queued this one.  I did improve
+the commit log, please check below.  The added detail is helpful to people
+(including ourselves, by the way) who might need to look at this commit
+some time in the future.
 
-If it is a bug, we should probably figure out which version of binutils
-has fixed the bug.
+If you have an x86 system lying around, running rcutorture is quite
+straightforward.  Non-x86 systems can also run rcutorture, if nothing
+else by using modprobe and rmmod as described here:
+
+https://paulmck.livejournal.com/57769.html
+
+The scripting described in the latter part of this document has worked
+on ARMv8 and PowerPC, and might still work for all I know.
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 9482524d7dd0aea5d32a6efa2979223eea07c029
+Author: Neeraj Upadhyay <neeraju@codeaurora.org>
+Date:   Mon Jun 22 00:07:27 2020 +0530
+
+    rcu/tree: Force quiescent state on callback overload
+    
+    On callback overload, it is necessary to quickly detect idle CPUs,
+    and rcu_gp_fqs_check_wake() checks for this condition.  Unfortunately,
+    the code following the call to this function does not repeat this check,
+    which means that in reality no actual quiescent-state forcing, instead
+    only a couple of quick and pointless wakeups at the beginning of the
+    grace period.
+    
+    This commit therefore adds a check for the RCU_GP_FLAG_OVLD flag in
+    the post-wakeup "if" statement in rcu_gp_fqs_loop().
+    
+    Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index d0988a1..6226bfb 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1865,7 +1865,7 @@ static void rcu_gp_fqs_loop(void)
+ 			break;
+ 		/* If time for quiescent-state forcing, do it. */
+ 		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
+-		    (gf & RCU_GP_FLAG_FQS)) {
++		    (gf & (RCU_GP_FLAG_FQS | RCU_GP_FLAG_OVLD))) {
+ 			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+ 					       TPS("fqsstart"));
+ 			rcu_gp_fqs(first_gp_fqs);
