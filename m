@@ -2,120 +2,174 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B00C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB192071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A85C2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z5GkBE1h"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vxcnk++B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgFVMDL (ORCPT
+        id S1728107AbgFVMEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:03:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59514 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726889AbgFVMDL (ORCPT
+        Mon, 22 Jun 2020 08:04:54 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:62665 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbgFVMEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:03:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592827389;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XVrUkWunS1SNkKo57Lfv0f1FPTYSboRjBRmoZLWSzhU=;
-        b=Z5GkBE1hD1FvRxwTP71pRGEzdbi8G0HrcUOq45h5j4OGPEeeHTPqKSHz+v4Gt3ng3P4OSt
-        7hQDyYFPeaHl/uqgtSYl/ucy/qLVzPhGEuadoFYjCjG/afczo7CCIQi6RsDJ2nUmyWO/Gc
-        jqjGF0yAjIxk8g5FHiibf+4GyrkmTPo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-362-hb0t208fPqq-Zx5kPmQn6w-1; Mon, 22 Jun 2020 08:03:05 -0400
-X-MC-Unique: hb0t208fPqq-Zx5kPmQn6w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC3A881CBE3;
-        Mon, 22 Jun 2020 12:03:03 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.236])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 77C9F5C1BD;
-        Mon, 22 Jun 2020 12:03:01 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 22 Jun 2020 14:03:03 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 14:03:00 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Dominique Martinet <asmadeus@codewreck.org>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        linux-kernel@vger.kernel.org, ebiederm@xmission.com,
-        akpm@linux-foundation.org, liuzhiqiang26@huawei.com,
-        joel@joelfernandes.org, paulmck@linux.vnet.ibm.com,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] kernel/signal.c: Export symbol __lock_task_sighand
-Message-ID: <20200622120259.GD6516@redhat.com>
-References: <20200621133704.77896-1-alexander.kapshuk@gmail.com>
- <20200622062527.GA6516@redhat.com>
- <20200622083905.c3nurmkbo5yhd6lj@wittgenstein>
- <20200622102401.GA12377@nautica>
- <20200622113610.okzntx7jmnk6n7au@wittgenstein>
+        Mon, 22 Jun 2020 08:04:54 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 05MC3SgG001221;
+        Mon, 22 Jun 2020 21:03:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05MC3SgG001221
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592827409;
+        bh=XT5p7CGO0IRfglTH035B6VnJfGMRKyJLc0ZZJHRD7vI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vxcnk++Bh/HeR8KH8zvH64uyIKfNlEo5yYtjkH/52X7GM1W6grC2f/fYi44u3aO7Q
+         Zc2ON3HRrNHrIwYGTB46c+hVPdBIm7VdJdRPcc0vBkE8AbS4NWlehCVdwMLA3ocXnd
+         Fp4+7RwQrjN79zRVo/qK+/fuEDGxCGKISPdVIybR7Brvn/gY4LzKMnRS5+zWFSLvAx
+         e2i8LWJkaUDzZ9+fC2LN3MqBFvdpx2HTj6FWUrQeljYW/wiBjM+SB0O6zjgA9uxkNb
+         QWf8lMEh5XbIkTZScLcxASeXZ9n1+sgshBXwiDEQC6cw7q3+giUIxNaYP1pejGinkQ
+         NPTj859DtiRwg==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        - <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: ASoC: Convert UniPhier EVEA codec to json-schema
+Date:   Mon, 22 Jun 2020 21:03:20 +0900
+Message-Id: <20200622120320.454535-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622113610.okzntx7jmnk6n7au@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/22, Christian Brauner wrote:
->
-> On Mon, Jun 22, 2020 at 12:24:01PM +0200, Dominique Martinet wrote:
-> > Christian Brauner wrote on Mon, Jun 22, 2020:
-> > > On Mon, Jun 22, 2020 at 08:25:28AM +0200, Oleg Nesterov wrote:
-> > >> current->sighand is stable and can't go away. Unless "current" is exiting and
-> > >> has already passed exit_notify(). So I don't think net/9p needs this helper.
-> > >
-> > > From what I can gather from the thread (cf. [1]) that is linked in the
-> > > commit message the main motivation for all of this is sparse not being
-> > > happy and not some bug. (Maybe I'm not seeing something though.)
-> > >
-> > > The patch itself linked here doesn't seem to buy anything. I agree with
-> > > Oleg. Afaict, lock_task_sighand() would only be needed here if the task
-> > > wouldn't be current. So maybe it should just be dropped from the series.
-> >
-> > Sure. I honestly have no idea on what guarantees we have from the task
-> > being current here as opposed to any other task -- I guess that another
-> > thread calling exit for exemple would have to wait?
->
-> When a thread in a non-trivial thread-group (sorry for the math
-> reference :)) execs it'll unshare its struct sighand.
+Convert the UniPhier EVEA sound codec binding to DT schema format.
 
-Well, not really...
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-The execing threads will kill other other threads, then it will check
-if ->sighand should be unshared. The latter is very unlikely, I don't
-think CLONE_SIGHAND without CLONE_THREAD is actually used today.
+ .../sound/socionext,uniphier-evea.yaml        | 62 +++++++++++++++++++
+ .../bindings/sound/uniphier,evea.txt          | 26 --------
+ 2 files changed, 62 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/uniphier,evea.txt
 
-But this doesn't really matter. I mean, even if you race with another
-thread doing exec/exit/whatever, current->sighand is stable. Unless, again,
-current has already exited (called exit_notify()).
-
-> The new struct
-> sighand will be assigned using rcu_assign_pointer() so afaik (Paul or
-> Oleg can yell at me if I'm talking nonsense) any prior callers will see
-> the prior sighand value.
-
-Yes, but see above.
-
-If tsk is not current, then (in general) it is not safe to use tsk->sighand
-directly. It can can be changed by exec (as you explained), or you can hit
-tsk->sighand == NULL if you race with exit.
-
-Oleg.
+diff --git a/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml b/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
+new file mode 100644
+index 000000000000..7ac1c0140d5d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/socionext,uniphier-evea.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UniPhier EVEA SoC-internal sound codec
++
++maintainers:
++  - <alsa-devel@alsa-project.org>
++
++properties:
++  compatible:
++    const: socionext,uniphier-evea
++
++  reg:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: evea
++      - const: exiv
++
++  clocks:
++    minItems: 2
++    maxItems: 2
++
++  reset-names:
++    items:
++      - const: evea
++      - const: exiv
++      - const: adamv
++
++  resets:
++    minItems: 3
++    maxItems: 3
++
++  "#sound-dai-cells":
++    const: 1
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clock-names
++  - clocks
++  - reset-names
++  - resets
++  - "#sound-dai-cells"
++
++examples:
++  - |
++    codec@57900000 {
++        compatible = "socionext,uniphier-evea";
++        reg = <0x57900000 0x1000>;
++        clock-names = "evea", "exiv";
++        clocks = <&sys_clk 41>, <&sys_clk 42>;
++        reset-names = "evea", "exiv", "adamv";
++        resets = <&sys_rst 41>, <&sys_rst 42>, <&adamv_rst 0>;
++        #sound-dai-cells = <1>;
++    };
+diff --git a/Documentation/devicetree/bindings/sound/uniphier,evea.txt b/Documentation/devicetree/bindings/sound/uniphier,evea.txt
+deleted file mode 100644
+index 3f31b235f18b..000000000000
+--- a/Documentation/devicetree/bindings/sound/uniphier,evea.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-Socionext EVEA - UniPhier SoC internal codec driver
+-
+-Required properties:
+-- compatible      : should be "socionext,uniphier-evea".
+-- reg             : offset and length of the register set for the device.
+-- clock-names     : should include following entries:
+-                    "evea", "exiv"
+-- clocks          : a list of phandle, should contain an entry for each
+-                    entries in clock-names.
+-- reset-names     : should include following entries:
+-                    "evea", "exiv", "adamv"
+-- resets          : a list of phandle, should contain reset entries of
+-                    reset-names.
+-- #sound-dai-cells: should be 1.
+-
+-Example:
+-
+-	codec {
+-		compatible = "socionext,uniphier-evea";
+-		reg = <0x57900000 0x1000>;
+-		clock-names = "evea", "exiv";
+-		clocks = <&sys_clk 41>, <&sys_clk 42>;
+-		reset-names = "evea", "exiv", "adamv";
+-		resets = <&sys_rst 41>, <&sys_rst 42>, <&adamv_rst 0>;
+-		#sound-dai-cells = <1>;
+-	};
+-- 
+2.25.1
 
