@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D28C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3043AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9CC2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32352073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592865841;
-	bh=WXTjaO/GWX+4a+95F2PVE95dKGK8yFuYV1kK1j13JUc=;
+	s=default; t=1592865846;
+	bh=EGvrvG1audPsW1wwbscXqzjxXvxqTczeFC0n97JcnzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AkuITBuJqfJHn2kFmY2NnOEVja6DrclqHnVgGkBQlDbcfGxmEOn/2gPB59Sb6me0X
-	 CGngBPxaL12Kzegu4/AjsPFjZUGCzu4sIou3qrJIL9TN9Y3hE4GEp5KBJSZZg5GVHN
-	 VYC9+gKMMl9ZmLb4uCwFugvSRjTQ/HRzQTu5lGiU=
+	b=kF2Y8kk8y7rBOo39gmml+lskvzl3cw94+eZnXZoAtVY86YEhW2Aa/PkZDhxcfC9Lr
+	 VCSbTVZLfxO10498LQEGKaReeitwuVOZDNQuo/izp4WF13Car5dg3zjaFvFITW5HcM
+	 v9DGassnW0Rl7aTkgGCvbYPNDtTg6eV2xA6tkES4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbgFVWnP (ORCPT
+        id S1731456AbgFVWoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59728 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 18:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731269AbgFVWnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:43:05 -0400
+        id S1731312AbgFVWnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:43:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C815720786;
-        Mon, 22 Jun 2020 22:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2725520842;
+        Mon, 22 Jun 2020 22:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592865784;
-        bh=WXTjaO/GWX+4a+95F2PVE95dKGK8yFuYV1kK1j13JUc=;
+        s=default; t=1592865794;
+        bh=EGvrvG1audPsW1wwbscXqzjxXvxqTczeFC0n97JcnzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VaXx+6eSfGYLiiHYkg3kSx2wFywLxOwzl8MmoOZVUUEqtZJCbPGZF+vo4gmHCbo4I
-         Uy3cCzBu8V4+0eA+HaudBF+FUzj0cmi2Y/Q3mXPzBQ3BJoQY6j6p8r332KAuZ7RCTV
-         vbPe1HYz7FNsQzRJQXxMYVjkuwnMdl7Dj6TDjJcQ=
+        b=JxdJAbiddXcSDedCMCLRHxX0xCISKNqyNARUNDcGyUrSrL3XLH2Ion42MbQlKeE2F
+         oGfdX5REKjHsKudi1U8NzzXQ+ncfPM0One0TtneJNg3aNLX8yge7MF+AKEoyFhoKVS
+         gICm5Gt5eX71/dyHTf6mCdZG4hFvEpGuTDrUtwuM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     peterz@infradead.org
 Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
         jolsa@redhat.com, alexey.budankov@linux.intel.com,
         songliubraving@fb.com, acme@redhat.com, allison@lohutok.net,
         sashal@kernel.org
-Subject: [PATCH v3 02/14] tools headers: Add rcupdate.h header
-Date:   Mon, 22 Jun 2020 18:42:46 -0400
-Message-Id: <20200622224258.1208588-3-sashal@kernel.org>
+Subject: [PATCH v3 09/14] tools/lib/lockdep: New stacktrace API
+Date:   Mon, 22 Jun 2020 18:42:53 -0400
+Message-Id: <20200622224258.1208588-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200622224258.1208588-1-sashal@kernel.org>
 References: <20200622224258.1208588-1-sashal@kernel.org>
@@ -58,33 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is now needed by liblockdep as a result of a0b0fd53e1e6
-("locking/lockdep: Free lock classes that are no longer in use").
+The kernel switched to using kernel/stacktrace.c, and the API slightly
+changed.
+
+Adjust it to make stack traces work again.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/linux/rcupdate.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 tools/include/linux/rcupdate.h
+ tools/include/linux/stacktrace.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/include/linux/rcupdate.h b/tools/include/linux/rcupdate.h
-new file mode 100644
-index 0000000000000..1b7abc86f4336
---- /dev/null
-+++ b/tools/include/linux/rcupdate.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LIBLOCKDEP_RCUPDATE_H_
-+#define _LIBLOCKDEP_RCUPDATE_H_
+diff --git a/tools/include/linux/stacktrace.h b/tools/include/linux/stacktrace.h
+index ae343ac35bfa7..b290b98d883aa 100644
+--- a/tools/include/linux/stacktrace.h
++++ b/tools/include/linux/stacktrace.h
+@@ -15,10 +15,18 @@ static inline void print_stack_trace(struct stack_trace *trace, int spaces)
+ 	backtrace_symbols_fd((void **)trace->entries, trace->nr_entries, 1);
+ }
+ 
++static inline void stack_trace_print(const long unsigned int *entries, unsigned int nr, int spaces)
++{
++	backtrace_symbols_fd((void **)entries, nr, 1);
++}
 +
-+#define call_rcu(x, y)
-+#define init_rcu_head(x)
+ #define save_stack_trace(trace)	\
+ 	((trace)->nr_entries =	\
+ 		backtrace((void **)(trace)->entries, (trace)->max_entries))
+ 
++#define stack_trace_save(e, m, x) \
++	backtrace((void **)(e), (m))
 +
-+struct rcu_head {
-+	char dummy;
-+};
-+
-+#endif
+ static inline int dump_stack(void)
+ {
+ 	void *array[64];
 -- 
 2.25.1
 
