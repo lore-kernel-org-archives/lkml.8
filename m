@@ -2,147 +2,342 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17069C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F68C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDA582076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41512076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1DlWOIF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uFaTK3d5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgFVUCa (ORCPT
+        id S1728667AbgFVUCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52540 "EHLO
+        Mon, 22 Jun 2020 16:02:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbgFVUC2 (ORCPT
+        with ESMTP id S1728050AbgFVUCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:02:28 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4867DC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:02:28 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id s13so14201315otd.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:02:28 -0700 (PDT)
+        Mon, 22 Jun 2020 16:02:15 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4535BC06179B
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:47:00 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g10so698114wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:47:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AlYKYXzcMv9BOPw1annEKLuHXEQQjMbSoxaUi+SHOLc=;
-        b=a1DlWOIFce+lAwR9uUnCAaEdNUPzRDELBo3GobG/t4Q+sUpyoCJht8jshG1hqpAlWI
-         wJUMVq+s9I5abhW13Mnkw6fMzEuC7otNASbPgnZPUp3Up9hzUudS3AB/SoXjQuvVSIRx
-         x8O5WT5bmaSiFj4R09vAr7aG6InGEa5JUVU9mm+nmOlpSKhDlsjSe+RyArqpzT1H3RuK
-         tLoxQP4HEKImhvYk+Py0UpbGvr50L66L6hgAZCH4fcXq4vnI+lTPXuKzELmJGggm8GR7
-         jHaJ5WXa4VYFcnRLqilmTQAgJv/x0VzLc75ZpuLeSOe7m4gj1GrV/n0gw72myXxagRRi
-         o9LA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ODOSMs7hlDlueY6tO0Y70BJvb4BVdVy4itgUewuyPXQ=;
+        b=uFaTK3d56s7T4bkZ+sGL815DQdbAIf5cC8yFeAHB7iaBtf7T1St4qfhuFmFMJ7f6/r
+         t3xdDkBr2I+T39H09CDtHgv6oo/c7ibkh9AIfNq+39DuGI2KibjJMbijs4S4rv6k95+4
+         6HUte0FXf/ZEXY12mInPLRA8OUYmrEzkOssBKxRitUovbFgfMVJH8hUDZts6iIO67xB+
+         hRzNmZTbsoYDo6NjbpLWAxZnBVHBs6QniFGG65hb6aBZHA3jbq6CcBN3mIE/o93azWMy
+         O/MOwa8kjvX6+gA7jakig8mo/V8Q2EqgdgjEmdhoRH0dQD+FvrNICMjEFKXgNifncJAk
+         1dCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AlYKYXzcMv9BOPw1annEKLuHXEQQjMbSoxaUi+SHOLc=;
-        b=ttKq3iOumUYCM1fTXZd8wUild5TXbAYs2UUNWYUSn3lPVw+sCi1vGbUhXwCLuBBp3k
-         YDqd4g8/vXE7NV44JWkrQfZMKxS3+34q2E3r5eriPRhH/+ofzpB687jGgHDjf/j/iOSI
-         oamhJmk0buKdX0r33EDurqklMLOffcpe+mMVyJhT+88y+FsuebhwnT3/8b8tjlMrskwh
-         uifTk2IZEUzCaxKhdXb6Li+p0jVIYRHZjI/odU/kbP7XZEZy5SxiI2K0DBB+Gfj32kNj
-         i4TgQ98EOXb4g0o2VEPspDv3g5tTLnhCJv2DuHg6Zp2+IjJcmNG3IAYCbU7FDhKf66NV
-         K5Eg==
-X-Gm-Message-State: AOAM5319yEZSJsBk2HzY7RnrRIYBYfO7h5UyZJSXSpbuOk1PmbKCDz8T
-        W+KJAUSYBK6OVQCPJ1ITFuou62mC3bYzSPWMoL74v81qSnE=
-X-Google-Smtp-Source: ABdhPJw9iMpvNLp/TRxRoZmJOlM7QF3eTJlY6d4DZ3NjVE9nvNFE1yhiDkcHC4tSBPGGKwanZYXFmZdToTpf7zr+TmE=
-X-Received: by 2002:a9d:1722:: with SMTP id i34mr14357502ota.6.1592856147416;
- Mon, 22 Jun 2020 13:02:27 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ODOSMs7hlDlueY6tO0Y70BJvb4BVdVy4itgUewuyPXQ=;
+        b=YraAWAe60G8/4I6ZyTw8qkZzuBMTZTbRNQl7i4cALUmnU6qz324LCM1Ixu/N07dP6K
+         99u2OBmNMIJ1jqMMPWqJcKzwmnvmHCJCyKxlwaXtDNUHh/2csqLVwQ2SkRuEoqXteBNP
+         5yCLPdYwOOxmjKPz+z40j2dMdphpzhCjzNWMu8YcJJyskIdnVEDNxkiTTgngYqorlWrV
+         D0oJOLaUtkffEdoSU7x8FueACDCGhx+Oh9LACN1d/X8wECS57mg5HNHyRRnjyfEH73Kx
+         m9EzSMXiRggtiNPx5cejsbMsyCp2t/1whJI6Qs1MkZP4W6ZJQ4LQOgVYTQ7mPsz+QIdb
+         Au8w==
+X-Gm-Message-State: AOAM5303fu0pQak915NwQLJSveSh02QCd2c3XC25MvK/Ba4rPtV1HawY
+        9sB8kPdGTqHINJp/LxXBG3c+zQ==
+X-Google-Smtp-Source: ABdhPJxEDVn/3oGDYMLsY0vvPxVE+iAjav6gvVGW8hxllefuYnkkGCqLpJrLn9luSaiJbbCUK8wrkw==
+X-Received: by 2002:a1c:4444:: with SMTP id r65mr1767496wma.129.1592855218748;
+        Mon, 22 Jun 2020 12:46:58 -0700 (PDT)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
+        by smtp.googlemail.com with ESMTPSA id i17sm12945242wrc.34.2020.06.22.12.46.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 12:46:58 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] thermal: add support for the MCU controlled FAN on
+ Khadas boards
+To:     Neil Armstrong <narmstrong@baylibre.com>, lee.jones@linaro.org
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com,
+        Amit Kucheria <amit.kucheria@linaro.org>
+References: <20200618133818.15857-1-narmstrong@baylibre.com>
+ <20200618133818.15857-2-narmstrong@baylibre.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <53aa62a3-1d8e-bc91-1a2b-88c766276beb@linaro.org>
+Date:   Mon, 22 Jun 2020 21:46:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200619143056.24538-1-trini@konsulko.com>
-In-Reply-To: <20200619143056.24538-1-trini@konsulko.com>
-From:   ron minnich <rminnich@gmail.com>
-Date:   Mon, 22 Jun 2020 13:02:16 -0700
-Message-ID: <CAP6exYJ64Hy9y3Dzh9Asrq8Y0oDWYk+tf4UAcasEc-ZxTY8DAw@mail.gmail.com>
-Subject: Re: [PATCH] initrd: Remove erroneous comment
-To:     Tom Rini <trini@konsulko.com>
-Cc:     lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200618133818.15857-2-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The other thing you ought to consider fixing:
-initrd is documented as follows:
-
-        initrd=         [BOOT] Specify the location of the initial ramdisk
-
-for bootloaders only.
-
-UEFI consumes initrd from the command line as well. As ARM servers
-increasingly use UEFI, there may be situations in which the initrd
-option doesn't make its way to the kernel? I don't know, UEFI is such
-a black box to me. But I've seen this "initrd consumption" happen.
-
-Based on docs, and the growing use of bootloaders that are happy to
-consume initrd= and not pass it to the kernel, you might be better off
-trying to move to the new command line option anyway.
-
-IOW, this comment may not be what people want to see, but ... it might
-also be right. Or possibly changed to:
-
-/*
- * The initrd keyword is in use today on ARM, PowerPC, and MIPS.
- * It is also reserved for use by bootloaders such as UEFI and may
- * be consumed by them and not passed on to the kernel.
- * The documentation also shows it as reserved for bootloaders.
- * It is advised to move to the initrdmem= option whereever possible.
- */
-
-On Fri, Jun 19, 2020 at 7:31 AM Tom Rini <trini@konsulko.com> wrote:
->
-> Most architectures have been passing the location of an initrd via the
-> initrd= option since their inception.  Remove the comment as it's both
-> wrong and unrelated to the commit that introduced it.
->
-> Fixes: 694cfd87b0c8 ("x86/setup: Add an initrdmem= option to specify initrd physical address")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-> Cc: H. Peter Anvin (Intel) <hpa@zytor.com>
-> Cc: Ronald G. Minnich <rminnich@gmail.com>
-> Signed-off-by: Tom Rini <trini@konsulko.com>
+On 18/06/2020 15:38, Neil Armstrong wrote:
+> The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
+> on-board microcontroller.
+> 
+> This implements the FAN control as thermal devices and as cell of the Khadas
+> MCU MFD driver.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
-> For a bit more context, I assume there's been some confusion between
-> "initrd" being a keyword in things like extlinux.conf and also that for
-> quite a long time now initrd information is passed via device tree and
-> not the command line on relevant architectures.  But it's still true
-> that it's been a valid command line option to the kernel since the 90s.
-> It's just the case that in 2018 the code was consolidated from under
-> arch/ and in to this file.
-> ---
->  init/do_mounts_initrd.c | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-> index d72beda824aa..53314d7da4be 100644
-> --- a/init/do_mounts_initrd.c
-> +++ b/init/do_mounts_initrd.c
-> @@ -45,11 +45,6 @@ static int __init early_initrdmem(char *p)
->  }
->  early_param("initrdmem", early_initrdmem);
->
-> -/*
-> - * This is here as the initrd keyword has been in use since 11/2018
-> - * on ARM, PowerPC, and MIPS.
-> - * It should not be; it is reserved for bootloaders.
-> - */
->  static int __init early_initrd(char *p)
->  {
->         return early_initrdmem(p);
-> --
-> 2.17.1
->
+> Hi Lee,
+> 
+> Could you apply this patch via the MFD tree since it depends on
+> the linux/mfd/khadas-mcu.h header ?
+> 
+> This patch is unchanged from the v3 serie.
+> 
+> Thanks,
+> Neil
+> 
+>  drivers/thermal/Kconfig          |  11 ++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
+>  3 files changed, 186 insertions(+)
+>  create mode 100644 drivers/thermal/khadas_mcu_fan.c
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 3eb2348e5242..0125561488c9 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -500,4 +500,15 @@ config SPRD_THERMAL
+>  	help
+>  	  Support for the Spreadtrum thermal sensor driver in the Linux thermal
+>  	  framework.
+> +
+> +config KHADAS_MCU_FAN_THERMAL
+> +	tristate "Khadas MCU controller FAN cooling support"
+> +	depends on OF || COMPILE_TEST
+> +	depends on MFD_KHADAS_MCU
+> +	select MFD_CORE
+> +	select REGMAP
+> +	help
+> +	  If you say yes here you get support for the FAN controlled
+> +	  by the Microcontroller found on the Khadas VIM boards.
+> +
+>  endif
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 0c8b84a09b9a..4b6aabaa7e31 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -61,3 +61,4 @@ obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
+>  obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
+>  obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
+>  obj-$(CONFIG_SPRD_THERMAL)	+= sprd_thermal.o
+> +obj-$(CONFIG_KHADAS_MCU_FAN_THERMAL)	+= khadas_mcu_fan.o
+> diff --git a/drivers/thermal/khadas_mcu_fan.c b/drivers/thermal/khadas_mcu_fan.c
+> new file mode 100644
+> index 000000000000..6995b443cad4
+> --- /dev/null
+> +++ b/drivers/thermal/khadas_mcu_fan.c
+> @@ -0,0 +1,174 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Khadas MCU Controlled FAN driver
+> + *
+> + * Copyright (C) 2020 BayLibre SAS
+> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/khadas-mcu.h>
+> +#include <linux/regmap.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/thermal.h>
+> +
+> +#define MAX_LEVEL 3
+> +
+> +struct khadas_mcu_fan_ctx {
+> +	struct khadas_mcu *mcu;
+> +	unsigned int level;
+> +	struct thermal_cooling_device *cdev;
+> +};
+> +
+> +static int khadas_mcu_fan_set_level(struct khadas_mcu_fan_ctx *ctx,
+> +				    unsigned int level)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_write(ctx->mcu->regmap, KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
+> +			   level);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ctx->level = level;
+> +
+> +	return 0;
+> +}
+> +
+> +static int khadas_mcu_fan_get_max_state(struct thermal_cooling_device *cdev,
+> +					unsigned long *state)
+> +{
+> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+> +
+> +	if (!ctx)
+> +		return -EINVAL;
+
+It is pointless to check 'ctx' is NULL, that was done at probe time.
+
+> +	*state = MAX_LEVEL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int khadas_mcu_fan_get_cur_state(struct thermal_cooling_device *cdev,
+> +					unsigned long *state)
+> +{
+> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+> +
+> +	if (!ctx)
+> +		return -EINVAL;
+
+Ditto
+
+> +	*state = ctx->level;
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +khadas_mcu_fan_set_cur_state(struct thermal_cooling_device *cdev,
+> +			     unsigned long state)
+> +{
+> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+> +
+> +	if (!ctx || (state > MAX_LEVEL))
+> +		return -EINVAL;
+
+Ditto
+
+> +	if (state == ctx->level)
+> +		return 0;
+> +
+> +	return khadas_mcu_fan_set_level(ctx, state);
+> +}
+> +
+> +static const struct thermal_cooling_device_ops khadas_mcu_fan_cooling_ops = {
+> +	.get_max_state = khadas_mcu_fan_get_max_state,
+> +	.get_cur_state = khadas_mcu_fan_get_cur_state,
+> +	.set_cur_state = khadas_mcu_fan_set_cur_state,
+> +};
+> +
+> +static int khadas_mcu_fan_probe(struct platform_device *pdev)
+> +{
+> +	struct khadas_mcu *mcu = dev_get_drvdata(pdev->dev.parent);
+> +	struct thermal_cooling_device *cdev;
+> +	struct device *dev = &pdev->dev;
+> +	struct khadas_mcu_fan_ctx *ctx;
+> +	int ret;
+> +
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +	ctx->mcu = mcu;
+> +	platform_set_drvdata(pdev, ctx);
+> +
+> +	cdev = devm_thermal_of_cooling_device_register(dev->parent,
+> +			dev->parent->of_node, "khadas-mcu-fan", ctx,
+> +			&khadas_mcu_fan_cooling_ops);
+> +	if (IS_ERR(cdev)) {
+> +		ret = PTR_ERR(cdev);
+> +		dev_err(dev,
+> +				"Failed to register khadas-mcu-fan as cooling device: %d\n",
+> +				ret);
+> +		return ret;
+> +	}
+> +	ctx->cdev = cdev;
+> +	thermal_cdev_update(cdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int khadas_mcu_fan_disable(struct device *dev)
+> +{
+> +	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
+> +	unsigned int level_save = ctx->level;
+> +	int ret;
+> +
+> +	ret = khadas_mcu_fan_set_level(ctx, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ctx->level = level_save;
+
+Nitpicking : move the save section to suspend.
+
+> +	return 0;
+> +}
+> +
+> +static void khadas_mcu_fan_shutdown(struct platform_device *pdev)
+> +{
+> +	khadas_mcu_fan_disable(&pdev->dev);
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int khadas_mcu_fan_suspend(struct device *dev)
+> +{
+> +	return khadas_mcu_fan_disable(dev);
+> +}
+> +
+> +static int khadas_mcu_fan_resume(struct device *dev)
+> +{
+> +	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
+> +
+> +	return khadas_mcu_fan_set_level(ctx, ctx->level);
+
+Out of curiosity, did you check the fan is not continuously spinning
+after a resume when the suspend happened during a mitigation phase?
+
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(khadas_mcu_fan_pm, khadas_mcu_fan_suspend,
+> +			 khadas_mcu_fan_resume);
+> +
+> +static const struct platform_device_id khadas_mcu_fan_id_table[] = {
+> +	{ .name = "khadas-mcu-fan-ctrl", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(platform, khadas_mcu_fan_id_table);
+> +
+> +static struct platform_driver khadas_mcu_fan_driver = {
+> +	.probe		= khadas_mcu_fan_probe,
+> +	.shutdown	= khadas_mcu_fan_shutdown,
+> +	.driver	= {
+> +		.name		= "khadas-mcu-fan-ctrl",
+> +		.pm		= &khadas_mcu_fan_pm,
+> +	},
+> +	.id_table	= khadas_mcu_fan_id_table,
+> +};
+> +
+> +module_platform_driver(khadas_mcu_fan_driver);
+> +
+> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
+> +MODULE_DESCRIPTION("Khadas MCU FAN driver");
+> +MODULE_LICENSE("GPL");
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
