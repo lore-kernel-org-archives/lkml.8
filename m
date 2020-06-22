@@ -2,87 +2,91 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58017C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2272E20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k8Y3QFkI"
+	by mail.kernel.org (Postfix) with ESMTP id B791820732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbgFVVXJ (ORCPT
+        id S1730576AbgFVVXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730460AbgFVVXI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:23:08 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 357F3C061573;
-        Mon, 22 Jun 2020 14:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hPBi1Ca/ygGxeQUdNKQzKk5MNJppiF11w9HoER8rk1Q=; b=k8Y3QFkIq+BeFyvt43VXR17p8+
-        mQX77gJVujEvu7+d5QYfMAUus0U6EDtfwaYPIrKAiSAlaxIEgGXRXzcNfhPYrSGUMVMibLczDd3kR
-        HbMmpgxLVefe2/H5tg6WIPAITTeYDEgrXUc2nwCKIk2EwADK6sjKSigIsO479qbZKEHJXY1oz9LFs
-        /IhT8l/A90yd8SDSbSmjRre1ZKWY/m8SzZMB5S76nlknqBYF2+zDjrYRq69xEarKz2FFnArt5euFJ
-        Nnby+PwzqIyZvPhm1vtFX2ARMEeU/tCDuEDCVWLTM7J08PemZKQ0y/w8fUMG62SaJ8ta+ETKAn4nb
-        OjzFLyHA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnTtu-0000Lo-1U; Mon, 22 Jun 2020 21:22:46 +0000
-Date:   Mon, 22 Jun 2020 22:22:45 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Egor Chelak <egor.chelak@gmail.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] isofs: fix High Sierra dirent flag accesses
-Message-ID: <20200622212245.GC21350@casper.infradead.org>
-References: <20200621040817.3388-1-egor.chelak@gmail.com>
+        Mon, 22 Jun 2020 17:23:14 -0400
+Received: from mga12.intel.com ([192.55.52.136]:2435 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730460AbgFVVXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:23:11 -0400
+IronPort-SDR: k8dhMNyzdXZbSwDt1OmHO0XN7WDnceahm/RO+LcHcMYFC1tx4+49EOaw8xILN0i/3gDsYqrfab
+ weug+k782/XA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123548484"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="123548484"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:23:07 -0700
+IronPort-SDR: HT28r4MFHIWnj1VKD2Ee6Sac8XbdwleMeRtuTIZ4ENl2/A9cbBVaAKyouMzUQhTskq6ulxETRU
+ Ui8VzQS8/Zjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="278894224"
+Received: from scheller-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.117])
+  by orsmga006.jf.intel.com with ESMTP; 22 Jun 2020 14:23:03 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     pengfei.xu@intel.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        stable@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
+        Petr Vorel <petr.vorel@gmail.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/3] Revert "tpm: selftest: cleanup after unseal with wrong auth/policy test"
+Date:   Tue, 23 Jun 2020 00:20:20 +0300
+Message-Id: <20200622212034.20624-2-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200622212034.20624-1-jarkko.sakkinen@linux.intel.com>
+References: <20200622212034.20624-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200621040817.3388-1-egor.chelak@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 07:08:17AM +0300, Egor Chelak wrote:
-> The flags byte of the dirent was accessed as de->flags[0] in a couple of
-> places, and not as de->flags[-sbi->s_high_sierra], which is how it's
-> accessed elsewhere. This caused a bug, where some files on an HSF disc
-> could be inaccessible.
+The reverted commit illegitly uses tpm2-tools. External dependencies are
+absolutely forbidden from these tests. There is also the problem that
+clearing is not necessarily wanted behavior if the test/target computer is
+not used only solely for testing.
 
-> +++ b/fs/isofs/dir.c
-> @@ -50,6 +50,7 @@ int isofs_name_translate(struct iso_directory_record *de, char *new, struct inod
->  int get_acorn_filename(struct iso_directory_record *de,
->  			    char *retname, struct inode *inode)
->  {
-> +	struct isofs_sb_info *sbi = ISOFS_SB(inode->i_sb);
->  	int std;
->  	unsigned char *chr;
->  	int retnamlen = isofs_name_translate(de, retname, inode);
-> @@ -66,7 +67,7 @@ int get_acorn_filename(struct iso_directory_record *de,
->  		return retnamlen;
->  	if ((*retname == '_') && ((chr[19] & 1) == 1))
->  		*retname = '!';
-> -	if (((de->flags[0] & 2) == 0) && (chr[13] == 0xff)
-> +	if (((de->flags[-sbi->s_high_sierra] & 2) == 0) && (chr[13] == 0xff)
->  		&& ((chr[12] & 0xf0) == 0xf0)) {
->  		retname[retnamlen] = ',';
->  		sprintf(retname+retnamlen+1, "%3.3x",
+Fixes: a9920d3bad40 ("tpm: selftest: cleanup after unseal with wrong auth/policy test")
+Cc: Tadeusz Struk <tadeusz.struk@intel.com>
+Cc: stable@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ tools/testing/selftests/tpm2/test_smoke.sh | 5 -----
+ 1 file changed, 5 deletions(-)
 
-It's been about 22 years since I contributed the patch which added
-support for the Acorn extensions ;-)  But I'm pretty sure that it's not
-possible to have an Acorn CD-ROM that is also an HSF CD-ROM.  That is,
-all Acorn formatted CD-ROMs are ISO-9660 compatible.  So I think this
-chunk of the patch is not required.
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 663062701d5a..79f8e9da5d21 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -8,8 +8,3 @@ ksft_skip=4
+ 
+ python -m unittest -v tpm2_tests.SmokeTest
+ python -m unittest -v tpm2_tests.AsyncTest
+-
+-CLEAR_CMD=$(which tpm2_clear)
+-if [ -n $CLEAR_CMD ]; then
+-	tpm2_clear -T device
+-fi
+-- 
+2.25.1
 
