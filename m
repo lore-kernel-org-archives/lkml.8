@@ -2,130 +2,88 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07CE207BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1929120716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YXGd3zJx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eb7tmofl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbgFVGU6 (ORCPT
+        id S1731262AbgFVGZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:20:58 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:27461 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731238AbgFVGU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 02:20:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592806857; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=5I7VSl/4Rul7O9mJZbZ9v3pTVJhuCI7n/dCMG5x7Lq4=;
- b=YXGd3zJxMpbCdP02LgThoMPzApwIqxsF0YJGAMGkhnhTzv5VcGmExI5cy0GzpW8xdkCnlJn7
- cAenbo4ckANtm1buvH1vu3e0hBW0T1btpVM1wZePtud5RIQTTY7k1qXtQErzhm29s/z3r+9o
- rOij9BGr9ZDZoXwBTUXKz4UResU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5ef04dc586de6ccd44e5cfc8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 06:20:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9EFBAC4339C; Mon, 22 Jun 2020 06:20:52 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 22 Jun 2020 02:25:40 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39272 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731248AbgFVGZj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 02:25:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592807138;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iWL52GgKhbpQ7k8TUhHZOgGLDFtwgrzAarEVSsatCzw=;
+        b=Eb7tmoflb6VBCF4WnplXCDFWv8sfUkiKuN37MbYhS+Wamm0lo7mAa1eUEeGV2LVBwL7hiZ
+        5TWavyoCqDUV1P2+3vJ8yXlBtVwu8gH1uDE8QxaP6FLGCyOWQeG5l4I6TnFPbFNKuLdhQE
+        cyQ2+VOObj7JAK53IxxowPL5DFsULGc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-421-EkiwYrYNOTaGGSmPNZE8MQ-1; Mon, 22 Jun 2020 02:25:34 -0400
+X-MC-Unique: EkiwYrYNOTaGGSmPNZE8MQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0DBB5C433C6;
-        Mon, 22 Jun 2020 06:20:52 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EEE4800053;
+        Mon, 22 Jun 2020 06:25:32 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.236])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 583EC7C1FF;
+        Mon, 22 Jun 2020 06:25:29 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 22 Jun 2020 08:25:32 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 08:25:28 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, christian.brauner@ubuntu.com,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        liuzhiqiang26@huawei.com, joel@joelfernandes.org,
+        paulmck@linux.vnet.ibm.com, asmadeus@codewreck.org,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] kernel/signal.c: Export symbol __lock_task_sighand
+Message-ID: <20200622062527.GA6516@redhat.com>
+References: <20200621133704.77896-1-alexander.kapshuk@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 22 Jun 2020 11:50:52 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Andy Gross <agross@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCHv3 0/2] Convert QCOM watchdog timer bindings to YAML
-In-Reply-To: <20200621073320.GI128451@builder.lan>
-References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
- <c2b8fabcf82b27c7334482bd53ebba62@codeaurora.org>
- <20200621073320.GI128451@builder.lan>
-Message-ID: <ce4c2b44cb15af12b04c09f1786a6c1a@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200621133704.77896-1-alexander.kapshuk@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-21 13:03, Bjorn Andersson wrote:
-> On Tue 16 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
-> 
->> Hi Bjorn,
->> 
-> 
-> Hi Sai,
-> 
->> On 2020-02-12 03:54, Sai Prakash Ranjan wrote:
->> > This series converts QCOM watchdog timer bindings to YAML. Also
->> > it adds the missing SoC-specific compatible for QCS404, SC7180,
->> > SDM845 and SM8150 SoCs.
->> >
->> > v1:
->> > https://lore.kernel.org/lkml/cover.1576211720.git.saiprakash.ranjan@codeaurora.org/
->> > v2:
->> > https://lore.kernel.org/lkml/cover.1580570160.git.saiprakash.ranjan@codeaurora.org/
->> >
->> > Changes since v2:
->> >  * Add missing compatibles to enum.
->> >
->> > Changes since v1:
->> >  As per Rob's suggestion:
->> >   * Replaced oneOf+const with enum.
->> >   * Removed timeout-sec and included watchdog.yaml.
->> >   * Removed repeated use of const:qcom,kpss-wdt and made use of enum.
->> >
->> > Sai Prakash Ranjan (2):
->> >   dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
->> >   dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845,
->> >     SM8150
->> >
->> >  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
->> >  .../bindings/watchdog/qcom-wdt.yaml           | 48 +++++++++++++++++++
->> >  2 files changed, 48 insertions(+), 28 deletions(-)
->> >  delete mode 100644
->> > Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
->> >  create mode 100644
->> > Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->> 
->> 
->> Gentle ping!
->> 
-> 
-> This should better go through the watchdog tree, so I believe Guenter
-> would be the one to pick this up.
-> 
+On 06/21, Alexander Kapshuk wrote:
+>
+> Export symbol __lock_task_sighand, so it is accessible from code compiled
+> as modules.
+> This fixes the following modpost error:
+> ERROR: modpost: "__lock_task_sighand" [net/9p/9pnet.ko] undefined!
+>
+> Where __lock_task_sighand is called via lock_task_sighand in net/9p/client.c
+> See https://lore.kernel.org/lkml/20200620201456.14304-1-alexander.kapshuk@gmail.com/.
 
-Ah right, then a gentle ping for Guenter.
+Why?
 
-Thanks,
-Sai
+current->sighand is stable and can't go away. Unless "current" is exiting and
+has already passed exit_notify(). So I don't think net/9p needs this helper.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+However, the games with TIF_SIGPENDING doesn't look right in any case.
+
+Oleg.
+
