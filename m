@@ -2,132 +2,134 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08956C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD28620644
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87E020644
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:03:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1TJWk/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgFVRB0 (ORCPT
+        id S1729563AbgFVRDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:01:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729603AbgFVRBZ (ORCPT
+        Mon, 22 Jun 2020 13:03:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25312 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729492AbgFVRDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:01:25 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95C4C061573;
-        Mon, 22 Jun 2020 10:01:25 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jnPox-0005ms-Mb; Mon, 22 Jun 2020 19:01:23 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0652D1C0051;
-        Mon, 22 Jun 2020 19:01:23 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 17:01:22 -0000
-From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fsgsbase] selftests/x86: Add a syscall_arg_fault_64 test
- for negative GSBASE
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <f4f71efc91b9eae5e3dae21c9aee1c70cf5f370e.1590620529.git.luto@kernel.org>
-References: <f4f71efc91b9eae5e3dae21c9aee1c70cf5f370e.1590620529.git.luto@kernel.org>
+        Mon, 22 Jun 2020 13:03:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592845411;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c20PFCYQDvm9Eid24U2nkRH13DnKGthrv5RalXWjuFY=;
+        b=g1TJWk/BljmMMew+ljRgKvBcZu+XkyxdSpCs77J7IhpFdq9mSDR54l5avYepQW9KyxVsyg
+        Bid/i8NHoIFUmn1WpvUtin+OkMZaKRKQEov0dQxpvueEmyGm0kKUcAaOyiHo/vU1FNVE6+
+        wucMNJLOVSskJZ7UEKhOiE9oOisTyUE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-d_pv1W_uPhKEyPxTXJvk6A-1; Mon, 22 Jun 2020 13:03:29 -0400
+X-MC-Unique: d_pv1W_uPhKEyPxTXJvk6A-1
+Received: by mail-wr1-f71.google.com with SMTP id m14so11162893wrj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:03:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c20PFCYQDvm9Eid24U2nkRH13DnKGthrv5RalXWjuFY=;
+        b=b5+O7vkdhm7Mu5kPm+zgdNEjyaR7+j/Ujks9WgQt8Zzj25A/RpMWjBwUZ++gHLWqYg
+         qNMZz1pi7DoNHw7dYFxiymzs3bpqnDypU+nrntle8d9+hETDz7LkVFNPGVfPJZF5CvSr
+         HTUz0DlnZ2EEs4e735fiDxFZWRFoZ2SQakjlxp92GMs6MVy62dGpWDSaN0x+be2wtnFr
+         SYSeqDEN+qeRqcJFqPk39MvccDwr5Uv4dv1LUfgsFDXv/7IT0Sep+OQboPW3HLq0r1qN
+         nqpceixK7LtIPGrXqgHN6pZt9yQtWYO+2V5iploNnrLi8Xu5PKmSYP8M2e8l5iAYxejq
+         61lw==
+X-Gm-Message-State: AOAM533SvJ66ODRojgpIfropFEZ00dVTRvImWt3D+bIzOJb0SkVoEDJZ
+        jm7BE7My6FHDeGrau0gm1GiBkwP5CEhl9SZ97MQ9Xyy+MF66dNuKmPe+vSbGuOobE07yKRKnWEx
+        3SVCWTCZRccfQkOfWZyMNlONr
+X-Received: by 2002:a1c:2d4b:: with SMTP id t72mr19131616wmt.105.1592845408428;
+        Mon, 22 Jun 2020 10:03:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwweM4fgoyTFBK/0Q0Al7o+gxdp67dHiQcz5b9iViAs9R8o5AJVNf1yg53OQ6NLPISTypdorw==
+X-Received: by 2002:a1c:2d4b:: with SMTP id t72mr19131589wmt.105.1592845408155;
+        Mon, 22 Jun 2020 10:03:28 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
+        by smtp.gmail.com with ESMTPSA id y25sm197930wma.19.2020.06.22.10.03.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 10:03:27 -0700 (PDT)
+Subject: Re: [PATCH v2 00/11] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, babu.moger@amd.com
+References: <20200619153925.79106-1-mgamal@redhat.com>
+ <5a52fd65-e1b2-ca87-e923-1d5ac167cfb9@amd.com>
+ <52295811-f78a-46c5-ff9e-23709ba95a3d@redhat.com>
+ <0d1acded-93a4-c1fa-b8f8-cfca9e082cd1@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <40ac43a1-468f-24d5-fdbf-d012bdae49ed@redhat.com>
+Date:   Mon, 22 Jun 2020 19:03:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Message-ID: <159284528271.16989.5534524906632422674.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <0d1acded-93a4-c1fa-b8f8-cfca9e082cd1@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/fsgsbase branch of tip:
+On 22/06/20 18:33, Tom Lendacky wrote:
+> I'm not a big fan of trapping #PF for this. Can't this have a performance
+> impact on the guest? If I'm not mistaken, Qemu will default to TCG
+> physical address size (40-bits), unless told otherwise, causing #PF to now
+> be trapped. Maybe libvirt defaults to matching host/guest CPU MAXPHYADDR?
 
-Commit-ID:     a5d25e01c8146ad8846da4760422e12242fceafe
-Gitweb:        https://git.kernel.org/tip/a5d25e01c8146ad8846da4760422e12242fceafe
-Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Wed, 27 May 2020 16:02:36 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 22 Jun 2020 18:56:36 +02:00
+Yes, this is true.  We should change it similar to how we handle TSC
+frequency (and having support for guest MAXPHYADDR < host MAXPHYADDR is
+a prerequisite).
 
-selftests/x86: Add a syscall_arg_fault_64 test for negative GSBASE
+> In bare-metal, there's no guarantee a CPU will report all the faults in a
+> single PF error code. And because of race conditions, software can never
+> rely on that behavior. Whenever the OS thinks it has cured an error, it
+> must always be able to handle another #PF for the same access when it
+> retries because another processor could have modified the PTE in the
+> meantime.
 
-If the kernel erroneously allows WRGSBASE and user code writes a
-negative value, paranoid_entry will get confused. Check for this by
-writing a negative value to GSBASE and doing SYSENTER with TF set. A
-successful run looks like:
+I agree, but I don't understand the relation to this patch.  Can you
+explain?
 
-    [RUN]	SYSENTER with TF, invalid state, and GSBASE < 0
-    [SKIP]	Illegal instruction
+> What's the purpose of reporting RSVD in the error code in the
+> guest in regards to live migration?
+>
+>> - if the page is accessible to the guest according to the permissions in
+>> the page table, it will cause a #NPF.  Again, we need to trap it, check
+>> the guest physical address and inject a P|RSVD #PF if the guest physical
+>> address has any guest-reserved bits.
+>>
+>> The AMD specific issue happens in the second case.  By the time the NPF
+>> vmexit occurs, the accessed and/or dirty bits have been set and this
+>> should not have happened before the RSVD page fault that we want to
+>> inject.  On Intel processors, instead, EPT violations trigger before
+>> accessed and dirty bits are set.  I cannot find an explicit mention of
+>> the intended behavior in either the
+>> Intel SDM or the AMD APM.
+> 
+> Section 15.25.6 of the AMD APM volume 2 talks about page faults (nested vs
+> guest) and fault ordering. It does talk about setting guest A/D bits
+> during the walk, before an #NPF is taken. I don't see any way around that
+> given a virtual MAXPHYADDR in the guest being less than the host MAXPHYADDR.
 
-A failed run causes a kernel hang, and I believe it's because we
-double-fault and then get a never ending series of page faults and,
-when we exhaust the double fault stack we double fault again,
-starting the process over.
+Right you are...  Then this behavior cannot be implemented on AMD.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/f4f71efc91b9eae5e3dae21c9aee1c70cf5f370e.1590620529.git.luto@kernel.org
----
- tools/testing/selftests/x86/syscall_arg_fault.c | 26 ++++++++++++++++-
- 1 file changed, 26 insertions(+)
+Paolo
 
-diff --git a/tools/testing/selftests/x86/syscall_arg_fault.c b/tools/testing/selftests/x86/syscall_arg_fault.c
-index bc0ecc2..62fba40 100644
---- a/tools/testing/selftests/x86/syscall_arg_fault.c
-+++ b/tools/testing/selftests/x86/syscall_arg_fault.c
-@@ -72,6 +72,7 @@ static void sigsegv_or_sigbus(int sig, siginfo_t *info, void *ctx_void)
- 	if (ax != -EFAULT && ax != -ENOSYS) {
- 		printf("[FAIL]\tAX had the wrong value: 0x%lx\n",
- 		       (unsigned long)ax);
-+		printf("\tIP = 0x%lx\n", (unsigned long)ctx->uc_mcontext.gregs[REG_IP]);
- 		n_errs++;
- 	} else {
- 		printf("[OK]\tSeems okay\n");
-@@ -226,5 +227,30 @@ int main()
- 	}
- 	set_eflags(get_eflags() & ~X86_EFLAGS_TF);
- 
-+#ifdef __x86_64__
-+	printf("[RUN]\tSYSENTER with TF, invalid state, and GSBASE < 0\n");
-+
-+	if (sigsetjmp(jmpbuf, 1) == 0) {
-+		sigtrap_consecutive_syscalls = 0;
-+
-+		asm volatile ("wrgsbase %%rax\n\t"
-+			      :: "a" (0xffffffffffff0000UL));
-+
-+		set_eflags(get_eflags() | X86_EFLAGS_TF);
-+		asm volatile (
-+			"movl $-1, %%eax\n\t"
-+			"movl $-1, %%ebx\n\t"
-+			"movl $-1, %%ecx\n\t"
-+			"movl $-1, %%edx\n\t"
-+			"movl $-1, %%esi\n\t"
-+			"movl $-1, %%edi\n\t"
-+			"movl $-1, %%ebp\n\t"
-+			"movl $-1, %%esp\n\t"
-+			"sysenter"
-+			: : : "memory", "flags");
-+	}
-+	set_eflags(get_eflags() & ~X86_EFLAGS_TF);
-+#endif
-+
- 	return 0;
- }
