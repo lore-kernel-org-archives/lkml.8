@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB58C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE54B252C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE98206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbgFVF1O (ORCPT
+        id S1731144AbgFVFbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 01:27:14 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:33004 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgFVF1N (ORCPT
+        Mon, 22 Jun 2020 01:31:12 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:54664 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729114AbgFVFbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 01:27:13 -0400
-Received: by mail-il1-f197.google.com with SMTP id c11so11245682ilq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 22:27:11 -0700 (PDT)
+        Mon, 22 Jun 2020 01:31:11 -0400
+Received: by mail-io1-f69.google.com with SMTP id t23so11755601iog.21
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 22:31:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=WAbF95MgN8ZYZsWID6ErjvPvo/yEVx8gXF6X3UgNnwE=;
-        b=WaNktqqpTTOibeWHUpR8y0YC1RXvzJb3JO4fngJ2JmZpepKn/x7DphTW6PVZJkFdxU
-         zxhCsur5qXmggDG/F2jqDb1b50nvBs3MoBNhoW6gDyGHrpjnKzJCoOkZQfSP8aM/9tL3
-         u2BEpSMxBzi/lsQPRtSvUeo43W4qwku1zeTqvDQulN65+W/lmlQxUwLhGKEIZTmZ0r2k
-         qI430Gp1/prcJhf0flgS2UgXkWG4ayC4n3Il/DR10cc5b4yNcKNOKpVVOY+fO2kuDU8u
-         4kkoaZqiaQdBazvVns0QqMmLUfuDX5PaPb6Vto1sj0ZZqJsDgoFbn/ZOTzaf2qfeUDwC
-         VKtw==
-X-Gm-Message-State: AOAM530Hw94q87e4YpjN31OKt91B4Tz1UVyUPt1sMbNHR0ZzIlFnTrsQ
-        OOe00bNnV3WSBfst2mZrR1I+Xx+Vy3X+54SLTxNNVOD9Y5Gs
-X-Google-Smtp-Source: ABdhPJx1d2x8MplJ7qZiLPqN7qsCGSk24mbh9hQ0jkWLY6ngXy5/k2A7sFw9yePX9F81jEWL281xJItlf+5A1VMl9Sqtp1btximk
+        bh=aQtYKQkkKYuteeNYG+2Awb4ARDJtZy19+odkppRd09I=;
+        b=dwa6citwq4sDjQkvaLsQxgG27UU0z86kBYpNWNJIUND0auyG0sb0E7tWGltTBsz+WQ
+         gDg5QPespaM7ocftF7Oabu48qN2r4WUlDbtvrO4cZRMHLb25ncZmuT4P/wELiHxbcQH3
+         a2h1ArUOJlVuy2la0WTOkbDyhro/7XkTIxjuZV6IhIWru1x42KRQ57ufEs6pKXfL3Gcg
+         rUWY3HwfxgllTsXxD3tw/tf6X1KuavQXwAKVhK1JiczKgAOZhjurX6lGsd/sIeOxi05C
+         S6tZnGsGjbJb5h3RzaN1ixzYjV7GtslH6QeRsCH1tHDSlRF8ZdjAEbQQJb5mNBO+Oeaf
+         AdhQ==
+X-Gm-Message-State: AOAM532wYcq2YAO1EUNLfAOFeeFV1+xw+yfUQXpr81eLevyWE5e7TkDO
+        D72ZSEgR7qxKFb6XKmMMwh11VofDO4CDiwBkZjIYHVo1FbVG
+X-Google-Smtp-Source: ABdhPJyW7RuXSwMiKUJB9D+k4K8gv+o3ui2u2HhK4Bkh8euurHOIiSsergkhBiOmiHVQ+ImuoHBGVz/lpI5KeeAoXX9y29sOMDKe
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:d42:: with SMTP id d2mr16942376jak.9.1592803631022;
- Sun, 21 Jun 2020 22:27:11 -0700 (PDT)
-Date:   Sun, 21 Jun 2020 22:27:11 -0700
+X-Received: by 2002:a02:2c5:: with SMTP id 188mr16250393jau.3.1592803870624;
+ Sun, 21 Jun 2020 22:31:10 -0700 (PDT)
+Date:   Sun, 21 Jun 2020 22:31:10 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009fc59f05a8a57efd@google.com>
-Subject: KASAN: null-ptr-deref Write in kvm_vcpu_halt
-From:   syzbot <syzbot+76004d8cdf5443dcd8e7@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
+Message-ID: <000000000000e7d00f05a8a58cdc@google.com>
+Subject: WARNING in tcf_chain0_head_change_cb_del
+From:   syzbot <syzbot+438750324c752008e890@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,45 +61,76 @@ syzbot found the following crash on:
 
 HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17d9bfa9100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
-dashboard link: https://syzkaller.appspot.com/bug?extid=76004d8cdf5443dcd8e7
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+console output: https://syzkaller.appspot.com/x/log.txt?x=1630b4d1100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=438750324c752008e890
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+76004d8cdf5443dcd8e7@syzkaller.appspotmail.com
+Reported-by: syzbot+438750324c752008e890@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: null-ptr-deref in kvm_vcpu_halt+0xea/0x110 arch/x86/kvm/x86.c:7546
-Write of size 4 at addr 0000000000000000 by task syz-executor.0/11111
-
-CPU: 1 PID: 11111 Comm: syz-executor.0 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- __kasan_report mm/kasan/report.c:517 [inline]
- kasan_report+0x151/0x1d0 mm/kasan/report.c:530
- kvm_vcpu_halt+0xea/0x110 arch/x86/kvm/x86.c:7546
- </IRQ>
-==================================================================
+Free swap  = 0kB
+Total swap = 0kB
+1965979 pages RAM
+0 pages HighMem/MovableOnly
+349378 pages reserved
+0 pages cma reserved
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(lock->magic != lock)
+WARNING: CPU: 1 PID: 3326 at kernel/locking/mutex.c:938 __mutex_lock_common kernel/locking/mutex.c:938 [inline]
+WARNING: CPU: 1 PID: 3326 at kernel/locking/mutex.c:938 __mutex_lock+0xd75/0x13c0 kernel/locking/mutex.c:1103
 Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 11111 Comm: syz-executor.0 Tainted: G    B             5.7.0-syzkaller #0
+CPU: 1 PID: 3326 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
- <IRQ>
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- end_report mm/kasan/report.c:104 [inline]
- __kasan_report mm/kasan/report.c:520 [inline]
- kasan_report+0x1c9/0x1d0 mm/kasan/report.c:530
- kvm_vcpu_halt+0xea/0x110 arch/x86/kvm/x86.c:7546
- </IRQ>
-Shutting down cpus with NMI
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:105 [inline]
+ fixup_bug arch/x86/kernel/traps.c:100 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:197
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:216
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:938 [inline]
+RIP: 0010:__mutex_lock+0xd75/0x13c0 kernel/locking/mutex.c:1103
+Code: d2 0f 85 98 05 00 00 44 8b 05 07 44 ae 02 45 85 c0 0f 85 c1 f3 ff ff 48 c7 c6 c0 8b 2b 88 48 c7 c7 80 89 2b 88 e8 e3 78 67 f9 <0f> 0b e9 a7 f3 ff ff 65 48 8b 1c 25 00 1f 02 00 be 08 00 00 00 48
+RSP: 0018:ffffc9001675f200 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000040000 RSI: ffffffff815d5ba7 RDI: fffff52002cebe32
+RBP: ffffc9001675f370 R08: ffff88808823a5c0 R09: 0000000000000000
+R10: ffffffff899b2823 R11: fffffbfff1336504 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffff88809d5e9000 R15: ffff88809d5e9000
+ tcf_chain0_head_change_cb_del.isra.0+0x31/0x3c0 net/sched/cls_api.c:803
+ tcf_block_put_ext.part.0+0x25/0x80 net/sched/cls_api.c:1375
+ tcf_block_put_ext net/sched/cls_api.c:1373 [inline]
+ tcf_block_put+0xb3/0x100 net/sched/cls_api.c:1388
+ cake_destroy+0x3f/0x80 net/sched/sch_cake.c:2667
+ qdisc_create+0xd93/0x1430 net/sched/sch_api.c:1295
+ tc_modify_qdisc+0x4c5/0x1a00 net/sched/sch_api.c:1662
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca59
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6a1c91fc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000501a60 RCX: 000000000045ca59
+RDX: 0000000000000000 RSI: 00000000200007c0 RDI: 0000000000000004
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000005
+R13: 0000000000000a22 R14: 00000000004cd04d R15: 00007f6a1c9206d4
 Kernel Offset: disabled
 Rebooting in 86400 seconds..
 
