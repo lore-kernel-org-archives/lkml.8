@@ -2,85 +2,125 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF75C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1F920716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B63220716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:51:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEAGfP/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgFVPvU (ORCPT
+        id S1729637AbgFVPvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:51:20 -0400
-Received: from elvis.franken.de ([193.175.24.41]:33897 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbgFVPvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 11:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728431AbgFVPvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 11:51:16 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jnOj4-0002AG-02; Mon, 22 Jun 2020 17:51:14 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 3E785C06F0; Mon, 22 Jun 2020 17:48:55 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 17:48:55 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     maobibo <maobibo@loongson.cn>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: Do not flush tlb when setting pmd entry
-Message-ID: <20200622154855.GC17294@alpha.franken.de>
-References: <1591177333-17833-1-git-send-email-maobibo@loongson.cn>
- <20200615101443.GA10075@alpha.franken.de>
- <4bef403d-baba-ddf8-c25c-3d6968897a53@loongson.cn>
- <20200617111403.GC9940@alpha.franken.de>
- <ea914a82-70c1-b9a3-f6f0-f92a6d6c6e7f@loongson.cn>
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90EDAC061573;
+        Mon, 22 Jun 2020 08:51:16 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ne5so17690pjb.5;
+        Mon, 22 Jun 2020 08:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mpPb3+yNpxwCEjuPN9vujTShlReBQ2Dt+rrRa2Bp2DQ=;
+        b=hEAGfP/nFGOSzQuYQ+mVlTeEXfn4amAcGfX1VdaDPPQmPhJurXb8NVq8CRcydEKsIf
+         Duk388/QhD+XpCFwmhLON1Hz/96s2qi0NKnqqSzCxve7+E/C5RGASHaH+4ZJ1xzZdWMu
+         eaEQCRRKZXDh7ZRuIprzQVVkuHq9vwQrSpGbb0qrXjxEGUTHgAQupJhoNFpYmBnLAvF/
+         T8Rhl7XYv9bb/HokATYjbec6pMYvKYJ2MMgZa/NDvLOJ5VuKOjZHIIc2pG4Nwzxtd2yF
+         damyeMz2Q2TnjsT+xeW5nPUI5yfnrrIs14QbM9WYp5ODCbVpU8/G9NGA+ZVv8XhHHkPB
+         zQ3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mpPb3+yNpxwCEjuPN9vujTShlReBQ2Dt+rrRa2Bp2DQ=;
+        b=DjL83L0t7FZHKcqrnbegEyHkKt+cpGv4A1/8bHghC3ValMzMwX6QFA/i/3CDg7TmAv
+         Zb2Mi5zwfuMQKwhzp/9cGd4MJ+5cFyFAApeI/krFyqkUrCe22McPH6t/O5y5gVWakBI6
+         ny0dmVYnWa0ZVnhRFs6uiV5mdZMOFLecu25rjfsSqHQgHyXpDKoZZv80SrhO8Yl2VEWg
+         bgB8S8X3b9bwRGAgF15wwt6p5B9QMU7Htday2GgVgTd1vWNypdBZL5yvGnc42HL8NaMT
+         jhFDXN1GoH7u8oqAqodPWhxQbljCi10QcKuoOQnl92rDlLx3SCxcXt+KnQGRJPYb8Cfn
+         NUpw==
+X-Gm-Message-State: AOAM533MkocMW36wQi1HWR29XB2cGtbBF2DHxGdM1QzfWMA8DK+7yTv0
+        kOXCSwg3rZ/7G5qMXLdJFN9UVi6QmAMeY5FzQHE=
+X-Google-Smtp-Source: ABdhPJzv28LTfnWpJp82+S+pzs7++aNj/pUb9dRwcbTfTgiLWqmcLOfQ70fYghDtqny5H6ocNpkQ1poPDlTbaOtfe+I=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr19471241pjq.228.1592841076136;
+ Mon, 22 Jun 2020 08:51:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea914a82-70c1-b9a3-f6f0-f92a6d6c6e7f@loongson.cn>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200622103817.476-1-nsaenzjulienne@suse.de> <20200622103817.476-7-nsaenzjulienne@suse.de>
+ <CAHp75Vcpo49BUe+cApfbB2BXFLz0SyLjWkO_6Uw=sYEcJEBMPg@mail.gmail.com> <0c0546cfe855eee1381c629b2ffd7f65427c7091.camel@suse.de>
+In-Reply-To: <0c0546cfe855eee1381c629b2ffd7f65427c7091.camel@suse.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 22 Jun 2020 18:51:03 +0300
+Message-ID: <CAHp75Vcs=QZye_QPwpQ-9uwjOJnbvbyrHpRNjeTEG8X65fseeg@mail.gmail.com>
+Subject: Re: [PATCH v4 6/9] Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        USB <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        tim.gover@raspberrypi.org, linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 11:47:35AM +0800, maobibo wrote:
-> 
-> 
-> On 06/17/2020 07:14 PM, Thomas Bogendoerfer wrote:
-> > On Tue, Jun 16, 2020 at 06:34:21PM +0800, maobibo wrote:
-> >>
-> >>
-> >> On 06/15/2020 06:14 PM, Thomas Bogendoerfer wrote:
-> >>> On Wed, Jun 03, 2020 at 05:42:13PM +0800, Bibo Mao wrote:
-> >>>> Function set_pmd_at is to set pmd entry, if tlb entry need to
-> >>>> be flushed, there exists pmdp_huge_clear_flush alike function
-> >>>> before set_pmd_at is called. So it is not necessary to call
-> >>>> flush_tlb_all in this function.
-> >>>
-> >>> have you checked all set_pmd_at() calls ? I found a few case where
-> >>> it's not clear to me, if tlb flushing is done... If you think this
-> >>> is still the right thing to do, please change arch/mips/mm/pgtable-32.c
-> >>> as well.
-> >> well, I will double check this and do more testing about thp and hugepage.
-> > 
-> > I was more concerned about
-> > 
-> > fs/dax.c
-> > fs/proc/task_mmu.c
-> > mm/rmap.c
-> 
-> I think that flush_tlb_all should not be called in function set_pmd_at
-> on mips platform. However update_mmu_cache_pmd() should be called __after__
-> set_pmd_at() function to update tlb entry at some places, it is another issue.
-> Here is my analysis in the three files where set_pmd_at is called.
-> [..]
+On Mon, Jun 22, 2020 at 6:11 PM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+> On Mon, 2020-06-22 at 17:44 +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 22, 2020 at 5:26 PM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > This reverts commit c65822fef4adc0ba40c37a47337376ce75f7a7bc.
+> > >
+> > > The initialization of Raspberry Pi 4's USB chip is now handled through a
+> > > reset controller. No need to directly call the firmware routine trough a
+> >
+> > trough -> through.
+> >
+> > > pci quirk.
+> >
+> > pci -> PCI.
+> >
+>
+> Noted
+>
+> > ...
+> >
+> > > -
+> > > -#include <soc/bcm2835/raspberrypi-firmware.h>
+> > > -
+> >
+> > Leave one blank line here.
+>
+> This being a revert, does it make sense to do so? If we are 100% strict about
+> it, the space should come from a separate patch.
+>
+> That said, if you insist I'll be happy to edit it.
 
-thank you for confirming that we are good with removing flush_tlb_all().
-
-Thomas.
+Even though, this revert depends on the previous patches, so,
+considered as a new patch.
+I leave this to the maintainer to choose the best approach (update
+themselves, request new version, ...).
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+With Best Regards,
+Andy Shevchenko
