@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C75C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35865C4345B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF86C2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395B420768
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgFVNQh (ORCPT
+        id S1728902AbgFVNTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:16:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51938 "EHLO vps0.lunn.ch"
+        Mon, 22 Jun 2020 09:19:02 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:51990 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgFVNQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:16:36 -0400
+        id S1728010AbgFVNTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:19:02 -0400
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
         (envelope-from <andrew@lunn.ch>)
-        id 1jnMJ6-001fCY-B8; Mon, 22 Jun 2020 15:16:16 +0200
-Date:   Mon, 22 Jun 2020 15:16:16 +0200
+        id 1jnMLW-001fF9-Kb; Mon, 22 Jun 2020 15:18:46 +0200
+Date:   Mon, 22 Jun 2020 15:18:46 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -57,30 +57,31 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 05/15] net: phy: reset the PHY even if probe() is not
- implemented
-Message-ID: <20200622131616.GJ338481@lunn.ch>
+Subject: Re: [PATCH 06/15] net: phy: mdio: reset MDIO devices even if probe()
+ is not implemented
+Message-ID: <20200622131846.GK338481@lunn.ch>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-6-brgl@bgdev.pl>
+ <20200622093744.13685-7-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622093744.13685-6-brgl@bgdev.pl>
+In-Reply-To: <20200622093744.13685-7-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:37:34AM +0200, Bartosz Golaszewski wrote:
+On Mon, Jun 22, 2020 at 11:37:35AM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Currently we only call phy_device_reset() if the PHY driver implements
-> the probe() callback. This is not mandatory and many drivers (e.g.
-> realtek) don't need probe() for most devices but still can have reset
-> GPIOs defined. There's no reason to depend on the presence of probe()
-> here so pull the reset code out of the if clause.
+> Similarily to PHY drivers - there's no reason to require probe() to be
+> implemented in order to call mdio_device_reset(). MDIO devices can have
+> resets defined without needing to do anything in probe().
 > 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+I would be surprised if there is any MDIO driver which don't have a
+probe callback.
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
