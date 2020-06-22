@@ -2,219 +2,168 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C19BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E41F22076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56F3206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="BqGFSh6G";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UI0ilr1A"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="PViZfFut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgFVUh4 (ORCPT
+        id S1728692AbgFVUkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:37:56 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:1204 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728361AbgFVUhz (ORCPT
+        Mon, 22 Jun 2020 16:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgFVUkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:37:55 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MKVqgm026191;
-        Mon, 22 Jun 2020 13:37:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=8Oxz3EFH1REQxcuzAyIaIfTBn4SQc35zDUJZSt/IJuc=;
- b=BqGFSh6G0QgWctEZ8+L3DO5Wg5PWGCtlyBBuJ+5Uw2aFy1lmJM2QAdfyAi88dGlQ6ieK
- t7/xuE22oqrrPgqXczKcXSVRF2SYWN4SopTlwqCpQLDUKriiyGFxUx6R8NlNfMiPgESp
- Pppi06DnJGmM08j2znqChdOlvvLe9EPywho= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 31t2a2fgra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 22 Jun 2020 13:37:44 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 22 Jun 2020 13:37:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EADaQKl+tpHVc+nw00YjR1kmnSjU7YPMJU+7pOPRuHyIsbLYigM9FLCU98oFnHVreeU8wcw4jSHYrPVEFQrGZMrXZ73FHAa8WKBOZrarpdUqP+Xjicpt1lqNcfdx6HTxnZpLp/DrseyfaFIpQoAz6LwNJefdD/Edjf7qFHZfPd9eIvhZW3UIYSdfL5auw1iFaIYpLU9WadlEJiBqTwgkXeXxyfkdqh2eVCbo5ugSs//drmylu1XmnY29Tfvw4r1No5rJYQNL1kbGKnFfYFCJpTXMk0LY2Vz64q4S/ZfNmELym0BgOQjwtmbrDOC/UCPHqmZlE+bXQCCg3QRS6+fYzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Oxz3EFH1REQxcuzAyIaIfTBn4SQc35zDUJZSt/IJuc=;
- b=oRlwVQmf6eWt+xslQH5aAN5/LTpb4tWUQJweRUFCXuT5rSFkMMIi80iWiBUE+7UWh86069+CQAiwq9Bno6nUnV/qo6SdSOm5BgPwrVH6kFnjGsI5KTtbYaAXqeEkkIv1k+s4B2cuWXM7YwJPRbp+Dob1xhqLen1yJosNkqf9YQ5IqEvtAh2t/LQ7TLxHKcCzKs7lTcvXUgi1y38O/3Ad2uPbXuxUq1fqJoHh2HhggSvmnYUZNWa8IOQq5rzpQR22XPRTPcqRr/4Vs4ziAFk88lpRIuEvP9QXDedgFbCoIuaBIkDk1+0sBoSKWULb7Tf9QachK9X83OBlcYU/xTN8Yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Oxz3EFH1REQxcuzAyIaIfTBn4SQc35zDUJZSt/IJuc=;
- b=UI0ilr1AX710dQIWYqqvngdZFX9M71WARgo0LaJ8H/zmvpjZ3FduZR5iZH/QT2+dU4qAu39em4J0dG6llSmvMaNG+MDDqwvMyfgszy5ryJtvVmmr4IUWTHNqzCUTa8FK0eBmlGJIQ+H+nLs/wfI6SnoezukiWoTUjIkx3smqONE=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB3480.namprd15.prod.outlook.com (2603:10b6:a03:112::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
- 2020 20:37:42 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 20:37:42 +0000
-Date:   Mon, 22 Jun 2020 13:37:39 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 17/19] mm: memcg/slab: use a single set of kmem_caches
- for all allocations
-Message-ID: <20200622203739.GD301338@carbon.dhcp.thefacebook.com>
-References: <20200608230654.828134-1-guro@fb.com>
- <20200608230654.828134-18-guro@fb.com>
- <CALvZod5NCCpt2rkyXXr69OnVXb9ew7875vAV=iWZdqJhXcKEWQ@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod5NCCpt2rkyXXr69OnVXb9ew7875vAV=iWZdqJhXcKEWQ@mail.gmail.com>
-X-ClientProxiedBy: BY3PR10CA0009.namprd10.prod.outlook.com
- (2603:10b6:a03:255::14) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Mon, 22 Jun 2020 16:40:39 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC09C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:40:37 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id d12so8645454qvn.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dd3K3zzJF+yvAk8TDWakFKiRtbHRFGEXn9KCJgGenGU=;
+        b=PViZfFutFFoUw307mqKCN7HcuEzTsBawFfG6ePmyfJgMcAF+EuCW83JlDWsQg0A6yD
+         7lnB85dzIbRsf+wjuHZ43uxZV5zsNZ0DfyjyxS6IjAu8/BwaYnzKircWUPOID2Kjp1EV
+         rDqJJS4rKI8k6PV531LThbI5zMk5jfb0UI9zo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dd3K3zzJF+yvAk8TDWakFKiRtbHRFGEXn9KCJgGenGU=;
+        b=AWLYPIVLfDQypvvWgB/ofZIEPDJxf6Jwsef1ZovufaLZq1jWVDiMhD7BsJe68+unlG
+         cF4z/uqmZcc4xUvxXRQxSGQmvbqAs7aik/Zj9dUc4AqhQUwpF0ZCbrUK1aDDyAtOiIVN
+         uWcO+uZ9Yq95V5tJFyaQsVoOjJoMIFlBuLBU1plhq2Xhord6nWbOexmePktm1qWnJmU0
+         o3SRIPAM/7YKe2E52RwPD6os0nLoUAs9d+ShB/yCPe3qzqrZkJaXMvAK8kFKt7Y+0s1L
+         nEELHO2eWjn8lLyaemkNsdMlIJ3P5gALRnLLymC4qYV+r2BhI2VO2P8FztA63mFgWGvu
+         z1Ww==
+X-Gm-Message-State: AOAM530EtkXzEVo8UPYuGdhGmggHZXgFEwqAVpH5x9Xrz2R4JZdVcQmm
+        LKqH1pw7SG3vUoa7mxjLn4/RTbKpX1SrnA==
+X-Google-Smtp-Source: ABdhPJyZZ/DfoF/7ARRH29uxPkTzmXtNkiH6H9ZvnEsfUO5ZCZ5L6eS+9rfCaluC75FfnGKL64YguA==
+X-Received: by 2002:a05:6214:1447:: with SMTP id b7mr24125944qvy.83.1592858436979;
+        Mon, 22 Jun 2020 13:40:36 -0700 (PDT)
+Received: from bill-the-cat (2606-a000-1401-8080-e5dd-5747-7916-11ff.inf6.spectrum.com. [2606:a000:1401:8080:e5dd:5747:7916:11ff])
+        by smtp.gmail.com with ESMTPSA id o145sm3531599qke.2.2020.06.22.13.40.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jun 2020 13:40:36 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 16:40:34 -0400
+From:   Tom Rini <trini@konsulko.com>
+To:     ron minnich <rminnich@gmail.com>
+Cc:     lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] initrd: Remove erroneous comment
+Message-ID: <20200622204034.GL27801@bill-the-cat>
+References: <20200619143056.24538-1-trini@konsulko.com>
+ <CAP6exYJ64Hy9y3Dzh9Asrq8Y0oDWYk+tf4UAcasEc-ZxTY8DAw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:68a8) by BY3PR10CA0009.namprd10.prod.outlook.com (2603:10b6:a03:255::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Mon, 22 Jun 2020 20:37:41 +0000
-X-Originating-IP: [2620:10d:c090:400::5:68a8]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d5cec280-ebca-491f-f7a9-08d816ec1c81
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3480:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3480A5B616893B1840074789BE970@BYAPR15MB3480.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:350;
-X-Forefront-PRVS: 0442E569BC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: D8Nu/SPBwdPan9KP89NjeHzSW8S1XkP3R/OJxNCXvilb4vgDZZA2MUwxn15RtWlnHzhNDY5YbP6vS3+mkAijM5RtolfT7qQT9ENSpK1+CAyI+FPzGWM1l+1Iipdd3oYP6sElS54YlU0wky1U+0uySTUcMseUlVihWewVdQL8dGrpbfl4ObjQZrEHn5KU74t9ISaSVApga5SeoQ8rWyPp2LTfNh0e6j33SPeu7nmjiNlZwJ6Qse83FWfg/nFkegFGVr3qb9alaT//SQ9QaAhKkg/415sFwYPN0TVon9HJIkps6riZamJbuOFJPQ8A5CJHncnFeWwlwbC3j9RKrUdByw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(366004)(346002)(376002)(396003)(136003)(4326008)(66476007)(6916009)(316002)(52116002)(7696005)(33656002)(478600001)(83380400001)(54906003)(5660300002)(55016002)(9686003)(53546011)(6506007)(8936002)(1076003)(16526019)(66556008)(66946007)(2906002)(8676002)(186003)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: ipKe5Mx/iB12fV+iXqA4U1pkAjL6lEZNfz/X/dQLyeZI+PeaG8FTzDZihiT62LCQ8tbnSoK+rtnprvg0yyTRkE52T9Gyg6yUU2WTmL89xC2mktTzSnqGU6ng41Kjq1Eij8u5gutj4ZhSGUq+bYHWq194tJ+AjOj4EXDH+CcMLO38KLCvY3CxTaK7l01wk/l9p/Lcf2BfSj7TgpGAv3/cHR/4ui09qKP/SPuPdPPH7qWonE0EM3bdT2/RcHm6Wds7K/wLW+WzMrEUvqZ9FNl/s9fXBeZ5Vwu68xL8EZIYzJ+iBakTzEWDmZjH6s7d1vQqj9Gx0jwifC3Bz7W6n+gyuUTetX74ZH8yKEhdV/MayOf+tQ2W21VFivA5s4lJtSo2mJ4/CSiGJJMZTzg/UCZyQcAWGObGqOHdTYupiu4uBvMzvpC0NoGo765W41CbwBaXkaT4Z962xeHOPln3EcMDqmpclBXxemmKpTGGPQBJgv6uylcBl5hAqQGkJ5oqJ0enAtc/f0hzatzvwhQtk1KB3w==
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5cec280-ebca-491f-f7a9-08d816ec1c81
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 20:37:42.1818
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UV9SZnifugx0SLrXXxkXfoAKAlVI4JqDeJri0UxAZX/AOpMDAFals+tMrAD/y5VM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3480
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_12:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 phishscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=926 bulkscore=0 cotscore=-2147483648 mlxscore=0
- impostorscore=0 suspectscore=1 spamscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006220134
-X-FB-Internal: deliver
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZGfVcqCQYT4RlWas"
+Content-Disposition: inline
+In-Reply-To: <CAP6exYJ64Hy9y3Dzh9Asrq8Y0oDWYk+tf4UAcasEc-ZxTY8DAw@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 12:21:28PM -0700, Shakeel Butt wrote:
-> On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > Instead of having two sets of kmem_caches: one for system-wide and
-> > non-accounted allocations and the second one shared by all accounted
-> > allocations, we can use just one.
-> >
-> > The idea is simple: space for obj_cgroup metadata can be allocated
-> > on demand and filled only for accounted allocations.
-> >
-> > It allows to remove a bunch of code which is required to handle
-> > kmem_cache clones for accounted allocations. There is no more need
-> > to create them, accumulate statistics, propagate attributes, etc.
-> > It's a quite significant simplification.
-> >
-> > Also, because the total number of slab_caches is reduced almost twice
-> > (not all kmem_caches have a memcg clone), some additional memory
-> > savings are expected. On my devvm it additionally saves about 3.5%
-> > of slab memory.
-> >
-> > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> > ---
-> [snip]
-> >  static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
-> >                                               struct obj_cgroup *objcg,
-> > -                                             size_t size, void **p)
-> > +                                             gfp_t flags, size_t size,
-> > +                                             void **p)
-> >  {
-> >         struct page *page;
-> >         unsigned long off;
-> >         size_t i;
-> >
-> > +       if (!objcg)
-> > +               return;
-> > +
-> > +       flags &= ~__GFP_ACCOUNT;
-> >         for (i = 0; i < size; i++) {
-> >                 if (likely(p[i])) {
-> >                         page = virt_to_head_page(p[i]);
-> > +
-> > +                       if (!page_has_obj_cgroups(page) &&
-> 
-> The page is already linked into the kmem_cache, don't you need
-> synchronization for memcg_alloc_page_obj_cgroups().
 
-Hm, yes, in theory we need it. I guess the reason behind why I've never seen any issues
-here is the SLUB percpu partial list.
+--ZGfVcqCQYT4RlWas
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So in theory we need something like:
+On Mon, Jun 22, 2020 at 01:02:16PM -0700, ron minnich wrote:
 
-diff --git a/mm/slab.h b/mm/slab.h
-index 0a31600a0f5c..44bf57815816 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -237,7 +237,10 @@ static inline int memcg_alloc_page_obj_cgroups(struct page *page,
-        if (!vec)
-                return -ENOMEM;
- 
--       page->obj_cgroups = (struct obj_cgroup **) ((unsigned long)vec | 0x1UL);
-+       if (cmpxchg(&page->obj_cgroups, 0,
-+                   (struct obj_cgroup **) ((unsigned long)vec | 0x1UL)))
-+               kfree(vec);
-+
-        return 0;
- }
+> The other thing you ought to consider fixing:
+> initrd is documented as follows:
+>=20
+>         initrd=3D         [BOOT] Specify the location of the initial ramd=
+isk
+>=20
+> for bootloaders only.
+>=20
+> UEFI consumes initrd from the command line as well. As ARM servers
+> increasingly use UEFI, there may be situations in which the initrd
+> option doesn't make its way to the kernel? I don't know, UEFI is such
+> a black box to me. But I've seen this "initrd consumption" happen.
+>=20
+> Based on docs, and the growing use of bootloaders that are happy to
+> consume initrd=3D and not pass it to the kernel, you might be better off
+> trying to move to the new command line option anyway.
+>=20
+> IOW, this comment may not be what people want to see, but ... it might
+> also be right. Or possibly changed to:
+>=20
+> /*
+>  * The initrd keyword is in use today on ARM, PowerPC, and MIPS.
+>  * It is also reserved for use by bootloaders such as UEFI and may
+>  * be consumed by them and not passed on to the kernel.
+>  * The documentation also shows it as reserved for bootloaders.
+>  * It is advised to move to the initrdmem=3D option whereever possible.
+>  */
 
+Fair warning, one of the other hats I wear is the chief custodian of the
+U-Boot project.
 
-But I wonder if we might put it under #ifdef CONFIG_SLAB?
-Or any other ideas how to make it less expensive?
+Note that on most architectures in modern times the device tree is used
+to pass in initrd type information and "initrd=3D" on the command line is
+quite legacy.
 
-> What's the reason to remove this from charge_slab_page()?
+But what do you mean UEFI "consumes" initrd=3D ?  It's quite expected that
+when you configure grub/syslinux/systemd-boot/whatever via extlinux.conf
+or similar with "initrd /some/file" something reasonable happens to
+read that in to memory and pass along the location to Linux (which can
+vary from arch to arch, when not using device tree).  I guess looking at=20
+Documentation/x86/boot.rst is where treating initrd=3D as a file that
+should be handled and ramdisk_image / ramdisk_size set came from.  I do
+wonder what happens in the case of ARM/ARM64 + UEFI without device tree.
 
-Because at charge_slab_page() we don't know if we'll ever need
-page->obj_cgroups. Some caches might have only few or even zero
-accounted objects.
+That said, no the comment is wrong.  It's not "since 11/2018" but "since
+the 1990s".  And it doesn't provide any sort of link / context to the
+boot loader specification project or similar that explains the cases
+when a non-filename "initrd=3D" would reasonably (or unreasonably but
+happens in reality) be removed.
 
-> 
-> > +                           memcg_alloc_page_obj_cgroups(page, s, flags)) {
-> > +                               obj_cgroup_uncharge(objcg, obj_full_size(s));
-> > +                               continue;
-> > +                       }
-> > +
-> >                         off = obj_to_index(s, page, p[i]);
-> >                         obj_cgroup_get(objcg);
-> >                         page_obj_cgroups(page)[off] = objcg;
+I would go so far as to suggest that adding special handling for some
+x86 setups is the wrong to place to start / further deprecate how other
+architectures and firmwares handle a given situation.  I'm only chiming
+in here as I saw this commit go by on LWN and wanted to see how this was
+different from the traditional usage of initrd=3D in the rest of the
+kernel (it's not) and then saw the otherwise unrelated new comment being
+added.
+
+--=20
+Tom
+
+--ZGfVcqCQYT4RlWas
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAl7xFz4ACgkQFHw5/5Y0
+tyzDqwv/Q4YjI0nwVltVEupqLyeqOBD765TmWdoXzJ69K42gTsYDHTN4qXT+RRX9
+2zxJwh/9egkyuuI05VXRY+NzkqVcmkyAoYnZg648G4bn8DTfPg4vYFMAVDy1lNS8
+HpnVJjAzDHD4O6yaAMDBP4O9WOp5K55yXyoSv04bY8wa7Bf3B2SoSxppZjVbwdxV
+RKzn0ypZXfYJ3Ob7hrS25o8Q+MCk2KcJqSg3dkYpDnud2TI40Ltwm0EdEQJHeN3s
+qVr5J22V3fIJnkPKiROnqiUhSEA8H+fuQrBFQKjLN09pZHMtTkpFHQxiI6ATjE+s
+/6xGBwtu9X8ipBiIe+uoiKmBXzSX3KEKLrtthTqzPnWmlPZZhtzfDRoAWSztj02s
+PE1zkN++35i6dczldwaPqCUcsUpcgHaftsmty4bH7IGLYb6EAYJL5GP7fEm+KIow
+ye44TLLSdPu9RAMRd3EfnKwFGgjC+AQxV5DE0egkqjbEKugCmL3iSQZ6MnC+8mGK
+bZc7OZbi
+=NpoE
+-----END PGP SIGNATURE-----
+
+--ZGfVcqCQYT4RlWas--
