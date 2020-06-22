@@ -2,155 +2,146 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8310C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B309F23A61
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592802684;
-	bh=JuotqnfXdJUnHF7gcpdByuMcJM86C92XcbAsqiX1CD8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=15hKO1ELnQFICTyEZmt8soGZZUke81uEe7rsghe8FepJdzlY2nGVkD00UldsfccT6
-	 o6NwG6KOorcm+tPuKnz0c48YYm8ul7G/rUOxolMoRhjM2VOZZ0F6xxVZSij+YjsKpM
-	 zLkfqRujnAGTTYMbXwu7t2H5pmElAlcVAxAqKyEI=
+	by mail.kernel.org (Postfix) with ESMTP id 7414A20B80
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:16:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JINrqbh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgFVFLH (ORCPT
+        id S1726649AbgFVFQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 01:11:07 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:50329 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgFVFLF (ORCPT
+        Mon, 22 Jun 2020 01:16:21 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56900 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgFVFQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 01:11:05 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 05M5AoTQ012538;
-        Mon, 22 Jun 2020 14:10:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 05M5AoTQ012538
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592802651;
-        bh=rtovyjmtjdSI4mT4E8WX06Hp4IUhVZCZ0HVtU3JW7HY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hz4MQDigVkW8NWB38mxig1VvddkdJrlRUq1XJKR+fUdRBF8EdheuglfjDpo0qVWmp
-         DM7f7AuU5lKGhRdd7cqoAkgV2Ohs1n9hzOKwsN2TdbtwBk/J6WGetZCe1k1lBpRM6E
-         no/MgaM/bUGGkj1fg6dZAi0rnEPdiAnTCVfjWHZRtRtJ5gd/LS7nYws5b4MSVLa2DG
-         ynieWT4H/CkkBoV9oM4wgmSyv84eYj+Zq4rTgiTwUYnDzk4nE5kZDfHDO64WA5rMS8
-         H/e7qvfyb8kz75p5tHtBT09ygDo3uhlBIbRgDwFbyu9gAH/pdIqJd5NjH38TMP/JL/
-         RZ5IDo4wbygYg==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id 190so8887090vsr.9;
-        Sun, 21 Jun 2020 22:10:50 -0700 (PDT)
-X-Gm-Message-State: AOAM530lLdGu3VbkFa4El+wMjRiKR8LpZL4vljHKEeNktv8+d4IxIAR4
-        lmEpwsA3Ibr4nzPUQIWnBwALuWJhDOFauxozsZ8=
-X-Google-Smtp-Source: ABdhPJyPzynbMmROc1mJ3Htutmdx5lwoyKIWF79hcxcwmlWiTLyb+tIudJSD1p6ni8qq6It5V4cz6c5spnxbrziJZjc=
-X-Received: by 2002:a67:22c7:: with SMTP id i190mr15249326vsi.179.1592802649777;
- Sun, 21 Jun 2020 22:10:49 -0700 (PDT)
+        Mon, 22 Jun 2020 01:16:20 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05M52HFY130522;
+        Mon, 22 Jun 2020 05:15:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=6XhL61uLBRsGx4qqMyCILKTmquZ28D8Zmwjf5hvNpqU=;
+ b=JINrqbh6lenpOpaHRClW2mmHVaEQrXJBbRa/7+tvBd4SZImgmaB+tbTAHuovamFpSF67
+ D/PDrEf8UTlcpw2io7YFlzjKCF+cuiTzCwN5NE1IH7f1J7egeEj13cpODW/q1WkcBKie
+ tZ5KeabloQLlaNcv4ErRsEuLnyET1vEv5IpUed50bwnioO7lHrDanG5o5vDk40v8gKe7
+ A4UQ7tRpZ6WbfGBkCO6uN2QfA+u+Hd/2WXhd9RXQYsqboZeo8Sh9T+IFF7vOAbcUGrcE
+ 4rGD72fsKwYYFZjvL3zNrCv9MdDYBHn9ocCT3K8qlQdiD5PlsmMtPty8jbcG+z+83JEl DA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 31sebbca28-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 05:15:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05M54250096345;
+        Mon, 22 Jun 2020 05:15:50 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31sv7pev7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 05:15:49 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05M5FfKI003483;
+        Mon, 22 Jun 2020 05:15:41 GMT
+Received: from Junxiaos-MacBook-Pro.local (/73.231.9.254)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Jun 2020 05:15:41 +0000
+Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc
+ dentries
+To:     Matthew Wilcox <willy@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
+        "joe.jin@oracle.com" <joe.jin@oracle.com>,
+        Wengang Wang <wen.gang.wang@oracle.com>
+References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
+ <20200618233958.GV8681@bombadil.infradead.org>
+ <877dw3apn8.fsf@x220.int.ebiederm.org>
+ <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
+ <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
+ <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
+ <87k1036k9y.fsf@x220.int.ebiederm.org>
+ <68a1f51b-50bf-0770-2367-c3e1b38be535@oracle.com>
+ <87blle4qze.fsf@x220.int.ebiederm.org>
+ <20200620162752.GF8681@bombadil.infradead.org>
+From:   Junxiao Bi <junxiao.bi@oracle.com>
+Message-ID: <39e9f488-110c-588d-d977-413da3dc5dfa@oracle.com>
+Date:   Sun, 21 Jun 2020 22:15:39 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <591473.1592679153@turing-police>
-In-Reply-To: <591473.1592679153@turing-police>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 22 Jun 2020 14:10:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARevD4o1WCRatKqZcf9-arxsvBcyLKHcNSM1ih+TDS5Mw@mail.gmail.com>
-Message-ID: <CAK7LNARevD4o1WCRatKqZcf9-arxsvBcyLKHcNSM1ih+TDS5Mw@mail.gmail.com>
-Subject: Re: kbuild: separate kerneldoc warnings from compiler warnings
-To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200620162752.GF8681@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006220038
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9659 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 cotscore=-2147483648 mlxscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006220038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 3:52 AM Valdis Kl=C4=93tnieks
-<valdis.kletnieks@vt.edu> wrote:
+On 6/20/20 9:27 AM, Matthew Wilcox wrote:
+
+> On Fri, Jun 19, 2020 at 05:42:45PM -0500, Eric W. Biederman wrote:
+>> Junxiao Bi <junxiao.bi@oracle.com> writes:
+>>> Still high lock contention. Collect the following hot path.
+>> A different location this time.
+>>
+>> I know of at least exit_signal and exit_notify that take thread wide
+>> locks, and it looks like exit_mm is another.  Those don't use the same
+>> locks as flushing proc.
+>>
+>>
+>> So I think you are simply seeing a result of the thundering herd of
+>> threads shutting down at once.  Given that thread shutdown is fundamentally
+>> a slow path there is only so much that can be done.
+>>
+>> If you are up for a project to working through this thundering herd I
+>> expect I can help some.  It will be a long process of cleaning up
+>> the entire thread exit process with an eye to performance.
+> Wengang had some tests which produced wall-clock values for this problem,
+> which I agree is more informative.
 >
-> This patch introduces a new build flag 'K=3D1' which controls whether ker=
-neldoc
-> warnings should be issued, separating them from the compiler warnings tha=
-t W=3D
-> controls.
+> I'm not entirely sure what the customer workload is that requires a
+> highly threaded workload to also shut down quickly.  To my mind, an
+> overall workload is normally composed of highly-threaded tasks that run
+> for a long time and only shut down rarely (thus performance of shutdown
+> is not important) and single-threaded tasks that run for a short time.
 
+The real workload is a Java application working in server-agent mode, 
+issue happened in agent side, all it do is waiting works dispatching 
+from server and execute. To execute one work, agent will start lots of 
+short live threads, there could be a lot of threads exit same time if 
+there were a lots of work to execute, the contention on the exit path 
+caused a high %sys time which impacted other workload.
 
-I do not understand why this change is needed.
+Thanks,
 
+Junxiao.
 
-IIRC, our goal was to enable this check by default.
-https://patchwork.kernel.org/patch/10030521/
-but there are so many warnings.
-
-
-Meanwhile, this is checked only when W=3D is given
-because 0-day bot tests with W=3D1 to
-block new kerneldoc warnings.
-
-K=3D1 ?   Do people need to learn this new switch?
-
-
-
-
-
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 >
-> diff --git a/Makefile b/Makefile
-> index 29abe44ada91..b1c0f9484a66 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1605,6 +1605,7 @@ PHONY +=3D help
->         @echo  '                       (sparse by default)'
->         @echo  '  make C=3D2   [targets] Force check of all c source with=
- $$CHECK'
->         @echo  '  make RECORDMCOUNT_WARN=3D1 [targets] Warn about ignored=
- mcount sections'
-> +       @echo  '  make K=3D1   [targets] Warn about problems in kerneldoc=
- comments'
->         @echo  '  make W=3Dn   [targets] Enable extra build checks, n=3D1=
-,2,3 where'
->         @echo  '                1: warnings which may be relevant and do =
-not occur too often'
->         @echo  '                2: warnings which occur quite often but m=
-ay still be relevant'
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 2e8810b7e5ed..9bcb77f5a5f1 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -100,7 +100,7 @@ else ifeq ($(KBUILD_CHECKSRC),2)
->          cmd_force_checksrc =3D $(CHECK) $(CHECKFLAGS) $(c_flags) $<
->  endif
->
-> -ifneq ($(KBUILD_EXTRA_WARN),)
-> +ifneq ($(KBUILD_KDOC_WARN),)
->    cmd_checkdoc =3D $(srctree)/scripts/kernel-doc -none $<
->  endif
->
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 4aea7cf71d11..3fd5881c91b0 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -17,6 +17,12 @@ endif
->
->  export KBUILD_EXTRA_WARN
->
-> +ifeq ("$(origin K)", "command line")
-> +  KBUILD_KDOC_WARN :=3D $(K)
-> +endif
-> +
-> +export KBUILD_KDOC_WARN
-> +
->  #
->  # W=3D1 - warnings which may be relevant and do not occur too often
->  #
->
->
-
-
---=20
-Best Regards
-Masahiro Yamada
+> Understanding this workload is important to my next suggestion, which
+> is that rather than searching for all the places in the exit path which
+> contend on a single spinlock, we simply set the allowed CPUs for an
+> exiting task to include only the CPU that this thread is running on.
+> It will probably run faster to take the threads down in series on one
+> CPU rather than take them down in parallel across many CPUs (or am I
+> mistaken?  Is there inherently a lot of parallelism in the thread
+> exiting process?)
