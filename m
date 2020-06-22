@@ -2,210 +2,119 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C39C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CC0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF1220738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D826A20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G03qVrj5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxbhIJef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbgFVOhE (ORCPT
+        id S1729456AbgFVOhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729377AbgFVOhA (ORCPT
+        Mon, 22 Jun 2020 10:37:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30914 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729421AbgFVOhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:37:00 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A113C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:37:00 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k1so7664826pls.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=t3k98uqLUbsbenoKJRmJ5jM5z4HxpBNQ2xj0GuTh8yY=;
-        b=G03qVrj55e7LDYdknFi4s2nL7rtTpCQUSF8Zz+JHlvm35ro+nr76bAY71hDYZfDiV3
-         Kxe2JLWOeu7dI7+SYPcHpTmhtrPTiSl37dj2XAVimZU+As5yL69FBik7532qj2qkDkMI
-         1mBEGupiWoWCKLNfF1bt2w00n6ArUTj6a0/1W3lFoCLLuUUFfEk1C/FqqCJ4Ob4D7CSW
-         UCMrILqg5ehc7EWeeyvVfp7+M8Di1MJcgG/UXWhYlgXYUzeoMxe+PVjEeLBbb6movnKu
-         meK5guSXva4vwkvKTYsQgS+QSTCuE+RrtznjxBAZkE0WQpnlr47NPUmNh9yixKVLmG2b
-         3vPA==
+        Mon, 22 Jun 2020 10:37:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592836631;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rhaA+I0JFMBynaEViVLcWDggNAbJpIVf0sPk39R0QYE=;
+        b=CxbhIJefeK3bdc/WWmnlvyaf6C0IoQgUcZghuuGvriXly0fWvDUNcPeUHHOKJKxtD7wb3L
+        Rv4ZZq7luH4TPs0dBDHrsQKKl445CidVt8NCz0CCqh+GpCB70anyVr2EldKSaqZlqR6kkw
+        sIrPw12Ifx0RRpEw1vR+bdd6u1bXPJY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-490-iB9V-ThKMAuTj8PJhdwxHw-1; Mon, 22 Jun 2020 10:37:09 -0400
+X-MC-Unique: iB9V-ThKMAuTj8PJhdwxHw-1
+Received: by mail-wm1-f72.google.com with SMTP id a18so6872035wmm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:37:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=t3k98uqLUbsbenoKJRmJ5jM5z4HxpBNQ2xj0GuTh8yY=;
-        b=kU2ZDfPL1Pvw4z3obopWrW/8lJMm49BfNw5AF6Av5fHpEgS3gwRaREX2hQfkjdRqyz
-         zz+uIpTAYWnZz3Bvqx5PXveiRlV4jVQW5UvUmilGPzY4rwtzLlpxa93YbNbaWkxuwbfr
-         5A8kRdPqUPFBIuxN5j/35o5r9ReNJDDwpFlD3WbGr1W5NFJ6a3DGSuMrWoDCyp2qTF6p
-         DKtYWdW99MAMEViTROXeHEnXLOyyLcv0PwTXa0xiSxgloHFOjbt2PFRYYjdvZUj8v4HV
-         /Y0xmBN2emUzsUAztvD8vUzYz/LBYc4L24b/Svj87F/MVn5TKBH0BB1wY4pKTZ5QlqKN
-         DL1Q==
-X-Gm-Message-State: AOAM533uW3AJvoFl1r/dGO8xOdE1OKXrp8eTrHRex0p5deTL5kCNmWGu
-        CFLRHHjztFXOEwo3QtJxsu8mkvzq
-X-Google-Smtp-Source: ABdhPJyCNc+L2udkdEKC2rn8aT3WoVSOZaAdBUTRBVsTyP8dPmR/8JqH97LXgot4aTcgALXvCGlJrA==
-X-Received: by 2002:a17:90a:be10:: with SMTP id a16mr17198525pjs.150.1592836619913;
-        Mon, 22 Jun 2020 07:36:59 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b4sm14509284pfg.75.2020.06.22.07.36.58
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rhaA+I0JFMBynaEViVLcWDggNAbJpIVf0sPk39R0QYE=;
+        b=jtRMJ3AVj1FVbAmPmU6a1uKkoNEWP4SqinkkG2yP4H01jZd2ggcFo3mzffnrnbZrog
+         QTyzp/XiYe7I7tURaAFuBLtjdHTMzEDAUNi+GjX8u1+pT9oiiU6+5eFPfWaGa0haUMb3
+         udbqtas99388Gqk8Lw/a/eysgIFGDQp//5fFA+eplpYVNZiB+gJpfXc4XSwgyQ0B+Wd6
+         +Rd2Zo4avnpCZNWy9rkO8EPdHyFD4wLGJTbtS06+NOx+M9UUGaapDcj6antGnAjG0fCz
+         T5Kcy2BqDu1hm9OneK6WQQWYpcwPs6Tqa1SWWtgDoEMb/FLl2wwzVIWP7cBNVVORdg/J
+         HUkw==
+X-Gm-Message-State: AOAM533wQ4O2i0kSWRQPLN21C1wnxPL7u+eFlaB1LqTPIxGOM8TEPo/T
+        nMADX1bd/Ip18cLeWys28rTpcEevaEmcEjL/XROBfh74cv/iHKSrO9NEruk8n0wpP6C91jzMJeQ
+        7wXrsHT4B9rY/opVNEkwy/7QG
+X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr19095316wmo.139.1592836627931;
+        Mon, 22 Jun 2020 07:37:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJztqu1oKbzSSjrl7L3+QyPP72A21fy7XJuosE7miCXFYthUAfyXzD1V8PIxlT2RSA76DOqswg==
+X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr19095292wmo.139.1592836627759;
+        Mon, 22 Jun 2020 07:37:07 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
+        by smtp.gmail.com with ESMTPSA id w7sm12908477wmc.32.2020.06.22.07.37.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 07:36:59 -0700 (PDT)
-Subject: Re: [tip: sched/urgent] sched: Fix RANDSTRUCT build fail
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>, x86 <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-References: <159178525684.17951.17825196124597318263.tip-bot2@tip-bot2>
- <202006192008.337CB5212E@keescook>
- <CAHk-=wgj17RR3zetey4fpbOxbC58A=jMt87bQ9QRe4QDnxE46w@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <86b83934-6498-28b0-8756-33254b900bc3@roeck-us.net>
-Date:   Mon, 22 Jun 2020 07:36:58 -0700
+        Mon, 22 Jun 2020 07:37:07 -0700 (PDT)
+Subject: Re: [PATCH v3] KVM: LAPIC: Recalculate apic map in batch
+To:     Igor Mammedov <imammedo@redhat.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
+ <20200619143626.1b326566@redhat.com>
+ <3e025538-297b-74e5-f1b1-2193b614978b@redhat.com>
+ <20200622002637.33358827@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <cc8b429e-74dd-70f1-8f1c-8893a5485e76@redhat.com>
+Date:   Mon, 22 Jun 2020 16:37:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgj17RR3zetey4fpbOxbC58A=jMt87bQ9QRe4QDnxE46w@mail.gmail.com>
+In-Reply-To: <20200622002637.33358827@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/20 9:32 AM, Linus Torvalds wrote:
-> On Fri, Jun 19, 2020 at 8:14 PM Kees Cook <keescook@chromium.org> wrote:
->>
->> On Wed, Jun 10, 2020 at 10:34:16AM -0000, tip-bot2 for Peter Zijlstra wrote:
->>> The following commit has been merged into the sched/urgent branch of tip:
->>>
->>> Commit-ID:     bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
->>> Gitweb:        https://git.kernel.org/tip/bfb9fbe0f7e70ec5c8e51ee55b6968d4dff14456
->>> Author:        Peter Zijlstra <peterz@infradead.org>
->>> AuthorDate:    Wed, 10 Jun 2020 12:14:09 +02:00
->>> Committer:     Peter Zijlstra <peterz@infradead.org>
->>> CommitterDate: Wed, 10 Jun 2020 12:30:19 +02:00
->>>
->>> sched: Fix RANDSTRUCT build fail
->>>
->>> As a temporary build fix, the proper cleanup needs more work.
->>>
->>> Reported-by: Guenter Roeck <linux@roeck-us.net>
->>> Reported-by: Eric Biggers <ebiggers@kernel.org>
->>> Suggested-by: Eric Biggers <ebiggers@kernel.org>
->>> Suggested-by: Kees Cook <keescook@chromium.org>
->>> Fixes: a148866489fb ("sched: Replace rq::wake_list")
->>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>
->> Hi, can this please get sent to Linus before -rc2? With a148866489fb in
->> -rc1, all the CI with the GCC plugins installed have been failing their
->> all*config builds. This entered -next 9 days ago (and fixed the -next
->> builds), but Linus's tree is still failing:
+On 22/06/20 00:26, Igor Mammedov wrote:
 > 
-> Ugh.
+> following sequence looks like a race that can cause lost map update events:
 > 
-> I actually think the problem goes deeper than that.
-> 
-> The code expects the list entries to be of type 'call_single_data_t'
-> 
-> Then they damn well should be that type.
-> 
-> Note how "call_single_data_t" also implies certain alignment rules
-> that the hack in 'struct task_struct' does *not* have, and while that
-> doesn't matter on x86, it could matter on other architectures.
-> 
+>          cpu1                            cpu2
+>                              
+>                                 apic_map_dirty = true     
+>   ------------------------------------------------------------   
+>                                 kvm_recalculate_apic_map:
+>                                      pass check
+>                                          mutex_lock(&kvm->arch.apic_map_lock);
+>                                          if (!kvm->arch.apic_map_dirty)
+>                                      and in process of updating map
+>   -------------------------------------------------------------
+>     other calls to
+>        apic_map_dirty = true         might be too late for affected cpu
+>   -------------------------------------------------------------
+>                                      apic_map_dirty = false
+>   -------------------------------------------------------------
+>     kvm_recalculate_apic_map:
+>     bail out on
+>       if (!kvm->arch.apic_map_dirty)
 
-Yes, that came up before. At least, with this patch, I don't see any compile
-or boot test failures. This patch wasn't supposed to be a clean solution
-(Peter is working on that) but a quick fix that can be applied easily
-and at least improves the situation.
+I will post a fix for that.  Thanks for the analysis!
 
-As it is, the mainline kernel currently relies on having RANDSTRUCT
-disabled, and still has all the other problems you mentioned here,
-so it is definitely much worse.
-
-On the other side, a148866489fb has been in the tree for more
-than three weeks now. Maybe we can wait more time for a more
-comprehensive solution which hopefully doesn't introduce other
-problems.
-
-Guenter
-
-> So no, I don't think Peter's patch is correct. It may make the build
-> pass, but that "check the offsets between two fields" is not
-> sufficient.
-> 
-> Now, if we could create a new
-> 
->    struct __call_single_list_entry {
->         struct llist_node llist;
->         unsigned int flags;
->    } call_single_list_entry_t;
-> 
-> and use that as part of thecall_single_data_t and only use that for
-> tyhe traversal of the list, then that would avoid the alignment issue
-> and the waste of space in struct task_struct.
-> 
-> Hmm?
-> 
-> Peter/Ingo?
-> 
->                  Linus
-> 
+Paolo
 
