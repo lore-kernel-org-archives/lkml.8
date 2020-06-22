@@ -2,91 +2,126 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11C9B206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592816636;
-	bh=uHzWPbIY/41z+WQ/nEUcOLsdKXZ7Qrprx0s9J3nM1WI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=2ualsz05hDhh+Wj0leWFhe3UBtbgUoW7TUpR+SCQYxqh/kFkAGunHanEaa/9Y+GiU
-	 I5ZOLpRU0ocmzLuOmNhsZ638sQoD5yhhLSCjiSK6HCI1vmHrran6QEV1PMapUQwkgU
-	 lrnVguIFgoiFvjh2qGPMxMMDS7vKg+9YPVllXihs=
+	by mail.kernel.org (Postfix) with ESMTP id 059AA20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="yMwSFW9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgFVJDx (ORCPT
+        id S1726719AbgFVJEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:03:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbgFVJDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:03:51 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3708D20716;
-        Mon, 22 Jun 2020 09:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592816630;
-        bh=uHzWPbIY/41z+WQ/nEUcOLsdKXZ7Qrprx0s9J3nM1WI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Xh/zfNmL3ERN7ZAuWqJeou0LUUvk4MxvRvqg/wo1SCR+kIFKaY9IoS91eJwSGmLxN
-         41gDTQtH3HmNO1ivPmHrDiY28L/xmHDYW6B2Zu88FibzNrSxqjvk4opMhmkVX7J1zb
-         BUvEkLF+J6WNitfbDSFytorOw4J66B/N2vbM1fp8=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 22 Jun 2020 05:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgFVJEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:04:44 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B77C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:04:43 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id d64so1074953vke.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hwidXab7KcGUBateRVXW8zpxh0rBFCmS1LBPPNCnOFs=;
+        b=yMwSFW9zn/x4voNySBTlnA26fMQCe4mTWRT02T7FplbayAJ04otvMsASKWc9/mo6jF
+         NCbgO3o4LZvSVnMWo9ZAGeT9aIS+j2p5q35tzoV5hI3hUXT3n8foHNu96J0NmK7XFhXY
+         RJfsg3taQ+egVgLEXi1g5+mL2IkbqBXh/nZZJjhIpgb4GvqfNp6PJ4I/fzS4uzN0512k
+         dg2OvIB1wckClNQPR8wJEj8enOKvi5Q4CyvYEB4mhiJN1sqhfaCzn67EX5enZ4fWse1B
+         xLZQVxhTmpkbhDcoqyGRAbHCvd/kj555Mht2nywkotfdw/kw5emLe8bAM/VNLUxmX0pk
+         aFPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hwidXab7KcGUBateRVXW8zpxh0rBFCmS1LBPPNCnOFs=;
+        b=Sr3Guj4Eg7MtuG6Al5x7FQlUhSFT2PKeungFs5n+bMTB3lVgJai6qHyassclzcWxP/
+         XvXI8xkZXh29AMozsFhro3ZRkYGw0qb4ZCKfM1YM2JX1YVa/CG17UgWfIIn5RCzh9p0c
+         uMMpUjqZjLIJyop4Ta/n0ifJPYFMZTJGMAvzL7OFtqceEh3tpFym1VAMJ0gb4yoMNesb
+         s2yP42iWP94Zu8cJDTGJmj/Ix/LCbCZtFWTQ9UXSnNWPlqPadU3mmv8JqxgBV0MxV4RC
+         H370YMsmeX0xhN+8TcSAdqMaOaqtAlTwquSNpNgaNdVOqT+hucn7gn1XRu/+JAgZC4Mo
+         v5Eg==
+X-Gm-Message-State: AOAM531pEGiBrEpm+FKdSZMSvos0rTiEDL9CS0K80lZ3KtngR+R+yghS
+        saSVDEy3GBUCRQfwbg3JAbBPKQMQVQ1X4Hq93zNbWw==
+X-Google-Smtp-Source: ABdhPJyYmko8VFPBAPnfwHC3JEX6GmA+fgmMjI/QiUkeFxLgLTGx8SZ1A85OHGZzC1aUZkecXh9bz8L+3a6d3inzdaY=
+X-Received: by 2002:a1f:b202:: with SMTP id b2mr15315183vkf.86.1592816682850;
+ Mon, 22 Jun 2020 02:04:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200618133818.15857-1-narmstrong@baylibre.com>
+ <20200618133818.15857-2-narmstrong@baylibre.com> <20200618162849.GH954398@dell>
+In-Reply-To: <20200618162849.GH954398@dell>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Mon, 22 Jun 2020 14:34:31 +0530
+Message-ID: <CAHLCerOvR2adMOyADyQhhm6TrLd=eaCoMMUzk+nJH-6mwgr7GQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] thermal: add support for the MCU controlled FAN on
+ Khadas boards
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200620033007.1444705-10-keescook@chromium.org>
-References: <20200620033007.1444705-1-keescook@chromium.org> <20200620033007.1444705-10-keescook@chromium.org>
-Subject: Re: [PATCH v2 09/16] clk: spear: Remove uninitialized_var() usage
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mm@kvack.org,
-        clang-built-linux@googlegroups.com
-To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Date:   Mon, 22 Jun 2020 02:03:49 -0700
-Message-ID: <159281662960.62212.15318119299039755482@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kees Cook (2020-06-19 20:30:00)
-> Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> "unused variable"). If the compiler thinks it is uninitialized, either
-> simply initialize the variable or make compiler changes. As a precursor
-> to removing[2] this[3] macro[4], initialize "i" to zero. The compiler
-> warning was not a false positive, since clk_pll_set_rate()'s call to
-> clk_pll_round_rate_index() will always fail (since "prate" is NULL), so
-> "i" was never being initialized.
->=20
-> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.co=
-m/
-> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=3D1TGqCR5vQkCzWJ0QxK6Cern=
-OU6eedsudAixw@mail.gmail.com/
-> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz=
-9knmPuXhOeg@mail.gmail.com/
-> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=3DyVJu65TpLg=
-N_ybYNv0VEOKA@mail.gmail.com/
->=20
-> Fixes: 7d4998f71b29 ("clk: SPEAr: Vco-pll: Fix compilation warning")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+On Thu, Jun 18, 2020 at 9:58 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Thu, 18 Jun 2020, Neil Armstrong wrote:
+>
+> > The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
+> > on-board microcontroller.
+> >
+> > This implements the FAN control as thermal devices and as cell of the K=
+hadas
+> > MCU MFD driver.
+> >
+> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+>
+> Is this an Ack?
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+> If so, do you require a pull-request?
+
+I'll let Daniel comment about the PR but AFAICT, this can get merged
+through the MFD tree.
+
+
+> > ---
+> > Hi Lee,
+> >
+> > Could you apply this patch via the MFD tree since it depends on
+> > the linux/mfd/khadas-mcu.h header ?
+> >
+> > This patch is unchanged from the v3 serie.
+> >
+> > Thanks,
+> > Neil
+> >
+> >  drivers/thermal/Kconfig          |  11 ++
+> >  drivers/thermal/Makefile         |   1 +
+> >  drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
+> >  3 files changed, 186 insertions(+)
+> >  create mode 100644 drivers/thermal/khadas_mcu_fan.c
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Senior Technical Lead - Developer Services
+> Linaro.org =E2=94=82 Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
