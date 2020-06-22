@@ -2,318 +2,292 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5082CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 952A4206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28369206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EffVA766"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IasGR7mw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgFVLuF (ORCPT
+        id S1728087AbgFVLue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:50:05 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:31734 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgFVLuD (ORCPT
+        Mon, 22 Jun 2020 07:50:34 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:16977 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727872AbgFVLud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:50:03 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 05MBmUTK027768;
-        Mon, 22 Jun 2020 20:48:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 05MBmUTK027768
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592826510;
-        bh=f3EMttsKXE8wNghn4PUIkbuq9XEwF9UBbOhFXf+0tEM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EffVA766bsXs0n9u8OkWf4xQynGfSdkWMT4HeX/Km0vF0bsfBxzerDUwLDSnEC1K8
-         DOSLb+82bW93i/JmF0RdINFHFT7drAheGrR2iQ+k7sJO3R2Vpvp1qXgryZspiIdB3A
-         LSMFteQi1niRGNhrmmqnIu50IQboMyi8drVd0Kw3/+0veJ3H/mxWVCLNMIJ+ZqhrIi
-         FImWJnKxi1IMh6rB30oqeAFDS396u5SxfXGJlvmZ56TA3AKlkcOe1g5/suiCYEeE5+
-         onpOHeqRfQn1cXpq0UHAIKvP1SAZYewvxkAq86qMc7dzeaJAwGFjrZxwWv3rDSQZlE
-         X0kztVDqz+Zmw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: reset: Convert UniPhier reset to json-schema
-Date:   Mon, 22 Jun 2020 20:48:26 +0900
-Message-Id: <20200622114826.450442-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 22 Jun 2020 07:50:33 -0400
+X-UUID: 817b72eb343940f78f125648321c78af-20200622
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Z4O8wOPpdK/UrDMr2s/MUtr1TAtMLP4nIR6WOTI/cG8=;
+        b=IasGR7mw7AUD7u/6J4THXaOA5UNzq7QOr8fja3TTC21osObC645BSRS16At5Ilg0uQzxnQMUUKH6Cal88FkRk8jS6+ZmOKS5uxLzZIpRJDan8bPBOSR/0peWZDCwy6Dc3ua/M7QGkYQQ6vDVzW1UoRAS6/gyiwQOXedd+Twfkkc=;
+X-UUID: 817b72eb343940f78f125648321c78af-20200622
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1488807730; Mon, 22 Jun 2020 19:50:25 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 22 Jun 2020 19:50:20 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 22 Jun 2020 19:50:20 +0800
+Message-ID: <1592826623.17794.9.camel@mtkswgap22>
+Subject: Re: [RESEND v2 4/4] arm64: dts: mt6359: add PMIC MT6359 related
+ nodes
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        "Mark Brown" <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Date:   Mon, 22 Jun 2020 19:50:23 +0800
+In-Reply-To: <16c03b9e-ee74-c080-f2cc-f915ac4a90be@gmail.com>
+References: <1592808050-14260-1-git-send-email-Wen.Su@mediatek.com>
+         <1592808050-14260-5-git-send-email-Wen.Su@mediatek.com>
+         <16c03b9e-ee74-c080-f2cc-f915ac4a90be@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: AFB6E4054866FDE561E37EB69D8760553BFB29F4794E1243C8ECD79EFD9531CD2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier reset controller binding to DT schema format.
-I excluded the glue resets because their bindings are too different.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- .../reset/socionext,uniphier-reset.yaml       | 112 ++++++++++++++++
- .../bindings/reset/uniphier-reset.txt         | 121 +-----------------
- 2 files changed, 113 insertions(+), 120 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
-
-diff --git a/Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml b/Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
-new file mode 100644
-index 000000000000..4c9b0ebf6869
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/reset/socionext,uniphier-reset.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier reset controller
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description: System reset
-+        enum:
-+          - socionext,uniphier-ld4-reset
-+          - socionext,uniphier-pro4-reset
-+          - socionext,uniphier-sld8-reset
-+          - socionext,uniphier-pro5-reset
-+          - socionext,uniphier-pxs2-reset
-+          - socionext,uniphier-ld6b-reset
-+          - socionext,uniphier-ld11-reset
-+          - socionext,uniphier-ld20-reset
-+          - socionext,uniphier-pxs3-reset
-+      - description: Media I/O (MIO) reset, SD reset
-+        enum:
-+          - socionext,uniphier-ld4-mio-reset
-+          - socionext,uniphier-pro4-mio-reset
-+          - socionext,uniphier-sld8-mio-reset
-+          - socionext,uniphier-pro5-sd-reset
-+          - socionext,uniphier-pxs2-sd-reset
-+          - socionext,uniphier-ld11-mio-reset
-+          - socionext,uniphier-ld11-sd-reset
-+          - socionext,uniphier-ld20-sd-reset
-+          - socionext,uniphier-pxs3-sd-reset
-+      - description: Peripheral reset
-+        enum:
-+          - socionext,uniphier-ld4-peri-reset
-+          - socionext,uniphier-pro4-peri-reset
-+          - socionext,uniphier-sld8-peri-reset
-+          - socionext,uniphier-pro5-peri-reset
-+          - socionext,uniphier-pxs2-peri-reset
-+          - socionext,uniphier-ld11-peri-reset
-+          - socionext,uniphier-ld20-peri-reset
-+          - socionext,uniphier-pxs3-peri-reset
-+      - description: Analog signal amplifier reset
-+        enum:
-+          - socionext,uniphier-ld11-adamv-reset
-+          - socionext,uniphier-ld20-adamv-reset
-+
-+  "#reset-cells":
-+    const: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - "#reset-cells"
-+
-+examples:
-+  - |
-+    sysctrl@61840000 {
-+        compatible = "socionext,uniphier-sysctrl", "simple-mfd", "syscon";
-+        reg = <0x61840000 0x4000>;
-+
-+        reset {
-+            compatible = "socionext,uniphier-ld11-reset";
-+            #reset-cells = <1>;
-+        };
-+
-+        // other nodes ...
-+    };
-+
-+  - |
-+    mioctrl@59810000 {
-+        compatible = "socionext,uniphier-mioctrl", "simple-mfd", "syscon";
-+        reg = <0x59810000 0x800>;
-+
-+        reset {
-+            compatible = "socionext,uniphier-ld11-mio-reset";
-+            #reset-cells = <1>;
-+        };
-+
-+        // other nodes ...
-+    };
-+
-+  - |
-+    perictrl@59820000 {
-+        compatible = "socionext,uniphier-perictrl", "simple-mfd", "syscon";
-+        reg = <0x59820000 0x200>;
-+
-+        reset {
-+            compatible = "socionext,uniphier-ld11-peri-reset";
-+            #reset-cells = <1>;
-+        };
-+
-+        // other nodes ...
-+    };
-+
-+  - |
-+    adamv@57920000 {
-+        compatible = "socionext,uniphier-ld11-adamv", "simple-mfd", "syscon";
-+        reg = <0x57920000 0x1000>;
-+
-+        reset {
-+            compatible = "socionext,uniphier-ld11-adamv-reset";
-+            #reset-cells = <1>;
-+        };
-+
-+        // other nodes ...
-+    };
-diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-index e320a8cc9e4d..88e06e5e8d23 100644
---- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-@@ -1,123 +1,4 @@
--UniPhier reset controller
--
--
--System reset
--------------
--
--Required properties:
--- compatible: should be one of the following:
--    "socionext,uniphier-ld4-reset"  - for LD4 SoC
--    "socionext,uniphier-pro4-reset" - for Pro4 SoC
--    "socionext,uniphier-sld8-reset" - for sLD8 SoC
--    "socionext,uniphier-pro5-reset" - for Pro5 SoC
--    "socionext,uniphier-pxs2-reset" - for PXs2/LD6b SoC
--    "socionext,uniphier-ld11-reset" - for LD11 SoC
--    "socionext,uniphier-ld20-reset" - for LD20 SoC
--    "socionext,uniphier-pxs3-reset" - for PXs3 SoC
--- #reset-cells: should be 1.
--
--Example:
--
--	sysctrl@61840000 {
--		compatible = "socionext,uniphier-ld11-sysctrl",
--			     "simple-mfd", "syscon";
--		reg = <0x61840000 0x4000>;
--
--		reset {
--			compatible = "socionext,uniphier-ld11-reset";
--			#reset-cells = <1>;
--		};
--
--		other nodes ...
--	};
--
--
--Media I/O (MIO) reset, SD reset
---------------------------------
--
--Required properties:
--- compatible: should be one of the following:
--    "socionext,uniphier-ld4-mio-reset"  - for LD4 SoC
--    "socionext,uniphier-pro4-mio-reset" - for Pro4 SoC
--    "socionext,uniphier-sld8-mio-reset" - for sLD8 SoC
--    "socionext,uniphier-pro5-sd-reset"  - for Pro5 SoC
--    "socionext,uniphier-pxs2-sd-reset"  - for PXs2/LD6b SoC
--    "socionext,uniphier-ld11-mio-reset" - for LD11 SoC (MIO)
--    "socionext,uniphier-ld11-sd-reset"  - for LD11 SoC (SD)
--    "socionext,uniphier-ld20-sd-reset"  - for LD20 SoC
--    "socionext,uniphier-pxs3-sd-reset"  - for PXs3 SoC
--- #reset-cells: should be 1.
--
--Example:
--
--	mioctrl@59810000 {
--		compatible = "socionext,uniphier-ld11-mioctrl",
--			     "simple-mfd", "syscon";
--		reg = <0x59810000 0x800>;
--
--		reset {
--			compatible = "socionext,uniphier-ld11-mio-reset";
--			#reset-cells = <1>;
--		};
--
--		other nodes ...
--	};
--
--
--Peripheral reset
------------------
--
--Required properties:
--- compatible: should be one of the following:
--    "socionext,uniphier-ld4-peri-reset"  - for LD4 SoC
--    "socionext,uniphier-pro4-peri-reset" - for Pro4 SoC
--    "socionext,uniphier-sld8-peri-reset" - for sLD8 SoC
--    "socionext,uniphier-pro5-peri-reset" - for Pro5 SoC
--    "socionext,uniphier-pxs2-peri-reset" - for PXs2/LD6b SoC
--    "socionext,uniphier-ld11-peri-reset" - for LD11 SoC
--    "socionext,uniphier-ld20-peri-reset" - for LD20 SoC
--    "socionext,uniphier-pxs3-peri-reset" - for PXs3 SoC
--- #reset-cells: should be 1.
--
--Example:
--
--	perictrl@59820000 {
--		compatible = "socionext,uniphier-ld11-perictrl",
--			     "simple-mfd", "syscon";
--		reg = <0x59820000 0x200>;
--
--		reset {
--			compatible = "socionext,uniphier-ld11-peri-reset";
--			#reset-cells = <1>;
--		};
--
--		other nodes ...
--	};
--
--
--Analog signal amplifier reset
-------------------------------
--
--Required properties:
--- compatible: should be one of the following:
--    "socionext,uniphier-ld11-adamv-reset" - for LD11 SoC
--    "socionext,uniphier-ld20-adamv-reset" - for LD20 SoC
--- #reset-cells: should be 1.
--
--Example:
--
--	adamv@57920000 {
--		compatible = "socionext,uniphier-ld11-adamv",
--			     "simple-mfd", "syscon";
--		reg = <0x57920000 0x1000>;
--
--		adamv_rst: reset {
--			compatible = "socionext,uniphier-ld11-adamv-reset";
--			#reset-cells = <1>;
--		};
--
--		other nodes ...
--	};
-+UniPhier glue reset controller
- 
- 
- Peripheral core reset in glue layer
--- 
-2.25.1
+SGkgTWF0dGhpYXMsDQoNCk9uIE1vbiwgMjAyMC0wNi0yMiBhdCAxMjoxMiArMDIwMCwgTWF0dGhp
+YXMgQnJ1Z2dlciB3cm90ZToNCj4gDQo+IE9uIDIyLzA2LzIwMjAgMDg6NDAsIFdlbiBTdSB3cm90
+ZToNCj4gPiBGcm9tOiAiV2VuIFN1IiA8d2VuLnN1QG1lZGlhdGVrLmNvbT4NCj4gPiANCj4gPiBh
+ZGQgUE1JQyBNVDYzNTkgcmVsYXRlZCBub2RlcyB3aGljaCBpcyBmb3IgTVQ2Nzc5IHBsYXRmb3Jt
+DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogV2VuIFN1IDx3ZW4uc3VAbWVkaWF0ZWsuY29tPg0K
+PiA+IC0tLQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NjM1OS5kdHNpIHwg
+MzA2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQs
+IDMwNiBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jv
+b3QvZHRzL21lZGlhdGVrL210NjM1OS5kdHNpDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2MzU5LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
+L21lZGlhdGVrL210NjM1OS5kdHNpDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRl
+eCAwMDAwMDAwLi40Y2FmZTFmDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2MzU5LmR0c2kNCj4gPiBAQCAtMCwwICsxLDMwNiBAQA0K
+PiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsg
+KiBDb3B5cmlnaHQgKGMpIDIwMTkgTWVkaWFUZWsgSW5jLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4g
+KyZwd3JhcCB7DQo+ID4gKwlwbWljOiBwbWljIHsNCj4gPiArCQltdDYzNTlyZWd1bGF0b3I6IG10
+NjM1OXJlZ3VsYXRvciB7DQo+IA0KPiB5b3UgYXJlIG1pc3Npbmc6DQo+IGNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ2MzU5IjsNCj4gZG9uJ3QgeW91Pw0KDQpJIHRoaW5rIHRoaXMgY29tcGF0aWJs
+ZSBzdHJpbmcgaXMgZm9yIE1GRCBkcml2ZXIuDQpBbmQgdGhlIE1GRCBpbnN0YW50aWF0ZSB0aGUg
+cmVndWxhdG9yIGRyaXZlciB3aGVuIGl0IHByb2Jlcy4NClNvIHRoaXMgcmVndWxhdG9yIHBhdGNo
+IHNldCByZW1vdmUgdGhpcyBjb21wYXRpYmxlIHN0cmluZy4NCklzIGl0IGJldHRlciB0byBhZGQg
+dGhpcyBjb21wYXRpYmxlIHN0cmluZyBpbiB0aGlzIHBhdGNoIHNldCA/DQpUaGFua3MgZm9yIHlv
+dXIgc3VnZ2VzdGlvbi4NCg0KPiANCj4gUmVnYXJkcywNCj4gTWF0dGhpYXMNCj4gDQo+ID4gKwkJ
+CWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzU5LXJlZ3VsYXRvciI7DQo+ID4gKwkJCW10NjM1
+OV92czFfYnVja19yZWc6IGJ1Y2tfdnMxIHsNCj4gPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZz
+MSI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw4MDAwMDA+Ow0KPiA+ICsJ
+CQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MjIwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0
+b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9u
+Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdmdwdTExX2J1Y2tfcmVnOiBidWNrX3ZncHUx
+MSB7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Z3B1MTEiOw0KPiA+ICsJCQkJcmVndWxh
+dG9yLW1pbi1taWNyb3ZvbHQgPSA8NDAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWlj
+cm92b2x0ID0gPDExOTM3NTA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLXJhbXAtZGVsYXkgPSA8NTAw
+MD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MjAwPjsNCj4gPiAr
+CQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJCQlyZWd1bGF0b3ItYWxsb3dlZC1tb2Rl
+cyA9IDwwIDEgMj47DQo+ID4gKwkJCX07DQo+ID4gKwkJCW10NjM1OV92bW9kZW1fYnVja19yZWc6
+IGJ1Y2tfdm1vZGVtIHsNCj4gPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZtb2RlbSI7DQo+ID4g
+KwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw0MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxh
+dG9yLW1heC1taWNyb3ZvbHQgPSA8MTEwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItcmFtcC1k
+ZWxheSA9IDwxMDc2MD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8
+MjAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJCX07DQo+ID4gKwkJ
+CW10NjM1OV92cHVfYnVja19yZWc6IGJ1Y2tfdnB1IHsNCj4gPiArCQkJCXJlZ3VsYXRvci1uYW1l
+ID0gInZwdSI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw0MDAwMDA+Ow0K
+PiA+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTE5Mzc1MD47DQo+ID4gKwkJCQly
+ZWd1bGF0b3ItcmFtcC1kZWxheSA9IDw1MDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUt
+cmFtcC1kZWxheSA9IDwyMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWFsbG93ZWQtbW9kZXMgPSA8
+MCAxIDI+Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdmNvcmVfYnVja19yZWc6IGJ1Y2tf
+dmNvcmUgew0KPiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNvcmUiOw0KPiA+ICsJCQkJcmVn
+dWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NDAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgt
+bWljcm92b2x0ID0gPDExOTM3NTA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLXJhbXAtZGVsYXkgPSA8
+NTAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MjAwPjsNCj4g
+PiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJCQlyZWd1bGF0b3ItYWxsb3dlZC1t
+b2RlcyA9IDwwIDEgMj47DQo+ID4gKwkJCX07DQo+ID4gKwkJCW10NjM1OV92czJfYnVja19yZWc6
+IGJ1Y2tfdnMyIHsNCj4gPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZzMiI7DQo+ID4gKwkJCQly
+ZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw4MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1h
+eC1taWNyb3ZvbHQgPSA8MTYwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAt
+ZGVsYXkgPSA8MD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCQl9Ow0K
+PiA+ICsJCQltdDYzNTlfdnBhX2J1Y2tfcmVnOiBidWNrX3ZwYSB7DQo+ID4gKwkJCQlyZWd1bGF0
+b3ItbmFtZSA9ICJ2cGEiOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NTAw
+MDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDM2NTAwMDA+Ow0KPiA+
+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDMwMD47DQo+ID4gKwkJCX07DQo+
+ID4gKwkJCW10NjM1OV92cHJvYzJfYnVja19yZWc6IGJ1Y2tfdnByb2MyIHsNCj4gPiArCQkJCXJl
+Z3VsYXRvci1uYW1lID0gInZwcm9jMiI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9s
+dCA9IDw0MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTE5Mzc1
+MD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItcmFtcC1kZWxheSA9IDw3NTAwPjsNCj4gPiArCQkJCXJl
+Z3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwyMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWFs
+d2F5cy1vbjsNCj4gPiArCQkJCXJlZ3VsYXRvci1hbGxvd2VkLW1vZGVzID0gPDAgMSAyPjsNCj4g
+PiArCQkJfTsNCj4gPiArCQkJbXQ2MzU5X3Zwcm9jMV9idWNrX3JlZzogYnVja192cHJvYzEgew0K
+PiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidnByb2MxIjsNCj4gPiArCQkJCXJlZ3VsYXRvci1t
+aW4tbWljcm92b2x0ID0gPDQwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9s
+dCA9IDwxMTkzNzUwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1yYW1wLWRlbGF5ID0gPDc1MDA+Ow0K
+PiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDIwMD47DQo+ID4gKwkJCQly
+ZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCQkJcmVndWxhdG9yLWFsbG93ZWQtbW9kZXMgPSA8
+MCAxIDI+Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdmNvcmVfc3NodWJfYnVja19yZWc6
+IGJ1Y2tfdmNvcmVfc3NodWIgew0KPiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNvcmVfc3No
+dWIiOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NDAwMDAwPjsNCj4gPiAr
+CQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDExOTM3NTA+Ow0KPiA+ICsJCQl9Ow0KPiA+
+ICsJCQltdDYzNTlfdmF1ZDE4X2xkb19yZWc6IGxkb192YXVkMTggew0KPiA+ICsJCQkJcmVndWxh
+dG9yLW5hbWUgPSAidmF1ZDE4IjsNCj4gPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0g
+PDE4MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTgwMDAwMD47
+DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MjQwPjsNCj4gPiArCQkJ
+fTsNCj4gPiArCQkJbXQ2MzU5X3ZzaW0xX2xkb19yZWc6IGxkb192c2ltMSB7DQo+ID4gKwkJCQly
+ZWd1bGF0b3ItbmFtZSA9ICJ2c2ltMSI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9s
+dCA9IDwxNzAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMxMDAw
+MDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDQ4MD47DQo+ID4g
+KwkJCX07DQo+ID4gKwkJCW10NjM1OV92aWJyX2xkb19yZWc6IGxkb192aWJyIHsNCj4gPiArCQkJ
+CXJlZ3VsYXRvci1uYW1lID0gInZpYnIiOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3Zv
+bHQgPSA8MTIwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAw
+MDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwyNDA+Ow0KPiA+
+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdnJmMTJfbGRvX3JlZzogbGRvX3ZyZjEyIHsNCj4gPiAr
+CQkJCXJlZ3VsYXRvci1uYW1lID0gInZyZjEyIjsNCj4gPiArCQkJCXJlZ3VsYXRvci1taW4tbWlj
+cm92b2x0ID0gPDExMDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8
+MTMwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MTIwPjsN
+Cj4gPiArCQkJfTsNCj4gPiArCQkJbXQ2MzU5X3Z1c2JfbGRvX3JlZzogbGRvX3Z1c2Igew0KPiA+
+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidnVzYiI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1p
+Y3Jvdm9sdCA9IDwzMDAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
+PDMwMDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDI0MD47
+DQo+ID4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYz
+NTlfdnNyYW1fcHJvYzJfbGRvX3JlZzogbGRvX3ZzcmFtX3Byb2MyIHsNCj4gPiArCQkJCXJlZ3Vs
+YXRvci1uYW1lID0gInZzcmFtX3Byb2MyIjsNCj4gPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92
+b2x0ID0gPDUwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMTkz
+NzUwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1yYW1wLWRlbGF5ID0gPDc1MDA+Ow0KPiA+ICsJCQkJ
+cmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDI0MD47DQo+ID4gKwkJCQlyZWd1bGF0b3It
+YWx3YXlzLW9uOw0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdmlvMThfbGRvX3JlZzogbGRv
+X3ZpbzE4IHsNCj4gPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZpbzE4IjsNCj4gPiArCQkJCXJl
+Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE3MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1h
+eC1taWNyb3ZvbHQgPSA8MTkwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAt
+ZGVsYXkgPSA8OTYwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJCX07
+DQo+ID4gKwkJCW10NjM1OV92Y2FtaW9fbGRvX3JlZzogbGRvX3ZjYW1pbyB7DQo+ID4gKwkJCQly
+ZWd1bGF0b3ItbmFtZSA9ICJ2Y2FtaW8iOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3Zv
+bHQgPSA8MTcwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxOTAw
+MDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwxOTIwPjsNCj4g
+PiArCQkJfTsNCj4gPiArCQkJbXQ2MzU5X3ZjbjE4X2xkb19yZWc6IGxkb192Y24xOCB7DQo+ID4g
+KwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y24xOCI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1p
+Y3Jvdm9sdCA9IDwxODAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
+PDE4MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDI0MD47
+DQo+ID4gKwkJCX07DQo+ID4gKwkJCW10NjM1OV92ZmUyOF9sZG9fcmVnOiBsZG9fdmZlMjggew0K
+PiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmZlMjgiOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1p
+bi1taWNyb3ZvbHQgPSA8MjgwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9s
+dCA9IDwyODAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwx
+MjA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiArCQkJfTsNCj4gPiArCQkJ
+bXQ2MzU5X3ZjbjEzX2xkb19yZWc6IGxkb192Y24xMyB7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbmFt
+ZSA9ICJ2Y24xMyI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw5MDAwMDA+
+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTMwMDAwMD47DQo+ID4gKwkJ
+CQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MjQwPjsNCj4gPiArCQkJfTsNCj4gPiAr
+CQkJbXQ2MzU5X3ZjbjMzXzFfYnRfbGRvX3JlZzogbGRvX3ZjbjMzXzFfYnQgew0KPiA+ICsJCQkJ
+cmVndWxhdG9yLW5hbWUgPSAidmNuMzNfMV9idCI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1p
+Y3Jvdm9sdCA9IDwyODAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
+PDM1MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDI0MD47
+DQo+ID4gKwkJCX07DQo+ID4gKwkJCW10NjM1OV92Y24zM18xX3dpZmlfbGRvX3JlZzogbGRvX3Zj
+bjMzXzFfd2lmaSB7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y24zM18xX3dpZmkiOw0K
+PiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MjgwMDAwMD47DQo+ID4gKwkJCQly
+ZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzNTAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1l
+bmFibGUtcmFtcC1kZWxheSA9IDwyNDA+Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdmF1
+eDE4X2xkb19yZWc6IGxkb192YXV4MTggew0KPiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmF1
+eDE4IjsNCj4gPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAwMDA+Ow0KPiA+
+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTgwMDAwMD47DQo+ID4gKwkJCQlyZWd1
+bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MjQwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1hbHdh
+eXMtb247DQo+ID4gKwkJCX07DQo+ID4gKwkJCW10NjM1OV92c3JhbV9vdGhlcnNfbGRvX3JlZzog
+bGRvX3ZzcmFtX290aGVycyB7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2c3JhbV9vdGhl
+cnMiOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NTAwMDAwPjsNCj4gPiAr
+CQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDExOTM3NTA+Ow0KPiA+ICsJCQkJcmVndWxh
+dG9yLXJhbXAtZGVsYXkgPSA8NTAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAt
+ZGVsYXkgPSA8MjQwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJCX07
+DQo+ID4gKwkJCW10NjM1OV92ZWZ1c2VfbGRvX3JlZzogbGRvX3ZlZnVzZSB7DQo+ID4gKwkJCQly
+ZWd1bGF0b3ItbmFtZSA9ICJ2ZWZ1c2UiOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3Zv
+bHQgPSA8MTcwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwyMDAw
+MDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwyNDA+Ow0KPiA+
+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdnhvMjJfbGRvX3JlZzogbGRvX3Z4bzIyIHsNCj4gPiAr
+CQkJCXJlZ3VsYXRvci1uYW1lID0gInZ4bzIyIjsNCj4gPiArCQkJCXJlZ3VsYXRvci1taW4tbWlj
+cm92b2x0ID0gPDE4MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8
+MjIwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MTIwPjsN
+Cj4gPiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJCX07DQo+ID4gKwkJCW10NjM1
+OV92cmZja19sZG9fcmVnOiBsZG9fdnJmY2sgew0KPiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAi
+dnJmY2siOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTUwMDAwMD47DQo+
+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxNzAwMDAwPjsNCj4gPiArCQkJCXJl
+Z3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDw0ODA+Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCQlt
+dDYzNTlfdmJpZjI4X2xkb19yZWc6IGxkb192YmlmMjggew0KPiA+ICsJCQkJcmVndWxhdG9yLW5h
+bWUgPSAidmJpZjI4IjsNCj4gPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDI4MDAw
+MDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MjgwMDAwMD47DQo+ID4g
+KwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MjQwPjsNCj4gPiArCQkJCXJlZ3Vs
+YXRvci1hbHdheXMtb247DQo+ID4gKwkJCX07DQo+ID4gKwkJCW10NjM1OV92aW8yOF9sZG9fcmVn
+OiBsZG9fdmlvMjggew0KPiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmlvMjgiOw0KPiA+ICsJ
+CQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MjgwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0
+b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUt
+cmFtcC1kZWxheSA9IDwyNDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiAr
+CQkJfTsNCj4gPiArCQkJbXQ2MzU5X3ZlbWNfbGRvX3JlZzogbGRvX3ZlbWMgew0KPiA+ICsJCQkJ
+cmVndWxhdG9yLW5hbWUgPSAidmVtYyI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9s
+dCA9IDwyOTAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAw
+MDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDI0MD47DQo+ID4g
+KwkJCX07DQo+ID4gKwkJCW10NjM1OV92Y24zM18yX2J0X2xkb19yZWc6IGxkb192Y24zM18yX2J0
+IHsNCj4gPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZjbjMzXzJfYnQiOw0KPiA+ICsJCQkJcmVn
+dWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MjgwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4
+LW1pY3Jvdm9sdCA9IDwzNTAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1k
+ZWxheSA9IDwyNDA+Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdmNuMzNfMl93aWZpX2xk
+b19yZWc6IGxkb192Y24zM18yX3dpZmkgew0KPiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNu
+MzNfMl93aWZpIjsNCj4gPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDI4MDAwMDA+
+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzUwMDAwMD47DQo+ID4gKwkJ
+CQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MjQwPjsNCj4gPiArCQkJfTsNCj4gPiAr
+CQkJbXQ2MzU5X3ZhMTJfbGRvX3JlZzogbGRvX3ZhMTIgew0KPiA+ICsJCQkJcmVndWxhdG9yLW5h
+bWUgPSAidmExMiI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxMjAwMDAw
+PjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDEzMDAwMDA+Ow0KPiA+ICsJ
+CQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDI0MD47DQo+ID4gKwkJCQlyZWd1bGF0
+b3ItYWx3YXlzLW9uOw0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdmEwOV9sZG9fcmVnOiBs
+ZG9fdmEwOSB7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2YTA5IjsNCj4gPiArCQkJCXJl
+Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDgwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4
+LW1pY3Jvdm9sdCA9IDwxMjAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1k
+ZWxheSA9IDwyNDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiArCQkJfTsN
+Cj4gPiArCQkJbXQ2MzU5X3ZyZjE4X2xkb19yZWc6IGxkb192cmYxOCB7DQo+ID4gKwkJCQlyZWd1
+bGF0b3ItbmFtZSA9ICJ2cmYxOCI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9
+IDwxNzAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MTAwMDA+
+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDEyMD47DQo+ID4gKwkJ
+CQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCQl9Ow0KPiA+ICsJCQltdDYzNTlfdnNyYW1f
+bWRfbGRvX3JlZzogbGRvX3ZzcmFtX21kIHsNCj4gPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZz
+cmFtX21kIjsNCj4gPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDUwMDAwMD47DQo+
+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMTAwMDAwPjsNCj4gPiArCQkJCXJl
+Z3VsYXRvci1yYW1wLWRlbGF5ID0gPDEwNzYwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUt
+cmFtcC1kZWxheSA9IDwyNDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiAr
+CQkJfTsNCj4gPiArCQkJbXQ2MzU5X3Z1ZnNfbGRvX3JlZzogbGRvX3Z1ZnMgew0KPiA+ICsJCQkJ
+cmVndWxhdG9yLW5hbWUgPSAidnVmcyI7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9s
+dCA9IDwxNzAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE5MDAw
+MDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDE5MjA+Ow0KPiA+
+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiArCQkJfTsNCj4gPiArCQkJbXQ2MzU5X3Zt
+MThfbGRvX3JlZzogbGRvX3ZtMTggew0KPiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidm0xOCI7
+DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxNzAwMDAwPjsNCj4gPiArCQkJ
+CXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE5MDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9y
+LWVuYWJsZS1yYW1wLWRlbGF5ID0gPDE5MjA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1v
+bjsNCj4gPiArCQkJfTsNCj4gPiArCQkJbXQ2MzU5X3ZiYmNrX2xkb19yZWc6IGxkb192YmJjayB7
+DQo+ID4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2YmJjayI7DQo+ID4gKwkJCQlyZWd1bGF0b3It
+bWluLW1pY3Jvdm9sdCA9IDwxMTAwMDAwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92
+b2x0ID0gPDEyMDAwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0g
+PDI0MD47DQo+ID4gKwkJCX07DQo+ID4gKwkJCW10NjM1OV92c3JhbV9wcm9jMV9sZG9fcmVnOiBs
+ZG9fdnNyYW1fcHJvYzEgew0KPiA+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidnNyYW1fcHJvYzEi
+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NTAwMDAwPjsNCj4gPiArCQkJ
+CXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDExOTM3NTA+Ow0KPiA+ICsJCQkJcmVndWxhdG9y
+LXJhbXAtZGVsYXkgPSA8NzUwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVs
+YXkgPSA8MjQwPjsNCj4gPiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJCX07DQo+
+ID4gKwkJCW10NjM1OV92c2ltMl9sZG9fcmVnOiBsZG9fdnNpbTIgew0KPiA+ICsJCQkJcmVndWxh
+dG9yLW5hbWUgPSAidnNpbTIiOw0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8
+MTcwMDAwMD47DQo+ID4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMTAwMDAwPjsN
+Cj4gPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDw0ODA+Ow0KPiA+ICsJCQl9
+Ow0KPiA+ICsJCQltdDYzNTlfdnNyYW1fb3RoZXJzX3NzaHViX2xkbzogbGRvX3ZzcmFtX290aGVy
+c19zc2h1YiB7DQo+ID4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2c3JhbV9vdGhlcnNfc3NodWIi
+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NTAwMDAwPjsNCj4gPiArCQkJ
+CXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDExOTM3NTA+Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJ
+CX07DQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+IA0KDQo=
 
