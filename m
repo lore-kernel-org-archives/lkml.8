@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6572BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 833DA20707
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FB2207C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RNpzDrmu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IzYnAgcx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbgFVIGR (ORCPT
+        id S1726110AbgFVIHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:06:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
+        Mon, 22 Jun 2020 04:07:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgFVIGQ (ORCPT
+        with ESMTP id S1725881AbgFVIHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:06:16 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45339C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:06:16 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g7so12313824oti.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:06:16 -0700 (PDT)
+        Mon, 22 Jun 2020 04:07:51 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23738C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:07:50 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id m2so12333215otr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:07:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=RCGFWVoC+22vi5fGF/Lzmf9sDoYHuK/JibjQYr3rU/Y=;
-        b=RNpzDrmu/1ExMjMNc3/90lZOQTc6y1Ts0qeHUevG26B05m1/F/EMtiDaHXeF8qfsr7
-         GKoEFysjLRg6rx9Zx1JSdq7fHG/cCuZJyre4QKxW1VSZ5aF/zw5+9I8ohCiSH94IQWNc
-         z0wSthDKVujjSIBEINJWoJlPBNYblC99IVxxx5HDdmk3QS0AXZVlK2JN91MFMeMs/ZYl
-         BYwa6zOxzp7ToJ0ny1CbEZgzfbsK6QZ2TVdjSA0CJ0zUFsh6MbyiM8CTTD1jJSFfAZ0x
-         uBJpEgb05sarWVdKVLuM+THYvmvCoprm03aRDMwMbEzVczRiUBbXdA7UvnvQYoGUmOV5
-         Ls+A==
+        bh=s/Z1KJBqPxAzU1XgEqeVVc6digaYa1vATfTaGO5Of4k=;
+        b=IzYnAgcxm+xpe2QdoJiV1WLYry/jKp+aUcau2Htwx0SqiXCsVl8puTpiwvJU2tomPp
+         gI87/rn9FgEiiOIAAiFW5Cf5p01dhmyviPMchpSQAfyiDJ2tflG8LxVXBN5vIImkdgLc
+         Y6lXaX6ajm9dlaWwf2+xVX47m6XKhLl6FyIvrY5jTMUqXvTpymfUB9mJT5uOfHAnE7lh
+         89I8Ku04hZOHNaf7cDNWhQnihP9hzOZoniCUwkc6GgdJRysAUNKVo5wr0LPc1l5BI84R
+         aDfXLX4nGniF2ZcKansa+sYpnkMQQW6RzeTINilm/e9cowcR2pNo0LIiZd5UNxkC2C1K
+         Wlbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RCGFWVoC+22vi5fGF/Lzmf9sDoYHuK/JibjQYr3rU/Y=;
-        b=lduRRvZuFi6Nhs/6xkiVAPvfwxsuFIbOynTcMao+pfuWY1NELxcVMVSFLga0sY6ZiY
-         zFmHDqmcinQf/62qXbmavre+y/CPVLoD7Hoc9qPJtfpiBVk5qLOCOWppDSoth2/wSfTT
-         gsM6FrVgM6jDZHc1p/AYGlhuOmAO1oQrookqSckpoYC4JJ+bTwW6aiNvkRv6ucwciYvJ
-         mfNtGbQZqrpfqjAGfhptElvzY/OERXMnvjGK0RUC7XpPK1K0u0nJsPJ9llRmzr4WvnTw
-         R0klzxhoYAvnLG84Ce4gSVcq7YqPIoXB9I3hjxnyiDWVJYPGIkeI8rXVosgy9u+9dFcQ
-         QdZA==
-X-Gm-Message-State: AOAM532cdjWPwItCjqAnHjZaSdQ2qx6C5amgjjSBE55s4Ab99hwEXfs7
-        qQviu8dwCeGLbetNVDTqY4oB/A==
-X-Google-Smtp-Source: ABdhPJx3DnAh2tMtG2FaBUndVdH5/vjM9U66Owh7njm0BJFz0Y2FVlFk93FnZDPI61FWL/XHCPvV2Q==
-X-Received: by 2002:a9d:7b41:: with SMTP id f1mr13350822oto.363.1592813175637;
-        Mon, 22 Jun 2020 01:06:15 -0700 (PDT)
+        bh=s/Z1KJBqPxAzU1XgEqeVVc6digaYa1vATfTaGO5Of4k=;
+        b=n4lSDTQgrBfn70ZKVfzoe38IcPBBPVCdp2wvV05OFV0Cpps6kkjkHwS9b4l6DHr+en
+         p9l6y1k5DPnVRQby+a5rb0/1UnlatEMRxAg86C/VTuh2QcGL6+nPdUrKKs86Q2UbdoNk
+         xI8cJv6BB/jgHLQQBvyiAGVdL9D4RGDgL1DwLwzynQTZo06nHjPH6wSRqg8MArkhBChU
+         cmffnSrTen2ANUtILb+fNWQgSsCbivbee3+Fbly4LOsFVfNA+PKQmSnDGh+otgRuVFOu
+         CVIU/P1Sqru2eTlUXb4Kw4oyXSJRcSniSSPJXXJVZgdtyWYmktowZUHmWE9c1eqmsglr
+         yvvA==
+X-Gm-Message-State: AOAM533JMgRD1Ic32/I6AcnDsQH90SM5YzHunDz6eknguBb0+8frG5CH
+        IlLKlsKRPKCczZSOr69LcCU19Q==
+X-Google-Smtp-Source: ABdhPJxuIPLfMi3Tn0La+LJtRlI42WZAm5jHZEVxLV276qtbDnq4/rDsn3UqE9MZ+dKeEP1jO66wGQ==
+X-Received: by 2002:a05:6830:1c7b:: with SMTP id s27mr2790946otg.194.1592813269518;
+        Mon, 22 Jun 2020 01:07:49 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f5sm3239196oou.47.2020.06.22.01.06.13
+        by smtp.gmail.com with ESMTPSA id h23sm3274987oou.14.2020.06.22.01.07.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 01:06:14 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 01:03:29 -0700
+        Mon, 22 Jun 2020 01:07:48 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 01:05:03 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Konrad Dybcio <konradybcio@gmail.com>
 Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
@@ -73,15 +73,14 @@ Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 2/8] Documentation: Document pm660(l) SPMI GPIOs
- compatible
-Message-ID: <20200622080329.GD2421@builder.lan>
+Subject: Re: [PATCH v2 3/8] soc: qcom: socinfo: Add socinfo entry for SDM630
+Message-ID: <20200622080503.GQ128451@builder.lan>
 References: <20200622075749.21925-1-konradybcio@gmail.com>
- <20200622075749.21925-3-konradybcio@gmail.com>
+ <20200622075749.21925-4-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622075749.21925-3-konradybcio@gmail.com>
+In-Reply-To: <20200622075749.21925-4-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -89,26 +88,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon 22 Jun 00:57 PDT 2020, Konrad Dybcio wrote:
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> This patch adds missing soc ID for SDM630.
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> index 7be5de8d253f..c3d1914381ae 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> @@ -23,6 +23,8 @@ PMIC's from Qualcomm.
->  		    "qcom,pmi8994-gpio"
->  		    "qcom,pmi8998-gpio"
->  		    "qcom,pms405-gpio"
-> +		    "qcom,pm660-gpio"
-> +		    "qcom,pm660l-gpio"
->  		    "qcom,pm8150-gpio"
->  		    "qcom,pm8150b-gpio"
->  		    "qcom,pm6150-gpio"
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+
+Applied
+
+Thanks,
+Bjorn
+
+> ---
+>  drivers/soc/qcom/socinfo.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+> index 5983c6ffb078..705f142ee588 100644
+> --- a/drivers/soc/qcom/socinfo.c
+> +++ b/drivers/soc/qcom/socinfo.c
+> @@ -202,6 +202,7 @@ static const struct soc_id soc_id[] = {
+>  	{ 310, "MSM8996AU" },
+>  	{ 311, "APQ8096AU" },
+>  	{ 312, "APQ8096SG" },
+> +	{ 318, "SDM630" },
+>  	{ 321, "SDM845" },
+>  	{ 341, "SDA845" },
+>  };
 > -- 
 > 2.27.0
 > 
