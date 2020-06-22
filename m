@@ -2,135 +2,116 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A43C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE6AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAD32073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963ED2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jPi/b9t/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbgFVUvd (ORCPT
+        id S1728828AbgFVUxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:51:33 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45422 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728421AbgFVUvc (ORCPT
+        Mon, 22 Jun 2020 16:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728131AbgFVUxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:51:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B03E78030809;
-        Mon, 22 Jun 2020 20:51:23 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zrSYLP8U0TZk; Mon, 22 Jun 2020 23:51:22 +0300 (MSK)
-Date:   Mon, 22 Jun 2020 23:51:21 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Pavel Machek <pavel@denx.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mon, 22 Jun 2020 16:53:47 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600A9C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:53:47 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e18so8799643pgn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mDXLfB+PQDLRQ6NmPDmR2JF3Ok4ZVjhNHcZbi8M58JY=;
+        b=jPi/b9t/cgTj3qq2Y+w0Tp93JhZufwpflaLmvJiEevWxTi3dExayl9ry4eqVJN/fWa
+         o8Dul0iXlzYg6sDsWr+LM+o6q4SVmNEyXDnChNwemh29HXQJQCorReaJsa0EvUAllkee
+         p8bfk/EkllHSz3PZVmYDOYLn+iUf/LwJlmHSw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mDXLfB+PQDLRQ6NmPDmR2JF3Ok4ZVjhNHcZbi8M58JY=;
+        b=lTuOqsnXZGthZKPv6lWNfR5DRuLLn4TLfFG4h/i5iHP1ZYcmEwbY+aleRiHovxTGLn
+         K0Bx6yzMTZ1bKXi6OGK+HKMTE+kikGMTash7hrD/VZeYLE9gaQADd/fo7zlNOoof3c/i
+         lYkTAHQuhBsYpS70MncRLQjWdlRiLombf7O54Gf4Hth41VSkW8gQaBjiuWjh7DIpgGSM
+         4iWICISD8pMOw7P+74/vsLC7mG12d5IJrHhDCsZ5VDzTylX78hQILfrKEyrvvb7FE5ge
+         DIRJD/rpnwM/RtzjV+N7bZpv9lJeoN0GwNYReObhtEaH5ln9LBUuHPfbp9HEWIs1xayD
+         +wBQ==
+X-Gm-Message-State: AOAM5307hnVAJoxJJqQ/H2C8stVYiC7VX38YaHXvM/xiqRmQSVwcqAWQ
+        OObrqFIVpQ/pCtNCx4Ha5Ktkqw==
+X-Google-Smtp-Source: ABdhPJzyxPTRZcNzcoXYNKkQYAQPnWOSEGrY4CLCWimk1cAn3PmhaciF3QcwlYv13B0JtnQ3oe6LXg==
+X-Received: by 2002:a05:6a00:7c6:: with SMTP id n6mr20534999pfu.120.1592859226960;
+        Mon, 22 Jun 2020 13:53:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q22sm11005302pgn.91.2020.06.22.13.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 13:53:46 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
- the dma_transfer callback
-Message-ID: <20200622205121.4xuki7guyj6u5yul@mobilestation>
-References: <20200619141648.840376470@linuxfoundation.org>
- <20200619141657.498868116@linuxfoundation.org>
- <20200619210719.GB12233@amd>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] x86: Warn on orphan section placement
+Date:   Mon, 22 Jun 2020 13:53:38 -0700
+Message-Id: <20200622205341.2987797-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200619210719.GB12233@amd>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pavel
+v2:
+- split by architecture, rebase to v5.8-rc2
+v1: https://lore.kernel.org/lkml/20200228002244.15240-1-keescook@chromium.org/
 
-On Fri, Jun 19, 2020 at 11:07:19PM +0200, Pavel Machek wrote:
-> On Fri 2020-06-19 16:32:47, Greg Kroah-Hartman wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > [ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
-> > 
-> > DW APB SSI DMA-part of the driver may need to perform the requested
-> > SPI-transfer synchronously. In that case the dma_transfer() callback
-> > will return 0 as a marker of the SPI transfer being finished so the
-> > SPI core doesn't need to wait and may proceed with the SPI message
-> > trasnfers pumping procedure. This will be needed to fix the problem
-> > when DMA transactions are finished, but there is still data left in
-> > the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
-> > to return 1 as the normal dw_spi_transfer_one() method.
-> 
+A recent bug[1] was solved for builds linked with ld.lld, and tracking
+it down took way longer than it needed to (a year). Ultimately, it
+boiled down to differences between ld.bfd and ld.lld's handling of
+orphan sections. Similarly, the recent FGKASLR series brough up orphan
+section handling too[2]. In both cases, it would have been nice if the
+linker was running with --orphan-handling=warn so that surprise sections
+wouldn't silently get mapped into the kernel image at locations up to the
+whim of the linker's orphan handling logic. Instead, all desired sections
+should be explicitly identified in the linker script (to be either kept or
+discarded) with any orphans throwing a warning. The powerpc architecture
+actually already does this, so this series extends coverage to x86.
 
-> As far as I understand, this is support for new SoC, not a fix?
+Thanks!
 
-Not really. That patch is a first one of a series fixing a problem with
-SPI transfer completion:
-33726eff3d98 spi: dw: Add SPI Rx-done wait method to DMA-based transfer
-1ade2d8a72f9 spi: dw: Add SPI Tx-done wait method to DMA-based transfer
-bdbdf0f06337 spi: dw: Locally wait for the DMA transfers completion
-f0410bbf7d0f spi: dw: Return any value retrieved from the dma_transfer callback
+-Kees
 
-In anyway having just first commit applied is harmless, though pretty much
-pointless in fixing the problem it had been originally introduced for. But it
-can be useful for something else. See my comment below.
+[1] https://github.com/ClangBuiltLinux/linux/issues/282
+[2] https://lore.kernel.org/lkml/202002242122.AA4D1B8@keescook/
 
-> 
-> > +++ b/drivers/spi/spi-dw.c
-> > @@ -383,11 +383,8 @@ static int dw_spi_transfer_one(struct spi_controller *master,
-> >  
-> >  	spi_enable_chip(dws, 1);
-> >  
-> > -	if (dws->dma_mapped) {
-> > -		ret = dws->dma_ops->dma_transfer(dws, transfer);
-> > -		if (ret < 0)
-> > -			return ret;
-> > -	}
-> > +	if (dws->dma_mapped)
-> > +		return dws->dma_ops->dma_transfer(dws, transfer);
-> >  
-> >  	if (chip->poll_mode)
-> >  		return poll_transfer(dws);
-> 
+Kees Cook (3):
+  vmlinux.lds.h: Add .gnu.version* to DISCARDS
+  x86/build: Warn on orphan section placement
+  x86/boot: Warn on orphan section placement
 
-> Mainline patch simply changes return value, but code is different in
-> v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
-> that a problem?
+ arch/x86/Makefile                      |  4 ++++
+ arch/x86/boot/compressed/Makefile      |  3 ++-
+ arch/x86/boot/compressed/vmlinux.lds.S | 11 +++++++++++
+ arch/x86/kernel/vmlinux.lds.S          |  6 ++++++
+ include/asm-generic/vmlinux.lds.h      |  1 +
+ 5 files changed, 24 insertions(+), 1 deletion(-)
 
-Actually no.) In that old 4.19 context it's even better to return straight away
-no matter what value is returned by the dma_transfer() callback. In the code
-without this patch applied, the transfer_one() method will check the poll_mode
-flag state even if the dma_transfer() returns a positive value. The positive
-value (1) means that the DMA transfer has been executed and the SPI core must
-wait for its completion. Needless to say, that if the poll_mode flag state
-gets to be true, then a poll-transfer will be executed alongside with the DMA
-transfer. Which as you understand will be very wrong. So by having this patch
-applied we implicitly fix that problem. Although a probability of the
-problematic situation is very low, since the DW APB SSI driver poll-mode hasn't
-been utilized by any SPI client driver since long time ago...
-
--Sergey
-
-> 
-> Best regards,
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
+-- 
+2.25.1
 
