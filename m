@@ -2,214 +2,276 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D105FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4848EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B921620760
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F2620732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WwCCF/Er"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgFVMHk (ORCPT
+        id S1728152AbgFVMIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:07:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2353 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726889AbgFVMHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:07:36 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 6F542F674EA362ED9CCC;
-        Mon, 22 Jun 2020 13:07:35 +0100 (IST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.81.228) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Mon, 22 Jun 2020 13:07:34 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
-        <lenb@kernel.org>, <tony.luck@intel.com>,
-        <dan.carpenter@oracle.com>, <zhangliguang@linux.alibaba.com>,
-        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
-        <jroedel@suse.de>
-CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
-        <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>
-Subject: [PATCH v11 1/2] ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
-Date:   Mon, 22 Jun 2020 13:05:26 +0100
-Message-ID: <20200622120527.690-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200622120527.690-1-shiju.jose@huawei.com>
-References: <20200622120527.690-1-shiju.jose@huawei.com>
+        Mon, 22 Jun 2020 08:08:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24633 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727835AbgFVMIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:08:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592827688;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nnx9W/qLm351r2r0o603cG4pwGJORxcYfoZb+ozOfFI=;
+        b=WwCCF/Eri/gsYbYfDLqTjrzqZ0LLKPMa4Ffe2VOFbsvgB21jR89FyGJZ1elj7GmEN53obV
+        Bxey1e+Xw1sSlkqSxQVZ9B8e62JZxOTgdSa0kQzednDmh0he53Eg8Y11BRGYXzVDyYOnz0
+        jwstkgEKKPbxJBnGIizjXGLxN+bkJaY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-260-lzU-v-1EO_-5Rk4xIBq9rg-1; Mon, 22 Jun 2020 08:08:06 -0400
+X-MC-Unique: lzU-v-1EO_-5Rk4xIBq9rg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AB1E18A8221;
+        Mon, 22 Jun 2020 12:08:05 +0000 (UTC)
+Received: from dell-r430-03.lab.eng.brq.redhat.com (dell-r430-03.lab.eng.brq.redhat.com [10.37.153.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 06AD210013D2;
+        Mon, 22 Jun 2020 12:08:03 +0000 (UTC)
+From:   Igor Mammedov <imammedo@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, kvm@vger.kernel.org, wanpengli@tencent.com
+Subject: [PATCH] Revert "KVM: LAPIC: Recalculate apic map in batch"
+Date:   Mon, 22 Jun 2020 08:08:02 -0400
+Message-Id: <20200622120802.376848-1-imammedo@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.81.228]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CPER records describing a firmware-first error are identified by GUID.
-The ghes driver currently logs, but ignores any unknown CPER records.
-This prevents describing errors that can't be represented by a standard
-entry, that would otherwise allow a driver to recover from an error.
-The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
-version 2.8).
+Guest fails to online hotplugged CPU with error
+  smpboot: do_boot_cpu failed(-1) to wakeup CPU#4
 
-Add a notifier chain for these non-standard/vendor-records. Callers
-must identify their type of records by GUID.
+It's caused by the fact that kvm_apic_set_state(), which used to call
+recalculate_apic_map() unconditionally and pulled hotplugged CPU into
+apic map, is updating map conditionally on state change which doesn't
+happen in this case and apic map update is skipped.
 
-Record data is copied to memory from the ghes_estatus_pool to allow
-us to keep it until after the notifier has run.
+Also subj commit introduces a race which can make apic map update
+events loss, in case one CPU is already in process of updating
+apic map and another CPU flags map as dirty asking for another
+update. But the first CPU will clear update request set by another
+CPU when update in progress is finished.
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-[ Removed kfifo and ghes_gdata_pool. Expanded commit message ]
-Signed-off-by: James Morse <james.morse@arm.com>
+  CPU1 kvm_recalculate_apic_map()
+     .. updating
+  CPU2 apic_map_dirty = true
+  CPU1 apic_map_dirty = false
+  CPU2 kvm_recalculate_apic_map()
+         nop due to apic_map_dirty == false
+
+This reverts commit 4abaffce4d25aa41392d2e81835592726d757857.
+
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
 ---
- drivers/acpi/apei/ghes.c | 63 ++++++++++++++++++++++++++++++++++++++++
- include/acpi/ghes.h      | 27 +++++++++++++++++
- 2 files changed, 90 insertions(+)
+ arch/x86/include/asm/kvm_host.h |  1 -
+ arch/x86/kvm/lapic.h            |  1 -
+ arch/x86/kvm/lapic.c            | 46 +++++++--------------------------
+ arch/x86/kvm/x86.c              |  1 -
+ 4 files changed, 10 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 81bf71b10d44..99df00f64306 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -79,6 +79,12 @@
- 	((struct acpi_hest_generic_status *)				\
- 	 ((struct ghes_estatus_node *)(estatus_node) + 1))
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index f8998e97457f..bbf066217c91 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -943,7 +943,6 @@ struct kvm_arch {
+ 	atomic_t vapics_in_nmi_mode;
+ 	struct mutex apic_map_lock;
+ 	struct kvm_apic_map *apic_map;
+-	bool apic_map_dirty;
  
-+#define GHES_VENDOR_ENTRY_LEN(gdata_len)                               \
-+	(sizeof(struct ghes_vendor_record_entry) + (gdata_len))
-+#define GHES_GDATA_FROM_VENDOR_ENTRY(vendor_entry)                     \
-+	((struct acpi_hest_generic_data *)                              \
-+	((struct ghes_vendor_record_entry *)(vendor_entry) + 1))
-+
- /*
-  *  NMI-like notifications vary by architecture, before the compiler can prune
-  *  unused static functions it needs a value for these enums.
-@@ -123,6 +129,12 @@ static DEFINE_MUTEX(ghes_list_mutex);
-  */
- static DEFINE_SPINLOCK(ghes_notify_lock_irq);
- 
-+struct ghes_vendor_record_entry {
-+	struct work_struct work;
-+	int error_severity;
-+	char vendor_record[];
-+};
-+
- static struct gen_pool *ghes_estatus_pool;
- static unsigned long ghes_estatus_pool_size_request;
- 
-@@ -511,6 +523,56 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- #endif
+ 	bool apic_access_page_done;
+ 	unsigned long apicv_inhibit_reasons;
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index 754f29beb83e..7d08ccfb69d0 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -81,7 +81,6 @@ void kvm_lapic_set_tpr(struct kvm_vcpu *vcpu, unsigned long cr8);
+ void kvm_lapic_set_eoi(struct kvm_vcpu *vcpu);
+ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
+ u64 kvm_lapic_get_base(struct kvm_vcpu *vcpu);
+-void kvm_recalculate_apic_map(struct kvm *kvm);
+ void kvm_apic_set_version(struct kvm_vcpu *vcpu);
+ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val);
+ int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 34a7e0533dad..e99d74288b9e 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -169,28 +169,14 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
+ 	kvfree(map);
  }
  
-+static BLOCKING_NOTIFIER_HEAD(vendor_record_notify_list);
-+
-+int ghes_register_vendor_record_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&vendor_record_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_register_vendor_record_notifier);
-+
-+void ghes_unregister_vendor_record_notifier(struct notifier_block *nb)
-+{
-+	blocking_notifier_chain_unregister(&vendor_record_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_unregister_vendor_record_notifier);
-+
-+static void ghes_vendor_record_work_func(struct work_struct *work)
-+{
-+	struct ghes_vendor_record_entry *entry;
-+	struct acpi_hest_generic_data *gdata;
-+	u32 len;
-+
-+	entry = container_of(work, struct ghes_vendor_record_entry, work);
-+	gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
-+
-+	blocking_notifier_call_chain(&vendor_record_notify_list,
-+				     entry->error_severity, gdata);
-+
-+	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
-+	gen_pool_free(ghes_estatus_pool, (unsigned long)entry, len);
-+}
-+
-+static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
-+					  int sev)
-+{
-+	struct acpi_hest_generic_data *copied_gdata;
-+	struct ghes_vendor_record_entry *entry;
-+	u32 len;
-+
-+	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
-+	entry = (void *)gen_pool_alloc(ghes_estatus_pool, len);
-+	if (!entry)
-+		return;
-+
-+	copied_gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
-+	memcpy(copied_gdata, gdata, acpi_hest_get_record_size(gdata));
-+	entry->error_severity = sev;
-+
-+	INIT_WORK(&entry->work, ghes_vendor_record_work_func);
-+	schedule_work(&entry->work);
-+}
-+
- static bool ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
+-void kvm_recalculate_apic_map(struct kvm *kvm)
++static void recalculate_apic_map(struct kvm *kvm)
  {
-@@ -549,6 +611,7 @@ static bool ghes_do_proc(struct ghes *ghes,
+ 	struct kvm_apic_map *new, *old = NULL;
+ 	struct kvm_vcpu *vcpu;
+ 	int i;
+ 	u32 max_id = 255; /* enough space for any xAPIC ID */
+ 
+-	if (!kvm->arch.apic_map_dirty) {
+-		/*
+-		 * Read kvm->arch.apic_map_dirty before
+-		 * kvm->arch.apic_map
+-		 */
+-		smp_rmb();
+-		return;
+-	}
+-
+ 	mutex_lock(&kvm->arch.apic_map_lock);
+-	if (!kvm->arch.apic_map_dirty) {
+-		/* Someone else has updated the map. */
+-		mutex_unlock(&kvm->arch.apic_map_lock);
+-		return;
+-	}
+ 
+ 	kvm_for_each_vcpu(i, vcpu, kvm)
+ 		if (kvm_apic_present(vcpu))
+@@ -255,12 +241,6 @@ void kvm_recalculate_apic_map(struct kvm *kvm)
+ 	old = rcu_dereference_protected(kvm->arch.apic_map,
+ 			lockdep_is_held(&kvm->arch.apic_map_lock));
+ 	rcu_assign_pointer(kvm->arch.apic_map, new);
+-	/*
+-	 * Write kvm->arch.apic_map before
+-	 * clearing apic->apic_map_dirty
+-	 */
+-	smp_wmb();
+-	kvm->arch.apic_map_dirty = false;
+ 	mutex_unlock(&kvm->arch.apic_map_lock);
+ 
+ 	if (old)
+@@ -282,20 +262,20 @@ static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
+ 		else
+ 			static_key_slow_inc(&apic_sw_disabled.key);
+ 
+-		apic->vcpu->kvm->arch.apic_map_dirty = true;
++		recalculate_apic_map(apic->vcpu->kvm);
+ 	}
+ }
+ 
+ static inline void kvm_apic_set_xapic_id(struct kvm_lapic *apic, u8 id)
+ {
+ 	kvm_lapic_set_reg(apic, APIC_ID, id << 24);
+-	apic->vcpu->kvm->arch.apic_map_dirty = true;
++	recalculate_apic_map(apic->vcpu->kvm);
+ }
+ 
+ static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
+ {
+ 	kvm_lapic_set_reg(apic, APIC_LDR, id);
+-	apic->vcpu->kvm->arch.apic_map_dirty = true;
++	recalculate_apic_map(apic->vcpu->kvm);
+ }
+ 
+ static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
+@@ -311,7 +291,7 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
+ 
+ 	kvm_lapic_set_reg(apic, APIC_ID, id);
+ 	kvm_lapic_set_reg(apic, APIC_LDR, ldr);
+-	apic->vcpu->kvm->arch.apic_map_dirty = true;
++	recalculate_apic_map(apic->vcpu->kvm);
+ }
+ 
+ static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
+@@ -1976,7 +1956,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+ 	case APIC_DFR:
+ 		if (!apic_x2apic_mode(apic)) {
+ 			kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
+-			apic->vcpu->kvm->arch.apic_map_dirty = true;
++			recalculate_apic_map(apic->vcpu->kvm);
+ 		} else
+ 			ret = 1;
+ 		break;
+@@ -2082,8 +2062,6 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+ 		break;
+ 	}
+ 
+-	kvm_recalculate_apic_map(apic->vcpu->kvm);
+-
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kvm_lapic_reg_write);
+@@ -2232,7 +2210,7 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
+ 			static_key_slow_dec_deferred(&apic_hw_disabled);
  		} else {
- 			void *err = acpi_hest_get_payload(gdata);
+ 			static_key_slow_inc(&apic_hw_disabled.key);
+-			vcpu->kvm->arch.apic_map_dirty = true;
++			recalculate_apic_map(vcpu->kvm);
+ 		}
+ 	}
  
-+			ghes_defer_non_standard_event(gdata, sev);
- 			log_non_standard_event(sec_type, fru_id, fru_text,
- 					       sec_sev, err,
- 					       gdata->error_data_length);
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index 517a5231cc1b..ae0e8847fdd5 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -53,6 +53,33 @@ enum {
- 	GHES_SEV_PANIC = 0x3,
- };
+@@ -2273,7 +2251,6 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 	if (!apic)
+ 		return;
  
-+#ifdef CONFIG_ACPI_APEI_GHES
-+/**
-+ * ghes_register_vendor_record_notifier - register a notifier for vendor
-+ * records that the kernel would otherwise ignore.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ *
-+ * return 0 : SUCCESS, non-zero : FAIL
-+ */
-+int ghes_register_vendor_record_notifier(struct notifier_block *nb);
-+
-+/**
-+ * ghes_unregister_vendor_record_notifier - unregister the previously
-+ * registered vendor record notifier.
-+ * @nb: pointer to the notifier_block structure of the vendor record handler.
-+ */
-+void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
-+#else
-+static inline int ghes_register_vendor_record_notifier(struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline void ghes_unregister_vendor_record_notifier(struct notifier_block *nb)
-+{
-+}
-+#endif
-+
- int ghes_estatus_pool_init(int num_ghes);
+-	vcpu->kvm->arch.apic_map_dirty = false;
+ 	/* Stop the timer in case it's a reset to an active apic */
+ 	hrtimer_cancel(&apic->lapic_timer.timer);
  
- /* From drivers/edac/ghes_edac.c */
+@@ -2325,8 +2302,6 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 
+ 	vcpu->arch.apic_arb_prio = 0;
+ 	vcpu->arch.apic_attention = 0;
+-
+-	kvm_recalculate_apic_map(vcpu->kvm);
+ }
+ 
+ /*
+@@ -2556,18 +2531,17 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 	int r;
+ 
++
+ 	kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
+ 	/* set SPIV separately to get count of SW disabled APICs right */
+ 	apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV)));
+ 
+ 	r = kvm_apic_state_fixup(vcpu, s, true);
+-	if (r) {
+-		kvm_recalculate_apic_map(vcpu->kvm);
++	if (r)
+ 		return r;
+-	}
+ 	memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
+ 
+-	kvm_recalculate_apic_map(vcpu->kvm);
++	recalculate_apic_map(vcpu->kvm);
+ 	kvm_apic_set_version(vcpu);
+ 
+ 	apic_update_ppr(apic);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 00c88c2f34e4..26055d69aaf6 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -374,7 +374,6 @@ int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	}
+ 
+ 	kvm_lapic_set_base(vcpu, msr_info->data);
+-	kvm_recalculate_apic_map(vcpu->kvm);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(kvm_set_apic_base);
 -- 
-2.17.1
-
+2.26.2
 
