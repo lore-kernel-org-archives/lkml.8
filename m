@@ -2,339 +2,283 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D4BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B435520732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7AB2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jH12bvlE"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="iZHQqTm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgFVTLi (ORCPT
+        id S1728143AbgFVTMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:11:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44554 "EHLO
+        Mon, 22 Jun 2020 15:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgFVTLh (ORCPT
+        with ESMTP id S1726854AbgFVTMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:11:37 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEADC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:11:37 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g18so8771692wrm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:11:37 -0700 (PDT)
+        Mon, 22 Jun 2020 15:12:06 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90891C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:12:06 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id g18so8773057wrm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8wWKIKLl62YvxE5aJzOwwPk1paC8wJY238BgG0fGcg8=;
-        b=jH12bvlETu4WQchE3dVyLhWqGLJr/JA0FNKBqj/g+1C39iTTzu9fmY47a550ltXpCi
-         gOHutBX20RipGjWNar2tQsjZzWXY2s/ybGazOZJPAO+sxyhl9n4SLGpkXPZMznygB1c5
-         SpjpeDE73oU8NOUGgk+vDAf8zVLcEo6s9KYR6uNehDfNsZ2sS+BJ09frHaPswgWAClSu
-         hdBQZwFxTi8TaRKFvrjWH3Kuxp+2NTau5X0PZL98Vqmt0g3mUZOu+6GfhygZa1J++/co
-         Qza0XJTFNnxz0IqgPLrRafkqxzWBp7tMt+L62gGfJJiDDsPawVHs/zPk48iRRpT6agVT
-         Pm8w==
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Fmod96j6xSUGJvqDNAIW99FGIv8l2jLCCShrGVZU87w=;
+        b=iZHQqTm6aehdoK6+OOOAUInhKTxurNGYzryo6H3vwvMgNB8OVOqDmaUZAw8OgwLOjV
+         hf8mlbm5er0KysDTkDYBxm5pIT7gDKnwYnHgScwfPSlB80Zxu1R9ZDRAeJByzrfn125K
+         XAIVZ+2q2cmqkw2Wo53575jm/7LQ1kC4yIgq8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8wWKIKLl62YvxE5aJzOwwPk1paC8wJY238BgG0fGcg8=;
-        b=H4SOKE0SeClSqB0Szy6kgWIcwDMZdqvRFdfhVWe9yLqIN/8jdMbFA/tsFFhWGizkOa
-         Jg8nH2AoqHr0xvtvB1C3/kDCoSLTamh18xCG61YX13k3Ra2r3Aq59iWL8WCy433d8GHZ
-         kz9jEbFTEE6plGCAtWNrfl6IVeAmp1mC0ZviAOU3IcPB42c6nDPNnyslI8l+QKn0fkXM
-         nuo/cgeM27xuR4X4RucjFyn18DjX27L7CkGZSif//qMRn1pCen4NcOfmjW7zNWKAzvCu
-         9q//IE7BLKZa7Zam37JdYfbc5NzbANI1sJQAsw2mqrcQqJ3IDpP/n6rLhjNDhl/mLxz5
-         +dLg==
-X-Gm-Message-State: AOAM530rr27i59iyEY/UmswW/nNDHeivcUQJPDmZLt4Wp0lPOHK4N957
-        aislvJtTKcSyb81LjzCMzgb4VQ==
-X-Google-Smtp-Source: ABdhPJyUNdg2X6juP+ha+wkXAdVR309klPO6g5E3pnk+GrQ7sLTFyXrhXPnKKqhBV1X2Sl8JQIqnVg==
-X-Received: by 2002:adf:e648:: with SMTP id b8mr21197299wrn.386.1592853095745;
-        Mon, 22 Jun 2020 12:11:35 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id q4sm585574wmc.1.2020.06.22.12.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:11:34 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 20:11:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-Message-ID: <20200622191133.GY954398@dell>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
- <20200615092644.GA2608702@dell>
- <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
- <20200622085009.GP954398@dell>
- <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
- <20200622151054.GW954398@dell>
- <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Fmod96j6xSUGJvqDNAIW99FGIv8l2jLCCShrGVZU87w=;
+        b=PalHsCQBdJ9lZO8ALqsL0tvpGoxMPZCkvKU76XqS+blWvcNFwInESyH2BKuorVobXC
+         11k0eoxv3evqRu85zGpAHBuCgb3iBLLGMl6bxZkfEfOcOwLoOjI1FAOuzmpP1tPe1Z9R
+         o0WCGWrNSdb2UaYgpqEBLDrATBsPj9mv3WG9PBn9AVitLTzJr2pH5OhTY4pK0oRQOYkE
+         JbmmMTiWfm6sCM5+r3pDGQBT/mDTqkPgZVr4RuBsGrvy/27spRPZeydpF+8kvATTyZdx
+         A+Eg5Iv+HLVNzCLyeB1w/aA5/l7HieFS47Dh1klZ6JxX/qC2/d6LgkDPAtbJXs7p2wMU
+         pwoQ==
+X-Gm-Message-State: AOAM530mtrKxbKUMTMF687NCxR3lxuC0YKiIGiDckpO7+4evODzcVYZT
+        4FqUy4uzB1IPyjjgB7ANMzMAYwDCbpVwiuA11gZo
+X-Google-Smtp-Source: ABdhPJwywlArloKwHoRSCBso38VgVWBoaC9NnX2sVxnpDse5ZoAvIMHyfOLUwtV8sMj+jbeTVvDeAjcFIW8bNC8PgxI=
+X-Received: by 2002:adf:f9c9:: with SMTP id w9mr3479861wrr.176.1592853125238;
+ Mon, 22 Jun 2020 12:12:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+References: <20200603153608.30056-1-alex@ghiti.fr> <20200603153608.30056-3-alex@ghiti.fr>
+ <CAOnJCU+JSuOGbOmZW-vqb-A_qR7CJc=qG16FbgOLWSm1vhJH1A@mail.gmail.com>
+ <23529a84-44a0-3c45-f16d-5a7ee528610d@ghiti.fr> <CAOnJCU+s5JuNdPg_R-Cg2+WnMjR51DD0ekbRr84EFCig6=YyZA@mail.gmail.com>
+ <f1a5ec6e-540b-497f-a9ad-f2d1e7adfc65@ghiti.fr> <2588a00a-b042-4902-1602-7cb8d587ac2b@ghiti.fr>
+In-Reply-To: <2588a00a-b042-4902-1602-7cb8d587ac2b@ghiti.fr>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Mon, 22 Jun 2020 12:11:54 -0700
+Message-ID: <CAOnJCU+JOdoJfVCAKOHK52m47UwR_NzpJoGXQywD+Mx-6JRw5w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv: Use PUD/PGDIR entries for linear mapping when possible
+To:     Alex Ghiti <alex@ghiti.fr>
+Cc:     Anup Patel <anup@brainfault.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Alistair Francis <Alistair.Francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020, Frank Rowand wrote:
-
-> On 2020-06-22 10:10, Lee Jones wrote:
-> > On Mon, 22 Jun 2020, Frank Rowand wrote:
-> > 
-> >> On 2020-06-22 03:50, Lee Jones wrote:
-> >>> On Thu, 18 Jun 2020, Frank Rowand wrote:
+On Sun, Jun 21, 2020 at 2:39 AM Alex Ghiti <alex@ghiti.fr> wrote:
+>
+> Hi Atish,
+>
+> Le 6/20/20 =C3=A0 5:04 AM, Alex Ghiti a =C3=A9crit :
+> > Hi Atish,
+> >
+> > Le 6/19/20 =C3=A0 2:16 PM, Atish Patra a =C3=A9crit :
+> >> On Thu, Jun 18, 2020 at 9:28 PM Alex Ghiti <alex@ghiti.fr> wrote:
+> >>> Hi Atish,
 > >>>
-> >>>> On 2020-06-15 04:26, Lee Jones wrote:
-> >>>>> On Sun, 14 Jun 2020, Frank Rowand wrote:
+> >>> Le 6/18/20 =C3=A0 8:47 PM, Atish Patra a =C3=A9crit :
+> >>>> On Wed, Jun 3, 2020 at 8:38 AM Alexandre Ghiti <alex@ghiti.fr> wrote=
+:
+> >>>>> Improve best_map_size so that PUD or PGDIR entries are used for
+> >>>>> linear
+> >>>>> mapping when possible as it allows better TLB utilization.
 > >>>>>
-> >>>>>> Hi Lee,
-> >>>>>>
-> >>>>>> I'm looking at 5.8-rc1.
-> >>>>>>
-> >>>>>> The only use of OF_MFD_CELL() where the same compatible is specified
-> >>>>>> for multiple elements of a struct mfd_cell array is for compatible
-> >>>>>> "stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
-> >>>>>>
-> >>>>>>         OF_MFD_CELL("ab8500-pwm",
-> >>>>>>                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
-> >>>>>>         OF_MFD_CELL("ab8500-pwm",
-> >>>>>>                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
-> >>>>>>         OF_MFD_CELL("ab8500-pwm",
-> >>>>>>                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
-> >>>>
-> >>>>          OF_MFD_CELL("ab8500-pwm",
-> >>>>                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
-> >>>>
-> >>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
-> >>>>                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
-> >>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
-> >>>>                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
-> >>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
-> >>>>                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
-> >>>>
-> >>>>>>
-> >>>>>> The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
-> >>>>>> are:
-> >>>>>>
-> >>>>>>    arch/arm/boot/dts/ste-ab8500.dtsi
-> >>>>>>    arch/arm/boot/dts/ste-ab8505.dtsi
-> >>>>>>
-> >>>>>> These two .dtsi files only have a single node with this compatible.
-> >>>>>> Chasing back to .dts and .dtsi files that include these two .dtsi
-> >>>>>> files, I see no case where there are multiple nodes with this
-> >>>>>> compatible.
-> >>>>>>
-> >>>>>> So it looks to me like there is no .dts in mainline that is providing
-> >>>>>> the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
-> >>>>>> is expecting.  No case that there are multiple mfd child nodes where
-> >>>>>> mfd_add_device() would assign the first of n child nodes with the
-> >>>>>> same compatible to multiple devices.
-> >>>>>>
-> >>>>>> So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
-> >>>>>> Am I missing something here?
-> >>>>>>
-> >>>>>> If I am correct, then either drivers/mfd/ab8500-core.c or
-> >>>>>> ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
+> >>>>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> >>>>> ---
+> >>>>>    arch/riscv/mm/init.c | 45
+> >>>>> +++++++++++++++++++++++++++++++++-----------
+> >>>>>    1 file changed, 34 insertions(+), 11 deletions(-)
 > >>>>>
-> >>>>> Your analysis is correct.
-> >>>>
-> >>>> OK, if I'm not overlooking anything, that is good news.
-> >>>>
-> >>>> Existing .dts source files only have one "ab8500-pwm" child.  They already
-> >>>> work correcly.
-> >>>>
-> >>>> Create a new compatible for the case of multiple children.  In my example
-> >>>> I will add "-mc" (multiple children) to the existing compatible.  There
-> >>>> is likely a better name, but this lets me provide an example.
-> >>>>
-> >>>> Modify drivers/mfd/ab8500-core.c to use the new compatible, and new .dts
-> >>>> source files with multiple children use the new compatible:
-> >>>>
-> >>>>          OF_MFD_CELL("ab8500-pwm",
-> >>>>                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
-> >>>>
-> >>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
-> >>>>                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
-> >>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
-> >>>>                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
-> >>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
-> >>>>                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
-> >>>>
-> >>>> The "OF_MFD_CELL" entry is the existing entry, which will handle current
-> >>>> .dts source files.  The new "OF_MFD_CELL_REG" entries will handle new
-> >>>> .dts source files.
+> >>>>> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> >>>>> index 9a5c97e091c1..d275f9f834cf 100644
+> >>>>> --- a/arch/riscv/mm/init.c
+> >>>>> +++ b/arch/riscv/mm/init.c
+> >>>>> @@ -424,13 +424,29 @@ static void __init create_pgd_mapping(pgd_t
+> >>>>> *pgdp,
+> >>>>>           create_pgd_next_mapping(nextp, va, pa, sz, prot);
+> >>>>>    }
+> >>>>>
+> >>>>> -static uintptr_t __init best_map_size(phys_addr_t base,
+> >>>>> phys_addr_t size)
+> >>>>> +static bool is_map_size_ok(uintptr_t map_size, phys_addr_t base,
+> >>>>> +                          uintptr_t base_virt, phys_addr_t size)
+> >>>>>    {
+> >>>>> -       /* Upgrade to PMD_SIZE mappings whenever possible */
+> >>>>> -       if ((base & (PMD_SIZE - 1)) || (size & (PMD_SIZE - 1)))
+> >>>>> -               return PAGE_SIZE;
+> >>>>> +       return !((base & (map_size - 1)) || (base_virt & (map_size
+> >>>>> - 1)) ||
+> >>>>> +                       (size < map_size));
+> >>>>> +}
+> >>>>> +
+> >>>>> +static uintptr_t __init best_map_size(phys_addr_t base, uintptr_t
+> >>>>> base_virt,
+> >>>>> +                                     phys_addr_t size)
+> >>>>> +{
+> >>>>> +#ifndef __PAGETABLE_PMD_FOLDED
+> >>>>> +       if (is_map_size_ok(PGDIR_SIZE, base, base_virt, size))
+> >>>>> +               return PGDIR_SIZE;
+> >>>>> +
+> >>>>> +       if (pgtable_l4_enabled)
+> >>>>> +               if (is_map_size_ok(PUD_SIZE, base, base_virt, size)=
+)
+> >>>>> +                       return PUD_SIZE;
+> >>>>> +#endif
+> >>>>> +
+> >>>>> +       if (is_map_size_ok(PMD_SIZE, base, base_virt, size))
+> >>>>> +               return PMD_SIZE;
+> >>>>>
+> >>>>> -       return PMD_SIZE;
+> >>>>> +       return PAGE_SIZE;
+> >>>>>    }
+> >>>>>
+> >>>>>    /*
+> >>>>> @@ -576,7 +592,7 @@ void create_kernel_page_table(pgd_t *pgdir,
+> >>>>> uintptr_t map_size)
+> >>>>>    asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >>>>>    {
+> >>>>>           uintptr_t va, end_va;
+> >>>>> -       uintptr_t map_size =3D best_map_size(load_pa,
+> >>>>> MAX_EARLY_MAPPING_SIZE);
+> >>>>> +       uintptr_t map_size;
+> >>>>>
+> >>>>>           load_pa =3D (uintptr_t)(&_start);
+> >>>>>           load_sz =3D (uintptr_t)(&_end) - load_pa;
+> >>>>> @@ -587,6 +603,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_p=
+a)
+> >>>>>
+> >>>>>           kernel_virt_addr =3D KERNEL_VIRT_ADDR;
+> >>>>>
+> >>>>> +       map_size =3D best_map_size(load_pa, PAGE_OFFSET,
+> >>>>> MAX_EARLY_MAPPING_SIZE);
+> >>>>>           va_pa_offset =3D PAGE_OFFSET - load_pa;
+> >>>>>           va_kernel_pa_offset =3D kernel_virt_addr - load_pa;
+> >>>>>           pfn_base =3D PFN_DOWN(load_pa);
+> >>>>> @@ -700,6 +717,8 @@ static void __init setup_vm_final(void)
+> >>>>>
+> >>>>>           /* Map all memory banks */
+> >>>>>           for_each_memblock(memory, reg) {
+> >>>>> +               uintptr_t remaining_size;
+> >>>>> +
+> >>>>>                   start =3D reg->base;
+> >>>>>                   end =3D start + reg->size;
+> >>>>>
+> >>>>> @@ -707,15 +726,19 @@ static void __init setup_vm_final(void)
+> >>>>>                           break;
+> >>>>>                   if (memblock_is_nomap(reg))
+> >>>>>                           continue;
+> >>>>> -               if (start <=3D __pa(PAGE_OFFSET) &&
+> >>>>> -                   __pa(PAGE_OFFSET) < end)
+> >>>>> -                       start =3D __pa(PAGE_OFFSET);
+> >>>>>
+> >>>>> -               map_size =3D best_map_size(start, end - start);
+> >>>>> -               for (pa =3D start; pa < end; pa +=3D map_size) {
+> >>>>> +               pa =3D start;
+> >>>>> +               remaining_size =3D reg->size;
+> >>>>> +
+> >>>>> +               while (remaining_size) {
+> >>>>>                           va =3D (uintptr_t)__va(pa);
+> >>>>> +                       map_size =3D best_map_size(pa, va,
+> >>>>> remaining_size);
+> >>>>> +
+> >>>>> create_pgd_mapping(swapper_pg_dir, va, pa,
+> >>>>>                                              map_size, PAGE_KERNEL)=
+;
+> >>>>> +
+> >>>>> +                       pa +=3D map_size;
+> >>>>> +                       remaining_size -=3D map_size;
+> >>>>>                   }
+> >>>>>           }
+> >>>>>
+> >>>> This may not work in the RV32 with 2G memory  and if the map_size is
+> >>>> determined to be a page size
+> >>>> for the last memblock. Both pa & remaining_size will overflow and th=
+e
+> >>>> loop will try to map memory from zero again.
+> >>> I'm not sure I understand: if pa starts at 0x8000_0000 and size is 2G=
+,
+> >>> then pa will overflow in the last iteration, but remaining_size will
+> >>> then be equal to 0 right ?
 > >>>
-> >>> Sorry, but I'm not sure what the above exercise is supposed to solve.
+> >> Not unless the remaining_size is at least page size aligned. The last
+> >> remaining size would "fff".
+> >> It will overflow as well after subtracting the map_size.
+>
+>
+> While fixing this issue, I noticed that if the size in the device tree
+> is not aligned on PAGE_SIZE, the size is then automatically realigned on
+> PAGE_SIZE: see early_init_dt_add_memory_arch where size is and-ed with
+> PAGE_MASK to remove the unaligned part.
+>
+Yes. But the memblock size is not guaranteed to be PAGE_SIZE aligned.
+The memblock size is updated in memblock_cap_size
+
+    /* adjust *@size so that (@base + *@size) doesn't overflow, return
+new size */
+   static inline phys_addr_t memblock_cap_size(phys_addr_t base,
+phys_addr_t *size)
+   {
+            return *size =3D min(*size, PHYS_ADDR_MAX - base);
+   }
+
+You will not see this issue right away even if you allocate 2GB of
+memory while running 32 bit linux in qemu
+because the kernel removes anything beyond 0xc0400000 for 32 bit in
+bootmem setup.
+
+=E2=94=82[    0.000000][    T0] memblock_remove: [0xc0400000-0xfffffffe]
+setup_bootmem+0x90/0x216
+
+This also restricts the kernel to use only 1GB of memory even if
+maximum physical memory supported is 2GB.
+
+> So the issue does not need to be fixed :)
+>
+> Thanks anyway,
+>
+> Alex
+>
+>
+> >>
+> >>> And by the way, I realize that this loop only handles sizes that are
+> >>> aligned on map_size.
 > >>>
-> >>> Could you explain it for me please?
+> >> Yeah.
+> >
+> >
+> > Thanks for noticing, I send a v2.
+> >
+> > Alex
+> >
+> >
 > >>
-> >> The OF_MFD_CELL() entry handles all of the existing .dts source files
-> >> that only have one ab8500-pwm child nodes.  So existing .dtb blobs
-> >> continue to work.
-> >>
-> >> The OF_MFD_CELL_REG() entries will handle all of the new .dts source
-> >> files that will have up to 3 ab8500-pwm child nodes.
-> >>
-> >> Compatibility is maintained for existing .dtb files.  A new kernel
-> >> version with the changes will support new .dtb files that contain
-> >> multiple ab8500-pwm child nodes.
-> > 
-> > I can see *what* you're trying to do.  I was looking for an
-> > explanation of *how* you think that will work.  FWIW, I don't think
-> > what you're proposing will work as you envisage.  I thought that
-> > perhaps I was missing something, which is why I requested further
-> > explanation.
-> > 
-> >>>> And of course the patch that creates OF_MFD_CELL_REG() needs to precede
-> >>>> this change.
-> >>>>
-> >>>> I would remove the fallback code in the existing patch that tries to
-> >>>> handle an incorrect binding.  Just error out if the binding is not
-> >>>> used properly.
+> >>> Thanks,
 > >>>
-> >>> What fallback code?
+> >>> Alex
+> >>>
+> >>>
+> >>>>> --
+> >>>>> 2.20.1
+> >>>>>
+> >>>>>
 > >>
-> >> Based on reading the patch description, I expected some extra code to try
-> >> to handle the case where the compatible in more than one struct mfd_cell
-> >> entry is "stericsson,ab8500-pwm" and there are multiple ab8500-pwm child
-> >> nodes.
 > >>
-> >> Looking at the actual code (which I had not done before), I see that the
-> >> "best effort attempt to match" is keeping a list of child nodes that
-> >> have already been used (mfd_of_node_list) and avoiding re-use of such
-> >> nodes.  This allows an invalid .dtb (one with multple "stericsson,ab8500-pwm"
-> >> child nodes) to possibly be assigned unique child nodes for multiple
-> >> struct mfd_cell entries to be "stericsson,ab8500-pwm".
-> >>
-> >> So it is confusing for me to call that "fallback code".  It really is
-> >> "best effort attempt to match" for a broken .dtb code.
-> >>
-> >> There should be no best effort for a broken .dtb.  The broken .dtb should
-> >> instead result in an error.
-> > 
-> > The problem is, how can you tell the difference between a valid and a
-> > broken FDT without pre-processing - which, as I explained in the
-> > commit message, I am not prepared to do.  We cannot test individually
-> > since all configurations (e.g. no 'reg' property are valid on an
-> > individual basis.
-> 
-> If my proposed changes are made, then there are at least 3 ways to detect
-> a broken FDT or prevent the problem caused by the broken FDT.
-> 
-> 
-> 1) Use the validation process that uses the bindings to validate the
-> devicetree source.
+> >
 
-Could you provide an example please?
 
-> 2) Modify patch 1/3.  The small part of the patch to modify is:
-> 
-> +static int mfd_match_of_node_to_dev(struct platform_device *pdev,
-> +				    struct device_node *np,
-> +				    const struct mfd_cell *cell)
-> +{
-> +	struct mfd_of_node_entry *of_entry;
-> +	const __be32 *reg;
-> +	u64 of_node_addr;
-> +
-> +	/* Skip devices 'disabled' by Device Tree */
-> +	if (!of_device_is_available(np))
-> +		return -ENODEV;
-> +
-> +	/* Skip if OF node has previously been allocated to a device */
-> +	list_for_each_entry(of_entry, &mfd_of_node_list, list)
-> 
-> Change:
-> 
-> +		if (of_entry->np == np)
-> +			return -EAGAIN;
-> 
-> To:
-> 
-> +		if (of_entry->np == np) {
-> +			if (!cell->use_of_reg)
-> +				return -EINVAL;
-> +			else
-> +				return -EAGAIN;
-> 
-> There may be a better choice than EINVAL, but I am just showing the method.
-> 
-> You may also want to refactor this section of the patch slightly
-> differently to achieve the same result.  It was just easiest to
-> show the suggested change the way I did it.
-> 
-> The test that returns EINVAL detects the issue that the FDT does
-> not match the binding (there is more one child node with the
-> "stericsson,ab8500-pwm" compatible.
 
-So here, instead of just failing a single device, we fail everything?
-Sounds a lot like throwing the baby out with the bath water.  How is
-that an improvement?
-
-> 3) I'm not sure if the pre-parsing that is wanted is parsing of the
-> devicetree or parsing of the struct mfd_cell array.  If the mfd_cell
-> array then solution 3 is not acceptable.
-> 
-> A different change to a small part of patch 1/3.  In mfd_add_devices(),
-> validate parameter "cells".  The validation could precede the existing
-> code, or it could be folded into the existing for loop.  The validation
-> is checking for any other element of the cells array containing
-> the same compatible value if cell->use_of_reg is not true for an element.
-> 
-> If this validation occurs, then I think mfd_of_node_list, and all the
-> associated code to deal with it is no longer needed.  But I didn't
-> look at this part in detail, so maybe I missed something.
-> 
-> The validation is something like (untested):
-> 
-> 	if (IS_ENABLED(CONFIG_OF)
-> 		for (i = 0; i < n_devs; i++) {
-> 			this_cell = cells + i;
-> 			if (!this_cell->use_of_reg) {
-> 				for (j = 1; j < n_devs; j++) {
-> 					if (j != i) {
-> 						cell = cells + j;
-> 						if (!strcmp(this_cell->of_compatible, cell->of_compatible))
-> 							return -EINVAL;
-> 					}
-> 				}
-> 			}
-> 		}
-
-I think I just threw-up a little. ;)
-
-Did you read the commit message?
-
-  "We could code around this with some pre-parsing semantics, but the
-  added complexity required to cover each and every corner-case is not
-  justified.  Merely patching the current failing (via this patch) is
-  already working with some pretty small corner-cases"
-  
-Providing thorough pre-parsing would be highly complex and highly
-error prone.  The example you provide above is not only ugly, there
-are numerous issues with it.  Not least:
-
- * Only one corner-case is covered
- * Validation is only completed on a single mfd_cells struct
- * False positives can occur and will fail as a result
-
-The above actually makes the solution worse, not better.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--
+Regards,
+Atish
