@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF03C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B439C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61BCC20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE90207BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgFVODT (ORCPT
+        id S1729234AbgFVODY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:03:19 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64832 "EHLO
+        Mon, 22 Jun 2020 10:03:24 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55236 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbgFVODS (ORCPT
+        with ESMTP id S1728070AbgFVODW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:03:18 -0400
+        Mon, 22 Jun 2020 10:03:22 -0400
 Received: from 89-64-85-91.dynamic.chello.pl (89.64.85.91) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id add3d0c7dbc26dbb; Mon, 22 Jun 2020 16:03:16 +0200
+ id b9bc4d710fe8cc24; Mon, 22 Jun 2020 16:03:19 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Dan Williams <dan.j.williams@intel.com>,
         Erik Kaneda <erik.kaneda@intel.com>
@@ -34,9 +34,9 @@ Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
-Subject: [RFT][PATCH v2 4/4] ACPI: OSL: Implement acpi_os_map_memory_fast_path()
-Date:   Mon, 22 Jun 2020 16:02:44 +0200
-Message-ID: <39838855.e8c3ya2Sh3@kreacher>
+Subject: [RFT][PATCH v2 2/4] ACPI: OSL: Add support for deferred unmapping of ACPI memory
+Date:   Mon, 22 Jun 2020 15:53:40 +0200
+Message-ID: <1821880.vZFEW4x2Ui@kreacher>
 In-Reply-To: <2713141.s8EVnczdoM@kreacher>
 References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher>
 MIME-Version: 1.0
@@ -49,138 +49,304 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Add acpi_os_map_memory_fast_path() and set ACPI_USE_FAST_PATH_MAPPING
-to allow acpi_ex_system_memory_space_handler() to avoid unnecessary
-memory mapping and unmapping overhead by retaining all memory
-mappings created by it until the memory opregions associated with
-them go away.
+Implement acpi_os_unmap_deferred() and
+acpi_os_release_unused_mappings() and set ACPI_USE_DEFERRED_UNMAPPING
+to allow ACPICA to use deferred unmapping of memory in
+acpi_ex_system_memory_space_handler() so as to avoid RCU-related
+performance issues with memory opregions.
 
+Reported-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/osl.c                | 65 +++++++++++++++++++++++--------
- include/acpi/platform/aclinuxex.h |  4 ++
- 2 files changed, 53 insertions(+), 16 deletions(-)
+ drivers/acpi/osl.c                | 160 +++++++++++++++++++++++-------
+ include/acpi/platform/aclinuxex.h |   4 +
+ 2 files changed, 128 insertions(+), 36 deletions(-)
 
 diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 28863d908fa8..89554ec9a178 100644
+index 762c5d50b8fe..28863d908fa8 100644
 --- a/drivers/acpi/osl.c
 +++ b/drivers/acpi/osl.c
-@@ -306,21 +306,8 @@ static void acpi_unmap(acpi_physical_address pg_off, void __iomem *vaddr)
- 		iounmap(vaddr);
- }
- 
--/**
-- * acpi_os_map_iomem - Get a virtual address for a given physical address range.
-- * @phys: Start of the physical address range to map.
-- * @size: Size of the physical address range to map.
-- *
-- * Look up the given physical address range in the list of existing ACPI memory
-- * mappings.  If found, get a reference to it and return a pointer to it (its
-- * virtual address).  If not found, map it, add it to that list and return a
-- * pointer to it.
-- *
-- * During early init (when acpi_permanent_mmap has not been set yet) this
-- * routine simply calls __acpi_map_table() to get the job done.
-- */
--void __iomem __ref
--*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
-+static void __iomem __ref *__acpi_os_map_iomem(acpi_physical_address phys,
-+					       acpi_size size, bool fast_path)
- {
- 	struct acpi_ioremap *map;
+@@ -77,12 +77,16 @@ struct acpi_ioremap {
  	void __iomem *virt;
-@@ -332,8 +319,12 @@ void __iomem __ref
- 		return NULL;
+ 	acpi_physical_address phys;
+ 	acpi_size size;
+-	unsigned long refcount;
++	union {
++		unsigned long refcount;
++		struct list_head gc;
++	} track;
+ };
+ 
+ static LIST_HEAD(acpi_ioremaps);
+ static DEFINE_MUTEX(acpi_ioremap_lock);
+ #define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
++static LIST_HEAD(unused_mappings);
+ 
+ static void __init acpi_request_region (struct acpi_generic_address *gas,
+ 	unsigned int length, char *desc)
+@@ -250,7 +254,7 @@ void __iomem *acpi_os_get_iomem(acpi_physical_address phys, unsigned int size)
+ 	map = acpi_map_lookup(phys, size);
+ 	if (map) {
+ 		virt = map->virt + (phys - map->phys);
+-		map->refcount++;
++		map->track.refcount++;
  	}
- 
--	if (!acpi_permanent_mmap)
-+	if (!acpi_permanent_mmap) {
-+		if (WARN_ON(fast_path))
-+			return NULL;
-+
- 		return __acpi_map_table((unsigned long)phys, size);
-+	}
- 
- 	mutex_lock(&acpi_ioremap_lock);
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 	return virt;
+@@ -335,7 +339,7 @@ void __iomem __ref
  	/* Check if there's a suitable mapping already. */
-@@ -343,6 +334,11 @@ void __iomem __ref
+ 	map = acpi_map_lookup(phys, size);
+ 	if (map) {
+-		map->refcount++;
++		map->track.refcount++;
  		goto out;
  	}
  
-+	if (fast_path) {
-+		mutex_unlock(&acpi_ioremap_lock);
-+		return NULL;
-+	}
-+
- 	map = kzalloc(sizeof(*map), GFP_KERNEL);
- 	if (!map) {
- 		mutex_unlock(&acpi_ioremap_lock);
-@@ -370,6 +366,25 @@ void __iomem __ref
- 	mutex_unlock(&acpi_ioremap_lock);
- 	return map->virt + (phys - map->phys);
- }
-+
-+/**
-+ * acpi_os_map_iomem - Get a virtual address for a given physical address range.
-+ * @phys: Start of the physical address range to map.
-+ * @size: Size of the physical address range to map.
-+ *
-+ * Look up the given physical address range in the list of existing ACPI memory
-+ * mappings.  If found, get a reference to it and return a pointer representing
-+ * its virtual address.  If not found, map it, add it to that list and return a
-+ * pointer representing its virtual address.
-+ *
-+ * During early init (when acpi_permanent_mmap has not been set yet) call
-+ * __acpi_map_table() to obtain the mapping.
-+ */
-+void __iomem __ref *acpi_os_map_iomem(acpi_physical_address phys,
-+				      acpi_size size)
-+{
-+	return __acpi_os_map_iomem(phys, size, false);
-+}
- EXPORT_SYMBOL_GPL(acpi_os_map_iomem);
+@@ -358,7 +362,7 @@ void __iomem __ref
+ 	map->virt = virt;
+ 	map->phys = pg_off;
+ 	map->size = pg_sz;
+-	map->refcount = 1;
++	map->track.refcount = 1;
  
- void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
-@@ -378,6 +393,24 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
- }
+ 	list_add_tail_rcu(&map->list, &acpi_ioremaps);
+ 
+@@ -375,40 +379,41 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
  EXPORT_SYMBOL_GPL(acpi_os_map_memory);
  
-+/**
-+ * acpi_os_map_memory_fast_path - Fast-path physical-to-virtual address mapping.
-+ * @phys: Start of the physical address range to map.
-+ * @size: Size of the physical address range to map.
-+ *
-+ * Look up the given physical address range in the list of existing ACPI memory
-+ * mappings.  If found, get a reference to it and return a pointer representing
-+ * its virtual address.  If not found, return NULL.
-+ *
-+ * During early init (when acpi_permanent_mmap has not been set yet) log a
-+ * warning and return NULL.
-+ */
-+void __ref *acpi_os_map_memory_fast_path(acpi_physical_address phys,
-+					acpi_size size)
+ /* Must be called with mutex_lock(&acpi_ioremap_lock) */
+-static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
++static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
+ {
+-	unsigned long refcount = --map->refcount;
++	if (--map->track.refcount)
++		return true;
+ 
+-	if (!refcount)
+-		list_del_rcu(&map->list);
+-	return refcount;
++	list_del_rcu(&map->list);
++
++	if (defer) {
++		INIT_LIST_HEAD(&map->track.gc);
++		list_add_tail(&map->track.gc, &unused_mappings);
++		return true;
++	}
++
++	return false;
+ }
+ 
+-static void acpi_os_map_cleanup(struct acpi_ioremap *map)
++static void __acpi_os_map_cleanup(struct acpi_ioremap *map)
+ {
+-	synchronize_rcu_expedited();
+ 	acpi_unmap(map->phys, map->virt);
+ 	kfree(map);
+ }
+ 
+-/**
+- * acpi_os_unmap_iomem - Drop a memory mapping reference.
+- * @virt: Start of the address range to drop a reference to.
+- * @size: Size of the address range to drop a reference to.
+- *
+- * Look up the given virtual address range in the list of existing ACPI memory
+- * mappings, drop a reference to it and unmap it if there are no more active
+- * references to it.
+- *
+- * During early init (when acpi_permanent_mmap has not been set yet) this
+- * routine simply calls __acpi_unmap_table() to get the job done.  Since
+- * __acpi_unmap_table() is an __init function, the __ref annotation is needed
+- * here.
+- */
+-void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
++static void acpi_os_map_cleanup(struct acpi_ioremap *map)
 +{
-+	return __acpi_os_map_iomem(phys, size, true);
++	if (!map)
++		return;
++
++	synchronize_rcu_expedited();
++	__acpi_os_map_cleanup(map);
 +}
 +
- /* Must be called with mutex_lock(&acpi_ioremap_lock) */
- static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
++static void __ref __acpi_os_unmap_iomem(void __iomem *virt, acpi_size size,
++					bool defer)
  {
+ 	struct acpi_ioremap *map;
+-	unsigned long refcount;
+ 
+ 	if (!acpi_permanent_mmap) {
+ 		__acpi_unmap_table(virt, size);
+@@ -416,26 +421,102 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
+ 	}
+ 
+ 	mutex_lock(&acpi_ioremap_lock);
++
+ 	map = acpi_map_lookup_virt(virt, size);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
+ 		return;
+ 	}
+-	refcount = acpi_os_drop_map_ref(map);
++	if (acpi_os_drop_map_ref(map, defer))
++		map = NULL;
++
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 
+-	if (!refcount)
+-		acpi_os_map_cleanup(map);
++	acpi_os_map_cleanup(map);
++}
++
++/**
++ * acpi_os_unmap_iomem - Drop a memory mapping reference.
++ * @virt: Start of the address range to drop a reference to.
++ * @size: Size of the address range to drop a reference to.
++ *
++ * Look up the given virtual address range in the list of existing ACPI memory
++ * mappings, drop a reference to it and unmap it if there are no more active
++ * references to it.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) this
++ * routine simply calls __acpi_unmap_table() to get the job done.  Since
++ * __acpi_unmap_table() is an __init function, the __ref annotation is needed
++ * here.
++ */
++void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
++{
++	__acpi_os_unmap_iomem(virt, size, false);
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
+ 
+ void __ref acpi_os_unmap_memory(void *virt, acpi_size size)
+ {
+-	return acpi_os_unmap_iomem((void __iomem *)virt, size);
++	acpi_os_unmap_iomem((void __iomem *)virt, size);
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_unmap_memory);
+ 
++/**
++ * acpi_os_unmap_deferred - Drop a memory mapping reference.
++ * @virt: Start of the address range to drop a reference to.
++ * @size: Size of the address range to drop a reference to.
++ *
++ * Look up the given virtual address range in the list of existing ACPI memory
++ * mappings, drop a reference to it and if there are no more active references
++ * to it, put it in the list of unused memory mappings.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) this
++ * routine behaves like acpi_os_unmap_memory().
++ */
++void __ref acpi_os_unmap_deferred(void *virt, acpi_size size)
++{
++	__acpi_os_unmap_iomem((void __iomem *)virt, size, true);
++}
++
++/**
++ * acpi_os_release_unused_mappings - Release unused ACPI memory mappings.
++ */
++void acpi_os_release_unused_mappings(void)
++{
++	struct list_head list;
++
++	INIT_LIST_HEAD(&list);
++
++	/*
++	 * First avoid looking at mappings that may be added to the "unused"
++	 * list while the synchronize_rcu() below is running.
++	 */
++	mutex_lock(&acpi_ioremap_lock);
++
++	list_splice_init(&unused_mappings, &list);
++
++	mutex_unlock(&acpi_ioremap_lock);
++
++	if (list_empty(&list))
++		return;
++
++	/*
++	 * Wait for the possible users of the mappings in the "unused" list to
++	 * stop using them.
++	 */
++	synchronize_rcu();
++
++	/* Release the unused mappings in the list. */
++	while (!list_empty(&list)) {
++		struct acpi_ioremap *map;
++
++		map = list_entry(list.next, struct acpi_ioremap, track.gc);
++		list_del(&map->track.gc);
++		__acpi_os_map_cleanup(map);
++	}
++}
++
+ int acpi_os_map_generic_address(struct acpi_generic_address *gas)
+ {
+ 	u64 addr;
+@@ -461,7 +542,6 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ {
+ 	u64 addr;
+ 	struct acpi_ioremap *map;
+-	unsigned long refcount;
+ 
+ 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
+ 		return;
+@@ -472,16 +552,18 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ 		return;
+ 
+ 	mutex_lock(&acpi_ioremap_lock);
++
+ 	map = acpi_map_lookup(addr, gas->bit_width / 8);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		return;
+ 	}
+-	refcount = acpi_os_drop_map_ref(map);
++	if (acpi_os_drop_map_ref(map, false))
++		map = NULL;
++
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 
+-	if (!refcount)
+-		acpi_os_map_cleanup(map);
++	acpi_os_map_cleanup(map);
+ }
+ EXPORT_SYMBOL(acpi_os_unmap_generic_address);
+ 
+@@ -1566,11 +1648,17 @@ static acpi_status acpi_deactivate_mem_region(acpi_handle handle, u32 level,
+ acpi_status acpi_release_memory(acpi_handle handle, struct resource *res,
+ 				u32 level)
+ {
++	acpi_status ret;
++
+ 	if (!(res->flags & IORESOURCE_MEM))
+ 		return AE_TYPE;
+ 
+-	return acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
++	ret = acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
+ 				   acpi_deactivate_mem_region, NULL, res, NULL);
++
++	acpi_os_release_unused_mappings();
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(acpi_release_memory);
+ 
 diff --git a/include/acpi/platform/aclinuxex.h b/include/acpi/platform/aclinuxex.h
-index e13f364d6c69..89c387449425 100644
+index 04f88f2de781..e13f364d6c69 100644
 --- a/include/acpi/platform/aclinuxex.h
 +++ b/include/acpi/platform/aclinuxex.h
-@@ -143,6 +143,10 @@ void acpi_os_release_unused_mappings(void);
- 
- #define ACPI_USE_DEFERRED_UNMAPPING
- 
-+void *acpi_os_map_memory_fast_path(acpi_physical_address where, acpi_size length);
+@@ -138,6 +138,10 @@ static inline void acpi_os_terminate_debugger(void)
+ /*
+  * OSL interfaces added by Linux
+  */
++void acpi_os_unmap_deferred(void *virt, acpi_size size);
++void acpi_os_release_unused_mappings(void);
 +
-+#define ACPI_USE_FAST_PATH_MAPPING
-+
++#define ACPI_USE_DEFERRED_UNMAPPING
+ 
  #endif				/* __KERNEL__ */
  
- #endif				/* __ACLINUXEX_H__ */
 -- 
 2.26.2
 
