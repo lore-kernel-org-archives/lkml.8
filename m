@@ -2,138 +2,89 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7483C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDBE12075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B806E2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGSVgug8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVP4bwRN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbgFVWVC (ORCPT
+        id S1730990AbgFVWXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45926 "EHLO
+        Mon, 22 Jun 2020 18:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731048AbgFVWVB (ORCPT
+        with ESMTP id S1730808AbgFVWXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:21:01 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84AAC061573;
-        Mon, 22 Jun 2020 15:21:00 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id x18so17528275ilp.1;
-        Mon, 22 Jun 2020 15:21:00 -0700 (PDT)
+        Mon, 22 Jun 2020 18:23:50 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30821C061573;
+        Mon, 22 Jun 2020 15:23:50 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id q8so17060484qkm.12;
+        Mon, 22 Jun 2020 15:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZhNj1tixXIeix7bgn2AK1/llpYadGdoyoeJTRk7FmHc=;
-        b=pGSVgug8N9vVzOkE03howsi5Vq6MyJbvzOTAOi7DznX22Li3JJVAjfrC+MPE66/oCz
-         8ZyKIezBpo3sHf84gh2Yz9mi2jXomL/0iZl7hjE2sATDTDwDqM+WvVZ6mrSBfEL9HMg1
-         /1G9HBC+R0S0a7ETECVHNDHum6EgJkOphvhyxQPmQGow2ZWeFcZzy9GX1nmw9be+B2qz
-         St4YcGiJ/ZIIEt7Om7KGFgeLKXwMYagNNtxU1ylsbnLviV4ykuxAgSkhP9mcgZJbyNN5
-         j/MLdjGnxmk/eHEOK4YDLC/NqAffeKRYlldcraBql4SseC5mygIT0KDVVWvTk3TgUq3J
-         EkRw==
+        bh=6ak7/xoV85fgFlGxeovTzLXqeps/akc4AmPjgdKSJ38=;
+        b=OVP4bwRNMW28kTW4zNKm7dDxbfZcwz/pWcDK/9NBeC7aUW6gth2xjAep2FSIK4pRhw
+         mEPDspNIbHGoP8q1/nRRGmckcfj6IU4hv0q9n+2AoAF2aYOcbEsz5hyyooKKY5OvsGx5
+         5dF8jJeDhBC4werymg9FuWFL9R3KIoPA74Jmjt60GueSMeTqcyDt0KIvqLoxEQI4uj4H
+         uTwSakIMel4kV7cdwxj3tZ0QYqu87wroz33Zg1rXDyl3kkg4e3S4FrYzT6muSdO6f+lf
+         XYqhQXrIrpQFdIgbfcDqyqnPTxFZeskN4nLAIbYVtBtfUlUxg/RbyptyHbeJQBpMeKNJ
+         7wbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZhNj1tixXIeix7bgn2AK1/llpYadGdoyoeJTRk7FmHc=;
-        b=l7RUD1xPdTan2aysmW4bGXH/LvhFKM5lpKiX5SQEJhyXjCfSGTLd90/mifMLzQtfBo
-         EYFC3Ushwf1+7HDO9ZSnFDTfYbNnrVl3AT3eGJmPnmP78Qk2XFSABkbEnWtXR3bOW8tg
-         6DmdLSDlmiZ7wdTLIuS0EPiMTBdDjrvdePjP3geL8nVB3R/qm5fgkmNZkiDxaDMLHM8A
-         MODPSBjUwG66bJv+hfDGy0FlWpYZDOO1K02eW3EohMBbVZgN4MdeZgh+x+RDoA2TCmCl
-         yNMXbxd50fVSez3j5p8rVFWwt1LaU+aQ81k1Y30zz8HEOLq3vywd2g3xuCz4pSKh/DRp
-         4jrw==
-X-Gm-Message-State: AOAM5309RTPAYnr+LNoK9v0sUNbKP5I/5VRUxLInL0n6S2BGnoHtISmJ
-        LcqQffE4iHKMArp9yMXuLHi0kiFe
-X-Google-Smtp-Source: ABdhPJxoy4jzdBnIx5tHtjQV590Sv1JQpPSrF+wDm03m/P3oNNHCXXlfkRDK8ftHePsz7QpqyMd7gw==
-X-Received: by 2002:a92:d984:: with SMTP id r4mr19796299iln.302.1592864459790;
-        Mon, 22 Jun 2020 15:20:59 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id m2sm1563327iln.1.2020.06.22.15.20.56
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6ak7/xoV85fgFlGxeovTzLXqeps/akc4AmPjgdKSJ38=;
+        b=H5N178u9mdpjzChV+4Pr1GXg/gUvw+zF64dr22lLlaWTRjk0n4C894sH77SIuHzJf0
+         kHFz/0LNHJuW9WHhLTnYKBC6YBxWw7AmQBI54luVW6FvIN1214jU948KL0rgKtCHxLZX
+         njGF4pRWbE/6SyafsIXCvRURbheARWsJz26lBjliwucAXblEnhei2vfk7dvgTS6bpxB7
+         msmSqqb0UznrjCp316wMC19EQncv2Nt86pfkG+vjlLJTtE7yDMzqO3PUmUJh4cdvHu4W
+         KbUun9HHyfY3Q3zVhyDUl1ItfxSLXBM+PZzGtQY85HzFC1MEFlhVj61TR8nnDNfU2TVc
+         eBhQ==
+X-Gm-Message-State: AOAM533NCfdzBMnQmchaerfVePJqUkiDfiJaWZvG/aOFYNjmX2WQLr7a
+        r4YeM/PSx/ECEi2MMbnIKKA=
+X-Google-Smtp-Source: ABdhPJzxRvg6eRJjiRlt5AC30xSeExZJ5qAr8A/hfqTvHMDn42QAuQjG4vPLYKI4yursxZCeqYsyyw==
+X-Received: by 2002:a37:a5cc:: with SMTP id o195mr4202360qke.326.1592864629265;
+        Mon, 22 Jun 2020 15:23:49 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id o15sm1086734qko.67.2020.06.22.15.23.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 15:20:58 -0700 (PDT)
-Subject: Re: [PATCH net-next v3 2/7] dt-bindings: net: add backplane dt
- bindings
-To:     florinel.iordache@nxp.com, davem@davemloft.net,
-        netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux@armlinux.org.uk
-Cc:     devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        Mon, 22 Jun 2020 15:23:48 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
- <1592832924-31733-3-git-send-email-florinel.iordache@nxp.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
- 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
- S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
- 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
- r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
- IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
- Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
- b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
- JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
- cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
- +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
- BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
- Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
- WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
- P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
- 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
- C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
- es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
- 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
- zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
- 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
- skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
- 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
- 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
- SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
- PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
- WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
- nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
- gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
- rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
- QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
- BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
- PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
- hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
- OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
- Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
- LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
- RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
- k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
- uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
- 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
- HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
- TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <7035531d-3e74-6fd4-0df6-fa730998b065@gmail.com>
-Date:   Mon, 22 Jun 2020 15:20:55 -0700
+References: <20200611191002.2256570-1-lee.jones@linaro.org>
+ <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
+ <20200615092644.GA2608702@dell>
+ <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
+ <20200622085009.GP954398@dell>
+ <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
+ <20200622151054.GW954398@dell>
+ <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+ <20200622191133.GY954398@dell>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
+Date:   Mon, 22 Jun 2020 17:23:47 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <1592832924-31733-3-git-send-email-florinel.iordache@nxp.com>
+In-Reply-To: <20200622191133.GY954398@dell>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -142,61 +93,300 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 6:35 AM, Florinel Iordache wrote:
-> Add ethernet backplane device tree bindings
+On 2020-06-22 14:11, Lee Jones wrote:
+> On Mon, 22 Jun 2020, Frank Rowand wrote:
 > 
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> ---
+>> On 2020-06-22 10:10, Lee Jones wrote:
+>>> On Mon, 22 Jun 2020, Frank Rowand wrote:
+>>>
+>>>> On 2020-06-22 03:50, Lee Jones wrote:
+>>>>> On Thu, 18 Jun 2020, Frank Rowand wrote:
+>>>>>
+>>>>>> On 2020-06-15 04:26, Lee Jones wrote:
+>>>>>>> On Sun, 14 Jun 2020, Frank Rowand wrote:
+>>>>>>>
+>>>>>>>> Hi Lee,
+>>>>>>>>
+>>>>>>>> I'm looking at 5.8-rc1.
+>>>>>>>>
+>>>>>>>> The only use of OF_MFD_CELL() where the same compatible is specified
+>>>>>>>> for multiple elements of a struct mfd_cell array is for compatible
+>>>>>>>> "stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
+>>>>>>>>
+>>>>>>>>         OF_MFD_CELL("ab8500-pwm",
+>>>>>>>>                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
+>>>>>>>>         OF_MFD_CELL("ab8500-pwm",
+>>>>>>>>                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
+>>>>>>>>         OF_MFD_CELL("ab8500-pwm",
+>>>>>>>>                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
+>>>>>>
+>>>>>>          OF_MFD_CELL("ab8500-pwm",
+>>>>>>                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
+>>>>>>
+>>>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>>>                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
+>>>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>>>                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
+>>>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>>>                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
+>>>>>>
+>>>>>>>>
+>>>>>>>> The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
+>>>>>>>> are:
+>>>>>>>>
+>>>>>>>>    arch/arm/boot/dts/ste-ab8500.dtsi
+>>>>>>>>    arch/arm/boot/dts/ste-ab8505.dtsi
+>>>>>>>>
+>>>>>>>> These two .dtsi files only have a single node with this compatible.
+>>>>>>>> Chasing back to .dts and .dtsi files that include these two .dtsi
+>>>>>>>> files, I see no case where there are multiple nodes with this
+>>>>>>>> compatible.
+>>>>>>>>
+>>>>>>>> So it looks to me like there is no .dts in mainline that is providing
+>>>>>>>> the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
+>>>>>>>> is expecting.  No case that there are multiple mfd child nodes where
+>>>>>>>> mfd_add_device() would assign the first of n child nodes with the
+>>>>>>>> same compatible to multiple devices.
+>>>>>>>>
+>>>>>>>> So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
+>>>>>>>> Am I missing something here?
+>>>>>>>>
+>>>>>>>> If I am correct, then either drivers/mfd/ab8500-core.c or
+>>>>>>>> ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
+>>>>>>>
+>>>>>>> Your analysis is correct.
+>>>>>>
+>>>>>> OK, if I'm not overlooking anything, that is good news.
+>>>>>>
+>>>>>> Existing .dts source files only have one "ab8500-pwm" child.  They already
+>>>>>> work correcly.
+>>>>>>
+>>>>>> Create a new compatible for the case of multiple children.  In my example
+>>>>>> I will add "-mc" (multiple children) to the existing compatible.  There
+>>>>>> is likely a better name, but this lets me provide an example.
+>>>>>>
+>>>>>> Modify drivers/mfd/ab8500-core.c to use the new compatible, and new .dts
+>>>>>> source files with multiple children use the new compatible:
+>>>>>>
+>>>>>>          OF_MFD_CELL("ab8500-pwm",
+>>>>>>                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
+>>>>>>
+>>>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>>>                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
+>>>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>>>                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
+>>>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>>>                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
+>>>>>>
+>>>>>> The "OF_MFD_CELL" entry is the existing entry, which will handle current
+>>>>>> .dts source files.  The new "OF_MFD_CELL_REG" entries will handle new
+>>>>>> .dts source files.
+>>>>>
+>>>>> Sorry, but I'm not sure what the above exercise is supposed to solve.
+>>>>>
+>>>>> Could you explain it for me please?
+>>>>
+>>>> The OF_MFD_CELL() entry handles all of the existing .dts source files
+>>>> that only have one ab8500-pwm child nodes.  So existing .dtb blobs
+>>>> continue to work.
+>>>>
+>>>> The OF_MFD_CELL_REG() entries will handle all of the new .dts source
+>>>> files that will have up to 3 ab8500-pwm child nodes.
+>>>>
+>>>> Compatibility is maintained for existing .dtb files.  A new kernel
+>>>> version with the changes will support new .dtb files that contain
+>>>> multiple ab8500-pwm child nodes.
+>>>
+>>> I can see *what* you're trying to do.  I was looking for an
+>>> explanation of *how* you think that will work.  FWIW, I don't think
+>>> what you're proposing will work as you envisage.  I thought that
+>>> perhaps I was missing something, which is why I requested further
+>>> explanation.
+>>>
+>>>>>> And of course the patch that creates OF_MFD_CELL_REG() needs to precede
+>>>>>> this change.
+>>>>>>
+>>>>>> I would remove the fallback code in the existing patch that tries to
+>>>>>> handle an incorrect binding.  Just error out if the binding is not
+>>>>>> used properly.
+>>>>>
+>>>>> What fallback code?
+>>>>
+>>>> Based on reading the patch description, I expected some extra code to try
+>>>> to handle the case where the compatible in more than one struct mfd_cell
+>>>> entry is "stericsson,ab8500-pwm" and there are multiple ab8500-pwm child
+>>>> nodes.
+>>>>
+>>>> Looking at the actual code (which I had not done before), I see that the
+>>>> "best effort attempt to match" is keeping a list of child nodes that
+>>>> have already been used (mfd_of_node_list) and avoiding re-use of such
+>>>> nodes.  This allows an invalid .dtb (one with multple "stericsson,ab8500-pwm"
+>>>> child nodes) to possibly be assigned unique child nodes for multiple
+>>>> struct mfd_cell entries to be "stericsson,ab8500-pwm".
+>>>>
+>>>> So it is confusing for me to call that "fallback code".  It really is
+>>>> "best effort attempt to match" for a broken .dtb code.
+>>>>
+>>>> There should be no best effort for a broken .dtb.  The broken .dtb should
+>>>> instead result in an error.
+>>>
+>>> The problem is, how can you tell the difference between a valid and a
+>>> broken FDT without pre-processing - which, as I explained in the
+>>> commit message, I am not prepared to do.  We cannot test individually
+>>> since all configurations (e.g. no 'reg' property are valid on an
+>>> individual basis.
+>>
+>> If my proposed changes are made, then there are at least 3 ways to detect
+>> a broken FDT or prevent the problem caused by the broken FDT.
+>>
+>>
+>> 1) Use the validation process that uses the bindings to validate the
+>> devicetree source.
+> 
+> Could you provide an example please?
 
-[snip]
+I'm sorry I don't have a concise description and example.  I have not been
+keeping up with the state of the art in this area.
 
-> +properties:
-> +  $nodename:
-> +    pattern: "^serdes(@[a-f0-9]+)?$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: serdes-10g
-> +        description: SerDes module type of 10G
+A terribly non-precise pointer to the general area is:
 
-Since this appears to be memory mapped in your case, it does not sound
-like "serdes-10g" alone is going to be sufficient, should not we have a
-SoC specific compatible string if nothing else?
+  https://elinux.org/Device_tree_future#Devicetree_Verification
 
-> +
-> +  reg:
-> +    description:
-> +      Registers memory map offset and size for this serdes module
-> +
-> +  reg-names:
-> +    description:
-> +      Names of the register map given in "reg" node.
+As a general comment, I think that validation / verification is a very
+valuable tool, but the schemas to support it are an ongoing project.
 
-You would also need to describe how many of these two properties are
-expected.
+Even after the schemas are all in place, it will still be possible for
+bad FDTs to be fed to the kernel, so it is not a total pancea.
 
-> +
-> +  little-endian:
-> +    description:
-> +      Specifies the endianness of serdes module
-> +      For complete definition see
-> +      Documentation/devicetree/bindings/common-properties.txt
+> 
+>> 2) Modify patch 1/3.  The small part of the patch to modify is:
+>>
+>> +static int mfd_match_of_node_to_dev(struct platform_device *pdev,
+>> +				    struct device_node *np,
+>> +				    const struct mfd_cell *cell)
+>> +{
+>> +	struct mfd_of_node_entry *of_entry;
+>> +	const __be32 *reg;
+>> +	u64 of_node_addr;
+>> +
+>> +	/* Skip devices 'disabled' by Device Tree */
+>> +	if (!of_device_is_available(np))
+>> +		return -ENODEV;
+>> +
+>> +	/* Skip if OF node has previously been allocated to a device */
+>> +	list_for_each_entry(of_entry, &mfd_of_node_list, list)
+>>
+>> Change:
+>>
+>> +		if (of_entry->np == np)
+>> +			return -EAGAIN;
+>>
+>> To:
+>>
+>> +		if (of_entry->np == np) {
+>> +			if (!cell->use_of_reg)
+>> +				return -EINVAL;
+>> +			else
+>> +				return -EAGAIN;
+>>
+>> There may be a better choice than EINVAL, but I am just showing the method.
+>>
+>> You may also want to refactor this section of the patch slightly
+>> differently to achieve the same result.  It was just easiest to
+>> show the suggested change the way I did it.
+>>
+>> The test that returns EINVAL detects the issue that the FDT does
+>> not match the binding (there is more one child node with the
+>> "stericsson,ab8500-pwm" compatible.
+> 
+> So here, instead of just failing a single device, we fail everything?
+> Sounds a lot like throwing the baby out with the bath water.  How is
+> that an improvement?
+> 
+>> 3) I'm not sure if the pre-parsing that is wanted is parsing of the
+>> devicetree or parsing of the struct mfd_cell array.  If the mfd_cell
+>> array then solution 3 is not acceptable.
+>>
+>> A different change to a small part of patch 1/3.  In mfd_add_devices(),
+>> validate parameter "cells".  The validation could precede the existing
+>> code, or it could be folded into the existing for loop.  The validation
+>> is checking for any other element of the cells array containing
+>> the same compatible value if cell->use_of_reg is not true for an element.
+>>
+>> If this validation occurs, then I think mfd_of_node_list, and all the
+>> associated code to deal with it is no longer needed.  But I didn't
+>> look at this part in detail, so maybe I missed something.
+>>
+>> The validation is something like (untested):
+>>
+>> 	if (IS_ENABLED(CONFIG_OF)
+>> 		for (i = 0; i < n_devs; i++) {
+>> 			this_cell = cells + i;
+>> 			if (!this_cell->use_of_reg) {
+>> 				for (j = 1; j < n_devs; j++) {
+>> 					if (j != i) {
+>> 						cell = cells + j;
+>> 						if (!strcmp(this_cell->of_compatible, cell->of_compatible))
+>> 							return -EINVAL;
+>> 					}
+>> 				}
+>> 			}
+>> 		}
+> 
+> I think I just threw-up a little. ;)
 
-This is redundant with the default binding then, and if it is not
-already in the common YAML binding, can you please add little-endian and
-native-endian added there?
+I'm not surprised.
 
-> +
-> +examples:
-> +  - |
-> +    serdes1: serdes@1ea0000 {
-> +        compatible = "serdes-10g";
-> +        reg = <0x0 0x1ea0000 0 0x00002000>;
-> +        reg-names = "serdes", "serdes-10g";
-> +        little-endian;
-> +    };
+But it actually is pretty simple code.
+
+> 
+> Did you read the commit message?
+
+Yes, I did.
+
+> 
+>   "We could code around this with some pre-parsing semantics, but the
+
+And as I said above, it was not clear to me what was meant by pre-parsing.
+
+>   added complexity required to cover each and every corner-case is not
+>   justified.  Merely patching the current failing (via this patch) is
+>   already working with some pretty small corner-cases"
+>   
+> Providing thorough pre-parsing would be highly complex and highly
+> error prone.  The example you provide above is not only ugly, there
+> are numerous issues with it.  Not least:
+> 
+>  * Only one corner-case is covered
+
+I agree with this.  I also agree it is a fool's errand to try to add
+code to fully validate all possible devicetree source errors in
+driver source.
+
+>  * Validation is only completed on a single mfd_cells struct
+
+On a single _array_ of struct mfd_cells.  But this does appear
+to be a fatal flaw.  I had not looked at enough callers of
+mfd_add_devices() to see that it is a common pattern for
+a single driver to call it multiple times.
+
+>  * False positives can occur and will fail as a result
+
+((What is an example of a false positive?))  Never mind, now that
+I see that the previous issue is a fatal flaw, this becomes
+academic.
+
+> 
+> The above actually makes the solution worse, not better.
 > 
 
+Patch 1/3 silently fails to deal with a broken devicetree.
+It results on one of the three ab8500-pwm child nodes in
+the hypothetical devicetree source tree not being added.
 
--- 
-Florian
+That is not a good result either.
+
+OK, so my solution #3 is a no go.  How about my solution #2,
+which you did not comment on?
+
+-Frank
