@@ -2,120 +2,89 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA302C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76B8920707
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zwn0HsJn"
+	by mail.kernel.org (Postfix) with ESMTP id B3D6720707
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgFVRQT (ORCPT
+        id S1729992AbgFVRQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:16:19 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54982 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729605AbgFVRQS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:16:18 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MHCK42001951;
-        Mon, 22 Jun 2020 17:16:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ci1IJQ0RoehL2DDOcJn9MgU2FhV6BbVz7B8OziZTtFk=;
- b=zwn0HsJnSJe8xXH/vKWdlwfzxVXYUUKTXv2xUH7PR4Ngf4wuAR+zNc0h/QfVM17ndQ3L
- kdQjVXW9oRyzp93BvTtEgyCNNa4u3hfww0hdMgN/KGD5NEaCJVMpXfyCbGH+1DBpni6R
- CLywCs+2VbSO+9JJaqvR3Lo6JU6VrtEP6rLhImEQy1b4X4hgKaFWJOBfdNa0WA7vpVgg
- IPlZrf8gN7rccezMwkbL8BTM9MQFU2hpza4/5hOXwrVLGcZmfjpIQLJ+us0i97T/KiDW
- eaqEYQKI8sfMMAPWTzgvz1JJieC0Yfo20QUbfnxvR3BRfyanwk8HVvXxc20jeZLiSVIW 7A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 31sebbgmwe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 17:16:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MHDbYr034023;
-        Mon, 22 Jun 2020 17:16:08 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 31sv1m3avr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 17:16:08 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05MHG7b9020609;
-        Mon, 22 Jun 2020 17:16:07 GMT
-Received: from dhcp-10-159-159-167.vpn.oracle.com (/10.159.159.167)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 22 Jun 2020 17:16:07 +0000
-Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc
- dentries
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin@oracle.com" <joe.jin@oracle.com>,
-        Wengang Wang <wen.gang.wang@oracle.com>
-References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
- <20200618233958.GV8681@bombadil.infradead.org>
- <877dw3apn8.fsf@x220.int.ebiederm.org>
- <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
- <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
- <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
- <87k1036k9y.fsf@x220.int.ebiederm.org>
- <68a1f51b-50bf-0770-2367-c3e1b38be535@oracle.com>
- <87blle4qze.fsf@x220.int.ebiederm.org>
- <20200620162752.GF8681@bombadil.infradead.org>
- <39e9f488-110c-588d-d977-413da3dc5dfa@oracle.com>
- <87d05r2kl3.fsf@x220.int.ebiederm.org>
-From:   Junxiao Bi <junxiao.bi@oracle.com>
-Message-ID: <c7fcf5f6-b289-96a6-0e1b-0969254c0f22@oracle.com>
-Date:   Mon, 22 Jun 2020 10:16:05 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Mon, 22 Jun 2020 13:16:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45056 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729309AbgFVRQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 13:16:58 -0400
+IronPort-SDR: 86mAV5nhuhI2qHoZ+TnVsJ2aL9OvBy/Zw6fI7cDO/SATsH7OBXLYpabw9NQ64fjmFcRmTXWGW4
+ uQY9ubV4wKWw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209013397"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="209013397"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 10:16:58 -0700
+IronPort-SDR: +l1MFBOMI9UhPmyFiCJ4R+cL2z3IkOTUTF9pRTc+CphmYwvRwUqLABqom5f94wtlmyqtCnrZds
+ b2fHQJn3BHUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="300909504"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Jun 2020 10:16:55 -0700
+Date:   Tue, 23 Jun 2020 01:18:00 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rui Zhang <rui.zhang@intel.com>
+Subject: Re: [PATCH][v2] PM / s2idle: Clear _TIF_POLLING_NRFLAG before
+ suspend to idle
+Message-ID: <20200622171759.GA26527@chenyu-office.sh.intel.com>
+References: <20200616040442.21515-1-yu.c.chen@intel.com>
+ <CAJZ5v0gBVBAjdCOXsM-Fa-iAkuv2JMi2mVkG5w7ADcg9dWencA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87d05r2kl3.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=960
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=3 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006220120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=963 cotscore=-2147483648 mlxscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=3 clxscore=1015
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gBVBAjdCOXsM-Fa-iAkuv2JMi2mVkG5w7ADcg9dWencA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 8:20 AM, ebiederm@xmission.com wrote:
-
-> If I understand correctly, the Java VM is not exiting.  Just some of
-> it's threads.
+Hi Rafael,
+On Mon, Jun 22, 2020 at 06:19:35PM +0200, Rafael J. Wysocki wrote:
+[cut]
+> > +{
+> > +       if (!current_clr_polling_and_test())
+> > +               s2idle_enter(drv, dev, index);
+> > +
+> > +       return index;
+> 
+> Is the value returned here used at all?
 >
-> That is a very different problem to deal with.  That are many
-> optimizations that are possible when_all_  of the threads are exiting
-> that are not possible when_many_  threads are exiting.
->
-> Do you know if it is simply the cpu time or if it is the lock contention
-> that is the problem?  If it is simply the cpu time we should consider if
-> some of the locks that can be highly contended should become mutexes.
-> Or perhaps something like Matthew's cpu pinning idea.
-
-The problem is high %sys time.
+It is not used for now IMO.
+> >          */
+> >         index = find_deepest_state(drv, dev, U64_MAX, 0, true);
+> >         if (index > 0)
+> > -               enter_s2idle_proper(drv, dev, index);
+> > +               call_s2idle(drv, dev, index);
+> 
+> I'm wondering why this can't be
+> 
+>     if (index > 0 && !current_clr_polling_and_test())
+>             enter_s2idle_proper(drv, dev, index);
+> 
+Yes, it should be simpler, but I guess Peter was trying to
+make call_s2idle() consistent with call_cpuidle(),
+and also s2idle_enter() is analogous to cpuidle_enter().
 
 Thanks,
-
-Junxiao.
-
+Chenyu
