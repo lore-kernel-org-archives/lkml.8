@@ -2,142 +2,121 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE47C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA132071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592828870;
-	bh=9LP+6J46UHd6iLA1SXQteq4whwEerh+r4zMArC52mP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fsu9SqiInQ1FmzmPYcmPPp1W5zR3vYbVOZqyOYTsjEi5KV3IiZvRO1Qcei8OYasLb
-	 8i2jrgybd0ZZVf1z8qBfclex5CJJpEJvS3C3bhCTEWEUUdJe9zKIFddTQdksATUod0
-	 IVFVhA5390OpXzxhfag7O3mw9ikGMS3xImIA0zs8=
+	by mail.kernel.org (Postfix) with ESMTP id 7994320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgFVM1t (ORCPT
+        id S1728188AbgFVM3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:27:49 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37560 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgFVM1r (ORCPT
+        Mon, 22 Jun 2020 08:29:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36667 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728101AbgFVM3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:27:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id j1so8354480pfe.4;
-        Mon, 22 Jun 2020 05:27:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EywcY6vS9cylelIV1NX4lE8fuwIV3UqzEJ1KluaxKEQ=;
-        b=MrAhikw59itfNsVas1+eC2lpwabDyRyOmgu2ur9Uk7WNWHJAOLfCxqhpa5ZdFioZ0c
-         oJfACHIzXEBxvjWnAC8tDqYYPw5RUSC/xCY3eVtuVhhrLBSHAxn9k7d+pePqUGe1/u9T
-         Urz/YZqypudYqrZFq5cII39zNrE358/y1N2wn7EUSFg1IrLWLWiPLEBlScZ6dls9Y65g
-         sAiYKjz34xjouS4xBeG1TwQiIxtO8Fc8e5MWbYBxzhAtNwCDh8TbD8o9wCEkmrU9HaOe
-         caD0nwXPkrzYmy8eXeK84oDQTLlhzJ02pb0tpd8en7whJBG2+8Md0rwkVaogOhMXwmQi
-         kiRA==
-X-Gm-Message-State: AOAM5320CCH8lYZCJ1tGOsq2cX7PWJ8vUIWo29W4TqNBtP+1mIDj8WWh
-        hX2td72fGmcpChjwvoRTCZg=
-X-Google-Smtp-Source: ABdhPJyTiqAV+V55lsVYMa3ppMo+Ee9nBX4Ii6+mVgydtVh78CU8KmXFOKHKPtJwrv4kquV9O7DWLw==
-X-Received: by 2002:a63:2a8a:: with SMTP id q132mr12273112pgq.279.1592828865482;
-        Mon, 22 Jun 2020 05:27:45 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id v8sm13526689pfn.217.2020.06.22.05.27.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 05:27:43 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id A280840430; Mon, 22 Jun 2020 12:27:42 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 12:27:42 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        martin.petersen@oracle.com, jejb@linux.ibm.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v7 5/8] loop: be paranoid on exit and prevent new
- additions / removals
-Message-ID: <20200622122742.GU11244@42.do-not-panic.com>
-References: <20200619204730.26124-1-mcgrof@kernel.org>
- <20200619204730.26124-6-mcgrof@kernel.org>
- <7e76d892-b5fd-18ec-c96e-cf4537379eba@acm.org>
+        Mon, 22 Jun 2020 08:29:30 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jnLZl-000475-Q4; Mon, 22 Jun 2020 12:29:25 +0000
+Date:   Mon, 22 Jun 2020 14:29:25 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Dominique Martinet <asmadeus@codewreck.org>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        linux-kernel@vger.kernel.org, ebiederm@xmission.com,
+        akpm@linux-foundation.org, liuzhiqiang26@huawei.com,
+        joel@joelfernandes.org, paulmck@linux.vnet.ibm.com,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] kernel/signal.c: Export symbol __lock_task_sighand
+Message-ID: <20200622122925.khcilncycuzb4xki@wittgenstein>
+References: <20200621133704.77896-1-alexander.kapshuk@gmail.com>
+ <20200622062527.GA6516@redhat.com>
+ <20200622083905.c3nurmkbo5yhd6lj@wittgenstein>
+ <20200622102401.GA12377@nautica>
+ <20200622113610.okzntx7jmnk6n7au@wittgenstein>
+ <20200622120259.GD6516@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7e76d892-b5fd-18ec-c96e-cf4537379eba@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200622120259.GD6516@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 10:11:46AM -0700, Bart Van Assche wrote:
-> On 2020-06-19 13:47, Luis Chamberlain wrote:
-> > Be pedantic on removal as well and hold the mutex.
-> > This should prevent uses of addition while we exit.
-> > 
-> > Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> > ---
-> >  drivers/block/loop.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> > index c33bbbfd1bd9..d55e1b52f076 100644
-> > --- a/drivers/block/loop.c
-> > +++ b/drivers/block/loop.c
-> > @@ -2402,6 +2402,8 @@ static void __exit loop_exit(void)
-> >  
-> >  	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
-> >  
-> > +	mutex_lock(&loop_ctl_mutex);
-> > +
-> >  	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
-> >  	idr_destroy(&loop_index_idr);
-> >  
-> > @@ -2409,6 +2411,8 @@ static void __exit loop_exit(void)
-> >  	unregister_blkdev(LOOP_MAJOR, "loop");
-> >  
-> >  	misc_deregister(&loop_misc);
-> > +
-> > +	mutex_unlock(&loop_ctl_mutex);
-> >  }
-> >  
-> >  module_init(loop_init);
+On Mon, Jun 22, 2020 at 02:03:00PM +0200, Oleg Nesterov wrote:
+> On 06/22, Christian Brauner wrote:
+> >
+> > On Mon, Jun 22, 2020 at 12:24:01PM +0200, Dominique Martinet wrote:
+> > > Christian Brauner wrote on Mon, Jun 22, 2020:
+> > > > On Mon, Jun 22, 2020 at 08:25:28AM +0200, Oleg Nesterov wrote:
+> > > >> current->sighand is stable and can't go away. Unless "current" is exiting and
+> > > >> has already passed exit_notify(). So I don't think net/9p needs this helper.
+> > > >
+> > > > From what I can gather from the thread (cf. [1]) that is linked in the
+> > > > commit message the main motivation for all of this is sparse not being
+> > > > happy and not some bug. (Maybe I'm not seeing something though.)
+> > > >
+> > > > The patch itself linked here doesn't seem to buy anything. I agree with
+> > > > Oleg. Afaict, lock_task_sighand() would only be needed here if the task
+> > > > wouldn't be current. So maybe it should just be dropped from the series.
+> > >
+> > > Sure. I honestly have no idea on what guarantees we have from the task
+> > > being current here as opposed to any other task -- I guess that another
+> > > thread calling exit for exemple would have to wait?
+> >
+> > When a thread in a non-trivial thread-group (sorry for the math
+> > reference :)) execs it'll unshare its struct sighand.
 > 
-> Is try_module_get(fops->owner) called before a loop device is opened and
-> is module_put(fops->owner) called after a loop device is closed? Does
-> that mean that it is impossible to unload the loop driver while a loop
-> device is open? Does that mean that the above patch is not necessary or
-> did I perhaps miss something?
+> Well, not really...
+> 
+> The execing threads will kill other other threads, then it will check
 
-That's not the only way to add or remove the loop module though.
+I know but I didn't want to go into that much detail but you're right of
+course! :)
 
-You may add/remove it manually. And again, as mentioned in the commit log,
-I couldn't trigger a race myself, however this seemed the more pedantic
-and careful strategy we can take.
+> if ->sighand should be unshared. The latter is very unlikely, I don't
+> think CLONE_SIGHAND without CLONE_THREAD is actually used today.
 
-Note: this will bring you sanity if you try to figure out *why* we still
-get:
+It is a supported case however unlikely. I just tried to answer
+Dominique's specific question pointing out that even in that unlikely
+case sighand_struct is stable.
 
-[235530.144343] debugfs: Directory 'loop0' with parent 'block' already present!
-[235530.149477] blktrace: debugfs_dir not present for loop0 so skipping
-[235530.232328] debugfs: Directory 'loop0' with parent 'block' already present!
-[235530.238962] blktrace: debugfs_dir not present for loop0 so skipping
+Just as an fyi, CLONE_SIGHAND with CLONE_VM but without CLONE_THREAD is
+actually used quite a bit, e.g. in newlib, in stress-ng, and in criu.
+Actually for some use-cases with userfaultfd if you want to handle
+pagefaults in the child, you'd want CLONE_VM which enforces
+CLONE_SIGHAND so that would be another use-case afaict.
 
-If you run run_0004.sh from break-blktrace [0]. Even with all my patches
-merged we still run into this. And so the bug lies within the block
-layer or on the driver. I haven't been able to find the issue yet.
+And honestly, quite often this combo is used in helper processes that
+share as much context as possible without CLONE_THREAD to do as little
+work as possible in terms of allocations and so on in the kernel.
+(Another interesting use-case could arise with CLONE_SIGHAND +
+ CLONE_CLEAR_SIGHAND as it allows you to reset both the parent's and
+ child's signal handler in one shot.)
 
-[0] https://github.com/mcgrof/break-blktrace
-
-  Luis
+> 
+> But this doesn't really matter. I mean, even if you race with another
+> thread doing exec/exit/whatever, current->sighand is stable. Unless, again,
+> current has already exited (called exit_notify()).
+> 
+> > The new struct
+> > sighand will be assigned using rcu_assign_pointer() so afaik (Paul or
+> > Oleg can yell at me if I'm talking nonsense) any prior callers will see
+> > the prior sighand value.
+> 
+> Yes, but see above.
+> 
+> If tsk is not current, then (in general) it is not safe to use tsk->sighand
+> directly. It can can be changed by exec (as you explained), or you can hit
+> tsk->sighand == NULL if you race with exit.
+> 
+> Oleg.
+> 
