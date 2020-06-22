@@ -2,179 +2,313 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30CE0206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA85B206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="hPCSBYPi"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="fe4ZhvE8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgFVKCP (ORCPT
+        id S1728040AbgFVKCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:02:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43832 "EHLO
+        Mon, 22 Jun 2020 06:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbgFVKBR (ORCPT
+        with ESMTP id S1727789AbgFVKCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:01:17 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B397DC06179A
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:01:16 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id a6so4145918wmm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:01:16 -0700 (PDT)
+        Mon, 22 Jun 2020 06:02:18 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F6FC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:02:18 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b201so8208109pfb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SA+ksrlspcBtk66ickfbWi5/X69plQETLqM+T7sqDOM=;
-        b=hPCSBYPijk+oW7o3W3ojF3NAaYsD4JrRPsGlfOOBzQ4ThECSIaaifu8iSYPR7zbUAx
-         giQ4sowH3znExtSO3S964zh5IyteuZGXmP9B2ZvExrbuG0lv3RnqMa0dbDx7oKT3Cruf
-         ntFtCt/KtwVdleh2QZcz+vD9bEurGJjeVbuXPkyeyA87kxRvFoIssYR99lkRq25sp0Dy
-         8ME3z0/l/PLLTultbtzKIRLt1ie8TS/eRQs7WOUniJkv9YG+Ya35j/vswWIOOkBzSz+Z
-         KPipplT5rhQD8Nb/E1vu5Mffd1y2DmSUKnz0Ux1Df2rzIAqZgpQCiOI37E2WBb24Fa9I
-         KUIw==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/NcVIXiiE9x8ZKquN67mQqSl2HACuH3AEuB0kcfccLA=;
+        b=fe4ZhvE8bqQfEcQUTBKXYiEkK0bn58gnRochRX32i7AbCiMyg30uCIggbk9ysCIYBw
+         AWJMoSJAanabCNkyg3Ymh+nK2GbJB2BWKj9+ddL+GIMIumjCEwWc1HOCDNyhHLXutnuJ
+         mldQDZFqMSjEjldV9Z/RGN3aplt9/6LbK4PdK4j2yBzdsbC3XC4wQRsx9x2GtfyUI19e
+         j6VDiDIQ+u/GUq+9aXZORxdP2Xw65L9NZs5Pmu43YMcgiBXgBlh3XzkDP1W+TNwoVyN6
+         XVVBlRceDl7rEg6HIUaHn1GJ5lFDIeSVoYwEDuHP2Opa7169rfJPyiuVZsyS6k0yNE+h
+         xHvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SA+ksrlspcBtk66ickfbWi5/X69plQETLqM+T7sqDOM=;
-        b=jVz4QjeGrS0HNVMuJ7w3GYWXohI6H9Q/3G7oLTghk1u0vyPSugqHmTklgFJ1mYsxzO
-         lzWZ108bsHJHDYs/d7dGA05caVzreJnQtcFAUdzGsia7FkivjJqziqJ6iLW6V+5l8ZEu
-         Lg34PsH5ef93fxokO942LXYaU61I5sy/PzrsgyWCZPioS+oLKFhzWZCyxOt3MUJ1a7Do
-         8YNRDobw1RgAJrhIljCGoKo0e//A2xfJhA+ZlLj1lBmLfGOaBKmPYhdl0Ixj4WUayOoN
-         zNGvv4B9C6/WoaFosGbD7uKCWraWPz2vbmR6nR/Os5TB103MiJe9+H26+7HgHGdZScg4
-         pFjw==
-X-Gm-Message-State: AOAM530Ga7/bJBzx/+OC5r2eahQ833r8LmhraKhTwoKsqqS/PFsKqnis
-        TfybarB3xIuMdt2jyr0OehW41A==
-X-Google-Smtp-Source: ABdhPJwWuhZqPJe1EH2uJKbIx2fxGg7cPQA+kFKd21eTb++TacoGNccIXkK+VSOvahqdHB0+R/2MHw==
-X-Received: by 2002:a1c:bc55:: with SMTP id m82mr10040949wmf.92.1592820075474;
-        Mon, 22 Jun 2020 03:01:15 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id x205sm16822187wmx.21.2020.06.22.03.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 03:01:14 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 06/11] phy: un-inline devm_mdiobus_register()
-Date:   Mon, 22 Jun 2020 12:00:51 +0200
-Message-Id: <20200622100056.10151-7-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200622100056.10151-1-brgl@bgdev.pl>
-References: <20200622100056.10151-1-brgl@bgdev.pl>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/NcVIXiiE9x8ZKquN67mQqSl2HACuH3AEuB0kcfccLA=;
+        b=sE8MVqXcVBtx40eZqZ+Xlqqy8cBanmNrVzZ5JD7IfmxwuPPDKKR8EOXCBiQ81v43Ma
+         BcAI4+rI4WSYlR/nJym/ynICGK+solVopgBzJ16BCqsFzYMA9VcZ3w/Fa+hBNzBAdR6Z
+         4yOvJ+VTj54ziggwKnY09RY0j40iOXYeQ8UqnqIgbs73ernmbpVSIRuX6Z/pzHUyVg0v
+         mzzQu+yAiRUiboZAc/JytcK7073zqnQAAiB1okePBK5wCA9yby+cTwX8d6qZSRUw5djM
+         HXu9Yn9m8dacg+BR/dNU9tf3anTTdtFQy+5aF+gw1hvlASz7e4/IVlxtETExM2871NRB
+         Qofw==
+X-Gm-Message-State: AOAM531KgXn3VauJJnAOY8U6+U7XqQgKRMwrYET9+eBzxif005h8bA0t
+        zRAUNokllvwZtNl4TbwnWIapec4iZVb1pw==
+X-Google-Smtp-Source: ABdhPJzKas5uAo1jsU2w0QcY5qWWjcoAVvUKu/iBMDzfZpg15AYSPL4Fuq4OCRM+6/B5DhvLlxmKmw==
+X-Received: by 2002:a63:935c:: with SMTP id w28mr12061329pgm.174.1592820137007;
+        Mon, 22 Jun 2020 03:02:17 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id ev20sm12693732pjb.8.2020.06.22.03.02.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 03:02:16 -0700 (PDT)
+Subject: Re: [PATCH 1/4] powerpc/pseries/iommu: Update call to
+ ibm,query-pe-dma-windows
+To:     Leonardo Bras <leobras.c@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200619050619.266888-1-leobras.c@gmail.com>
+ <20200619050619.266888-2-leobras.c@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
+ EePO1JqpVuIow/wGud9xaPA5uvuVgRS1q7RU8otD+7VLDFzPRiRE4Jfr2CW89Ox6BF+q5ZPV
+ /pS4v4G9eOrw1v09lEKHB9WtiBVhhxKK1LnUjPEH3ifkOkgW7jFfoYgTdtB3XaXVgYnNPDFo
+ PTBYsJy+wr89XfyHr2Ev7BB3Xaf7qICXdBF8MEVY8t/UFsesg4wFWOuzCfqxFmKEaPDZlTuR
+ tfLAeVpslNfWCi5ybPlowLx6KJqOsI9R2a9o4qRXWGP7IwiMRAC3iiPyk9cknt8ee6EUIxI6
+ t847eFaVKI/6WcxhszI0R6Cj+N4y+1rHfkGWYWupCiHwj9DjILW9iEAncVgQmkNPpUsZECLT
+ WQzMuVSxjuXW4nJ6f4OFHqL2dU//qR+BM/eJ0TT3OnfLcPqfucGxubhT7n/CXUxEy+mvWwnm
+ s9p4uqVpTfEuzQ0/bE6t7dZdPBua7eYox1AQnk8JQDwC3Rn9kZq2O7u5KuJP5MfludMmQevm
+ pHYEMF4vZuIpWcOrrSctJfIIEyhDoDmR34bCXAZfNJ4p4H6TPqPh671uMQV82CfTxTrMhGFq
+ 8WYU2AH86FrVQfWoH09z1WqhlOm/KZhAV5FndwVjQJs1MRXD8QARAQABtCRBbGV4ZXkgS2Fy
+ ZGFzaGV2c2tpeSA8YWlrQG96bGFicy5ydT6JAjgEEwECACIFAk+rT0sCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAAAoJEIYTPdgrwSC5fAIP/0wf/oSYaCq9PhO0UP9zLSEz66SSZUf7
+ AM9O1rau1lJpT8RoNa0hXFXIVbqPPKPZgorQV8SVmYRLr0oSmPnTiZC82x2dJGOR8x4E01gK
+ TanY53J/Z6+CpYykqcIpOlGsytUTBA+AFOpdaFxnJ9a8p2wA586fhCZHVpV7W6EtUPH1SFTQ
+ q5xvBmr3KkWGjz1FSLH4FeB70zP6uyuf/B2KPmdlPkyuoafl2UrU8LBADi/efc53PZUAREih
+ sm3ch4AxaL4QIWOmlE93S+9nHZSRo9jgGXB1LzAiMRII3/2Leg7O4hBHZ9Nki8/fbDo5///+
+ kD4L7UNbSUM/ACWHhd4m1zkzTbyRzvL8NAVQ3rckLOmju7Eu9whiPueGMi5sihy9VQKHmEOx
+ OMEhxLRQbzj4ypRLS9a+oxk1BMMu9cd/TccNy0uwx2UUjDQw/cXw2rRWTRCxoKmUsQ+eNWEd
+ iYLW6TCfl9CfHlT6A7Zmeqx2DCeFafqEd69DqR9A8W5rx6LQcl0iOlkNqJxxbbW3ddDsLU/Y
+ r4cY20++WwOhSNghhtrroP+gouTOIrNE/tvG16jHs8nrYBZuc02nfX1/gd8eguNfVX/ZTHiR
+ gHBWe40xBKwBEK2UeqSpeVTohYWGBkcd64naGtK9qHdo1zY1P55lHEc5Uhlk743PgAnOi27Q
+ ns5zuQINBE+rT0sBEACnV6GBSm+25ACT+XAE0t6HHAwDy+UKfPNaQBNTTt31GIk5aXb2Kl/p
+ AgwZhQFEjZwDbl9D/f2GtmUHWKcCmWsYd5M/6Ljnbp0Ti5/xi6FyfqnO+G/wD2VhGcKBId1X
+ Em/B5y1kZVbzcGVjgD3HiRTqE63UPld45bgK2XVbi2+x8lFvzuFq56E3ZsJZ+WrXpArQXib2
+ hzNFwQleq/KLBDOqTT7H+NpjPFR09Qzfa7wIU6pMNF2uFg5ihb+KatxgRDHg70+BzQfa6PPA
+ o1xioKXW1eHeRGMmULM0Eweuvpc7/STD3K7EJ5bBq8svoXKuRxoWRkAp9Ll65KTUXgfS+c0x
+ gkzJAn8aTG0z/oEJCKPJ08CtYQ5j7AgWJBIqG+PpYrEkhjzSn+DZ5Yl8r+JnZ2cJlYsUHAB9
+ jwBnWmLCR3gfop65q84zLXRQKWkASRhBp4JK3IS2Zz7Nd/Sqsowwh8x+3/IUxVEIMaVoUaxk
+ Wt8kx40h3VrnLTFRQwQChm/TBtXqVFIuv7/Mhvvcq11xnzKjm2FCnTvCh6T2wJw3de6kYjCO
+ 7wsaQ2y3i1Gkad45S0hzag/AuhQJbieowKecuI7WSeV8AOFVHmgfhKti8t4Ff758Z0tw5Fpc
+ BFDngh6Lty9yR/fKrbkkp6ux1gJ2QncwK1v5kFks82Cgj+DSXK6GUQARAQABiQIfBBgBAgAJ
+ BQJPq09LAhsMAAoJEIYTPdgrwSC5NYEP/2DmcEa7K9A+BT2+G5GXaaiFa098DeDrnjmRvumJ
+ BhA1UdZRdfqICBADmKHlJjj2xYo387sZpS6ABbhrFxM6s37g/pGPvFUFn49C47SqkoGcbeDz
+ Ha7JHyYUC+Tz1dpB8EQDh5xHMXj7t59mRDgsZ2uVBKtXj2ZkbizSHlyoeCfs1gZKQgQE8Ffc
+ F8eWKoqAQtn3j4nE3RXbxzTJJfExjFB53vy2wV48fUBdyoXKwE85fiPglQ8bU++0XdOr9oyy
+ j1llZlB9t3tKVv401JAdX8EN0++ETiOovQdzE1m+6ioDCtKEx84ObZJM0yGSEGEanrWjiwsa
+ nzeK0pJQM9EwoEYi8TBGhHC9ksaAAQipSH7F2OHSYIlYtd91QoiemgclZcSgrxKSJhyFhmLr
+ QEiEILTKn/pqJfhHU/7R7UtlDAmFMUp7ByywB4JLcyD10lTmrEJ0iyRRTVfDrfVP82aMBXgF
+ tKQaCxcmLCaEtrSrYGzd1sSPwJne9ssfq0SE/LM1J7VdCjm6OWV33SwKrfd6rOtvOzgadrG6
+ 3bgUVBw+bsXhWDd8tvuCXmdY4bnUblxF2B6GOwSY43v6suugBttIyW5Bl2tXSTwP+zQisOJo
+ +dpVG2pRr39h+buHB3NY83NEPXm1kUOhduJUA17XUY6QQCAaN4sdwPqHq938S3EmtVhsuQIN
+ BFq54uIBEACtPWrRdrvqfwQF+KMieDAMGdWKGSYSfoEGGJ+iNR8v255IyCMkty+yaHafvzpl
+ PFtBQ/D7Fjv+PoHdFq1BnNTk8u2ngfbre9wd9MvTDsyP/TmpF0wyyTXhhtYvE267Av4X/BQT
+ lT9IXKyAf1fP4BGYdTNgQZmAjrRsVUW0j6gFDrN0rq2J9emkGIPvt9rQt6xGzrd6aXonbg5V
+ j6Uac1F42ESOZkIh5cN6cgnGdqAQb8CgLK92Yc8eiCVCH3cGowtzQ2m6U32qf30cBWmzfSH0
+ HeYmTP9+5L8qSTA9s3z0228vlaY0cFGcXjdodBeVbhqQYseMF9FXiEyRs28uHAJEyvVZwI49
+ CnAgVV/n1eZa5qOBpBL+ZSURm8Ii0vgfvGSijPGbvc32UAeAmBWISm7QOmc6sWa1tobCiVmY
+ SNzj5MCNk8z4cddoKIc7Wt197+X/X5JPUF5nQRvg3SEHvfjkS4uEst9GwQBpsbQYH9MYWq2P
+ PdxZ+xQE6v7cNB/pGGyXqKjYCm6v70JOzJFmheuUq0Ljnfhfs15DmZaLCGSMC0Amr+rtefpA
+ y9FO5KaARgdhVjP2svc1F9KmTUGinSfuFm3quadGcQbJw+lJNYIfM7PMS9fftq6vCUBoGu3L
+ j4xlgA/uQl/LPneu9mcvit8JqcWGS3fO+YeagUOon1TRqQARAQABiQRsBBgBCAAgFiEEZSrP
+ ibrORRTHQ99dhhM92CvBILkFAlq54uICGwICQAkQhhM92CvBILnBdCAEGQEIAB0WIQQIhvWx
+ rCU+BGX+nH3N7sq0YorTbQUCWrni4gAKCRDN7sq0YorTbVVSD/9V1xkVFyUCZfWlRuryBRZm
+ S4GVaNtiV2nfUfcThQBfF0sSW/aFkLP6y+35wlOGJE65Riw1C2Ca9WQYk0xKvcZrmuYkK3DZ
+ 0M9/Ikkj5/2v0vxz5Z5w/9+IaCrnk7pTnHZuZqOh23NeVZGBls/IDIvvLEjpD5UYicH0wxv+
+ X6cl1RoP2Kiyvenf0cS73O22qSEw0Qb9SId8wh0+ClWet2E7hkjWFkQfgJ3hujR/JtwDT/8h
+ 3oCZFR0KuMPHRDsCepaqb/k7VSGTLBjVDOmr6/C9FHSjq0WrVB9LGOkdnr/xcISDZcMIpbRm
+ EkIQ91LkT/HYIImL33ynPB0SmA+1TyMgOMZ4bakFCEn1vxB8Ir8qx5O0lHMOiWMJAp/PAZB2
+ r4XSSHNlXUaWUg1w3SG2CQKMFX7vzA31ZeEiWO8tj/c2ZjQmYjTLlfDK04WpOy1vTeP45LG2
+ wwtMA1pKvQ9UdbYbovz92oyZXHq81+k5Fj/YA1y2PI4MdHO4QobzgREoPGDkn6QlbJUBf4To
+ pEbIGgW5LRPLuFlOPWHmIS/sdXDrllPc29aX2P7zdD/ivHABslHmt7vN3QY+hG0xgsCO1JG5
+ pLORF2N5XpM95zxkZqvYfC5tS/qhKyMcn1kC0fcRySVVeR3tUkU8/caCqxOqeMe2B6yTiU1P
+ aNDq25qYFLeYxg67D/4w/P6BvNxNxk8hx6oQ10TOlnmeWp1q0cuutccblU3ryRFLDJSngTEu
+ ZgnOt5dUFuOZxmMkqXGPHP1iOb+YDznHmC0FYZFG2KAc9pO0WuO7uT70lL6larTQrEneTDxQ
+ CMQLP3qAJ/2aBH6SzHIQ7sfbsxy/63jAiHiT3cOaxAKsWkoV2HQpnmPOJ9u02TPjYmdpeIfa
+ X2tXyeBixa3i/6dWJ4nIp3vGQicQkut1YBwR7dJq67/FCV3Mlj94jI0myHT5PIrCS2S8LtWX
+ ikTJSxWUKmh7OP5mrqhwNe0ezgGiWxxvyNwThOHc5JvpzJLd32VDFilbxgu4Hhnf6LcgZJ2c
+ Zd44XWqUu7FzVOYaSgIvTP0hNrBYm/E6M7yrLbs3JY74fGzPWGRbBUHTZXQEqQnZglXaVB5V
+ ZhSFtHopZnBSCUSNDbB+QGy4B/E++Bb02IBTGl/JxmOwG+kZUnymsPvTtnNIeTLHxN/H/ae0
+ c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
+ DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
+ XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
+Message-ID: <cfbcacde-ca7f-5fc7-2fcf-267f698f3d49@ozlabs.ru>
+Date:   Mon, 22 Jun 2020 20:02:11 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200619050619.266888-2-leobras.c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Functions should only be static inline if they're very short. This
-devres helper is already over 10 lines and it will grow soon as we'll
-be improving upon its approach. Pull it into mdio_devres.c.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/net/phy/Makefile      |  2 +-
- drivers/net/phy/mdio_devres.c | 18 ++++++++++++++++++
- include/linux/phy.h           | 15 ++-------------
- 3 files changed, 21 insertions(+), 14 deletions(-)
- create mode 100644 drivers/net/phy/mdio_devres.c
+On 19/06/2020 15:06, Leonardo Bras wrote:
+> From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can make the number of
+> outputs from "ibm,query-pe-dma-windows" go from 5 to 6.
+> 
+> This change of output size is meant to expand the address size of
+> largest_available_block PE TCE from 32-bit to 64-bit, which ends up
+> shifting page_size and migration_capable.
+> 
+> This ends up requiring the update of
+> ddw_query_response->largest_available_block from u32 to u64, and manually
+> assigning the values from the buffer into this struct, according to
+> output size.
+> 
+> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+> ---
+>  arch/powerpc/platforms/pseries/iommu.c | 57 +++++++++++++++++++++-----
+>  1 file changed, 46 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+> index 6d47b4a3ce39..e5a617738c8b 100644
+> --- a/arch/powerpc/platforms/pseries/iommu.c
+> +++ b/arch/powerpc/platforms/pseries/iommu.c
+> @@ -334,7 +334,7 @@ struct direct_window {
+>  /* Dynamic DMA Window support */
+>  struct ddw_query_response {
+>  	u32 windows_available;
+> -	u32 largest_available_block;
+> +	u64 largest_available_block;
+>  	u32 page_size;
+>  	u32 migration_capable;
+>  };
+> @@ -869,14 +869,32 @@ static int find_existing_ddw_windows(void)
+>  }
+>  machine_arch_initcall(pseries, find_existing_ddw_windows);
+>  
+> +/*
+> + * From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can rule how many output
+> + * parameters ibm,query-pe-dma-windows will have, ranging from 5 to 6.
+> + */
+> +
+> +static int query_ddw_out_sz(struct device_node *par_dn)
 
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index dc9e53b511d6..896afdcac437 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -3,7 +3,7 @@
- 
- libphy-y			:= phy.o phy-c45.o phy-core.o phy_device.o \
- 				   linkmode.o
--mdio-bus-y			+= mdio_bus.o mdio_device.o
-+mdio-bus-y			+= mdio_bus.o mdio_device.o mdio_devres.o
- 
- ifdef CONFIG_MDIO_DEVICE
- obj-y				+= mdio-boardinfo.o
-diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
-new file mode 100644
-index 000000000000..f0b4b6cfe5e3
---- /dev/null
-+++ b/drivers/net/phy/mdio_devres.c
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/phy.h>
-+
-+int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
-+{
-+	int ret;
-+
-+	if (!bus->is_managed)
-+		return -EPERM;
-+
-+	ret = __mdiobus_register(bus, owner);
-+	if (!ret)
-+		bus->is_managed_registered = 1;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(__devm_mdiobus_register);
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c05d0fb5c00..62149945c5b3 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -313,20 +313,9 @@ static inline struct mii_bus *mdiobus_alloc(void)
- }
- 
- int __mdiobus_register(struct mii_bus *bus, struct module *owner);
-+int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner);
- #define mdiobus_register(bus) __mdiobus_register(bus, THIS_MODULE)
--static inline int devm_mdiobus_register(struct mii_bus *bus)
--{
--	int ret;
--
--	if (!bus->is_managed)
--		return -EPERM;
--
--	ret = mdiobus_register(bus);
--	if (!ret)
--		bus->is_managed_registered = 1;
--
--	return ret;
--}
-+#define devm_mdiobus_register(bus) __devm_mdiobus_register(bus, THIS_MODULE)
- 
- void mdiobus_unregister(struct mii_bus *bus);
- void mdiobus_free(struct mii_bus *bus);
+Can easily be folded into query_ddw().
+
+> +{
+> +	int ret;
+> +	u32 ddw_ext[3];
+> +
+> +	ret = of_property_read_u32_array(par_dn, "ibm,ddw-extensions",
+> +					 &ddw_ext[0], 3);
+> +	if (ret || ddw_ext[0] < 2 || ddw_ext[2] != 1)
+
+
+Oh that PAPR thing again :-/
+
+===
+The “ibm,ddw-extensions” property value is a list of integers the first
+integer indicates the number of extensions implemented and subsequent
+integers, one per extension, provide a value associated with that
+extension.
+===
+
+So ddw_ext[0] is length.
+Listindex==2 is for "reset" says PAPR and
+Listindex==3 is for this new 64bit "largest_available_block".
+
+So I'd expect ddw_ext[2] to have the "reset" token and ddw_ext[3] to
+have "1" for this new feature but indexes are smaller. I am confused.
+Either way these "2" and "3" needs to be defined in macros, "0" probably
+too.
+
+Please post 'lsprop "ibm,ddw-extensions"' here. Thanks,
+
+
+
+> +		return 5;
+> +	return 6;
+> +}
+> +
+>  static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+> -			struct ddw_query_response *query)
+> +		     struct ddw_query_response *query,
+> +		     struct device_node *par_dn)
+>  {
+>  	struct device_node *dn;
+>  	struct pci_dn *pdn;
+> -	u32 cfg_addr;
+> +	u32 cfg_addr, query_out[5];
+>  	u64 buid;
+> -	int ret;
+> +	int ret, out_sz;
+>  
+>  	/*
+>  	 * Get the config address and phb buid of the PE window.
+> @@ -888,12 +906,29 @@ static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+>  	pdn = PCI_DN(dn);
+>  	buid = pdn->phb->buid;
+>  	cfg_addr = ((pdn->busno << 16) | (pdn->devfn << 8));
+> +	out_sz = query_ddw_out_sz(par_dn);
+> +
+> +	ret = rtas_call(ddw_avail[0], 3, out_sz, query_out,
+> +			cfg_addr, BUID_HI(buid), BUID_LO(buid));
+> +	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x returned %d\n",
+> +		 ddw_avail[0], cfg_addr, BUID_HI(buid), BUID_LO(buid), ret);
+> +
+> +	switch (out_sz) {
+> +	case 5:
+> +		query->windows_available = query_out[0];
+> +		query->largest_available_block = query_out[1];
+> +		query->page_size = query_out[2];
+> +		query->migration_capable = query_out[3];
+> +		break;
+> +	case 6:
+> +		query->windows_available = query_out[0];
+> +		query->largest_available_block = ((u64)query_out[1] << 32) |
+> +						 query_out[2];
+> +		query->page_size = query_out[3];
+> +		query->migration_capable = query_out[4];
+> +		break;
+> +	}
+>  
+> -	ret = rtas_call(ddw_avail[0], 3, 5, (u32 *)query,
+> -		  cfg_addr, BUID_HI(buid), BUID_LO(buid));
+> -	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x"
+> -		" returned %d\n", ddw_avail[0], cfg_addr, BUID_HI(buid),
+> -		BUID_LO(buid), ret);
+>  	return ret;
+>  }
+>  
+> @@ -1040,7 +1075,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>  	 * of page sizes: supported and supported for migrate-dma.
+>  	 */
+>  	dn = pci_device_to_OF_node(dev);
+> -	ret = query_ddw(dev, ddw_avail, &query);
+> +	ret = query_ddw(dev, ddw_avail, &query, pdn);
+>  	if (ret != 0)
+>  		goto out_failed;
+>  
+> @@ -1068,7 +1103,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>  	/* check largest block * page size > max memory hotplug addr */
+>  	max_addr = ddw_memory_hotplug_max();
+>  	if (query.largest_available_block < (max_addr >> page_shift)) {
+> -		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %u "
+> +		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu "
+>  			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
+>  			  1ULL << page_shift);
+>  		goto out_failed;
+> 
+
 -- 
-2.26.1
-
+Alexey
