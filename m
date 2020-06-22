@@ -2,129 +2,113 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D802076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932E225414
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:18:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L680i4qL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbgFVGP2 (ORCPT
+        id S1731257AbgFVGSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:15:28 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:48805 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731219AbgFVGPR (ORCPT
+        Mon, 22 Jun 2020 02:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731238AbgFVGSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 02:15:17 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 21 Jun 2020 23:15:16 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 21 Jun 2020 23:15:13 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id CBC0B218A1; Mon, 22 Jun 2020 11:45:11 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        stanimir.varbanov@linaro.org, ardb@kernel.org,
-        sivaprak@codeaurora.org, cotequeiroz@gmail.com,
-        ebiggers@google.com, horia.geanta@nxp.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] crypto: qce: support zero length test vectors
-Date:   Mon, 22 Jun 2020 11:45:04 +0530
-Message-Id: <1592806506-23978-2-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592806506-23978-1-git-send-email-sivaprak@codeaurora.org>
-References: <1592806506-23978-1-git-send-email-sivaprak@codeaurora.org>
+        Mon, 22 Jun 2020 02:18:51 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0CBC061795
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 23:18:49 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so17887552ljc.8
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 23:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EwHajz3b3OzliZZ0iljg79Qo0FRnx6yIvPIMoMPNCF0=;
+        b=L680i4qLfffD6qOBHAVVNs/RTGmimhbH54HePc+aAEEFMZsU+KwUMLtg0o3/KjZxwi
+         AsJtSTQQ9TWWeiUXdQ6E95DBB6nBEu9Bw9RHmSduuUFi5efeqeK0TwchSwQmEm1b/LR9
+         guCuBfe2PDw3TrUU4GG5GeGv7DXpvHYmlHIldJ2LtIJ7sYX6q2DjQR1wjBtOZiQOZo0Z
+         c9Wg8EN9kOlCKoKR3DMaVb8rhfL6NJ6XMN3s8YaoUJrXHuvkQxL1kSCVF2HJjwP4WKbo
+         VBXH7bVYaJLr5EKRWY/wyAk5DctM3eO6l3XrzLPT9iajAEGxLTpci91ZvZNz83XG70eE
+         IcaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EwHajz3b3OzliZZ0iljg79Qo0FRnx6yIvPIMoMPNCF0=;
+        b=BSSph9oxtHjWHP0DPudwtasC74GWcZL6Jk+SrPdlhlQMIwSyvRW4AHqf+x3aX0cKvH
+         7YKY+fWVk+gKy9Ajp+qpLbs0vubHqtJ7fU5ufrsKrLuRzIRhLH9Y/XFTakLBQoyGCoA4
+         p150kQArRCgO7YFj9uPkGVXUP2RKMGK7be0xGqlatP2h8/+HzXCTelkm9bqrJoXO6qah
+         iq8i0kJHDok74zj2zujIqhIDrcnqcQtZYT9M8mQkPYZEUHDEuoGGL0tNsUTSuIAb/mgf
+         jqqefS6IUV0dEouCM2Da/zZSTsK8boylDKWua3snLKxERuwh43KLgTsiKriQgpCIV4Ly
+         tmww==
+X-Gm-Message-State: AOAM531ey/+ki0TDCtpPTsTHIlnpH0v71GkcnoAo8KlEVR3MnkhjrBgO
+        W518rhAZ0FyNuCqOA+5MvpcGI9s6CoFOB1+ZCZ9qsw==
+X-Google-Smtp-Source: ABdhPJzk1dBKVTKlDCM/pQw++y3L1fqg3Nln3xfdv33XwAIbfQ+dtjXOSdb7gqcWA/t3i5e0VbW2AJq+r8s5HIFRXi8=
+X-Received: by 2002:a2e:9116:: with SMTP id m22mr7607612ljg.431.1592806727377;
+ Sun, 21 Jun 2020 23:18:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200617065658.27567-1-naresh.kamboju@linaro.org> <20200621074003.GJ128451@builder.lan>
+In-Reply-To: <20200621074003.GJ128451@builder.lan>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 22 Jun 2020 11:48:35 +0530
+Message-ID: <CA+G9fYvOSRL5WaU1tYTxe4Y16h_kBbNsOibsH6Od5dc1tcmK6Q@mail.gmail.com>
+Subject: Re: [PATCH] remoteproc: qcom: q6v5-mss: Fix kfree build error
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, inux-remoteproc@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vinod Koul <vinod.koul@linaro.org>, agross@kernel.org,
+        Ohad Ben Cohen <ohad@wizery.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-crypto test module passes zero length vectors as test input to sha-1 and
-sha-256. To provide correct output for these vectors, hash zero support
-has been added as in other crypto drivers.
+On Sun, 21 Jun 2020 at 13:12, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Tue 16 Jun 23:56 PDT 2020, Naresh Kamboju wrote:
+>
+> > This patch adds linux/slab.h to fix build error in qcom_q6v5_mss.c
+> >
+> > Build error:
+> >  ../drivers/remoteproc/qcom_q6v5_mss.c:
+> >   In function =E2=80=98q6v5_mpss_init_image=E2=80=99:
+> >  ../drivers/remoteproc/qcom_q6v5_mss.c:772:3:
+> >   error: implicit declaration of function =E2=80=98kfree=E2=80=99;
+> >   did you mean =E2=80=98vfree=E2=80=99? [-Werror=3Dimplicit-function-de=
+claration]
+> >    772 |   kfree(metadata);
+> >        |   ^~~~~
+> >        |   vfree
+> >
+> > Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+>
+> Thanks for the patch Naresh, it looks correct but I've not seen this
+> build error myself. Could you please let me know what you built to get
+> this and if you have any suggestion on what caused it? (So we can add a
+> Fixes: tag etc)
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- drivers/crypto/Kconfig      |  2 ++
- drivers/crypto/qce/common.h |  2 ++
- drivers/crypto/qce/sha.c    | 18 +++++++++++++++++-
- 3 files changed, 21 insertions(+), 1 deletion(-)
+Thanks for the review.
+This was an arm64 modules build failure on linux -next 20200616 tag.
+This fix has already been taken care of by
+Herbert Xu <herbert@gondor.apana.org.au> and got merged.
+Fixes: f0187db056dc ("iov_iter: Move unnecessary inclusion of...")
 
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 802b9ada4e9e..7bc58bf99703 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -624,6 +624,8 @@ config CRYPTO_DEV_QCE_SKCIPHER
- config CRYPTO_DEV_QCE_SHA
- 	bool
- 	depends on CRYPTO_DEV_QCE
-+	select CRYPTO_SHA1
-+	select CRYPTO_SHA256
- 
- choice
- 	prompt "Algorithms enabled for QCE acceleration"
-diff --git a/drivers/crypto/qce/common.h b/drivers/crypto/qce/common.h
-index 9f989cba0f1b..85ba16418a04 100644
---- a/drivers/crypto/qce/common.h
-+++ b/drivers/crypto/qce/common.h
-@@ -87,6 +87,8 @@ struct qce_alg_template {
- 		struct ahash_alg ahash;
- 	} alg;
- 	struct qce_device *qce;
-+	const u8 *hash_zero;
-+	const u32 digest_size;
- };
- 
- void qce_cpu_to_be32p_array(__be32 *dst, const u8 *src, unsigned int len);
-diff --git a/drivers/crypto/qce/sha.c b/drivers/crypto/qce/sha.c
-index 1ab62e7d5f3c..ed82520203f9 100644
---- a/drivers/crypto/qce/sha.c
-+++ b/drivers/crypto/qce/sha.c
-@@ -305,8 +305,12 @@ static int qce_ahash_final(struct ahash_request *req)
- 	struct qce_alg_template *tmpl = to_ahash_tmpl(req->base.tfm);
- 	struct qce_device *qce = tmpl->qce;
- 
--	if (!rctx->buflen)
-+	if (!rctx->buflen) {
-+		if (tmpl->hash_zero)
-+			memcpy(req->result, tmpl->hash_zero,
-+					tmpl->alg.ahash.halg.digestsize);
- 		return 0;
-+	}
- 
- 	rctx->last_blk = true;
- 
-@@ -338,6 +342,13 @@ static int qce_ahash_digest(struct ahash_request *req)
- 	rctx->first_blk = true;
- 	rctx->last_blk = true;
- 
-+	if (!rctx->nbytes_orig) {
-+		if (tmpl->hash_zero)
-+			memcpy(req->result, tmpl->hash_zero,
-+					tmpl->alg.ahash.halg.digestsize);
-+		return 0;
-+	}
-+
- 	return qce->async_req_enqueue(tmpl->qce, &req->base);
- }
- 
-@@ -490,6 +501,11 @@ static int qce_ahash_register_one(const struct qce_ahash_def *def,
- 	alg->halg.digestsize = def->digestsize;
- 	alg->halg.statesize = def->statesize;
- 
-+	if (IS_SHA1(def->flags))
-+		tmpl->hash_zero = sha1_zero_message_hash;
-+	else if (IS_SHA256(def->flags))
-+		tmpl->hash_zero = sha256_zero_message_hash;
-+
- 	base = &alg->halg.base;
- 	base->cra_blocksize = def->blocksize;
- 	base->cra_priority = 300;
--- 
-2.7.4
+ref:
+https://lore.kernel.org/lkml/20200616010502.GA28834@gondor.apana.org.au/
 
+- Naresh
