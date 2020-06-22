@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E83C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF86C2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358AE2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="MBbHsVWm"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="Vv8/OVNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgFVLZO (ORCPT
+        id S1728090AbgFVLOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:25:14 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:4532 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728171AbgFVLO6 (ORCPT
+        Mon, 22 Jun 2020 07:14:54 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:10688 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728070AbgFVLOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:14:58 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MB74pA012022;
-        Mon, 22 Jun 2020 04:14:55 -0700
+        Mon, 22 Jun 2020 07:14:38 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MB4QxD006349;
+        Mon, 22 Jun 2020 04:14:37 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=pfpt0818;
- bh=aSQnaeJ4BVFSG1Xi0jIbKbe60eR9TioORFDcgcGBMiA=;
- b=MBbHsVWmcfKB7yKqEpTH7+64j1IUmS+RlszCTmlXuNlG4O7NY4tRCKtrvFulfh4lztBM
- BHc6ct8QEUfQuk22l7ZprDfk38Uk/YD2EjtzvYhifLVufv8EI9zFhjmUtZtQwy/Htz5F
- BMt5N3ZC3Cpu0LN7rF2/mkN43OgJbQXQOqF1U4UTXy+vkva1b32dg/R7Xb/PVj8F/vMd
- 5d4sgGrX9OYVLMwPsVoge2nX4FCCIUUlV+LztOZqsz8eFXU9uGvVrP3UZxGSlluovFOS
- 7oKjsSiwCzpn/3cQ1diRRS/rNQt/hZHYgSMgRvq/LaEvxNaoDtwjJxtj+fbWPom7eG4/ wQ== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 31shynqpbj-1
+ bh=1jC8vw5IckmccgxfVcMnGInOWw5kRghaO0rPZUm9yp8=;
+ b=Vv8/OVNSMtx0MqNSfDYmCWzyJT+MS44m/zsD0piGiJOVQ7ghhjo81UOkEh+IOVgO4lL1
+ fQnazkhbpRYzxqhwRKxH2A+okdCfRkimhQh8O9gPUsyOx1mNm+Bgil3miXHeDChzuHBU
+ cUxbDYjeU7Q4+v7zYtGIvpTnJiojvTY1Up9GHG+S8ajtbuA68V36M6rmhJahKEjR2AjN
+ NBXt4Vojqh1o4LVauNcuLOSOKCXXmAuldgeP9QbfR7tYdx92Z102NcISxa6XmIstgkdW
+ GArAiknJyq3kk/5c/dzpIJqIyhpgY+NnWyIX1H3yUB4maR0Ns0QVrEP4X6hU02oD1yPt HQ== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 31sftpg5x1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 04:14:55 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Jun
- 2020 04:14:53 -0700
+        Mon, 22 Jun 2020 04:14:37 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Jun
+ 2020 04:14:36 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Jun
+ 2020 04:14:35 -0700
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
  (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 22 Jun 2020 04:14:53 -0700
+ Transport; Mon, 22 Jun 2020 04:14:35 -0700
 Received: from NN-LT0049.marvell.com (unknown [10.193.39.36])
-        by maili.marvell.com (Postfix) with ESMTP id 3A74E3F703F;
-        Mon, 22 Jun 2020 04:14:48 -0700 (PDT)
+        by maili.marvell.com (Postfix) with ESMTP id 531FD3F703F;
+        Mon, 22 Jun 2020 04:14:31 -0700 (PDT)
 From:   Alexander Lobakin <alobakin@marvell.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -61,9 +64,9 @@ CC:     Igor Russkikh <irusskikh@marvell.com>,
         Alexander Lobakin <alobakin@marvell.com>,
         <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH net 7/9] net: qede: fix use-after-free on recovery and AER handling
-Date:   Mon, 22 Jun 2020 14:14:11 +0300
-Message-ID: <20200622111413.7006-8-alobakin@marvell.com>
+Subject: [PATCH net 3/9] net: qede: stop adding events on an already destroyed workqueue
+Date:   Mon, 22 Jun 2020 14:14:07 +0300
+Message-ID: <20200622111413.7006-4-alobakin@marvell.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200622111413.7006-1-alobakin@marvell.com>
 References: <20200622111413.7006-1-alobakin@marvell.com>
@@ -77,29 +80,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set edev->cdev pointer to NULL after calling remove() callback to avoid
-using of already freed object.
+Set rdma_wq pointer to NULL after destroying the workqueue and check
+for it when adding new events to fix crashes on driver unload.
 
-Fixes: ccc67ef50b90 ("qede: Error recovery process")
+Fixes: cee9fbd8e2e9 ("qede: Add qedr framework")
 Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
 Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 ---
- drivers/net/ethernet/qlogic/qede/qede_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qlogic/qede/qede_rdma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index f6ff31e73ebe..29e285430f99 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1318,6 +1318,7 @@ static void __qede_remove(struct pci_dev *pdev, enum qede_remove_mode mode)
- 	if (system_state == SYSTEM_POWER_OFF)
- 		return;
- 	qed_ops->common->remove(cdev);
-+	edev->cdev = NULL;
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+index 2d873ae8a234..668ccc9d49f8 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+@@ -105,6 +105,7 @@ static void qede_rdma_destroy_wq(struct qede_dev *edev)
  
- 	/* Since this can happen out-of-sync with other flows,
- 	 * don't release the netdevice until after slowpath stop
+ 	qede_rdma_cleanup_event(edev);
+ 	destroy_workqueue(edev->rdma_info.rdma_wq);
++	edev->rdma_info.rdma_wq = NULL;
+ }
+ 
+ int qede_rdma_dev_add(struct qede_dev *edev, bool recovery)
+@@ -325,7 +326,7 @@ static void qede_rdma_add_event(struct qede_dev *edev,
+ 	if (edev->rdma_info.exp_recovery)
+ 		return;
+ 
+-	if (!edev->rdma_info.qedr_dev)
++	if (!edev->rdma_info.qedr_dev || !edev->rdma_info.rdma_wq)
+ 		return;
+ 
+ 	/* We don't want the cleanup flow to start while we're allocating and
 -- 
 2.21.0
 
