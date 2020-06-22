@@ -2,266 +2,176 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D16DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77818C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F6120727
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4F520727
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VnLhWmtj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MK3YZsIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbgFVXxu (ORCPT
+        id S1731186AbgFVXzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60370 "EHLO
+        Mon, 22 Jun 2020 19:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730227AbgFVXxt (ORCPT
+        with ESMTP id S1730227AbgFVXzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:53:49 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C01E8C061573;
-        Mon, 22 Jun 2020 16:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Mz/A+hFfuf24LVGItLsLfUEgCItsEK6JiOXYHwMwFLQ=; b=VnLhWmtjHgbFCQ6Yr0nSQfHPy
-        TSbERVRaAM8pnpmgV7XlFpnLWt/E9Qq6dXeNOkp0zXJab0YenjSNZRFGanOc8RglhvdxAnuxVQGNo
-        /kWpdFWWPkSj+XWD7JaIIwK171gc5VYUH8VKQtkXJ6grVq457ol0PvS4xfcukZ/5xb6ycFitF2AFo
-        IFBq2Ntw0w+RJ1njeQSRCrl44goxjpO5KrGxaKgJPDmBwjgq17mAm40qqtetacSOSfTqEMPg8yFJg
-        a0i3VbQvStMgEnKcJfyjwzNdhkHQznIQgtmQNRNZ5FIQcOnLAK2Veb0uhu6HikuPCSjPzpLXE8fhD
-        JqtWS9cjA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58994)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jnWG3-00013A-4g; Tue, 23 Jun 2020 00:53:47 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jnWFw-0000UE-KX; Tue, 23 Jun 2020 00:53:40 +0100
-Date:   Tue, 23 Jun 2020 00:53:40 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 1/2] net: ethernet: mvneta: Fix Serdes configuration for
- SoCs without comphy
-Message-ID: <20200622235340.GQ1551@shell.armlinux.org.uk>
-References: <20200616083140.8498-1-s.hauer@pengutronix.de>
+        Mon, 22 Jun 2020 19:55:14 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED98BC061573;
+        Mon, 22 Jun 2020 16:55:13 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id p20so19700983ejd.13;
+        Mon, 22 Jun 2020 16:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NjMcZXprv/nOI4forFhKBTk/9F1/kItqecbA0f3zzT8=;
+        b=MK3YZsIqGYoDjbxLtQy2a2wo4ruMmS1w9QUl9/b2H1N34YqISWMm4seVahEk6vXpOI
+         SgBWMKclzauV/+pl9tGCeOaTNW0t2+0vC53zrCUIN6UO6sMVq+xOis8Nnm32NMx8suxR
+         UhCmTiQTZQhtWbpw2vcER4mouZPvsT8VZEXNEeATbbrxzozgbjOPBthCdAw+infZucxe
+         zkUG4Enjj+ZXGXRDXzuhcOIhk127PUmHwYCqIOvVFSxdxnzVTp8DEZ/aH2mR5XH5+Ans
+         xmUT27IlXZQdKBsq/7FrGNFly2GxAGf/6aYN5rJVJtKl2tow0KSBSoBWJGhErIvYIYDX
+         NbSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NjMcZXprv/nOI4forFhKBTk/9F1/kItqecbA0f3zzT8=;
+        b=iz8GU/l3NxK4TsbnTMNwgaDarjy1L9LOGjCR1pcHIW/nTG4WNpeeE7TAhYUbu6wuCm
+         j+cbnoAsfvgJzEeTObyt4Q2DpldZl23ZdnDwMO3kYK7W6BxSGnzTA6x1TLX915SDrhYg
+         wLpoxne/F6L6EHOME3y+DuGZlJ8lnHZXpsDgmG9DAD5FUggUq0B6OeaSZJs0PhR6vClK
+         QycyLbO+3gtBloZl3ItHDLLrqlBE9WMoj9qtvvm2eVqBbre9ytmQuMXPRYRuUhuuRih6
+         bCNDbByNXWAJmDgDhIyYA45mlHwdJ4c8oRMvj36BIWUzBjJs/NA8IwHO0fz/V6NR4NFB
+         A/uw==
+X-Gm-Message-State: AOAM530HVXwuEnhUsIEiN6Mn6VPfp0ajpHrXzUrEeEBvx1WidJPfkSt9
+        OLgH+2G1IBsF8ewUrsocW+J1umsjnbzATn8s0xY=
+X-Google-Smtp-Source: ABdhPJwQzUdtQVA8N+epe6jO74BqD4xLZlDw/rWnWRA1sAy4igezZryH7Kv9srM9ru85/edGlgH35lOeiLAECSYhKcc=
+X-Received: by 2002:a17:906:2b81:: with SMTP id m1mr17303645ejg.488.1592870112660;
+ Mon, 22 Jun 2020 16:55:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616083140.8498-1-s.hauer@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200619215649.32297-1-rcampbell@nvidia.com> <20200619215649.32297-14-rcampbell@nvidia.com>
+ <F1872509-3B1F-4A8A-BFF5-E4D44E451920@nvidia.com> <b6eed976-c515-72d6-a7be-2296cab8f0d4@nvidia.com>
+ <C7BEB563-3698-442C-A188-1B66CBE4CF63@nvidia.com> <a5f502f8-70cd-014b-8066-bbaeb8024a29@nvidia.com>
+ <4C364E23-0716-4D59-85A1-0C293B86BC2C@nvidia.com> <CAHbLzkqe50+KUsRH92O4Be2PjuwAYGw9nK+d-73syxi2Xnf9-Q@mail.gmail.com>
+ <CAHbLzko=BqtPhxgf7f1bKKqoQxK9XCCPdp4YdL80K_uXFfcETQ@mail.gmail.com> <fa056e5e-ca87-aef1-e66e-58e8ebe5403e@nvidia.com>
+In-Reply-To: <fa056e5e-ca87-aef1-e66e-58e8ebe5403e@nvidia.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Mon, 22 Jun 2020 16:54:45 -0700
+Message-ID: <CAHbLzkrR4-s+ye1F3XDV_0q+iyZOcyMQNHTggDY3Mn_e2yOZ7g@mail.gmail.com>
+Subject: Re: [PATCH 13/16] mm: support THP migration to device private memory
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Zi Yan <ziy@nvidia.com>, Ralph Campbell <rcampbell@nvidia.com>,
+        nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        Linux MM <linux-mm@kvack.org>, linux-kselftest@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Huang, Ying" <ying.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:31:39AM +0200, Sascha Hauer wrote:
-> The MVNETA_SERDES_CFG register is only available on older SoCs like the
-> Armada XP. On newer SoCs like the Armada 38x the fields are moved to
-> comphy. This patch moves the writes to this register next to the comphy
-> initialization, so that depending on the SoC either comphy or
-> MVNETA_SERDES_CFG is configured.
-> With this we no longer write to the MVNETA_SERDES_CFG on SoCs where it
-> doesn't exist.
-> 
-> Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  drivers/net/ethernet/marvell/mvneta.c | 80 +++++++++++++++------------
->  1 file changed, 44 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> index 51889770958d8..9933eb4577d43 100644
-> --- a/drivers/net/ethernet/marvell/mvneta.c
-> +++ b/drivers/net/ethernet/marvell/mvneta.c
-> @@ -106,6 +106,7 @@
->  #define      MVNETA_TX_IN_PRGRS                  BIT(1)
->  #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
->  #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
-> +/* Only exists on Armada XP and Armada 370 */
->  #define MVNETA_SERDES_CFG			 0x24A0
->  #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
->  #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-> @@ -3514,26 +3515,55 @@ static int mvneta_setup_txqs(struct mvneta_port *pp)
->  	return 0;
->  }
->  
-> -static int mvneta_comphy_init(struct mvneta_port *pp)
-> +static int mvneta_comphy_init(struct mvneta_port *pp, phy_interface_t interface)
->  {
->  	int ret;
->  
-> -	if (!pp->comphy)
-> -		return 0;
-> -
-> -	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
-> -			       pp->phy_interface);
-> +	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET, interface);
->  	if (ret)
->  		return ret;
->  
->  	return phy_power_on(pp->comphy);
->  }
->  
-> +static int mvneta_config_interface(struct mvneta_port *pp,
-> +				   phy_interface_t interface)
-> +{
-> +	int ret = 0;
-> +
-> +	if (pp->comphy) {
-> +		if (interface == PHY_INTERFACE_MODE_SGMII ||
-> +		    interface == PHY_INTERFACE_MODE_1000BASEX ||
-> +		    interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +			ret = mvneta_comphy_init(pp, interface);
-> +		}
-> +	} else {
-> +		switch (interface) {
-> +		case PHY_INTERFACE_MODE_QSGMII:
-> +			mvreg_write(pp, MVNETA_SERDES_CFG,
-> +				    MVNETA_QSGMII_SERDES_PROTO);
-> +			break;
-> +
-> +		case PHY_INTERFACE_MODE_SGMII:
-> +		case PHY_INTERFACE_MODE_1000BASEX:
-> +			mvreg_write(pp, MVNETA_SERDES_CFG,
-> +				    MVNETA_SGMII_SERDES_PROTO);
-> +			break;
-> +		default:
-> +			return -EINVAL;
+On Mon, Jun 22, 2020 at 4:02 PM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On 2020-06-22 15:33, Yang Shi wrote:
+> > On Mon, Jun 22, 2020 at 3:30 PM Yang Shi <shy828301@gmail.com> wrote:
+> >> On Mon, Jun 22, 2020 at 2:53 PM Zi Yan <ziy@nvidia.com> wrote:
+> >>> On 22 Jun 2020, at 17:31, Ralph Campbell wrote:
+> >>>> On 6/22/20 1:10 PM, Zi Yan wrote:
+> >>>>> On 22 Jun 2020, at 15:36, Ralph Campbell wrote:
+> >>>>>> On 6/21/20 4:20 PM, Zi Yan wrote:
+> >>>>>>> On 19 Jun 2020, at 17:56, Ralph Campbell wrote:
+> ...
+> >>> Ying(cc=E2=80=99d) developed the code to swapout and swapin THP in on=
+e piece: https://lore.kernel.org/linux-mm/20181207054122.27822-1-ying.huang=
+@intel.com/.
+> >>> I am not sure whether the patchset makes into mainstream or not. It c=
+ould be a good technical reference
+> >>> for swapping in device private pages, although swapping in pages from=
+ disk and from device private
+> >>> memory are two different scenarios.
+> >>>
+> >>> Since the device private memory swapin impacts core mm performance, w=
+e might want to discuss your patches
+> >>> with more people, like the ones from Ying=E2=80=99s patchset, in the =
+next version.
+> >>
+> >> I believe Ying will give you more insights about how THP swap works.
+> >>
+> >> But, IMHO device memory migration (migrate to system memory) seems
+> >> like THP CoW more than swap.
+>
+>
+> A fine point: overall, the desired behavior is "migrate", not CoW.
+> That's important. Migrate means that you don't leave a page behind, even
+> a read-only one. And that's exactly how device private migration is
+> specified.
+>
+> We should try to avoid any erosion of clarity here. Even if somehow
+> (really?) the underlying implementation calls this THP CoW, the actual
+> goal is to migrate pages over to the device (and back).
+>
+>
+> >>
+> >> When migrating in:
+> >
+> > Sorry for my fat finger, hit sent button inadvertently, let me finish h=
+ere.
+> >
+> > When migrating in:
+> >
+> >          - if THP is enabled: allocate THP, but need handle allocation
+> > failure by falling back to base page
+> >          - if THP is disabled: fallback to base page
+> >
+>
+> OK, but *all* page entries (base and huge/large pages) need to be cleared=
+,
+> when migrating to device memory, unless I'm really confused here.
+> So: not CoW.
 
-I've just noticed that you made changes to the patch I sent, such as
-adding this default case that errors out, and by doing so, you have
-caused a regression by causing a WARN_ON() splat.
+I realized the comment caused more confusion. I apologize for the
+confusion. Yes, the trigger condition for swap/migration and CoW are
+definitely different. Here I mean the fault handling part of migrating
+into system memory.
 
-It was not accidental that my patch had "break;" here instead of an
-error return, and I left the interface mode checking in
-mvneta_port_power_up() that you also removed.
+Swap-in just needs to handle the base page case since THP swapin is
+not supported in upstream yet and the PMD is split in swap-out phase
+(see shrink_page_list).
 
-mvneta supports RGMII, and since RGMII doesn't use the serdes, there
-is no need to write to MVNETA_SGMII_SERDES_PROTO, and so we want to
-ignore those, not return -EINVAL.
+The patch adds THP migration support to device memory, but you need to
+handle migrate in (back to system memory) case correctly. The fault
+handling should look like THP CoW fault handling behavior (before
+5.8):
+    - if THP is enabled: allocate THP, fallback if allocation is failed
+    - if THP is disabled: fallback to base page
 
-Since the interface type was already validated both by phylink when
-the interface is brought up, and also by the driver at probe time
-through mvneta_port_power_up(), which performs early validation of
-the mode given in DT this was not a problem... there is no need to
-consider anything but the RGMII case in the "default" case here.
+Swap fault handling doesn't look like the above. So, I said it seems
+like more THP CoW (fault handling part only before 5.8). I hope I
+articulate my mind.
 
-So, please fix this... at minimum fixing this switch() statement not
-to error out in the RGMII cases.  However, I think actually following
-what was in my patch (which was there for good reason) rather than
-randomly changing it would have been better.
+However, I didn't see such fallback is handled. It looks if THP
+allocation is failed, it just returns SIGBUS; and no check about THP
+status if I read the patches correctly. The THP might be disabled for
+the specific vma or system wide before migrating from device memory
+back to system memory.
 
-This will have made the kernel on the SolidRun Clearfog platform
-trigger the WARN_ON()s for the dedicated gigabit port, which uses
-RGMII, and doesn't have a comphy specified in DT... and having
-waited for the compile to finish and the resulting kernel to boot...
-
-WARNING: CPU: 0 PID: 268 at drivers/net/ethernet/marvell/mvneta.c:3512 mvneta_start_dev+0x220/0x23c
-
-Thanks.
-
-> +		}
-> +	}
-> +
-> +	pp->phy_interface = interface;
-> +
-> +	return ret;
-> +}
-> +
->  static void mvneta_start_dev(struct mvneta_port *pp)
->  {
->  	int cpu;
->  
-> -	WARN_ON(mvneta_comphy_init(pp));
-> +	WARN_ON(mvneta_config_interface(pp, pp->phy_interface));
->  
->  	mvneta_max_rx_size_set(pp, pp->pkt_size);
->  	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
-> @@ -3907,14 +3937,10 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
->  	if (state->speed == SPEED_2500)
->  		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
->  
-> -	if (pp->comphy && pp->phy_interface != state->interface &&
-> -	    (state->interface == PHY_INTERFACE_MODE_SGMII ||
-> -	     state->interface == PHY_INTERFACE_MODE_1000BASEX ||
-> -	     state->interface == PHY_INTERFACE_MODE_2500BASEX)) {
-> -		pp->phy_interface = state->interface;
-> -
-> -		WARN_ON(phy_power_off(pp->comphy));
-> -		WARN_ON(mvneta_comphy_init(pp));
-> +	if (pp->phy_interface != state->interface) {
-> +		if (pp->comphy)
-> +			WARN_ON(phy_power_off(pp->comphy));
-> +		WARN_ON(mvneta_config_interface(pp, state->interface));
->  	}
->  
->  	if (new_ctrl0 != gmac_ctrl0)
-> @@ -4958,20 +4984,10 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
->  }
->  
->  /* Power up the port */
-> -static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
-> +static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
->  {
->  	/* MAC Cause register should be cleared */
->  	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
-> -
-> -	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
-> -		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
-> -	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
-> -		 phy_interface_mode_is_8023z(phy_mode))
-> -		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
-> -	else if (!phy_interface_mode_is_rgmii(phy_mode))
-> -		return -EINVAL;
-> -
-> -	return 0;
->  }
->  
->  /* Device initialization routine */
-> @@ -5157,11 +5173,7 @@ static int mvneta_probe(struct platform_device *pdev)
->  	if (err < 0)
->  		goto err_netdev;
->  
-> -	err = mvneta_port_power_up(pp, phy_mode);
-> -	if (err < 0) {
-> -		dev_err(&pdev->dev, "can't power up port\n");
-> -		goto err_netdev;
-> -	}
-> +	mvneta_port_power_up(pp, phy_mode);
->  
->  	/* Armada3700 network controller does not support per-cpu
->  	 * operation, so only single NAPI should be initialized.
-> @@ -5315,11 +5327,7 @@ static int mvneta_resume(struct device *device)
->  		}
->  	}
->  	mvneta_defaults_set(pp);
-> -	err = mvneta_port_power_up(pp, pp->phy_interface);
-> -	if (err < 0) {
-> -		dev_err(device, "can't power up port\n");
-> -		return err;
-> -	}
-> +	mvneta_port_power_up(pp, pp->phy_interface);
->  
->  	netif_device_attach(dev);
->  
-> -- 
-> 2.27.0
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+>
+> thanks,
+> --
+> John Hubbard
+> NVIDIA
