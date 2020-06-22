@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC80C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57E2D20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8E12071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SP7AoO6j"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UtNEe+Y7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFVJll (ORCPT
+        id S1727806AbgFVJlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40680 "EHLO
+        Mon, 22 Jun 2020 05:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbgFVJl2 (ORCPT
+        with ESMTP id S1727101AbgFVJlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:41:28 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D59C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:26 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x16so5063549wmj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:26 -0700 (PDT)
+        Mon, 22 Jun 2020 05:41:37 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70ED3C061796
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:37 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so3552830wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bqh6HxDlaYo+eDyI7otJcwguVt4xZOU026/4uSBRTYc=;
-        b=SP7AoO6jktrfliyzCx/xTv9Acl8xJ9sY7iCwKrfwfyNggXkndAn+GiE89e2CakhX93
-         EtFpneu7Irbs7xZzUb0hX6BSHQi3UozkzhV+p6SQq9kyi9aHVpBp5CBCwNTmulsZslat
-         S7C/Z8dksydKPXBjvs5GBreCNnBfxtAnumAazOf9/1wvwfZCe7m8JALCSbuOLvoF5Rou
-         xBK1gJiM8i95SvZeb+tQiaOslV7j4IZb68JOC/jIisPOWeaDQtMQzPIITSrjs4DzZlJ8
-         MzF704Nbnte2Zw7NGj8nJyLAt5+AEeIUcZgDNWKDwvTp1MOa2y3CoFw3Vypbd5fd3vFk
-         FLZg==
+        bh=yy6XgmLu+rdPXztYG22qHG3UQylFLO0aZanRZZZSG+U=;
+        b=UtNEe+Y7D5ArH7Qe/vs7TUd5yHPcILffWoYh4wTCQdtMBq36DtKsydxvi6z3a7HbGS
+         FB2blBliY4Y+cVZyVIBbNCz/TMBZbmhI+WrSDUrAZc+nT9RqNVT9ahaolMbn+oxd3MXf
+         1G7L1Tcb6rs72hInUAFR8sZDDUZyVq9WQ8aEF0wR9UhVHcEeuUBRsA99mkWAfVG8D7Fm
+         zKsJUFL1xKBJ0gZxZlQvxrVGukdEa54zY4pSR0TYGGrqagLXr4OzxpZFMV8ttxXXVHQU
+         uiUpPpCNqmeepGbSEiBWxIRbMBVFfKFJKOIFmK8bRZsbBYVxA3/rlPTyqTaIaGU38MYj
+         ac8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bqh6HxDlaYo+eDyI7otJcwguVt4xZOU026/4uSBRTYc=;
-        b=b0TU/5AtaN6txpW6sLdHVFTmfyfTaC76u2Rk7/48aosTCQOmBao/sdkoIT08rfo6NQ
-         dAoHz/+IHVxFHQiUVUR3oYZfeHyDdqce7nfvDi5+4IAtlk2TlUirE1TgVqTT708Wad5n
-         CY1f2aUEtCHGSGkmi5Xr/1eMzSTNGXMgj1PUAYQgdxVao08W9v7s2QbGEcHRKSfub6JI
-         /YAjWeabt4yxaUvuhc9R6muJ3ymD11J0HyZksPh4PXbMV0LL0k/h+k0FU+Ll6/aao/tE
-         wTFwL5RxQEUmVh3g2OU14FN6oez0ZGS/PIUupOFRJl8xtTezHxpBCf+PF0+DRP/w3lrm
-         Lj2g==
-X-Gm-Message-State: AOAM53203PwRsG+sPhqkUlBIQ1TC8Un6bizQvnJDvWG+lLCLOh/KEPb6
-        2NvcKhV7oO320eWyn72Ag8Dgig==
-X-Google-Smtp-Source: ABdhPJxp7i5US20/aRii1o/KsIXINrL2pr4jmYkXOUQGOXKf71p0QdlmezcpuamEmuUdwfDNh3u4dA==
-X-Received: by 2002:a1c:a3c5:: with SMTP id m188mr17121192wme.152.1592818885393;
-        Mon, 22 Jun 2020 02:41:25 -0700 (PDT)
+        bh=yy6XgmLu+rdPXztYG22qHG3UQylFLO0aZanRZZZSG+U=;
+        b=qr5dQZyDAueuZGVfFvU9SG81i2r/GvChpW4xg/ORxl8hM0vFhHYTf9RAbosZwoF/hv
+         82yLQptSf3ejAgT+PqvQEOoMVu6p+xyMyaGJELMSVny/D5+buQz5OFNX0UKoHwzitimy
+         5D7aQpKxHTMIFj1U/GYl9HHPy3bSJu+HmXeVwBW5XrPOcoOE/w/b+vXDZOT06BKVspQy
+         0icObAvYZSjsXmXuGJnHmM30VE6V6AEY7/9iC1IxxkrgurEDtezLQnkJ7/wG8Sylbu4c
+         e3qtbgKEAkN2tlQLYQdX9tt5XREsGPtnNzYynBeeL6flsaJUEbCUXtKlqJafPYZZSFic
+         WZLw==
+X-Gm-Message-State: AOAM533i/u7o1KJlb+7dSZC3xKrB+oAplLwWUfT6K+hbbqI2j7OBBiCu
+        YE0mr8GWwp3Jlmn1Q7omHaj4cw==
+X-Google-Smtp-Source: ABdhPJyFGfPZiEZAaPA05Oy9u/8YECmNenqKkrnMxPg4aIkaLDansk5+kyg8mkF5tPJf9KrUB0gUSQ==
+X-Received: by 2002:a5d:6987:: with SMTP id g7mr17998302wru.79.1592818896247;
+        Mon, 22 Jun 2020 02:41:36 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.23
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:24 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:35 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -93,9 +93,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 02/15] net: phy: arrange headers in mdio_device.c alphabetically
-Date:   Mon, 22 Jun 2020 11:37:31 +0200
-Message-Id: <20200622093744.13685-3-brgl@bgdev.pl>
+Subject: [PATCH 08/15] net: phy: check the PHY presence in get_phy_id()
+Date:   Mon, 22 Jun 2020 11:37:37 +0200
+Message-Id: <20200622093744.13685-9-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -108,34 +108,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Keeping the headers in alphabetical order is better for readability and
-allows to easily see if given header is already included.
+get_phy_id() is only called from get_phy_device() so the check for the
+0x1fffffff value can be pulled into the former. This way it'll be easier
+to remove get_phy_device() later on.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/mdio_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phy_device.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
-index c1d345c3cab3..f60443e48622 100644
---- a/drivers/net/phy/mdio_device.c
-+++ b/drivers/net/phy/mdio_device.c
-@@ -6,6 +6,7 @@
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 8037a9663a85..eccbf6aea63d 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -806,6 +806,10 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 	*phy_id |= phy_reg;
  
-+#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
-@@ -20,7 +21,6 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/unistd.h>
--#include <linux/delay.h>
++	/* If the phy_id is mostly Fs, there is no device there */
++	if ((*phy_id & 0x1fffffff) == 0x1fffffff)
++		return -ENODEV;
++
+ 	return 0;
+ }
  
- void mdio_device_free(struct mdio_device *mdiodev)
- {
+@@ -832,10 +836,6 @@ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
+ 	if (r)
+ 		return ERR_PTR(r);
+ 
+-	/* If the phy_id is mostly Fs, there is no device there */
+-	if ((phy_id & 0x1fffffff) == 0x1fffffff)
+-		return ERR_PTR(-ENODEV);
+-
+ 	return phy_device_create(bus, addr, phy_id, is_c45, &c45_ids);
+ }
+ EXPORT_SYMBOL(get_phy_device);
 -- 
 2.26.1
 
