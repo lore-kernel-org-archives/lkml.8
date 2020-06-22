@@ -2,145 +2,166 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBBBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E967C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF4F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6753A2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ILThu+fB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="anju6xJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbgFVVEO (ORCPT
+        id S1730544AbgFVVEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:04:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33992 "EHLO
+        Mon, 22 Jun 2020 17:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730493AbgFVVEI (ORCPT
+        with ESMTP id S1730418AbgFVVEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:04:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC3BC06179A
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:04:06 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id n2so8094533pld.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:04:06 -0700 (PDT)
+        Mon, 22 Jun 2020 17:04:43 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECFBFC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:04:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e4so20974405ljn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 14:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XaQAHgI/fJz5n4PH9+AAQxpUaFNfDOAFJjIvvuWc6mg=;
-        b=ILThu+fBeQLbDkY3Saa7Zr6fXvZla6p/mhaacfaAod5Ou2LCXGVY9rmI/SQ12/gRGw
-         0OyvuZwHPdhHMhqZNfaygaAuqkjJxQw9ecwhpY877rYeLJOYo7K1LFnWVKMlDLVDvRVU
-         aO7im+xhoBSS7Rfzh9EnHnbqHF0AGGKdOIZCs=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fYVGKPR2yU3JPe9oC0azgd3CTmHpa/y89mhXYHW9wOc=;
+        b=anju6xJ8xizXgJoCiTCnr62/0hAVWt3tpba4VyB6Uu9GK/quThrDtveIseHGA5X+Hx
+         MHhJEkugGqGAwkV9gvcFL823g5O30pgKXNXrG4xWoULSSZzNLLxOtI6FgXpRuA6sf8S2
+         XX2bzJ0RDkZCbbWp3CYgUrn64SoCpHtmwPCtIrBFS9D/7vKecrd68meKjXc2bmaRGm1A
+         yMglRixHcYUZGT9f0vSdR+PyagzF0x0vh4HwUk4N5ak+B0bz5n2os88+AM9Oe4Nhf0tN
+         zAzlI4J0w8zw1CvOFKRuACxatkqhNujZhqsHG6+FQPTjpxgkPTYC7MiWUx+anq6pESfq
+         l7hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XaQAHgI/fJz5n4PH9+AAQxpUaFNfDOAFJjIvvuWc6mg=;
-        b=bVzwEmMUldeHqca07cnM4H2tyiCUSmYozA7l2v1Sny2fIvz3tY3u1YO9XhVq3STPxl
-         BHCf6ahINr7r++NS0EVPE+dX7S8Y09tjeN1O0crvBpGlkj2IOFZi0xvPYhH/TLAqNPrq
-         EMO5E+FGmNT+svnOjj9o3e2u7ZHpmbxLRTTbGGWhwAbkOJ7u2v178ScUajt4RkJt3+xj
-         WPMe/OfnbxOCR7iHhZimhovaHXuHuXl39rNRISOZMGLkuIIFrVYgpEaAGVETMNVCMleF
-         xz/YXwKe2zwjfm4NCqLBddqJoPheLF3HWuL8oA0YvJdOBAcG6uH1Tblc4nLWroZb5/wZ
-         RCwQ==
-X-Gm-Message-State: AOAM531BXPudk9pwUWPm9R9GkNtL2ZlBaK+VwZaAF13SH5/iIWKwxTkm
-        lC6eVZSpVE6nDw9hLF8M2dqr0g==
-X-Google-Smtp-Source: ABdhPJxa2RKG+txMKUm/MEMBUFpa2Kv9XKoAQ0+Lw2FAoqT0JOWKLV1rtyBoAVQcAiWWStDNJ+p+nQ==
-X-Received: by 2002:a17:902:b942:: with SMTP id h2mr20581705pls.163.1592859846012;
-        Mon, 22 Jun 2020 14:04:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d2sm10586968pfc.1.2020.06.22.14.04.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 14:04:05 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 14:04:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2 04/16] b43: Remove uninitialized_var() usage
-Message-ID: <202006221403.EEAD37E94B@keescook>
-References: <20200620033007.1444705-1-keescook@chromium.org>
- <20200620033007.1444705-5-keescook@chromium.org>
- <CAKwvOdmsXuqx-3Rt_KNFq4psAeFjG2-7qQaqkJ7dDqqmscUFNw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fYVGKPR2yU3JPe9oC0azgd3CTmHpa/y89mhXYHW9wOc=;
+        b=T6xYnvh3DVwFvxEC76MTmlXfq0asd0rq3VFb00FjGWr1drGMxXojN9r2nhMnKkNlTI
+         FSfzNHX1kRlkd9PiIQ69+Nl9ej0YylslAibB7f25U9Z+ZMiv6uswdxYJCmVxw5y7bdEk
+         QUn+tNAbyxiqQGPtceW7yZpSy92qOrK8D7NNPJbWdPRiDYUeBGArzx8473nF+iE4ErU8
+         d9NJckt29sMHc+GMKhKziHTzYRAXZPcVudBvW1FJFeWhZnvzVIT4StyyDjnsrhByd8ye
+         TaH4B1nSksJSzi0LIw1qpNfroghbZSo8DkqoUDH8iIqJkCgCnBvtH9iRxIGzaOfLImVS
+         dROw==
+X-Gm-Message-State: AOAM532RadtjCay1sXCDj56rmnffX47jNGM4f9SL1ro7zDRK361LJ2X0
+        GdAKxtVzptGOn77SXHgxJWW6N2bARy77XnUsvptgQw==
+X-Google-Smtp-Source: ABdhPJz9bNAC+mLgBDdJqkEuTqKjqlvEz9k5KOq+isP5jeWorPFWcbqMRtUoB41EmAVXoOuyUixh03WTuQhHHbZe3n8=
+X-Received: by 2002:a2e:960b:: with SMTP id v11mr9655771ljh.77.1592859881138;
+ Mon, 22 Jun 2020 14:04:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmsXuqx-3Rt_KNFq4psAeFjG2-7qQaqkJ7dDqqmscUFNw@mail.gmail.com>
+References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-18-guro@fb.com>
+ <CALvZod5NCCpt2rkyXXr69OnVXb9ew7875vAV=iWZdqJhXcKEWQ@mail.gmail.com> <20200622203739.GD301338@carbon.dhcp.thefacebook.com>
+In-Reply-To: <20200622203739.GD301338@carbon.dhcp.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 22 Jun 2020 14:04:29 -0700
+Message-ID: <CALvZod5powO1Zph0+iO+=gtNb7=MQqfHwYkdb-+PkaVCGhuf=g@mail.gmail.com>
+Subject: Re: [PATCH v6 17/19] mm: memcg/slab: use a single set of kmem_caches
+ for all allocations
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 10:04:18AM -0700, Nick Desaulniers wrote:
-> On Fri, Jun 19, 2020 at 8:30 PM Kees Cook <keescook@chromium.org> wrote:
+On Mon, Jun 22, 2020 at 1:37 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Mon, Jun 22, 2020 at 12:21:28PM -0700, Shakeel Butt wrote:
+> > On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
+> > >
+> > > Instead of having two sets of kmem_caches: one for system-wide and
+> > > non-accounted allocations and the second one shared by all accounted
+> > > allocations, we can use just one.
+> > >
+> > > The idea is simple: space for obj_cgroup metadata can be allocated
+> > > on demand and filled only for accounted allocations.
+> > >
+> > > It allows to remove a bunch of code which is required to handle
+> > > kmem_cache clones for accounted allocations. There is no more need
+> > > to create them, accumulate statistics, propagate attributes, etc.
+> > > It's a quite significant simplification.
+> > >
+> > > Also, because the total number of slab_caches is reduced almost twice
+> > > (not all kmem_caches have a memcg clone), some additional memory
+> > > savings are expected. On my devvm it additionally saves about 3.5%
+> > > of slab memory.
+> > >
+> > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> > > ---
+> > [snip]
+> > >  static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
+> > >                                               struct obj_cgroup *objcg,
+> > > -                                             size_t size, void **p)
+> > > +                                             gfp_t flags, size_t size,
+> > > +                                             void **p)
+> > >  {
+> > >         struct page *page;
+> > >         unsigned long off;
+> > >         size_t i;
+> > >
+> > > +       if (!objcg)
+> > > +               return;
+> > > +
+> > > +       flags &= ~__GFP_ACCOUNT;
+> > >         for (i = 0; i < size; i++) {
+> > >                 if (likely(p[i])) {
+> > >                         page = virt_to_head_page(p[i]);
+> > > +
+> > > +                       if (!page_has_obj_cgroups(page) &&
 > >
-> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> > "unused variable"). If the compiler thinks it is uninitialized, either
-> > simply initialize the variable or make compiler changes. As a precursor
-> > to removing[2] this[3] macro[4], just initialize this variable to NULL.
-> > No later NULL deref is possible due to the early returns outside of the
-> > (phy->rev >= 7 && phy->rev < 19) case, which explicitly tests for NULL.
-> >
-> > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
-> >
-> > Fixes: 58619b14d106 ("b43: move under broadcom vendor directory")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> I see three total uses of uninitialized_var() in this file, do we want
-> to eliminate all of them?
+> > The page is already linked into the kmem_cache, don't you need
+> > synchronization for memcg_alloc_page_obj_cgroups().
+>
+> Hm, yes, in theory we need it. I guess the reason behind why I've never seen any issues
+> here is the SLUB percpu partial list.
+>
+> So in theory we need something like:
+>
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 0a31600a0f5c..44bf57815816 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -237,7 +237,10 @@ static inline int memcg_alloc_page_obj_cgroups(struct page *page,
+>         if (!vec)
+>                 return -ENOMEM;
+>
+> -       page->obj_cgroups = (struct obj_cgroup **) ((unsigned long)vec | 0x1UL);
+> +       if (cmpxchg(&page->obj_cgroups, 0,
+> +                   (struct obj_cgroup **) ((unsigned long)vec | 0x1UL)))
+> +               kfree(vec);
+> +
+>         return 0;
+>  }
+>
+>
+> But I wonder if we might put it under #ifdef CONFIG_SLAB?
+> Or any other ideas how to make it less expensive?
+>
+> > What's the reason to remove this from charge_slab_page()?
+>
+> Because at charge_slab_page() we don't know if we'll ever need
+> page->obj_cgroups. Some caches might have only few or even zero
+> accounted objects.
+>
 
-This is the only one that needed an explicit initialization -- all the
-others are handled in the treewide patch. I *could* split it out here,
-but I found it easier to keep the "no op" changes together in the
-treewide patch.
-
--Kees
-
-> 
-> > ---
-> >  drivers/net/wireless/broadcom/b43/phy_n.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
-> > index c33b4235839d..46db91846007 100644
-> > --- a/drivers/net/wireless/broadcom/b43/phy_n.c
-> > +++ b/drivers/net/wireless/broadcom/b43/phy_n.c
-> > @@ -4222,7 +4222,7 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
-> >         u32 rfpwr_offset;
-> >         u8 pga_gain, pad_gain;
-> >         int i;
-> > -       const s16 *uninitialized_var(rf_pwr_offset_table);
-> > +       const s16 *rf_pwr_offset_table = NULL;
-> >
-> >         table = b43_nphy_get_tx_gain_table(dev);
-> >         if (!table)
-> > --
-> 
-> -- 
-> Thanks,
-> ~Nick Desaulniers
-
--- 
-Kees Cook
+If slab_pre_alloc_hook() returns a non-NULL objcg then we definitely
+need page->obj_cgroups.  The charge_slab_page() happens between
+slab_pre_alloc_hook() & slab_post_alloc_hook(), so, we should be able
+to tell if page->obj_cgroups is needed.
