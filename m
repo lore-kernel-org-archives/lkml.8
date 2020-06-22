@@ -2,184 +2,96 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE37C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBFA23355
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E7D25302
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kcNK9B7k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwOE4Myf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbgFVAQ1 (ORCPT
+        id S1730957AbgFVAWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 20:16:27 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1216 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgFVAQ1 (ORCPT
+        Sun, 21 Jun 2020 20:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgFVAWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 20:16:27 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eeff82e0000>; Sun, 21 Jun 2020 17:15:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 21 Jun 2020 17:16:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 21 Jun 2020 17:16:26 -0700
-Received: from [10.2.167.171] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
- 2020 00:16:18 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Jason Gunthorpe" <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH 14/16] mm/thp: add THP allocation helper
-Date:   Sun, 21 Jun 2020 20:15:45 -0400
-X-Mailer: MailMate (1.13.1r5690)
-Message-ID: <9948121A-CA52-494F-9B68-6C0089E15057@nvidia.com>
-In-Reply-To: <20200619215649.32297-15-rcampbell@nvidia.com>
-References: <20200619215649.32297-1-rcampbell@nvidia.com>
- <20200619215649.32297-15-rcampbell@nvidia.com>
+        Sun, 21 Jun 2020 20:22:19 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6836CC061794;
+        Sun, 21 Jun 2020 17:22:18 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id w15so8548905lfe.11;
+        Sun, 21 Jun 2020 17:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0lg2uKJKReGcJ/SN0dspdmB6LnpVWoA9FveJXoHvwkY=;
+        b=mwOE4MyfbAS1tKiNvOT6CPPxIYnHmqKecesQNuBi3IZ0UFofg3RlE3bbVu9nrtV5kG
+         3EJE8YdXNXbObffPDwiAxYCUZOjsy+JpK6Lmx90Q1X3orgKUt8eXEFwygjhQ1cixJxdE
+         q9DcknfPWD/BhFpQRiYNf10lS1vkcBFs/uHAD1IBOpl3CzIoFkOXpU/MWc2TijgSpq65
+         jBSNwfZdxJvOz0oBISSJrSiQpHKoWlAAfLS7BQitRPIGY9n1DYlVPerrCT7WFjj5PXMW
+         7eyunCd1FbrofrszRt4FnU86IDdZoA8ytY0zZLUK6JXzuitOLNTJ9btYweKV81bd2Rzf
+         PGOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0lg2uKJKReGcJ/SN0dspdmB6LnpVWoA9FveJXoHvwkY=;
+        b=nL5WW26TRuO02ddNrPnnmuTVG+GCLEnHVPg5NcSf4Do/ScFikyRn0BGis3kb8jjPBx
+         RyOEZ7R59oQt9n+NBTeWY1jxKwFEeXLM1TyKmfiuU5mKDL05QK1q0L2NNcVGlRK7tZmZ
+         pWq5hcMFzeo1BhCfx27IGsFLbw/l2EqBNv9W6t821eXkjEGokTA23Ar2XUmU//rFQeLO
+         zvv5y+egz+zHJD5pxLEbLt4HELSFznm6iP5CgqLHXewUDaJ70xuLw//weWC91SBuTDe7
+         RL+6YOp1S8wL/fpOwHNIaFOleKq/XBCpQI895RTcz/W8tFLe96yVcUrSiJH50fC90Vbh
+         dpWQ==
+X-Gm-Message-State: AOAM531E663MpazRQRTuo3nsvG+g6xdb4tOjgLqHeJcTana4ftsC5Z6J
+        L6X9FZ9O16b0CpxMghv8cVGaoCbn4w6SDIAGtCA=
+X-Google-Smtp-Source: ABdhPJyUc+wlDsye7zDHRg9OmC1EKYoLXxqlS+dIOZ94ext3KQifTcuvkirB1xfQuxg8dCrh2qPrArxAeAT9VPppQd8=
+X-Received: by 2002:a19:b07:: with SMTP id 7mr8088813lfl.38.1592785336823;
+ Sun, 21 Jun 2020 17:22:16 -0700 (PDT)
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_4C36EFB0-847C-4A5D-A41C-B10AE0145101_=";
-        micalg=pgp-sha1; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592784942; bh=Lr8iQ6hREjxuIrrKajV9oQHe0CBRPThD6DDsvzRvG88=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=kcNK9B7kDcnIj5KTg2K7ZI3H/ITfv/fVhMe6LNHevMFvtR9mrnxySOqp8KItN6/zU
-         uPApsdYyrDEwN9Sdw+J33HBTV6bTaWPReJ7agzPv3XDX1T3jara8+nBSWZCN3Xs7W2
-         w26R03Vzir/ckhxS6NkSV4lYEZkuiT4PraqoF+zbtY2f8cnFY7xck3U/xS2wTQsoEZ
-         VGQ+i5dfa1qqKFIOZDjoZYuzcOi7z9Tk4SO2qk9YdVUMv5BKQgjNTYfecpvQMIL/kK
-         jJPBH28+w+yCFuzHuNrpJZ/vXnn6QNbuqrckX3VMU2Nebqjmp4mgfMcMgRZJfotG4G
-         rMSkddnkNVykw==
+References: <20200621213806.551879-1-konradybcio@gmail.com> <20200621213806.551879-5-konradybcio@gmail.com>
+In-Reply-To: <20200621213806.551879-5-konradybcio@gmail.com>
+From:   Alexey Minnekhanov <alexey.min@gmail.com>
+Date:   Mon, 22 Jun 2020 03:22:32 +0300
+Message-ID: <CANi4RBT=MDvN8PVKr19OjsX=LEAiN43JGPycnY1DTFw2qvYBkA@mail.gmail.com>
+Subject: Re: [PATCH 4/8] clk: qcom: smd: Add support for SDM660 rpm clocks
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_4C36EFB0-847C-4A5D-A41C-B10AE0145101_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I have almost identical patch in my working sdm660 kernel tree, maybe
+this can be counted as tested by?
 
-On 19 Jun 2020, at 17:56, Ralph Campbell wrote:
+Tested-by: Alexey Minnekhanov <alexey.min@gmail.com>
 
-> Transparent huge page allocation policy is controlled by several sysfs
-> variables. Rather than expose these to each device driver that needs to=
-
-> allocate THPs, provide a helper function.
+=D0=BF=D0=BD, 22 =D0=B8=D1=8E=D0=BD. 2020 =D0=B3. =D0=B2 00:40, Konrad Dybc=
+io <konradybcio@gmail.com>:
 >
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> Add rpm smd clocks, PMIC and bus clocks which are required on
+> SDM630/660 (and APQ variants) for clients to vote on.
+>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 > ---
->  include/linux/gfp.h | 10 ++++++++++
->  mm/huge_memory.c    | 16 ++++++++++++++++
->  2 files changed, 26 insertions(+)
->
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index 67a0774e080b..1c7d968a27d3 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -562,6 +562,16 @@ extern struct page *alloc_pages_vma(gfp_t gfp_mask=
-, int order,
->  	alloc_pages_vma(gfp_mask, 0, vma, addr, numa_node_id(), false)
->  #define alloc_page_vma_node(gfp_mask, vma, addr, node)		\
->  	alloc_pages_vma(gfp_mask, 0, vma, addr, node, false)
-> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-> +extern struct page *alloc_transhugepage(struct vm_area_struct *vma,
-> +					unsigned long addr);
-> +#else
-> +static inline struct page *alloc_transhugepage(struct vm_area_struct *=
-vma,
-> +						unsigned long addr)
-> +{
-> +	return NULL;
-> +}
-> +#endif
->
->  extern unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int ord=
-er);
->  extern unsigned long get_zeroed_page(gfp_t gfp_mask);
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 25d95f7b1e98..f749633ed350 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -775,6 +775,22 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fa=
-ult *vmf)
->  	return __do_huge_pmd_anonymous_page(vmf, page, gfp);
->  }
->
-> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-> +struct page *alloc_transhugepage(struct vm_area_struct *vma,
-> +				 unsigned long haddr)
-> +{
-> +	gfp_t gfp;
-> +	struct page *page;
-> +
-> +	gfp =3D alloc_hugepage_direct_gfpmask(vma);
-> +	page =3D alloc_hugepage_vma(gfp, vma, haddr, HPAGE_PMD_ORDER);
-> +	if (page)
-> +		prep_transhuge_page(page);
-> +	return page;
-> +}
-> +EXPORT_SYMBOL_GPL(alloc_transhugepage);
-> +#endif
-> +
->  static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long a=
-ddr,
->  		pmd_t *pmd, pfn_t pfn, pgprot_t prot, bool write,
->  		pgtable_t pgtable)
-> -- =
-
-> 2.20.1
-
-Why use CONFIG_ARCH_ENABLE_THP_MIGRATION to guard THP allocator helper?
-Shouldn=E2=80=99t CONFIG_TRANSPARENT_HUGEPAGE be used? Also the helper st=
-ill allocates
-a THP even if transparent_hugepage_enabled(vma) is false, which is wrong,=
- right?
-
-
---
-Best Regards,
-Yan Zi
-
---=_MailMate_4C36EFB0-847C-4A5D-A41C-B10AE0145101_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl7v+DEPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKQCQP/R4abSW0mnepE+hQxnoAry2FCsgoq4kfwbLS
-z61PThcPrmTTEvbT9kRmqtarVtKhK1u0NxFkzhBYEZA4jfrs9JOufIXWBdhEEI+L
-Lp0xXMwc4qEugDb2whgdiTWIWfwhDqzYExaaZMuWlpr2H9Uw+qEENzlBvTBnd2Xa
-4cj2nAipD6ggJ4qz/h7pt+2JTNKhNBirkfXqYjoXeWZpj/N0AfUs8IziaHyOwqxZ
-1p2KvBeqsOB5M67Mr6TVzOHh1EZEbN7VMRHbXEgw6mBt179v67IGmP129Xp/zzFh
-U0KDQiMGUh7rt8rScMpv9v9xbvTXA5Ztpe/ExGARRK9cmOWOr3UHK2fDLwl3WSTl
-IN7swIwEBTpKPSWpCEi0f4fiQOqOk9PuexRM6ZxI5W/GYPKR99Fn7cHEMjgESOw1
-fKCXPMXx95DDabWoRdMmTPEKkReI8k/RWSJhBq5mIUH8kHNilWgbPhUH/l7pbgMB
-W636ZixfVK0q7F95lwwU+fEH5BTfMwwk/usVT0ugRoTsiAFOFEZ3GXi6W8mmp8fo
-6oaOysR1M3K01IXl8RRlDrWqK3oPsv2MnNTH2adPCxKKXU8PSRgs9Zcc7d9EIIO1
-I7bnvmSZ7pTWK0RaHfv/yIbcfqpyyUt9wJy9kc83VXknBsOjJs9QtOBchjzpBWq1
-q2tbBUmt
-=CvYf
------END PGP SIGNATURE-----
-
---=_MailMate_4C36EFB0-847C-4A5D-A41C-B10AE0145101_=--
