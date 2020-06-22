@@ -2,84 +2,99 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F90C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE682075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pZSCdYsq"
+	by mail.kernel.org (Postfix) with ESMTP id C91A02075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592862420;
+	bh=XrZl/vVQWaiQPTxpVNlEe6VlmB1jEXGxRHg5FbzoxMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=neomDpCtHqaHd6nJg5QJwBttZxspdylZ5i3cHYRzZYSoq0lxVa5MRWjNiJH3ME5ti
+	 HJJxDgsVxdUpDGkpBVgoonH8JqkSF5G7lzoK8TD7UjU98ajEmlZjYZkWuKA3yfa4hv
+	 ejPGB8rU6el5nkoa1+Mf6OPHxsi+f346ZEla6exM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbgFVVq2 (ORCPT
+        id S1730756AbgFVVq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:46:28 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:34258 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730494AbgFVVq0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:46:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1592862376; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aSFfecEJZ2Br9jQI/s7igbpy7SV0eFCH93xlSkAnB1I=;
-        b=pZSCdYsq3KfcyqRF5UgqTA2x0HMJ29OH1l3ITs89cXYN1dORtxkfkTKoreOPGr886xYg0W
-        FBex0WdHxgL71F5kxQTQ1ikKVvrheb7huWVd4f+JB9n+q3k7dS/sMLgxsQmpPZxq5ctdZc
-        KjSDgeDQqztsO5bB9nmOzlvFBK3jNCo=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20Henrique?= <johnnyonflame@hotmail.com>
-Subject: [PATCH 2/2] pinctrl: ingenic: Properly detect GPIO direction when configured for IRQ
-Date:   Mon, 22 Jun 2020 23:45:48 +0200
-Message-Id: <20200622214548.265417-2-paul@crapouillou.net>
-In-Reply-To: <20200622214548.265417-1-paul@crapouillou.net>
-References: <20200622214548.265417-1-paul@crapouillou.net>
+        Mon, 22 Jun 2020 17:46:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730594AbgFVVq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:46:58 -0400
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFC2F2075A;
+        Mon, 22 Jun 2020 21:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592862417;
+        bh=XrZl/vVQWaiQPTxpVNlEe6VlmB1jEXGxRHg5FbzoxMA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JDnfB2iRafLkgHmRvlGUj0k+vNxNQMs1lY12U9FapM45OcfpQ76IL/Giv/l25E2FZ
+         RAhb0WYRnxr0zEXRKpZWhmF1JVEC31xtyGrpy44Q0hhtahRqygF5D6QZ0U7KHZvQrs
+         D6tgJV6OuXsqQ942GYVhLixo4yijI9jaQchrv59g=
+Date:   Mon, 22 Jun 2020 14:46:55 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net,
+        shawnguo@kernel.org, leoyang.li@nxp.com, madalin.bucur@oss.nxp.com,
+        ioana.ciornei@nxp.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 4/7] net: phy: add backplane kr driver
+ support
+Message-ID: <20200622144655.49ee2fe2@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
+References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
+        <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PAT1 register contains information about the IRQ type (edge/level)
-for input GPIOs with IRQ enabled, and the direction for non-IRQ GPIOs.
-So it makes sense to read it only if the GPIO has no interrupt
-configured, otherwise input GPIOs configured for level IRQs are
-misdetected as output GPIOs.
+On Mon, 22 Jun 2020 16:35:21 +0300 Florinel Iordache wrote:
+> Add support for backplane kr generic driver including link training
+> (ieee802.3ap/ba) and fixed equalization algorithm
+>=20
+> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 
-Cc: stable@vger.kernel.org
-Fixes: ebd6651418b6 ("pinctrl: ingenic: Implement .get_direction for GPIO chips")
-Reported-by: João Henrique <johnnyonflame@hotmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/pinctrl/pinctrl-ingenic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 241e563d5814..a8d1b53ec4c1 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1958,7 +1958,8 @@ static int ingenic_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- 	unsigned int pin = gc->base + offset;
- 
- 	if (jzpc->info->version >= ID_JZ4760) {
--		if (ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_PAT1))
-+		if (ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_INT) ||
-+		    ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_PAT1))
- 			return GPIO_LINE_DIRECTION_IN;
- 		return GPIO_LINE_DIRECTION_OUT;
- 	}
--- 
-2.27.0
-
+drivers/net/phy/backplane/backplane.c:60:11: warning: symbol 'backplane_com=
+mon_features_array' was not declared. Should it be static?
+drivers/net/phy/backplane/backplane.c:66:11: warning: symbol 'backplane_pro=
+tocol_features_array' was not declared. Should it be static?
+drivers/net/phy/backplane/backplane.c:1204:40: warning: incorrect type in a=
+ssignment (different address spaces)
+drivers/net/phy/backplane/backplane.c:1204:40:    expected void *[assigned]=
+ reg_base
+drivers/net/phy/backplane/backplane.c:1204:40:    got void [noderef] <asn:2=
+> *reg_base
+drivers/net/phy/backplane/backplane.c: In function =C3=A2=E2=82=AC=CB=9Cbp_=
+kr_state_machine=C3=A2=E2=82=AC=E2=84=A2:
+drivers/net/phy/backplane/backplane.c:590:27: warning: variable =C3=A2=E2=
+=82=AC=CB=9Cbpdev=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-se=
+t-variable]
+  590 |  struct backplane_device *bpdev;
+      |                           ^~~~~
+drivers/net/phy/backplane/link_training.c: In function =C3=A2=E2=82=AC=CB=
+=9Clt_train_remote_tx=C3=A2=E2=82=AC=E2=84=A2:
+drivers/net/phy/backplane/link_training.c:557:6: warning: variable =C3=A2=
+=E2=82=AC=CB=9Clp_resp_time=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunu=
+sed-but-set-variable]
+  557 |  u64 lp_resp_time;
+      |      ^~~~~~~~~~~~
+drivers/net/phy/backplane/link_training.c: In function =C3=A2=E2=82=AC=CB=
+=9Clt_train_local_tx=C3=A2=E2=82=AC=E2=84=A2:
+drivers/net/phy/backplane/link_training.c:1143:15: warning: variable =C3=A2=
+=E2=82=AC=CB=9Cold_ld_status=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wun=
+used-but-set-variable]
+ 1143 |  int request, old_ld_status;
+      |               ^~~~~~~~~~~~~
