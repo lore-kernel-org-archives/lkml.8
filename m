@@ -2,230 +2,181 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A95CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A97432073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022DF2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Om+hyYPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbgFVWDp (ORCPT
+        id S1730888AbgFVWEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:03:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54902 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgFVWDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:03:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9EB64AF26;
-        Mon, 22 Jun 2020 22:03:40 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id D27546048B; Tue, 23 Jun 2020 00:03:40 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 00:03:40 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Tom Herbert <therbert@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 2/3] net: ethtool: fix indentation of
- netdev_features_strings
-Message-ID: <20200622220340.hywpi56nhwv3i4qf@lion.mk-sys.cz>
-References: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
- <ly7E_Rx0k-iaWMNwqdEUSf-U09l0LjW_0X5jBA4OgSXbyinju_SjuPteXdKn6FRzainlp5tp-WQW9hvS-6CLx35x1CUD8VXXL_nK9QUTFBk=@pm.me>
+        Mon, 22 Jun 2020 18:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730736AbgFVWEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:04:44 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC36BC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:04:42 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d10so6282777pls.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tiLvWsLlWI5Mz8yJb26QV5MdQxD2Cn7z8TLlvShCGfU=;
+        b=Om+hyYPXJ8zWabYbc6j0NJhRsYt8jMK2RZ8VkZvizn/0iWwTmfV5CpCspe1f49JHQW
+         6gV2PbvOVcBmbS6Dkxhwac9tkJmvLeq9OhxwTB6IOmUuEIfpwzibKOjcJaaH8shijbHK
+         ngd3RTBVPCWAn6skAEgoIsGV4+tetMcj/rxhM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tiLvWsLlWI5Mz8yJb26QV5MdQxD2Cn7z8TLlvShCGfU=;
+        b=epbO8KT8LB9Q1IVhMLys4dOQWroGvQypxCgdqypUH3khLZMsdlzz3eDBEqouDVDGHt
+         MzuaEKkIZoarWVdTdp1jUYBI2OX+58uxbaFj05MuwHlcLsV/Wm/J9BufLUNyo58Jc3+R
+         gkzUDcNQ8bds/HohtziI7bxS7gLuGiQzWY8pSfJmBdV0mmapU0w4ojM7FKyDvYHbNl7o
+         giXAvpcB3CFU6vuFz32e4+U1Qzzf/sKe8+zW6TOGZcwzGmRLtoEvpmdYYYLnhN6wC/BE
+         UWpxpIIj+4Js6NUHfxafDtReIdcEydJWZKu49C7o/4XXo31G5ZC/gnNmKWEWgEaHfQoH
+         SRDg==
+X-Gm-Message-State: AOAM531jfxxKOgrNN/npt8R3ZbpPDLks5zGNT/OlitmGflITt0Wt9EsJ
+        rFSTozeEhF0M4Z5wxt05aFYVpg==
+X-Google-Smtp-Source: ABdhPJzYYstfMbj2bKl5qg6BjBnX7jxPh+vFVKET3pf6cfx1vakKGSEBc4Spw9TWrQtmJz0BX3mj8Q==
+X-Received: by 2002:a17:902:8342:: with SMTP id z2mr21209390pln.300.1592863482442;
+        Mon, 22 Jun 2020 15:04:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n8sm12462000pgi.18.2020.06.22.15.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 15:04:41 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 15:04:40 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
+ each syscall
+Message-ID: <202006221451.2E80C90FF7@keescook>
+References: <20200622193146.2985288-1-keescook@chromium.org>
+ <20200622193146.2985288-4-keescook@chromium.org>
+ <CAG48ez0pRtMZs3Hc3R2+XGHRwt9nZAGZu6vDpPBMbE+Askr_+Q@mail.gmail.com>
+ <202006221426.CEEE0B8@keescook>
+ <CAG48ez1b_wMkQGj+z=dWSVctikzzw72V3SPexEPm3Aw8LrXGWQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4x2w6jrx7shqjepr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ly7E_Rx0k-iaWMNwqdEUSf-U09l0LjW_0X5jBA4OgSXbyinju_SjuPteXdKn6FRzainlp5tp-WQW9hvS-6CLx35x1CUD8VXXL_nK9QUTFBk=@pm.me>
+In-Reply-To: <CAG48ez1b_wMkQGj+z=dWSVctikzzw72V3SPexEPm3Aw8LrXGWQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 22, 2020 at 11:42:29PM +0200, Jann Horn wrote:
+> No, at least on x86-64 and x86 Linux overrides the normal ABI. From
+> arch/x86/Makefile:
 
---4x2w6jrx7shqjepr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah! Thanks for the pointer.
 
-On Fri, Jun 19, 2020 at 06:50:06PM +0000, Alexander Lobakin wrote:
-> The current indentation is an absolute mess of tabs, spaces and their
-> mixes in different proportions. Convert it all to plain tabs and move
-> assignment operation char to the right, which is the most commonly
-> used style in Linux code.
->=20
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+> 
+> # For gcc stack alignment is specified with -mpreferred-stack-boundary,
+> # clang has the option -mstack-alignment for that purpose.
+> ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+>       cc_stack_align4 := -mpreferred-stack-boundary=2
+>       cc_stack_align8 := -mpreferred-stack-boundary=3
+> else ifneq ($(call cc-option, -mstack-alignment=16),)
+>       cc_stack_align4 := -mstack-alignment=4
+>       cc_stack_align8 := -mstack-alignment=8
+> endif
+> [...]
+> ifeq ($(CONFIG_X86_32),y)
+> [...]
+>         # Align the stack to the register width instead of using the default
+>         # alignment of 16 bytes. This reduces stack usage and the number of
+>         # alignment instructions.
+>         KBUILD_CFLAGS += $(call cc-option,$(cc_stack_align4))
+> [...]
+> else
+> [...]
+>         # By default gcc and clang use a stack alignment of 16 bytes for x86.
+>         # However the standard kernel entry on x86-64 leaves the stack on an
+>         # 8-byte boundary. If the compiler isn't informed about the actual
+>         # alignment it will generate extra alignment instructions for the
+>         # default alignment which keep the stack *mis*aligned.
+>         # Furthermore an alignment to the register width reduces stack usage
+>         # and the number of alignment instructions.
+>         KBUILD_CFLAGS += $(call cc-option,$(cc_stack_align8))
+> [...]
+> endif
 
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+And it seems that only x86 does this. No other architecture specifies
+-mpreferred-stack-boundary...
 
-But this is a pure cleanup so it should rather go to net-next.
+> Normal x86-64 ABI has 16-byte stack alignment; Linux kernel x86-64 ABI
+> has 8-byte stack alignment.
+> Similarly, the normal Linux 32-bit x86 ABI is 16-byte aligned;
+> meanwhile Linux kernel x86 ABI has 4-byte stack alignment.
+> 
+> This is because userspace code wants the stack to be sufficiently
+> aligned for fancy SSE instructions and such; the kernel, on the other
+> hand, never uses those in normal code, and cares about stack usage and
+> such very much.
 
-Michal
+This makes it nicer for Clang:
 
-> ---
->  net/ethtool/common.c | 120 +++++++++++++++++++++----------------------
->  1 file changed, 60 insertions(+), 60 deletions(-)
->=20
-> diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-> index aaecfc916a4d..c8e3fce6e48d 100644
-> --- a/net/ethtool/common.c
-> +++ b/net/ethtool/common.c
-> @@ -6,66 +6,66 @@
->  #include "common.h"
-> =20
->  const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN=
-] =3D {
-> -	[NETIF_F_SG_BIT] =3D               "tx-scatter-gather",
-> -	[NETIF_F_IP_CSUM_BIT] =3D          "tx-checksum-ipv4",
-> -	[NETIF_F_HW_CSUM_BIT] =3D          "tx-checksum-ip-generic",
-> -	[NETIF_F_IPV6_CSUM_BIT] =3D        "tx-checksum-ipv6",
-> -	[NETIF_F_HIGHDMA_BIT] =3D          "highdma",
-> -	[NETIF_F_FRAGLIST_BIT] =3D         "tx-scatter-gather-fraglist",
-> -	[NETIF_F_HW_VLAN_CTAG_TX_BIT] =3D  "tx-vlan-hw-insert",
-> -
-> -	[NETIF_F_HW_VLAN_CTAG_RX_BIT] =3D  "rx-vlan-hw-parse",
-> -	[NETIF_F_HW_VLAN_CTAG_FILTER_BIT] =3D "rx-vlan-filter",
-> -	[NETIF_F_HW_VLAN_STAG_TX_BIT] =3D  "tx-vlan-stag-hw-insert",
-> -	[NETIF_F_HW_VLAN_STAG_RX_BIT] =3D  "rx-vlan-stag-hw-parse",
-> -	[NETIF_F_HW_VLAN_STAG_FILTER_BIT] =3D "rx-vlan-stag-filter",
-> -	[NETIF_F_VLAN_CHALLENGED_BIT] =3D  "vlan-challenged",
-> -	[NETIF_F_GSO_BIT] =3D              "tx-generic-segmentation",
-> -	[NETIF_F_LLTX_BIT] =3D             "tx-lockless",
-> -	[NETIF_F_NETNS_LOCAL_BIT] =3D      "netns-local",
-> -	[NETIF_F_GRO_BIT] =3D              "rx-gro",
-> -	[NETIF_F_GRO_HW_BIT] =3D           "rx-gro-hw",
-> -	[NETIF_F_LRO_BIT] =3D              "rx-lro",
-> -
-> -	[NETIF_F_TSO_BIT] =3D              "tx-tcp-segmentation",
-> -	[NETIF_F_GSO_ROBUST_BIT] =3D       "tx-gso-robust",
-> -	[NETIF_F_TSO_ECN_BIT] =3D          "tx-tcp-ecn-segmentation",
-> -	[NETIF_F_TSO_MANGLEID_BIT] =3D	 "tx-tcp-mangleid-segmentation",
-> -	[NETIF_F_TSO6_BIT] =3D             "tx-tcp6-segmentation",
-> -	[NETIF_F_FSO_BIT] =3D              "tx-fcoe-segmentation",
-> -	[NETIF_F_GSO_GRE_BIT] =3D		 "tx-gre-segmentation",
-> -	[NETIF_F_GSO_GRE_CSUM_BIT] =3D	 "tx-gre-csum-segmentation",
-> -	[NETIF_F_GSO_IPXIP4_BIT] =3D	 "tx-ipxip4-segmentation",
-> -	[NETIF_F_GSO_IPXIP6_BIT] =3D	 "tx-ipxip6-segmentation",
-> -	[NETIF_F_GSO_UDP_TUNNEL_BIT] =3D	 "tx-udp_tnl-segmentation",
-> -	[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT] =3D "tx-udp_tnl-csum-segmentation",
-> -	[NETIF_F_GSO_PARTIAL_BIT] =3D	 "tx-gso-partial",
-> -	[NETIF_F_GSO_TUNNEL_REMCSUM_BIT] =3D "tx-tunnel-remcsum-segmentation",
-> -	[NETIF_F_GSO_SCTP_BIT] =3D	 "tx-sctp-segmentation",
-> -	[NETIF_F_GSO_ESP_BIT] =3D		 "tx-esp-segmentation",
-> -	[NETIF_F_GSO_UDP_L4_BIT] =3D	 "tx-udp-segmentation",
-> -	[NETIF_F_GSO_FRAGLIST_BIT] =3D	 "tx-gso-list",
-> -
-> -	[NETIF_F_FCOE_CRC_BIT] =3D         "tx-checksum-fcoe-crc",
-> -	[NETIF_F_SCTP_CRC_BIT] =3D        "tx-checksum-sctp",
-> -	[NETIF_F_FCOE_MTU_BIT] =3D         "fcoe-mtu",
-> -	[NETIF_F_NTUPLE_BIT] =3D           "rx-ntuple-filter",
-> -	[NETIF_F_RXHASH_BIT] =3D           "rx-hashing",
-> -	[NETIF_F_RXCSUM_BIT] =3D           "rx-checksum",
-> -	[NETIF_F_NOCACHE_COPY_BIT] =3D     "tx-nocache-copy",
-> -	[NETIF_F_LOOPBACK_BIT] =3D         "loopback",
-> -	[NETIF_F_RXFCS_BIT] =3D            "rx-fcs",
-> -	[NETIF_F_RXALL_BIT] =3D            "rx-all",
-> -	[NETIF_F_HW_L2FW_DOFFLOAD_BIT] =3D "l2-fwd-offload",
-> -	[NETIF_F_HW_TC_BIT] =3D		 "hw-tc-offload",
-> -	[NETIF_F_HW_ESP_BIT] =3D		 "esp-hw-offload",
-> -	[NETIF_F_HW_ESP_TX_CSUM_BIT] =3D	 "esp-tx-csum-hw-offload",
-> -	[NETIF_F_RX_UDP_TUNNEL_PORT_BIT] =3D	 "rx-udp_tunnel-port-offload",
-> -	[NETIF_F_HW_TLS_RECORD_BIT] =3D	"tls-hw-record",
-> -	[NETIF_F_HW_TLS_TX_BIT] =3D	 "tls-hw-tx-offload",
-> -	[NETIF_F_HW_TLS_RX_BIT] =3D	 "tls-hw-rx-offload",
-> -	[NETIF_F_GRO_FRAGLIST_BIT] =3D	 "rx-gro-list",
-> -	[NETIF_F_HW_MACSEC_BIT] =3D	 "macsec-hw-offload",
-> +	[NETIF_F_SG_BIT]			=3D "tx-scatter-gather",
-> +	[NETIF_F_IP_CSUM_BIT]			=3D "tx-checksum-ipv4",
-> +	[NETIF_F_HW_CSUM_BIT]			=3D "tx-checksum-ip-generic",
-> +	[NETIF_F_IPV6_CSUM_BIT]			=3D "tx-checksum-ipv6",
-> +	[NETIF_F_HIGHDMA_BIT]			=3D "highdma",
-> +	[NETIF_F_FRAGLIST_BIT]			=3D "tx-scatter-gather-fraglist",
-> +	[NETIF_F_HW_VLAN_CTAG_TX_BIT]		=3D "tx-vlan-hw-insert",
-> +
-> +	[NETIF_F_HW_VLAN_CTAG_RX_BIT]		=3D "rx-vlan-hw-parse",
-> +	[NETIF_F_HW_VLAN_CTAG_FILTER_BIT]	=3D "rx-vlan-filter",
-> +	[NETIF_F_HW_VLAN_STAG_TX_BIT]		=3D "tx-vlan-stag-hw-insert",
-> +	[NETIF_F_HW_VLAN_STAG_RX_BIT]		=3D "rx-vlan-stag-hw-parse",
-> +	[NETIF_F_HW_VLAN_STAG_FILTER_BIT]	=3D "rx-vlan-stag-filter",
-> +	[NETIF_F_VLAN_CHALLENGED_BIT]		=3D "vlan-challenged",
-> +	[NETIF_F_GSO_BIT]			=3D "tx-generic-segmentation",
-> +	[NETIF_F_LLTX_BIT]			=3D "tx-lockless",
-> +	[NETIF_F_NETNS_LOCAL_BIT]		=3D "netns-local",
-> +	[NETIF_F_GRO_BIT]			=3D "rx-gro",
-> +	[NETIF_F_GRO_HW_BIT]			=3D "rx-gro-hw",
-> +	[NETIF_F_LRO_BIT]			=3D "rx-lro",
-> +
-> +	[NETIF_F_TSO_BIT]			=3D "tx-tcp-segmentation",
-> +	[NETIF_F_GSO_ROBUST_BIT]		=3D "tx-gso-robust",
-> +	[NETIF_F_TSO_ECN_BIT]			=3D "tx-tcp-ecn-segmentation",
-> +	[NETIF_F_TSO_MANGLEID_BIT]		=3D "tx-tcp-mangleid-segmentation",
-> +	[NETIF_F_TSO6_BIT]			=3D "tx-tcp6-segmentation",
-> +	[NETIF_F_FSO_BIT]			=3D "tx-fcoe-segmentation",
-> +	[NETIF_F_GSO_GRE_BIT]			=3D "tx-gre-segmentation",
-> +	[NETIF_F_GSO_GRE_CSUM_BIT]		=3D "tx-gre-csum-segmentation",
-> +	[NETIF_F_GSO_IPXIP4_BIT]		=3D "tx-ipxip4-segmentation",
-> +	[NETIF_F_GSO_IPXIP6_BIT]		=3D "tx-ipxip6-segmentation",
-> +	[NETIF_F_GSO_UDP_TUNNEL_BIT]		=3D "tx-udp_tnl-segmentation",
-> +	[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT]	=3D "tx-udp_tnl-csum-segmentation",
-> +	[NETIF_F_GSO_PARTIAL_BIT]		=3D "tx-gso-partial",
-> +	[NETIF_F_GSO_TUNNEL_REMCSUM_BIT]	=3D "tx-tunnel-remcsum-segmentation",
-> +	[NETIF_F_GSO_SCTP_BIT]			=3D "tx-sctp-segmentation",
-> +	[NETIF_F_GSO_ESP_BIT]			=3D "tx-esp-segmentation",
-> +	[NETIF_F_GSO_UDP_L4_BIT]		=3D "tx-udp-segmentation",
-> +	[NETIF_F_GSO_FRAGLIST_BIT]		=3D "tx-gso-list",
-> +
-> +	[NETIF_F_FCOE_CRC_BIT]			=3D "tx-checksum-fcoe-crc",
-> +	[NETIF_F_SCTP_CRC_BIT]			=3D "tx-checksum-sctp",
-> +	[NETIF_F_FCOE_MTU_BIT]			=3D "fcoe-mtu",
-> +	[NETIF_F_NTUPLE_BIT]			=3D "rx-ntuple-filter",
-> +	[NETIF_F_RXHASH_BIT]			=3D "rx-hashing",
-> +	[NETIF_F_RXCSUM_BIT]			=3D "rx-checksum",
-> +	[NETIF_F_NOCACHE_COPY_BIT]		=3D "tx-nocache-copy",
-> +	[NETIF_F_LOOPBACK_BIT]			=3D "loopback",
-> +	[NETIF_F_RXFCS_BIT]			=3D "rx-fcs",
-> +	[NETIF_F_RXALL_BIT]			=3D "rx-all",
-> +	[NETIF_F_HW_L2FW_DOFFLOAD_BIT]		=3D "l2-fwd-offload",
-> +	[NETIF_F_HW_TC_BIT]			=3D "hw-tc-offload",
-> +	[NETIF_F_HW_ESP_BIT]			=3D "esp-hw-offload",
-> +	[NETIF_F_HW_ESP_TX_CSUM_BIT]		=3D "esp-tx-csum-hw-offload",
-> +	[NETIF_F_RX_UDP_TUNNEL_PORT_BIT]	=3D "rx-udp_tunnel-port-offload",
-> +	[NETIF_F_HW_TLS_RECORD_BIT]		=3D "tls-hw-record",
-> +	[NETIF_F_HW_TLS_TX_BIT]			=3D "tls-hw-tx-offload",
-> +	[NETIF_F_HW_TLS_RX_BIT]			=3D "tls-hw-rx-offload",
-> +	[NETIF_F_GRO_FRAGLIST_BIT]		=3D "rx-gro-list",
-> +	[NETIF_F_HW_MACSEC_BIT]			=3D "macsec-hw-offload",
->  };
-> =20
->  const char
-> --=20
-> 2.27.0
->=20
->=20
 
---4x2w6jrx7shqjepr
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+index 1df0dc52cadc..f7e1f68fb50c 100644
+--- a/include/linux/randomize_kstack.h
++++ b/include/linux/randomize_kstack.h
+@@ -10,6 +10,14 @@ DECLARE_STATIC_KEY_MAYBE(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
+ 			 randomize_kstack_offset);
+ DECLARE_PER_CPU(u32, kstack_offset);
+ 
++#ifdef CONFIG_X86_64
++#define ARCH_STACK_ALIGN_MASK	~((1 << 8) - 1)
++#elif defined(CONFIG_X86_32)
++#define ARCH_STACK_ALIGN_MASK	~((1 << 4) - 1)
++#else
++#define ARCH_STACK_ALIGN_MASK	~(0)
++#endif
++
+ /*
+  * Do not use this anywhere else in the kernel. This is used here because
+  * it provides an arch-agnostic way to grow the stack with correct
+@@ -23,7 +31,8 @@ void *__builtin_alloca(size_t size);
+ 	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+ 				&randomize_kstack_offset)) {		\
+ 		u32 offset = this_cpu_read(kstack_offset);		\
+-		u8 *ptr = __builtin_alloca(offset & 0x3FF);		\
++		u8 *ptr = __builtin_alloca(offset & 0x3FF &		\
++					   ARCH_STACK_ALIGN_MASK);	\
+ 		asm volatile("" : "=m"(*ptr));				\
+ 	}								\
+ } while (0)
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7xKrwACgkQ538sG/LR
-dpWzDQgAteEmu3FwOKdJCn4Rm1bWRqhYTMmzqIehGYU4JZv8GS7DZbDJLX72HX6R
-SW+Z02s/kuxgWLQVCHI4K0FJ96EepCkmF4FsK02f5CtUvNXtzoz8rUzQKASR5Bh1
-gkR34+M25Gf8lxY2002wrPd7EDRqSBA6dEM9A7XUM9gwHK6DCC3UpkVN5Jio1jrf
-qriLcfjhjLAthYf8dW7Sp2WpGhUWfpWVL3oP9s2zJ2gc7rDb4woEGaehsTOLOM+h
-eXzDC2XPqE6E8mbAsofsUuejrHRh47jIogUz/dTDfa4pnEO1lEcmP64hyTQ3fuI1
-HE7WOjiObopMkrKV2b7+LyAwJLkGuw==
-=TprI
------END PGP SIGNATURE-----
+But I don't like open-coding the x86-ony stack alignment... it should be
+in Kconfig or something, I think?
 
---4x2w6jrx7shqjepr--
+-- 
+Kees Cook
