@@ -2,166 +2,292 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E723C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C7420732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673B420732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="JCWLxAZF";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ANt+EFi3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wm31U41Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbgFVRkx (ORCPT
+        id S1730125AbgFVRlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:40:53 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36250 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729605AbgFVRkw (ORCPT
+        Mon, 22 Jun 2020 13:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729886AbgFVRlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:40:52 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MHV7KE025002;
-        Mon, 22 Jun 2020 10:40:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=gpOPgXPEyw/BZJtqeDdJpa4uA52MwIS5LfpzSdOWJbA=;
- b=JCWLxAZFK8ByTIt+ZqKEYVvoEduT1Kpe1/ZOU3TjUosrX7Ogean0GNJlxygsuxOcImIh
- 70BK5/ncHbKPxO6Zh6hbXOi3KCedawEAtJh8OnxFrsRu+4L2Icys1HsgzbfWUmRVCqfk
- OVTZCuHj6Q0fdI5LcRm5t/Nav8HQNJLgrPs= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31t25bpn8m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 22 Jun 2020 10:40:40 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 22 Jun 2020 10:40:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZsrJsyJbE1Zfl2Ecc8p8M42wyJea3jLVPk7G7cdOzJCNVB7wqF+Xw77JkV+iVtDmR8Qgu4aBFpV4GRfxcGnm5Rgm2qQTdmKNCQpekwZmiFJ2nCju8tpEzLH5FCQXy3ln2TbTRojGyts+dD1r090PrBYNZKBLB3HrB0jMfeZxPEMOCPGG+37/0SvMDimtZd4VM87oaok6XzDSqG94iaX/3H1UOKdqmY6P5bfA5S6cRm7xkc1jBpOZaPlqfpHXyS9WyxYyk+KurnW7X2udBWjWr0dqJ0tggwoPj/+GJ6WjSgfUHUG95adnv4q2qxPTLpCslPKz2v4JqDEhLkcRpW0gUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gpOPgXPEyw/BZJtqeDdJpa4uA52MwIS5LfpzSdOWJbA=;
- b=NrtPBAGAXauDGOZ7Ab2daL5/GJkfpLfMPtEaIdCykIAQyhCjG9eVO0joBpLqumTFxy3sSdGyCV8BqSToIz7glLauq1YKxsKxcZq/8yZh0YintBKJ1dJVeOVpskL9j20kX8T4Wp+8sOLy1BeWLq7heGQABGWj839sYK1UadfYVAzSz8/Nklcf2nmuXkRrqPudAvj/x0heeFWSZKqeOezFgcsW3gCQPGxCa8g3bCwrXITRdcqecR9SEu6wyrWJv+jje+Cr9IGnm0/tv3Z1TflHrawauAuwJ0hOFKrCaCtCKzTWnYxczB/wYgbB+cD/pzPJEIFQONYldllWrnR3l81LEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gpOPgXPEyw/BZJtqeDdJpa4uA52MwIS5LfpzSdOWJbA=;
- b=ANt+EFi393QOlbuBdIhjWfrVAlS7R3AXR+1WaQz+PkrAzwecvX7j/vufu71X7O+OfTyUbSjNMfa9xn/a3Vb6QJXSvK+8DbKaQhw6aa8HoK46/HTv//qMewOoALFV237NtkTKoKPpHrNW6/4mvlol8pytt5oK3JGAffKxLOg9NQo=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2663.namprd15.prod.outlook.com (2603:10b6:a03:15c::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Mon, 22 Jun
- 2020 17:40:38 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 17:40:38 +0000
-Date:   Mon, 22 Jun 2020 10:40:35 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 13/19] mm: memcg/slab: simplify memcg cache creation
-Message-ID: <20200622174035.GA301338@carbon.dhcp.thefacebook.com>
-References: <20200608230654.828134-1-guro@fb.com>
- <20200608230654.828134-14-guro@fb.com>
- <CALvZod50rUqhknV50zwvm4sLxdP=OWCLqFRKPPO_8Pff_v4EOg@mail.gmail.com>
+        Mon, 22 Jun 2020 13:41:36 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8CDC061796
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:41:35 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id d4so13757096otk.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dp8vvD2CI6znDHHfd68Sf9CL9jtb/dkv5bravtbMg7A=;
+        b=Wm31U41Y8LtB0XivKMN8OXczcrfTJ+xdbLxBxhT6nCXCHdV2c3QkPn8neJ5NSYfXlZ
+         igvQSF8PjyoQ2Dq3PyQpGsyrGftMb40MlpdsiWJ8PTC+nSayXqDhervGxUet+8hk1eqf
+         rEwrHjbbetFFr05CU4r57mPUTFJVo2HeXjCl4tz7I8ct3v7ybioFhg/IbqoXv1/990yT
+         UVHl1EQaflUDsNMO640JWPcSxuzm5ZLYsUkU9Jo5RamkrF4DjRjD1MzZS2T9VYVBcL/W
+         gFxu+1/c/jjfx5CL2TM4Cl2p9MQhOxYM5x1b+USeGyEl+Wp50VjhBkYfnQvUmLd+8X3F
+         llHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dp8vvD2CI6znDHHfd68Sf9CL9jtb/dkv5bravtbMg7A=;
+        b=Ny7HIvTnWhlnyFWBAUg3+SpXuyLgG+dceenwR1bBiQ7EyrCKCLVmV+2IE1cysP0UlE
+         /nrcOVE4dH6sOxTYhl0bwD9mzdBCc/Skp1ssNI4t+ZOuGza6rtOuoZZu7I2ALm83umT6
+         gym4fWnwTfIpw50EdBFGmHYoEe2AIRGoBoC+qtniH2fKmo4QhwKZLAubklDxoccgdwtI
+         qqSho5ftpivx3XQJjw8uxGuXhuUKJtUv1iWdOYOj1IxdwBZIaQuyvku4RXjAxuSQBrcY
+         euAilsb99t7W5L+xbYgzzGDnwM3TDAl59qvZZB1l8yF4B+Z49udGiXe2B0uEX8HcGbUC
+         UP1g==
+X-Gm-Message-State: AOAM5333RkfL/9JfOKyq+Z5iTNwMAowK3muqk3OIEI87ixk38FS/43Vf
+        bHEc1NYoV1OIyv7bSA47f+GGDA==
+X-Google-Smtp-Source: ABdhPJxU47N0XE/3K90NJgWY/Y5EeYU97hoLQGnqSmlFe+zILC8u6n0gXCC/3WKOYcliNydMfKml3g==
+X-Received: by 2002:a05:6830:2004:: with SMTP id e4mr15096660otp.85.1592847693553;
+        Mon, 22 Jun 2020 10:41:33 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j2sm3420573otk.61.2020.06.22.10.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 10:41:32 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 10:38:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] clk: qcom: gcc-msm8994: Add missing clocks,
+ resets and GDSCs
+Message-ID: <20200622173848.GF2421@builder.lan>
+References: <20200622091843.57589-1-konradybcio@gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALvZod50rUqhknV50zwvm4sLxdP=OWCLqFRKPPO_8Pff_v4EOg@mail.gmail.com>
-X-ClientProxiedBy: BYAPR05CA0022.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::35) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:88b0) by BYAPR05CA0022.namprd05.prod.outlook.com (2603:10b6:a03:c0::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.12 via Frontend Transport; Mon, 22 Jun 2020 17:40:37 +0000
-X-Originating-IP: [2620:10d:c090:400::5:88b0]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9d4eb1ff-6db4-48fe-6885-08d816d36000
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2663:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB26633F13E0ADD0023C602E04BE970@BYAPR15MB2663.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0442E569BC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tFkMQt0HEDK+b0WO9ORjbnUICzagAotaPaGe5JQBdrHAJvYaFDVJmL0Oa2+FZ4VIYeLq2O2uDd2NwmghFeOh4LNf4d4Yuwe8hWajTf3YVZmXe4lCNViPm5MRC9Dyo/iqjbsEMUXOGtVTkIveNW00knyfhc07v1YB0kR0bMW4wVu9s8UfLyjWxrdhBJGVepXwCSJiGX8152wX3tsaubzDIhpf+1kSkOX1F5eRmoJO2CAsObfVhcEH8YoRvYOcZ/v0EgbefmnB7qAouiXeOIkshUU7iLh48aTPggs+gECr4MBATjGEZyQdwwE55tpim+LQ2LSCviIF60SmKw62qlzjVA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(39860400002)(136003)(366004)(376002)(6506007)(16526019)(186003)(66946007)(33656002)(316002)(5660300002)(66556008)(66476007)(9686003)(4326008)(53546011)(8676002)(2906002)(54906003)(1076003)(8936002)(7696005)(86362001)(478600001)(6916009)(52116002)(55016002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 2TEDoa6fMoEhrBVN2AyEsphwrcIBvWvm6dSnNMipcVetdPpS3tRmC6DYqdAzRs79/kfqvT1Lt6ovKUvQHsyZCyM/RkNY60yEc6g5QChHE3dQdxleWYFbttPqWpnCYxjiZi/QgqmSgL1ERZedjypWR3k3MOjDk2JhudNsqST4k6S1wx+FtB2Wvms7lwQE2CE/XDCKtLMeoK6g+VCMNjOfIlsHEaIxdeqi/RgbAzeC1tJT1Ti/M0UZaCsR5unhMOpShM8moPQz40x3D2HZioViCMrzMaYQlsYnD5/s+RTA1N7FZWH8OwiYTLlwEf/JJ8U43WiEv658LwWUD+pRM47kYwjx7mNcw/oSe7QNO/rlM0Gz1WlYae2zETYF0JjdIHIoIxYDXFIVLITkPqR3YKE5ZjyhCwo9HlaG9u18MTdr9nueo7mo1QsZ8LAGyFl/6VMWYV4FyvDa0rh7+k9DKzYanIFxfNzict4yceA2ZtCSI4Sp42KDuGa7MbaW3yg+I9Y55az2E0papSxj8OHVpIwOKg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d4eb1ff-6db4-48fe-6885-08d816d36000
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 17:40:37.9541
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2zE08TBv16eFN7rpR0fJmrRYE5L3lE46xvkdwPKqg65PYups9eLHWND7McuXI0/P
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2663
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_10:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
- phishscore=0 impostorscore=0 cotscore=-2147483648 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 adultscore=0 suspectscore=1
- mlxscore=0 malwarescore=0 priorityscore=1501 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006220121
-X-FB-Internal: deliver
+In-Reply-To: <20200622091843.57589-1-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 10:29:29AM -0700, Shakeel Butt wrote:
-> On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > Because the number of non-root kmem_caches doesn't depend on the
-> > number of memory cgroups anymore and is generally not very big,
-> > there is no more need for a dedicated workqueue.
-> >
-> > Also, as there is no more need to pass any arguments to the
-> > memcg_create_kmem_cache() except the root kmem_cache, it's
-> > possible to just embed the work structure into the kmem_cache
-> > and avoid the dynamic allocation of the work structure.
-> >
-> > This will also simplify the synchronization: for each root kmem_cache
-> > there is only one work. So there will be no more concurrent attempts
-> > to create a non-root kmem_cache for a root kmem_cache: the second and
-> > all following attempts to queue the work will fail.
-> >
-> >
-> > On the kmem_cache destruction path there is no more need to call the
-> > expensive flush_workqueue() and wait for all pending works to be
-> > finished. Instead, cancel_work_sync() can be used to cancel/wait for
-> > only one work.
-> >
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+On Mon 22 Jun 02:18 PDT 2020, Konrad Dybcio wrote:
+
+> changes since v1:
+> - refrain from reordering defines in the header
+
+The changelog goes after '---' below.
+
 > 
-> Why not pre-allocate the non-root kmem_cache at the kmem_cache
-> creation time? No need for work_struct, queue_work() or
-> cancel_work_sync() at all.
+> This change adds GDSCs, resets and most of the missing
+> clocks to the msm8994 GCC driver. The remaining ones
+> are of local_vote_clk and gate_clk type, which are not
+> yet supported upstream. Also reorder them to match the
+> original downstream driver.
+> 
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  drivers/clk/qcom/gcc-msm8994.c               | 388 ++++++++++++++++++-
+>  include/dt-bindings/clock/qcom,gcc-msm8994.h |  36 ++
+>  2 files changed, 423 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/qcom/gcc-msm8994.c b/drivers/clk/qcom/gcc-msm8994.c
+> index b7fc8c7ba195..144d2ba7a9be 100644
+> --- a/drivers/clk/qcom/gcc-msm8994.c
+> +++ b/drivers/clk/qcom/gcc-msm8994.c
+> @@ -20,6 +20,7 @@
+>  #include "clk-rcg.h"
+>  #include "clk-branch.h"
+>  #include "reset.h"
+> +#include "gdsc.h"
+>  
+>  enum {
+>  	P_XO,
+> @@ -1772,6 +1773,32 @@ static struct clk_branch gcc_gp3_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_lpass_q6_axi_clk = {
+> +	.halt_reg = 0x0280,
+> +	.clkr = {
+> +		.enable_reg = 0x0280,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_lpass_q6_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch gcc_mss_q6_bimc_axi_clk = {
+> +	.halt_reg = 0x0284,
+> +	.clkr = {
+> +		.enable_reg = 0x0284,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_mss_q6_bimc_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct clk_branch gcc_pcie_0_aux_clk = {
+>  	.halt_reg = 0x1ad4,
+>  	.clkr = {
+> @@ -1790,6 +1817,32 @@ static struct clk_branch gcc_pcie_0_aux_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pcie_0_cfg_ahb_clk = {
+> +	.halt_reg = 0x1ad0,
+> +	.clkr = {
+> +		.enable_reg = 0x1ad0,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_0_cfg_ahb_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch gcc_pcie_0_mstr_axi_clk = {
+> +	.halt_reg = 0x1acc,
+> +	.clkr = {
+> +		.enable_reg = 0x1acc,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_0_mstr_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct clk_branch gcc_pcie_0_pipe_clk = {
+>  	.halt_reg = 0x1ad8,
+>  	.halt_check = BRANCH_HALT_DELAY,
+> @@ -1809,6 +1862,20 @@ static struct clk_branch gcc_pcie_0_pipe_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pcie_0_slv_axi_clk = {
+> +	.halt_reg = 0x1ac8,
+> +	.halt_check = BRANCH_HALT_DELAY,
+> +	.clkr = {
+> +		.enable_reg = 0x1ac8,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_0_slv_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct clk_branch gcc_pcie_1_aux_clk = {
+>  	.halt_reg = 0x1b54,
+>  	.clkr = {
+> @@ -1827,6 +1894,32 @@ static struct clk_branch gcc_pcie_1_aux_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pcie_1_cfg_ahb_clk = {
+> +	.halt_reg = 0x1b54,
+> +	.clkr = {
+> +		.enable_reg = 0x1b54,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_1_cfg_ahb_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch gcc_pcie_1_mstr_axi_clk = {
+> +	.halt_reg = 0x1b50,
+> +	.clkr = {
+> +		.enable_reg = 0x1b50,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_1_mstr_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct clk_branch gcc_pcie_1_pipe_clk = {
+>  	.halt_reg = 0x1b58,
+>  	.halt_check = BRANCH_HALT_DELAY,
+> @@ -1846,6 +1939,19 @@ static struct clk_branch gcc_pcie_1_pipe_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pcie_1_slv_axi_clk = {
+> +	.halt_reg = 0x1b48,
+> +	.clkr = {
+> +		.enable_reg = 0x1b48,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_1_slv_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct clk_branch gcc_pdm2_clk = {
+>  	.halt_reg = 0x0ccc,
+>  	.clkr = {
+> @@ -1864,6 +1970,19 @@ static struct clk_branch gcc_pdm2_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pdm_ahb_clk = {
+> +	.halt_reg = 0x0cc4,
+> +	.clkr = {
+> +		.enable_reg = 0x0cc4,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pdm_ahb_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct clk_branch gcc_sdcc1_apps_clk = {
+>  	.halt_reg = 0x04c4,
+>  	.clkr = {
+> @@ -1899,6 +2018,23 @@ static struct clk_branch gcc_sdcc1_ahb_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_sdcc2_ahb_clk = {
+> +	.halt_reg = 0x0508,
+> +	.clkr = {
+> +		.enable_reg = 0x0508,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_sdcc2_ahb_clk",
+> +			.parent_names = (const char *[]){
 
-Simple because some kmem_caches are created very early, so we don't
-even know at that time if we will need memcg slab caches. But this
-code is likely going away if we're going with a single set for all
-allocations.
+Please convert these to use .parent_data instead.
 
-Thanks!
+Regards,
+Bjorn
