@@ -2,154 +2,129 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE7DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 047B62075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604E42075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p7Qxqg5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbgFVWY4 (ORCPT
+        id S1730934AbgFVW0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:24:56 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45742 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730756AbgFVWY4 (ORCPT
+        Mon, 22 Jun 2020 18:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730777AbgFVW0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:24:56 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 401AB8030833;
-        Mon, 22 Jun 2020 22:24:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ruqNffr3OvTc; Tue, 23 Jun 2020 01:24:52 +0300 (MSK)
-Date:   Tue, 23 Jun 2020 01:24:50 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Will Deacon <will@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/3] serial: 8250_dw: Simplify the ref clock rate
- setting procedure
-Message-ID: <20200622222450.3sijzrmfxc4ivl6s@mobilestation>
-References: <20200619200251.9066-1-Sergey.Semin@baikalelectronics.ru>
- <20200619200251.9066-3-Sergey.Semin@baikalelectronics.ru>
- <20200620081201.GQ1551@shell.armlinux.org.uk>
+        Mon, 22 Jun 2020 18:26:16 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2529AC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:26:16 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id v13so14581817otp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:26:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Whj9pPjVdxqNoQPO3/j1uYot6iyKYAdZJXRmnTL5xO8=;
+        b=p7Qxqg5dSBmq2hSsNLlQ5+RQja1zy1WyYt7A69O13Qz64ge9PlX6tdodta5m1mOyoJ
+         fiN5mS59lG0/DHWLxyJ9fd6KgT+4T2u8M+Zym1mEOB2eT60Whl+ktEDA7Siy1kfUs+pT
+         RTJKTDghbBAAP0xM0ZAogIU5UbG7kBnbN5TOrz+IU39QodAFe3Z+JdLSeGMjAEOq3OX6
+         tpHADkHQ6kFosnXVXny6G1T41zqnx80pSGoiTAgGTdFI/7qsaJcMRNt3NjrppdPtcJvg
+         /5k3CS58NDCDoEPLweGzunQJ2GpmotulLtyhI5asWN0alRZp6X5DSbnYKp98UKA7wwgw
+         4ftw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Whj9pPjVdxqNoQPO3/j1uYot6iyKYAdZJXRmnTL5xO8=;
+        b=bh1JqI7ZIYHSZuqPEtcVGH7PplqaW3ON7m1vtS8u/jJjr+Wrh/e45EcfanlihDbLHu
+         5pgazswWVtN5orpoBy85XNXFBZdz4io5m9vQAd8oCNT1vqUyGIRP9/IXaTZ4D+19adJY
+         kYlWY3ZBiMb3SZuLLn0ugRtvMLwijZ/TnuUks5Vsj2e8I+SV2TJJLbK4ForqetSkxaOV
+         B2q+jFy2gs8E/hxypbB+vsu12TtwDwNX7PA8Kx/IlT+fOxoxenfId8z4GdXsdF8trFGd
+         AR+yIf0Ih9kMi3mp5W6As5NjpLtWYXmdWNUkJMvuP7iBgCwCHOi22vqXNFugM5SyCocc
+         IeFg==
+X-Gm-Message-State: AOAM530CipnqKYIo7csApxFoAOjeLxkegPHRUbMUBhv7eAn2ba0LrJ1B
+        r9qpbwLODpzBhxRuwmROiwenbw==
+X-Google-Smtp-Source: ABdhPJwPN1WmV+udGRk+h9E1afL6SIOkLi8rjKfsh1tBIrwek2pmebCqB86B9yLovtcWMsgdL/vfnQ==
+X-Received: by 2002:a05:6830:1dbb:: with SMTP id z27mr15880575oti.340.1592864775362;
+        Mon, 22 Jun 2020 15:26:15 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p1sm3753330oot.34.2020.06.22.15.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 15:26:14 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 15:23:30 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tsoni@codeaurora.org, psodagud@codeaurora.org,
+        sidgup@codeaurora.org, mathieu.poirier@linaro.org
+Subject: Re: [v4 PATCH 0/3] Extend coredump functionality
+Message-ID: <20200622222330.GN149351@builder.lan>
+References: <1590611177-15826-1-git-send-email-rishabhb@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200620081201.GQ1551@shell.armlinux.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <1590611177-15826-1-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Russell,
+On Wed 27 May 13:26 PDT 2020, Rishabh Bhatnagar wrote:
 
-Thanks for your comments. My response is below.
-
-On Sat, Jun 20, 2020 at 09:12:01AM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Jun 19, 2020 at 11:02:50PM +0300, Serge Semin wrote:
-> > Really instead of twice checking the clk_round_rate() return value
-> > we could do it once, and if it isn't error the clock rate can be changed.
-> > By doing so we decrease a number of ret-value tests and remove a weird
-> > goto-based construction implemented in the dw8250_set_termios() method.
+> This patch series moves the coredump functionality to a separate
+> file and adds "inline" coredump feature. Inline coredump directly
+> copies segments from device memory during coredump to userspace.
+> This avoids extra memory usage at the cost of speed. Recovery is
+> stalled until all data is read by userspace.
 > 
-> This doesn't look right to me - neither the before code nor the after
-> code.
-> 
-> >  	clk_disable_unprepare(d->clk);
-> >  	rate = clk_round_rate(d->clk, baud * 16);
-> > -	if (rate < 0)
-> > -		ret = rate;
-> > -	else if (rate == 0)
-> > -		ret = -ENOENT;
-> > -	else
-> > +	if (rate > 0) {
-> >  		ret = clk_set_rate(d->clk, rate);
-> > +		if (!ret)
-> > +			p->uartclk = rate;
-> > +	}
-> >  	clk_prepare_enable(d->clk);
-> >  
-> > -	if (ret)
-> > -		goto out;
-> > -
-> > -	p->uartclk = rate;
-> 
-> 	newrate = baud * 16;
-> 
-> 	clk_disable_unprepare(d->clk);
-
-> 	rate = clk_round_rate(newrate);
-> 	ret = clk_set_rate(d->clk, newrate);
-> 	if (!ret)
-> 		p->uartclk = rate;
-> 
-> 	ret = elk_prepare_enable(d->clk);
-> 	/* check ret for failure, means the clock is no longer running */
-> 
-> is all that should be necessary: note that clk_round_rate() is required
-> to return the rate that a successful call to clk_set_rate() would result
-> in for that clock.
-
-While I do understand your note regarding the newrate passing to both methods, I
-don't fully get it why is it ok to skip checking the clk_round_rate() return
-value? As I see it there is no point in calling clk_set_rate() if
-clk_round_rate() has returned an error. From that perspective this patch
-is full acceptable, right?
-
-In addition to that in order to provide an optimization I'll have to check the
-return value of the clk_round_rate() anyway in the next patch of this series
-("serial: 8250_dw: Fix common clocks usage race condition") since I'll need to
-set uartclk with that value before calling clk_set_rate() (see the patch and
-notes there for details). So there is no point in removing the check here since
-it will be got back in the next patch anyway.
-
-One more note in favor of checking the clk_round_rate() return value is below.
-
-> It is equivalent to:
+> Changelog:
 > 
 
-> 	ret = clk_set_rate(d->clk, newrate);
-> 	if (ret == 0)
-> 		p->uartclk = clk_get_rate(d->clk);
+Hi Rishabh,
 
-Alas neither this nor the suggested code above will work if the clock is
-optional. If it is, then d->clk will be NULL and clk_round_rate(),
-clk_set_rate() and clk_get_rate() will return zero. Thus in accordance with the
-fixes suggested by you we'll rewrite a fixed uartclk value supplied by a
-firmware.
+This looks good to me, but it doesn't apply cleanly on linux-next. Can
+you please take a look?
 
-To sum it up getting a positive value returned from clk_round_rate() will
-mean not only an actual clock frequency, but also having a real reference clock
-installed. So we can use that value to update the uartclk field of the UART port
-descriptor.
+Regards,
+Bjorn
 
+> v4 -> v3:
+> - Write a helper function to copy segment memory for every dump format
+> - Change segment dump fn to add offset and size adn covert mss driver
 > 
-> The other commonly misunderstood thing about the clk API is that the
-> rate you pass in to clk_round_rate() to discover the actual clock rate
-> and the value passed in to clk_set_rate() _should_ be the same value.
-> You should _not_ do clk_set_rate(clk, clk_round_rate(clk, newrate));
-
-Agreed. Thanks for the comment. I'll fix it in the next version of the series.
-
--Sergey
-
+> v3 -> v2:
+> - Move entire coredump functionality to remoteproc_coredump.c
+> - Modify rproc_coredump to perform dump according to conf. set by userspace
+> - Move the userspace configuration to debugfs from sysfs.
+> - Keep the default coredump implementation as is
+> 
+> v2 -> v1:
+> - Introduce new file for coredump.
+> - Add userspace sysfs configuration for dump type.
+> 
+> Rishabh Bhatnagar (3):
+>   remoteproc: Move coredump functionality to a new file
+>   remoteproc: Add inline coredump functionality
+>   remoteproc: Add coredump debugfs entry
+> 
+>  drivers/remoteproc/Makefile              |   1 +
+>  drivers/remoteproc/qcom_q6v5_mss.c       |   9 +-
+>  drivers/remoteproc/remoteproc_core.c     | 191 ------------------
+>  drivers/remoteproc/remoteproc_coredump.c | 328 +++++++++++++++++++++++++++++++
+>  drivers/remoteproc/remoteproc_debugfs.c  |  86 ++++++++
+>  drivers/remoteproc/remoteproc_internal.h |   4 +
+>  include/linux/remoteproc.h               |  21 +-
+>  7 files changed, 443 insertions(+), 197 deletions(-)
+>  create mode 100644 drivers/remoteproc/remoteproc_coredump.c
 > 
 > -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
