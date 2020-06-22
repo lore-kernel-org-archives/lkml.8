@@ -2,117 +2,210 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B041DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB4E246CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:37:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XdcRkVR5"
+	by mail.kernel.org (Postfix) with ESMTP id 305BA25376
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbgFVChH (ORCPT
+        id S1731064AbgFVCij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 22:37:07 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41375 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731032AbgFVChG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 22:37:06 -0400
-X-UUID: 11e8f40cb6fb4ec8891f034011c311c3-20200622
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3L2iJRLFz0cWplF3YyvVHCZSfWtaCZG+LYZCcDp7xIo=;
-        b=XdcRkVR51MYtCRyOm6g8Z2uIEq2FZNuPi3xmoer3blxqdeD8/62TjaUeyzObS3a5An1O2scvBT9BRc1K/vXJxV7+jRS6nHaG+cb466vkT7A25bSn1CSBpfeM/F5gD2crPuQm3bYmeM9C6TDYV/xoD0w2pALLcS/OIlY1+N8pMNc=;
-X-UUID: 11e8f40cb6fb4ec8891f034011c311c3-20200622
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 323343844; Mon, 22 Jun 2020 10:37:05 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 22 Jun 2020 10:36:49 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 22 Jun 2020 10:36:40 +0800
-Message-ID: <1592793410.11692.5.camel@mtksdaap41>
-Subject: Re: [PATCH v7 4/4] mailbox: mediatek: cmdq: clear task in channel
- before shutdown
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        HS Liao <hs.liao@mediatek.com>
-Date:   Mon, 22 Jun 2020 10:36:50 +0800
-In-Reply-To: <1592745731-14614-5-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1592745731-14614-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1592745731-14614-5-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 21 Jun 2020 22:38:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:51961 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726699AbgFVCii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 22:38:38 -0400
+IronPort-SDR: YZ9+yFhwDv6e5NaSTk2Ps81coVqmVMrFFPck9LDVeGmnTdLsv02HFSgfZ8GFiE1+PBmcQ4FiP7
+ qT3YxR2ohEcw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="142704079"
+X-IronPort-AV: E=Sophos;i="5.75,265,1589266800"; 
+   d="scan'208";a="142704079"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 19:38:38 -0700
+IronPort-SDR: kLI/D8Q8tZxkRPPFuiYPaE98ZUv1IOQQhFqpjbEvK2nvhnQsDpBIUcqoVcKllluunqSdvOAhbn
+ t3Z8I20xo8XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,265,1589266800"; 
+   d="scan'208";a="422482828"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga004.jf.intel.com with ESMTP; 21 Jun 2020 19:38:31 -0700
+Date:   Sun, 21 Jun 2020 22:28:28 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Zeng, Xin" <xin.zeng@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
+ VFIO live migration
+Message-ID: <20200622022827.GA18338@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200602165527.34137955@x1.home>
+ <20200603031948.GB12300@joy-OptiPlex-7040>
+ <20200602215528.7a1008f0@x1.home>
+ <20200603052443.GC12300@joy-OptiPlex-7040>
+ <20200603102628.017e2896@x1.home>
+ <20200605102224.GB2936@work-vm>
+ <20200605083149.1809e783@x1.home>
+ <20200605143950.GG2897@work-vm>
+ <20200610003731.GA13961@joy-OptiPlex-7040>
+ <20200619164046.2bdc2f67@w520.home>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: EAE0CFC385DA52FD097CAAFA54CAE7070AA1C8B7CEE452C921733A983F9C1ED12000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619164046.2bdc2f67@w520.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEJpYmJ5IEhzaWVoIDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQoNClRo
-YW5rcy4NCg0KT24gU3VuLCAyMDIwLTA2LTIxIGF0IDIxOjIyICswODAwLCBEZW5uaXMgWUMgSHNp
-ZWggd3JvdGU6DQo+IERvIHN1Y2Nlc3MgY2FsbGJhY2sgaW4gY2hhbm5lbCB3aGVuIHNodXRkb3du
-LiBGb3IgdGhvc2UgdGFzayBub3QgZmluaXNoLA0KPiBjYWxsYmFjayB3aXRoIGVycm9yIGNvZGUg
-dGh1cyBjbGllbnQgaGFzIGNoYW5jZSB0byBjbGVhbnVwIG9yIHJlc2V0Lg0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0K
-PiBSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2
-ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jIHwgICAzOCArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspDQo+
-IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYyBiL2Ry
-aXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gaW5kZXggOTk5NGFjOTQyNmQ2Li5i
-NTZkMzQwYzg5ODIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWls
-Ym94LmMNCj4gKysrIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYw0KPiBAQCAt
-Mzg3LDYgKzM4NywxMiBAQCBzdGF0aWMgaW50IGNtZHFfbWJveF9zZW5kX2RhdGEoc3RydWN0IG1i
-b3hfY2hhbiAqY2hhbiwgdm9pZCAqZGF0YSkNCj4gIA0KPiAgCWlmIChsaXN0X2VtcHR5KCZ0aHJl
-YWQtPnRhc2tfYnVzeV9saXN0KSkgew0KPiAgCQlXQVJOX09OKGNsa19lbmFibGUoY21kcS0+Y2xv
-Y2spIDwgMCk7DQo+ICsJCS8qDQo+ICsJCSAqIFRoZSB0aHJlYWQgcmVzZXQgd2lsbCBjbGVhciB0
-aHJlYWQgcmVsYXRlZCByZWdpc3RlciB0byAwLA0KPiArCQkgKiBpbmNsdWRpbmcgcGMsIGVuZCwg
-cHJpb3JpdHksIGlycSwgc3VzcGVuZCBhbmQgZW5hYmxlLiBUaHVzDQo+ICsJCSAqIHNldCBDTURR
-X1RIUl9FTkFCTEVEIHRvIENNRFFfVEhSX0VOQUJMRV9UQVNLIHdpbGwgZW5hYmxlDQo+ICsJCSAq
-IHRocmVhZCBhbmQgbWFrZSBpdCBydW5uaW5nLg0KPiArCQkgKi8NCj4gIAkJV0FSTl9PTihjbWRx
-X3RocmVhZF9yZXNldChjbWRxLCB0aHJlYWQpIDwgMCk7DQo+ICANCj4gIAkJd3JpdGVsKHRhc2st
-PnBhX2Jhc2UgPj4gY21kcS0+c2hpZnRfcGEsDQo+IEBAIC00NTAsNiArNDU2LDM4IEBAIHN0YXRp
-YyBpbnQgY21kcV9tYm94X3N0YXJ0dXAoc3RydWN0IG1ib3hfY2hhbiAqY2hhbikNCj4gIA0KPiAg
-c3RhdGljIHZvaWQgY21kcV9tYm94X3NodXRkb3duKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+
-ICB7DQo+ICsJc3RydWN0IGNtZHFfdGhyZWFkICp0aHJlYWQgPSAoc3RydWN0IGNtZHFfdGhyZWFk
-ICopY2hhbi0+Y29uX3ByaXY7DQo+ICsJc3RydWN0IGNtZHEgKmNtZHEgPSBkZXZfZ2V0X2RydmRh
-dGEoY2hhbi0+bWJveC0+ZGV2KTsNCj4gKwlzdHJ1Y3QgY21kcV90YXNrICp0YXNrLCAqdG1wOw0K
-PiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ICsNCj4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmdGhy
-ZWFkLT5jaGFuLT5sb2NrLCBmbGFncyk7DQo+ICsJaWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFz
-a19idXN5X2xpc3QpKQ0KPiArCQlnb3RvIGRvbmU7DQo+ICsNCj4gKwlXQVJOX09OKGNtZHFfdGhy
-ZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8IDApOw0KPiArDQo+ICsJLyogbWFrZSBzdXJlIGV4
-ZWN1dGVkIHRhc2tzIGhhdmUgc3VjY2VzcyBjYWxsYmFjayAqLw0KPiArCWNtZHFfdGhyZWFkX2ly
-cV9oYW5kbGVyKGNtZHEsIHRocmVhZCk7DQo+ICsJaWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFz
-a19idXN5X2xpc3QpKQ0KPiArCQlnb3RvIGRvbmU7DQo+ICsNCj4gKwlsaXN0X2Zvcl9lYWNoX2Vu
-dHJ5X3NhZmUodGFzaywgdG1wLCAmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCwNCj4gKwkJCQkgbGlz
-dF9lbnRyeSkgew0KPiArCQljbWRxX3Rhc2tfZXhlY19kb25lKHRhc2ssIENNRFFfQ0JfRVJST1Ip
-Ow0KPiArCQlrZnJlZSh0YXNrKTsNCj4gKwl9DQo+ICsNCj4gKwljbWRxX3RocmVhZF9kaXNhYmxl
-KGNtZHEsIHRocmVhZCk7DQo+ICsJY2xrX2Rpc2FibGUoY21kcS0+Y2xvY2spOw0KPiArZG9uZToN
-Cj4gKwkvKg0KPiArCSAqIFRoZSB0aHJlYWQtPnRhc2tfYnVzeV9saXN0IGVtcHR5IG1lYW5zIHRo
-cmVhZCBhbHJlYWR5IGRpc2FibGUuIFRoZQ0KPiArCSAqIGNtZHFfbWJveF9zZW5kX2RhdGEoKSBh
-bHdheXMgcmVzZXQgdGhyZWFkIHdoaWNoIGNsZWFyIGRpc2FibGUgYW5kDQo+ICsJICogc3VzcGVu
-ZCBzdGF0dWUgd2hlbiBmaXJzdCBwa3Qgc2VuZCB0byBjaGFubmVsLCBzbyB0aGVyZSBpcyBubyBu
-ZWVkDQo+ICsJICogdG8gZG8gYW55IG9wZXJhdGlvbiBoZXJlLCBvbmx5IHVubG9jayBhbmQgbGVh
-dmUuDQo+ICsJICovDQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdGhyZWFkLT5jaGFuLT5s
-b2NrLCBmbGFncyk7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWJveF9jaGFu
-X29wcyBjbWRxX21ib3hfY2hhbl9vcHMgPSB7DQoNCg==
+On Fri, Jun 19, 2020 at 04:40:46PM -0600, Alex Williamson wrote:
+> On Tue, 9 Jun 2020 20:37:31 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > On Fri, Jun 05, 2020 at 03:39:50PM +0100, Dr. David Alan Gilbert wrote:
+> > > > > > I tried to simplify the problem a bit, but we keep going backwards.  If
+> > > > > > the requirement is that potentially any source device can migrate to any
+> > > > > > target device and we cannot provide any means other than writing an
+> > > > > > opaque source string into a version attribute on the target and
+> > > > > > evaluating the result to determine compatibility, then we're requiring
+> > > > > > userspace to do an exhaustive search to find a potential match.  That
+> > > > > > sucks.     
+> > > > >  
+> > hi Alex and Dave,
+> > do you think it's good for us to put aside physical devices and mdev aggregation
+> > for the moment, and use Alex's original idea that
+> > 
+> > +  Userspace should regard two mdev devices compatible when ALL of below
+> > +  conditions are met:
+> > +  (0) The mdev devices are of the same type
+> > +  (1) success when reading from migration_version attribute of one mdev device.
+> > +  (2) success when writing migration_version string of one mdev device to
+> > +  migration_version attribute of the other mdev device.
+> 
+> I think Pandora's box is already opened, if we can't articulate how
+> this solution would evolve to support features that we know are coming,
+> why should we proceed with this approach?  We've already seen interest
+> in breaking rule (0) in this thread, so we can't focus the solution on
+> mdev devices.
+> 
+> Maybe the best we can do is to compare one instance of a device to
+> another instance of a device, without any capability to predict
+> compatibility prior to creating devices, in the case on mdev.  The
+> string would need to include not only the device and vendor driver
+> compatibility, but also anything that has modified the state of the
+> device, such as creation time or post-creation time configuration.  The
+> user is left on their own for creating a compatible device, or
+> filtering devices to determine which might be, or which might generate,
+> compatible devices.  It's not much of a solution, I wonder if anyone
+> would even use it.
+> 
+> > and what about adding another sysfs attribute for vendors to put
+> > recommended migration compatible device type. e.g.
+> > #cat /sys/bus/pci/devices/0000:00:02.0/mdev_supported_types/i915-GVTg_V5_8/migration_compatible_devices
+> > parent id: 8086 591d
+> > mdev_type: i915-GVTg_V5_8
+> > 
+> > vendors are free to define the format and conent of this migration_compatible_devices
+> > and it's even not to be a full list.
+> > 
+> > before libvirt or user to do live migration, they have to read and test
+> > migration_version attributes of src/target devices to check migration compatibility.
+> 
+> AFAICT, free-form, vendor defined attributes are useless to libvirt.
+> Vendors could already put this information in the description attribute
+> and have it ignored by userspace tools due to the lack of defined
+> format.  It's also not clear what value this provides when it's
+> necessarily incomplete, a driver written today cannot know what future
+> drivers might be compatible with its migration data.  Thanks,
+>
+hi Alex
+maybe the problem can be divided into two pieces:
+(1) how to create/locate two migration compatible devices. For normal
+users, the most common and safest way to do it is to find a exact duplication
+of the source device. so for mdev, it's probably to create a target mdev
+of the same parent pci id, mdev type and creation parameters as the
+source mdev; and for physical devices, it's to locate a target device of the
+same pci id as the source device, plus some extra constraints (e.g. the
+target NVMe device is configured to the same remote device as the source
+NVMe device; or the target QAT device is supporting equal encryption
+algorithm set as the source QAT device...).
+I think a possible solution for this piece is to let vendor drivers provide a
+creating/locating script to find such exact duplication of source device.
+Then before libvirt is about to do live migration, it can use this script to
+create a target vm of exactly duplicated configuration of the source vm.
+
+(2) how to identify two devices are migration compatible after they are
+created and even they are not exactly identical (e.g. their parent
+devices are of minor difference in hardware SKUs). This identification is
+necessary even after in step (1) when libvirt has created/located two
+identical devices and are about to start live migration.
+Also, users are free to create/configure target devices and use the
+read-and-test interfaces defined in this series to check if they are
+live migration compatible.
+The read and test behavior in this patch set can grant vendor drivers the
+freedom to decide whether to support migration between only exact identical
+devices or able to support migration between devices of minor
+difference. 
+
+So, do you think we can let this series focus on the second piece of
+problem and leave the first piece to other future series.
+
+Thanks
+Yan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
