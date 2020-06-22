@@ -2,133 +2,217 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC7592071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA32925471
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fg7emq7u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpDyoyBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731389AbgFVHaT (ORCPT
+        id S1731386AbgFVHdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731344AbgFVHaS (ORCPT
+        Mon, 22 Jun 2020 03:33:43 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60085 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731323AbgFVHdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:30:18 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E47C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:30:18 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id t25so14758971oij.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ygaQRZsiHWxwQyMfFbHB0BV1hg9adFSrkxnAXBNM/Xo=;
-        b=Fg7emq7u6AxvbahIlxX2OEGFyhdrP70UBnBknmSN2foEef4qnd2y/lgST91lNQWiGF
-         XsgUC8J+w0VYhGHm4oZdzLaaB6GDupvwYBbeWJTB3ISR2N9mnx+FKi5NIerlVFaDJof6
-         fFXMzbIcbcTph+esVMxxu/6flV+irY9rU5+hyJ0uWLzAaceHSnJ2J9ygJnhXqXLB5jyd
-         bTFYNGUvWJa8q5fOUnvUGTyT19qv/wFGTGBDOJjs6WvdUIQE91PsObySKFR3yxlr5H5/
-         +lUBozy9lwLLrSxjAqJ6SehdmX+9wXbQxRP17LZ/9TlUNtx/tH2Ik/zOGbJ6UaedmMYX
-         WATA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ygaQRZsiHWxwQyMfFbHB0BV1hg9adFSrkxnAXBNM/Xo=;
-        b=FhCJ94XK07lEGrNnM/g+5+LPhZ558ECaSOGQEfUDCbwkov3TJDdSSFIL/VJOQ+CLaL
-         vLRMoHTgpMrEaEeC9U+u/ESsAnq6iAIxBw6Fhk5e7zqkEdNGGHeNrKBM0gUja3M+NWFE
-         Gq7vgr2MoFZ3Zzd+YRJ/zii0OxG84BSdpmFAhccHaAwhNUAuqJZ756Dym4RIyy4AOjzG
-         Gx4IQiqkTHNmGQNuai1r09VZggv2oNTa2rbFaQKZT493S8LBrMderBwCx1E7yZj+kHKZ
-         wtuTxAN8YfTNyo0ihUFG7gpawuRK3Itzh8dEv39143Tqo6SV3rainrLMwUxX0HlOwu1O
-         zXYQ==
-X-Gm-Message-State: AOAM530XneYAh7/B6le5SQIP9nwYcxstkhP2z4WBFRFpRfofLVVBAQcD
-        7oms3Lj9cXarHMAXIc3c4B/hGQ==
-X-Google-Smtp-Source: ABdhPJziLw4HeHf3U5p5Ms7FJjg86kxkO3uXjiamKOQkajCldTvffCNwAyUn8IpkhaFEuWdbh4+4GQ==
-X-Received: by 2002:aca:5049:: with SMTP id e70mr11817176oib.72.1592811017862;
-        Mon, 22 Jun 2020 00:30:17 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 190sm3246689oon.2.2020.06.22.00.30.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:30:17 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 00:27:32 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loic.pallardy@st.com,
-        arnaud.pouliquen@st.com, s-anna@ti.com
-Subject: Re: [PATCH v4 8/9] remoteproc: Refactor function rproc_free_vring()
-Message-ID: <20200622072732.GJ149351@builder.lan>
-References: <20200601175139.22097-1-mathieu.poirier@linaro.org>
- <20200601175139.22097-9-mathieu.poirier@linaro.org>
+        Mon, 22 Jun 2020 03:33:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592811220;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=Bl1UeornAt/775yEZ4avXhN5Jaa/cDGCCOWXwTwWe1I=;
+        b=GpDyoyByw8k0aUyf64KHwtbsbYi0LY8V0n1z/J6zMZrHjmtnHiiX/ax6TtSwWuoWQq41jM
+        +q08pocTZwGe1ZHV3ohq6Rc2CHRkURVsKNlRbUxln/F8ezzB+UA2zHyLaGHRUJEnOadl4l
+        nV3kyNeJ3FQOPP7bRYFl9WqB9JPrhEI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-81-QKvxSkPTPMOLxRw3SSrOFA-1; Mon, 22 Jun 2020 03:33:34 -0400
+X-MC-Unique: QKvxSkPTPMOLxRw3SSrOFA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2C864A0BD8;
+        Mon, 22 Jun 2020 07:33:33 +0000 (UTC)
+Received: from [10.36.113.213] (ovpn-113-213.ams2.redhat.com [10.36.113.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF4AC5C296;
+        Mon, 22 Jun 2020 07:33:29 +0000 (UTC)
+Subject: Re: [PATCH v2 3/3] mm/shuffle: remove dynamic reconfiguration
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Huang Ying <ying.huang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>
+References: <20200619125923.22602-1-david@redhat.com>
+ <20200619125923.22602-4-david@redhat.com>
+ <CAPcyv4hvwHDa=1suuuEFX5mmpOm12kv-Axbd8G7bp9iaA+FWAA@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <7a5f9ea1-7405-7058-af60-eea0bc165e79@redhat.com>
+Date:   Mon, 22 Jun 2020 09:33:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601175139.22097-9-mathieu.poirier@linaro.org>
+In-Reply-To: <CAPcyv4hvwHDa=1suuuEFX5mmpOm12kv-Axbd8G7bp9iaA+FWAA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 01 Jun 10:51 PDT 2020, Mathieu Poirier wrote:
-
-> When function rproc_free_vring() clears the virtio device section
-> it does so on the cached resource table rather than the one
-> installed in the remote processor memory.  When a remote processor
-> has been booted by another entity there is no need to use a cached
-> table and as such, no need to clear the virtio device section in
-> it.
+On 20.06.20 03:49, Dan Williams wrote:
+> On Fri, Jun 19, 2020 at 5:59 AM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> Commit e900a918b098 ("mm: shuffle initial free memory to improve
+>> memory-side-cache utilization") promised "autodetection of a
+>> memory-side-cache (to be added in a follow-on patch)" over a year ago.
+>>
+>> The original series included patches [1], however, they were dropped
+>> during review [2] to be followed-up later.
+>>
+>> Due to lack of platforms that publish an HMAT, autodetection is currently
+>> not implemented. However, manual activation is actively used [3]. Let's
+>> simplify for now and re-add when really (ever?) needed.
+>>
+>> [1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com
+>> [2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com
+>> [3] https://lkml.kernel.org/r/CAPcyv4irwGUU2x+c6b4L=KbB1dnasNKaaZd6oSpYjL9kfsnROQ@mail.gmail.com
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Minchan Kim <minchan@kernel.org>
+>> Cc: Huang Ying <ying.huang@intel.com>
+>> Cc: Wei Yang <richard.weiyang@gmail.com>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  mm/shuffle.c | 28 ++--------------------------
+>>  mm/shuffle.h | 17 -----------------
+>>  2 files changed, 2 insertions(+), 43 deletions(-)
+>>
+>> diff --git a/mm/shuffle.c b/mm/shuffle.c
+>> index dd13ab851b3ee..9b5cd4b004b0f 100644
+>> --- a/mm/shuffle.c
+>> +++ b/mm/shuffle.c
+>> @@ -10,33 +10,11 @@
+>>  #include "shuffle.h"
+>>
+>>  DEFINE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
+>> -static unsigned long shuffle_state __ro_after_init;
+>> -
+>> -/*
+>> - * Depending on the architecture, module parameter parsing may run
+>> - * before, or after the cache detection. SHUFFLE_FORCE_DISABLE prevents,
+>> - * or reverts the enabling of the shuffle implementation. SHUFFLE_ENABLE
+>> - * attempts to turn on the implementation, but aborts if it finds
+>> - * SHUFFLE_FORCE_DISABLE already set.
+>> - */
+>> -__meminit void page_alloc_shuffle(enum mm_shuffle_ctl ctl)
+>> -{
+>> -       if (ctl == SHUFFLE_FORCE_DISABLE)
+>> -               set_bit(SHUFFLE_FORCE_DISABLE, &shuffle_state);
+>> -
+>> -       if (test_bit(SHUFFLE_FORCE_DISABLE, &shuffle_state)) {
+>> -               if (test_and_clear_bit(SHUFFLE_ENABLE, &shuffle_state))
+>> -                       static_branch_disable(&page_alloc_shuffle_key);
+>> -       } else if (ctl == SHUFFLE_ENABLE
+>> -                       && !test_and_set_bit(SHUFFLE_ENABLE, &shuffle_state))
+>> -               static_branch_enable(&page_alloc_shuffle_key);
+>> -}
+>>
+>>  static bool shuffle_param;
+>>  static int shuffle_show(char *buffer, const struct kernel_param *kp)
+>>  {
+>> -       return sprintf(buffer, "%c\n", test_bit(SHUFFLE_ENABLE, &shuffle_state)
+>> -                       ? 'Y' : 'N');
+>> +       return sprintf(buffer, "%c\n", shuffle_param ? 'Y' : 'N');
+>>  }
+>>
+>>  static __meminit int shuffle_store(const char *val,
+>> @@ -47,9 +25,7 @@ static __meminit int shuffle_store(const char *val,
+>>         if (rc < 0)
+>>                 return rc;
+>>         if (shuffle_param)
+>> -               page_alloc_shuffle(SHUFFLE_ENABLE);
+>> -       else
+>> -               page_alloc_shuffle(SHUFFLE_FORCE_DISABLE);
+>> +               static_branch_enable(&page_alloc_shuffle_key);
+>>         return 0;
+>>  }
 > 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Let's do proper input validation here and require 1 / 'true' to enable
+> shuffling and not also allow 0 to be an 'enable' value.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I don't think that's currently done?
 
-Regards,
-Bjorn
+param_set_bool(val, kp) will only default val==NULL to 'true'. Passing 0
+will properly be handled by strtobool(). Or am I missing something?
 
-> ---
->  drivers/remoteproc/remoteproc_core.c | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index d32ac8f0c872..0e23284fbd25 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -411,10 +411,22 @@ void rproc_free_vring(struct rproc_vring *rvring)
->  
->  	idr_remove(&rproc->notifyids, rvring->notifyid);
->  
-> -	/* reset resource entry info */
-> -	rsc = (void *)rproc->table_ptr + rvring->rvdev->rsc_offset;
-> -	rsc->vring[idx].da = 0;
-> -	rsc->vring[idx].notifyid = -1;
-> +	/*
-> +	 * At this point rproc_stop() has been called and the installed resource
-> +	 * table in the remote processor memory may no longer be accessible. As
-> +	 * such and as per rproc_stop(), rproc->table_ptr points to the cached
-> +	 * resource table (rproc->cached_table).  The cached resource table is
-> +	 * only available when a remote processor has been booted by the
-> +	 * remoteproc core, otherwise it is NULL.
-> +	 *
-> +	 * Based on the above, reset the virtio device section in the cached
-> +	 * resource table only if there is one to work with.
-> +	 */
-> +	if (rproc->table_ptr) {
-> +		rsc = (void *)rproc->table_ptr + rvring->rvdev->rsc_offset;
-> +		rsc->vring[idx].da = 0;
-> +		rsc->vring[idx].notifyid = -1;
-> +	}
->  }
->  
->  static int rproc_vdev_do_start(struct rproc_subdev *subdev)
-> -- 
-> 2.20.1
-> 
+Thanks!
+
+-- 
+Thanks,
+
+David / dhildenb
+
