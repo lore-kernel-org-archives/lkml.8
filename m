@@ -2,366 +2,133 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0984DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28477C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D94B920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E4220738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:56:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AT4AvU9s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gguJfFy+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbgFVRzj (ORCPT
+        id S1730185AbgFVR4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730067AbgFVRzi (ORCPT
+        Mon, 22 Jun 2020 13:56:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39336 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730122AbgFVR4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:55:38 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C286C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:55:37 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id v13so13789480otp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yL/GGFgKvPpT/ESkDllNmDDqKcU651dh4sx64jW309s=;
-        b=AT4AvU9sAT5ioVcP/Ma82mag06FRZC53FNcWA1/DQgm2s3sS33VltL9VIEI3UqR0M5
-         TNTcrDi7uP7DdLozHKbKufOXZKfzrTJpjDIVIcd3As/rfGfC4xxeW2Fu65Yr0k22eOEi
-         qX9SP3JdyPQMPfz5IvW1Aef66AMQtm5vGBr+K+tWNkBWMLB4zsAi1h+uRlBAQ/7tlORO
-         tkP+zf5ZaWa98u/3LgqRZiDpD8ublLJ9e2OB8sb0Kah9I5R793MuvtMFLtNKlJan3iKh
-         VYRwouZuzG9f+nUHLefWF6ZF6Ydga4Ge/rPCe6pxSPMh99UBaVKUMbauepZ0T61t9Nyu
-         JoDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yL/GGFgKvPpT/ESkDllNmDDqKcU651dh4sx64jW309s=;
-        b=WBJZPuzenEiL/eYmIJu9rXwAPGdmBltr4H37NYBit2pCregWmXwNFqQPbad7ORfUhf
-         euFDAEXqrazCblZYt9v6sJduDc/qwV3K1bnuupgmpAbxHihposRguwHaaVz1DQHV0SGT
-         OdAgGeG3VazSSn53GBI5AYAVujsbI1CQHx/7A9aqTUIRTHfe7pGuayIgwv5SOQRI/8uv
-         Q4CLajjXnpiDBXBfo8YUKJfkPgD1brQFxhlL2TTL8nB4qML9qS7YDbJbqAd3pIGpP1iN
-         AQPO4FOLQPCZbviWxfJz16HRMJ3JNJYBaOriOVlqXow1ThXFrDMwo80GcaAaMto+VAeK
-         bovg==
-X-Gm-Message-State: AOAM531LdQrkGvZsSoPHf5jfLUBHHQZbri9RzLQItLdzSW5FVYZEFEEU
-        5cpV6adLc3ZCw9m3UT5eQX35PQ==
-X-Google-Smtp-Source: ABdhPJxdPSEtlZTw4FnQA7BtS442zJ/JmTFbMHgsow0c1g5UJUAeaTEOfHwjrLB7P+2NEyn5SJtbgg==
-X-Received: by 2002:a4a:e2c1:: with SMTP id l1mr15507498oot.12.1592848536280;
-        Mon, 22 Jun 2020 10:55:36 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k15sm3552652oom.22.2020.06.22.10.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 10:55:35 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 10:52:50 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        ??ukasz Patron <priv.luk@gmail.com>
-Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: Add support for Sony Xperia
- XA2/Plus/Ultra (Nile platform)
-Message-ID: <20200622175250.GT128451@builder.lan>
-References: <20200622075749.21925-1-konradybcio@gmail.com>
- <20200622075749.21925-8-konradybcio@gmail.com>
+        Mon, 22 Jun 2020 13:56:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592848571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ySuDF4uW5IhgSc5+6f1wy6JDv5FU7nQ5DALwzLWqkuw=;
+        b=gguJfFy+YoxyW7ozl7feWl/wCpcIYgp7MXEl8NAHBukC0TEd6r/4ndO8ja+dTXKVGPagIg
+        midZbYNGkD9JPd3C0Gl7scN0AYTaN5vBjMUVn6uLmnJFdJf8xfNlmCKO8Khivv6O77Ki7E
+        KeXatbTweYI4XVoAnGtENzn6Boo23Tc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-189-AWUGfKRlOj6DKO4q4ct8zA-1; Mon, 22 Jun 2020 13:56:09 -0400
+X-MC-Unique: AWUGfKRlOj6DKO4q4ct8zA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F1718005AD;
+        Mon, 22 Jun 2020 17:56:08 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-116-193.rdu2.redhat.com [10.10.116.193])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E8AD6FDD1;
+        Mon, 22 Jun 2020 17:56:04 +0000 (UTC)
+Subject: Re: [PATCH v4] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
+References: <20200618171941.9475-1-longman@redhat.com>
+ <20200618225810.GJ2005@dread.disaster.area>
+ <20200618230405.GK2005@dread.disaster.area>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <14d9c969-3fbe-ed1f-6821-050fc2c6289e@redhat.com>
+Date:   Mon, 22 Jun 2020 13:56:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622075749.21925-8-konradybcio@gmail.com>
+In-Reply-To: <20200618230405.GK2005@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 22 Jun 00:57 PDT 2020, Konrad Dybcio wrote:
+On 6/18/20 7:04 PM, Dave Chinner wrote:
+> On Fri, Jun 19, 2020 at 08:58:10AM +1000, Dave Chinner wrote:
+>> On Thu, Jun 18, 2020 at 01:19:41PM -0400, Waiman Long wrote:
+>>> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+>>> index 379cbff438bc..1b94b9bfa4d7 100644
+>>> --- a/fs/xfs/xfs_super.c
+>>> +++ b/fs/xfs/xfs_super.c
+>>> @@ -913,11 +913,33 @@ xfs_fs_freeze(
+>>>   	struct super_block	*sb)
+>>>   {
+>>>   	struct xfs_mount	*mp = XFS_M(sb);
+>>> +	unsigned long		pflags;
+>>> +	int			ret;
+>>>   
+>>> +	/*
+>>> +	 * A fs_reclaim pseudo lock is added to check for potential deadlock
+>>> +	 * condition with fs reclaim. The following lockdep splat was hit
+>>> +	 * occasionally. This is actually a false positive as the allocation
+>>> +	 * is being done only after the frozen filesystem is no longer dirty.
+>>> +	 * One way to avoid this splat is to add GFP_NOFS to the affected
+>>> +	 * allocation calls. This is what PF_MEMALLOC_NOFS is for.
+>>> +	 *
+>>> +	 *       CPU0                    CPU1
+>>> +	 *       ----                    ----
+>>> +	 *  lock(sb_internal);
+>>> +	 *                               lock(fs_reclaim);
+>>> +	 *                               lock(sb_internal);
+>>> +	 *  lock(fs_reclaim);
+>>> +	 *
+>>> +	 *  *** DEADLOCK ***
+>>> +	 */
+>> The lockdep splat is detailed in the commit message - it most
+>> definitely does not need to be repeated in full here because:
+>>
+>> 	a) it doesn't explain why the splat occurring is, and
+>> 	b) we most definitely don't care about how the lockdep check
+>> 	   that triggered it is implemented.
+> I should have added this:
+>
+> 	c) a lot of people don't understand what lockdep reports
+> 	   are telling them is a problem.
+>
+> I get a lot of questions like "I saw this lockdep thing, but I can't
+> work out what it actually means, so can you have a look at it
+> Dave?". Hence I think directly quoting something people tend not to
+> understand to explain the problem they didn't understand isn't the
+> best approach to improving understanding of the problem...
 
-> Add device tree support for the Sony Xperia XA2, XA2 Plus and
-> XA2 Ultra smartphones. They are all based on the Sony Nile
-> platform (sdm630) and share a lot of common code. The
-> differences are really minor, so a Nile-common DTSI
-> has been created to reduce clutter.
-> 
-> XA2 - Pioneer
-> XA2 Plus - Voyager
-> XA2 Ultra - Discovery
-> 
-> The boards currently support:
-> * Screen console
-> * SDHCI
-> * I2C
-> * pstore log dump
-> * GPIO keys
-> * PSCI idle states
-> 
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> Tested-by: ??ukasz Patron <priv.luk@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |   3 +
->  .../sdm630-sony-xperia-nile-discovery.dts     |  13 ++
->  .../qcom/sdm630-sony-xperia-nile-pioneer.dts  |  13 ++
->  .../qcom/sdm630-sony-xperia-nile-voyager.dts  |  20 +++
->  .../dts/qcom/sdm630-sony-xperia-nile.dtsi     | 135 ++++++++++++++++++
->  5 files changed, 184 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 0f2c33d611df..1cad7cb07574 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -16,6 +16,9 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-voyager.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
-> new file mode 100644
-> index 000000000000..1312eebe76a1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Konrad Dybcio
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630-sony-xperia-nile.dtsi"
-> +
-> +/ {
-> +	model = "SoMC Discovery-RoW";
+OK, how about simplifying the comment to as follows:
 
-Given that this is already stated by the compatible, would it be
-reasonable to make this use the marketing name instead?
+        /*
+          * Disable fs reclaim in memory allocation for fs freeze to avoid
+          * causing a possible circular locking dependency lockdep splat
+          * involving fs reclaim.
+          */
 
-(I.e. "Sony Mobile Xperia XA2 Ultra")
+Does that look good enough for you?
 
-> +	compatible = "sony,discovery-row", "qcom,sdm630", "qcom,sdm630-mtp";
+Cheers,
+Longman
 
-Does the -mtp one have any significance? Otherwise I would like you to
-drop this - given that this isn't going to be compatible with the actual
-MTP hardware.
-
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
-> new file mode 100644
-> index 000000000000..76f20ad5273f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Konrad Dybcio
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630-sony-xperia-nile.dtsi"
-> +
-> +/ {
-> +	model = "SoMC Pioneer-RoW";
-> +	compatible = "sony,pioneer-row", "qcom,sdm630", "qcom,sdm630-mtp";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
-> new file mode 100644
-> index 000000000000..82e54a73d172
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
-> @@ -0,0 +1,20 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Konrad Dybcio
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630-sony-xperia-nile.dtsi"
-> +
-> +/ {
-> +	model = "SoMC Voyager-RoW";
-> +	compatible = "sony,voyager-row", "qcom,sdm630", "qcom,sdm630-mtp";
-> +
-> +	chosen {
-> +		framebuffer@9d400000 {
-> +			reg = <0 0x9d400000 0 (2160 * 1080 * 4)>;
-> +			height = <2160>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-> new file mode 100644
-> index 000000000000..af75ab211b5f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-> @@ -0,0 +1,135 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Konrad Dybcio
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630.dtsi"
-> +#include "pm660.dtsi"
-> +#include "pm660l.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/input/gpio-keys.h>
-> +
-> +/ {
-> +	/* required for bootloader to select correct board */
-> +	qcom,msm-id = <318 0>;
-> +	qcom,board-id = <8 1>;
-> +	qcom,pmic-id = <0x1001b 0x101011a 0x00 0x00 0x1001b 0x201011a 0x00 0x00>;
-> +
-> +	/* This part enables graphical output via bootloader-enabled display */
-> +	chosen {
-> +		bootargs = "earlycon=tty0 console=tty0";
-> +
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		stdout-path = "framebuffer0";
-> +
-> +		framebuffer0: framebuffer@9d400000 {
-> +		compatible = "simple-framebuffer";
-
-Please check the indentation here.
-
-> +		reg = <0 0x9d400000 0 (1920 * 1080 * 4)>;
-> +		width = <1080>;
-> +		height = <1920>;
-> +		stride = <(1080 * 4)>;
-> +		format = "a8r8g8b8";
-> +		status= "okay";
-> +		};
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		ramoops@ffc00000 {
-> +			compatible = "ramoops";
-> +			reg = <0x0 0xffc00000 0x0 0x100000>;
-> +			record-size = <0x10000>;
-> +			console-size = <0x60000>;
-> +			ftrace-size = <0x10000>;
-> +			pmsg-size = <0x20000>;
-> +			ecc-size = <16>;
-> +			status = "okay";
-> +		};
-> +
-> +		debug_region@ffb00000 {
-> +			reg = <0x00 0xffb00000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		removed_region@85800000 {
-> +			reg = <0x00 0x85800000 0x00 0x3700000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	soc {
-> +		gpio_keys {
-
-/soc is for mmio devices, as such gpio_keys should be moved outside
-"soc".
-
-Regards,
-Bjorn
-
-> +			status = "okay";
-> +			compatible = "gpio-keys";
-> +			input-name = "gpio-keys";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			autorepeat;
-> +
-> +			camera_focus {
-> +				label = "Camera Focus";
-> +				gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-> +				linux,input-type = <1>;
-> +				linux,code = <KEY_CAMERA_FOCUS>;
-> +				debounce-interval = <15>;
-> +			};
-> +
-> +			camera_snapshot {
-> +				label = "Camera Snapshot";
-> +				gpios = <&tlmm 113 GPIO_ACTIVE_LOW>;
-> +				linux,input-type = <1>;
-> +				linux,code = <KEY_CAMERA>;
-> +				debounce-interval = <15>;
-> +			};
-> +
-> +			vol_down {
-> +				label = "Volume Down";
-> +				gpios = <&pm660l_gpios 7 GPIO_ACTIVE_LOW>;
-> +				linux,input-type = <1>;
-> +				linux,code = <KEY_VOLUMEDOWN>;
-> +				gpio-key,wakeup;
-> +				debounce-interval = <15>;
-> +			};
-> +		};
-> +
-> +		sdhci@c0c4000 {
-> +			status = "okay";
-> +
-> +			/* SoMC Nile platform's eMMC doesn't support HS200 mode */
-> +			/delete-property/ mmc-hs200-1_8v;
-> +		};
-> +
-> +		i2c@c175000 {
-> +			status = "okay";
-> +
-> +			/* Synaptics touchscreen */
-> +		};
-> +
-> +		i2c@c176000 {
-> +			status = "okay";
-> +
-> +			/* SMB1351 charger */
-> +		};
-> +
-> +		/* I2C3, 4, 5, 7 and 8 are disabled on this board. */
-> +
-> +		i2c@c1b6000 {
-> +			status = "okay";
-> +
-> +			/* NXP NFC */
-> +		};
-> +
-> +		serial@c1af000 {
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> -- 
-> 2.27.0
-> 
