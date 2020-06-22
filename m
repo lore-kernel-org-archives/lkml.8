@@ -2,170 +2,151 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E376C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15801C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE73325431
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10D42535E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RlT4vcr6"
+	dkim=pass (1024-bit key) header.d=cern.onmicrosoft.com header.i=@cern.onmicrosoft.com header.b="pSo3jmYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbgFVGxz (ORCPT
+        id S1731250AbgFVG5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:53:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731287AbgFVGxy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 02:53:54 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E143C061795
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 23:53:54 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q5so3033439wru.6
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 23:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3st1Xpy8PMIYJ29+AOCat9fQ6H15z9nbOwUnhMMLhQg=;
-        b=RlT4vcr6p8p3WhMwqdvdIiWm8cSpTritK3ynpnHlhdiSq1A63RYtWfur0SYx3CEgf8
-         zNEIP66840WXAZWesJhfhc1PHUSLX8nx5+pId5innSe9PWR8tUY9g2MswWSoGDAZAsk9
-         01UtfkJ4gJLz9dvM6yVDRaW4jqauOfwvj+HakP6osJRPnrrVHFiOuZy+wmFQXfamCSi/
-         BQADIpisPiVuSUmXgMkQ49PohawdreO4lpLyfGwVNBA6SHsHr4vYDJO3iaZkbtOmuD3J
-         Rc2jM9gSjz/u7aShV8GTzUFKE7g5yDNG6xB5NeJxf1hSWeOY4gLzMR5StHyk3QEuJUhV
-         cE9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3st1Xpy8PMIYJ29+AOCat9fQ6H15z9nbOwUnhMMLhQg=;
-        b=O1bRniTH1/aKeIJ21/Cq2/pxcgi5Y3qefIIhx/dV3V4avPKHsbap7WGasWDhcM10l4
-         P1sncbNAVLeUIkS8S+DXGFjHPW4FJVV3ijz8/JiVIgyp27qx3vPIa+3y4cP2sASV6VFq
-         muKaBrqmBDwQ00qouMA7XZ96h1+bLTvpwMai6U46C7MSUrJjaQ1Bm7cfEtFl7w4xnC3y
-         Fa3WztGWo0duKFchZVQbYkKwG2jjJO4lwjLu+Fy7d2pVzBmir9nY5zOmiTVOJY4LegbJ
-         aD1EEUynQWQB6ZqG84i6107nAWcoFK8k3QgeAUU4TrK4oH2T20gNY0xanvG3dv+acdcB
-         SuSw==
-X-Gm-Message-State: AOAM530yLUihNy9HzbvIDPgSMZpGE00tMdJo1OlioWYKvIZxN7H8cfiV
-        AJum8x7ZQqlfHEnnjRUW1Qn1Kw==
-X-Google-Smtp-Source: ABdhPJx60bF1uC6l4ykc8vsYhgnhHXh7sN8AhZNQZCxssjwQToadbKxSJ0hyVFLyrrQsT9omwbuxYg==
-X-Received: by 2002:a5d:630f:: with SMTP id i15mr17113215wru.309.1592808832730;
-        Sun, 21 Jun 2020 23:53:52 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p9sm14749735wma.48.2020.06.21.23.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 23:53:52 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 07:53:50 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded
- Controller binding
-Message-ID: <20200622065350.GN954398@dell>
-References: <20200617110829.1036898-1-lkundrak@v3.sk>
- <20200617110829.1036898-2-lkundrak@v3.sk>
+        Mon, 22 Jun 2020 02:57:34 -0400
+Received: from mail-eopbgr40060.outbound.protection.outlook.com ([40.107.4.60]:43009
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725933AbgFVG5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 02:57:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oVtVANfUGUM1DXekbnILFGjFPvQRAevc53ZM9+oPjZP+j8oHIa28Exdrp5Rmw67dTtGO5CQW0WKBvHAswa5KMHXDNoU0OjpxlMuNL94edpCviA1bcH61Rzkt6dVnzRDGOwBUS0zYdFE0ocGKZcy+gZIfi0UIx9i3pUvE3nwn/mjyO9KOqPH/vC0t1s0gkdBYcnIhK9QtLihSVqK2rQhsk54F7qEOPeFtxScmyK33iKXtGG4L06jZD4l3t3Gop9QSYzHzBmmr6BB/9X7icbx68Si26FIWzszLnrJLnNP3HFEEs8ZpQmJuXvh2EbEfjCncXeGeJVGAEcgNOr/BML4JBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8o8WnYrRJ0FRx/PYGL6CjeX+EfrSOVGiBzSpmXKg0dM=;
+ b=aY3RxWjmSjt4tO3GGdFdXtDNDit73Q5gFoqhazioFcWlLtEW2/6/DnFsMi6fkxKr1ecJ7q+n3jkZPGy+yfJeFs51Ra3K2/YrPQUoLm/zfNOWLROFn7+wTMA9M5ZvyKVWTWAD6B0TgQAXa2o42y1ODpNompFmDTWLA+XITkERC26M+FuaPnVgh1UzKGMa4ymB3ChYXSeGVSkcwhON8HzeX9dmAcdF0gaRUUNWUdg2jwI4vyegXh6gn7LxnV48gB8FvEO4ElikcIvn8+dfzrcTWYRPCY0+y/OqIE6h11+d+DPNqdy9YVF+GIRfcYeCG209GHod//SzWEHU+PmQJos5sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 188.184.36.50) smtp.rcpttodomain=kernel.org smtp.mailfrom=cern.ch;
+ dmarc=bestguesspass action=none header.from=cern.ch; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.onmicrosoft.com;
+ s=selector2-cern-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8o8WnYrRJ0FRx/PYGL6CjeX+EfrSOVGiBzSpmXKg0dM=;
+ b=pSo3jmYTv7wSlTLYLTVo0zqm6XK1JkSilKbXjjRCKQNexXlDnu0Fx3xgEKwUjorX8Wxjad12V+GTU0krYldwQ6F41dYAJhjZ8fcCtuW1bvbrzbMz7VYQtuSTXamiIE8X7lT1kOzR2/T63cZjNzXIgxGh8ssFLJWo38fklBjE488=
+Received: from AM5PR1001CA0003.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:206:2::16)
+ by HE1PR0601MB2075.eurprd06.prod.outlook.com (2603:10a6:3:2b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Mon, 22 Jun
+ 2020 06:57:30 +0000
+Received: from HE1EUR02FT048.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:206:2:cafe::d6) by AM5PR1001CA0003.outlook.office365.com
+ (2603:10a6:206:2::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend
+ Transport; Mon, 22 Jun 2020 06:57:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 188.184.36.50)
+ smtp.mailfrom=cern.ch; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=cern.ch;
+Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
+ 188.184.36.50 as permitted sender) receiver=protection.outlook.com;
+ client-ip=188.184.36.50; helo=cernmxgwlb4.cern.ch;
+Received: from cernmxgwlb4.cern.ch (188.184.36.50) by
+ HE1EUR02FT048.mail.protection.outlook.com (10.152.10.243) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 06:57:29 +0000
+Received: from cernfe01.cern.ch (188.184.36.42) by cernmxgwlb4.cern.ch
+ (188.184.36.50) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 22 Jun
+ 2020 08:57:30 +0200
+Received: from cwe-513-vol689.cern.ch (2001:1458:d00:7::100:1c8) by
+ smtp.cern.ch (2001:1458:201:66::100:14) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Mon, 22 Jun 2020 08:57:27 +0200
+Date:   Mon, 22 Jun 2020 08:57:27 +0200
+From:   Federico Vaga <federico.vaga@cern.ch>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: DMA Engine: Transfer From Userspace
+Message-ID: <20200622065727.ywbnevdhjs7kizfc@cwe-513-vol689.cern.ch>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617110829.1036898-2-lkundrak@v3.sk>
+In-Reply-To: <20200622044733.GB2324254@vkoul-mobl>
+X-Originating-IP: [2001:1458:d00:7::100:1c8]
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:188.184.36.50;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:cernmxgwlb4.cern.ch;PTR:cernmx11.cern.ch;CAT:NONE;SFTY:;SFS:(396003)(376002)(136003)(346002)(39860400002)(46966005)(53546011)(316002)(82310400002)(54906003)(83380400001)(426003)(336012)(478600001)(6916009)(44832011)(7636003)(82740400003)(356005)(47076004)(8936002)(70206006)(16526019)(186003)(26005)(86362001)(5660300002)(8676002)(4326008)(1076003)(70586007)(7696005)(2906002)(55016002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dbaf38d3-bf89-4b4f-a0f9-08d8167987fa
+X-MS-TrafficTypeDiagnostic: HE1PR0601MB2075:
+X-Microsoft-Antispam-PRVS: <HE1PR0601MB2075E8A562563C43FA699E5BEF970@HE1PR0601MB2075.eurprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1QqERMWt1hd2PzJRjiJSUOeJ9W0zzH6c+tyUowPBy+esUOZjsaB30nWiUdx04R80ADg/cjXAv9eroc+ble15kFVIuXWYlBeTa2PujtmJHhjSH5dRuoyFVuKyadHq/+in/I6A4GPJfLHDPqY/+GZ8bSK+OxgAAORRexJLRbrUxQgNatRMyqKW2+pflkxbSuI+VigXN3fAHBOcy3ONZZ7xmlQiq3Q8Ne7g8ZplYbHywZ2TFGtvZ+Yatg2CFMm5ckMkDMzh2f2mC8/FzMtDf7GZX+qmJIyqPmg+sirXuXIFVA2cA7EqHyIA9O6gmLSBLQEwi2zKPK65672OvAv8QqxW3PViSPYCEPTVNKERKYzf6+kU65GM75GU7Sxljv+YOhp/ycnW9kzNkQCdUdc/em3s9g==
+X-OriginatorOrg: cern.ch
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 06:57:29.8359
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbaf38d3-bf89-4b4f-a0f9-08d8167987fa
+X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[188.184.36.50];Helo=[cernmxgwlb4.cern.ch]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0601MB2075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020, Lubomir Rintel wrote:
+On Mon, Jun 22, 2020 at 10:17:33AM +0530, Vinod Koul wrote:
+>On 21-06-20, 22:36, Federico Vaga wrote:
+>> On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
+>> > On 19-06-20, 16:31, Dave Jiang wrote:
+>> > >
+>> > >
+>> > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
+>> > > > Hello,
+>> > > >
+>> > > > is there the possibility of using a DMA engine channel from userspace?
+>> > > >
+>> > > > Something like:
+>> > > > - configure DMA using ioctl() (or whatever configuration mechanism)
+>> > > > - read() or write() to trigger the transfer
+>> > > >
+>> > >
+>> > > I may have supposedly promised Vinod to look into possibly providing
+>> > > something like this in the future. But I have not gotten around to do that
+>> > > yet. Currently, no such support.
+>> >
+>> > And I do still have serious reservations about this topic :) Opening up
+>> > userspace access to DMA does not sound very great from security point of
+>> > view.
+>>
+>> I was thinking about a dedicated module, and not something that the DMA engine
+>> offers directly. You load the module only if you need it (like the test module)
+>
+>But loading that module would expose dma to userspace.
 
-> Add binding document for the ENE KB3930 Embedded Controller.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> ---
-> Changes since v4:
-> - Collected Rob's Reviewed-by
-> 
-> Changes since v1:
-> - Addressed binding validation failure
-> 
->  .../devicetree/bindings/mfd/ene-kb3930.yaml   | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> new file mode 100644
-> index 0000000000000..005f5cb59ab12
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/ene-kb3930.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ENE KB3930 Embedded Controller bindings
+Of course, but users *should* know what they are doing ... right? ^_^'
 
-Please expand ENE.
+>>
+>> > Federico, what use case do you have in mind?
+>>
+>> Userspace drivers
+>
+>more the reason not do do so, why cant a kernel driver be added for your
+>usage?
 
-> +description: |
-> +  This binding describes the ENE KB3930 Embedded Controller attached to a
-> +  I2C bus.
+Yes of course, I was just wandering if there was a kernel API.
 
-Nit: "an I2C bus"
-
-> +maintainers:
-> +  - Lubomir Rintel <lkundrak@v3.sk>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - dell,wyse-ariel-ec  # Dell Wyse Ariel board (3020)
-> +      - const: ene,kb3930
-> +  reg:
-> +    maxItems: 1
-> +
-> +  off-gpios:
-> +    description: GPIO used with the shutdown protocol on Ariel
-> +    maxItems: 2
-> +
-> +  system-power-controller: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      embedded-controller@58 {
-> +        compatible = "dell,wyse-ariel-ec", "ene,kb3930";
-> +        reg = <0x58>;
-> +        system-power-controller;
-> +
-> +        off-gpios = <&gpio 126 GPIO_ACTIVE_HIGH>,
-> +                    <&gpio 127 GPIO_ACTIVE_HIGH>;
-> +      };
-> +    };
-> +
-> +...
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>-- 
+>~Vinod
