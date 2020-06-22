@@ -2,104 +2,131 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B058EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86B9E2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592827123;
-	bh=vs4+pF8zCbPo5SX2paUNobqlBDYLTJ+ieB7qsSqtQK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qjIfGk7B4gV+8TXLrkZhVqrS7kGV56XYx7Jx1L05wsf3Y+8rm3AqmQa9uGJ7EqK4S
-	 ARNxd2jnwzQIGLlSSH/TovzA4XUZe+ta+RCtq6EcPhlyGMik6MRIKZuZu8aJe2Vsay
-	 dtdqrgyzv6AyzLNFFrvgX7wrWiGMFYCCephwOr84=
+	by mail.kernel.org (Postfix) with ESMTP id C8580206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgFVL6m (ORCPT
+        id S1728024AbgFVMBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:58:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727821AbgFVL6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:58:41 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7649206EB;
-        Mon, 22 Jun 2020 11:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592827121;
-        bh=vs4+pF8zCbPo5SX2paUNobqlBDYLTJ+ieB7qsSqtQK4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wvIhqatZx4FwXxwifIernm1iEymbEe8Qp2gXIL7YcKv2LgXS4AFqw0GR6ksDlw8Do
-         wxXtR9Mu6K0SCxpeDGJVoX/zMLaCX9aiiF9JUZ70iJny/AW1aPnDa0cBu46J6NLx5q
-         s5Ug8wlWWpPlBfNzqqEOTLAQvP1jjypGb20Nw4zU=
-Date:   Mon, 22 Jun 2020 17:28:37 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        sanyog.r.kale@intel.com, pierre-louis.bossart@linux.intel.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soundwire: qcom: Constify static structs
-Message-ID: <20200622115837.GL2324254@vkoul-mobl>
-References: <20200609230029.69802-1-rikard.falkeborn@gmail.com>
+        Mon, 22 Jun 2020 08:01:22 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:44191 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727901AbgFVMBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:01:21 -0400
+Received: from oxbsgw05.schlund.de ([172.19.248.8]) by
+ mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1M1YpJ-1jqMCo0ArD-0033vK; Mon, 22 Jun 2020 14:01:13 +0200
+Date:   Mon, 22 Jun 2020 14:01:12 +0200 (CEST)
+From:   Thomas Ruf <freelancer@rufusul.de>
+Reply-To: Thomas Ruf <freelancer@rufusul.de>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Federico Vaga <federico.vaga@cern.ch>
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <419762761.402939.1592827272368@mailbusiness.ionos.de>
+In-Reply-To: <20200622044733.GB2324254@vkoul-mobl>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+Subject: Re: DMA Engine: Transfer From Userspace
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609230029.69802-1-rikard.falkeborn@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:vqrA2vYCx1uDKgThEtFbc6VetceM3TsFmqGIYceaPIpVSI5rnwV
+ jzWDzPXiDwgkQcxT8pv7GNOBsNYxsO/aTbTl5MNduvTJdzN9E6ySMEGq9oulNx6DLewTTcv
+ IbU4Es9KWA2nfkMVzCo7BgUNM53vUPbRVBWn7phzqGV5XbJ5InGXp3ohszv7FweaB3T5dOO
+ f+WHDbV6ksaSSCy2OFiOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lTMpz7zt9FY=:e3CrO0pQcDG1ENDm9Agbim
+ LwkiEWdidKgMtWnZDC8zwqgwno/NN/u8G3gEE20lZ5xSADOOVvtmlERnTktRfO5tyTYSmh8n7
+ Ci/bOL3IPq6DsCeABXLzgZmgztWYL4eweH5DAooRRW6OsJ3wRuaeoEUfkYW1ui1A/GTLBZODp
+ Jx7u/j22nPeBWtglUP1HIpR8+a4EFa1/XNsoaH08duAM9TJPdMbuNRuHRKlMHK6zydC7pSBC+
+ rZQlQoCaBAmW3ssdjmE19Wm/34T83NC2B5klDwiyectWnyd8ePvTMi4TOxiEDo3QWopZB0P7j
+ nhxRXY51XylKbKU2/97HJcNZFszNsZiX8Sf4asmlAY7eZLbAms/DPibtm/MnK4dHiacP3uPDY
+ T28T6jQI3bL6c1fK40b732tQVaKVPgNIW2erI6FQb9jYN/EdAu1LhEej5ZjtXOHah7nYECNnH
+ y/w0sJOyHKExCrLGfoa8cnYEsLRhVpDx5WwMG9N64aAjE8X3WUFgIABV41qfsPiHLeNSvLNs0
+ nln7TCGJaBomeqtuvUVU4DO4TRGzRBvrYK1JGwyv0ia21roRhM0AzEB9x0NVgklAy2PkOBTsz
+ Pz5IDdqG4rTp1Ug4UImXvTwN9UL4J/7JB7YHryyuK30/yliYD9vNqnqPDE/aRFGoVjt1BJneS
+ CRCHRXwb5aVF0B1w9JnBF49oiuc2wLveoUu15sNWEPzWAl86c8vN1a8SpZP2p8/ZfE/b+zgBt
+ 4xbMXbOpOjgyQobS/RxjY8tXSBdJ5PY1jyz99Se/+HbRnUsgKQ3XYUZMm6bCa7P7Rr4xV/eQ+
+ HM4o8+RoiCUpmz+eX6bc97AQn4xtRY4jyu2Htz2tlcQUpPa7zM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-06-20, 01:00, Rikard Falkeborn wrote:
-> qcom_swrm_port_ops and qcom_swrm_ops are not modified and can be made
-> const to allow the compiler to put them in read-only memory.
+> On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
 > 
-> Before:
->    text    data     bss     dec     hex filename
->   18266    3056     256   21578    544a drivers/soundwire/qcom.o
+> On 21-06-20, 22:36, Federico Vaga wrote:
+> > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
+> > > On 19-06-20, 16:31, Dave Jiang wrote:
+> > > > 
+> > > > 
+> > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> > > > > Hello,
+> > > > >
+> > > > > is there the possibility of using a DMA engine channel from userspace?
+> > > > >
+> > > > > Something like:
+> > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
+> > > > > - read() or write() to trigger the transfer
+> > > > >
+> > > > 
+> > > > I may have supposedly promised Vinod to look into possibly providing
+> > > > something like this in the future. But I have not gotten around to do that
+> > > > yet. Currently, no such support.
+> > > 
+> > > And I do still have serious reservations about this topic :) Opening up
+> > > userspace access to DMA does not sound very great from security point of
+> > > view.
+> > 
+> > I was thinking about a dedicated module, and not something that the DMA engine
+> > offers directly. You load the module only if you need it (like the test module)
 > 
-> After:
->    text    data     bss     dec     hex filename
->   18426    2896     256   21578    544a drivers/soundwire/qcom.o
+> But loading that module would expose dma to userspace. 
+> > 
+> > > Federico, what use case do you have in mind?
+> > 
+> > Userspace drivers
+> 
+> more the reason not do do so, why cant a kernel driver be added for your
+> usage?
 
-Applied, thanks
+by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
+now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
 
-> 
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> ---
->  drivers/soundwire/qcom.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
-> index a1c2a44a3b4d..915c2cf0c274 100644
-> --- a/drivers/soundwire/qcom.c
-> +++ b/drivers/soundwire/qcom.c
-> @@ -406,13 +406,13 @@ static int qcom_swrm_port_enable(struct sdw_bus *bus,
->  	return ctrl->reg_write(ctrl, reg, val);
->  }
->  
-> -static struct sdw_master_port_ops qcom_swrm_port_ops = {
-> +static const struct sdw_master_port_ops qcom_swrm_port_ops = {
->  	.dpn_set_port_params = qcom_swrm_port_params,
->  	.dpn_set_port_transport_params = qcom_swrm_transport_params,
->  	.dpn_port_enable_ch = qcom_swrm_port_enable,
->  };
->  
-> -static struct sdw_master_ops qcom_swrm_ops = {
-> +static const struct sdw_master_ops qcom_swrm_ops = {
->  	.xfer_msg = qcom_swrm_xfer_msg,
->  	.pre_bank_switch = qcom_swrm_pre_bank_switch,
->  };
-> -- 
-> 2.27.0
+just let me introduce myself and the project:
+- coding in C since '91
+- coding in C++ since '98
+- a lot of stuff not relevant for this ;-)
+- working as a freelancer since Nov '19
+- implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
+- last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
+- subscribed to dmaengine on friday, saw the start of this discussion on saturday
+- talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
 
--- 
-~Vinod
+here the struct for the ioctl:
+
+typedef struct {
+  unsigned int struct_size;
+  const void *src_user_ptr;
+  void *dst_user_ptr;
+  unsigned long length;
+  unsigned int timeout_in_ms;
+} dma_sg_proxy_arg_t;
+
+best regards,
+Thomas
