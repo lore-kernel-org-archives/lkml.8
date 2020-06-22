@@ -2,118 +2,129 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E69CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 124002073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D412074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URj6Gz7D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gfkpd0ZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgFVPrY (ORCPT
+        id S1729585AbgFVPr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:47:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729250AbgFVPrX (ORCPT
+        Mon, 22 Jun 2020 11:47:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22570 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729266AbgFVPr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:47:23 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2103DC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:47:22 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id p18so14032498eds.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:47:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F8T5mZjCR5K6UE+9mip6AsTcYlxfqPfxEDZRXo68qXg=;
-        b=URj6Gz7DCNjVsfGxAkO2DOJQ4lhP8RnWB1oBTpMB1v+b9ngI15iZSGpciCEHPwhRtm
-         THavvnAHUL50ZpFzgz1EVT2okwJ6BeeZsAmcopLJMf5WZSkYA/QwaRG7z7H3s1k+eaJt
-         EF3a5YtgqK/aV1lCOq+EjGrCWYUgoTtReCeLcXg7FKh05Qp1sNZubqrc5zQ2ZDlWfUTu
-         AdbdhbrQpkW4BdEe8NFtAz6Y5DShUyx3KystsWglITp/okRj/QzsaCpNqC7cX1zVoc2L
-         wiT0IjoCZxuJsPhLG88KnO5MoJdfND8u4agst1e7U+g4Tcv381/zETGmFcbfvKl3zUm0
-         NAUw==
+        Mon, 22 Jun 2020 11:47:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592840846;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WSF8UMj0qG7jLVHbYktfjNnfEK9wsId39MxDX59I23o=;
+        b=gfkpd0ZHZrZnZlsvk27rh3NQcdJMjC3w8cfaS+B+6puKzg0gobeCNp2Xc36fkc1KabRELO
+        FEzlzuSo+umkvTp9kH5OWsSvPAp57/g+3uBVzrdU5MxKXYPo7560p//5bkU0sGObokUikt
+        KRqzVrs1+1bqmwG/C5lvGVWnPwya/bo=
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
+ [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-XJ7Pj6RyObqVVWSIZO1lvg-1; Mon, 22 Jun 2020 11:47:24 -0400
+X-MC-Unique: XJ7Pj6RyObqVVWSIZO1lvg-1
+Received: by mail-oo1-f72.google.com with SMTP id v26so8788854oot.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:47:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F8T5mZjCR5K6UE+9mip6AsTcYlxfqPfxEDZRXo68qXg=;
-        b=Z5sAu0lCRHBoQXA8Nbj5f1rcQpmPUvx10dI1aAnl49bbdcpxikcI5af8baxy8/btyw
-         hDjh7hOLxj+5iWJphE3Qo9a+tbftErWLV5bCOuWRaeWxknmuW66ccjytXrfIslwO0c0p
-         ILmJNjR6GTvjOJyd1dXemAoVBoAK4pJDypxV1ZruOttzS0L03T7Vf2ICscWm3uecqNZP
-         bfH8Q/X6dul8UBAdxbYQINtJ35gv2zTdQpAJHCeLap6Ev2UeyWt9M0/e0tnu/gAqLYLP
-         k9EUWbxYfuAS1/JN0G0XLza87WWSgAws2vKAd8MiBB8sYaPEClm2d6WzIddv5h+fkIlL
-         maXA==
-X-Gm-Message-State: AOAM531kiZehrj7kp0qVaunYP6bmzsbFqAvHo5zX49m0nymR+akTcytZ
-        08d/LbeyfRZ5YplmD/x9jbVK5Ac/
-X-Google-Smtp-Source: ABdhPJxIEqQRDELoOstYIbkWotcJMHSYonzFQNZ+f6Fma7p8nFax+whEYuQyCld/TtQgaxDNa/YB8A==
-X-Received: by 2002:aa7:c790:: with SMTP id n16mr18225197eds.54.1592840840867;
-        Mon, 22 Jun 2020 08:47:20 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:74f4:a0e9:488b:65c7])
-        by smtp.gmail.com with ESMTPSA id s14sm4015599edq.36.2020.06.22.08.47.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 08:47:20 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH] kbuild: run the checker after the compiler
-Date:   Mon, 22 Jun 2020 17:45:12 +0200
-Message-Id: <20200622154512.82758-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WSF8UMj0qG7jLVHbYktfjNnfEK9wsId39MxDX59I23o=;
+        b=tyhz5QMG4F57P/rOhqglAPD3s7S+bJqwZRStRvskMF7XGUjIdhaYHn1bj64l+v1xF1
+         EBIL80xsCtJMfBXqNQIO4g1he+dNs8AHz/gWf34Oo5LuJ+q+E2LqtLU+sFD05QMP8ju2
+         WoVlDlzyR9De10nWBiJMFKp3XQzHwNnfGVYHbqwMPTUHbTicp+X9vH2vDBCQmI/7pUrs
+         J/hCf3rn2MO8qu9H0e/GrxubQkqE65Gs9yZeBq2ilx7bY/sGzt61cqGvEQ0dXuagseKw
+         tUG0DGOYJ+gQbrNnDTETnRKzaU51zmBSqlGZfWPapQirfByodtJa7j3+Z0E4BxhpnKfn
+         liSg==
+X-Gm-Message-State: AOAM5310fo8SjylWhzH9PpLZ7oO7R5HWl/wsgRVijnqjqwrG942SA2XZ
+        2qBLteLyY5na0P/3iPSxss3kt3tF2qij5tQUV9VMBSQXXEBCPKXxQckYyTTuoLwdVLgMA03z+o4
+        2hn6U5nzolM2I4dBOWkBmRcX1Yh/wNs+vYzTKB9CS
+X-Received: by 2002:aca:3841:: with SMTP id f62mr12481358oia.73.1592840843775;
+        Mon, 22 Jun 2020 08:47:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwBhgHwGj1eiXfkBF+0eixO3+eR7Q3mDOxpcP81LLNNTZ6PrhQY/bBTskBdBKEEzM8q3mO6eXhRshbbN0Q2cjU=
+X-Received: by 2002:aca:3841:: with SMTP id f62mr12481346oia.73.1592840843518;
+ Mon, 22 Jun 2020 08:47:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200618090556.pepjdbnba2gqzcbe@butterfly.localdomain>
+ <20200618111859.GC698688@lore-desk.lan> <20200619150132.2zrc3ojqhtbn432u@butterfly.localdomain>
+ <20200621205412.GB271428@localhost.localdomain> <CAHcwAbR4govGK3RPyfKWRgFRhFanWtpJLrB_PEjcoiBDJ3_Adg@mail.gmail.com>
+ <20200622145338.GB27892@localhost.localdomain>
+In-Reply-To: <20200622145338.GB27892@localhost.localdomain>
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+Date:   Mon, 22 Jun 2020 17:47:12 +0200
+Message-ID: <CAHcwAbR1W_aOaozr=m48UCWKPr1m71bk-c+kwkGd6A2GTLGF6A@mail.gmail.com>
+Subject: Re: mt7612 suspend/resume issue
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Felix Fietkau <nbd@nbd.name>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the pre-git time the checker is run first, before the compiler.
-But if the source file contains some syntax error, the warnings from
-the compiler are more useful than those from sparse (and other
-checker most probably too).
+On Mon, Jun 22, 2020 at 4:53 PM Lorenzo Bianconi
+<lorenzo.bianconi@redhat.com> wrote:
+> > On Sun, Jun 21, 2020 at 10:54 PM Lorenzo Bianconi <lorenzo@kernel.org> wrote:
+> > > > > +static int __maybe_unused
+> > > > > +mt76x2e_suspend(struct pci_dev *pdev, pm_message_t state)
+> > > > > +{
+> > > > > +   struct mt76_dev *mdev = pci_get_drvdata(pdev);
+> > > > > +   struct mt76x02_dev *dev = container_of(mdev, struct mt76x02_dev, mt76);
+> > > > > +   int i, err;
+> > >
+> > > can you please double-check what is the PCI state requested during suspend?
+> >
+> > Do you mean ACPI S3 (this is the state the system enters)?  If not,
+> > what should I check and where?
+>
+> yes, right. Just for debugging, can you please force the card in PCI_D0 during the
+> suspend?
 
-So move the 'check' command to run after the compiler.
+Do you want me to do this:
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- scripts/Makefile.build | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+index 5543e242fb9b..e558342cce03 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+@@ -119,9 +119,8 @@ mt76x2e_suspend(struct pci_dev *pdev, pm_message_t state)
 
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 2e8810b7e5ed..7ba6a752d5bd 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -252,9 +252,9 @@ cmd_gen_ksymdeps = \
- endif
- 
- define rule_cc_o_c
--	$(call cmd,checksrc)
- 	$(call cmd_and_fixdep,cc_o_c)
- 	$(call cmd,gen_ksymdeps)
-+	$(call cmd,checksrc)
- 	$(call cmd,checkdoc)
- 	$(call cmd,objtool)
- 	$(call cmd,modversions_c)
-@@ -277,8 +277,8 @@ endif
- 
- # Built-in and composite module parts
- $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
--	$(call cmd,force_checksrc)
- 	$(call if_changed_rule,cc_o_c)
-+	$(call cmd,force_checksrc)
- 
- cmd_mod = { \
- 	echo $(if $($*-objs)$($*-y)$($*-m), $(addprefix $(obj)/, $($*-objs) $($*-y) $($*-m)), $(@:.mod=.o)); \
+     mt76x02_dma_reset(dev);
 
-base-commit: 48778464bb7d346b47157d21ffde2af6b2d39110
+-    pci_enable_wake(pdev, pci_choose_state(pdev, state), true);
+     pci_save_state(pdev);
+-    err = pci_set_power_state(pdev, pci_choose_state(pdev, state));
++    err = pci_set_power_state(pdev, PCI_D0);
+     if (err)
+         goto restore;
+
+?
+
 -- 
-2.27.0
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Principal Software Maintenance Engineer
 
