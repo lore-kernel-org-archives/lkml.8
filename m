@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C5FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0527206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A04206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Tsq60zSl"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="RkGI6tow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgFVKBU (ORCPT
+        id S1728014AbgFVKCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43798 "EHLO
+        Mon, 22 Jun 2020 06:02:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgFVKBN (ORCPT
+        with ESMTP id S1727801AbgFVKBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:01:13 -0400
+        Mon, 22 Jun 2020 06:01:18 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F550C061796
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:01:13 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x16so5120822wmj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:01:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E227C0617B9
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:01:18 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 17so522982wmo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A+lImr9HJg7an5aR2kWVhsrz0bguXORdrvazpSsfAy4=;
-        b=Tsq60zSlQyklW6ikiOvVha9m8MSQkGcpaji1GbS6xFPATyiJUUq3JKJyfCAyoxgehy
-         6CzmzBfAhfYC+JJ7E2jJttBs8SlhgR8oo9tMY8qH0H5uA72QFI9xKDo+9n217Y4MWcDI
-         iIpqF19hJetEL+xliD5MhEvVcUjPcnrYARK0a04t2IuYk/3fmnQix3PKNa1StSQ2Ywir
-         OsASWBCKRjtVl/oQTuUFv5MYvUju1kmBOyveg54l6ZkSpLRCgEJ7CT/LJK7QfCebpVVu
-         Mj4niG7n9b0pf3hzpGxkqMvGlvJ+MWwIDdWWPh8rjVNo3Yy750rQCUi4Ar9S11Dn+wof
-         slIA==
+        bh=rcgV1UNGKm4K4QD82m2Udcr1uoHRVa+LAuPxtdS553M=;
+        b=RkGI6towfSCgupn14twIBaRcPBpM6kTZkAyARWvNzlnwP2dFp8mTrnv4XT4CqOTAtt
+         IZZIzKyBSsI3/vkakwGdPxh4YtWTjHfNDgdbQoZiEHDRdqwaJzeBZU2n3pe3Hl1JIPX3
+         j5b+wJ80RHNzlW79fmuSMN+irizFshjUfl7KHbTO/28J+86JZlFjPu2oxnw1xDlP9U+o
+         Tz/qaKPx5+I3TcQfOgtfVc5nagMQ1oAW9Ofb8YpEYwg0Zu2KW4gsBJQW7Tl/PL353xVB
+         MT3qUFDfoJzdv7OI5y+BMBaG6gcer8a9lZAr62OJTJz3NDwnsNdQyvR6wevtOPQ6vWAU
+         9aMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=A+lImr9HJg7an5aR2kWVhsrz0bguXORdrvazpSsfAy4=;
-        b=W73YWYB2kxPocHqssmXQHHqz4jM3n6h3kWpvxfRfKlF6ysH+X5g3SHTflw6nAFOA/z
-         VqwQRPX2irTrhX7dkfHCW9pmb9kBq7L9EQOIavG0ZUah1wfVEFBogceLEVGGpLf3/Xi5
-         /cFDRBfrrvSlfBOnezB8S6hqLDiu/t4rRTuPL//VwME7kIzZiP9sjiH/cMvMUXncxJrX
-         pTMzBc6inVYWNPS687eOUNEAhdQRvO5+KsGpRUnUY/l6S45vOTbPXzz6M0E/ZUzt4oHe
-         QaEUmR1k0nW6zc/YJdI94OOjsXGdcyecFXRN3PYrY2XUfMv7sHK/U7OZZivkzfQs3b5M
-         heFQ==
-X-Gm-Message-State: AOAM531JWi2Ci0Hz019fchUVUKesZzFTxUFdJtTP5OesmyPq3KkkvZ/L
-        /TInLaHjkVMtdBuqSHn/zPaZlQ==
-X-Google-Smtp-Source: ABdhPJz+xi3uc649226XqSHmo+O8gA+/80J/5T5A137PMAF2MXQi5PymwGW6I5MXBKX7A322evi/xw==
-X-Received: by 2002:a1c:3bc2:: with SMTP id i185mr17995739wma.33.1592820071777;
-        Mon, 22 Jun 2020 03:01:11 -0700 (PDT)
+        bh=rcgV1UNGKm4K4QD82m2Udcr1uoHRVa+LAuPxtdS553M=;
+        b=fuTA9tjSbExkm6qNl/Wq4lQsGIoDeI+Lq/ml5Rrz0Cvz1nkubnFct+e5gFxkRbUJeS
+         41gZVW5nZL1nkLkVMX5R9mBfn0ix+TmTWhy2UBNFsObJEr18nWeJDosUP649zOTUVp7I
+         0GGGtPR4TtSOcW8yISLB4lRoM4k274imK+VMr25Ps/VX0yzBWjF3s9VKmxB7uyFN4Cl0
+         ni5DAwgzAbBzVUBlM/+1I2Maw8rnqp9yX1tWJ016awGIRo1+dazYnAJyHOCIO7sQML8+
+         aSivCVV52bu62BTDfaRUPL5Vd7XBhDoas8XTJONBPg/ixkzDhvBDxDUD4pa038L1iVrg
+         gUoQ==
+X-Gm-Message-State: AOAM530sfGHRPFfcGW+U6JXDKhAmA++QkBL55tNKHXCkFHuECxBWzJUt
+        mwT1S7GHgrsIXlJIygOOmbbvkA==
+X-Google-Smtp-Source: ABdhPJy6HpyoKYwmL67X7W6b1kvbkakGECdClzNJkWp/hMLI6DOqKfaBEc4Vc9FAS3rR166Apmbchw==
+X-Received: by 2002:a1c:f616:: with SMTP id w22mr9844980wmc.155.1592820077095;
+        Mon, 22 Jun 2020 03:01:17 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id x205sm16822187wmx.21.2020.06.22.03.01.10
+        by smtp.gmail.com with ESMTPSA id x205sm16822187wmx.21.2020.06.22.03.01.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 03:01:11 -0700 (PDT)
+        Mon, 22 Jun 2020 03:01:16 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
@@ -84,9 +84,9 @@ Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 04/11] net: devres: rename the release callback of devm_register_netdev()
-Date:   Mon, 22 Jun 2020 12:00:49 +0200
-Message-Id: <20200622100056.10151-5-brgl@bgdev.pl>
+Subject: [PATCH 07/11] phy: mdio: add kerneldoc for __devm_mdiobus_register()
+Date:   Mon, 22 Jun 2020 12:00:52 +0200
+Message-Id: <20200622100056.10151-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622100056.10151-1-brgl@bgdev.pl>
 References: <20200622100056.10151-1-brgl@bgdev.pl>
@@ -99,36 +99,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Make it an explicit counterpart to devm_register_netdev() just like we
-do with devm_free_netdev() for better clarity.
+This function is not documented. Add a short kerneldoc description.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- net/devres.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/phy/mdio_devres.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/devres.c b/net/devres.c
-index 1583ccb207c0..d7aa92243844 100644
---- a/net/devres.c
-+++ b/net/devres.c
-@@ -39,7 +39,7 @@ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
- }
- EXPORT_SYMBOL(devm_alloc_etherdev_mqs);
+diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
+index f0b4b6cfe5e3..3ee887733d4a 100644
+--- a/drivers/net/phy/mdio_devres.c
++++ b/drivers/net/phy/mdio_devres.c
+@@ -2,6 +2,13 @@
  
--static void devm_netdev_release(struct device *dev, void *this)
-+static void devm_unregister_netdev(struct device *dev, void *this)
+ #include <linux/phy.h>
+ 
++/**
++ * __devm_mdiobus_register - Resource-managed variant of mdiobus_register()
++ * @bus:	MII bus structure to register
++ * @owner:	Owning module
++ *
++ * Returns 0 on success, negative error number on failure.
++ */
+ int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
  {
- 	struct net_device_devres *res = this;
- 
-@@ -60,7 +60,7 @@ int devm_register_netdev(struct device *dev, struct net_device *ndev)
- 	struct net_device_devres *dr;
  	int ret;
- 
--	dr = devres_alloc(devm_netdev_release, sizeof(*dr), GFP_KERNEL);
-+	dr = devres_alloc(devm_unregister_netdev, sizeof(*dr), GFP_KERNEL);
- 	if (!dr)
- 		return -ENOMEM;
- 
 -- 
 2.26.1
 
