@@ -2,118 +2,200 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208D7206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D9E206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YvWCp+X5"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="MAUnUwCF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgFVJHr (ORCPT
+        id S1726644AbgFVJJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:07:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40078 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726201AbgFVJHq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:07:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592816865;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uYoQXSzwclqSNX+q/yIlo00opb3YPsUI2zyXrlleGws=;
-        b=YvWCp+X5KnT+FEVjOlsm3JbvdQ5++UU3mq2Xawp95vY++phdZ7QcmmiJNxGyI/JYHyBspd
-        Qg/Yk9I+mGFnfYZZ2SaM6urYAZv3LggqKubqBYQ7xBUC6+tGH5p6g9s0HgC79QL5vm8zUq
-        EMWsIpPflI18ve2uJVQk38g5SCU2dl4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-51-SQJRxOhlMqa4Bpmmejm1fA-1; Mon, 22 Jun 2020 05:07:41 -0400
-X-MC-Unique: SQJRxOhlMqa4Bpmmejm1fA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 294EE801503;
-        Mon, 22 Jun 2020 09:07:40 +0000 (UTC)
-Received: from [10.72.13.194] (ovpn-13-194.pek2.redhat.com [10.72.13.194])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E1D2071664;
-        Mon, 22 Jun 2020 09:07:34 +0000 (UTC)
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-To:     Eugenio Perez Martin <eperezma@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20200611113404.17810-1-mst@redhat.com>
- <20200611113404.17810-3-mst@redhat.com>
- <20200611152257.GA1798@char.us.oracle.com>
- <CAJaqyWdwXMX0JGhmz6soH2ZLNdaH6HEdpBM8ozZzX9WUu8jGoQ@mail.gmail.com>
- <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b6347dad-89e8-61f6-6394-65c301f91dd7@redhat.com>
-Date:   Mon, 22 Jun 2020 17:07:33 +0800
+        Mon, 22 Jun 2020 05:09:18 -0400
+Received: from mail-bn8nam12hn2214.outbound.protection.outlook.com ([52.100.165.214]:25409
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725819AbgFVJJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:09:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A1S1VTT86868q33LAkMz3A+P0rzKM6fvqTgI70xD/NyAkMFjuNNjqgDvPCF/NGYaMuyftsOonTeR6kw3t9Fy68lJEx4IsTNZfnRQT4uS9NeW0d8vPZFAosC3Thu4by4Q6ToO8gwR7OZcruiZT26EguposkTHt50O67ztheV7C1vd3NUcj6/J1Wd8qnfcagtYveSXrHDFQwPE3U4V7Ukuawc3xVezMQbVK3hCwJOtmOgcf/3vZJ7uWUiV/NKhk7+C3pra6AV/CTtH5c1nRAStFaeAMNQvTkpgRRiLM6n8zxIHAxAUrvV0l2YmzGhTTtTXN3jl3DR0GXGK/bM5vep3Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KjboPE8FDhP5OaCazEg75N3dpaR2SdubrLhT0eMTIuM=;
+ b=eMdBh9zgQcZfNTBwGl5IJErIgDETHF4ptzQ9GmkW7ECrnul/6wUosqlW9mOoJZperfiJ+o0JEq5nEEp4T2DlOmetMr3RSOMBVXVoUhUe7dOqhAt04e4ZXE6OMHZ0szQK5u2w++Z9DqdEw6WnXxMjhGGdWScxENnDWT9R5l3Fxi/OlwTkRrYD9MdVopf01yAW2DNXSmz53hjJniw8FlS0yydfGDEMFD+z3grQy4dbmZsMOv2J/xCneW0/cfc470z32/Vd10NXyhg8QFqz97eM2uncwa04PxYsFK61XxTBxVhwRH5U4P2Tefj++yw6JAqmfkRAdXZIrcVm6cQgX4wF7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KjboPE8FDhP5OaCazEg75N3dpaR2SdubrLhT0eMTIuM=;
+ b=MAUnUwCFBSRIucQ1pbSUmUgzLcuQaXxeJDLnyy9PKnoUpDCYzCvKXAGM9kJlhvOMKrEDe55AecQxyoGRdc/L9dkgbXVImfus1iClnGai+YVCISg2pK1i8vfWUjE8uVvyFdDYwhlIQfafTGYj4RkPlVcZnpg88DW68KlN9eqapqo=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=windriver.com;
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
+ by SN6PR11MB3311.namprd11.prod.outlook.com (2603:10b6:805:c1::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
+ 2020 09:09:12 +0000
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::b15b:3bd8:5bf1:1a55]) by SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::b15b:3bd8:5bf1:1a55%6]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 09:09:12 +0000
+Subject: Re: [PATCH] eventfd: Enlarge recursion limit to allow vhost to work
+To:     axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200410114720.24838-1-zhe.he@windriver.com>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <7a658764-31bd-95ac-0041-6b5064fba159@windriver.com>
+Date:   Mon, 22 Jun 2020 17:09:06 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200410114720.24838-1-zhe.he@windriver.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-ClientProxiedBy: HK0PR03CA0115.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::31) To SN6PR11MB3360.namprd11.prod.outlook.com
+ (2603:10b6:805:c8::30)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [128.224.162.175] (60.247.85.82) by HK0PR03CA0115.apcprd03.prod.outlook.com (2603:1096:203:b0::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 09:09:11 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f90c2eb3-7128-4a7e-8965-08d8168bee2d
+X-MS-TrafficTypeDiagnostic: SN6PR11MB3311:
+X-Microsoft-Antispam-PRVS: <SN6PR11MB33115962135A318304A45E188F970@SN6PR11MB3311.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Vh/vrYJMP2tOIbmwgTA3HxIj2cZ2RceuW1ffD4sBsI1uhgXRelqlDnLiiemONF+YHVTaxtvKBwmcvAgo43XD7fNBrsuFTTm+5TaeYKRHk047vOkJd3s5cx/YXTthm0QPW7LsMTa6p7RHg3ZvRQsysfYbokQRKbLsrLhMo4OT5V3lhybrw76gauALbtr6WNNdn4G30dZNoTfCo1dBMaiuI/fziFFVqBFH41rfB+c/ZHYxRzk1bighs6rZkPxkuydgAo/FWRPUCdS+thRQhJJBZW5TYbSi+hrsz2dpRDhp+hXuM8NY6I5oJ7QnwvNRsQ5GYSGagoMyUk1g6U8CfpZY0spPCrXFhqVe+p+mCsnikTFe3UcJ4Enc/d/WVYOxM+SydyfSh8xFbade+XJenjrraGRB8/GSR7+PqbC+PIJpt05Uqmzydqphct+ovzneEdy20q6xb8N2q7hpCl9MONV/JlufdyZ6Mo6Ank1A8f86pmigPx7p6kKx7IHaBVFnzxaQpah8Ef9ZKZZyb1KWTkt/Qun3UtDMjau4yWiwUyGun+yLqtTm4ITs/MOj2iGu5HVlJE0Bp4OmxfzVVHyp0ZvbF1NbvgFv03ZTJj7rs6k+TKQZvGxLGUsxzf0yZn6XPxD2Nflmdt85XsfIF8zP4fjh8Uwp2NQYokMSJM2b76MmuDlrziIkxZOYUZX8PtPr562wzggVL9dIfvdQ3HAmQCp8ocGo0KKo43CVvhEVpD/qb2nj3AJ9H5ohxgnumpjDWC6E
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:SN6PR11MB3360.namprd11.prod.outlook.com;PTR:;CAT:OSPM;SFTY:;SFS:(136003)(376002)(346002)(39850400004)(366004)(396003)(66476007)(66556008)(66946007)(83380400001)(5660300002)(31696002)(2616005)(31686004)(956004)(86362001)(6666004)(2906002)(8676002)(52116002)(16526019)(186003)(26005)(53546011)(6486002)(16576012)(316002)(478600001)(8936002)(6706004)(36756003)(78286006)(161623001);DIR:OUT;SFP:1501;
+X-MS-Exchange-AntiSpam-MessageData: oAqt3B/QMhhYNReEtnAe/k6mBTcoyMpA+7LDLz58rtSJveyjGp8ct1R79bbBUs+90Pvh7MgyfGNSXgmYuIxkdExTkz/BFjsvaWePumO0OOgT0ql3pZeg0on/0I+ewFV4DCDXGaeBPr/IPed3FXTi/XKo3EMl89o7SvGlAo491Tq8YPR8cJ/s4RKH+p/1q1bDxa6crvJQBLKkJNtkd0/6lB/cJLrHJODsYQp8Ynh7T/SqC2FmYPJtN410jQyVZtZOELXSXwW9MVhK6FE1EGkY7dflfwZWlMN/dj7ah6MKhqsWMkpWsM96pMRGVuGvvwToOhWgeWHcU8Ivo8OJAlTcbTsr0pZXQIPh9+YQq279Lj4sa3X29O3egjWGzqgoHT9pQGsgfp/+8xWjejVrgVwvQ5m6F+QMjh8JVa3LOKYD/rp/xOHxDx5GBU3R/b5VkWDGmIPlaXi4hikmTx4AzRoHrRAoyo4TvKIirNOstP/rODY=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f90c2eb3-7128-4a7e-8965-08d8168bee2d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 09:09:12.7250
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qoIGM8awQ/kYASnHUXX9CGTRz+FX0FKqB6lok4oAq/FuDPF8BUnRwnQ364WQr1w9jfVABes+ByJKL43sspX2vA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3311
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Can this be considered for this moment?
+This is actually v2 of
+"[PATCH 1/2] eventfd: Make wake counter work for single fd instead of all".
 
-On 2020/6/20 上午2:07, Eugenio Perez Martin wrote:
-> On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
-> <eperezma@redhat.com> wrote:
->> On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
->> <konrad.wilk@oracle.com> wrote:
->>> On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
->>>> As testing shows no performance change, switch to that now.
->>> What kind of testing? 100GiB? Low latency?
->>>
->> Hi Konrad.
->>
->> I tested this version of the patch:
->> https://lkml.org/lkml/2019/10/13/42
->>
->> It was tested for throughput with DPDK's testpmd (as described in
->> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html)
->> and kernel pktgen. No latency tests were performed by me. Maybe it is
->> interesting to perform a latency test or just a different set of tests
->> over a recent version.
->>
->> Thanks!
-> I have repeated the tests with v9, and results are a little bit different:
-> * If I test opening it with testpmd, I see no change between versions
-> * If I forward packets between two vhost-net interfaces in the guest
-> using a linux bridge in the host:
->    - netperf UDP_STREAM shows a performance increase of 1.8, almost
-> doubling performance. This gets lower as frame size increase.
->    - rests of the test goes noticeably worse: UDP_RR goes from ~6347
-> transactions/sec to 5830
->    - TCP_STREAM goes from ~10.7 gbps to ~7Gbps
+Thanks,
+Zhe
 
 
-Which direction did you mean here? Guest TX or RX?
 
-
->    - TCP_RR from 6223.64 transactions/sec to 5739.44
-
-
-Perf diff might help. I think we can start from the RR result which 
-should be easier. Maybe you can test it for each patch then you may see 
-which patch is the source of the regression.
-
-Thanks
+On 4/10/20 7:47 PM, zhe.he@windriver.com wrote:
+> From: He Zhe <zhe.he@windriver.com>
+>
+> commit b5e683d5cab8 ("eventfd: track eventfd_signal() recursion depth")
+> introduces a percpu counter that tracks the percpu recursion depth and
+> warn if it greater than zero, to avoid potential deadlock and stack
+> overflow.
+>
+> However sometimes different eventfds may be used in parallel. Specifically,
+> when heavy network load goes through kvm and vhost, working as below, it
+> would trigger the following call trace.
+>
+> -  100.00%
+>    - 66.51%
+>         ret_from_fork
+>         kthread
+>       - vhost_worker
+>          - 33.47% handle_tx_kick
+>               handle_tx
+>               handle_tx_copy
+>               vhost_tx_batch.isra.0
+>               vhost_add_used_and_signal_n
+>               eventfd_signal
+>          - 33.05% handle_rx_net
+>               handle_rx
+>               vhost_add_used_and_signal_n
+>               eventfd_signal
+>    - 33.49%
+>         ioctl
+>         entry_SYSCALL_64_after_hwframe
+>         do_syscall_64
+>         __x64_sys_ioctl
+>         ksys_ioctl
+>         do_vfs_ioctl
+>         kvm_vcpu_ioctl
+>         kvm_arch_vcpu_ioctl_run
+>         vmx_handle_exit
+>         handle_ept_misconfig
+>         kvm_io_bus_write
+>         __kvm_io_bus_write
+>         eventfd_signal
+>
+> 001: WARNING: CPU: 1 PID: 1503 at fs/eventfd.c:73 eventfd_signal+0x85/0xa0
+> ---- snip ----
+> 001: Call Trace:
+> 001:  vhost_signal+0x15e/0x1b0 [vhost]
+> 001:  vhost_add_used_and_signal_n+0x2b/0x40 [vhost]
+> 001:  handle_rx+0xb9/0x900 [vhost_net]
+> 001:  handle_rx_net+0x15/0x20 [vhost_net]
+> 001:  vhost_worker+0xbe/0x120 [vhost]
+> 001:  kthread+0x106/0x140
+> 001:  ? log_used.part.0+0x20/0x20 [vhost]
+> 001:  ? kthread_park+0x90/0x90
+> 001:  ret_from_fork+0x35/0x40
+> 001: ---[ end trace 0000000000000003 ]---
+>
+> This patch enlarges the limit to 1 which is the maximum recursion depth we
+> have found so far.
+>
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> ---
+>  fs/eventfd.c            | 3 ++-
+>  include/linux/eventfd.h | 3 +++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/eventfd.c b/fs/eventfd.c
+> index 78e41c7c3d05..8b9bd6fb08cd 100644
+> --- a/fs/eventfd.c
+> +++ b/fs/eventfd.c
+> @@ -70,7 +70,8 @@ __u64 eventfd_signal(struct eventfd_ctx *ctx, __u64 n)
+>  	 * it returns true, the eventfd_signal() call should be deferred to a
+>  	 * safe context.
+>  	 */
+> -	if (WARN_ON_ONCE(this_cpu_read(eventfd_wake_count)))
+> +	if (WARN_ON_ONCE(this_cpu_read(eventfd_wake_count) >
+> +	    EFD_WAKE_COUNT_MAX))
+>  		return 0;
+>  
+>  	spin_lock_irqsave(&ctx->wqh.lock, flags);
+> diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
+> index dc4fd8a6644d..e7684d768e3f 100644
+> --- a/include/linux/eventfd.h
+> +++ b/include/linux/eventfd.h
+> @@ -29,6 +29,9 @@
+>  #define EFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
+>  #define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE)
+>  
+> +/* This is the maximum recursion depth we find so far */
+> +#define EFD_WAKE_COUNT_MAX 1
+> +
+>  struct eventfd_ctx;
+>  struct file;
+>  
 
