@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E13FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3463CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3788A20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1431720767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SWyHG/rb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zt6mwbyw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbgFVS7m (ORCPT
+        id S1730467AbgFVS7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:59:42 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42318 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730356AbgFVS7j (ORCPT
+        Mon, 22 Jun 2020 14:59:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60942 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730416AbgFVS7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:59:39 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxSuo024921;
-        Mon, 22 Jun 2020 13:59:28 -0500
+        Mon, 22 Jun 2020 14:59:44 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxWjK053537;
+        Mon, 22 Jun 2020 13:59:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592852368;
-        bh=l5DBLATby1KM81lVYix9jAEvjwVv3jRRG9y+NT8lvMA=;
+        s=ti-com-17Q1; t=1592852372;
+        bh=9rbi449bFmHQundQ8dlXaifDs/ndof179QCH2fsw94w=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=SWyHG/rbXEqiH8nB01MUIsKNHKcpsc/lvQPnjKZfxfm6m7B0do4x9jSNOd1MbiD9D
-         q9UEgU7OqE/wEx1Jnz/UypPIoaJ9lbs0VMLvEQC8YzsegHNQdaxb5DsJFw9Qlltu3Q
-         eS/V2cFxLCUwU7nzU70dtvjcWfI403bHlE23ywjI=
+        b=Zt6mwbywt8/DxgUn594YhlVIt4rza/ACSG5n9E9qmLJZu2HrowFRmDPU8zfUaNmyP
+         FOQASu8kbRdv0uJURPzlZKyNfr/aIVGcpBOvqQN7gfHGiBdeBMZ1w4729qjUZSBtxv
+         orMhq/gtRC/NMdsg0cojrAz2MjOniaBgrnl1/7n0=
 Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MIxS3O038043
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MIxWqt010424
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 13:59:28 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
+        Mon, 22 Jun 2020 13:59:32 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
  (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Jun 2020 13:59:27 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 13:59:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 22 Jun 2020 13:59:27 -0500
+ Frontend Transport; Mon, 22 Jun 2020 13:59:31 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxReA088083;
-        Mon, 22 Jun 2020 13:59:27 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxVNo078747;
+        Mon, 22 Jun 2020 13:59:31 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
 CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v29 06/16] dt-bindings: leds: Convert leds-lp55xx to yaml
-Date:   Mon, 22 Jun 2020 13:59:09 -0500
-Message-ID: <20200622185919.2131-7-dmurphy@ti.com>
+Subject: [PATCH v29 15/16] leds: lp55xx: Fix file permissions to use DEVICE_ATTR macros
+Date:   Mon, 22 Jun 2020 13:59:18 -0500
+Message-ID: <20200622185919.2131-16-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200622185919.2131-1-dmurphy@ti.com>
 References: <20200622185919.2131-1-dmurphy@ti.com>
@@ -68,476 +68,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the leds-lp55xx.txt to yaml binding.
+Fix the checkpatch warnings for the use of the file permission macros.
+In converting the file permissions to the DEVICE_ATTR_XX macros the
+call back function names needed to be updated within the code.
 
+This means that the lp55xx_ needed to be dropped in the name to keep in
+harmony with the ABI documentation.
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 ------------------
- .../devicetree/bindings/leds/leds-lp55xx.yaml | 220 +++++++++++++++++
- 2 files changed, 220 insertions(+), 228 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+ drivers/leds/leds-lp55xx-common.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-deleted file mode 100644
-index 1b66a413fb9d..000000000000
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ /dev/null
-@@ -1,228 +0,0 @@
--Binding for TI/National Semiconductor LP55xx Led Drivers
--
--Required properties:
--- compatible: one of
--	national,lp5521
--	national,lp5523
--	ti,lp55231
--	ti,lp5562
--	ti,lp8501
--
--- reg: I2C slave address
--- clock-mode: Input clock mode, (0: automode, 1: internal, 2: external)
--
--Each child has own specific current settings
--- led-cur: Current setting at each led channel (mA x10, 0 if led is not connected)
--- max-cur: Maximun current at each led channel.
--
--Optional properties:
--- enable-gpio: GPIO attached to the chip's enable pin
--- label: Used for naming LEDs
--- pwr-sel: LP8501 specific property. Power selection for output channels.
--         0: D1~9 are connected to VDD
--         1: D1~6 with VDD, D7~9 with VOUT
--         2: D1~6 with VOUT, D7~9 with VDD
--         3: D1~9 are connected to VOUT
--
--Alternatively, each child can have a specific channel name and trigger:
--- chan-name (optional): name of channel
--- linux,default-trigger (optional): see
--  Documentation/devicetree/bindings/leds/common.txt
--
--example 1) LP5521
--3 LED channels, external clock used. Channel names are 'lp5521_pri:channel0',
--'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
--on channel 0.
--
--lp5521@32 {
--	compatible = "national,lp5521";
--	reg = <0x32>;
--	label = "lp5521_pri";
--	clock-mode = /bits/ 8 <2>;
--
--	chan0 {
--		led-cur = /bits/ 8 <0x2f>;
--		max-cur = /bits/ 8 <0x5f>;
--		linux,default-trigger = "heartbeat";
--	};
--
--	chan1 {
--		led-cur = /bits/ 8 <0x2f>;
--		max-cur = /bits/ 8 <0x5f>;
--	};
--
--	chan2 {
--		led-cur = /bits/ 8 <0x2f>;
--		max-cur = /bits/ 8 <0x5f>;
--	};
--};
--
--example 2) LP5523
--9 LED channels with specific name. Internal clock used.
--The I2C slave address is configurable with ASEL1 and ASEL0 pins.
--Available addresses are 32/33/34/35h.
--
--ASEL1    ASEL0    Address
---------------------------
-- GND      GND       32h
-- GND      VEN       33h
-- VEN      GND       34h
-- VEN      VEN       35h
--
--lp5523@32 {
--	compatible = "national,lp5523";
--	reg = <0x32>;
--	clock-mode = /bits/ 8 <1>;
--
--	chan0 {
--		chan-name = "d1";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan1 {
--		chan-name = "d2";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan2 {
--		chan-name = "d3";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan3 {
--		chan-name = "d4";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan4 {
--		chan-name = "d5";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan5 {
--		chan-name = "d6";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan6 {
--		chan-name = "d7";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan7 {
--		chan-name = "d8";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan8 {
--		chan-name = "d9";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--};
--
--example 3) LP5562
--4 channels are defined.
--
--lp5562@30 {
--	compatible = "ti,lp5562";
--	reg = <0x30>;
--	clock-mode = /bits/8 <2>;
--
--	chan0 {
--		chan-name = "R";
--		led-cur = /bits/ 8 <0x20>;
--		max-cur = /bits/ 8 <0x60>;
--	};
--
--	chan1 {
--		chan-name = "G";
--		led-cur = /bits/ 8 <0x20>;
--		max-cur = /bits/ 8 <0x60>;
--	};
--
--	chan2 {
--		chan-name = "B";
--		led-cur = /bits/ 8 <0x20>;
--		max-cur = /bits/ 8 <0x60>;
--	};
--
--	chan3 {
--		chan-name = "W";
--		led-cur = /bits/ 8 <0x20>;
--		max-cur = /bits/ 8 <0x60>;
--	};
--};
--
--example 4) LP8501
--9 channels are defined. The 'pwr-sel' is LP8501 specific property.
--Others are same as LP5523.
--
--lp8501@32 {
--	compatible = "ti,lp8501";
--	reg = <0x32>;
--	clock-mode = /bits/ 8 <2>;
--	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
--
--	chan0 {
--		chan-name = "d1";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan1 {
--		chan-name = "d2";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan2 {
--		chan-name = "d3";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan3 {
--		chan-name = "d4";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan4 {
--		chan-name = "d5";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan5 {
--		chan-name = "d6";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan6 {
--		chan-name = "d7";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan7 {
--		chan-name = "d8";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--
--	chan8 {
--		chan-name = "d9";
--		led-cur = /bits/ 8 <0x14>;
--		max-cur = /bits/ 8 <0x20>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-new file mode 100644
-index 000000000000..b1bb3feb0f4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-@@ -0,0 +1,220 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-lp55xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI/National Semiconductor LP55xx and LP8501 LED Drivers
-+
-+maintainers:
-+  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-+  - Pavel Machek <pavel@ucw.cz>
-+
-+description: |
-+  Bindings for the TI/National Semiconductor LP55xx and LP8501 multi channel
-+  LED Drivers.
-+
-+  For more product information please see the link below:
-+    https://www.ti.com/lit/gpn/lp5521
-+    https://www.ti.com/lit/gpn/lp5523
-+    https://www.ti.com/lit/gpn/lp55231
-+    https://www.ti.com/lit/gpn/lp5562
-+    https://www.ti.com/lit/gpn/lp8501
-+
-+properties:
-+  compatible:
-+    enum:
-+      - national,lp5521
-+      - national,lp5523
-+      - ti,lp55231
-+      - ti,lp5562
-+      - ti,lp8501
-+
-+  reg:
-+    maxItems: 1
-+    description: I2C slave address
-+
-+  clock-mode:
-+    $ref: /schemas/types.yaml#definitions/uint8
-+    description: |
-+      Input clock mode
-+    enum:
-+      - 0 # automode
-+      - 1 # internal
-+      - 2 # external
-+
-+  enable-gpio:
-+    maxItems: 1
-+    description: |
-+      GPIO attached to the chip's enable pin
-+
-+  pwr-sel:
-+    $ref: /schemas/types.yaml#definitions/uint8
-+    description: |
-+      LP8501 specific property. Power selection for output channels.
-+    enum:
-+      - 0 # D1~9 are connected to VDD
-+      - 1 # D1~6 with VDD, D7~9 with VOUT
-+      - 2 # D1~6 with VOUT, D7~9 with VDD
-+      - 3 # D1~9 are connected to VOUT
-+
-+patternProperties:
-+  "(^led@[0-9a-f]$|led)":
-+    type: object
-+    $ref: common.yaml#
-+    properties:
-+      led-cur:
-+        $ref: /schemas/types.yaml#definitions/uint8
-+        description: |
-+          Current setting at each LED channel (mA x10, 0 if LED is not connected)
-+        minimum: 0
-+        maximum: 255
-+
-+      max-cur:
-+        $ref: /schemas/types.yaml#definitions/uint8
-+        description: Maximun current at each LED channel.
-+
-+      reg:
-+        description: |
-+          Output channel for the LED.  This is zero based channel identifier and
-+          the data sheet is a one based channel identifier.
-+          reg value to output to LED output number
-+        enum:
-+          - 0 # LED output D1
-+          - 1 # LED output D2
-+          - 2 # LED output D3
-+          - 3 # LED output D4
-+          - 4 # LED output D5
-+          - 5 # LED output D6
-+          - 6 # LED output D7
-+          - 7 # LED output D8
-+          - 8 # LED output D9
-+
-+      chan-name:
-+        $ref: /schemas/types.yaml#definitions/string
-+        description: name of channel
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+   #include <dt-bindings/leds/common.h>
-+
-+   i2c {
-+       #address-cells = <1>;
-+       #size-cells = <0>;
-+
-+       led-controller@32 {
-+           #address-cells = <1>;
-+           #size-cells = <0>;
-+           compatible = "ti,lp8501";
-+           reg = <0x32>;
-+           clock-mode = /bits/ 8 <2>;
-+           pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
-+
-+           led@0 {
-+               reg = <0>;
-+               chan-name = "d1";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+
-+           led@1 {
-+               reg = <1>;
-+               chan-name = "d2";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+
-+           led@2 {
-+               reg = <2>;
-+               chan-name = "d3";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+
-+           led@3 {
-+               reg = <3>;
-+               chan-name = "d4";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+
-+           led@4 {
-+               reg = <4>;
-+               chan-name = "d5";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+
-+           led@5 {
-+               reg = <5>;
-+               chan-name = "d6";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+
-+           led@6 {
-+               reg = <6>;
-+               chan-name = "d7";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+
-+           led@7 {
-+               reg = <7>;
-+               chan-name = "d8";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+
-+           led@8 {
-+               reg = <8>;
-+               chan-name = "d9";
-+               led-cur = /bits/ 8 <0x14>;
-+               max-cur = /bits/ 8 <0x20>;
-+           };
-+        };
-+
-+       led-controller@33 {
-+           #address-cells = <1>;
-+           #size-cells = <0>;
-+           compatible = "national,lp5523";
-+           reg = <0x33>;
-+           clock-mode = /bits/ 8 <0>;
-+
-+           multi-led@2 {
-+               #address-cells = <1>;
-+               #size-cells = <0>;
-+               reg = <0x2>;
-+               color = <LED_COLOR_ID_MULTI>;
-+               function = LED_FUNCTION_STANDBY;
-+               linux,default-trigger = "heartbeat";
-+
-+               led@0 {
-+                   led-cur = /bits/ 8 <50>;
-+                   max-cur = /bits/ 8 <100>;
-+                   reg = <0x0>;
-+                   color = <LED_COLOR_ID_GREEN>;
-+               };
-+
-+               led@1 {
-+                   led-cur = /bits/ 8 <50>;
-+                   max-cur = /bits/ 8 <100>;
-+                   reg = <0x1>;
-+                   color = <LED_COLOR_ID_BLUE>;
-+               };
-+
-+               led@6 {
-+                   led-cur = /bits/ 8 <50>;
-+                   max-cur = /bits/ 8 <100>;
-+                   reg = <0x6>;
-+                   color = <LED_COLOR_ID_RED>;
-+               };
-+            };
-+        };
-+    };
-+
-+...
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index d33564aef563..59c3234ba1d7 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -83,7 +83,7 @@ static int lp55xx_post_init_device(struct lp55xx_chip *chip)
+ 	return cfg->post_init_device(chip);
+ }
+ 
+-static ssize_t lp55xx_show_current(struct device *dev,
++static ssize_t led_current_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -92,7 +92,7 @@ static ssize_t lp55xx_show_current(struct device *dev,
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->led_current);
+ }
+ 
+-static ssize_t lp55xx_store_current(struct device *dev,
++static ssize_t led_current_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -116,7 +116,7 @@ static ssize_t lp55xx_store_current(struct device *dev,
+ 	return len;
+ }
+ 
+-static ssize_t lp55xx_show_max_current(struct device *dev,
++static ssize_t max_current_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -125,9 +125,8 @@ static ssize_t lp55xx_show_max_current(struct device *dev,
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->max_current);
+ }
+ 
+-static DEVICE_ATTR(led_current, S_IRUGO | S_IWUSR, lp55xx_show_current,
+-		lp55xx_store_current);
+-static DEVICE_ATTR(max_current, S_IRUGO , lp55xx_show_max_current, NULL);
++static DEVICE_ATTR_RW(led_current);
++static DEVICE_ATTR_RO(max_current);
+ 
+ static struct attribute *lp55xx_led_attrs[] = {
+ 	&dev_attr_led_current.attr,
+@@ -271,7 +270,7 @@ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
+ 				GFP_KERNEL, chip, lp55xx_firmware_loaded);
+ }
+ 
+-static ssize_t lp55xx_show_engine_select(struct device *dev,
++static ssize_t select_engine_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -281,7 +280,7 @@ static ssize_t lp55xx_show_engine_select(struct device *dev,
+ 	return sprintf(buf, "%d\n", chip->engine_idx);
+ }
+ 
+-static ssize_t lp55xx_store_engine_select(struct device *dev,
++static ssize_t select_engine_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -323,7 +322,7 @@ static inline void lp55xx_run_engine(struct lp55xx_chip *chip, bool start)
+ 		chip->cfg->run_engine(chip, start);
+ }
+ 
+-static ssize_t lp55xx_store_engine_run(struct device *dev,
++static ssize_t run_engine_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -348,9 +347,8 @@ static ssize_t lp55xx_store_engine_run(struct device *dev,
+ 	return len;
+ }
+ 
+-static DEVICE_ATTR(select_engine, S_IRUGO | S_IWUSR,
+-		   lp55xx_show_engine_select, lp55xx_store_engine_select);
+-static DEVICE_ATTR(run_engine, S_IWUSR, NULL, lp55xx_store_engine_run);
++static DEVICE_ATTR_RW(select_engine);
++static DEVICE_ATTR_WO(run_engine);
+ 
+ static struct attribute *lp55xx_engine_attributes[] = {
+ 	&dev_attr_select_engine.attr,
 -- 
 2.26.2
 
