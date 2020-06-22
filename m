@@ -2,120 +2,135 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72988C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F78C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48AA62075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2522075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SSPivWN2"
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="xdayWTMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgFVUs4 (ORCPT
+        id S1728846AbgFVUtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:48:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47053 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbgFVUsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:48:55 -0400
-Received: from hanvin-mobl2.amr.corp.intel.com (fmdmzpr03-ext.fm.intel.com [192.55.54.38])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 05MKmkhO2220693
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 22 Jun 2020 13:48:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 05MKmkhO2220693
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020052301; t=1592858928;
-        bh=qK1GQ3W6Pi4xX9Ea+1auBCAyZ/O5uuSxujhiAeKID9g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SSPivWN2sEZECwBqhIcK0Id+FBFe9duWrX+JwbRCl8+i0wETIkqO+54ZgWB/+xSKQ
-         ZRIW+pNAjeUyplLl6g8KlaINBJXk/5rP91u69nUTDS8EHvoCOjaB3yHqvccXrRsLre
-         7EmzGWRxKaPzoh/Vd5PTea0r/nIs2/VBCZ4oBN2RppsW+9lHqWA7m3WGDVZuT47ki1
-         fGMxKSZ1RtA++vx1Q2SVvXy2EsNOPbN342ZJ4iGhiBD2mZ7FSamq2TrGGmNOpyh6zc
-         EWv93EIQqORSWFKagwG5uYcAl/mShXyTE5yw2qiH6PPR7rL9QK9HYTdKjvzk9GmMs3
-         AtOTLg6VhIbRw==
-Subject: Re: [PATCH] initrd: Remove erroneous comment
-To:     Tom Rini <trini@konsulko.com>, ron minnich <rminnich@gmail.com>
-Cc:     lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-References: <20200619143056.24538-1-trini@konsulko.com>
- <CAP6exYJ64Hy9y3Dzh9Asrq8Y0oDWYk+tf4UAcasEc-ZxTY8DAw@mail.gmail.com>
- <20200622204034.GL27801@bill-the-cat>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <2455d1e8-d6b4-760b-9a4c-0071c5ae986d@zytor.com>
-Date:   Mon, 22 Jun 2020 13:48:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 16:49:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbgFVUtH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:49:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FAFC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:49:05 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 22so32639wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bAxXw0P+7fxIv8XDeAsMIWiKTTgiRvEnr1gYhF4aqDM=;
+        b=xdayWTMfcnj9BL4Q/497ZIEo8KpNEk/mhOwdmzGQf4Pjv21yHpjP2x+/pZqEhvtfKy
+         kQoLzoFlMNqqTN6d+H0u2jj1QvfxEh9JFAAYCRhDxu3cvv1EntkeLWf2MzM3Hnpp7g6l
+         YCKC4tsxLzwYZzPa18lOti+gNylnlEzFvTLvug4S0N2F08al6Nyc6jUDfC9Nba5THlUt
+         8hPn4wcYs+tB8sFRTPS0g5Fmre5UJNLMAP3z2KKJQX62OQCupovbtLUL5E1QEDr8QRCN
+         Cs+SrjxkPhkMzTV5qVfhNbDGrokD6nDNQ4totde1IJJpcLaJBtmjg5tSmYJP06E8KQ8A
+         vCKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bAxXw0P+7fxIv8XDeAsMIWiKTTgiRvEnr1gYhF4aqDM=;
+        b=hLj4f1hwc0woGsI3X1iRgLa2THkhz64qtcLrZblfQaz1779nRtmKcasLVfqfEzvYTs
+         2/qdMtNHnvKaRdryNfguqc1cLoa4k3O1nrhAukAUCJPZpjcfAtf7lZFlYqWMI69lGurK
+         5JVWd+Opl0k+2xY2AdDQFnrL+PnbagNtdoN1gYmXS98JChUT59XGHhNyTgimefhJ6xJC
+         z23RMW1JRRS81HUla89eNGXw+DNo9eD2RfJv3gPr0ocmkY+w979KZNmVK8NLeHKTVntC
+         YKYChX637m2bhboK4CJ+NjTjbxxuMgi7oV+vEBxtr3jGINfip2yRwUyVSeQfCwAlmo6u
+         Wc9Q==
+X-Gm-Message-State: AOAM5313+tpqJ0WeEiOpQT2jj8zS2bxx2O8j3tYzxzSYDaW1/tV7Yh3V
+        SpM7qaOGUewdyMGl87vGW7Z6pA==
+X-Google-Smtp-Source: ABdhPJzrxBMb7aICDtcTivTZt/0N4IDma8H11KKSTACEDvMEWomIvk3wdH6CnEUTeffNe+JG5MbH8Q==
+X-Received: by 2002:a7b:c186:: with SMTP id y6mr21336746wmi.82.1592858944236;
+        Mon, 22 Jun 2020 13:49:04 -0700 (PDT)
+Received: from localhost.localdomain ([194.53.184.63])
+        by smtp.gmail.com with ESMTPSA id z1sm11144565wru.30.2020.06.22.13.49.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 13:49:03 -0700 (PDT)
+From:   Quentin Monnet <quentin@isovalent.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Quentin Monnet <quentin@isovalent.com>
+Subject: [PATCH] checkpatch: fix CONST_STRUCT when const_structs.checkpatch is missing
+Date:   Mon, 22 Jun 2020 21:48:44 +0100
+Message-Id: <20200622204844.21030-1-quentin@isovalent.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200622204034.GL27801@bill-the-cat>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22 13:40, Tom Rini wrote:
-> On Mon, Jun 22, 2020 at 01:02:16PM -0700, ron minnich wrote:
-> 
->> The other thing you ought to consider fixing:
->> initrd is documented as follows:
->>
->>         initrd=         [BOOT] Specify the location of the initial ramdisk
->>
->> for bootloaders only.
->>
->> UEFI consumes initrd from the command line as well. As ARM servers
->> increasingly use UEFI, there may be situations in which the initrd
->> option doesn't make its way to the kernel? I don't know, UEFI is such
->> a black box to me. But I've seen this "initrd consumption" happen.
->>
->> Based on docs, and the growing use of bootloaders that are happy to
->> consume initrd= and not pass it to the kernel, you might be better off
->> trying to move to the new command line option anyway.
->>
->> IOW, this comment may not be what people want to see, but ... it might
->> also be right. Or possibly changed to:
->>
->> /*
->>  * The initrd keyword is in use today on ARM, PowerPC, and MIPS.
->>  * It is also reserved for use by bootloaders such as UEFI and may
->>  * be consumed by them and not passed on to the kernel.
->>  * The documentation also shows it as reserved for bootloaders.
->>  * It is advised to move to the initrdmem= option whereever possible.
->>  */
-> 
-> Fair warning, one of the other hats I wear is the chief custodian of the
-> U-Boot project.
-> 
-> Note that on most architectures in modern times the device tree is used
-> to pass in initrd type information and "initrd=" on the command line is
-> quite legacy.
-> 
-> But what do you mean UEFI "consumes" initrd= ?  It's quite expected that
-> when you configure grub/syslinux/systemd-boot/whatever via extlinux.conf
-> or similar with "initrd /some/file" something reasonable happens to
-> read that in to memory and pass along the location to Linux (which can
-> vary from arch to arch, when not using device tree).  I guess looking at 
-> Documentation/x86/boot.rst is where treating initrd= as a file that
-> should be handled and ramdisk_image / ramdisk_size set came from.  I do
-> wonder what happens in the case of ARM/ARM64 + UEFI without device tree.
-> 
+Checkpatch reports warnings when some specific structs are not declared
+as const in the code. The list of structs to consider was initially
+defined in the checkpatch.pl script itself, but it was later moved to an
+external file (scripts/const_structs.checkpatch). This introduced two
+minor issues:
 
-UEFI plus the in-kernel UEFI stub is, in some ways, a "bootloader" in
-the traditional sense. It is totally fair that we should update the
-documentation with this as a different case, though, because it is part
-of the kernel tree and so the kernel now has partial ownership of the
-namespace.
+- When file scripts/const_structs.checkpatch is not present (for
+  example, if checkpatch is run outside of the kernel directory with the
+  "--no-tree" option), a warning is printed to stderr to tell the user
+  that "No structs that should be const will be found". This is fair,
+  but the warning is printed unconditionally, even if the option
+  "--ignore CONST_STRUCT" is passed. In the latter case, we explicitly
+  ask checkpatch to skip this check, so no warning should be printed.
 
-I suggest "STUB" for "in-kernel firmware stub" for this purpose; no need
-to restrict it to a specific firmware for the purpose of namespace
-reservation.
+- When scripts/const_structs.checkpatch is missing, or even when trying
+  to silence the warning by adding an empty file, $const_structs is set
+  to "", and the regex used for finding structs that should be const,
+  "$line =~ /\bstruct\s+($const_structs)\b(?!\s*\{)/)", matches all
+  structs found in the code, thus reporting a number of false positives.
 
-	-hpa
+Let's fix the first item by skipping scripts/const_structs.checkpatch
+processing if "CONST_STRUCT" checks are ignored, and the second one by
+skipping the test if $const_structs is an empty string.
+
+Fixes: bf1fa1dae68e ("checkpatch: externalize the structs that should be const")
+Signed-off-by: Quentin Monnet <quentin@isovalent.com>
+---
+ scripts/checkpatch.pl | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index b06093777fd8..dcbf4ff5d445 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -781,8 +781,10 @@ sub read_words {
+ }
+ 
+ my $const_structs = "";
+-read_words(\$const_structs, $conststructsfile)
+-    or warn "No structs that should be const will be found - file '$conststructsfile': $!\n";
++if (show_type("CONST_STRUCT")) {
++	read_words(\$const_structs, $conststructsfile)
++	    or warn "No structs that should be const will be found - file '$conststructsfile': $!\n";
++}
+ 
+ my $typeOtherTypedefs = "";
+ if (length($typedefsfile)) {
+@@ -6660,7 +6662,8 @@ sub process {
+ 
+ # check for various structs that are normally const (ops, kgdb, device_tree)
+ # and avoid what seem like struct definitions 'struct foo {'
+-		if ($line !~ /\bconst\b/ &&
++		if ($const_structs ne "" &&
++		    $line !~ /\bconst\b/ &&
+ 		    $line =~ /\bstruct\s+($const_structs)\b(?!\s*\{)/) {
+ 			WARN("CONST_STRUCT",
+ 			     "struct $1 should normally be const\n" . $herecurr);
+-- 
+2.20.1
+
