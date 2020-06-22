@@ -2,99 +2,128 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA4FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C91A02075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592862420;
-	bh=XrZl/vVQWaiQPTxpVNlEe6VlmB1jEXGxRHg5FbzoxMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=neomDpCtHqaHd6nJg5QJwBttZxspdylZ5i3cHYRzZYSoq0lxVa5MRWjNiJH3ME5ti
-	 HJJxDgsVxdUpDGkpBVgoonH8JqkSF5G7lzoK8TD7UjU98ajEmlZjYZkWuKA3yfa4hv
-	 ejPGB8rU6el5nkoa1+Mf6OPHxsi+f346ZEla6exM=
+	by mail.kernel.org (Postfix) with ESMTP id 2111520767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbgFVVq7 (ORCPT
+        id S1730768AbgFVVrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39144 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 17:47:45 -0400
+Received: from mga04.intel.com ([192.55.52.120]:20842 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730594AbgFVVq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:46:58 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFC2F2075A;
-        Mon, 22 Jun 2020 21:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592862417;
-        bh=XrZl/vVQWaiQPTxpVNlEe6VlmB1jEXGxRHg5FbzoxMA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JDnfB2iRafLkgHmRvlGUj0k+vNxNQMs1lY12U9FapM45OcfpQ76IL/Giv/l25E2FZ
-         RAhb0WYRnxr0zEXRKpZWhmF1JVEC31xtyGrpy44Q0hhtahRqygF5D6QZ0U7KHZvQrs
-         D6tgJV6OuXsqQ942GYVhLixo4yijI9jaQchrv59g=
-Date:   Mon, 22 Jun 2020 14:46:55 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net,
-        shawnguo@kernel.org, leoyang.li@nxp.com, madalin.bucur@oss.nxp.com,
-        ioana.ciornei@nxp.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 4/7] net: phy: add backplane kr driver
- support
-Message-ID: <20200622144655.49ee2fe2@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
-        <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
+        id S1727049AbgFVVro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:47:44 -0400
+IronPort-SDR: ZodNfaIS04hWJQ/CSIq/9ZzvLmfdIoJYAwAq9Wufyfh4FohkrZOqLUjpjnFm9XztGr0bdIC1PI
+ 3frgASyl8p1g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="141383919"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="141383919"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:47:44 -0700
+IronPort-SDR: klFt9lM/VG83Mhux4A2krEf8V3LNHiXvB3y999chqZTg8LqBCVpQ6q0ad+pbfZFpJjqSGAbrD9
+ 9Jva/FrFlMhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="300984512"
+Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Jun 2020 14:47:40 -0700
+Date:   Tue, 23 Jun 2020 00:47:39 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Pengfei Xu <pengfei.xu@intel.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Heng Su <heng.su@intel.com>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kai Svahn <kai.svahn@intel.com>
+Subject: Re: [PATCH v2] Kernel selftests: TPM2: upgrade TPM2 tests from
+ Python 2 to Python 3
+Message-ID: <20200622214739.GB22727@linux.intel.com>
+References: <20200618081502.15302-1-pengfei.xu@intel.com>
+ <20200622214613.GA22727@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622214613.GA22727@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 16:35:21 +0300 Florinel Iordache wrote:
-> Add support for backplane kr generic driver including link training
-> (ieee802.3ap/ba) and fixed equalization algorithm
->=20
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+On Tue, Jun 23, 2020 at 12:46:18AM +0300, Jarkko Sakkinen wrote:
+> On Thu, Jun 18, 2020 at 04:15:02PM +0800, Pengfei Xu wrote:
+> > Python 2 is no longer supported by the Python upstream project, so
+> > upgrade TPM2 tests to Python 3.
+> > 
+> > Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
+> 
+> Use "selftests: tpm: <short summary>".
+> 
+> > ---
+> >  tools/testing/selftests/tpm2/test_smoke.sh |  4 +-
+> >  tools/testing/selftests/tpm2/test_space.sh |  2 +-
+> >  tools/testing/selftests/tpm2/tpm2.py       | 68 ++++++++++++++--------
+> >  tools/testing/selftests/tpm2/tpm2_tests.py | 24 +++++---
+> >  4 files changed, 61 insertions(+), 37 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+> > index 663062701d5a..d05467f6d258 100755
+> > --- a/tools/testing/selftests/tpm2/test_smoke.sh
+> > +++ b/tools/testing/selftests/tpm2/test_smoke.sh
+> > @@ -6,8 +6,8 @@ ksft_skip=4
+> >  
+> >  [ -f /dev/tpm0 ] || exit $ksft_skip
+> >  
+> > -python -m unittest -v tpm2_tests.SmokeTest
+> > -python -m unittest -v tpm2_tests.AsyncTest
+> > +python3 -m unittest -v tpm2_tests.SmokeTest
+> > +python3 -m unittest -v tpm2_tests.AsyncTest
+> >  
+> >  CLEAR_CMD=$(which tpm2_clear)
+> >  if [ -n $CLEAR_CMD ]; then
+> > diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+> > index 36c9d030a1c6..151c64e8ee9f 100755
+> > --- a/tools/testing/selftests/tpm2/test_space.sh
+> > +++ b/tools/testing/selftests/tpm2/test_space.sh
+> > @@ -6,4 +6,4 @@ ksft_skip=4
+> >  
+> >  [ -f /dev/tpmrm0 ] || exit $ksft_skip
+> >  
+> > -python -m unittest -v tpm2_tests.SpaceTest
+> > +python3 -m unittest -v tpm2_tests.SpaceTest
+> > diff --git a/tools/testing/selftests/tpm2/tpm2.py b/tools/testing/selftests/tpm2/tpm2.py
+> > index d0fcb66a88a6..b0ccc1499c53 100644
+> > --- a/tools/testing/selftests/tpm2/tpm2.py
+> > +++ b/tools/testing/selftests/tpm2/tpm2.py
+> > @@ -247,14 +247,18 @@ class ProtocolError(Exception):
+> >  class AuthCommand(object):
+> >      """TPMS_AUTH_COMMAND"""
+> >  
+> > -    def __init__(self, session_handle=TPM2_RS_PW, nonce='', session_attributes=0,
+> > -                 hmac=''):
+> > +    def __init__(self, session_handle=TPM2_RS_PW, nonce=''.encode(),
+> > +                 session_attributes=0, hmac=''.encode()):
+> > +        if not isinstance(nonce, bytes):
+> > +            nonce = nonce.encode()
+> > +        if not isinstance(hmac, bytes):
+> > +            hmac = hmac.encode()
+> 
+> This looks messy. Please, instead
+> 
+>     def __init__(self, session_handle=TPM2_RS_PW, nonce=bytes(),
+>                  session_attributes=0, hmac=bytes()):
+>          self.session_handle = session_handle
+>          self.nonce = nonce
+>          self.session_attributes = session_attributes
+> 
+> Applies also to other places.
 
-drivers/net/phy/backplane/backplane.c:60:11: warning: symbol 'backplane_com=
-mon_features_array' was not declared. Should it be static?
-drivers/net/phy/backplane/backplane.c:66:11: warning: symbol 'backplane_pro=
-tocol_features_array' was not declared. Should it be static?
-drivers/net/phy/backplane/backplane.c:1204:40: warning: incorrect type in a=
-ssignment (different address spaces)
-drivers/net/phy/backplane/backplane.c:1204:40:    expected void *[assigned]=
- reg_base
-drivers/net/phy/backplane/backplane.c:1204:40:    got void [noderef] <asn:2=
-> *reg_base
-drivers/net/phy/backplane/backplane.c: In function =C3=A2=E2=82=AC=CB=9Cbp_=
-kr_state_machine=C3=A2=E2=82=AC=E2=84=A2:
-drivers/net/phy/backplane/backplane.c:590:27: warning: variable =C3=A2=E2=
-=82=AC=CB=9Cbpdev=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-se=
-t-variable]
-  590 |  struct backplane_device *bpdev;
-      |                           ^~~~~
-drivers/net/phy/backplane/link_training.c: In function =C3=A2=E2=82=AC=CB=
-=9Clt_train_remote_tx=C3=A2=E2=82=AC=E2=84=A2:
-drivers/net/phy/backplane/link_training.c:557:6: warning: variable =C3=A2=
-=E2=82=AC=CB=9Clp_resp_time=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunu=
-sed-but-set-variable]
-  557 |  u64 lp_resp_time;
-      |      ^~~~~~~~~~~~
-drivers/net/phy/backplane/link_training.c: In function =C3=A2=E2=82=AC=CB=
-=9Clt_train_local_tx=C3=A2=E2=82=AC=E2=84=A2:
-drivers/net/phy/backplane/link_training.c:1143:15: warning: variable =C3=A2=
-=E2=82=AC=CB=9Cold_ld_status=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wun=
-used-but-set-variable]
- 1143 |  int request, old_ld_status;
-      |               ^~~~~~~~~~~~~
+I.e. use '.encode()' in the call site.
+
+/Jarkko
