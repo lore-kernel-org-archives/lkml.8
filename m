@@ -2,126 +2,132 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B60C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD222073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B99E2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvujDWVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbgFVUOx (ORCPT
+        id S1728519AbgFVUPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:14:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18112 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728363AbgFVUOx (ORCPT
+        Mon, 22 Jun 2020 16:15:53 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60841 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728333AbgFVUPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:14:53 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MK276w105648;
-        Mon, 22 Jun 2020 16:14:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31tysqpa8n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 16:14:40 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05MKDc4M150271;
-        Mon, 22 Jun 2020 16:14:39 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31tysqpa7t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 16:14:39 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MKBLoJ026964;
-        Mon, 22 Jun 2020 20:14:37 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03fra.de.ibm.com with ESMTP id 31sa381j4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 20:14:36 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MKEYPK53411960
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 20:14:34 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7CE21AE056;
-        Mon, 22 Jun 2020 20:14:34 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B430AE04D;
-        Mon, 22 Jun 2020 20:14:32 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.202.125])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Jun 2020 20:14:32 +0000 (GMT)
-Message-ID: <1592856871.4987.21.camel@linux.ibm.com>
-Subject: Re: [PATCH] ima_evm_utils: extended calc_bootaggr to PCRs 8 - 9
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Maurizio Drocco <maurizio.drocco@ibm.com>, roberto.sassu@huawei.com
-Cc:     Silviu.Vlasceanu@huawei.com, dmitry.kasatkin@gmail.com,
-        jejb@linux.ibm.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        mdrocco@linux.vnet.ibm.com
-Date:   Mon, 22 Jun 2020 16:14:31 -0400
-In-Reply-To: <20200618201126.2081-2-maurizio.drocco@ibm.com>
-References: <b744c1b79ba14a17a786f5de04c1f3c4@huawei.com>
-         <20200618201126.2081-1-maurizio.drocco@ibm.com>
-         <20200618201126.2081-2-maurizio.drocco@ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_11:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- mlxscore=0 bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 phishscore=0 mlxlogscore=999
- cotscore=-2147483648 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220127
+        Mon, 22 Jun 2020 16:15:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592856951;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TSUweuZT4DKGDzPl0W0mgX7uetKvmHq3b3GY3r5obEQ=;
+        b=AvujDWVv1fJT1dJn+N4SkW5GMmDU7IzbCKKcFRWYUi39vcyRdTrOXRiPgl3E7M3zge/VvR
+        ZkRQMMmnk1YvVdlxpk+BsrqFbmZI7D1S3R3L9QdDGE/3EqgrbhDjYqVmFyvP22lTRRtz4m
+        8LgSdLETYuzgVcOxuBQArD3DxdwY2O0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-420-f7cc3XQuNW-UeEjQYsAiCA-1; Mon, 22 Jun 2020 16:15:47 -0400
+X-MC-Unique: f7cc3XQuNW-UeEjQYsAiCA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03BD218FF665;
+        Mon, 22 Jun 2020 20:15:45 +0000 (UTC)
+Received: from redhat.com (ovpn-119-159.rdu2.redhat.com [10.10.119.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8972560F89;
+        Mon, 22 Jun 2020 20:15:42 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 16:15:40 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Felix Kuehling <felix.kuehling@amd.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200622201540.GB9708@redhat.com>
+References: <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
+ <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca>
+ <20200619180935.GA10009@redhat.com>
+ <20200619181849.GR6578@ziepe.ca>
+ <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
+ <20200619195538.GT6578@ziepe.ca>
+ <20200619203147.GC13117@redhat.com>
+ <20200622114617.GU6578@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200622114617.GU6578@ziepe.ca>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-18 at 16:11 -0400, Maurizio Drocco wrote:
-> From: Maurizio <maurizio.drocco@ibm.com>
+On Mon, Jun 22, 2020 at 08:46:17AM -0300, Jason Gunthorpe wrote:
+> On Fri, Jun 19, 2020 at 04:31:47PM -0400, Jerome Glisse wrote:
+> > Not doable as page refcount can change for things unrelated to GUP, with
+> > John changes we can identify GUP and we could potentialy copy GUPed page
+> > instead of COW but this can potentialy slow down fork() and i am not sure
+> > how acceptable this would be. Also this does not solve GUP against page
+> > that are already in fork tree ie page P0 is in process A which forks,
+> > we now have page P0 in process A and B. Now we have process A which forks
+> > again and we have page P0 in A, B, and C. Here B and C are two branches
+> > with root in A. B and/or C can keep forking and grow the fork tree.
 > 
-> If PCRs 8 - 9 are set (i.e. not all-zeros), cal_bootaggr should include
-> them into the digest.
+> For a long time now RDMA has broken COW pages when creating user DMA
+> regions.
 > 
-> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
-> ---
->  src/evmctl.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+> The problem has been that fork re-COW's regions that had their COW
+> broken.
 > 
-> diff --git a/src/evmctl.c b/src/evmctl.c
-> index 1d065ce..554571e 100644
-> --- a/src/evmctl.c
-> +++ b/src/evmctl.c
-> @@ -1930,6 +1930,18 @@ static void calc_bootaggr(struct tpm_bank_info *bank)
->  		}
->  	}
->  
-> +	if (strcmp(bank->algo_name, "sha1") != 0) {
-> +		for (i = 8; i < 10; i++) {
-> +			if (memcmp(bank->pcr[i], zero, bank->digest_size) != 0) {
-> +				err = EVP_DigestUpdate(pctx, bank->pcr[i], bank->digest_size);
-> +				if (!err) {
-> +					log_err("EVP_DigestUpdate() failed\n");
-> +					return;
-> +				}
-> +			}
-> +		}
-> +	}
+> So, if you break the COW upon mapping and prevent fork (and others)
+> from copying DMA pinned then you'd cover the cases.
 
-Roberto, now that we're only including the PCRs 8 & 9 in the non-sha1
-"boot_aggregate", they can always be included.
+I am not sure we want to prevent COW for pinned GUP pages, this would
+change current semantic and potentialy break/slow down existing apps.
 
-Please reflect this change in the patch description and, here, in the
-code.
+Anyway i think we focus too much on fork/COW, it is just an unfixable
+broken corner cases, mmu notifier allows you to avoid it. Forcing real
+copy on fork would likely be seen as regression by most people.
 
-thanks,
 
-Mimi
+> > Semantic was change with 17839856fd588f4ab6b789f482ed3ffd7c403e1f to some
+> > what "fix" that but GUP fast is still succeptible to this.
+> 
+> Ah, so everyone breaks the COW now, not just RDMA..
+> 
+> What do you mean 'GUP fast is still succeptible to this' ?
+
+Not all GUP fast path are updated (intentionaly) __get_user_pages_fast()
+for instance still keeps COW intact. People using GUP should really knows
+what they are doing.
+
+Cheers,
+Jérôme
+
