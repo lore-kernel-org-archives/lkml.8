@@ -2,260 +2,113 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F89F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592854176;
-	bh=j8fdbxKsBIlHF8/hWpPNyzfI6zDwaf+bP+8TL/qPvDA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pdB2SadfhvlapZJRBdD1jznoClUk0J2zsAozfXn48xgZosdO95tdUEUvYmZ84aftx
-	 wiRt5cSuZEv2lb+rkBynv4Ok3/9b4DaGoxyPhmS3U1N5rMZnnYM6NcFFwpF7o91jK3
-	 8XE/ulB5uiBCnBbeQv6Zv2Pc6+qSJN0cVubYpt7I=
+	by mail.kernel.org (Postfix) with ESMTP id 19B0020776
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgFVT3e (ORCPT
+        id S1728384AbgFVTaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:29:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728594AbgFVT3X (ORCPT
+        Mon, 22 Jun 2020 15:30:52 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38836 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbgFVTaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:29:23 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F67C061573;
-        Mon, 22 Jun 2020 12:29:23 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id b5so8653309pgm.8;
-        Mon, 22 Jun 2020 12:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8Ul/VyioCZgSyOOWRzsGy5FBJiYJTcxPpaUmWpPopUw=;
-        b=aSwM6DsYB1/dpxaO1GdMEYGz5So4Bsx1gHNxIcRQmwSHWyd2LDIyy526R7Dm3vg/U0
-         hPW8FovOHjF3ncjzSwNS49l65o4mEwt+stfbXxbXTtabuP9VzJKt5kNpsKqf8gWbm7e8
-         Jy7KLq/Oa8nWPd65hZpHq6atvB/hDkCkGB5hzYKgwST5ssIXtMTaX607CWH2DAsebuZc
-         TknY4iL3TlMu7nX6yjVZb1gWo1BmzG1feeMDspM9plW9Ecx/qLNW1DSCzw3r6Hp5ot3y
-         5HWMB02qByZbhRTIdJ8xnRPm+YzVrRE+zMT+QXXnuQNRfRXjGlzZvKk1PtjLFbK8TCW7
-         Zqcg==
+        Mon, 22 Jun 2020 15:30:52 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 64so3170972oti.5;
+        Mon, 22 Jun 2020 12:30:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=8Ul/VyioCZgSyOOWRzsGy5FBJiYJTcxPpaUmWpPopUw=;
-        b=tizh9Qd0OK37FJWAgfKljBC95Ijjiw8oKgWCjVSfGUDJFuOpjc3nc11Lg9JxlqdTDJ
-         uoyUOFcSv1rfgC1C+n1StKCJ3807mFHHRZZVzaFJ5jiiy1QYtOZrOEw+h/VshX2Nh/Yy
-         vawH70gORfmVcS8fgGv+XclBgyC3mNg8VMIa5c97/cO8YTnHLOXpEkPXvsGgNacC+/9z
-         1++UAdzWcQlmP2dYwLdAuDJzrFXB4opxTNat3F47Jx9xDOTMXC/rMcpb0jmks3/1Bn3h
-         Fa0MPnXC7e1PKJMPNekh65GJhgugeKQLgyJSjX+77zcwFL77tVlNfbO23XkFY68jvLMc
-         pN9A==
-X-Gm-Message-State: AOAM5317J7vIKpPmmWHRdgpd1GVJ97/6iXR+2YBev1MKOBI3gFwkhUiO
-        NGgE49GND1o8GmNI0Pj3aJj0J/XD
-X-Google-Smtp-Source: ABdhPJw2WQbvHFWoo0cnD9rBNEULjMl/Sezb/fUY29hFdcN9wqV/dwQmcM+u/jI25YdJul3DpG7Ejg==
-X-Received: by 2002:a63:cd4d:: with SMTP id a13mr14285541pgj.49.1592854163147;
-        Mon, 22 Jun 2020 12:29:23 -0700 (PDT)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id mu17sm264603pjb.53.2020.06.22.12.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:29:21 -0700 (PDT)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        SeongJae Park <sjpark@amazon.de>, linux-man@vger.kernel.org
-Subject: [PATCH v8 4/4] mm/madvise: check fatal signal pending of target process
-Date:   Mon, 22 Jun 2020 12:29:00 -0700
-Message-Id: <20200622192900.22757-5-minchan@kernel.org>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-In-Reply-To: <20200622192900.22757-1-minchan@kernel.org>
-References: <20200622192900.22757-1-minchan@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f+m8WfznoPmZDhpXMJjjF8LFblQRh0TioPpDuSD1pp0=;
+        b=cZ5nn/bPlQ38WJLE5/Lfh/ECMriNLGxHjekmOlqKxv8Ry4UtJtu0seF2jKgvE3AhSw
+         dZ36TvvVExjo7D0f/2Cnypc+0X4n1yeWUniTCuEYFe3kp7w7OW+RI/Wia1RT+q134YdO
+         KLEDJpdPkfGzmvaBxBaqXipjDcfcCL+nIP08vbPJQosUp6hbu/DG86ELHHsZtfObuHSN
+         3OvWvXagIaafHyVw9oceZQCT6gtjLMwU4+mXk1Ui1pF+w+lYCHiQmEP80JFrLpkP8y8k
+         fdL7PP9UafxBe+/gNSxuxyRfq6dKHBMBg2p7D83W/gjMXwZciFMgtphv8nrPnhZpA6sb
+         zWHw==
+X-Gm-Message-State: AOAM530p9ntLtAPouQiRpXWHRPq1+kMrY/jrD4gtP/pFYMgNjT/0NkUj
+        XsEzolWI4wI+QD6lT4uo6QUyaJ9QJc3+ikqWegU=
+X-Google-Smtp-Source: ABdhPJwRxDC7XKOX0GSqgJfIIpa4gxfZ9Mz9zJRml/UI6rLWqLBUvxcLJOOvgyLDgRj/WAdDU+2gFeYTFa4HV4iICjw=
+X-Received: by 2002:a9d:62c2:: with SMTP id z2mr15002234otk.145.1592854250122;
+ Mon, 22 Jun 2020 12:30:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1591554886-21725-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8sMAkhLh9n7d=4QaNLDDJuExcu4ctWX2P1xH6Jqj-D3DA@mail.gmail.com>
+In-Reply-To: <CA+V-a8sMAkhLh9n7d=4QaNLDDJuExcu4ctWX2P1xH6Jqj-D3DA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 22 Jun 2020 21:30:38 +0200
+Message-ID: <CAMuHMdVPcF4B8SiWPYuT2pRN5i_nn0n2tKrg8+y=XdhFkU-Vsw@mail.gmail.com>
+Subject: Re: [PATCH 00/11] Add support for HiHope RZ/G2M[N] Rev.3.0/4.0
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bail out to prevent unnecessary CPU overhead if target process has pending
-fatal signal during (MADV_COLD|MADV_PAGEOUT) operation.
+Hi Prabhakar,
 
-Link: http://lkml.kernel.org/r/20200302193630.68771-4-minchan@kernel.org
-Signed-off-by: Minchan Kim <minchan@kernel.org>
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: Brian Geffon <bgeffon@google.com>
-Cc: Christian Brauner <christian@brauner.io>
-Cc: Daniel Colascione <dancol@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: John Dias <joaodias@google.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oleksandr Natalenko <oleksandr@redhat.com>
-Cc: Sandeep Patil <sspatil@google.com>
-Cc: SeongJae Park <sj38.park@gmail.com>
-Cc: SeongJae Park <sjpark@amazon.de>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Sonny Rao <sonnyrao@google.com>
-Cc: Tim Murray <timmurray@google.com>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: <linux-man@vger.kernel.org>
----
- mm/madvise.c | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
+On Mon, Jun 22, 2020 at 7:52 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Sun, Jun 7, 2020 at 7:35 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > This patch series adds supports for HiHope RZ/G2M[N] Rev.3.0/4.0
+> > boards.
+> >
+> > Patches are based on top of renesas-arm-dt-for-v5.9 branch [1].
+> >
+> > [1] git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git
+> >
+> > Cheers,
+> > Prabhakar
+> >
+> > Lad Prabhakar (11):
+> >   arm64: dts: renesas: r8a774a1-hihope-rzg2m[-ex/-ex-idk-1110wr]: Rename
+> >     HiHope RZ/G2M boards
+> >   arm64: dts: renesas: r8a774b1-hihope-rzg2n[-ex]: Rename HiHope RZ/G2N
+> >     boards
+> >   arm64: dts: renesas: hihope-common: Separate out Rev.2.0 specific into
+> >     hihope-common-rev2.dtsi file
+> >   arm64: dts: renesas: Add HiHope RZ/G2M[N] Rev.3.0/4.0 specific into
+> >     common file
+> >   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 main board support
+> >   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 sub board support
+> >   arm64: dts: renesas: hihope-rzg2-ex: Separate out lvds specific nodes
+> >     into common file
+> >   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 board with
+> >     idk-1110wr display
+> >   arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 main board support
+> >   arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 sub board support
+> >   arm64: dts: renesas: Add HiHope RZ/G2N Rev2.0/3.0/4.0 board with
+> >     idk-1110wr display
+> >
+> Thank you for the Ack's for the above patches.
+>
+> I shall re-spin the new version fixing the comments. I am waiting for
+> your feedback on patch 03/11.
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 23abca3f93fa..a16dba21cdf6 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -39,6 +39,7 @@
- struct madvise_walk_private {
- 	struct mmu_gather *tlb;
- 	bool pageout;
-+	struct task_struct *target_task;
- };
- 
- /*
-@@ -319,6 +320,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 	if (fatal_signal_pending(current))
- 		return -EINTR;
- 
-+	if (private->target_task &&
-+			fatal_signal_pending(private->target_task))
-+		return -EINTR;
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	if (pmd_trans_huge(*pmd)) {
- 		pmd_t orig_pmd;
-@@ -480,12 +485,14 @@ static const struct mm_walk_ops cold_walk_ops = {
- };
- 
- static void madvise_cold_page_range(struct mmu_gather *tlb,
-+			     struct task_struct *task,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
- {
- 	struct madvise_walk_private walk_private = {
- 		.pageout = false,
- 		.tlb = tlb,
-+		.target_task = task,
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -493,7 +500,8 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
- 	tlb_end_vma(tlb, vma);
- }
- 
--static long madvise_cold(struct vm_area_struct *vma,
-+static long madvise_cold(struct task_struct *task,
-+			struct vm_area_struct *vma,
- 			struct vm_area_struct **prev,
- 			unsigned long start_addr, unsigned long end_addr)
- {
-@@ -506,19 +514,21 @@ static long madvise_cold(struct vm_area_struct *vma,
- 
- 	lru_add_drain();
- 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
--	madvise_cold_page_range(&tlb, vma, start_addr, end_addr);
-+	madvise_cold_page_range(&tlb, task, vma, start_addr, end_addr);
- 	tlb_finish_mmu(&tlb, start_addr, end_addr);
- 
- 	return 0;
- }
- 
- static void madvise_pageout_page_range(struct mmu_gather *tlb,
-+			     struct task_struct *task,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
- {
- 	struct madvise_walk_private walk_private = {
- 		.pageout = true,
- 		.tlb = tlb,
-+		.target_task = task,
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -542,7 +552,8 @@ static inline bool can_do_pageout(struct vm_area_struct *vma)
- 		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
- }
- 
--static long madvise_pageout(struct vm_area_struct *vma,
-+static long madvise_pageout(struct task_struct *task,
-+			struct vm_area_struct *vma,
- 			struct vm_area_struct **prev,
- 			unsigned long start_addr, unsigned long end_addr)
- {
-@@ -558,7 +569,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
- 
- 	lru_add_drain();
- 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
--	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
-+	madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
- 	tlb_finish_mmu(&tlb, start_addr, end_addr);
- 
- 	return 0;
-@@ -938,7 +949,8 @@ static int madvise_inject_error(int behavior,
- #endif
- 
- static long
--madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
-+madvise_vma(struct task_struct *task, struct vm_area_struct *vma,
-+		struct vm_area_struct **prev,
- 		unsigned long start, unsigned long end, int behavior)
- {
- 	switch (behavior) {
-@@ -947,9 +959,9 @@ madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
- 	case MADV_WILLNEED:
- 		return madvise_willneed(vma, prev, start, end);
- 	case MADV_COLD:
--		return madvise_cold(vma, prev, start, end);
-+		return madvise_cold(task, vma, prev, start, end);
- 	case MADV_PAGEOUT:
--		return madvise_pageout(vma, prev, start, end);
-+		return madvise_pageout(task, vma, prev, start, end);
- 	case MADV_FREE:
- 	case MADV_DONTNEED:
- 		return madvise_dontneed_free(vma, prev, start, end, behavior);
-@@ -1166,7 +1178,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
- 			tmp = end;
- 
- 		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
--		error = madvise_vma(vma, &prev, start, tmp, behavior);
-+		error = madvise_vma(target_task, vma, &prev,
-+					start, tmp, behavior);
- 		if (error)
- 			goto out;
- 		start = tmp;
+I'm sorry, but what exactly is still unresolved for patch 03/11?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0.111.gc72c7da667-goog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
