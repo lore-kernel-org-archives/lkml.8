@@ -2,108 +2,104 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A63C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2100206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5496420706
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:30:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyTPcZ3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgFVK0S (ORCPT
+        id S1727065AbgFVKaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:26:18 -0400
-Received: from relay-b02.edpnet.be ([212.71.1.222]:44109 "EHLO
-        relay-b02.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgFVK0R (ORCPT
+        Mon, 22 Jun 2020 06:30:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgFVKaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:26:17 -0400
-X-ASG-Debug-ID: 1592821574-0a7b8d7b58395dd0001-xx1T2L
-Received: from zotac.vandijck-laurijssen.be ([213.219.130.186]) by relay-b02.edpnet.be with ESMTP id 7mCYZTARDg2OtGBc; Mon, 22 Jun 2020 12:26:14 +0200 (CEST)
-X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
-X-Barracuda-Effective-Source-IP: UNKNOWN[213.219.130.186]
-X-Barracuda-Apparent-Source-IP: 213.219.130.186
-Received: from x1.vandijck-laurijssen.be (x1.vandijck-laurijssen.be [IPv6:fd01::1a1d:eaff:fe02:d339])
-        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id 93BBAF69EFE;
-        Mon, 22 Jun 2020 12:26:06 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 12:25:59 +0200
-From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        wg@grandegger.com, kernel@martin.sperl.org,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
-Message-ID: <20200622102559.GA3077@x1.vandijck-laurijssen.be>
-X-ASG-Orig-Subj: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
-Mail-Followup-To: Marc Kleine-Budde <mkl@pengutronix.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        wg@grandegger.com, kernel@martin.sperl.org,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
- <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
- <20200617165902.GB14228@x1.vandijck-laurijssen.be>
- <2e80e2ed-d63d-5cc6-e1c6-e0c9e75c218e@pengutronix.de>
- <20200618123055.GA17496@x1.vandijck-laurijssen.be>
- <c8267280-e7a9-8171-d714-fa392ccb5537@pengutronix.de>
+        Mon, 22 Jun 2020 06:30:21 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A31C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:30:21 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g18so7041512wrm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 03:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=OJZ8ufIPKsqB5rJhxxmA58THKC8gBVaQJxB1BylSHW8=;
+        b=hyTPcZ3p/Vj6NBYTZuHMAibM2O4uw5XyIDy98N/mJFvWAkzmlmsgkmIdoUWbpc0r7k
+         98uhYZM80THFf+l8shd3BDY8336XLBaz70LV/2bAqqu305gf8YTAYYdWus/Y+V0+47iu
+         Rr0HhXfrQyZGE13X5i5Vz+p3VGGkd4eDwsfkgKGa1dnHotEE8Fqp/ZVTKsKQeY2V4iG0
+         xi9713viZTF66cHzHcR8S6hrTHw99znvETu7lqsDPBE37UYcZJ0JmPSdcKPUUSHZlV4x
+         ZE2v+946/9xzxcKSOfXLVBxbi/C+rNRFDVDrcILhe0MTGy+7VPon/dfW+RTZ9tkVS8G+
+         TsWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=OJZ8ufIPKsqB5rJhxxmA58THKC8gBVaQJxB1BylSHW8=;
+        b=heaYXH21gkxIMKAqC+ZCpU3/YftDBDz07NIcBvDgMrWJs+5/nQJdn8Hx0U0KNUCCaS
+         gUfee3GqnsW1X+IPzoiFQmQrqW8l/lE9xLiBNEsuaPnsfkAdE+EHwPLx0ses7HpPx/Qj
+         5gjJgQehnnZ1Nfsd8mX3Bo5gd7fYMCaXRKKfx9CpcB+Uo/NkARQUnVlOzbCjaWewOFzq
+         c4h+Awi1IOHKWN+6JyCc0ofFyh3oyopMFNupoA8Vl4cGxaGRe/7Eh8t1oX4jAi6ubDMi
+         0nCrjIf8NORBQi8EVefzS6zxZXFgdrssnd3ToRk2fcm8PUTbJoltD5C/vaTzBHHjUkd2
+         DD6A==
+X-Gm-Message-State: AOAM530wo4f9PzLH+mnlgx78gZeZI1EOuak0Rvf6NEwrhyRRgG9H3jH5
+        MNwmS7XqNup6zfkEDVeRDVnBrA==
+X-Google-Smtp-Source: ABdhPJzbZyR4CNtd9Ju/EbDUWI2mZigkJb8SK98Z/hYKtkT3onVWzAgyoX8RGlVwB7JFNUi69uXTIQ==
+X-Received: by 2002:a5d:4286:: with SMTP id k6mr17702175wrq.140.1592821819859;
+        Mon, 22 Jun 2020 03:30:19 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id d9sm17210004wre.28.2020.06.22.03.30.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 03:30:19 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 11:30:17 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.co, alexandre.torgue@st.com,
+        linus.walleij@linaro.org, amelie.delaunay@st.com,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Message-ID: <20200622103017.GS954398@dell>
+References: <20200220162246.8334-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c8267280-e7a9-8171-d714-fa392ccb5537@pengutronix.de>
-User-Agent: Mutt/1.5.22 (2013-10-16)
-X-Barracuda-Connect: UNKNOWN[213.219.130.186]
-X-Barracuda-Start-Time: 1592821574
-X-Barracuda-URL: https://212.71.1.222:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at edpnet.be
-X-Barracuda-Scan-Msg-Size: 1248
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: SPAM GLOBAL 0.9857 1.0000 4.1774
-X-Barracuda-Spam-Score: 4.18
-X-Barracuda-Spam-Status: No, SCORE=4.18 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.82726
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220162246.8334-1-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Marc,
+On Thu, 20 Feb 2020, Benjamin Gaignard wrote:
 
-On do, 18 jun 2020 14:35:28 +0200, Marc Kleine-Budde wrote:
-> On 6/18/20 2:30 PM, Kurt Van Dijck wrote:
-> > On do, 18 jun 2020 00:36:29 +0200, Marc Kleine-Budde wrote:
-> >> On 6/17/20 6:59 PM, Kurt Van Dijck wrote:
-> >>> I'm in the process of getting a Variscite imx8m mini SOM online, with
-> >>
-> >> Have your heard about the imx8m plus? It has CAN cores! We have a board in the
-> >> office to play with. :)
-> >>
-> >>> MCP2517FD. The 4.19 kernel that comes with it, has a driver that is
-> >>
-> >> You shall not start projects with 1,5 years old kernel.
-> >> And you probably shall not use vendor kernel for new projects.
-> >> :D
-> > 
-> > your rpi kernel starts of v4.19.119 (or so), where the variscite starts
-> > of v4.19.35.
+> Convert stmfx bindings to json-schema
 > 
-> You're missing some stable backports for the kernel then.
-> 
-> > The result was quite some list of merge conflicts, on top of a vendor
-> > kernel, so I took your advise and switched to the latest and greatest
-> > 5.7.3.
-> 
-> \o/
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
+>  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
+>  3 files changed, 124 insertions(+), 144 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
 
-I got my board up with a 5.7, despite device-tree problems completely
-unrelated to CAN.
-It seems to work well with a fully-loaded CAN bus (cangen -g0 ...).
-So that is a real improvement.
-I will need to add the listen-only mode soon.
+Applied, thanks.
 
-Kurt
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
