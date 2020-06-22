@@ -2,168 +2,140 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55263C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C58DF20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEB820708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Md8aji7v"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yh6uQc0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgFVO4R (ORCPT
+        id S1729257AbgFVO5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32946 "EHLO
+        Mon, 22 Jun 2020 10:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729065AbgFVO4P (ORCPT
+        with ESMTP id S1728824AbgFVO5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:56:15 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA002C061573;
-        Mon, 22 Jun 2020 07:56:14 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id j1so8534828pfe.4;
-        Mon, 22 Jun 2020 07:56:14 -0700 (PDT)
+        Mon, 22 Jun 2020 10:57:08 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45AABC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:57:08 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id h190so1388658vkh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:57:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xjagLTgBdJuS+lxCzj+HJEcO0dILS8d3HH+uOW/jYtg=;
-        b=Md8aji7v9v0IesqnKaESVzP6xZdACvIez0GIkPpCPmtWFsewspfffLO15ZBS7ofNeu
-         i5H6dE4LJi6O1A7RSHmuZV7nLXinxR9H7+KvrUlooYEHr0Aho3aIMdQBF+L2sXNjFY0Q
-         Gh3B3cagl5QtXpxT+COfqGy3PV+KOXHuG4NH1Uel+v8fSPemDaWeTlsS66xv1B1raMhj
-         hwwZkHtRYkYbQiX9vMs0U4oAYXI3hPYLW1fttm9Az0WpH9SpcI96Hsx+A8vJEbcEYtTY
-         motBNPnQH1XLgb+g1Es5sQUsaGzcdvH04dcVsVHiVlXm0B/C8j0Kl7aCzhOciJwAKT4l
-         3EcQ==
+        bh=DaQaRL/n2na4izh2TsmRyDKAg7niGqHtN8UJRlkcUNk=;
+        b=Yh6uQc0Tk44UUcYHHPdxzcHe4JMuPLNwLsMpf1hfB3Jh8Tu5KzLiUZOVxNrSzFNeRC
+         1VX+uZFI62Ls1+BJbg7pP2QF3IogycASPqdpS7cK4qx+8UL3mK0h3koU2KF86qJLyXNp
+         ISsh8AdquX9pm+IhFbc8LzxKYCLQ8dhUJwD7E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xjagLTgBdJuS+lxCzj+HJEcO0dILS8d3HH+uOW/jYtg=;
-        b=FL/9ZUke9nYc9Lp4oVi1Ud/41UyP4RH0a3is0kph3vGq7fIrF3eJLPNmmaMDFFZCHk
-         Z/gTZKAOiS+aduXZF9Ce8EJwWQKM7dLK7/bL/jv+M41WM12ne6vlj8s87jAnl3Z8lYbb
-         LAIOMFTkppoLXghjwpu/v0X9CswnrRh3/zI7mSK9s1F1vUf+zmyYnuWhIGLRlTv46jQH
-         gt7G0UdKPZIABkxCvjHdnJxRSct1bMiojcFD/dSWRM+EbidxJp73QEu2yO25XZ9x4R/o
-         UH/mL89dvNL0ri7f/nGCBW54S2khd8LxeCmW35fAnR22f2AT4CccX/R3VtiNUZpkWll7
-         Z6Ag==
-X-Gm-Message-State: AOAM533sqtSmOWkXjqirdaFheEk1F9Z9/MthF6lE1oqwku/H1+NnPQ+v
-        I3cdCONVUa0KjdsBO3spC4gBcWbf37hQ97llIyI=
-X-Google-Smtp-Source: ABdhPJw6mQ+zxmpMSkJb+dlDQRkhgtNZHBFjiCPSrtowB9pYMq4Z4oApxfCZkPSIP1wpDoaef47WoTMB7FRH5DO4Uyo=
-X-Received: by 2002:a62:3103:: with SMTP id x3mr20128249pfx.130.1592837774307;
- Mon, 22 Jun 2020 07:56:14 -0700 (PDT)
+        bh=DaQaRL/n2na4izh2TsmRyDKAg7niGqHtN8UJRlkcUNk=;
+        b=OddyixyEqS1drP9zHfM4nNRcSwEC5oemezzlYfWGgptPqYT3fKVWemWZ+4+6m92kWZ
+         0Htl7TKqZ8MfiHJrFaSId2ayy1S5F6dTpHu79UN8CJpK6P7FFVLOgfu1LvY58Vxm+Axs
+         B3mWf42pMUpqWBSsu0Nt8dAR0LbBycW2AIVkprx3KmoABFE9AXx8zU7JTqpAnTIpvCR5
+         xRGBemDUZnQUfXi97f+0PAg0jbQtbrpCEDT1OZygHjUglr7aNBwDFmj4pqo7EtNbTojq
+         mV7LppVk5gTrWtkg6E328RnPmsr2Jo07irHPQeVFETABl7YxxXfKxoXPVzKRBHJgwPoF
+         LOIQ==
+X-Gm-Message-State: AOAM533Iu+1rwjjUReGyb2xxKhq9nkHhLPhPMd3RdNtogmEwyk1zk96O
+        IJkCS8HNBNj/XQHtM14MLtxpnmtu4QQ=
+X-Google-Smtp-Source: ABdhPJwzx4bwvEx8BZEUPSrKMIh+8QmnD0QjCLcI6BKhT70C1hhApMLhkSyj6qtokstyBbn1SfE87w==
+X-Received: by 2002:a1f:9e8a:: with SMTP id h132mr9462823vke.14.1592837827205;
+        Mon, 22 Jun 2020 07:57:07 -0700 (PDT)
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
+        by smtp.gmail.com with ESMTPSA id x16sm2083598vko.54.2020.06.22.07.57.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 07:57:06 -0700 (PDT)
+Received: by mail-vk1-f173.google.com with SMTP id s192so4024493vkh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:57:06 -0700 (PDT)
+X-Received: by 2002:ac5:ce86:: with SMTP id 6mr16311424vke.75.1592837825897;
+ Mon, 22 Jun 2020 07:57:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2713141.s8EVnczdoM@kreacher> <1821880.vZFEW4x2Ui@kreacher>
-In-Reply-To: <1821880.vZFEW4x2Ui@kreacher>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Jun 2020 17:56:01 +0300
-Message-ID: <CAHp75VePDyPevCAOntFpTajf5zd9ocwjeWRz80WmCNtiDicpLg@mail.gmail.com>
-Subject: Re: [RFT][PATCH v2 2/4] ACPI: OSL: Add support for deferred unmapping
- of ACPI memory
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
+References: <20200619141958.1.I58d549fded1fd2299543ede6a103fe2bb94c805d@changeid>
+In-Reply-To: <20200619141958.1.I58d549fded1fd2299543ede6a103fe2bb94c805d@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 22 Jun 2020 07:56:54 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VCX27cMs4q+jJ528UdEM93yZ96+kYTQPgU3ZqZ-whgEw@mail.gmail.com>
+Message-ID: <CAD=FV=VCX27cMs4q+jJ528UdEM93yZ96+kYTQPgU3ZqZ-whgEw@mail.gmail.com>
+Subject: Re: [PATCH] tpm_tis_spi: Prefer async probe
+To:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Andrey Pronin <apronin@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 5:06 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+Hi,
+
+On Fri, Jun 19, 2020 at 2:20 PM Douglas Anderson <dianders@chromium.org> wrote:
 >
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> On a Chromebook I'm working on I noticed a big (~1 second) delay
+> during bootup where nothing was happening.  Right around this big
+> delay there were messages about the TPM:
 >
-> Implement acpi_os_unmap_deferred() and
-> acpi_os_release_unused_mappings() and set ACPI_USE_DEFERRED_UNMAPPING
-> to allow ACPICA to use deferred unmapping of memory in
-> acpi_ex_system_memory_space_handler() so as to avoid RCU-related
-> performance issues with memory opregions.
-
-...
-
-> +static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
->  {
-> -       unsigned long refcount = --map->refcount;
-> +       if (--map->track.refcount)
-> +               return true;
+> [    2.311352] tpm_tis_spi spi0.0: TPM ready IRQ confirmed on attempt 2
+> [    3.332790] tpm_tis_spi spi0.0: Cr50 firmware version: ...
 >
-> -       if (!refcount)
-> -               list_del_rcu(&map->list);
-> -       return refcount;
-> +       list_del_rcu(&map->list);
-> +
-
-> +       if (defer) {
-> +               INIT_LIST_HEAD(&map->track.gc);
-> +               list_add_tail(&map->track.gc, &unused_mappings);
-
-> +               return true;
-> +       }
-> +
-> +       return false;
-
-A nit:
-
-Effectively it returns a value of defer.
-
-  return defer;
-
->  }
-
-...
-
-> @@ -416,26 +421,102 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
->         }
+> I put a few printouts in and saw that tpm_tis_spi_init() (specifically
+> tpm_chip_register() in that function) was taking the lion's share of
+> this time, though ~115 ms of the time was in cr50_print_fw_version().
 >
->         mutex_lock(&acpi_ioremap_lock);
-> +
->         map = acpi_map_lookup_virt(virt, size);
-
-A nit: should it be somewhere else (I mean in another patch)?
-
->         if (!map) {
-
-...
-
-> +       /* Release the unused mappings in the list. */
-> +       while (!list_empty(&list)) {
-> +               struct acpi_ioremap *map;
-> +
-> +               map = list_entry(list.next, struct acpi_ioremap, track.gc);
-
-A nt: if __acpi_os_map_cleanup() (actually acpi_unmap() according to
-the code) has no side effects, can we use list_for_each_entry_safe()
-here?
-
-> +               list_del(&map->track.gc);
-> +               __acpi_os_map_cleanup(map);
-> +       }
-> +}
-
-...
-
-> @@ -472,16 +552,18 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
->                 return;
+> Let's make a one-line change to prefer async probe for tpm_tis_spi.
+> There's no reason we need to block other drivers from probing while we
+> load.
 >
->         mutex_lock(&acpi_ioremap_lock);
-> +
->         map = acpi_map_lookup(addr, gas->bit_width / 8);
+> NOTES:
+> * It's possible that other hardware runs through the init sequence
+>   faster than Cr50 and this isn't such a big problem for them.
+>   However, even if they are faster they are still doing _some_
+>   transfers over a SPI bus so this should benefit everyone even if to
+>   a lesser extent.
+> * It's possible that there are extra delays in the code that could be
+>   optimized out.  I didn't dig since once I enabled async probe they
+>   no longer impacted me.
 
-A nit: should it be somewhere else (I mean in another patch)?
+I will note that I did continue to dig into the delays, actually.  I
+haven't fully resolved all of them, but I'm fairly sure that most of
+them are actually inefficiencies in the SPI driver on my platform,
+which seems to have a lot of overhead in starting a new transfer.
+I'll work on fixing that, but in any case we should still do the async
+probe because it's very safe and gives a perf boost.  Why do I say
+it's safe?
 
--- 
-With Best Regards,
-Andy Shevchenko
+1. It's not like our probe order was defined by anything anyway.  When
+we probe is at the whim of when the SPI controller probes and that can
+be any time.
+
+2. If someone needs to access the TPM from another driver then they
+have to handle the fact that it might not have probed yet anyway
+because perhaps the SPI controller hasn't probed yet.
+
+3. There may be other drivers probing at the same time as us anyway
+because _they_ used async probe.
+
+While I won't say that it's impossible to tickle a bug by turning on
+async probe, I would assert that in almost all cases the bug was
+already there and needed to be fixed anyway.  ;-)
+
+
+-Doug
