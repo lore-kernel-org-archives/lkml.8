@@ -2,227 +2,113 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D12BB20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A072076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWmcpKX3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JxJcBBvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731066AbgFVWSd (ORCPT
+        id S1730955AbgFVWU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:18:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731007AbgFVWSV (ORCPT
+        Mon, 22 Jun 2020 18:20:26 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11272 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730840AbgFVWUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:18:21 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764B8C061795;
-        Mon, 22 Jun 2020 15:18:21 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id cy7so8381520edb.5;
-        Mon, 22 Jun 2020 15:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=hj/ZWwebgZ0sMqnXUxboE0Dr7x3sLqM/VkXD+bUE5oo=;
-        b=bWmcpKX3Hog+1IIxJGtaD7Rw5hEMyL0nVDlnzVATPE6QVHwa6U+819XWYVo1m1R3FI
-         8xxKVI6btaFakUM/rvKLG1+GQJ6uwD7OJY/Iu+TdGqK1/oeM9Gp8C5Iok+S2vEc0jj5j
-         bHgWQabvK/4nrbQgz/XGXlaAIRi8BzIQ5Dg0ewBdACrRq2EumAiXn29R1vzNHj5Hk5PC
-         XvRjr6L3yCKPiBQPj7f0V7cmghfY70tFva53vdcSh6S8McJyPj1syTpapUhG8gDcRynb
-         Xd5CMzQobzoCFj6rlVTk3H50iAwC87Reg7tBoeKhUJeDJi6ujdB96NV7FxDcUd6Fx2yE
-         /2Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hj/ZWwebgZ0sMqnXUxboE0Dr7x3sLqM/VkXD+bUE5oo=;
-        b=j7W6LmUwyIpurIqCaLx6SotTHNZYpr6e4wUNSRTBmjeNh2gVdCxdHqtf1+ZlB9QDXf
-         LvwPmHq1hpM848pJQ+8WN4rMrQwrlr4ggsNkm+qfZb7uWdvSD330JMian+mOOvIwuq7/
-         xiHFB0jksXIBcTmmq+vcLvSw+Gcfglpqk57YY29ar755mEDF2eUHHi6eL57CO4Ybm85h
-         CGEj9WsWgYfnkgFdNvj2GA6uY/QcuXKraz/nG89dL/Dd9lcWvlmjgfcYTtwaWOUIlSS4
-         YPHLAHqAHssgsCBFKwFaR4SIROG6k08EiAmWGwxY+pITyabMuQoM2utTxcOdf3RpldPX
-         /Uvg==
-X-Gm-Message-State: AOAM530zCfJQ20f0GP5bACdovWgxOFrJuLs+4hm+fc/bFbA3zTAoLkeg
-        DB0GxoEduJPWjFZCrSIO+7E=
-X-Google-Smtp-Source: ABdhPJxXbdW2IXu5QI8TrMaHze3PJWIu6xI7EgfEWAazsW6c7moopkJfmerQyEHxQXnCkK9QlYc3qQ==
-X-Received: by 2002:aa7:c68b:: with SMTP id n11mr19217260edq.278.1592864300134;
-        Mon, 22 Jun 2020 15:18:20 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.85])
-        by smtp.gmail.com with ESMTPSA id dm1sm13314421ejc.99.2020.06.22.15.18.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 15:18:19 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] io-wq: return next work from ->do_work() directly
-Date:   Tue, 23 Jun 2020 01:16:35 +0300
-Message-Id: <915321064eaf58b3b6fc2c6fed015879c769f3a1.1592863245.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1592863245.git.asml.silence@gmail.com>
-References: <cover.1592863245.git.asml.silence@gmail.com>
+        Mon, 22 Jun 2020 18:20:25 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef12e7c0001>; Mon, 22 Jun 2020 15:19:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 15:20:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 22 Jun 2020 15:20:25 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
+ 2020 22:20:18 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 22 Jun 2020 22:20:18 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ef12ea20001>; Mon, 22 Jun 2020 15:20:18 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [RESEND PATCH] mm: fix migrate_vma_setup() src_owner and normal pages
+Date:   Mon, 22 Jun 2020 15:20:08 -0700
+Message-ID: <20200622222008.9971-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592864380; bh=ySmyg12ZvnX4sON6UJTDpZrJIeJKTXH2UZeIMBkOFh8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=JxJcBBvujeFk6CmyTc7FOCIAh0CEb3Tkllm/M6lhjXEWpvIXr3LbCH7+4VeCgmxYX
+         w+zDJCSFAjsjBNGVqAixxnp9C30xqNvMtC1a/IMBep1BceLsN4bV8ft0CJTvPeCTHl
+         BJJfU7l0TSUMsl/cFDBNTDyMI9waxcPUPSF4Sk7aiCT8OPV+FKN/A6DYUBOaN+kN7P
+         o2Q/bIW39koLi/7ZZoOdpjc8XKTQyBct68HE1CT9cgV/H/zTFCzFQFlfMGbHF8mj9c
+         i79N6Be5FqjJ+/LR7uyMaV66yVuSGEN37GyY2LRYJpEChbRPNJSl8eIEj0EOpRYwtY
+         lnmPACycThJJg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's easier to return next work from ->do_work() than
-having an in-out argument. Looks nicer and easier to compile.
-Also, merge io_wq_assign_next() into its only user.
+The caller of migrate_vma_setup() does not know what type of page is
+stored in the CPU's page tables. Pages within the specified range are
+free to be swapped out, migrated, or freed until after migrate_vma_setup()
+returns. The caller needs to set struct migrate_vma.src_owner in case a
+page is a ZONE device private page that the device owns and might want to
+migrate. However, the current code skips normal anonymous pages if
+src_owner is set, thus preventing those pages from being migrated.
+Remove the src_owner check for normal pages since src_owner only applies
+to device private pages and allow a range of normal and device private
+pages to be migrated.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Fixes: 800bb1c8dc80 ("mm: handle multiple owners of device private pages in=
+ migrate_vma")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 ---
- fs/io-wq.c    |  8 +++-----
- fs/io-wq.h    |  2 +-
- fs/io_uring.c | 53 ++++++++++++++++++++-------------------------------
- 3 files changed, 25 insertions(+), 38 deletions(-)
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 47c5f3aeb460..72f759e1d6eb 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -523,9 +523,8 @@ static void io_worker_handle_work(struct io_worker *worker)
- 				work->flags |= IO_WQ_WORK_CANCEL;
- 
- 			hash = io_get_work_hash(work);
--			linked = old_work = work;
--			wq->do_work(&linked);
--			linked = (old_work == linked) ? NULL : linked;
-+			old_work = work;
-+			linked = wq->do_work(work);
- 
- 			work = next_hashed;
- 			if (!work && linked && !io_wq_is_hashed(linked)) {
-@@ -781,8 +780,7 @@ static void io_run_cancel(struct io_wq_work *work, struct io_wqe *wqe)
- 		struct io_wq_work *old_work = work;
- 
- 		work->flags |= IO_WQ_WORK_CANCEL;
--		wq->do_work(&work);
--		work = (work == old_work) ? NULL : work;
-+		work = wq->do_work(work);
- 		wq->free_work(old_work);
- 	} while (work);
- }
-diff --git a/fs/io-wq.h b/fs/io-wq.h
-index 04239dfb12b0..114f12ec2d65 100644
---- a/fs/io-wq.h
-+++ b/fs/io-wq.h
-@@ -101,7 +101,7 @@ static inline struct io_wq_work *wq_next_work(struct io_wq_work *work)
- }
- 
- typedef void (free_work_fn)(struct io_wq_work *);
--typedef void (io_wq_work_fn)(struct io_wq_work **);
-+typedef struct io_wq_work *(io_wq_work_fn)(struct io_wq_work *);
- 
- struct io_wq_data {
- 	struct user_struct *user;
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 595d2bbb31b1..5282711eeeaf 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -886,7 +886,6 @@ enum io_mem_account {
- 
- static void io_complete_rw_common(struct kiocb *kiocb, long res);
- static bool io_rw_reissue(struct io_kiocb *req, long res);
--static void io_wq_submit_work(struct io_wq_work **workptr);
- static void io_cqring_fill_event(struct io_kiocb *req, long res);
- static void io_put_req(struct io_kiocb *req);
- static void __io_double_put_req(struct io_kiocb *req);
-@@ -1624,20 +1623,6 @@ static void io_free_req(struct io_kiocb *req)
- 		io_queue_async_work(nxt);
- }
- 
--static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *nxt)
--{
--	struct io_kiocb *link;
--	const struct io_op_def *def = &io_op_defs[nxt->opcode];
--
--	if ((nxt->flags & REQ_F_ISREG) && def->hash_reg_file)
--		io_wq_hash_work(&nxt->work, file_inode(nxt->file));
--
--	*workptr = &nxt->work;
--	link = io_prep_linked_timeout(nxt);
--	if (link)
--		nxt->flags |= REQ_F_QUEUE_TIMEOUT;
--}
--
- /*
-  * Drop reference to request, return next in chain (if there is one) if this
-  * was the last reference to this request.
-@@ -1657,24 +1642,29 @@ static void io_put_req(struct io_kiocb *req)
- 		io_free_req(req);
- }
- 
--static void io_steal_work(struct io_kiocb *req,
--			  struct io_wq_work **workptr)
-+static struct io_wq_work *io_steal_work(struct io_kiocb *req)
- {
-+	struct io_kiocb *link, *nxt = NULL;
-+
- 	/*
--	 * It's in an io-wq worker, so there always should be at least
--	 * one reference, which will be dropped in io_put_work() just
--	 * after the current handler returns.
--	 *
--	 * It also means, that if the counter dropped to 1, then there is
--	 * no asynchronous users left, so it's safe to steal the next work.
-+	 * A ref is owned by io-wq in which context we're. So, if that's the
-+	 * last one, it's safe to steal next work. False negatives are Ok,
-+	 * it just will be re-punted async in io_put_work()
- 	 */
--	if (refcount_read(&req->refs) == 1) {
--		struct io_kiocb *nxt = NULL;
-+	if (refcount_read(&req->refs) != 1)
-+		return NULL;
- 
--		io_req_find_next(req, &nxt);
--		if (nxt)
--			io_wq_assign_next(workptr, nxt);
--	}
-+	io_req_find_next(req, &nxt);
-+	if (!nxt)
-+		return NULL;
-+
-+	if ((nxt->flags & REQ_F_ISREG) && io_op_defs[nxt->opcode].hash_reg_file)
-+		io_wq_hash_work(&nxt->work, file_inode(nxt->file));
-+
-+	link = io_prep_linked_timeout(nxt);
-+	if (link)
-+		nxt->flags |= REQ_F_QUEUE_TIMEOUT;
-+	return &nxt->work;
- }
- 
- /*
-@@ -5626,9 +5616,8 @@ static void io_arm_async_linked_timeout(struct io_kiocb *req)
- 	io_queue_linked_timeout(link);
- }
- 
--static void io_wq_submit_work(struct io_wq_work **workptr)
-+static struct io_wq_work *io_wq_submit_work(struct io_wq_work *work)
- {
--	struct io_wq_work *work = *workptr;
- 	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
- 	int ret = 0;
- 
-@@ -5660,7 +5649,7 @@ static void io_wq_submit_work(struct io_wq_work **workptr)
- 		io_put_req(req);
- 	}
- 
--	io_steal_work(req, workptr);
-+	return io_steal_work(req);
- }
- 
- static inline struct file *io_file_from_index(struct io_ring_ctx *ctx,
--- 
-2.24.0
+This is based on 5.8.0-rc2 for Andrew Morton's mm tree.
+I believe it can be queued for 5.8-rcX after being reviewed.
+This was part of a larger series but I'm resending it separately as
+suggested by Jason Gunthorpe.
+https://lore.kernel.org/linux-mm/20200619215649.32297-1-rcampbell@nvidia.co=
+m/
+
+ mm/migrate.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/mm/migrate.c b/mm/migrate.c
+index f37729673558..24535281cea3 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2295,8 +2295,6 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ 			if (is_write_device_private_entry(entry))
+ 				mpfn |=3D MIGRATE_PFN_WRITE;
+ 		} else {
+-			if (migrate->src_owner)
+-				goto next;
+ 			pfn =3D pte_pfn(pte);
+ 			if (is_zero_pfn(pfn)) {
+ 				mpfn =3D MIGRATE_PFN_MIGRATE;
+--=20
+2.20.1
 
