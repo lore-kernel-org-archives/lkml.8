@@ -2,96 +2,121 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCBE206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5735206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592828369;
+	bh=k3rXEplySMMeVAnP4t/Y1+QV1CCc3J629pWXJH8mggo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ii81/9CtpnUM0PQk58I7OKV4VAoYmtkaa8Cuc1ka3r7LPq7KFKGpUpGxgr7quyuZ0
+	 5N85MfexyUk+8RXXa1BLSWqTobYubYc2KekoT6sDpQ1WLZbheXoUpYFAOjdJkf7302
+	 DXYhsSOzyHZ5LVqLxZfilU8PSBzVdl4S9NSmqGKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgFVMTJ (ORCPT
+        id S1728150AbgFVMT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:19:09 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:47296
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727852AbgFVMTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:19:08 -0400
-X-IronPort-AV: E=Sophos;i="5.75,266,1589234400"; 
-   d="scan'208";a="352352552"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:19:06 +0200
-Date:   Mon, 22 Jun 2020 14:19:06 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     Kees Cook <keescook@chromium.org>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [PATCH v3] coccinelle: misc: add array_size_dup script
- to detect missed overflow checks
-In-Reply-To: <e57c419b-a64a-55a1-be7a-8f45edaea3bf@linux.com>
-Message-ID: <alpine.DEB.2.22.394.2006221418110.2531@hadrien>
-References: <20200615102045.4558-1-efremov@linux.com> <20200619131313.15468-1-efremov@linux.com> <alpine.DEB.2.22.394.2006212255140.2501@hadrien> <e57c419b-a64a-55a1-be7a-8f45edaea3bf@linux.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Mon, 22 Jun 2020 08:19:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727852AbgFVMT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:19:27 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE86E206FA;
+        Mon, 22 Jun 2020 12:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592828366;
+        bh=k3rXEplySMMeVAnP4t/Y1+QV1CCc3J629pWXJH8mggo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xSJtdwv9eAvTUT95oJigMtBjsFtfi2waSbGaDwIVd8LdfXBzDB2glSzPYAbxYDNuE
+         B2EcDDe2jlQI/JF0wreZdZaU9MabBD6PtUJ0naEts9Tfx2fFivyv/ink0WOmPyq8OF
+         LQisnrxMXf7OEQ/SpNMYfeBHbSFSM7vTz3Vmlnhc=
+Received: by pali.im (Postfix)
+        id 6B1A27CD; Mon, 22 Jun 2020 14:19:24 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 14:19:24 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: drivers/pci/controller/pci-aardvark.c:350:2: error: implicit
+ declaration of function 'gpiod_set_value_cansleep'
+Message-ID: <20200622121924.7u3t6b5ffzlryqhm@pali>
+References: <202006211118.LxtENQfl%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006211118.LxtENQfl%lkp@intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sunday 21 June 2020 11:05:22 kernel test robot wrote:
+> >> drivers/pci/controller/pci-aardvark.c:350:2: error: implicit declaration of function 'gpiod_set_value_cansleep' [-Werror,-Wimplicit-function-declaration]
+>            gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+>            ^
+>    drivers/pci/controller/pci-aardvark.c:350:2: note: did you mean 'gpio_set_value_cansleep'?
+>    include/linux/gpio.h:188:20: note: 'gpio_set_value_cansleep' declared here
+>    static inline void gpio_set_value_cansleep(unsigned gpio, int value)
+>                       ^
+> >> drivers/pci/controller/pci-aardvark.c:1074:21: error: implicit declaration of function 'devm_gpiod_get_from_of_node' [-Werror,-Wimplicit-function-declaration]
+>            pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
+>                               ^
+> >> drivers/pci/controller/pci-aardvark.c:1076:14: error: use of undeclared identifier 'GPIOD_OUT_LOW'
+>                                                           GPIOD_OUT_LOW,
+>                                                           ^
+>    20 warnings and 3 errors generated.
+> 
+> vim +/gpiod_set_value_cansleep +350 drivers/pci/controller/pci-aardvark.c
+> 
+>    335	
+>    336	static void advk_pcie_issue_perst(struct advk_pcie *pcie)
+>    337	{
+>    338		u32 reg;
+>    339	
+>    340		if (!pcie->reset_gpio)
+>    341			return;
+>    342	
+>    343		/* PERST does not work for some cards when link training is enabled */
+>    344		reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+>    345		reg &= ~LINK_TRAINING_EN;
+>    346		advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+>    347	
+>    348		/* 10ms delay is needed for some cards */
+>    349		dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
+>  > 350		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+>    351		usleep_range(10000, 11000);
+>    352		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+>    353	}
+>    354	
 
+Hello!
 
-On Mon, 22 Jun 2020, Denis Efremov wrote:
+Could you try to test following patch if it fixes above problems?
 
-> What do you think about removing duplicates warning from the rule?
->
-> I mean this kind of warnings: "WARNING: same array_size (line {p1[0].line})"
->
-> As for now, I think it's better to not disturb developers with this kind
-> of things.
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 90ff291c24f0..01f1fcbb8770 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
 
-I agree.  I guess there is a small overhead for the test, but if the code
-is not performance critical, being simpler is probably better.
+Both GPIOD_OUT_LOW and gpiod_set_value_cansleep() are defined in
+linux/gpio/consumer.h header file.
 
-julia
-
-
->
-> Thanks,
-> Denis
->
-> >> +@as_dup@
-> >> +expression subE1 <= as.E1;
-> >> +expression subE2 <= as.E2;
-> >> +expression as.E1, as.E2, E3;
-> >> +assignment operator aop;
-> >> +position p1, p2;
-> >> +@@
-> >> +
-> >> +* array_size(E1, E2)@p1
-> >> +  ... when != \(E1\|E2\|subE1\|subE2\) aop E3
-> >> +      when != &\(E1\|E2\|subE1\|subE2\)
-> >> +* array_size(E1, E2)@p2
-> >> +
-> >> +@script:python depends on report@
-> >> +p1 << as_dup.p1;
-> >> +p2 << as_dup.p2;
-> >> +@@
-> >> +
-> >> +coccilib.report.print_report(p2[0],
-> >> +f"WARNING: same array_size (line {p1[0].line})")
-> >> +
-> >> +@script:python depends on org@
-> >> +p1 << as_dup.p1;
-> >> +p2 << as_dup.p2;
-> >> +@@
-> >> +
-> >> +coccilib.org.print_todo(p2[0],
-> >> +f"WARNING: same array_size (line {p1[0].line})")
-> >> +
->
->
+I do not have s390 box nor s390 cross compiler to do verification.
