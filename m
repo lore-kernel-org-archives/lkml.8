@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D81C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA862C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F740208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834592083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqqJimki"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfOLAiBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgFVH6K (ORCPT
+        id S1726997AbgFVH6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:58:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52872 "EHLO
+        Mon, 22 Jun 2020 03:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgFVH6F (ORCPT
+        with ESMTP id S1727870AbgFVH6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:58:05 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1FFBC061794;
-        Mon, 22 Jun 2020 00:58:04 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id k8so12873256edq.4;
-        Mon, 22 Jun 2020 00:58:04 -0700 (PDT)
+        Mon, 22 Jun 2020 03:58:12 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C117BC061794;
+        Mon, 22 Jun 2020 00:58:11 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id h28so655482edz.0;
+        Mon, 22 Jun 2020 00:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nzouIcqNeHmwTME7jVaUjFBAtS8z2sOjc/dsKSoeppE=;
-        b=sqqJimkiTu7IRJE5IFZNKQ6CmfrVpIe+bIAfK15kRWrQgdPR/PgM9Gmx7mSDshphvw
-         9AL/m4v/pn6feUYYfdYFKynhB+dTk2f+kzeGaPTYZpMbiXsJZYG7Yek+JEtAu/C1bnkT
-         PKpRHinlp4w8NiBe4VNItV9LHYnG5380XUZRUdGt/MSavJox1DUYzTHp7RO4c3nOtu6m
-         cJEtAynrKCjWqu8RB10HXSiL0bTc+QoAjTQdybU7svGHwbvMAa8bo7MQNQJsa9lGgpPe
-         2KpkIjpgqvTx2VZQYXpVAtdQQSMvx4JRId/YCJUmvgFZp+AT7C5riHbA9ewjSeQ59v1B
-         D8EQ==
+        bh=T9nXQS24IzdAIA5rd/n9W4KYIMOEsi4rl6eO3TNMu0Y=;
+        b=tfOLAiBau9aznFJa/bKhu0XtIQw1lmugYp/dimpgoc6KmzBe92ueJjdFZpvjELA4Nm
+         ZTqlA5itENZuXZuUkWYY9fa2lsS+XPU3Vhn/YyJEwQFT8p4s8nK9AT6ofvulf1bjVgbk
+         lY+FVeWoG/D9Vqq05R9aQUKleI6pejnbMfXZncnRlM5Tg+EL9RO3w4OWSsg5NE9Af05V
+         Be6ShGVCjqff//d+WRulHapqUPUM5I4ukxOPCRic8Pi1e7yFTgHm8JG+TQgDvMwr0ggN
+         M72TIK6L9HMwnVhBmoyn389e8haItIkVUxtyPETfswW2s3tZoGw5M490/2gyc49nm1ZA
+         l/Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nzouIcqNeHmwTME7jVaUjFBAtS8z2sOjc/dsKSoeppE=;
-        b=ZHaOv3EvqHGlIXPdleCrwYj/1coKL7QK3gQDDMxJjiNouGJHZwWfsLl0s7yrckvfUB
-         a2flrD21Gmt2kJUXF2CH1OOegAXf4r9AooDOLJ3rD0Ma3Jy5D6BT54YnpRLjhOu4KPXa
-         Z+Junp5PEcU2Tmq5jYiFLm3bF5q+hGSW5wAZaU2K4nDX0GX4/u1OsDypePK8MTThCWoC
-         g6liKchtxekMFe545tzyeSjh1NL1tB9NPM8s3tJulNqXBhP+hcU0obu6bxT/BXBUcp+z
-         5Tbi8qZGyu6K8jdXEVhhUNJRKjRhqy9jNpU38rHHEGhqGnTxkP5gkiAtLAQDgSJUsV9S
-         4+OA==
-X-Gm-Message-State: AOAM532UUa0jxxijIwGKKSmc+pDhtJ8jYJMYiDEPrxjOpkbQI83CkWdp
-        D4r+cuh7ckoBVLgaYA7sAVU=
-X-Google-Smtp-Source: ABdhPJwhZoxVmh3ooaVs5Mou9B6IGPM/3LOIVUFAVD3EpJIA6khP/+uJ99029Qqvg2zPs6n27vdAjQ==
-X-Received: by 2002:aa7:d28d:: with SMTP id w13mr15883695edq.336.1592812683594;
-        Mon, 22 Jun 2020 00:58:03 -0700 (PDT)
+        bh=T9nXQS24IzdAIA5rd/n9W4KYIMOEsi4rl6eO3TNMu0Y=;
+        b=SewtVCwA8ZsCTpm3Zbc0eOJhcPFxE0YN7ltPjgF8PLhRHni3FVlQZCMN4x7WDQxrQu
+         PdYl0G25A+LVvYZHY+9yqE2R6CHc6cGPKzXxl9Uy/6KGC6B+olB6BHeTMgiQ0laZ8og/
+         DjUbXoAJZW5WbgBzXfkAlD/NUetYJVLg6SUpBftOpiQB8PVZllofp8yxmv6Gs1Ulbiu7
+         vPXsWb2gNdyURylcGCJn7+vZgDpKmvo/fV7BTL8xpLcgPHM1k+wnJrvzR5Hfvp4aTGRf
+         sMsgGTVXLtke8f/TMX4CAQtZvLbrimLhat78Hv1W9t6egDWUW8VLijmjh1TbuRAIoy4z
+         FdBg==
+X-Gm-Message-State: AOAM532vHfXySoFg2Nx8234SvjLcrRbWmGulAKZPK5KLwtl/Dg24dhqD
+        vGvff71QFhaehw2OOmGNz7A=
+X-Google-Smtp-Source: ABdhPJzGULkHG1G+P4LRMpZqGh9LrhcAVvZARST280Y+WbmTQXXRm5mm8RPLyaHGxnIkAFNIy+kw9A==
+X-Received: by 2002:a05:6402:128b:: with SMTP id w11mr15075087edv.377.1592812690495;
+        Mon, 22 Jun 2020 00:58:10 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id b4sm10511606ejp.40.2020.06.22.00.58.02
+        by smtp.googlemail.com with ESMTPSA id b4sm10511606ejp.40.2020.06.22.00.58.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:58:03 -0700 (PDT)
+        Mon, 22 Jun 2020 00:58:10 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -75,9 +75,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 3/8] soc: qcom: socinfo: Add socinfo entry for SDM630
-Date:   Mon, 22 Jun 2020 09:57:41 +0200
-Message-Id: <20200622075749.21925-4-konradybcio@gmail.com>
+Subject: [PATCH v2 5/8] arm64: dts: qcom: pm660(l): Add base dts files
+Date:   Mon, 22 Jun 2020 09:57:43 +0200
+Message-Id: <20200622075749.21925-6-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200622075749.21925-1-konradybcio@gmail.com>
 References: <20200622075749.21925-1-konradybcio@gmail.com>
@@ -88,25 +88,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds missing soc ID for SDM630.
+Add base DTS files for pm660(l) along with GPIOs, power-on and
+rtc nodes.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- drivers/soc/qcom/socinfo.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/pm660.dtsi  | 60 ++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm660l.dtsi | 46 +++++++++++++++++++++
+ 2 files changed, 106 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm660.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm660l.dtsi
 
-diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-index 5983c6ffb078..705f142ee588 100644
---- a/drivers/soc/qcom/socinfo.c
-+++ b/drivers/soc/qcom/socinfo.c
-@@ -202,6 +202,7 @@ static const struct soc_id soc_id[] = {
- 	{ 310, "MSM8996AU" },
- 	{ 311, "APQ8096AU" },
- 	{ 312, "APQ8096SG" },
-+	{ 318, "SDM630" },
- 	{ 321, "SDM845" },
- 	{ 341, "SDA845" },
- };
+diff --git a/arch/arm64/boot/dts/qcom/pm660.dtsi b/arch/arm64/boot/dts/qcom/pm660.dtsi
+new file mode 100644
+index 000000000000..041f45264255
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/pm660.dtsi
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2020, Konrad Dybcio
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/spmi/spmi.h>
++#include <dt-bindings/input/linux-event-codes.h>
++
++&spmi_bus {
++
++	pmic@0 {
++		compatible = "qcom,pm660", "qcom,spmi-pmic";
++		reg = <0x0 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		rtc@6000 {
++			compatible = "qcom,pm8941-rtc";
++			reg = <0x6000>, <0x6100>;
++			reg-names = "rtc", "alarm";
++			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
++		};
++
++		pon: pon@800 {
++			compatible = "qcom,pm8916-pon";
++
++			reg = <0x800>;
++
++			pwrkey {
++				compatible = "qcom,pm8941-pwrkey";
++				interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
++				debounce = <15625>;
++				bias-pull-up;
++				linux,code = <KEY_POWER>;
++			};
++
++		};
++
++		pm660_gpios: gpios@c000 {
++			compatible = "qcom,pm660-gpio";
++			reg = <0xc000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
++				     <0 0xc1 0 IRQ_TYPE_NONE>,
++				     <0 0xc2 0 IRQ_TYPE_NONE>,
++				     <0 0xc3 0 IRQ_TYPE_NONE>,
++				     <0 0xc4 0 IRQ_TYPE_NONE>,
++				     <0 0xc5 0 IRQ_TYPE_NONE>,
++				     <0 0xc6 0 IRQ_TYPE_NONE>,
++				     <0 0xc7 0 IRQ_TYPE_NONE>,
++				     <0 0xc8 0 IRQ_TYPE_NONE>,
++				     <0 0xc9 0 IRQ_TYPE_NONE>,
++				     <0 0xca 0 IRQ_TYPE_NONE>,
++				     <0 0xcb 0 IRQ_TYPE_NONE>,
++				     <0 0xcc 0 IRQ_TYPE_NONE>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/pm660l.dtsi b/arch/arm64/boot/dts/qcom/pm660l.dtsi
+new file mode 100644
+index 000000000000..5e0f1a6e3966
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/pm660l.dtsi
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2020, Konrad Dybcio
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/spmi/spmi.h>
++#include <dt-bindings/input/linux-event-codes.h>
++
++&spmi_bus {
++
++	pmic@2 {
++		compatible = "qcom,pm660l", "qcom,spmi-pmic";
++		reg = <0x2 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pm660l_gpios: gpios@c000 {
++			compatible = "qcom,pm660l-gpio", "qcom,spmi-gpio";
++			reg = <0xc000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			#interrupt-cells = <2>;
++			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xca 0x0 IRQ_TYPE_NONE>,
++					 <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
++		};
++	};
++
++	pmic@3 {
++		compatible = "qcom,pm660l", "qcom,spmi-pmic";
++		reg = <0x3 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
++
 -- 
 2.27.0
 
