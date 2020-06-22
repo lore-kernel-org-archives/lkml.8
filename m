@@ -2,119 +2,91 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A38BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6972C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE7FB20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F5F20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgFVO0e (ORCPT
+        id S1729447AbgFVO0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:26:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46762 "EHLO mx2.suse.de"
+        Mon, 22 Jun 2020 10:26:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46986 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729397AbgFVO0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:26:32 -0400
+        id S1729413AbgFVO0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:26:34 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1E1A0C1E3;
-        Mon, 22 Jun 2020 14:26:29 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v4 6/9] Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
-Date:   Mon, 22 Jun 2020 12:38:15 +0200
-Message-Id: <20200622103817.476-7-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622103817.476-1-nsaenzjulienne@suse.de>
-References: <20200622103817.476-1-nsaenzjulienne@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id D6D39C1A6;
+        Mon, 22 Jun 2020 14:26:30 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        James Tai <james.tai@realtek.com>
+Subject: [PATCH v4 0/3] arm64: dts: realtek: Initial RTD1319 and Pym Particles support
+Date:   Mon, 22 Jun 2020 14:55:23 +0200
+Message-Id: <20200622125527.24207-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit c65822fef4adc0ba40c37a47337376ce75f7a7bc.
+Hello,
 
-The initialization of Raspberry Pi 4's USB chip is now handled through a
-reset controller. No need to directly call the firmware routine trough a
-pci quirk.
+This patch series adds initial Device Trees for Realtek RTD1319 SoC and
+Realtek Pym Particles EVB.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/firmware/Kconfig      |  3 +--
- drivers/usb/host/pci-quirks.c | 16 ----------------
- 2 files changed, 1 insertion(+), 18 deletions(-)
+This v4 is an update of James' v3, incorporating pending review comments.
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index fbd785dd0513..4843e94713a4 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -178,9 +178,8 @@ config ISCSI_IBFT
- 	  Otherwise, say N.
- 
- config RASPBERRYPI_FIRMWARE
--	bool "Raspberry Pi Firmware Driver"
-+	tristate "Raspberry Pi Firmware Driver"
- 	depends on BCM2835_MBOX
--	default USB_PCI
- 	help
- 	  This option enables support for communicating with the firmware on the
- 	  Raspberry Pi.
-diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index 0b949acfa258..92150ecdb036 100644
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -16,9 +16,6 @@
- #include <linux/export.h>
- #include <linux/acpi.h>
- #include <linux/dmi.h>
--
--#include <soc/bcm2835/raspberrypi-firmware.h>
--
- #include "pci-quirks.h"
- #include "xhci-ext-caps.h"
- 
-@@ -1246,24 +1243,11 @@ static void quirk_usb_handoff_xhci(struct pci_dev *pdev)
- 
- static void quirk_usb_early_handoff(struct pci_dev *pdev)
- {
--	int ret;
--
- 	/* Skip Netlogic mips SoC's internal PCI USB controller.
- 	 * This device does not need/support EHCI/OHCI handoff
- 	 */
- 	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
- 		return;
--
--	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
--		ret = rpi_firmware_init_vl805(pdev);
--		if (ret) {
--			/* Firmware might be outdated, or something failed */
--			dev_warn(&pdev->dev,
--				 "Failed to load VL805's firmware: %d. Will continue to attempt to work, but bad things might happen. You should fix this...\n",
--				 ret);
--		}
--	}
--
- 	if (pdev->class != PCI_CLASS_SERIAL_USB_UHCI &&
- 			pdev->class != PCI_CLASS_SERIAL_USB_OHCI &&
- 			pdev->class != PCI_CLASS_SERIAL_USB_EHCI &&
+Upstreaming progress being tracked at:
+https://en.opensuse.org/HCL:Realtek_DHC
+
+Latest experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+v3 -> v4:
+* Updated Realtek copyright for files changed in v3
+* Updated PMU compatible (Robin)
+* Changed compatible, renamed .dts
+* Updated bindings schema and prepended refactoring
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: James Tai <james.tai@realtek.com>
+
+Andreas Färber (1):
+  dt-bindings: arm: realtek: Convert comments to descriptions
+
+James Tai (2):
+  dt-bindings: arm: realtek: Document RTD1319 and Realtek Pym Particles
+    EVB
+  arm64: dts: realtek: Add RTD1319 SoC and Realtek Pym Particles EVB
+
+ .../devicetree/bindings/arm/realtek.yaml      |  30 ++-
+ arch/arm64/boot/dts/realtek/Makefile          |   2 +
+ .../boot/dts/realtek/rtd1319-pymparticles.dts |  43 ++++
+ arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 +
+ arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 213 ++++++++++++++++++
+ 5 files changed, 288 insertions(+), 12 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+
 -- 
-2.27.0
+2.26.2
 
