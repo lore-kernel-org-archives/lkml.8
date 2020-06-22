@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD27DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A475C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF71C2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5874D2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbgFVULW (ORCPT
+        id S1730945AbgFVULi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:11:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:60195 "EHLO mga12.intel.com"
+        Mon, 22 Jun 2020 16:11:38 -0400
+Received: from mga12.intel.com ([192.55.52.136]:60212 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730383AbgFVUJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:09:14 -0400
-IronPort-SDR: eW6f0yYIRMB0phIpQeNXUkoshnMl0BeCgEE0HxmConJxT/DULjI7bHGWcs9WSvgljFgYIAiTxm
- FC/KZSaXVr2Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123527732"
+        id S1730228AbgFVUJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 16:09:13 -0400
+IronPort-SDR: 8v6esNUHYfY1MKRPzz4Wwi4MZ9i+sux+ZBtbCk4VCviQ5epG7e0reyzsVAx1bu5ul+jvCSEOik
+ P/4DUbWd9UGQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123527717"
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="123527732"
+   d="scan'208";a="123527717"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:09:13 -0700
-IronPort-SDR: 6Ia5uhwjctHaySi317F/9+WvPSn+PS6/FHFQk8LIOAcfpdbtUdcjR0PTwaH7efYNEMCOJi2STg
- cTr2KOvriHeg==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:09:10 -0700
+IronPort-SDR: yGlHMVpx7tPbvz8MilBzAcb+zV5/r1q/UDwdXJHLNr+wYdW5D6lwBhGmwvh3BbwcOP7TP9cHQR
+ F9Wk/ytWU0Yw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="318877076"
+   d="scan'208";a="318877061"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 13:09:12 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 13:09:10 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
@@ -55,9 +55,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Peter Shier <pshier@google.com>,
         Junaid Shahid <junaids@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH v2 08/21] KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
-Date:   Mon, 22 Jun 2020 13:08:09 -0700
-Message-Id: <20200622200822.4426-9-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 05/21] KVM: x86/mmu: Try to avoid crashing KVM if a MMU memory cache is empty
+Date:   Mon, 22 Jun 2020 13:08:06 -0700
+Message-Id: <20200622200822.4426-6-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200622200822.4426-1-sean.j.christopherson@intel.com>
 References: <20200622200822.4426-1-sean.j.christopherson@intel.com>
@@ -68,66 +68,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up the minimums in mmu_topup_memory_caches() to document the
-driving mechanisms behind the minimums.  Now that encountering an empty
-cache is unlikely to trigger BUG_ON(), it is less dangerous to be more
-precise when defining the minimums.
+Attempt to allocate a new object instead of crashing KVM (and likely the
+kernel) if a memory cache is unexpectedly empty.  Use GFP_ATOMIC for the
+allocation as the caches are used while holding mmu_lock.  The immediate
+BUG_ON() makes the code unnecessarily explosive and led to confusing
+minimums being used in the past, e.g. allocating 4 objects where 1 would
+suffice.
 
-For rmaps, the logic is 1 parent PTE per level, plus a single rmap, and
-prefetched rmaps.  The extra objects in the current '8 + PREFETCH'
-minimum came about due to an abundance of paranoia in commit
-c41ef344de212 ("KVM: MMU: increase per-vcpu rmap cache alloc size"),
-i.e. it could have increased the minimum to 2 rmaps.  Furthermore, the
-unexpected extra rmap case was killed off entirely by commits
-f759e2b4c728c ("KVM: MMU: avoid pte_list_desc running out in
-kvm_mmu_pte_write") and f5a1e9f89504f ("KVM: MMU: remove call to
-kvm_mmu_pte_write from walk_addr").
-
-For the so called page cache, replace '8' with 2*PT64_ROOT_MAX_LEVEL.
-The 2x multiplier is needed because the cache is used for both shadow
-pages and gfn arrays for indirect MMUs.
-
-And finally, for page headers, replace '4' with PT64_ROOT_MAX_LEVEL.
-
-Note, KVM now supports 5-level paging, i.e. the old minimums that used a
-baseline derived from 4-level paging were technically wrong.  But, KVM
-always allocates roots in a separate flow, e.g. it's impossible in the
-current implementation to actually need 5 new shadow pages in a single
-flow.  Use PT64_ROOT_MAX_LEVEL unmodified instead of subtracting 1, as
-the direct usage is likely more intuitive to uninformed readers, and the
-inflated minimum is unlikely to affect functionality in practice.
-
-Reviewed-by: Ben Gardon <bgardon@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 4b4c3234d623..451e0365e5dd 100644
+index ba70de24a5b0..5e773564ab20 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1103,14 +1103,17 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
- {
- 	int r;
- 
-+	/* 1 rmap, 1 parent PTE per level, and the prefetched rmaps. */
- 	r = mmu_topup_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
--				   8 + PTE_PREFETCH_NUM);
-+				   1 + PT64_ROOT_MAX_LEVEL + PTE_PREFETCH_NUM);
- 	if (r)
- 		return r;
--	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache, 8);
-+	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
-+				   2 * PT64_ROOT_MAX_LEVEL);
- 	if (r)
- 		return r;
--	return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
-+	return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
-+				      PT64_ROOT_MAX_LEVEL);
+@@ -1060,6 +1060,15 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
+ 	local_irq_enable();
  }
  
- static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
++static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
++					       gfp_t gfp_flags)
++{
++	if (mc->kmem_cache)
++		return kmem_cache_zalloc(mc->kmem_cache, gfp_flags);
++	else
++		return (void *)__get_free_page(gfp_flags);
++}
++
+ static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
+ {
+ 	void *obj;
+@@ -1067,10 +1076,7 @@ static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
+ 	if (mc->nobjs >= min)
+ 		return 0;
+ 	while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
+-		if (mc->kmem_cache)
+-			obj = kmem_cache_zalloc(mc->kmem_cache, GFP_KERNEL_ACCOUNT);
+-		else
+-			obj = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
++		obj = mmu_memory_cache_alloc_obj(mc, GFP_KERNEL_ACCOUNT);
+ 		if (!obj)
+ 			return mc->nobjs >= min ? 0 : -ENOMEM;
+ 		mc->objects[mc->nobjs++] = obj;
+@@ -1118,8 +1124,11 @@ static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
+ {
+ 	void *p;
+ 
+-	BUG_ON(!mc->nobjs);
+-	p = mc->objects[--mc->nobjs];
++	if (WARN_ON(!mc->nobjs))
++		p = mmu_memory_cache_alloc_obj(mc, GFP_ATOMIC | __GFP_ACCOUNT);
++	else
++		p = mc->objects[--mc->nobjs];
++	BUG_ON(!p);
+ 	return p;
+ }
+ 
 -- 
 2.26.0
 
