@@ -2,102 +2,182 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC23C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E62C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1DE20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WM25xbl3"
+	by mail.kernel.org (Postfix) with ESMTP id 4CDA820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731516AbgFVXr0 (ORCPT
+        id S1731527AbgFVXr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:47:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730658AbgFVXqH (ORCPT
+        Mon, 22 Jun 2020 19:47:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54753 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730544AbgFVXqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:46:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592869566;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=A3Sr9mNHVM8s9WUTsyWY81eoKGneWkQuZ36cxKIntEs=;
-        b=WM25xbl3CeNLf/+a1h5dC0VNJYOBN6955c0D+EF1foUL6pFbDN7zlYQgN7j0CysGJf4pWi
-        mycGa2VNxbr54LU3C8gTrZWCw3PN5ZY+70hrH2GsPR8jC6mJuGtPaLG4gCtBKaNBiHwNtU
-        E2Q9Qg/07P3RZlRvKeWs8og0OV211mU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-LXVPb2CoMgOtLk5LQrxHpw-1; Mon, 22 Jun 2020 19:45:54 -0400
-X-MC-Unique: LXVPb2CoMgOtLk5LQrxHpw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45101107ACCA;
-        Mon, 22 Jun 2020 23:45:51 +0000 (UTC)
-Received: from virtlab423.virt.lab.eng.bos.redhat.com (virtlab423.virt.lab.eng.bos.redhat.com [10.19.152.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3812D5C583;
-        Mon, 22 Jun 2020 23:45:46 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com
-Subject: [PATCH v2 0/3] Preventing job distribution to isolated CPUs        
-Date:   Mon, 22 Jun 2020 19:45:07 -0400
-Message-Id: <20200622234510.240834-1-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Mon, 22 Jun 2020 19:46:06 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jnW8Z-0005DO-Ny; Mon, 22 Jun 2020 23:46:03 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        linux-m68k@lists.linux-m68k.org, x86@kernel.org
+Subject: [PATCH 01/17] fork: fold legacy_clone_args_valid() into _do_fork()
+Date:   Tue, 23 Jun 2020 01:43:10 +0200
+Message-Id: <20200622234326.906346-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200622234326.906346-1-christian.brauner@ubuntu.com>
+References: <20200622234326.906346-1-christian.brauner@ubuntu.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-                                                                           
-Testing                                                                    
-=======                                                                    
-* Patch 1:                                                                 
-  Fix for cpumask_local_spread() is tested by creating VFs, loading        
-  iavf module and by adding a tracepoint to confirm that only housekeeping 
-  CPUs are picked when an appropriate profile is set up and all remaining  
-  CPUs when no CPU isolation is configured.                                
-                                                                           
-* Patch 2:                                                                 
-  To test the PCI fix, I hotplugged a virtio-net-pci from qemu console     
-  and forced its addition to a specific node to trigger the code path that 
-  includes the proposed fix and verified that only housekeeping CPUs       
-  are included via tracepoint.                                             
-                                                                           
-* Patch 3:                                                                 
-  To test the fix in store_rps_map(), I tried configuring an isolated      
-  CPU by writing to /sys/class/net/en*/queues/rx*/rps_cpus which           
-  resulted in 'write error: Invalid argument' error. For the case          
-  where a non-isolated CPU is writing in rps_cpus the above operation      
-  succeeded without any error.                                             
-                                                                           
-                                                                           
-Changes from v1:                                                           
-===============                                                            
-- Included the suggestions made by Bjorn Helgaas in the commit messages.    
-- Included the 'Reviewed-by' and 'Acked-by' received for Patch-2.          
-                                                                           
-[1] https://patchwork.ozlabs.org/project/netdev/patch/51102eebe62336c6a4e584c7a503553b9f90e01c.camel@marvell.com/
-                                                                           
-Alex Belits (3):                                                           
-  lib: Restrict cpumask_local_spread to houskeeping CPUs                   
-  PCI: Restrict probe functions to housekeeping CPUs                       
-  net: Restrict receive packets queuing to housekeeping CPUs               
-                                                                           
- drivers/pci/pci-driver.c |  5 ++++-                                       
- lib/cpumask.c            | 43 +++++++++++++++++++++++-----------------    
- net/core/net-sysfs.c     | 10 +++++++++-                                  
- 3 files changed, 38 insertions(+), 20 deletions(-)                        
-                                                                           
---
+This separate helper only existed to guarantee the mutual exclusivity of
+CLONE_PIDFD and CLONE_PARENT_SETTID for legacy clone since CLONE_PIDFD
+abuses the parent_tid field to return the pidfd. But we can actually handle
+this uniformely thus removing the helper. For legacy clone we can detect
+that CLONE_PIDFD is specified in conjunction with CLONE_PARENT_SETTID
+because they will share the same memory which is invalid and for clone3()
+setting the separate pidfd and parent_tid fields to the same memory is
+bogus as well. So fold that helper directly into _do_fork() by detecting
+this case.
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: x86@kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ arch/m68k/kernel/process.c |  3 ---
+ arch/x86/kernel/sys_ia32.c |  3 ---
+ include/linux/sched/task.h |  1 -
+ kernel/fork.c              | 30 ++++++++++++++----------------
+ 4 files changed, 14 insertions(+), 23 deletions(-)
+
+diff --git a/arch/m68k/kernel/process.c b/arch/m68k/kernel/process.c
+index 90ae376b7ab1..0608439ba452 100644
+--- a/arch/m68k/kernel/process.c
++++ b/arch/m68k/kernel/process.c
+@@ -125,9 +125,6 @@ asmlinkage int m68k_clone(struct pt_regs *regs)
+ 		.tls		= regs->d5,
+ 	};
+ 
+-	if (!legacy_clone_args_valid(&args))
+-		return -EINVAL;
+-
+ 	return _do_fork(&args);
+ }
+ 
+diff --git a/arch/x86/kernel/sys_ia32.c b/arch/x86/kernel/sys_ia32.c
+index f8d65c99feb8..720cde885042 100644
+--- a/arch/x86/kernel/sys_ia32.c
++++ b/arch/x86/kernel/sys_ia32.c
+@@ -251,9 +251,6 @@ COMPAT_SYSCALL_DEFINE5(ia32_clone, unsigned long, clone_flags,
+ 		.tls		= tls_val,
+ 	};
+ 
+-	if (!legacy_clone_args_valid(&args))
+-		return -EINVAL;
+-
+ 	return _do_fork(&args);
+ }
+ #endif /* CONFIG_IA32_EMULATION */
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 38359071236a..ddce0ea515d1 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -96,7 +96,6 @@ extern void exit_files(struct task_struct *);
+ extern void exit_itimers(struct signal_struct *);
+ 
+ extern long _do_fork(struct kernel_clone_args *kargs);
+-extern bool legacy_clone_args_valid(const struct kernel_clone_args *kargs);
+ extern long do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *);
+ struct task_struct *fork_idle(int);
+ struct mm_struct *copy_init_mm(void);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 142b23645d82..9875aeb2ba41 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2422,6 +2422,20 @@ long _do_fork(struct kernel_clone_args *args)
+ 	int trace = 0;
+ 	long nr;
+ 
++	/*
++	 * For legacy clone() calls, CLONE_PIDFD uses the parent_tid argument
++	 * to return the pidfd. Hence, CLONE_PIDFD and CLONE_PARENT_SETTID are
++	 * mutually exclusive. With clone3() CLONE_PIDFD has grown a separate
++	 * field in struct clone_args and it still doesn't make sense to have
++	 * them both point at the same memory location. Performing this check
++	 * here has the advantage that we don't need to have a separate helper
++	 * to check for legacy clone().
++	 */
++	if ((args->flags & CLONE_PIDFD) &&
++	    (args->flags & CLONE_PARENT_SETTID) &&
++	    (args->pidfd == args->parent_tid))
++		return -EINVAL;
++
+ 	/*
+ 	 * Determine whether and which event to report to ptracer.  When
+ 	 * called from kernel_thread or CLONE_UNTRACED is explicitly
+@@ -2479,16 +2493,6 @@ long _do_fork(struct kernel_clone_args *args)
+ 	return nr;
+ }
+ 
+-bool legacy_clone_args_valid(const struct kernel_clone_args *kargs)
+-{
+-	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
+-	if ((kargs->flags & CLONE_PIDFD) &&
+-	    (kargs->flags & CLONE_PARENT_SETTID))
+-		return false;
+-
+-	return true;
+-}
+-
+ #ifndef CONFIG_HAVE_COPY_THREAD_TLS
+ /* For compatibility with architectures that call do_fork directly rather than
+  * using the syscall entry points below. */
+@@ -2508,9 +2512,6 @@ long do_fork(unsigned long clone_flags,
+ 		.stack_size	= stack_size,
+ 	};
+ 
+-	if (!legacy_clone_args_valid(&args))
+-		return -EINVAL;
+-
+ 	return _do_fork(&args);
+ }
+ #endif
+@@ -2593,9 +2594,6 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
+ 		.tls		= tls,
+ 	};
+ 
+-	if (!legacy_clone_args_valid(&args))
+-		return -EINVAL;
+-
+ 	return _do_fork(&args);
+ }
+ #endif
+-- 
+2.27.0
 
