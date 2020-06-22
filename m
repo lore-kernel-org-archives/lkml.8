@@ -2,292 +2,121 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD65020707
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F7C20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8fTGTu3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rwo9R4gF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgFVQ6D (ORCPT
+        id S1729886AbgFVQ7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:58:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729603AbgFVQ6D (ORCPT
+        Mon, 22 Jun 2020 12:59:01 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3554 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729563AbgFVQ7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:58:03 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2885FC061573;
-        Mon, 22 Jun 2020 09:58:03 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id a21so16235376oic.8;
-        Mon, 22 Jun 2020 09:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+l+Wc7r3ZFJFwCHq4nS699ytoJwtaAaFD5baah39A1c=;
-        b=a8fTGTu3kUS15M7IcoUCf+kAfxVphYsRyTN3Vc3Ag5sO/XbFBQlaRufSawzMGKdW2G
-         8bpurzQFvfIIp3myQGZ0PL8+2L5Y6h7wqxVvXuhi2qY7f6e/61jQhRKbK/sEgH0nUEId
-         Jn/NJ0QV8DmK0CihrmNi8l8NlNQ2TCpKq9ohbV8gs66GfAY1F5/mnb1NjqGm4qco0jL/
-         1tjWyMVWEcVGCv+kvFS+kqHCfF9a7DBfqeQe9UdgWYHZ5I0qAuHQeq/zSDg6dJNkVfV6
-         Sp3dxaQx2Z9FUSw+jahvC+KJ0+1MBIFIyKBl3EnSfxKgd9WZOqVLvP8bDn21fkO/fCib
-         fdng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=+l+Wc7r3ZFJFwCHq4nS699ytoJwtaAaFD5baah39A1c=;
-        b=AdEDf4c1drMtj93WH2AYPBCA+XSbpq6RQdk+ThyJtCAF7QpwbhzbHYNw7R9PVxcHcb
-         y81T6oDZu1oCMM8fYRxe6PzhJ3lb0dB4ZfpH9uwJef8ZG1u56BwpgPbhpUBHB3UI97vd
-         yBVNYCkjD+VCAF30771iSjElvlANbJyI6d2xasQij9jCSD/F85YbEP7NUpvleak6B0gN
-         kQbGw5I0vef4OwNp0N1DXDhKIFtx6slyfEMBP8H1AVhW3p+YZI2gt7OGuOHtBvg4aUzd
-         mIvpzSmigedwVF5kUlQfvQMOhUBalr/uKKvftLsTTckxD58NMw+NJMTl5KoABKjBfWJ/
-         ioNw==
-X-Gm-Message-State: AOAM531SE/Z9G9F1G+bwJhLi8uNQewkB+eVQmHp5/hXYCkJNkortkz4p
-        nLs6iL/qrfvPLTFtML/pzysP/RQ=
-X-Google-Smtp-Source: ABdhPJyOiJfEJYGWN2iFHyfyoWX/sLHv8+2Kq17jW48fGc4O5a0YrLc5SyG8ntW/IXD/sLaR6QNIjw==
-X-Received: by 2002:aca:1308:: with SMTP id e8mr12433059oii.119.1592845082342;
-        Mon, 22 Jun 2020 09:58:02 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.146.204])
-        by smtp.gmail.com with ESMTPSA id c1sm3445226otn.81.2020.06.22.09.58.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 09:58:01 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:acca:171:3424:849f])
-        by serve.minyard.net (Postfix) with ESMTPSA id 59F5B18003A;
-        Mon, 22 Jun 2020 16:58:00 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 11:57:59 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Xin Long <lucien.xin@gmail.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        linux-sctp@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Strange problem with SCTP+IPv6
-Message-ID: <20200622165759.GA3235@minyard.net>
-Reply-To: minyard@acm.org
-References: <20200621155604.GA23135@minyard.net>
- <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
+        Mon, 22 Jun 2020 12:59:01 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef0e3480000>; Mon, 22 Jun 2020 09:58:48 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 09:59:01 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 09:59:01 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
+ 2020 16:58:54 +0000
+Subject: Re: [PATCH 00/16] mm/hmm/nouveau: THP mapping and migration
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
+ <20200622123947.GC2590509@mellanox.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <05bcdcd7-d17b-9092-1a9c-759fb0eab728@nvidia.com>
+Date:   Mon, 22 Jun 2020 09:58:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200622123947.GC2590509@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592845128; bh=17rmJOZx2NuUvyVDIKMt8wguy1oUyTRKNcnhF9ewJgU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rwo9R4gFj7zEIuYXLuR8sMIDq669bABVnTdSwAYO0cdeo2tW8lCTawdU2ufryO5gF
+         TihfxNdj7WV0NLbF2cwCoY+9bQwqoKgpyRQZbZDBnr8oRJto2vtsDB8nq3YKnbCXjK
+         S/uT/aAPAzmPVQU3ymyYvZSxHqUFtJxS3GDJvYhevPLnQs68Nm7fcnzgheqizzkEKG
+         6aC/rTKNMF2zZNlj8LJaUFNmhRIkIEe5FrlRhUYZ+1anzI+NOgdtFQf5t2jPzzFcOB
+         R1Z68hKNEXvJIC2clDRCVFbEeB2PSf95gbtf8ZlCxVHaGZSk2HTN7djCwV/nWvvK6u
+         W8sju/hNTpTkQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
-> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
-> >
-> > I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
-> > sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
-> > then I make a connection to it using ::1, the connection will drop after
-> > 2.5 seconds with an ECONNRESET error.
-> >
-> > It only happens on SCTP, it doesn't have the issue if you connect to a
-> > full IPv6 address instead of ::1, and it doesn't happen if you don't
-> > set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
-> > I tried on an ARM system and x86_64.
-> >
-> > I haven't dug into the kernel to see if I could find anything yet, but I
-> > thought I would go ahead and report it.  I am attaching a reproducer.
-> > Basically, compile the following code:
-> The code only set IPV6_V6ONLY on server side, so the client side will
-> still bind all the local ipv4 addresses (as you didn't call bind() to
-> bind any specific addresses ). Then after the connection is created,
-> the client will send HB on the v4 paths to the server. The server
-> will abort the connection, as it can't support v4.
-> 
-> So you can work around it by either:
-> 
->   - set IPV6_V6ONLY on client side.
-> 
-> or
-> 
->   - bind to the specific v6 addresses on the client side.
-> 
-> I don't see RFC said something about this.
-> So it may not be a good idea to change the current behaviour
-> to not establish the connection in this case, which may cause regression.
 
-Ok, I understand this.  It's a little strange, but I see why it works
-this way.
-
-Thanks,
-
--corey
-
+On 6/22/20 5:39 AM, Jason Gunthorpe wrote:
+> On Fri, Jun 19, 2020 at 02:56:33PM -0700, Ralph Campbell wrote:
+>> These patches apply to linux-5.8.0-rc1. Patches 1-3 should probably go
+>> into 5.8, the others can be queued for 5.9. Patches 4-6 improve the HMM
+>> self tests. Patch 7-8 prepare nouveau for the meat of this series which
+>> adds support and testing for compound page mapping of system memory
+>> (patches 9-11) and compound page migration to device private memory
+>> (patches 12-16). Since these changes are split across mm core, nouveau,
+>> and testing, I'm guessing Jason Gunthorpe's HMM tree would be appropriate.
 > 
-> >
-> >   gcc -g -o sctptest -Wall sctptest.c
-> >
-> > and run it in one window as a server:
-> >
-> >   ./sctptest a
-> >
-> > (Pass in any option to be the server) and run the following in another
-> > window as the client:
-> >
-> >   ./sctptest
-> >
-> > It disconnects after about 2.5 seconds.  If it works, it should just sit
-> > there forever.
-> >
-> > -corey
-> >
-> >
-> > #include <stdio.h>
-> > #include <stdbool.h>
-> > #include <string.h>
-> > #include <unistd.h>
-> > #include <fcntl.h>
-> > #include <sys/select.h>
-> > #include <arpa/inet.h>
-> > #include <netinet/sctp.h>
-> > #include <sys/types.h>
-> > #include <sys/socket.h>
-> > #include <netdb.h>
-> >
-> > static int
-> > getaddr(const char *addr, const char *port, bool listen,
-> >         struct addrinfo **rai)
-> > {
-> >     struct addrinfo *ai, hints;
-> >
-> >     memset(&hints, 0, sizeof(hints));
-> >     hints.ai_flags = AI_ADDRCONFIG;
-> >     if (listen)
-> >         hints.ai_flags |= AI_PASSIVE;
-> >     hints.ai_family = AF_UNSPEC;
-> >     hints.ai_socktype = SOCK_STREAM;
-> >     hints.ai_protocol = IPPROTO_SCTP;
-> >     if (getaddrinfo(addr, port, &hints, &ai)) {
-> >         perror("getaddrinfo");
-> >         return -1;
-> >     }
-> >
-> >     *rai = ai;
-> >     return 0;
-> > }
-> >
-> > static int
-> > waitread(int s)
-> > {
-> >     char data[1];
-> >     ssize_t rv;
-> >
-> >     rv = read(s, data, sizeof(data));
-> >     if (rv == -1) {
-> >         perror("read");
-> >         return -1;
-> >     }
-> >     printf("Read %d bytes\n", (int) rv);
-> >     return 0;
-> > }
-> >
-> > static int
-> > do_server(void)
-> > {
-> >     int err, ls, s, optval;
-> >     struct addrinfo *ai;
-> >
-> >     printf("Server\n");
-> >
-> >     err = getaddr("::", "3023", true, &ai);
-> >     if (err)
-> >         return err;
-> >
-> >     ls = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-> >     if (ls == -1) {
-> >         perror("socket");
-> >         return -1;
-> >     }
-> >
-> >     optval = 1;
-> >     if (setsockopt(ls, SOL_SOCKET, SO_REUSEADDR,
-> >                    (void *)&optval, sizeof(optval)) == -1) {
-> >         perror("setsockopt reuseaddr");
-> >         return -1;
-> >     }
-> >
-> >     /* Comment this out and it will work. */
-> >     if (setsockopt(ls, IPPROTO_IPV6, IPV6_V6ONLY, &optval,
-> >                    sizeof(optval)) == -1) {
-> >         perror("setsockopt ipv6 only");
-> >         return -1;
-> >     }
-> >
-> >     err = bind(ls, ai->ai_addr, ai->ai_addrlen);
-> >     if (err == -1) {
-> >         perror("bind");
-> >         return -1;
-> >     }
-> >
-> >     err = listen(ls, 5);
-> >     if (err == -1) {
-> >         perror("listen");
-> >         return -1;
-> >     }
-> >
-> >     s = accept(ls, NULL, NULL);
-> >     if (s == -1) {
-> >         perror("accept");
-> >         return -1;
-> >     }
-> >
-> >     close(ls);
-> >
-> >     err = waitread(s);
-> >     close(s);
-> >     return err;
-> > }
-> >
-> > static int
-> > do_client(void)
-> > {
-> >     int err, s;
-> >     struct addrinfo *ai;
-> >
-> >     printf("Client\n");
-> >
-> >     err = getaddr("::1", "3023", false, &ai);
-> >     if (err)
-> >         return err;
-> >
-> >     s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-> >     if (s == -1) {
-> >         perror("socket");
-> >         return -1;
-> >     }
-> >
-> >     err = connect(s, ai->ai_addr, ai->ai_addrlen);
-> >     if (err == -1) {
-> >         perror("connect");
-> >         return -1;
-> >     }
-> >
-> >     err = waitread(s);
-> >     close(s);
-> >     return err;
-> > }
-> >
-> > int
-> > main(int argc, char *argv[])
-> > {
-> >     int err;
-> >
-> >     if (argc > 1)
-> >         err = do_server();
-> >     else
-> >         err = do_client();
-> >     return !!err;
-> > }
-> >
+> You need to break this up into parts that go where they need to
+> go. Nouveau rc changes should go to DRM or some series needs to
+> explain the linkage
+> 
+>> Ralph Campbell (16):
+>>    mm: fix migrate_vma_setup() src_owner and normal pages
+>>    nouveau: fix migrate page regression
+>>    nouveau: fix mixed normal and device private page migration
+>>    mm/hmm: fix test timeout on slower machines
+>>    mm/hmm/test: remove redundant page table invalidate
+>>    mm/hmm: test mixed normal and device private migrations
+>>    nouveau: make nvkm_vmm_ctor() and nvkm_mmu_ptp_get() static
+>>    nouveau/hmm: fault one page at a time
+>>    mm/hmm: add output flag for compound page mapping
+>>    nouveau/hmm: support mapping large sysmem pages
+>>    hmm: add tests for HMM_PFN_COMPOUND flag
+>>    mm/hmm: optimize migrate_vma_setup() for holes
+> 
+> Order things so it is hmm, test, noeveau
+> 
+>>    mm: support THP migration to device private memory
+>>    mm/thp: add THP allocation helper
+>>    mm/hmm/test: add self tests for THP migration
+>>    nouveau: support THP migration to private memory
+> 
+> This is another series, you should split it even if it has to go
+> through the hmm tree
+> 
+> Jason
+
+Thanks. I thought there was probably a better way to submit this but
+I posted everything so people could see how it all fit together.
+
