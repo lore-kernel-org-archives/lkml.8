@@ -2,116 +2,246 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF5472068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:17:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="f5fFAa+G"
+	by mail.kernel.org (Postfix) with ESMTP id AB09D206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgFVIRu (ORCPT
+        id S1726854AbgFVIS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:17:50 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:18511 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726695AbgFVIRu (ORCPT
+        Mon, 22 Jun 2020 04:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgFVIS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:17:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592813869; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=glcto0l0iQlHpS80rrXSQWxQLrQAV2ARSJlihUlAAiA=; b=f5fFAa+GLIPvJXZ0d2BlqKWdBkYj4MpHU06AcYn64iUTyMFSOqEyGk6kSwDmpsJbT9Ln4TVE
- YI7FkygCfJxg89/Y6WqYYNgAnnnpbpfoDiDkkHcvHwoJxa89f+mg/AVoNSy04QfEP5vgJ6JG
- 42OBE1mCvmWAfsGadY00BLSxmtQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5ef069200206ad41d1a25260 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 08:17:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 28E2DC4344A; Mon, 22 Jun 2020 08:17:36 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB9F8C4339C;
-        Mon, 22 Jun 2020 08:17:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB9F8C4339C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, mka@chromium.org
-Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, lukasz.luba@arm.com,
-        sudeep.holla@arm.com, smasetty@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v6 5/5] cpufreq: qcom: Disable fast switch when scaling DDR/L3
-Date:   Mon, 22 Jun 2020 13:46:49 +0530
-Message-Id: <20200622081649.27280-6-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200622081649.27280-1-sibis@codeaurora.org>
-References: <20200622081649.27280-1-sibis@codeaurora.org>
+        Mon, 22 Jun 2020 04:18:26 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD7DC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:18:25 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jnHel-0004I1-8V; Mon, 22 Jun 2020 10:18:19 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jnHeU-0003pu-F0; Mon, 22 Jun 2020 10:18:02 +0200
+Date:   Mon, 22 Jun 2020 10:18:02 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>, linux-rtc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        allen <allen.chen@ite.com.tw>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Brown <broonie@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [RFC PATCH 06/10] pwm: ntxec: Add driver for PWM function in
+ Netronix EC
+Message-ID: <20200622081802.pv4xmb7vn4te5r5t@taurus.defre.kleine-koenig.org>
+References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+ <20200620224222.1312520-5-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7tfyuhyp2zipmowo"
+Content-Disposition: inline
+In-Reply-To: <20200620224222.1312520-5-j.neuschaefer@gmx.net>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable fast switch when the opp-tables required for scaling DDR/L3
-are populated.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+--7tfyuhyp2zipmowo
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v7:
- * Picked up R-b from Matthias
+Hello,
 
-v6:
- * No change
+On Sun, Jun 21, 2020 at 12:42:17AM +0200, Jonathan Neusch=E4fer wrote:
+> The Netronix EC provides a PWM output, which is used for the backlight
 
-v5:
- * Drop dev_pm_opp_get_path_count [Saravana]
+s/,//
 
- drivers/cpufreq/qcom-cpufreq-hw.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> on ebook readers. This patches adds a driver for the PWM output.
 
-diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-index aaf98333d37da..fa68fa8ebd95e 100644
---- a/drivers/cpufreq/qcom-cpufreq-hw.c
-+++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-@@ -159,6 +159,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
- 		dev_err(cpu_dev, "Invalid opp table in device tree\n");
- 		return ret;
- 	} else {
-+		policy->fast_switch_possible = true;
- 		icc_scaling_enabled = false;
- 	}
- 
-@@ -308,8 +309,6 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
- 
- 	dev_pm_opp_of_register_em(policy->cpus);
- 
--	policy->fast_switch_possible = true;
--
- 	return 0;
- error:
- 	devm_iounmap(dev, base);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+on *some* ebook readers
 
+
+> +#define NTXEC_UNK_A		0xa1
+> +#define NTXEC_UNK_B		0xa2
+> +#define NTXEC_ENABLE		0xa3
+> +#define NTXEC_PERIOD_LOW	0xa4
+> +#define NTXEC_PERIOD_HIGH	0xa5
+> +#define NTXEC_DUTY_LOW		0xa6
+> +#define NTXEC_DUTY_HIGH		0xa7
+> +
+> +/*
+> + * The time base used in the EC is 8MHz, or 125ns. Period and duty cycle=
+ are
+> + * measured in this unit.
+> + */
+> +static int ntxec_pwm_config(struct pwm_chip *chip, struct pwm_device *pw=
+m_dev,
+> +				 int duty_ns, int period_ns)
+> +{
+> +	struct ntxec_pwm *pwm =3D pwmchip_to_pwm(chip);
+> +	uint64_t duty =3D duty_ns;
+> +	uint64_t period =3D period_ns;
+
+As you cannot use values bigger than 8191999 anyhow, I wonder why you
+use a 64 bit type here.
+
+> +	int res =3D 0;
+> +
+> +	do_div(period, 125);
+
+Please use a define instead of plain 125.
+
+> +	if (period > 0xffff) {
+> +		dev_warn(pwm->dev,
+> +			 "Period is not representable in 16 bits: %llu\n", period);
+> +		return -ERANGE;
+> +	}
+> +
+> +	do_div(duty, 125);
+> +	if (duty > 0xffff) {
+> +		dev_warn(pwm->dev, "Duty cycle is not representable in 16 bits: %llu\n=
+",
+> +			duty);
+> +		return -ERANGE;
+> +	}
+
+This check isn't necessary as the pwm core ensures that duty <=3D period.
+
+> +	res |=3D ntxec_write8(pwm->ec, NTXEC_PERIOD_HIGH, period >> 8);
+> +	res |=3D ntxec_write8(pwm->ec, NTXEC_PERIOD_LOW, period);
+> +	res |=3D ntxec_write8(pwm->ec, NTXEC_DUTY_HIGH, duty >> 8);
+> +	res |=3D ntxec_write8(pwm->ec, NTXEC_DUTY_LOW, duty);
+
+Does this complete the currently running period? Can it happen that a
+new period starts between the first and the last write and so a mixed
+period can be seen at the output?
+
+> +
+> +	return (res < 0) ? -EIO : 0;
+> +}
+> +
+> +static int ntxec_pwm_enable(struct pwm_chip *chip,
+> +				 struct pwm_device *pwm_dev)
+> +{
+> +	struct ntxec_pwm *pwm =3D pwmchip_to_pwm(chip);
+> +
+> +	return ntxec_write8(pwm->ec, NTXEC_ENABLE, 1);
+> +}
+> +
+> +static void ntxec_pwm_disable(struct pwm_chip *chip,
+> +				   struct pwm_device *pwm_dev)
+> +{
+> +	struct ntxec_pwm *pwm =3D pwmchip_to_pwm(chip);
+> +
+> +	ntxec_write8(pwm->ec, NTXEC_ENABLE, 0);
+> +}
+> +
+> +static struct pwm_ops ntxec_pwm_ops =3D {
+> +	.config		=3D ntxec_pwm_config,
+> +	.enable		=3D ntxec_pwm_enable,
+> +	.disable	=3D ntxec_pwm_disable,
+> +	.owner		=3D THIS_MODULE,
+
+Please don't align the =3D, just a single space before them is fine.
+More important: Please implement .apply() (and .get_state()) instead of
+the old API. Also please enable PWM_DEBUG which might save us a review
+iteration.
+
+> +};
+> +
+> +static int ntxec_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct ntxec *ec =3D dev_get_drvdata(pdev->dev.parent);
+> +	struct ntxec_pwm *pwm;
+> +	struct pwm_chip *chip;
+> +	int res;
+> +
+> +	pwm =3D devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+> +	if (!pwm)
+> +		return -ENOMEM;
+> +
+> +	pwm->ec =3D ec;
+> +	pwm->dev =3D &pdev->dev;
+> +
+> +	chip =3D &pwm->chip;
+> +	chip->dev =3D &pdev->dev;
+> +	chip->ops =3D &ntxec_pwm_ops;
+> +	chip->base =3D -1;
+> +	chip->npwm =3D 1;
+> +
+> +	res =3D pwmchip_add(chip);
+> +	if (res < 0)
+> +		return res;
+> +
+> +	platform_set_drvdata(pdev, pwm);
+> +
+> +	res |=3D ntxec_write8(pwm->ec, NTXEC_ENABLE, 0);
+> +	res |=3D ntxec_write8(pwm->ec, NTXEC_UNK_A, 0xff);
+> +	res |=3D ntxec_write8(pwm->ec, NTXEC_UNK_B, 0xff);
+> +
+> +	return (res < 0) ? -EIO : 0;
+
+This is broken for several reasons:
+
+ - You're not supposed to modify the output in .probe
+ - if ntxec_write8 results in an error you keep the pwm registered.
+ - From the moment on pwmchip_add returns the callbacks can be called.
+   The calls to ntxec_write8 probably interfere here.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--7tfyuhyp2zipmowo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7waTcACgkQwfwUeK3K
+7Alz9gf8C+9A/FPfdyoWF4DcZ7zjNKarHze44XtL4sUIkJfLYl9xqKr+/YjB9EYr
+6Z/sukeRDw5Gn0DZo0kgntYx5TcLztsQxB7TFVhO6cj25+uzwnJwumN4DQxJlOqY
+u30aZH1IyFoG2PTDKyCnOrxrWGnK2VsUqV5t5g8RgIUIJysGaMtUgiwvyggtXvKv
+jMLcjm5QBnrsU56rkZYJGiXtcz+L6lGF7rd1cXWPR3nfgXngWPEBe/NjnqChsfsy
+VRF8nb6G46xF7c58IARrMRiH43wLcHLhtKvIStC17t5on0FbfuL3jFMT1wylV+E5
+lZ9Y/VFroSxQX6EARBDDa2E/J38PSg==
+=eoxM
+-----END PGP SIGNATURE-----
+
+--7tfyuhyp2zipmowo--
