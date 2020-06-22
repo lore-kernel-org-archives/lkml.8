@@ -2,63 +2,74 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD94AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B74C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 876D72073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592851254;
-	bh=ummMjX41XB0RRf8l8TTRWyYH8+hc44L6LHZf3H73YC8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kg71UWCbULamhwG0J4qxf0M02BxCwncrwOrvAlLQfw3385ZlyMuvAgLw19CkeSxPl
-	 zhMT4X/QbITXUwpCUIb5dndU+Tag7jfdQtpOwh0F6AHJbPLrIGv1so1CrjOMi2wwlb
-	 fY/YzfoSyGv/QFVhX2OfxURMaxN0hAH0lsgCEBA8=
+	by mail.kernel.org (Postfix) with ESMTP id E06412073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PkWyxttt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbgFVSkx (ORCPT
+        id S1730369AbgFVSmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729605AbgFVSkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:40:52 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D472073E
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:40:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592851252;
-        bh=ummMjX41XB0RRf8l8TTRWyYH8+hc44L6LHZf3H73YC8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wSCsG5hIV6ZBfn+dFHGxUmYzBqbWn8+GKXzmKRWdH9+v86DGH4XaiVFU9X3X6p6dG
-         xWGHaj01lg2D3ch/gfC9VSizFk7D7KKXPgHl08Q1u37VZkSBr++XDiqVYPRUEe7v+3
-         wgPQWM8v9Y9SDwGM+qC7fPe1OdXb+5wBa9XNjsTA=
-Received: by mail-wr1-f47.google.com with SMTP id q5so5346102wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:40:51 -0700 (PDT)
-X-Gm-Message-State: AOAM533LuytW24aHInfPGRQaWPOR9jBX0BxZvnRBmDCFANNvJ7ZtoGyX
-        IZSyu062YdcURa2nqJ3iFYVLntHW77hUUqszldxCnw==
-X-Google-Smtp-Source: ABdhPJz5M3EsisMMo/x090Cfd0ALE75dfYWGHpWLEOo1QV5wAcPSmZiCEsS/+gxuCYK8WO72MQWuSswYv/WPuWAeYCk=
-X-Received: by 2002:a5d:6acf:: with SMTP id u15mr19669170wrw.18.1592851250402;
- Mon, 22 Jun 2020 11:40:50 -0700 (PDT)
+        Mon, 22 Jun 2020 14:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729605AbgFVSmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 14:42:19 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B79A2C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:42:18 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z9so20502754ljh.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9aX2e0KRVgCu7iM/YzQ9kW8CY4++NvSyG3ZKNDs8dBA=;
+        b=PkWyxtttxziJ7sl0J3cRRVqapHbtXt4kdu65zklL3qMNyj/kjW1Ul758pFfOfq7bc6
+         vIq4C4PwC6Rlt93ZeCqqhOxf9pF6Rgwm3KfctMtfhrPhEunuiOYxoQIodSkAGBAjfR8q
+         xzyUIeOenWufKMgp6iggI7PqKYqK1589MvKHc4dpa40qgOEfP0EvG9bdKk8YWo8Ob6He
+         FsMNnr04wAZwfZLSOPoNm3SjxtkYkPzfpdrxz13T+dinoILo/fLnB+dQRAE64Un2byUt
+         pHgq7o/3EyZRFF07xl3YG6cAcHeypZ4n5d37OtAYejFZr3KkIzRPD3Jv4UyRTNA6Yf3C
+         P43w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9aX2e0KRVgCu7iM/YzQ9kW8CY4++NvSyG3ZKNDs8dBA=;
+        b=qQgDhjXitktf4ijwWRK+5pqxXKQ9b4X0ZBxRkoKB5xnzNTkj9lsDkP3MaUkB4I9ppP
+         8nSsU3TVLavQFPq12+RZwR3ztmAW9QrQ5qEZNVdbMts+HYpFdyLDHvBLqQnB0GaHoL5u
+         Jnar8oWflwuh1UcIkcWXbUxuQSVFrszDDpHj9cPQmQPpXCKnfWtb+3Auf6nElkAp2Oje
+         jKGkHAiR+bbIbb/0bbhlUfBUKFPGBL0Bzp/hCG/g2yIKCT0F6L0IPpt8K+ao6EstRw32
+         ZthDMcwRdhk8tg9PMDDztzD8B7Z1pA+ESqVAIKVgLleW5NacN+/7ly91d6EKSRG+9EYz
+         HZIQ==
+X-Gm-Message-State: AOAM533RO3JLKB1+Vm3JHMLG2NhyHlfotw6D8LlBDKikI/hfuRf/bSyF
+        Z87REGS7DK+o33CitlMNJoQNeirjVf2pTAjpY7Rm7Q==
+X-Google-Smtp-Source: ABdhPJwRCFcJmK2mEPD2AfdCfvBCKYaTqaRO4KPnzwM344nnPLVu6HlrS309q7QQ41IdOgsCzHLKXZ2bpzLAvYJB3zg=
+X-Received: by 2002:a2e:960b:: with SMTP id v11mr9389585ljh.77.1592851336994;
+ Mon, 22 Jun 2020 11:42:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200619174127.22304-1-bp@alien8.de> <20200619174127.22304-2-bp@alien8.de>
- <CALCETrXZhFJGJA2h4zP743KYTtni-rQSUME8mtSYUdk1-ZTauQ@mail.gmail.com>
- <20200622170908.GH32200@zn.tnic> <CALCETrU0C5yVwfAOj+v1RqNBZY+phXrdvCBZMKdOXOExBgMbVg@mail.gmail.com>
- <ef327682-7e9f-5652-1664-3e201ac38f60@intel.com>
-In-Reply-To: <ef327682-7e9f-5652-1664-3e201ac38f60@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 22 Jun 2020 11:40:38 -0700
-X-Gmail-Original-Message-ID: <CALCETrUT1_WVjMbPZhUcX9sjFvLBZKCc2fxeJJsD940k1Ajyrw@mail.gmail.com>
-Message-ID: <CALCETrUT1_WVjMbPZhUcX9sjFvLBZKCc2fxeJJsD940k1Ajyrw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, jpa@kernelbug.mail.kapsi.fi,
+References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-15-guro@fb.com>
+In-Reply-To: <20200608230654.828134-15-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 22 Jun 2020 11:42:05 -0700
+Message-ID: <CALvZod6Y5sfLQSpZov8TXx9Ybndq_vuNproG-2vM8trztFzk8A@mail.gmail.com>
+Subject: Re: [PATCH v6 14/19] mm: memcg/slab: remove memcg_kmem_get_cache()
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,31 +77,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:38 AM Dave Hansen <dave.hansen@intel.com> wrote:
+On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> On 6/22/20 11:33 AM, Andy Lutomirski wrote:
-> > Suppose you do:
-> >
-> > double x = 1.0;
-> >
-> > kernel_fpu_begin();
-> >
-> > x += 2.0;
-> >
-> > We want to make sure that GCC puts things in the right order.  I
-> > suppose that even a memory clobber is insufficient here, though.
+> The memcg_kmem_get_cache() function became really trivial,
+> so let's just inline it into the single call point:
+> memcg_slab_pre_alloc_hook().
 >
-> Even with CONFIG_PREEMPT disabled, we still have:
+> It will make the code less bulky and can also help the compiler
+> to generate a better code.
 >
->         #define preempt_disable()                       barrier()
->
-> I don't see us supporting preemptible kernel_fpu regions any time soon,
-> so shouldn't this be sufficient now and for a long time?
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-That's on the wrong end of the function.  It'sL
-
-preempt_disable();
-LDMXCSR;
-<-- some kind of barrier here might be nice
-
---Andy
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
