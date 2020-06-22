@@ -2,121 +2,147 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED93C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C268C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60A520738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B36A2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DEgcNUgm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="N01y1zIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731351AbgFVXAQ (ORCPT
+        id S1731381AbgFVXCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:00:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731175AbgFVXAP (ORCPT
+        Mon, 22 Jun 2020 19:02:07 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17060 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731268AbgFVXCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:00:15 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF6DC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:00:15 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b5so9098354pfp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=83TCNCBjNohNVrqhGduE8K74z3IQ6/Lu6H9fSwHcKBI=;
-        b=DEgcNUgmnqgavBlvTgADYfLgOafyX/H5FdDRdvi9Bb6S/WBs7kYll9YiPjRSOvgAEG
-         v7bulz7OBSDhmA+jwBGRGVdMGRWVjDRy6+FOm9QURTY20m2IeGFzm5+8yMNEN2Dr6Oa1
-         ibe8QqZwP9MNkKA71L+uamdauQHqW1Qj57tvg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=83TCNCBjNohNVrqhGduE8K74z3IQ6/Lu6H9fSwHcKBI=;
-        b=El77Bk34l+2r4K7MseJxdqtjL1mQ+bWxOlr0vpSKNyz6aHWIKl5vNQ7cFYx3Q/RwtQ
-         CHYYhgedwWsRG1IzjuCB2+CFrlnO/rLhklXYEAFk9mRgEtqucgEnaHchpiC/4+IKXooL
-         zrAUBHJYOEnck5du3H17HMnFgR3zSi8xlrPM1axZicx1P4SDI3rLxEv0ttwhMkqQL2pv
-         gacjaaoCXvOkXdiUIAk1odbMSBMYv0XuPOPeHToayRypmxcYflXib/1Rb0GJVxuSVB7I
-         hYYgp0OK4POsQ+FG2wt0FzF7EWj09Vx6v1AJCF2VaYvXngRsrMAwnzCV/t19zvD/vCP+
-         tAZw==
-X-Gm-Message-State: AOAM531aMzyCiyP4EK2Dpuh1eaVRJdxHwAwTpivCSkH1M0k2l8BKYOb5
-        zrncSzQenlMeYP1KnHG4FlDiXQ==
-X-Google-Smtp-Source: ABdhPJzDfln86XAWzAEV3/P8Jj4TpYbAS/ch7Sm25KrySby0/SNFjM433WHLKjjRx44/ZmqpW6wv+w==
-X-Received: by 2002:a63:df56:: with SMTP id h22mr14511327pgj.140.1592866814612;
-        Mon, 22 Jun 2020 16:00:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v7sm14485890pfn.147.2020.06.22.16.00.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 16:00:13 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 16:00:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Fangrui Song <maskray@google.com>
-Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] x86/boot: Warn on orphan section placement
-Message-ID: <202006221600.81F5586@keescook>
-References: <20200622205341.2987797-1-keescook@chromium.org>
- <20200622205341.2987797-4-keescook@chromium.org>
- <20200622220628.t5fklwmbtqoird5f@google.com>
- <202006221543.EA2FCFA2FF@keescook>
- <20200622224928.o2a7jkq33guxfci4@google.com>
+        Mon, 22 Jun 2020 19:02:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef138130000>; Mon, 22 Jun 2020 16:00:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 16:02:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 16:02:06 -0700
+Received: from [10.2.59.206] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
+ 2020 23:01:51 +0000
+Subject: Re: [PATCH 13/16] mm: support THP migration to device private memory
+To:     Yang Shi <shy828301@gmail.com>, Zi Yan <ziy@nvidia.com>
+CC:     Ralph Campbell <rcampbell@nvidia.com>,
+        <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Shuah Khan" <shuah@kernel.org>,
+        "Huang, Ying" <ying.huang@intel.com>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
+ <20200619215649.32297-14-rcampbell@nvidia.com>
+ <F1872509-3B1F-4A8A-BFF5-E4D44E451920@nvidia.com>
+ <b6eed976-c515-72d6-a7be-2296cab8f0d4@nvidia.com>
+ <C7BEB563-3698-442C-A188-1B66CBE4CF63@nvidia.com>
+ <a5f502f8-70cd-014b-8066-bbaeb8024a29@nvidia.com>
+ <4C364E23-0716-4D59-85A1-0C293B86BC2C@nvidia.com>
+ <CAHbLzkqe50+KUsRH92O4Be2PjuwAYGw9nK+d-73syxi2Xnf9-Q@mail.gmail.com>
+ <CAHbLzko=BqtPhxgf7f1bKKqoQxK9XCCPdp4YdL80K_uXFfcETQ@mail.gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <fa056e5e-ca87-aef1-e66e-58e8ebe5403e@nvidia.com>
+Date:   Mon, 22 Jun 2020 16:01:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622224928.o2a7jkq33guxfci4@google.com>
+In-Reply-To: <CAHbLzko=BqtPhxgf7f1bKKqoQxK9XCCPdp4YdL80K_uXFfcETQ@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592866835; bh=Y6NBr0D1yM6UcnMk8vnlqkMWMVjsve14PP2JOfM1rUE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=N01y1zIPkJH/Lms5VPCw+1hdpKCS6PQZaY+D44RrVIXwNweSuXmYr3z3AfacpMrRd
+         G6+/fqzWMSPGkgXP5CHVQpYsuLjMkY+7UKSYaWnH1EkZLLsUN4HnVHQvpRTB4ETFdv
+         mhmHUu3UNo7z2CHs8x9IfXei5XwR3Y9Zs7z/4nGOSZHwHXZyStlyAfAisuSqTF6kJk
+         6gCLh23dt5mh+yBb98fGlamGj9DI3thkQ6Su+m8vH3eU9D0J67Zac+QkklzP31wVYD
+         lHOctZ9rMoZOScVyrBhik3PE1youRWx4x2Ase8LtWQUNfGk29QlDgJu+UXoKCypz1b
+         XQu2ultXjtJaw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 03:49:28PM -0700, Fangrui Song wrote:
-> On 2020-06-22, Kees Cook wrote:
-> > On Mon, Jun 22, 2020 at 03:06:28PM -0700, Fangrui Song wrote:
-> > > LLD may report warnings for 3 synthetic sections if they are orphans:
-> > > 
-> > > ld.lld: warning: <internal>:(.symtab) is being placed in '.symtab'
-> > > ld.lld: warning: <internal>:(.shstrtab) is being placed in '.shstrtab'
-> > > ld.lld: warning: <internal>:(.strtab) is being placed in '.strtab'
-> > > 
-> > > Are they described?
-> > 
-> > Perhaps:
-> > 
-> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > index db600ef218d7..57e9c142e401 100644
-> > --- a/include/asm-generic/vmlinux.lds.h
-> > +++ b/include/asm-generic/vmlinux.lds.h
-> > @@ -792,6 +792,9 @@
-> > 		.stab.exclstr 0 : { *(.stab.exclstr) }			\
-> > 		.stab.index 0 : { *(.stab.index) }			\
-> > 		.stab.indexstr 0 : { *(.stab.indexstr) }		\
-> > +		.symtab 0 : { *(.symtab) }				\
-> > +		.strtab 0 : { *(.strtab) }				\
-> > +		.shstrtab 0 : { *(.shstrtab) }				\
-> > 		.comment 0 : { *(.comment) }
-> > 
-> > #ifdef CONFIG_GENERIC_BUG
-> 
-> This LGTM. Nit: .comment before .symtab is a more common order.
+On 2020-06-22 15:33, Yang Shi wrote:
+> On Mon, Jun 22, 2020 at 3:30 PM Yang Shi <shy828301@gmail.com> wrote:
+>> On Mon, Jun 22, 2020 at 2:53 PM Zi Yan <ziy@nvidia.com> wrote:
+>>> On 22 Jun 2020, at 17:31, Ralph Campbell wrote:
+>>>> On 6/22/20 1:10 PM, Zi Yan wrote:
+>>>>> On 22 Jun 2020, at 15:36, Ralph Campbell wrote:
+>>>>>> On 6/21/20 4:20 PM, Zi Yan wrote:
+>>>>>>> On 19 Jun 2020, at 17:56, Ralph Campbell wrote:
+...
+>>> Ying(cc=E2=80=99d) developed the code to swapout and swapin THP in one =
+piece: https://lore.kernel.org/linux-mm/20181207054122.27822-1-ying.huang@i=
+ntel.com/.
+>>> I am not sure whether the patchset makes into mainstream or not. It cou=
+ld be a good technical reference
+>>> for swapping in device private pages, although swapping in pages from d=
+isk and from device private
+>>> memory are two different scenarios.
+>>>
+>>> Since the device private memory swapin impacts core mm performance, we =
+might want to discuss your patches
+>>> with more people, like the ones from Ying=E2=80=99s patchset, in the ne=
+xt version.
+>>
+>> I believe Ying will give you more insights about how THP swap works.
+>>
+>> But, IMHO device memory migration (migrate to system memory) seems
+>> like THP CoW more than swap.
 
-Adjusted.
 
-> Reviewed-by: Fangrui Song <maskray@google.com>
+A fine point: overall, the desired behavior is "migrate", not CoW.
+That's important. Migrate means that you don't leave a page behind, even
+a read-only one. And that's exactly how device private migration is
+specified.
 
-Thanks!
+We should try to avoid any erosion of clarity here. Even if somehow
+(really?) the underlying implementation calls this THP CoW, the actual
+goal is to migrate pages over to the device (and back).
 
--- 
-Kees Cook
+
+>>
+>> When migrating in:
+>=20
+> Sorry for my fat finger, hit sent button inadvertently, let me finish her=
+e.
+>=20
+> When migrating in:
+>=20
+>          - if THP is enabled: allocate THP, but need handle allocation
+> failure by falling back to base page
+>          - if THP is disabled: fallback to base page
+>=20
+
+OK, but *all* page entries (base and huge/large pages) need to be cleared,
+when migrating to device memory, unless I'm really confused here.
+So: not CoW.
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
