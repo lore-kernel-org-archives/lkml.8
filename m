@@ -2,148 +2,108 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AEDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9BA0206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CDD206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:23:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WIzqC71X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbgFVPWO (ORCPT
+        id S1729301AbgFVPX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729049AbgFVPWO (ORCPT
+        Mon, 22 Jun 2020 11:23:56 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36633 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729150AbgFVPXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:22:14 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE424C061795;
-        Mon, 22 Jun 2020 08:22:13 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jnOGn-0003qn-MF; Mon, 22 Jun 2020 17:22:01 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 25C361C0051;
-        Mon, 22 Jun 2020 17:22:01 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 15:22:00 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/msr: Move the F15h MSRs where they belong
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Borislav Petkov <bp@suse.de>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200621163323.14e8533f@canb.auug.org.au>
-References: <20200621163323.14e8533f@canb.auug.org.au>
+        Mon, 22 Jun 2020 11:23:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592839432;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wGpF0Z4o98o6k0v3vIzdGQK4IxCExf5QSKDcyS94Xvc=;
+        b=WIzqC71X0A5hN4gOoXemTu/J+1yvz80y1jvPYSibdSKjR1ZKagJQeRVM+YbkbwPdic1C9o
+        ibBWhrgXrP9pTFWPmbMj+B3Gehohy/Tfm5IjYNjdSodvExbdGT3CCQkzHl19bPaIcXo3Mc
+        GLvs6Ass6OeGnxsyzVbGpUJ3Jn5BG2w=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-493-zORpBuoTOyu4u2Yvkgs1rA-1; Mon, 22 Jun 2020 11:23:51 -0400
+X-MC-Unique: zORpBuoTOyu4u2Yvkgs1rA-1
+Received: by mail-wm1-f69.google.com with SMTP id l2so6985636wmi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:23:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wGpF0Z4o98o6k0v3vIzdGQK4IxCExf5QSKDcyS94Xvc=;
+        b=FCJu5bTWbcih27Y51HompCnTeQ1mS/36vZmVJk66D6+VLGjA6C5lz1PnxYcrayVj1o
+         mjGULw/IA6AcI4IJV+X2aNWvz7t4DKxA4CZr+7b1FK2z/61iJL8V9fUhGmWK7yOHGTVA
+         LASAR3m+cgXyLWXaSP6aFe/MseW3IQTrfGl5h8xonyZPUf8I+8JFwo3w12Hees2Wsgnx
+         WUrr0BJi8pd+rpPVysTGaEFMgMY32/qet7HMhLGiz3aiGYZnlJFWqVaU4Kryg3WdPlZ3
+         nw06a7GZbH1dugqC1Xyo52LEXcmqqR4VzyIkxtji5GsOYxCDWRKGK5cs9UpfABWTp1A9
+         pyxQ==
+X-Gm-Message-State: AOAM531fFbMWx+uzKdB/tIYGYhq3d0cyCS4pbz8I+58sdO9fE3c+CUe+
+        GZPagCIOBMnYrpbD1SF0S0g9ToWeFsgMMMlsiTu9ZXiqhF5yULQUUQkf0+rTEXxZkaPhyDWXXW/
+        QLs0SFSn50Sr9kLoCgB8e8SA0
+X-Received: by 2002:adf:ef46:: with SMTP id c6mr1166990wrp.34.1592839429932;
+        Mon, 22 Jun 2020 08:23:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyJvSRmLdiYDCgpOU1rHgnpl7Ep95bf98pJLlBYjznBMbbO5UABy+Hb03Ct9Xk8BS49lBEPeA==
+X-Received: by 2002:adf:ef46:: with SMTP id c6mr1166972wrp.34.1592839429751;
+        Mon, 22 Jun 2020 08:23:49 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
+        by smtp.gmail.com with ESMTPSA id 63sm19975505wra.86.2020.06.22.08.23.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 08:23:49 -0700 (PDT)
+Subject: Re: [PATCH v2 00/11] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+To:     Mohammed Gamal <mgamal@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, babu.moger@amd.com
+References: <20200619153925.79106-1-mgamal@redhat.com>
+ <5a52fd65-e1b2-ca87-e923-1d5ac167cfb9@amd.com>
+ <a5793938619c1c328b8283aab90166e352071317.camel@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <08594d32-9be2-b4d6-1dac-a335e8bda9f7@redhat.com>
+Date:   Mon, 22 Jun 2020 17:23:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Message-ID: <159283932089.16989.16947739862636103746.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <a5793938619c1c328b8283aab90166e352071317.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On 22/06/20 17:08, Mohammed Gamal wrote:
+>> Also, something to consider. On AMD, when memory encryption is 
+>> enabled (via the SYS_CFG MSR), a guest can actually have a larger
+>> MAXPHYADDR than the host. How do these patches all play into that?
 
-Commit-ID:     99e40204e014e06644072c39001a269d9689e0d1
-Gitweb:        https://git.kernel.org/tip/99e40204e014e06644072c39001a269d9689e0d1
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Sun, 21 Jun 2020 12:41:53 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 22 Jun 2020 17:15:53 +02:00
+As long as the NPT page tables handle the guest MAXPHYADDR just fine,
+there's no need to do anything.  I think that's the case?
 
-x86/msr: Move the F15h MSRs where they belong
+Paolo
 
-1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
+> Well the patches definitely don't address that case. It's assumed a
+> guest VM's MAXPHYADDR <= host MAXPHYADDR, and hence we handle the case
+> where a guests's physical address space is smaller and try to trap
+> faults that may go unnoticed by the host.
+> 
+> My question is in the case of guest MAXPHYADDR > host MAXPHYADDR, do we
+> expect somehow that there might be guest physical addresses that
+> contain what the host could see as reserved bits? And how'd the host
+> handle that?
 
-moved the three F15h power MSRs to the architectural list but that was
-wrong as they belong in the family 0x15 list. That also caused:
-
-  In file included from trace/beauty/tracepoints/x86_msr.c:10:
-  perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: error: initialized field overwritten [-Werror=override-init]
-    292 |  [0xc0010280 - x86_AMD_V_KVM_MSRs_offset] = "F15H_PTSC",
-        |                                             ^~~~~~~~~~~
-  perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: note: (near initialization for 'x86_AMD_V_KVM_MSRs[640]')
-
-due to MSR_F15H_PTSC ending up being defined twice. Move them where they
-belong and drop the duplicate.
-
-Also, drop the respective tools/ changes of the msr-index.h copy the
-above commit added because perf tool developers prefer to go through
-those changes themselves in order to figure out whether changes to the
-kernel headers would need additional handling in perf.
-
-Fixes: 1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20200621163323.14e8533f@canb.auug.org.au
----
- arch/x86/include/asm/msr-index.h       | 5 ++---
- tools/arch/x86/include/asm/msr-index.h | 5 +----
- 2 files changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index eb95372..63ed8fe 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -422,11 +422,8 @@
- #define MSR_AMD_PERF_CTL		0xc0010062
- #define MSR_AMD_PERF_STATUS		0xc0010063
- #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
--#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
--#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
--#define MSR_F15H_PTSC			0xc0010280
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
- #define MSR_AMD64_CPUID_FN_1		0xc0011004
-@@ -469,6 +466,8 @@
- #define MSR_F16H_DR0_ADDR_MASK		0xc0011027
- 
- /* Fam 15h MSRs */
-+#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-+#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_F15H_PERF_CTL		0xc0010200
- #define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
- #define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 7dfd45b..ef452b8 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -414,18 +414,15 @@
- #define MSR_AMD64_PATCH_LEVEL		0x0000008b
- #define MSR_AMD64_TSC_RATIO		0xc0000104
- #define MSR_AMD64_NB_CFG		0xc001001f
-+#define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_PATCH_LOADER		0xc0010020
- #define MSR_AMD_PERF_CTL		0xc0010062
- #define MSR_AMD_PERF_STATUS		0xc0010063
- #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
--#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
--#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
--#define MSR_F15H_PTSC			0xc0010280
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
--#define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_LS_CFG		0xc0011020
- #define MSR_AMD64_DC_CFG		0xc0011022
- #define MSR_AMD64_BU_CFG2		0xc001102a
