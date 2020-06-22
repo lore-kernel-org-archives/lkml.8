@@ -2,125 +2,105 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4134C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74913C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A996225403
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAC125403
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 05:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592804084;
-	bh=GrdjXVaRbPN9gVQRuaOrbDVj0urS/Yt31tCI6xoLn7A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sBP75ZnwCbLb9MMDjeHg/DpbM+EqTiR/G+DuBJNGuA/nY2Do3sOpGuD1ulzwWILn2
-	 fONJtaO8iE7AV6Bhs13P2oDOupINVx5vixUwTAm5DOPwWclHt7BAZgvI4dw0KEeNai
-	 melpH3n/EJwOoNpp1dpxffN7B+VM768VWmGdlicg=
+	s=default; t=1592804088;
+	bh=E3RXzVUV2XgnYSHsFHYQBv8Wt4U72vQ9giqYbfrpai0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CasWXyLvX3TyOY8aqNg+S1V3ZHbzLc94rIAblMpOsaTvyqyRk/ZjV/MKYqFXWV+y8
+	 jZ3Odhh4K42vc9B9gDk4m0db4KUui6XtJWr7nAHwNMulIuT3qsLKrhUZJAlTsXdWlD
+	 rULbm2rzf/s/QzorFxvR/5lEs84Yi8si1I0ySOwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbgFVFen (ORCPT
+        id S1731228AbgFVFeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 01:34:43 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:60021 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgFVFen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 01:34:43 -0400
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 05M5YHTq010632;
-        Mon, 22 Jun 2020 14:34:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 05M5YHTq010632
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592804058;
-        bh=l1Wp8QkA57im+NZmeXieOSoL1AHhaVcvQ4yMPx1u/lw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zka7rOiFfK4LJYPLBtdXrDwXPFTimfyqIuYntf3jwVO3e07ZfWV6HGUDX2cTVBDSg
-         HS9b4J7EJsJBcwSgfbhCmVQFxQHmNHVODfq98QIpUoe2UI7kRregJKUfD6aAObmfTg
-         Y3k7cM2+ut1N69s9dHw9A51qgCTCd+HlK0g/RAXLCBG8lBsJ6bYC/5yWj8I31H4EBA
-         u5gidbiT0P96mHIZb9EH9HzduDTeY9EZkvY7RZjXPYfxvdRW6un3aA/Ik1YIZnPoP4
-         tsZP1cvfDjNsUNO0+NxXssOhHD4GPBes/FE9Dx0nrOztTHByzfCfMCDWvQc2UrTrc2
-         xspEZ8Zs8mH3A==
-X-Nifty-SrcIP: [209.85.221.171]
-Received: by mail-vk1-f171.google.com with SMTP id s6so3661635vkb.9;
-        Sun, 21 Jun 2020 22:34:17 -0700 (PDT)
-X-Gm-Message-State: AOAM530mnAtZ/G1XVqkaU+olnDoj1x7Ey52CE2q0c5m/QXi0l/kZ/KtL
-        yOHmwd97ulkJOhCjShGrhrFzLEIVenlIDMMg9EM=
-X-Google-Smtp-Source: ABdhPJwh6BZWfd4rlU2RWuyudUqoKaTL84W4xch0jXewj8b3Y2FY7i6N6lJ2HXvrwYHzcQc/HZddEaokfWVLepAfzoU=
-X-Received: by 2002:a1f:1f04:: with SMTP id f4mr14462230vkf.73.1592804056188;
- Sun, 21 Jun 2020 22:34:16 -0700 (PDT)
+        Mon, 22 Jun 2020 01:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731210AbgFVFeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 01:34:46 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78482253E9;
+        Mon, 22 Jun 2020 05:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592804085;
+        bh=E3RXzVUV2XgnYSHsFHYQBv8Wt4U72vQ9giqYbfrpai0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r/HD9M5IHBDvlCPkxSg/s2VSNOE1JY8phHpLiQuVHwgWBzZoQoUtBSXI3GI3aDom8
+         BvKAkZVhh8j3nyl8NaWYDQbyj5CawS5c8DZrURjEv8rOmpmJBNMpidK4+TiSzf3d06
+         t+qsGvgVMCmzwvP4CuJzG34SpxPyZy5+4GaswZjw=
+Date:   Mon, 22 Jun 2020 11:04:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] ALSA: compress: document the compress gapless audio
+ state machine
+Message-ID: <20200622053441.GE2324254@vkoul-mobl>
+References: <20200619045449.3966868-1-vkoul@kernel.org>
+ <20200619045449.3966868-3-vkoul@kernel.org>
+ <5c878ccf-43dd-4e13-aa6b-a6cb1e82af72@linux.intel.com>
 MIME-Version: 1.0
-References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
- <20200618233958.GV8681@bombadil.infradead.org> <877dw3apn8.fsf@x220.int.ebiederm.org>
- <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com> <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
-In-Reply-To: <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 22 Jun 2020 14:33:39 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARr4aWTUqcS5TGdQ-7C_u=PFQVMMuakQ2Oro3-43fYu9w@mail.gmail.com>
-Message-ID: <CAK7LNARr4aWTUqcS5TGdQ-7C_u=PFQVMMuakQ2Oro3-43fYu9w@mail.gmail.com>
-Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc dentries
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin@oracle.com" <joe.jin@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c878ccf-43dd-4e13-aa6b-a6cb1e82af72@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:14 PM Eric W. Biederman
-<ebiederm@xmission.com> wrote:
->
->
-> Junxiao Bi <junxiao.bi@oracle.com> reported:
-> > When debugging some performance issue, i found that thousands of threads exit
-> > around same time could cause a severe spin lock contention on proc dentry
-> > "/proc/$parent_process_pid/task/", that's because threads needs to clean up
-> > their pid file from that dir when exit.
->
-> Matthew Wilcox <willy@infradead.org> reported:
-> > We've looked at a few different ways of fixing this problem.
->
-> The flushing of the proc dentries from the dcache is an optmization,
-> and is not necessary for correctness.  Eventually cache pressure will
-> cause the dentries to be freed even if no flushing happens.  Some
-> light testing when I refactored the proc flushg[1] indicated that at
-> least the memory footprint is easily measurable.
->
-> An optimization that causes a performance problem due to a thundering
-> herd of threads is no real optimization.
->
-> Modify the code to only flush the /proc/<tgid>/ directory when all
-> threads in a process are killed at once.  This continues to flush
-> practically everything when the process is reaped as the threads live
-> under /proc/<tgid>/task/<tid>.
->
-> There is a rare possibility that a debugger will access /proc/<tid>/,
-> which this change will no longer flush, but I believe such accesses
-> are sufficiently rare to not be observed in practice.
->
-> [1] 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
-> Link: https://lkml.kernel.org/r/54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com
+On 19-06-20, 09:27, Pierre-Louis Bossart wrote:
+> 
+> > +For Gapless, we move from running state to partial drain and back, along
+> > +with setting of meta_data and signalling for next track ::
+> > +
+> > +
+> > +                                        +----------+
+> > +                compr_drain_notify()    |          |
+> > +              +------------------------>|  RUNNING |
+> > +              |                         |          |
+> > +              |                         +----------+
+> > +              |                              |
+> > +              |                              |
+> > +              |                              | compr_next_track()
+> > +              |                              |
+> > +              |                              V
+> > +              |                         +----------+
+> > +              |                         |          |
+> > +              |                         |NEXT_TRACK|
+> > +              |                         |          |
+> > +              |                         +----------+
+> > +              |                              |
+> > +              |                              |
+> > +              |                              | compr_partial_drain()
+> > +              |                              |
+> > +              |                              V
+> > +              |                         +----------+
+> > +              |                         |          |
+> > +              +------------------------ | PARTIAL_ |
+> > +                                        |  DRAIN   |
+> > +                                        +----------+
+> 
+> May I suggest having a single state machine, not a big one and an additional
+> partial one. It would help explain why in one case compr_drain_notify()
+> triggers a transition to RUNNING while in the other one it goes to SETUP.
+> 
+> I realize it's more complicated to edit but it'd be easier on
+> reviewers/users.
 
-
-> Reported-by: Masahiro Yamada <masahiroy@kernel.org>
-
-I did not report this.
-
-
-
-
-
-> Reported-by: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
-
+Ell adding stop and transitions would really make it complicated and
+gapless is a bit different handling and it looks cleaner this way IMO,
+so lets stick to this. Feel free to create one if you are up for it.
 
 -- 
-Best Regards
-Masahiro Yamada
+~Vinod
