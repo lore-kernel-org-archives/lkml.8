@@ -2,132 +2,117 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729FC20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD92B20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="k8sCtVsI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TLI75zhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgFVLqW (ORCPT
+        id S1727976AbgFVLqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60100 "EHLO
+        Mon, 22 Jun 2020 07:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727836AbgFVLqU (ORCPT
+        with ESMTP id S1727120AbgFVLqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:46:20 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 107E7C061796
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:46:20 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b4so15076898qkn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:46:19 -0700 (PDT)
+        Mon, 22 Jun 2020 07:46:52 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DC0C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:46:52 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id v1so12436043qvx.8
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NBKzXepzy68inRcMiAHpgcaZ+EYis2uiV6fI4xhZtmM=;
-        b=k8sCtVsIXQZTIM44uTx5XoGTEDbrW/uXOY8fvY9Nd/4DXh4saPSxYGA0cCfUbnlyLl
-         tHW4PMUz+IUIg6iJElEk/IVvMc03r9mZCDo7PkP58fQDAGJJHKTvWbHlwGlvSkCSJBE9
-         Ppej67LhjF9DHjvuE14BQiJBd6KnkgcnIxlNFcmKmCUHQqePe85Gy7qlE4M8VsBeHKUS
-         yKX1U0jk0j5Ks8Y76HvcbvQtdxXTdUE006wQlY/5i2fjpanXsf+qNhaiup+oN8Qg8/ox
-         /U6VE787P4r0dXZDbqERqe83AX626e55WkuKobSm/QiJ7uDeG7xH7wfc6SCv8Inqo2Uq
-         QFhA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=j19qINoTS0ZUB5VmYI6tnBHGsC7YwPPKrYVY46VAbqw=;
+        b=TLI75zhb3hcV71NRaoY51FnnY5U5mwBw4h8IRj01n/GB6WFaLkNAhOJ8mnrRi3Kt3U
+         D5/gxSxGrus9cNQo5m1Gcy6XqXBDCOw3JYI8VmnY7KeZnA7NkePDxNoyI09U/OSYdl2+
+         hZ/u5zK+54x66LU6Nq3QU4GNpunW1AZfRo/MZdfk+il4B1WHnDB1+DQ7fPll1n+1XZ+L
+         y6GDaAQ/h9xMJ4jkd550Ctde6Of3UWj0ud5H+4FdWvJ7l8GD/L64pmBh0KUAiTwOsVGu
+         PIXKyL4z1yLzsRB7rNwGrL+OhEOFvq49zwARR2aWdduxZjBc784HqWV1e9Xm+McOFmSC
+         UTrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NBKzXepzy68inRcMiAHpgcaZ+EYis2uiV6fI4xhZtmM=;
-        b=rmkvygbLYjaMJLXpPAEwlrdkTv2fHa/thIlji6pTb8hofhS423V413rpStIxwHJNHY
-         /GOpWbmoRWGC0sPODKL/XMMmqjO6bEAts5U/XCo01f2gn+kqXS4XmHV0RNccBv839TSh
-         oDVdUkX0VFbmyvSmhLwgV+U51PoXhgZ84V3Nr6wErHuYFQEhUOqoxAPdM1AToZOtW2Zp
-         enF8cp2hzmC3T2LIVTtAJFQAfGLnZ1qO0gE+M3R87Ss4FEFKOLsII1cdW/fnvgf2NKC7
-         iuAvbZnBs8b0NG4NJ+kBfUhNt5N/UyjIff6ujRY+2+Nkzh1O48fmqEJb8qqJ56K9QgzY
-         XYFw==
-X-Gm-Message-State: AOAM531IGBe672yJD2OMwl9EIbFfYCPPWjZzjO1CEca1tKbfnEMv0OrC
-        RqTOt0XrDA6ZF/jWuio73Wb/ow==
-X-Google-Smtp-Source: ABdhPJxthYjyMVCe6ZAxMUNKsmIMBTQD1YPg4YWyLhscgW6iJ+jy7QK2ERT6it0ZxPEWrnvgAqzIOg==
-X-Received: by 2002:ae9:c00d:: with SMTP id u13mr15622504qkk.434.1592826379164;
-        Mon, 22 Jun 2020 04:46:19 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id r37sm14964604qtk.34.2020.06.22.04.46.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 04:46:18 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jnKu1-00Brwt-CA; Mon, 22 Jun 2020 08:46:17 -0300
-Date:   Mon, 22 Jun 2020 08:46:17 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Felix Kuehling <felix.kuehling@amd.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
-        <thomas_os@shipmail.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200622114617.GU6578@ziepe.ca>
-References: <20200619113934.GN6578@ziepe.ca>
- <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
- <20200619151551.GP6578@ziepe.ca>
- <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
- <20200619172308.GQ6578@ziepe.ca>
- <20200619180935.GA10009@redhat.com>
- <20200619181849.GR6578@ziepe.ca>
- <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
- <20200619195538.GT6578@ziepe.ca>
- <20200619203147.GC13117@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619203147.GC13117@redhat.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=j19qINoTS0ZUB5VmYI6tnBHGsC7YwPPKrYVY46VAbqw=;
+        b=egZ7OXYElDOd6i54z1Q+pw50pRAAX7YigI6cV3ZlMB4FQq6j3HQUn6MwhUYmthvycE
+         erejC+WgUX3OTG41xFRiNQWzNMZKwRGMSHVzYcSBFyPZlPL7Aw/xKt52i7SbkXImq3hI
+         SVmXIhoa0MWE9bPWnYD1EClVm76DR1CAE9fUo3scWPYeCOBrd1i7FGQpT5pQpd9IryqV
+         sUHmiejxJGcZqKDZBJW2FcosQx2VYPU48ztO0/hV9EhZmDHwgC7+io6oKX7F4EC/JArd
+         0gpbdPYSgFikaBeMG9PEYG1jTLD80Mw091Zs8I3JFLSYYc2V5ThGoFHdG3CFcoRdUgkb
+         oQPg==
+X-Gm-Message-State: AOAM5331ed1vfGRwF9/mP4K3Jj+C3AKoeRkZk8b8ZvVd3aNDeYK/JHrP
+        pNJpJL+DP+Ov9BnMyIz9sxhCzmcEFLI=
+X-Google-Smtp-Source: ABdhPJxtMErmxXcluP2xrN//Yw4g53tHUvtp06FFk3nIs69FZwkQ9eA3ZuOzcfzQAtTaVbdUTCxXPynvXwE=
+X-Received: by 2002:a0c:8d46:: with SMTP id s6mr21215475qvb.241.1592826411606;
+ Mon, 22 Jun 2020 04:46:51 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 13:46:36 +0200
+Message-Id: <20200622114639.165874-1-darekm@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+Subject: [PATCH v2] media: cros-ec-cec: do not bail on device_init_wakeup failure
+From:   Dariusz Marcinkiewicz <darekm@google.com>
+To:     linux-media@vger.kernel.org
+Cc:     narmstrong@baylibre.com, Dariusz Marcinkiewicz <darekm@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Dariusz Marcinkiewicz <darekm@chromium.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 04:31:47PM -0400, Jerome Glisse wrote:
-> Not doable as page refcount can change for things unrelated to GUP, with
-> John changes we can identify GUP and we could potentialy copy GUPed page
-> instead of COW but this can potentialy slow down fork() and i am not sure
-> how acceptable this would be. Also this does not solve GUP against page
-> that are already in fork tree ie page P0 is in process A which forks,
-> we now have page P0 in process A and B. Now we have process A which forks
-> again and we have page P0 in A, B, and C. Here B and C are two branches
-> with root in A. B and/or C can keep forking and grow the fork tree.
+Do not fail probing when device_init_wakeup fails.
 
-For a long time now RDMA has broken COW pages when creating user DMA
-regions.
+device_init_wakeup fails when the device is already enabled as wakeup
+device. Hence, the driver fails to probe the device if:
+- The device has already been enabled for wakeup (by e.g. sysfs)
+- The driver has been unloaded and is being loaded again.
 
-The problem has been that fork re-COW's regions that had their COW
-broken.
+This goal of the patch is to fix the above cases.
 
-So, if you break the COW upon mapping and prevent fork (and others)
-from copying DMA pinned then you'd cover the cases.
+Overwhelming majority of the drivers do not check device_init_wakeup
+return code.
 
-> Semantic was change with 17839856fd588f4ab6b789f482ed3ffd7c403e1f to some
-> what "fix" that but GUP fast is still succeptible to this.
+v2: add Fixes tags
 
-Ah, so everyone breaks the COW now, not just RDMA..
+Fixes: cd70de2d356ee ("media: platform: Add ChromeOS EC CEC driver")
+Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+---
+ drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-What do you mean 'GUP fast is still succeptible to this' ?
+diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+index 0e7e2772f08f..2d95e16cd248 100644
+--- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
++++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+@@ -277,11 +277,7 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, cros_ec_cec);
+ 	cros_ec_cec->cros_ec = cros_ec;
+ 
+-	ret = device_init_wakeup(&pdev->dev, 1);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to initialize wakeup\n");
+-		return ret;
+-	}
++	device_init_wakeup(&pdev->dev, 1);
+ 
+ 	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
+ 						 DRV_NAME,
+-- 
+2.27.0.111.gc72c7da667-goog
 
-Jason
