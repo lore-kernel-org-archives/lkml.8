@@ -2,107 +2,73 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA39C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C13F20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162E620732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbgFVVWx (ORCPT
+        id S1730527AbgFVVXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:22:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39748 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730460AbgFVVWw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:22:52 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ML2xIt106480;
-        Mon, 22 Jun 2020 17:22:38 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31tysvg7v8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 17:22:38 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05ML4WE3112081;
-        Mon, 22 Jun 2020 17:22:38 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31tysvg7uv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 17:22:38 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MLFbdJ028588;
-        Mon, 22 Jun 2020 21:22:37 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma01dal.us.ibm.com with ESMTP id 31sa38q828-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 21:22:37 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MLMZtg41353574
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 21:22:36 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E265B6A047;
-        Mon, 22 Jun 2020 21:22:35 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3CC7D6A051;
-        Mon, 22 Jun 2020 21:22:35 +0000 (GMT)
-Received: from [9.211.67.55] (unknown [9.211.67.55])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Jun 2020 21:22:35 +0000 (GMT)
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Ian Kent <raven@themaw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
- <20200622175343.GC13061@mtj.duckdns.org>
-From:   Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Message-ID: <82b2379e-36d0-22c2-41eb-71571e992b37@linux.vnet.ibm.com>
-Date:   Mon, 22 Jun 2020 14:22:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 17:23:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20567 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730460AbgFVVW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:22:59 -0400
+IronPort-SDR: UAoTt8pSvD3UNcfy/099cgVtTEdqJaKliGdnUlj0xcrqeEtC9hhNbkwDOF/eBNUlEFM6rFAgL+
+ g3S1DRAWk3ag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131284745"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="131284745"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:22:58 -0700
+IronPort-SDR: Ej2K4ojeT5mwx1R1iS92uXiqywEwLpq0b8Vaqa+F5Q3UZIHmuIBkxbLtWwxEqYfnoRghCpmGpn
+ jd4Ctbft5cVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="275125017"
+Received: from scheller-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.117])
+  by orsmga003.jf.intel.com with ESMTP; 22 Jun 2020 14:22:52 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     pengfei.xu@intel.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
+        Petr Vorel <petr.vorel@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tadeusz Struk <tadeusz.struk@intel.com>
+Subject: [PATCH 0/3] selftests: tpm: fixes
+Date:   Tue, 23 Jun 2020 00:20:19 +0300
+Message-Id: <20200622212034.20624-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200622175343.GC13061@mtj.duckdns.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_12:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 adultscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- clxscore=1015 phishscore=0 mlxscore=0 priorityscore=1501 malwarescore=0
- cotscore=-2147483648 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220137
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 10:53 AM, Tejun Heo wrote:
+A few fixes for tools/testing/selftests/tpm.
 
-> I don't know. The above highlights the absurdity of the approach itself to
-> me. You seem to be aware of it too in writing: 250,000 "devices".
+Jarkko Sakkinen (3):
+  Revert "tpm: selftest: cleanup after unseal with wrong auth/policy
+    test"
+  selftests: tpm: Use 'test -e' instead of 'test -f'
+  selftests: tpm: Use /bin/sh instead of /bin/bash
 
-Just because it is absurd doesn't mean it wasn't built that way :)
+ tools/testing/selftests/tpm2/test_smoke.sh | 9 ++-------
+ tools/testing/selftests/tpm2/test_space.sh | 4 ++--
+ 2 files changed, 4 insertions(+), 9 deletions(-)
 
-I agree, and I'm trying to influence the next hardware design.  However, what's already out there is memory units that must be accessed in 256MB blocks.  If you want to remove/add a GB, that's really 4 blocks of memory you're manipulating, to the hardware.  Those blocks have to be registered and recognized by the kernel for that to work.
-
-Rick
+-- 
+2.25.1
 
