@@ -2,104 +2,115 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCF6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9932C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771F92076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B912076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQdkvhEc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YZ3w+n5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgFVT6g (ORCPT
+        id S1728336AbgFVUCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:58:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728372AbgFVT6g (ORCPT
+        Mon, 22 Jun 2020 16:02:01 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60938 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728050AbgFVUCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:58:36 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05FDC0617BB
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:58:34 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i27so20740482ljb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:58:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nHSFCQ5+cQ8OGh51wncqKzKnMeiEdXuW0XPalgJJm0s=;
-        b=WQdkvhEcVZnm+GQQuLrVNL+AlI4jUEwnJ7v0hmSqrLb34OLYuQqujv78GPwIWmwdal
-         8YSY4XbjIGiccH5xGfzU9dv+BtI13WXalpqseoHo9kl9WqU1Eo9Q2PxdF4UVEnVstsKa
-         34Jn8j+9WBQf38ZGaxFVI1Fm3JUp6tHgsqsvzQSJcD7JROpW9sbh13AFnN1WIFPHT3Y7
-         rRj6Oc3AqvXAdXjOz9P1jb7piKLrambsacW1gG5EJjoeWzz/6dtEiLwqkzxEf1rbl4yz
-         bWNIe6Z1mrDcTOHT5z9+0lwvyhrqxLY/o/bYGFQ7MCIqyULdnNm1wTIfxm6d8xUVJSS3
-         5ZXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nHSFCQ5+cQ8OGh51wncqKzKnMeiEdXuW0XPalgJJm0s=;
-        b=aVC5UzaQOoDjQg6ArtF+0rE1YJdLkznnxrCXJy4QjhwMClg+JoATT2cmU6VMc4D0GA
-         eoXF8HajsdHTuhSp/zG/HFv1j+acifqqMCVzowDTvfukgrmbLCkn8D2vcBgK8TSZFD25
-         e+ox+b+S01klpTdXw8fuRJqf+8kztVtSqpOJmz3AOJ50cRbWu3Th66PYrUyF8XrOSaxL
-         fEAv+/fFp7HLUUqQj+HWVOIRxCP9C+eXSWV/wuTt3bO/bqpYFsGXZozu/wcCDbU3WgNW
-         sdfbS0lO8a+plSAnbELAsQeYJXc3lrB3ipzn160vK2xzou3qCXBc2UjR6nLEuB2+zF8w
-         obaQ==
-X-Gm-Message-State: AOAM531RcBx6EXAr1HouqWz6sIbKHBk5vMEgLuYnRq8LMTRz3JFRBD76
-        NCWHTp2x5SKdjzNixQv1uaU=
-X-Google-Smtp-Source: ABdhPJy8lJXP0jTFUAshbb+9yLIxUhZnDctLlz+GdGwCHouL8FWtsrqxWEUjVRhoAMHuPRgeWRzfqA==
-X-Received: by 2002:a2e:9049:: with SMTP id n9mr8719266ljg.118.1592855913450;
-        Mon, 22 Jun 2020 12:58:33 -0700 (PDT)
-Received: from pc636.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id f24sm2864472ljk.125.2020.06.22.12.58.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:58:31 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 1/1] mm/vmalloc: update the header about KVA rework
-Date:   Mon, 22 Jun 2020 21:58:21 +0200
-Message-Id: <20200622195821.4796-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 22 Jun 2020 16:02:01 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MK1gA0118523;
+        Mon, 22 Jun 2020 15:01:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592856102;
+        bh=UnjtmQf18KHv3JEllemSjYzNN6dGsJqMcXI38xM2/bI=;
+        h=From:To:CC:Subject:Date;
+        b=YZ3w+n5H/tTKuBe/BFuUtyjzbyb2kY9YwBhSdTtLoDMccWHyygnOAqoJXgh9DUwaI
+         NikZRkBFG3FvCkKZtusxO4TEi9Tkf2sdWo4g873NGSknBXyJ1OkCVluXXwkOety+3C
+         7vmFQO7uyPv90vQedVYkW33tmQjFcI0rjinSmr5Q=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MK1gH1118398
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 15:01:42 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
+ Jun 2020 15:01:41 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 22 Jun 2020 15:01:41 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MK1eSn061651;
+        Mon, 22 Jun 2020 15:01:41 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] soc: ti: k3-ringacc: fix: warn: variable dereferenced before check 'ring'
+Date:   Mon, 22 Jun 2020 23:01:37 +0300
+Message-ID: <20200622200137.30109-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reflect an information about an author, date
-and year when the KVA rework has been done.
+Fix build warning in k3_ringacc_ring_cfg():
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+smatch warnings:
+drivers/soc/ti/k3-ringacc.c:562 k3_ringacc_ring_cfg() warn: variable dereferenced before check 'ring' (see line 559)
+
+  557  int k3_ringacc_ring_cfg(struct k3_ring *ring, struct k3_ring_cfg *cfg)
+  558  {
+ @559           struct k3_ringacc *ringacc = ring->parent;
+                                             ^^^^^^^^^^^^
+Dereference.
+
+  560           int ret = 0;
+  561
+ @562           if (!ring || !cfg)
+                    ^^^^
+
+Check too late.  Delete it?
+
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- mm/vmalloc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/ti/k3-ringacc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 1e94497b7388..3c3b6ec26f9c 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -7,6 +7,7 @@
-  *  SMP-safe vmalloc/vfree/ioremap, Tigran Aivazian <tigran@veritas.com>, May 2000
-  *  Major rework to support vmap/vunmap, Christoph Hellwig, SGI, August 2002
-  *  Numa awareness, Christoph Lameter, SGI, June 2005
-+ *  Improving global KVA allocator, Uladzislau Rezki, Sony, May 2019
-  */
+diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
+index 5fb2ee2ac978..19156f15af0a 100644
+--- a/drivers/soc/ti/k3-ringacc.c
++++ b/drivers/soc/ti/k3-ringacc.c
+@@ -556,11 +556,13 @@ static int k3_ringacc_ring_cfg_sci(struct k3_ring *ring)
  
- #include <linux/vmalloc.h>
+ int k3_ringacc_ring_cfg(struct k3_ring *ring, struct k3_ring_cfg *cfg)
+ {
+-	struct k3_ringacc *ringacc = ring->parent;
++	struct k3_ringacc *ringacc;
+ 	int ret = 0;
+ 
+ 	if (!ring || !cfg)
+ 		return -EINVAL;
++	ringacc = ring->parent;
++
+ 	if (cfg->elm_size > K3_RINGACC_RING_ELSIZE_256 ||
+ 	    cfg->mode >= K3_RINGACC_RING_MODE_INVALID ||
+ 	    cfg->size & ~K3_RINGACC_CFG_RING_SIZE_ELCNT_MASK ||
 -- 
-2.20.1
+2.17.1
 
