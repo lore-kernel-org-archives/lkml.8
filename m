@@ -2,145 +2,241 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28251C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E72C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12FE620732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E34E20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:00:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdC4ageF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgFVO77 (ORCPT
+        id S1729458AbgFVPAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:59:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:39075 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729347AbgFVO74 (ORCPT
+        Mon, 22 Jun 2020 11:00:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729399AbgFVO75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:59:56 -0400
-Received: from desktop ([188.192.134.246]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N5VTm-1ilzVH1REo-016zBv; Mon, 22 Jun 2020 16:59:33 +0200
-From:   <mail@adrianschmutzler.de>
-To:     "'David Woodhouse'" <dwmw2@infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Cc:     "'kexec'" <kexec@lists.infradead.org>,
-        "'openwrt-devel'" <openwrt-devel@lists.openwrt.org>,
-        <linux-mtd@lists.infradead.org>,
-        "'linux-arm-kernel'" <linux-arm-kernel@lists.infradead.org>,
-        "'openconnect-devel'" <openconnect-devel@lists.infradead.org>
-References: <5277ad6f4147325a921678367b4501d87217e95c.camel@infradead.org>
-In-Reply-To: <5277ad6f4147325a921678367b4501d87217e95c.camel@infradead.org>
-Subject: RE: lists.infradead.org restored from backup, git.infradead.org down.
-Date:   Mon, 22 Jun 2020 16:59:32 +0200
-Message-ID: <001e01d648a5$bd1ee2d0$375ca870$@adrianschmutzler.de>
-X-Mailer: Microsoft Outlook 15.0
+        Mon, 22 Jun 2020 10:59:57 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407B9C061573;
+        Mon, 22 Jun 2020 07:59:57 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id r9so15190105wmh.2;
+        Mon, 22 Jun 2020 07:59:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qjSTpOx1f56iFgaO+NU8TyLZb7WbmaX8dzGpT5a8k9c=;
+        b=QdC4ageFNjGFqfuJ5zOPmcy0Zek9teeLvjDxiAasLgYKuvtzSjOhecWkqBbc45SJ9W
+         VgC46xc3TLSFCXuxzIJc/CTLCt/Vqp1OV+AHKkbsdIUXCK/MnhkGoVfeqJd7111qLDf4
+         ZPubLr7Z2ppru/kZd8ZHORwzmTRWUnCbWcT4+9dyn6/oMb6YbK5wOOSQOLENgf5HYGvw
+         iN5SYNTaEB3Jzb7+vd4LEffa3YXPgrlydmD9HyibTvpM1kjTZNxOwjV6neUezXy7rh6u
+         TQUAy5XENnnGjD3E28ifKViGlJGvXNLQPfjlaKPp4P3hJ6bQl7zLoVULgna/wof1I6Jl
+         EhOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=qjSTpOx1f56iFgaO+NU8TyLZb7WbmaX8dzGpT5a8k9c=;
+        b=JwXoPQqNtbLWrT0WNiINfzwbnwtXib0LrwwYlPA5MGyflFfX+MFX4vRNcjHgCoj2A6
+         FLlz1kAvB2S7afk4DyFDB1A5frRfkyr3S9bAGIAHNXGV1ZgAzTYj22dBtpfBL0vkP9K1
+         CwCP0vKGg8Y5UlnYSM7+UUV5UfcujTadKLJXcXvPj+H2OReNW7gXEyBPVlZapoqJtDJy
+         J7nbH2VyXLiAOOH2/jhm/kzCXIngsQ5UR0cIwElq/Q1oIuxbIhkiFblR4HTeCkrrQqt+
+         FuhFsGS4hFCSpx2GB0pkZTIy8XeWgKnDdIf1Z/d/3sB77MDIuitTuAend68hmzFj2OpN
+         n93w==
+X-Gm-Message-State: AOAM532QHZ+E3SYFNIUxa6Ata+amqeMs+gDIvQQ9PwP/wQYb8YmMd8Cj
+        bZtNBaTN//9qM2V+QNorvSHFxq28srU=
+X-Google-Smtp-Source: ABdhPJwA8xXLcqPBJmCRdS3o9ebWim/QBXgcamtIJm1bEpbBLy5MWC1znFH7T51ioAPZ8Enl5lU4ow==
+X-Received: by 2002:a7b:c7d2:: with SMTP id z18mr19420099wmk.149.1592837995575;
+        Mon, 22 Jun 2020 07:59:55 -0700 (PDT)
+Received: from donizetti.redhat.com ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
+        by smtp.gmail.com with ESMTPSA id 1sm13135806wmf.0.2020.06.22.07.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 07:59:54 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Igor Mammedov <imammedo@redhat.com>
+Subject: [PATCH] KVM: LAPIC: ensure APIC map is up to date on concurrent update requests
+Date:   Mon, 22 Jun 2020 16:59:53 +0200
+Message-Id: <20200622145953.41931-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Thread-Index: AQG5hV8pLw0uSvkNbgUKrUeSyIoqiqkeQGlQ
-Content-Language: de
-Content-Type: multipart/signed;
-        micalg=pgp-sha256;
-        protocol="application/pgp-signature";
-        boundary="=-=XMvxVdaVBbhA+p=-="
-X-Provags-ID: V03:K1:WJk5W5PG4j7/5TJ/HBZSoGxsduLFv8ECFfIo31dmkCy9/2aWeOJ
- 5f4fCbbnGBOffxKcwVAZTc7BPU7kp4PqdN7QxmzOvAp4RtTkkBzVV5G6RKugkyuwY0GTBkB
- xoSQcRBiY7IuV8lWi/9hTKNy4S6V0eIcoMqOkyCcb9K33gsupvVI3Gr9LyZJcgF9pshtz6D
- gmHmDZK0dXm+LVv6dai+w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ToHgZf6XnjE=:k1cmNqwWpx0vUkjYHY6T/t
- evS0DyVoCNnAdtZFyXI6X24vw4tGnefcnyOmGlnhUzb+HrvpPhYPcwZws+nA9sxGm09YnL/I2
- 0wrjzehpzjA8+ZMGJP3WxbjKFyEikX2ThHHB0GbfZgsdGFSAzJUJYYAWYRU9wKM0wFPQHz3Ol
- KGNMh8ps3YMRsu44p0PDdi6qBHIrbM1Kx5dybOxIVmsdic8ufkyQ16zOxV/34Ht5pPL14Ff/q
- PtEvdKO2QsXFqFlWO3lnGyNZl4FqML3yd5wgBHETqwC2z8ug/6NDFsdZgZSwPRLtwfHFlgvMm
- JrlsQLRHnMeFiKCpbQJ6IuhoAfCdwzM3tG4Pql7iqjJFRhUey9q4m0q8N6iN/ldhlaoyszgOa
- qHm+8aksg2/KVBoSxys9kMXmIV3s8IoV9SEWzvc7v+m3MxPTNeeUcODPv1PSwdyz0L+HMZZAc
- GASPbFlWFD4oicMw2Xuhxf1ByGjHCDLwsjYvtYTMelj6P8OxamM67hLh+ygCfJnwfyInLwTKi
- hkVBqYVK4HvSNDqW8fOz3u+WgT2nvVYAFkW3nW8wQ0p6p/GuN3Ehen76uowpyGmtFn6SYVetd
- lqTXBEnvH1cBQtXinCK9NecLNztTI74kxjmgNvbRlPpgKF3z8lfP4thhfyhWtSENfYryUtxUt
- L22Q0BeBWTl1/vjTA+x1AgyL2un3oo3Kz+3ckOjFA/9A+RABvJ8rfitbosonmSyjiYov8I0lO
- eIl9su221YRmjRpHbsKJq3cDZbmQYhwCHUYXQdY9uAlErePwLRiU6ZLXPu5477Zx1GmFAWpAf
- GWYrFkMxp92Nw7ZvWRF/CN9ygYECRXq+XnuwHDhjA/LgcbHShYPMyy6FxdEAyR5srsOMq5+
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multipart message in MIME format.
+The following race can cause lost map update events:
 
---=-=XMvxVdaVBbhA+p=-=
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+         cpu1                            cpu2
 
-Hi,
+                                apic_map_dirty = true
+  ------------------------------------------------------------
+                                kvm_recalculate_apic_map:
+                                     pass check
+                                         mutex_lock(&kvm->arch.apic_map_lock);
+                                         if (!kvm->arch.apic_map_dirty)
+                                     and in process of updating map
+  -------------------------------------------------------------
+    other calls to
+       apic_map_dirty = true         might be too late for affected cpu
+  -------------------------------------------------------------
+                                     apic_map_dirty = false
+  -------------------------------------------------------------
+    kvm_recalculate_apic_map:
+    bail out on
+      if (!kvm->arch.apic_map_dirty)
 
-> -----Original Message-----
-> From: openwrt-devel [mailto:openwrt-devel-bounces@lists.openwrt.org]
-> On Behalf Of David Woodhouse
-> Sent: Montag, 22. Juni 2020 14:52
-> To: linux-kernel@vger.kernel.org
-> Cc: kexec <kexec@lists.infradead.org>; openwrt-devel <openwrt-
-> devel@lists.openwrt.org>; linux-mtd@lists.infradead.org; linux-arm-kernel
-> <linux-arm-kernel@lists.infradead.org>; openconnect-devel <openconnect-
-> devel@lists.infradead.org>
-> Subject: lists.infradead.org restored from backup, git.infradead.org down.
->=20
-> The machine hosting lists.infradead.org and git.infradead.org suffered a
-> complete disk failure over the weekend; sadly the last backup of the
-> mailman config was fairly old (May 2018) so the subscriber lists and arch=
-ives
-> have been reset to that date, but the lists should be running again.
->=20
-> I've recreated the new lists which had been created since then.
->=20
-> The lists should be up and running again on a new host; we can recreate
-> archives if anyone can provide the mailboxes.
+To fix it, record the beginning of an update of the APIC map in
+apic_map_dirty.  If another APIC map change switches apic_map_dirty
+back to DIRTY, kvm_recalculate_apic_map should not make it CLEAN and
+let the other caller go through the slow path.
 
-There is this page:
-https://www.mail-archive.com/openwrt-devel@lists.openwrt.org/
+Reported-by: Igor Mammedov <imammedo@redhat.com>
+---
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/lapic.c            | 45 +++++++++++++++++++--------------
+ 2 files changed, 27 insertions(+), 20 deletions(-)
 
-Don't know whether they provide a sufficient interface though or will respo=
-nd and help if asked nicely ...
-
-Best
-
-Adrian
-
->=20
-> Users will have to resubscribe (and in some cases, unsubscribe again).
-> Apologies for the inconvenience.
->=20
-> If you had personal email hosted on, or going through,
-> bombadil.infradead.org then please let me know and we can move you to
-> another box.
->=20
-> The dead box was also git.infradead.org; I'll be fixing that next... if y=
-ou had an
-> account and want it reinstated then please let me know.
-
---=-=XMvxVdaVBbhA+p=-=
-Content-Type: application/pgp-signature;
-	name="openpgp-digital-signature.asc"
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEESgN6p2H3WoMOAf81oNyKO7qxAnAFAl7wx0gACgkQoNyKO7qx
-AnCxgg/+LUncYyqX/WHSsM8AxoC8qVdMxLvcW0jjo/Sf1suYv2qBJJaTMjrAHRkk
-nGgf8pJ4WNyke1yCYJ4rk3MHJTqBNeXd589pzivShmpW7vLXiZo/0dITBRzk7lMk
-Zic6H3yrNws13ssM+z1xX8LJLi9UKmDwLtEp3GxXFRtjmuldSKsrZJfY0Mnj1Aj/
-as7OrOZckoLTM3FAzz1PbDYXDoRKJczliFpnj05MJeWbgsG5gZZehgJ9LozqArCn
-tyZC+MElMM6JujPdAO4wzcMo43fDzs0QWNvNGkd2SDU23H5VSx+5KGEww5lSyAbf
-Y5stkGfd51PDHvZWZfVvU9XT8ZhDq2+1Id3Ef72E+oEuXfCKywxKpb4EkQoXBbhQ
-lOPtGPVmqdg6cHZpsV/N2z2kWelbLbElA0iMWbHqC804sHs5E+hutKyaD/ep2igC
-I0D4VbhxSaagt5I7EqcB4HW3wTJ59yi133d7Ws8hFdCAn2Wkp1KuoxVs4Py3DFWJ
-k/PPKj3b3YeGiyppp/6Nxnw5rmSV/TQu8s1SRh2l2G3rIBpifPCvlO/7nwh8ASGo
-9c70bDTAHpR0cMzqcmu6obuTHvOWmp/qyJBUS2yEYeS32UOgceD7abICagTLHs0X
-O92cZ/+o+T5iMQl6dUko6GgNwMp0iWjuijXB7Xfa9PJFHwYZsMc=
-=dbBk
------END PGP SIGNATURE-----
-
-
---=-=XMvxVdaVBbhA+p=-=--
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 1da5858501ca..d814032a81e7 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -943,7 +943,7 @@ struct kvm_arch {
+ 	atomic_t vapics_in_nmi_mode;
+ 	struct mutex apic_map_lock;
+ 	struct kvm_apic_map *apic_map;
+-	bool apic_map_dirty;
++	atomic_t apic_map_dirty;
+ 
+ 	bool apic_access_page_done;
+ 	unsigned long apicv_inhibit_reasons;
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 34a7e0533dad..ef98f2fd3bbd 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -169,6 +169,18 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
+ 	kvfree(map);
+ }
+ 
++/*
++ * CLEAN -> DIRTY and UPDATE_IN_PROGRESS -> DIRTY changes happen without a lock.
++ *
++ * DIRTY -> UPDATE_IN_PROGRESS and UPDATE_IN_PROGRESS -> CLEAN happen with
++ * apic_map_lock_held.
++ */
++enum {
++	CLEAN,
++	UPDATE_IN_PROGRESS,
++	DIRTY
++};
++
+ void kvm_recalculate_apic_map(struct kvm *kvm)
+ {
+ 	struct kvm_apic_map *new, *old = NULL;
+@@ -176,17 +188,13 @@ void kvm_recalculate_apic_map(struct kvm *kvm)
+ 	int i;
+ 	u32 max_id = 255; /* enough space for any xAPIC ID */
+ 
+-	if (!kvm->arch.apic_map_dirty) {
+-		/*
+-		 * Read kvm->arch.apic_map_dirty before
+-		 * kvm->arch.apic_map
+-		 */
+-		smp_rmb();
++	/* Read kvm->arch.apic_map_dirty before kvm->arch.apic_map.  */
++	if (atomic_read_acquire(&kvm->arch.apic_map_dirty) == CLEAN)
+ 		return;
+-	}
+ 
+ 	mutex_lock(&kvm->arch.apic_map_lock);
+-	if (!kvm->arch.apic_map_dirty) {
++	if (atomic_cmpxchg_acquire(&kvm->arch.apic_map_dirty,
++				   DIRTY, UPDATE_IN_PROGRESS) == CLEAN) {
+ 		/* Someone else has updated the map. */
+ 		mutex_unlock(&kvm->arch.apic_map_lock);
+ 		return;
+@@ -256,11 +264,11 @@ void kvm_recalculate_apic_map(struct kvm *kvm)
+ 			lockdep_is_held(&kvm->arch.apic_map_lock));
+ 	rcu_assign_pointer(kvm->arch.apic_map, new);
+ 	/*
+-	 * Write kvm->arch.apic_map before
+-	 * clearing apic->apic_map_dirty
++	 * Write kvm->arch.apic_map before clearing apic->apic_map_dirty.
++	 * If another update came in, leave it DIRTY.
+ 	 */
+-	smp_wmb();
+-	kvm->arch.apic_map_dirty = false;
++	atomic_cmpxchg_release(&kvm->arch.apic_map_dirty,
++			       UPDATE_IN_PROGRESS, CLEAN);
+ 	mutex_unlock(&kvm->arch.apic_map_lock);
+ 
+ 	if (old)
+@@ -282,20 +290,20 @@ static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
+ 		else
+ 			static_key_slow_inc(&apic_sw_disabled.key);
+ 
+-		apic->vcpu->kvm->arch.apic_map_dirty = true;
++		atomic_set(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+ 	}
+ }
+ 
+ static inline void kvm_apic_set_xapic_id(struct kvm_lapic *apic, u8 id)
+ {
+ 	kvm_lapic_set_reg(apic, APIC_ID, id << 24);
+-	apic->vcpu->kvm->arch.apic_map_dirty = true;
++	atomic_set(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+ }
+ 
+ static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
+ {
+ 	kvm_lapic_set_reg(apic, APIC_LDR, id);
+-	apic->vcpu->kvm->arch.apic_map_dirty = true;
++	atomic_set(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+ }
+ 
+ static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
+@@ -311,7 +319,7 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
+ 
+ 	kvm_lapic_set_reg(apic, APIC_ID, id);
+ 	kvm_lapic_set_reg(apic, APIC_LDR, ldr);
+-	apic->vcpu->kvm->arch.apic_map_dirty = true;
++	atomic_set(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+ }
+ 
+ static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
+@@ -1976,7 +1984,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+ 	case APIC_DFR:
+ 		if (!apic_x2apic_mode(apic)) {
+ 			kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
+-			apic->vcpu->kvm->arch.apic_map_dirty = true;
++			atomic_set(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+ 		} else
+ 			ret = 1;
+ 		break;
+@@ -2232,7 +2240,7 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
+ 			static_key_slow_dec_deferred(&apic_hw_disabled);
+ 		} else {
+ 			static_key_slow_inc(&apic_hw_disabled.key);
+-			vcpu->kvm->arch.apic_map_dirty = true;
++			atomic_set(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+ 		}
+ 	}
+ 
+@@ -2273,7 +2281,6 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 	if (!apic)
+ 		return;
+ 
+-	vcpu->kvm->arch.apic_map_dirty = false;
+ 	/* Stop the timer in case it's a reset to an active apic */
+ 	hrtimer_cancel(&apic->lapic_timer.timer);
+ 
+-- 
+2.25.4
 
