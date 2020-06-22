@@ -2,74 +2,126 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A105C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 127E52073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43851206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgFVKuR (ORCPT
+        id S1727120AbgFVKyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:50:17 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2348 "EHLO huawei.com"
+        Mon, 22 Jun 2020 06:54:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6382 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726919AbgFVKuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:50:14 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id A8AFB26D710A9753088E;
-        Mon, 22 Jun 2020 11:50:12 +0100 (IST)
-Received: from [127.0.0.1] (10.47.7.242) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 22 Jun
- 2020 11:50:11 +0100
-Subject: Re: [PATCH v3] driver core: platform: expose numa_node to users in
- sysfs
-To:     Barry Song <song.bao.hua@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <rafael@kernel.org>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        Prime Zeng <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>
-References: <20200619030045.81956-1-song.bao.hua@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <dc66d5a7-fa26-4c56-7445-57f99d3a5018@huawei.com>
-Date:   Mon, 22 Jun 2020 11:48:44 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1727024AbgFVKyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 06:54:12 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DD2B3CE1167AFCF01F41;
+        Mon, 22 Jun 2020 18:54:09 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.203.232) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 22 Jun 2020 18:54:01 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Seth Jennings <sjenning@redhat.com>,
+        "Dan Streetman" <ddstreet@ieee.org>,
+        Vitaly Wool <vitaly.wool@konsulko.com>
+Subject: [PATCH] mm/zswap: careful error path implementation in comp_prepare
+Date:   Mon, 22 Jun 2020 22:52:28 +1200
+Message-ID: <20200622105228.17720-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200619030045.81956-1-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.7.242]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.203.232]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/2020 04:00, Barry Song wrote:
-> Some platform devices like ARM SMMU are memory-mapped and populated by ACPI/IORT.
-> In this case, NUMA topology of those platform devices are exported by firmware as
-> well. Software might care about the numa_node of those devices in order to achieve
-> NUMA locality.
+Free the allocated memory and resource while an error occurs.
 
-Is it generally the case that the SMMU will be in the same NUMA node as 
-the endpoint device (which you're driving)? If so, we can get this info 
-from sysfs already for the endpoint, and also have a link from the 
-endpoint to the iommu for pci devices (which I assume you're interested in):
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: David S. Miller" <davem@davemloft.net>
+Cc: Seth Jennings <sjenning@redhat.com>
+Cc: Dan Streetman <ddstreet@ieee.org>
+Cc: Vitaly Wool <vitaly.wool@konsulko.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ -v1: an incremental patch againest linux-next to fix the issue pointed
+      out by Vitaly
 
-root@(none)$ ls -l /sys/devices/pci0000:74/0000:74:02.0/ | grep iommu
-lrwxrwxrwx 1 root  root 0 Jun 22 10:33 iommu -> 
-../../platform/arm-smmu-v3.2.auto/iommu/smmu3.0x0000000140000000
-lrwxrwxrwx 1 root  root 0 Jun 22 10:33 iommu_group -> 
-../../../kernel/iommu_groups/0
-root@(none)$
+ mm/zswap.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-Thanks,
-John
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 0d914ba6b4a0..c0a85ef46610 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -428,28 +428,31 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
+ 	struct crypto_acomp *acomp;
+ 	struct acomp_req *req;
+ 	struct crypto_acomp_ctx *acomp_ctx;
++	int ret;
+ 
+ 	if (WARN_ON(*per_cpu_ptr(pool->acomp_ctx, cpu)))
+ 		return 0;
+ 
+ 	acomp_ctx = kzalloc(sizeof(*acomp_ctx), GFP_KERNEL);
+-	if (IS_ERR_OR_NULL(acomp_ctx)) {
+-		pr_err("Could not initialize acomp_ctx\n");
++	if (!acomp_ctx) {
++		pr_err("Could not allocate acomp_ctx\n");
+ 		return -ENOMEM;
+ 	}
+ 	acomp = crypto_alloc_acomp(pool->tfm_name, 0, 0);
+-	if (IS_ERR_OR_NULL(acomp)) {
++	if (IS_ERR(acomp)) {
+ 		pr_err("could not alloc crypto acomp %s : %ld\n",
+ 				pool->tfm_name, PTR_ERR(acomp));
+-		return -ENOMEM;
++		ret = PTR_ERR(acomp);
++		goto free_ctx;
+ 	}
+ 	acomp_ctx->acomp = acomp;
+ 
+ 	req = acomp_request_alloc(acomp_ctx->acomp);
+-	if (IS_ERR_OR_NULL(req)) {
+-		pr_err("could not alloc crypto acomp %s : %ld\n",
+-		       pool->tfm_name, PTR_ERR(acomp));
+-		return -ENOMEM;
++	if (!req) {
++		pr_err("could not alloc crypto acomp_request %s\n",
++		       pool->tfm_name);
++		ret = -ENOMEM;
++		goto free_acomp;
+ 	}
+ 	acomp_ctx->req = req;
+ 
+@@ -462,6 +465,12 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
+ 	*per_cpu_ptr(pool->acomp_ctx, cpu) = acomp_ctx;
+ 
+ 	return 0;
++
++free_acomp:
++	crypto_free_acomp(acomp_ctx->acomp);
++free_ctx:
++	kfree(acomp_ctx);
++	return ret;
+ }
+ 
+ static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
+-- 
+2.27.0
+
+
