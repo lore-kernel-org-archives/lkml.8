@@ -2,117 +2,101 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD92B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6989320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TLI75zhb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCuIUgPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgFVLqx (ORCPT
+        id S1728015AbgFVLrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:46:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
+        Mon, 22 Jun 2020 07:47:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgFVLqw (ORCPT
+        with ESMTP id S1727120AbgFVLrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:46:52 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DC0C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:46:52 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id v1so12436043qvx.8
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 04:46:52 -0700 (PDT)
+        Mon, 22 Jun 2020 07:47:11 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83117C061794;
+        Mon, 22 Jun 2020 04:47:10 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id 35so7492328ple.0;
+        Mon, 22 Jun 2020 04:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=j19qINoTS0ZUB5VmYI6tnBHGsC7YwPPKrYVY46VAbqw=;
-        b=TLI75zhb3hcV71NRaoY51FnnY5U5mwBw4h8IRj01n/GB6WFaLkNAhOJ8mnrRi3Kt3U
-         D5/gxSxGrus9cNQo5m1Gcy6XqXBDCOw3JYI8VmnY7KeZnA7NkePDxNoyI09U/OSYdl2+
-         hZ/u5zK+54x66LU6Nq3QU4GNpunW1AZfRo/MZdfk+il4B1WHnDB1+DQ7fPll1n+1XZ+L
-         y6GDaAQ/h9xMJ4jkd550Ctde6Of3UWj0ud5H+4FdWvJ7l8GD/L64pmBh0KUAiTwOsVGu
-         PIXKyL4z1yLzsRB7rNwGrL+OhEOFvq49zwARR2aWdduxZjBc784HqWV1e9Xm+McOFmSC
-         UTrQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LiBGF084Pp6dCZ14UkujprrgGctzNH7WtCqeXOknFI8=;
+        b=uCuIUgPsr8qbzqBFVG3fkPY8Ev4mfasm1onLTS1Kaej+E0YJ/5qNW2E2u6OTXVOJ4F
+         B0Yu17EAQ454OPh4D0COZ+w/U+mXm0rZCFBYgxLd/Ya54XmMdKJLUBZbY1RGLnaUQpZX
+         bEHfRQIMwNl4/R7ELsH1AlFUQsB4AYrPbY0Al8YHq26SPi9MAOKh6QCtHf8FEAqhgO2s
+         ib635QAlY+CL3ZXwkcQ8R0sFKg5AbSg6RoKb8ywpPs0LXV196uouDxUfDZi5IXrnpF6Y
+         Wcf/Yiv7P+9XUd2v3i7VnU2qEQlbrPR2/SS0kRvAd72yP8BxNdsCxs3d3Aqx90bQ2zJj
+         7sjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=j19qINoTS0ZUB5VmYI6tnBHGsC7YwPPKrYVY46VAbqw=;
-        b=egZ7OXYElDOd6i54z1Q+pw50pRAAX7YigI6cV3ZlMB4FQq6j3HQUn6MwhUYmthvycE
-         erejC+WgUX3OTG41xFRiNQWzNMZKwRGMSHVzYcSBFyPZlPL7Aw/xKt52i7SbkXImq3hI
-         SVmXIhoa0MWE9bPWnYD1EClVm76DR1CAE9fUo3scWPYeCOBrd1i7FGQpT5pQpd9IryqV
-         sUHmiejxJGcZqKDZBJW2FcosQx2VYPU48ztO0/hV9EhZmDHwgC7+io6oKX7F4EC/JArd
-         0gpbdPYSgFikaBeMG9PEYG1jTLD80Mw091Zs8I3JFLSYYc2V5ThGoFHdG3CFcoRdUgkb
-         oQPg==
-X-Gm-Message-State: AOAM5331ed1vfGRwF9/mP4K3Jj+C3AKoeRkZk8b8ZvVd3aNDeYK/JHrP
-        pNJpJL+DP+Ov9BnMyIz9sxhCzmcEFLI=
-X-Google-Smtp-Source: ABdhPJxtMErmxXcluP2xrN//Yw4g53tHUvtp06FFk3nIs69FZwkQ9eA3ZuOzcfzQAtTaVbdUTCxXPynvXwE=
-X-Received: by 2002:a0c:8d46:: with SMTP id s6mr21215475qvb.241.1592826411606;
- Mon, 22 Jun 2020 04:46:51 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 13:46:36 +0200
-Message-Id: <20200622114639.165874-1-darekm@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH v2] media: cros-ec-cec: do not bail on device_init_wakeup failure
-From:   Dariusz Marcinkiewicz <darekm@google.com>
-To:     linux-media@vger.kernel.org
-Cc:     narmstrong@baylibre.com, Dariusz Marcinkiewicz <darekm@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Dariusz Marcinkiewicz <darekm@chromium.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LiBGF084Pp6dCZ14UkujprrgGctzNH7WtCqeXOknFI8=;
+        b=OIw3oqOy6MC0K7AJyty10dl0IPIO8SC1ypBxSMxcOPAqP+Vj6extEsvq5NKhP+CDqc
+         LZux7Yy+OE63+tNSxMAAQsyhNujMweX31ghZ4WlagiXiAT5PeN53BdaNgOgoqlILyx9A
+         7bO6pByQu40bzcoQe4UUcXtcW7uDtwM5xA/gbeKvBreDE+Re4KRTJpu8UmIoFiXbBVZO
+         RxNzh7S24k4y8V8RpU5JWUOeAISyYfhsoOmGkexje5yEnRMYfAU71oJIBDUkmH0XQ23y
+         IVSVj483gtikQfoFkCLB61Ym74sYk5wg4Y7155mcfWHYwuMnskINb5jnOfsJNEjCDDtN
+         bu1g==
+X-Gm-Message-State: AOAM5319rpE2kWyfQUWzCVKo2Bh5CpBVDDJMtFUSJh/d+X41mfZpcMIX
+        gnQ0AqcC6OESzuOjBdyhLaI=
+X-Google-Smtp-Source: ABdhPJy8GhbcijBg1WZAh0wJE6T5qBbkLL2oa1JLqC0YTaNAiGZlOFvFKD9dlGIpjD0/JWXAXijIHA==
+X-Received: by 2002:a17:90b:3c6:: with SMTP id go6mr18540571pjb.224.1592826430099;
+        Mon, 22 Jun 2020 04:47:10 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id r8sm14070896pfq.16.2020.06.22.04.47.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jun 2020 04:47:09 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net v2] mptcp: drop sndr_key in mptcp_syn_options
+Date:   Mon, 22 Jun 2020 19:45:58 +0800
+Message-Id: <60f8315d6ae7b62d175c573f75cee50f14ce988b.1592826171.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not fail probing when device_init_wakeup fails.
+In RFC 8684, we don't need to send sndr_key in SYN package anymore, so drop
+it.
 
-device_init_wakeup fails when the device is already enabled as wakeup
-device. Hence, the driver fails to probe the device if:
-- The device has already been enabled for wakeup (by e.g. sysfs)
-- The driver has been unloaded and is being loaded again.
-
-This goal of the patch is to fix the above cases.
-
-Overwhelming majority of the drivers do not check device_init_wakeup
-return code.
-
-v2: add Fixes tags
-
-Fixes: cd70de2d356ee ("media: platform: Add ChromeOS EC CEC driver")
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+Fixes: cc7972ea1932 ("mptcp: parse and emit MP_CAPABLE option according to v1 spec")
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ net/mptcp/options.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-index 0e7e2772f08f..2d95e16cd248 100644
---- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-+++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-@@ -277,11 +277,7 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, cros_ec_cec);
- 	cros_ec_cec->cros_ec = cros_ec;
- 
--	ret = device_init_wakeup(&pdev->dev, 1);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to initialize wakeup\n");
--		return ret;
--	}
-+	device_init_wakeup(&pdev->dev, 1);
- 
- 	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
- 						 DRV_NAME,
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 490b92534afc..df9a51425c6f 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -336,9 +336,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 	 */
+ 	subflow->snd_isn = TCP_SKB_CB(skb)->end_seq;
+ 	if (subflow->request_mptcp) {
+-		pr_debug("local_key=%llu", subflow->local_key);
+ 		opts->suboptions = OPTION_MPTCP_MPC_SYN;
+-		opts->sndr_key = subflow->local_key;
+ 		*size = TCPOLEN_MPTCP_MPC_SYN;
+ 		return true;
+ 	} else if (subflow->request_join) {
 -- 
-2.27.0.111.gc72c7da667-goog
+2.17.1
 
