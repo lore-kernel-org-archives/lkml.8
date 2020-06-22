@@ -6,126 +6,72 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62686C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C53C20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36D3F2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592854601;
-	bh=SYk7dJHyHNfgLKp11CYL0eoTYsNMRaURKnformq1eYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VVbSf2qNDbGli/T26D7ynhzmEGXuv3i5ehVbggfS4h077Hy5NOAO3Ch1fnSwA5/jr
-	 Ie8GqEimqrrxvVlPMi0+AwfbIm53y7BUBsmCBAEZ/dOpDqRKdEdG/lFCBn/uY0idG+
-	 Ym4AspyiduYx5f4M21MEMP+1cuXSIcjQ/zaI4r3o=
+	s=default; t=1592854704;
+	bh=DXvjdrGQ3yYXZ1xMpIwoepraEtPiiR6PIBhKLza1dM0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1hmAQAIkx/Bwe4KB/cMwkPfS5EwfTsLZQXg69l7CAV+l8LMlc8whYEKVE4cY9BWEE
+	 33Bif4O2yB8sJCmf5JGGhGk2ShqaPiP+XUocGxlLiPpd1YXVJkwc8UaksQkAatJR16
+	 1qQ+wAe5Opeoo34EPdLCGH42OLgBeHYDlXo6ShsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgFVTgk (ORCPT
+        id S1728512AbgFVTiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728435AbgFVTgi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:36:38 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20DCC061573;
-        Mon, 22 Jun 2020 12:36:38 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b5so8853504pfp.9;
-        Mon, 22 Jun 2020 12:36:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SL19nea2/x/BTVEfq3tEcv8dczThi2gQ+pctAMjhBis=;
-        b=jX6laj/GLKW8OrK62WrqFv1Ix+RuTRrkjsPWJ66J4iz7W021DvRBARhZb/NFV31mYT
-         J7reeZI3hJhOGbmrFl6UIZGftFqGWpH4XNyxc6i1HeuvU8xVo8v4Xm0UleSiHswNTRXN
-         3bRfknYIwZbME+HpCyINSMnOdIQULa338Cn5lxOxzvk/QKpmOcooZGwoJvq5FGZPKz2Z
-         U4wm0mmFaoohpNkOmmY0W7YZizyu9g89tFGAipnZIvgEd5xZ0z2A/t4Qvdv95e/wgdJX
-         5JvieE0PbMR0ITFtPHFIqjiC579ANAGr7aG3tiKGis+3Mrn5i9YBbgzEJ156YTCHJWju
-         /ekA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=SL19nea2/x/BTVEfq3tEcv8dczThi2gQ+pctAMjhBis=;
-        b=n3ZMgB/QkPJqCDfs6QE6yFz3wJ09T2l7s7aPsTreGGIPr4MnszNdUYx/GSWJUy1CP9
-         ujDH+f+UkZRyfJ2nrNY23oSjJAfux367orxEkquESNmP8hg/w8qH/3tUB6wQ2ZLGOCbE
-         XygvvDbIyFnq7nQP66gdipiRHROEcSh/HZnMnlT+TmPKfaUtJbP8x55TXViARowcx4Sj
-         7ntl/OwT/zyTQoebp5Cgrn1fAf/5ID//u5huzRFfYiwHYQ8xJr36Ln6wpgxP8WVxLxhh
-         Ti8RahqT+ddkAT3zMdp3dZ4OOB6Ex1P6KR2e533T0k9bh81FjWisQPpIQX8uztWlquBU
-         Li5Q==
-X-Gm-Message-State: AOAM530pYsT0c6cUVEYV0PdcKznfpj4hlrsVuwl9hL97TtAvZ+VYjqCi
-        toz7qdwiKKmLEBwvUmdBLZ4=
-X-Google-Smtp-Source: ABdhPJy+H1EKZ69bUI9csC6dh59Q7kZNckMpQjEugrWLNPuK6AfQLQWrFFbrCuTbD9Sp5VFvDrTkiA==
-X-Received: by 2002:aa7:972b:: with SMTP id k11mr22374035pfg.299.1592854598029;
-        Mon, 22 Jun 2020 12:36:38 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id b71sm5269965pfb.125.2020.06.22.12.36.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:36:37 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 12:36:35 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>, oleksandr@redhat.com
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>
-Subject: Re: [PATCH v8 0/4]  introduce memory hinting API for external process
-Message-ID: <20200622193635.GA23000@google.com>
-References: <20200622192900.22757-1-minchan@kernel.org>
+        Mon, 22 Jun 2020 15:38:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728068AbgFVTiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:38:22 -0400
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE5F320767;
+        Mon, 22 Jun 2020 19:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592854701;
+        bh=DXvjdrGQ3yYXZ1xMpIwoepraEtPiiR6PIBhKLza1dM0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HXBkK8BBRowssIsPcViuIc2erjgv1vbRDujwCNEAmaEiPrcKCiJxeoS3KlgTjKCpO
+         TjjeL/3iKIxC1go1llmqI7y2NVXGa+FrcEp6/ZbR+R33ZvzDMNZEBJ5EnboqDvHQNn
+         rdhKn9NTeuL+RA6oQne/v7bJqM5Yov5ESc4lvhNc=
+Date:   Mon, 22 Jun 2020 12:38:20 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     yunaixin03610@163.com
+Cc:     netdev@vger.kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, wuguanping@huawei.com,
+        wangqindong@huawei.com
+Subject: Re: [PATCH 0/5] Adding Huawei BMA drivers
+Message-ID: <20200622123820.3f7d8e3e@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20200622160311.1533-1-yunaixin03610@163.com>
+References: <20200622160311.1533-1-yunaixin03610@163.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622192900.22757-1-minchan@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 12:28:56PM -0700, Minchan Kim wrote:
-> Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
-> application could give hints to kernel what memory range are preferred to be
-> reclaimed. However, in some platform(e.g., Android), the information
-> required to make the hinting decision is not known to the app.
-> Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
-> and that daemon must be able to initiate reclaim on its own without any app
-> involvement.
+On Tue, 23 Jun 2020 00:03:06 +0800 yunaixin03610@163.com wrote:
+> From: yunaixin <yunaixin03610@163.com>
 > 
-> To solve the concern, this patch introduces new syscall - process_madvise(2).
-> Bascially, it's same with madvise(2) syscall but it has some differences.
+> This patch set contains 5 communication drivers for Huawei BMA software.
+> The BMA software is a system management software. It supports the status
+> monitoring, performance monitoring, and event monitoring of various
+> components, including server CPUs, memory, hard disks, NICs, IB cards,
+> PCIe cards, RAID controller cards, and optical modules.
 > 
-> 1. It needs pidfd of target process to provide the hint
-> 2. It supports only MADV_{COLD|PAGEOUT} at this moment.
->    Other hints in madvise will be opened when there are explicit requests from
->    community to prevent unexpected bugs we couldn't support.
-> 3. Only privileged processes can do something for other process's address
->    space.
-> 
-> For more detail of the new API, please see "mm: introduce external memory hinting API"
-> description in this patchset.
-> 
-> * from v7 -  http://lore.kernel.org/r/20200302193630.68771-1-minchan@kernel.org
->   * dropping pid support from new syscall and fold releated patches into syscall patch
->   * dropping KSM patch by discussion - Oleksandr, I lost the discussion.
->     Please resend the single patch against of the patchset if you resolves the discussion.
->     https://lore.kernel.org/linux-api/20200302193630.68771-8-minchan@kernel.org/
+> These 5 drivers are used to send/receive message through PCIe channel in
+> different ways by BMA software.
 
-Oleksandr, it seems you discussed something with Vlastimil but couldn't
-find conclustion yet and Since Jann put an a new note in the thread,
-I detach the patch from this patchset.
+Please make sure patches build cleanly with W=1 C=1 flags and recent
+version of gcc (preferably gcc-10).
 
-Please send the KSM patch based on this patchset if you belive there is
-no need to be actionable for comments.
+Please address errors which checkpatch points out.
+
+Please do no use static inline in C sources, only headers. Compiler
+will know when to inline, anyway.
