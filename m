@@ -2,91 +2,179 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC311C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D20320776
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:38:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfWp2zi+"
+	by mail.kernel.org (Postfix) with ESMTP id 37A0420708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgFVIi3 (ORCPT
+        id S1726839AbgFVIi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:38:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFVIi2 (ORCPT
+        Mon, 22 Jun 2020 04:38:59 -0400
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:35851 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgFVIi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:38:28 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1149C061794;
-        Mon, 22 Jun 2020 01:38:27 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e22so2278994edq.8;
-        Mon, 22 Jun 2020 01:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cUFbNHgo6IB5Sy3bImSkiGN8kcxHOUvCTIjR4hYNmSs=;
-        b=bfWp2zi+iSVUaRV5UZNbccpk4TXYBNwDZiBOkKQ6/Dc+VtX1X+9Gs5ceoLzrXq/PZ9
-         vXaYBUjdU16fUvGvH7DbVVvuUJmvD7Ir0nCACqiMv0Rxj+i+sxU2NStf4EtixbkFlOKy
-         QytxIaPtV/BZMpCFLSoO8YESWhVSKs0LgUsjH68AGN5fjOsvqNDd6cdj+em6FuyBw7fK
-         R/OfsV6tCgIXwW0sjEGfTlXo82vaUwPu2gcM6g28cM4z8vWVksdp8wg+VX/MeN11ejjL
-         xYB9q3o3AMQI45ocSeuP0niuxAkeWPNtbZ9pnjPp+PDfBBgjjP83pPPZ4wgeWhBfQDtR
-         oHFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cUFbNHgo6IB5Sy3bImSkiGN8kcxHOUvCTIjR4hYNmSs=;
-        b=ksqzriVrNrdsx9UZwov79LDOg5/c1SM5qxL4EzFOJNI+xUM+jdCgyV1O7VMVh2aTVJ
-         J5h8DKhZKMTFKVPAmiTnEeRbRSlBljSwAMdmeDpJtpfwNMAVQP4suKO3nJGHyiqzGLIR
-         MzvW1yVthjsxVti2O5+U42VB2P2QCfmc/J3rl0tHCk2WJN1h5KyhYxSU21PeYvoLo5Dq
-         EpDkHVa3TGlV8xUOYyNDaM5/zAcbA38cqDxe6sOsL9iEwWw8N9FVnSTFLPsX4AyTYqwf
-         Bxa8QUAYzUrmzdIyP3dITf98/IjfaIiVcBSsqkWU4goSS45Z2ScGqkuzhJLmVbKbGbW8
-         ultQ==
-X-Gm-Message-State: AOAM530yxiqhB+3MWEH4FV93TnL7utBXdBZkAZbr9gY+no/zl5pKySpp
-        G7QlZWUxaUGRrORjwa7hgP9UnPX7le7jtrNgL6A=
-X-Google-Smtp-Source: ABdhPJwPApeAEn5hum2A9icysOaHVQpVvzup0Zr3/5gcyJTD1N5sRC7gkUmnieQOj9zEqFa6NauS3YRK5ZO9HhRy3/c=
-X-Received: by 2002:a50:ec8f:: with SMTP id e15mr6447759edr.70.1592815106098;
- Mon, 22 Jun 2020 01:38:26 -0700 (PDT)
+        Mon, 22 Jun 2020 04:38:58 -0400
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: 4TpWVnbtiqhHqTm8UcF3OpAb2ZHi7hzxMchVDlx84oPPC2OsOAjK2SGuA51o1ODupl2ywABbKs
+ sTGTZwEKCHOWRk3j67f09FvjcIBqouRt4xz0ohd5suQxkDHg1yk+MHmJxOxAluIGqpnqFIF2OH
+ 04YAJ30lc/a5kSPPrGakF2TBnKOjBMH1fUOJ6TzqIMxiVO3Q14HqKHl9cdBd1jOqInig3Z6IN1
+ SRgzwpiMw315v8aBPVr76xaemjJo64jKEZKyF3QQUDhxS0lx2+OvdOzT0m389dE4n5hBxoFbH/
+ 0mM=
+X-SBRS: 2.7
+X-MesageID: 20942116
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.75,266,1589256000"; 
+   d="scan'208";a="20942116"
+Date:   Mon, 22 Jun 2020 10:38:46 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Anchal Agarwal <anchalag@amazon.com>
+CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Valentin, Eduardo" <eduval@amazon.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and
+ hibernation]
+Message-ID: <20200622083846.GF735@Air-de-Roger>
+References: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
+ <20200604070548.GH1195@Air-de-Roger>
+ <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200617083528.GW735@Air-de-Roger>
+ <20200619234312.GA24846@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
 MIME-Version: 1.0
-References: <20200622075749.21925-1-konradybcio@gmail.com> <20200622075749.21925-4-konradybcio@gmail.com>
- <20200622080503.GQ128451@builder.lan>
-In-Reply-To: <20200622080503.GQ128451@builder.lan>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Mon, 22 Jun 2020 10:37:50 +0200
-Message-ID: <CAMS8qEWrnHc3CWrW-vzwxu+PR8FL9hcvCtBpS4oK9ZYXgGfLJg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] soc: qcom: socinfo: Add socinfo entry for SDM630
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200619234312.GA24846@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Fri, Jun 19, 2020 at 11:43:12PM +0000, Anchal Agarwal wrote:
+> On Wed, Jun 17, 2020 at 10:35:28AM +0200, Roger Pau Monné wrote:
+> > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > 
+> > 
+> > 
+> > On Tue, Jun 16, 2020 at 09:49:25PM +0000, Anchal Agarwal wrote:
+> > > On Thu, Jun 04, 2020 at 09:05:48AM +0200, Roger Pau Monné wrote:
+> > > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > On Wed, Jun 03, 2020 at 11:33:52PM +0000, Agarwal, Anchal wrote:
+> > > > >  CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > >     > +             xenbus_dev_error(dev, err, "Freezing timed out;"
+> > > > >     > +                              "the device may become inconsistent state");
+> > > > >
+> > > > >     Leaving the device in this state is quite bad, as it's in a closed
+> > > > >     state and with the queues frozen. You should make an attempt to
+> > > > >     restore things to a working state.
+> > > > >
+> > > > > You mean if backend closed after timeout? Is there a way to know that? I understand it's not good to
+> > > > > leave it in this state however, I am still trying to find if there is a good way to know if backend is still connected after timeout.
+> > > > > Hence the message " the device may become inconsistent state".  I didn't see a timeout not even once on my end so that's why
+> > > > > I may be looking for an alternate perspective here. may be need to thaw everything back intentionally is one thing I could think of.
+> > > >
+> > > > You can manually force this state, and then check that it will behave
+> > > > correctly. I would expect that on a failure to disconnect from the
+> > > > backend you should switch the frontend to the 'Init' state in order to
+> > > > try to reconnect to the backend when possible.
+> > > >
+> > > From what I understand forcing manually is, failing the freeze without
+> > > disconnect and try to revive the connection by unfreezing the
+> > > queues->reconnecting to backend [which never got diconnected]. May be even
+> > > tearing down things manually because I am not sure what state will frontend
+> > > see if backend fails to to disconnect at any point in time. I assumed connected.
+> > > Then again if its "CONNECTED" I may not need to tear down everything and start
+> > > from Initialising state because that may not work.
+> > >
+> > > So I am not so sure about backend's state so much, lets say if  xen_blkif_disconnect fail,
+> > > I don't see it getting handled in the backend then what will be backend's state?
+> > > Will it still switch xenbus state to 'Closed'? If not what will frontend see,
+> > > if it tries to read backend's state through xenbus_read_driver_state ?
+> > >
+> > > So the flow be like:
+> > > Front end marks XenbusStateClosing
+> > > Backend marks its state as XenbusStateClosing
+> > >     Frontend marks XenbusStateClosed
+> > >     Backend disconnects calls xen_blkif_disconnect
+> > >        Backend fails to disconnect, the above function returns EBUSY
+> > >        What will be state of backend here?
+> > 
+> > Backend should stay in state 'Closing' then, until it can finish
+> > tearing down.
+> > 
+> It disconnects the ring after switching to connected state too. 
+> > >        Frontend did not tear down the rings if backend does not switches the
+> > >        state to 'Closed' in case of failure.
+> > >
+> > > If backend stays in CONNECTED state, then even if we mark it Initialised in frontend, backend
+> > 
+> > Backend will stay in state 'Closing' I think.
+> > 
+> > > won't be calling connect(). {From reading code in frontend_changed}
+> > > IMU, Initialising will fail since backend dev->state != XenbusStateClosed plus
+> > > we did not tear down anything so calling talk_to_blkback may not be needed
+> > >
+> > > Does that sound correct?
+> > 
+> > I think switching to the initial state in order to try to attempt a
+> > reconnection would be our best bet here.
+> >
+> It does not seems to work correctly, I get hung tasks all over and all the
+> requests to filesystem gets stuck. Backend does shows the state as connected
+> after xenbus_dev_suspend fails but I think there may be something missing.
+> I don't seem to get IO interrupts thereafter i.e hitting the function blkif_interrupts.
+> I think just marking it initialised may not be the only thing.
+> Here is a short description of what I am trying to do:
+> So, on timeout:
+>     Switch XenBusState to "Initialized"
+>     unquiesce/unfreeze the queues and return
+>     mark info->connected = BLKIF_STATE_CONNECTED
 
-you said "Applied" - so should I omit this patch when sending a v3 of
-the series or keep it in there?
+If xenbus state is Initialized isn't it wrong to set info->connected
+== CONNECTED?
 
-Regards
-Konrad
+You should tear down all the internal state (like a proper close)?
+
+>     return EBUSY
+> 
+> I even allowed blkfront_connect to switch state to "CONNECTED" rather me doing
+> it explicitly as mentioned above without re-allocating/re-registering the device
+> just to make sure bklfront_info object has all the right values.
+> Do you see anythign missing here?
+
+I'm afraid you will have to do a little bit of debugging here to
+figure out what's going on. You can add printk's to several places to
+see which path is taken, and why blkfront ends in such state.
+
+Thanks, Roger.
