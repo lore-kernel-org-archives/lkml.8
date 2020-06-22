@@ -2,92 +2,123 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2306C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E64C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B61F20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE872073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDD5TX5K"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YqBN6UfV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgFVOgm (ORCPT
+        id S1729327AbgFVOgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:36:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728341AbgFVOgj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:36:39 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB0AC061573;
-        Mon, 22 Jun 2020 07:36:36 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h95so8712852pje.4;
-        Mon, 22 Jun 2020 07:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dKQAr0AzqF//CMcdvyZux8j8igYj0jeJ37SF6QSpEzM=;
-        b=FDD5TX5K6HKPItrzjIIBKSe6VqdurJXbR1eGATMXyVJMQm6p0BvOAz4y7vL2oxRh2T
-         FM3tNFk5hiTaWtNe8oBQWqiAKAN59s/PI8ncuz+iUTxgQUmUtn0MpFXKTG3y1ePyroyz
-         vGfszLLnANuox8b8wR1Uxl9AkGwZVTox+McODYnNa/0mvMEKGhDF6TjHpudZiV8W7GmX
-         Xi/fuP6GnDpkWNPDLxs72gsyzPwpAuGFWSa26lIoIjpr7I8+QaX4SibJGVYnyCvvyTCY
-         hivAM0wFs0Y89dIJu8P0ur0PbH8csuGRqOy0pDTts0ibT0mUfwubUkExGQs7jVf9TBAm
-         4WRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dKQAr0AzqF//CMcdvyZux8j8igYj0jeJ37SF6QSpEzM=;
-        b=N5xc5fCfZ+ueFvhE7piCbFVxHzF9gCUc9GCdaTA5hGsFxD4t6zd7pYmtVoRrLpE6Uh
-         96UCsMfDiNuZ/D/5TpZ2/oGKj4fLe/nVovBadv2CDlEx+uSiQxJypNmfruwxw0iXRNX5
-         nS/qJzCm/ITG1RtLYbE3IHup6goc0N9BXPa302T2yS8T911vANYHn6+LkgyF8zC9wbht
-         a706vTl1F4dqsfaXnH/VjrQpiVraGmdRAqeh5WZrQFiHXFeE5bt+YjzmWNG99kkFn8tI
-         mmAg+kgOvU6rT1OujcA0BMOi6fXjqjZ6TMSLCDawklToyjDp7Oz2bu5bCJEzkXaVnbim
-         1i/A==
-X-Gm-Message-State: AOAM530j0D5zt9PSUZhPtFsgR+u6ilgxl7P6KC2EdH3N/CXhLs4DLN7m
-        Kx6N3x3HmVtrs9V5gQlh05iqNu2CwfgmWY0LdHNmMHBZ
-X-Google-Smtp-Source: ABdhPJwONkkBXuckxOwuh/Kd2q9DlPnyBqZSMqfHNXBbQ9l3Czd0OWGQLpfhQ0kbCKEyeea9H399eVScKOGmHiIjaKw=
-X-Received: by 2002:a17:90a:220f:: with SMTP id c15mr19521759pje.129.1592836595666;
- Mon, 22 Jun 2020 07:36:35 -0700 (PDT)
+        Mon, 22 Jun 2020 10:36:51 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:53877 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728341AbgFVOgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:36:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592836609; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=JSt09Fbrzf0H+Eep97NqWj/jsb72fCfRDnOyEo7TatI=; b=YqBN6UfVf79fddUt8mb1hXxQTZlUTrkuRDZvF707TVzqE8vBIy2dQu3bbQAv+2IWBeWC0dYN
+ yvHnUPAPKbOVkA5q4BvDhoZAjJTKQBV380PZOefxWhCSYgtzO89TRBxu1WjdlNYcB8bUUT4R
+ o2XVpXJ+k6MORgmKVGKM+JR1CIg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5ef0c1ffa3d8a4474323a507 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 14:36:47
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 85EF2C433CB; Mon, 22 Jun 2020 14:36:46 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E361C433CA;
+        Mon, 22 Jun 2020 14:36:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E361C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Roman Mamedov <rm@romanrm.net>
+Cc:     Qiujun Huang <hqjagain@gmail.com>, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [BISECTED REGRESSION] ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+References: <20200404041838.10426-1-hqjagain@gmail.com>
+        <20200404041838.10426-6-hqjagain@gmail.com>
+        <20200621020428.6417d6fb@natsu>
+Date:   Mon, 22 Jun 2020 17:36:41 +0300
+In-Reply-To: <20200621020428.6417d6fb@natsu> (Roman Mamedov's message of "Sun,
+        21 Jun 2020 02:04:28 +0500")
+Message-ID: <87lfkff9qe.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20200618164751.56828-1-andriy.shevchenko@linux.intel.com>
- <20200618164751.56828-2-andriy.shevchenko@linux.intel.com> <15960896-3874-599c-6304-18b01ffd5c94@suse.com>
-In-Reply-To: <15960896-3874-599c-6304-18b01ffd5c94@suse.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Jun 2020 17:36:23 +0300
-Message-ID: <CAHp75VcBV0djS=z+_FTDjkyxFmQ+wnj1rmLT1VDCSX3d2AvZ3w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/6] mips: Return proper error code from console
- ->setup() hook
-To:     Jiri Slaby <jslaby@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 5:30 PM Jiri Slaby <jslaby@suse.com> wrote:
->
-> On 18. 06. 20, 18:47, Andy Shevchenko wrote:
-> > For unifying console ->setup() handling, which is pure documented,
->
-> Did you mean s/pure/poorly/ in all the patches? Or purely? But then where?
+Roman Mamedov <rm@romanrm.net> writes:
 
-Poorly.
+> On Sat,  4 Apr 2020 12:18:38 +0800
+> Qiujun Huang <hqjagain@gmail.com> wrote:
+>
+>> In ath9k_hif_usb_rx_cb interface number is assumed to be 0.
+>> usb_ifnum_to_if(urb->dev, 0)
+>> But it isn't always true.
+>> 
+>> The case reported by syzbot:
+>> https://lore.kernel.org/linux-usb/000000000000666c9c05a1c05d12@google.com
+>> usb 2-1: new high-speed USB device number 2 using dummy_hcd
+>> usb 2-1: config 1 has an invalid interface number: 2 but max is 0
+>> usb 2-1: config 1 has no interface number 0
+>> usb 2-1: New USB device found, idVendor=0cf3, idProduct=9271, bcdDevice=
+>> 1.08
+>> usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+>> general protection fault, probably for non-canonical address
+>> 0xdffffc0000000015: 0000 [#1] SMP KASAN
+>> KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000af]
+>> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
+>> 
+>> Call Trace
+>> __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+>> usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+>> dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+>> call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+>> expire_timers kernel/time/timer.c:1449 [inline]
+>> __run_timers kernel/time/timer.c:1773 [inline]
+>> __run_timers kernel/time/timer.c:1740 [inline]
+>> run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+>> __do_softirq+0x21e/0x950 kernel/softirq.c:292
+>> invoke_softirq kernel/softirq.c:373 [inline]
+>> irq_exit+0x178/0x1a0 kernel/softirq.c:413
+>> exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+>> smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+>> apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+>> 
+>> Reported-and-tested-by: syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com
+>> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+>
+> This causes complete breakage of ath9k operation across all the stable kernel
+> series it got backported to, and I guess the mainline as well. Please see:
+> https://bugzilla.kernel.org/show_bug.cgi?id=208251
+> https://bugzilla.redhat.com/show_bug.cgi?id=1848631
+
+So there's no fix for this? I was under impression that someone fixed
+this, but maybe I'm mixing with something else.
+
+If this is not fixed can someone please submit a patch to revert the
+offending commit (or commits) so that we get ath9k working again?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
