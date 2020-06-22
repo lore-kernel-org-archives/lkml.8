@@ -2,40 +2,40 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526A320767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF702073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbgFVWoh (ORCPT
+        id S1731527AbgFVWor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:44:37 -0400
+        Mon, 22 Jun 2020 18:44:47 -0400
 Received: from mga18.intel.com ([134.134.136.126]:27426 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730943AbgFVWm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:42:59 -0400
-IronPort-SDR: XLFIK+YfUKeGhx+Tet1yfda2xJKB0G8cYqne/26fINdreBNzTGl7IusJgjbyLjDViBLp3x08EE
- DKiSaR37P+OQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131303578"
+        id S1731198AbgFVWm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:42:58 -0400
+IronPort-SDR: /aa+26LgBxu85NVKIQQPdMbK0FgKzX3Hnp9ik4ONQl5GsYg0U/c/DT03dyk6WOofNuyOIGmlx7
+ PrvKyChbxGYQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131303576"
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="131303578"
+   d="scan'208";a="131303576"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 15:42:55 -0700
-IronPort-SDR: FGeySH7zGAHkWHnu3g5/cg1JH6n1nzHSgyhIDbSMWmggd/VhzW1w1yE+Qspo7J9cXaFqxvshkA
- Qzk6yYhWPXfQ==
+IronPort-SDR: tKrppNG3mwzVZRukBF6u1Hs7VizfIz28P7GOyMnJcUAPBG8CoLhTDbDdyU8JdOjWyOX5hZZZsU
+ L2u1BBRSY6Bw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="264634940"
+   d="scan'208";a="264634933"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 15:42:55 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 15:42:54 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -44,9 +44,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 13/15] KVM: VMX: Rename "vmx_set_guest_msr" to "vmx_set_guest_uret_msr"
-Date:   Mon, 22 Jun 2020 15:42:47 -0700
-Message-Id: <20200622224249.29562-14-sean.j.christopherson@intel.com>
+Subject: [PATCH 11/15] KVM: VMX: Add vmx_setup_uret_msr() to handle lookup and swap
+Date:   Mon, 22 Jun 2020 15:42:45 -0700
+Message-Id: <20200622224249.29562-12-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200622224249.29562-1-sean.j.christopherson@intel.com>
 References: <20200622224249.29562-1-sean.j.christopherson@intel.com>
@@ -57,49 +57,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "uret" to vmx_set_guest_msr() to explicitly associate it with the
-guest_uret_msrs array, and to differentiate it from vmx_set_msr() as
-well as VMX's load/store MSRs.
+Add vmx_setup_uret_msr() to wrap the lookup and manipulation of the uret
+MSRs array during setup_msrs().  In addition to consolidating code, this
+eliminates move_msr_up(), which while being a very literally description
+of the function, isn't exacly helpful in understanding the net effect of
+the code.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 49 ++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 31 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6662c1aab9b2..178315b2758b 100644
+index 8731ca8ca2b0..f3cd1de7b0ff 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -645,7 +645,8 @@ struct vmx_uret_msr *vmx_find_uret_msr(struct vcpu_vmx *vmx, u32 msr)
- 	return NULL;
+@@ -1714,12 +1714,15 @@ static void vmx_queue_exception(struct kvm_vcpu *vcpu)
+ 	vmx_clear_hlt(vcpu);
  }
  
--static int vmx_set_guest_msr(struct vcpu_vmx *vmx, struct vmx_uret_msr *msr, u64 data)
-+static int vmx_set_guest_uret_msr(struct vcpu_vmx *vmx,
-+				  struct vmx_uret_msr *msr, u64 data)
+-/*
+- * Swap MSR entry in host/guest MSR entry array.
+- */
+-static void move_msr_up(struct vcpu_vmx *vmx, int from, int to)
++static void vmx_setup_uret_msr(struct vcpu_vmx *vmx, unsigned int msr)
  {
- 	int ret = 0;
+ 	struct vmx_uret_msr tmp;
++	int from, to;
++
++	from = __vmx_find_uret_msr(vmx, msr);
++	if (from < 0)
++		return;
++	to = vmx->nr_active_uret_msrs++;
  
-@@ -2232,7 +2233,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	find_uret_msr:
- 		msr = vmx_find_uret_msr(vmx, msr_index);
- 		if (msr)
--			ret = vmx_set_guest_msr(vmx, msr, data);
-+			ret = vmx_set_guest_uret_msr(vmx, msr, data);
- 		else
- 			ret = kvm_set_msr_common(vcpu, msr_info);
+ 	tmp = vmx->guest_uret_msrs[to];
+ 	vmx->guest_uret_msrs[to] = vmx->guest_uret_msrs[from];
+@@ -1733,42 +1736,26 @@ static void move_msr_up(struct vcpu_vmx *vmx, int from, int to)
+  */
+ static void setup_msrs(struct vcpu_vmx *vmx)
+ {
+-	int nr_active_uret_msrs, index;
+-
+-	nr_active_uret_msrs = 0;
++	vmx->guest_uret_msrs_loaded = false;
++	vmx->nr_active_uret_msrs = 0;
+ #ifdef CONFIG_X86_64
+ 	/*
+ 	 * The SYSCALL MSRs are only needed on long mode guests, and only
+ 	 * when EFER.SCE is set.
+ 	 */
+ 	if (is_long_mode(&vmx->vcpu) && (vmx->vcpu.arch.efer & EFER_SCE)) {
+-		index = __vmx_find_uret_msr(vmx, MSR_STAR);
+-		if (index >= 0)
+-			move_msr_up(vmx, index, nr_active_uret_msrs++);
+-		index = __vmx_find_uret_msr(vmx, MSR_LSTAR);
+-		if (index >= 0)
+-			move_msr_up(vmx, index, nr_active_uret_msrs++);
+-		index = __vmx_find_uret_msr(vmx, MSR_SYSCALL_MASK);
+-		if (index >= 0)
+-			move_msr_up(vmx, index, nr_active_uret_msrs++);
++		vmx_setup_uret_msr(vmx, MSR_STAR);
++		vmx_setup_uret_msr(vmx, MSR_LSTAR);
++		vmx_setup_uret_msr(vmx, MSR_SYSCALL_MASK);
  	}
-@@ -7282,7 +7283,7 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 		msr = vmx_find_uret_msr(vmx, MSR_IA32_TSX_CTRL);
- 		if (msr) {
- 			bool enabled = guest_cpuid_has(vcpu, X86_FEATURE_RTM);
--			vmx_set_guest_msr(vmx, msr, enabled ? 0 : TSX_CTRL_RTM_DISABLE);
-+			vmx_set_guest_uret_msr(vmx, msr, enabled ? 0 : TSX_CTRL_RTM_DISABLE);
- 		}
- 	}
- }
+ #endif
+-	if (update_transition_efer(vmx)) {
+-		index = __vmx_find_uret_msr(vmx, MSR_EFER);
+-		if (index >= 0)
+-			move_msr_up(vmx, index, nr_active_uret_msrs++);
+-	}
+-	if (guest_cpuid_has(&vmx->vcpu, X86_FEATURE_RDTSCP)) {
+-		index = __vmx_find_uret_msr(vmx, MSR_TSC_AUX);
+-		if (index >= 0)
+-			move_msr_up(vmx, index, nr_active_uret_msrs++);
+-	}
+-	index = __vmx_find_uret_msr(vmx, MSR_IA32_TSX_CTRL);
+-	if (index >= 0)
+-		move_msr_up(vmx, index, nr_active_uret_msrs++);
++	if (update_transition_efer(vmx))
++		vmx_setup_uret_msr(vmx, MSR_EFER);
+ 
+-	vmx->nr_active_uret_msrs = nr_active_uret_msrs;
+-	vmx->guest_uret_msrs_loaded = false;
++	if (guest_cpuid_has(&vmx->vcpu, X86_FEATURE_RDTSCP))
++		vmx_setup_uret_msr(vmx, MSR_TSC_AUX);
++
++	vmx_setup_uret_msr(vmx, MSR_IA32_TSX_CTRL);
+ 
+ 	if (cpu_has_vmx_msr_bitmap())
+ 		vmx_update_msr_bitmap(&vmx->vcpu);
 -- 
 2.26.0
 
