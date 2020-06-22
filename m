@@ -3,219 +3,183 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 01:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 01:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32FB125340
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 01:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442D524746
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 01:48:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bs0pq449"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5Ut+EvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbgFVBia (ORCPT
+        id S1726778AbgFVBsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 21:38:30 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:32931 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgFVBi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 21:38:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qsW52Q87z9sRf;
-        Mon, 22 Jun 2020 11:38:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592789906;
-        bh=gFKLnB8nhbKKuTEnbfrhDS9nVWeNL8Gq938DTMzHiqQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bs0pq449QlG9p7XUF3biwtOL8yPNp5N6i1/Gg6VYcNNnaMp9DQMT6KVCUiq1Pm5dJ
-         19zR0SkLQDGZmrjNK8Eko/V8JLw+q9tuciSkLeLx/Eem1iHHCwmQesSfXTqseuV7Bw
-         ODFSqPEo5hcpDhIx+naodrs/bjgElOxlbivM+T2D+1Fy6ASq+XBhGI8O/JPwPrmYch
-         nl6Al+QrH4cXy9GFVk+XdLb+37RCzt7alKKCWuEn+KOyq43hFO+uFo83u83xLGiA3N
-         zD5cCrvfOU+Ev17qQmhJ2vnc8CZHDjPKc+2VQKdIvceO/+G/G2VYLhqQ2frEQVn94c
-         uTFHU749tSo7g==
-Date:   Mon, 22 Jun 2020 11:38:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200622113824.6a3ab82f@canb.auug.org.au>
-In-Reply-To: <20200621105350.GA28206@zn.tnic>
-References: <20200621163323.14e8533f@canb.auug.org.au>
-        <20200621105350.GA28206@zn.tnic>
+        Sun, 21 Jun 2020 21:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgFVBsH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jun 2020 21:48:07 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9620EC061794
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 18:48:06 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id 25so14195484oiy.13
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 18:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ze28Eq/j1gsI361qz29/4oK9sda0rS5bu0lcqoefJK4=;
+        b=A5Ut+EvXuufgcQV6Yjo2m8t0r0g8kB0waG/TFfDqrTSTv0G7kNRFA3sOFdObE4QzYS
+         OCmAYmlZcm4mE4BqpfYt05/0ELYBoiZG/zye5xTLTmNy4V67dduiYz7FJFag91H3vLMW
+         Bn3M+1C2XBGEWArEuyp+tnk1a48bmR091Nkidb+tzp2/V7xfDbG4mfpZg1lZoBXpjeU1
+         ciADZt5d5x3NCseEZawRH7uO1H+uPb0PQb7Azj3y3Cq9cQPmLfOezZ+BoSsEFbvFbLvX
+         sk4IVUEsKLFdf6UiZHUO/lx1MgHdexBPjx5p1SCcT12j6wG6rhLarsRTHA1KcCNZFXPL
+         Ngkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ze28Eq/j1gsI361qz29/4oK9sda0rS5bu0lcqoefJK4=;
+        b=f41IuVEKjZMp+yOn3qhYWj8jC4cgU7OG0kVuKODpMA69tsJrcg98AHMrQBYn002RqE
+         aBRoIMGpITDubfhMWb01yxFKQa7fMnyUt25aXWcrl1z6bwi9+shdpaEmKXkwSki+xgup
+         iqXxrBubO194uxoFOIBo1t2J6zE0JTH/olg4o9bQBpc6B3K6ekRq+sPTp5J/RYJX0sYu
+         5bp5BXynO4bD5jBi8PVRE4XcgTcvdxGwq9mRogLlKJoqRD74FR3dB93vH78AMcvsM/34
+         0sfRBQwGbSMcXXqftvDAqQAnNZjMFwbCuMZ3iMvE2dabz7abq4le/54OK6+6g+LW0uLN
+         uG1Q==
+X-Gm-Message-State: AOAM531TVOa5ifC2qDcaBciGpg4ocAcjm2Qqa/BnY+AWIWJjKJXqniG4
+        vW5vbbJpwpzESZYDiaaowYAuSW5f
+X-Google-Smtp-Source: ABdhPJxLDIPe1X86eTVAUkaTFcV/WnaVfBnbfgqsmCj5SBDAo5s0P38sMrWCTq/08adc+EKbFt3XSg==
+X-Received: by 2002:a54:4406:: with SMTP id k6mr11236087oiw.60.1592790485427;
+        Sun, 21 Jun 2020 18:48:05 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id s15sm2961118oic.54.2020.06.21.18.48.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2020 18:48:04 -0700 (PDT)
+Date:   Sun, 21 Jun 2020 18:48:03 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2 3/5] mm: memcg/percpu: per-memcg percpu memory
+ statistics
+Message-ID: <20200622014803.GA2916179@ubuntu-n2-xlarge-x86>
+References: <20200608230819.832349-1-guro@fb.com>
+ <20200608230819.832349-4-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ON7aHcUF6v.+g+q+iDPDmte";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608230819.832349-4-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ON7aHcUF6v.+g+q+iDPDmte
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Borislav,
-
-On Sun, 21 Jun 2020 12:53:50 +0200 Borislav Petkov <bp@alien8.de> wrote:
->
-> + acme for an FYI.
->=20
-> On Sun, Jun 21, 2020 at 04:33:23PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > After merging the tip tree, today's linux-next build (perf) failed
-> > like this:
-> >=20
-> > In file included from trace/beauty/tracepoints/x86_msr.c:10:
-> > perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: error: initia=
-lized field overwritten [-Werror=3Doverride-init]
-> >   292 |  [0xc0010280 - x86_AMD_V_KVM_MSRs_offset] =3D "F15H_PTSC",
-> >       |                                             ^~~~~~~~~~~
-> > perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: note: (near i=
-nitialization for 'x86_AMD_V_KVM_MSRs[640]')
-> >=20
-> > Caused by commit
-> >=20
-> >   1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
-> >=20
-> > I have used the tip tree from next-20200618 for tooday. =20
->=20
-> Thanks, I saw that once but then got distracted to something of higher
-> prio. :-\
->=20
-> I'll apply this after testing it a bit:
->=20
+On Mon, Jun 08, 2020 at 04:08:17PM -0700, Roman Gushchin wrote:
+> Percpu memory can represent a noticeable chunk of the total
+> memory consumption, especially on big machines with many CPUs.
+> Let's track percpu memory usage for each memcg and display
+> it in memory.stat.
+> 
+> A percpu allocation is usually scattered over multiple pages
+> (and nodes), and can be significantly smaller than a page.
+> So let's add a byte-sized counter on the memcg level:
+> MEMCG_PERCPU_B. Byte-sized vmstat infra created for slabs
+> can be perfectly reused for percpu case.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Acked-by: Dennis Zhou <dennis@kernel.org>
 > ---
-> From: Borislav Petkov <bp@suse.de>
-> Date: Sun, 21 Jun 2020 12:41:53 +0200
-> Subject: [PATCH] x86/msr: Move the F15h MSRs where they belong
->=20
-> 1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
->=20
-> moved the three F15h power MSRs to the architectural list but that was
-> wrong as they belong in the family 0x15 list. That also caused:
->=20
->   In file included from trace/beauty/tracepoints/x86_msr.c:10:
->   perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: error: initia=
-lized field overwritten [-Werror=3Doverride-init]
->     292 |  [0xc0010280 - x86_AMD_V_KVM_MSRs_offset] =3D "F15H_PTSC",
->         |                                             ^~~~~~~~~~~
->   perf/trace/beauty/generated/x86_arch_MSRs_array.c:292:45: note: (near i=
-nitialization for 'x86_AMD_V_KVM_MSRs[640]')
->=20
-> due to MSR_F15H_PTSC ending up being defined twice. Move them where they
-> belong and drop the duplicate.
->=20
-> While at it, update the msr-index.h copy to pick up the changes from
->=20
->   7e5b3c267d25 ("x86/speculation: Add Special Register Buffer Data Sampli=
-ng (SRBDS) mitigation")
->=20
-> Fixes: 1068ed4547ad ("x86/msr: Lift AMD family 0x15 power-specific MSRs")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> ---
->  arch/x86/include/asm/msr-index.h       | 5 ++---
->  tools/arch/x86/include/asm/msr-index.h | 9 ++++++---
->  2 files changed, 8 insertions(+), 6 deletions(-)
->=20
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-=
-index.h
-> index eb9537254920..63ed8fe35738 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -422,11 +422,8 @@
->  #define MSR_AMD_PERF_CTL		0xc0010062
->  #define MSR_AMD_PERF_STATUS		0xc0010063
->  #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
-> -#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-> -#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
->  #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
->  #define MSR_AMD64_OSVW_STATUS		0xc0010141
-> -#define MSR_F15H_PTSC			0xc0010280
->  #define MSR_AMD_PPIN_CTL		0xc00102f0
->  #define MSR_AMD_PPIN			0xc00102f1
->  #define MSR_AMD64_CPUID_FN_1		0xc0011004
-> @@ -469,6 +466,8 @@
->  #define MSR_F16H_DR0_ADDR_MASK		0xc0011027
-> =20
->  /* Fam 15h MSRs */
-> +#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-> +#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
->  #define MSR_F15H_PERF_CTL		0xc0010200
->  #define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
->  #define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
-> diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/incl=
-ude/asm/msr-index.h
-> index 7dfd45bb6cdb..63ed8fe35738 100644
-> --- a/tools/arch/x86/include/asm/msr-index.h
-> +++ b/tools/arch/x86/include/asm/msr-index.h
-> @@ -128,6 +128,10 @@
->  #define TSX_CTRL_RTM_DISABLE		BIT(0)	/* Disable RTM feature */
->  #define TSX_CTRL_CPUID_CLEAR		BIT(1)	/* Disable TSX enumeration */
-> =20
-> +/* SRBDS support */
-> +#define MSR_IA32_MCU_OPT_CTRL		0x00000123
-> +#define RNGDS_MITG_DIS			BIT(0)
+>  Documentation/admin-guide/cgroup-v2.rst |  4 ++++
+>  include/linux/memcontrol.h              |  8 ++++++++
+>  mm/memcontrol.c                         |  4 +++-
+>  mm/percpu.c                             | 10 ++++++++++
+>  4 files changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index ce3e05e41724..7c1e784239bf 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -1274,6 +1274,10 @@ PAGE_SIZE multiple when read back.
+>  		Amount of memory used for storing in-kernel data
+>  		structures.
+>  
+> +	  percpu
+> +		Amount of memory used for storing per-cpu kernel
+> +		data structures.
 > +
->  #define MSR_IA32_SYSENTER_CS		0x00000174
->  #define MSR_IA32_SYSENTER_ESP		0x00000175
->  #define MSR_IA32_SYSENTER_EIP		0x00000176
-> @@ -418,11 +422,8 @@
->  #define MSR_AMD_PERF_CTL		0xc0010062
->  #define MSR_AMD_PERF_STATUS		0xc0010063
->  #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
-> -#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-> -#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
->  #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
->  #define MSR_AMD64_OSVW_STATUS		0xc0010141
-> -#define MSR_F15H_PTSC			0xc0010280
->  #define MSR_AMD_PPIN_CTL		0xc00102f0
->  #define MSR_AMD_PPIN			0xc00102f1
->  #define MSR_AMD64_CPUID_FN_1		0xc0011004
-> @@ -465,6 +466,8 @@
->  #define MSR_F16H_DR0_ADDR_MASK		0xc0011027
-> =20
->  /* Fam 15h MSRs */
-> +#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-> +#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
->  #define MSR_F15H_PERF_CTL		0xc0010200
->  #define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
->  #define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
+>  	  sock
+>  		Amount of memory used in network transmission buffers
+>  
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index eede46c43573..7ed3af71a6fb 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -32,11 +32,19 @@ struct kmem_cache;
+>  enum memcg_stat_item {
+>  	MEMCG_SWAP = NR_VM_NODE_STAT_ITEMS,
+>  	MEMCG_SOCK,
+> +	MEMCG_PERCPU_B,
+>  	/* XXX: why are these zone and not node counters? */
+>  	MEMCG_KERNEL_STACK_KB,
+>  	MEMCG_NR_STAT,
+>  };
+>  
+> +static __always_inline bool memcg_stat_item_in_bytes(enum memcg_stat_item item)
+> +{
+> +	if (item == MEMCG_PERCPU_B)
+> +		return true;
+> +	return vmstat_item_in_bytes(item);
 
-I applied that patch to the tip tree merge today.
+This patch is now in -next and this line causes a warning from clang,
+which shows up in every translation unit that includes this header,
+which is a lot:
 
-Tested-by: Stephen Rothwell <sfr@canb.auug.org.au> # build tested
+include/linux/memcontrol.h:45:30: warning: implicit conversion from
+enumeration type 'enum memcg_stat_item' to different enumeration type
+'enum node_stat_item' [-Wenum-conversion]
+        return vmstat_item_in_bytes(item);
+               ~~~~~~~~~~~~~~~~~~~~ ^~~~
+1 warning generated.
 
---=20
+I assume this conversion is intentional; if so, it seems like expecting
+a specific enum is misleading. Perhaps this should be applied on top?
+
 Cheers,
-Stephen Rothwell
+Nathan
 
---Sig_/ON7aHcUF6v.+g+q+iDPDmte
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7wC5AACgkQAVBC80lX
-0Gz0ggf/WwzIrlSl3C3AApljMTQ/giylH3ownY7CARuvr+JUXKnrbffKL3NltXYo
-mCFkJTx/1HlnJYncSYPg/umDNily6UX2GfmO+JMPQkkeFips8i2rkCsDPJR6D6mv
-GTaA/wY9aJK9CSv5VMK51IeK5AmPNWOekhiggVwlXMJybxdGpK0zPXK3GeW2b/Yw
-zTKQpV0SXCJed1KAM4q1rYPZI3d1+Ed/f3QyuQ2Mz/iWhoZdKttWgQadUFHj9A3+
-rKSGQ0ieUQVyDxVrYI/LI/8ps8DpRSlV3Qrvw4vQypBsAW/X2ssg/TLTmYmImga/
-+rTqdDk633uR2R3Mnoh/qNA9U8zk0g==
-=kC5v
------END PGP SIGNATURE-----
-
---Sig_/ON7aHcUF6v.+g+q+iDPDmte--
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 2499f78cf32d..bddeb4ce7a4f 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -38,7 +38,7 @@ enum memcg_stat_item {
+ 	MEMCG_NR_STAT,
+ };
+ 
+-static __always_inline bool memcg_stat_item_in_bytes(enum memcg_stat_item item)
++static __always_inline bool memcg_stat_item_in_bytes(int item)
+ {
+ 	if (item == MEMCG_PERCPU_B)
+ 		return true;
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 084ee1c17160..52d7961a24f0 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -211,7 +211,7 @@ enum node_stat_item {
+  * measured in pages). This defines the API part, the internal representation
+  * might be different.
+  */
+-static __always_inline bool vmstat_item_in_bytes(enum node_stat_item item)
++static __always_inline bool vmstat_item_in_bytes(int item)
+ {
+ 	/*
+ 	 * Global and per-node slab counters track slab pages.
