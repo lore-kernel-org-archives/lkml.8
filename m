@@ -2,192 +2,114 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE86C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF5A2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0E82073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkI2USsN"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Rw1MHPXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730087AbgFVSon (ORCPT
+        id S1730156AbgFVSpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729605AbgFVSom (ORCPT
+        Mon, 22 Jun 2020 14:45:09 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12286 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729605AbgFVSpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:44:42 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C2AC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:44:41 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id m26so10226929lfo.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bsa2D8UcUdmWeSVi19Th9t5QWO+7dW+3wkTgqvnKWig=;
-        b=rkI2USsN/jAc+p2oilopycy25wr5sVI0tpE2XgEi6pMS/rAQbP7Hu26UR19nfOq1AJ
-         1Np5Qo2/xMDdO95rUi5ytBqxbCK2w4BlWMl5z+bmsPHMTUSBbdJt5DbMQuaFAHu3GsE3
-         hwGcOZtlqQSOx98Ccw6FViwLUqd8WVOjvdPIk8D9wZMA9ReaVhAYgEHpiR64jXe9FJKD
-         SSXVNwkefgbQAKI/mrun0pFeINVWBsg+T/l3iCorhuci/7B5/ehgHBErhOy9GFBHPr08
-         lmKZj+cqwUytlTTcH2nJyWykLOcJJ/aZT0F2qIBlAhfLdLnxlmRp+NlswiEiG6VvnbO5
-         PZow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bsa2D8UcUdmWeSVi19Th9t5QWO+7dW+3wkTgqvnKWig=;
-        b=bn6SC6nYMRPnbs6vIncDtvP7hpFmn96OvrRIVS7pLoW+yOHNpnIheRyKqd2GjKajOe
-         4/mZw1nKI9lekk9RPA5Lzga6oj8Z06NjBPJp0MLhCPXR+jnJXVjHYXvUZ+A8nVcmH4fB
-         vWdiruHqZwylNCEXXMqlfRSQBit/X51XdaKBxdhRxeJAPzbVAyAG+eo2wGDAKFhA2tUT
-         aX/60zw7TF7tY5YPMWvobKXc2kTQ6+xyVSZSVdCXOlhOcOR1wBAW8yH9LPbgvZsR7zNQ
-         ehKIledbN0AoZhX83NCpTyZqVT+87T4eV0Tqt9AsbIVH5Fm2JPx0gaoME4GvYhIhNmQY
-         GEDw==
-X-Gm-Message-State: AOAM5316bMd0jV2wHTv9cx1JLc2HwXU6bFER+Zc9EFgTOBffjmlaIktA
-        cfTSHYS8Lrz8DaKY87WJZK63EcAdChnNycWQXcCF8rA4
-X-Google-Smtp-Source: ABdhPJxr4uBUcKdGTWVm9gTrdLJWlX+Uz75PHVP1LlPA9Qi3PeqXxZmwj0YtBtqv0zY1bHUzBIsUY0GR1ixqYwH0wio=
-X-Received: by 2002:a19:c744:: with SMTP id x65mr10603363lff.133.1592851479925;
- Mon, 22 Jun 2020 11:44:39 -0700 (PDT)
+        Mon, 22 Jun 2020 14:45:08 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef0fc270000>; Mon, 22 Jun 2020 11:44:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 11:45:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 11:45:08 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
+ 2020 18:44:59 +0000
+Subject: Re: [PATCH 08/16] nouveau/hmm: fault one page at a time
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+References: <20200619215649.32297-1-rcampbell@nvidia.com>
+ <20200619215649.32297-9-rcampbell@nvidia.com>
+ <20200622172233.GA2874652@mellanox.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <f529df0d-707c-cb67-ac12-356784e54ef8@nvidia.com>
+Date:   Mon, 22 Jun 2020 11:44:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <1592363698-4266-1-git-send-email-jrdr.linux@gmail.com>
- <d9e8ad0f-f2aa-eea4-5bc7-a802c626ace6@oracle.com> <CAFqt6zbJD+k9xkV9Se0nL2qKfnea3mRrWJ4gzPmPJBquYk4M+w@mail.gmail.com>
- <fe2a1d23-7abd-86a9-4aec-2c14fb11cdea@nvidia.com>
-In-Reply-To: <fe2a1d23-7abd-86a9-4aec-2c14fb11cdea@nvidia.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 23 Jun 2020 00:22:56 +0530
-Message-ID: <CAFqt6zb8hK+mpqfrZ_QoGLO4nNfbHvZ7aJLRrcNRgDsywFHKqg@mail.gmail.com>
-Subject: Re: [RFC PATCH] xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>, sstabellini@kernel.org,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        paul@xen.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200622172233.GA2874652@mellanox.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592851495; bh=edTvH4CLD4vItWTGQfSjP32xxPYuTSK47wQwLKtpC2o=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Rw1MHPXFCHxs683/WECRpVcEISDyJHi11DYaKjk6Je+Hzsfmso1p97Ec8fYZM2+nM
+         A+Whgg2ThDXh90YDXJAKBJwzuaP2WzJlG8bwz/1/VnakrGPCT7sb/aLJ+IleyTzN4h
+         9jH1TmNccMQ6YU399/RKKkKq2dPSZhr92L71xYLncMKZOVOR48E1BIFUCpW11mwjOE
+         t+M8mWr0WSNGayrNmi4RHcERwZ+hLyLIlZZD5cjsTt043/R1L5B5ihX/JKG3DP2Aem
+         qU3pd3KpJt+qQyE2dumEr5djt4hCCHzY/BBBtQZeeGZ0+hG3skWe1a6K8PfsLkY2WT
+         4nfL0AaTfpmSw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 1:00 PM John Hubbard <jhubbard@nvidia.com> wrote:
->
-> On 2020-06-18 20:12, Souptick Joarder wrote:
-> > On Wed, Jun 17, 2020 at 11:29 PM Boris Ostrovsky
-> > <boris.ostrovsky@oracle.com> wrote:
-> >>
-> >> On 6/16/20 11:14 PM, Souptick Joarder wrote:
-> >>> In 2019, we introduced pin_user_pages*() and now we are converting
-> >>> get_user_pages*() to the new API as appropriate. [1] & [2] could
-> >>> be referred for more information.
->
->
-> Ideally, the commit description should say which case, in
-> pin_user_pages.rst, that this is.
->
 
-Ok.
+On 6/22/20 10:22 AM, Jason Gunthorpe wrote:
+> On Fri, Jun 19, 2020 at 02:56:41PM -0700, Ralph Campbell wrote:
+>> The SVM page fault handler groups faults into a range of contiguous
+>> virtual addresses and requests hmm_range_fault() to populate and
+>> return the page frame number of system memory mapped by the CPU.
+>> In preparation for supporting large pages to be mapped by the GPU,
+>> process faults one page at a time. In addition, use the hmm_range
+>> default_flags to fix a corner case where the input hmm_pfns array
+>> is not reinitialized after hmm_range_fault() returns -EBUSY and must
+>> be called again.
+> 
+> Are you sure? hmm_range_fault is pretty expensive per call..
+> 
+> Jason
+> 
 
->
-> >>>
-> >>> [1] Documentation/core-api/pin_user_pages.rst
-> >>>
-> >>> [2] "Explicit pinning of user-space pages":
-> >>>          https://lwn.net/Articles/807108/
-> >>>
-> >>> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> >>> Cc: John Hubbard <jhubbard@nvidia.com>
-> >>> ---
-> >>> Hi,
-> >>>
-> >>> I have compile tested this patch but unable to run-time test,
-> >>> so any testing help is much appriciated.
-> >>>
-> >>> Also have a question, why the existing code is not marking the
-> >>> pages dirty (since it did FOLL_WRITE) ?
-> >>
-> >>
-> >> Indeed, seems to me it should. Paul?
->
-> Definitely good to get an answer from an expert in this code, but
-> meanwhile, it's reasonable to just mark them dirty. Below...
->
-> >>
-> >>
-> >>>
-> >>>   drivers/xen/privcmd.c | 7 ++-----
-> >>>   1 file changed, 2 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-> >>> index a250d11..543739e 100644
-> >>> --- a/drivers/xen/privcmd.c
-> >>> +++ b/drivers/xen/privcmd.c
-> >>> @@ -594,7 +594,7 @@ static int lock_pages(
-> >>>                if (requested > nr_pages)
-> >>>                        return -ENOSPC;
-> >>>
-> >>> -             pinned = get_user_pages_fast(
-> >>> +             pinned = pin_user_pages_fast(
-> >>>                        (unsigned long) kbufs[i].uptr,
-> >>>                        requested, FOLL_WRITE, pages);
-> >>>                if (pinned < 0)
-> >>> @@ -614,10 +614,7 @@ static void unlock_pages(struct page *pages[], unsigned int nr_pages)
-> >>>        if (!pages)
-> >>>                return;
-> >>>
-> >>> -     for (i = 0; i < nr_pages; i++) {
-> >>> -             if (pages[i])
-> >>> -                     put_page(pages[i]);
-> >>> -     }
-> >>> +     unpin_user_pages(pages, nr_pages);
->
->
-> ...so just use unpin_user_pages_dirty_lock() here, I think.
->
->
-> >>
-> >>
-> >> Why are you no longer checking for valid pages?
-> >
-> > My understanding is, in case of lock_pages() end up returning partial
-> > mapped pages,
-> > we should pass no. of partial mapped pages to unlock_pages(), not nr_pages.
-> > This will avoid checking extra check to validate the pages[i].
-> >
-> > and if lock_pages() returns 0 in success, anyway we have all the pages[i] valid.
-> > I will try to correct it in v2.
-> >
-> > But I agree, there is no harm to check for pages[i] and I believe,
->
->
-> Generally, it *is* harmful to do unnecessary checks, in most code, but especially
-> in most kernel code. If you can convince yourself that the check for null pages
-> is redundant here, then please let's remove that check. The code becomes then
-> becomes shorter, simpler, and faster.
+Short answer is no, I'm not 100% sure.
 
-I read the code again. I think, this check is needed to handle a scenario when
-lock_pages() return -ENOSPC. Better to keep this check. Let me post v2 of this
-RFC for a clear view.
+The GPU might generate a list of dozens or hundreds of fault entries in the
+same 4K page, or sequential 4K pages, or some other stride.
+A single 2MB mapping might satisfy all of those after calling hmm_range_fault()
+for the first fault entry and then skipping all the other fault entries
+that fall into that range. So mostly, I'm proposing this change because it
+makes handling the compound page case and -EBUSY case simpler.
 
->
->
-> > unpin_user_pages()
-> > is the right place to do so.
-> >
-> > John any thought ?
->
->
-> So far I haven't seen any cases to justify changing the implementation of
-> unpin_user_pages().
->
->
-> thanks,
-> --
-> John Hubbard
-> NVIDIA
+As for performance, that is hard to say because nouveau is missing policies
+for whether to migrate data to GPU memory on a fault or to map system memory.
+Since GPU memory is much higher bandwidth, overall performance
+can be much higher if the data is migrated to the GPU's local memory but
+currently, migration is only performed explicitly under application request
+(via OpenCL clEnqueueSVMMigrateMem() call).
+If the GPU is only accessing system memory a few times, then it can be faster
+to map system memory and not migrate the data so it depends on the application.
+Then there is thrashing to consider if the GPU and CPU are both trying to
+access the same pages...
