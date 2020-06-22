@@ -2,133 +2,64 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBDC2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YYNlxB3U"
+	by mail.kernel.org (Postfix) with ESMTP id A36AF2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbgFVLVy (ORCPT
+        id S1729314AbgFVLXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728664AbgFVLRj (ORCPT
+        Mon, 22 Jun 2020 07:23:10 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:28826 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728918AbgFVLWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:17:39 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C91C061794;
-        Mon, 22 Jun 2020 04:17:38 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id k11so17594466ejr.9;
-        Mon, 22 Jun 2020 04:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TZiwZIrCsEEo6wwyPFdJPE4K71P6aGthJLmX8PuGg2U=;
-        b=YYNlxB3Uju5mOajQTpUA4vt4nTLtkKo0voPP61L+DegsW9AcPKRSvzXweV6r3OZKDS
-         ZPR1tKH6zK2JInKbEmi3gMXOO2R9tmGL45IRX/tOT3pq1pY2tJ/Le0qZvcNfCN5MYYvJ
-         jKdm1rJOiDRG5Hn9FUMmuUO+qJa2cqya3dr2ZQl9bLMTTjEf1kLlwmTnxNUsevwQG4E7
-         mAeXziqLLgNBJrhvQ8Xiib4UU08aWyCVVSnivJm3Vsx4F0zno9jlet3oNyIGO8LSE76j
-         kloffnQrKGSfYFYuXzWcf/MD5XbQB48LfbBYX9sPz5LnuvDng0JgzQj9IDZKbTY7NMaJ
-         mE3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TZiwZIrCsEEo6wwyPFdJPE4K71P6aGthJLmX8PuGg2U=;
-        b=oWWVURlv1qg1usXADoVJPbCYw8ZTwk6JnmTsywjIKLuvjWcq7hnHYGnX4kx80kNNwp
-         Qf3PmFO5pqGzPEdkmpMtDPwOKbUMYW83uH42kZ4aZypHHowvK88qNRjhgpaRh9x4xqx/
-         aaloy1bO0LJ1b93el/lKtEaPWw4QPa82SNNnwMJM1YEQqPlqqNZhQvh+Ua2N/gmm2Aw6
-         0hz9fUGXzm4NiKHKkShPB2urQfZijJNzzknSQobzz9lIhgudwGNr3hYXJMpyq97aGNxd
-         13WnIPPG03pSgIeK/6o0ZFmYK0cQ9E7Sw3PO3xSxnkDmaHGrHYX/iEHgtdnlyWiCVX4/
-         YSsg==
-X-Gm-Message-State: AOAM533rFf936+madbWBOAz1urbJ9pj5AACRsspLm6R0wg2hT8yrFfsq
-        8ZEBjvs5XOCwzNZUgZzCUSKO56tyQ+y6T2voUjo=
-X-Google-Smtp-Source: ABdhPJyP1teXpZMQJBSy6XRfAPiUcGdFA51dFuisvct6xWquwQV7kcR13vg76tHLi5aN+VwYBucVCdFLkuJU6CUrNpU=
-X-Received: by 2002:a17:906:2e50:: with SMTP id r16mr14796322eji.305.1592824657403;
- Mon, 22 Jun 2020 04:17:37 -0700 (PDT)
+        Mon, 22 Jun 2020 07:22:36 -0400
+X-IronPort-AV: E=Sophos;i="5.75,266,1589234400"; 
+   d="scan'208";a="455981487"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:22:33 +0200
+Date:   Mon, 22 Jun 2020 13:22:33 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [v3] coccinelle: misc: add array_size_dup script to detect missed
+ overflow checks
+In-Reply-To: <5f91ec99-5c21-78c2-f484-76a0b5bd3e71@web.de>
+Message-ID: <alpine.DEB.2.22.394.2006221321180.2531@hadrien>
+References: <5f91ec99-5c21-78c2-f484-76a0b5bd3e71@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-References: <20200622110543.5035-1-krzk@kernel.org>
-In-Reply-To: <20200622110543.5035-1-krzk@kernel.org>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 22 Jun 2020 14:17:26 +0300
-Message-ID: <CA+h21hqQLaghmEYso9ZMeJHQuiDMgi5UN9-06je84_0n9iripA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] spi: spi-fsl-dspi: Fix lockup if device is removed
- during SPI transfer
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, Peng Ma <peng.ma@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323329-558735236-1592824953=:2531"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 at 14:06, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> During device removal, the driver should unregister the SPI controller
-> and stop the hardware.  Otherwise the dspi_transfer_one_message() could
-> wait on completion infinitely.
->
-> Additionally, calling spi_unregister_controller() first in device
-> removal reverse-matches the probe function, where SPI controller is
-> registered at the end.
->
-> Fixes: 05209f457069 ("spi: fsl-dspi: add missing clk_disable_unprepare() in dspi_remove()")
-> Cc: <stable@vger.kernel.org>
-> Reported-by: Vladimir Oltean <olteanv@gmail.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+--8323329-558735236-1592824953=:2531
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
+> I suggest to take another look at information from the section
+> “2.4.3. Formatted string literals”.
+> https://docs.python.org/3/reference/lexical_analysis.html#f-strings
 >
-> Changes since v3:
-> 1. New patch.
-> ---
->  drivers/spi/spi-fsl-dspi.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 58190c94561f..ec0fd0d366eb 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -1434,9 +1434,18 @@ static int dspi_remove(struct platform_device *pdev)
->         struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
->
->         /* Disconnect from the SPI framework */
-> +       spi_unregister_controller(dspi->ctlr);
-> +
-> +       /* Disable RX and TX */
-> +       regmap_update_bits(dspi->regmap, SPI_MCR,
-> +                          SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
-> +                          SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
-> +
-> +       /* Stop Running */
-> +       regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
-> +
->         dspi_release_dma(dspi);
->         clk_disable_unprepare(dspi->clk);
-> -       spi_unregister_controller(dspi->ctlr);
->
->         return 0;
->  }
-> --
-> 2.17.1
->
+> This software documentation provides the information “New in version 3.6”.
+> Will such a detail trigger any more software development consequences?
+
+Thanks foor this information.  Denis, would it be possible to express the
+code in a more portable way?
+
+thanks,
+julia
+--8323329-558735236-1592824953=:2531--
