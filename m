@@ -2,127 +2,220 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC63C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0F3620578
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:48:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="T9v7eyd3";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="pvWRUjgN"
+	by mail.kernel.org (Postfix) with ESMTP id C0D562070E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592815737;
+	bh=KEXZv/RiV5DDJWb/evdFcodDSutl7irNtNrxfkNQuGc=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Uxv+y3Kgt14johTqnOaPd5x1+ehVFsBV1UDwYjVX+mX1z5X5uV+eYyWVlN3erUHXR
+	 21lGlrUxoeuA41lZcs26af5X+/vTqfLitkNkxD1Z9Zcjxn/v3SPWdONQmSt4MJzwhe
+	 V5XGK5Jwuyzt4WxS07tcFyfImK9EwAEvOBNH22x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgFVIsb (ORCPT
+        id S1726874AbgFVIs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:48:31 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:55364 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgFVIsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:48:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592815710; x=1624351710;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=T9v7eyd3dMGRfJMFzXtRUDAM6UgOjwQBI+1TxpmFlIc2SPuvJR24TKTk
-   e/one1r1m0SYPCyVxfDCpmEFg6MKhBvnmyI97uOAMbdfzuw6sOKKuT/Sb
-   FvC9dpNWT+C42aVWWXSWR39cTR2I50YOhUMYU9bF30lVCI9rEI+HEJDC0
-   r2y75beocpZxqJ0vENUMMXxw1gf8mO90t9GR0EGza/jY53ez94uNghlUX
-   l3IVEjgTsB9irctXkcnRlv+5tMUDQ26uS3zB6Gs9JzAHADecnHLuf0O2Y
-   suVnWKw9UyXi4ehiwGAnyZ+JlwKMZ5WbgnUK6x/h6fEhBtlaMxlJpP/P0
-   Q==;
-IronPort-SDR: QC8QhPu0yYxW112j9/fXRI78NMalzKXGFzbTG9o776XBzuKaiq3ZgBO0l/FwoLMAS2QG2aDgmQ
- YGtvoNIrJwi2OgkiBjoQhUXP7mrNBl+UtHB2oz8cTFIkWsosqgn2RLAEHKQF4Ea3JfHayDCWnB
- /riuTt6dmH1Pn3+8+xArwnXL89Ievzc/W8iatmxbJ22m+cAKoC504X50jfiRh78Tc52vUS286i
- Ik1E+zvJJbMSYx3KuVYg4xpwyGLQxM5B+qlPadDJVU9S+nu04fUndptRMXyS0udONbaf90ZdG6
- avc=
-X-IronPort-AV: E=Sophos;i="5.75,266,1589212800"; 
-   d="scan'208";a="141967735"
-Received: from mail-co1nam11lp2177.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.177])
-  by ob1.hgst.iphmx.com with ESMTP; 22 Jun 2020 16:48:29 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=grdYkAuzwHNdpJ8Aeb9YZvLniI2nKSIXYWbqV5XTcQBKM0fd/rH0O3F3O/nqZI3cBCQFqhYHNnf5iSiG6VTR8tZZTlffE3YQ1aqwjyjT3uS00kACIZprqGl72DT+6knNn8H9xhFJNZt4CU3VcIy9ALN2Sk4hX35jibpP18sfvUafHFQ4SIlI/aeSj3/IDg0fJQAGn2zMtgHmJbOvQC7Vjf4fT6imWHts00YWWQldmtVCQadmx2OnSjzyfGkBnKKDsADwDRg6LpYC2bBXIgWXZBb9kFmdsehWlz2d9x5TLsuC4w6KdU5unOJLyYBueHyHgoE8Cu+3N/ApbYQPbKbU1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=Nu9zBMm5o7Vw/x5s7r+XOL3Trj68VJqPiZtLP/Pv2/S0FN7flHVXVTt7eBl46qpw1AONumLTczNhzOAV1mPymsj7Ah+YN2yL73Zfhd6M3LXXhbUDv0ML1jdAX8cQM5pGHbKgzUDWidv0URaC7LQspum9jJoXXHGEDnDa91v7PyTgCKOcMxCZSM+Cps/YB1upscyYvXkaf/lTuw1/PcLZeMbTZsKC1LYJxx8ZSWYNVTJjHlYlM1UTmfA1Lx84XYOPucJCvoE7o5x53rH17Fjk4a5bA97Kbd56xMylSXV2QgtAv7wDqBdVhME2koF+RVZEG9nC4KRskGiyyyNaaKkTag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=pvWRUjgNkiAHzONJQmR+5WFW8AZ2lNEoHmAEhMYOACJ1JH8qU/LqYzegnitOgLFaBAnMHFR8E0dfMISFMG6DbBjKrMJvrT+XfZ3jaWhxAWIM/JiBOQOUPY1HaSzUt9GaC+OuP0fibO5sgGuH/bZAltlRaMD6nX5jrju37OKUX04=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB5117.namprd04.prod.outlook.com
- (2603:10b6:805:93::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
- 2020 08:48:27 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 08:48:27 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/10] tty/sysrq: emergency_thaw_all does not depend on
- CONFIG_BLOCK
-Thread-Topic: [PATCH 01/10] tty/sysrq: emergency_thaw_all does not depend on
- CONFIG_BLOCK
-Thread-Index: AQHWRtLphugdjNLhv0apVJxBOmyRIw==
-Date:   Mon, 22 Jun 2020 08:48:27 +0000
-Message-ID: <SN4PR0401MB3598E7924C3F8B9BFC308EC89B970@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200620071644.463185-1-hch@lst.de>
- <20200620071644.463185-2-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1597:de01:e494:6330:3987:7eb6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5d042d5c-1ace-4c6c-a342-08d816890840
-x-ms-traffictypediagnostic: SN6PR04MB5117:
-x-microsoft-antispam-prvs: <SN6PR04MB5117DD8537A53CD9136919739B970@SN6PR04MB5117.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 0442E569BC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tx240AA/fVMH5RJpTYLwGLGr6ksBjovkVx9cMZVHpvcMZjdXjPxIuUDaCrRLXq/Uz803Ep4sSYhvdz6G0txNBa7td8oBpucvZH/SerJ7j//nu5lqF2abvj7K0rt/R6srwDOa1svAhQNxUXfadkcxGQ/FUvV9JjHnE0Q5o4yBkUEXk9y/ZT2zxxwZhMqAPqYc8+tMf7sBowoy6qpmnQBUDckTZUw/uP6i0a3SE2h10LUyGSmJ4zko9KaoiFEcD6DBpZScTYoy92O+xK/w+H5fDMxFYIuD5Ts9ZizssgawvoEhzwI8RawWZ3/zIkhU5NThoQtA5bdd5mZqshH0QNYarA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(478600001)(5660300002)(52536014)(76116006)(8676002)(91956017)(54906003)(66446008)(66946007)(8936002)(110136005)(19618925003)(4270600006)(316002)(66556008)(64756008)(66476007)(558084003)(9686003)(4326008)(33656002)(86362001)(186003)(6506007)(55016002)(2906002)(7696005)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: UOHRoKh9hbTP+1fwhGOT1ENPYQBUKB9e387M7uxvnhcZEimzyqwMSmnMfMaEeqTnMZKdDf9giJ0+OsEpcSp2pUAx9uvx7RbadrFa1coXBY714mtuRE5OSA0d78GnvbfveiVDp8S6tbMMHE0u8bHdD4SAxx5pITUMAlIGF7bdxwgXWrFto1qehvZCNAhH0i20vITAwPB6DYGiNVxXTd+rZfocXrj86WH2h669YmBEdYCM9JRd1Iq3FwYsxHs+cyo2D4Acs2XpbJpr6vVwDLmZr2vcJAtNyM5Pggp2syb8ygYZnIpqf5IwqkpBTu419DhmbUp0C2Kjd9cAzzkcB8eGaHXnkvNDoZvm1aLv7sIrs5nn9Rnf2SRJozyuIn4Zu7tCs2UHMnKiJ6qlcas8EXFwK6w8ItiuEGMN0Mlk9QIQgA2YLHd276t3fwbBCX+M93K1dRrLqZRhBRxdVIorj4uEqAoJQM3wIcsOuw+7eiKpYFIcOcFAUH5KlF59O2Ca2UW2Sk7F4PyQaOW+ffs+6rePVPGZ3Dj4rAf5qWtdHeis/3hdFHq9KSGAON0rRnK7iqPk
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 22 Jun 2020 04:48:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgFVIsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 04:48:55 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 941D820578;
+        Mon, 22 Jun 2020 08:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592815734;
+        bh=KEXZv/RiV5DDJWb/evdFcodDSutl7irNtNrxfkNQuGc=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=07mCxkHW4Bn9uIFnzMCrcbaZOcG/fGCicgGBYXseNN1mcPeo+NxhOAU8ZxINZVEVb
+         EUVpBOjFptfcTqv4dta8awALUO8g3V4B4Z/cj1oG6U2l9B7wvaR2e38fbyOneTr5Q0
+         tkZrHrMnrVonQSFBRx1miW0iZIUHTCltZrGv0gYk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d042d5c-1ace-4c6c-a342-08d816890840
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 08:48:27.6292
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fZVuU19LJnpUy0wfhbZPS2solwhXXGNkTRNcjUjAmInmqv1LzhIiSbO/OceLzZCoYLLjG6V7E2o+nV3GPNEGOCWde5WfNHU+UJ8wbWH3on0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5117
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200622075749.21925-5-konradybcio@gmail.com>
+References: <20200622075749.21925-1-konradybcio@gmail.com> <20200622075749.21925-5-konradybcio@gmail.com>
+Subject: Re: [PATCH v2 4/8] clk: qcom: smd: Add support for SDM660 rpm clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+To:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl
+Date:   Mon, 22 Jun 2020 01:48:53 -0700
+Message-ID: <159281573385.62212.14646958691369932904@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+Quoting Konrad Dybcio (2020-06-22 00:57:42)
+> Add rpm smd clocks, PMIC and bus clocks which are required on
+> SDM630/660 (and APQ variants) for clients to vote on.
+>=20
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+
+Just minor nits. Please resend without the other dts and SoC things and
+trim the Cc list way down. Thanks.
+
+> ---
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+>  drivers/clk/qcom/clk-smd-rpm.c                | 77 +++++++++++++++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h        | 10 +++
+>  3 files changed, 88 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Doc=
+umentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> index 90a1349bc713..2ced7807d574 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> @@ -20,6 +20,7 @@ Required properties :
+>                         "qcom,rpmcc-msm8996", "qcom,rpmcc"
+>                         "qcom,rpmcc-msm8998", "qcom,rpmcc"
+>                         "qcom,rpmcc-qcs404", "qcom,rpmcc"
+> +                        "qcom,rpmcc-sdm660", "qcom,rpmcc"
+
+This one looks right, but indented incorrectly?
+
+> =20
+>  - #clock-cells : shall contain 1
+> =20
+> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rp=
+m.c
+> index 52f63ad787ba..4ae9e79e602e 100644
+> --- a/drivers/clk/qcom/clk-smd-rpm.c
+> +++ b/drivers/clk/qcom/clk-smd-rpm.c
+> @@ -766,15 +766,92 @@ static const struct rpm_smd_clk_desc rpm_clk_msm899=
+8 =3D {
+>         .num_clks =3D ARRAY_SIZE(msm8998_clks),
+>  };
+> =20
+> +/* sdm660 */
+> +DEFINE_CLK_SMD_RPM_BRANCH(sdm660, bi_tcxo, bi_tcxo_a, QCOM_SMD_RPM_MISC_=
+CLK, 0,
+> +                                                               19200000);
+> +DEFINE_CLK_SMD_RPM(sdm660, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1=
+);
+> +DEFINE_CLK_SMD_RPM(sdm660, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2=
+);
+> +DEFINE_CLK_SMD_RPM(sdm660, cnoc_periph_clk, cnoc_periph_a_clk,
+> +                                               QCOM_SMD_RPM_BUS_CLK, 0);
+> +DEFINE_CLK_SMD_RPM(sdm660, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0=
+);
+> +DEFINE_CLK_SMD_RPM(sdm660, mmssnoc_axi_clk, mmssnoc_axi_a_clk,
+> +                                                  QCOM_SMD_RPM_MMAXI_CLK=
+, 0);
+> +DEFINE_CLK_SMD_RPM(sdm660, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
+> +DEFINE_CLK_SMD_RPM(sdm660, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
+> +DEFINE_CLK_SMD_RPM(sdm660, aggre2_noc_clk, aggre2_noc_a_clk,
+> +                                               QCOM_SMD_RPM_AGGR_CLK, 2);
+> +DEFINE_CLK_SMD_RPM_QDSS(sdm660, qdss_clk, qdss_a_clk,
+> +                                               QCOM_SMD_RPM_MISC_CLK, 1);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, rf_clk1, rf_clk1_a, 4);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, div_clk1, div_clk1_a, 11);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, ln_bb_clk1, ln_bb_clk1_a, 1);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, ln_bb_clk2, ln_bb_clk2_a, 2);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm660, ln_bb_clk3, ln_bb_clk3_a, 3);
+> +
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(sdm660, rf_clk1_pin, rf_clk1_a_pin,=
+ 4);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(sdm660, ln_bb_clk1_pin,
+> +                                                       ln_bb_clk1_pin_a,=
+ 1);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(sdm660, ln_bb_clk2_pin,
+> +                                                       ln_bb_clk2_pin_a,=
+ 2);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(sdm660, ln_bb_clk3_pin,
+> +                                                       ln_bb_clk3_pin_a,=
+ 3);
+> +static struct clk_smd_rpm *sdm660_clks[] =3D {
+> +       [RPM_SMD_XO_CLK_SRC] =3D &sdm660_bi_tcxo,
+> +       [RPM_SMD_XO_A_CLK_SRC] =3D &sdm660_bi_tcxo_a,
+> +       [RPM_SMD_SNOC_CLK] =3D &sdm660_snoc_clk,
+> +       [RPM_SMD_SNOC_A_CLK] =3D &sdm660_snoc_a_clk,
+> +       [RPM_SMD_CNOC_CLK] =3D &sdm660_cnoc_clk,
+> +       [RPM_SMD_CNOC_A_CLK] =3D &sdm660_cnoc_a_clk,
+> +       [RPM_SMD_CNOC_PERIPH_CLK] =3D &sdm660_cnoc_periph_clk,
+> +       [RPM_SMD_CNOC_PERIPH_A_CLK] =3D &sdm660_cnoc_periph_a_clk,
+> +       [RPM_SMD_BIMC_CLK] =3D &sdm660_bimc_clk,
+> +       [RPM_SMD_BIMC_A_CLK] =3D &sdm660_bimc_a_clk,
+> +       [RPM_SMD_MMSSNOC_AXI_CLK] =3D &sdm660_mmssnoc_axi_clk,
+> +       [RPM_SMD_MMSSNOC_AXI_CLK_A] =3D &sdm660_mmssnoc_axi_a_clk,
+> +       [RPM_SMD_IPA_CLK] =3D &sdm660_ipa_clk,
+> +       [RPM_SMD_IPA_A_CLK] =3D &sdm660_ipa_a_clk,
+> +       [RPM_SMD_CE1_CLK] =3D &sdm660_ce1_clk,
+> +       [RPM_SMD_CE1_A_CLK] =3D &sdm660_ce1_a_clk,
+> +       [RPM_SMD_AGGR2_NOC_CLK] =3D &sdm660_aggre2_noc_clk,
+> +       [RPM_SMD_AGGR2_NOC_A_CLK] =3D &sdm660_aggre2_noc_a_clk,
+> +       [RPM_SMD_QDSS_CLK] =3D &sdm660_qdss_clk,
+> +       [RPM_SMD_QDSS_A_CLK] =3D &sdm660_qdss_a_clk,
+> +       [RPM_SMD_RF_CLK1] =3D &sdm660_rf_clk1,
+> +       [RPM_SMD_RF_CLK1_A] =3D &sdm660_rf_clk1_a,
+> +       [RPM_SMD_DIV_CLK1] =3D &sdm660_div_clk1,
+> +       [RPM_SMD_DIV_A_CLK1] =3D &sdm660_div_clk1_a,
+> +       [RPM_SMD_LN_BB_CLK] =3D &sdm660_ln_bb_clk1,
+> +       [RPM_SMD_LN_BB_A_CLK] =3D &sdm660_ln_bb_clk1_a,
+> +       [RPM_SMD_LN_BB_CLK2] =3D &sdm660_ln_bb_clk2,
+> +       [RPM_SMD_LN_BB_CLK2_A] =3D &sdm660_ln_bb_clk2_a,
+> +       [RPM_SMD_LN_BB_CLK3] =3D &sdm660_ln_bb_clk3,
+> +       [RPM_SMD_LN_BB_CLK3_A] =3D &sdm660_ln_bb_clk3_a,
+> +       [RPM_SMD_RF_CLK1_PIN] =3D &sdm660_rf_clk1_pin,
+> +       [RPM_SMD_RF_CLK1_A_PIN] =3D &sdm660_rf_clk1_a_pin,
+> +       [RPM_SMD_LN_BB_CLK1_PIN] =3D &sdm660_ln_bb_clk1_pin,
+> +       [RPM_SMD_LN_BB_CLK1_A_PIN] =3D &sdm660_ln_bb_clk1_pin_a,
+> +       [RPM_SMD_LN_BB_CLK2_PIN] =3D &sdm660_ln_bb_clk2_pin,
+> +       [RPM_SMD_LN_BB_CLK2_A_PIN] =3D &sdm660_ln_bb_clk2_pin_a,
+> +       [RPM_SMD_LN_BB_CLK3_PIN] =3D &sdm660_ln_bb_clk3_pin,
+> +       [RPM_SMD_LN_BB_CLK3_A_PIN] =3D &sdm660_ln_bb_clk3_pin_a,
+> +};
+> +
+> +static const struct rpm_smd_clk_desc rpm_clk_sdm660 =3D {
+> +       .clks =3D sdm660_clks,
+> +       .num_clks =3D ARRAY_SIZE(sdm660_clks),
+> +};
+> +
+>  static const struct of_device_id rpm_smd_clk_match_table[] =3D {
+>         { .compatible =3D "qcom,rpmcc-msm8916", .data =3D &rpm_clk_msm891=
+6 },
+>         { .compatible =3D "qcom,rpmcc-msm8974", .data =3D &rpm_clk_msm897=
+4 },
+>         { .compatible =3D "qcom,rpmcc-msm8976", .data =3D &rpm_clk_msm897=
+6 },
+>         { .compatible =3D "qcom,rpmcc-msm8996", .data =3D &rpm_clk_msm899=
+6 },
+>         { .compatible =3D "qcom,rpmcc-msm8998", .data =3D &rpm_clk_msm899=
+8 },
+> +       { .compatible =3D "qcom,rpmcc-sdm660",  .data =3D &rpm_clk_sdm660=
+  },
+
+Should come last, because s comes after q.
+
+>         { .compatible =3D "qcom,rpmcc-qcs404",  .data =3D &rpm_clk_qcs404=
+  },
+>         { }
+>  };
+> +
+
+Drop this diff.
+
+>  MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
+> =20
+>  static struct clk_hw *qcom_smdrpm_clk_hw_get(struct of_phandle_args *clk=
+spec,
