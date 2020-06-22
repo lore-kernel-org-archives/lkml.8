@@ -2,396 +2,155 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05715C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CADC62542E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7072542E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mkRAbfJy"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="mPJZBVRB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgFVGvx (ORCPT
+        id S1731269AbgFVGwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbgFVGvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 02:51:52 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4707DC061795
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 23:51:52 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k6so2959060wrn.3
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jun 2020 23:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=W5AE71tZZBH3wMZqXScLr5DwjRMl7db4uGp55HYU/Dg=;
-        b=mkRAbfJyRJ7KB0LHXsgpwG0CiAa/P/5/iO3acaUyyEjBJWz4t0BYUHyFFq16t71gpa
-         lq7DGrVrVA3x2kNPZibjjjqM3t/FUqaeo9Ebm3wAvV5NsH5JlMDBscU5KSy2NDXPFJx7
-         4pgDpFHbMgmOvNya9PPfnvDYgp75cBs3mvd/jObzGtoS9L6rQ2wM6dJO9YYIIgzSAMys
-         tT9fziU0OsjO9B546XMkNp+uDKFvERcbuA6vmbuE8x4WuEXnwFsTy4Cq2a36K5AJ4OuM
-         8u7tWgJ5Igilq3sBA50cAkCwvSKL1FU3ZLVdEtJ9wGF13SAO6KGJGaT9BzLMoVIT+o1p
-         4gfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=W5AE71tZZBH3wMZqXScLr5DwjRMl7db4uGp55HYU/Dg=;
-        b=aBgjEpXMCp8tkmLtNpJtnzYmBNh5XRVpEoTMprxDrwpSXHSAYy755oB7YXS8rtg9D5
-         DBgFE627kTN7XF94kifVdL3KHNn1u+rlc9qLY+3pnORLaIvqdkvD/beRiZwEQkfOoGPR
-         u/L5kkjlUix1CUP2TxsIGJYXQJGMfjIT6IiWJvrLkgvlCFp32dVcE8vf4n20sFbo620T
-         IqNflbD/20dVlwUSFG6QmXC1p4oJLquh4RXQ9hM7eONRhgrQOGXEsUMvd3ZtCWISke3c
-         CIT/jMB135MnK2kTkmEIt8o9NUQOmY21vSX9nJuFJm6+c2PVJopGiiHhVOz4iNs+2xaQ
-         4X1A==
-X-Gm-Message-State: AOAM532OC6WzP7qzPcHRR4GU+t3MH7clNirf+15iDf918gYRxo+UcR/4
-        trn9JLXPs9TUXZlQyMeS8mGS39i+hmU=
-X-Google-Smtp-Source: ABdhPJy2NI2zalF1V+ZM6SKNVjk0PGxNFAKbw2Rolxk072PMdRub9lrhpJE/fzmAZMk22FQG02nS+g==
-X-Received: by 2002:a5d:4d89:: with SMTP id b9mr18647943wru.210.1592808710687;
-        Sun, 21 Jun 2020 23:51:50 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 104sm16720609wrl.25.2020.06.21.23.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 23:51:49 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 07:51:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] mfd: ene-kb3930: Add driver for ENE KB3930
- Embedded Controller
-Message-ID: <20200622065148.GM954398@dell>
-References: <20200617110829.1036898-1-lkundrak@v3.sk>
- <20200617110829.1036898-3-lkundrak@v3.sk>
+        Mon, 22 Jun 2020 02:52:09 -0400
+Received: from mout.web.de ([212.227.15.14]:53021 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726759AbgFVGwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 02:52:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592808670;
+        bh=9iOSO4KLAd/1THwTxg/hUqNUPF6Lv8cPp6yA4is/Ek0=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=mPJZBVRBPIw/aqyGan+EWfUl85rO33/SQnyTIRJLFdj/PCx4yVP3YcMnjrSqdEVZz
+         CaTnpDxjW7rMEAYfZ58SxWcayOTRl8UuD3mUEBz69KOxuERXWkzpZsImuR9/SSDQiA
+         fMV7H7sZVCkAFm5VNMgyJ4M9FZzMZLbBMFAWK2zY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.69.81]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LlsUC-1jECWk2Cky-00ZLby; Mon, 22
+ Jun 2020 08:51:10 +0200
+Subject: Re: [PATCH] arch/x86: Check return value from a notify_die() call
+To:     Bo YU <tsu.yubo@gmail.com>, kernel-janitors@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <ee99271a-6eb5-0dec-87d2-504b3ad4724d@web.de>
+ <CAKq8=3LaX0tWs0BfdpCYvKRRz5Cqv4cOXo1wcVvpY72cQA8RGA@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <615f79c5-5ca8-9dad-9ef7-85d8513a3e1b@web.de>
+Date:   Mon, 22 Jun 2020 08:50:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <CAKq8=3LaX0tWs0BfdpCYvKRRz5Cqv4cOXo1wcVvpY72cQA8RGA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617110829.1036898-3-lkundrak@v3.sk>
+Content-Language: en-GB
+X-Provags-ID: V03:K1:uZsiGn3jM1fIowQ+wi1x7tZpPlpcw1TAwvp8KTFCsN8Tvtcwzn+
+ pcZEKJy9JfwY6hwJ1jJOmbjEx3Z8VSF6uq7ExEvMF+V0Yvsj3QdHOI61cUu6vKgdMvlsXdY
+ Y1FlXCCGuOXKZlk0xPh65QJL9gC6KtlhMvcRbx90A+HU1i6msqngYG4iRRMoHKZhEhcpVCY
+ HqkHrsHB6iMShNWBkHT4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:H6iL6OPXA+A=:8HB+SajW6BivW0zJIcBvPu
+ DWJboVWZq1xtdMuRs9VGZg+E5ToA9jXllnV9MyfYvay7cisy12xavde8/uTaXfTjBGRzr/Ijq
+ uGBUc588sZ4+6AZBuZMGFu2U2xSv/o6y6+ZCVxPC3KB5i0XFwRVSHaFqU102Kx+hT3pJNtTjC
+ 9NeQHPk7KOTTYTUvCwlSxvtDMxoVjSmJtcr5cB/VML2sb5MTcZnuDkLraUs9mb2L4r+ARF6si
+ hlY+jtXDtVs6EkWgBGyEb7Hr0sai+owyIXRGYy1TgwnEA4KyB5N/zXEZiID8KLiDEX3vOD4Ag
+ GveMAQPuYOYS7nUY9q+y9uPcVkUz0Tkybnlc114vW5t2prmtlGDCosDWhUjdVZII/rUGXUuJY
+ EGpCfkMSTECfA/7XY7DL9c55N8JC8LCzAWxxjtFqmHBD6ed7V8cwfGPFtDn8vbFFAjNw2Z0OW
+ SuyRe4W4vO24kvi17Yt7bYcEKH09XgzOY53T/Uft/5oqA/994cQQsf7BtKLg+tIphNCGPtkFl
+ yDUafCioFQIvNlm9+rUWkLDwjQPb2dvbdtK7J201gwYmq3x7S2jg1PlvRxEzerNt63siSWLkB
+ cANfLN1V9j5cHGq/6URUP8erzW2bUR23w1NNXZDu3npWKCyV+b86IICdLbNEd7Gvnv7HO0wIf
+ Ol+D/vvYrk9Z/lk7a44hPHGl74IHFUp1e7GzTv09WE4y/o73OvdIkqzH8mnB+JxX1Bq6QlY7M
+ smda6GsTsOpPB+9alVxGKt+R4E8vQigd8985YWYgKoMNA5x/lGVQG0hg9NcxnrH9P3j0gqggm
+ lYmwciNb4B0TeMPtofZ2cU88dM80K96Lotz3ugY3FWAM7EQ0kE1iHHShWqxsCHqdQl5NarmEQ
+ fAOiaONiQSmZscaeza7sEYjgmR75igcfUam10gr+7V42h7zHO196lNq4tdoA/kzel0RywQYrq
+ BRgq6PKXLkLzjEiG7LPnIdPfHx07ztR+pdr4Dz5xBEX+vKGI47vHAKwLiEU2B9IvKKhuxVq0P
+ kRZ9zkNzWsrUZkRTTc4gSl0IanCjaexluqryHOpAmycS53bin8fUzZ2SyXPyGNe2ZQq55pzJ6
+ Mh/i2bkOJ9BbgB0GyXO1MtB1KNL+1REFYagGaS4HCVYZSMfunfgT4P6qIarLg4xaBS4RmadfX
+ nVssrp0XnOV4uCiqJZNcszy5DIIm2TpRD7u1HxE9uBYInsU3CFXJtIBNW4Qv+EpEVSqYdPX34
+ ffmHkCsx27/VEd3h/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020, Lubomir Rintel wrote:
+>>> This is detected by Coverity scan: #CID: 1464472(CHECKED_RETURN)
 
-> This driver provides access to the EC RAM of said embedded controller
-> attached to the I2C bus as well as optionally supporting its slightly weird
-> power-off/restart protocol.
-> 
-> A particular implementation of the EC firmware can be identified by a
-> model byte. If this driver identifies the Dell Ariel platform, it
-> registers the appropriate cells.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v3:
-> - Clarify that the power-off function is provided by this driver while
->   LEDS_ARIEL is necessary to drive the leds in Kconfig help text
-> - s/kb3930_power_off/kb3930_pm_power_off/, s/global_kb3930/kb3930_power_off/
-> - Don't fail with -EEXIST with more than one instance
-> - s/ret < 0/ret/ for devm_mfd_add_devices() return value
-> - Drop a \n between struct i2c_driver and module_i2c_driver()
-> 
-> Changes since v2:
-> - Sort the includes
-> - s/EC_MODEL_ID/EC_MODEL/
-> - Add a couple of clarifying comments
-> - Use #defines for values used in poweroff routine
-> - Remove priority from a restart notifier block
-> - s/priv/ddata/
-> - s/ec_ram/ram_regmap/ for the regmap name
-> - Fix the error handling when getting off gpios was not successful
-> - Remove a useless dev_info at the end of probe()
-> - Use i2c probe_new() callback, drop i2c_device_id
-> - Modify the logic in checking the model ID
+Can an additional imperative wording be helpful for the change description
+(besides an adjusted patch subject)?
 
-Much better.  Just a couple of nits to fix.
 
->  drivers/mfd/Kconfig      |  11 ++
->  drivers/mfd/Makefile     |   1 +
->  drivers/mfd/ene-kb3930.c | 211 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 223 insertions(+)
->  create mode 100644 drivers/mfd/ene-kb3930.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index a37d7d1713820..7569f1d1703e3 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -398,6 +398,17 @@ config MFD_DLN2
->  	  etc. must be enabled in order to use the functionality of
->  	  the device.
->  
-> +config MFD_ENE_KB3930
-> +	tristate "ENE KB3930 Embedded Controller support"
+>>> FIXES: c94082656dac7(x86: Use enum instead of literals for trap values)
+>>
+>> Is the following tag specification more appropriate?
+>>
+>> Fixes: c94082656dac7 ("x86: Use enum instead of literals for trap values")
+> Your description looks like more appropriate, thank you.
 
-What is "ENE"?
+Thanks for your positive feedback.
 
-> +	depends on I2C
-> +	depends on MACH_MMP3_DT || COMPILE_TEST
-> +	select MFD_CORE
-> +	help
-> +	  This adds support for the power-off functionality and access to
-> +	  the registers that control LEDS and USB port power on ENE KB3930
-> +	  Embedded Controller. To use the LED functionality LEDS_ARIEL must
-> +	  be enabled.
-> +
->  config MFD_EXYNOS_LPASS
->  	tristate "Samsung Exynos SoC Low Power Audio Subsystem"
->  	depends on ARCH_EXYNOS || COMPILE_TEST
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9367a92f795a6..11085a6968398 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
->  obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
->  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
->  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
-> +obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
->  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
->  obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
->  
-> diff --git a/drivers/mfd/ene-kb3930.c b/drivers/mfd/ene-kb3930.c
-> new file mode 100644
-> index 0000000000000..75eced148ce53
-> --- /dev/null
-> +++ b/drivers/mfd/ene-kb3930.c
-> @@ -0,0 +1,211 @@
-> +// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
-> +/*
-> + * ENE KB3930 Embedded Controller Driver
-> + *
-> + * Copyright (C) 2020 Lubomir Rintel
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/reboot.h>
-> +#include <linux/regmap.h>
-> +
-> +/* I2C registers that are multiplexing access to the EC RAM. */
-> +enum {
-> +	EC_DATA_IN	= 0x00,
-> +	EC_RAM_OUT	= 0x80,
-> +	EC_RAM_IN	= 0x81,
-> +};
-> +
-> +/* EC RAM registers. */
-> +enum {
-> +	EC_MODEL	= 0x30,
-> +	EC_VERSION_MAJ	= 0x31,
-> +	EC_VERSION_MIN	= 0x32,
-> +};
-> +
-> +struct kb3930 {
-> +	struct i2c_client *client;
-> +	struct regmap *ram_regmap;
-> +	struct gpio_descs *off_gpios;
-> +};
-> +
-> +struct kb3930 *kb3930_power_off;
-> +
-> +#define EC_GPIO_WAVE		0
-> +#define EC_GPIO_OFF_MODE	1
-> +
-> +#define EC_OFF_MODE_REBOOT	0
-> +#define EC_OFF_MODE_POWER	1
-> +
-> +static void kb3930_off(struct kb3930 *ddata, int off_mode)
-> +{
-> +	gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_OFF_MODE],
-> +			       off_mode);
-> +
-> +	/*
-> +	 * The EC initiates a shutdown when it detects a 10 MHz wave, inspecting the
-> +	 * other GPIO pin to decide whether it's supposed to turn the power off or
-> +	 * reset the board.
-> +	 */
-> +	while (1) {
-> +		mdelay(50);
-> +		gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_WAVE], 0);
-> +		mdelay(50);
-> +		gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_WAVE], 1);
-> +	}
 
-The comment describes what the EC is expecting, but says nothing about
-what these lines of code do, or why they're required.
+> But I want to receive suggestions from other reviewers also. So I will
+> send V2 patch as your point once got confirmed. Sorry.
 
-> +}
-> +
-> +static int kb3930_restart(struct notifier_block *this,
-> +			  unsigned long mode, void *cmd)
-> +{
-> +	kb3930_off(kb3930_power_off, EC_OFF_MODE_REBOOT);
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static void kb3930_pm_power_off(void)
-> +{
-> +	kb3930_off(kb3930_power_off, EC_OFF_MODE_POWER);
-> +}
-> +
-> +static struct notifier_block kb3930_restart_nb = {
-> +	.notifier_call = kb3930_restart,
-> +};
-> +
-> +static const struct mfd_cell ariel_ec_cells[] = {
-> +	{ .name = "dell-wyse-ariel-led", },
-> +	{ .name = "dell-wyse-ariel-power", },
-> +};
-> +
-> +static int kb3930_ec_ram_reg_write(void *context, unsigned int reg,
-> +				   unsigned int val)
-> +{
-> +	struct kb3930 *ddata = context;
-> +
-> +	return i2c_smbus_write_word_data(ddata->client, EC_RAM_OUT,
-> +					 (val << 8) | reg);
-> +}
-> +
-> +static int kb3930_ec_ram_reg_read(void *context, unsigned int reg,
-> +				  unsigned int *val)
-> +{
-> +	struct kb3930 *ddata = context;
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_word_data(ddata->client, EC_RAM_IN, reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = i2c_smbus_read_word_data(ddata->client, EC_DATA_IN);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = ret >> 8;
-> +	return 0;
-> +}
-> +
-> +static const struct regmap_config kb3930_ram_regmap_config = {
-> +	.name = "ec_ram",
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.reg_stride = 1,
-> +	.max_register = 0xff,
-> +	.reg_write = kb3930_ec_ram_reg_write,
-> +	.reg_read = kb3930_ec_ram_reg_read,
-> +	.fast_io = false,
-> +};
-> +
-> +static int kb3930_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct kb3930 *ddata;
-> +	unsigned int model;
-> +	int ret;
-> +
-> +	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
-> +	if (!ddata)
-> +		return -ENOMEM;
-> +
-> +	kb3930_power_off = ddata;
-> +	ddata->client = client;
-> +	i2c_set_clientdata(client, ddata);
-> +
-> +	ddata->ram_regmap = devm_regmap_init(dev, NULL, ddata,
-> +					     &kb3930_ram_regmap_config);
-> +	if (IS_ERR(ddata->ram_regmap))
-> +		return PTR_ERR(ddata->ram_regmap);
-> +
-> +	ret = regmap_read(ddata->ram_regmap, EC_MODEL, &model);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Currently we only support the cells present on Dell Ariel model. */
-> +	if (model != 'J') {
-> +		dev_err(dev, "unknown board model: %02x\n", model);
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* These are the cells valid for model == 'J' only. */
+Should the confirmation be sufficient from the available software documentation?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=625d3449788f85569096780592549d0340e9c0c7#n183
 
-The previous comment makes this superfluous.
+I am curious if this patch review will clarify more aspects.
 
-> +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
-> +				   ariel_ec_cells,
-> +				   ARRAY_SIZE(ariel_ec_cells),
-> +				   NULL, 0, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (of_property_read_bool(np, "system-power-controller")) {
-> +		ddata->off_gpios =
-> +			devm_gpiod_get_array_optional(dev, "off", GPIOD_IN);
-> +		if (IS_ERR(ddata->off_gpios))
-> +			return PTR_ERR(ddata->off_gpios);
-> +		if (ddata->off_gpios->ndescs < 2) {
-> +			dev_err(dev, "invalid off-gpios property\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-
-'\n' here.
-
-> +	if (ddata->off_gpios) {
-> +		register_restart_handler(&kb3930_restart_nb);
-> +		if (pm_power_off == NULL)
-
-if (!pm_power_off)
-
-> +			pm_power_off = kb3930_pm_power_off;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int kb3930_remove(struct i2c_client *client)
-> +{
-> +	struct kb3930 *ddata = i2c_get_clientdata(client);
-> +
-> +	if (ddata->off_gpios) {
-> +		if (pm_power_off == kb3930_pm_power_off)
-> +			pm_power_off = NULL;
-> +		unregister_restart_handler(&kb3930_restart_nb);
-> +	}
-> +	kb3930_power_off = NULL;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id kb3930_dt_ids[] = {
-> +	{ .compatible = "ene,kb3930" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, kb3930_dt_ids);
-> +
-> +static struct i2c_driver kb3930_driver = {
-> +	.probe_new = kb3930_probe,
-> +	.remove = kb3930_remove,
-> +	.driver = {
-> +		.name = "ene-kb3930",
-> +		.of_match_table = of_match_ptr(kb3930_dt_ids),
-> +	},
-> +};
-> +module_i2c_driver(kb3930_driver);
-> +
-> +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-> +MODULE_DESCRIPTION("ENE KB3930 Embedded Controller Driver");
-> +MODULE_LICENSE("Dual BSD/GPL");
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards,
+Markus
