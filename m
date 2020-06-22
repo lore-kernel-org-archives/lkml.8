@@ -2,111 +2,147 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17069C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06A7D2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA582076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uDb/6m6q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1DlWOIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgFVUCZ (ORCPT
+        id S1728629AbgFVUCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52484 "EHLO
+        Mon, 22 Jun 2020 16:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbgFVUCP (ORCPT
+        with ESMTP id S1728482AbgFVUC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:02:15 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28646C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:44:55 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id a137so16733780oii.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:44:55 -0700 (PDT)
+        Mon, 22 Jun 2020 16:02:28 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4867DC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:02:28 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id s13so14201315otd.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 13:02:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mg5y3to7GQinVmHOzDaJ7XV7WqxlCDc/TMo6EnpGcTs=;
-        b=uDb/6m6qlj0PFysttennBODak4mm4qQYqd03MDZ1R33VQaWr4CXcIWuW+N7oowKUbF
-         p/oFBS3BbFxCJCG9pp24WhMgvUKl/t9LrlfGnUet39at5E5hYfbcZOnMKzhNiLRgC8Ag
-         NNR69Ib8p3Lw6dkFk+09kWRsu/7gEou0cOaeUPk3Aa5zNv5yEf9gY81qrBpajY2AheMH
-         5K+RWOWuy+YxqTz+vRkg+PsgBnKgUDGAv/OlMOB0NbI1g7KeB4u4AB51sMu9IxvGHJCX
-         9980XBEVvVrQMuSsLWfdeyoyHDyXOcY6SZ/YY2OfJ9YzflF7AQ2knlug0YsF8FnLkqm6
-         4Gsw==
+         :cc;
+        bh=AlYKYXzcMv9BOPw1annEKLuHXEQQjMbSoxaUi+SHOLc=;
+        b=a1DlWOIFce+lAwR9uUnCAaEdNUPzRDELBo3GobG/t4Q+sUpyoCJht8jshG1hqpAlWI
+         wJUMVq+s9I5abhW13Mnkw6fMzEuC7otNASbPgnZPUp3Up9hzUudS3AB/SoXjQuvVSIRx
+         x8O5WT5bmaSiFj4R09vAr7aG6InGEa5JUVU9mm+nmOlpSKhDlsjSe+RyArqpzT1H3RuK
+         tLoxQP4HEKImhvYk+Py0UpbGvr50L66L6hgAZCH4fcXq4vnI+lTPXuKzELmJGggm8GR7
+         jHaJ5WXa4VYFcnRLqilmTQAgJv/x0VzLc75ZpuLeSOe7m4gj1GrV/n0gw72myXxagRRi
+         o9LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mg5y3to7GQinVmHOzDaJ7XV7WqxlCDc/TMo6EnpGcTs=;
-        b=ZTJ/N8tgtdDZxQpuiTCSykSWGIYPmPvt/ow72LNJh+kyux2DMhYW9lpKHad8usNAu7
-         gJv4rUHueyJP7jxCGbKTwbHcalt2gfORUxSIkDXgeY+YhhwJoCEydTiWGlxRs/NrTDZB
-         aNRGM2XNlKtHT+B72O/Kcr2SOJN9KTywweixD5o0PsFhr8sz2F56E42lhJBXrN64K/eZ
-         AXD/U2yYcrYAbg6gAviHA9kSkQ0U4vjoVe0ex8/1bZSUmAhJOzaWfOa76oX+B1Nq4pGw
-         bsvu28VwRaY3nRBjrh4uUlEAAZ2a5+hrozlWT8qQnZWHipbJgsRPr367dlbFg3AVvpG+
-         /Y8g==
-X-Gm-Message-State: AOAM531V4p9/sBozb4nCqpy9eilRXfCI9Y0TmQNQbuaEnhJhIAj9Gf//
-        TniBG0WgDqh6vBaZZEmZafplQPvWbvRde0pXHmwfLg==
-X-Google-Smtp-Source: ABdhPJy3zt3r18SZTCCHa918AxYLYtT476CxByuaL4koYHT2akdNKZsP1b9JbWI38R6lwVzUcvP4UMhS9YXded0oISI=
-X-Received: by 2002:aca:5d0b:: with SMTP id r11mr13230543oib.169.1592855094408;
- Mon, 22 Jun 2020 12:44:54 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=AlYKYXzcMv9BOPw1annEKLuHXEQQjMbSoxaUi+SHOLc=;
+        b=ttKq3iOumUYCM1fTXZd8wUild5TXbAYs2UUNWYUSn3lPVw+sCi1vGbUhXwCLuBBp3k
+         YDqd4g8/vXE7NV44JWkrQfZMKxS3+34q2E3r5eriPRhH/+ofzpB687jGgHDjf/j/iOSI
+         oamhJmk0buKdX0r33EDurqklMLOffcpe+mMVyJhT+88y+FsuebhwnT3/8b8tjlMrskwh
+         uifTk2IZEUzCaxKhdXb6Li+p0jVIYRHZjI/odU/kbP7XZEZy5SxiI2K0DBB+Gfj32kNj
+         i4TgQ98EOXb4g0o2VEPspDv3g5tTLnhCJv2DuHg6Zp2+IjJcmNG3IAYCbU7FDhKf66NV
+         K5Eg==
+X-Gm-Message-State: AOAM5319yEZSJsBk2HzY7RnrRIYBYfO7h5UyZJSXSpbuOk1PmbKCDz8T
+        W+KJAUSYBK6OVQCPJ1ITFuou62mC3bYzSPWMoL74v81qSnE=
+X-Google-Smtp-Source: ABdhPJw9iMpvNLp/TRxRoZmJOlM7QF3eTJlY6d4DZ3NjVE9nvNFE1yhiDkcHC4tSBPGGKwanZYXFmZdToTpf7zr+TmE=
+X-Received: by 2002:a9d:1722:: with SMTP id i34mr14357502ota.6.1592856147416;
+ Mon, 22 Jun 2020 13:02:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAADnVQ+BqPeVqbgojN+nhYTE0nDcGF2-TfaeqyfPLOF-+DLn5Q@mail.gmail.com>
- <20200620212616.93894-1-zenczykowski@gmail.com>
-In-Reply-To: <20200620212616.93894-1-zenczykowski@gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 22 Jun 2020 12:44:44 -0700
-Message-ID: <CALAqxLVeg=EE06Eh5yMBoXtb2KTHLKKnBLXwGu-yGV4aGgoVMA@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] restore behaviour of CAP_SYS_ADMIN allowing the
- loading of networking bpf programs
-To:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
-Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Linux Network Development Mailing List 
-        <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
+References: <20200619143056.24538-1-trini@konsulko.com>
+In-Reply-To: <20200619143056.24538-1-trini@konsulko.com>
+From:   ron minnich <rminnich@gmail.com>
+Date:   Mon, 22 Jun 2020 13:02:16 -0700
+Message-ID: <CAP6exYJ64Hy9y3Dzh9Asrq8Y0oDWYk+tf4UAcasEc-ZxTY8DAw@mail.gmail.com>
+Subject: Re: [PATCH] initrd: Remove erroneous comment
+To:     Tom Rini <trini@konsulko.com>
+Cc:     lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "H . Peter Anvin" <hpa@zytor.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 2:26 PM Maciej =C5=BBenczykowski
-<zenczykowski@gmail.com> wrote:
->
-> From: Maciej =C5=BBenczykowski <maze@google.com>
->
-> This is a fix for a regression introduced in 5.8-rc1 by:
->   commit 2c78ee898d8f10ae6fb2fa23a3fbaec96b1b7366
->   'bpf: Implement CAP_BPF'
->
-> Before the above commit it was possible to load network bpf programs
-> with just the CAP_SYS_ADMIN privilege.
->
-> The Android bpfloader happens to run in such a configuration (it has
-> SYS_ADMIN but not NET_ADMIN) and creates maps and loads bpf programs
-> for later use by Android's netd (which has NET_ADMIN but not SYS_ADMIN).
->
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Reported-by: John Stultz <john.stultz@linaro.org>
-> Fixes: 2c78ee898d8f ("bpf: Implement CAP_BPF")
-> Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
+The other thing you ought to consider fixing:
+initrd is documented as follows:
 
-Thanks so much for helping narrow this regression down and submitting this =
-fix!
-It's much appreciated!
+        initrd=         [BOOT] Specify the location of the initial ramdisk
 
-Tested-by: John Stultz <john.stultz@linaro.org>
+for bootloaders only.
 
-thanks
--john
+UEFI consumes initrd from the command line as well. As ARM servers
+increasingly use UEFI, there may be situations in which the initrd
+option doesn't make its way to the kernel? I don't know, UEFI is such
+a black box to me. But I've seen this "initrd consumption" happen.
+
+Based on docs, and the growing use of bootloaders that are happy to
+consume initrd= and not pass it to the kernel, you might be better off
+trying to move to the new command line option anyway.
+
+IOW, this comment may not be what people want to see, but ... it might
+also be right. Or possibly changed to:
+
+/*
+ * The initrd keyword is in use today on ARM, PowerPC, and MIPS.
+ * It is also reserved for use by bootloaders such as UEFI and may
+ * be consumed by them and not passed on to the kernel.
+ * The documentation also shows it as reserved for bootloaders.
+ * It is advised to move to the initrdmem= option whereever possible.
+ */
+
+On Fri, Jun 19, 2020 at 7:31 AM Tom Rini <trini@konsulko.com> wrote:
+>
+> Most architectures have been passing the location of an initrd via the
+> initrd= option since their inception.  Remove the comment as it's both
+> wrong and unrelated to the commit that introduced it.
+>
+> Fixes: 694cfd87b0c8 ("x86/setup: Add an initrdmem= option to specify initrd physical address")
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+> Cc: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Cc: Ronald G. Minnich <rminnich@gmail.com>
+> Signed-off-by: Tom Rini <trini@konsulko.com>
+> ---
+> For a bit more context, I assume there's been some confusion between
+> "initrd" being a keyword in things like extlinux.conf and also that for
+> quite a long time now initrd information is passed via device tree and
+> not the command line on relevant architectures.  But it's still true
+> that it's been a valid command line option to the kernel since the 90s.
+> It's just the case that in 2018 the code was consolidated from under
+> arch/ and in to this file.
+> ---
+>  init/do_mounts_initrd.c | 5 -----
+>  1 file changed, 5 deletions(-)
+>
+> diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+> index d72beda824aa..53314d7da4be 100644
+> --- a/init/do_mounts_initrd.c
+> +++ b/init/do_mounts_initrd.c
+> @@ -45,11 +45,6 @@ static int __init early_initrdmem(char *p)
+>  }
+>  early_param("initrdmem", early_initrdmem);
+>
+> -/*
+> - * This is here as the initrd keyword has been in use since 11/2018
+> - * on ARM, PowerPC, and MIPS.
+> - * It should not be; it is reserved for bootloaders.
+> - */
+>  static int __init early_initrd(char *p)
+>  {
+>         return early_initrdmem(p);
+> --
+> 2.17.1
+>
