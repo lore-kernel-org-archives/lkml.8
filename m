@@ -2,135 +2,114 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2237C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1DC120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592869657;
-	bh=zAwSWQ8OvKxObFHvQv87JN2fQxHGoOpqfEKWX5QSxfA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=sm5+QBz3ALusW+cuWqZZlOvjRLaLIEWsE0VcYTay4/xIYKl9EuRsycN7hbBrlmPJt
-	 mb1H621buXRFGGtfXkWA5znV+T2tl2P9AL0m/53rFVOz19Iq0vO/uZg/GcbGZVp/Ri
-	 quDkyUma/hMsj+53HqFsyi0jnLOdGMVtzm278HK8=
+	by mail.kernel.org (Postfix) with ESMTP id 6C1452075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:50:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oCJRZhCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbgFVXrh (ORCPT
+        id S1731023AbgFVXuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:47:37 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46697 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731112AbgFVXre (ORCPT
+        Mon, 22 Jun 2020 19:50:08 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:41441 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728636AbgFVXuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:47:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id n2so8283031pld.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:47:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JTvITH8zv2UiirsD4c1fgFQNvQdvFMxIvcN0BCe53iI=;
-        b=etokx5WlVlTFgmUrw5dhPu8rM2K4Wy3oMC1e3d7mt89IxscoWmX1V5gbTxujt9z+bR
-         k4tfyLQSpaThdzwJnGaKSXJLX9I3I7i81eWBIl6FlHh4GDLQfY1xHv6rg8jSnbgE0FBv
-         BuRv1mqteRqCEzpWfR9NvWMfAIG4SpG378ml/xpkGHJFP375TroMl5dQjqyMzEXtkIXx
-         WCop+dtrDraYTy8sWvJ3ZiEEsLF43sQfNndDqh3HjqvQc71+M3kh2KVXfPyqMDkneorf
-         BQwiUj3pZRCKWQOLke00JrbOLDRgBP/4Tk/j7zcrSITmBboCVwAMhlwsJfQhB0ofe3Lm
-         BN0g==
-X-Gm-Message-State: AOAM5332USLgQlojlii/xnf/yBGT/fOIrjGT6iiCLU+g9XlIHVGpHMc9
-        iZXpR3gAouyPgJsaYmFWjnXv0Q==
-X-Google-Smtp-Source: ABdhPJx72Pm6LsNC4fLdGwlzl8iFtNOBSmeItFZY56V7VPMWLT75rU04HboqVu4maibgIS7/Fxkz1A==
-X-Received: by 2002:a17:902:ee12:: with SMTP id z18mr21870343plb.211.1592869653523;
-        Mon, 22 Jun 2020 16:47:33 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:3602:86ff:fef6:e86b? ([2601:646:c200:1ef2:3602:86ff:fef6:e86b])
-        by smtp.googlemail.com with ESMTPSA id n189sm15178382pfn.108.2020.06.22.16.47.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 16:47:32 -0700 (PDT)
-Subject: Re: [PATCH v2 00/11] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, babu.moger@amd.com
-References: <20200619153925.79106-1-mgamal@redhat.com>
- <5a52fd65-e1b2-ca87-e923-1d5ac167cfb9@amd.com>
- <52295811-f78a-46c5-ff9e-23709ba95a3d@redhat.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Message-ID: <2bcdb1cb-c0c5-5447-eed5-6fb094ae7f19@kernel.org>
-Date:   Mon, 22 Jun 2020 16:47:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 19:50:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592869807; x=1624405807;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rZllEpf8ZszlyvJoAGgIfYMlPA/MYJ1fDs3XrZKxdZc=;
+  b=oCJRZhCaB08569ZvGCGoPG0FqzY4lsh0JvZ5Ey4b6im1WHKfpxlKrLmL
+   2Ybt5F+BxgjBGj8WpNJbtKVawvGs++kAdUHjTb7sy+XD/DIW4MLjOYmxy
+   fzR94s2TEyrHUa8aOwuiQ6MPbGSctXz9oz/oT3dBqZm1EIsuoTbCZVJu9
+   MwHau4FIAUJz7jyo78pHHuqBlcGH+JHd88Un2bbpA+LDBqIjBtKihNzLD
+   i2vblqOcbxa2SxAkqC9zyLb27GByp/Detnf/0p4VMsAv49UQxFeVNnhni
+   NGbb0ghHmhzsyRUcL5zA9oXe5LYhYkH5XHMiiSwWhXpX38bYmNnfQPM9e
+   A==;
+IronPort-SDR: w58p2vJDUuC1etz4K2HV9UCvQup0jV6RVz+pUc/SgCesYTZeX/yQFYDmkQmyDCu1uTqLY7f82S
+ CuHfLzzBzsGHGNrMAXq0stAUCgQJsOvSZmhEHlopXz5T84UYx0zxPo3Bd7Apd0TBO8wHh8e7b2
+ O/JNqBBqiXrgOivp5PeDar0xUSeF+vi4y7O8V1IrJzzS/AL4RGBaaOu7uxbJtKEf/oxTIUsZ6a
+ dRivYXpc5DgZXS6E1flOCPiLmYoD+xCgaZfgytDpTlplVR/4zpi9cheqFz+rgwWpGU5UdSi4Nt
+ L1w=
+X-IronPort-AV: E=Sophos;i="5.75,268,1589212800"; 
+   d="scan'208";a="140646385"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 23 Jun 2020 07:50:06 +0800
+IronPort-SDR: rR/kW+sJPyHkatnuX/t0dcIWK/1KvL7vSG0HOKOpVqImaTSYBgymY2KgAY/7bhDjTrPQrFLXoJ
+ nZzxVedu3qBFYtm4/WWWhAaTm4wTla67g=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 16:39:12 -0700
+IronPort-SDR: JiLUl4lWt6ijHyeGhTrIqNZmAwbOJ4TKFawtA72xtj+eWa4H8YRT6IHsXhbWWv1znpHQhmz8OU
+ jEid+rR83mPg==
+WDCIronportException: Internal
+Received: from lpt-lee-f.ad.shared (HELO yoda.hgst.com) ([10.86.58.181])
+  by uls-op-cesaip01.wdc.com with ESMTP; 22 Jun 2020 16:50:06 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greentime Hu <greentime.hu@sifive.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH] RISC-V: Use a local variable instead of smp_processor_id()
+Date:   Mon, 22 Jun 2020 16:47:25 -0700
+Message-Id: <20200622234725.92511-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <52295811-f78a-46c5-ff9e-23709ba95a3d@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 4:07 PM, Paolo Bonzini wrote:
-> On 19/06/20 23:52, Tom Lendacky wrote:
->>> A more subtle issue is when the host MAXPHYADDR is larger than that
->>> of the guest. Page faults caused by reserved bits on the guest won't
->>> cause an EPT violation/NPF and hence we also check guest MAXPHYADDR
->>> and add PFERR_RSVD_MASK error code to the page fault if needed.
->>
->> I'm probably missing something here, but I'm confused by this
->> statement. Is this for a case where a page has been marked not
->> present and the guest has also set what it believes are reserved
->> bits? Then when the page is accessed, the guest sees a page fault
->> without the error code for reserved bits?
-> 
-> No, for non-present page there is no issue because there are no reserved
-> bits in that case.  If the page is present and no reserved bits are set
-> according to the host, however, there are two cases to consider:
-> 
-> - if the page is not accessible to the guest according to the
-> permissions in the page table, it will cause a #PF.  We need to trap it
-> and change the error code into P|RSVD if the guest physical address has
-> any guest-reserved bits.
+From: Greentime Hu <greentime.hu@sifive.com>
 
-You say "we need to trap it".  I think this should have a clear
-justification for exactly what this accomplishes and how it benefits
-what real-world guests.  The performance implications and the exact
-condition under which they apply should IMO be clearly documented in
-Documentation/, in the code, or, at the very least, in the changelog.  I
-don't see such docs right now.
+Store the smp_processor_id() in a local variable to save some
+pointer chasing.
 
-As I understand it, the problematic case is where a guest OS
-intentionally creates a present PTE with reserved bits set.  (I believe
-that Xen does this.  Linux does not.)  For a guest to actually be
-functional in this case, the guest needs to make sure that it is not
-setting bits that are not, in fact, reserved on the CPU.  This means the
-guest needs to check MAXPHYADDR and do something different on different
-CPUs.
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+---
+ arch/riscv/kernel/smpboot.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Do such guests exist?  As far as I know, Xen is busted on systems with
-unusually large MAXPHYADDR regardless of any virtualization issues, so,
-at best, this series would make Xen, running as a KVM guest, work better
-on new hardware than it does running bare metal on that hardware.  This
-seems like an insufficient justification for a performance-eating series
-like this.
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 4e9922790f6e..3e033e97dd08 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -146,6 +146,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
+ asmlinkage __visible void smp_callin(void)
+ {
+ 	struct mm_struct *mm = &init_mm;
++	unsigned int curr_cpuid = smp_processor_id();
+ 
+ 	if (!IS_ENABLED(CONFIG_RISCV_SBI))
+ 		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
+@@ -155,9 +156,9 @@ asmlinkage __visible void smp_callin(void)
+ 	current->active_mm = mm;
+ 
+ 	trap_init();
+-	notify_cpu_starting(smp_processor_id());
+-	update_siblings_masks(smp_processor_id());
+-	set_cpu_online(smp_processor_id(), 1);
++	notify_cpu_starting(curr_cpuid);
++	update_siblings_masks(curr_cpuid);
++	set_cpu_online(curr_cpuid, 1);
+ 	/*
+ 	 * Remote TLB flushes are ignored while the CPU is offline, so emit
+ 	 * a local TLB flush right now just in case.
+-- 
+2.26.2
 
-And, unless I've misunderstood, this will eat performance quite badly.
-Linux guests [0] (and probably many other guests), in quite a few
-workloads, is fairly sensitive to the performance of ordinary
-write-protect or not-present faults.  Promoting these to VM exits
-because you
-want to check for bits above the guest's MAXPHYADDR is going to hurt.
-
-(Also, I'm confused.  Wouldn't faults like this be EPT/NPT violations,
-not page faults?)
-
---Andy
-
-
-[0] From rather out-of-date memory, Linux doesn't make as much use as
-one might expect of the A bit.  Instead it uses minor faults.  Ouch.
