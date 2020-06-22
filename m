@@ -2,177 +2,149 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39625C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D18C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB9320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8520B20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hqQ98FJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgFVNho (ORCPT
+        id S1729247AbgFVNiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:37:44 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39881 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728203AbgFVNhn (ORCPT
+        Mon, 22 Jun 2020 09:38:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55532 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728070AbgFVNh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:37:43 -0400
-Received: from [37.160.94.17] (port=64520 helo=melee.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jnMdl-000DM3-WC; Mon, 22 Jun 2020 15:37:38 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-fpga@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Moritz Fischer <mdf@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH v2 2/2] fpga manager: xilinx-spi: check INIT_B pin during write_init
-Date:   Mon, 22 Jun 2020 15:37:23 +0200
-Message-Id: <20200622133723.23326-2-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622133723.23326-1-luca@lucaceresoli.net>
-References: <20200622133723.23326-1-luca@lucaceresoli.net>
+        Mon, 22 Jun 2020 09:37:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592833078;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mgkrMlHTxNpnMQAYHl1K4EwFxcTFYH4+ZUAQ7d50tGY=;
+        b=hqQ98FJlme/61XxkWMFdDhoojiWhI8hayZ+d/Zswv1SoqAD7rZi6s/neJ0JZUTOaBeFuQJ
+        QDSqnuOFwkVZZfL/C4htL7u5NHBxGTW3W0HAyBiVcXaFUSLRI+G20hunv1hoVBRp2SyABG
+        0oizWFR44zYyrGaSSy/5YLLfhZP7mug=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-35-taiTrE9hNXq1zEyx4hjdhQ-1; Mon, 22 Jun 2020 09:37:52 -0400
+X-MC-Unique: taiTrE9hNXq1zEyx4hjdhQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01183872FE1;
+        Mon, 22 Jun 2020 13:37:50 +0000 (UTC)
+Received: from localhost (ovpn-116-90.gru2.redhat.com [10.97.116.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FB355BADE;
+        Mon, 22 Jun 2020 13:37:48 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 10:37:47 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH] Revert "kernel/printk: add kmsg SEEK_CUR handling"
+Message-ID: <20200622133747.GD2850@glitch>
+References: <20200622030222.1370098-1-Jason@zx2c4.com>
+ <CAHk-=wj5TPoHih-8m+s9UNShiKavUFLacmHFmNbDrXQem43kSA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+In-Reply-To: <CAHk-=wj5TPoHih-8m+s9UNShiKavUFLacmHFmNbDrXQem43kSA@mail.gmail.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=bmeneg@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bi5JUZtvcfApsciF"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The INIT_B pin reports the status during startup and after the end of the
-programming process. However the current driver completely ignores it.
+--bi5JUZtvcfApsciF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Check the pin status during startup to make sure programming is never
-started too early and also to detect any hardware issues in the FPGA
-connection.
+On Sun, Jun 21, 2020 at 08:50:09PM -0700, Linus Torvalds wrote:
+> On Sun, Jun 21, 2020 at 8:02 PM Jason A. Donenfeld <Jason@zx2c4.com> wrot=
+e:
+> >
+> > This reverts commit 8ece3b3eb576a78d2e67ad4c3a80a39fa6708809.
+> >
+> > This commit broke userspace. Bash uses ESPIPE to determine whether or
+> > not the file should be read using "unbuffered I/O", which means reading
+> > 1 byte at a time instead of 128 bytes at a time.
+>=20
+> Ack. Somewhat odd behavior, but clearly user space depended on the
+> legacy "return EINVAL rather than ESPIPE" behavior.
+>=20
+> I do think there are other reasons to not return ESPIPE. The fact is,
+> the printk buffer _is_ seekable, it's just relative seeking that
+> doesn't work. You can seek to the beginning and the end and a
+> particular offset, just not relative.
+>=20
+> So I kind of see why people wanted to return ESPIPE, but at the same
+> time it really is very misleading: ESPIPE is for pure streams that
+> can't lseek at all.
 
-This is optional for backward compatibility. If INIT_B is not passed by
-device tree, just fallback to the old udelays.
+That was indeed a misunderstanding of mine wrt ESPIPE meaning.
+And I agree with your previous paragraph where you stated that the
+buffer is only not "relative" seekable. So, ack for the revert.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+However, the issue with glibc is their fd checking on dprintf using:
 
----
+lseek(offset =3D=3D 0, whence =3D=3D SEEK_CUR)
 
-Changes in v2:
- - rename DT property init_b-gpios to init-b-gpios (Rob Herring suggested to
-   not use '_' in property names)
- - improve wait_for_init_b() documentation and variable naming
----
- drivers/fpga/xilinx-spi.c | 55 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
+Which, technically, isn't a relative seek operation in my opinion, thus
+I'm also not sure that returning EINVAL is correct.=20
 
-diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-index 799ae04301be..2967aa2a74e2 100644
---- a/drivers/fpga/xilinx-spi.c
-+++ b/drivers/fpga/xilinx-spi.c
-@@ -23,6 +23,7 @@
- struct xilinx_spi_conf {
- 	struct spi_device *spi;
- 	struct gpio_desc *prog_b;
-+	struct gpio_desc *init_b;
- 	struct gpio_desc *done;
- };
- 
-@@ -36,11 +37,45 @@ static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
- 	return FPGA_MGR_STATE_UNKNOWN;
- }
- 
-+/**
-+ * wait_for_init_b - wait for the INIT_B pin to have a given state, or wait
-+ * a given delay if the pin is unavailable
-+ *
-+ * @mgr:        The FPGA manager object
-+ * @value:      Value INIT_B to wait for (1 = asserted = low)
-+ * @alt_udelay: Delay to wait if the INIT_B GPIO is not available
-+ *
-+ * Returns 0 when the INIT_B GPIO reached the given state or -ETIMEDOUT if
-+ * too much time passed waiting for that. If no INIT_B GPIO is available
-+ * then always return 0.
-+ */
-+static int wait_for_init_b(struct fpga_manager *mgr, int value,
-+			   unsigned long alt_udelay)
-+{
-+	struct xilinx_spi_conf *conf = mgr->priv;
-+	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
-+
-+	if (conf->init_b) {
-+		while (time_before(jiffies, timeout)) {
-+			/* dump_state(conf, "wait for init_d .."); */
-+			if (gpiod_get_value(conf->init_b) == value)
-+				return 0;
-+			usleep_range(100, 400);
-+		}
-+		return -ETIMEDOUT;
-+	}
-+
-+	udelay(alt_udelay);
-+
-+	return 0;
-+}
-+
- static int xilinx_spi_write_init(struct fpga_manager *mgr,
- 				 struct fpga_image_info *info,
- 				 const char *buf, size_t count)
- {
- 	struct xilinx_spi_conf *conf = mgr->priv;
-+	int err;
- 
- 	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
- 		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-@@ -49,10 +84,21 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
- 
- 	gpiod_set_value(conf->prog_b, 1);
- 
--	udelay(1); /* min is 500 ns */
-+	err = wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
-+	if (err) {
-+		dev_err(&mgr->dev, "INIT_B pin did not go low\n");
-+		gpiod_set_value(conf->prog_b, 0);
-+		return err;
-+	}
- 
- 	gpiod_set_value(conf->prog_b, 0);
- 
-+	err = wait_for_init_b(mgr, 0, 0);
-+	if (err) {
-+		dev_err(&mgr->dev, "INIT_B pin did not go high\n");
-+		return err;
-+	}
-+
- 	if (gpiod_get_value(conf->done)) {
- 		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
- 		return -EIO;
-@@ -154,6 +200,13 @@ static int xilinx_spi_probe(struct spi_device *spi)
- 		return PTR_ERR(conf->prog_b);
- 	}
- 
-+	conf->init_b = devm_gpiod_get_optional(&spi->dev, "init-b", GPIOD_IN);
-+	if (IS_ERR(conf->init_b)) {
-+		dev_err(&spi->dev, "Failed to get INIT_B gpio: %ld\n",
-+			PTR_ERR(conf->init_b));
-+		return PTR_ERR(conf->init_b);
-+	}
-+
- 	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
- 	if (IS_ERR(conf->done)) {
- 		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
--- 
-2.27.0
+Would it make sense to return the next buffer index instead? Basically
+the same as SEEK_END does? The first "if (offset)" in the function would
+prevent any real relative move while SEEK_CUR would return a valid
+address following this buffer behavior of specific points it could seek
+to.
+
+>=20
+> The fact that some silly shell internal then reacts very badly to that
+> may be extreme, but it may be as well as you can do it you worry about
+> leaving data for the next user.
+>=20
+> I've applied the revert.
+>=20
+>              Linus
+>=20
+
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
+
+--bi5JUZtvcfApsciF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7wtCsACgkQYdRkFR+R
+okMX3wgAtGljuKIhXYBxhpvs4p2xQWRLW/RTySITG7k86tmTNf9qs/7/kog9a0Yb
+gF087sCIG9ZC0POru1uaKVV7uLS6mxJo2e5nzkZukGEoXVkECFjbK79nlJMc3kW5
+sgJCT2NvuCng2Ytr82CUVACvWqsna7diX+Pm0RWcys/CwzcEGlbmVmiWJc9BrAIK
+1NZCSLtB08HqndkHL9rKeoXBrpb2x4UTMXixJ4Z/axp+UmjhQBfMD+fY/FD/VRPZ
+Op8/mMglCHDygjghG3m2Fk/6pOQwOkbw/nfGuwcB7gZ+Yr+7DeoCEgrJCPK5Kd2B
+pi30kaQTwAU5V/TLbLAA+Xiy5xppQg==
+=+dr2
+-----END PGP SIGNATURE-----
+
+--bi5JUZtvcfApsciF--
 
