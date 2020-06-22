@@ -2,258 +2,81 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46491C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1924F2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:49:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fo0jCaeb"
+	by mail.kernel.org (Postfix) with ESMTP id 4DC182071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgFVMtI (ORCPT
+        id S1728243AbgFVMtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgFVMtI (ORCPT
+        Mon, 22 Jun 2020 08:49:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35233 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgFVMtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:49:08 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E7FC061794;
-        Mon, 22 Jun 2020 05:49:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c3so16497191wru.12;
-        Mon, 22 Jun 2020 05:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xGatUJxNTAw2tUiFEaNFWmvGzMlb5CEE+27h8ZbQoqA=;
-        b=Fo0jCaebeHZeZRepyjDDO5l3PFS2O33eoeemUc7+TfVjsdW0PZh1jxiNqsbozvZ+/S
-         WbwtPoO2/lKaDMExIygZ/rAUsJZnrnQpNutiLvWuLimsp+OhRyAfBdp5NsRSAThz5uKx
-         63wl8EZq7CCRE1v387f86SlE6MhyIpQYjUrzcFdFeaWUz30gUNnloIJODOMqxXC2I/dH
-         0hnhSV/v0ZA0i+h5a9r/Z0tZpFgmn/9kIalWhRtDb2eZWiVcAp1MBWs0EOyCMNMg8BmD
-         XiGyMtxPjjT7otFsFPFJVrKjx0xjG75+Ny6hSK4vLaRlvtfg9Mr5clmipUCDINCpWCUF
-         fGQA==
+        Mon, 22 Jun 2020 08:49:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k4so15501464oik.2;
+        Mon, 22 Jun 2020 05:49:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xGatUJxNTAw2tUiFEaNFWmvGzMlb5CEE+27h8ZbQoqA=;
-        b=VgnCoufsJeYmjh171O0or1Dz7WcwIcXrdH9lVM9o0GdXh+PSxecDzRbGLYmfxzR/4D
-         sUyimc8eDzrJZTUzYmssZmneqMUPB8jn/nmCeCc6R89gQ+KnNZNw+56M3RgIsCRM0CB+
-         849CAF2FexdxF/IPbE3Z7wNRvrPKsxVV44mwA7yZxOoojqW/ABtYc2CG6UNLDCIKHcLH
-         JLBEtFCP3v8U2rqXFCHPa8ENut5WUDp7MNFc6Ts0ghIW14Rg5bFCF2hzt82xDCygjbUe
-         vaXsJW1pfBCN3TaU7cgK7GeI7/BeUx6q3WdldZUnD4GExtu89Bx9tJmQaWzfyO2F9zoO
-         hbRA==
-X-Gm-Message-State: AOAM5315iOfpR/j5m91qF+Qhtkicxud8TmovWVhbIIC01nutETQf/l7C
-        sQKIvbf+X1RhAW5ps768s0i0+1QqFLc=
-X-Google-Smtp-Source: ABdhPJzMLu4KRyVzvJP0bS2XiYGikCs23dmilk57dFnSrKScoyR4yDFMDMhiQJv/QXhrNjgLZ9TprQ==
-X-Received: by 2002:a5d:6088:: with SMTP id w8mr3846805wrt.49.1592830146570;
-        Mon, 22 Jun 2020 05:49:06 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id c201sm12510825wmd.4.2020.06.22.05.49.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 05:49:05 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 13:49:04 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 00/15] vfio: expose virtual Shared Virtual Addressing
- to VMs
-Message-ID: <20200622124904.GA15683@stefanha-x1.localdomain>
-References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
- <20200615100214.GC1491454@stefanha-x1.localdomain>
- <MWHPR11MB16451F1E4748DF97D6A1DDD48C9D0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20200616154928.GF1491454@stefanha-x1.localdomain>
- <20200616170016.GC34820@otc-nc-03>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6dAYpU1c+0omFMwewQ7Zp2dGw4F3J5EZFq0iFfoZxAI=;
+        b=J55ztwuXcXC1lCwr+tndwcCvVdMqWzXjKF/b9o4nT/qOYVetocZYqMrRVyWjSSsmMW
+         Z9hbLJD4EjEYQabyu89SHlyNsoxTjHiC/9OVQWq5xcGIIuwyzvsslUaArQGjCPA55b+7
+         fc0xeGChPeGpBhgwr1Jq1mZX+ZHOkMn6gc+OBl8UV4jQoPl1Mas2Hmw/HWxDm1vtFn6E
+         QkCkDseh2lk7FID+R2qo3VPzvTF8tizOAgN3ZNs4Q3vxKodFSH8fkAurAxBaT/weTiOB
+         cH9CO0BEhcdnzmsINFBCN264qKEbF/OUN8XNrD9XZDVN5PBxz/AFZwklEv/IR0Sx+6Cu
+         2cSQ==
+X-Gm-Message-State: AOAM533ZuhLeVZlZobAfVUDHBqPWdbrQq6SYoLn0xtpYv4v4y0f5tCYU
+        FjfTI4TMb8jWnpycmbLBYt9zIVwlGXiylFBl4BU=
+X-Google-Smtp-Source: ABdhPJyi2SBTi38RvRrJ8xesD3xyuDcqlHuNTdDX4MnHLITVUj7m+dDJnt+4xzfduFu43MsuzTE49U8fElVPsoTj2ZI=
+X-Received: by 2002:aca:849:: with SMTP id 70mr11836517oii.153.1592830154983;
+ Mon, 22 Jun 2020 05:49:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Content-Disposition: inline
-In-Reply-To: <20200616170016.GC34820@otc-nc-03>
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591555267-21822-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1591555267-21822-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 22 Jun 2020 14:49:04 +0200
+Message-ID: <CAMuHMdXa+kuSNhQr4QC-jWbF=fwguaCsUQUfcW4251A5JuZ3YQ@mail.gmail.com>
+Subject: Re: [PATCH 08/11] arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0
+ board with idk-1110wr display
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jun 7, 2020 at 8:42 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for idk-1110wr display as similarly done for Rev.2.0
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Tue, Jun 16, 2020 at 10:00:16AM -0700, Raj, Ashok wrote:
-> On Tue, Jun 16, 2020 at 04:49:28PM +0100, Stefan Hajnoczi wrote:
-> > On Tue, Jun 16, 2020 at 02:26:38AM +0000, Tian, Kevin wrote:
-> > > > From: Stefan Hajnoczi <stefanha@gmail.com>
-> > > > Sent: Monday, June 15, 2020 6:02 PM
-> > > >=20
-> > > > On Thu, Jun 11, 2020 at 05:15:19AM -0700, Liu Yi L wrote:
-> > > > > Shared Virtual Addressing (SVA), a.k.a, Shared Virtual Memory (SV=
-M) on
-> > > > > Intel platforms allows address space sharing between device DMA a=
-nd
-> > > > > applications. SVA can reduce programming complexity and enhance
-> > > > security.
-> > > > >
-> > > > > This VFIO series is intended to expose SVA usage to VMs. i.e. Sha=
-ring
-> > > > > guest application address space with passthru devices. This is ca=
-lled
-> > > > > vSVA in this series. The whole vSVA enabling requires QEMU/VFIO/I=
-OMMU
-> > > > > changes. For IOMMU and QEMU changes, they are in separate series =
-(listed
-> > > > > in the "Related series").
-> > > > >
-> > > > > The high-level architecture for SVA virtualization is as below, t=
-he key
-> > > > > design of vSVA support is to utilize the dual-stage IOMMU transla=
-tion (
-> > > > > also known as IOMMU nesting translation) capability in host IOMMU.
-> > > > >
-> > > > >
-> > > > >     .-------------.  .---------------------------.
-> > > > >     |   vIOMMU    |  | Guest process CR3, FL only|
-> > > > >     |             |  '---------------------------'
-> > > > >     .----------------/
-> > > > >     | PASID Entry |--- PASID cache flush -
-> > > > >     '-------------'                       |
-> > > > >     |             |                       V
-> > > > >     |             |                CR3 in GPA
-> > > > >     '-------------'
-> > > > > Guest
-> > > > > ------| Shadow |--------------------------|--------
-> > > > >       v        v                          v
-> > > > > Host
-> > > > >     .-------------.  .----------------------.
-> > > > >     |   pIOMMU    |  | Bind FL for GVA-GPA  |
-> > > > >     |             |  '----------------------'
-> > > > >     .----------------/  |
-> > > > >     | PASID Entry |     V (Nested xlate)
-> > > > >     '----------------\.------------------------------.
-> > > > >     |             |   |SL for GPA-HPA, default domain|
-> > > > >     |             |   '------------------------------'
-> > > > >     '-------------'
-> > > > > Where:
-> > > > >  - FL =3D First level/stage one page tables
-> > > > >  - SL =3D Second level/stage two page tables
-> > > >=20
-> > > > Hi,
-> > > > Looks like an interesting feature!
-> > > >=20
-> > > > To check I understand this feature: can applications now pass virtu=
-al
-> > > > addresses to devices instead of translating to IOVAs?
-> > > >=20
-> > > > If yes, can guest applications restrict the vSVA address space so t=
-he
-> > > > device only has access to certain regions?
-> > > >=20
-> > > > On one hand replacing IOVA translation with virtual addresses simpl=
-ifies
-> > > > the application programming model, but does it give up isolation if=
- the
-> > > > device can now access all application memory?
-> > > >=20
-> > >=20
-> > > with SVA each application is allocated with a unique PASID to tag its
-> > > virtual address space. The device that claims SVA support must guaran=
-tee=20
-> > > that one application can only program the device to access its own vi=
-rtual
-> > > address space (i.e. all DMAs triggered by this application are tagged=
- with
-> > > the application's PASID, and are translated by IOMMU's PASID-granular
-> > > page table). So, isolation is not sacrificed in SVA.
-> >=20
-> > Isolation between applications is preserved but there is no isolation
-> > between the device and the application itself. The application needs to
-> > trust the device.
->=20
-> Right. With all convenience comes security trust. With SVA there is an
-> expectation that the device has the required security boundaries properly
-> implemented. FWIW, what is our guarantee today that VF's are secure from
-> one another or even its own PF? They can also generate transactions with
-> any of its peer id's and there is nothing an IOMMU can do today. Other th=
-an
-> rely on ACS. Even BusMaster enable can be ignored and devices (malicious
-> or otherwise) can generate after the BM=3D0. With SVM you get the benefit=
-s of
->=20
-> * Not having to register regions
-> * Don't need to pin application space for DMA.
+Gr{oetje,eeting}s,
 
-As along as the security model is clearly documented users can decide
-whether or not SVA meets their requirements. I just wanted to clarify
-what the security model is.
+                        Geert
 
->=20
-> >=20
-> > Examples:
-> >=20
-> > 1. The device can snoop secret data from readable pages in the
-> >    application's virtual memory space.
->=20
-> Aren't there other security technologies that can address this?
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Maybe the IOMMU could enforce Memory Protection Keys? Imagine each
-device is assigned a subset of memory protection keys and the IOMMU
-checks them on each device access. This would allow the application to
-mark certain pages off-limits to the device but the IOMMU could still
-walk the full process page table (no need to construct a special device
-page table for the IOMMU).
-
-> >=20
-> > 2. The device can gain arbitrary execution on the CPU by overwriting
-> >    control flow addresses (e.g. function pointers, stack return
-> >    addresses) in writable pages.
->=20
-> I suppose technology like CET might be able to guard. The general
-> expectation is code pages and anything that needs to be protected should =
-be
-> mapped nor writable.
-
-Function pointers are a common exception to this. They are often located
-in writable heap or stack pages.
-
-There might also be dynamic linker memory structures that are easy to
-hijack.
-
-Stefan
-
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl7wqL8ACgkQnKSrs4Gr
-c8heuQgApuxvMLS3gRIfo/o5wq9Bk1pmP6BYlbH+zzsGCLuIHFmY4vMWAxjZxfX/
-ThavBmvMFOSnJSzTxzDcM/kY1P5XfcTwdaEaELIn/Pvd1bnfo+1R3fxUZAL9wQeT
-y1XqmdmqC8s8Gv38VLR6YhWuEs0ZkevIWCMkySxjkvb0VN0OdFBidJeroRJq/LTo
-dlmZJQg138jFzeSJYHsT6sY+SHKZVjnLltBOZJxVHRLzEPeA0YfqPeLNmOZDUAA4
-nSGknlEO5CUuWGo9NK0JNfA0CbRR+cWgUtIcGi3FS729MSKXoErHoNVTgKPxL992
-KjDqf88bkzcwGigXGrKjmB2TOvbmAg==
-=/67A
------END PGP SIGNATURE-----
-
---bp/iNruPH9dso1Pn--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
