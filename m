@@ -2,259 +2,204 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE63C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2C5206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27348206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgFVIas (ORCPT
+        id S1726535AbgFVIbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:30:48 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:15484 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725940AbgFVIap (ORCPT
+        Mon, 22 Jun 2020 04:31:43 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:50697 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgFVIbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:30:45 -0400
-From:   Peter Enderborg <peter.enderborg@sony.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     Peter Enderborg <peter.enderborg@sony.com>
-Subject: [PATCH 2/2] debugfs: Add access restriction option
-Date:   Mon, 22 Jun 2020 10:30:19 +0200
-Message-ID: <20200622083019.15479-3-peter.enderborg@sony.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200622083019.15479-1-peter.enderborg@sony.com>
-References: <20200617133738.6631-1-peter.enderborg@sony.com>
- <20200622083019.15479-1-peter.enderborg@sony.com>
+        Mon, 22 Jun 2020 04:31:42 -0400
+X-Originating-IP: 93.34.118.233
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 99AAFC0009;
+        Mon, 22 Jun 2020 08:31:34 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 10:35:01 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Luis Oliveira <lolivei@synopsys.com>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: Re: [PATCH v2 3/6] media: ov5647: Add support for non-continuous
+ clock mode
+Message-ID: <20200622083501.htr7mzngchyn7n7q@uno.localdomain>
+References: <cover.1589850165.git.roman.kovalivskyi@globallogic.com>
+ <cd04fe908fc1a747949ee83044f4d2abc1885cee.1589850165.git.roman.kovalivskyi@globallogic.com>
+ <20200519115707.GK20066@paasikivi.fi.intel.com>
+ <20200618101326.zpcdcb3zdrtgz45t@uno.localdomain>
+ <7d718df8-5256-3ff6-01ec-2f1a14f53580@globallogic.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=B7jHL9lM c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=nTHF0DUjJn0A:10 a=z6gsHLkEAAAA:8 a=T63rtsT0MoZSlwSC9SoA:9 a=d-OLMTCWyvARjPbQ-enb:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7d718df8-5256-3ff6-01ec-2f1a14f53580@globallogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since debugfs include sensitive information it need to be treated
-carefully. But it also has many very useful debug functions for userspace.
-With this option we can have same configuration for system with
-need of debugfs and a way to turn it off. This gives a extra protection
-for exposure on systems where user-space services with system
-access are attacked.
+Hi Roman,
 
-It is controlled by a configurable default value that can be override
-with a kernel command line parameter. (debugfs=)
+On Mon, Jun 22, 2020 at 10:00:46AM +0300, Roman Kovalivskyi wrote:
+> Hi Jacopo,
+>
+> On 18.06.20 13:13, Jacopo Mondi wrote:
+> > Hi Roman, Sakari
+> >
+> > On Tue, May 19, 2020 at 02:57:07PM +0300, Sakari Ailus wrote:
+> >> Hi Roman,
+> >>
+> >> On Tue, May 19, 2020 at 04:16:18AM +0300, Roman Kovalivskyi wrote:
+> >>> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> >>>
+> >>> The driver was only supporting continuous clock mode
+> >>> although this was not stated anywhere.
+> >>> Non-continuous clock saves a small amount of power and
+> >>> on some SoCs is easier to interface with.
+> >>>
+> > not much to add to what Sakari said, apart for
+> >
+> >>> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> >>> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+> >>> ---
+> >>>  drivers/media/i2c/ov5647.c | 25 ++++++++++++++++++++++---
+> >>>  1 file changed, 22 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
+> >>> index 796cc80f8ee1..10f35c637f91 100644
+> >>> --- a/drivers/media/i2c/ov5647.c
+> >>> +++ b/drivers/media/i2c/ov5647.c
+> >>> @@ -44,6 +44,7 @@
+> >>>  #define PWDN_ACTIVE_DELAY_MS	20
+> >>>
+> >>>  #define MIPI_CTRL00_CLOCK_LANE_GATE		BIT(5)
+> >>> +#define MIPI_CTRL00_LINE_SYNC_ENABLE		BIT(4)
+> >>>  #define MIPI_CTRL00_BUS_IDLE			BIT(2)
+> >>>  #define MIPI_CTRL00_CLOCK_LANE_DISABLE		BIT(0)
+> >>>
+> >>> @@ -95,6 +96,7 @@ struct ov5647 {
+> >>>  	int				power_count;
+> >>>  	struct clk			*xclk;
+> >>>  	struct gpio_desc		*pwdn;
+> >>> +	bool				is_clock_contiguous;
+> > the clock is 'continuous' not contigous :)
+> >
+> > I plan to upport more ov5647 patches soon, Roman are you planning a
+> > resend of this series or should I do so (keeping your signoffs of
+> > course)
+> >
+> > Thanks
+> >   j
+>
+> I would be grateful if someone more competent would continue with this
+> patch series, so feel free to update it with v3.
 
-It can be on or off, but also internally on but not seen from user-space.
-This no-fs mode do not register a debugfs as filesystem, but client can
-register their parts in the internal structures. This data can be readed
-with a debugger or saved with a crashkernel. When it is off clients
-get EPERM error when accessing the functions for registering their
-components.
+I think you did a very good job, I just happen to have a bit more time
+to dedicate to this.
 
-Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
----
- .../admin-guide/kernel-parameters.txt         | 12 ++++++
- fs/debugfs/inode.c                            | 37 +++++++++++++++++++
- fs/debugfs/internal.h                         | 14 +++++++
- lib/Kconfig.debug                             | 32 ++++++++++++++++
- 4 files changed, 95 insertions(+)
+I'll make sure I'll cc you and the cc list from your series.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb95fad81c79..236aacaceaf5 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -827,6 +827,18 @@
- 			useful to also enable the page_owner functionality.
- 			on: enable the feature
- 
-+	debugfs=    	[KNL] This parameter enables what is exposed to userspace
-+			and debugfs internal clients.
-+			Format: { on, no-fs, off }
-+			on: 	All functions are enabled.
-+			no-fs: 	Filesystem is not registered but kernel clients can
-+			        access APIs and a crashkernel can be used to read
-+				its content. There is nothing to mount.
-+			off: 	Filesystem is not registered and clients
-+			        get a -EPERM as result when trying to register files
-+				or directories within debugfs.
-+			Default value is set in build-time with a kernel configuration.
-+
- 	debugpat	[X86] Enable PAT debugging
- 
- 	decnet.addr=	[HW,NET]
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index b7f2e971ecbc..a4a1c92ae478 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -35,6 +35,7 @@
- static struct vfsmount *debugfs_mount;
- static int debugfs_mount_count;
- static bool debugfs_registered;
-+static unsigned int debugfs_allow = DEFAULT_DEBUGFS_ACCESS_BITS;
- 
- /*
-  * Don't allow access attributes to be changed whilst the kernel is locked down
-@@ -266,6 +267,9 @@ static struct dentry *debug_mount(struct file_system_type *fs_type,
- 			int flags, const char *dev_name,
- 			void *data)
- {
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API_BIT))
-+		return ERR_CAST(ERR_PTR(-EPERM));
-+
- 	return mount_single(fs_type, flags, data, debug_fill_super);
- }
- 
-@@ -311,6 +315,9 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
- 	struct dentry *dentry;
- 	int error;
- 
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API_BIT))
-+		return ERR_PTR(-EPERM);
-+
- 	pr_debug("creating file '%s'\n", name);
- 
- 	if (IS_ERR(parent))
-@@ -385,6 +392,11 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
- 	if (IS_ERR(dentry))
- 		return dentry;
- 
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API_BIT)) {
-+		failed_creating(dentry);
-+		return ERR_PTR(-EPERM);
-+	}
-+
- 	inode = debugfs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode)) {
- 		pr_err("out of free dentries, can not create file '%s'\n",
-@@ -541,6 +553,11 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
- 	if (IS_ERR(dentry))
- 		return dentry;
- 
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API_BIT)) {
-+		failed_creating(dentry);
-+		return ERR_PTR(-EPERM);
-+	}
-+
- 	inode = debugfs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode)) {
- 		pr_err("out of free dentries, can not create directory '%s'\n",
-@@ -583,6 +600,11 @@ struct dentry *debugfs_create_automount(const char *name,
- 	if (IS_ERR(dentry))
- 		return dentry;
- 
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API_BIT)) {
-+		failed_creating(dentry);
-+		return ERR_PTR(-EPERM);
-+	}
-+
- 	inode = debugfs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode)) {
- 		pr_err("out of free dentries, can not create automount '%s'\n",
-@@ -786,10 +808,25 @@ bool debugfs_initialized(void)
- }
- EXPORT_SYMBOL_GPL(debugfs_initialized);
- 
-+static int __init debugfs_kernel(char *str)
-+{
-+	if (str && !strcmp(str, "on"))
-+		debugfs_allow = DEBUGFS_ALLOW_API_BIT | DEBUGFS_ALLOW_FS_BIT;
-+	if (str && !strcmp(str, "no-fs"))
-+		debugfs_allow = DEBUGFS_ALLOW_API_BIT;
-+	if (str && !strcmp(str, "off"))
-+		debugfs_allow = 0;
-+
-+	return 0;
-+}
-+early_param("debugfs", debugfs_kernel);
- static int __init debugfs_init(void)
- {
- 	int retval;
- 
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_FS_BIT))
-+		return -EPERM;
-+
- 	retval = sysfs_create_mount_point(kernel_kobj, "debug");
- 	if (retval)
- 		return retval;
-diff --git a/fs/debugfs/internal.h b/fs/debugfs/internal.h
-index 034e6973cead..dba138f8d418 100644
---- a/fs/debugfs/internal.h
-+++ b/fs/debugfs/internal.h
-@@ -29,4 +29,18 @@ struct debugfs_fsdata {
-  */
- #define DEBUGFS_FSDATA_IS_REAL_FOPS_BIT BIT(0)
- 
-+/* Access BITS */
-+#define DEBUGFS_ALLOW_API_BIT BIT(0)
-+#define DEBUGFS_ALLOW_FS_BIT BIT(1)
-+
-+#ifdef CONFIG_DEBUG_FS_ACCESS_ALL
-+#define DEFAULT_DEBUGFS_ACCESS_BITS (DEBUGFS_ALLOW_FS_BIT|DEBUGFS_ALLOW_API_BIT)
-+#endif
-+#ifdef CONFIG_DEBUG_FS_ACCESS_NO_FS
-+#define DEFAULT_DEBUGFS_ACCESS_BITS (DEBUGFS_ALLOW_API_BIT)
-+#endif
-+#ifdef CONFIG_DEBUG_FS_ACCESS_NONE
-+#define DEFAULT_DEBUGFS_ACCESS_BITS (0)
-+#endif
-+
- #endif /* _DEBUGFS_INTERNAL_H_ */
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d74ac0fd6b2d..4c699ffad1fb 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -477,6 +477,38 @@ config DEBUG_FS
- 
- 	  If unsure, say N.
- 
-+choice
-+	prompt "Debugfs default access"
-+	depends on DEBUG_FS
-+	default DEBUG_FS_ACCESS_ALL
-+	help
-+	  This select the default access restricions for debugfs.
-+	  It can be overridden with kernel command line option
-+	  debugfs=[on,no-fs,off] The restrictions apply for API access
-+	  and filesystem registration. .
-+
-+config DEBUG_FS_ACCESS_ALL
-+       bool "Access all"
-+       help
-+	  No restrictions applies. Both API and filesystem registration
-+	  is on.
-+
-+config DEBUG_FS_ACCESS_NO_FS
-+       bool "Do not register debugfs as filesystem"
-+       help
-+	 The API is open but filesystem not loaded. Client can still do
-+	 their work and readed with debug tools that does not need
-+	 debugfs filesystem.
-+
-+config DEBUG_FS_ACCESS_NONE
-+       bool "No access"
-+       help
-+	  Access is off. Clients get EPERM when trying to create nodes in
-+	  debugfs tree and debugfs is not registred as an filesystem.
-+	  Client can then back-off or continue without debugfs access.
-+
-+endchoice
-+
- source "lib/Kconfig.kgdb"
- 
- source "lib/Kconfig.ubsan"
--- 
-2.26.2
+Thanks
+  j
 
+>
+> >>>  };
+> >>>
+> >>>  static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
+> >>> @@ -274,9 +276,15 @@ static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
+> >>>
+> >>>  static int ov5647_stream_on(struct v4l2_subdev *sd)
+> >>>  {
+> >>> +	struct ov5647 *ov5647 = to_state(sd);
+> >>> +	u8 val = MIPI_CTRL00_BUS_IDLE;
+> >>>  	int ret;
+> >>>
+> >>> -	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, MIPI_CTRL00_BUS_IDLE);
+> >>> +	if (ov5647->is_clock_contiguous)
+> >>> +		val |= MIPI_CTRL00_CLOCK_LANE_GATE |
+> >>> +		       MIPI_CTRL00_LINE_SYNC_ENABLE;
+> >>> +
+> >>> +	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, val);
+> >>>  	if (ret < 0)
+> >>>  		return ret;
+> >>>
+> >>> @@ -573,7 +581,7 @@ static const struct v4l2_subdev_internal_ops ov5647_subdev_internal_ops = {
+> >>>  	.open = ov5647_open,
+> >>>  };
+> >>>
+> >>> -static int ov5647_parse_dt(struct device_node *np)
+> >>> +static int ov5647_parse_dt(struct ov5647 *sensor, struct device_node *np)
+> >>>  {
+> >>>  	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
+> >>>  	struct device_node *ep;
+> >>> @@ -586,6 +594,17 @@ static int ov5647_parse_dt(struct device_node *np)
+> >>>
+> >>>  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
+> >>>
+> >> Extra newline.
+> >>
+> >>> +	if (!ret) {
+> >>> +		of_node_put(ep);
+> >>> +		of_node_put(np);
+> >> Why to put np as well?
+> >>
+> >>> +		return ret;
+> >> Please add a label at the end; it makes error handling easier.
+> >>
+> >>> +	}
+> >>> +
+> >>> +	if (bus_cfg.bus_type == V4L2_MBUS_CSI2_DPHY
+> >>> +		|| bus_cfg.bus_type == V4L2_MBUS_CSI2_CPHY)
+> >> I bet this device is D-PHY only.
+> >>
+> >>> +		sensor->is_clock_contiguous = bus_cfg.bus.mipi_csi2.flags
+> >>> +			& V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
+> >> Now that you're making use of bus specific parameters, please set the bus
+> >> type first before calling v4l2_fwnode_endpoint_parse().
+> >>
+> >>> +
+> >>>  	of_node_put(ep);
+> >>>  	return ret;
+> >>>  }
+> >>> @@ -604,7 +623,7 @@ static int ov5647_probe(struct i2c_client *client)
+> >>>  		return -ENOMEM;
+> >>>
+> >>>  	if (IS_ENABLED(CONFIG_OF) && np) {
+> >>> -		ret = ov5647_parse_dt(np);
+> >>> +		ret = ov5647_parse_dt(sensor, np);
+> >>>  		if (ret) {
+> >>>  			dev_err(dev, "DT parsing error: %d\n", ret);
+> >>>  			return ret;
+> >> --
+> >> Kind regards,
+> >>
+> >> Sakari Ailus
+>
+>
+> --
+>
+> Best regards,
+> Roman Kovalivskyi
+>
