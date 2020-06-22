@@ -2,158 +2,156 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AECC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90601206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8EB3206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MyVxAdfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgFVIh3 (ORCPT
+        id S1726704AbgFVIhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:37:29 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:57976 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbgFVIh3 (ORCPT
+        Mon, 22 Jun 2020 04:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgFVIhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:37:29 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U0K3ntX_1592815044;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0K3ntX_1592815044)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 22 Jun 2020 16:37:24 +0800
-Date:   Mon, 22 Jun 2020 16:37:24 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [PATCH v2 3/3] mm/shuffle: remove dynamic reconfiguration
-Message-ID: <20200622083724.GA96508@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200619125923.22602-1-david@redhat.com>
- <20200619125923.22602-4-david@redhat.com>
- <CAPcyv4hvwHDa=1suuuEFX5mmpOm12kv-Axbd8G7bp9iaA+FWAA@mail.gmail.com>
- <7a5f9ea1-7405-7058-af60-eea0bc165e79@redhat.com>
+        Mon, 22 Jun 2020 04:37:38 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2801BC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:37:37 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so18303841ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3eXBIJ/ong3y2DHs11bafvAglqmRKvwsWXz4ncOvgbk=;
+        b=MyVxAdfQuB3hNhVA6gFQPxOHMVZq4kOoEBR5d6+KvfCryN2lealybR0S635YEMAIb1
+         7CZFmBV4O9X4eZXOcbPkmEiodDZvxNhCOL7WBwd6J2Cj3/1b8ZHiWxf3RAU10cL4ibcx
+         GbHMLomNSEpu9ejd3MB182JsijA8KDOJSvVUdgJjLz2nAVxl/RIeI6YgcqGWOAnwYJJT
+         viXUnrmiCJWl8KHn52/cVCN1oD7n+D/UloNHOitJhWjYp/wwwu2k1gBiVKxW9DHxhhzZ
+         GIzmRw7Ry3GeuyRqGCH5rOdvc2R9lNBZeBPcVKaXbXeyiK68BDupWJy+Gt6110i0Vpos
+         q/Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3eXBIJ/ong3y2DHs11bafvAglqmRKvwsWXz4ncOvgbk=;
+        b=uJc8Waf8ZfunSaGQsCB+M/T3gJy52APbPXSopYwzLH0dYN38sNqWnUNUhR89RbCWRQ
+         9WHh3w5ArJFWq5GfMJzNJbVEHRPP6yPJMo05oRFhXAYhJI1+Nl3dDPYRdIpfuOwSXp0O
+         juVYx1ZIqlcAt46JgSwucgkQ23AL8tWSxtlbJq/iwPLU45Hr0/QkWT08tIhYFqnDtCt1
+         ITHqeBFz8hng9wEhu0YrXuhz0GlVA8WU68pMGq4u5DX7ulfk/zhJ4/HSMxXqCX6nazOc
+         xx2/hsBqJX5k0QzExn96gLV18MbNLqfL+opCOMplo5XUIKS0rnJRoByyoS99u3unlKaB
+         AzaQ==
+X-Gm-Message-State: AOAM530dvoTvlu7d09tImNpEX/QK3tDWxiuzZ3eVe/tgmXhyTmLs7AV5
+        1Ua79XZmKlmUQ897mXOEZNk3j9y17lZvPL6/BEPW1Q==
+X-Google-Smtp-Source: ABdhPJyq2873ShtFN9NjzvHiLg+t0lqwT8VYMxYMqaId//U8qDN7eqNChDblrwuN2XX52zIX4exu3kqPkTH2dU3Dtk0=
+X-Received: by 2002:a05:651c:512:: with SMTP id o18mr8528544ljp.226.1592815055424;
+ Mon, 22 Jun 2020 01:37:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a5f9ea1-7405-7058-af60-eea0bc165e79@redhat.com>
+References: <20200614010755.9129-1-valentin.schneider@arm.com>
+ <20200614010755.9129-2-valentin.schneider@arm.com> <CAKfTPtCyi9acak95_2_2uL3Cf0OMAbZhDav2LbPY+ULPrD7z4w@mail.gmail.com>
+ <20200620174912.GA18358@arm.com> <jhjmu4xcqyk.mognet@arm.com>
+In-Reply-To: <jhjmu4xcqyk.mognet@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 22 Jun 2020 10:37:23 +0200
+Message-ID: <CAKfTPtDG26Y9s4c+MbdmbxJaiCv6s6WTqmzztcoFsm2SnRL=vQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] thermal/cpu-cooling, sched/core: Cleanup thermal
+ pressure definition
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 09:33:28AM +0200, David Hildenbrand wrote:
->On 20.06.20 03:49, Dan Williams wrote:
->> On Fri, Jun 19, 2020 at 5:59 AM David Hildenbrand <david@redhat.com> wrote:
->>>
->>> Commit e900a918b098 ("mm: shuffle initial free memory to improve
->>> memory-side-cache utilization") promised "autodetection of a
->>> memory-side-cache (to be added in a follow-on patch)" over a year ago.
->>>
->>> The original series included patches [1], however, they were dropped
->>> during review [2] to be followed-up later.
->>>
->>> Due to lack of platforms that publish an HMAT, autodetection is currently
->>> not implemented. However, manual activation is actively used [3]. Let's
->>> simplify for now and re-add when really (ever?) needed.
->>>
->>> [1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com
->>> [2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com
->>> [3] https://lkml.kernel.org/r/CAPcyv4irwGUU2x+c6b4L=KbB1dnasNKaaZd6oSpYjL9kfsnROQ@mail.gmail.com
->>>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>> Cc: Michal Hocko <mhocko@suse.com>
->>> Cc: Minchan Kim <minchan@kernel.org>
->>> Cc: Huang Ying <ying.huang@intel.com>
->>> Cc: Wei Yang <richard.weiyang@gmail.com>
->>> Cc: Mel Gorman <mgorman@techsingularity.net>
->>> Cc: Dan Williams <dan.j.williams@intel.com>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>  mm/shuffle.c | 28 ++--------------------------
->>>  mm/shuffle.h | 17 -----------------
->>>  2 files changed, 2 insertions(+), 43 deletions(-)
->>>
->>> diff --git a/mm/shuffle.c b/mm/shuffle.c
->>> index dd13ab851b3ee..9b5cd4b004b0f 100644
->>> --- a/mm/shuffle.c
->>> +++ b/mm/shuffle.c
->>> @@ -10,33 +10,11 @@
->>>  #include "shuffle.h"
->>>
->>>  DEFINE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
->>> -static unsigned long shuffle_state __ro_after_init;
->>> -
->>> -/*
->>> - * Depending on the architecture, module parameter parsing may run
->>> - * before, or after the cache detection. SHUFFLE_FORCE_DISABLE prevents,
->>> - * or reverts the enabling of the shuffle implementation. SHUFFLE_ENABLE
->>> - * attempts to turn on the implementation, but aborts if it finds
->>> - * SHUFFLE_FORCE_DISABLE already set.
->>> - */
->>> -__meminit void page_alloc_shuffle(enum mm_shuffle_ctl ctl)
->>> -{
->>> -       if (ctl == SHUFFLE_FORCE_DISABLE)
->>> -               set_bit(SHUFFLE_FORCE_DISABLE, &shuffle_state);
->>> -
->>> -       if (test_bit(SHUFFLE_FORCE_DISABLE, &shuffle_state)) {
->>> -               if (test_and_clear_bit(SHUFFLE_ENABLE, &shuffle_state))
->>> -                       static_branch_disable(&page_alloc_shuffle_key);
->>> -       } else if (ctl == SHUFFLE_ENABLE
->>> -                       && !test_and_set_bit(SHUFFLE_ENABLE, &shuffle_state))
->>> -               static_branch_enable(&page_alloc_shuffle_key);
->>> -}
->>>
->>>  static bool shuffle_param;
->>>  static int shuffle_show(char *buffer, const struct kernel_param *kp)
->>>  {
->>> -       return sprintf(buffer, "%c\n", test_bit(SHUFFLE_ENABLE, &shuffle_state)
->>> -                       ? 'Y' : 'N');
->>> +       return sprintf(buffer, "%c\n", shuffle_param ? 'Y' : 'N');
->>>  }
->>>
->>>  static __meminit int shuffle_store(const char *val,
->>> @@ -47,9 +25,7 @@ static __meminit int shuffle_store(const char *val,
->>>         if (rc < 0)
->>>                 return rc;
->>>         if (shuffle_param)
->>> -               page_alloc_shuffle(SHUFFLE_ENABLE);
->>> -       else
->>> -               page_alloc_shuffle(SHUFFLE_FORCE_DISABLE);
->>> +               static_branch_enable(&page_alloc_shuffle_key);
->>>         return 0;
->>>  }
->> 
->> Let's do proper input validation here and require 1 / 'true' to enable
->> shuffling and not also allow 0 to be an 'enable' value.
+On Sun, 21 Jun 2020 at 00:28, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
 >
->I don't think that's currently done?
 >
->param_set_bool(val, kp) will only default val==NULL to 'true'. Passing 0
->will properly be handled by strtobool(). Or am I missing something?
+> On 20/06/20 18:49, Ionela Voinescu wrote:
+> > Hi Vincent,
+> >
+> > On Thursday 18 Jun 2020 at 17:03:24 (+0200), Vincent Guittot wrote:
+> >> On Sun, 14 Jun 2020 at 03:10, Valentin Schneider
+> >> <valentin.schneider@arm.com> wrote:
+> > [..]
+> >> > diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+> >> > index e297e135c031..a1efd379b683 100644
+> >> > --- a/drivers/thermal/cpufreq_cooling.c
+> >> > +++ b/drivers/thermal/cpufreq_cooling.c
+> >> > @@ -417,6 +417,11 @@ static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
+> >> >         return 0;
+> >> >  }
+> >> >
+> >> > +__weak void
+> >> > +arch_set_thermal_pressure(const struct cpumask *cpus, unsigned long th_pressure)
+> >> > +{
+> >> > +}
+> >>
+> >> Having this weak function declared in cpufreq_cooling is weird. This
+> >> means that we will have to do so for each one that wants to use it.
+> >>
+> >> Can't you declare an empty function in a common header file ?
+> >
+> > Do we expect anyone other than cpufreq_cooling to call
+> > arch_set_thermal_pressure()?
+> >
+> > I'm not against any of the options, either having it here as a week
+> > default definition (same as done for arch_set_freq_scale() in cpufreq.c)
+> > or in a common header (as done for arch_scale_freq_capacity() in sched.h).
+> >
 >
+> Same thoughts here; I was going for the arch_set_freq_scale() way.
+>
+> > But for me, Valentin's implementation seems more natural as setters are
+> > usually only called from within the framework that does the control
+> > (throttling for thermal or frequency setting for cpufreq) and we
+> > probably want to think twice if we want to call them from other places.
+> >
+>
+> Well TBH I was tempted to go the other way and keep the definition in
+> core.c, given a simple per-cpu value is fairly generic. More precisely, it
 
-Agree with this statement.
+Having all definitions in the same place is my main concern here.
+If topology.c defines arch_set_thermal_pressure it should also provide
+the empty function when the feature is not available or possible
+instead of relying of each user of the interface to define a weak
+function just in case.
 
->Thanks!
+> seems somewhat awkward that architectures have to redefine those interfaces
+> when, given what cpufreq_cooling is doing, they'll have to go for per-cpu
+> storage in some way or another.
 >
->-- 
->Thanks,
+> I ultimately decided against it, seeing as it isn't too difficult to come
+> up with other drivers of thermal pressure. There was that TDP-bound thing
+> [1], where IIUC you could end up with throttling not because of thermal but
+> because of power constraints. And then there's always FW that can cap stuff
+> as a last resort, and some architectures will want to inform the scheduler
+> of that when/if they'll be able to query FW for that.
 >
->David / dhildenb
-
--- 
-Wei Yang
-Help you, Help me
+> [1]: 20200428032258.2518-1-currojerez@riseup.net
+>
+> > Thanks,
+> > Ionela.
