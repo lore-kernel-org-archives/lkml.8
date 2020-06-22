@@ -2,132 +2,105 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B60C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57098C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B99E2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:15:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvujDWVv"
+	by mail.kernel.org (Postfix) with ESMTP id 3DD662073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgFVUPx (ORCPT
+        id S1728618AbgFVUQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:15:53 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60841 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728333AbgFVUPw (ORCPT
+        Mon, 22 Jun 2020 16:16:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728333AbgFVUQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:15:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592856951;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TSUweuZT4DKGDzPl0W0mgX7uetKvmHq3b3GY3r5obEQ=;
-        b=AvujDWVv1fJT1dJn+N4SkW5GMmDU7IzbCKKcFRWYUi39vcyRdTrOXRiPgl3E7M3zge/VvR
-        ZkRQMMmnk1YvVdlxpk+BsrqFbmZI7D1S3R3L9QdDGE/3EqgrbhDjYqVmFyvP22lTRRtz4m
-        8LgSdLETYuzgVcOxuBQArD3DxdwY2O0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-f7cc3XQuNW-UeEjQYsAiCA-1; Mon, 22 Jun 2020 16:15:47 -0400
-X-MC-Unique: f7cc3XQuNW-UeEjQYsAiCA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03BD218FF665;
-        Mon, 22 Jun 2020 20:15:45 +0000 (UTC)
-Received: from redhat.com (ovpn-119-159.rdu2.redhat.com [10.10.119.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8972560F89;
-        Mon, 22 Jun 2020 20:15:42 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 16:15:40 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Felix Kuehling <felix.kuehling@amd.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200622201540.GB9708@redhat.com>
-References: <CAKMK7uE-kWA==Cko5uenMrcnopEjq42HxoDTDywzBAbHqsN13g@mail.gmail.com>
- <20200619151551.GP6578@ziepe.ca>
- <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
- <20200619172308.GQ6578@ziepe.ca>
- <20200619180935.GA10009@redhat.com>
- <20200619181849.GR6578@ziepe.ca>
- <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
- <20200619195538.GT6578@ziepe.ca>
- <20200619203147.GC13117@redhat.com>
- <20200622114617.GU6578@ziepe.ca>
+        Mon, 22 Jun 2020 16:16:05 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40978C061573;
+        Mon, 22 Jun 2020 13:16:05 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2060F3F0CE;
+        Mon, 22 Jun 2020 20:15:57 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Documentation/process
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Joe Perches <joe@perches.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Tony Fischetti <tony.fischetti@gmail.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200621133630.46435-1-grandmaster@al2klimov.de>
+ <CANiq72kA==S-G481VHx2qrKkJmaVK7ZOuYmin4xVr3XKB8x8ug@mail.gmail.com>
+ <b7ba0047-8993-d3bf-327c-1fb70bc0282c@al2klimov.de>
+ <CANiq72=Y+beqZ8Dmieo_GKbyaLN8Nf1n3bVntj_o90Cn-nADRQ@mail.gmail.com>
+ <20200622070623.086f1623@lwn.net>
+ <CANiq72m6BNYe2ETNXJ2oLc6Jzad6kBBJK7_dz+BwZCeqYFXZqg@mail.gmail.com>
+ <adf85348dcbfbf64157e6519115b3a0c9f35df55.camel@perches.com>
+ <CANiq72mSz+LWLwOCa=9YtzKaD+NjhjZdRdwFiZ-gLMbjYd=QzA@mail.gmail.com>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <b2eeb299-d43b-54db-07a8-b50f5b66e7b7@al2klimov.de>
+Date:   Mon, 22 Jun 2020 22:15:57 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <CANiq72mSz+LWLwOCa=9YtzKaD+NjhjZdRdwFiZ-gLMbjYd=QzA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200622114617.GU6578@ziepe.ca>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:46:17AM -0300, Jason Gunthorpe wrote:
-> On Fri, Jun 19, 2020 at 04:31:47PM -0400, Jerome Glisse wrote:
-> > Not doable as page refcount can change for things unrelated to GUP, with
-> > John changes we can identify GUP and we could potentialy copy GUPed page
-> > instead of COW but this can potentialy slow down fork() and i am not sure
-> > how acceptable this would be. Also this does not solve GUP against page
-> > that are already in fork tree ie page P0 is in process A which forks,
-> > we now have page P0 in process A and B. Now we have process A which forks
-> > again and we have page P0 in A, B, and C. Here B and C are two branches
-> > with root in A. B and/or C can keep forking and grow the fork tree.
+
+
+Am 22.06.20 um 22:06 schrieb Miguel Ojeda:
+> On Mon, Jun 22, 2020 at 7:29 PM Joe Perches <joe@perches.com> wrote:
+>>
+>> scripts/get_maintainer.pl --self-test=links has a reachability test
+>> using wget.
+>>
+>> Perhaps a script like that could be used for http:// vs https://
 > 
-> For a long time now RDMA has broken COW pages when creating user DMA
-> regions.
+> +1
 > 
-> The problem has been that fork re-COW's regions that had their COW
-> broken.
+> Not sure about `--no-check-certificate` if the goal is to move to
+> "proper HTTPS". Perhaps we can try first without it and if that fails,
+> print a warning and try with `--no-check-certificate` etc.
+To be honest my script even blocked HTTPS->HTTP redirections, so I opt 
+for maximum security.
+
 > 
-> So, if you break the COW upon mapping and prevent fork (and others)
-> from copying DMA pinned then you'd cover the cases.
-
-I am not sure we want to prevent COW for pinned GUP pages, this would
-change current semantic and potentialy break/slow down existing apps.
-
-Anyway i think we focus too much on fork/COW, it is just an unfixable
-broken corner cases, mmu notifier allows you to avoid it. Forcing real
-copy on fork would likely be seen as regression by most people.
-
-
-> > Semantic was change with 17839856fd588f4ab6b789f482ed3ffd7c403e1f to some
-> > what "fix" that but GUP fast is still succeptible to this.
+> Cheers,
+> Miguel
 > 
-> Ah, so everyone breaks the COW now, not just RDMA..
-> 
-> What do you mean 'GUP fast is still succeptible to this' ?
+Also I opt for freezing the discussion about eventual future runs of the 
+script until everything from the first run[1] has been applied.
 
-Not all GUP fast path are updated (intentionaly) __get_user_pages_fast()
-for instance still keeps COW intact. People using GUP should really knows
-what they are doing.
 
-Cheers,
-Jérôme
-
+[1]
+âžœ  linux git:(master) git stash show --shortstat
+  1857 files changed, 2664 insertions(+), 2664 deletions(-)
+âžœ  linux git:(master)
