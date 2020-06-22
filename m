@@ -2,270 +2,145 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B52CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBE3520644
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CEE20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Cm5lXkEb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HK1pnyvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgFVRE5 (ORCPT
+        id S1730006AbgFVRFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:04:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729605AbgFVRE4 (ORCPT
+        Mon, 22 Jun 2020 13:05:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48030 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729605AbgFVRE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:04:56 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E3BC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:04:56 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0a2500329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:2500:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 888181EC0283;
-        Mon, 22 Jun 2020 19:04:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592845494;
+        Mon, 22 Jun 2020 13:04:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592845497;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4ZE0rblkVRU8ADgHdusXh5/vN8EII/na4ZFDGRwtdqk=;
-        b=Cm5lXkEbESAPW6MhL1FDLPEIlasK2bpDO2dHRCM5f/MKy/kP8ifybhVdyFkhmbbWSI+Nya
-        TTMhaTZT3L2Hq9l/Ap1gqeZBipeKgN7tWfh805bt/azoNGnIZZpUzHJ+qk15YnkSbvHG/V
-        tVa6HsUQlJ2wotPe1GGdhpJiWOOIWI0=
-Date:   Mon, 22 Jun 2020 19:04:46 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     kernel test robot <lkp@intel.com>,
-        clang-built-linux@googlegroups.com
-Cc:     X86 ML <x86@kernel.org>, kbuild-all@lists.01.org,
-        clang-built-linux@googlegroups.com, jpa@kernelbug.mail.kapsi.fi,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] selftests/fpu: Add an FPU selftest
-Message-ID: <20200622170446.GG32200@zn.tnic>
-References: <20200619174127.22304-3-bp@alien8.de>
- <202006210328.6YokxLP3%lkp@intel.com>
+        bh=zw8XrOHkVRgeeR7QiiSEcbjjjltG1ehdscLw0b/C9c0=;
+        b=HK1pnyvkqHnxsLGrfsqJVCnJUQGfR2HNg+QQNbW7LlAZDNwUPJriS4zqdks9x7klIWMnGc
+        5iig13zlfIOSl28b4c5YR78WBwAA1QTyDg1ItpuiM6QZsGXZgWv7dpa3cHdt1+gRcXTTCU
+        wPCeMmVmlLFFh0tIf0YSjDhyLCDfkUo=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-B5dA4YPjNDGeLM7vej3xlg-1; Mon, 22 Jun 2020 13:04:56 -0400
+X-MC-Unique: B5dA4YPjNDGeLM7vej3xlg-1
+Received: by mail-wr1-f70.google.com with SMTP id a6so4859502wrq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 10:04:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zw8XrOHkVRgeeR7QiiSEcbjjjltG1ehdscLw0b/C9c0=;
+        b=Ka2O+yAilnWipqif7Sk2dse1PF4xEZrAqknepK5cSHCZZ+NAxgAWP7KBi9MCd3+/0x
+         HAVKr06gqSjdRgJxspxCdz1Kx9B1EK+N8u1m/2JOvZfN4FI5MkTXpImQpFytM2KvW+71
+         ZRH5gfCdsB/zBHT9WYIfMEWAFEfvv+U8Rg28SitwRkriLDiNnWqD6UhAA5ZBOr0vaWXa
+         nHUiGKn8Fly1WZFE/wDj5UaqmoovXh3SZSE9ciXQY1tkueEJsNqtG6bl8nKP0mA+uA34
+         OzS52w2McCKw4jjGOpey7qQlHEuRa7zlvz21olPp6XGoLadGukPH6CdrvG9T4cubk+dc
+         bZig==
+X-Gm-Message-State: AOAM531V0qLj06RmPon6gzDAidjHKgA0wOqqfbRP/kycuv2LLisHMvCn
+        Wqydqb6I31N1UivtnIvc9G3Ud0Tj1mYtZA565my8R2HhSEhhDFo80ZbADtTFXYfKTSMBvBUTin9
+        OT5oO7QoU3OyyjhqPanShT/ze
+X-Received: by 2002:a5d:4d4d:: with SMTP id a13mr20552792wru.252.1592845494817;
+        Mon, 22 Jun 2020 10:04:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzJshRM/Q+cYn+pOyoQNIMqnZX6SUkflro/KbDFFzDy9a/O4IODCxlScxMd2GSbKua7MHQkLQ==
+X-Received: by 2002:a5d:4d4d:: with SMTP id a13mr20552775wru.252.1592845494559;
+        Mon, 22 Jun 2020 10:04:54 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id p16sm20655190wru.27.2020.06.22.10.04.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 10:04:53 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86/mmu: Avoid mixing gpa_t with gfn_t in
+ walk_addr_generic()
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+References: <20200622151435.752560-1-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <fe5b461e-795f-332f-48fe-58fc39fd1ae0@redhat.com>
+Date:   Mon, 22 Jun 2020 19:04:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200622151435.752560-1-vkuznets@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <202006210328.6YokxLP3%lkp@intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 03:55:00AM +0800, kernel test robot wrote:
-> Hi Borislav,
->=20
-> Thank you for the patch! Yet something to improve:
->=20
-> [auto build test ERROR on kselftest/next]
-> [also build test ERROR on tip/auto-latest linus/master v5.8-rc1 next-2020=
-0618]
-> [cannot apply to tip/x86/core]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use  as documented in
-> https://git-scm.com/docs/git-format-patch]
->=20
-> url:    https://github.com/0day-ci/linux/commits/Borislav-Petkov/x86-FPU-=
-FPU-sanitization-for-in-kernel-use/20200620-014453
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kself=
-test.git next
-> config: x86_64-allmodconfig (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 487c=
-a07fcc75d52755c9fe2ee05bcb3b6eeeec44)
-> reproduce (this is a W=3D1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
-n/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install x86_64 cross compiling tool for clang build
->         # apt-get install binutils-x86-64-linux-gnu
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang make.cross AR=
-CH=3Dx86_64=20
->=20
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->=20
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
->=20
-> >> ERROR: modpost: "__gtdf2" [lib/test_fpu.ko] undefined!
-> >> ERROR: modpost: "__divdf3" [lib/test_fpu.ko] undefined!
-> >> ERROR: modpost: "__muldf3" [lib/test_fpu.ko] undefined!
-> >> ERROR: modpost: "__adddf3" [lib/test_fpu.ko] undefined!
+On 22/06/20 17:14, Vitaly Kuznetsov wrote:
+> translate_gpa() returns a GPA, assigning it to 'real_gfn' seems obviously
+> wrong. There is no real issue because both 'gpa_t' and 'gfn_t' are u64 and
+> we don't use the value in 'real_gfn' as a GFN, we do
+> 
+>  real_gfn = gpa_to_gfn(real_gfn);
+> 
+> instead. 'If you see a "buffalo" sign on an elephant's cage, do not trust
+> your eyes', but let's fix it for good.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/mmu/paging_tmpl.h | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+> index a6d484ea110b..58234bfaca07 100644
+> --- a/arch/x86/kvm/mmu/paging_tmpl.h
+> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
+> @@ -360,7 +360,6 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+>  	++walker->level;
+>  
+>  	do {
+> -		gfn_t real_gfn;
+>  		unsigned long host_addr;
+>  
+>  		pt_access = pte_access;
+> @@ -375,7 +374,7 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+>  		walker->table_gfn[walker->level - 1] = table_gfn;
+>  		walker->pte_gpa[walker->level - 1] = pte_gpa;
+>  
+> -		real_gfn = mmu->translate_gpa(vcpu, gfn_to_gpa(table_gfn),
+> +		real_gpa = mmu->translate_gpa(vcpu, gfn_to_gpa(table_gfn),
+>  					      nested_access,
+>  					      &walker->fault);
+>  
+> @@ -389,12 +388,10 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+>  		 * information to fix the exit_qualification or exit_info_1
+>  		 * fields.
+>  		 */
+> -		if (unlikely(real_gfn == UNMAPPED_GVA))
+> +		if (unlikely(real_gpa == UNMAPPED_GVA))
+>  			return 0;
+>  
+> -		real_gfn = gpa_to_gfn(real_gfn);
+> -
+> -		host_addr = kvm_vcpu_gfn_to_hva_prot(vcpu, real_gfn,
+> +		host_addr = kvm_vcpu_gfn_to_hva_prot(vcpu, gpa_to_gfn(real_gpa),
+>  					    &walker->pte_writable[walker->level - 1]);
+>  		if (unlikely(kvm_is_error_hva(host_addr)))
+>  			goto error;
+> 
 
-Hmm, the point here is to actually have SSE* code in a kernel module for
-testing. And gcc does the right thing, see below.
+Queued, thanks.
 
-LLVM folks, how can I make llvm not call those library functions and
-actually spit out SSE* code?
+Paolo
 
-Full build command is:
-
-  /mnt/smr/share/src/llvm/tc-build/install/bin/clang-11 -Wp,-MMD,lib/.test_=
-fpu.o.d  -nostdinc -isystem /mnt/smr/share/src/llvm/tc-build/install/lib/cl=
-ang/11.0.0/include -I./arch/x86/include -I./arch/x86/include/generated  -I.=
-/include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./=
-include/uapi -I./include/generated/uapi -include ./include/linux/kconfig.h =
--include ./include/linux/compiler_types.h -D__KERNEL__ -Qunused-arguments -=
-Wall -Wundef -Werror=3Dstrict-prototypes -Wno-trigraphs -fno-strict-aliasin=
-g -fno-common -fshort-wchar -fno-PIE -Werror=3Dimplicit-function-declaratio=
-n -Werror=3Dimplicit-int -Wno-format-security -std=3Dgnu89 -no-integrated-a=
-s -Werror=3Dunknown-warning-option -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -=
-mno-avx -m64 -mno-80387 -mstack-alignment=3D8 -march=3Dk8 -mno-red-zone -mc=
-model=3Dkernel -Wno-sign-compare -fno-asynchronous-unwind-tables -mretpolin=
-e-external-thunk -fno-delete-null-pointer-checks -Wno-frame-address -Wno-ad=
-dress-of-packed-member -O2 -Wframe-larger-than=3D2048 -fstack-protector -Wn=
-o-format-invalid-specifier -Wno-gnu -mno-global-merge -Wno-unused-const-var=
-iable -g -DCC_USING_FENTRY -Wdeclaration-after-statement -Wvla -Wno-pointer=
--sign -Wno-array-bounds -fno-strict-overflow -fno-merge-all-constants -fno-=
-stack-check -Werror=3Ddate-time -Werror=3Dincompatible-pointer-types -fmacr=
-o-prefix-map=3D./=3D -fcf-protection=3Dnone -Wno-initializer-overrides -Wno=
--format -Wno-sign-compare -Wno-format-zero-length -Wno-pointer-to-enum-cast=
- -Wno-tautological-constant-out-of-range-compare -mhard-float -msse  -DMODU=
-LE  -DKBUILD_BASENAME=3D'"test_fpu"' -DKBUILD_MODNAME=3D'"test_fpu"' -c -o =
-lib/test_fpu.o lib/test_fpu.c
-
-Thx.
-
---- /tmp/test_fpu.s.gcc	2020-06-22 18:51:25.828615337 +0200
-+++ /tmp/test_fpu.s.llvm-11	2020-06-22 18:50:35.080614534 +0200
-@@ -1,74 +1,49 @@
--test_fpu_get:
--	pushq	%r12	#
--	pushq	%rbx	#
--	movq	%rsi, %rbx	# tmp119, val
--	subq	$56, %rsp	#,
--# lib/test_fpu.c:58: 	kernel_fpu_begin();
--	call	kernel_fpu_begin	#
--# lib/test_fpu.c:32: 	a =3D 4.0;
--	movlpd	.LC1(%rip), %xmm0	#, tmp106
--	movsd	%xmm0, (%rsp)	# tmp106, a
--# lib/test_fpu.c:33: 	b =3D 1e-15;
--	movlpd	.LC2(%rip), %xmm0	#, tmp107
--	movsd	%xmm0, 8(%rsp)	# tmp107, b
--# lib/test_fpu.c:34: 	c =3D 1e-310;
--	movlpd	.LC3(%rip), %xmm0	#, tmp108
--	movsd	%xmm0, 16(%rsp)	# tmp108, c
--# lib/test_fpu.c:37: 	d =3D a + b;
--	movlpd	(%rsp), %xmm0	# a, a.2_8
--	movlpd	8(%rsp), %xmm1	# b, b.3_9
--	addsd	%xmm1, %xmm0	# b.3_9, _10
--# lib/test_fpu.c:37: 	d =3D a + b;
--	movsd	%xmm0, 24(%rsp)	# _10, d
--# lib/test_fpu.c:40: 	e =3D a + b / 2;
--	movlpd	8(%rsp), %xmm0	# b, b.4_11
--# lib/test_fpu.c:40: 	e =3D a + b / 2;
--	movlpd	(%rsp), %xmm1	# a, a.5_13
--# lib/test_fpu.c:40: 	e =3D a + b / 2;
--	mulsd	.LC4(%rip), %xmm0	#, tmp109
--# lib/test_fpu.c:40: 	e =3D a + b / 2;
--	addsd	%xmm1, %xmm0	# a.5_13, _14
--# lib/test_fpu.c:40: 	e =3D a + b / 2;
--	movsd	%xmm0, 32(%rsp)	# _14, e
--# lib/test_fpu.c:43: 	f =3D b / c;
--	movlpd	8(%rsp), %xmm0	# b, b.6_15
--	movlpd	16(%rsp), %xmm1	# c, c.7_16
--	divsd	%xmm1, %xmm0	# c.7_16, _17
--# lib/test_fpu.c:43: 	f =3D b / c;
--	movsd	%xmm0, 40(%rsp)	# _17, f
--# lib/test_fpu.c:46: 	g =3D a + c * f;
--	movlpd	16(%rsp), %xmm0	# c, c.8_18
--	movlpd	40(%rsp), %xmm2	# f, f.9_19
--# lib/test_fpu.c:46: 	g =3D a + c * f;
--	movlpd	(%rsp), %xmm1	# a, a.10_21
--# lib/test_fpu.c:46: 	g =3D a + c * f;
--	mulsd	%xmm2, %xmm0	# f.9_19, tmp111
--# lib/test_fpu.c:46: 	g =3D a + c * f;
--	addsd	%xmm1, %xmm0	# a.10_21, _22
--# lib/test_fpu.c:46: 	g =3D a + c * f;
--	movsd	%xmm0, 48(%rsp)	# _22, g
--# lib/test_fpu.c:48: 	if (d > a && e > a && g > a)
--	movlpd	24(%rsp), %xmm1	# d, d.11_23
--	movlpd	(%rsp), %xmm0	# a, a.12_24
--# lib/test_fpu.c:48: 	if (d > a && e > a && g > a)
--	comisd	%xmm0, %xmm1	# a.12_24, d.11_23
--	jbe	.L15	#,
--# lib/test_fpu.c:48: 	if (d > a && e > a && g > a)
--	movlpd	32(%rsp), %xmm1	# e, e.13_25
--	movlpd	(%rsp), %xmm0	# a, a.14_26
--# lib/test_fpu.c:48: 	if (d > a && e > a && g > a)
--	comisd	%xmm0, %xmm1	# a.14_26, e.13_25
--	jbe	.L15	#,
--# lib/test_fpu.c:48: 	if (d > a && e > a && g > a)
--	movlpd	48(%rsp), %xmm1	# g, g.15_27
--# lib/test_fpu.c:51: 		return -EINVAL;
--	movl	$0, %r12d	#, tmp117
--	movl	$-22, %eax	#, tmp118
--# lib/test_fpu.c:48: 	if (d > a && e > a && g > a)
--	movlpd	(%rsp), %xmm0	# a, a.16_28
--# lib/test_fpu.c:51: 		return -EINVAL;
--	comisd	%xmm0, %xmm1	# a.16_28, g.15_27
--	cmovbe	%eax, %r12d	# tmp117,, tmp118, <retval>
--.L4:
--# lib/test_fpu.c:60: 	kernel_fpu_end();
--	call	kernel_fpu_end	#
-+test_fpu_get:                           # @test_fpu_get
-+# %bb.0:
-+	pushq	%rbp
-+	pushq	%rbx
-+	subq	$56, %rsp
-+	movq	%rsi, %rbx
-+	callq	kernel_fpu_begin
-+	movabsq	$4616189618054758400, %rax # imm =3D 0x4010000000000000
-+	movq	%rax, (%rsp)
-+	movabsq	$4382569440205035030, %rax # imm =3D 0x3CD203AF9EE75616
-+	movq	%rax, 8(%rsp)
-+	movabsq	$20240225330731, %rax   # imm =3D 0x12688B70E62B
-+	movq	%rax, 16(%rsp)
-+	movq	(%rsp), %rdi
-+	movq	8(%rsp), %rsi
-+	callq	__adddf3
-+	movq	%rax, 48(%rsp)
-+	movq	(%rsp), %rbp
-+	movq	8(%rsp), %rdi
-+	movabsq	$4602678819172646912, %rsi # imm =3D 0x3FE0000000000000
-+	callq	__muldf3
-+	movq	%rbp, %rdi
-+	movq	%rax, %rsi
-+	callq	__adddf3
-+	movq	%rax, 40(%rsp)
-+	movq	8(%rsp), %rdi
-+	movq	16(%rsp), %rsi
-+	callq	__divdf3
-+	movq	%rax, 32(%rsp)
-+	movq	(%rsp), %rbp
-+	movq	16(%rsp), %rdi
-+	movq	32(%rsp), %rsi
-+	callq	__muldf3
-+	movq	%rbp, %rdi
-+	movq	%rax, %rsi
-+	callq	__adddf3
-+	movq	%rax, 24(%rsp)
-+	movq	48(%rsp), %rdi
-+	movq	(%rsp), %rsi
-+	callq	__gtdf2
-+	testl	%eax, %eax
-+	jle	.LBB3_3
-+# %bb.1:
-+	movq	40(%rsp), %rdi
-+	movq	(%rsp), %rsi
-+	callq	__gtdf2
-+	testl	%eax, %eax
-+	jle	.LBB3_3
-+# %bb.2:
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
