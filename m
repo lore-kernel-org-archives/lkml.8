@@ -2,314 +2,133 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB36C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F03C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF2820768
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:54:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKZK6zF0"
+	by mail.kernel.org (Postfix) with ESMTP id D3D212075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592841287;
+	bh=oRJB6h/bS+tqbd9R39cS2329vCq3WIUuVv0P5qICFUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L+PayGCHFdvMkB6EkXZ75pJ0zqWUFUpSk6xfvq8/cBmPVb9zRSxuCE1MhCV31E0Vz
+	 fITbLErscJMBFc3ujtrhPbHD95EN4iioxCQTS4wvslDXaIPUYPQEdehIEQUcT4+zeQ
+	 gotaFbwrjQ4GcbMYe+9mlU5SawieGYVZFWkhyECE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbgFVPyT (ORCPT
+        id S1729428AbgFVPyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:54:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgFVPyS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:54:18 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5961EC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:54:17 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c3so17164456wru.12
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 08:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5vFrkeZQfkF+X3F51MR72kw4rxnUJbdYv8qMFbrWUSo=;
-        b=nKZK6zF0Dg8tJX+t3TBIsjafGj8sRbAwShgZVhOZ/O8GPVM8xpX8ss3MRXDnUbT9tS
-         g2CR0AUD0k6f8YX5InVrggLH3ksl/S1idz2S/RuvG64Wf95PMrEi0X0fibuQYurSPzPZ
-         rcb8yRxK8IzuE7i+2kcb8od13H9KL6t9j0RBWhC6Y3dBwh+GQE3yj3wUE3HT/9U3geBv
-         qb1ZygTf9fc6JscpA67jQ6PY1sSV28vZlf1q9RdD7yHw7bZAiYqOVThjllBT3MY/jIPX
-         pLrQ1itJCHIFxzZNyOASXf1PGvq+0xqGe5BzNWCjN6b9DPyMmUNnURnEPesYpOw5GcRx
-         gP+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=5vFrkeZQfkF+X3F51MR72kw4rxnUJbdYv8qMFbrWUSo=;
-        b=Steu5sqDI7bKhE7B/hA3rZiedhXu8+xd8ghKpe1sh4k6Aa020lTANLoaX7FRkz9O6P
-         cUlz96oqmqHzqsnWXS/xWfFi1IX4Iq9sK/8GYXj40oDQ4i5hq3BKSldY5KbkzyYP6OHq
-         SsnjqRXc8uMfzrOKxxBFUEVVJf1ZaAgEFEHic0e8uPEiG4GAUTQshVAGrxEWTUyzJ7I5
-         DXHt9HgtttyWteGxOLrhJpnVT5PshqGTa65sT7dPKDPH9XHJMj+NqQX3xuoH4r+rHUz0
-         7fOxPjPRxGRzceuswUQDiCajQ0AuIctxJsBezWl45m8QU1wsdneLRWewNfQbtOBadpMj
-         3C9w==
-X-Gm-Message-State: AOAM532OtqigSI7W0Lg/seZgM9PK411G9cNwwSTezpflaO/sL/LKvQqA
-        byUZ2mp2PEUKuTBGq9RQG1A=
-X-Google-Smtp-Source: ABdhPJzoGtwB6cLNM7pIdb83WPlgG98du1PQFqxgPDpVPiogNlfUhaRBIYFLa7tfIc+gBrzha0Zcmg==
-X-Received: by 2002:a5d:4286:: with SMTP id k6mr19114188wrq.140.1592841256065;
-        Mon, 22 Jun 2020 08:54:16 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.138])
-        by smtp.gmail.com with ESMTPSA id h18sm18443775wru.7.2020.06.22.08.54.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 08:54:14 -0700 (PDT)
-Subject: Re: [PATCH v1 03/11] soc: mediatek: cmdq: add write_s function
-To:     Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, HS Liao <hs.liao@mediatek.com>
-References: <1592749115-24158-1-git-send-email-dennis-yc.hsieh@mediatek.com>
- <1592749115-24158-4-git-send-email-dennis-yc.hsieh@mediatek.com>
- <a9c6f28a-94d1-f92b-a017-935e80d0ec26@gmail.com>
- <1592840183.1307.12.camel@mtkswgap22>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8bdfff5f-9fa8-7a13-79d3-dcb63d587629@gmail.com>
-Date:   Mon, 22 Jun 2020 17:54:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 11:54:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbgFVPyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 11:54:46 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53FBF2074D;
+        Mon, 22 Jun 2020 15:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592841286;
+        bh=oRJB6h/bS+tqbd9R39cS2329vCq3WIUuVv0P5qICFUs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1rAAOtWug0zRuuAKt9uYzXZhuiodYywEsoqay8UQK3SGp4XmBOkmVS428PppVFfJK
+         y+vATJ5E/6KVsCPPVP8gJwSOqDwxnogBkP0VDTbYzkWSkddu19cGnxO7R8uK4BKSly
+         uwZBbjQd5lWiKAzjITZLVpbTBPJ4a2wHK2HK2n10=
+Date:   Mon, 22 Jun 2020 21:24:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Thomas Ruf <freelancer@rufusul.de>
+Cc:     Federico Vaga <federico.vaga@cern.ch>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: DMA Engine: Transfer From Userspace
+Message-ID: <20200622155440.GM2324254@vkoul-mobl>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+ <419762761.402939.1592827272368@mailbusiness.ionos.de>
 MIME-Version: 1.0
-In-Reply-To: <1592840183.1307.12.camel@mtkswgap22>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <419762761.402939.1592827272368@mailbusiness.ionos.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 22-06-20, 14:01, Thomas Ruf wrote:
+> > On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
+> > 
+> > On 21-06-20, 22:36, Federico Vaga wrote:
+> > > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
+> > > > On 19-06-20, 16:31, Dave Jiang wrote:
+> > > > > 
+> > > > > 
+> > > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> > > > > > Hello,
+> > > > > >
+> > > > > > is there the possibility of using a DMA engine channel from userspace?
+> > > > > >
+> > > > > > Something like:
+> > > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
+> > > > > > - read() or write() to trigger the transfer
+> > > > > >
+> > > > > 
+> > > > > I may have supposedly promised Vinod to look into possibly providing
+> > > > > something like this in the future. But I have not gotten around to do that
+> > > > > yet. Currently, no such support.
+> > > > 
+> > > > And I do still have serious reservations about this topic :) Opening up
+> > > > userspace access to DMA does not sound very great from security point of
+> > > > view.
+> > > 
+> > > I was thinking about a dedicated module, and not something that the DMA engine
+> > > offers directly. You load the module only if you need it (like the test module)
+> > 
+> > But loading that module would expose dma to userspace. 
+> > > 
+> > > > Federico, what use case do you have in mind?
+> > > 
+> > > Userspace drivers
+> > 
+> > more the reason not do do so, why cant a kernel driver be added for your
+> > usage?
+> 
+> by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
+> now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
+> 
+> just let me introduce myself and the project:
+> - coding in C since '91
+> - coding in C++ since '98
+> - a lot of stuff not relevant for this ;-)
+> - working as a freelancer since Nov '19
+> - implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
+> - last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
+> - subscribed to dmaengine on friday, saw the start of this discussion on saturday
+> - talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
 
+DMA_SG was removed as it had no users, if we have a user (in-kernel) we
+can certainly revert that removal patch.
+> 
+> here the struct for the ioctl:
+> 
+> typedef struct {
+>   unsigned int struct_size;
+>   const void *src_user_ptr;
+>   void *dst_user_ptr;
+>   unsigned long length;
+>   unsigned int timeout_in_ms;
+> } dma_sg_proxy_arg_t;
 
-On 22/06/2020 17:36, Dennis-YC Hsieh wrote:
-> Hi Matthias,
-> 
-> thanks for your comment.
-> 
-> On Mon, 2020-06-22 at 13:07 +0200, Matthias Brugger wrote:
->>
->> On 21/06/2020 16:18, Dennis YC Hsieh wrote:
->>> add write_s function in cmdq helper functions which
->>> writes value contains in internal register to address
->>> with large dma access support.
->>>
->>> Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
->>> ---
->>>  drivers/soc/mediatek/mtk-cmdq-helper.c   |   19 +++++++++++++++++++
->>>  include/linux/mailbox/mtk-cmdq-mailbox.h |    1 +
->>>  include/linux/soc/mediatek/mtk-cmdq.h    |   19 +++++++++++++++++++
->>>  3 files changed, 39 insertions(+)
->>>
->>> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> index bf32e3b2ca6c..817a5a97dbe5 100644
->>> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> @@ -18,6 +18,10 @@ struct cmdq_instruction {
->>>  	union {
->>>  		u32 value;
->>>  		u32 mask;
->>> +		struct {
->>> +			u16 arg_c;
->>> +			u16 src_reg;
->>> +		};
->>>  	};
->>>  	union {
->>>  		u16 offset;
->>> @@ -222,6 +226,21 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
->>>  }
->>>  EXPORT_SYMBOL(cmdq_pkt_write_mask);
->>>  
->>> +int cmdq_pkt_write_s(struct cmdq_pkt *pkt, u16 high_addr_reg_idx,
->>> +		     u16 addr_low, u16 src_reg_idx)
->>> +{
->>
->> Do I understand correctly that we use CMDQ_ADDR_HIGH(addr) and
->> CMDQ_ADDR_LOW(addr) to calculate in the client high_addr_reg_idx and addr_low
->> respectively?
->>
->> In that case I think a better interface would be to pass the address and do the
->> high/low calculation in the cmdq_pkt_write_s
-> 
-> Not exactly. The high_addr_reg_idx parameter is index of internal
-> register (which store address bit[47:16]), not result of
-> CMDQ_ADDR_HIGH(addr). 
-> 
-> The CMDQ_ADDR_HIGH macro use in patch 02/11 cmdq_pkt_assign() api. This
-> api helps assign address bit[47:16] into one of internal register by
-> index. And same index could be use in cmdq_pkt_write_s(). The gce
-> combine bit[47:16] in internal register and bit[15:0] in addr_low
-> parameter to final address. So it is better to keep interface in this
-> way.
-> 
+Again, am not convinced opening DMA to userspace like this is a great
+idea. Why not have Xilinx camera driver invoke the dmaengine and do
+DMA_SG ?
 
-Got it, but then why don't we call cmdq_pkt_assign() in cmdq_pkt_write_s()? This
-way we would get a clean API for what we want to do.
-Do we expect other users of cmdq_pkt_assign()? Otherwise we could keep it
-private the this file and don't export it.
-
-By the way, why do you postfix the _s, I understand that it reflects the large
-DMA access but I wonder why you choose '_s'.
-
-Regards,
-Matthias
-
-> 
-> Regards,
-> Dennis
-> 
->>
->> Regards,
->> Matthias
->>
->>> +	struct cmdq_instruction inst = {};
->>> +
->>> +	inst.op = CMDQ_CODE_WRITE_S;
->>> +	inst.src_t = CMDQ_REG_TYPE;
->>> +	inst.sop = high_addr_reg_idx;
->>> +	inst.offset = addr_low;
->>> +	inst.src_reg = src_reg_idx;
->>> +
->>> +	return cmdq_pkt_append_command(pkt, inst);
->>> +}
->>> +EXPORT_SYMBOL(cmdq_pkt_write_s);
->>> +
->>>  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
->>>  {
->>>  	struct cmdq_instruction inst = { {0} };
->>> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
->>> index 121c3bb6d3de..ee67dd3b86f5 100644
->>> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
->>> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
->>> @@ -59,6 +59,7 @@ enum cmdq_code {
->>>  	CMDQ_CODE_JUMP = 0x10,
->>>  	CMDQ_CODE_WFE = 0x20,
->>>  	CMDQ_CODE_EOC = 0x40,
->>> +	CMDQ_CODE_WRITE_S = 0x90,
->>>  	CMDQ_CODE_LOGIC = 0xa0,
->>>  };
->>>  
->>> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
->>> index 83340211e1d3..e1c5a7549b4f 100644
->>> --- a/include/linux/soc/mediatek/mtk-cmdq.h
->>> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
->>> @@ -12,6 +12,8 @@
->>>  #include <linux/timer.h>
->>>  
->>>  #define CMDQ_NO_TIMEOUT		0xffffffffu
->>> +#define CMDQ_ADDR_HIGH(addr)	((u32)(((addr) >> 16) & GENMASK(31, 0)))
->>> +#define CMDQ_ADDR_LOW(addr)	((u16)(addr) | BIT(1))
->>>  
->>>  struct cmdq_pkt;
->>>  
->>> @@ -103,6 +105,23 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
->>>  			u16 offset, u32 value, u32 mask);
->>>  
->>>  /**
->>> + * cmdq_pkt_write_s() - append write_s command to the CMDQ packet
->>> + * @pkt:	the CMDQ packet
->>> + * @high_addr_reg_idx:	internal register ID which contains high address of pa
->>> + * @addr_low:	low address of pa
->>> + * @src_reg_idx:	the CMDQ internal register ID which cache source value
->>> + *
->>> + * Return: 0 for success; else the error code is returned
->>> + *
->>> + * Support write value to physical address without subsys. Use CMDQ_ADDR_HIGH()
->>> + * to get high address and call cmdq_pkt_assign() to assign value into internal
->>> + * reg. Also use CMDQ_ADDR_LOW() to get low address for addr_low parameter when
->>> + * call to this function.
->>> + */
->>> +int cmdq_pkt_write_s(struct cmdq_pkt *pkt, u16 high_addr_reg_idx,
->>> +		     u16 addr_low, u16 src_reg_idx);
->>> +
->>> +/**
->>>   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
->>>   * @pkt:	the CMDQ packet
->>>   * @event:	the desired event type to "wait and CLEAR"
->>>
-> 
+-- 
+~Vinod
