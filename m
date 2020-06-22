@@ -2,114 +2,105 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C73FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3E32075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17A22073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbgFVQhM (ORCPT
+        id S1729792AbgFVQiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:37:12 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54621 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729564AbgFVQhM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:37:12 -0400
-Received: by mail-il1-f199.google.com with SMTP id d18so2751671ill.21
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:37:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=dXpRaOSCV03GZrVNf0as05OY3tFtQlSGCWqY2/ykkOA=;
-        b=r6E6Voz7WPEO6kjtF4cCdAVVfBmmhZv3sYLaVnJN1yGXaHUjlsrisPbmtBnBfACSaD
-         aJJyBSq/wVJoBMa6BqDM8h2CC79gDgRQP9o2BrmkDyiWgosW2bTLolq1MJJ6uJwizQGq
-         QqwW1AbmZZqKjoUlKp6sNvhZwo6e6UyXjHUeF9QnKsFOcOPWYjw361jHjrnmlhmstJYd
-         4GFIWi5nSpb9Ako1tcAfq0Dpwyu76Mo/U2e1n0q/oBIjAN8sd+OcJqG13LFquis52da7
-         VWYqT2sle0QYXrIJFZhE5MH99pVwhapaDVqZBiYrUzqK/R7NOR7LzMIYpMTlMMtmwHKT
-         3iPg==
-X-Gm-Message-State: AOAM533ywBDwEMedLap5yj8oDlNnNCqXAL4lKiAyXxV6kpTq68nMorSi
-        /x7kGpR9bVX1Yc2FiPQtWX4gy1mAzrO2Vrhpc45rSEnBZhid
-X-Google-Smtp-Source: ABdhPJxIVmrzZ3ErJSIFqeO5UfeDz1PCz021Swz4WKdBXUv991BkVC5hlSjGxBXGpM1nDcgOmD5cEfcIcJIZRD+RueNZ6821Ppdc
+        Mon, 22 Jun 2020 12:38:00 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45770 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729260AbgFVQiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:38:00 -0400
+IronPort-SDR: 9aDMIAudlv/lEvT+ZUeEA7/uq/VReLVbFLjEUN6pspFkwuSVFpkk5MHyVXhiCGo1rW8arDqOcQ
+ Df7FA9WczP6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="145321772"
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="scan'208";a="145321772"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 09:37:59 -0700
+IronPort-SDR: tUatlQhKCXoMlU2i9XOmGEVCNLlPs3jyOOdZIjUT+MC7KpNBMZ6zeCIwkpHCizk0l5JO/fepmN
+ cdClWSlqsypg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="scan'208";a="478444703"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga006.fm.intel.com with SMTP; 22 Jun 2020 09:37:57 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 22 Jun 2020 19:37:56 +0300
+Date:   Mon, 22 Jun 2020 19:37:56 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@dell.com>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Allow breaking up Thunderbolt/USB4 updates
+Message-ID: <20200622163756.GV2795@lahna.fi.intel.com>
+References: <20200622143035.25327-1-mario.limonciello@dell.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:91d4:: with SMTP id t203mr19859440iod.149.1592843831156;
- Mon, 22 Jun 2020 09:37:11 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 09:37:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bd2c6905a8aedaa8@google.com>
-Subject: WARNING: suspicious RCU usage in tipc_udp_send_msg
-From:   syzbot <syzbot+7b0553cceace6d4a2b82@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622143035.25327-1-mario.limonciello@dell.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Mario,
 
-syzbot found the following crash on:
+On Mon, Jun 22, 2020 at 09:30:33AM -0500, Mario Limonciello wrote:
+> Currently updates to Thunderbolt and USB4 controllers are fully atomic
+> actions. When writing into the non-active NVM nothing gets flushed to
+> the hardware until authenticate is sent.
+> 
+> There has been some desire to improve the perceived performance of these
+> updates, particularly for userland that may perform the update upon
+> a performance sensitive time like logging out.
+> 
+> So allow userland to flush the image to hardware at runtime, and then
+> allow authenticating the image at another time.
+> 
+> For the Dell WD19TB some specific hardware capability exists that allows
+> extending this to automatically complete the update when unplugged.
+> Export that functionality to userspace as well.
+> 
+> This patch series is done relative thunderbolt.git/next.
 
-HEAD commit:    67c20de3 net: Add MODULE_DESCRIPTION entries to network mo..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=16de7aed100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=45c80de7244166e1
-dashboard link: https://syzkaller.appspot.com/bug?extid=7b0553cceace6d4a2b82
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Thanks for the patch series. I wonder if you could base this on top of
+my "retimer NVM upgrade" series here (you are also Cc'd):
 
-Unfortunately, I don't have any reproducer for this crash yet.
+  https://lore.kernel.org/linux-usb/20200616135617.85752-1-mika.westerberg@linux.intel.com/
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7b0553cceace6d4a2b82@syzkaller.appspotmail.com
+That series moves some of the common NVM functionality into a separate
+file (nvm.c).
 
-=============================
-WARNING: suspicious RCU usage
-5.8.0-rc1-syzkaller #0 Not tainted
------------------------------
-net/tipc/udp_media.c:241 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-2 locks held by kworker/1:17/1829:
- #0: ffff8880a6986538 ((wq_completion)cryptd){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880a6986538 ((wq_completion)cryptd){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880a6986538 ((wq_completion)cryptd){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880a6986538 ((wq_completion)cryptd){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880a6986538 ((wq_completion)cryptd){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880a6986538 ((wq_completion)cryptd){+.+.}-{0:0}, at: process_one_work+0x844/0x1690 kernel/workqueue.c:2240
- #1: ffffc90008e57dc0 ((work_completion)(&cpu_queue->work)){+.+.}-{0:0}, at: process_one_work+0x878/0x1690 kernel/workqueue.c:2244
-
-stack backtrace:
-CPU: 1 PID: 1829 Comm: kworker/1:17 Not tainted 5.8.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: cryptd cryptd_queue_worker
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- tipc_udp_send_msg+0x3b1/0x480 net/tipc/udp_media.c:241
- tipc_aead_encrypt_done+0x204/0x3a0 net/tipc/crypto.c:761
- cryptd_aead_crypt+0xe8/0x1d0 crypto/cryptd.c:739
- cryptd_queue_worker+0x118/0x1b0 crypto/cryptd.c:181
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> Mario Limonciello (2):
+>   thunderbolt: Add support for separating the flush to SPI and
+>     authenticate
+>   thunderbolt: Add support for authenticate on disconnect
+> 
+>  .../ABI/testing/sysfs-bus-thunderbolt         | 24 +++++-
+>  drivers/thunderbolt/Makefile                  |  1 +
+>  drivers/thunderbolt/eeprom.c                  |  2 +
+>  drivers/thunderbolt/lc.c                      | 14 ++++
+>  drivers/thunderbolt/quirks.c                  | 38 +++++++++
+>  drivers/thunderbolt/switch.c                  | 81 +++++++++++++++----
+>  drivers/thunderbolt/tb-quirks.h               | 16 ++++
+>  drivers/thunderbolt/tb.h                      |  4 +
+>  drivers/thunderbolt/tb_regs.h                 |  1 +
+>  9 files changed, 162 insertions(+), 19 deletions(-)
+>  create mode 100644 drivers/thunderbolt/quirks.c
+>  create mode 100644 drivers/thunderbolt/tb-quirks.h
+> 
+> -- 
+> 2.25.1
