@@ -2,83 +2,125 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4201FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C35C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C48E2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBB220739
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rza3aMY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgFVNMh (ORCPT
+        id S1728695AbgFVNMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:12:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51800 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbgFVNMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:12:36 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jnMFK-001f7b-PC; Mon, 22 Jun 2020 15:12:22 +0200
-Date:   Mon, 22 Jun 2020 15:12:22 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 02/15] net: phy: arrange headers in mdio_device.c
- alphabetically
-Message-ID: <20200622131222.GG338481@lunn.ch>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-3-brgl@bgdev.pl>
+        Mon, 22 Jun 2020 09:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbgFVNMw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:12:52 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627B0C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 06:12:52 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id s21so15527624oic.9
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 06:12:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qcGU7nvBRl72foMmnfzxCxyVhGZeHsJifexaVS75v3Y=;
+        b=Rza3aMY1Yo+yqYktcrUVWa/BOjei8LvddkKoUYWWAq4RkaoAOVto5q3/Wfk8atX0ZK
+         eG6ZtVMQ23JOclHAZq37tE1LFBQEay0d4h8QREnzX+tLaTHDfddYleL+b3b3mAR5bKh8
+         N+BhFAzdfC3EKuvgdyNOX24pXCM/sBVD4+r0as2/+w8lm/F51XB8y8SzvEfUs0v5ALIF
+         qf3skkbaRj2Pl6+A5gqJkDukbFx0RvSE0gi5dJAPl7pQBoCSgy2SG70laF6Xv3SW1OXl
+         AeOV85Ic4e9pKfRL72wMvCp6Zsrb2JUntAXc+YrTs7INEIJ/HaegoeaTEk0C5rCcv4G9
+         JUAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qcGU7nvBRl72foMmnfzxCxyVhGZeHsJifexaVS75v3Y=;
+        b=Fwq1xM/KTgzCsiUhrfRRMF7sPaQ32fNFl/OobKD+2Ra/3RRw8DE+g6LVjE9PnPS7U3
+         ej3h/0K95diFRNGoG9p1NJerzLgdAgrK9AmOjyoTDTAEybQX/3QOKL6nVwvC28cALvbW
+         K7QYaY78LhMp8mvuN/17lfsRu/7PamQmC8NbLwS9eraJ2EMXU49FmU/D00eNRZAeEjs2
+         sBmiri1F2pNNg8c7jSxCUtyhCedbyAvEtwFCBu+ArCS+xkFEaO6OplKlehgLb/e98ymb
+         nWdnEVmimKTpCd1rcYf1WtI3tetJNaVsiCk0M3pbLzvPPHwnBIqCHaZ/BGp0rDyEuKTm
+         Tz8w==
+X-Gm-Message-State: AOAM530lEIZN3yzNYXxuRv7f24xnpf//w/kCXBWJTs5YhwKqP1cFkA8Z
+        yO6CUp+wejPp6Jlh8n/b2sB+7OkZKrqgmWNpbgiwow==
+X-Google-Smtp-Source: ABdhPJxzjHByYX9BlhdruUuU+p8vDMZcooI2U2quqMiV5mzu6OY3UiQ+JK3QBL5mU6Rjjj5s2am9JE76MTziI7uDkdg=
+X-Received: by 2002:a05:6808:34f:: with SMTP id j15mr12828286oie.121.1592831571442;
+ Mon, 22 Jun 2020 06:12:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622093744.13685-3-brgl@bgdev.pl>
+References: <000000000000c25ce105a8a8fcd9@google.com> <20200622094923.GP576888@hirez.programming.kicks-ass.net>
+ <CANpmjNMJL2euWekeJ-pRcW7-BQaDCmfCSr=8Z3Mfnz-ugtUX4g@mail.gmail.com>
+In-Reply-To: <CANpmjNMJL2euWekeJ-pRcW7-BQaDCmfCSr=8Z3Mfnz-ugtUX4g@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 22 Jun 2020 15:12:39 +0200
+Message-ID: <CANpmjNNb7P6eemu2=Pt7WKjfuh7VAcy5eDODUkJgkQFjzGRdGw@mail.gmail.com>
+Subject: Re: linux-next build error (9)
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     syzbot <syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, jmattson@google.com,
+        joro@8bytes.org, kvm@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        sean.j.christopherson@intel.com,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>, vkuznets@redhat.com,
+        wanpengli@tencent.com, "the arch/x86 maintainers" <x86@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:37:31AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Keeping the headers in alphabetical order is better for readability and
-> allows to easily see if given header is already included.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, 22 Jun 2020 at 13:06, Marco Elver <elver@google.com> wrote:
+>
+> On Mon, 22 Jun 2020 at 11:49, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Mon, Jun 22, 2020 at 02:37:12AM -0700, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    27f11fea Add linux-next specific files for 20200622
+> > > git tree:       linux-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=138dc743100000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=41c659db5cada6f4
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=dbf8cf3717c8ef4a90a0
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com
+> > >
+> > > ./arch/x86/include/asm/kvm_para.h:99:29: error: inlining failed in call to always_inline 'kvm_handle_async_pf': function attribute mismatch
+> > > ./arch/x86/include/asm/processor.h:824:29: error: inlining failed in call to always_inline 'prefetchw': function attribute mismatch
+> > > ./arch/x86/include/asm/current.h:13:44: error: inlining failed in call to always_inline 'get_current': function attribute mismatch
+> > > arch/x86/mm/fault.c:1353:1: error: inlining failed in call to always_inline 'handle_page_fault': function attribute mismatch
+> > > ./arch/x86/include/asm/processor.h:576:29: error: inlining failed in call to always_inline 'native_swapgs': function attribute mismatch
+> > > ./arch/x86/include/asm/fsgsbase.h:33:38: error: inlining failed in call to always_inline 'rdgsbase': function attribute mismatch
+> > > ./arch/x86/include/asm/irq_stack.h:40:29: error: inlining failed in call to always_inline 'run_on_irqstack_cond': function attribute mismatch
+> > > ./include/linux/debug_locks.h:15:28: error: inlining failed in call to always_inline '__debug_locks_off': function attribute mismatch
+> > > ./include/asm-generic/atomic-instrumented.h:70:1: error: inlining failed in call to always_inline 'atomic_add_return': function attribute mismatch
+> > > kernel/locking/lockdep.c:396:29: error: inlining failed in call to always_inline 'lockdep_recursion_finish': function attribute mismatch
+> > > kernel/locking/lockdep.c:4725:5: error: inlining failed in call to always_inline '__lock_is_held': function attribute mismatch
+> >
+> > Hurmph, I though that was cured in GCC >= 8. Marco?
+>
+> Yeah, time to upgrade syzbot's compiler. This experimental gcc 9.0.0
+> still has the bug, but stable gcc 9 doesn't. For now, I think this
+> requires no fixes on the kernel side.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+#syz invalid
 
-    Andrew
+compiler upgraded.
