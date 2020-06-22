@@ -2,117 +2,92 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8059C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD2A206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58AE3206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PndyeTcr"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OTqVZBcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgFVPOr (ORCPT
+        id S1729397AbgFVPPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:14:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60428 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729206AbgFVPOq (ORCPT
+        Mon, 22 Jun 2020 11:15:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729278AbgFVPPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:14:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592838885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NIQCA5ZckTuLuocOtdMBGLUU2Sj+VfxVeRxU4kvLvWg=;
-        b=PndyeTcrL8jquNZf4pLLLz3+hxIW6+xKHp7LjOtmNl+LFIASh1SGH+VWnb+cKKa/xDJypT
-        b/6w1KVbtiMVQFPnkzsIxGrqEhENIjY63sIcR4qdiwiFB1q0BPNZzbo66QSB5tyhxmzZei
-        UOKjKnP6JgHnO3p6dRYRmaKLfozGKjQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-19-9ya5N6rCP0iHAeJJWgqevw-1; Mon, 22 Jun 2020 11:14:40 -0400
-X-MC-Unique: 9ya5N6rCP0iHAeJJWgqevw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 22 Jun 2020 11:15:07 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05036C061573;
+        Mon, 22 Jun 2020 08:15:07 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0a2500329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:2500:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5F3C107ACF6;
-        Mon, 22 Jun 2020 15:14:38 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2551B60BE2;
-        Mon, 22 Jun 2020 15:14:36 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86/mmu: Avoid mixing gpa_t with gfn_t in walk_addr_generic()
-Date:   Mon, 22 Jun 2020 17:14:35 +0200
-Message-Id: <20200622151435.752560-1-vkuznets@redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8AA271EC02B9;
+        Mon, 22 Jun 2020 17:15:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592838905;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=poCjt5Hnl2yRbfjwza7dJmmzO9NHIwqXjUHnukTHB7k=;
+        b=OTqVZBcmrQ4C/T8Pc6e4GzXfK3N3Ei8V1CKLAm443rbMtEtWDzOBDD3UXhEa581dDQdKgG
+        S53OljfjyDy6zfTko/ld3OsUeGy2gkvxl7LzdEgS8AVgVrXMpwoUgVHmyaKDtDw9SgGNUg
+        0ic4YC7Vxn7e8HylaUZPP0pIkejMXjU=
+Date:   Mon, 22 Jun 2020 17:15:02 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH -v2] x86/msr: Move the F15h MSRs where they belong
+Message-ID: <20200622151502.GE32200@zn.tnic>
+References: <20200621163323.14e8533f@canb.auug.org.au>
+ <20200621105350.GA28206@zn.tnic>
+ <20200622113824.6a3ab82f@canb.auug.org.au>
+ <20200622130407.GB32200@zn.tnic>
+ <20200622141737.GA30611@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200622141737.GA30611@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-translate_gpa() returns a GPA, assigning it to 'real_gfn' seems obviously
-wrong. There is no real issue because both 'gpa_t' and 'gfn_t' are u64 and
-we don't use the value in 'real_gfn' as a GFN, we do
+On Mon, Jun 22, 2020 at 11:17:37AM -0300, Arnaldo Carvalho de Melo wrote:
+> So this reverts the change you made to the tools copy of that file and
+> then does the change you need to the kernel sources, ok.
+>
+> In the future the change will be made just in the kernel files, as
+> kernel developers don't have to have the burden of checking if tooling
+> continues to work when they change kernel files.
 
- real_gfn = gpa_to_gfn(real_gfn);
+Always nice to have less work. :-)
 
-instead. 'If you see a "buffalo" sign on an elephant's cage, do not trust
-your eyes', but let's fix it for good.
+> That way later the perf developers get the warning in the perf build
+> process, see how this change in a file that is a copy from the kernel
+> sources affects tooling, and act upon it, simply updating the copy or
+> doing that + extra tooling adjustments, perhaps a new feature, etc.
 
-No functional change intended.
+Nice.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/mmu/paging_tmpl.h | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+> Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index a6d484ea110b..58234bfaca07 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -360,7 +360,6 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
- 	++walker->level;
- 
- 	do {
--		gfn_t real_gfn;
- 		unsigned long host_addr;
- 
- 		pt_access = pte_access;
-@@ -375,7 +374,7 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
- 		walker->table_gfn[walker->level - 1] = table_gfn;
- 		walker->pte_gpa[walker->level - 1] = pte_gpa;
- 
--		real_gfn = mmu->translate_gpa(vcpu, gfn_to_gpa(table_gfn),
-+		real_gpa = mmu->translate_gpa(vcpu, gfn_to_gpa(table_gfn),
- 					      nested_access,
- 					      &walker->fault);
- 
-@@ -389,12 +388,10 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
- 		 * information to fix the exit_qualification or exit_info_1
- 		 * fields.
- 		 */
--		if (unlikely(real_gfn == UNMAPPED_GVA))
-+		if (unlikely(real_gpa == UNMAPPED_GVA))
- 			return 0;
- 
--		real_gfn = gpa_to_gfn(real_gfn);
--
--		host_addr = kvm_vcpu_gfn_to_hva_prot(vcpu, real_gfn,
-+		host_addr = kvm_vcpu_gfn_to_hva_prot(vcpu, gpa_to_gfn(real_gpa),
- 					    &walker->pte_writable[walker->level - 1]);
- 		if (unlikely(kvm_is_error_hva(host_addr)))
- 			goto error;
+Thanks, queueing.
+
 -- 
-2.25.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
