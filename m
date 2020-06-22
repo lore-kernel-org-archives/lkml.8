@@ -2,56 +2,76 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B00C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8342C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A85C2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09ED20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 12:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vxcnk++B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSqV8oLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgFVMEy (ORCPT
+        id S1728105AbgFVMHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:04:54 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:62665 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgFVMEy (ORCPT
+        Mon, 22 Jun 2020 08:07:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgFVMHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 08:04:54 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05MC3SgG001221;
-        Mon, 22 Jun 2020 21:03:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05MC3SgG001221
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592827409;
-        bh=XT5p7CGO0IRfglTH035B6VnJfGMRKyJLc0ZZJHRD7vI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vxcnk++Bh/HeR8KH8zvH64uyIKfNlEo5yYtjkH/52X7GM1W6grC2f/fYi44u3aO7Q
-         Zc2ON3HRrNHrIwYGTB46c+hVPdBIm7VdJdRPcc0vBkE8AbS4NWlehCVdwMLA3ocXnd
-         Fp4+7RwQrjN79zRVo/qK+/fuEDGxCGKISPdVIybR7Brvn/gY4LzKMnRS5+zWFSLvAx
-         e2i8LWJkaUDzZ9+fC2LN3MqBFvdpx2HTj6FWUrQeljYW/wiBjM+SB0O6zjgA9uxkNb
-         QWf8lMEh5XbIkTZScLcxASeXZ9n1+sgshBXwiDEQC6cw7q3+giUIxNaYP1pejGinkQ
-         NPTj859DtiRwg==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        - <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: ASoC: Convert UniPhier EVEA codec to json-schema
-Date:   Mon, 22 Jun 2020 21:03:20 +0900
-Message-Id: <20200622120320.454535-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 22 Jun 2020 08:07:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5630FC061794;
+        Mon, 22 Jun 2020 05:07:00 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ga6so8073954pjb.1;
+        Mon, 22 Jun 2020 05:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ou9Z/Ox/FwTNRKwSYB37fOjhliFS4VQZs0FMTQAQC5I=;
+        b=PSqV8oLCQOb7Tmzo31U7GZn+L294sHL3jjZIZwdpZ3FcDVcSyU1+IKfDX63ylkv/U4
+         cxSiNOGrbjokKMbcEbqSSmXGoG/DxlJXTUeWnwG8oe2W4NvYHc+QTgMLdeFszPyvZzTr
+         Uzy4Yp5J5K3unoJq0TgbjANslW/6rHLf7A6fVqwz3EKHMneyiAj1UNL2HPGKIOgPwSrU
+         dI+xlWn2/AiZHK7rJsdSCzFPEXgCvEZggaeyoQn3UPzhHwkiGrKjsyBFZz8xKnMxFEyY
+         MQSDu4D1qbSgLRiP83rr6LjNfHhOQGV/FQ7ZDotrV8OUMqgqjDfuDcloOLbC51wQTYX5
+         vIcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ou9Z/Ox/FwTNRKwSYB37fOjhliFS4VQZs0FMTQAQC5I=;
+        b=RerVJP3QxlIe/B1MD7apMDvtCx87SCfZnHe+ONCCweN9R2hUtT6DrmOYOwyckXoiN1
+         Vzt1cz3QWkxaRyiIHzjC/yiUltKxY9sFe7NdK1lWoOBPFVFEoMz+mZS1ZkE4sv1UwQzt
+         qoKoegBAVGbo06/ycdbse5tcSWxlfzZjNVX7ipQ75SaaHikmb0SyEGF7gmT6KHFzNzIu
+         CF17b9QGsJlTj+WQQCdMSkYpB0xZDZA5ufHciPFBtAljJSNgF56dMpJJ0tFIlAY3vE0U
+         kph+TuG+0f6jkNZunM++XgPEycJhy+0F0Jb052tvuTjE2rm2U7DiYLdwmzqlv2U4ypZD
+         RCXQ==
+X-Gm-Message-State: AOAM5327PUOm6wWYJVnYWMPzVqH4EiHJXWJ6LcivZSw78RN9rrI4mXM7
+        Nm3p0jxVg11C80xbzLG3wv4=
+X-Google-Smtp-Source: ABdhPJxWH1R7RNazyZb+CXYHrdyY/Qo/VwMC9R+HrORsdOghiTJDVI2x/EEpEoO0/7/ggGXeEFOFDg==
+X-Received: by 2002:a17:902:7008:: with SMTP id y8mr20024907plk.84.1592827619747;
+        Mon, 22 Jun 2020 05:06:59 -0700 (PDT)
+Received: from varodek.localdomain ([2401:4900:b8b:123e:d7ae:5602:b3d:9c0])
+        by smtp.gmail.com with ESMTPSA id j8sm13195391pji.3.2020.06.22.05.06.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 05:06:58 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1] [media] saa7134: use generic power management
+Date:   Mon, 22 Jun 2020 17:32:30 +0530
+Message-Id: <20200622120229.89610-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,117 +79,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier EVEA sound codec binding to DT schema format.
+With the support of generic PM callbacks, drivers no longer need to use
+legacy .suspend() and .resume() in which they had to maintain PCI states
+changes and device's power state themselves. The required operations are
+done by PCI core.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
+ drivers/media/pci/saa7134/saa7134-core.c | 25 ++++++++----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
 
- .../sound/socionext,uniphier-evea.yaml        | 62 +++++++++++++++++++
- .../bindings/sound/uniphier,evea.txt          | 26 --------
- 2 files changed, 62 insertions(+), 26 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/uniphier,evea.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml b/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
-new file mode 100644
-index 000000000000..7ac1c0140d5d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/socionext,uniphier-evea.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier EVEA SoC-internal sound codec
-+
-+maintainers:
-+  - <alsa-devel@alsa-project.org>
-+
-+properties:
-+  compatible:
-+    const: socionext,uniphier-evea
-+
-+  reg:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: evea
-+      - const: exiv
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 2
-+
-+  reset-names:
-+    items:
-+      - const: evea
-+      - const: exiv
-+      - const: adamv
-+
-+  resets:
-+    minItems: 3
-+    maxItems: 3
-+
-+  "#sound-dai-cells":
-+    const: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-names
-+  - clocks
-+  - reset-names
-+  - resets
-+  - "#sound-dai-cells"
-+
-+examples:
-+  - |
-+    codec@57900000 {
-+        compatible = "socionext,uniphier-evea";
-+        reg = <0x57900000 0x1000>;
-+        clock-names = "evea", "exiv";
-+        clocks = <&sys_clk 41>, <&sys_clk 42>;
-+        reset-names = "evea", "exiv", "adamv";
-+        resets = <&sys_rst 41>, <&sys_rst 42>, <&adamv_rst 0>;
-+        #sound-dai-cells = <1>;
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/uniphier,evea.txt b/Documentation/devicetree/bindings/sound/uniphier,evea.txt
-deleted file mode 100644
-index 3f31b235f18b..000000000000
---- a/Documentation/devicetree/bindings/sound/uniphier,evea.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--Socionext EVEA - UniPhier SoC internal codec driver
+diff --git a/drivers/media/pci/saa7134/saa7134-core.c b/drivers/media/pci/saa7134/saa7134-core.c
+index e4623ed2f831..eb01109d4f98 100644
+--- a/drivers/media/pci/saa7134/saa7134-core.c
++++ b/drivers/media/pci/saa7134/saa7134-core.c
+@@ -1370,10 +1370,8 @@ static void saa7134_finidev(struct pci_dev *pci_dev)
+ 	kfree(dev);
+ }
+ 
+-#ifdef CONFIG_PM
 -
--Required properties:
--- compatible      : should be "socionext,uniphier-evea".
--- reg             : offset and length of the register set for the device.
--- clock-names     : should include following entries:
--                    "evea", "exiv"
--- clocks          : a list of phandle, should contain an entry for each
--                    entries in clock-names.
--- reset-names     : should include following entries:
--                    "evea", "exiv", "adamv"
--- resets          : a list of phandle, should contain reset entries of
--                    reset-names.
--- #sound-dai-cells: should be 1.
+ /* resends a current buffer in queue after resume */
+-static int saa7134_buffer_requeue(struct saa7134_dev *dev,
++static int __maybe_unused saa7134_buffer_requeue(struct saa7134_dev *dev,
+ 				  struct saa7134_dmaqueue *q)
+ {
+ 	struct saa7134_buf *buf, *next;
+@@ -1397,8 +1395,9 @@ static int saa7134_buffer_requeue(struct saa7134_dev *dev,
+ 	return 0;
+ }
+ 
+-static int saa7134_suspend(struct pci_dev *pci_dev , pm_message_t state)
++static int __maybe_unused saa7134_suspend(struct device *dev_d)
+ {
++	struct pci_dev *pci_dev = to_pci_dev(dev_d);
+ 	struct v4l2_device *v4l2_dev = pci_get_drvdata(pci_dev);
+ 	struct saa7134_dev *dev = container_of(v4l2_dev, struct saa7134_dev, v4l2_dev);
+ 
+@@ -1428,21 +1427,15 @@ static int saa7134_suspend(struct pci_dev *pci_dev , pm_message_t state)
+ 	if (dev->remote && dev->remote->dev->users)
+ 		saa7134_ir_close(dev->remote->dev);
+ 
+-	pci_save_state(pci_dev);
+-	pci_set_power_state(pci_dev, pci_choose_state(pci_dev, state));
 -
--Example:
+ 	return 0;
+ }
+ 
+-static int saa7134_resume(struct pci_dev *pci_dev)
++static int __maybe_unused saa7134_resume(struct device *dev_d)
+ {
+-	struct v4l2_device *v4l2_dev = pci_get_drvdata(pci_dev);
++	struct v4l2_device *v4l2_dev = dev_get_drvdata(dev_d);
+ 	struct saa7134_dev *dev = container_of(v4l2_dev, struct saa7134_dev, v4l2_dev);
+ 	unsigned long flags;
+ 
+-	pci_set_power_state(pci_dev, PCI_D0);
+-	pci_restore_state(pci_dev);
 -
--	codec {
--		compatible = "socionext,uniphier-evea";
--		reg = <0x57900000 0x1000>;
--		clock-names = "evea", "exiv";
--		clocks = <&sys_clk 41>, <&sys_clk 42>;
--		reset-names = "evea", "exiv", "adamv";
--		resets = <&sys_rst 41>, <&sys_rst 42>, <&adamv_rst 0>;
--		#sound-dai-cells = <1>;
--	};
+ 	/* Do things that are done in saa7134_initdev ,
+ 		except of initializing memory structures.*/
+ 
+@@ -1490,7 +1483,6 @@ static int saa7134_resume(struct pci_dev *pci_dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ /* ----------------------------------------------------------- */
+ 
+@@ -1522,15 +1514,14 @@ EXPORT_SYMBOL(saa7134_ts_unregister);
+ 
+ /* ----------------------------------------------------------- */
+ 
++static SIMPLE_DEV_PM_OPS(saa7134_pm_ops, saa7134_suspend, saa7134_resume);
++
+ static struct pci_driver saa7134_pci_driver = {
+ 	.name     = "saa7134",
+ 	.id_table = saa7134_pci_tbl,
+ 	.probe    = saa7134_initdev,
+ 	.remove   = saa7134_finidev,
+-#ifdef CONFIG_PM
+-	.suspend  = saa7134_suspend,
+-	.resume   = saa7134_resume
+-#endif
++	.driver.pm = &saa7134_pm_ops,
+ };
+ 
+ static int __init saa7134_init(void)
 -- 
-2.25.1
+2.27.0
 
