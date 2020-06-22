@@ -2,185 +2,304 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9833AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B64520716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A579A20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgFVWKY (ORCPT
+        id S1730933AbgFVWLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:10:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60250 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730701AbgFVWKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:10:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B0F63AF3B;
-        Mon, 22 Jun 2020 22:10:20 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id DBA5F6048B; Tue, 23 Jun 2020 00:10:20 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 00:10:20 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Jiri Pirko <jiri@mellanox.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Tom Herbert <therbert@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 3/3] net: ethtool: sync netdev_features_strings order
- with enum netdev_features
-Message-ID: <20200622221020.budxdjdoxwvqd42q@lion.mk-sys.cz>
-References: <x6AQUs_HEHFh9N-5HYIEIDvv9krP6Fg6OgEuqUBC6jHmWwaeXSkyLVi05uelpCPAZXlXKlJqbJk8ox3xkIs33KVna41w5es0wJlc-cQhb8g=@pm.me>
- <sqZrzUWnFxtxVcoxsWQF4Nv8G9fd9g61ZQV90btG1FJpZVRU1lf2Wa6pX4XBQq1fkkUxaotZDm9Bb0z01hODC2HEhShi_GOVWqLE7pDSr8w=@pm.me>
+        Mon, 22 Jun 2020 18:11:18 -0400
+Received: from mail-lf1-f52.google.com ([209.85.167.52]:33727 "EHLO
+        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbgFVWLS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:11:18 -0400
+Received: by mail-lf1-f52.google.com with SMTP id g2so10568677lfb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 15:11:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OZuyls1cMAwtwJjsM2adYow5pWrQPEerf0VMA+Z2UtA=;
+        b=bP/S+wVWC3AYeh977nxMh3mDl7sXOSwzggKyoDv9sRgXOeufFXpIwzsrYdRtRtF8sj
+         ptNYN8wNBp8i9kSh6OUUkc68Psn3lVR95zSUxZIiujlSJ5M335MIAWSwhPTuyPdkN8Cs
+         RTofefq8osvxz/1chRQmzezxIG3ca0GW9hj2/HS7aY1OE/oBig6miGFBhPK+MsycDkv9
+         riQBiwVST9aRjnCw29Mo4hmiEDkwT40oAR9PAxDpAxBoyoD2MW8XUcm5n1jMuTvWZ2+H
+         dtCos9KIGK9mLij+WcJ4PtN3eVxzSdmOOwO05+kJzSOVi8y2GpOsHst2EHVvyVv26h7b
+         UCrA==
+X-Gm-Message-State: AOAM53017y5ZuBmT2NSrhlgiVra6jUPQ+6k+DL9JizIQO2RWuDArmqRi
+        QAlBmHu9VzhRhHsaSUyX6yJqgUWbUTAuzg==
+X-Google-Smtp-Source: ABdhPJzjbZiQ3nbSwFtSlsYo/E6omKmiTX7TPjlHrGObRdpZqKPeEco721dhmnBmTv4MkCeTGVLmRQ==
+X-Received: by 2002:a19:e346:: with SMTP id c6mr11129516lfk.177.1592863874519;
+        Mon, 22 Jun 2020 15:11:14 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id a23sm3738767lfb.10.2020.06.22.15.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 15:11:13 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] coccinelle: misc: add array_size_dup script to detect missed overflow checks
+Date:   Tue, 23 Jun 2020 01:10:56 +0300
+Message-Id: <20200622221056.34241-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615102045.4558-1-efremov@linux.com>
+References: <20200615102045.4558-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k22oqm7alg25phu7"
-Content-Disposition: inline
-In-Reply-To: <sqZrzUWnFxtxVcoxsWQF4Nv8G9fd9g61ZQV90btG1FJpZVRU1lf2Wa6pX4XBQq1fkkUxaotZDm9Bb0z01hODC2HEhShi_GOVWqLE7pDSr8w=@pm.me>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Detect an opencoded expression that is used before or after
+array_size()/array3_size()/struct_size() to compute the same size.
 
---k22oqm7alg25phu7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+Changes in v2:
+ - python rules moved next to SmPL patterns
+ - assignment operator used
+ - struct_size patterns fixed to check only E3, since
+   E1, E2 are sizeofs of a structure and a member
+   of a structure
+Changes in v3:
+ - s/overlow/overflow/ typo fixed (thanks, Markus)
+ - \(&E1\|&E2\) changed to &\(E1\|E2\)
+ - print strings breaks removed
+Changes in v4:
+ - duplicates warning removed
+ - python2 compatability in report&&org modes added
+ - s/down the code/later/ warning changed
+ - \(E1\|E2\|subE1\|subE2\) patterns simplified to \(subE1\|subE2\)
 
-On Fri, Jun 19, 2020 at 06:39:59PM +0000, Alexander Lobakin wrote:
-> The ordering of netdev_features_strings[] makes no sense when it comes
-> to user interaction, as list of features in `ethtool -k` input is sorted
-> according to the corresponding bit's position.
-> Instead, it *does* make sense when it comes to adding new netdev_features
-> or modifying existing ones. We have at least 2 occasions of forgetting to
-> add the strings for newly introduced features, and one of them existed
-> since 3.1x times till now.
->=20
-> Let's keep this stringtable sorted according to bit's position in enum
-> netdev_features, as this simplifies both reading and modification of the
-> source code and can help not to miss or forget anything.
->=20
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+ scripts/coccinelle/misc/array_size_dup.cocci | 209 +++++++++++++++++++
+ 1 file changed, 209 insertions(+)
+ create mode 100644 scripts/coccinelle/misc/array_size_dup.cocci
 
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+diff --git a/scripts/coccinelle/misc/array_size_dup.cocci b/scripts/coccinelle/misc/array_size_dup.cocci
+new file mode 100644
+index 000000000000..d3d635b2d4fc
+--- /dev/null
++++ b/scripts/coccinelle/misc/array_size_dup.cocci
+@@ -0,0 +1,209 @@
++// SPDX-License-Identifier: GPL-2.0-only
++///
++/// Check for array_size(), array3_size(), struct_size() duplicates.
++/// Three types of patterns for these functions:
++///  1. An opencoded expression is used before array_size() to compute the same size
++///  2. An opencoded expression is used after array_size() to compute the same size
++/// From security point of view only first case is relevant. These functions
++/// perform arithmetic overflow check. Thus, if we use an opencoded expression
++/// before a call to the *_size() function we can miss an overflow.
++///
++// Confidence: High
++// Copyright: (C) 2020 Denis Efremov ISPRAS
++// Options: --no-includes --include-headers --no-loops
++
++virtual context
++virtual report
++virtual org
++
++@as@
++expression E1, E2;
++@@
++
++array_size(E1, E2)
++
++@as_next@
++expression subE1 <= as.E1;
++expression subE2 <= as.E2;
++expression as.E1, as.E2, E3;
++assignment operator aop;
++position p1, p2;
++@@
++
++* E1 * E2@p1
++  ... when != \(subE1\|subE2\) aop E3
++      when != &\(subE1\|subE2\)
++* array_size(E1, E2)@p2
++
++@script:python depends on report@
++p1 << as_next.p1;
++p2 << as_next.p2;
++@@
++
++msg = "WARNING: array_size is used later (line %s) to compute the same size" % (p2[0].line)
++coccilib.report.print_report(p1[0], msg)
++
++@script:python depends on org@
++p1 << as_next.p1;
++p2 << as_next.p2;
++@@
++
++msg = "WARNING: array_size is used later (line %s) to compute the same size" % (p2[0].line)
++coccilib.org.print_todo(p1[0], msg)
++
++@as_prev@
++expression subE1 <= as.E1;
++expression subE2 <= as.E2;
++expression as.E1, as.E2, E3;
++assignment operator aop;
++position p1, p2;
++@@
++
++* array_size(E1, E2)@p1
++  ... when != \(subE1\|subE2\) aop E3
++      when != &\(subE1\|subE2\)
++* E1 * E2@p2
++
++@script:python depends on report@
++p1 << as_prev.p1;
++p2 << as_prev.p2;
++@@
++
++msg = "WARNING: array_size is already used (line %s) to compute the same size" % (p1[0].line)
++coccilib.report.print_report(p2[0], msg)
++
++@script:python depends on org@
++p1 << as_prev.p1;
++p2 << as_prev.p2;
++@@
++
++msg = "WARNING: array_size is already used (line %s) to compute the same size" % (p1[0].line)
++coccilib.org.print_todo(p2[0], msg)
++
++@as3@
++expression E1, E2, E3;
++@@
++
++array3_size(E1, E2, E3)
++
++@as3_next@
++expression subE1 <= as3.E1;
++expression subE2 <= as3.E2;
++expression subE3 <= as3.E3;
++expression as3.E1, as3.E2, as3.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* E1 * E2 * E3@p1
++  ... when != \(subE1\|subE2\|subE3\) aop E4
++      when != &\(subE1\|subE2\|subE3\)
++* array3_size(E1, E2, E3)@p2
++
++@script:python depends on report@
++p1 << as3_next.p1;
++p2 << as3_next.p2;
++@@
++
++msg = "WARNING: array3_size is used later (line %s) to compute the same size" % (p2[0].line)
++coccilib.report.print_report(p1[0], msg)
++
++@script:python depends on org@
++p1 << as3_next.p1;
++p2 << as3_next.p2;
++@@
++
++msg = "WARNING: array3_size is used later (line %s) to compute the same size" % (p2[0].line)
++coccilib.org.print_todo(p1[0], msg)
++
++@as3_prev@
++expression subE1 <= as3.E1;
++expression subE2 <= as3.E2;
++expression subE3 <= as3.E3;
++expression as3.E1, as3.E2, as3.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* array3_size(E1, E2, E3)@p1
++  ... when != \(subE1\|subE2\|subE3\) aop E4
++      when != &\(subE1\|subE2\|subE3\)
++* E1 * E2 * E3@p2
++
++@script:python depends on report@
++p1 << as3_prev.p1;
++p2 << as3_prev.p2;
++@@
++
++msg = "WARNING: array3_size is already used (line %s) to compute the same size" % (p1[0].line)
++coccilib.report.print_report(p2[0], msg)
++
++@script:python depends on org@
++p1 << as3_prev.p1;
++p2 << as3_prev.p2;
++@@
++
++msg = "WARNING: array3_size is already used (line %s) to compute the same size" % (p1[0].line)
++coccilib.org.print_todo(p2[0], msg)
++
++@ss@
++expression E1, E2, E3;
++@@
++
++struct_size(E1, E2, E3)
++
++@ss_next@
++expression subE3 <= ss.E3;
++expression ss.E1, ss.E2, ss.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* E1 * E2 + E3@p1
++  ... when != subE3 aop E4
++      when != &subE3
++* struct_size(E1, E2, E3)@p2
++
++@script:python depends on report@
++p1 << ss_next.p1;
++p2 << ss_next.p2;
++@@
++
++msg = "WARNING: struct_size is used later (line %s) to compute the same size" % (p2[0].line)
++coccilib.report.print_report(p1[0], msg)
++
++@script:python depends on org@
++p1 << ss_next.p1;
++p2 << ss_next.p2;
++@@
++
++msg = "WARNING: struct_size is used later (line %s) to compute the same size" % (p2[0].line)
++coccilib.org.print_todo(p1[0], msg)
++
++@ss_prev@
++expression subE3 <= ss.E3;
++expression ss.E1, ss.E2, ss.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* struct_size(E1, E2, E3)@p1
++  ... when != subE3 aop E4
++      when != &subE3
++* E1 * E2 + E3@p2
++
++@script:python depends on report@
++p1 << ss_prev.p1;
++p2 << ss_prev.p2;
++@@
++
++msg = "WARNING: struct_size is already used (line %s) to compute the same size" % (p1[0].line)
++coccilib.report.print_report(p2[0], msg)
++
++@script:python depends on org@
++p1 << ss_prev.p1;
++p2 << ss_prev.p2;
++@@
++
++msg = "WARNING: struct_size is already used (line %s) to compute the same size" % (p1[0].line)
++coccilib.org.print_todo(p2[0], msg)
+-- 
+2.26.2
 
-This would also rather belong to net-next, IMHO.
-
-Michal
-
-> ---
->  net/ethtool/common.c | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
->=20
-> diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-> index c8e3fce6e48d..24f35d47832d 100644
-> --- a/net/ethtool/common.c
-> +++ b/net/ethtool/common.c
-> @@ -8,25 +8,25 @@
->  const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN=
-] =3D {
->  	[NETIF_F_SG_BIT]			=3D "tx-scatter-gather",
->  	[NETIF_F_IP_CSUM_BIT]			=3D "tx-checksum-ipv4",
-> +
-> +	/* __UNUSED_NETIF_F_1 - deprecated */
-> +
->  	[NETIF_F_HW_CSUM_BIT]			=3D "tx-checksum-ip-generic",
->  	[NETIF_F_IPV6_CSUM_BIT]			=3D "tx-checksum-ipv6",
->  	[NETIF_F_HIGHDMA_BIT]			=3D "highdma",
->  	[NETIF_F_FRAGLIST_BIT]			=3D "tx-scatter-gather-fraglist",
->  	[NETIF_F_HW_VLAN_CTAG_TX_BIT]		=3D "tx-vlan-hw-insert",
-> -
->  	[NETIF_F_HW_VLAN_CTAG_RX_BIT]		=3D "rx-vlan-hw-parse",
->  	[NETIF_F_HW_VLAN_CTAG_FILTER_BIT]	=3D "rx-vlan-filter",
-> -	[NETIF_F_HW_VLAN_STAG_TX_BIT]		=3D "tx-vlan-stag-hw-insert",
-> -	[NETIF_F_HW_VLAN_STAG_RX_BIT]		=3D "rx-vlan-stag-hw-parse",
-> -	[NETIF_F_HW_VLAN_STAG_FILTER_BIT]	=3D "rx-vlan-stag-filter",
->  	[NETIF_F_VLAN_CHALLENGED_BIT]		=3D "vlan-challenged",
->  	[NETIF_F_GSO_BIT]			=3D "tx-generic-segmentation",
->  	[NETIF_F_LLTX_BIT]			=3D "tx-lockless",
->  	[NETIF_F_NETNS_LOCAL_BIT]		=3D "netns-local",
->  	[NETIF_F_GRO_BIT]			=3D "rx-gro",
-> -	[NETIF_F_GRO_HW_BIT]			=3D "rx-gro-hw",
->  	[NETIF_F_LRO_BIT]			=3D "rx-lro",
-> =20
-> +	/* NETIF_F_GSO_SHIFT =3D NETIF_F_TSO_BIT */
-> +
->  	[NETIF_F_TSO_BIT]			=3D "tx-tcp-segmentation",
->  	[NETIF_F_GSO_ROBUST_BIT]		=3D "tx-gso-robust",
->  	[NETIF_F_TSO_ECN_BIT]			=3D "tx-tcp-ecn-segmentation",
-> @@ -43,9 +43,14 @@ const char netdev_features_strings[NETDEV_FEATURE_COUN=
-T][ETH_GSTRING_LEN] =3D {
->  	[NETIF_F_GSO_TUNNEL_REMCSUM_BIT]	=3D "tx-tunnel-remcsum-segmentation",
->  	[NETIF_F_GSO_SCTP_BIT]			=3D "tx-sctp-segmentation",
->  	[NETIF_F_GSO_ESP_BIT]			=3D "tx-esp-segmentation",
-> +
-> +	/* NETIF_F_GSO_UDP_BIT - deprecated */
-> +
->  	[NETIF_F_GSO_UDP_L4_BIT]		=3D "tx-udp-segmentation",
->  	[NETIF_F_GSO_FRAGLIST_BIT]		=3D "tx-gso-list",
-> =20
-> +	/* NETIF_F_GSO_LAST =3D NETIF_F_GSO_FRAGLIST_BIT */
-> +
->  	[NETIF_F_FCOE_CRC_BIT]			=3D "tx-checksum-fcoe-crc",
->  	[NETIF_F_SCTP_CRC_BIT]			=3D "tx-checksum-sctp",
->  	[NETIF_F_FCOE_MTU_BIT]			=3D "fcoe-mtu",
-> @@ -56,16 +61,25 @@ const char netdev_features_strings[NETDEV_FEATURE_COU=
-NT][ETH_GSTRING_LEN] =3D {
->  	[NETIF_F_LOOPBACK_BIT]			=3D "loopback",
->  	[NETIF_F_RXFCS_BIT]			=3D "rx-fcs",
->  	[NETIF_F_RXALL_BIT]			=3D "rx-all",
-> +	[NETIF_F_HW_VLAN_STAG_TX_BIT]		=3D "tx-vlan-stag-hw-insert",
-> +	[NETIF_F_HW_VLAN_STAG_RX_BIT]		=3D "rx-vlan-stag-hw-parse",
-> +	[NETIF_F_HW_VLAN_STAG_FILTER_BIT]	=3D "rx-vlan-stag-filter",
->  	[NETIF_F_HW_L2FW_DOFFLOAD_BIT]		=3D "l2-fwd-offload",
-> +
->  	[NETIF_F_HW_TC_BIT]			=3D "hw-tc-offload",
->  	[NETIF_F_HW_ESP_BIT]			=3D "esp-hw-offload",
->  	[NETIF_F_HW_ESP_TX_CSUM_BIT]		=3D "esp-tx-csum-hw-offload",
->  	[NETIF_F_RX_UDP_TUNNEL_PORT_BIT]	=3D "rx-udp_tunnel-port-offload",
-> -	[NETIF_F_HW_TLS_RECORD_BIT]		=3D "tls-hw-record",
->  	[NETIF_F_HW_TLS_TX_BIT]			=3D "tls-hw-tx-offload",
->  	[NETIF_F_HW_TLS_RX_BIT]			=3D "tls-hw-rx-offload",
-> +
-> +	[NETIF_F_GRO_HW_BIT]			=3D "rx-gro-hw",
-> +	[NETIF_F_HW_TLS_RECORD_BIT]		=3D "tls-hw-record",
->  	[NETIF_F_GRO_FRAGLIST_BIT]		=3D "rx-gro-list",
-> +
->  	[NETIF_F_HW_MACSEC_BIT]			=3D "macsec-hw-offload",
-> +
-> +	/* NETDEV_FEATURE_COUNT */
->  };
-> =20
->  const char
-> --=20
-> 2.27.0
->=20
->=20
-
---k22oqm7alg25phu7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7xLEwACgkQ538sG/LR
-dpUxfwf/Xe5uaU5cXmjHYAdIMaBuDYvteuYA1VACpIBJW+om8itcBhBzKmEuQbc6
-81cU96EFBvETTQ4NMgLcumRaMFLY3urdeQKD1L9TcIn8j1yX/SUaGaQzupNBsz/c
-cyyQD9xZ3PPiqVmlZCfqRm6dzM28M8F4KmbS2f1Y8tts2TmUerI3MrE9v/5IZ96F
-8uwgVJ2EnRuXAddyjvvGwPouYWLpPLKmRpYwwC2/lygL3NhICKRP3H2w9sD515Nb
-UadnTAsTOlsAeZuK52IkjoH4Y5JSbeQUBGWnyLpOWFspAlj/Q1AxljFTnqnMrplS
-7kaDp/NwueSiBfRAZgIJxFBzZfoYng==
-=ajHp
------END PGP SIGNATURE-----
-
---k22oqm7alg25phu7--
