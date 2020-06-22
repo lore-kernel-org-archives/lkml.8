@@ -2,92 +2,77 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F82C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E70CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0CE423D51
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:01:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592805687;
-	bh=6nLebhv8dk5YD7pf6tUTXOzj3cAi77aTsIEqJh8azO0=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F75pWrhQsfW2oWDiLPaC9KDUzzQOjm6k638uQaQR2msndP5sohF7fxLG8Fux5wRxL
-	 X4mE5WnkouFIOiwf5PWFdkcuQr3f3T1Nx7WX9gYldcBu79leKCpZ38ZJ15Y69IU5pj
-	 GgDXpbRWzhSSiBTLcS7Uc0RtQ+cTF78q2jwfucoo=
+	by mail.kernel.org (Postfix) with ESMTP id 87E382076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbgFVGBZ (ORCPT
+        id S1731261AbgFVGPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:01:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731108AbgFVGBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 02:01:24 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BFAB23B43;
-        Mon, 22 Jun 2020 06:01:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592805684;
-        bh=6nLebhv8dk5YD7pf6tUTXOzj3cAi77aTsIEqJh8azO0=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=W5FFWSIF0uo3SPQSMbOCS4IowYdkQjbfH8v6L/vBnHps1lGVs+Rbn4jFDvXtIzuAy
-         Gv5glWnJMFS3+Z2o07O+cO2GDW2a6r4bs1XYhQ/DUbVvoe3viZtU8YcNQVPq5JheeW
-         0z0AN5IzbsmJxvSetj6YJB9ldNbd+/WgCUiX8OzQ=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] iio: magnetometer: bmc150: Add proper compatible BMC156 and BMM150
-Date:   Mon, 22 Jun 2020 08:01:10 +0200
-Message-Id: <20200622060110.23192-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200622060110.23192-1-krzk@kernel.org>
-References: <20200622060110.23192-1-krzk@kernel.org>
+        Mon, 22 Jun 2020 02:15:18 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:62533 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731211AbgFVGPR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 02:15:17 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 21 Jun 2020 23:15:16 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 21 Jun 2020 23:15:13 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 0D624218C5; Mon, 22 Jun 2020 11:45:11 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        stanimir.varbanov@linaro.org, ardb@kernel.org,
+        sivaprak@codeaurora.org, cotequeiroz@gmail.com,
+        ebiggers@google.com, horia.geanta@nxp.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] crypto: qce: sha: Do not modify scatterlist passed along with request
+Date:   Mon, 22 Jun 2020 11:45:06 +0530
+Message-Id: <1592806506-23978-4-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592806506-23978-1-git-send-email-sivaprak@codeaurora.org>
+References: <1592806506-23978-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The compatibles (except BMC150) should not have "_magn" suffix and
-BMC156 is compatible with BMM150 so use just one compatible.
+Crypto test driver's test_ahash_speed calls crypto_ahash_update and
+crypto_ahash_final APIs repeatedly for all the available test vector
+buffer lengths.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+if we mark the end for scatterlist based on the current vector size then
+the subsequent vectors might fail if the later buffer lengths are higher.
 
+To avoid this, in qce do not mark the end of scatterlist in update API,
+the qce_ahash_async_req_handle API already takes care of this copying
+right amount of buffer from the request scatter list.
+
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
+ drivers/crypto/qce/sha.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Changes since v1:
-1. New patch.
----
- drivers/iio/magnetometer/bmc150_magn_i2c.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/magnetometer/bmc150_magn_i2c.c b/drivers/iio/magnetometer/bmc150_magn_i2c.c
-index fb45b63c56e4..038618da99f3 100644
---- a/drivers/iio/magnetometer/bmc150_magn_i2c.c
-+++ b/drivers/iio/magnetometer/bmc150_magn_i2c.c
-@@ -57,8 +57,9 @@ MODULE_DEVICE_TABLE(i2c, bmc150_magn_i2c_id);
+diff --git a/drivers/crypto/qce/sha.c b/drivers/crypto/qce/sha.c
+index 9e54a667d72f..c230843e2ffb 100644
+--- a/drivers/crypto/qce/sha.c
++++ b/drivers/crypto/qce/sha.c
+@@ -292,8 +292,6 @@ static int qce_ahash_update(struct ahash_request *req)
+ 	if (!sg_last)
+ 		return -EINVAL;
  
- static const struct of_device_id bmc150_magn_of_match[] = {
- 	{ .compatible = "bosch,bmc150_magn" },
--	{ .compatible = "bosch,bmc156_magn" },
--	{ .compatible = "bosch,bmm150_magn" },
-+	{ .compatible = "bosch,bmc156" },
-+	{ .compatible = "bosch,bmc156_magn" }, /* deprecated compatible */
-+	{ .compatible = "bosch,bmm150_magn" }, /* deprecated compatible */
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, bmc150_magn_of_match);
+-	sg_mark_end(sg_last);
+-
+ 	if (rctx->buflen) {
+ 		sg_init_table(rctx->sg, 2);
+ 		sg_set_buf(rctx->sg, rctx->tmpbuf, rctx->buflen);
 -- 
-2.17.1
+2.7.4
 
