@@ -2,149 +2,167 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D18C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8520B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6453820716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 13:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hqQ98FJl"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dyANFxY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgFVNiA (ORCPT
+        id S1729086AbgFVNim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:38:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55532 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728070AbgFVNh7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:37:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592833078;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mgkrMlHTxNpnMQAYHl1K4EwFxcTFYH4+ZUAQ7d50tGY=;
-        b=hqQ98FJlme/61XxkWMFdDhoojiWhI8hayZ+d/Zswv1SoqAD7rZi6s/neJ0JZUTOaBeFuQJ
-        QDSqnuOFwkVZZfL/C4htL7u5NHBxGTW3W0HAyBiVcXaFUSLRI+G20hunv1hoVBRp2SyABG
-        0oizWFR44zYyrGaSSy/5YLLfhZP7mug=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-35-taiTrE9hNXq1zEyx4hjdhQ-1; Mon, 22 Jun 2020 09:37:52 -0400
-X-MC-Unique: taiTrE9hNXq1zEyx4hjdhQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01183872FE1;
-        Mon, 22 Jun 2020 13:37:50 +0000 (UTC)
-Received: from localhost (ovpn-116-90.gru2.redhat.com [10.97.116.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FB355BADE;
-        Mon, 22 Jun 2020 13:37:48 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 10:37:47 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH] Revert "kernel/printk: add kmsg SEEK_CUR handling"
-Message-ID: <20200622133747.GD2850@glitch>
-References: <20200622030222.1370098-1-Jason@zx2c4.com>
- <CAHk-=wj5TPoHih-8m+s9UNShiKavUFLacmHFmNbDrXQem43kSA@mail.gmail.com>
+        Mon, 22 Jun 2020 09:38:42 -0400
+Received: from mail-db8eur05on2061.outbound.protection.outlook.com ([40.107.20.61]:12207
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728335AbgFVNil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:38:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h5GVfX57SwnP2pdNaf+o0bdVvAEeR+T/iR6B7JYKpfwZ/M2UwU2hU/bvPtBT3cvFsq5McUNaK+t3MDZAM6xAvRwR+VZ3QzbmbkljSxWc6l2gEV32uCUsfUtCke1/7EIZoiT7T9MPQb0OXi+iobY8yXFdz1mBGqbccgUc6CH1TdPL86uR5KXMql99AkU+xphehR3DcxKmFQw1Iyhe/eTPCapz4DOU8GLAJ0rb6uzwpaptv0RT/W2ye3nske5gQHF21s5gJCYgVridVp+SuJfB6tD//w7/wkonJk9cktPxweZCPvyzBzgaHnwUZS815M47IzUz9haHXZVH6Zy6rMzoDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XNFw7vmsU9mpTnzHIzSjb1FYBYxAoTfeCfNOOUlGRaw=;
+ b=iJTXIq5ZrWlo693Tx9StOXenHc3HkZqNm7ES448Jm72NkqHV2AI+Ztc8oAH+o7WAhE6ie91baxHZb+Bf7qysfKknohf0/XqnIKdWB7Z5/xtEOQWM9V+OUvmPLNkjy44qytHCcmKuJtnHMmrzV0C0XkOAqtRaYVEjTzEOiaXSSD+RnWwNrjE53B7h55gwMx3+C82WAz6ufb7AAOOKrfYmnyQbJcMD0RCyFVZYU8nC5GoB7Z6cyb3F/oFRCipMMCQBNvQYkuodFBElU9W25yQUGS/kM3f/JRFry//gc1aYep01A3DqgTUjvHVxlzvfxPK3hB/eBTgK3bo3Ps9g6uxm2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XNFw7vmsU9mpTnzHIzSjb1FYBYxAoTfeCfNOOUlGRaw=;
+ b=dyANFxY1UwkHn/hbBhRPbyxFM8owatLbbBsiTgaBzMbvcqRNTJxXFT9/Ifpp7q8HoZrGOJHdpsEpkqwmXk7dAvsGuj4Vpy3O6FTbStAhd3qTaspgyYpvOYlsSq2wAUPCbxlCHae/cb8F1DwA7HLPoVt6dfmk4hI4JIky6SoT0vs=
+Authentication-Results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (2603:10a6:208:119::33)
+ by AM0PR04MB5075.eurprd04.prod.outlook.com (2603:10a6:208:bf::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
+ 2020 13:38:37 +0000
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::f0b7:8439:3b5a:61bd]) by AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::f0b7:8439:3b5a:61bd%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 13:38:37 +0000
+From:   Florinel Iordache <florinel.iordache@nxp.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk
+Cc:     devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org,
+        Florinel Iordache <florinel.iordache@nxp.com>
+Subject: [PATCH net-next v3 0/7] net: ethernet backplane support on DPAA1
+Date:   Mon, 22 Jun 2020 16:38:13 +0300
+Message-Id: <1592833093-31783-1-git-send-email-florinel.iordache@nxp.com>
+X-Mailer: git-send-email 1.9.1
+Reply-to: florinel.iordache@nxp.com
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR10CA0013.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::23) To AM0PR04MB5443.eurprd04.prod.outlook.com
+ (2603:10a6:208:119::33)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wj5TPoHih-8m+s9UNShiKavUFLacmHFmNbDrXQem43kSA@mail.gmail.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=bmeneg@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bi5JUZtvcfApsciF"
-Content-Disposition: inline
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1464-128.ea.freescale.net (83.217.231.2) by AM0PR10CA0013.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 13:38:36 +0000
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d80b0a1a-3219-4ba2-c32e-08d816b1912f
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5075:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB5075230B4634B0924C9CBAA4FB970@AM0PR04MB5075.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f6x/w1IWam4L8lN03M0hiO893q+TosBgteA2GVoE2lcpD1OmJQTT0dTcKkWtgCJZWByWP6GzWidhd/O4/IwUOZV/wGaoiX6otpVRqnfufp5PTlg16oM2R4h3DrZgntjzfxvf3ZTYkEfCNQDhujGQ8QxCvS60ZXq3DCaxQiuej0eK/VzuK/kjqWs9U/EivdyZoL67eQqBFgMkiZ+lBFYtP5YF9GFKISb4XKBd326rCYQB5iHWmR6rfPJ6SBKq42Ba/xBd6OVm/MeSxZynX0An6OW0VCXmKxQIdB+RChlNdeX51jNc1TNcJh4svyLQyWRX
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(66476007)(66556008)(66946007)(83380400001)(5660300002)(2616005)(956004)(44832011)(86362001)(6666004)(2906002)(8676002)(6512007)(52116002)(16526019)(186003)(26005)(3450700001)(6506007)(4326008)(6486002)(316002)(478600001)(8936002)(7416002)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: geXCrSGhwzHAMrpWiPp088GpYfcCl9Cd5rOIEuvE+69M0Vq8QwQjYZL/WQK/9snRfU2oytUHstdvetYaTHXA1UJycth7usOCuNaX72PgDmZx219zFiHDFZnSrlb8GizpMCKGslQX5jJIzx1yBxIFeOZg0MyYqmvzSK6G2S8jNJLgj07gljx8lvsQhsgogtkozkIuhTBNwdojlaMnhKZcyLB9a5X/6G77ScUuagQvBLjuJl7wmnNNe85MKZiTyV+Y8eOosA7OzCPSlbBxuxc/RdkE934s5HXQJlWHar2Pq6PJFvpmYfLqI0wW6LbBK7u9aNiFiuRtFN/5X4+06sR4V7ZRPmWN8xsHOpjpMiV7zN1nYaA/CHFSNuDRZUeZ8rGJ41KtnTEnUNQYx/ljwFBX86loAtGtvnNHi0NM6M/YhzTpF2i9BuXdm8O6JJUsUxRd9DYtfFVucYs7/Eu7A+7sNehCFDBFK60CCLTWHYcMXRg=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d80b0a1a-3219-4ba2-c32e-08d816b1912f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 13:38:37.5173
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0VdVYUTjGcDnTwxnh8yn7X5hN9+QGmy22+axLZ+xyKhjUOj8AUfn/3n34213UxYuUUJ8/UzrjXxluBQgj1rIK+emIWpQGbaxcWXlWPHA5OY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---bi5JUZtvcfApsciF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add support for Ethernet Backplane KR driver only on DPAA1 devices.
+Ethernet Backplane KR generic driver is using link training
+(ieee802.3ap/ba standards), equalization algorithms (bee, fixed) and
+enable qoriq family of devices.
+This driver is dependent on uboot Backplane KR support:
+patchwork.ozlabs.org/project/uboot/list/?series=164627&state=*
 
-On Sun, Jun 21, 2020 at 08:50:09PM -0700, Linus Torvalds wrote:
-> On Sun, Jun 21, 2020 at 8:02 PM Jason A. Donenfeld <Jason@zx2c4.com> wrot=
-e:
-> >
-> > This reverts commit 8ece3b3eb576a78d2e67ad4c3a80a39fa6708809.
-> >
-> > This commit broke userspace. Bash uses ESPIPE to determine whether or
-> > not the file should be read using "unbuffered I/O", which means reading
-> > 1 byte at a time instead of 128 bytes at a time.
->=20
-> Ack. Somewhat odd behavior, but clearly user space depended on the
-> legacy "return EINVAL rather than ESPIPE" behavior.
->=20
-> I do think there are other reasons to not return ESPIPE. The fact is,
-> the printk buffer _is_ seekable, it's just relative seeking that
-> doesn't work. You can seek to the beginning and the end and a
-> particular offset, just not relative.
->=20
-> So I kind of see why people wanted to return ESPIPE, but at the same
-> time it really is very misleading: ESPIPE is for pure streams that
-> can't lseek at all.
+v3 changes:
+* The entire DPAA2 support was removed as well as phylink changes.
+This patchset contains only DPAA1 support for KR.
+* DPAA2 support will be added after we find a suitable solution
+for PCS representation.
+* All the changes made in v2 that addressed all the feedback not
+related to PCS representation, are kept in v3 as well.
 
-That was indeed a misunderstanding of mine wrt ESPIPE meaning.
-And I agree with your previous paragraph where you stated that the
-buffer is only not "relative" seekable. So, ack for the revert.
+Florinel Iordache (7):
+  doc: net: add backplane documentation
+  dt-bindings: net: add backplane dt bindings
+  net: fman: add kr support for dpaa1 mac
+  net: phy: add backplane kr driver support
+  net: phy: enable qoriq backplane support
+  net: phy: add bee algorithm for kr training
+  arm64: dts: add serdes and mdio description
 
-However, the issue with glibc is their fd checking on dprintf using:
+ .../bindings/net/ethernet-controller.yaml          |    7 +-
+ .../devicetree/bindings/net/ethernet-phy.yaml      |   50 +
+ .../devicetree/bindings/net/serdes-lane.yaml       |   49 +
+ Documentation/devicetree/bindings/net/serdes.yaml  |   42 +
+ Documentation/networking/backplane.rst             |  159 ++
+ Documentation/networking/phy.rst                   |    9 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     |   33 +-
+ .../boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi    |    5 +-
+ .../boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi    |    5 +-
+ drivers/net/ethernet/freescale/fman/mac.c          |   10 +-
+ drivers/net/phy/Kconfig                            |    2 +
+ drivers/net/phy/Makefile                           |    1 +
+ drivers/net/phy/backplane/Kconfig                  |   40 +
+ drivers/net/phy/backplane/Makefile                 |   12 +
+ drivers/net/phy/backplane/backplane.c              | 1557 ++++++++++++++++++++
+ drivers/net/phy/backplane/backplane.h              |  293 ++++
+ drivers/net/phy/backplane/eq_bee.c                 | 1076 ++++++++++++++
+ drivers/net/phy/backplane/eq_fixed.c               |   83 ++
+ drivers/net/phy/backplane/equalization.h           |  275 ++++
+ drivers/net/phy/backplane/link_training.c          | 1529 +++++++++++++++++++
+ drivers/net/phy/backplane/link_training.h          |   32 +
+ drivers/net/phy/backplane/qoriq_backplane.c        |  473 ++++++
+ drivers/net/phy/backplane/qoriq_backplane.h        |   42 +
+ drivers/net/phy/backplane/qoriq_serdes_10g.c       |  486 ++++++
+ 24 files changed, 6258 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/serdes-lane.yaml
+ create mode 100644 Documentation/devicetree/bindings/net/serdes.yaml
+ create mode 100644 Documentation/networking/backplane.rst
+ create mode 100644 drivers/net/phy/backplane/Kconfig
+ create mode 100644 drivers/net/phy/backplane/Makefile
+ create mode 100644 drivers/net/phy/backplane/backplane.c
+ create mode 100644 drivers/net/phy/backplane/backplane.h
+ create mode 100644 drivers/net/phy/backplane/eq_bee.c
+ create mode 100644 drivers/net/phy/backplane/eq_fixed.c
+ create mode 100644 drivers/net/phy/backplane/equalization.h
+ create mode 100644 drivers/net/phy/backplane/link_training.c
+ create mode 100644 drivers/net/phy/backplane/link_training.h
+ create mode 100644 drivers/net/phy/backplane/qoriq_backplane.c
+ create mode 100644 drivers/net/phy/backplane/qoriq_backplane.h
+ create mode 100644 drivers/net/phy/backplane/qoriq_serdes_10g.c
 
-lseek(offset =3D=3D 0, whence =3D=3D SEEK_CUR)
-
-Which, technically, isn't a relative seek operation in my opinion, thus
-I'm also not sure that returning EINVAL is correct.=20
-
-Would it make sense to return the next buffer index instead? Basically
-the same as SEEK_END does? The first "if (offset)" in the function would
-prevent any real relative move while SEEK_CUR would return a valid
-address following this buffer behavior of specific points it could seek
-to.
-
->=20
-> The fact that some silly shell internal then reacts very badly to that
-> may be extreme, but it may be as well as you can do it you worry about
-> leaving data for the next user.
->=20
-> I've applied the revert.
->=20
->              Linus
->=20
-
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
-
---bi5JUZtvcfApsciF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7wtCsACgkQYdRkFR+R
-okMX3wgAtGljuKIhXYBxhpvs4p2xQWRLW/RTySITG7k86tmTNf9qs/7/kog9a0Yb
-gF087sCIG9ZC0POru1uaKVV7uLS6mxJo2e5nzkZukGEoXVkECFjbK79nlJMc3kW5
-sgJCT2NvuCng2Ytr82CUVACvWqsna7diX+Pm0RWcys/CwzcEGlbmVmiWJc9BrAIK
-1NZCSLtB08HqndkHL9rKeoXBrpb2x4UTMXixJ4Z/axp+UmjhQBfMD+fY/FD/VRPZ
-Op8/mMglCHDygjghG3m2Fk/6pOQwOkbw/nfGuwcB7gZ+Yr+7DeoCEgrJCPK5Kd2B
-pi30kaQTwAU5V/TLbLAA+Xiy5xppQg==
-=+dr2
------END PGP SIGNATURE-----
-
---bi5JUZtvcfApsciF--
+-- 
+1.9.1
 
