@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA14C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0ED20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1824620716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="swtzTFmL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="2GosbQAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgFVJnL (ORCPT
+        id S1727051AbgFVJle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:43:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40718 "EHLO
+        Mon, 22 Jun 2020 05:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbgFVJlf (ORCPT
+        with ESMTP id S1726971AbgFVJl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:41:35 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E383CC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id c3so15902456wru.12
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:33 -0700 (PDT)
+        Mon, 22 Jun 2020 05:41:29 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894CEC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:28 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g10so14196789wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nC0F5ZT+Ll5OOGkPAd3mIJIStND0frPBkptlTCmDLJg=;
-        b=swtzTFmLVIWLX97Ka8BE4T1dWXPt5l1jiTgEty4wbnCrweWQw3HbeTXNza6y2qcCXR
-         iIu5WIxWbsQs51WOv19l2MOnnx9biFYV7/MbY0YMlQ/cSE0G+PyDXwmHvUYyHhrnNdUq
-         xAHqSoVXMheRLlPuN1KpgliIQIXbuBOHq+PCzME+TGn0K+/URvl99z5NPSrgSbWHtdpH
-         2XLpBaTp7Jhs4GFXZGq+gopioO0XNjhy5k4P+p0oSTll4HgmIBiAnRFMRF6aTZi4O2og
-         vYAAkHtdQXctioWsdumoNSuMfzhqraPeWT6gTazq92hFSwkJkMSYyr7hlCsjXk1eVqPx
-         7WHQ==
+        bh=XLmPOYVdaqe+y9UvFG8JqfkTSyC/6Nk+DJj6OjGJzDQ=;
+        b=2GosbQAaXiA/JCZI+g11JdzSxLyfN527ZSvaJacFgJHvRnRrhvLEPiWmyJFet6DLEb
+         hARZd6Itp8Ly0hWe26lMW947wIjwj7XUtHNewIkPpHDfvslkT6iaZRGzwVc1+AdkfN9E
+         77J7zDnRp2cYGiifSFx4PYoShheiwsluJXswRLqt8WCuWUWb6Embtw6Z9mU9W3xNZj5+
+         FkCtTAjDmKfNu78ysMk7zie06INp6h4obBSJsjUfKcugxIeYOlBAJsbCB32uIVigpa55
+         H1TopXYcKvoxi2/iyqbeMnFO353y8FNqh6Aqq/dcIb9ZhBcMg37bYYwmNiEdTQ26X7wA
+         iCKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nC0F5ZT+Ll5OOGkPAd3mIJIStND0frPBkptlTCmDLJg=;
-        b=P2ka3VbmpVCMPXzg0vmzpWxuPmMLD/zMGdtLJE+zFIWXXDNLYULY//1gwBWa/hhwFl
-         PdpmQVF3r5GB1G6vhEtGhvEjusQHJnP27IoLEIRK1J7ue9eU1soWAp4JNxconb+aVJKB
-         CMGSbQM/gWYEZ+xfDWeN7mtox9gCAGRLSZZlrS3OBTyKHakMijAQkST1eW+oqrQ2ueKf
-         UkE3qqQj13WhtIEYjxob+8aRjO2FZhOgF+1zJnRG6HvL9RsKbR1qQnJCfV4Mj0J/WfOe
-         /efU/DMfa8wto6yttvySlIiToh7il1hGJy/E5KU1hdjDdCL9wFqsPbV9FKT037xg8WPL
-         duLg==
-X-Gm-Message-State: AOAM530YRgCUpYisfJlKYiUmZbm1JnmFK+6HTIRZnfSj/VZBNR4LNGEN
-        fnDfY4jV3foqTumpGlQEVYatYw==
-X-Google-Smtp-Source: ABdhPJzxHCym+Ub6CuSXGJUTfH6gp7OLN1NQWcaww2Sg2sQLihShVVzipPqZpx45p1tV4dBze4Q9ew==
-X-Received: by 2002:a5d:6802:: with SMTP id w2mr18207943wru.68.1592818892680;
-        Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+        bh=XLmPOYVdaqe+y9UvFG8JqfkTSyC/6Nk+DJj6OjGJzDQ=;
+        b=CcDqcR/tHzg8ixhzgbBwao3Kqk7dPeZEnbsKmCZP4TaTWkq/9S1maH/rphILSVzGNL
+         YLLxX4EIvSsmdgSUiCOXQzsJisW6vhZyrS+UJByeIuV2HIDepmBmWZsxKvlHPQnvBbqR
+         a0o2h5H8Q45bn4ObAXC4YpVqnSHCe3BIsEURL0Kmvg4lyZ7814R6i4ppCxcUs8vSJypS
+         74koWw5gktNBVHNmxILYxB1FccFsjA1VNsi9fJ1vKVFEaGziA8xuPcOKt+55U+TIfYtC
+         7aCk8yESC8I3TWXHlRpOWSRfpH27CnCWvOulVj45IfSktj5MyFWMdCsm2/REL3uLESAf
+         MjSQ==
+X-Gm-Message-State: AOAM531iP7v0VAv7GkunNMgMMMWnkXZtms7pzFka/FcogaCt2RU+qfkR
+        UivB9U0GIwwPc8UX88gRhRS4ag==
+X-Google-Smtp-Source: ABdhPJzDaXbcIaH5nH0mryMVoe9yjbkPdBB2oGScnXDu1GQppXU4cUVJs6lCaQVoAVfhbUhW/QgYFw==
+X-Received: by 2002:a1c:f204:: with SMTP id s4mr18359072wmc.159.1592818887262;
+        Mon, 22 Jun 2020 02:41:27 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.31
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:26 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -93,9 +93,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 06/15] net: phy: mdio: reset MDIO devices even if probe() is not implemented
-Date:   Mon, 22 Jun 2020 11:37:35 +0200
-Message-Id: <20200622093744.13685-7-brgl@bgdev.pl>
+Subject: [PATCH 03/15] net: phy: arrange headers in phy_device.c alphabetically
+Date:   Mon, 22 Jun 2020 11:37:32 +0200
+Message-Id: <20200622093744.13685-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -108,49 +108,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Similarily to PHY drivers - there's no reason to require probe() to be
-implemented in order to call mdio_device_reset(). MDIO devices can have
-resets defined without needing to do anything in probe().
+Keeping the headers in alphabetical order is better for readability and
+allows to easily see if given header is already included.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/mdio_device.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/net/phy/phy_device.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
-index f60443e48622..be615504b829 100644
---- a/drivers/net/phy/mdio_device.c
-+++ b/drivers/net/phy/mdio_device.c
-@@ -150,10 +150,10 @@ static int mdio_probe(struct device *dev)
- 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
- 	int err = 0;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 04946de74fa0..1b4df12c70ad 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -9,28 +9,28 @@
  
--	if (mdiodrv->probe) {
--		/* Deassert the reset signal */
--		mdio_device_reset(mdiodev, 0);
-+	/* Deassert the reset signal */
-+	mdio_device_reset(mdiodev, 0);
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
-+	if (mdiodrv->probe) {
- 		err = mdiodrv->probe(mdiodev);
- 		if (err) {
- 			/* Assert the reset signal */
-@@ -170,12 +170,11 @@ static int mdio_remove(struct device *dev)
- 	struct device_driver *drv = mdiodev->dev.driver;
- 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
+-#include <linux/kernel.h>
+-#include <linux/string.h>
+-#include <linux/errno.h>
+-#include <linux/unistd.h>
+-#include <linux/slab.h>
+-#include <linux/interrupt.h>
+-#include <linux/init.h>
++#include <linux/bitmap.h>
+ #include <linux/delay.h>
+-#include <linux/netdevice.h>
++#include <linux/errno.h>
+ #include <linux/etherdevice.h>
+-#include <linux/skbuff.h>
++#include <linux/ethtool.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/mdio.h>
++#include <linux/mii.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
+-#include <linux/mii.h>
+-#include <linux/ethtool.h>
+-#include <linux/bitmap.h>
++#include <linux/netdevice.h>
+ #include <linux/phy.h>
+ #include <linux/phy_led_triggers.h>
+ #include <linux/sfp.h>
+-#include <linux/mdio.h>
+-#include <linux/io.h>
++#include <linux/skbuff.h>
++#include <linux/slab.h>
++#include <linux/string.h>
+ #include <linux/uaccess.h>
++#include <linux/unistd.h>
  
--	if (mdiodrv->remove) {
-+	if (mdiodrv->remove)
- 		mdiodrv->remove(mdiodev);
- 
--		/* Assert the reset signal */
--		mdio_device_reset(mdiodev, 1);
--	}
-+	/* Assert the reset signal */
-+	mdio_device_reset(mdiodev, 1);
- 
- 	return 0;
- }
+ MODULE_DESCRIPTION("PHY library");
+ MODULE_AUTHOR("Andy Fleming");
 -- 
 2.26.1
 
