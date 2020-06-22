@@ -4,99 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0492EC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D422B207C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4ADC20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cnVX3sYP"
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="eOMTvTR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgFVIKA (ORCPT
+        id S1726642AbgFVIKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:10:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54698 "EHLO
+        Mon, 22 Jun 2020 04:10:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgFVIJS (ORCPT
+        with ESMTP id S1725907AbgFVIKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:09:18 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EDF2C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:09:18 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 17so194916wmo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=lPM2dXcZWsfdanvmWpEJKe0oZi4Qaag02Vnv/2CyipI=;
-        b=cnVX3sYPQCbhNmRKFn9tmv4J3PekwjpwF6bfi8cMBn2SGOb6LT/dVyM7wombRqgxpA
-         is2ldG64YjU0yLCBODga9bjLY4rweVKScALDadK0DPBSHD4GQOASqFj2EfFbNg8jF5lQ
-         hxWMa9gmc6n2o6E0PbjkRrnQOmKKOs/aagbN1jFEHRseJdungrzUTi2gvS28rxskZBwm
-         lZ0woZ21p3kH6TUzjauOlKzuWgYiN79rDsW4inREu727cglKBj0bkV/0h9HnUAX29Hqw
-         AeJcAhMaKyMZdK+GnP4kqbAz2ECNuKxVqw4mPqXf2oOYLgMcPpQostHQYYi1s3+TjFlr
-         3PEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=lPM2dXcZWsfdanvmWpEJKe0oZi4Qaag02Vnv/2CyipI=;
-        b=NTwTCPLAOU+nVvJkdUgincC0F8LNjbFidSN+ruR6eSC4wptottzjH5Y/h8ig1Uh88p
-         wDRquV+yabotqhFSsbOUQ58xPov38CM0ynjTMI4hpot+vVeQyBnIaZlqwcnKmX7NbYA/
-         PAOLiKKyD7IDzNW7WoM6FS3EaM8ETFu5op+1hpm+PLR3FXqvy+rLVu0jS2rzBo5zzQDP
-         4OHUDKGIL6sFFazWMwziUom7uWfdzOvj47cALzgDIzMBOJ9Xd3WfxG9pFE5qJzsEgmcb
-         ajmavcOkkf7GdY7TRcS4ktzX6BfeJ+PRtbZu3byD40ncCbuCAVB/N5vRKYtsEc6anlaz
-         bppg==
-X-Gm-Message-State: AOAM530/+D/CHxhc3T2Zh2vRiyOoLNh+4xjbFNAuNa/B3ts28vAwsOtR
-        4mixcXrc3blRt5eXJtn/2Pn6JA==
-X-Google-Smtp-Source: ABdhPJzXTmJsexAMbC4fSFp/DV4mASBv8rG1X3KfMPe08q1ag1abOMxR5jA/eGxpEBtIkM/LyOFmSg==
-X-Received: by 2002:a1c:9cd3:: with SMTP id f202mr16240567wme.64.1592813356869;
-        Mon, 22 Jun 2020 01:09:16 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id x18sm5883006wrq.13.2020.06.22.01.09.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 01:09:16 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 09:09:13 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-Message-ID: <20200622080913.GO954398@dell>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
+        Mon, 22 Jun 2020 04:10:32 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BA5C061794;
+        Mon, 22 Jun 2020 01:10:32 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 49r2CS5Jqfz9sTY; Mon, 22 Jun 2020 18:10:28 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1592813428;
+        bh=Ce43B/8Fubqa8dR1cOJzDW7Y73JAHwovWlhBSJzM3CY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eOMTvTR7p3iDDktQO7xf6iq/zZY+SqaX7YzQZnmBeYAdU3Vb/iQW6iSId9wrg+T/G
+         klMmNjOjAq/y35tT0XYpcgIJnBf3nkM1Eks9Krb4rfNgXFoOLWn/qetTtk+T9dtFg/
+         z1hpQeFKEzeUNGGfPgmFy02oxsjVvRdlcpB952DI=
+Date:   Mon, 22 Jun 2020 17:53:18 +1000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 0/2] dtc: Improve checks for i2c reg properties
+Message-ID: <20200622075318.GT17085@umbus.fritz.box>
+References: <20200622031005.1890039-1-joel@jms.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZXzThk3vFZecBD04"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200611191002.2256570-1-lee.jones@linaro.org>
+In-Reply-To: <20200622031005.1890039-1-joel@jms.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020, Lee Jones wrote:
 
-> Currently, when a child platform device (sometimes referred to as a
-> sub-device) is registered via the Multi-Functional Device (MFD) API,
-> the framework attempts to match the newly registered platform device
-> with its associated Device Tree (OF) node.  Until now, the device has
-> been allocated the first node found with an identical OF compatible
-> string.  Unfortunately, if there are, say for example '3' devices
-> which are to be handled by the same driver and therefore have the same
-> compatible string, each of them will be allocated a pointer to the
-> *first* node.
+--ZXzThk3vFZecBD04
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Any more reviews/comments before I apply this?
+On Mon, Jun 22, 2020 at 12:40:03PM +0930, Joel Stanley wrote:
+> This is to fix a build warning in the Linux kernel caused by dtc
+> incorrectly warning about I2C_OWN_SLAVE_ADDRESS.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Applied, thanks.
+
+>=20
+> v4 adds a U to the defines
+> v3 fixes the 10 bit size check
+> v2 contains a second patch to check for 10 bit vs 7 bit addresses.
+>=20
+> Joel Stanley (2):
+>   checks: Remove warning for I2C_OWN_SLAVE_ADDRESS
+>   checks: Improve i2c reg property checking
+>=20
+>  checks.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--ZXzThk3vFZecBD04
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl7wY20ACgkQbDjKyiDZ
+s5LIHg/+JowiaWp26ONSiUBMBOOlj5fnSduXGzDLt6S/0xo3qTWsIwMoB9579Yk5
+KwX4uuHoMseEC9KNwxK7cX6JpHLOkXMXzUbTrs7wqQcUbG4H+poYG53Ha5/IgTFp
+j8E5IbKUR4zXme3zv9oOj5D7Nsc14EARFo7DxKAWNwL11Wmo9oKFZyUeQJH2S0UH
+29ijTWoEeCLYIhgydCPR3zcvVza3f1KX/01yYseVExsnzdqb0xLbtOeAfiSmwWj6
+uqWRPc5Uepp9gPaz/mgGKtbQ3CHnOirV4p3e4d6YgNbdBbutCsubQcsJoda5Wigw
+/QpkcxDVJvus5WWoKGI7NXnXOcLEInA+dqZHbuM8J+roXGzhK3Q5jxx2xirs/LDX
+JqsVMkA1986o4X9m4zQxXywvnw15oLokzO6kv3WA5RpFvHoXPURQLmZgHzH2BOJm
+WK/N5mvt61sjL59e/RW7ggEGauJoKzv6SBfZP+VSvO59txZ+wZPOjAu1Lbx9A3TA
+RGDwDjn+C7/QyTobLlFT0Wgw+WNJ3k/fGsFrDw7Pr+4BXaF8XI9Nuqo4j58nTsqw
+Hcy7mk5WJZzjxbrMNm4QbdT4S4zMcqFQ06zifd/BoAggRBspcsjOMAD6sT13PTqE
+8Oqb96+xqyWnTJLpqA4ZvvfF7guTw0HQQJxDnVKI9Mf84mDv00c=
+=Qy89
+-----END PGP SIGNATURE-----
+
+--ZXzThk3vFZecBD04--
