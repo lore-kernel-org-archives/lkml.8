@@ -2,71 +2,69 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51934C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82754C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2452320675
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572D0204EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hOL4meLA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="C0RbOwK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbgFVHzj (ORCPT
+        id S1731498AbgFVH4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52484 "EHLO
+        Mon, 22 Jun 2020 03:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731289AbgFVHzi (ORCPT
+        with ESMTP id S1730106AbgFVH4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:55:38 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C8BC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:55:38 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 17so155590wmo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:55:38 -0700 (PDT)
+        Mon, 22 Jun 2020 03:56:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD80FC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:56:03 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id a6so3912544wmm.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=GZ3cQNtQ465MvBmgLjG0yWAIDvq/cCKM9rt4ipQtrNg=;
-        b=hOL4meLAABo6fJnAXJJbgyiZ5819SFtS0xNF5hh7cHM1e9XvP2cgvMa5a1G9Fv5FNd
-         9vULLyjB7PqqNUN0NG9VfC5vlkEBYqSa4sl5WnGobpr6w8+Ql7bP+E402tIpRqebDqRe
-         QiX1uId7tYb4apLUsjdGJQD96a4VFGF7rqXpoqBXqxnU5ouuphgJ4AEyPcgOna2WyFRL
-         vfWzjorTagbXILwcahTuYr/7xlTB3+C5bpzMW4GhGzJ9g3hn/20Hhww62zhUYKTrmVFz
-         +j1qzt+UXlfr7ulwX5MO3yAqpDnIka+eZ1AVd1UQtKLCnX3efo9EZsfOjjUjKg3mTQGy
-         2Lcw==
+        bh=30CVh4O1BAwBWTUk6Vp1r3LF+rDdjJb7R18/JcI+iUw=;
+        b=C0RbOwK5mHHfUzdpQRRy1pb9Jw9i3LJcbU3zdike6mvRXrUL5XrkJLXK698Y2hsnkr
+         UxkEpAYcQI/iDGm+nJ3Xbx4ZmpmvhZdetdCq2mQS0JJLunyyKvbzICdXGfBKebuKDHst
+         Q6iyyqSLbNyHQjh1+r50Iwxx8pXv01beu7jOLtZHcaSlpHf9Z4Phu2NNPLVt6hXk6Cji
+         hLfO75m7U4YohmiiR+irBEoNIUaAI9qfz4zBvkRJwec02p5ZWW9qx6/3gKLV/ddPbd1G
+         jf5zWrlzkJ+zuRiFYvMcunVxzkiP7IAo8TqI6Zw5jBSMfXyl0m3LDRsxpcCK/O4T6gZ0
+         zaAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=GZ3cQNtQ465MvBmgLjG0yWAIDvq/cCKM9rt4ipQtrNg=;
-        b=Aoe/9CqwaMdUP6kf8scZqTPU30SvwqooWu0jl2FltHlFYqBoIatBcJ5ipTMbJQbRZl
-         iFXzc35DF8Xl6By+wWYG7VwaMg17Ntmii3NeY3QKOqbhe5xFjUhkT+Lk/oBpc6yncpnu
-         I0FIirvOpLFUES63IlrpwuqOQgcfjFdjx461Gcw51TwxHAVq0EKFMGu5KgzksiMjVFiT
-         V6FlotSuMs8Ycn+tKhYsEQyZL6k+ku90N8ONm1ZiaXIa3mOJl9UiI12iuCVQJ1p7apaT
-         QI1S91zGF/llju9RSE4W2mxElr2/Vru9iDpTIKKbyAA6l4j/Lu7Pyjq3Z7VohMVTiRnU
-         z+dQ==
-X-Gm-Message-State: AOAM530A9mtIm9JqMQPjnlIPXFSRP8yI7mOKzpvimCY3tMJdDT7HVvTC
-        gFqKjUKLX0UqFZTTx6v+AlzOXWn8/JQLIQ==
-X-Google-Smtp-Source: ABdhPJzdHGZpnVpUbRL2SMjOwrxrqkxg8X3ISlb9FMuftY+j3ODbu3SnjFlKu3ELIimNMrRZojG83A==
-X-Received: by 2002:a05:600c:281:: with SMTP id 1mr9288566wmk.143.1592812536623;
-        Mon, 22 Jun 2020 00:55:36 -0700 (PDT)
+        bh=30CVh4O1BAwBWTUk6Vp1r3LF+rDdjJb7R18/JcI+iUw=;
+        b=XxBaKIu7BtC77FJQ4OD7QKtQlTp4iztbPwNtNPkRzY3r3wUVmYJ5mkcmJgDBsP835n
+         qVNVoOoebQXgqLwYKUFryCyqQYWdBy6fnfmYmi2/X0op0U6bNzFAVDFPt9VGpg63T4jY
+         xbugPSBEpVxZeDCVObHdqJbflxsN3uJC9h0+3qbPotq3UAgNF6Jinbdel5N/SJbd8u0C
+         F+9LknfaruaufTMqDoKa7eSzx6beK0Iklr6muwTu6SLihBj8OMM4dTYXvA5E+pFtB+Rb
+         hlQ2lJlJ3xdYRMuIY8cgaXnWQj+/HVCFVbPmpOGJXu5gfsWvx6d7nWAiWMa6ojCPcsve
+         1+Hg==
+X-Gm-Message-State: AOAM531cNZqtpRrArEMjP4oEGA0sFyXOvo0YME5+TXKig4ftPdr41HR0
+        dw7A3FJzVJOQXTR+FkECLy1ZYg==
+X-Google-Smtp-Source: ABdhPJyQIc+PX1wzoX4kHh88J3vDTbbJJqtS48mOjVLGSCv1IjvAFaCkdlJL+27V1J6/v4eKyAr6EA==
+X-Received: by 2002:a1c:7416:: with SMTP id p22mr1524608wmc.32.1592812562337;
+        Mon, 22 Jun 2020 00:56:02 -0700 (PDT)
 Received: from ?IPv6:2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc? ([2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc])
-        by smtp.gmail.com with ESMTPSA id 207sm4810304wme.13.2020.06.22.00.55.35
+        by smtp.gmail.com with ESMTPSA id 92sm8099282wrr.96.2020.06.22.00.56.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 00:55:35 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: meson-gx: Switch to the meson-ee-pwrc
- bindings
+        Mon, 22 Jun 2020 00:56:01 -0700 (PDT)
+Subject: Re: [PATCH 0/3] ARM: dts: wire up the power domains on Meson8/8b/8m2
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200620161211.23685-1-martin.blumenstingl@googlemail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200620161010.23171-1-martin.blumenstingl@googlemail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -118,12 +116,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <f6c2f1e7-b35f-e7a6-1891-693274824da6@baylibre.com>
-Date:   Mon, 22 Jun 2020 09:55:35 +0200
+Message-ID: <ba6e6dc7-623c-aa52-5750-b44737b2c372@baylibre.com>
+Date:   Mon, 22 Jun 2020 09:56:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200620161211.23685-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200620161010.23171-1-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -132,147 +130,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/06/2020 18:12, Martin Blumenstingl wrote:
-> The "amlogic,meson-gx-pwrc-vpu" binding only supports the VPU power
-> domain, while actually there are more power domains behind that set of
-> registers. Switch to the new bindings so we can add more power domains
-> as needed.
+On 20/06/2020 18:10, Martin Blumenstingl wrote:
+> Now that the meson-ee-pwrc driver has gained support for the power
+> domains on Meson8/Meson8b/Meson8m2 we can add it to the corresponding
+> .dtsi files.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 18 ++++++++++--------
->  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi |  7 +++++--
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  7 +++++--
->  3 files changed, 20 insertions(+), 12 deletions(-)
+> So far this doesn't fix (or break) anything for me (probably because all
+> vendor u-boots are enabling the Ethernet power domains unconditionally).
+> But at least it's one preparation step which is needed for video output
+> in the future.
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> index ba63c36b22e0..0edd137151f8 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/meson-gxbb-power.h>
->  #include <dt-bindings/thermal/thermal.h>
->  
->  / {
-> @@ -60,7 +61,7 @@ simplefb_cvbs: framebuffer-cvbs {
->  			compatible = "amlogic,simple-framebuffer",
->  				     "simple-framebuffer";
->  			amlogic,pipeline = "vpu-cvbs";
-> -			power-domains = <&pwrc_vpu>;
-> +			power-domains = <&pwrc PWRC_GXBB_VPU_ID>;
->  			status = "disabled";
->  		};
->  
-> @@ -68,7 +69,7 @@ simplefb_hdmi: framebuffer-hdmi {
->  			compatible = "amlogic,simple-framebuffer",
->  				     "simple-framebuffer";
->  			amlogic,pipeline = "vpu-hdmi";
-> -			power-domains = <&pwrc_vpu>;
-> +			power-domains = <&pwrc PWRC_GXBB_VPU_ID>;
->  			status = "disabled";
->  		};
->  	};
-> @@ -438,12 +439,6 @@ sysctrl_AO: sys-ctrl@0 {
->  				compatible = "amlogic,meson-gx-ao-sysctrl", "simple-mfd", "syscon";
->  				reg =  <0x0 0x0 0x0 0x100>;
->  
-> -				pwrc_vpu: power-controller-vpu {
-> -					compatible = "amlogic,meson-gx-pwrc-vpu";
-> -					#power-domain-cells = <0>;
-> -					amlogic,hhi-sysctrl = <&sysctrl>;
-> -				};
-> -
->  				clkc_AO: clock-controller {
->  					compatible = "amlogic,meson-gx-aoclkc";
->  					#clock-cells = <1>;
-> @@ -552,6 +547,12 @@ hiubus: bus@c883c000 {
->  			sysctrl: system-controller@0 {
->  				compatible = "amlogic,meson-gx-hhi-sysctrl", "simple-mfd", "syscon";
->  				reg = <0 0 0 0x400>;
-> +
-> +				pwrc: power-controller {
-> +					compatible = "amlogic,meson-gxbb-pwrc";
-> +					#power-domain-cells = <1>;
-> +					amlogic,ao-sysctrl = <&sysctrl_AO>;
-> +				};
->  			};
->  
->  			mailbox: mailbox@404 {
-> @@ -574,6 +575,7 @@ ethmac: ethernet@c9410000 {
->  			interrupt-names = "macirq";
->  			rx-fifo-depth = <4096>;
->  			tx-fifo-depth = <2048>;
-> +			power-domains = <&pwrc PWRC_GXBB_ETHERNET_MEM_ID>;
->  			status = "disabled";
->  		};
->  
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> index 03c25b9facff..ea50dd434887 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> @@ -748,7 +748,7 @@ mux {
->  	};
->  };
->  
-> -&pwrc_vpu {
-> +&pwrc {
->  	resets = <&reset RESET_VIU>,
->  		 <&reset RESET_VENC>,
->  		 <&reset RESET_VCBUS>,
-> @@ -761,6 +761,9 @@ &pwrc_vpu {
->  		 <&reset RESET_VDI6>,
->  		 <&reset RESET_VENCL>,
->  		 <&reset RESET_VID_LOCK>;
-> +	reset-names = "viu", "venc", "vcbus", "bt656",
-> +		      "dvin", "rdma", "venci", "vencp",
-> +		      "vdac", "vdi6", "vencl", "vid_lock";
->  	clocks = <&clkc CLKID_VPU>,
->  	         <&clkc CLKID_VAPB>;
->  	clock-names = "vpu", "vapb";
-> @@ -867,7 +870,7 @@ &uart_C {
->  
->  &vpu {
->  	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
-> -	power-domains = <&pwrc_vpu>;
-> +	power-domains = <&pwrc PWRC_GXBB_VPU_ID>;
->  };
->  
->  &vdec {
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> index 60484bbc7272..beb5fc79d186 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> @@ -783,7 +783,7 @@ external_mdio: mdio@2009087f {
->  	};
->  };
->  
-> -&pwrc_vpu {
-> +&pwrc {
->  	resets = <&reset RESET_VIU>,
->  		 <&reset RESET_VENC>,
->  		 <&reset RESET_VCBUS>,
-> @@ -796,6 +796,9 @@ &pwrc_vpu {
->  		 <&reset RESET_VDI6>,
->  		 <&reset RESET_VENCL>,
->  		 <&reset RESET_VID_LOCK>;
-> +	reset-names = "viu", "venc", "vcbus", "bt656",
-> +		      "dvin", "rdma", "venci", "vencp",
-> +		      "vdac", "vdi6", "vencl", "vid_lock";
->  	clocks = <&clkc CLKID_VPU>,
->  	         <&clkc CLKID_VAPB>;
->  	clock-names = "vpu", "vapb";
-> @@ -902,7 +905,7 @@ &uart_C {
->  
->  &vpu {
->  	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
-> -	power-domains = <&pwrc_vpu>;
-> +	power-domains = <&pwrc PWRC_GXBB_VPU_ID>;
->  };
->  
->  &vdec {
+> 
+> Martin Blumenstingl (3):
+>   ARM: dts: meson8: add power domain controller
+>   ARM: dts: meson8m2: add resets for the power domain controller
+>   ARM: dts: meson8b: add power domain controller
+> 
+>  arch/arm/boot/dts/meson8.dtsi   | 13 +++++++++++++
+>  arch/arm/boot/dts/meson8b.dtsi  | 27 +++++++++++++++++++++++++++
+>  arch/arm/boot/dts/meson8m2.dtsi | 19 +++++++++++++++++++
+>  3 files changed, 59 insertions(+)
 > 
 
+For the serie:
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
