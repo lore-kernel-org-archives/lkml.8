@@ -2,107 +2,109 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDAA920776
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:31:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJ3VM5pM"
+	by mail.kernel.org (Postfix) with ESMTP id F2D7A20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592854279;
+	bh=CDMl9Mj/szvYn6o9TddGFWgTqsHrkjrdv1OxwGlEWf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OzGk9osZyYipdIfRemJlEGSZPAXZWeGEeN4Yp1aR0+0wgCSnbSOgJ0Gz6PsGawZyo
+	 1hMgvoHR9fkWBW4GUGwj3JqIbC6wsgh3YIHS0lQXSERRl2eyPKQfCYzwCtsGvEmHR6
+	 ijxBnq6mS5CHreDrkDjGfUk0kZg9P9UvD+39ZptM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgFVTbI (ORCPT
+        id S1728548AbgFVTbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728140AbgFVTbH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:31:07 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F12C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:31:07 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id z9so20667374ljh.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g/w1zkRDXUbZArondtMBfTeFeGofm5z89InDg9Quyso=;
-        b=oJ3VM5pM/2tHjnJxcP81Jh55ivnWkl6fFY+9+X+TJiyMjil4v132mOLGeu0vhi6TeB
-         /qHxaMHtHAteo8F1dXq9kRpDRrZmU5hnv+orbfnnL3WiWqN+hYONwgC+onaf15YPzthF
-         6dMAc+M0Nh7WgLJyU289PHBAzEH5NDq1JrA/Ji5/Vzgy9l5CWho/FkTcqOpwZcSQ1ynj
-         kdMALBmH9dHv9riGNXGl9+v/rtjDIQBBH2tD+MISdAAioUhTFa1oRm5ZpRGrqWFjODdx
-         JkZ5j78yiX198AIs+Zx2zimMUHHjx+POQY0/pJ0PuF580jUeYoFZfNYOwJvC3lnvmOie
-         Tqnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g/w1zkRDXUbZArondtMBfTeFeGofm5z89InDg9Quyso=;
-        b=PBRrAWJNEOVBAqEyu5TayH+4tg2416k+UO8F1+StA8sujREyaslFCHwh16XtSEUeTO
-         u0xdel8n92Dx4qY/KAWh3EBUq2egi9nOmE2aUNaH+e77x0n7EKOdvv89O+1EU5+luCEJ
-         k3VzjdhKBQnkwtaYjfME4hztsOUvqccdMHGILUWjfTUAXQItiAFPws04NDVlxoSrpLir
-         H9mA5fedN5acV0DyaUn0ah/Pu7U9eGxxSL9OlD4KovocXAzohWyeBfx1J/s37C07giwc
-         OBkoQtOaVAfoRm5HfsGHkRF3SX2oiRx1E2HXgsKLO3BEfMB54+wh6nrPva6eoEzgmlk8
-         yzMA==
-X-Gm-Message-State: AOAM530zQP16sW5lP7atb46I0UvNszLvjTupfndHPEhhtRI5Piy9H6GD
-        YcPrb2gURIcxF+o9nXNzAcw=
-X-Google-Smtp-Source: ABdhPJwisJ3x1kHWTtiWCMY3vxohYL3a96jzmxeDizqI2/hg4njRAZvIB1oxUqoxOrT/J1azaCMfmQ==
-X-Received: by 2002:a2e:6c09:: with SMTP id h9mr5656161ljc.113.1592854265047;
-        Mon, 22 Jun 2020 12:31:05 -0700 (PDT)
-Received: from grain.localdomain ([5.18.102.224])
-        by smtp.gmail.com with ESMTPSA id t13sm2868087ljg.78.2020.06.22.12.31.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:31:03 -0700 (PDT)
-Received: by grain.localdomain (Postfix, from userid 1000)
-        id 268041A007B; Mon, 22 Jun 2020 22:31:03 +0300 (MSK)
-Date:   Mon, 22 Jun 2020 22:31:03 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, dave.hansen@intel.com, yu-cheng.yu@intel.com,
-        bigeasy@linutronix.de, hpa@zytor.com,
-        alexey.budankov@linux.intel.com, eranian@google.com,
-        ak@linux.intel.com, like.xu@linux.intel.com,
-        yao.jin@linux.intel.com
-Subject: Re: [PATCH 21/21] perf/x86/intel/lbr: Support XSAVES for arch LBR
- read
-Message-ID: <20200622193103.GW134822@grain>
-References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
- <1592575449-64278-22-git-send-email-kan.liang@linux.intel.com>
- <20200622184937.GV134822@grain>
- <3492fcad-344d-174e-7e38-46f2e543b065@linux.intel.com>
+        Mon, 22 Jun 2020 15:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728140AbgFVTbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:31:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DCBD20776;
+        Mon, 22 Jun 2020 19:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592854275;
+        bh=CDMl9Mj/szvYn6o9TddGFWgTqsHrkjrdv1OxwGlEWf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PWpK7pPjONrZsljBOvbu1phO/3iPw89A0Bi4v07Ua94CsfNwKqmcM3B4flQfRq8U+
+         StM3bW7Gr3oDSGcOfEmf6JTOZGDbwI0eGxa9uktWrBlbHsD9pH3wnkT5iQk9m0e0Dp
+         N9Zek+Qt7bP9ew/BpmXKgxQnjQWj/6W7Lqj7VPkI=
+Date:   Mon, 22 Jun 2020 21:31:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
+        Nicolai Stange <nicstange@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Srivatsa Vaddagiri <vatsa@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: debugfs_create_u32_array() memory leaks
+Message-ID: <20200622193109.GA2163148@kroah.com>
+References: <20200619161734.25e99fa4@kicinski-fedora-PC1C0HJN>
+ <20200620074542.GA2298609@kroah.com>
+ <20200622122332.274c842e@kicinski-fedora-PC1C0HJN>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3492fcad-344d-174e-7e38-46f2e543b065@linux.intel.com>
-User-Agent: Mutt/1.14.0 (2020-05-02)
+In-Reply-To: <20200622122332.274c842e@kicinski-fedora-PC1C0HJN>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 03:11:07PM -0400, Liang, Kan wrote:
+On Mon, Jun 22, 2020 at 12:23:32PM -0700, Jakub Kicinski wrote:
+> On Sat, 20 Jun 2020 09:45:42 +0200 Greg Kroah-Hartman wrote:
+> > On Fri, Jun 19, 2020 at 04:17:34PM -0700, Jakub Kicinski wrote:
+> > > Hi!
+> > > 
+> > > I'm trying to use debugfs_create_u32_array() in drivers/net/netdevsim
+> > > and it causes memory leaks:
+> > > 
+> > > unreferenced object 0xffff8880546642a0 (size 16):
+> > >   comm "test_udp_tuns.s", pid 2146, jiffies 4294928368 (age 3772.435s)
+> > >   hex dump (first 16 bytes):
+> > >     84 52 6a 4d 80 88 ff ff 04 00 00 00 f3 78 7e 89  .RjM.........x~.
+> > >   backtrace:
+> > >     [<000000006962a447>] debugfs_create_u32_array+0x3f/0x90
+> > > 
+> > > I can see that debugfs_create_u32_array() allocates a structure at
+> > > create time that ends up assigned to inode->i_private, but I don't 
+> > > see it freed anywhere.
+> > > 
+> > > Am I missing something? I'm pretty sure files get removed, cause the
+> > > driver calls debugfs_remove_recursive() and no other file types leaks.  
 > > 
-> > The goto and "return" statement before the "rollback" label
-> > looks pretty ugly. I'm sorry I didn't follow the series
-> > in details so if you plan to add more handlers at "rollback"
-> > then sure.
+> > Yeah, that's a bug, nice catch.  The debugfs_create*() functions should
+> > not allocate local memory as we can't know to free that memory when the
+> > file is removed.
 > > 
+> > Can you fix this up, or do you want me to?  I only see one in-kernel
+> > user of this, so it shouldn't be that tough to do so.  The one user
+> > never removes that file so that's why no one noticed this before.
 > 
-> There were several handlers when I first implemented the function, but they
-> are removed now. I don't think I will add more handlers in the next version.
-> I will remove the "rollback" label.
-> 
-> Thanks for pointing it out.
+> Ah, I wasn't sure how to fix but since you say that create functions
+> shouldn't allocate memory seems like the fix will be to make callers
+> pass an equivalent of struct debugfs_blob_wrapper for u32.
 
-This could be done on top of the series of course, no need to resend
-for this sole change I think.
+Sounds good.
+
+> I'm happy to send a patch to that effect - I have a process question
+> tho - I need this change in net-next, should I sent the patch to you?
+> Can it still make it into 5.8 (debugfs -> Linus -> net -> net-next) or
+> perhaps can it go via net-next since there is no de facto bug in 5.8?
+
+I can take a fix now, and get it into 5.8 if that makes things easier
+for you.
+
+thanks,
+
+greg k-h
