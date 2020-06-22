@@ -2,96 +2,127 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E79E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 564A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E7D25302
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C7325288
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwOE4Myf"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ym1FQJdM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730957AbgFVAWV (ORCPT
+        id S1730962AbgFVA1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 20:22:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgFVAWT (ORCPT
+        Sun, 21 Jun 2020 20:27:23 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:36002 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgFVA1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 20:22:19 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6836CC061794;
-        Sun, 21 Jun 2020 17:22:18 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id w15so8548905lfe.11;
-        Sun, 21 Jun 2020 17:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0lg2uKJKReGcJ/SN0dspdmB6LnpVWoA9FveJXoHvwkY=;
-        b=mwOE4MyfbAS1tKiNvOT6CPPxIYnHmqKecesQNuBi3IZ0UFofg3RlE3bbVu9nrtV5kG
-         3EJE8YdXNXbObffPDwiAxYCUZOjsy+JpK6Lmx90Q1X3orgKUt8eXEFwygjhQ1cixJxdE
-         q9DcknfPWD/BhFpQRiYNf10lS1vkcBFs/uHAD1IBOpl3CzIoFkOXpU/MWc2TijgSpq65
-         jBSNwfZdxJvOz0oBISSJrSiQpHKoWlAAfLS7BQitRPIGY9n1DYlVPerrCT7WFjj5PXMW
-         7eyunCd1FbrofrszRt4FnU86IDdZoA8ytY0zZLUK6JXzuitOLNTJ9btYweKV81bd2Rzf
-         PGOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0lg2uKJKReGcJ/SN0dspdmB6LnpVWoA9FveJXoHvwkY=;
-        b=nL5WW26TRuO02ddNrPnnmuTVG+GCLEnHVPg5NcSf4Do/ScFikyRn0BGis3kb8jjPBx
-         RyOEZ7R59oQt9n+NBTeWY1jxKwFEeXLM1TyKmfiuU5mKDL05QK1q0L2NNcVGlRK7tZmZ
-         pWq5hcMFzeo1BhCfx27IGsFLbw/l2EqBNv9W6t821eXkjEGokTA23Ar2XUmU//rFQeLO
-         zvv5y+egz+zHJD5pxLEbLt4HELSFznm6iP5CgqLHXewUDaJ70xuLw//weWC91SBuTDe7
-         RL+6YOp1S8wL/fpOwHNIaFOleKq/XBCpQI895RTcz/W8tFLe96yVcUrSiJH50fC90Vbh
-         dpWQ==
-X-Gm-Message-State: AOAM531E663MpazRQRTuo3nsvG+g6xdb4tOjgLqHeJcTana4ftsC5Z6J
-        L6X9FZ9O16b0CpxMghv8cVGaoCbn4w6SDIAGtCA=
-X-Google-Smtp-Source: ABdhPJyUc+wlDsye7zDHRg9OmC1EKYoLXxqlS+dIOZ94ext3KQifTcuvkirB1xfQuxg8dCrh2qPrArxAeAT9VPppQd8=
-X-Received: by 2002:a19:b07:: with SMTP id 7mr8088813lfl.38.1592785336823;
- Sun, 21 Jun 2020 17:22:16 -0700 (PDT)
+        Sun, 21 Jun 2020 20:27:22 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200622002720epoutp01bbd3d70fcdc24400096dae8760da503c~athnOLxFA1153311533epoutp01c
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:27:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200622002720epoutp01bbd3d70fcdc24400096dae8760da503c~athnOLxFA1153311533epoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592785640;
+        bh=jCPcOeaRvhdkHyFgABEEVptIERkV666narv0UilYcno=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=Ym1FQJdM3dQisyoacsy73mwG3+7DIQxWxAbzlgirE44BA1nnBUTJiPdXmHn6Ox0yG
+         cURqkHcHpExyIQ8CnORFnfbCwjyWrF8Vga3qdSPR5Yj2AW5uHB009l5+mRydi4rgWD
+         Wki8fiz0dYLgI4C7RbTVVQErW9thw1tMsd+vTT2g=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200622002719epcas1p1f213bae64a3d5bffe6d1dfc570e3055c~athmr1Wvm3266532665epcas1p1P;
+        Mon, 22 Jun 2020 00:27:19 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49qqx25VxrzMqYkZ; Mon, 22 Jun
+        2020 00:27:18 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7B.4D.18978.5EAFFEE5; Mon, 22 Jun 2020 09:27:17 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200622002716epcas1p1f72a6a18e7d7c86990d34f118296eddd~athj8YmPl1151811518epcas1p1g;
+        Mon, 22 Jun 2020 00:27:16 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200622002716epsmtrp112c643bf8dd52aa8876b012e106efd6a~athj7phab0409704097epsmtrp1E;
+        Mon, 22 Jun 2020 00:27:16 +0000 (GMT)
+X-AuditID: b6c32a35-5edff70000004a22-a6-5eeffae590a4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7B.FE.08382.4EAFFEE5; Mon, 22 Jun 2020 09:27:16 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200622002716epsmtip1c27d0d0fff5f48bcb67c70c7b29aa0ab~athjyeArn3252932529epsmtip1O;
+        Mon, 22 Jun 2020 00:27:16 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Sungjong Seo'" <sj1557.seo@samsung.com>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <1592480606-14657-1-git-send-email-sj1557.seo@samsung.com>
+Subject: RE: [PATCH] exfat: flush dirty metadata in fsync
+Date:   Mon, 22 Jun 2020 09:27:16 +0900
+Message-ID: <000a01d6482b$e1eb34d0$a5c19e70$@samsung.com>
 MIME-Version: 1.0
-References: <20200621213806.551879-1-konradybcio@gmail.com> <20200621213806.551879-5-konradybcio@gmail.com>
-In-Reply-To: <20200621213806.551879-5-konradybcio@gmail.com>
-From:   Alexey Minnekhanov <alexey.min@gmail.com>
-Date:   Mon, 22 Jun 2020 03:22:32 +0300
-Message-ID: <CANi4RBT=MDvN8PVKr19OjsX=LEAiN43JGPycnY1DTFw2qvYBkA@mail.gmail.com>
-Subject: Re: [PATCH 4/8] clk: qcom: smd: Add support for SDM660 rpm clocks
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQDtA/PAf/AkJUVnASwyuxUrAs/RQAI7piHFqqRyXYA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMKsWRmVeSWpSXmKPExsWy7bCmnu7TX+/jDKZPYLXYs/cki8XlXXPY
+        LLb8O8LqwOzRt2UVo8fnTXIBTFE5NhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZK
+        CnmJuam2Si4+AbpumTlAO5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BYYGBXrF
+        ibnFpXnpesn5uVaGBgZGpkCVCTkZp+a8ZSyYz1zxtFO8gfECUxcjJ4eEgInEugf9rF2MXBxC
+        AjsYJS6vmsQE4XxilJg34ToLhPONUWL7rD3MMC39TTOhWvYySjR0NbNBOC8ZJS4svwZWxSag
+        K/Hvz36gBAeHCJDd98cLJMws4Cxx+MYpsBJOAXeJydtfgd0hLGAp8XbxInYQm0VAVWLinz9s
+        IDYvULx5y3lmCFtQ4uTMJywQc+Qltr+dA3WQgsTPp8tYQWwRASuJOw9vskPUiEjM7mxjBrlN
+        QuAeu8T799+hnnaRWNP/EsoWlnh1fAs7hC0l8bK/jR3kZgmBaomP+6HmdzBKvPhuC2EbS9xc
+        v4EVpIRZQFNi/S59iLCixM7fcxkh1vJJvPvawwoxhVeio00IokRVou/SYail0hJd7R/YJzAq
+        zULy2Cwkj81C8sAshGULGFlWMYqlFhTnpqcWGxYYIkf1JkZw6tMy3cE48e0HvUOMTByMhxgl
+        OJiVRHhfB7yLE+JNSaysSi3Kjy8qzUktPsRoCgzqicxSosn5wOSbVxJvaGpkbGxsYWJmbmZq
+        rCTOKy5zIU5IID2xJDU7NbUgtQimj4mDU6qBqSwqWO6OhfY2xv3v/5++0+GSvPynfouz0+GY
+        fwUNxwu7T53ieaLEunfqlL/nSlIjbLhu3i//9lAq339BvKOIT8CTG8z/529xfJizu++58bFo
+        z//l1qJd0TM2C7Qeb/hw8fCrFG3pniytta5c/57OC96U88i/59z65JKFZ8uXJujG3brF/Tg4
+        /o7s38aGWb5MXzOYtxX9uvN4R8+JPwfz7rOtC516tWRyXm9A8m21u392R5279iFcormkIfKQ
+        m63rT9b6mxkhZSE/1qlP0RVf5zSvcd//uVVb21IzBQSXVIeJRM7qfLR4akTYn7A5IUmP1y27
+        HlY6ffmFwEknVrYtu9pktV5ydrkT0/rHHA72DUosxRmJhlrMRcWJAJ0Yqt0GBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsWy7bCSnO6TX+/jDB4dVbXYs/cki8XlXXPY
+        LLb8O8LqwOzRt2UVo8fnTXIBTFFcNimpOZllqUX6dglcGafmvGUsmM9c8bRTvIHxAlMXIyeH
+        hICJRH/TTNYuRi4OIYHdjBJN2w6yQCSkJY6dOMPcxcgBZAtLHD5cDFHznFHiU+t9sBo2AV2J
+        f3/2s4HUiADZfX+8QMLMAq4S85+vZoOon8Eo8fvORLBlnALuEpO3vwKzhQUsJd4uXsQOYrMI
+        qEpM/POHDcTmBYo3bznPDGELSpyc+YQFYqi2xNObT6FseYntb+cwQ9ypIPHz6TJWEFtEwEri
+        zsOb7BA1IhKzO9uYJzAKz0IyahaSUbOQjJqFpGUBI8sqRsnUguLc9NxiwwLDvNRyveLE3OLS
+        vHS95PzcTYzgKNDS3MG4fdUHvUOMTByMhxglOJiVRHhfB7yLE+JNSaysSi3Kjy8qzUktPsQo
+        zcGiJM57o3BhnJBAemJJanZqakFqEUyWiYNTqoEp3OdX7YQTVeXbDfijcyYLr2efE/3uC//C
+        cx/dZktc1Tqr4/719T7eedkaTbPPybc7nv7CVHLlv7viOeY/TRwrVu5wyHwyIbG2N7Douerd
+        oLaovk7TJyyZ9mev8s34GPLKT/EU04cnVXs1dbvXx7umvW5d8XIvB2Pgn6lRXx96n9IL05P+
+        GPJJWuL/m5car547ntroH551d8WVzRoyyR9vNnh0bIh9KjrpzyR502mOS4QzeHoPTp1qzzJ/
+        h2/vlH3GNtx5XvxNMn1n5q9wmmZm6vHyqK2LxqIf1zl9Jj60r/Lf4Hf32+7lN4WtNrFmT1io
+        sThKyV7X78W6T73m3xYmb05pEan8bdanp/Zl1ZvLSizFGYmGWsxFxYkAXpqVgPECAAA=
+X-CMS-MailID: 20200622002716epcas1p1f72a6a18e7d7c86990d34f118296eddd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200618121007epcas1p1aa0f24b361e0232913bf7477ee0a92c8
+References: <CGME20200618121007epcas1p1aa0f24b361e0232913bf7477ee0a92c8@epcas1p1.samsung.com>
+        <1592480606-14657-1-git-send-email-sj1557.seo@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have almost identical patch in my working sdm660 kernel tree, maybe
-this can be counted as tested by?
+> generic_file_fsync() exfat used could not guarantee the consistency of a file because it has flushed
+> not dirty metadata but only dirty data pages for a file.
+> 
+> Instead of that, use exfat_file_fsync() for files and directories so that it guarantees to commit both
+> the metadata and data pages for a file.
+> 
+> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+Pushed it into exfat #dev. Thanks!
 
-Tested-by: Alexey Minnekhanov <alexey.min@gmail.com>
-
-=D0=BF=D0=BD, 22 =D0=B8=D1=8E=D0=BD. 2020 =D0=B3. =D0=B2 00:40, Konrad Dybc=
-io <konradybcio@gmail.com>:
->
-> Add rpm smd clocks, PMIC and bus clocks which are required on
-> SDM630/660 (and APQ variants) for clients to vote on.
->
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
