@@ -2,154 +2,145 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1E7C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32CD520738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E7220738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g47As6pT"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="C/H4h2hA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbgFVSjP (ORCPT
+        id S1730467AbgFVSjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730428AbgFVSjO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:39:14 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D930FC06179A
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:39:13 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id d6so263558pjs.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gb+JetmJfxvfJpxHC8m6WwdUvvjtG/PEO/NrvZ7SUq0=;
-        b=g47As6pTItcLFTPBKcE7GoqTMDitRniLcUVZb/sgo6Z6hU1SBXf3XA30MossVWhFm+
-         WrZs8HM7KrKN7vIEe4hAi7PM9veaLBUBzmO1d6hg/ZrKjGDYlC+J8mnlzIu7m8jCiDVX
-         oUMZ6YXzkXP7P/9ND3v2M3GdghI0Eiq5bwNDzgs5cWvWuZbpdd3bSkITbG7/ShPdrwrX
-         oq7EH8OJ65SqfDB5bRXrhOWPzVNj9lb6ggrqKdEFfG/SWqJeDT88TfoVD+co4a3hK8cD
-         TZxZzP6pibR5VmEHPFJiQguXyVlIy2oApu1xDzwGn7gtMfXUFW3LNOourTReEdtotVmu
-         1u6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gb+JetmJfxvfJpxHC8m6WwdUvvjtG/PEO/NrvZ7SUq0=;
-        b=UfWVC6Pj9VwskZBDcmpzRv3RFGptZ9SiErxN/5CwPPa9Vbn60lz/Vvep2OJUVoq2mQ
-         JERbZloBOW20a6GXd5YYDwYJ/VHPX1OIXtcI2TK1nzTzmBfxyBW94fUcmRy6+SvHwP/s
-         +Oe2Ku7E65II6fWSH/u+P5Cyp3U44EujPwh5KqdxLquQRey11sSEveTzyitUGewX7Wc6
-         TkrYPX2yk2d2xYf7OGeO/YTovjppEelQVPlCNZ+l2gnfbPvZFYlxWd6HW/ORgb5rSZsH
-         LnRWFskjw9Wb0zybRtocF1+5bFCALlHwb9Aw5O7IXbxJ50970wsEKc8H3uoIIcgNvVBf
-         A+7w==
-X-Gm-Message-State: AOAM531+Re3cHLQHjQwn7d10+zoPmh19SV4qhRji8wCr3caWJaW8JETI
-        XHZdLIIevMDh5JEUb6jmLLsKaDAy3QEFRm+TU0IcCw==
-X-Google-Smtp-Source: ABdhPJxjYmvT3fQkCRcyhTKfiFZOdTkx+4rML9Oc+LRvsn6ucoVJwJ7PtyGZkVKmwrq2pv/vivr0Qr/enJgVlPaAiao=
-X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr20457257plm.179.1592851152937;
- Mon, 22 Jun 2020 11:39:12 -0700 (PDT)
+        Mon, 22 Jun 2020 14:39:52 -0400
+Received: from mout.gmx.net ([212.227.17.22]:37227 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730319AbgFVSjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 14:39:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1592851115;
+        bh=rBxfEZ67KF13JJOQ5naIrxWqmKbXOOuTFfLMGcf4oQ4=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=C/H4h2hAu5T+DFzynYhRw7LeaZOUgXd6RZ0e53fe75L0+ia1e21F7QvExrlq/VDrD
+         V+fRN78upEy37Go90ECLnUlSloSEeE3fclqbeJdTw3wqXpNy+Y5pMXgdiJDc1Gv4+9
+         ep1r6vOGW8W81B4yGg/YUetHLyC/3qc1fw1qejs4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mirng-1jAn8g3ChI-00eu1N; Mon, 22
+ Jun 2020 20:38:34 +0200
+Date:   Mon, 22 Jun 2020 20:38:31 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Eric Biggers <ebiggers@google.com>, Jan Kara <jack@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Alexander Schremmer <alex@alexanderweb.de>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        David Sterba <dsterba@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
+ Documentation/admin-guide
+Message-ID: <20200622183831.GC2581@latitude>
+References: <20200622181944.51083-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200620033007.1444705-1-keescook@chromium.org> <20200620033007.1444705-12-keescook@chromium.org>
-In-Reply-To: <20200620033007.1444705-12-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 22 Jun 2020 11:39:01 -0700
-Message-ID: <CAKwvOdm7+8xhbMZRPq0+2X1hez=cNGf=psX7ofNUfqq9iY5ScA@mail.gmail.com>
-Subject: Re: [PATCH v2 11/16] media: sur40: Remove uninitialized_var() usage
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
+Content-Disposition: inline
+In-Reply-To: <20200622181944.51083-1-grandmaster@al2klimov.de>
+X-Provags-ID: V03:K1:Pw4YmJzjjxXasVnBvT+TnaxSEF5MoRvjnalixj0MITaAolFwLpC
+ CXcOmef94fKi553CyiFAwmMiG8Cbq5oUwy4kGZVYoN+msroRWbUw2BGCeze0+fsh7dzjggF
+ hp+oQomD94xPCNxuaVGpFGIZhEawRN9MsVT0Iyt7Ts3xO5KsY/GFv5YSukGpCJ5p47bIjHs
+ /vekM9jd3dwGrpX8OnfXg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6jknfIzZmN8=:CeP7HnUmRRrFIRh5r8B8re
+ noM3p6Qzkc8gs+NgBkRkHNm1f7SUslHc+M9qnZu4Cyp2HKTf3V0L6oa0XbsE2JTS2TeKLh/+X
+ KTZ2d03IUmBKdiwB5dN+hp5v68idtFC2abeCtkkeE6aVOTZkEzrtS9RpJxoAFwk7wr8l2Tdo0
+ lRcoaZUPcOvjgUZhx8N9OepcHv3d9BAqaEPN2dovukmCyaIPbLmusREUHqo3imF+sPg+yK7ZB
+ kPE0NHKnybf2HTdFYQmbgVsUdYhBx20rV+N3cetdrp1ZwUxDPhyUiWrWA9Z2RUz5QFciBZsuq
+ Q6cBNvKL+DQKYSj/f9j3qOVbONQt8BhuI6tjJdvSmEUevzKj1crxgea78kSF/JyzW9nYnOtD1
+ nXHyrE1LQlh5G1GC8X9jLPhjJiiP3rB4qBHRgIGH/wEpZ1abz94bS+kbJdPV3PK3ZtE/9J5xi
+ HgTUfgv4CaedWQtV7Su3umBESd3Skh1vBnUY+6kfWoR1qaoSqdsqwS/E96ELKmA/dArmE8qss
+ e0xFMIovV5t0+8iFNLICvOKX77Xi8Er7pxBrQEuxpX3/sqVVUY16Qa0uONjeLrd4AHV9pq97q
+ xvvdUcAtcYxs1GOLyLQhJevDbJYRgNKolRlMA5kGewSI/ELgC5cD6T50dTA1u4EEKNNI7mPQU
+ 3r8qXs5ADdhI/uYMMit3sjyW4J1XM/8VoX7I+NeIhZeGwpVV0VPD8pOOigg58vQdABHg+IGsc
+ vh62lrXeqVW7gmYb5D3/3vBz6sXYirbfX57qwT+VI6ft3QRwdfP4ySQEAa32JBux15LqTYDWX
+ lxLd7Ay0udzZY4fz3rkDXEi4u81H7UBNJhsbnccyMMrORuWIJLCp6kamWpARVdDyRnkQ5cdrG
+ yIoJ2tAxhZWcmUhqxkBxYmD4t16sW6o61fMkaClskvOvhUksoImr3OrCKojGzRYLOJ8DLFB2g
+ lKcWuAfrlKjR0SeZ0LPtRDw4852b4bWqpacPbGTXi24hWdwUG+6/NqTNfOnNNRR2gFsMxyD4D
+ Wh6wB5cOzGOOkDBpNrDVhWxM+f2CrvIAOaHPPb458IeIqouywe26ul7Cu5vF5myMWh/N7lsDY
+ GuNwK18kfLWEyg5hdHCVwWu8dcH2EC/M8X+EagNRYF03YSiKwgkp/mvzy01613tuak4ohBHMf
+ qvCo+c9+4xXJBBapG27Q/lVmJufHYuOD5LB9fiBp9tUGOePSLQWKUpQgUwA0GzhIiYG9+Sygm
+ rfYjzMpqAABK3/CQ1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 8:30 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> "unused variable"). If the compiler thinks it is uninitialized, either
-> simply initialize the variable or make compiler changes. As a precursor
-> to removing[2] this[3] macro[4], just remove this variable since it was
-> actually unused:
->
-> drivers/input/touchscreen/sur40.c:459:6: warning: variable 'packet_id' set but not used [-Wunused-but-set-variable]
->   459 |  u32 packet_id;
->       |      ^~~~~~~~~
->
-> However, in keeping with the documentation desires outlined in commit
-> 335abaea7a27 ("Input: sur40 - silence unnecessary noisy debug output"),
-> comment out the assignment instead of removing it.
->
-> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
->
-> Fixes: 335abaea7a27 ("Input: sur40 - silence unnecessary noisy debug output")
 
-Probably should comment out `/* u32 packet_id */` rather than removing
-it then, but that doesn't really matter. Either way,
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+--Y5rl02BVI9TCfPar
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/input/touchscreen/sur40.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/input/touchscreen/sur40.c b/drivers/input/touchscreen/sur40.c
-> index 34d31c7ec8ba..620cdd7d214a 100644
-> --- a/drivers/input/touchscreen/sur40.c
-> +++ b/drivers/input/touchscreen/sur40.c
-> @@ -456,8 +456,6 @@ static void sur40_poll(struct input_dev *input)
->  {
->         struct sur40_state *sur40 = input_get_drvdata(input);
->         int result, bulk_read, need_blobs, packet_blobs, i;
-> -       u32 uninitialized_var(packet_id);
-> -
->         struct sur40_header *header = &sur40->bulk_in_buffer->header;
->         struct sur40_blob *inblob = &sur40->bulk_in_buffer->blobs[0];
->
-> @@ -491,7 +489,7 @@ static void sur40_poll(struct input_dev *input)
->                 if (need_blobs == -1) {
->                         need_blobs = le16_to_cpu(header->count);
->                         dev_dbg(sur40->dev, "need %d blobs\n", need_blobs);
-> -                       packet_id = le32_to_cpu(header->packet_id);
-> +                       /* packet_id = le32_to_cpu(header->packet_id); */
->                 }
->
->                 /*
-> --
-> 2.25.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200620033007.1444705-12-keescook%40chromium.org.
+>Subject: [PATCH] Replace HTTP links with HTTPS ones: Documentation/admin-g=
+uide
+
+You already sent a patch with the exact same subject line.
+Please use an incrementing version number (PATCH v2, PATCH v3, etc.) for
+revised versions of a patch, and describe the differences below the ---
+line. This is (somewhat lengthily) explained here:
+
+  https://www.kernel.org/doc/html/latest/process/submitting-patches.html#th=
+e-canonical-patch-format
 
 
+Best regards,
+Jonathan Neusch=C3=A4fer
 
--- 
-Thanks,
-~Nick Desaulniers
+--Y5rl02BVI9TCfPar
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl7w+p8ACgkQCDBEmo7z
+X9tWiRAAnuS5matKAOKnBQ++3jS1s4CaYlzM7n36VwGK0eRnd3MeMC3C3yJJYgO1
+GvBRp41Hld5Lwu526J+Y7oKdGMn0EY8DljpyhT0uQXeKkDB9rBrYxDDyitJ8I9YE
+76TvJtp/UsKHX+lk9FCFfyAADy1/pz4vBsRv1g1R1MQI+5QUtCuOafUCdsoytQK/
+7Vtj2CIEklI8eloPgSOTAZLaQoDgJWoIUSzy7Qui2g6UTFboOUROLlXgJR7QGJva
+KuA0/4Y4C9Q1s+LH+H5iZyTgEqjETGrOEJNR2oTJlUS0Hf+hmNdi4FU9SvjvkiNh
+BzbxMctzeW4b+UFHGHpUsmT5gsNTJtDh7di5eoHfZ1uJ9aHwoJa1XfbXCGp8+8a+
+88q+EgyF1DUV8dLG3j8831tPR8yJjk+aZwqoO6pLRU7mEzYOjjP80JrvRtpYj21x
+8mpZzc5gAktnPVaQr86gvydCt9SwSZgKuOyFKTKZaibQx4L83XchSzmFKg4NlI8+
+JHF1S9C8Cl8GcypYL3w4ZYaUqHm0Zl9bTBApwzZEfd03cPp/k1so8MK69LyXB5tR
+TsZrOjCBobS83KoOyMoKNRaw6JYgcLvmCyBygYyBpyUQB5xCCu7XPVd6Tc92DZB+
+tGL59Z3gojroAMoLlfRlQIiGhzLG1gp3EjI02/zOBPYViSMb14k=
+=Uq1b
+-----END PGP SIGNATURE-----
+
+--Y5rl02BVI9TCfPar--
