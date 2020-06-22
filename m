@@ -2,138 +2,77 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D83A420767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bUbfuxxz"
+	by mail.kernel.org (Postfix) with ESMTP id D8DAC2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbgFVXaV (ORCPT
+        id S1730492AbgFVXeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:30:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56734 "EHLO
+        Mon, 22 Jun 2020 19:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728131AbgFVXaV (ORCPT
+        with ESMTP id S1727028AbgFVXeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:30:21 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021CAC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:30:21 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e18so8981653pgn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 16:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UWqQV2fZB9OmDJeh5A7wKzCKjHubm13ivYyuz+dxo9g=;
-        b=bUbfuxxz8CX/dO63xH28vPKUiPOsVTJi9AgkinEsU/PHv9FcsY3GO+vCXKz6K7ZbcH
-         K17+Z5IlfGvcQ7NoKcWU37Zv59d5kOdufCLXPoi2hdIPl8dViI5OgYVS5wGxiWhCEutS
-         yEuRbcSn+crkX1SvyLPKtSWr1vMP8MCwwci0Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=UWqQV2fZB9OmDJeh5A7wKzCKjHubm13ivYyuz+dxo9g=;
-        b=ecg4HWfuY6ZNeSkjYaFFQHSNsmv+IVS4Yn/hwpfbzdNtIWDKW2aHyNDmm/g/mySssN
-         7wOVKw3Lw6gku32rEwUlf2FtGT5i3TBUfMadM8UmAUoAlc95CtTtlUfSLCzD09tPN9vW
-         VlpBrC+3TcMS1zhjU4xiHS4+dno3I8yulo38OB6bv+577OdqKSktiSwYI0mPoyIYf6fL
-         gu6s61qGbt5NEVDalrooygRW1MNege3pVhS6bv1A5bNmquCREfTrRWCwjfgmYsFPLUkq
-         zUnXIiJvyTBJ9Rm5SvcTdJ9zwIdYcrguYq8wPB1lvxdjUXOYyU9HZ6Hsu76o5F3vVayC
-         TloA==
-X-Gm-Message-State: AOAM531BiZx5I6cfXFtsKjF8WB9b+5HoSKG1wv5xMr2LJADlWK150eM1
-        jIltee90V7I1cUbuSDsoi1VQYg==
-X-Google-Smtp-Source: ABdhPJyz2KvnmiiXZnfO//qQzAjGi3z8nzDMFB/UOoUeMpTq5NGsoYoqJSyavjLf8Sf2USB8VlglUg==
-X-Received: by 2002:a05:6a00:801:: with SMTP id m1mr22967569pfk.200.1592868620568;
-        Mon, 22 Jun 2020 16:30:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b5sm14968992pfg.191.2020.06.22.16.30.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 16:30:19 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 16:30:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
-Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] vmlinux.lds.h: Add .gnu.version* to DISCARDS
-Message-ID: <202006221629.5C8CF8AE2@keescook>
-References: <20200622205341.2987797-1-keescook@chromium.org>
- <20200622205341.2987797-2-keescook@chromium.org>
- <20200622220043.6j3vl6v7udmk2ppp@google.com>
- <202006221524.CEB86E036B@keescook>
- <20200622225237.ybol4qmz4mhkmlqc@google.com>
- <202006221555.45BB6412F@keescook>
- <CAFP8O3KdGc9TtziFX7UzmxA-=wfPzm5oi6NCEwRiyyrp+JD3Xg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFP8O3KdGc9TtziFX7UzmxA-=wfPzm5oi6NCEwRiyyrp+JD3Xg@mail.gmail.com>
+        Mon, 22 Jun 2020 19:34:08 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF784C061573;
+        Mon, 22 Jun 2020 16:34:07 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E26D112972187;
+        Mon, 22 Jun 2020 16:34:06 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 16:34:06 -0700 (PDT)
+Message-Id: <20200622.163406.1755086886045118386.davem@davemloft.net>
+To:     alobakin@pm.me
+Cc:     kuba@kernel.org, mkubecek@suse.cz, f.fainelli@gmail.com,
+        andrew@lunn.ch, jiri@mellanox.com, antoine.tenart@bootlin.com,
+        steffen.klassert@secunet.com, ayal@mellanox.com,
+        therbert@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net 0/3] net: ethtool: netdev_features_strings[]
+ cleanup
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <HPTrw9hrtm3e5151oH8oQfbr0HWTlzQ1n68bZn1hfd6yag38Tem57b4eTH-bhlaJgBxyhZb9U-qFFOafJoQqxcY-VX5fh5ZktTrnWhYeNB0=@pm.me>
+References: <HPTrw9hrtm3e5151oH8oQfbr0HWTlzQ1n68bZn1hfd6yag38Tem57b4eTH-bhlaJgBxyhZb9U-qFFOafJoQqxcY-VX5fh5ZktTrnWhYeNB0=@pm.me>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 22 Jun 2020 16:34:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 04:04:40PM -0700, Fāng-ruì Sòng wrote:
-> On Mon, Jun 22, 2020 at 3:57 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Mon, Jun 22, 2020 at 03:52:37PM -0700, Fangrui Song wrote:
-> > > > And it's not in the output:
-> > > >
-> > > > $ readelf -Vs arch/x86/boot/compressed/vmlinux | grep version
-> > > > No version information found in this file.
-> > > >
-> > > > So... for the kernel we need to silence it right now.
-> > >
-> > > Re-link with -M (or -Map file) to check where .gnu.version{,_d,_r} input
-> > > sections come from?
-> >
-> > It's not reporting it correctly:
-> >
-> > .gnu.version_d  0x00000000008966b0        0x0
-> >  .gnu.version_d
-> >                 0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
-> >
-> > .gnu.version    0x00000000008966b0        0x0
-> >  .gnu.version   0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
-> >
-> > .gnu.version_r  0x00000000008966b0        0x0
-> >  .gnu.version_r
-> >                 0x00000000008966b0        0x0 arch/x86/boot/compressed/kernel_info.o
-> >
-> > it just reports whatever file is listed on the link command line first.
-> >
-> > > If it is a bug, we should probably figure out which version of binutils
-> > > has fixed the bug.
-> >
-> > I see this with binutils 2.34...
-> >
-> > --
-> > Kees Cook
+From: Alexander Lobakin <alobakin@pm.me>
+Date: Sun, 21 Jun 2020 09:55:50 +0000
+
+> This little series adds the last forgotten feature string for
+> NETIF_F_GSO_TUNNEL_REMCSUM and attempts to prevent such losses
+> in future.
 > 
-> :( It deserves a binutils bug
-> (https://sourceware.org/bugzilla/enter_bug.cgi?product=binutils ) and
-> a comment..
-
-https://sourceware.org/bugzilla/show_bug.cgi?id=26153
-
-> With the description adjusted to say that this works around a bug
+> Patches 2-3 seem more like net-next candidates rather than net-fixes,
+> but for me it seems a bit more suitable to pull it during "quiet" RC
+> windows, so any new related code could start from this base.
 > 
-> Reviewed-by: Fangrui Song <maskray@google.com>
+> I was thinking about some kind of static assertion to have an early
+> prevention mechanism for this, but the existing of 2 intended holes
+> (former NO_CSUM and UFO) makes this problematic, at least at first
+> sight.
+> 
+> v2:
+>  - fix the "Fixes:" tag in the first patch;
+>  - no functional changes.
 
-Adjusted, and thanks!
+Please do not mix bug fixes (missing netdev feature strings, etc.) with
+cleanups (indentation changes).
 
--- 
-Kees Cook
+Thank you.
