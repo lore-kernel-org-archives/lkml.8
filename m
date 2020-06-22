@@ -5,37 +5,37 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A854E2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10DE220767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbgFVWm4 (ORCPT
+        id S1731229AbgFVWm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:42:56 -0400
-Received: from mga18.intel.com ([134.134.136.126]:27423 "EHLO mga18.intel.com"
+        Mon, 22 Jun 2020 18:42:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27425 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730954AbgFVWmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:42:53 -0400
-IronPort-SDR: EHRXotRI3e1/NCq5v0gTctS8l3QC/B/XYDxA+spvk8uxMd2NZswQnSWHQZp+zBvfAbAbuKTIwS
- ZFTcaAiLo6Wg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131303563"
+        id S1730954AbgFVWm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:42:56 -0400
+IronPort-SDR: TJuZitRUDRqKlpXBIq1I2yub3hgrzxnl6Iil8CyLio2gDBMmVemTmyOp6i3r///BZO0IG5Fjuz
+ eoxbmm3Pu9/w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131303570"
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="131303563"
+   d="scan'208";a="131303570"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 15:42:52 -0700
-IronPort-SDR: WP3dye+OydUpPYb9M0MXpQ3M2QZqt9UnGl1txNfqFYoOAH/kJTFFC1g7V5fOftHlnRGLHvXoqi
- vpz3VEASddnw==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 15:42:53 -0700
+IronPort-SDR: MXXGxMAR/otzla/5xXCE68ySPELqwwKdvScoQZWPtwetPI2WHVCk4p77pCvRtqcsc/dxSOtCHM
+ xCVPSYi1aHdQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="264634908"
+   d="scan'208";a="264634921"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 15:42:51 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 15:42:53 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -44,9 +44,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/15] KVM: VMX: Rename "vmx_find_msr_index" to "vmx_find_loadstore_msr_slot"
-Date:   Mon, 22 Jun 2020 15:42:37 -0700
-Message-Id: <20200622224249.29562-4-sean.j.christopherson@intel.com>
+Subject: [PATCH 07/15] KVM: VMX: Rename vcpu_vmx's "guest_msrs_ready" to "guest_uret_msrs_loaded"
+Date:   Mon, 22 Jun 2020 15:42:41 -0700
+Message-Id: <20200622224249.29562-8-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200622224249.29562-1-sean.j.christopherson@intel.com>
 References: <20200622224249.29562-1-sean.j.christopherson@intel.com>
@@ -57,121 +57,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "loadstore" to vmx_find_msr_index() to differentiate it from the so
-called shared MSRs helpers (which will soon be renamed), and replace
-"index" with "slot" to better convey that the helper returns slot in the
-array, not the MSR index (the value that gets stuffed into ECX).
+Add "uret" to "guest_msrs_ready" to explicitly associate it with the
+"guest_uret_msrs" array, and replace "ready" with "loaded" to more
+precisely reflect what it tracks, e.g. "ready" could be interpreted as
+meaning ready for processing (setup_msrs() has run), which is wrong.
+"loaded" also aligns with the similar "guest_state_loaded" field.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 16 ++++++++--------
- arch/x86/kvm/vmx/vmx.c    | 10 +++++-----
- arch/x86/kvm/vmx/vmx.h    |  2 +-
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 8 ++++----
+ arch/x86/kvm/vmx/vmx.h | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index df33878ff612..afc8e7e9ef24 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -933,11 +933,11 @@ static bool nested_vmx_get_vmexit_msr_value(struct kvm_vcpu *vcpu,
- 	 * VM-exit in L0, use the more accurate value.
- 	 */
- 	if (msr_index == MSR_IA32_TSC) {
--		int index = vmx_find_msr_index(&vmx->msr_autostore.guest,
--					       MSR_IA32_TSC);
-+		int i = vmx_find_loadstore_msr_slot(&vmx->msr_autostore.guest,
-+						    MSR_IA32_TSC);
- 
--		if (index >= 0) {
--			u64 val = vmx->msr_autostore.guest.val[index].value;
-+		if (i >= 0) {
-+			u64 val = vmx->msr_autostore.guest.val[i].value;
- 
- 			*data = kvm_read_l1_tsc(vcpu, val);
- 			return true;
-@@ -1026,12 +1026,12 @@ static void prepare_vmx_msr_autostore_list(struct kvm_vcpu *vcpu,
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	struct vmx_msrs *autostore = &vmx->msr_autostore.guest;
- 	bool in_vmcs12_store_list;
--	int msr_autostore_index;
-+	int msr_autostore_slot;
- 	bool in_autostore_list;
- 	int last;
- 
--	msr_autostore_index = vmx_find_msr_index(autostore, msr_index);
--	in_autostore_list = msr_autostore_index >= 0;
-+	msr_autostore_slot = vmx_find_loadstore_msr_slot(autostore, msr_index);
-+	in_autostore_list = msr_autostore_slot >= 0;
- 	in_vmcs12_store_list = nested_msr_store_list_has_msr(vcpu, msr_index);
- 
- 	if (in_vmcs12_store_list && !in_autostore_list) {
-@@ -1052,7 +1052,7 @@ static void prepare_vmx_msr_autostore_list(struct kvm_vcpu *vcpu,
- 		autostore->val[last].index = msr_index;
- 	} else if (!in_vmcs12_store_list && in_autostore_list) {
- 		last = --autostore->nr;
--		autostore->val[msr_autostore_index] = autostore->val[last];
-+		autostore->val[msr_autostore_slot] = autostore->val[last];
- 	}
- }
- 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 19e6f697affb..ba9af25b34e4 100644
+index baf425fa7089..cebd68ea50ba 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -826,7 +826,7 @@ static void clear_atomic_switch_msr_special(struct vcpu_vmx *vmx,
- 	vm_exit_controls_clearbit(vmx, exit);
+@@ -1142,8 +1142,8 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+ 	 * when guest state is loaded. This happens when guest transitions
+ 	 * to/from long-mode by setting MSR_EFER.LMA.
+ 	 */
+-	if (!vmx->guest_msrs_ready) {
+-		vmx->guest_msrs_ready = true;
++	if (!vmx->guest_uret_msrs_loaded) {
++		vmx->guest_uret_msrs_loaded = true;
+ 		for (i = 0; i < vmx->nr_active_uret_msrs; ++i)
+ 			kvm_set_user_return_msr(vmx->guest_uret_msrs[i].index,
+ 						vmx->guest_uret_msrs[i].data,
+@@ -1231,7 +1231,7 @@ static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+ #endif
+ 	load_fixmap_gdt(raw_smp_processor_id());
+ 	vmx->guest_state_loaded = false;
+-	vmx->guest_msrs_ready = false;
++	vmx->guest_uret_msrs_loaded = false;
  }
  
--int vmx_find_msr_index(struct vmx_msrs *m, u32 msr)
-+int vmx_find_loadstore_msr_slot(struct vmx_msrs *m, u32 msr)
- {
- 	unsigned int i;
+ #ifdef CONFIG_X86_64
+@@ -1759,7 +1759,7 @@ static void setup_msrs(struct vcpu_vmx *vmx)
+ 		move_msr_up(vmx, index, nr_active_uret_msrs++);
  
-@@ -860,7 +860,7 @@ static void clear_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr)
- 		}
- 		break;
- 	}
--	i = vmx_find_msr_index(&m->guest, msr);
-+	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
- 	if (i < 0)
- 		goto skip_guest;
- 	--m->guest.nr;
-@@ -868,7 +868,7 @@ static void clear_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr)
- 	vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, m->guest.nr);
+ 	vmx->nr_active_uret_msrs = nr_active_uret_msrs;
+-	vmx->guest_msrs_ready = false;
++	vmx->guest_uret_msrs_loaded = false;
  
- skip_guest:
--	i = vmx_find_msr_index(&m->host, msr);
-+	i = vmx_find_loadstore_msr_slot(&m->host, msr);
- 	if (i < 0)
- 		return;
- 
-@@ -927,9 +927,9 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
- 		wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
- 	}
- 
--	i = vmx_find_msr_index(&m->guest, msr);
-+	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
- 	if (!entry_only)
--		j = vmx_find_msr_index(&m->host, msr);
-+		j = vmx_find_loadstore_msr_slot(&m->host, msr);
- 
- 	if ((i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS) ||
- 	    (j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS)) {
+ 	if (cpu_has_vmx_msr_bitmap())
+ 		vmx_update_msr_bitmap(&vmx->vcpu);
 diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 4c053d204bea..12a845209088 100644
+index 55257195cb27..a0237ff6c4e0 100644
 --- a/arch/x86/kvm/vmx/vmx.h
 +++ b/arch/x86/kvm/vmx/vmx.h
-@@ -354,7 +354,7 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu);
- struct shared_msr_entry *find_msr_entry(struct vcpu_vmx *vmx, u32 msr);
- void pt_update_intercept_for_msr(struct vcpu_vmx *vmx);
- void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp);
--int vmx_find_msr_index(struct vmx_msrs *m, u32 msr);
-+int vmx_find_loadstore_msr_slot(struct vmx_msrs *m, u32 msr);
- int vmx_handle_memory_failure(struct kvm_vcpu *vcpu, int r,
- 			      struct x86_exception *e);
- 
+@@ -220,7 +220,7 @@ struct vcpu_vmx {
+ 	struct vmx_uret_msr   guest_uret_msrs[MAX_NR_USER_RETURN_MSRS];
+ 	int                   nr_uret_msrs;
+ 	int                   nr_active_uret_msrs;
+-	bool                  guest_msrs_ready;
++	bool                  guest_uret_msrs_loaded;
+ #ifdef CONFIG_X86_64
+ 	u64		      msr_host_kernel_gs_base;
+ 	u64		      msr_guest_kernel_gs_base;
 -- 
 2.26.0
 
