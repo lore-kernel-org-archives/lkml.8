@@ -2,128 +2,209 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8896C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 04:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 04:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B460020C09
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 04:25:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eVLEF0Mf"
+	by mail.kernel.org (Postfix) with ESMTP id 98C96253E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 04:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgFVEZS (ORCPT
+        id S1726079AbgFVE2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 00:25:18 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40997 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgFVEZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 00:25:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49qxCZ42vcz9sSF;
-        Mon, 22 Jun 2020 14:25:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592799914;
-        bh=81fk/3JF3x95g9UbYd0X5h2GkzbHPz5gmaEBxnj+jVM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eVLEF0MfrgFcjT4UopaKCdZqhjZCBkC8sCydLQ9rpzF8hQlysIiUlrEhVRRu1KbPu
-         xLQQKCzCgIn7jEHOh3zAUoxbqXhOWaE1C6lD5XEfLw03+d04InVN2f2k0y006OXJZn
-         HAXk8fJBbAm74ej4N0yssS0FE5AL5ZVMLQBTsD9Dplb9KDTLp2L82yHtZZ6TiBWn78
-         5T9XTcQZ10MiHxXSnmq2zpRJSZevl5teeqK3RrmfwwRAOD8e1q2qbtg64iMMDAP5s8
-         61qgMbTW9OJ1zi7aCJkktsNpFWKpuBsKC2Rc7yuytFLhL7fMCUeBZXEv8bYOmM7vit
-         uyoJrcO9LIIIw==
-Date:   Mon, 22 Jun 2020 14:25:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] Explicitly include linux/major.h where it is
- needed
-Message-ID: <20200622142512.702bdc68@canb.auug.org.au>
-In-Reply-To: <20200617161810.256ff93f@canb.auug.org.au>
-References: <20200617092614.7897ccb2@canb.auug.org.au>
-        <20200617092747.0cadb2de@canb.auug.org.au>
-        <20200617055843.GB25631@kroah.com>
-        <20200617161810.256ff93f@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4E7sxZ+o7+5.7k+KqzAJoZd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 22 Jun 2020 00:28:38 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:15666 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725497AbgFVE2h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 00:28:37 -0400
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 21 Jun 2020 21:28:37 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 21 Jun 2020 21:28:33 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 37800218E3; Mon, 22 Jun 2020 09:58:32 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        sivaprak@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V8 4/4] clk: qcom: Add ipq6018 apss clock controller
+Date:   Mon, 22 Jun 2020 09:58:12 +0530
+Message-Id: <1592800092-20533-5-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592800092-20533-1-git-send-email-sivaprak@codeaurora.org>
+References: <1592800092-20533-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4E7sxZ+o7+5.7k+KqzAJoZd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The CPU on Qualcomm ipq6018 devices are clocked primarily by a aplha PLL
+and xo which are connected to a mux and enable block.
 
-Hi Arnd,
+Add support for the mux and enable block which feeds the CPU on ipq6018
+devices.
 
-On Wed, 17 Jun 2020 16:18:10 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Wed, 17 Jun 2020 07:58:43 +0200 Greg KH <gregkh@linuxfoundation.org> w=
-rote:
-> >
-> > On Wed, Jun 17, 2020 at 09:27:47AM +1000, Stephen Rothwell wrote: =20
-> > > This is in preparation for removing the include of major.h where it is
-> > > not needed.
-> > >=20
-> > > These files were found using
-> > >=20
-> > > 	grep -E -L '[<"](uapi/)?linux/major\.h' $(git grep -l -w -f /tmp/xx)
-> > >=20
-> > > where /tmp/xx contains all the symbols defined in major.h.  There were
-> > > a couple of files in that list that did not need the include since the
-> > > references are in comments.
-> > >=20
-> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>   =20
-> >=20
-> > Any reason this had an RFC, but patch 2/2 did not? =20
->=20
-> I forgot :-)  I added RFC just to hopefully get some attention as this
-> is just the start of a long slow use of my "spare" time.
->=20
-> > They look good to me, I will be glad to take these, but do you still
-> > want reviews from others for this?  It seems simple enough to me... =20
->=20
-> Yeah, well, we all know the simplest patches usually cause the most pain =
-:-)
->=20
-> However, I have been fairly careful and it is an easy include file to
-> work with.  And I have done my usual build checks, so the linux-next
-> maintainer won't complain about build problems :-)
->=20
-> I would like to hear from Arnd, at least, as I don't want to step on
-> his toes (he is having a larger look at our include files).
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ drivers/clk/qcom/Kconfig        |  11 +++++
+ drivers/clk/qcom/Makefile       |   1 +
+ drivers/clk/qcom/apss-ipq6018.c | 106 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 118 insertions(+)
+ create mode 100644 drivers/clk/qcom/apss-ipq6018.c
 
-Any comment?
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 49e265ddcdab..f510ef61db69 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -97,6 +97,17 @@ config IPQ_APSS_PLL
+ 	  Say Y if you want to support CPU frequency scaling on ipq based
+ 	  devices.
+ 
++config IPQ_APSS_6018
++	tristate "IPQ APSS Clock Controller"
++	select IPQ_APSS_PLL
++	depends on QCOM_APCS_IPC || COMPILE_TEST
++	help
++	  Support for APSS clock controller on IPQ platforms. The
++	  APSS clock controller manages the Mux and enable block that feeds the
++	  CPUs.
++	  Say Y if you want to support CPU frequency scaling on
++	  ipq based devices.
++
+ config IPQ_GCC_4019
+ 	tristate "IPQ4019 Global Clock Controller"
+ 	help
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 7942c00902ec..21439b94395a 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -20,6 +20,7 @@ clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
+ obj-$(CONFIG_APQ_GCC_8084) += gcc-apq8084.o
+ obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
+ obj-$(CONFIG_IPQ_APSS_PLL) += apss-ipq-pll.o
++obj-$(CONFIG_IPQ_APSS_6018) += apss-ipq6018.o
+ obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
+ obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
+ obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
+diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6018.c
+new file mode 100644
+index 000000000000..004f7e1ecdc2
+--- /dev/null
++++ b/drivers/clk/qcom/apss-ipq6018.c
+@@ -0,0 +1,106 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/platform_device.h>
++#include <linux/clk-provider.h>
++#include <linux/regmap.h>
++#include <linux/module.h>
++
++#include <dt-bindings/clock/qcom,apss-ipq.h>
++
++#include "common.h"
++#include "clk-regmap.h"
++#include "clk-branch.h"
++#include "clk-alpha-pll.h"
++#include "clk-regmap-mux.h"
++
++enum {
++	P_XO,
++	P_APSS_PLL_EARLY,
++};
++
++static const struct clk_parent_data parents_apcs_alias0_clk_src[] = {
++	{ .fw_name = "xo" },
++	{ .fw_name = "pll" },
++};
++
++static const struct parent_map parents_apcs_alias0_clk_src_map[] = {
++	{ P_XO, 0 },
++	{ P_APSS_PLL_EARLY, 5 },
++};
++
++static struct clk_regmap_mux apcs_alias0_clk_src = {
++	.reg = 0x0050,
++	.width = 3,
++	.shift = 7,
++	.parent_map = parents_apcs_alias0_clk_src_map,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "apcs_alias0_clk_src",
++		.parent_data = parents_apcs_alias0_clk_src,
++		.num_parents = 2,
++		.ops = &clk_regmap_mux_closest_ops,
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_branch apcs_alias0_core_clk = {
++	.halt_reg = 0x0058,
++	.clkr = {
++		.enable_reg = 0x0058,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "apcs_alias0_core_clk",
++			.parent_hws = (const struct clk_hw *[]){
++				&apcs_alias0_clk_src.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static const struct regmap_config apss_ipq6018_regmap_config = {
++	.reg_bits       = 32,
++	.reg_stride     = 4,
++	.val_bits       = 32,
++	.max_register   = 0x1000,
++	.fast_io        = true,
++};
++
++static struct clk_regmap *apss_ipq6018_clks[] = {
++	[APCS_ALIAS0_CLK_SRC] = &apcs_alias0_clk_src.clkr,
++	[APCS_ALIAS0_CORE_CLK] = &apcs_alias0_core_clk.clkr,
++};
++
++static const struct qcom_cc_desc apss_ipq6018_desc = {
++	.config = &apss_ipq6018_regmap_config,
++	.clks = apss_ipq6018_clks,
++	.num_clks = ARRAY_SIZE(apss_ipq6018_clks),
++};
++
++static int apss_ipq6018_probe(struct platform_device *pdev)
++{
++	struct regmap *regmap;
++
++	regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return qcom_cc_really_probe(pdev, &apss_ipq6018_desc, regmap);
++}
++
++static struct platform_driver apss_ipq6018_driver = {
++	.probe = apss_ipq6018_probe,
++	.driver = {
++		.name   = "qcom,apss-ipq6018-clk",
++	},
++};
++
++module_platform_driver(apss_ipq6018_driver);
++
++MODULE_DESCRIPTION("QCOM APSS IPQ 6018 CLK Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4E7sxZ+o7+5.7k+KqzAJoZd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7wMqgACgkQAVBC80lX
-0GxoIAf+KqJYIQ6vTc/0E/3RWnBpf5RrYu0GH9BW7ka5MpfFK4pMfzJzcpt2TWeL
-O6efiNJ/SyHHA5BpeNsO/PLaYQH1uuXrOndVYqDzgC+9tOXzNNcg/QMbjV6R1krq
-VzdB0kRGcNvEO2dvHPVJeon6/CYuQsG4+TJKX80scHRRF0ASD6xE9WeiT9pIUlUB
-NUnjCkkVvYZnBJ+xkgwObQDlwCyODwQd0pgwQnsv/JC8+mOBvK79bxzWAoVQILai
-5mZOAn6Y/dyQyt8IITo4s3bcSLRr/W3bGFcS90h8aKdBc4xp3olDQAMnxJrUp+gn
-FAFRytt45UvyyiVGypIKzFMcHadQAg==
-=dZlI
------END PGP SIGNATURE-----
-
---Sig_/4E7sxZ+o7+5.7k+KqzAJoZd--
