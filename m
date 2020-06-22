@@ -2,119 +2,167 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFD22076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BDA2545C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:27:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dnsjmqwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbgFVHZP (ORCPT
+        id S1731390AbgFVH1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:25:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43924 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731320AbgFVHZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:25:15 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B71C084EEA6DFF3F68BD;
-        Mon, 22 Jun 2020 15:25:10 +0800 (CST)
-Received: from [10.133.219.224] (10.133.219.224) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 22 Jun 2020 15:25:04 +0800
-Subject: Re: [PATCH] jffs2: fix UAF problem
-To:     Zhe Li <lizhe67@huawei.com>, <dwmw2@infradead.org>,
-        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <zhongjubin@huawei.com>, <qiuxi1@huawei.com>,
-        <wangfangpeng1@huawei.com>, <chenjie6@huawei.com>
-References: <20200619090635.58548-1-lizhe67@huawei.com>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <ce9130ff-b95f-e1c4-2e9f-94f0ad18b95e@huawei.com>
-Date:   Mon, 22 Jun 2020 15:25:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Mon, 22 Jun 2020 03:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731360AbgFVH1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 03:27:49 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2241AC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:27:49 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id s21so14745570oic.9
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=i3nL1FOZiHj0yAhZuO+cTGxj+n7PLyTcuScPp7qWic0=;
+        b=dnsjmqwHBtKGiOld1FMCqn5dRqN9aePTpgzT8zmcxrKfKdvQURQC6gYhBstXmbkspK
+         mMPfpw1xWrHynJ+sfv3AFJTWl1elALark/Kw0lPVyIvPHwNM/1YfyK31aIO0/z9pvj65
+         MVtPhKjORr2Fk46rpO9ulAs7BtXtCNqjxQaMSrWhU33MU3M1FeWVZ3WDeu6mCqlczb98
+         TvaCUmGZavaXMZC46rs09PCgu/dHuW5GuaKm7jkIgWYuaqpiSlWCV58i93XFQOEvnID7
+         lC7RRivzDmgEH4RjCcAixZUJBeAlPCCUda578U0D75/oZd7JLyahxlc8pyjlcZIqZ4Pr
+         iEyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i3nL1FOZiHj0yAhZuO+cTGxj+n7PLyTcuScPp7qWic0=;
+        b=TJph7Oq4YpMK5A9qWc92ZJAb0xha9GRKcCXx1mrwkKiik68T9Qu+2Pbl8HoX4HYZUc
+         aAaqdQAzFTpCEhq9uHr1QMIfYDNIUNJhec5zH38+wDBN09Z5MLJIAkOGuHP0MPXoJgkk
+         1l369wtjdvQKYTqsbvkp1zeUAZ/9MMRDGZ3z24bb+XV7V/GOwk0YiVRPsaU7ROwH5Rrd
+         vKQ4qH049ljtVJx6qSjA5f39mGIHvgV6+0/OxMIZd1dDQa0PnS+SDOPeMD46Fz038VSA
+         YqMM1qTaS4s+xhZzpCGvc0xTURFPWfw1MMTVdOuxzu6zMcjPLdQwzOSsn9CtwVqDkjnr
+         CYgQ==
+X-Gm-Message-State: AOAM533fRx+ZiXSQBOTGjFipl4uA/IdbGCLRYaBUJZ862U5RSAlwHh4w
+        6VGy748m7HSwKIQIRMNEiVzdpA==
+X-Google-Smtp-Source: ABdhPJwkNkIrZFl2zFX8mXQVZUpNLjPQIfXAMBF3MzPdeWB99FmyhgpY9JP4a4wvf14F7mTVhBDQJQ==
+X-Received: by 2002:aca:dec2:: with SMTP id v185mr11894603oig.171.1592810868372;
+        Mon, 22 Jun 2020 00:27:48 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i72sm3015123oib.28.2020.06.22.00.27.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 00:27:47 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 00:25:02 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loic.pallardy@st.com,
+        arnaud.pouliquen@st.com, s-anna@ti.com
+Subject: Re: [PATCH v4 5/9] remoteproc: Introducing function rproc_validate()
+Message-ID: <20200622072502.GG149351@builder.lan>
+References: <20200601175139.22097-1-mathieu.poirier@linaro.org>
+ <20200601175139.22097-6-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200619090635.58548-1-lizhe67@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.224]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601175139.22097-6-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Hou Tao <houtao1@huawei.com>
+On Mon 01 Jun 10:51 PDT 2020, Mathieu Poirier wrote:
 
-On 2020/6/19 17:06, Zhe Li wrote:
-> The log of UAF problem is listed below.
-> BUG: KASAN: use-after-free in jffs2_rmdir+0xa4/0x1cc [jffs2] at addr c1f165fc
-> Read of size 4 by task rm/8283
-> =============================================================================
-> BUG kmalloc-32 (Tainted: P    B      O   ): kasan: bad access detected
-> -----------------------------------------------------------------------------
+> Add a new function to assert the general health of the remote
+> processor before handing it to the remoteproc core.
 > 
-> INFO: Allocated in 0xbbbbbbbb age=3054364 cpu=0 pid=0
->         0xb0bba6ef
->         jffs2_write_dirent+0x11c/0x9c8 [jffs2]
->         __slab_alloc.isra.21.constprop.25+0x2c/0x44
->         __kmalloc+0x1dc/0x370
->         jffs2_write_dirent+0x11c/0x9c8 [jffs2]
->         jffs2_do_unlink+0x328/0x5fc [jffs2]
->         jffs2_rmdir+0x110/0x1cc [jffs2]
->         vfs_rmdir+0x180/0x268
->         do_rmdir+0x2cc/0x300
->         ret_from_syscall+0x0/0x3c
-> INFO: Freed in 0x205b age=3054364 cpu=0 pid=0
->         0x2e9173
->         jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
->         jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
->         jffs2_garbage_collect_dirent.isra.3+0x21c/0x288 [jffs2]
->         jffs2_garbage_collect_live+0x16bc/0x1800 [jffs2]
->         jffs2_garbage_collect_pass+0x678/0x11d4 [jffs2]
->         jffs2_garbage_collect_thread+0x1e8/0x3b0 [jffs2]
->         kthread+0x1a8/0x1b0
->         ret_from_kernel_thread+0x5c/0x64
-> Call Trace:
-> [c17ddd20] [c02452d4] kasan_report.part.0+0x298/0x72c (unreliable)
-> [c17ddda0] [d2509680] jffs2_rmdir+0xa4/0x1cc [jffs2]
-> [c17dddd0] [c026da04] vfs_rmdir+0x180/0x268
-> [c17dde00] [c026f4e4] do_rmdir+0x2cc/0x300
-> [c17ddf40] [c001a658] ret_from_syscall+0x0/0x3c
-> 
-> The root cause is that we don't get "jffs2_inode_info.sem" before
-> we scan list "jffs2_inode_info.dents" in function jffs2_rmdir.
-> This patch add codes to get "jffs2_inode_info.sem" before we scan
-> "jffs2_inode_info.dents" to slove the UAF problem.
-> 
-> Signed-off-by: Zhe Li <lizhe67@huawei.com>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > ---
->  fs/jffs2/dir.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  drivers/remoteproc/remoteproc_core.c | 45 ++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 > 
-> diff --git a/fs/jffs2/dir.c b/fs/jffs2/dir.c
-> index f20cff1..7764937 100644
-> --- a/fs/jffs2/dir.c
-> +++ b/fs/jffs2/dir.c
-> @@ -590,10 +590,14 @@ static int jffs2_rmdir (struct inode *dir_i, struct dentry *dentry)
->  	int ret;
->  	uint32_t now = JFFS2_NOW();
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index c70fa0372d07..0be8343dd851 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -2060,6 +2060,47 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
+>  #endif
+>  EXPORT_SYMBOL(rproc_get_by_phandle);
 >  
-> +	mutex_lock(&f->sem);
->  	for (fd = f->dents ; fd; fd = fd->next) {
-> -		if (fd->ino)
-> +		if (fd->ino) {
-> +			mutex_unlock(&f->sem);
->  			return -ENOTEMPTY;
-> +		}
->  	}
-> +	mutex_unlock(&f->sem);
+> +static int rproc_validate(struct rproc *rproc)
+> +{
+> +	/*
+> +	 * When adding a remote processor, the state of the device
+> +	 * can be offline or detached, nothing else.
+> +	 */
+> +	if (rproc->state != RPROC_OFFLINE &&
+> +	    rproc->state != RPROC_DETACHED)
+> +		goto inval;
+
+I would prefer that you just return -EINVAL; directly.
+
+Overall I think this would be better represented as a switch on
+rproc->state though.
+
+
+I think the logic is sound though.
+
+Regards,
+Bjorn
+
+> +
+> +	if (rproc->state == RPROC_OFFLINE) {
+> +		/*
+> +		 * An offline processor without a start()
+> +		 * function makes no sense.
+> +		 */
+> +		if (!rproc->ops->start)
+> +			goto inval;
+> +	}
+> +
+> +	if (rproc->state == RPROC_DETACHED) {
+> +		/*
+> +		 * A remote processor in a detached state without an
+> +		 * attach() function makes not sense.
+> +		 */
+> +		if (!rproc->ops->attach)
+> +			goto inval;
+> +		/*
+> +		 * When attaching to a remote processor the device memory
+> +		 * is already available and as such there is no need to have a
+> +		 * cached table.
+> +		 */
+> +		if (rproc->cached_table)
+> +			goto inval;
+> +	}
+> +
+> +	return 0;
+> +
+> +inval:
+> +	return -EINVAL;
+> +}
+> +
+>  /**
+>   * rproc_add() - register a remote processor
+>   * @rproc: the remote processor handle to register
+> @@ -2089,6 +2130,10 @@ int rproc_add(struct rproc *rproc)
+>  	if (ret < 0)
+>  		return ret;
 >  
->  	ret = jffs2_do_unlink(c, dir_f, dentry->d_name.name,
->  			      dentry->d_name.len, f, now);
+> +	ret = rproc_validate(rproc);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	dev_info(dev, "%s is available\n", rproc->name);
+>  
+>  	/* create debugfs entries */
+> -- 
+> 2.20.1
 > 
