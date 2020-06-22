@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B66F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1402073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592865831;
-	bh=hdSJ0WSegTcwByJEJ9Fu9kUCV4GsRKEAjQS6V1gITUE=;
+	s=default; t=1592865836;
+	bh=meQTT1s1Rrlo1gj4g9dJYjkI+GuEn89kJWoTpmyaJRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KLC+Aif3Kt8f8jen97Y2B/85aI9QyH7Urx1iCR/krTWXnVVDCCBbpMSJipFVBeyxi
-	 uYv3GaoawwsTdqk2Gn/kRu/zfkM+tJc1qatsvYmXd/PCj6PeBq3zC4Wl79D8w+PPLZ
-	 DwK+Zb8CTa+o9OzXwpmfKSjJ62CHS+D4H1BWxd+4=
+	b=0jLCACpk4iPofWYx+ic8H8mhhFd9n1ODSQQBcM5CWrRbr3dqRKRoWuBtVKQ4uGZ5R
+	 RkAcj/K35K4T/CkS3VqAla5/CAr+LwkemfRDGGmetoq/dV77gRnFjvAt1UMoZamyG7
+	 ujDDh6ZhtrGwhKznSlpApp87y+F/VYbG06+UjtEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbgFVWnu (ORCPT
+        id S1731448AbgFVWny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:43:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60034 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 18:43:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731352AbgFVWnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:43:19 -0400
+        id S1731342AbgFVWnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:43:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 827412083B;
-        Mon, 22 Jun 2020 22:43:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A6442084D;
+        Mon, 22 Jun 2020 22:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592865799;
-        bh=hdSJ0WSegTcwByJEJ9Fu9kUCV4GsRKEAjQS6V1gITUE=;
+        s=default; t=1592865798;
+        bh=meQTT1s1Rrlo1gj4g9dJYjkI+GuEn89kJWoTpmyaJRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVyZFs1fHmjyoldaDBxcXn82XYQ78GOPQzwYnI15FlbumXlKT0CeeLkADU7CWaaQE
-         6EPyhUfuDxUMVqBTlQwORuCEDa1bw2+8W7qGoPnAxZJt9/RNcVyYc2aBVAG45wy/vH
-         dHtOk/ehDfVNKESeprzqigoWTRXqil7aq6n8LUo0=
+        b=1izrvPQC0GjYX7zlidK7URpVGI+874I2alsb71HUWeMAhJA2VCA78flEfJ4B4lNnc
+         gxQOwpOjMX/hlltAK5YD9t0LsemJdH7wH7m9Ctb8Q7Y86gI7YBaG5WPsRAahsO4mAh
+         mKYzii5d5CADTNEtHbZ3gZCnMxHQCSk306k+tlX8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     peterz@infradead.org
 Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
         jolsa@redhat.com, alexey.budankov@linux.intel.com,
         songliubraving@fb.com, acme@redhat.com, allison@lohutok.net,
         sashal@kernel.org
-Subject: [PATCH v3 13/14] tools/lib/lockdep: explicitly declare lockdep_init_task()
-Date:   Mon, 22 Jun 2020 18:42:57 -0400
-Message-Id: <20200622224258.1208588-14-sashal@kernel.org>
+Subject: [PATCH v3 12/14] tools/kernel.h: hide noinstr
+Date:   Mon, 22 Jun 2020 18:42:56 -0400
+Message-Id: <20200622224258.1208588-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200622224258.1208588-1-sashal@kernel.org>
 References: <20200622224258.1208588-1-sashal@kernel.org>
@@ -58,26 +58,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid a warning as we can't pull the decleration for lockdep's header.
+After 655389666643 ("vmlinux.lds.h: Create section for protection against
+instrumentation") we need to ignore "noinstr" in userspace.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/lockdep/preload.c | 2 ++
+ tools/include/linux/kernel.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/tools/lib/lockdep/preload.c b/tools/lib/lockdep/preload.c
-index 5bd58c51066c4..2928c712f87f8 100644
---- a/tools/lib/lockdep/preload.c
-+++ b/tools/lib/lockdep/preload.c
-@@ -92,6 +92,8 @@ static int (*ll_pthread_rwlock_trywrlock)(pthread_rwlock_t *rwlock)	= __pthread_
- static int (*ll_pthread_rwlock_wrlock)(pthread_rwlock_t *rwlock)	= __pthread_rwlock_wrlock;
- static int (*ll_pthread_rwlock_unlock)(pthread_rwlock_t *rwlock)	= __pthread_rwlock_unlock;
+diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
+index 5ac493eef4237..39fcbb144a34a 100644
+--- a/tools/include/linux/kernel.h
++++ b/tools/include/linux/kernel.h
+@@ -126,4 +126,6 @@ static __maybe_unused int system_state;
  
-+extern void lockdep_init_task(struct task_struct *task);
+ #define in_nmi() 0
+ 
++#define noinstr
 +
- enum { none, prepare, done, } __init_state;
- static void init_preload(void);
- static void try_init_preload(void)
+ #endif
 -- 
 2.25.1
 
