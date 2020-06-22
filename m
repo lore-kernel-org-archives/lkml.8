@@ -2,376 +2,150 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6917DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3667E206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF09D206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="J7jaHAeb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g1brCWmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgFVIvq (ORCPT
+        id S1727012AbgFVIvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:51:46 -0400
-Received: from mail-dm6nam10on2089.outbound.protection.outlook.com ([40.107.93.89]:6149
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725952AbgFVIvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:51:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bJVl4z6rYfyZ8dLiMraF3Q98dUrpPReJLsyNs9C+PblIMN16v875ygKydZ1LxOgh/9BJ/buLpFMm1b+DM1M5Iqi2+pZwR3SHEvHzmmx7t7MfTfOZju0pNtEUXJVKu19MwCI62iUxByOT2hY1kznTl+GQO8mLUZezoCZteqUvCBT4NMEW6mx3dDe51KpCCeWDa3bLUSPm/Y2dSp+qDk6bSWtwYo7B6sx55avTOUyKJ4G/ot5Pm1f+X757niB4INlBV4qKkNZt+ZhYuvrjnU5DQeJNsCjVMYwSGqrbgv0mU/h3E+KEiSiDRd9z1OUPN+Hm3FKWLqk7mg/DoUDNvv/41g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D7v39zB2rBdGcrL7S9IqrMJx5TMhZ5Py1bSPh2IYiHA=;
- b=RT4O//vQ0IcR/o9/mZOAADy27P/nJqSaKp4oTyvEpbYdxGDjfS1YcvYiwDTDKg/Kl+qebypMaImhBODEtr7iBgzMTvQ8t+MjrSzlRCFGPmCws+KlaiM0sU/t+puvvfwWfl4LAeYIkHqfp8BbkWaUOrjPlURai6G1VhVXn+fYFOhW9gHy58mAqrOiQlKTTabBy5lKJKiPvhu5EKYvVV2gw8djLMfAdYTd10fWXKNryvptZ0z3uPyIZWj6BDiX9O0Q9FMVNSpHXumBNzfQAjaGVGlmQAv1yne/84XX/lEAEPb9eVzcyZ5dXNWlDoFIobKFhMvY0lmJMuTvycaZDwsG6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Mon, 22 Jun 2020 04:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725952AbgFVIvx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 04:51:53 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754FAC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:51:52 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id n23so18317608ljh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 01:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D7v39zB2rBdGcrL7S9IqrMJx5TMhZ5Py1bSPh2IYiHA=;
- b=J7jaHAebK/EDyVel79IGd52BhYzBNFUS8kJ+XqChNd4PLYJH6cPBFNxu/wpdqDC9jpGyMiMYeqwNhmcdt0KMCKSStMNNskOxbYsiElV4BBWTOYKUWI5VA/4xPXJR9zUQXvqrSisyxCbnoduYjwnWcF2F4ZS40hhufijSBO/M5yU=
-Authentication-Results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BYAPR03MB3509.namprd03.prod.outlook.com (2603:10b6:a02:aa::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
- 2020 08:51:40 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 08:51:40 +0000
-Date:   Mon, 22 Jun 2020 16:44:31 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: mmc: Convert pwrseq to json-schema
-Message-ID: <20200622164431.3dbc8c5a@xhacker.debian>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TY2PR06CA0048.apcprd06.prod.outlook.com
- (2603:1096:404:2e::36) To BYAPR03MB3573.namprd03.prod.outlook.com
- (2603:10b6:a02:ae::15)
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5iSOzHwBaotY/UIRNioAEBuXDPVG7zu4qxXMNrK9fyc=;
+        b=g1brCWmwJtbkSmFV9tqet1ryr9ApeCcCobA98O+cU+FVDj94qF4u9u0ipyjv7QP2qo
+         21prTrr4rLVKagZO1Ra+ay+gNxNr917nLzNVLjeCbu4H8rSqpfyjR3kLirlWPjVNhK+T
+         6QeOABhjPryupAkfoIxNCmCs1oKwrRJYxQQUcWvqw0So+1UGczY8TbVrX0AdRZxSHDUO
+         UIR2+jQozywcAJJqc3Mlk6cLafjWJ1imBHjeftPy7Mr7Ml7HMaV+jqn/W2D4waHIkcom
+         J1L6fq9amVsuNkhjxaOkV2BUbByvpCXBuzl8LU/7fNF4G3bmFcAly/3OtqShrxr7ehiG
+         TyBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5iSOzHwBaotY/UIRNioAEBuXDPVG7zu4qxXMNrK9fyc=;
+        b=siuZT0UxidXTeoo9El6DK/e+Qzsn/ShO8JUi4+amnWl7kTvyZ1odp2oGSrB8TArudJ
+         v6QtQ9W1BHhXFevkvfm9lvGLQxENu8Sl7CxYB5FHkBcCNMRWh9zKx1La+Omx9LqJ8cwI
+         uafOyV5KDsmLdsjWre8JiI6HmHZwupbcBRrvnLvHJAbVmlmk74RD3CJOGSEdI2UVcYpv
+         u2Ff7+M88xZvb+Fvv5WS9Odm+a55XU1bfSIwCa6HFtRYyV15EzJYKUl/F6ZPZZ58lymx
+         /8WhX3ras02/rlugcVgBYkDW1XFlwsB19QS9Wo0nbDj+CaSUGgkiUSZrne0anpGk9urv
+         hmBA==
+X-Gm-Message-State: AOAM530jqEe7eNG0K6UKsWFu6fN206cSYEilpnBbhEXafV5L3iOhwmcZ
+        y9ErayBfMlvkHMIC+4a56RdYG/IIN0/X4cH+j7zSkA==
+X-Google-Smtp-Source: ABdhPJzPcxI7lreAQVQmWGeoQhl8ktN6/1zLDkgbhAhAe090FX+hV8+nsH6dFhqYb8sndBXmAohGrA73QF7C0Ox0Zno=
+X-Received: by 2002:a05:651c:318:: with SMTP id a24mr7713808ljp.55.1592815910815;
+ Mon, 22 Jun 2020 01:51:50 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TY2PR06CA0048.apcprd06.prod.outlook.com (2603:1096:404:2e::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 08:51:38 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8e0ff31a-69b9-4015-83cf-08d816897ad7
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3509:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB35099A8856215875E3BD1C91ED970@BYAPR03MB3509.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0442E569BC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HVzpMQVvUNHHNVztAyuitzQNF9x2BbTGQ9b1G66GyNayJ9Wg2GYEh3C+FwoTreTPXgMAXcK60agJ5FADPq6Zht/tslB8m77dTPM+2jJ7UKeii1mNTRLvrJtIOmerS6WY4cnppgnV0uQGdbiYQOuiINVzfjBAepGv7VH1sHlv/PpRXHjq8DCzbh9qqx/9P7tfWfEgM+ZlpbLK3VP9KO8zDgHhiC7Q6YgZNRIAso2BpxI/Va2xb9t2rIpqJsWcOijvOCpaZa7kwFOWDdB65WOKE5p/Y0itY6mZH5TfX+XQaY51Wd1yTLBm8vr5gc/GAIcx1ZsnB1/uQZ8JyzOJcreosl6G4jxJiYV+uSN2MK3ydHYc9zHF+annvzW6JlYxKGnVNryxhQc7c4yX67yRFxjrtg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(346002)(39860400002)(396003)(376002)(2906002)(966005)(66556008)(110136005)(1076003)(5660300002)(66476007)(9686003)(66946007)(6666004)(83380400001)(86362001)(8676002)(956004)(4326008)(55016002)(316002)(26005)(16526019)(186003)(52116002)(6506007)(478600001)(7696005)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: W7kvPQK80O5auJqwBSw82erluW3ygWFVZYC2pdAEEISErOI2sWVifb+/3fXDTlBcnrfEO5ZAe8VAAnNQVwAashS9AFI9k3MI/6ow7G+xvVOitbHYJBfHCj3EwBrjxGGsFHTFP/PEW0OuvYj5acr3kWPy9KQEkXInTFgzYC+fHiNzbxLWQ+8O682j1UnWPV7Vmw02+eipSmg7OJIVHALd607RFFfnZy4icK0oCOaoDViBdjhwP4uHZqh3PVXsUr2YuF6OA3KP+JBJsYcE+CS+n7PEl1v4DgB6GAEYTgVXsI06YOEKbdTr/vwBHXQpsJD1slW76FyazSvUuwGeGtAT0AgMtEvyG2rIfHG8TPs/pd5CtcwLB4VB9OHl10lyV+1I8dDVBPSJrikl3eI8zPNJ+nX7C1sc7g4Lch711+YSEXrbMEuUnMKCWO8b1o+Yrt+UAlLM+C1UoDdo2uc7RQzbtnaNJuCktvbekgtvLEDEkpOUJ47u0MudTsK/pSScMifl
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e0ff31a-69b9-4015-83cf-08d816897ad7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 08:51:40.2948
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +AxNhsRMLHdY50QZa471sxw5UrsjvGFfJ115Jf9/kY9V2BdDn7jBAzLulgbPQK1of+t8Ak2xff9C0GXGZxBYuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3509
+References: <20200508065356.2493343-1-mpe@ellerman.id.au>
+In-Reply-To: <20200508065356.2493343-1-mpe@ellerman.id.au>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 22 Jun 2020 14:21:38 +0530
+Message-ID: <CA+G9fYtHP+Gg+BrR_GkBMxu2oOi-_e9pATtpb6TVRswv1G1r1Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] selftests/lkdtm: Don't clear dmesg when running tests
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>,
+        Justin Cook <justin.cook@linaro.org>,
+        lkft-triage@lists.linaro.org, Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>, Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the pwrseq binding to DT schema format using json-schema.
+On Fri, 8 May 2020 at 12:23, Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> It is Very Rude to clear dmesg in test scripts. That's because the
+> script may be part of a larger test run, and clearing dmesg
+> potentially destroys the output of other tests.
+>
+> We can avoid using dmesg -c by saving the content of dmesg before the
+> test, and then using diff to compare that to the dmesg afterward,
+> producing a log with just the added lines.
+>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> ---
+>  tools/testing/selftests/lkdtm/run.sh | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+> index dadf819148a4..0b409e187c7b 100755
+> --- a/tools/testing/selftests/lkdtm/run.sh
+> +++ b/tools/testing/selftests/lkdtm/run.sh
+> @@ -59,23 +59,25 @@ if [ -z "$expect" ]; then
+>         expect="call trace:"
+>  fi
+>
+> -# Clear out dmesg for output reporting
+> -dmesg -c >/dev/null
+> -
+>  # Prepare log for report checking
+> -LOG=$(mktemp --tmpdir -t lkdtm-XXXXXX)
+> +LOG=$(mktemp --tmpdir -t lkdtm-log-XXXXXX)
+> +DMESG=$(mktemp --tmpdir -t lkdtm-dmesg-XXXXXX)
+>  cleanup() {
+> -       rm -f "$LOG"
+> +       rm -f "$LOG" "$DMESG"
+>  }
+>  trap cleanup EXIT
+>
+> +# Save existing dmesg so we can detect new content below
+> +dmesg > "$DMESG"
+> +
+>  # Most shells yell about signals and we're expecting the "cat" process
+>  # to usually be killed by the kernel. So we have to run it in a sub-shell
+>  # and silence errors.
+>  ($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
+>
+>  # Record and dump the results
+> -dmesg -c >"$LOG"
+> +dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
 
-At the same time, fix a couple of issues with the examples discovered by
-the validation tool -- missing ";"
+We are facing problems with the diff `=%>` part of the option.
+This report is from the OpenEmbedded environment.
+We have the same problem from livepatch_testcases.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
-since v1:
- - conver pwrseq to yaml format rather than fixing old docs
+# selftests lkdtm BUG.sh
+lkdtm: BUG.sh_ #
+# diff unrecognized option '--changed-group-format=%>'
+unrecognized: option_'--changed-group-format=%>' #
+# BusyBox v1.27.2 (2020-03-30 164108 UTC) multi-call binary.
+v1.27.2: (2020-03-30_164108 #
+#
+: _ #
+# Usage diff [-abBdiNqrTstw] [-L LABEL] [-S FILE] [-U LINES] FILE1 FILE2
+diff: [-abBdiNqrTstw]_[-L #
+# BUG missing 'kernel BUG at' [FAIL]
 
- .../bindings/mmc/mmc-pwrseq-emmc.txt          | 25 --------
- .../bindings/mmc/mmc-pwrseq-emmc.yaml         | 46 ++++++++++++++
- .../bindings/mmc/mmc-pwrseq-sd8787.txt        | 16 -----
- .../bindings/mmc/mmc-pwrseq-sd8787.yaml       | 39 ++++++++++++
- .../bindings/mmc/mmc-pwrseq-simple.txt        | 31 ----------
- .../bindings/mmc/mmc-pwrseq-simple.yaml       | 62 +++++++++++++++++++
- 6 files changed, 147 insertions(+), 72 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml
+Full test output log,
+https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200621/testrun/2850083/suite/kselftest/test/lkdtm_BUG.sh/log
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
-deleted file mode 100644
-index 3d965d57e00b..000000000000
---- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--* The simple eMMC hardware reset provider
--
--The purpose of this driver is to perform standard eMMC hw reset
--procedure, as described by Jedec 4.4 specification. This procedure is
--performed just after MMC core enabled power to the given mmc host (to
--fix possible issues if bootloader has left eMMC card in initialized or
--unknown state), and before performing complete system reboot (also in
--case of emergency reboot call). The latter is needed on boards, which
--doesn't have hardware reset logic connected to emmc card and (limited or
--broken) ROM bootloaders are unable to read second stage from the emmc
--card if the card is left in unknown or already initialized state.
--
--Required properties:
--- compatible : contains "mmc-pwrseq-emmc".
--- reset-gpios : contains a GPIO specifier. The reset GPIO is asserted
--	and then deasserted to perform eMMC card reset. To perform
--	reset procedure as described in Jedec 4.4 specification, the
--	gpio line should be defined as GPIO_ACTIVE_LOW.
--
--Example:
--
--	sdhci0_pwrseq {
--		compatible = "mmc-pwrseq-emmc";
--		reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
--	}
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml
-new file mode 100644
-index 000000000000..77f746f57284
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/mmc-pwrseq-emmc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Simple eMMC hardware reset provider binding
-+
-+maintainers:
-+  - Ulf Hansson <ulf.hansson@linaro.org>
-+
-+description:
-+  The purpose of this driver is to perform standard eMMC hw reset
-+  procedure, as described by Jedec 4.4 specification. This procedure is
-+  performed just after MMC core enabled power to the given mmc host (to
-+  fix possible issues if bootloader has left eMMC card in initialized or
-+  unknown state), and before performing complete system reboot (also in
-+  case of emergency reboot call). The latter is needed on boards, which
-+  doesn't have hardware reset logic connected to emmc card and (limited or
-+  broken) ROM bootloaders are unable to read second stage from the emmc
-+  card if the card is left in unknown or already initialized state.
-+
-+properties:
-+  compatible:
-+    const: mmc-pwrseq-emmc
-+
-+  reset-gpios:
-+    minItems: 1
-+    description:
-+      contains a GPIO specifier. The reset GPIO is asserted
-+      and then deasserted to perform eMMC card reset. To perform
-+      reset procedure as described in Jedec 4.4 specification, the
-+      gpio line should be defined as GPIO_ACTIVE_LOW.
-+
-+required:
-+  - compatible
-+  - reset-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    sdhci0_pwrseq {
-+      compatible = "mmc-pwrseq-emmc";
-+      reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-deleted file mode 100644
-index 22e9340e4ba2..000000000000
---- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--* Marvell SD8787 power sequence provider
--
--Required properties:
--- compatible: must be "mmc-pwrseq-sd8787".
--- powerdown-gpios: contains a power down GPIO specifier with the
--		   default active state
--- reset-gpios: contains a reset GPIO specifier with the default
--		   active state
--
--Example:
--
--	wifi_pwrseq: wifi_pwrseq {
--		compatible = "mmc-pwrseq-sd8787";
--		powerdown-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
--		reset-gpios = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
--	}
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml
-new file mode 100644
-index 000000000000..a68820d31d50
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/mmc-pwrseq-sd8787.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell SD8787 power sequence provider binding
-+
-+maintainers:
-+  - Ulf Hansson <ulf.hansson@linaro.org>
-+
-+properties:
-+  compatible:
-+    const: mmc-pwrseq-sd8787
-+
-+  powerdown-gpios:
-+    minItems: 1
-+    description:
-+      contains a power down GPIO specifier with the default active state
-+
-+  reset-gpios:
-+    minItems: 1
-+    description:
-+      contains a reset GPIO specifier with the default active state
-+
-+required:
-+  - compatible
-+  - powerdown-gpios
-+  - reset-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    wifi_pwrseq: wifi_pwrseq {
-+      compatible = "mmc-pwrseq-sd8787";
-+      powerdown-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
-+      reset-gpios = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-deleted file mode 100644
-index 9029b45b8a22..000000000000
---- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--* The simple MMC power sequence provider
--
--The purpose of the simple MMC power sequence provider is to supports a set of
--common properties between various SOC designs. It thus enables us to use the
--same provider for several SOC designs.
--
--Required properties:
--- compatible : contains "mmc-pwrseq-simple".
--
--Optional properties:
--- reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
--	at initialization and prior we start the power up procedure of the card.
--	They will be de-asserted right after the power has been provided to the
--	card.
--- clocks : Must contain an entry for the entry in clock-names.
--  See ../clocks/clock-bindings.txt for details.
--- clock-names : Must include the following entry:
--  "ext_clock" (External clock provided to the card).
--- post-power-on-delay-ms : Delay in ms after powering the card and
--	de-asserting the reset-gpios (if any)
--- power-off-delay-us : Delay in us after asserting the reset-gpios (if any)
--	during power off of the card.
--
--Example:
--
--	sdhci0_pwrseq {
--		compatible = "mmc-pwrseq-simple";
--		reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
--		clocks = <&clk_32768_ck>;
--		clock-names = "ext_clock";
--	}
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml
-new file mode 100644
-index 000000000000..449215444723
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/mmc-pwrseq-simple.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Simple MMC power sequence provider binding
-+
-+maintainers:
-+  - Ulf Hansson <ulf.hansson@linaro.org>
-+
-+description:
-+  The purpose of the simple MMC power sequence provider is to supports a set
-+  of common properties between various SOC designs. It thus enables us to use
-+  the same provider for several SOC designs.
-+
-+properties:
-+  compatible:
-+    const: mmc-pwrseq-simple
-+
-+  reset-gpios:
-+    minItems: 1
-+    description:
-+      contains a list of GPIO specifiers. The reset GPIOs are asserted
-+      at initialization and prior we start the power up procedure of the card.
-+      They will be de-asserted right after the power has been provided to the
-+      card.
-+
-+  clocks:
-+    minItems: 1
-+    description: Handle for the entry in clock-names.
-+
-+  clock-names:
-+    items:
-+      - const: ext_clock
-+    description: External clock provided to the card.
-+
-+  post-power-on-delay-ms:
-+    description:
-+      Delay in ms after powering the card and de-asserting the
-+      reset-gpios (if any).
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  power-off-delay-us:
-+    description:
-+      Delay in us after asserting the reset-gpios (if any)
-+      during power off of the card.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    sdhci0_pwrseq {
-+      compatible = "mmc-pwrseq-simple";
-+      reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-+      clocks = <&clk_32768_ck>;
-+      clock-names = "ext_clock";
-+    };
-+...
 -- 
-2.27.0
-
+Linaro LKFT
+https://lkft.linaro.org
