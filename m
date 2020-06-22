@@ -1,65 +1,71 @@
 Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Level: *
+X-Spam-Status: No, score=1.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B83DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49939C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5F82075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31AB12075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgFVVsI (ORCPT
+        id S1730685AbgFVVtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:48:08 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:42327 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730646AbgFVVsC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:48:02 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 1924B1C0002;
-        Mon, 22 Jun 2020 21:47:59 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 23:47:59 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        Karl =?iso-8859-1?Q?Rudb=E6k?= Olsen <karl@micro-technic.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] clk: at91: add sama5d3 pmc driver
-Message-ID: <20200622214759.GK131826@piout.net>
-References: <20200110223033.1261791-1-alexandre.belloni@bootlin.com>
- <37d11358-d3b5-10a1-72a3-93a03a6c1ea6@pengutronix.de>
+        Mon, 22 Jun 2020 17:49:36 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14723 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730527AbgFVVtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:49:35 -0400
+IronPort-SDR: JTFxKTYojH5mEBs6RM7CZrfhkJB2rsHfbUOFIJm1KhcIFlFvstOHR+KS/SBsP9Is9Hd+ZIacWU
+ LekfCDhbqnMA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142147317"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="142147317"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:49:33 -0700
+IronPort-SDR: l3+aCNn5cePJQnTRUQM4M2UMmP5EjvVZ6GmDgHmqx1h3pHz2i1GNcq7Fihp7D5jhue8nvCH4Aq
+ 4ZBVhrF46cBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="263119058"
+Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Jun 2020 14:49:24 -0700
+Date:   Tue, 23 Jun 2020 00:49:22 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v11 0/8] Add tpm i2c ptp driver
+Message-ID: <20200622214922.GC22727@linux.intel.com>
+References: <20200618134344.243537-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <37d11358-d3b5-10a1-72a3-93a03a6c1ea6@pengutronix.de>
+In-Reply-To: <20200618134344.243537-1-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Jun 18, 2020 at 04:43:35PM +0300, amirmizi6@gmail.com wrote:
+>  - Jarkko Sakkinen:
+>         https://lore.kernel.org/patchwork/patch/1252428/
+>         https://lore.kernel.org/patchwork/patch/1252422/
+>         https://lore.kernel.org/patchwork/patch/1252424/
 
-On 22/06/2020 23:24:45+0200, Ahmad Fatoum wrote:
-> > +	regmap = syscon_node_to_regmap(np);
-> 
-> Shouldn't this be device_node_to_regmap for the same reasons outlined in your
-> 6956eb33 ("clk: at91: fix possible deadlock") commit?
-> 
-> Same question for at91sam9g45.c, sam9x60.c and at91sam9n12.c.
-> 
+Thanks for linking these, very helpful.
 
-Agreed, I guess you can send a patch fixing all the instances.
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+/Jarkko
