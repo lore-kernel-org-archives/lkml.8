@@ -2,277 +2,333 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4921C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5B220732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:20:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QSW97pG8"
+	by mail.kernel.org (Postfix) with ESMTP id 8D5642076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730330AbgFVSUG (ORCPT
+        id S1730370AbgFVSUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36528 "EHLO
+        Mon, 22 Jun 2020 14:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730161AbgFVSUF (ORCPT
+        with ESMTP id S1730339AbgFVSUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:20:05 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E520AC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:20:04 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id v25so5947221uau.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nOfB1nD8xx8DwSEkMEHETyPoMUDPxJH6rW8d8vmvj7g=;
-        b=QSW97pG8vKEMRrIFP/MZcbLbVB5ajm7JcOiFU2DS8RJcn9p4CptzJ/k4gUbnhVRAfC
-         YQPpcIqrU2BrEkoj3Mp+vOAH8UvXUWNhOoP5ACUXjjC6ZVNUL/MAAYQ9QjAOMlzqxDR2
-         iFYofoSYZmF6XI8uMpd5iH9mUYhm0/0uuKNRo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nOfB1nD8xx8DwSEkMEHETyPoMUDPxJH6rW8d8vmvj7g=;
-        b=sKoQ9G7uIUv8gGE+lPHkS/ZCV/fDDadTr/hqE+PBmJuLdO/aTXgZgAWOwopj5azd3A
-         cWlXNGKZ/J43KVBBDfl4rWP8IR5GpG5O6NbbQ7hWkmUGGeuHoGo8xPyIg5Xk1ReaBkE9
-         LdZGtDZfkLgnZULpDVFJ5CqYkJdfZEjIJdZEovq+CdDSgXAJPu/pSpSCw/eLEkMChVeZ
-         YzIthWgHDBqu3iDOXm5yRFiJspjQYbRRp4vYf6R22H167bukfcbisu8OlZqyCH7u/7/J
-         ZxGDHgoopYP0tFrq13KIkQ9H6bBm9peP4KqvaqTov7A2+geppTKbG5iFp8n0EifXDx+P
-         gH+w==
-X-Gm-Message-State: AOAM530m5lCqE4CoVghRwwMOLsPXJ8h+W6QtB1nEqolDvTILqlaPwxKI
-        LxJdpLJROpMG9MzQiQQrlS66BOlsVjw=
-X-Google-Smtp-Source: ABdhPJyt9NUz7yI7/BFh00AlXMm/hg65uAZu9cOr3rKWTV2Jq0sWuZjwrvWKMOrw7lpXNdvGhpH4rQ==
-X-Received: by 2002:ab0:21c5:: with SMTP id u5mr12393355uan.101.1592850003522;
-        Mon, 22 Jun 2020 11:20:03 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id k23sm1156724vkn.24.2020.06.22.11.20.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 11:20:02 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id i8so5939430uak.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:20:02 -0700 (PDT)
-X-Received: by 2002:ab0:7488:: with SMTP id n8mr12114670uap.8.1592850001793;
- Mon, 22 Jun 2020 11:20:01 -0700 (PDT)
+        Mon, 22 Jun 2020 14:20:08 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59360C061573;
+        Mon, 22 Jun 2020 11:20:08 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id D769B45531;
+        Mon, 22 Jun 2020 18:19:55 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Changbin Du <changbin.du@intel.com>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers@google.com>, Jan Kara <jack@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Alexander Schremmer <alex@alexanderweb.de>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        David Sterba <dsterba@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Replace HTTP links with HTTPS ones: Documentation/admin-guide
+Date:   Mon, 22 Jun 2020 20:19:44 +0200
+Message-Id: <20200622181944.51083-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
- <20200611110301.GA132747@google.com> <CAD=FV=V2FvFcYrghxUSdHNxmcS3DKpnBbk2oL64w7hh=tV-DfQ@mail.gmail.com>
- <20200612092454.GA94228@google.com> <20200612123448.fcmzv3rdtsbawmpd@e107158-lin.cambridge.arm.com>
- <CAD=FV=UySLsTaUP3nOfQO98qPEUkY8tMhw25pJ4Yi7FVM5xU6g@mail.gmail.com> <20200619153146.vaizbj7muy52zvbd@e107158-lin.cambridge.arm.com>
-In-Reply-To: <20200619153146.vaizbj7muy52zvbd@e107158-lin.cambridge.arm.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 22 Jun 2020 11:19:49 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V0YCS69uErFnY-cF_v44mDfAe4AWa+K+U6mQR+TNLkww@mail.gmail.com>
-Message-ID: <CAD=FV=V0YCS69uErFnY-cF_v44mDfAe4AWa+K+U6mQR+TNLkww@mail.gmail.com>
-Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
- cpu freq
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Quentin Perret <qperret@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, Joel Fernandes <joelaf@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        ctheegal@codeaurora.org, Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-On Fri, Jun 19, 2020 at 8:31 AM Qais Yousef <qais.yousef@arm.com> wrote:
->
-> Hi Doug,
->
-> On 06/18/20 14:31, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Fri, Jun 12, 2020 at 5:34 AM Qais Yousef <qais.yousef@arm.com> wrote:
-> > >
-> > > On 06/12/20 10:24, Quentin Perret wrote:
-> > > > +CC Qais [FYI]
-> > >
-> > > Thanks for the CC.
-> > >
-> > > >
-> > > > On Thursday 11 Jun 2020 at 10:48:40 (-0700), Doug Anderson wrote:
-> > > > > Hrm.  I guess my first instinct is to say that we still want this
-> > > > > patch even if we have something that is applied more globally.
-> > > >
-> > > > Fair enough.
-> > > >
-> > > > > Specifically it sounds as if the patch you point at is suggesting that
-> > > > > we'd tweak the boost value to something other than max but we'd still
-> > > > > have a boost value.  In the case of cros_ec_spi I don't believe we
-> > > > > need any boost value at all, so my patch would still be useful.  The
-> > > > > computational needs of cros_ec_spi are very modest and it can do its
-> > > > > work at lower CPU frequencies just fine.  It just can't be interrupted
-> > > > > for large swaths of time.
-> > > > >
-> > > > >
-> > > > > > IOW, how do you feel about 20200511154053.7822-1-qais.yousef@arm.com ?
-> > > > >
-> > > > > I'm not totally a fan, but I'm definitely not an expert in this area
-> > > > > (I've also only read the patch description and not the patch or the
-> > > > > whole thread).  I really don't want yet another value that I need to
-> > > > > tune from board to board.  Even worse, this tuning value isn't
-> > > > > board-specific but a combination of board and software specific.  By
-> > > > > this, I'd imagine a scenario where you're using a real-time task to
-> > > > > get audio decoding done within a certain latency.  I guess you'd tune
-> > > > > this value to make sure that you can get all your audio decoding done
-> > > > > in time but also not burn extra power.  Now, imagine that the OS
-> > > > > upgrades and the audio task suddenly has to decode more complex
-> > > > > streams.  You've got to go across all of your boards and re-tune every
-> > > > > one?  ...or, nobody thinks about it and older boards start getting
-> > > > > stuttery audio?  Perhaps the opposite happens and someone comes up
-> > > > > with a newer lower-cpu-intensive codec and you could save power.
-> > > > > Sounds like a bit of a nightmare.
-> > >
-> > > Generally I would expect this global tunable to be part of a vendor's SoC BSP.
-> >
-> > I think I'm coming at this from a very different world than the one
-> > you're thinking of.  The concept of a BSP makes me think of a SoC
-> > vendor providing a drop of Linux with all their own weird hacks in it
-> > that only ever works on that one SoC and will never, ever, ever be
-> > updated.  5 years down the road if a software update is needed
-> > (security fix?) some poor soul will be in charge of tracking down the
-> > exact ancient code base that was used to build the original kernel,
-> > making the tweak, and building a new kernel.  ;-)
-> >
-> > In the world of Chrome OS we try very very hard to build everything
-> > from a clean code base and are trying hard to stay even closer to
-> > upstream and away from per-device weirdness...
->
-> Hmm I thought OEMs who ship stuff that are based on Chrome OS would have to do
-> the final tuning here, which would be based on the recommendation of the SoC
-> vendor. And I'm being overly generic here to think not only SoC from Intel
-> which traditionally they have been treated in different ways.
->
-> I think you provide a generic stack for OEMs, no?
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
 
-No, that's the Android way.  The only way Chrome OS can ship updates
-for the whole fleet every ~6 weeks and support it for so many years is
-that all the builds and updates happen on Google servers.  The only
-way Google can maintain this is to not have a separate kernel code
-base for every single variant of every single board.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Documentation/admin-guide/README.rst                        | 4 ++--
+ Documentation/admin-guide/dell_rbu.rst                      | 2 +-
+ Documentation/admin-guide/devices.txt                       | 6 +++---
+ Documentation/admin-guide/ext4.rst                          | 4 ++--
+ Documentation/admin-guide/kernel-parameters.txt             | 2 +-
+ Documentation/admin-guide/laptops/disk-shock-protection.rst | 2 +-
+ Documentation/admin-guide/laptops/sonypi.rst                | 2 +-
+ Documentation/admin-guide/laptops/thinkpad-acpi.rst         | 6 +++---
+ Documentation/admin-guide/mm/ksm.rst                        | 2 +-
+ Documentation/admin-guide/nfs/nfs-client.rst                | 4 ++--
+ Documentation/admin-guide/nfs/nfs-rdma.rst                  | 2 +-
+ Documentation/admin-guide/nfs/nfsroot.rst                   | 6 +++---
+ Documentation/admin-guide/sysctl/fs.rst                     | 2 +-
+ 13 files changed, 22 insertions(+), 22 deletions(-)
 
+diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+index 5fb526900023..d9e7f7117850 100644
+--- a/Documentation/admin-guide/README.rst
++++ b/Documentation/admin-guide/README.rst
+@@ -1,7 +1,7 @@
+ .. _readme:
+ 
+-Linux kernel release 5.x <http://kernel.org/>
+-=============================================
++Linux kernel release 5.x <https://kernel.org/>
++==============================================
+ 
+ These are the release notes for Linux version 5.  Read them carefully,
+ as they tell you what this is all about, explain how to install the
+diff --git a/Documentation/admin-guide/dell_rbu.rst b/Documentation/admin-guide/dell_rbu.rst
+index 8d70e1fc9f9d..2196caf1b939 100644
+--- a/Documentation/admin-guide/dell_rbu.rst
++++ b/Documentation/admin-guide/dell_rbu.rst
+@@ -26,7 +26,7 @@ Please go to  http://support.dell.com register and you can find info on
+ OpenManage and Dell Update packages (DUP).
+ 
+ Libsmbios can also be used to update BIOS on Dell systems go to
+-http://linux.dell.com/libsmbios/ for details.
++https://linux.dell.com/libsmbios/ for details.
+ 
+ Dell_RBU driver supports BIOS update using the monolithic image and packetized
+ image methods. In case of monolithic the driver allocates a contiguous chunk
+diff --git a/Documentation/admin-guide/devices.txt b/Documentation/admin-guide/devices.txt
+index 2a97aaec8b12..a622dfec92a4 100644
+--- a/Documentation/admin-guide/devices.txt
++++ b/Documentation/admin-guide/devices.txt
+@@ -1442,7 +1442,7 @@
+ 		    ...
+ 
+ 		The driver and documentation may be obtained from
+-		http://www.winradio.com/
++		https://www.winradio.com/
+ 
+   82 block	I2O hard disk
+ 		  0 = /dev/i2o/hdag	33rd I2O hard disk, whole disk
+@@ -1656,7 +1656,7 @@
+ 		dynamically, so there is no fixed mapping from subdevice
+ 		pathnames to minor numbers.
+ 
+-		See http://www.comedi.org/ for information about the Comedi
++		See https://www.comedi.org/ for information about the Comedi
+ 		project.
+ 
+   98 block	User-mode virtual block device
+@@ -1723,7 +1723,7 @@
+ 		implementations a kernel presence for caching and easy
+ 		mounting.  For more information about the project,
+ 		write to <arla-drinkers@stacken.kth.se> or see
+-		http://www.stacken.kth.se/project/arla/
++		https://www.stacken.kth.se/project/arla/
+ 
+  103 block	Audit device
+ 		  0 = /dev/audit	Audit device
+diff --git a/Documentation/admin-guide/ext4.rst b/Documentation/admin-guide/ext4.rst
+index 9443fcef1876..bc3abfb33476 100644
+--- a/Documentation/admin-guide/ext4.rst
++++ b/Documentation/admin-guide/ext4.rst
+@@ -611,7 +611,7 @@ kernel source:	<file:fs/ext4/>
+ 
+ programs:	http://e2fsprogs.sourceforge.net/
+ 
+-useful links:	http://fedoraproject.org/wiki/ext3-devel
++useful links:	https://fedoraproject.org/wiki/ext3-devel
+ 		http://www.bullopensource.org/ext4/
+ 		http://ext4.wiki.kernel.org/index.php/Main_Page
+-		http://fedoraproject.org/wiki/Features/Ext4
++		https://fedoraproject.org/wiki/Features/Ext4
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb95fad81c79..b333ba5cb144 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2786,7 +2786,7 @@
+ 			touchscreen support is not enabled in the mainstream
+ 			kernel as of 2.6.30, a preliminary port can be found
+ 			in the "bleeding edge" mini2440 support kernel at
+-			http://repo.or.cz/w/linux-2.6/mini2440.git
++			https://repo.or.cz/w/linux-2.6/mini2440.git
+ 
+ 	mitigations=
+ 			[X86,PPC,S390,ARM64] Control optional mitigations for
+diff --git a/Documentation/admin-guide/laptops/disk-shock-protection.rst b/Documentation/admin-guide/laptops/disk-shock-protection.rst
+index e97c5f78d8c3..22c7ec3e84cf 100644
+--- a/Documentation/admin-guide/laptops/disk-shock-protection.rst
++++ b/Documentation/admin-guide/laptops/disk-shock-protection.rst
+@@ -135,7 +135,7 @@ single project which, although still considered experimental, is fit
+ for use. Please feel free to add projects that have been the victims
+ of my ignorance.
+ 
+-- http://www.thinkwiki.org/wiki/HDAPS
++- https://www.thinkwiki.org/wiki/HDAPS
+ 
+   See this page for information about Linux support of the hard disk
+   active protection system as implemented in IBM/Lenovo Thinkpads.
+diff --git a/Documentation/admin-guide/laptops/sonypi.rst b/Documentation/admin-guide/laptops/sonypi.rst
+index c6eaaf48f7c1..190da1234314 100644
+--- a/Documentation/admin-guide/laptops/sonypi.rst
++++ b/Documentation/admin-guide/laptops/sonypi.rst
+@@ -151,7 +151,7 @@ Bugs:
+ 	  different way to adjust the backlighting of the screen. There
+ 	  is a userspace utility to adjust the brightness on those models,
+ 	  which can be downloaded from
+-	  http://www.acc.umu.se/~erikw/program/smartdimmer-0.1.tar.bz2
++	  https://www.acc.umu.se/~erikw/program/smartdimmer-0.1.tar.bz2
+ 
+ 	- since all development was done by reverse engineering, there is
+ 	  *absolutely no guarantee* that this driver will not crash your
+diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+index 822907dcc845..69b7ce905cba 100644
+--- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
++++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+@@ -904,7 +904,7 @@ temperatures:
+ The mapping of thermal sensors to physical locations varies depending on
+ system-board model (and thus, on ThinkPad model).
+ 
+-http://thinkwiki.org/wiki/Thermal_Sensors is a public wiki page that
++https://thinkwiki.org/wiki/Thermal_Sensors is a public wiki page that
+ tries to track down these locations for various models.
+ 
+ Most (newer?) models seem to follow this pattern:
+@@ -925,7 +925,7 @@ For the R51 (source: Thomas Gruber):
+ - 3:  Internal HDD
+ 
+ For the T43, T43/p (source: Shmidoax/Thinkwiki.org)
+-http://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_T43.2C_T43p
++https://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_T43.2C_T43p
+ 
+ - 2:  System board, left side (near PCMCIA slot), reported as HDAPS temp
+ - 3:  PCMCIA slot
+@@ -935,7 +935,7 @@ http://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_T43.2C_T43p
+ - 11: Power regulator, underside of system board, below F2 key
+ 
+ The A31 has a very atypical layout for the thermal sensors
+-(source: Milos Popovic, http://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_A31)
++(source: Milos Popovic, https://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_A31)
+ 
+ - 1:  CPU
+ - 2:  Main Battery: main sensor
+diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-guide/mm/ksm.rst
+index 874eb0c77d34..e87bf0135edf 100644
+--- a/Documentation/admin-guide/mm/ksm.rst
++++ b/Documentation/admin-guide/mm/ksm.rst
+@@ -9,7 +9,7 @@ Overview
+ 
+ KSM is a memory-saving de-duplication feature, enabled by CONFIG_KSM=y,
+ added to the Linux kernel in 2.6.32.  See ``mm/ksm.c`` for its implementation,
+-and http://lwn.net/Articles/306704/ and http://lwn.net/Articles/330589/
++and http://lwn.net/Articles/306704/ and https://lwn.net/Articles/330589/
+ 
+ KSM was originally developed for use with KVM (where it was known as
+ Kernel Shared Memory), to fit more virtual machines into physical memory,
+diff --git a/Documentation/admin-guide/nfs/nfs-client.rst b/Documentation/admin-guide/nfs/nfs-client.rst
+index c4b777c7584b..6adb6457bc69 100644
+--- a/Documentation/admin-guide/nfs/nfs-client.rst
++++ b/Documentation/admin-guide/nfs/nfs-client.rst
+@@ -65,8 +65,8 @@ migrated onto another server by means of the special "fs_locations"
+ attribute. See `RFC3530 Section 6: Filesystem Migration and Replication`_ and
+ `Implementation Guide for Referrals in NFSv4`_.
+ 
+-.. _RFC3530 Section 6\: Filesystem Migration and Replication: http://tools.ietf.org/html/rfc3530#section-6
+-.. _Implementation Guide for Referrals in NFSv4: http://tools.ietf.org/html/draft-ietf-nfsv4-referrals-00
++.. _RFC3530 Section 6\: Filesystem Migration and Replication: https://tools.ietf.org/html/rfc3530#section-6
++.. _Implementation Guide for Referrals in NFSv4: https://tools.ietf.org/html/draft-ietf-nfsv4-referrals-00
+ 
+ The fs_locations information can take the form of either an ip address and
+ a path, or a DNS hostname and a path. The latter requires the NFS client to
+diff --git a/Documentation/admin-guide/nfs/nfs-rdma.rst b/Documentation/admin-guide/nfs/nfs-rdma.rst
+index ef0f3678b1fb..f137485f8bde 100644
+--- a/Documentation/admin-guide/nfs/nfs-rdma.rst
++++ b/Documentation/admin-guide/nfs/nfs-rdma.rst
+@@ -65,7 +65,7 @@ use with NFS/RDMA.
+   If the version is less than 1.1.2 or the command does not exist,
+   you should install the latest version of nfs-utils.
+ 
+-  Download the latest package from: http://www.kernel.org/pub/linux/utils/nfs
++  Download the latest package from: https://www.kernel.org/pub/linux/utils/nfs
+ 
+   Uncompress the package and follow the installation instructions.
+ 
+diff --git a/Documentation/admin-guide/nfs/nfsroot.rst b/Documentation/admin-guide/nfs/nfsroot.rst
+index c6772075c80c..135218f33394 100644
+--- a/Documentation/admin-guide/nfs/nfsroot.rst
++++ b/Documentation/admin-guide/nfs/nfsroot.rst
+@@ -264,7 +264,7 @@ They depend on various facilities being available:
+      	access to the floppy drive device, /dev/fd0
+ 
+      	For more information on syslinux, including how to create bootdisks
+-     	for prebuilt kernels, see http://syslinux.zytor.com/
++     	for prebuilt kernels, see https://syslinux.zytor.com/
+ 
+ 	.. note::
+ 		Previously it was possible to write a kernel directly to
+@@ -292,7 +292,7 @@ They depend on various facilities being available:
+ 	  cdrecord dev=ATAPI:1,0,0 arch/x86/boot/image.iso
+ 
+      	For more information on isolinux, including how to create bootdisks
+-     	for prebuilt kernels, see http://syslinux.zytor.com/
++     	for prebuilt kernels, see https://syslinux.zytor.com/
+ 
+ - Using LILO
+ 
+@@ -346,7 +346,7 @@ They depend on various facilities being available:
+ 	see Documentation/admin-guide/serial-console.rst for more information.
+ 
+ 	For more information on isolinux, including how to create bootdisks
+-	for prebuilt kernels, see http://syslinux.zytor.com/
++	for prebuilt kernels, see https://syslinux.zytor.com/
+ 
+ 
+ 
+diff --git a/Documentation/admin-guide/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
+index 2a45119e3331..f48277a0a850 100644
+--- a/Documentation/admin-guide/sysctl/fs.rst
++++ b/Documentation/admin-guide/sysctl/fs.rst
+@@ -261,7 +261,7 @@ directories like /tmp. The common method of exploitation of this flaw
+ is to cross privilege boundaries when following a given symlink (i.e. a
+ root process follows a symlink belonging to another user). For a likely
+ incomplete list of hundreds of examples across the years, please see:
+-http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=/tmp
++https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=/tmp
+ 
+ When set to "0", symlink following behavior is unrestricted.
+ 
+-- 
+2.27.0
 
-> Generally for RT tasks, Linux always required an admin to do the tuning. And to
-> provide an automatic solution that fits all is not easy to happen, because what
-> ultimately is important for userspace, is only known by the userspace.
->
-> This is an interesting problem for me personally that I have been trying to
-> look at in my free time. On general purpose systems, it's hard to reason about
-> what's important because, as you say, you distribute something that should
-> target a wide range of platforms. And sometimes the end user (like a person
-> installing Ubuntu Desktop on their laptop), have no clue what a driver is even
-> to pick the right tuning for all RT tasks in their system.
->
-> But this problem already exists and catching up with this will need more work
-> from both distros and maybe kernel. I can't see a possible situation where the
-> kernel can do all the tuning without userspace providing more info anyway.
->
-> The per-device weirdness you're talking about is just how the way goes in
-> a world where there are many SoCs that are created to target different budgets
-> and use cases.
-
-I think it's sane for the OS to do very high level tuning, like "this
-platform has an underpowered CPU and being fast is more important than
-battery life, so error on the side of running fast" or "this platform
-has a fast SSD so tune disk algorithms appropriately".  ...but picking
-specific values gets tricky.
-
-
-> So I don't see the 2 worlds (laptops/mobile) really different, they just
-> traditionally started differently where such variations in SoC didn't exist
-> that much. But there are more Arm based SoCs that are targetting laptop markets
-> now.. So you never know when they will be dealing with the same variations the
-> mobile world sees today.
-
-The slowest laptop we currently support is a Quad-core A17 running at
-~1.8 GHz.  On that CPU the cros_ec thread needs to be realtime (so it
-doesn't get interrupted) but doesn't need any particular CPU speed.
-
-That being said, that does remind me that on that laptop we did give
-up and end up with a hack to set a minimum CPU speed when USB audio
-was happening.  That CPU has dwc2 for its USB controller and it's
-utterly important to service interrupts in < 125 us when USB audio is
-going on.  So in that case, yes, I was forced to do tuning and pick a
-specific value.
-
-
-> > > People tend to think of the flagship SoCs which are powerful, but if you
-> > > consider the low and medium end devices there's a massive spectrum over there
-> > > that this range is trying to cover.
-> >
-> > Yeah, perhaps you're right.  When thinking about a laptop it's almost
-> > always a fairly powerful device and things could certainly be
-> > different for very low end chips trying to run Linux.
->
-> I think there are low end laptops in the market that barely have enough grunt
-> to do work. So not all laptops are fairly powerful.
->
-> >
-> >
-> > > I would expect older boards init script to be separate for newer boards init
-> > > script. The OS by default boosts all RT tasks unless a platform specific script
-> > > overrides that. So I can't see how an OS upgrade would affect older boards.
-> >
-> > In the Chrome OS world I'm part of, the people supporting the boards
-> > are not always the people adding new whizbang features.  We get new
-> > versions of the OS every 6 weeks and those new versions may change the
-> > way things work pretty significantly.  We ship those new versions off
-> > to all boards.  Certainly they undergo testing, but there are a lot of
-> > boards and if something is not tuned as well as it was when the device
-> > first shipped it's likely nobody will really notice.  This is my bias
-> > against needing per-board tuning.
->
-> Apologies for my lack knowledge about the exact process in Chrome OS. In my
-> head, I think what you do is like what Android and other distros do. Provide
-> a software stack that can be used on any platform. On Android OEMs do have to
-> do the tuning (with a help from SoC vendor usually). Not many laptops ship with
-> Linux as their default OS, but this is an increasing trend and LWN did write
-> something recently about the demand is increasing for Linux based laptops.
->
->
-> I thought Chrome OS is the same, where an OEM will take your deliverables and
-> do the final integration.
->
-> So I agree at your level it might be hard to reason about the full spectrum.
-> But I thought the OEMs that wants to ship Chrome OS will need to look at init
-> scripts, drivers etc to ensure their laptop is competitive.
->
-> >
-> >
-> > > This knob still allows you to disable the max boosting and use the per-task
-> > > uclamp interface to boost only those tasks you care about. AFAIK this is
-> > > already done in a hacky way in android devices via special vendors provisions.
-> >
-> > Yeah.  I don't think I have enough skin in the game to really say one
-> > way or the other what the API should be so I'll probably stay off the
-> > other, bigger thread and let others decide what the best API should
-> > be.  For Chrome OS I'd probably advocate just disabling the default
-> > boost but even there I'd be willing to defer to the folks doing the
-> > actual work.
->
-> Yes I appreciate the challenges you have. I think for most users disabling is
-> good enough for them as RT tasks could end up causing a lot of power to be
-> wasted unnecessarily. But if someone wants to take the extra mile and squeeze
-> the best compromise, they can :)
-
-Yeah, thinking about the USB audio hack we ended up with makes me
-understand that sometimes on lower-end systems you are forced to do
-tuning even if it's annoying.
-
--Doug
