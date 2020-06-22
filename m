@@ -2,318 +2,108 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2017C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A667320706
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2100206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 10:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgFVKYi convert rfc822-to-8bit (ORCPT
+        id S1727892AbgFVK0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:24:38 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2526 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726841AbgFVKYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:24:37 -0400
-Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 66D414EB7654287926C8;
-        Mon, 22 Jun 2020 18:24:34 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
- dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0487.000;
- Mon, 22 Jun 2020 18:24:24 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Seth Jennings <sjenning@redhat.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>
-Subject: RE: [PATCH 1/3] crypto: permit users to specify numa node of acomp
- hardware
-Thread-Topic: [PATCH 1/3] crypto: permit users to specify numa node of acomp
- hardware
-Thread-Index: AQHWSD/zs33FY9kjZEy0iXthrgawh6jj4QCAgACLU3A=
-Date:   Mon, 22 Jun 2020 10:24:23 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD2513958@DGGEMI525-MBS.china.huawei.com>
-References: <20200622024901.12632-1-song.bao.hua@hisilicon.com>
-        <20200622024901.12632-2-song.bao.hua@hisilicon.com>
- <20200622105923.0000710b@Huawei.com>
-In-Reply-To: <20200622105923.0000710b@Huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.106]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 22 Jun 2020 06:26:18 -0400
+Received: from relay-b02.edpnet.be ([212.71.1.222]:44109 "EHLO
+        relay-b02.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgFVK0R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 06:26:17 -0400
+X-ASG-Debug-ID: 1592821574-0a7b8d7b58395dd0001-xx1T2L
+Received: from zotac.vandijck-laurijssen.be ([213.219.130.186]) by relay-b02.edpnet.be with ESMTP id 7mCYZTARDg2OtGBc; Mon, 22 Jun 2020 12:26:14 +0200 (CEST)
+X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
+X-Barracuda-Effective-Source-IP: UNKNOWN[213.219.130.186]
+X-Barracuda-Apparent-Source-IP: 213.219.130.186
+Received: from x1.vandijck-laurijssen.be (x1.vandijck-laurijssen.be [IPv6:fd01::1a1d:eaff:fe02:d339])
+        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id 93BBAF69EFE;
+        Mon, 22 Jun 2020 12:26:06 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 12:25:59 +0200
+From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        wg@grandegger.com, kernel@martin.sperl.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
+Message-ID: <20200622102559.GA3077@x1.vandijck-laurijssen.be>
+X-ASG-Orig-Subj: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
+Mail-Followup-To: Marc Kleine-Budde <mkl@pengutronix.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        wg@grandegger.com, kernel@martin.sperl.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
+ <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
+ <20200617165902.GB14228@x1.vandijck-laurijssen.be>
+ <2e80e2ed-d63d-5cc6-e1c6-e0c9e75c218e@pengutronix.de>
+ <20200618123055.GA17496@x1.vandijck-laurijssen.be>
+ <c8267280-e7a9-8171-d714-fa392ccb5537@pengutronix.de>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c8267280-e7a9-8171-d714-fa392ccb5537@pengutronix.de>
+User-Agent: Mutt/1.5.22 (2013-10-16)
+X-Barracuda-Connect: UNKNOWN[213.219.130.186]
+X-Barracuda-Start-Time: 1592821574
+X-Barracuda-URL: https://212.71.1.222:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at edpnet.be
+X-Barracuda-Scan-Msg-Size: 1248
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: SPAM GLOBAL 0.9857 1.0000 4.1774
+X-Barracuda-Spam-Score: 4.18
+X-Barracuda-Spam-Status: No, SCORE=4.18 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.82726
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Jonathan Cameron
-> Sent: Monday, June 22, 2020 9:59 PM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: herbert@gondor.apana.org.au; davem@davemloft.net; Seth Jennings
-> <sjenning@redhat.com>; Linuxarm <linuxarm@huawei.com>;
-> linux-kernel@vger.kernel.org; linux-mm@kvack.org;
-> linux-crypto@vger.kernel.org; akpm@linux-foundation.org; Dan Streetman
-> <ddstreet@ieee.org>; Vitaly Wool <vitaly.wool@konsulko.com>
-> Subject: Re: [PATCH 1/3] crypto: permit users to specify numa node of acomp
-> hardware
-> 
-> On Mon, 22 Jun 2020 14:48:59 +1200
-> Barry Song <song.bao.hua@hisilicon.com> wrote:
-> 
-> > For a Linux server with NUMA, there are possibly multiple (de)compressors
-> > which are either local or remote to some NUMA node. Some drivers will
-> > automatically use the (de)compressor near the CPU calling acomp_alloc().
-> > However, it is not necessarily correct because users who send acomp_req
-> > could be from different NUMA node with the CPU which allocates acomp.
-> >
-> > Just like kernel has kmalloc() and kmalloc_node(), here crypto can have
-> > same support.
-> >
-> > Cc: Seth Jennings <sjenning@redhat.com>
-> > Cc: Dan Streetman <ddstreet@ieee.org>
-> > Cc: Vitaly Wool <vitaly.wool@konsulko.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> 
-> Hi Barry,
-> 
-> Seems sensible to me.  A few trivial comments inline.
+Hey Marc,
 
-Thanks for your review, Jonathan.
+On do, 18 jun 2020 14:35:28 +0200, Marc Kleine-Budde wrote:
+> On 6/18/20 2:30 PM, Kurt Van Dijck wrote:
+> > On do, 18 jun 2020 00:36:29 +0200, Marc Kleine-Budde wrote:
+> >> On 6/17/20 6:59 PM, Kurt Van Dijck wrote:
+> >>> I'm in the process of getting a Variscite imx8m mini SOM online, with
+> >>
+> >> Have your heard about the imx8m plus? It has CAN cores! We have a board in the
+> >> office to play with. :)
+> >>
+> >>> MCP2517FD. The 4.19 kernel that comes with it, has a driver that is
+> >>
+> >> You shall not start projects with 1,5 years old kernel.
+> >> And you probably shall not use vendor kernel for new projects.
+> >> :D
+> > 
+> > your rpi kernel starts of v4.19.119 (or so), where the variscite starts
+> > of v4.19.35.
+> 
+> You're missing some stable backports for the kernel then.
+> 
+> > The result was quite some list of merge conflicts, on top of a vendor
+> > kernel, so I took your advise and switched to the latest and greatest
+> > 5.7.3.
+> 
+> \o/
 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > ---
-> >  crypto/acompress.c         |  8 ++++++++
-> >  crypto/api.c               | 22 ++++++++++++++--------
-> >  crypto/internal.h          | 23 +++++++++++++++++++----
-> >  include/crypto/acompress.h |  7 +++++++
-> >  include/linux/crypto.h     |  3 ++-
-> >  5 files changed, 50 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/crypto/acompress.c b/crypto/acompress.c
-> > index 84a76723e851..c32c72048a1c 100644
-> > --- a/crypto/acompress.c
-> > +++ b/crypto/acompress.c
-> > @@ -109,6 +109,14 @@ struct crypto_acomp *crypto_alloc_acomp(const
-> char *alg_name, u32 type,
-> >  }
-> >  EXPORT_SYMBOL_GPL(crypto_alloc_acomp);
-> >
-> > +struct crypto_acomp *crypto_alloc_acomp_node(const char *alg_name,
-> u32 type,
-> > +					u32 mask, int node)
-> > +{
-> > +	return crypto_alloc_tfm_node(alg_name, &crypto_acomp_type, type,
-> mask,
-> > +				node);
-> > +}
-> > +EXPORT_SYMBOL_GPL(crypto_alloc_acomp_node);
-> > +
-> >  struct acomp_req *acomp_request_alloc(struct crypto_acomp *acomp)
-> >  {
-> >  	struct crypto_tfm *tfm = crypto_acomp_tfm(acomp);
-> > diff --git a/crypto/api.c b/crypto/api.c
-> > index edcf690800d4..4ecf712286af 100644
-> > --- a/crypto/api.c
-> > +++ b/crypto/api.c
-> > @@ -433,8 +433,9 @@ struct crypto_tfm *crypto_alloc_base(const char
-> *alg_name, u32 type, u32 mask)
-> >  }
-> >  EXPORT_SYMBOL_GPL(crypto_alloc_base);
-> >
-> > -void *crypto_create_tfm(struct crypto_alg *alg,
-> > -			const struct crypto_type *frontend)
-> > +void *crypto_create_tfm_node(struct crypto_alg *alg,
-> > +			const struct crypto_type *frontend,
-> > +			int node)
-> >  {
-> >  	char *mem;
-> >  	struct crypto_tfm *tfm = NULL;
-> > @@ -451,6 +452,7 @@ void *crypto_create_tfm(struct crypto_alg *alg,
-> >
-> >  	tfm = (struct crypto_tfm *)(mem + tfmsize);
-> >  	tfm->__crt_alg = alg;
-> > +	tfm->node = node;
-> >
-> >  	err = frontend->init_tfm(tfm);
-> >  	if (err)
-> > @@ -472,7 +474,7 @@ void *crypto_create_tfm(struct crypto_alg *alg,
-> >  out:
-> >  	return mem;
-> >  }
-> > -EXPORT_SYMBOL_GPL(crypto_create_tfm);
-> > +EXPORT_SYMBOL_GPL(crypto_create_tfm_node);
-> >
-> >  struct crypto_alg *crypto_find_alg(const char *alg_name,
-> >  				   const struct crypto_type *frontend,
-> > @@ -490,11 +492,13 @@ struct crypto_alg *crypto_find_alg(const char
-> *alg_name,
-> >  EXPORT_SYMBOL_GPL(crypto_find_alg);
-> >
-> >  /*
-> > - *	crypto_alloc_tfm - Locate algorithm and allocate transform
-> > + *	crypto_alloc_tfm_node - Locate algorithm and allocate transform
-> >   *	@alg_name: Name of algorithm
-> >   *	@frontend: Frontend algorithm type
-> >   *	@type: Type of algorithm
-> >   *	@mask: Mask for type comparison
-> > + *	@node: NUMA node in which users desire to put requests, if node is
-> > + *		NUMA_NO_NODE, it means users have no special requirement.
-> >   *
-> >   *	crypto_alloc_tfm() will first attempt to locate an already loaded
-> >   *	algorithm.  If that fails and the kernel supports dynamically
-> loadable
-> > @@ -509,8 +513,10 @@ EXPORT_SYMBOL_GPL(crypto_find_alg);
-> >   *
-> >   *	In case of error the return value is an error pointer.
-> >   */
-> > -void *crypto_alloc_tfm(const char *alg_name,
-> > -		       const struct crypto_type *frontend, u32 type, u32 mask)
-> > +
-> > +void *crypto_alloc_tfm_node(const char *alg_name,
-> > +		       const struct crypto_type *frontend, u32 type, u32 mask,
-> > +		       int node)
-> >  {
-> >  	void *tfm;
-> >  	int err;
-> > @@ -524,7 +530,7 @@ void *crypto_alloc_tfm(const char *alg_name,
-> >  			goto err;
-> >  		}
-> >
-> > -		tfm = crypto_create_tfm(alg, frontend);
-> > +		tfm = crypto_create_tfm_node(alg, frontend, node);
-> >  		if (!IS_ERR(tfm))
-> >  			return tfm;
-> >
-> > @@ -542,7 +548,7 @@ void *crypto_alloc_tfm(const char *alg_name,
-> >
-> >  	return ERR_PTR(err);
-> >  }
-> > -EXPORT_SYMBOL_GPL(crypto_alloc_tfm);
-> > +EXPORT_SYMBOL_GPL(crypto_alloc_tfm_node);
-> >
-> >  /*
-> >   *	crypto_destroy_tfm - Free crypto transform
-> > diff --git a/crypto/internal.h b/crypto/internal.h
-> > index ff06a3bd1ca1..1b92a5a61852 100644
-> > --- a/crypto/internal.h
-> > +++ b/crypto/internal.h
-> > @@ -68,13 +68,28 @@ void crypto_remove_final(struct list_head *list);
-> >  void crypto_shoot_alg(struct crypto_alg *alg);
-> >  struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
-> >  				      u32 mask);
-> > -void *crypto_create_tfm(struct crypto_alg *alg,
-> > -			const struct crypto_type *frontend);
-> > +void *crypto_create_tfm_node(struct crypto_alg *alg,
-> > +			const struct crypto_type *frontend, int node);
-> > +
-> > +static inline void *crypto_create_tfm(struct crypto_alg *alg,
-> > +			const struct crypto_type *frontend)
-> > +{
-> > +	return crypto_create_tfm_node(alg, frontend, NUMA_NO_NODE);
-> > +}
-> > +
-> >  struct crypto_alg *crypto_find_alg(const char *alg_name,
-> >  				   const struct crypto_type *frontend,
-> >  				   u32 type, u32 mask);
-> > -void *crypto_alloc_tfm(const char *alg_name,
-> > -		       const struct crypto_type *frontend, u32 type, u32 mask);
-> > +
-> > +void *crypto_alloc_tfm_node(const char *alg_name,
-> > +		       const struct crypto_type *frontend, u32 type, u32 mask,
-> > +		       int node);
-> > +
-> > +static inline void *crypto_alloc_tfm(const char *alg_name,
-> > +		       const struct crypto_type *frontend, u32 type, u32 mask)
-> > +{
-> > +	return crypto_alloc_tfm_node(alg_name, frontend, type, mask,
-> NUMA_NO_NODE);
-> > +}
-> >
-> >  int crypto_probing_notify(unsigned long val, void *v);
-> >
-> > diff --git a/include/crypto/acompress.h b/include/crypto/acompress.h
-> > index 2b4d2b06ccbd..b1a78687014a 100644
-> > --- a/include/crypto/acompress.h
-> > +++ b/include/crypto/acompress.h
-> > @@ -106,6 +106,13 @@ struct acomp_alg {
-> >   */
-> >  struct crypto_acomp *crypto_alloc_acomp(const char *alg_name, u32
-> type,
-> >  					u32 mask);
-> > +/**
-> > + * crypto_alloc_acomp_node() -- allocate ACOMPRESS tfm handle with
-> desired NUMA
-> > + *				node
-> 
-> Given slightly relaxed view on 80 chars now in place, I'd put that on one line.
-> 
+I got my board up with a 5.7, despite device-tree problems completely
+unrelated to CAN.
+It seems to work well with a fully-loaded CAN bus (cangen -g0 ...).
+So that is a real improvement.
+I will need to add the listen-only mode soon.
 
-Will put in another line.
-
-> Also kernel-doc needs to be complete so though it's tedious you should
-> document
-> the other parameters.
-
-You mean here the doc for other parameters should be copied from crypto_alloc_acomp()? 
-If so, it is ok to me :-)
-
-> 
-> > + * @node:	specifies the NUMA node the ZIP hardware belongs to
-> > + */
-> > +struct crypto_acomp *crypto_alloc_acomp_node(const char *alg_name,
-> u32 type,
-> > +					u32 mask, int node);
-> >
-> >  static inline struct crypto_tfm *crypto_acomp_tfm(struct crypto_acomp
-> *tfm)
-> >  {
-> > diff --git a/include/linux/crypto.h b/include/linux/crypto.h
-> > index 763863dbc079..c1a47ce4c09e 100644
-> > --- a/include/linux/crypto.h
-> > +++ b/include/linux/crypto.h
-> > @@ -593,8 +593,9 @@ int crypto_has_alg(const char *name, u32 type, u32
-> mask);
-> >   */
-> >
-> >  struct crypto_tfm {
-> > -
-> 
-> Stray change. Shouldn't be in this patch.
-
-Will have a separate patch for this.
-
-> 
-> 
-> >  	u32 crt_flags;
-> > +
-> > +	int node;
-> >
-> >  	void (*exit)(struct crypto_tfm *tfm);
-> >
-> 
-
-Best Regard
-Barry
-
+Kurt
