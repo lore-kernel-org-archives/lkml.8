@@ -2,151 +2,129 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5280C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8F1207C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B424B2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:35:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qCxFvMEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgFVQeO (ORCPT
+        id S1729645AbgFVQfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:34:14 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:33029 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbgFVQeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:34:13 -0400
-Received: from oxbsgw00.schlund.de ([172.19.248.10]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1M89TB-1jjokx3rQB-005KpV; Mon, 22 Jun 2020 18:34:04 +0200
-Date:   Mon, 22 Jun 2020 18:34:04 +0200 (CEST)
-From:   Thomas Ruf <freelancer@rufusul.de>
-Reply-To: Thomas Ruf <freelancer@rufusul.de>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Federico Vaga <federico.vaga@cern.ch>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <1835214773.354594.1592843644540@mailbusiness.ionos.de>
-In-Reply-To: <20200622155440.GM2324254@vkoul-mobl>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl>
- <419762761.402939.1592827272368@mailbusiness.ionos.de>
- <20200622155440.GM2324254@vkoul-mobl>
-Subject: Re: DMA Engine: Transfer From Userspace
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Mon, 22 Jun 2020 12:35:43 -0400
+Received: from mail-dm6nam10on2048.outbound.protection.outlook.com ([40.107.93.48]:6189
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729522AbgFVQfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:35:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nWA9bVMqY4tq82kTB/+uV+O2TLkyfoZFbH/zId5hD4n2wjJbj2hJiTCjf9W0hYRxU30tkuB9w+gMhVZh9B+ZLM+pSXrk/JNNpDz49x4TbLvt9ZuSj/OeBjw0mZlUMzfLnDWSLoscxExE+hvaQJpRK/CrEcCqZuGUfrwQXIRnAwVX0olYyOhp2LFHdPbge1qP9M9D/Ukr8+R1F764FLlwAbIJI0GHQMlRn3fucKgu5iYlFJuvXR5GOETHMX6l3q6HnnmS/i6xWlibwLQZYU3GzEXrW5AQTW1hkKPj28CvYYvGXZbDODmIwEkGWqf15hmsIoGj7VeBc8TBQxxnejgVAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vOEj/p68ARkN6uUpH8AO2Nl7liuGNmSHIS0K+3cHoqE=;
+ b=M3z9jDr5DvTs1jfJudQKEILuuPZiU3xm2usGrZI/MW1TTWLP4DC58GEgqO1CRKR7Nd2FRxLjvOpXYJ6z10p715CJy1lljOpzrdxD6ikN/QFRhlIUvUVwF4k3ukOlwsskKG1qymvjADN0NJgRS2IQECD6VSzivK7SHLsePc2sbe4xZytIpdVP9ETZyWGdpS5CJfFaDvTlAeGMkQ4aJtKc3DeeMlk9XG3yiw90URJEcMQrbsq6YHyLHKbht9XFY0KpRQZcg1TveNxlHqn96m+cksGtiAHDZAJr1hsqyTvqzBIk6LKT2MYV37JFvg0A09E6ecmHgP1dx9cKYjvXpU+IWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vOEj/p68ARkN6uUpH8AO2Nl7liuGNmSHIS0K+3cHoqE=;
+ b=qCxFvMEXGZNay1Wmow3foe3PN5DzvMH4LDVDiV8Bw3usXapH8z7xlLo46wjSYm6UJZISBr2EzBeC/aagUS2/Ik9DOqoO4QkL6LP3ZBiXe3tlScYshNU9laeRL2gS/wcdBQmKjsdbJh2WzDCl1FFXdgYSlX5mrU9EtF5j/itRuhg=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1355.namprd12.prod.outlook.com (2603:10b6:3:6e::7) by
+ DM6PR12MB3370.namprd12.prod.outlook.com (2603:10b6:5:38::25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3109.22; Mon, 22 Jun 2020 16:35:40 +0000
+Received: from DM5PR12MB1355.namprd12.prod.outlook.com
+ ([fe80::4ce1:9947:9681:c8b1]) by DM5PR12MB1355.namprd12.prod.outlook.com
+ ([fe80::4ce1:9947:9681:c8b1%10]) with mapi id 15.20.3109.027; Mon, 22 Jun
+ 2020 16:35:40 +0000
+Subject: Re: [PATCH v2 00/11] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, babu.moger@amd.com
+References: <20200619153925.79106-1-mgamal@redhat.com>
+ <5a52fd65-e1b2-ca87-e923-1d5ac167cfb9@amd.com>
+ <a5793938619c1c328b8283aab90166e352071317.camel@redhat.com>
+ <08594d32-9be2-b4d6-1dac-a335e8bda9f7@redhat.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <53dc2f58-1373-b0ef-9888-713712c6a85a@amd.com>
+Date:   Mon, 22 Jun 2020 11:35:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <08594d32-9be2-b4d6-1dac-a335e8bda9f7@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:QPaxUzy3VgmMe1bkzn55F0lHImGPzZK0TV3+DEwcnT35cMd6Od2
- XfLr4gqZfNKDJRYl9f3Y+Pifwmxy/EVNfkL8eig3azDvBjnd2pamyaA6wUqtRGYGExml8Ub
- 9WRIgEYzgjvBge6SFAxrf7agXv//emdrWNHoRJnOwbtbJUTbrwAiWJmH0ItPFy+g0KfVEBU
- TqP/77l1VBUGe0qzZChkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:b5xqvHzMs/k=:i6nEZ8RPbzMHTnU9YvZxfP
- IDauMXlFFR7GiHsKDfrOPSMgqABTt3lQ8HHCeYqDKmFaDPTIxUNZldeBeIbloTGbBkGga773f
- xC5g9+A80FBq6I/1pWCvDd67vdZqD2leVrgNovrmrfI2ynj7iGMZpy2tf4n5LlnFoHaH7kViu
- 86seSaDjNFE2LqTiFUmqJBMYpOTTSn6oZCy3OPboH8eDMN+J1WKI19D8qglpThmD2dnEfFDWP
- kEUjT8RqB6MAU6fNqz5KiODpgoFzf3Fw63JTPpk3Lq+v6qmdqGsE7YI+bn6CI97iaM3SXi6nc
- 4nPHR3MJGrDp+5ORyIEku4/0TEwudRb213d/iR2bogv4NNbmu5Jirzjtbel+intiDRan8nzos
- 94LFExz2kKSf1PCeHSQkYTGityoS/hn0ACiM6gmXRpAyNiv5w12j3Fjd4aQ/XRf5lLRPLWA0/
- 9O2Sfxf1D3GMc0xTcdRsXXSSKMUWydUIN1YXV73L6qxCnEkx3o75MPBlW7YaJiNuElb8fL6iu
- WNmXz42YIpw74Zsh8EsI2+9GfjalZrGf/66VBn8cDJrOPQCHEhfqBE77dt4yZG8DT6RGiMqS5
- idH9hlHTaqufg2RxF8iArc5jP/5pHhfQ2iftRaFBapPPxaBfeMDZe8pv3UebEUpOtbQ8IF3lY
- xZvbA8Kl5aQtKX1aRXjXp5jM2QUsJoZ4Hw/NnanpM+3UpRs10rkriZ6z8piMjWmVembH471y1
- Ye24Nn5EIazYH+cmg6HVoLauZLV88jGu4xZU+o5XeGxqPAOQNxEZNBk8N9lzAPoNDLtltsK8m
- Qbq6vc7FVEWPo85Ju2FFMIBt1Ek4VAlAFS/o4uJ77g9IerZTJk=
+X-ClientProxiedBy: DM5PR13CA0018.namprd13.prod.outlook.com
+ (2603:10b6:3:23::28) To DM5PR12MB1355.namprd12.prod.outlook.com
+ (2603:10b6:3:6e::7)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.30.118] (165.204.77.1) by DM5PR13CA0018.namprd13.prod.outlook.com (2603:10b6:3:23::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.10 via Frontend Transport; Mon, 22 Jun 2020 16:35:39 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 925f6d12-0dfa-435b-3c57-08d816ca4cf8
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3370:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB337018AAF8CB37A01551C17CEC970@DM6PR12MB3370.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ogpyri1y91EnDHUBPxeMFjk1ZCwNAMT9sQF2jwhQyiaQEiLeClPEfPRU6i2e0aioOx7+fa3+G5r2uMCOhC3q8engks6Pb8rdG/g1pw8wLuGBb7U8gkWjvlNCTn6lUev9feZYNZ/BSU63NlOby4Q+exRaykM7ZkTSa4FnfLQ4REqiW+TfhQJyWy7BHg6fg21foRvHBw9+ujs0LqtvT5mMhPHfOGvjpU46nd24GPXpVAGYH2zxXVBUZ+C2kZ+XQO4foyJVFbudZRfSY6UMNiRdyp7YV9MIdGdytv9AQMATSPwS9/K/4mmf54Sz+6hO9vDcgz4z6fx+Mn4BX699xYcpVG/rDMvsEPwbD16kSqrnn08mr9vNWQbX8QUYuoC5Q7bN
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(39860400002)(366004)(376002)(316002)(478600001)(4744005)(110136005)(66946007)(8676002)(4326008)(66556008)(52116002)(66476007)(36756003)(83380400001)(26005)(16576012)(956004)(8936002)(5660300002)(86362001)(31696002)(2616005)(6486002)(53546011)(186003)(31686004)(16526019)(2906002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: duoI6pCEkYYd3NsM60/dBDLrVDRJwCQbuRs7UZIQRdefV5463XP/hokQzdgUlJQU+RBKEfgfoPvxTPWavbxgZH9reJL/BT8AZNx7f2Hze7DAAIMsDsQf770sttxODpg2eBucecAe19owaioX6lrE0Gn3gQm4cUHt36YeDkDmklq7ZBTyPR8hgxqHvkNHicn9mch2mdKf4H4JMiFdqJox+e8qQMZrBjPD/3x9tlWrhk0F8mOa8sUISYzJiEr8KWqoSMnwv+ZVtl4DFN8x7VEuW/uWkd0MffWRAemiD/RaFOfjdaSiEpzOcvQrlxXD4sXjPDkVBdD4r/HV4lfSR2FXlghSVIfnG7/WblWQv2n4TbUchSKE2fQT9yHYzAsQtTgXRkGpAALF8ZX1Fjp3cBtCWAY+fA6CgeZGfnLq7hhKsmEaInEW7Qv8YdUgciTYPmBykS+anb76ZiuhCn7XprJG6AZUGo8SvUSZW/p/VqREHVA=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 925f6d12-0dfa-435b-3c57-08d816ca4cf8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 16:35:40.5056
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DN6VbBOzHsqqOUqFgcecuAp4K3AzKfouFPKWSxzomhpw5XzODlBO/aADZHBiOnhIQmaOOrwCMmo2Qy1a7534QA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3370
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> On 22 June 2020 at 17:54 Vinod Koul <vkoul@kernel.org> wrote:
+On 6/22/20 10:23 AM, Paolo Bonzini wrote:
+> On 22/06/20 17:08, Mohammed Gamal wrote:
+>>> Also, something to consider. On AMD, when memory encryption is 
+>>> enabled (via the SYS_CFG MSR), a guest can actually have a larger
+>>> MAXPHYADDR than the host. How do these patches all play into that?
 > 
+> As long as the NPT page tables handle the guest MAXPHYADDR just fine,
+> there's no need to do anything.  I think that's the case?
+
+Yes, it does.
+
+Thanks,
+Tom
+
 > 
-> On 22-06-20, 14:01, Thomas Ruf wrote:
-> > > On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
-> > > 
-> > > On 21-06-20, 22:36, Federico Vaga wrote:
-> > > > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
-> > > > > On 19-06-20, 16:31, Dave Jiang wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > is there the possibility of using a DMA engine channel from userspace?
-> > > > > > >
-> > > > > > > Something like:
-> > > > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
-> > > > > > > - read() or write() to trigger the transfer
-> > > > > > >
-> > > > > > 
-> > > > > > I may have supposedly promised Vinod to look into possibly providing
-> > > > > > something like this in the future. But I have not gotten around to do that
-> > > > > > yet. Currently, no such support.
-> > > > > 
-> > > > > And I do still have serious reservations about this topic :) Opening up
-> > > > > userspace access to DMA does not sound very great from security point of
-> > > > > view.
-> > > > 
-> > > > I was thinking about a dedicated module, and not something that the DMA engine
-> > > > offers directly. You load the module only if you need it (like the test module)
-> > > 
-> > > But loading that module would expose dma to userspace. 
-> > > > 
-> > > > > Federico, what use case do you have in mind?
-> > > > 
-> > > > Userspace drivers
-> > > 
-> > > more the reason not do do so, why cant a kernel driver be added for your
-> > > usage?
-> > 
-> > by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
-> > now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
-> > 
-> > just let me introduce myself and the project:
-> > - coding in C since '91
-> > - coding in C++ since '98
-> > - a lot of stuff not relevant for this ;-)
-> > - working as a freelancer since Nov '19
-> > - implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
-> > - last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
-> > - subscribed to dmaengine on friday, saw the start of this discussion on saturday
-> > - talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
+> Paolo
 > 
-> DMA_SG was removed as it had no users, if we have a user (in-kernel) we
-> can certainly revert that removal patch.
-
-yeah, already understood that.
-
-> > 
-> > here the struct for the ioctl:
-> > 
-> > typedef struct {
-> >   unsigned int struct_size;
-> >   const void *src_user_ptr;
-> >   void *dst_user_ptr;
-> >   unsigned long length;
-> >   unsigned int timeout_in_ms;
-> > } dma_sg_proxy_arg_t;
+>> Well the patches definitely don't address that case. It's assumed a
+>> guest VM's MAXPHYADDR <= host MAXPHYADDR, and hence we handle the case
+>> where a guests's physical address space is smaller and try to trap
+>> faults that may go unnoticed by the host.
+>>
+>> My question is in the case of guest MAXPHYADDR > host MAXPHYADDR, do we
+>> expect somehow that there might be guest physical addresses that
+>> contain what the host could see as reserved bits? And how'd the host
+>> handle that?
 > 
-> Again, am not convinced opening DMA to userspace like this is a great
-> idea. Why not have Xilinx camera driver invoke the dmaengine and do
-> DMA_SG ?
-
-In our case we have several camera pipelines, in some cases uncached memory is okay (e. g. image goes directly to display framebuffer), in some cases not because we need to process the images on cpu or gpu and we for that need to copy to oridinary user memoy first. This seems easier to do by decoupling the driver code.
-And one more thing: in case we engage the dma memcpy we want to copy to target memory which is prepared for IPC because we want to share these images with another process. The v4l2 interface did not look to be made for such cases but is possible by this "memcpy" approach.
-
-Best regards,
-Thomas
