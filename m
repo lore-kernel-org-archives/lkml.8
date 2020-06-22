@@ -2,97 +2,117 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553A0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ADAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 367DF20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6B720732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 21:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbgFVVXb (ORCPT
+        id S1730642AbgFVVYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:23:31 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2469 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730460AbgFVVXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:23:30 -0400
-IronPort-SDR: dpFSCi1544XuAKCIGfSov51p5HubZ1RFSF97AyqncOx3jTg3Mhm3x0Mc1afnj6ftv87YqcasMo
- G96M1rx0B1Eg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123548596"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="123548596"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:23:29 -0700
-IronPort-SDR: YU7fP6RdkdXBthLv3FK4h2DNntPCXOCmcZe053PnGOAcQrgdaPS3xyaH4oySFH+lnqaZBSospj
- 70roBrLzBkVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="278894306"
-Received: from scheller-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.117])
-  by orsmga006.jf.intel.com with ESMTP; 22 Jun 2020 14:23:25 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     pengfei.xu@intel.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        stable@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
-        Petr Vorel <petr.vorel@gmail.com>,
-        Joey Pabalinas <joeypabalinas@gmail.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] selftests: tpm: Use /bin/sh instead of /bin/bash
-Date:   Tue, 23 Jun 2020 00:20:22 +0300
-Message-Id: <20200622212034.20624-4-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200622212034.20624-1-jarkko.sakkinen@linux.intel.com>
-References: <20200622212034.20624-1-jarkko.sakkinen@linux.intel.com>
+        Mon, 22 Jun 2020 17:24:50 -0400
+Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:51818 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728555AbgFVVYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:24:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id EB19718029134;
+        Mon, 22 Jun 2020 21:24:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sink53_2c02d6f26e36
+X-Filterd-Recvd-Size: 3649
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 22 Jun 2020 21:24:47 +0000 (UTC)
+Message-ID: <8a218fa14cc2e1690df32d278c82587c7507a820.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: fix CONST_STRUCT when
+ const_structs.checkpatch is missing
+From:   Joe Perches <joe@perches.com>
+To:     Quentin Monnet <quentin@isovalent.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Mon, 22 Jun 2020 14:24:47 -0700
+In-Reply-To: <20200622204844.21030-1-quentin@isovalent.com>
+References: <20200622204844.21030-1-quentin@isovalent.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's better to use /bin/sh instead of /bin/bash in order to run the tests
-in the BusyBox shell.
+On Mon, 2020-06-22 at 21:48 +0100, Quentin Monnet wrote:
+> Checkpatch reports warnings when some specific structs are not declared
+> as const in the code. The list of structs to consider was initially
+> defined in the checkpatch.pl script itself, but it was later moved to an
+> external file (scripts/const_structs.checkpatch). This introduced two
+> minor issues:
+> 
+> - When file scripts/const_structs.checkpatch is not present (for
+>   example, if checkpatch is run outside of the kernel directory with the
+>   "--no-tree" option), a warning is printed to stderr to tell the user
+>   that "No structs that should be const will be found". This is fair,
+>   but the warning is printed unconditionally, even if the option
+>   "--ignore CONST_STRUCT" is passed. In the latter case, we explicitly
+>   ask checkpatch to skip this check, so no warning should be printed.
+> 
+> - When scripts/const_structs.checkpatch is missing, or even when trying
+>   to silence the warning by adding an empty file, $const_structs is set
+>   to "", and the regex used for finding structs that should be const,
+>   "$line =~ /\bstruct\s+($const_structs)\b(?!\s*\{)/)", matches all
+>   structs found in the code, thus reporting a number of false positives.
+> 
+> Let's fix the first item by skipping scripts/const_structs.checkpatch
+> processing if "CONST_STRUCT" checks are ignored, and the second one by
+> skipping the test if $const_structs is an empty string.
+> 
+> Fixes: bf1fa1dae68e ("checkpatch: externalize the structs that should be const")
 
-Fixes: 6ea3dfe1e073 ("selftests: add TPM 2.0 tests")
-Cc: stable@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- tools/testing/selftests/tpm2/test_smoke.sh | 2 +-
- tools/testing/selftests/tpm2/test_space.sh | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Probably not worthy of a Fixes: line, as that's
+generally used for backporting, but OK by me.
 
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index 338d6b0272dc..1334e301d2a0 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -1,4 +1,4 @@
--#!/bin/bash
-+#!/bin/sh
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
- # Kselftest framework requirement - SKIP code is 4.
-diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
-index 847cabb20a5f..00259cb746cf 100755
---- a/tools/testing/selftests/tpm2/test_space.sh
-+++ b/tools/testing/selftests/tpm2/test_space.sh
-@@ -1,4 +1,4 @@
--#!/bin/bash
-+#!/bin/sh
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
- # Kselftest framework requirement - SKIP code is 4.
--- 
-2.25.1
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -781,8 +781,10 @@ sub read_words {
+>  }
+>  
+>  my $const_structs = "";
+
+This might be a tiny bit faster/less cpu using:
+
+my $const_structs;
+
+> -read_words(\$const_structs, $conststructsfile)
+> -    or warn "No structs that should be const will be found - file '$conststructsfile': $!\n";
+> +if (show_type("CONST_STRUCT")) {
+> +	read_words(\$const_structs, $conststructsfile)
+> +	    or warn "No structs that should be const will be found - file '$conststructsfile': $!\n";
+> +}
+>  
+>  my $typeOtherTypedefs = "";
+>  if (length($typedefsfile)) {
+> @@ -6660,7 +6662,8 @@ sub process {
+>  
+>  # check for various structs that are normally const (ops, kgdb, device_tree)
+>  # and avoid what seem like struct definitions 'struct foo {'
+> -		if ($line !~ /\bconst\b/ &&
+> +		if ($const_structs ne "" &&
+
+instead testing
+
+		if (defined($const_structs) &&
+
+> +		    $line !~ /\bconst\b/ &&
+>  		    $line =~ /\bstruct\s+($const_structs)\b(?!\s*\{)/) {
+>  			WARN("CONST_STRUCT",
+>  			     "struct $1 should normally be const\n" . $herecurr);
 
