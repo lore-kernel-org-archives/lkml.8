@@ -2,107 +2,100 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95287C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 564A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 733D12071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:42:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="spfR+u2x"
+	by mail.kernel.org (Postfix) with ESMTP id 30B5A20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592837050;
+	bh=JeM2k9LZLGwMR+rmDIhVvU3owb+bFfdgnMZMKkzslrI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oiZ6xjfkOUeDYOK3PBz6YuK5n5j0NyLPl92420900Hwyi0ThkRGsUBlH84DCcDs07
+	 6Ky1bBa4xlkL5eWtWukVkxyD0XOG85JEn3j91fokoCm/1vfhFu/qesEkxvqbvGBaxk
+	 mrYCLT/A8l7Z5/4ZF66lf/ZOsBx77x26DG51aTdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgFVOmZ (ORCPT
+        id S1729206AbgFVOoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbgFVOmZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:42:25 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9DBC061573;
-        Mon, 22 Jun 2020 07:42:25 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so7653946plb.11;
-        Mon, 22 Jun 2020 07:42:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9YLaWFLlIzBRLs4RY6djpcyNOYh8PB7BzxpoYxS2lEM=;
-        b=spfR+u2xLXtkMNRBWgq+InK0f0X0wRn2Gqp1Ccoi8UHaSQI1UkQiuHQ5EpWDpSy0zr
-         NrTwLCKwidJW2ES+yzW6UyTOSxxn+Ra5mqQJm40G3tNWE0jrnggX4349AHin0Sg5G8UH
-         BpYoqtScJgu7vBEWkUkDqzOmIZx//ptLQI+2VzEM8/akwN7SFknGAv4mhT2dpd5ZMJdD
-         HXkx031RwB12EzIy6U800fuoQQCaqw4ofyv/jeThviWnYdbWWq10ZZm9iSiWrbN/1Vjp
-         9YjK2RzNoYXAYK2yUgQzA2p/oO+TvVyxUWXjPyev7NGuEiQXPEhZDfx103v89ibeql+9
-         AP4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9YLaWFLlIzBRLs4RY6djpcyNOYh8PB7BzxpoYxS2lEM=;
-        b=N70pNyspdm9/ZSv2+BfxQV3mGxeQNaFfC8bzH9gSx2lj8q8F85x9AIH0il/erflyMn
-         yp4Pewge2sXLtUWjRBrDNflpt+lLaL1GxK6F47EnJgyR0ZY2VZpE9+ab41NP6ST+Zo1W
-         Ot1by/CxrZRi79cFJvvzcEpqUlhHsNvam1pNUcDht2hmCGI0e7XQO4WxrIfx+l/qk1yT
-         Stjd8eRCbkBFYZ3AapXjc9OeatakxWWMFVw07ni3W3qSyZ/sE18waV12EGwwdBkPLB9v
-         Lm6CJ+tuGdsrudeXe3Q9HSNwX5xk0RCWTIS6HpCoh+PLxzcVoyovY+XPCKBa/5QPv6xz
-         bdHQ==
-X-Gm-Message-State: AOAM532V3UfAytbJJW8WGJD7qnObiLoduMsgKVd0rqzWChAq8yfOxhlb
-        H3GVGz0sB56t2pKop2/QJqHtYVbVnmbVb0jzNw4=
-X-Google-Smtp-Source: ABdhPJwnb91qMbXzVIPFIU6C/Ry5merVXS0V0FxZ1cMSh9l3XgYYN3BXfY2F+Z5mKnXzLMpQ9BNbCOqOdqX6V0uaOiw=
-X-Received: by 2002:a17:902:7611:: with SMTP id k17mr19958374pll.255.1592836944732;
- Mon, 22 Jun 2020 07:42:24 -0700 (PDT)
+        Mon, 22 Jun 2020 10:44:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728293AbgFVOoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:44:08 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B6882071A;
+        Mon, 22 Jun 2020 14:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592837047;
+        bh=JeM2k9LZLGwMR+rmDIhVvU3owb+bFfdgnMZMKkzslrI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DVP6gqnRjQLHKC8DyHJyDDhVgNrgyP7tjiARScsm0+Ali1+lbF0WmxaCZRJEZ/W0T
+         7KtBPBkSc5xg2Kw8ElBdyJEQJDTJ/vJyzGNDjYZOfV1a0V0Fb0Lh2yccrMwVfkjdRI
+         E61BP9sHdlb3k1/t5dMbp1wO+rzGMnq9dvO+4njo=
+Date:   Mon, 22 Jun 2020 10:44:02 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dmitry Osipenko <digetx@gmail.com>,
+        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.7 004/388] ASoC: tegra: tegra_wm8903: Support
+ nvidia, headset property
+Message-ID: <20200622144402.GH1931@sasha-vm>
+References: <20200618010805.600873-1-sashal@kernel.org>
+ <20200618010805.600873-4-sashal@kernel.org>
+ <20200618110023.GB5789@sirena.org.uk>
+ <20200618143046.GT1931@sasha-vm>
+ <20200618143930.GI5789@sirena.org.uk>
+ <20200621233352.GA1931@sasha-vm>
+ <20200622112321.GB4560@sirena.org.uk>
+ <20200622123118.GF1931@sasha-vm>
+ <20200622132757.GG4560@sirena.org.uk>
 MIME-Version: 1.0
-References: <20200622103817.476-1-nsaenzjulienne@suse.de> <20200622103817.476-3-nsaenzjulienne@suse.de>
-In-Reply-To: <20200622103817.476-3-nsaenzjulienne@suse.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 Jun 2020 17:42:12 +0300
-Message-ID: <CAHp75VcGoK=6FitfuzEhPZXSrtJiO_-XcD6jtg8SckprWhePgA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/9] reset: Add Raspberry Pi 4 firmware reset controller
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        USB <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        tim.gover@raspberrypi.org, linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200622132757.GG4560@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 5:26 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+On Mon, Jun 22, 2020 at 02:27:57PM +0100, Mark Brown wrote:
+>On Mon, Jun 22, 2020 at 08:31:18AM -0400, Sasha Levin wrote:
+>> On Mon, Jun 22, 2020 at 12:23:21PM +0100, Mark Brown wrote:
 >
-> Raspberry Pi 4's co-processor controls some of the board's HW
-> initialization process, but it's up to Linux to trigger it when
-> relevant. Introduce a reset controller capable of interfacing with
-> RPi4's co-processor that models these firmware initialization routines as
-> reset lines.
+>> > That's concerning - please don't do this.  It's not what stable is
+>> > expected to be and there's no guarantee that you're getting all the
+>> > changes required to actually make things work.
+>
+>> How come? This is one of the things stable rules explicitly call for:
+>> "New device IDs and quirks are also accepted".
+>
+>I would expect that to be data only additions, I would not expect that
+>to be adding new code.
 
-...
+These come hand in hand. Take a look at the more complex cases such as
+sound/pci/hda/patch_*
 
-> +       struct device_node *fw_node;
+>> If we're missing anything, the solution is to make sure we stop missing
+>> it rather than not take anything to begin with :)
+>
+>It would be much better to not have to watch stable constantly like we
+>currently do - we're seeing people report breakage often enough to be a
+>concern as things are, we don't need to be trying to pile extra stuff in
+>there because there's some keywords in a changelog or whatever.  The
+>testing coverage for drivers is weak, increasing the change rate puts
+>more stress on that.
 
-If you are going to use fwnode (as it should be), make sure the proper
-data type is in use, i.e. struct fwnode_handle.
-
-Otherwise, if you want to be OF centric (I discourage this, don't know
-if RPi4 is ever going to run RHEL or other distros that require non-DT
-firmwares), don't name fw_node. It's confusing.
+Shouldn't we instead improve testing here? nvidia for example already
+provides Tegra testing for stable releases, if the coverage isn't
+sufficient then let's work on making it better.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Sasha
