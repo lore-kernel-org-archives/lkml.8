@@ -2,152 +2,150 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3E520732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592837184;
-	bh=RN9WLRGnrtPmBWYNtHcqVPLynmrX6nclTsxOlWcuXHc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=RypXvpDV+QfR7k0AXMCIP1+vDbrX+fHmO9yBrNdksb6WV1r/xDfBmK92NX8i6oDfa
-	 Zk1chdA3WTU6DhzMvgoi0N+HSHh9dSBYaod9O8KQGuBIRBSDUqAhe8+gPfDGjA5L/L
-	 TKMn0mcW1I8R8fXAxtS6g14X2XkpELWP4HSYEYbA=
+	by mail.kernel.org (Postfix) with ESMTP id 7E3872071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cypress.com header.i=@cypress.com header.b="m0X8BGlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgFVOqV (ORCPT
+        id S1729222AbgFVOs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:46:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbgFVOqU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:46:20 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A72C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:46:20 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id x202so15849418oix.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 07:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bibVHEU3JMl6WYz1eGuG4xe8py8Hpo9EpfUixb5KAwQ=;
-        b=X0FJOcp6+5/IGDlD6069Y26SKrjwT9WG1ad1kqnco1dtIv1V8IFOU64KGlgAFym0ni
-         XZH3Of/dCoZzu26HH6veTfiZ8GxyXu9vXBHnW3T2aysKegvAlbVDwC9oRES7uzRXO3lf
-         zXhwqPTlC9wfbWpFsdq80ygL5J3kmemq8JWos=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bibVHEU3JMl6WYz1eGuG4xe8py8Hpo9EpfUixb5KAwQ=;
-        b=ndLuX62bVsgyK6Kzh8FHQEvkWKiQOmEoqrkheFYLDnyfDa4k5SgkN8x0nC2kf+yWQv
-         77V0uLdICIC3IPKVGBdS06891LJ88TWyny3NHrsxjWz7JUjlHbKnkAsRo0A45UEz0tsY
-         8MKAiGEx1SEImEl3zyp+N63mGOV1ETQ64x+ECehnPBMg4H9bk0pa2cXGacuiLgsYZeGo
-         K0O9IjBtSDuUz6avifhA8cse790+o24Yjp7KdaJ2MVvmejR1eIA2gP6Kxumea+YundBX
-         7gELX6scCh/8GziIbt4QwCegPnAsJH5sTNJPE5Ou3Vepgnfpl6ROzfKseACwsnScHBIH
-         JPFQ==
-X-Gm-Message-State: AOAM5307y+0eYqyfLhmRYosmgC01/ZbYDdDgx1tVjWP9ecxZD4cDGzEP
-        bGIsePvUHMzijiORQERpGtXjyg==
-X-Google-Smtp-Source: ABdhPJxoDeOi/h22SFplMsaTYfOqsWxP58QzPKlvnYmt5yxokfMtFgLKIV40/BxXqkjjsMjZkvu4Fw==
-X-Received: by 2002:aca:eb12:: with SMTP id j18mr12510057oih.28.1592837180117;
-        Mon, 22 Jun 2020 07:46:20 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id u80sm3272937oia.5.2020.06.22.07.46.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 07:46:19 -0700 (PDT)
-Subject: Re: [PATCH] scripts: add dummy report mode to add_namespace.cocci
-To:     Matthias Maennich <maennich@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
-        cocci@systeme.lip6.fr, stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200604164145.173925-1-maennich@google.com>
- <alpine.DEB.2.21.2006042130080.2577@hadrien>
- <bf757b9d-6a67-598b-ed6e-7ee24464abfa@linuxfoundation.org>
- <20200622080345.GD260206@google.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <0eda607e-4083-46d2-acb8-63cfa2697a71@linuxfoundation.org>
-Date:   Mon, 22 Jun 2020 08:46:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200622080345.GD260206@google.com>
+        Mon, 22 Jun 2020 10:48:27 -0400
+Received: from mail-bn7nam10on2120.outbound.protection.outlook.com ([40.107.92.120]:17504
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728504AbgFVOs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:48:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LumxNkY44pxhgRB/Li6gvd0sO5QJUButJkXDDGG7ag8hi1pHSM2B8/SwJsblrRRwfklfZ9EOSzmRaLSBHQJ3hWNU9nB8UB9RaOS5JiGBJHFgAT/miW2UNbkEXSLKgBuHzrrK2c/MCssqOTFxU+4mwrln+roDq7qLyD5CadQxwwoDZWD1NejzC9EBvjMjJoR5R0yN0qQeANzvmTh+bR7wDYZUt1X8D9Tt41PE8d5BAt2NqPOC7wfJodbYe+gJCsEGGGa4/o1cFAZlzrD+CdAC4RdPUl5cghkuG7/3yLYaxr6c3yog+8McS7XYPsoTQQ0NVIoNoDE3vvUUkhiSFO0RZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N5s3L4ddF0dGvLJ3lCRHjRm4l14rTNR5gztdCcvoers=;
+ b=AYHk/HdpXhVuV0f4d+sXykeCNJAKAkIHy1YoiIIW6cFR+I+vAiehSt2hVO3U3yACU9WKNjmZq0g6txiAwuMJeA6C65kpNX9lx1V1xykWCQi0z6MVYoLXejXpnDQHdxFeiLxYWR1yK+Gw91tGXy9B20sf6qVllfdxecGR89408KkamiohYzAYEvtWcj8bc0VH8PrJVxtYfiiRaazcrcorpOkDKvyRtzpWcKdPKQTML1SrBAkYhVwX4VohHn0Y4DmXOzR0gV+e/Tkt8Hgzhoml4UqZKYYi4OtD6WrFNUAKvSLBSsUSi+2Uu3Bmzpbla2uu2DhWGYgtwiV8CnCxEQ21iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cypress.com; dmarc=pass action=none header.from=cypress.com;
+ dkim=pass header.d=cypress.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cypress.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N5s3L4ddF0dGvLJ3lCRHjRm4l14rTNR5gztdCcvoers=;
+ b=m0X8BGlWcMb7tRtl7ZGJmaTgIruIDR0f5lhwuzPm9sQB+0ikTg8MhVpxfjwC+DAY2BnDiJlQJOmDVsCzUMZ05dOsR7ALKR7Y3FpvYbL889JQuHJ5mXyBuKYJknQaZ1sK8i0fQ0NMALa97Ih1vyY79VzzbbA5cWZAod3IiZKrigU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=cypress.com;
+Received: from BYAPR06MB4901.namprd06.prod.outlook.com (2603:10b6:a03:7a::30)
+ by BY5PR06MB6513.namprd06.prod.outlook.com (2603:10b6:a03:234::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
+ 2020 14:48:23 +0000
+Received: from BYAPR06MB4901.namprd06.prod.outlook.com
+ ([fe80::b972:c25d:c8fc:fc0e]) by BYAPR06MB4901.namprd06.prod.outlook.com
+ ([fe80::b972:c25d:c8fc:fc0e%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 14:48:23 +0000
+Reply-To: chi-hsien.lin@cypress.com
+Subject: Re: drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1710:40:
+ sparse: sparse: incorrect type in initializer (different base types)
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        kernel test robot <lkp@intel.com>
+Cc:     Joseph Chuang <joseph.chuang@cypress.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
+References: <202006190422.VymyEbuu%lkp@intel.com>
+ <87a70vgpkb.fsf@codeaurora.org>
+From:   Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Message-ID: <76e75ef2-850b-2860-f28b-ba773ee50117@cypress.com>
+Date:   Mon, 22 Jun 2020 22:48:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+In-Reply-To: <87a70vgpkb.fsf@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR08CA0050.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::27) To BYAPR06MB4901.namprd06.prod.outlook.com
+ (2603:10b6:a03:7a::30)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.9.112.143] (61.222.14.99) by BYAPR08CA0050.namprd08.prod.outlook.com (2603:10b6:a03:117::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Mon, 22 Jun 2020 14:48:21 +0000
+X-Originating-IP: [61.222.14.99]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 23aa3272-9d44-4e95-2405-08d816bb4fba
+X-MS-TrafficTypeDiagnostic: BY5PR06MB6513:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR06MB6513021DF2FCAACF2A470EBDBB970@BY5PR06MB6513.namprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UeU0YsxZ6waBb3Zadfkuu7VrKi0Oq1xDceCPMMSvqCFnfzNqDUJCD+3AtKCJT06TXwwDWQe0UJzXjuBA5W2ZlPI2NWaDjxzYQR+mYCUZvkumHecr32PEdDO4s2CRk+7oRWl62f33aZTFFuSqVNjZRoQDbrSkdInobxZ2S7U9bv5oxJavuzGAYGnVoYQ0BOqUnYuQ4nMZtKg2JK/isojwGAfPfilzXW28ryZbXVK5aJJb7CC/J84N+z21is/1LYl3nlgnFhfbHft93eDTdkv5dxWfTIyj+ZY7DWmP2WT5/LwuUJscZaSvDIBG6zkZqQ0KOrcWK/Ya5/PxvdtEeyJOy8+WHRD9ZlGy7ffXqIOHXUIxZ+0MO/hqKLb39qqSFUO7afJViQ8Beham7xq6SbJjFrkTp1PQAGb0A6RBmwgRBNVuUI8pjW4PRMxnDrDiaCSyVxzPFOvfRD7tj1IaVht+1g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR06MB4901.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(376002)(396003)(366004)(346002)(8936002)(16576012)(2906002)(478600001)(3450700001)(316002)(4326008)(2616005)(16526019)(956004)(6666004)(26005)(186003)(31696002)(5660300002)(110136005)(6486002)(83380400001)(8676002)(66556008)(66476007)(53546011)(66946007)(36756003)(31686004)(86362001)(52116002)(966005)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: p0U+Mm7JJw4K0vIO66o4Z3Rc/mE6kuSHsArkrM7gtTZTvH56rkTWe4OCt+qGlI1XtdbXdGb3bJuy47RAFw8ThN3PdX+5sqKtGimytYl8V8JlIzN5J/zsBrJZsqKIHv7rZRd0Z6185j3vH/STe5khUZLYc8oW0uunDV5o5bQlIz4IitZuXIRObKSlXNb7uFkeIfq004qOvtaq3hdKjVhmDRS1VPa8eosI2E7sGtWWbGgVjtJxtWq4NrYaGLrnW5iXmlKJweAqhvmMVGhxpLjcsxZgRfZnwj79XRK9YhVd7FxFdR2H515kiFi4D31raRwiDvgqtShh+gXXFOHGsQMub48GR72aOcqnDhc4cAMnyEfm8GNWNr2vmkDwFo+MNJoUZbu4+4BAbdDkn6Y/GaafEdT5/QpLVzr3lhdiPU9FkP/6QnAKsIhVDZ9fjj6N0j4YyLZHM0z6fk9Tf0Ur7OLdTI5cPsabPpohDNbXPIDXLmc=
+X-OriginatorOrg: cypress.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23aa3272-9d44-4e95-2405-08d816bb4fba
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 14:48:22.7828
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 011addfc-2c09-450d-8938-e0bbc2dd2376
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RgFNRtfszlJuruSSmTOhhiVpG3j3gzsaKI34xL7r10UuYmmKLpwFmHTa+sHiMtGaHAS9EN8pksCyyEdCZ13PCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR06MB6513
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 2:03 AM, Matthias Maennich wrote:
-> On Thu, Jun 04, 2020 at 02:39:18PM -0600, Shuah Khan wrote:
->> On 6/4/20 1:31 PM, Julia Lawall wrote:
->>>
->>>
->>> On Thu, 4 Jun 2020, Matthias Maennich wrote:
->>>
->>>> When running `make coccicheck` in report mode using the
->>>> add_namespace.cocci file, it will fail for files that contain
->>>> MODULE_LICENSE. Those match the replacement precondition, but spatch
->>>> errors out as virtual.ns is not set.
->>>>
->>>> In order to fix that, add the virtual rule nsdeps and only do search 
->>>> and
->>>> replace if that rule has been explicitly requested.
->>>>
->>>> In order to make spatch happy in report mode, we also need a dummy 
->>>> rule,
->>>> as otherwise it errors out with "No rules apply". Using a script:python
->>>> rule appears unrelated and odd, but this is the shortest I could 
->>>> come up
->>>> with.
->>>>
->>>> Adjust scripts/nsdeps accordingly to set the nsdeps rule when run 
->>>> trough
->>>> `make nsdeps`.
->>>>
->>>> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
->>>> Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
->>>> Cc: YueHaibing <yuehaibing@huawei.com>
->>>> Cc: jeyu@kernel.org
->>>> Cc: cocci@systeme.lip6.fr
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Matthias Maennich <maennich@google.com>
->>>
->>> Acked-by: Julia Lawall <julia.lawall@inria.fr>
->>>
->>> Shuah reported the problem to me, so you could add
->>>
->>> Reported-by: Shuah Khan <skhan@linuxfoundation.org>
->>>
+
+
+On 06/22/2020 10:09, Kalle Valo wrote:
+> + linux-wireless
+> 
+> kernel test robot <lkp@intel.com> writes:
+> 
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   5e857ce6eae7ca21b2055cca4885545e29228fe2
+>> commit: 9c29da3f4e7ef9810bdfaf3d8aa5e6d2e33136f8 brcmfmac: Fix P2P
+>> Group Formation failure via Go-neg method
+>> date:   6 weeks ago
+>> config: riscv-randconfig-s032-20200618 (attached as .config)
+>> compiler: riscv64-linux-gcc (GCC) 9.3.0
+>> reproduce:
+>>          # apt-get install sparse
+>>          # sparse version: v0.6.2-rc1-10-gc17b1b06-dirty
+>>          git checkout 9c29da3f4e7ef9810bdfaf3d8aa5e6d2e33136f8
+>>          # save the attached .config to linux build tree
+>>          make W=1 C=1 ARCH=riscv CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 >>
->> Very cool. No errors with this patch. Thanks for fixing it
->> quickly.
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>>
+>> sparse warnings: (new ones prefixed by >>)
+>>
+>>>> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1710:40:
+>>>> sparse: sparse: incorrect type in initializer (different base
+>>>> types) @@ expected signed int [usertype] requested_dwell @@ got
+>>>> restricted __le32 [usertype] dwell_time @@
+>>>> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1710:40:
+>>>> sparse: expected signed int [usertype] requested_dwell
+>>>> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1710:40:
+>>>> sparse: got restricted __le32 [usertype] dwell_time
 > 
-> I am happy I could fix that and thanks for confirming. I assume your
-> Tested-by could be added?
+> Joseph, please send a followup patch to fix these.
+Kalle,
 
-Yes
+The fix is this one
+https://patchwork.kernel.org/patch/11598109/
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Do I need to submit a V2 with "Reported-by: kernel test robot 
+<lkp@intel.com>" tag?
+
+
 > 
-> Is somebody willing to take this patch through their tree?
-> 
-
-My guess is that these go through kbuild git??
-
-
-thanks,
--- Shuah
-
-
