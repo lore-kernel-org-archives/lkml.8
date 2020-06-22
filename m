@@ -2,127 +2,200 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD796C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C7325288
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B665C2531A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 00:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ym1FQJdM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z5Jquwx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbgFVA1X (ORCPT
+        id S1730989AbgFVA2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 20:27:23 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:36002 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgFVA1W (ORCPT
+        Sun, 21 Jun 2020 20:28:11 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24279 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730975AbgFVA2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 20:27:22 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200622002720epoutp01bbd3d70fcdc24400096dae8760da503c~athnOLxFA1153311533epoutp01c
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 00:27:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200622002720epoutp01bbd3d70fcdc24400096dae8760da503c~athnOLxFA1153311533epoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592785640;
-        bh=jCPcOeaRvhdkHyFgABEEVptIERkV666narv0UilYcno=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Ym1FQJdM3dQisyoacsy73mwG3+7DIQxWxAbzlgirE44BA1nnBUTJiPdXmHn6Ox0yG
-         cURqkHcHpExyIQ8CnORFnfbCwjyWrF8Vga3qdSPR5Yj2AW5uHB009l5+mRydi4rgWD
-         Wki8fiz0dYLgI4C7RbTVVQErW9thw1tMsd+vTT2g=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200622002719epcas1p1f213bae64a3d5bffe6d1dfc570e3055c~athmr1Wvm3266532665epcas1p1P;
-        Mon, 22 Jun 2020 00:27:19 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.164]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 49qqx25VxrzMqYkZ; Mon, 22 Jun
-        2020 00:27:18 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7B.4D.18978.5EAFFEE5; Mon, 22 Jun 2020 09:27:17 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200622002716epcas1p1f72a6a18e7d7c86990d34f118296eddd~athj8YmPl1151811518epcas1p1g;
-        Mon, 22 Jun 2020 00:27:16 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200622002716epsmtrp112c643bf8dd52aa8876b012e106efd6a~athj7phab0409704097epsmtrp1E;
-        Mon, 22 Jun 2020 00:27:16 +0000 (GMT)
-X-AuditID: b6c32a35-5edff70000004a22-a6-5eeffae590a4
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7B.FE.08382.4EAFFEE5; Mon, 22 Jun 2020 09:27:16 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200622002716epsmtip1c27d0d0fff5f48bcb67c70c7b29aa0ab~athjyeArn3252932529epsmtip1O;
-        Mon, 22 Jun 2020 00:27:16 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Sungjong Seo'" <sj1557.seo@samsung.com>
-Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <1592480606-14657-1-git-send-email-sj1557.seo@samsung.com>
-Subject: RE: [PATCH] exfat: flush dirty metadata in fsync
-Date:   Mon, 22 Jun 2020 09:27:16 +0900
-Message-ID: <000a01d6482b$e1eb34d0$a5c19e70$@samsung.com>
+        Sun, 21 Jun 2020 20:28:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592785688;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0pL3pqVHLXm3NBNiDm2mhZms72TO4yAdGCyBJAb8m28=;
+        b=Z5Jquwx7VlTyxSG1+xtKTAibJfyXbLkN9ym8BjJY01A/4PWUbiShwf5RqKLq22dLRNvKvV
+        inLyycMvDLTVTd7fPsfeyWKXoOR+bsYXZXtHeI7BXDSKkjqlR8fSLbaIiZk1Sc6dKYhSAM
+        Ahl+vk9U9xGvPvGsVx7A1yViFw4h4+Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-kLYIcos7OuGsBtyuXZlGSA-1; Sun, 21 Jun 2020 20:28:06 -0400
+X-MC-Unique: kLYIcos7OuGsBtyuXZlGSA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1073C835B40;
+        Mon, 22 Jun 2020 00:28:05 +0000 (UTC)
+Received: from T590 (ovpn-12-19.pek2.redhat.com [10.72.12.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45E587166D;
+        Mon, 22 Jun 2020 00:27:57 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 08:27:53 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ming Lei <tom.leiming@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: kprobe: __blkdev_put probe is missed
+Message-ID: <20200622002753.GC670933@T590>
+References: <20200618125438.GA191266@T590>
+ <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
+ <20200618231901.GA196099@T590>
+ <20200619141239.56f6dda0976453b790190ff7@kernel.org>
+ <20200619072859.GA205278@T590>
+ <20200619081954.3d72a252@oasis.local.home>
+ <20200619133240.GA351476@T590>
+ <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
+ <20200619232820.GE353853@T590>
+ <20200620103747.fb83f804083ef9956740acee@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQDtA/PAf/AkJUVnASwyuxUrAs/RQAI7piHFqqRyXYA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMKsWRmVeSWpSXmKPExsWy7bCmnu7TX+/jDKZPYLXYs/cki8XlXXPY
-        LLb8O8LqwOzRt2UVo8fnTXIBTFE5NhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZK
-        CnmJuam2Si4+AbpumTlAO5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BYYGBXrF
-        ibnFpXnpesn5uVaGBgZGpkCVCTkZp+a8ZSyYz1zxtFO8gfECUxcjJ4eEgInEugf9rF2MXBxC
-        AjsYJS6vmsQE4XxilJg34ToLhPONUWL7rD3MMC39TTOhWvYySjR0NbNBOC8ZJS4svwZWxSag
-        K/Hvz36gBAeHCJDd98cLJMws4Cxx+MYpsBJOAXeJydtfgd0hLGAp8XbxInYQm0VAVWLinz9s
-        IDYvULx5y3lmCFtQ4uTMJywQc+Qltr+dA3WQgsTPp8tYQWwRASuJOw9vskPUiEjM7mxjBrlN
-        QuAeu8T799+hnnaRWNP/EsoWlnh1fAs7hC0l8bK/jR3kZgmBaomP+6HmdzBKvPhuC2EbS9xc
-        v4EVpIRZQFNi/S59iLCixM7fcxkh1vJJvPvawwoxhVeio00IokRVou/SYail0hJd7R/YJzAq
-        zULy2Cwkj81C8sAshGULGFlWMYqlFhTnpqcWGxYYIkf1JkZw6tMy3cE48e0HvUOMTByMhxgl
-        OJiVRHhfB7yLE+JNSaysSi3Kjy8qzUktPsRoCgzqicxSosn5wOSbVxJvaGpkbGxsYWJmbmZq
-        rCTOKy5zIU5IID2xJDU7NbUgtQimj4mDU6qBqSwqWO6OhfY2xv3v/5++0+GSvPynfouz0+GY
-        fwUNxwu7T53ieaLEunfqlL/nSlIjbLhu3i//9lAq339BvKOIT8CTG8z/529xfJizu++58bFo
-        z//l1qJd0TM2C7Qeb/hw8fCrFG3pniytta5c/57OC96U88i/59z65JKFZ8uXJujG3brF/Tg4
-        /o7s38aGWb5MXzOYtxX9uvN4R8+JPwfz7rOtC516tWRyXm9A8m21u392R5279iFcormkIfKQ
-        m63rT9b6mxkhZSE/1qlP0RVf5zSvcd//uVVb21IzBQSXVIeJRM7qfLR4akTYn7A5IUmP1y27
-        HlY6ffmFwEknVrYtu9pktV5ydrkT0/rHHA72DUosxRmJhlrMRcWJAJ0Yqt0GBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsWy7bCSnO6TX+/jDB4dVbXYs/cki8XlXXPY
-        LLb8O8LqwOzRt2UVo8fnTXIBTFFcNimpOZllqUX6dglcGafmvGUsmM9c8bRTvIHxAlMXIyeH
-        hICJRH/TTNYuRi4OIYHdjBJN2w6yQCSkJY6dOMPcxcgBZAtLHD5cDFHznFHiU+t9sBo2AV2J
-        f3/2s4HUiADZfX+8QMLMAq4S85+vZoOon8Eo8fvORLBlnALuEpO3vwKzhQUsJd4uXsQOYrMI
-        qEpM/POHDcTmBYo3bznPDGELSpyc+YQFYqi2xNObT6FseYntb+cwQ9ypIPHz6TJWEFtEwEri
-        zsOb7BA1IhKzO9uYJzAKz0IyahaSUbOQjJqFpGUBI8sqRsnUguLc9NxiwwLDvNRyveLE3OLS
-        vHS95PzcTYzgKNDS3MG4fdUHvUOMTByMhxglOJiVRHhfB7yLE+JNSaysSi3Kjy8qzUktPsQo
-        zcGiJM57o3BhnJBAemJJanZqakFqEUyWiYNTqoEp3OdX7YQTVeXbDfijcyYLr2efE/3uC//C
-        cx/dZktc1Tqr4/719T7eedkaTbPPybc7nv7CVHLlv7viOeY/TRwrVu5wyHwyIbG2N7Douerd
-        oLaovk7TJyyZ9mev8s34GPLKT/EU04cnVXs1dbvXx7umvW5d8XIvB2Pgn6lRXx96n9IL05P+
-        GPJJWuL/m5car547ntroH551d8WVzRoyyR9vNnh0bIh9KjrpzyR502mOS4QzeHoPTp1qzzJ/
-        h2/vlH3GNtx5XvxNMn1n5q9wmmZm6vHyqK2LxqIf1zl9Jj60r/Lf4Hf32+7lN4WtNrFmT1io
-        sThKyV7X78W6T73m3xYmb05pEan8bdanp/Zl1ZvLSizFGYmGWsxFxYkAXpqVgPECAAA=
-X-CMS-MailID: 20200622002716epcas1p1f72a6a18e7d7c86990d34f118296eddd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200618121007epcas1p1aa0f24b361e0232913bf7477ee0a92c8
-References: <CGME20200618121007epcas1p1aa0f24b361e0232913bf7477ee0a92c8@epcas1p1.samsung.com>
-        <1592480606-14657-1-git-send-email-sj1557.seo@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200620103747.fb83f804083ef9956740acee@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> generic_file_fsync() exfat used could not guarantee the consistency of a file because it has flushed
-> not dirty metadata but only dirty data pages for a file.
+Hi Masami,
+
+On Sat, Jun 20, 2020 at 10:37:47AM +0900, Masami Hiramatsu wrote:
+> Hi Ming,
 > 
-> Instead of that, use exfat_file_fsync() for files and directories so that it guarantees to commit both
-> the metadata and data pages for a file.
+> On Sat, 20 Jun 2020 07:28:20 +0800
+> Ming Lei <ming.lei@redhat.com> wrote:
 > 
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-Pushed it into exfat #dev. Thanks!
+> > > 
+> > > Ah, after all it is as expected. With your kconfig, the kernel is
+> > > very agressively optimized.
+> > > 
+> > > $ objdump -dS vmlinux | less
+> > > ...
+> > > ffffffff81256dc3 <__blkdev_put>:
+> > > {
+> > > ffffffff81256dc3:       e8 98 85 df ff          callq  ffffffff8104f360 <__fentry__>
+> > > ffffffff81256dc8:       41 57                   push   %r15
+> > > ffffffff81256dca:       41 56                   push   %r14
+> > > ffffffff81256dcc:       41 55                   push   %r13
+> > > ...
+> > > ffffffff81256f05:       75 02                   jne    ffffffff81256f09 <__blkdev_put+0x146>
+> > >         struct block_device *victim = NULL;
+> > > ffffffff81256f07:       31 db                   xor    %ebx,%ebx
+> > >                 bdev->bd_contains = NULL;
+> > > ffffffff81256f09:       48 c7 45 60 00 00 00    movq   $0x0,0x60(%rbp)
+> > > ffffffff81256f10:       00 
+> > >                 put_disk_and_module(disk);
+> > > ffffffff81256f11:       4c 89 f7                mov    %r14,%rdi
+> > > ffffffff81256f14:       e8 c6 3d 11 00          callq  ffffffff8136acdf <put_disk_and_module>
+> > >         mutex_unlock(&bdev->bd_mutex);
+> > > ffffffff81256f19:       4c 89 ff                mov    %r15,%rdi
+> > >                 __blkdev_put(victim, mode, 1);
+> > > ffffffff81256f1c:       41 bc 01 00 00 00       mov    $0x1,%r12d
+> > >         mutex_unlock(&bdev->bd_mutex);
+> > > ffffffff81256f22:       e8 8d d7 48 00          callq  ffffffff816e46b4 <mutex_unlock>
+> > >         bdput(bdev);
+> > > ffffffff81256f27:       48 89 ef                mov    %rbp,%rdi
+> > > ffffffff81256f2a:       e8 f0 e9 ff ff          callq  ffffffff8125591f <bdput>
+> > >         if (victim)
+> > > ffffffff81256f2f:       48 85 db                test   %rbx,%rbx
+> > > ffffffff81256f32:       74 08                   je     ffffffff81256f3c <__blkdev_put+0x179>
+> > > ffffffff81256f34:       48 89 dd                mov    %rbx,%rbp
+> > > ffffffff81256f37:       e9 b4 fe ff ff          jmpq   ffffffff81256df0 <__blkdev_put+0x2d> <<-----THIS!!
+> > > }
+> > > ffffffff81256f3c:       48 8b 44 24 28          mov    0x28(%rsp),%rax
+> > > ffffffff81256f41:       65 48 33 04 25 28 00    xor    %gs:0x28,%rax
+> > > ffffffff81256f48:       00 00 
+> > > ffffffff81256f4a:       74 05                   je     ffffffff81256f51 <__blkdev_put+0x18e>
+> > > ffffffff81256f4c:       e8 5a 4e 48 00          callq  ffffffff816dbdab <__stack_chk_fail>
+> > > ffffffff81256f51:       48 83 c4 30             add    $0x30,%rsp
+> > > ffffffff81256f55:       5b                      pop    %rbx
+> > > ffffffff81256f56:       5d                      pop    %rbp
+> > > ffffffff81256f57:       41 5c                   pop    %r12
+> > > ffffffff81256f59:       41 5d                   pop    %r13
+> > > ffffffff81256f5b:       41 5e                   pop    %r14
+> > > ffffffff81256f5d:       41 5f                   pop    %r15
+> > > ffffffff81256f5f:       c3                      retq   
+> > > 
+> > > 
+> > > As you can see, the nested __blkdev_put() is coverted to a loop.
+> > > If you put kprobe on __blkdev_put+0x2d, you'll see the event twice.
+> > 
+> > Thanks for your investigation.
+> > 
+> > Some trace tools can just trace on function entry, such as bcc, and some
+> > user script always trace on function entry.
+> > 
+> > I guess the issue should belong to kprobe implementation:
+> > 
+> > 1) __blkdev_put() is capable of being kprobed, so from user view, the
+> > probe on entry of __blkdev_put() should be triggered
+> 
+> Yes, it is correctly triggered.
+
+I mean it isn't from user's viewpoint, and the binary code is usually a
+black box for final kprobe user.
+
+IMO, all your and Steven's input are just from kprobe/trace developer's viewpoint.
+Can you think about the issue from kprobe real/final user?
+
+Trace is very useful tools to observe system internal, and people often
+relies on trace to understand system. However, missed probe often causes
+trouble for us to understand the system correctly.
+
+> 
+> > 
+> > 2) from implementation view, I understand exception should be trapped
+> > on the entry of __blkdev_put(), looks it isn't done.
+> 
+> No, it is correctly trapped the function entry address. The problem is
+> that the gcc optimized the nested function call into jump to the
+> beginning of function body (skip prologue).
+> 
+> Usually, a function is compiled as below
+> 
+> func()     (1) the entry address (func:)
+> {          (2) the function prologue (setup stackframe)  
+>   int a    (3) the beginning of function body 
+>    ...
+>   func()   (4) the nested function call
+> 
+> And in this case, the gcc optimized (4) into jump to (3) instead of
+> actual function call instruction. Thus, for the nested case (1) and
+> (2) are skipped.
+>  IOW, the code flow becomes
+>   (1)->(2)->(3)->(4)->(3)
+>  instead of 
+>   (1)->(2)->(3)->(4)->(1)->(2)->(3)
+> 
+> In this case, if we put a probe on (1) or (2), those are disappeared
+> in the nested call. Thus if you put a probe on (3) ('perf probe __blkdev_put:2')
+> you'll see the event twice.
+
+Thanks for your explanation.
+
+Can you kprobe guys improve the implementation for covering this case?
+For example, put probe on 3) in case the above situation is recognized.
+
+
+
+Thanks,
+Ming
 
