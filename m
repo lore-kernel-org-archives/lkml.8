@@ -2,106 +2,181 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A7C20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="FMooE4Fd"
+	by mail.kernel.org (Postfix) with ESMTP id C0A3120739
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:31:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgFVPaN (ORCPT
+        id S1729415AbgFVPa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:30:13 -0400
-Received: from sonic310-21.consmr.mail.gq1.yahoo.com ([98.137.69.147]:37432
-        "EHLO sonic310-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729306AbgFVPaM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:30:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1592839811; bh=ZrqH4CkkktGM5U4f9eYdkRlGgwNo9TU/U6UyKhhS7Nk=; h=Date:From:Subject:To:Cc:References:In-Reply-To:From:Subject; b=FMooE4Fd+vL4bOCsF19oFQ+8koe0SIaIvvnGdNGfg2bY9knR5NmK7OICT9TR/C4FomIL9cKp+4yWwn+F6H2vlvCQsslSqNrU3R5XJIZ+X3cjerWqjIpY8zb9ydg7gue/6Xc4vqKJOS1EsEMOrpmE2Nv5tvLGQneg7LWwmDotsRzxkX1Wih8HHzws+RGqUypcRFtQLFLn1F+oLy+uSiVoNGeOSvWvy4dlO53/Cs55fitsnVg2Cl8z3JSvTv8QAJz7Fv2TewSJX57O433tT8/QBqo7Xuvbg6idLtQHo9zE9a2gE+v5/0hP+Z6L/rHNzJlToMcYh2Jh4sas0IgFWTyXnQ==
-X-YMail-OSG: Cr3SZHIVM1nhNBz0ZZsYMs_M_FiwKACLBt6kQJYR4K4mF8rlKRnT_f7fT.t2sCC
- DipgYeUhA4EqFw.SkQWXpFDSR9OEwLAwPhxJrNDrZntjEiUyBxrucSuQHm_QF14U8f.b2eKVT72N
- qLFP7qiHUNKXQ4SYEPcuZ_q_hvbnxXiCXViFhbZeefE03ucrFdRs4EM21.p1dmjv5xm1mLoCeWIN
- jkgvvhLmjrY8f5pm5D.I7cSGPM0XP4TaGG6w.i1Rm9gkDs8YL.9moWBhj1cX2qg6nJLn_YP9zuaP
- 0j4YBbovs_HxALABkTP.KUcbU5likQB6ekjU..0CB5QQqi81Q0Hy7bFSr7FHxVMM12ot7uWaEinI
- JzMYBL7BgegWMHyrDLq0BukuCBzZhQ7HtVDiFAb6SLzynuhFE2s0oduA4_8TuEHwugSN8ABWWMon
- VPs76OFaHB4AiH8rlzDNUDvCs7hdVL4wp9PFB6nn9gIroi814lkRYshQ4SiMu8.x1LxzVQKuj_1K
- AuI6G4xS5qHgGm9tql95oMLMkoCQ_OChr1GN3vdf3AkF.9X9Wc6QF3ClqlTETxkAJr74XyNRNefG
- KKhCUU2Mb6kqNBNzFDJhl1nBfl4J3BT0UE0D3HzQ.zUoHGifRb9ATfXlzwDHyItKsky9dMsmfqtp
- i6TMZweDPyfDW5BjQ.MZTGyShESLRfuuUEljOv8zB54h_Fy7RVp.TsJfycEpERk0eoEc8YtNTOHf
- CcMXxFXSBJJWfuCSoiKgkmgJ.tWI9GYciX5ptLM5SO5ucVKruIh5YWFPlCwnk7h.bBmMVMK6JbYY
- FIzEK18BG84ne8qJn5HcUc4YGExVQ_0VdZ68jSrZOOgnALE7w0Yh7P.5FEyFgcDv5CQRtTlDa9XV
- 332GOILLb4zJJheQ0JFSPElT9FH3CBrDs5LCQxJomwN4y7xwltOYhRMK83otrU_Fj_y_eHeotXp5
- XEoZNPauow06YAJ6iF5IF8YixALM0Q7iN05wMbk0d_uc0b55OOLVDb3x3VUYpis0YS82.POsP32I
- ulBQXux3NQlclxawhgWzTJz.jykMGFqABOqUbZETOIhVNH9HkQalW_F5SQXc82W2mLThpOJ_x082
- G.nYAFFP6Iozy3gvrmlA27ubLrteMzz7DLQIULn80k0_6JJr84FSeEkkQDHO2PSnfc8bmvPlGVvp
- 18BXWE0ViDKr5zEztaQIMuEjnaJYCCDIS0FBU4hrX67yVYFDBT0y6ZYXCS4tbw1UClE62qzLiBIP
- UN3eLZ.VIszJNb86Rf9A8WrGMP2tM7.UAiknCB.VtjckyXwujOVTk01wBBbAFbL0YYDxIOdYmGmw
- oInI7KsCeCE6pCvJGjT60utyj2RwD2L_Yt9unDDKpSoj3x.XhDmB.
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.gq1.yahoo.com with HTTP; Mon, 22 Jun 2020 15:30:11 +0000
-Received: by smtp418.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 402ae077068331dedde2e55d9ced12f3;
-          Mon, 22 Jun 2020 15:30:08 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 11:30:04 -0400
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: Re: AMD IOMMU + SME + amdgpu regression
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Gross <agross@kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Drake <drake@endlessm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        jonathan.derrick@intel.com, Jonathan Hunter <jonathanh@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        David Rientjes <rientjes@google.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        virtualization@lists.linux-foundation.org,
+        Mon, 22 Jun 2020 11:30:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:44858 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729213AbgFVPa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 11:30:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA49C31B;
+        Mon, 22 Jun 2020 08:30:48 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4B6A3F6CF;
+        Mon, 22 Jun 2020 08:30:46 -0700 (PDT)
+Subject: Re: kernel BUG at mm/huge_memory.c:2613!
+To:     Joerg Roedel <joro@8bytes.org>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Roman Gushchin <guro@fb.com>, Yang Shi <shy828301@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richardw.yang@linux.intel.com>,
         Will Deacon <will@kernel.org>
-References: <1591915710.rakbpzst8h.none.ref@localhost>
-        <1591915710.rakbpzst8h.none@localhost> <20200622100257.GD31822@suse.de>
-In-Reply-To: <20200622100257.GD31822@suse.de>
+References: <20200619001938.GA135965@carbon.dhcp.thefacebook.com>
+ <CAHbLzkrDcn-GQOrAM=m7+2g5_J6obsz4K50Oqb-1RD5p1iWTPQ@mail.gmail.com>
+ <20200619011449.GC135965@carbon.dhcp.thefacebook.com>
+ <20200619024026.GB21081@redhat.com> <20200622124646.GI3701@8bytes.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e31308f7-4e3c-b6bc-7201-3861b062d257@arm.com>
+Date:   Mon, 22 Jun 2020 16:30:41 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Message-Id: <1592839701.mxvvths2x9.none@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.16138 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+In-Reply-To: <20200622124646.GI3701@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Joerg Roedel's message of June 22, 2020 6:02 am:
-> Hi Alex,
->=20
-> On Thu, Jun 11, 2020 at 07:05:21PM -0400, Alex Xu (Hello71) wrote:
->> I am using an ASRock B450 Pro4 with Ryzen 1600 and ASUS RX 480. I don't=20
->> understand this code at all, but let me know what I can do to=20
->> troubleshoot.
->=20
-> Does it boot without SME enabled?
->=20
->=20
-> Regards,
->=20
-> 	Joerg
->=20
+On 2020-06-22 13:46, Joerg Roedel wrote:
+> + Robin
+> 
+> Robin, any idea on this?
 
-Yes, it works with SME off with dbed452a078 ("dma-pool: decouple=20
-DMA_REMAP from DMA_COHERENT_POOL") applied.
+After a bit of archaeology, this dates back to the original review:
+
+https://lore.kernel.org/linux-arm-kernel/54C285D4.3070802@arm.com/
+https://lore.kernel.org/linux-arm-kernel/54DA2666.9030003@arm.com/
+
+In summary: originally this inherited from other arch code that did 
+simply strip __GFP_COMP; that was deemed questionable because of the 
+nonsensical comment about CONFIG_HUGETLBFS that was stuck to it; the 
+current code is like it is because in 5 and a half years nobody said 
+that it's wrong :)
+
+If there actually *are* good reasons for stripping __GFP_COMP, then I've 
+certainly no objection to doing so.
+
+Robin.
+
+> On Thu, Jun 18, 2020 at 10:40:26PM -0400, Andrea Arcangeli wrote:
+>> Hello,
+>>
+>> On Thu, Jun 18, 2020 at 06:14:49PM -0700, Roman Gushchin wrote:
+>>> I agree. The whole
+>>>
+>>> 	page = alloc_pages_node(nid, alloc_flags, order);
+>>> 	if (!page)
+>>> 		continue;
+>>> 	if (!order)
+>>> 		break;
+>>> 	if (!PageCompound(page)) {
+>>> 		split_page(page, order);
+>>> 		break;
+>>> 	} else if (!split_huge_page(page)) {
+>>> 		break;
+>>> 	}
+>>>
+>>> looks very suspicious to me.
+>>> My wild guess is that gfp flags changed somewhere above, so we hit
+>>> the branch which was never hit before.
+>>
+>> Right to be suspicious about the above: split_huge_page on a regular
+>> page allocated by a driver was never meant to work.
+>>
+>> The PageLocked BUG_ON is just a symptom of a bigger issue, basically
+>> split_huge_page it may survive, but it'll stay compound and in turn it
+>> must be freed as compound.
+>>
+>> The respective free method doesn't even contemplate freeing compound
+>> pages, the only way the free method can survive, is by removing
+>> __GFP_COMP forcefully in the allocation that was perhaps set here
+>> (there are that many __GFP_COMP in that directory):
+>>
+>> static void snd_malloc_dev_pages(struct snd_dma_buffer *dmab, size_t size)
+>> {
+>> 	gfp_t gfp_flags;
+>>
+>> 	gfp_flags = GFP_KERNEL
+>> 		| __GFP_COMP	/* compound page lets parts be mapped */
+>>
+>> And I'm not sure what the comment means here, compound or non compound
+>> doesn't make a difference when you map it, it's not a THP, the
+>> mappings must be handled manually so nothing should check PG_compound
+>> anyway in the mapping code.
+>>
+>> Something like this may improve things, it's an untested quick hack,
+>> but this assumes it's always a bug to setup a compound page for these
+>> DMA allocations and given the API it's probably a correct
+>> assumption.. Compound is slower, unless you need it, you can avoid it
+>> and then split_page will give contiguous memory page granular. Ideally
+>> the code shouldn't call split_page at all and it should free it all at
+>> once by keeping track of the order and by returning the order to the
+>> caller, something the API can't do right now as it returns a plain
+>> array that can only represent individual small pages.
+>>
+>> Once this is resolved, you may want to check your config, iommu passthrough
+>> sounds more optimal for a soundcard.
+>>
+>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+>> index f68a62c3c32b..3dfbc010fa83 100644
+>> --- a/drivers/iommu/dma-iommu.c
+>> +++ b/drivers/iommu/dma-iommu.c
+>> @@ -499,6 +499,10 @@ static struct page **__iommu_dma_alloc_pages(struct device *dev,
+>>   
+>>   	/* IOMMU can map any pages, so himem can also be used here */
+>>   	gfp |= __GFP_NOWARN | __GFP_HIGHMEM;
+>> +	if (unlikely(gfp & __GFP_COMP)) {
+>> +		WARN();
+>> +		gfp &= ~__GFP_COMP;
+>> +	}
+>>   
+>>   	while (count) {
+>>   		struct page *page = NULL;
+>> @@ -522,13 +526,8 @@ static struct page **__iommu_dma_alloc_pages(struct device *dev,
+>>   				continue;
+>>   			if (!order)
+>>   				break;
+>> -			if (!PageCompound(page)) {
+>> -				split_page(page, order);
+>> -				break;
+>> -			} else if (!split_huge_page(page)) {
+>> -				break;
+>> -			}
+>> -			__free_pages(page, order);
+>> +			split_page(page, order);
+>> +			break;
+>>   		}
+>>   		if (!page) {
+>>   			__iommu_dma_free_pages(pages, i);
+>> diff --git a/sound/core/memalloc.c b/sound/core/memalloc.c
+>> index 6850d13aa98c..378f5a36ec5f 100644
+>> --- a/sound/core/memalloc.c
+>> +++ b/sound/core/memalloc.c
+>> @@ -28,7 +28,6 @@ static void snd_malloc_dev_pages(struct snd_dma_buffer *dmab, size_t size)
+>>   	gfp_t gfp_flags;
+>>   
+>>   	gfp_flags = GFP_KERNEL
+>> -		| __GFP_COMP	/* compound page lets parts be mapped */
+>>   		| __GFP_NORETRY /* don't trigger OOM-killer */
+>>   		| __GFP_NOWARN; /* no stack trace print - this call is non-critical */
+>>   	dmab->area = dma_alloc_coherent(dmab->dev.dev, size, &dmab->addr,
