@@ -2,3496 +2,1311 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 003AF2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:05:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="U/mgNY4j"
+	by mail.kernel.org (Postfix) with ESMTP id 3D8C820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgFVQFE (ORCPT
+        id S1729428AbgFVQHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:05:04 -0400
-Received: from m12-14.163.com ([220.181.12.14]:39752 "EHLO m12-14.163.com"
+        Mon, 22 Jun 2020 12:07:21 -0400
+Received: from mga04.intel.com ([192.55.52.120]:48360 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729792AbgFVQFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:05:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=OzUhI
-        KoOyaomrgkTFfT8D1+X0HsJF3itY5Z3EkeNisc=; b=U/mgNY4jmlKiwQEDsJOpl
-        sIGhlz4y8ntU1CAmhl/v9+tueihLRzT9XT2PYc3sjKFv84tM/i4up2Z9YG/wHyZA
-        bif1Xooscs6UyyJuU3JV4meoRBIRjsF9ICaqdMMWBI9ols6YsjTR51n5ZAKk3f83
-        OXmyFI4NiTEUttGNDJhIKI=
-Received: from SZA191027643-PM.china.huawei.com (unknown [120.235.53.225])
-        by smtp10 (Coremail) with SMTP id DsCowABnbelA1vBeGrmZHw--.17892S3;
-        Tue, 23 Jun 2020 00:03:18 +0800 (CST)
-From:   yunaixin03610@163.com
-To:     netdev@vger.kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, wuguanping@huawei.com,
-        wangqindong@huawei.com
-Cc:     yunaixin <yunaixin03610@163.com>
-Subject: [PATCH 1/5] Huawei BMA: Adding Huawei BMA driver: host_edma_drv
-Date:   Tue, 23 Jun 2020 00:03:07 +0800
-Message-Id: <20200622160311.1533-2-yunaixin03610@163.com>
-X-Mailer: git-send-email 2.26.2.windows.1
-In-Reply-To: <20200622160311.1533-1-yunaixin03610@163.com>
-References: <20200622160311.1533-1-yunaixin03610@163.com>
+        id S1729612AbgFVQHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:07:21 -0400
+IronPort-SDR: s5bM8M+TtkIRLmph5XeIXdgZjszeBLjzvahrID3jg8KgcAU9z9Zqxl49KavMK3zpfy4YNOVV6y
+ 2obE/YLdwNhg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="141298003"
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="gz'50?scan'50,208,50";a="141298003"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 08:39:08 -0700
+IronPort-SDR: iLsGX+htshbDh6yF78UBjHs8OMxE0D8QzGKK4CTzEK+4yF8udSuOHhBJbR//m9KFW8utmOgB+k
+ sdo3LYul6WEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="gz'50?scan'50,208,50";a="384554929"
+Received: from lkp-server01.sh.intel.com (HELO f484c95e4fd1) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Jun 2020 08:39:04 -0700
+Received: from kbuild by f484c95e4fd1 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jnOXH-0000Mi-W0; Mon, 22 Jun 2020 15:39:03 +0000
+Date:   Mon, 22 Jun 2020 23:38:00 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
+        <JohnsonCH.Chen@moxa.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     kbuild-all@lists.01.org,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/3] mfd: ds1374: Introduce Dallas/Maxim DS1374 MFD core
+  driver
+Message-ID: <202006222355.cumpS11z%lkp@intel.com>
+References: <HK2PR01MB328111AB2520315A7D4A1172FA970@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DsCowABnbelA1vBeGrmZHw--.17892S3
-X-Coremail-Antispam: 1Uf129KBjvAXoWkGr4kWw4kCFyDXFyxXr1rXrb_yoWDJr1kuo
-        WfX3ZxXr4rJw17Aw18Cr17uFyUuFy8Za98Jr4SkFWqv3WkJw15JrWUKFWxZr13Xr4rKF4U
-        C3ySvws3XrW8Xr93n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-        AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvj4Ru9aBDUUUU
-X-Originating-IP: [120.235.53.225]
-X-CM-SenderInfo: 51xqtxx0lqijqwrqqiywtou0bp/1tbiDgdL5lXlwxcJSAAAsB
+Content-Type: multipart/mixed; boundary="qMm9M+Fa2AknHoGS"
+Content-Disposition: inline
+In-Reply-To: <HK2PR01MB328111AB2520315A7D4A1172FA970@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yunaixin <yunaixin03610@163.com>
 
-The BMA software is a system management software offered by Huawei. It supports the status monitoring, performance monitoring, and event monitoring of various components, including server CPUs, memory, hard disks, NICs, IB cards, PCIe cards, RAID controller cards, and optical modules.
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This host_edma_drv driver is a PCIe driver used by Huawei BMA software. The main function of it is to control the PCIe bus between BMA software and Huawei 1711 chip. The chip will then process the data and display to users. This host_edma_drv driver offers API to send/receive data for other BMA drivers which want to use the PCIe channel in different ways(eg. host_cdev_drv, host_veth_drv).
+Hi "Johnson,
 
-Signed-off-by: yunaixin <yunaixin03610@163.com>
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on abelloni/rtc-next]
+[also build test ERROR on linux/master linus/master v5.8-rc2 next-20200622]
+[cannot apply to ljones-mfd/for-mfd-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use  as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Johnson-CH-Chen/Use-MFD-for-Dallas-Maxim-DS1374-driver-series/20200622-180544
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
+config: sparc-allyesconfig (attached as .config)
+compiler: sparc64-linux-gcc (GCC) 9.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=sparc 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   drivers/mfd/ds1374.c: In function 'ds1374_suspend':
+>> drivers/mfd/ds1374.c:56:3: error: implicit declaration of function 'enable_irq_wake' [-Werror=implicit-function-declaration]
+      56 |   enable_irq_wake(client->irq);
+         |   ^~~~~~~~~~~~~~~
+   drivers/mfd/ds1374.c: In function 'ds1374_resume':
+>> drivers/mfd/ds1374.c:65:3: error: implicit declaration of function 'disable_irq_wake' [-Werror=implicit-function-declaration]
+      65 |   disable_irq_wake(client->irq);
+         |   ^~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+vim +/enable_irq_wake +56 drivers/mfd/ds1374.c
+
+    49	
+    50	#ifdef CONFIG_PM_SLEEP
+    51	static int ds1374_suspend(struct device *dev)
+    52	{
+    53		struct i2c_client *client = to_i2c_client(dev);
+    54	
+    55		if (client->irq > 0 && device_may_wakeup(&client->dev))
+  > 56			enable_irq_wake(client->irq);
+    57		return 0;
+    58	}
+    59	
+    60	static int ds1374_resume(struct device *dev)
+    61	{
+    62		struct i2c_client *client = to_i2c_client(dev);
+    63	
+    64		if (client->irq > 0 && device_may_wakeup(&client->dev))
+  > 65			disable_irq_wake(client->irq);
+    66		return 0;
+    67	}
+    68	#endif
+    69	
+
 ---
- drivers/net/ethernet/huawei/Kconfig           |    1 +
- drivers/net/ethernet/huawei/Makefile          |    1 +
- drivers/net/ethernet/huawei/bma/Kconfig       |    1 +
- drivers/net/ethernet/huawei/bma/Makefile      |    5 +
- .../net/ethernet/huawei/bma/edma_drv/Kconfig  |   11 +
- .../net/ethernet/huawei/bma/edma_drv/Makefile |    2 +
- .../huawei/bma/edma_drv/bma_devintf.c         |  597 +++++++
- .../huawei/bma/edma_drv/bma_devintf.h         |   40 +
- .../huawei/bma/edma_drv/bma_include.h         |  116 ++
- .../ethernet/huawei/bma/edma_drv/bma_pci.c    |  533 ++++++
- .../ethernet/huawei/bma/edma_drv/bma_pci.h    |   94 ++
- .../ethernet/huawei/bma/edma_drv/edma_host.c  | 1462 +++++++++++++++++
- .../ethernet/huawei/bma/edma_drv/edma_host.h  |  351 ++++
- .../huawei/bma/include/bma_ker_intf.h         |   94 ++
- 14 files changed, 3308 insertions(+)
- create mode 100644 drivers/net/ethernet/huawei/bma/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h
- create mode 100644 drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-diff --git a/drivers/net/ethernet/huawei/Kconfig b/drivers/net/ethernet/huawei/Kconfig
-index bdcbface62d7..83ebaee13229 100644
---- a/drivers/net/ethernet/huawei/Kconfig
-+++ b/drivers/net/ethernet/huawei/Kconfig
-@@ -16,5 +16,6 @@ config NET_VENDOR_HUAWEI
- if NET_VENDOR_HUAWEI
- 
- source "drivers/net/ethernet/huawei/hinic/Kconfig"
-+source "drivers/net/ethernet/huawei/bma/Kconfig"
- 
- endif # NET_VENDOR_HUAWEI
-diff --git a/drivers/net/ethernet/huawei/Makefile b/drivers/net/ethernet/huawei/Makefile
-index 2549ad5afe6d..f5bf4ae195a3 100644
---- a/drivers/net/ethernet/huawei/Makefile
-+++ b/drivers/net/ethernet/huawei/Makefile
-@@ -4,3 +4,4 @@
- #
- 
- obj-$(CONFIG_HINIC) += hinic/
-+obj-$(CONFIG_BMA) += bma/
-diff --git a/drivers/net/ethernet/huawei/bma/Kconfig b/drivers/net/ethernet/huawei/bma/Kconfig
-new file mode 100644
-index 000000000000..0e6e9fcc9e42
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/Kconfig
-@@ -0,0 +1 @@
-+source "drivers/net/ethernet/huawei/bma/edma_drv/Kconfig"
-diff --git a/drivers/net/ethernet/huawei/bma/Makefile b/drivers/net/ethernet/huawei/bma/Makefile
-new file mode 100644
-index 000000000000..8582fb3998fb
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/Makefile
-@@ -0,0 +1,5 @@
-+# 
-+# Makefile for BMA software driver
-+# 
-+
-+obj-$(CONFIG_BMA) += edma_drv/
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig b/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
-new file mode 100644
-index 000000000000..97829c5487c2
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
-@@ -0,0 +1,11 @@
-+#
-+# Huawei BMA software driver configuration
-+#
-+
-+config BMA
-+	tristate "Huawei BMA Software Communication Driver"
-+
-+	---help---
-+	  This driver supports Huawei BMA Software. It is used 
-+	  to communication between Huawei BMA and BMC software.
-+
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/Makefile b/drivers/net/ethernet/huawei/bma/edma_drv/Makefile
-new file mode 100644
-index 000000000000..46cc51275a71
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/Makefile
-@@ -0,0 +1,2 @@
-+obj-$(CONFIG_BMA) += host_edma_drv.o
-+host_edma_drv-y := bma_pci.o bma_devintf.o edma_host.o
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c b/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c
-new file mode 100644
-index 000000000000..7817f58f8635
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c
-@@ -0,0 +1,597 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/fs.h>
-+#include <linux/module.h>
-+#include <linux/miscdevice.h>
-+#include <asm/ioctls.h>
-+#include <linux/slab.h>
-+#include <linux/poll.h>
-+#include <linux/proc_fs.h>
-+#include <linux/notifier.h>
-+#include "../include/bma_ker_intf.h"
-+#include "bma_include.h"
-+#include "bma_devintf.h"
-+#include "bma_pci.h"
-+#include "edma_host.h"
-+
-+static struct bma_dev_s *g_bma_dev;
-+
-+static ATOMIC_NOTIFIER_HEAD(bma_int_notify_list);
-+
-+static int bma_priv_insert_priv_list(struct bma_priv_data_s *priv, u32 type,
-+				     u32 sub_type)
-+{
-+	unsigned long flags = 0;
-+	int ret = 0;
-+	struct edma_user_inft_s *user_inft = NULL;
-+
-+	if (type >= TYPE_MAX || !priv)
-+		return -EFAULT;
-+
-+	user_inft = edma_host_get_user_inft(type);
-+
-+	if (user_inft && user_inft->user_register) {
-+		ret = user_inft->user_register(priv);
-+		if (ret) {
-+			BMA_LOG(DLOG_ERROR, "register failed\n");
-+			return -EFAULT;
-+		}
-+	} else {
-+		if (!g_bma_dev)
-+			return -ENXIO;
-+
-+		if (atomic_dec_and_test(&g_bma_dev->au_count[type]) == 0) {
-+			BMA_LOG(DLOG_ERROR,
-+				"busy, init_dev_type.type = %d, au_count = %d\n",
-+				type,
-+				atomic_read(&g_bma_dev->au_count[type]));
-+			atomic_inc(&g_bma_dev->au_count[type]);
-+			return -EBUSY;	/* already register */
-+		}
-+
-+		priv->user.type = type;
-+		priv->user.sub_type = sub_type;
-+		priv->user.user_id = 0;
-+
-+		spin_lock_irqsave(&g_bma_dev->priv_list_lock, flags);
-+
-+		list_add_rcu(&priv->user.link, &g_bma_dev->priv_list);
-+
-+		spin_unlock_irqrestore(&g_bma_dev->priv_list_lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static int bma_priv_delete_priv_list(struct bma_priv_data_s *priv)
-+{
-+	unsigned long flags = 0;
-+	struct edma_user_inft_s *user_inft = NULL;
-+
-+	if (!priv || priv->user.type >= TYPE_MAX)
-+		return -EFAULT;
-+	user_inft = edma_host_get_user_inft(priv->user.type);
-+	if (user_inft && user_inft->user_register) {
-+		user_inft->user_unregister(priv);
-+	} else {
-+		if (!g_bma_dev)
-+			return -ENXIO;
-+		spin_lock_irqsave(&g_bma_dev->priv_list_lock, flags);
-+		list_del_rcu(&priv->user.link);
-+		spin_unlock_irqrestore(&g_bma_dev->priv_list_lock, flags);
-+		/* release the type */
-+		atomic_inc(&g_bma_dev->au_count[priv->user.type]);
-+	}
-+	return 0;
-+}
-+
-+static int bma_priv_init(struct bma_priv_data_s **bma_priv)
-+{
-+	struct bma_priv_data_s *priv = NULL;
-+
-+	if (!bma_priv)
-+		return -EFAULT;
-+
-+	priv = kmalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv) {
-+		BMA_LOG(DLOG_ERROR, "malloc priv failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	memset(priv, 0, sizeof(struct bma_priv_data_s));
-+
-+	spin_lock_init(&priv->recv_msg_lock);
-+	INIT_LIST_HEAD(&priv->recv_msgs);
-+	init_waitqueue_head(&priv->wait);
-+
-+	priv->user.type = TYPE_UNKNOWN;
-+	priv->user.sub_type = 0;
-+	priv->user.dma_transfer = 0;
-+	priv->user.seq = 0;
-+	priv->user.cur_recvmsg_nums = 0;
-+	priv->user.max_recvmsg_nums = DEFAULT_MAX_RECV_MSG_NUMS;
-+
-+	*bma_priv = priv;
-+
-+	return 0;
-+}
-+
-+static void bma_priv_clean_up(struct bma_priv_data_s *bma_priv)
-+{
-+	int ret = 0;
-+	int i = 0;
-+	struct bma_priv_data_s *priv = bma_priv;
-+	struct edma_recv_msg_s *msg = NULL;
-+
-+	if (!priv)
-+		return;
-+
-+	if (priv->user.type == TYPE_UNKNOWN) {
-+		BMA_LOG(DLOG_ERROR, "already unknown type\n");
-+		return;
-+	}
-+
-+	for (i = 0; i < priv->user.max_recvmsg_nums; i++) {
-+		ret = edma_host_recv_msg(&g_bma_dev->edma_host, priv, &msg);
-+		if (ret)
-+			break;
-+
-+		kfree(msg);
-+	}
-+
-+	priv->user.type = TYPE_UNKNOWN;
-+	priv->user.sub_type = 0;
-+	priv->user.dma_transfer = 0;
-+	priv->user.seq = 0;
-+	priv->user.cur_recvmsg_nums = 0;
-+	priv->user.max_recvmsg_nums = DEFAULT_MAX_RECV_MSG_NUMS;
-+	kfree(priv);
-+}
-+
-+static irqreturn_t bma_irq_handle(int irq, void *data)
-+{
-+	struct bma_dev_s *bma_dev = (struct bma_dev_s *)data;
-+
-+	if (!bma_dev)
-+		return IRQ_HANDLED;
-+
-+	bma_dev->edma_host.statistics.b2h_int++;
-+
-+	if (!is_edma_b2h_int(&bma_dev->edma_host))
-+		return edma_host_irq_handle(&bma_dev->edma_host);
-+
-+	return (irqreturn_t)atomic_notifier_call_chain(&bma_int_notify_list, 0,
-+						       data);
-+}
-+
-+int bma_devinft_init(struct bma_pci_dev_s *bma_pci_dev)
-+{
-+	int ret = 0;
-+	int i = 0;
-+	struct bma_dev_s *bma_dev = NULL;
-+
-+	if (!bma_pci_dev)
-+		return -EFAULT;
-+
-+	bma_dev = kmalloc(sizeof(*bma_dev), (int)GFP_KERNEL);
-+	if (!bma_dev)
-+		return -ENOMEM;
-+
-+	memset(bma_dev, 0, sizeof(struct bma_dev_s));
-+
-+	bma_dev->bma_pci_dev = bma_pci_dev;
-+	bma_pci_dev->bma_dev = bma_dev;
-+
-+	INIT_LIST_HEAD(&bma_dev->priv_list);
-+	spin_lock_init(&bma_dev->priv_list_lock);
-+
-+	for (i = 0; i < TYPE_MAX; i++)
-+		atomic_set(&bma_dev->au_count[i], 1);
-+
-+	ret = edma_host_init(&bma_dev->edma_host);
-+	if (ret) {
-+		BMA_LOG(DLOG_ERROR, "init edma host failed!err = %d\n", ret);
-+		goto err_free_bma_dev;
-+	}
-+
-+	BMA_LOG(DLOG_DEBUG, "irq = %d\n", bma_pci_dev->pdev->irq);
-+
-+	ret = request_irq(bma_pci_dev->pdev->irq, bma_irq_handle, IRQF_SHARED,
-+			  "EDMA_IRQ", (void *)bma_dev);
-+	if (ret) {
-+		BMA_LOG(DLOG_ERROR, "request_irq failed!err = %d\n", ret);
-+		goto err_edma_host_exit;
-+	}
-+
-+	g_bma_dev = bma_dev;
-+	BMA_LOG(DLOG_DEBUG, "ok\n");
-+
-+	return 0;
-+
-+err_edma_host_exit:
-+	edma_host_cleanup(&bma_dev->edma_host);
-+
-+err_free_bma_dev:
-+	kfree(bma_dev);
-+	bma_pci_dev->bma_dev = NULL;
-+
-+	return ret;
-+}
-+
-+void bma_devinft_cleanup(struct bma_pci_dev_s *bma_pci_dev)
-+{
-+	if (g_bma_dev) {
-+		if ((bma_pci_dev) && bma_pci_dev->pdev &&
-+		    bma_pci_dev->pdev->irq) {
-+			BMA_LOG(DLOG_DEBUG, "irq = %d\n",
-+				bma_pci_dev->pdev->irq);
-+			free_irq(bma_pci_dev->pdev->irq,
-+				 (void *)bma_pci_dev->bma_dev);
-+		}
-+
-+		edma_host_cleanup(&g_bma_dev->edma_host);
-+
-+		if ((bma_pci_dev) && bma_pci_dev->bma_dev) {
-+			kfree(bma_pci_dev->bma_dev);
-+			bma_pci_dev->bma_dev = NULL;
-+		}
-+
-+		g_bma_dev = NULL;
-+	}
-+}
-+
-+int bma_intf_register_int_notifier(struct notifier_block *nb)
-+{
-+	if (!nb)
-+		return -1;
-+
-+	return atomic_notifier_chain_register(&bma_int_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(bma_intf_register_int_notifier);
-+
-+void bma_intf_unregister_int_notifier(struct notifier_block *nb)
-+{
-+	if (!nb)
-+		return;
-+
-+	atomic_notifier_chain_unregister(&bma_int_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(bma_intf_unregister_int_notifier);
-+
-+int bma_intf_register_type(u32 type, u32 sub_type, enum intr_mod support_int,
-+			   void **handle)
-+{
-+	int ret = 0;
-+	struct bma_priv_data_s *priv = NULL;
-+
-+	if (!handle)
-+		return -EFAULT;
-+
-+	ret = bma_priv_init(&priv);
-+	if (ret) {
-+		BMA_LOG(DLOG_ERROR, "bma_priv_init failed! ret = %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = bma_priv_insert_priv_list(priv, type, sub_type);
-+	if (ret) {
-+		bma_priv_clean_up(priv);
-+		BMA_LOG(DLOG_ERROR,
-+			"bma_priv_insert_priv_list failed! ret = %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (support_int)
-+		priv->user.support_int = INTR_ENABLE;
-+
-+	if (type == TYPE_VETH) {
-+		priv->specific.veth.pdev = g_bma_dev->bma_pci_dev->pdev;
-+
-+		priv->specific.veth.veth_swap_phy_addr =
-+		    g_bma_dev->bma_pci_dev->veth_swap_phy_addr;
-+		priv->specific.veth.veth_swap_addr =
-+		    g_bma_dev->bma_pci_dev->veth_swap_addr;
-+		priv->specific.veth.veth_swap_len =
-+		    g_bma_dev->bma_pci_dev->veth_swap_len;
-+	}
-+
-+	*handle = priv;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(bma_intf_register_type);
-+
-+int bma_intf_unregister_type(void **handle)
-+{
-+	struct bma_priv_data_s *priv = NULL;
-+
-+	if (!handle) {
-+		BMA_LOG(DLOG_ERROR, "edna_priv is NULL\n");
-+		return -EFAULT;
-+	}
-+
-+	priv = (struct bma_priv_data_s *)*handle;
-+	*handle = NULL;
-+
-+	priv->user.cur_recvmsg_nums++;
-+	wake_up_interruptible(&priv->wait);
-+
-+	msleep(500);
-+
-+	bma_priv_delete_priv_list(priv);
-+
-+	bma_priv_clean_up(priv);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(bma_intf_unregister_type);
-+
-+int bma_intf_check_edma_supported(void)
-+{
-+	return !(!g_bma_dev);
-+}
-+EXPORT_SYMBOL(bma_intf_check_edma_supported);
-+
-+int bma_intf_check_dma_status(enum dma_direction_e dir)
-+{
-+	return edma_host_check_dma_status(dir);
-+}
-+EXPORT_SYMBOL(bma_intf_check_dma_status);
-+
-+void bma_intf_reset_dma(enum dma_direction_e dir)
-+{
-+	edma_host_reset_dma(&g_bma_dev->edma_host, dir);
-+}
-+EXPORT_SYMBOL(bma_intf_reset_dma);
-+
-+void bma_intf_clear_dma_int(enum dma_direction_e dir)
-+{
-+	if (dir == BMC_TO_HOST)
-+		clear_int_dmab2h(&g_bma_dev->edma_host);
-+	else if (dir == HOST_TO_BMC)
-+		clear_int_dmah2b(&g_bma_dev->edma_host);
-+	else
-+		return;
-+}
-+EXPORT_SYMBOL(bma_intf_clear_dma_int);
-+
-+int bma_intf_start_dma(void *handle, struct bma_dma_transfer_s *dma_transfer)
-+{
-+	int ret = 0;
-+	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
-+
-+	if (!handle || !dma_transfer)
-+		return -EFAULT;
-+
-+	ret = edma_host_dma_start(&g_bma_dev->edma_host, priv);
-+	if (ret) {
-+		BMA_LOG(DLOG_ERROR,
-+			"edma_host_dma_start failed! result = %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = edma_host_dma_transfer(&g_bma_dev->edma_host, priv, dma_transfer);
-+	if (ret)
-+		BMA_LOG(DLOG_ERROR,
-+			"edma_host_dma_transfer failed! ret = %d\n", ret);
-+
-+	ret = edma_host_dma_stop(&g_bma_dev->edma_host, priv);
-+	if (ret) {
-+		BMA_LOG(DLOG_ERROR,
-+			"edma_host_dma_stop failed! result = %d\n", ret);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(bma_intf_start_dma);
-+
-+int bma_intf_int_to_bmc(void *handle)
-+{
-+	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
-+
-+	if (!handle)
-+		return -EFAULT;
-+
-+	if (priv->user.support_int == 0) {
-+		BMA_LOG(DLOG_ERROR, "not support int to bmc.\n");
-+		return -EFAULT;
-+	}
-+
-+	edma_int_to_bmc(&g_bma_dev->edma_host);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(bma_intf_int_to_bmc);
-+
-+int bma_intf_is_link_ok(void)
-+{
-+	return (g_bma_dev->edma_host.statistics.remote_status ==
-+		REGISTERED) ? 1 : 0;
-+}
-+EXPORT_SYMBOL(bma_intf_is_link_ok);
-+
-+int bma_cdev_recv_msg(void *handle, char __user *data, size_t count)
-+{
-+	struct bma_priv_data_s *priv = NULL;
-+	struct edma_recv_msg_s *msg = NULL;
-+	int result = 0;
-+	int len = 0;
-+
-+	if (!handle || !data || count == 0) {
-+		BMA_LOG(DLOG_DEBUG, "input NULL point!\n");
-+		return -EFAULT;
-+	}
-+
-+	priv = (struct bma_priv_data_s *)handle;
-+
-+	result = edma_host_recv_msg(&g_bma_dev->edma_host, priv, &msg);
-+	if (result != 0)
-+		return -ENODATA;
-+
-+	if (msg->msg_len > count) {
-+		kfree(msg);
-+		return -EFAULT;
-+	}
-+
-+	if (copy_to_user(data, (void *)msg->msg_data, msg->msg_len)) {
-+		kfree(msg);
-+		return -EFAULT;
-+	}
-+
-+	len = msg->msg_len;
-+
-+	kfree(msg);
-+
-+	return len;
-+}
-+EXPORT_SYMBOL_GPL(bma_cdev_recv_msg);
-+
-+int bma_cdev_add_msg(void *handle, const char __user *msg, size_t msg_len)
-+{
-+	struct bma_priv_data_s *priv = NULL;
-+	struct edma_msg_hdr_s *hdr = NULL;
-+	unsigned long flags = 0;
-+	int total_len = 0;
-+	int ret = 0;
-+	struct edma_host_s *phost = &g_bma_dev->edma_host;
-+
-+	if (!handle || !msg || msg_len == 0) {
-+		BMA_LOG(DLOG_DEBUG, "input NULL point!\n");
-+		return -EFAULT;
-+	}
-+
-+	if (msg_len > CDEV_MAX_WRITE_LEN) {
-+		BMA_LOG(DLOG_DEBUG, "input data is overlen!\n");
-+		return -EINVAL;
-+	}
-+
-+	priv = (struct bma_priv_data_s *)handle;
-+
-+	if (priv->user.type >= TYPE_MAX) {
-+		BMA_LOG(DLOG_DEBUG, "error type = %d\n", priv->user.type);
-+		return -EFAULT;
-+	}
-+	total_len = SIZE_OF_MSG_HDR + msg_len;
-+
-+	spin_lock_irqsave(&phost->send_msg_lock, flags);
-+
-+	if (phost->msg_send_write + total_len <=
-+	    HOST_MAX_SEND_MBX_LEN - SIZE_OF_MBX_HDR) {
-+		hdr = (struct edma_msg_hdr_s *)(phost->msg_send_buf +
-+						phost->msg_send_write);
-+		hdr->type = priv->user.type;
-+		hdr->sub_type = priv->user.sub_type;
-+		hdr->user_id = priv->user.user_id;
-+		hdr->datalen = msg_len;
-+		BMA_LOG(DLOG_DEBUG, "msg_len is %ld\n", msg_len);
-+
-+		if (copy_from_user(hdr->data, msg, msg_len)) {
-+			BMA_LOG(DLOG_ERROR, "copy_from_user error\n");
-+		ret = -EFAULT;
-+		goto end;
-+		}
-+
-+		phost->msg_send_write += total_len;
-+		phost->statistics.send_bytes += total_len;
-+		phost->statistics.send_pkgs++;
-+#ifdef EDMA_TIMER
-+		(void)mod_timer(&phost->timer, jiffies_64);
-+#endif
-+		BMA_LOG(DLOG_DEBUG, "msg_send_write = %d\n",
-+			phost->msg_send_write);
-+
-+		ret = msg_len;
-+		goto end;
-+	} else {
-+		BMA_LOG(DLOG_DEBUG,
-+			"msg lost,msg_send_write: %d,msg_len:%d,max_len: %d\n",
-+			phost->msg_send_write, total_len,
-+			HOST_MAX_SEND_MBX_LEN);
-+		ret = -ENOSPC;
-+		goto end;
-+	}
-+
-+end:
-+	spin_unlock_irqrestore(&g_bma_dev->edma_host.send_msg_lock, flags);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(bma_cdev_add_msg);
-+
-+unsigned int bma_cdev_check_recv(void *handle)
-+{
-+	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
-+	unsigned long flags = 0;
-+	unsigned int result = 0;
-+
-+	if (priv) {
-+		spin_lock_irqsave(&priv->recv_msg_lock, flags);
-+
-+		if (!list_empty(&priv->recv_msgs))
-+			result = 1;
-+
-+		spin_unlock_irqrestore(&priv->recv_msg_lock, flags);
-+	}
-+
-+	return result;
-+}
-+EXPORT_SYMBOL_GPL(bma_cdev_check_recv);
-+
-+void *bma_cdev_get_wait_queue(void *handle)
-+{
-+	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
-+
-+	return priv ? ((void *)&priv->wait) : NULL;
-+}
-+EXPORT_SYMBOL_GPL(bma_cdev_get_wait_queue);
-+
-+void bma_intf_set_open_status(void *handle, int s)
-+{
-+	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
-+	int i = 0;
-+	int ret = 0;
-+	unsigned long flags = 0;
-+	char drv_msg[3] = { 0 };
-+	struct edma_recv_msg_s *tmp_msg = NULL;
-+
-+	if (!priv || priv->user.type >= TYPE_MAX)
-+		return;
-+
-+	drv_msg[0] = 1;
-+	drv_msg[1] = priv->user.type;
-+	drv_msg[2] = s;
-+
-+	(void)edma_host_send_driver_msg((void *)drv_msg, sizeof(drv_msg),
-+						DEV_OPEN_STATUS_ANS);
-+
-+		spin_lock_irqsave(&priv->recv_msg_lock, flags);
-+		g_bma_dev->edma_host.local_open_status[priv->user.type] = s;
-+
-+		if (s == DEV_CLOSE && priv->user.cur_recvmsg_nums > 0) {
-+			for (i = 0; i < priv->user.max_recvmsg_nums; i++) {
-+				ret = edma_host_recv_msg(&g_bma_dev->edma_host,
-+							 priv, &tmp_msg);
-+				if (ret < 0)
-+					break;
-+
-+				kfree(tmp_msg);
-+				tmp_msg = NULL;
-+			}
-+		}
-+
-+		spin_unlock_irqrestore(&priv->recv_msg_lock, flags);
-+}
-+EXPORT_SYMBOL_GPL(bma_intf_set_open_status);
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h b/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h
-new file mode 100644
-index 000000000000..138d1e278479
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _BMA_DEVINTF_H_
-+#define _BMA_DEVINTF_H_
-+
-+#include <linux/mutex.h>
-+#include "bma_pci.h"
-+#include "edma_host.h"
-+
-+struct bma_dev_s {
-+	/* proc */
-+	struct proc_dir_entry *proc_bma_root;
-+
-+	atomic_t au_count[TYPE_MAX];
-+
-+	struct list_head priv_list;
-+	/* spinlock for priv list */
-+	spinlock_t priv_list_lock;
-+
-+	struct bma_pci_dev_s *bma_pci_dev;
-+	struct edma_host_s edma_host;
-+};
-+
-+int bma_devinft_init(struct bma_pci_dev_s *bma_pci_dev);
-+void bma_devinft_cleanup(struct bma_pci_dev_s *bma_pci_dev);
-+
-+#endif
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h b/drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h
-new file mode 100644
-index 000000000000..2c122ae91463
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h
-@@ -0,0 +1,116 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _BMA_INCLUDE_H_
-+#define _BMA_INCLUDE_H_
-+
-+#include <linux/slab.h>
-+#include <asm/ioctls.h>
-+#include <linux/capability.h>
-+#include <linux/uaccess.h>	/* copy_*_user */
-+#include <linux/delay.h>	/* udelay */
-+#include <linux/mm.h>
-+#include <linux/types.h>
-+#include <linux/pci.h>
-+#include <linux/mutex.h>
-+#include <linux/interrupt.h>	/*tasklet */
-+#include <linux/version.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/version.h>
-+#include <linux/semaphore.h>
-+#include <linux/sched.h>
-+
-+#define UNUSED(x) (x = x)
-+#define KBOX_FALSE (-1)
-+#define KBOX_TRUE 0
-+
-+#define KBOX_IOC_MAGIC (0xB2)
-+
-+#define DEFAULT_MAX_RECV_MSG_NUMS   32
-+#define MAX_RECV_MSG_NUMS 1024
-+
-+#define STRFICATION(R) #R
-+#define MICRO_TO_STR(R) STRFICATION(R)
-+
-+enum {
-+	DLOG_ERROR = 0,
-+	DLOG_DEBUG = 1,
-+};
-+
-+enum {
-+	DEV_CLOSE = 0,
-+	DEV_OPEN = 1,
-+	DEV_OPEN_STATUS_REQ = 0xf0,
-+	DEV_OPEN_STATUS_ANS
-+};
-+
-+struct bma_user_s {
-+	struct list_head link;
-+
-+	u32 type;
-+	u32 sub_type;
-+	u8 user_id;
-+
-+	u8 dma_transfer:1, support_int:1;
-+
-+	u8 reserve1[2];
-+	u32 seq;
-+	u16 cur_recvmsg_nums;
-+	u16 max_recvmsg_nums;
-+};
-+
-+struct bma_priv_data_veth_s {
-+	struct pci_dev *pdev;
-+
-+	unsigned long veth_swap_phy_addr;
-+	void __iomem *veth_swap_addr;
-+	unsigned long veth_swap_len;
-+};
-+
-+struct bma_priv_data_s {
-+	struct bma_user_s user;
-+	/* spinlock for recv msg list */
-+	spinlock_t recv_msg_lock;
-+	struct list_head recv_msgs;
-+	struct file *file;
-+	wait_queue_head_t wait;
-+
-+	union {
-+		struct bma_priv_data_veth_s veth;
-+	} specific;
-+};
-+
-+#if defined(timer_setup) && defined(from_timer)
-+#define HAVE_TIMER_SETUP
-+#endif
-+
-+void __iomem *kbox_get_base_addr(void);
-+unsigned long kbox_get_io_len(void);
-+unsigned long kbox_get_base_phy_addr(void);
-+int edma_param_set_debug(const char *buf, const struct kernel_param *kp);
-+
-+#define GET_SYS_SECONDS(t) do \
-+	{\
-+		struct timespec64 uptime;\
-+		ktime_get_coarse_real_ts64(&uptime);\
-+		t = uptime.tv_sec;\
-+	} while (0)
-+
-+#define SECONDS_PER_DAY (24 * 3600)
-+#define SECONDS_PER_HOUR (3600)
-+#define SECONDS_PER_MINUTE (60)
-+
-+#endif
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c b/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c
-new file mode 100644
-index 000000000000..577acaedb0e2
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c
-@@ -0,0 +1,533 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/pci.h>
-+#include <linux/version.h>
-+#include <linux/module.h>
-+
-+#include "bma_include.h"
-+#include "bma_devintf.h"
-+#include "bma_pci.h"
-+
-+#define PCI_KBOX_MODULE_NAME		"edma_drv"
-+#define PCI_VENDOR_ID_HUAWEI_FPGA	0x19aa
-+#define PCI_DEVICE_ID_KBOX_0		0xe004
-+
-+#define PCI_VENDOR_ID_HUAWEI_PME	0x19e5
-+#define PCI_DEVICE_ID_KBOX_0_PME	0x1710
-+#define PCI_PME_USEABLE_SPACE		(4 * 1024 * 1024)
-+#define PME_DEV_CHECK(device, vendor) ((device) == PCI_DEVICE_ID_KBOX_0_PME && \
-+				       (vendor) == PCI_VENDOR_ID_HUAWEI_PME)
-+
-+#define PCI_BAR0_PME_1710		0x85800000
-+#define PCI_BAR0			0
-+#define PCI_BAR1			1
-+#define PCI_USING_DAC_DEFAULT 0
-+
-+#define GET_HIGH_ADDR(address)	((sizeof(unsigned long) == 8) ? \
-+				 ((u64)(address) >> 32) : 0)
-+
-+/* The value of the expression is true
-+ * only when dma_set_mask and dma_set_coherent_mask failed.
-+ */
-+#define SET_DMA_MASK(p_dev) \
-+	(dma_set_mask((p_dev), DMA_BIT_MASK(64)) && \
-+	 dma_set_coherent_mask((p_dev), DMA_BIT_MASK(64)))
-+
-+int pci_using_dac = PCI_USING_DAC_DEFAULT;
-+int debug = DLOG_ERROR;
-+MODULE_PARM_DESC(debug, "Debug switch (0=close debug, 1=open debug)");
-+
-+static struct bma_pci_dev_s *g_bma_pci_dev;
-+
-+static int bma_pci_suspend(struct pci_dev *pdev, pm_message_t state);
-+static int bma_pci_resume(struct pci_dev *pdev);
-+static int bma_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent);
-+static void bma_pci_remove(struct pci_dev *pdev);
-+
-+static const struct pci_device_id bma_pci_tbl[] = {
-+	{PCI_DEVICE(PCI_VENDOR_ID_HUAWEI_FPGA, PCI_DEVICE_ID_KBOX_0)},
-+	{PCI_DEVICE(PCI_VENDOR_ID_HUAWEI_PME, PCI_DEVICE_ID_KBOX_0_PME)},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(pci, bma_pci_tbl);
-+
-+int edma_param_get_statics(char *buf, const struct kernel_param *kp)
-+{
-+	if (!buf)
-+		return 0;
-+
-+	return edmainfo_show(buf);
-+}
-+
-+module_param_call(statistics, NULL, edma_param_get_statics, &debug, 0444);
-+MODULE_PARM_DESC(statistics, "Statistics info of edma driver,readonly");
-+
-+int edma_param_set_debug(const char *buf, const struct kernel_param *kp)
-+{
-+	unsigned long val = 0;
-+	int ret = 0;
-+
-+	if (!buf)
-+		return -EINVAL;
-+
-+	ret = kstrtoul(buf, 0, &val);
-+
-+	if (ret)
-+		return ret;
-+
-+	if (val > 1)
-+		return -EINVAL;
-+
-+	return param_set_int(buf, kp);
-+}
-+EXPORT_SYMBOL_GPL(edma_param_set_debug);
-+
-+module_param_call(debug, &edma_param_set_debug, &param_get_int, &debug, 0644);
-+
-+void __iomem *kbox_get_base_addr(void)
-+{
-+	if (!g_bma_pci_dev || (!(g_bma_pci_dev->kbox_base_addr))) {
-+		BMA_LOG(DLOG_ERROR, "kbox_base_addr NULL point\n");
-+		return NULL;
-+	}
-+
-+	return g_bma_pci_dev->kbox_base_addr;
-+}
-+EXPORT_SYMBOL_GPL(kbox_get_base_addr);
-+
-+unsigned long kbox_get_io_len(void)
-+{
-+	if (!g_bma_pci_dev) {
-+		BMA_LOG(DLOG_ERROR, "kbox_io_len is error,can not get it\n");
-+		return 0;
-+	}
-+
-+	return g_bma_pci_dev->kbox_base_len;
-+}
-+EXPORT_SYMBOL_GPL(kbox_get_io_len);
-+
-+unsigned long kbox_get_base_phy_addr(void)
-+{
-+	if (!g_bma_pci_dev || !g_bma_pci_dev->kbox_base_phy_addr) {
-+		BMA_LOG(DLOG_ERROR, "kbox_base_phy_addr NULL point\n");
-+		return 0;
-+	}
-+
-+	return g_bma_pci_dev->kbox_base_phy_addr;
-+}
-+EXPORT_SYMBOL_GPL(kbox_get_base_phy_addr);
-+
-+static struct pci_driver bma_driver = {
-+	.name = PCI_KBOX_MODULE_NAME,
-+	.id_table = bma_pci_tbl,
-+	.probe = bma_pci_probe,
-+	.remove = bma_pci_remove,
-+	.suspend = bma_pci_suspend,
-+	.resume = bma_pci_resume,
-+};
-+
-+s32 __atu_config_H(struct pci_dev *pdev, unsigned int region,
-+		   unsigned int hostaddr_h, unsigned int hostaddr_l,
-+		   unsigned int bmcaddr_h, unsigned int bmcaddr_l,
-+		   unsigned int len)
-+{
-+	/*  atu index reg,inbound and region*/
-+	(void)pci_write_config_dword(pdev, ATU_VIEWPORT,
-+		REGION_DIR_INPUT + (region & REGION_INDEX_MASK));
-+	(void)pci_write_config_dword(pdev, ATU_BASE_LOW, hostaddr_l);
-+	(void)pci_write_config_dword(pdev, ATU_BASE_HIGH, hostaddr_h);
-+	(void)pci_write_config_dword(pdev, ATU_LIMIT, hostaddr_l + len - 1);
-+	(void)pci_write_config_dword(pdev, ATU_TARGET_LOW, bmcaddr_l);
-+	(void)pci_write_config_dword(pdev, ATU_TARGET_HIGH, bmcaddr_h);
-+	/*  atu ctrl1 reg   */
-+	(void)pci_write_config_dword(pdev, ATU_REGION_CTRL1, ATU_CTRL1_DEFAULT);
-+	/*  atu ctrl2 reg   */
-+	(void)pci_write_config_dword(pdev, ATU_REGION_CTRL2, REGION_ENABLE);
-+
-+	return 0;
-+}
-+
-+static void iounmap_bar_mem(struct bma_pci_dev_s *bma_pci_dev)
-+{
-+	if (bma_pci_dev->kbox_base_addr) {
-+		iounmap(bma_pci_dev->kbox_base_addr);
-+		bma_pci_dev->kbox_base_addr = NULL;
-+	}
-+
-+	if (bma_pci_dev->bma_base_addr) {
-+		iounmap(bma_pci_dev->bma_base_addr);
-+		bma_pci_dev->bma_base_addr = NULL;
-+		bma_pci_dev->edma_swap_addr = NULL;
-+		bma_pci_dev->hostrtc_viraddr = NULL;
-+	}
-+}
-+
-+static int ioremap_pme_bar1_mem(struct pci_dev *pdev,
-+				struct bma_pci_dev_s *bma_pci_dev)
-+{
-+	unsigned long bar1_resource_flag = 0;
-+	u32 data = 0;
-+
-+	bma_pci_dev->kbox_base_len = PCI_PME_USEABLE_SPACE;
-+	BMA_LOG(DLOG_DEBUG, "1710\n");
-+
-+	bma_pci_dev->bma_base_phy_addr =
-+	    pci_resource_start(pdev, PCI_BAR1);
-+	bar1_resource_flag = pci_resource_flags(pdev, PCI_BAR1);
-+
-+	if (!(bar1_resource_flag & IORESOURCE_MEM)) {
-+		BMA_LOG(DLOG_ERROR,
-+			"Cannot find proper PCI device base address, aborting\n");
-+		return -ENODEV;
-+	}
-+
-+	bma_pci_dev->bma_base_len = pci_resource_len(pdev, PCI_BAR1);
-+	bma_pci_dev->edma_swap_len = EDMA_SWAP_DATA_SIZE;
-+	bma_pci_dev->veth_swap_len = VETH_SWAP_DATA_SIZE;
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		"bar1: bma_base_len = 0x%lx, edma_swap_len = %ld, veth_swap_len = %ld(0x%lx)\n",
-+		bma_pci_dev->bma_base_len, bma_pci_dev->edma_swap_len,
-+		bma_pci_dev->veth_swap_len, bma_pci_dev->veth_swap_len);
-+
-+	bma_pci_dev->hostrtc_phyaddr = bma_pci_dev->bma_base_phy_addr;
-+	/* edma */
-+	bma_pci_dev->edma_swap_phy_addr =
-+		bma_pci_dev->bma_base_phy_addr + EDMA_SWAP_BASE_OFFSET;
-+	/* veth */
-+	bma_pci_dev->veth_swap_phy_addr =
-+		bma_pci_dev->edma_swap_phy_addr + EDMA_SWAP_DATA_SIZE;
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		"bar1: hostrtc_phyaddr = 0x%lx, edma_swap_phy_addr = 0x%lx, veth_swap_phy_addr = 0x%lx\n",
-+		bma_pci_dev->hostrtc_phyaddr,
-+		bma_pci_dev->edma_swap_phy_addr,
-+		bma_pci_dev->veth_swap_phy_addr);
-+
-+	__atu_config_H(pdev, 0,
-+		       GET_HIGH_ADDR(bma_pci_dev->kbox_base_phy_addr),
-+			(bma_pci_dev->kbox_base_phy_addr & 0xffffffff),
-+		0, PCI_BAR0_PME_1710, PCI_PME_USEABLE_SPACE);
-+
-+	__atu_config_H(pdev, 1,
-+		       GET_HIGH_ADDR(bma_pci_dev->hostrtc_phyaddr),
-+			(bma_pci_dev->hostrtc_phyaddr & 0xffffffff),
-+			0, HOSTRTC_REG_BASE, HOSTRTC_REG_SIZE);
-+
-+	__atu_config_H(pdev, 2,
-+		       GET_HIGH_ADDR(bma_pci_dev->edma_swap_phy_addr),
-+			(bma_pci_dev->edma_swap_phy_addr & 0xffffffff),
-+			0, EDMA_SWAP_DATA_BASE, EDMA_SWAP_DATA_SIZE);
-+
-+	__atu_config_H(pdev, 3,
-+		       GET_HIGH_ADDR(bma_pci_dev->veth_swap_phy_addr),
-+			(bma_pci_dev->veth_swap_phy_addr & 0xffffffff),
-+			0, VETH_SWAP_DATA_BASE, VETH_SWAP_DATA_SIZE);
-+
-+	if (bar1_resource_flag & IORESOURCE_CACHEABLE) {
-+		bma_pci_dev->bma_base_addr =
-+		    ioremap(bma_pci_dev->bma_base_phy_addr,
-+			    bma_pci_dev->bma_base_len);
-+	} else {
-+		bma_pci_dev->bma_base_addr =
-+		    IOREMAP(bma_pci_dev->bma_base_phy_addr,
-+			    bma_pci_dev->bma_base_len);
-+	}
-+
-+	if (!bma_pci_dev->bma_base_addr) {
-+		BMA_LOG(DLOG_ERROR,
-+			"Cannot map device registers, aborting\n");
-+
-+		return -ENODEV;
-+	}
-+
-+	bma_pci_dev->hostrtc_viraddr = bma_pci_dev->bma_base_addr;
-+	bma_pci_dev->edma_swap_addr =
-+	    (unsigned char *)bma_pci_dev->bma_base_addr +
-+	    EDMA_SWAP_BASE_OFFSET;
-+	bma_pci_dev->veth_swap_addr =
-+	    (unsigned char *)bma_pci_dev->edma_swap_addr +
-+	    EDMA_SWAP_DATA_SIZE;
-+
-+	(void)pci_read_config_dword(pdev, 0x78, &data);
-+	data = data & 0xfffffff0;
-+	(void)pci_write_config_dword(pdev, 0x78, data);
-+	(void)pci_read_config_dword(pdev, 0x78, &data);
-+
-+	return 0;
-+}
-+
-+static int ioremap_bar_mem(struct pci_dev *pdev,
-+			   struct bma_pci_dev_s *bma_pci_dev)
-+{
-+	int err = 0;
-+	unsigned long bar0_resource_flag = 0;
-+
-+	bar0_resource_flag = pci_resource_flags(pdev, PCI_BAR0);
-+
-+	if (!(bar0_resource_flag & IORESOURCE_MEM)) {
-+		BMA_LOG(DLOG_ERROR,
-+			"Cannot find proper PCI device base address, aborting\n");
-+		err = -ENODEV;
-+		return err;
-+	}
-+
-+	bma_pci_dev->kbox_base_phy_addr = pci_resource_start(pdev, PCI_BAR0);
-+
-+	bma_pci_dev->kbox_base_len = pci_resource_len(pdev, PCI_BAR0);
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		"bar0: kbox_base_phy_addr = 0x%lx, base_len = %ld(0x%lx)\n",
-+		bma_pci_dev->kbox_base_phy_addr, bma_pci_dev->kbox_base_len,
-+		bma_pci_dev->kbox_base_len);
-+
-+	if (PME_DEV_CHECK(pdev->device, pdev->vendor)) {
-+		err = ioremap_pme_bar1_mem(pdev, bma_pci_dev);
-+		if (err != 0)
-+			return err;
-+	}
-+
-+	BMA_LOG(DLOG_DEBUG, "remap BAR0 KBOX\n");
-+
-+	if (bar0_resource_flag & IORESOURCE_CACHEABLE) {
-+		bma_pci_dev->kbox_base_addr =
-+		    ioremap(bma_pci_dev->kbox_base_phy_addr,
-+			    bma_pci_dev->kbox_base_len);
-+	} else {
-+		bma_pci_dev->kbox_base_addr =
-+		    IOREMAP(bma_pci_dev->kbox_base_phy_addr,
-+			    bma_pci_dev->kbox_base_len);
-+	}
-+
-+	if (!bma_pci_dev->kbox_base_addr) {
-+		BMA_LOG(DLOG_ERROR, "Cannot map device registers, aborting\n");
-+
-+		iounmap(bma_pci_dev->bma_base_addr);
-+		bma_pci_dev->bma_base_addr = NULL;
-+		bma_pci_dev->edma_swap_addr = NULL;
-+		bma_pci_dev->hostrtc_viraddr = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+int pme_pci_enable_msi(struct pci_dev *pdev)
-+{
-+	int err = 0;
-+
-+	pci_set_master(pdev);
-+
-+#ifdef CONFIG_PCI_MSI
-+	if (pci_find_capability(pdev, PCI_CAP_ID_MSI) == 0) {
-+		BMA_LOG(DLOG_ERROR, "not support msi\n");
-+		pci_disable_device(pdev);
-+		return err;
-+	}
-+
-+	BMA_LOG(DLOG_DEBUG, "support msi\n");
-+
-+	err = pci_enable_msi(pdev);
-+	if (err) {
-+		BMA_LOG(DLOG_ERROR, "pci_enable_msi failed\n");
-+		pci_disable_device(pdev);
-+		return err;
-+	}
-+#endif
-+
-+	return err;
-+}
-+
-+int pci_device_init(struct pci_dev *pdev, struct bma_pci_dev_s *bma_pci_dev)
-+{
-+	int err = 0;
-+
-+	if (PME_DEV_CHECK(pdev->device, pdev->vendor)) {
-+		err = bma_devinft_init(bma_pci_dev);
-+		if (err) {
-+			BMA_LOG(DLOG_ERROR, "bma_devinft_init failed\n");
-+			bma_devinft_cleanup(bma_pci_dev);
-+			iounmap_bar_mem(bma_pci_dev);
-+			g_bma_pci_dev = NULL;
-+			pci_release_regions(pdev);
-+			kfree(bma_pci_dev);
-+		#ifdef CONFIG_PCI_MSI
-+			pci_disable_msi(pdev);
-+		#endif
-+			pci_disable_device(pdev);
-+
-+			return err;
-+		}
-+	} else {
-+		BMA_LOG(DLOG_DEBUG, "edma is not supported on this pcie\n");
-+	}
-+
-+	pci_set_drvdata(pdev, bma_pci_dev);
-+
-+	return 0;
-+}
-+
-+int pci_device_config(struct pci_dev *pdev)
-+{
-+	int err = 0;
-+	struct bma_pci_dev_s *bma_pci_dev = NULL;
-+
-+	bma_pci_dev = kmalloc(sizeof(*bma_pci_dev), GFP_KERNEL);
-+	if (!bma_pci_dev) {
-+		err = -ENOMEM;
-+		goto err_out_disable_msi;
-+	}
-+	memset(bma_pci_dev, 0, sizeof(*bma_pci_dev));
-+
-+	bma_pci_dev->pdev = pdev;
-+
-+	err = pci_request_regions(pdev, PCI_KBOX_MODULE_NAME);
-+	if (err) {
-+		BMA_LOG(DLOG_ERROR, "Cannot obtain PCI resources, aborting\n");
-+		goto err_out_free_dev;
-+	}
-+
-+	err = ioremap_bar_mem(pdev, bma_pci_dev);
-+	if (err) {
-+		BMA_LOG(DLOG_ERROR, "ioremap_edma_io_mem failed\n");
-+		goto err_out_release_regions;
-+	}
-+
-+	g_bma_pci_dev = bma_pci_dev;
-+
-+	if (SET_DMA_MASK(&pdev->dev)) {
-+		BMA_LOG(DLOG_ERROR,
-+			"No usable DMA ,configuration, aborting,goto failed2!!!\n");
-+		goto err_out_unmap_bar;
-+	}
-+
-+	g_bma_pci_dev = bma_pci_dev;
-+
-+	return pci_device_init(pdev, bma_pci_dev);
-+
-+err_out_unmap_bar:
-+	iounmap_bar_mem(bma_pci_dev);
-+	g_bma_pci_dev = NULL;
-+err_out_release_regions:
-+	pci_release_regions(pdev);
-+err_out_free_dev:
-+	kfree(bma_pci_dev);
-+	bma_pci_dev = NULL;
-+err_out_disable_msi:
-+#ifdef CONFIG_PCI_MSI
-+	pci_disable_msi(pdev);
-+#endif
-+
-+	pci_disable_device(pdev);
-+
-+	return err;
-+}
-+
-+static int bma_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-+{
-+	int err = 0;
-+
-+	UNUSED(ent);
-+
-+	if (g_bma_pci_dev)
-+		return -EPERM;
-+
-+	err = pci_enable_device(pdev);
-+	if (err) {
-+		BMA_LOG(DLOG_ERROR, "Cannot enable PCI device,aborting\n");
-+		return err;
-+	}
-+
-+	if (PME_DEV_CHECK(pdev->device, pdev->vendor)) {
-+		err = pme_pci_enable_msi(pdev);
-+		if (err)
-+			return err;
-+	}
-+
-+	BMA_LOG(DLOG_DEBUG, "pdev->device = 0x%x\n", pdev->device);
-+	BMA_LOG(DLOG_DEBUG, "pdev->vendor = 0x%x\n", pdev->vendor);
-+
-+	return pci_device_config(pdev);
-+}
-+
-+static void bma_pci_remove(struct pci_dev *pdev)
-+{
-+	struct bma_pci_dev_s *bma_pci_dev =
-+		(struct bma_pci_dev_s *)pci_get_drvdata(pdev);
-+
-+	g_bma_pci_dev = NULL;
-+	(void)pci_set_drvdata(pdev, NULL);
-+
-+	if (bma_pci_dev) {
-+		bma_devinft_cleanup(bma_pci_dev);
-+
-+		iounmap_bar_mem(bma_pci_dev);
-+
-+		kfree(bma_pci_dev);
-+	}
-+
-+	pci_release_regions(pdev);
-+
-+#ifdef CONFIG_PCI_MSI
-+	pci_disable_msi(pdev);
-+#endif
-+	pci_disable_device(pdev);
-+}
-+
-+static int bma_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+{
-+	UNUSED(pdev);
-+	UNUSED(state);
-+
-+	return 0;
-+}
-+
-+static int bma_pci_resume(struct pci_dev *pdev)
-+{
-+	UNUSED(pdev);
-+
-+	return 0;
-+}
-+
-+int __init bma_pci_init(void)
-+{
-+	int ret = 0;
-+
-+	BMA_LOG(DLOG_DEBUG, "\n");
-+
-+	ret = pci_register_driver(&bma_driver);
-+	if (ret)
-+		BMA_LOG(DLOG_ERROR, "pci_register_driver failed\n");
-+
-+	return ret;
-+}
-+
-+void __exit bma_pci_cleanup(void)
-+{
-+	BMA_LOG(DLOG_DEBUG, "\n");
-+
-+	pci_unregister_driver(&bma_driver);
-+}
-+
-+MODULE_AUTHOR("HUAWEI TECHNOLOGIES CO., LTD.");
-+MODULE_DESCRIPTION("HUAWEI EDMA DRIVER");
-+MODULE_LICENSE("GPL");
-+MODULE_VERSION(BMA_VERSION);
-+#ifndef _lint
-+
-+module_init(bma_pci_init);
-+module_exit(bma_pci_cleanup);
-+#endif
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h b/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h
-new file mode 100644
-index 000000000000..2851e583666a
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h
-@@ -0,0 +1,94 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _BMA_PCI_H_
-+#define _BMA_PCI_H_
-+
-+#include "bma_devintf.h"
-+#include "bma_include.h"
-+#include <linux/netdevice.h>
-+
-+#define EDMA_SWAP_BASE_OFFSET	0x10000
-+
-+#define HOSTRTC_REG_BASE	0x2f000000
-+#define HOSTRTC_REG_SIZE	EDMA_SWAP_BASE_OFFSET
-+
-+#define EDMA_SWAP_DATA_BASE	0x84810000
-+#define EDMA_SWAP_DATA_SIZE	65536
-+
-+#define VETH_SWAP_DATA_BASE	0x84820000
-+#define VETH_SWAP_DATA_SIZE	0xdf000
-+
-+#define ATU_VIEWPORT		0x900
-+#define	ATU_REGION_CTRL1	0x904
-+#define ATU_REGION_CTRL2	0x908
-+#define ATU_BASE_LOW		0x90C
-+#define ATU_BASE_HIGH		0x910
-+#define ATU_LIMIT		0x914
-+#define	ATU_TARGET_LOW		0x918
-+#define ATU_TARGET_HIGH		0x91C
-+#define REGION_DIR_OUTPUT	(0x0 << 31)
-+#define REGION_DIR_INPUT	(0x1 << 31)
-+#define REGION_INDEX_MASK	0x7
-+#define	REGION_ENABLE		(0x1 << 31)
-+#define	ATU_CTRL1_DEFAULT	0x0
-+struct bma_pci_dev_s {
-+	unsigned long kbox_base_phy_addr;
-+	void __iomem *kbox_base_addr;
-+	unsigned long kbox_base_len;
-+
-+	unsigned long bma_base_phy_addr;
-+	void __iomem *bma_base_addr;
-+	unsigned long bma_base_len;
-+
-+	unsigned long hostrtc_phyaddr;
-+	void __iomem *hostrtc_viraddr;
-+
-+	unsigned long edma_swap_phy_addr;
-+	void __iomem *edma_swap_addr;
-+	unsigned long edma_swap_len;
-+
-+	unsigned long veth_swap_phy_addr;
-+	void __iomem *veth_swap_addr;
-+	unsigned long veth_swap_len;
-+
-+	struct pci_dev *pdev;
-+	struct bma_dev_s *bma_dev;
-+};
-+
-+#ifdef DRV_VERSION
-+#define BMA_VERSION MICRO_TO_STR(DRV_VERSION)
-+#else
-+#define BMA_VERSION "0.3.4"
-+#endif
-+
-+#ifdef CONFIG_ARM64
-+#define IOREMAP ioremap_wc
-+#else
-+#define IOREMAP ioremap_nocache
-+#endif
-+
-+extern int debug;
-+
-+#define BMA_LOG(level, fmt, args...) \
-+	do { \
-+		if (debug >= (level))\
-+			netdev_alert(0, "edma: %s, %d, " fmt, \
-+				__func__, __LINE__, ## args); \
-+	} while (0)
-+
-+int edmainfo_show(char *buff);
-+
-+#endif
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c b/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c
-new file mode 100644
-index 000000000000..2d5f4ffd79d9
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c
-@@ -0,0 +1,1462 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/kthread.h>
-+#include <linux/mm.h>
-+#include <linux/proc_fs.h>
-+#include <linux/seq_file.h>
-+
-+#include "bma_pci.h"
-+#include "edma_host.h"
-+
-+static struct edma_user_inft_s *g_user_func[TYPE_MAX] = { 0 };
-+
-+static struct bma_dev_s *g_bma_dev;
-+static int edma_host_dma_interrupt(struct edma_host_s *edma_host);
-+
-+int edmainfo_show(char *buf)
-+{
-+	struct bma_user_s *user_ptr = NULL;
-+	struct edma_host_s *host_ptr = NULL;
-+	int len = 0;
-+	__kernel_time_t running_time = 0;
-+	static const char * const host_status[] = {
-+		"deregistered",	"registered", "lost"};
-+
-+	if (!buf)
-+		return 0;
-+
-+	if (!g_bma_dev) {
-+		len += sprintf(buf, "EDMA IS NOT SUPPORTED");
-+		return len;
-+	}
-+
-+	host_ptr = &g_bma_dev->edma_host;
-+
-+	GET_SYS_SECONDS(running_time);
-+	running_time -= host_ptr->statistics.init_time;
-+	len += sprintf(buf + len,
-+		    "============================EDMA_DRIVER_INFO============================\n");
-+	len += sprintf(buf + len, "version      :" BMA_VERSION "\n");
-+
-+	len += sprintf(buf + len, "running_time :%luD %02lu:%02lu:%02lu\n",
-+		    running_time / SECONDS_PER_DAY,
-+		    running_time % SECONDS_PER_DAY / SECONDS_PER_HOUR,
-+		    running_time % SECONDS_PER_HOUR / SECONDS_PER_MINUTE,
-+		    running_time % SECONDS_PER_MINUTE);
-+
-+	len += sprintf(buf + len, "remote_status:%s\n",
-+		    host_status[host_ptr->statistics.remote_status]);
-+	len += sprintf(buf + len, "lost_count   :%d\n",
-+		    host_ptr->statistics.lost_count);
-+	len += sprintf(buf + len, "b2h_int      :%d\n",
-+		    host_ptr->statistics.b2h_int);
-+	len += sprintf(buf + len, "h2b_int      :%d\n",
-+		    host_ptr->statistics.h2b_int);
-+	len += sprintf(buf + len, "dma_count    :%d\n",
-+		    host_ptr->statistics.dma_count);
-+	len += sprintf(buf + len, "recv_bytes   :%d\n",
-+		    host_ptr->statistics.recv_bytes);
-+	len += sprintf(buf + len, "send_bytes   :%d\n",
-+		    host_ptr->statistics.send_bytes);
-+	len += sprintf(buf + len, "recv_pkgs    :%d\n",
-+		    host_ptr->statistics.recv_pkgs);
-+	len += sprintf(buf + len, "send_pkgs    :%d\n",
-+		    host_ptr->statistics.send_pkgs);
-+	len += sprintf(buf + len, "drop_pkgs    :%d\n",
-+		    host_ptr->statistics.drop_pkgs);
-+	len += sprintf(buf + len, "fail_count   :%d\n",
-+		    host_ptr->statistics.failed_count);
-+	len += sprintf(buf + len, "debug        :%d\n", debug);
-+	len += sprintf(buf + len,
-+		    "================================USER_INFO===============================\n");
-+
-+	list_for_each_entry_rcu(user_ptr, &g_bma_dev->priv_list, link) {
-+		len += sprintf(buf + len,
-+			    "type: %d\nsub type: %d\nopen:%d\nmax recvmsg nums: %d\ncur recvmsg nums: %d\n",
-+			    user_ptr->type, user_ptr->sub_type,
-+			    host_ptr->local_open_status[user_ptr->type],
-+			    user_ptr->max_recvmsg_nums,
-+			    user_ptr->cur_recvmsg_nums);
-+		len += sprintf(buf + len,
-+			    "========================================================================\n");
-+	}
-+
-+	return len;
-+}
-+
-+int is_edma_b2h_int(struct edma_host_s *edma_host)
-+{
-+	struct notify_msg *pnm = NULL;
-+
-+	if (!edma_host)
-+		return -1;
-+
-+	pnm = (struct notify_msg *)edma_host->edma_flag;
-+	if (!pnm) {
-+		BMA_LOG(DLOG_ERROR, "pnm is 0\n");
-+		return -1;
-+	}
-+
-+	if (IS_EDMA_B2H_INT(pnm->int_flag)) {
-+		CLEAR_EDMA_B2H_INT(pnm->int_flag);
-+		return 0;
-+	}
-+
-+	return -1;
-+}
-+
-+void edma_int_to_bmc(struct edma_host_s *edma_host)
-+{
-+	unsigned int data = 0;
-+
-+	if (!edma_host)
-+		return;
-+
-+	edma_host->statistics.h2b_int++;
-+
-+	data = *(unsigned int *)((char *)edma_host->hostrtc_viraddr +
-+							 HOSTRTC_INT_OFFSET);
-+
-+	data |= 0x00000001;
-+
-+	*(unsigned int *)((char *)edma_host->hostrtc_viraddr +
-+					  HOSTRTC_INT_OFFSET) = data;
-+}
-+
-+static void edma_host_int_to_bmc(struct edma_host_s *edma_host)
-+{
-+	struct notify_msg *pnm = NULL;
-+
-+	if (!edma_host)
-+		return;
-+
-+	pnm = (struct notify_msg *)edma_host->edma_flag;
-+	if (pnm) {
-+		SET_EDMA_H2B_INT(pnm->int_flag);
-+		edma_int_to_bmc(edma_host);
-+	}
-+}
-+
-+static int check_status_dmah2b(struct edma_host_s *edma_host)
-+{
-+	unsigned int data = 0;
-+	struct pci_dev *pdev = NULL;
-+
-+	if (!edma_host)
-+		return 0;
-+
-+	pdev = edma_host->pdev;
-+	if (!pdev)
-+		return 0;
-+
-+	(void)pci_read_config_dword(pdev, REG_PCIE1_DMAREAD_STATUS,
-+				    (u32 *)&data);
-+
-+	if (data & (1 << SHIFT_PCIE1_DMAREAD_STATUS))
-+		return 1;	/* ok */
-+	else
-+		return 0;	/* busy */
-+}
-+
-+static int check_status_dmab2h(struct edma_host_s *edma_host)
-+{
-+	unsigned int data = 0;
-+	struct pci_dev *pdev = NULL;
-+
-+	if (!edma_host)
-+		return 0;
-+
-+	pdev = edma_host->pdev;
-+	if (!pdev)
-+		return 0;
-+
-+	(void)pci_read_config_dword(pdev, REG_PCIE1_DMAWRITE_STATUS,
-+				    (u32 *)&data);
-+
-+	if (data & (1 << SHIFT_PCIE1_DMAWRITE_STATUS))
-+		return 1;	/* ok */
-+	else
-+		return 0;	/* busy */
-+}
-+
-+void clear_int_dmah2b(struct edma_host_s *edma_host)
-+{
-+	unsigned int data = 0;
-+	struct pci_dev *pdev = NULL;
-+
-+	if (!edma_host)
-+		return;
-+
-+	pdev = edma_host->pdev;
-+	if (!pdev)
-+		return;
-+
-+	(void)pci_read_config_dword(pdev, REG_PCIE1_DMAREADINT_CLEAR,
-+				    (u32 *)&data);
-+	data = data & (~((1 << SHIFT_PCIE1_DMAREADINT_CLEAR)));
-+	data = data | (1 << SHIFT_PCIE1_DMAREADINT_CLEAR);
-+	(void)pci_write_config_dword(pdev, REG_PCIE1_DMAREADINT_CLEAR, data);
-+}
-+
-+void clear_int_dmab2h(struct edma_host_s *edma_host)
-+{
-+	unsigned int data = 0;
-+	struct pci_dev *pdev = NULL;
-+
-+	if (!edma_host)
-+		return;
-+
-+	pdev = edma_host->pdev;
-+	if (!pdev)
-+		return;
-+
-+	(void)pci_read_config_dword(pdev, REG_PCIE1_DMAWRITEINT_CLEAR,
-+				    (u32 *)&data);
-+	data = data & (~((1 << SHIFT_PCIE1_DMAWRITEINT_CLEAR)));
-+	data = data | (1 << SHIFT_PCIE1_DMAWRITEINT_CLEAR);
-+	(void)pci_write_config_dword(pdev, REG_PCIE1_DMAWRITEINT_CLEAR, data);
-+}
-+
-+int edma_host_check_dma_status(enum dma_direction_e dir)
-+{
-+	int ret = 0;
-+
-+	switch (dir) {
-+	case BMC_TO_HOST:
-+		ret = check_status_dmab2h(&g_bma_dev->edma_host);
-+		if (ret == 1)
-+			clear_int_dmab2h(&g_bma_dev->edma_host);
-+
-+		break;
-+
-+	case HOST_TO_BMC:
-+		ret = check_status_dmah2b(&g_bma_dev->edma_host);
-+		if (ret == 1)
-+			clear_int_dmah2b(&g_bma_dev->edma_host);
-+
-+		break;
-+
-+	default:
-+		BMA_LOG(DLOG_ERROR, "direction failed, dir = %d\n", dir);
-+		ret = -EFAULT;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+#ifdef USE_DMA
-+
-+static int start_transfer_h2b(struct edma_host_s *edma_host, unsigned int len,
-+			      unsigned int src_h, unsigned int src_l,
-+			      unsigned int dst_h, unsigned int dst_l)
-+{
-+	unsigned long flags = 0;
-+	struct pci_dev *pdev = edma_host->pdev;
-+
-+	spin_lock_irqsave(&edma_host->reg_lock, flags);
-+	/*  read engine enable    */
-+	(void)pci_write_config_dword(pdev, 0x99c, 0x00000001);
-+	/*  read ch,ch index 0   */
-+	(void)pci_write_config_dword(pdev, 0xa6c, 0x80000000);
-+	/*  ch ctrl,local int enable */
-+	(void)pci_write_config_dword(pdev, 0xa70, 0x00000008);
-+	/*  size    */
-+	(void)pci_write_config_dword(pdev, 0xa78, len);
-+	/*  src lower 32b    */
-+	(void)pci_write_config_dword(pdev, 0xa7c, src_l);
-+	/*  src upper 32b    */
-+	(void)pci_write_config_dword(pdev, 0xa80, src_h);
-+	/*  dst lower 32b    */
-+	(void)pci_write_config_dword(pdev, 0xa84, dst_l);
-+	/*  dst upper 32b    */
-+	(void)pci_write_config_dword(pdev, 0xa88, dst_h);
-+	/*  start read dma,ch 0   */
-+	(void)pci_write_config_dword(pdev, 0x9a0, 0x00000000);
-+	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
-+	return 0;
-+}
-+
-+static int start_transfer_b2h(struct edma_host_s *edma_host, unsigned int len,
-+			      unsigned int src_h, unsigned int src_l,
-+			      unsigned int dst_h, unsigned int dst_l)
-+{
-+	unsigned long flags = 0;
-+	struct pci_dev *pdev = edma_host->pdev;
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		"len = 0x%8x,src_h = 0x%8x,src_l = 0x%8x,dst_h = 0x%8x,dst_l = 0x%8x\n",
-+		len, src_h, src_l, dst_h, dst_l);
-+
-+	spin_lock_irqsave(&edma_host->reg_lock, flags);
-+	/*  write engine enable    */
-+	(void)pci_write_config_dword(pdev, 0x97c, 0x00000001);
-+	/*  write ch,ch index 0   */
-+	(void)pci_write_config_dword(pdev, 0xa6c, 0x00000000);
-+	/*  ch ctrl,local int enable */
-+	(void)pci_write_config_dword(pdev, 0xa70, 0x00000008);
-+	/*  size    */
-+	(void)pci_write_config_dword(pdev, 0xa78, len);
-+	/*  src lower 32b    */
-+	(void)pci_write_config_dword(pdev, 0xa7c, src_l);
-+	/*  src upper 32b    */
-+	(void)pci_write_config_dword(pdev, 0xa80, src_h);
-+	/*  dst lower 32b    */
-+	(void)pci_write_config_dword(pdev, 0xa84, dst_l);
-+	/*  dst upper 32b    */
-+	(void)pci_write_config_dword(pdev, 0xa88, dst_h);
-+	/*  start write dma,ch 0   */
-+	(void)pci_write_config_dword(pdev, 0x980, 0x00000000);
-+	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
-+
-+	return 0;
-+}
-+#endif
-+
-+static void start_listtransfer_h2b(struct edma_host_s *edma_host,
-+				   unsigned int list_h, unsigned int list_l)
-+{
-+	unsigned long flags = 0;
-+	struct pci_dev *pdev = NULL;
-+
-+	if (!edma_host)
-+		return;
-+
-+	pdev = edma_host->pdev;
-+	if (!pdev)
-+		return;
-+
-+	spin_lock_irqsave(&edma_host->reg_lock, flags);
-+
-+	/*  write engine enable    */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x29c, 0x00000001);
-+	/*  write list err enable   */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x334, 0x00010000);
-+	/*  write ch,ch index 0   */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x36c, 0x80000000);
-+	/*  ch ctrl,local int enable */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x370, 0x00000300);
-+	/*  list lower 32b    */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x38c, list_l);
-+	/*  list upper 32b    */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x390, list_h);
-+	/*  start write dma,ch 0   */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x2a0, 0x00000000);
-+
-+	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
-+}
-+
-+static void start_listtransfer_b2h(struct edma_host_s *edma_host,
-+				   unsigned int list_h, unsigned int list_l)
-+{
-+	unsigned long flags = 0;
-+	struct pci_dev *pdev = NULL;
-+
-+	if (!edma_host)
-+		return;
-+
-+	pdev = edma_host->pdev;
-+	if (!pdev)
-+		return;
-+
-+	spin_lock_irqsave(&edma_host->reg_lock, flags);
-+
-+	/*  write engine enable    */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x27c, 0x00000001);
-+	/*  write list err enable   */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x300, 0x00000001);
-+	/*  write ch,ch index 0   */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x36c, 0x00000000);
-+	/*  ch ctrl,local int enable */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x370, 0x00000300);
-+	/*  list lower 32b    */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x38c, list_l);
-+	/*  list upper 32b    */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x390, list_h);
-+	/*  start write dma,ch 0   */
-+	(void)pci_write_config_dword(pdev, 0x700 + 0x280, 0x00000000);
-+
-+	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
-+}
-+
-+int edma_host_dma_start(struct edma_host_s *edma_host,
-+			struct bma_priv_data_s *priv)
-+{
-+	struct bma_user_s *puser = NULL;
-+	struct bma_dev_s *bma_dev = NULL;
-+	unsigned long flags = 0;
-+
-+	if (!edma_host || !priv)
-+		return -EFAULT;
-+
-+	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
-+
-+	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
-+
-+	list_for_each_entry_rcu(puser, &bma_dev->priv_list, link) {
-+		if (puser->dma_transfer) {
-+			spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+			BMA_LOG(DLOG_ERROR, "type = %d dma is started\n",
-+				puser->type);
-+
-+			return -EBUSY;
-+		}
-+	}
-+
-+	priv->user.dma_transfer = 1;
-+
-+	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+
-+	return 0;
-+}
-+
-+#ifdef USE_DMA
-+
-+static int edma_host_dma_h2b(struct edma_host_s *edma_host,
-+			     struct bma_dma_addr_s *host_addr,
-+			     struct bma_dma_addr_s *bmc_addr)
-+{
-+	int ret = 0;
-+	struct notify_msg *pnm = (struct notify_msg *)edma_host->edma_flag;
-+	unsigned long host_h2b_addr = 0;
-+	unsigned long bmc_h2b_addr = 0;
-+	unsigned int bmc_h2b_size = 0;
-+	unsigned int src_h, src_l, dst_h, dst_l;
-+
-+	if (!host_addr) {
-+		BMA_LOG(DLOG_ERROR, "host_addr is NULL\n");
-+		return -EFAULT;
-+	}
-+
-+	BMA_LOG(DLOG_DEBUG, "host_addr->dma_addr = 0x%llx\n",
-+		host_addr->dma_addr);
-+
-+	if (host_addr->dma_addr)
-+		host_h2b_addr = (unsigned long)(host_addr->dma_addr);
-+	else
-+		host_h2b_addr = edma_host->h2b_addr.dma_addr;
-+
-+	bmc_h2b_addr = pnm->h2b_addr;
-+	bmc_h2b_size = pnm->h2b_size;
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		"host_h2b_addr = 0x%lx, dma_data_len = %d, bmc_h2b_addr = 0x%lx, bmc_h2b_size = %d\n",
-+		host_h2b_addr, host_addr->dma_data_len, bmc_h2b_addr,
-+		bmc_h2b_size);
-+
-+	if (host_addr->dma_data_len > EDMA_DMABUF_SIZE ||
-+	    bmc_h2b_addr == 0 ||
-+	    host_addr->dma_data_len > bmc_h2b_size) {
-+		BMA_LOG(DLOG_ERROR,
-+			"dma_data_len too large = %d, bmc_h2b_size = %d\n",
-+			host_addr->dma_data_len, bmc_h2b_size);
-+		return -EFAULT;
-+	}
-+
-+	edma_host->h2b_state = H2BSTATE_WAITDMA;
-+
-+	src_h = (unsigned int)((sizeof(unsigned long) == 8) ?
-+					(host_h2b_addr >> 32) : 0);
-+	src_l = (unsigned int)(host_h2b_addr & 0xffffffff);
-+	dst_h = (unsigned int)((sizeof(unsigned long) == 8) ?
-+					(bmc_h2b_addr >> 32) : 0);
-+	dst_l = (unsigned int)(bmc_h2b_addr & 0xffffffff);
-+	(void)start_transfer_h2b(edma_host,
-+		host_addr->dma_data_len, src_h,
-+		src_l, dst_h, dst_l);
-+
-+	(void)mod_timer(&edma_host->dma_timer,
-+			jiffies_64 + TIMER_INTERVAL_CHECK);
-+
-+	ret = wait_event_interruptible_timeout(edma_host->wq_dmah2b,
-+					       (edma_host->h2b_state ==
-+					      H2BSTATE_IDLE),
-+					     EDMA_DMA_TRANSFER_WAIT_TIMEOUT);
-+
-+	if (ret == -ERESTARTSYS) {
-+		BMA_LOG(DLOG_ERROR, "eintr 1\n");
-+		ret = -EINTR;
-+		goto end;
-+	} else if (ret == 0) {
-+		BMA_LOG(DLOG_ERROR, "timeout 2\n");
-+		ret = -ETIMEDOUT;
-+		goto end;
-+	} else {
-+		ret = 0;
-+		BMA_LOG(DLOG_ERROR, "h2b dma successful\n");
-+	}
-+
-+end:
-+
-+	return ret;
-+}
-+
-+static int edma_host_dma_b2h(struct edma_host_s *edma_host,
-+			     struct bma_dma_addr_s *host_addr,
-+			     struct bma_dma_addr_s *bmc_addr)
-+{
-+	int ret = 0;
-+	struct notify_msg *pnm = (struct notify_msg *)edma_host->edma_flag;
-+	unsigned long bmc_b2h_addr = 0;
-+	unsigned long host_b2h_addr = 0;
-+	unsigned int src_h, src_l, dst_h, dst_l;
-+
-+	if (!bmc_addr)
-+		return -EFAULT;
-+
-+	if (host_addr->dma_addr)
-+		host_b2h_addr = (unsigned long)(host_addr->dma_addr);
-+	else
-+		host_b2h_addr = edma_host->b2h_addr.dma_addr;
-+
-+	if (bmc_addr->dma_addr)
-+		bmc_b2h_addr = (unsigned long)(bmc_addr->dma_addr);
-+	else
-+		bmc_b2h_addr = pnm->b2h_addr;
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		"bmc_b2h_addr = 0x%lx, host_b2h_addr = 0x%lx, dma_data_len = %d\n",
-+		bmc_b2h_addr, host_b2h_addr, bmc_addr->dma_data_len);
-+
-+	if (bmc_addr->dma_data_len > EDMA_DMABUF_SIZE ||
-+	    bmc_addr->dma_data_len > edma_host->b2h_addr.len) {
-+		BMA_LOG(DLOG_ERROR,
-+			"dma_data_len too large = %d, b2h_addr = %d\n",
-+			host_addr->dma_data_len, edma_host->b2h_addr.len);
-+		return -EFAULT;
-+	}
-+
-+	edma_host->b2h_state = B2HSTATE_WAITDMA;
-+
-+	src_h = (unsigned int)((sizeof(unsigned long) == 8) ?
-+					(bmc_b2h_addr >> 32) : 0);
-+	src_l = (unsigned int)(bmc_b2h_addr & 0xffffffff);
-+	dst_h = (unsigned int)((sizeof(unsigned long) == 8) ?
-+					(host_b2h_addr >> 32) : 0);
-+	dst_l = (unsigned int)(host_b2h_addr & 0xffffffff);
-+	(void)start_transfer_b2h(edma_host,
-+		bmc_addr->dma_data_len, src_h,
-+		src_l, dst_h, dst_l);
-+
-+	(void)mod_timer(&edma_host->dma_timer,
-+			jiffies_64 + TIMER_INTERVAL_CHECK);
-+
-+	ret = wait_event_interruptible_timeout(edma_host->wq_dmab2h,
-+					       (edma_host->b2h_state ==
-+					      B2HSTATE_IDLE),
-+					     EDMA_DMA_TRANSFER_WAIT_TIMEOUT);
-+
-+	if (ret == -ERESTARTSYS) {
-+		BMA_LOG(DLOG_ERROR, "eintr 1\n");
-+		ret = -EINTR;
-+		goto end;
-+	} else if (ret == 0) {
-+		BMA_LOG(DLOG_ERROR, "timeout 2\n");
-+		ret = -ETIMEDOUT;
-+		goto end;
-+	} else {
-+		BMA_LOG(DLOG_DEBUG, "h2b dma successful\n");
-+	}
-+
-+end:
-+
-+	return ret;
-+}
-+#endif
-+
-+void host_dma_transfer_without_list(struct edma_host_s *edma_host,
-+				    struct bma_dma_transfer_s *dma_transfer,
-+					int *return_code)
-+{
-+#ifdef USE_DMA
-+	union transfer_u *transfer = &dma_transfer->transfer;
-+
-+	switch (dma_transfer->dir) {
-+	case BMC_TO_HOST:
-+		*return_code = edma_host_dma_b2h(edma_host,
-+						 &transfer->nolist.host_addr,
-+						 &transfer->nolist.bmc_addr);
-+		break;
-+	case HOST_TO_BMC:
-+		*return_code = edma_host_dma_h2b(edma_host,
-+						 &transfer->nolist.host_addr,
-+						 &transfer->nolist.bmc_addr);
-+		break;
-+	default:
-+		BMA_LOG(DLOG_ERROR, "direction failed, dir = %d\n",
-+			dma_transfer->dir);
-+		*return_code = -EFAULT;
-+		break;
-+	}
-+#endif
-+}
-+
-+void host_dma_transfer_withlist(struct edma_host_s *edma_host,
-+				struct bma_dma_transfer_s *dma_transfer,
-+					int *return_code)
-+{
-+	unsigned int list_h = 0;
-+	unsigned int list_l = 0;
-+	union transfer_u *transfer = &dma_transfer->transfer;
-+
-+	list_h = (unsigned int)((sizeof(unsigned long) == 8) ?
-+			(transfer->list.dma_addr >> 32) : 0);
-+	list_l = (unsigned int)(transfer->list.dma_addr
-+				& 0xffffffff);
-+
-+	switch (dma_transfer->dir) {
-+	case BMC_TO_HOST:
-+		start_listtransfer_b2h(edma_host, list_h, list_l);
-+		break;
-+	case HOST_TO_BMC:
-+		start_listtransfer_h2b(edma_host, list_h, list_l);
-+		break;
-+	default:
-+		BMA_LOG(DLOG_ERROR, "direction failed, dir = %d\n\n",
-+			dma_transfer->dir);
-+		*return_code = -EFAULT;
-+		break;
-+	}
-+}
-+
-+int edma_host_dma_transfer(struct edma_host_s *edma_host,
-+			   struct bma_priv_data_s *priv,
-+			   struct bma_dma_transfer_s *dma_transfer)
-+{
-+	int ret = 0;
-+	unsigned long flags = 0;
-+	struct bma_dev_s *bma_dev = NULL;
-+
-+	if (!edma_host || !priv || !dma_transfer)
-+		return -EFAULT;
-+
-+	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
-+
-+	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
-+
-+	if (priv->user.dma_transfer == 0) {
-+		spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+		BMA_LOG(DLOG_ERROR, "dma_transfer = %hhd\n",
-+			priv->user.dma_transfer);
-+		return -EFAULT;
-+	}
-+
-+	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+
-+	edma_host->statistics.dma_count++;
-+
-+	if (dma_transfer->type == DMA_NOT_LIST) {
-+		host_dma_transfer_without_list(edma_host,
-+					       dma_transfer, &ret);
-+	} else if (dma_transfer->type == DMA_LIST) {
-+		host_dma_transfer_withlist(edma_host, dma_transfer, &ret);
-+	} else {
-+		BMA_LOG(DLOG_ERROR, "type failed! type = %d\n",
-+			dma_transfer->type);
-+		return -EFAULT;
-+	}
-+
-+	return ret;
-+}
-+
-+void edma_host_reset_dma(struct edma_host_s *edma_host, int dir)
-+{
-+	u32 data = 0;
-+	u32 reg_addr = 0;
-+	unsigned long flags = 0;
-+	int count = 0;
-+	struct pci_dev *pdev = NULL;
-+
-+	if (!edma_host)
-+		return;
-+
-+	pdev = edma_host->pdev;
-+	if (!pdev)
-+		return;
-+
-+	if (dir == BMC_TO_HOST)
-+		reg_addr = REG_PCIE1_DMA_READ_ENGINE_ENABLE;
-+	else if (dir == HOST_TO_BMC)
-+		reg_addr = REG_PCIE1_DMA_WRITE_ENGINE_ENABLE;
-+	else
-+		return;
-+
-+	spin_lock_irqsave(&edma_host->reg_lock, flags);
-+
-+	(void)pci_read_config_dword(pdev, reg_addr, &data);
-+	data &= ~(1 << SHIFT_PCIE1_DMA_ENGINE_ENABLE);
-+	(void)pci_write_config_dword(pdev, reg_addr, data);
-+
-+	while (count++ < 10) {
-+		(void)pci_read_config_dword(pdev, reg_addr, &data);
-+
-+		if (0 == (data & (1 << SHIFT_PCIE1_DMA_ENGINE_ENABLE))) {
-+			BMA_LOG(DLOG_DEBUG, "reset dma succesfull\n");
-+			break;
-+		}
-+
-+		mdelay(100);
-+	}
-+
-+	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
-+	BMA_LOG(DLOG_DEBUG, "reset dma reg_addr=0x%x count=%d data=0x%08x\n",
-+		reg_addr, count, data);
-+}
-+
-+int edma_host_dma_stop(struct edma_host_s *edma_host,
-+		       struct bma_priv_data_s *priv)
-+{
-+	unsigned long flags = 0;
-+	struct bma_dev_s *bma_dev = NULL;
-+
-+	if (!edma_host || !priv)
-+		return -1;
-+
-+	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
-+
-+	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
-+	priv->user.dma_transfer = 0;
-+	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int edma_host_send_msg(struct edma_host_s *edma_host)
-+{
-+	void *vaddr = NULL;
-+	unsigned long flags = 0;
-+	struct edma_mbx_hdr_s *send_mbx_hdr = NULL;
-+	static unsigned long last_timer_record;
-+
-+	if (!edma_host)
-+		return 0;
-+
-+	send_mbx_hdr = (struct edma_mbx_hdr_s *)edma_host->edma_send_addr;
-+
-+	if (send_mbx_hdr->mbxlen > 0) {
-+		if (send_mbx_hdr->mbxlen > HOST_MAX_SEND_MBX_LEN) {
-+			/*share memory is disable */
-+			send_mbx_hdr->mbxlen = 0;
-+			BMA_LOG(DLOG_ERROR, "mbxlen is too long\n");
-+			return -EFAULT;
-+		}
-+
-+		if (time_after(jiffies, last_timer_record + 10 * HZ)) {
-+			BMA_LOG(DLOG_ERROR, "no response in 10s,clean msg\n");
-+			edma_host->statistics.failed_count++;
-+			send_mbx_hdr->mbxlen = 0;
-+			return -EFAULT;
-+		}
-+
-+		BMA_LOG(DLOG_DEBUG,
-+			"still have msg : mbxlen: %d, msg_send_write: %d\n",
-+			send_mbx_hdr->mbxlen, edma_host->msg_send_write);
-+
-+		/*  resend door bell */
-+		if (time_after(jiffies, last_timer_record + 5 * HZ))
-+			edma_host_int_to_bmc(edma_host);
-+
-+		return -EFAULT;
-+	}
-+
-+	vaddr =
-+		(void *)((unsigned char *)edma_host->edma_send_addr +
-+			 SIZE_OF_MBX_HDR);
-+
-+	last_timer_record = jiffies;
-+
-+	spin_lock_irqsave(&edma_host->send_msg_lock, flags);
-+
-+	if (edma_host->msg_send_write == 0) {
-+		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
-+		return 0;
-+	}
-+
-+	if (edma_host->msg_send_write >
-+	    HOST_MAX_SEND_MBX_LEN - SIZE_OF_MBX_HDR) {
-+		BMA_LOG(DLOG_ERROR,
-+			"Length of send message %u is larger than %lu\n",
-+			edma_host->msg_send_write,
-+			HOST_MAX_SEND_MBX_LEN - SIZE_OF_MBX_HDR);
-+		edma_host->msg_send_write = 0;
-+		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
-+		return 0;
-+	}
-+
-+	memcpy(vaddr, edma_host->msg_send_buf,
-+	       edma_host->msg_send_write);
-+
-+	send_mbx_hdr->mbxlen = edma_host->msg_send_write;
-+	edma_host->msg_send_write = 0;
-+
-+	spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
-+
-+	edma_host_int_to_bmc(edma_host);
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		"vaddr: %p, mbxlen : %d, msg_send_write: %d\n", vaddr,
-+		send_mbx_hdr->mbxlen, edma_host->msg_send_write);
-+
-+	return -EAGAIN;
-+}
-+
-+#ifdef EDMA_TIMER
-+#ifdef HAVE_TIMER_SETUP
-+static void edma_host_timeout(struct timer_list *t)
-+{
-+	struct edma_host_s *edma_host = from_timer(edma_host, t, timer);
-+#else
-+static void edma_host_timeout(unsigned long data)
-+{
-+	struct edma_host_s *edma_host = (struct edma_host_s *)data;
-+#endif
-+	int ret = 0;
-+	unsigned long flags = 0;
-+
-+	ret = edma_host_send_msg(edma_host);
-+	if (ret < 0) {
-+		spin_lock_irqsave(&g_bma_dev->edma_host.send_msg_lock, flags);
-+		(void)mod_timer(&edma_host->timer,
-+				jiffies_64 + TIMER_INTERVAL_CHECK);
-+		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
-+	}
-+}
-+
-+#ifdef HAVE_TIMER_SETUP
-+static void edma_host_heartbeat_timer(struct timer_list *t)
-+{
-+	struct edma_host_s *edma_host = from_timer(edma_host, t,
-+						    heartbeat_timer);
-+#else
-+static void edma_host_heartbeat_timer(unsigned long data)
-+{
-+	struct edma_host_s *edma_host = (struct edma_host_s *)data;
-+#endif
-+	struct edma_statistics_s *edma_stats = &edma_host->statistics;
-+	unsigned int *remote_status = &edma_stats->remote_status;
-+	static unsigned int bmc_heartbeat;
-+	struct notify_msg *pnm = (struct notify_msg *)edma_host->edma_flag;
-+
-+	if (pnm) {
-+		if (pnm->bmc_registered) {
-+			if ((pnm->host_heartbeat & 7) == 0) {
-+				if (bmc_heartbeat != pnm->bmc_heartbeat) {
-+					if (*remote_status != REGISTERED) {
-+						BMA_LOG(DLOG_DEBUG,
-+							"bmc is registered\n");
-+						*remote_status = REGISTERED;
-+					}
-+
-+					bmc_heartbeat = pnm->bmc_heartbeat;
-+				} else {
-+					if (*remote_status == REGISTERED) {
-+						*remote_status = LOST;
-+						edma_stats->lost_count++;
-+						BMA_LOG(DLOG_DEBUG,
-+							"bmc is lost\n");
-+					}
-+				}
-+			}
-+		} else {
-+			if (*remote_status == REGISTERED)
-+				BMA_LOG(DLOG_DEBUG, "bmc is deregistered\n");
-+
-+			*remote_status = DEREGISTERED;
-+		}
-+
-+		pnm->host_heartbeat++;
-+	}
-+
-+	(void)mod_timer(&edma_host->heartbeat_timer,
-+			jiffies_64 + HEARTBEAT_TIMER_INTERVAL_CHECK);
-+}
-+
-+#ifdef USE_DMA
-+#ifdef HAVE_TIMER_SETUP
-+static void edma_host_dma_timeout(struct timer_list *t)
-+{
-+	struct edma_host_s *edma_host = from_timer(edma_host, t, dma_timer);
-+#else
-+static void edma_host_dma_timeout(unsigned long data)
-+{
-+	struct edma_host_s *edma_host = (struct edma_host_s *)data;
-+#endif
-+	int ret = 0;
-+
-+	ret = edma_host_dma_interrupt(edma_host);
-+	if (ret < 0)
-+		(void)mod_timer(&edma_host->dma_timer,
-+				jiffies_64 + DMA_TIMER_INTERVAL_CHECK);
-+}
-+#endif
-+#else
-+
-+static int edma_host_thread(void *arg)
-+{
-+	struct edma_host_s *edma_host = (struct edma_host_s *)arg;
-+
-+	BMA_LOG(DLOG_ERROR, "edma host thread\n");
-+
-+	while (!kthread_should_stop()) {
-+		wait_for_completion_interruptible_timeout(&edma_host->msg_ready,
-+							  1 * HZ);
-+		edma_host_send_msg(edma_host);
-+		(void)edma_host_dma_interrupt(edma_host);
-+	}
-+
-+	BMA_LOG(DLOG_ERROR, "edma host thread exiting\n");
-+
-+	return 0;
-+}
-+
-+#endif
-+
-+int edma_host_send_driver_msg(const void *msg, size_t msg_len, int subtype)
-+{
-+	int ret = 0;
-+	unsigned long flags = 0;
-+	struct edma_host_s *edma_host = NULL;
-+	struct edma_msg_hdr_s *hdr = NULL;
-+	int total_len = msg_len + SIZE_OF_MSG_HDR;
-+
-+	if (!msg || !g_bma_dev)
-+		return -1;
-+
-+	edma_host = &g_bma_dev->edma_host;
-+	if (!edma_host)
-+		return -1;
-+
-+	spin_lock_irqsave(&edma_host->send_msg_lock, flags);
-+
-+	if (edma_host->msg_send_write + total_len <=
-+	    (HOST_MAX_SEND_MBX_LEN - SIZE_OF_MBX_HDR)) {
-+		hdr = (struct edma_msg_hdr_s *)(edma_host->msg_send_buf +
-+					      edma_host->msg_send_write);
-+		hdr->type = TYPE_EDMA_DRIVER;
-+		hdr->sub_type = subtype;
-+		hdr->datalen = msg_len;
-+
-+		memcpy(hdr->data, msg, msg_len);
-+
-+		edma_host->msg_send_write += total_len;
-+
-+		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
-+
-+		(void)mod_timer(&edma_host->timer, jiffies_64);
-+		BMA_LOG(DLOG_DEBUG, "msg_send_write = %d\n",
-+			edma_host->msg_send_write);
-+	} else {
-+		ret = -ENOSPC;
-+		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
-+
-+		BMA_LOG(DLOG_DEBUG,
-+			"msg lost,msg_send_write: %d,msg_len:%d,max_len: %d\n",
-+			edma_host->msg_send_write, total_len,
-+			HOST_MAX_SEND_MBX_LEN);
-+	}
-+
-+	return ret;
-+}
-+
-+static int edma_host_insert_recv_msg(struct edma_host_s *edma_host,
-+				     struct edma_msg_hdr_s *msg_header)
-+{
-+	unsigned long flags = 0, msg_flags = 0;
-+	struct bma_dev_s *bma_dev = NULL;
-+	struct bma_priv_data_s *priv = NULL;
-+	struct bma_user_s *puser = NULL;
-+	struct list_head *entry = NULL;
-+	struct edma_recv_msg_s *msg_tmp = NULL;
-+	struct bma_user_s usertmp = { };
-+	struct edma_recv_msg_s *recv_msg = NULL;
-+
-+	if (!edma_host || !msg_header ||
-+	    msg_header->datalen > CDEV_MAX_WRITE_LEN) {
-+		return -EFAULT;
-+	}
-+
-+	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
-+
-+	recv_msg = kmalloc(sizeof(*recv_msg) + msg_header->datalen, GFP_ATOMIC);
-+	if (!recv_msg) {
-+		BMA_LOG(DLOG_ERROR, "malloc recv_msg failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	recv_msg->msg_len = msg_header->datalen;
-+	memcpy(recv_msg->msg_data, msg_header->data,
-+	       msg_header->datalen);
-+
-+	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
-+	list_for_each_entry_rcu(puser, &bma_dev->priv_list, link) {
-+		if (puser->type != msg_header->type ||
-+		    puser->sub_type != msg_header->sub_type)
-+			continue;
-+
-+		priv = list_entry(puser, struct bma_priv_data_s, user);
-+
-+		memcpy(&usertmp, puser,
-+		       sizeof(struct bma_user_s));
-+
-+		spin_lock_irqsave(&priv->recv_msg_lock, msg_flags);
-+
-+		if (puser->cur_recvmsg_nums >= puser->max_recvmsg_nums ||
-+		    puser->cur_recvmsg_nums >= MAX_RECV_MSG_NUMS) {
-+			entry = priv->recv_msgs.next;
-+			msg_tmp =
-+			    list_entry(entry, struct edma_recv_msg_s,
-+				       link);
-+			list_del(entry);
-+			puser->cur_recvmsg_nums--;
-+			kfree(msg_tmp);
-+		}
-+
-+		if (edma_host->local_open_status[puser->type]
-+			== DEV_OPEN) {
-+			list_add_tail(&recv_msg->link, &priv->recv_msgs);
-+			puser->cur_recvmsg_nums++;
-+			usertmp.cur_recvmsg_nums =
-+			    puser->cur_recvmsg_nums;
-+			spin_unlock_irqrestore(&priv->recv_msg_lock,
-+					       msg_flags);
-+
-+		} else {
-+			spin_unlock_irqrestore(&priv->recv_msg_lock,
-+					       msg_flags);
-+			break;
-+		}
-+
-+		wake_up_interruptible(&priv->wait);
-+		spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+
-+		BMA_LOG(DLOG_DEBUG,
-+			"find user, type = %d, sub_type = %d, user_id = %d, insert msg\n",
-+			usertmp.type, usertmp.sub_type,
-+			usertmp.user_id);
-+		BMA_LOG(DLOG_DEBUG,
-+			"msg_len = %d, cur_recvmsg_nums: %d, max_recvmsg_nums: %d\n",
-+			recv_msg->msg_len, usertmp.cur_recvmsg_nums,
-+			usertmp.max_recvmsg_nums);
-+
-+		return 0;
-+	}
-+
-+	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+	kfree(recv_msg);
-+	edma_host->statistics.drop_pkgs++;
-+	BMA_LOG(DLOG_DEBUG,
-+		"insert msg failed! not find user, type = %d, sub_type = %d\n",
-+		msg_header->type, msg_header->sub_type);
-+
-+	return -EFAULT;
-+}
-+
-+int edma_host_recv_msg(struct edma_host_s *edma_host,
-+		       struct bma_priv_data_s *priv,
-+		       struct edma_recv_msg_s **msg)
-+{
-+	unsigned long flags = 0;
-+	struct list_head *entry = NULL;
-+	struct edma_recv_msg_s *msg_tmp = NULL;
-+	struct bma_dev_s *bma_dev = NULL;
-+
-+	if (!edma_host || !priv || !msg)
-+		return -EAGAIN;
-+
-+	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
-+
-+	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
-+
-+	if (list_empty(&priv->recv_msgs)) {
-+		priv->user.cur_recvmsg_nums = 0;
-+		spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+		BMA_LOG(DLOG_DEBUG, "recv msgs empty\n");
-+		return -EAGAIN;
-+	}
-+
-+	entry = priv->recv_msgs.next;
-+	msg_tmp = list_entry(entry, struct edma_recv_msg_s, link);
-+	list_del(entry);
-+
-+	if (priv->user.cur_recvmsg_nums > 0)
-+		priv->user.cur_recvmsg_nums--;
-+
-+	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
-+
-+	*msg = msg_tmp;
-+
-+	BMA_LOG(DLOG_DEBUG, "msg->msg_len = %d\n", (int)msg_tmp->msg_len);
-+
-+	return 0;
-+}
-+
-+static int edma_host_msg_process(struct edma_host_s *edma_host,
-+				 struct edma_msg_hdr_s *msg_header)
-+{
-+	struct bma_user_s *user_ptr = NULL;
-+	char drv_msg[TYPE_MAX * 2 + 1] = { 0 };
-+
-+	if (!edma_host || !msg_header)
-+		return 0;
-+
-+	if (msg_header->type != TYPE_EDMA_DRIVER)
-+		return -1;
-+
-+	if (msg_header->sub_type != DEV_OPEN_STATUS_REQ)
-+		return 0;
-+
-+	list_for_each_entry_rcu(user_ptr, &g_bma_dev->priv_list, link) {
-+		drv_msg[drv_msg[0] * 2 + 1] = user_ptr->type;
-+		drv_msg[drv_msg[0] * 2 + 2] =
-+		    edma_host->local_open_status[user_ptr->type];
-+		BMA_LOG(DLOG_DEBUG,
-+			"send DEV_OPEN_STATUS_ANS index=%d type=%d status=%d\n",
-+			drv_msg[0], drv_msg[drv_msg[0] * 2 + 1],
-+			drv_msg[drv_msg[0] * 2 + 2]);
-+		drv_msg[0]++;
-+	}
-+
-+	if (drv_msg[0]) {
-+		(void)edma_host_send_driver_msg((void *)drv_msg,
-+						drv_msg[0] * 2 +
-+						1,
-+						DEV_OPEN_STATUS_ANS);
-+		BMA_LOG(DLOG_DEBUG,
-+			"send DEV_OPEN_STATUS_ANS %d\n",
-+			drv_msg[0]);
-+	}
-+
-+	return 0;
-+}
-+
-+void edma_host_isr_tasklet(unsigned long data)
-+{
-+	int result = 0;
-+	u16 len = 0;
-+	u16 off = 0;
-+	u16 msg_cnt = 0;
-+	struct edma_mbx_hdr_s *recv_mbx_hdr = NULL;
-+	struct edma_host_s *edma_host = (struct edma_host_s *)data;
-+	struct edma_msg_hdr_s *msg_header = NULL;
-+	unsigned char *ptr = NULL;
-+
-+	if (!edma_host)
-+		return;
-+
-+	recv_mbx_hdr = (struct edma_mbx_hdr_s *)(edma_host->edma_recv_addr);
-+	msg_header =
-+		(struct edma_msg_hdr_s *)((char *)(edma_host->edma_recv_addr) +
-+				SIZE_OF_MBX_HDR + recv_mbx_hdr->mbxoff);
-+
-+	off = readw((unsigned char *)edma_host->edma_recv_addr
-+				+ EDMA_B2H_INT_FLAG);
-+	len = readw((unsigned char *)edma_host->edma_recv_addr) - off;
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		" edma_host->edma_recv_addr = %p, len = %d, off = %d, mbxlen = %d\n",
-+		edma_host->edma_recv_addr, len, off, recv_mbx_hdr->mbxlen);
-+	edma_host->statistics.recv_bytes += (recv_mbx_hdr->mbxlen - off);
-+
-+	if (len == 0) {
-+		writel(0, (void *)(edma_host->edma_recv_addr));
-+		return;
-+	}
-+
-+	while (recv_mbx_hdr->mbxlen - off) {
-+		if (len == 0) {
-+			BMA_LOG(DLOG_DEBUG, " receive done\n");
-+			break;
-+		}
-+
-+		if (len < (SIZE_OF_MSG_HDR + msg_header->datalen)) {
-+			BMA_LOG(DLOG_ERROR, " len too less, is %d\n", len);
-+			break;
-+		}
-+
-+		edma_host->statistics.recv_pkgs++;
-+
-+		if (edma_host_msg_process(edma_host, msg_header) == -1) {
-+			result = edma_host_insert_recv_msg(edma_host,
-+							   msg_header);
-+			if (result < 0)
-+				BMA_LOG(DLOG_DEBUG,
-+					"edma_host_insert_recv_msg failed\n");
-+		}
-+
-+		BMA_LOG(DLOG_DEBUG, "len = %d\n", len);
-+		BMA_LOG(DLOG_DEBUG, "off = %d\n", off);
-+		len -= (msg_header->datalen + SIZE_OF_MSG_HDR);
-+		BMA_LOG(DLOG_DEBUG,
-+			"msg_header->datalen = %d, SIZE_OF_MSG_HDR=%d\n",
-+			msg_header->datalen, (int)SIZE_OF_MSG_HDR);
-+		off += (msg_header->datalen + SIZE_OF_MSG_HDR);
-+
-+		msg_cnt++;
-+
-+		ptr = (unsigned char *)msg_header;
-+		msg_header = (struct edma_msg_hdr_s *)(ptr +
-+					      (msg_header->datalen +
-+					       SIZE_OF_MSG_HDR));
-+
-+		if (msg_cnt > 2) {
-+			recv_mbx_hdr->mbxoff = off;
-+			BMA_LOG(DLOG_DEBUG, "len = %d\n", len);
-+			BMA_LOG(DLOG_DEBUG, "off = %d\n", off);
-+			BMA_LOG(DLOG_DEBUG, "off works\n");
-+
-+			tasklet_hi_schedule(&edma_host->tasklet);
-+
-+			break;
-+		}
-+
-+		if (!len) {
-+			writel(0, (void *)(edma_host->edma_recv_addr));
-+			recv_mbx_hdr->mbxoff = 0;
-+		}
-+	}
-+}
-+
-+static int edma_host_dma_interrupt(struct edma_host_s *edma_host)
-+{
-+	if (!edma_host)
-+		return 0;
-+
-+	if (check_status_dmah2b(edma_host)) {
-+		clear_int_dmah2b(edma_host);
-+
-+		edma_host->h2b_state = H2BSTATE_IDLE;
-+		wake_up_interruptible(&edma_host->wq_dmah2b);
-+		return 0;
-+	}
-+
-+	if (check_status_dmab2h(edma_host)) {
-+		clear_int_dmab2h(edma_host);
-+
-+		edma_host->b2h_state = B2HSTATE_IDLE;
-+		wake_up_interruptible(&edma_host->wq_dmab2h);
-+
-+		return 0;
-+	}
-+
-+	return -EAGAIN;
-+}
-+
-+irqreturn_t edma_host_irq_handle(struct edma_host_s *edma_host)
-+{
-+	if (edma_host) {
-+		(void)edma_host_dma_interrupt(edma_host);
-+
-+		tasklet_hi_schedule(&edma_host->tasklet);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+struct edma_user_inft_s *edma_host_get_user_inft(u32 type)
-+{
-+	if (type >= TYPE_MAX) {
-+		BMA_LOG(DLOG_ERROR, "type error %d\n", type);
-+		return NULL;
-+	}
-+
-+	return g_user_func[type];
-+}
-+
-+int edma_host_user_register(u32 type, struct edma_user_inft_s *func)
-+{
-+	if (type >= TYPE_MAX) {
-+		BMA_LOG(DLOG_ERROR, "type error %d\n", type);
-+		return -EFAULT;
-+	}
-+
-+	if (!func) {
-+		BMA_LOG(DLOG_ERROR, "func is NULL\n");
-+		return -EFAULT;
-+	}
-+
-+	g_user_func[type] = func;
-+
-+	return 0;
-+}
-+
-+int edma_host_user_unregister(u32 type)
-+{
-+	if (type >= TYPE_MAX) {
-+		BMA_LOG(DLOG_ERROR, "type error %d\n", type);
-+		return -EFAULT;
-+	}
-+
-+	g_user_func[type] = NULL;
-+
-+	return 0;
-+}
-+
-+int edma_host_init(struct edma_host_s *edma_host)
-+{
-+	int ret = 0;
-+	struct bma_dev_s *bma_dev = NULL;
-+	struct notify_msg *pnm = NULL;
-+
-+	if (!edma_host)
-+		return -1;
-+
-+	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
-+	g_bma_dev = bma_dev;
-+
-+	edma_host->pdev = bma_dev->bma_pci_dev->pdev;
-+
-+#ifdef EDMA_TIMER
-+	#ifdef HAVE_TIMER_SETUP
-+		timer_setup(&edma_host->timer, edma_host_timeout, 0);
-+	#else
-+		setup_timer(&edma_host->timer, edma_host_timeout,
-+			    (unsigned long)edma_host);
-+	#endif
-+	(void)mod_timer(&edma_host->timer, jiffies_64 + TIMER_INTERVAL_CHECK);
-+#ifdef USE_DMA
-+	#ifdef HAVE_TIMER_SETUP
-+		timer_setup(&edma_host->dma_timer, edma_host_dma_timeout, 0);
-+
-+	#else
-+		setup_timer(&edma_host->dma_timer, edma_host_dma_timeout,
-+			    (unsigned long)edma_host);
-+	#endif
-+	(void)mod_timer(&edma_host->dma_timer,
-+			jiffies_64 + DMA_TIMER_INTERVAL_CHECK);
-+#endif
-+
-+#else
-+	init_completion(&edma_host->msg_ready);
-+
-+	edma_host->edma_thread =
-+	    kthread_run(edma_host_thread, (void *)edma_host, "edma_host_msg");
-+
-+	if (IS_ERR(edma_host->edma_thread)) {
-+		BMA_LOG(DLOG_ERROR, "kernel_run  edma_host_msg failed\n");
-+		return PTR_ERR(edma_host->edma_thread);
-+	}
-+#endif
-+
-+	edma_host->msg_send_buf = kmalloc(HOST_MAX_SEND_MBX_LEN, GFP_KERNEL);
-+	if (!edma_host->msg_send_buf) {
-+		BMA_LOG(DLOG_ERROR, "malloc msg_send_buf failed!");
-+		ret = -ENOMEM;
-+		goto failed1;
-+	}
-+
-+	edma_host->msg_send_write = 0;
-+
-+	spin_lock_init(&edma_host->send_msg_lock);
-+
-+	tasklet_init(&edma_host->tasklet,
-+		     (void (*)(unsigned long))edma_host_isr_tasklet,
-+		     (unsigned long)edma_host);
-+
-+	edma_host->edma_flag = bma_dev->bma_pci_dev->edma_swap_addr;
-+
-+	edma_host->edma_send_addr =
-+	    (void *)((unsigned char *)bma_dev->bma_pci_dev->edma_swap_addr +
-+		     HOST_DMA_FLAG_LEN);
-+	memset(edma_host->edma_send_addr, 0, SIZE_OF_MBX_HDR);
-+
-+	edma_host->edma_recv_addr =
-+	    (void *)((unsigned char *)edma_host->edma_send_addr +
-+		     HOST_MAX_SEND_MBX_LEN);
-+
-+	BMA_LOG(DLOG_DEBUG,
-+		"edma_flag = %p, edma_send_addr = %p, edma_recv_addr = %p\n",
-+		edma_host->edma_flag, edma_host->edma_send_addr,
-+		edma_host->edma_recv_addr);
-+
-+	edma_host->hostrtc_viraddr = bma_dev->bma_pci_dev->hostrtc_viraddr;
-+
-+	init_waitqueue_head(&edma_host->wq_dmah2b);
-+	init_waitqueue_head(&edma_host->wq_dmab2h);
-+
-+	spin_lock_init(&edma_host->reg_lock);
-+
-+	edma_host->h2b_state = H2BSTATE_IDLE;
-+	edma_host->b2h_state = B2HSTATE_IDLE;
-+
-+	#ifdef HAVE_TIMER_SETUP
-+		timer_setup(&edma_host->heartbeat_timer,
-+			    edma_host_heartbeat_timer, 0);
-+	#else
-+		setup_timer(&edma_host->heartbeat_timer,
-+			    edma_host_heartbeat_timer,
-+			    (unsigned long)edma_host);
-+	#endif
-+	(void)mod_timer(&edma_host->heartbeat_timer,
-+			jiffies_64 + HEARTBEAT_TIMER_INTERVAL_CHECK);
-+
-+	pnm = (struct notify_msg *)edma_host->edma_flag;
-+	if (pnm)
-+		pnm->host_registered = REGISTERED;
-+
-+	GET_SYS_SECONDS(edma_host->statistics.init_time);
-+
-+#ifdef EDMA_TIMER
-+	BMA_LOG(DLOG_DEBUG, "timer ok\n");
-+#else
-+	BMA_LOG(DLOG_ERROR, "thread ok\n");
-+#endif
-+	return 0;
-+
-+failed1:
-+#ifdef EDMA_TIMER
-+	(void)del_timer_sync(&edma_host->timer);
-+#ifdef USE_DMA
-+	(void)del_timer_sync(&edma_host->dma_timer);
-+#endif
-+#else
-+	kthread_stop(edma_host->edma_thread);
-+	complete(&edma_host->msg_ready);
-+#endif
-+	return ret;
-+}
-+
-+void edma_host_cleanup(struct edma_host_s *edma_host)
-+{
-+	struct bma_dev_s *bma_dev = NULL;
-+	struct notify_msg *pnm = NULL;
-+
-+	if (!edma_host)
-+		return;
-+
-+	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
-+	(void)del_timer_sync(&edma_host->heartbeat_timer);
-+	pnm = (struct notify_msg *)edma_host->edma_flag;
-+
-+	if (pnm)
-+		pnm->host_registered = DEREGISTERED;
-+
-+	tasklet_kill(&edma_host->tasklet);
-+
-+	kfree(edma_host->msg_send_buf);
-+	edma_host->msg_send_buf = NULL;
-+#ifdef EDMA_TIMER
-+	(void)del_timer_sync(&edma_host->timer);
-+#ifdef USE_DMA
-+	(void)del_timer_sync(&edma_host->dma_timer);
-+#endif
-+
-+#else
-+	kthread_stop(edma_host->edma_thread);
-+
-+	complete(&edma_host->msg_ready);
-+#endif
-+}
-diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h b/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h
-new file mode 100644
-index 000000000000..9d86b5b0fdd6
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h
-@@ -0,0 +1,351 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _EDMA_HOST_H_
-+#define _EDMA_HOST_H_
-+
-+#include "bma_include.h"
-+#include "../include/bma_ker_intf.h"
-+
-+#define EDMA_TIMER
-+
-+#ifndef IN
-+#define IN
-+#endif
-+
-+#ifndef OUT
-+#define OUT
-+#endif
-+
-+#ifndef UNUSED
-+#define UNUSED
-+#endif
-+
-+/* vm_flags in vm_area_struct, see mm_types.h. */
-+#define VM_NONE		0x00000000
-+
-+#define VM_READ		0x00000001	/* currently active flags */
-+#define VM_WRITE	0x00000002
-+#define VM_EXEC		0x00000004
-+#define VM_SHARED	0x00000008
-+
-+#define VM_MAYREAD	0x00000010	/* limits for mprotect() etc */
-+#define VM_MAYWRITE	0x00000020
-+#define VM_MAYEXEC	0x00000040
-+#define VM_MAYSHARE	0x00000080
-+
-+#define VM_GROWSDOWN	0x00000100	/* general info on the segment */
-+/* Page-ranges managed without "struct page", just pure PFN */
-+#define VM_PFNMAP	0x00000400
-+#define VM_DENYWRITE	0x00000800	/* ETXTBSY on write attempts.. */
-+
-+#define VM_LOCKED	0x00002000
-+#define VM_IO           0x00004000	/* Memory mapped I/O or similar */
-+
-+					/* Used by sys_madvise() */
-+#define VM_SEQ_READ	0x00008000	/* App will access data sequentially */
-+/* App will not benefit from clustered reads */
-+#define VM_RAND_READ	0x00010000
-+
-+#define VM_DONTCOPY	0x00020000	/* Do not copy this vma on fork */
-+#define VM_DONTEXPAND	0x00040000	/* Cannot expand with mremap() */
-+#define VM_ACCOUNT	0x00100000	/* Is a VM accounted object */
-+#define VM_NORESERVE	0x00200000	/* should the VM suppress accounting */
-+#define VM_HUGETLB	0x00400000	/* Huge TLB Page VM */
-+#define VM_NONLINEAR	0x00800000	/* Is non-linear (remap_file_pages) */
-+#define VM_ARCH_1	0x01000000	/* Architecture-specific flag */
-+#define VM_DONTDUMP	0x04000000	/* Do not include in the core dump */
-+/* Can contain "struct page" and pure PFN pages */
-+#define VM_MIXEDMAP	0x10000000
-+
-+#define VM_MERGEABLE	0x80000000	/* KSM may merge identical pages */
-+
-+#if defined(CONFIG_X86)
-+/* PAT reserves whole VMA at once (x86) */
-+#define VM_PAT		VM_ARCH_1
-+#elif defined(CONFIG_PPC)
-+#define VM_SAO		VM_ARCH_1	/* Strong Access Ordering (powerpc) */
-+#elif defined(CONFIG_PARISC)
-+#define VM_GROWSUP	VM_ARCH_1
-+#elif defined(CONFIG_METAG)
-+#define VM_GROWSUP	VM_ARCH_1
-+#elif defined(CONFIG_IA64)
-+#define VM_GROWSUP	VM_ARCH_1
-+#elif !defined(CONFIG_MMU)
-+#define VM_MAPPED_COPY	VM_ARCH_1 /* T if mapped copy of data (nommu mmap) */
-+#endif
-+
-+#ifndef VM_GROWSUP
-+#define VM_GROWSUP	VM_NONE
-+#endif
-+
-+/* Bits set in the VMA until the stack is in its final location */
-+#define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
-+
-+#ifndef VM_STACK_DEFAULT_FLAGS	/* arch can override this */
-+#define VM_STACK_DEFAULT_FLAGS VM_DATA_DEFAULT_FLAGS
-+#endif
-+
-+#define VM_READHINTMASK			(VM_SEQ_READ | VM_RAND_READ)
-+#define VM_NORMAL_READ_HINT(v)		(!((v)->vm_flags & VM_READHINTMASK))
-+#define VM_SEQUENTIAL_READ_HINT(v)	((v)->vm_flags & VM_SEQ_READ)
-+#define VM_RANDOM_READ_HINT(v)		((v)->vm_flags & VM_RAND_READ)
-+
-+#define REG_PCIE1_DMAREAD_ENABLE	0xa18
-+#define SHIFT_PCIE1_DMAREAD_ENABLE	0
-+
-+#define REG_PCIE1_DMAWRITE_ENABLE	0x9c4
-+#define SHIFT_PCIE1_DMAWRITE_ENABLE	0
-+
-+#define REG_PCIE1_DMAREAD_STATUS	0xa10
-+#define SHIFT_PCIE1_DMAREAD_STATUS	0
-+#define REG_PCIE1_DMAREADINT_CLEAR	0xa1c
-+#define SHIFT_PCIE1_DMAREADINT_CLEAR	0
-+
-+#define REG_PCIE1_DMAWRITE_STATUS	0x9bc
-+#define SHIFT_PCIE1_DMAWRITE_STATUS	0
-+#define REG_PCIE1_DMAWRITEINT_CLEAR	0x9c8
-+#define SHIFT_PCIE1_DMAWRITEINT_CLEAR	0
-+
-+#define REG_PCIE1_DMA_READ_ENGINE_ENABLE	(0x99c)
-+#define SHIFT_PCIE1_DMA_ENGINE_ENABLE		(0)
-+#define REG_PCIE1_DMA_WRITE_ENGINE_ENABLE	(0x97C)
-+
-+#define HOSTRTC_INT_OFFSET		0x10
-+
-+#define H2BSTATE_IDLE			0
-+#define H2BSTATE_WAITREADY		1
-+#define H2BSTATE_WAITDMA		2
-+#define H2BSTATE_WAITACK		3
-+#define H2BSTATE_ERROR			4
-+
-+#define B2HSTATE_IDLE			0
-+#define B2HSTATE_WAITREADY		1
-+#define B2HSTATE_WAITRECV		2
-+#define B2HSTATE_WAITDMA		3
-+#define B2HSTATE_ERROR			4
-+
-+#define PAGE_ORDER			8
-+#define EDMA_DMABUF_SIZE		(1 << (PAGE_SHIFT + PAGE_ORDER))
-+
-+#define EDMA_DMA_TRANSFER_WAIT_TIMEOUT	(10 * HZ)
-+#define TIMEOUT_WAIT_NOSIGNAL		2
-+
-+#define TIMER_INTERVAL_CHECK		(HZ / 10)
-+#define DMA_TIMER_INTERVAL_CHECK	50
-+#define HEARTBEAT_TIMER_INTERVAL_CHECK	HZ
-+
-+#define EDMA_PCI_MSG_LEN		(56 * 1024)
-+
-+#define HOST_DMA_FLAG_LEN		(64)
-+
-+#define HOST_MAX_SEND_MBX_LEN		(40 * 1024)
-+#define BMC_MAX_RCV_MBX_LEN		HOST_MAX_SEND_MBX_LEN
-+
-+#define HOST_MAX_RCV_MBX_LEN		(16 * 1024)
-+#define BMC_MAX_SEND_MBX_LEN		HOST_MAX_RCV_MBX_LEN
-+#define CDEV_MAX_WRITE_LEN		(4 * 1024)
-+
-+#define HOST_MAX_MSG_LENGTH		272
-+
-+#define EDMA_MMAP_H2B_DMABUF		0xf1000000
-+
-+#define EDMA_MMAP_B2H_DMABUF		0xf2000000
-+
-+#define EDMA_IOC_MAGIC			'e'
-+
-+#define EDMA_H_REGISTER_TYPE		_IOW(EDMA_IOC_MAGIC, 100, unsigned long)
-+
-+#define EDMA_H_UNREGISTER_TYPE		_IOW(EDMA_IOC_MAGIC, 101, unsigned long)
-+
-+#define EDMA_H_DMA_START		_IOW(EDMA_IOC_MAGIC, 102, unsigned long)
-+
-+#define EDMA_H_DMA_TRANSFER		_IOW(EDMA_IOC_MAGIC, 103, unsigned long)
-+
-+#define EDMA_H_DMA_STOP			_IOW(EDMA_IOC_MAGIC, 104, unsigned long)
-+
-+#define U64ADDR_H(addr)			((((u64)addr) >> 32) & 0xffffffff)
-+#define U64ADDR_L(addr)			((addr) & 0xffffffff)
-+
-+struct bma_register_dev_type_s {
-+	u32 type;
-+	u32 sub_type;
-+};
-+
-+struct edma_mbx_hdr_s {
-+	u16 mbxlen;
-+	u16 mbxoff;
-+	u8 reserve[28];
-+} __packed;
-+
-+#define SIZE_OF_MBX_HDR (sizeof(struct edma_mbx_hdr_s))
-+
-+struct edma_recv_msg_s {
-+	struct list_head link;
-+	u32 msg_len;
-+	unsigned char msg_data[0];
-+};
-+
-+struct edma_dma_addr_s {
-+	void *kvaddr;
-+	dma_addr_t dma_addr;
-+	u32 len;
-+};
-+
-+struct edma_msg_hdr_s {
-+	u32 type;
-+	u32 sub_type;
-+	u8 user_id;
-+	u8 dma_flag;
-+	u8 reserve1[2];
-+	u32 datalen;
-+	u8 data[0];
-+};
-+
-+#define SIZE_OF_MSG_HDR (sizeof(struct edma_msg_hdr_s))
-+
-+#pragma pack(1)
-+
-+#define IS_EDMA_B2H_INT(flag)		((flag) & 0x02)
-+#define CLEAR_EDMA_B2H_INT(flag)	((flag) = (flag) & 0xfffffffd)
-+#define SET_EDMA_H2B_INT(flag)		((flag) = (flag) | 0x01)
-+#define EDMA_B2H_INT_FLAG                      0x02
-+
-+struct notify_msg {
-+	unsigned int host_registered;
-+	unsigned int host_heartbeat;
-+	unsigned int bmc_registered;
-+	unsigned int bmc_heartbeat;
-+	unsigned int int_flag;
-+
-+	unsigned int reservrd5;
-+	unsigned int h2b_addr;
-+	unsigned int h2b_size;
-+	unsigned int h2b_rsize;
-+	unsigned int b2h_addr;
-+	unsigned int b2h_size;
-+	unsigned int b2h_rsize;
-+};
-+
-+#pragma pack()
-+
-+struct edma_statistics_s {
-+	unsigned int remote_status;
-+	__kernel_time_t init_time;
-+	unsigned int h2b_int;
-+	unsigned int b2h_int;
-+	unsigned int recv_bytes;
-+	unsigned int send_bytes;
-+	unsigned int send_pkgs;
-+	unsigned int recv_pkgs;
-+	unsigned int failed_count;
-+	unsigned int drop_pkgs;
-+	unsigned int dma_count;
-+	unsigned int lost_count;
-+};
-+
-+struct edma_host_s {
-+	struct pci_dev *pdev;
-+
-+	struct tasklet_struct tasklet;
-+
-+	void __iomem *hostrtc_viraddr;
-+
-+	void __iomem *edma_flag;
-+	void __iomem *edma_send_addr;
-+	void __iomem *edma_recv_addr;
-+#ifdef USE_DMA
-+	struct timer_list dma_timer;
-+#endif
-+
-+	struct timer_list heartbeat_timer;
-+
-+#ifdef EDMA_TIMER
-+	struct timer_list timer;
-+#else
-+	struct completion msg_ready;	/* to sleep thread on      */
-+	struct task_struct *edma_thread;
-+#endif
-+	/* spinlock for send msg buf */
-+	spinlock_t send_msg_lock;
-+	unsigned char *msg_send_buf;
-+	unsigned int msg_send_write;
-+
-+	/* DMA */
-+	wait_queue_head_t wq_dmah2b;
-+	wait_queue_head_t wq_dmab2h;
-+
-+	/* spinlock for read pci register */
-+	spinlock_t reg_lock;
-+	int h2b_state;
-+	int b2h_state;
-+	struct edma_dma_addr_s h2b_addr;
-+	struct edma_dma_addr_s b2h_addr;
-+
-+	struct proc_dir_entry *proc_edma_dir;
-+
-+	struct edma_statistics_s statistics;
-+	unsigned char local_open_status[TYPE_MAX];
-+	unsigned char remote_open_status[TYPE_MAX];
-+};
-+
-+struct edma_user_inft_s {
-+	/* register user */
-+	int (*user_register)(struct bma_priv_data_s *priv);
-+
-+	/* unregister user */
-+	void (*user_unregister)(struct bma_priv_data_s *priv);
-+
-+	/* add msg */
-+	int (*add_msg)(void *msg, size_t msg_len);
-+};
-+
-+int is_edma_b2h_int(struct edma_host_s *edma_host);
-+void edma_int_to_bmc(struct edma_host_s *edma_host);
-+int edma_host_mmap(struct edma_host_s *edma_hos, struct file *filp,
-+		   struct vm_area_struct *vma);
-+int edma_host_copy_msg(struct edma_host_s *edma_host, void *msg,
-+		       size_t msg_len);
-+int edma_host_add_msg(struct edma_host_s *edma_host,
-+		      struct bma_priv_data_s *priv, void *msg, size_t msg_len);
-+int edma_host_recv_msg(struct edma_host_s *edma_host,
-+		       struct bma_priv_data_s *priv,
-+		       struct edma_recv_msg_s **msg);
-+void edma_host_isr_tasklet(unsigned long data);
-+int edma_host_check_dma_status(enum dma_direction_e dir);
-+int edma_host_dma_start(struct edma_host_s *edma_host,
-+			struct bma_priv_data_s *priv);
-+int edma_host_dma_transfer(struct edma_host_s *edma_host,
-+			   struct bma_priv_data_s *priv,
-+			   struct bma_dma_transfer_s *dma_transfer);
-+int edma_host_dma_stop(struct edma_host_s *edma_host,
-+		       struct bma_priv_data_s *priv);
-+irqreturn_t edma_host_irq_handle(struct edma_host_s *edma_host);
-+struct edma_user_inft_s *edma_host_get_user_inft(u32 type);
-+int edma_host_user_register(u32 type, struct edma_user_inft_s *func);
-+int edma_host_user_unregister(u32 type);
-+int edma_host_init(struct edma_host_s *edma_host);
-+void edma_host_cleanup(struct edma_host_s *edma_host);
-+int edma_host_send_driver_msg(const void *msg, size_t msg_len, int subtype);
-+void edma_host_reset_dma(struct edma_host_s *edma_host, int dir);
-+void clear_int_dmah2b(struct edma_host_s *edma_host);
-+void clear_int_dmab2h(struct edma_host_s *edma_host);
-+
-+enum EDMA_STATUS {
-+	DEREGISTERED = 0,
-+	REGISTERED = 1,
-+	LOST,
-+};
-+#endif
-diff --git a/drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h b/drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h
-new file mode 100644
-index 000000000000..d1df99b0c9fd
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h
-@@ -0,0 +1,94 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _BMA_KER_INTF_H_
-+#define _BMA_KER_INTF_H_
-+
-+typedef long		__kernel_time_t;
-+#define BAD_FUNC_ADDR(x) ((0xFFFFFFFF == (x)) || (0 == (x)))
-+
-+enum {
-+	/* 0 -127 msg */
-+	TYPE_LOGIC_PARTITION = 0,
-+	TYPE_UPGRADE = 1,
-+	TYPE_CDEV = 2,
-+	TYPE_VETH = 0x40,
-+	TYPE_MAX = 128,
-+
-+	TYPE_KBOX = 129,
-+	TYPE_EDMA_DRIVER = 130,
-+	TYPE_UNKNOWN = 0xff,
-+};
-+
-+enum dma_direction_e {
-+	BMC_TO_HOST = 0,
-+	HOST_TO_BMC = 1,
-+};
-+
-+enum dma_type_e {
-+	DMA_NOT_LIST = 0,
-+	DMA_LIST = 1,
-+};
-+
-+enum intr_mod {
-+	INTR_DISABLE = 0,
-+	INTR_ENABLE = 1,
-+};
-+
-+struct bma_dma_addr_s {
-+	dma_addr_t dma_addr;
-+	u32 dma_data_len;
-+};
-+
-+struct dma_transfer_s {
-+	struct bma_dma_addr_s host_addr;
-+	struct bma_dma_addr_s bmc_addr;
-+};
-+
-+struct dmalist_transfer_s {
-+	dma_addr_t dma_addr;
-+};
-+
-+union transfer_u {
-+	struct dma_transfer_s nolist;
-+	struct dmalist_transfer_s list;
-+};
-+
-+struct bma_dma_transfer_s {
-+	enum dma_type_e type;
-+	enum dma_direction_e dir;
-+	union transfer_u transfer;
-+};
-+
-+int bma_intf_register_int_notifier(struct notifier_block *nb);
-+void bma_intf_unregister_int_notifier(struct notifier_block *nb);
-+int bma_intf_register_type(u32 type, u32 sub_type, enum intr_mod support_int,
-+			   void **handle);
-+int bma_intf_unregister_type(void **handle);
-+int bma_intf_check_dma_status(enum dma_direction_e dir);
-+int bma_intf_start_dma(void *handle, struct bma_dma_transfer_s *dma_transfer);
-+int bma_intf_int_to_bmc(void *handle);
-+void bma_intf_set_open_status(void *handle, int s);
-+int bma_intf_is_link_ok(void);
-+void bma_intf_reset_dma(enum dma_direction_e dir);
-+void bma_intf_clear_dma_int(enum dma_direction_e dir);
-+
-+int bma_cdev_recv_msg(void *handle, char __user *data, size_t count);
-+int bma_cdev_add_msg(void *handle, const char __user *msg, size_t msg_len);
-+
-+unsigned int bma_cdev_check_recv(void *handle);
-+void *bma_cdev_get_wait_queue(void *handle);
-+int bma_intf_check_edma_supported(void);
-+#endif
--- 
-2.26.2.windows.1
+--qMm9M+Fa2AknHoGS
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+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
 
+--qMm9M+Fa2AknHoGS--
