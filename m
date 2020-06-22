@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC98CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F07CE20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80418206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 14:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="mREfFYj+"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="OPweAXaH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgFVOap (ORCPT
+        id S1729374AbgFVOar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:30:45 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:9948 "EHLO
+        Mon, 22 Jun 2020 10:30:47 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:10536 "EHLO
         mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729126AbgFVOam (ORCPT
+        by vger.kernel.org with ESMTP id S1729155AbgFVOao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:30:42 -0400
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MEP2ZE020796;
+        Mon, 22 Jun 2020 10:30:44 -0400
+Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MEQTa6003063;
         Mon, 22 Jun 2020 10:30:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=smtpout1;
- bh=J1g4xvWNe5bq4hXmUovFSL7jOukUWKFlWiaPq0XVZ9E=;
- b=mREfFYj+W41tQX2zFlfP8d3Z7NlfLpFov9C2LF+7hq4IrmfaoIti5ch5vcYIjXHbuSs4
- VEcIBo/h99aEo7EG1rYVzDSI8neUZhgOS59En0B2zJsmxYpHfGkRyF3GtH6zedeopdgS
- 571wx1iOTXSfAjIFbJ54p+uKNvD5KOjCRGr5uJdpxWaodc4gp5ffNQ9iblWvxfEx1Rsp
- ChGEzoIB+a7mWNcOO6I4nkIgaagD/yHFB+ChR7LKjKQmw8IMcZzS/AHeoQjETXtyJ6BX
- b1H9G3ReymSicOyFIaMaTlmeTeXYWriIrudkqopIT7HJOvDPl6sBhFl5GC7eMrgmBqRs YA== 
+ bh=FmzhWU2Bjqd3drcj/cLLSsuTZiadyuzOHiktPrapRBI=;
+ b=OPweAXaHeg1INqmFurmoGGtFGYSjZEZRAzmEzO64AIOCP+APIYIYGx7nqjNuKLl9R5fj
+ p9rbGjv16DOqZ8MI5XPyWbgvgHa0BMs55lQW3mGVfqVzgMQGmyH36KhrO1xQ6Ab0UNWK
+ 6jxLqFYxXvj9zo72gBvAuRnwaXE7Ch41X/XNipUXVnNOUgeFIbkqYYdh/NtbroEukmcO
+ reekFrH2bDJMeCA75TPRt9C4YZtWxbSHeF7DjXLUxYh4eMu5rfmtRG2Ivq+y0KJTAgYR
+ 6EIsXe+kOTVsRk9KvG2QS3ZV/cvMl5ddxFvRTmpOTb0njZyrJQmWaok03ImTTu/P1uP7 oQ== 
 Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 31sdp8vvsx-1
+        by mx0b-00154904.pphosted.com with ESMTP id 31sd15mxa5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Mon, 22 Jun 2020 10:30:41 -0400
 Received: from pps.filterd (m0144104.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MESgwH074354;
-        Mon, 22 Jun 2020 10:30:40 -0400
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MESgwI074354;
+        Mon, 22 Jun 2020 10:30:41 -0400
 Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
-        by mx0b-00154901.pphosted.com with ESMTP id 31sbqgt7s6-2
+        by mx0b-00154901.pphosted.com with ESMTP id 31sbqgt7s6-3
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 10:30:40 -0400
+        Mon, 22 Jun 2020 10:30:41 -0400
 X-LoopCount0: from 10.173.37.130
 X-PREM-Routing: D-Outbound
 X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="513697118"
+   d="scan'208";a="513697119"
 From:   Mario Limonciello <mario.limonciello@dell.com>
 To:     Andreas Noever <andreas.noever@gmail.com>,
         Michael Jamet <michael.jamet@intel.com>,
@@ -57,9 +57,9 @@ To:     Andreas Noever <andreas.noever@gmail.com>,
         Yehezkel Bernat <YehezkelShB@gmail.com>
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH 1/2] thunderbolt: Add support for separating the flush to SPI and authenticate
-Date:   Mon, 22 Jun 2020 09:30:34 -0500
-Message-Id: <20200622143035.25327-2-mario.limonciello@dell.com>
+Subject: [PATCH 2/2] thunderbolt: Add support for authenticate on disconnect
+Date:   Mon, 22 Jun 2020 09:30:35 -0500
+Message-Id: <20200622143035.25327-3-mario.limonciello@dell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200622143035.25327-1-mario.limonciello@dell.com>
 References: <20200622143035.25327-1-mario.limonciello@dell.com>
@@ -72,154 +72,309 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscor
  phishscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 clxscore=1015
  adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.12.0-2004280000 definitions=main-2006220110
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 spamscore=0 mlxscore=0 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006220110
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 spamscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006220110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows userspace to have a shorter period of time that the device
-is unusable and to call it at a more convenient time.
+Some external devices can support completing thunderbolt authentication
+when they are unplugged. For this to work though, the link controller must
+remain operational.
 
-For example flushing the image may happen while the user is using the
-machine and authenticating/rebooting may happen while logging out.
+The only device known to support this right now is the Dell WD19TB, so add
+a quirk for this.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- .../ABI/testing/sysfs-bus-thunderbolt         | 11 ++++-
- drivers/thunderbolt/switch.c                  | 43 ++++++++++++-------
- drivers/thunderbolt/tb.h                      |  1 +
- 3 files changed, 38 insertions(+), 17 deletions(-)
+ .../ABI/testing/sysfs-bus-thunderbolt         | 13 ++++++
+ drivers/thunderbolt/Makefile                  |  1 +
+ drivers/thunderbolt/eeprom.c                  |  2 +
+ drivers/thunderbolt/lc.c                      | 14 +++++++
+ drivers/thunderbolt/quirks.c                  | 38 +++++++++++++++++
+ drivers/thunderbolt/switch.c                  | 42 +++++++++++++++++--
+ drivers/thunderbolt/tb-quirks.h               | 16 +++++++
+ drivers/thunderbolt/tb.h                      |  3 ++
+ drivers/thunderbolt/tb_regs.h                 |  1 +
+ 9 files changed, 126 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/thunderbolt/quirks.c
+ create mode 100644 drivers/thunderbolt/tb-quirks.h
 
 diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-index 82e80de78dd0..26b15cbc9881 100644
+index 26b15cbc9881..30798f9a8f59 100644
 --- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
 +++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-@@ -178,11 +178,18 @@ KernelVersion:	4.13
+@@ -243,3 +243,16 @@ KernelVersion:	4.15
  Contact:	thunderbolt-software@lists.01.org
- Description:	When new NVM image is written to the non-active NVM
- 		area (through non_activeX NVMem device), the
--		authentication procedure is started by writing 1 to
--		this file. If everything goes well, the device is
-+		authentication procedure is started by writing to
-+		this file.
-+		If everything goes well, the device is
- 		restarted with the new NVM firmware. If the image
- 		verification fails an error code is returned instead.
- 
+ Description:	This contains XDomain service specific settings as
+ 		bitmask. Format: %x
++
++What:		/sys/bus/thunderbolt/devices/.../nvm_authenticate_on_disconnect
++Date:		August 2020
++KernelVersion:	5.9
++Contact:	thunderbolt-software@lists.01.org
++Description:	For supported devices, automatically authenticate the new Thunderbolt
++		image when the device is disconnected from the host system.
++
 +		This file will accept writing values "1" or "2"
 +		- Writing "1" will flush the image to the storage
-+		area and authenticate the image in one action.
++		area and prepare the device for authentication on disconnect.
 +		- Writing "2" will only flush the image to the storage
 +		area.
-+
- 		When read holds status of the last authentication
- 		operation if an error occurred during the process. This
- 		is directly the status value from the DMA configuration
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index d7d60cd9226f..4c476a58db38 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -27,6 +27,11 @@
- #define NVM_MIN_SIZE		SZ_32K
- #define NVM_MAX_SIZE		SZ_512K
+diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
+index eae28dd45250..013c5564565a 100644
+--- a/drivers/thunderbolt/Makefile
++++ b/drivers/thunderbolt/Makefile
+@@ -2,3 +2,4 @@
+ obj-${CONFIG_USB4} := thunderbolt.o
+ thunderbolt-objs := nhi.o nhi_ops.o ctl.o tb.o switch.o cap.o path.o tunnel.o eeprom.o
+ thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o tmu.o usb4.o
++thunderbolt-objs += quirks.o
+diff --git a/drivers/thunderbolt/eeprom.c b/drivers/thunderbolt/eeprom.c
+index b451a5aa90b5..32838c016c4f 100644
+--- a/drivers/thunderbolt/eeprom.c
++++ b/drivers/thunderbolt/eeprom.c
+@@ -10,6 +10,7 @@
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ #include "tb.h"
++#include "tb-quirks.h"
  
-+enum nvm_write_ops {
-+	WRITE_AND_AUTHENTICATE = 1,
-+	WRITE_ONLY = 2,
+ /**
+  * tb_eeprom_ctl_write() - write control word
+@@ -599,6 +600,7 @@ int tb_drom_read(struct tb_switch *sw)
+ 		sw->uid = header->uid;
+ 	sw->vendor = header->vendor_id;
+ 	sw->device = header->model_id;
++	check_tbt_quirks(sw);
+ 
+ 	crc = tb_crc32(sw->drom + TB_DROM_DATA_START, header->data_len);
+ 	if (crc != header->data_crc32) {
+diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
+index bd44d50246d2..45d2a1de2069 100644
+--- a/drivers/thunderbolt/lc.c
++++ b/drivers/thunderbolt/lc.c
+@@ -366,3 +366,17 @@ int tb_lc_dp_sink_dealloc(struct tb_switch *sw, struct tb_port *in)
+ 	tb_port_dbg(in, "sink %d de-allocated\n", sink);
+ 	return 0;
+ }
++
++/**
++ * lc_force_power() - Force powers a ridge
++ * @sw: thunderbolt switch
++ *
++ * This is useful to let authentication cycle pass even without
++ * a Thunderbolt link present
++ */
++int lc_force_power(struct tb_switch *sw)
++{
++	u32 in = 0xFFFF;
++
++	return tb_sw_write(sw, &in, TB_CFG_SWITCH, TB_LC_POWER, 1);
++}
+diff --git a/drivers/thunderbolt/quirks.c b/drivers/thunderbolt/quirks.c
+new file mode 100644
+index 000000000000..b9c5cfb97645
+--- /dev/null
++++ b/drivers/thunderbolt/quirks.c
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Thunderbolt driver - quirks
++ *
++ * Copyright (c) 2020 Mario Limonciello <mario.limonciello@dell.com>
++ */
++
++#include "tb.h"
++#include "tb-quirks.h"
++
++static void quirk_force_power_link(struct tb_switch *sw)
++{
++	sw->quirks |= QUIRK_FORCE_POWER_LINK_CONTROLLER;
++}
++
++struct tbt_quirk {
++	u16 vendor;
++	u16 device;
++	void (*hook)(struct tb_switch *sw);
 +};
 +
- static DEFINE_IDA(nvm_ida);
++static struct tbt_quirk tbt_quirks[] = {
++	/* Dell WD19TB supports self-authentication on unplug */
++	{ 0x00d4, 0xb070, quirk_force_power_link },
++};
++
++void check_tbt_quirks(struct tb_switch *sw)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(tbt_quirks); i++) {
++		struct tbt_quirk *q = &tbt_quirks[i];
++
++		if (sw->device == q->device &&
++		    sw->vendor == q->vendor)
++			q->hook(sw);
++	}
++}
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 4c476a58db38..0576fe7c0054 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -16,6 +16,7 @@
+ #include <linux/vmalloc.h>
  
- struct nvm_auth_status {
-@@ -164,8 +169,12 @@ static int nvm_validate_and_write(struct tb_switch *sw)
- 	}
+ #include "tb.h"
++#include "tb-quirks.h"
  
- 	if (tb_switch_is_usb4(sw))
--		return usb4_switch_nvm_write(sw, 0, buf, image_size);
--	return dma_port_flash_write(sw->dma_port, 0, buf, image_size);
-+		ret = usb4_switch_nvm_write(sw, 0, buf, image_size);
-+	else
-+		ret = dma_port_flash_write(sw->dma_port, 0, buf, image_size);
-+	if (!ret)
-+		sw->nvm->flushed = true;
-+	return ret;
+ /* Switch NVM support */
+ 
+@@ -1542,8 +1543,8 @@ static ssize_t nvm_authenticate_show(struct device *dev,
+ 	return sprintf(buf, "%#x\n", status);
  }
  
- static int nvm_authenticate_host_dma_port(struct tb_switch *sw)
-@@ -371,6 +380,7 @@ static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
+-static ssize_t nvm_authenticate_store(struct device *dev,
+-	struct device_attribute *attr, const char *buf, size_t count)
++static ssize_t nvm_authenticate_sysfs(struct device *dev, const char *buf,
++				      bool disconnect)
+ {
+ 	struct tb_switch *sw = tb_to_switch(dev);
+ 	int val;
+@@ -1581,8 +1582,12 @@ static ssize_t nvm_authenticate_store(struct device *dev,
+ 				goto exit_unlock;
+ 		}
+ 		if (val == WRITE_AND_AUTHENTICATE) {
+-			sw->nvm->authenticating = true;
+-			ret = nvm_authenticate(sw);
++			if (disconnect) {
++				ret = lc_force_power(sw);
++			} else {
++				sw->nvm->authenticating = true;
++				ret = nvm_authenticate(sw);
++			}
  		}
  	}
  
-+	sw->nvm->flushed = false;
- 	sw->nvm->buf_data_size = offset + bytes;
- 	memcpy(sw->nvm->buf + offset, val, bytes);
+@@ -1592,12 +1597,36 @@ static ssize_t nvm_authenticate_store(struct device *dev,
+ 	pm_runtime_mark_last_busy(&sw->dev);
+ 	pm_runtime_put_autosuspend(&sw->dev);
  
-@@ -1536,7 +1546,7 @@ static ssize_t nvm_authenticate_store(struct device *dev,
- 	struct device_attribute *attr, const char *buf, size_t count)
- {
- 	struct tb_switch *sw = tb_to_switch(dev);
--	bool val;
-+	int val;
- 	int ret;
- 
- 	pm_runtime_get_sync(&sw->dev);
-@@ -1552,25 +1562,28 @@ static ssize_t nvm_authenticate_store(struct device *dev,
- 		goto exit_unlock;
- 	}
- 
--	ret = kstrtobool(buf, &val);
-+	ret = kstrtoint(buf, 10, &val);
++	return ret;
++}
++
++static ssize_t nvm_authenticate_store(struct device *dev,
++	struct device_attribute *attr, const char *buf, size_t count)
++{
++	int ret = nvm_authenticate_sysfs(dev, buf, false);
  	if (ret)
- 		goto exit_unlock;
+ 		return ret;
+ 	return count;
+ }
+ static DEVICE_ATTR_RW(nvm_authenticate);
  
- 	/* Always clear the authentication status */
- 	nvm_clear_auth_status(sw);
- 
--	if (val) {
--		if (!sw->nvm->buf) {
--			ret = -EINVAL;
--			goto exit_unlock;
--		}
--
--		ret = nvm_validate_and_write(sw);
--		if (ret)
--			goto exit_unlock;
-+	if (val > 0) {
-+		if (!sw->nvm->flushed) {
-+			if (!sw->nvm->buf) {
-+				ret = -EINVAL;
-+				goto exit_unlock;
-+			}
- 
--		sw->nvm->authenticating = true;
--		ret = nvm_authenticate(sw);
-+			ret = nvm_validate_and_write(sw);
-+			if (ret || val == WRITE_ONLY)
-+				goto exit_unlock;
-+		}
-+		if (val == WRITE_AND_AUTHENTICATE) {
-+			sw->nvm->authenticating = true;
-+			ret = nvm_authenticate(sw);
-+		}
++static ssize_t nvm_authenticate_on_disconnect_show(struct device *dev,
++	struct device_attribute *attr, char *buf)
++{
++	return nvm_authenticate_show(dev, attr, buf);
++}
++
++static ssize_t nvm_authenticate_on_disconnect_store(struct device *dev,
++	struct device_attribute *attr, const char *buf, size_t count)
++{
++	int ret = nvm_authenticate_sysfs(dev, buf, true);
++
++	if (ret)
++		return ret;
++	return count;
++}
++static DEVICE_ATTR_RW(nvm_authenticate_on_disconnect);
++
+ static ssize_t nvm_version_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+@@ -1655,6 +1684,7 @@ static struct attribute *switch_attrs[] = {
+ 	&dev_attr_generation.attr,
+ 	&dev_attr_key.attr,
+ 	&dev_attr_nvm_authenticate.attr,
++	&dev_attr_nvm_authenticate_on_disconnect.attr,
+ 	&dev_attr_nvm_version.attr,
+ 	&dev_attr_rx_speed.attr,
+ 	&dev_attr_rx_lanes.attr,
+@@ -1709,6 +1739,10 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
+ 		if (tb_route(sw))
+ 			return attr->mode;
+ 		return 0;
++	} else if (attr == &dev_attr_nvm_authenticate_on_disconnect.attr) {
++		if (sw->quirks & QUIRK_FORCE_POWER_LINK_CONTROLLER)
++			return attr->mode;
++		return 0;
  	}
  
- exit_unlock:
+ 	return sw->safe_mode ? 0 : attr->mode;
+diff --git a/drivers/thunderbolt/tb-quirks.h b/drivers/thunderbolt/tb-quirks.h
+new file mode 100644
+index 000000000000..6b644eaaac40
+--- /dev/null
++++ b/drivers/thunderbolt/tb-quirks.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Thunderbolt driver - quirks
++ *
++ * Copyright (c) 2020 Mario Limonciello <mario.limonciello@dell.com>
++ */
++
++
++#ifndef _TB_QUIRKS
++#define _TB_QUIRKS
++
++#define QUIRK_FORCE_POWER_LINK_CONTROLLER       (1<<1)
++
++void check_tbt_quirks(struct tb_switch *sw);
++
++#endif
 diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index 2eb2bcd3cca3..222ec19737fa 100644
+index 222ec19737fa..22937be69a1f 100644
 --- a/drivers/thunderbolt/tb.h
 +++ b/drivers/thunderbolt/tb.h
-@@ -40,6 +40,7 @@ struct tb_switch_nvm {
- 	void *buf;
- 	size_t buf_data_size;
- 	bool authenticating;
-+	bool flushed;
+@@ -118,6 +118,7 @@ struct tb_switch_tmu {
+  * @depth: Depth in the chain this switch is connected (ICM only)
+  * @rpm_complete: Completion used to wait for runtime resume to
+  *		  complete (ICM only)
++ * @quirks: Quirks used for this Thunderbolt switch
+  *
+  * When the switch is being added or removed to the domain (other
+  * switches) you need to have domain lock held.
+@@ -155,6 +156,7 @@ struct tb_switch {
+ 	u8 link;
+ 	u8 depth;
+ 	struct completion rpm_complete;
++	unsigned long quirks;
  };
  
- #define TB_SWITCH_KEY_SIZE		32
+ /**
+@@ -784,6 +786,7 @@ bool tb_lc_lane_bonding_possible(struct tb_switch *sw);
+ bool tb_lc_dp_sink_query(struct tb_switch *sw, struct tb_port *in);
+ int tb_lc_dp_sink_alloc(struct tb_switch *sw, struct tb_port *in);
+ int tb_lc_dp_sink_dealloc(struct tb_switch *sw, struct tb_port *in);
++int lc_force_power(struct tb_switch *sw);
+ 
+ static inline int tb_route_length(u64 route)
+ {
+diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+index c29c5075525a..9a2fab9c5346 100644
+--- a/drivers/thunderbolt/tb_regs.h
++++ b/drivers/thunderbolt/tb_regs.h
+@@ -379,6 +379,7 @@ struct tb_regs_hop {
+ #define TB_LC_SNK_ALLOCATION_SNK1_SHIFT	4
+ #define TB_LC_SNK_ALLOCATION_SNK1_MASK	GENMASK(7, 4)
+ #define TB_LC_SNK_ALLOCATION_SNK1_CM	0x1
++#define TB_LC_POWER			0x740
+ 
+ /* Link controller registers */
+ #define TB_LC_PORT_ATTR			0x8d
 -- 
 2.25.1
 
