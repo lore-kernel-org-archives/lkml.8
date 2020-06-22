@@ -2,124 +2,208 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93FA52073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592844167;
-	bh=j9RmD9qEztTmkv8IrXZ4rpp60ujK/IENdtE9b0ttDHA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O7PlNUE4LtHCpdBzULUNNvDnSrmSpkrN1uGRZ8AIBH1aMYxmKa/YruS8RfN5l61bB
-	 5wje9k557gMSu7e+JPP62b97XMC45g5B/sgccmtXulUQlmnRTT+oeVg0dOmVTb/0Rs
-	 xvGuAFgnJzV0JHhgIjOSbr/vnMxOLOkpiZMv9Ybs=
+	by mail.kernel.org (Postfix) with ESMTP id AB0112075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgFVQmq (ORCPT
+        id S1729824AbgFVQmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 22 Jun 2020 12:42:47 -0400
+Received: from mga18.intel.com ([134.134.136.126]:58691 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729568AbgFVQmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 12:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729260AbgFVQmp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:42:45 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1601EC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:42:45 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id n24so20049017lji.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bioh+BBjrn8lfhGJU2vSscKrqgHvIa0YiWgSVaXIKk0=;
-        b=L+z0IZKykUBFS0YqWDjAmY+wO4YVKJ/tRwgisWQle1k44UsBmPcahzs8ifuDU8djes
-         OJGNCtXFOfX/eo/OdCIa2SQT08iS+s4+eexRbyPteoxEgHXyBvNxhXTALA0LFUiK516K
-         5LxY5wqnTstVM8qg8SRRWqsqYEFko76b/eRgg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bioh+BBjrn8lfhGJU2vSscKrqgHvIa0YiWgSVaXIKk0=;
-        b=imylYud0Jc45/MwVHtX0QTLiYucdHsrVKrgvAdbTXr1OhvLudXpV7BO+w+R1iogMxD
-         VrkTRzISkidUncSuBNsr6Ge8K6XLRxDNAmyJ+r3T7Gu9nhXaDDyyM6kitN0x3FEWIYSK
-         V9Z8yZxFNtFoGPIXiX+jU5WQAQoJX3jkCwhpa1h3ucNVbCKVB8TIt9UytJ0LQ4/iycOg
-         mtSg4BBmine2czZnIy7As+QJFFZYvofRIo0WbMSaVrBL7POSw6MpslxQuKqGL8/+FJAv
-         ww5vxrLe90FrA+6z5oNwsmvT5zVv66y7xzyz30gLn3OuMY+V5EJ3w1BLMtOtx5fOlJsV
-         RBnw==
-X-Gm-Message-State: AOAM530u/mZNSUvnwyZDxtWHSvCSFQHLo+MoBlihHSVFQlqcTLbhfpAn
-        nE1AuPqFRlcNi9e9BUl9afgSV4RHhX0=
-X-Google-Smtp-Source: ABdhPJyMAw0BMCKHhUo19cg+Bpi5ZYcmSYiiBnHBJxx+5BUBB/W+lvHkyXOHU0YTTZ+P5vFKkhrJmA==
-X-Received: by 2002:a2e:6e17:: with SMTP id j23mr9483555ljc.194.1592844163244;
-        Mon, 22 Jun 2020 09:42:43 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id b6sm3570458lfe.28.2020.06.22.09.42.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 09:42:42 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id o4so10023976lfi.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:42:41 -0700 (PDT)
-X-Received: by 2002:a19:ae0f:: with SMTP id f15mr10345309lfc.142.1592844161606;
- Mon, 22 Jun 2020 09:42:41 -0700 (PDT)
+IronPort-SDR: Rg+V7VWu6t7EYNsRUv5RNq9RBlYDWehaNYm7PZwIaDwxuCOmVDs+3J4sfJVHaBwYMfYZbY9Iha
+ P3u1KcesnNpA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131210074"
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="scan'208";a="131210074"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 09:42:45 -0700
+IronPort-SDR: gaYMqP2V1KwAfir4L5ydt9BBuc2TvmxqdG2SQGf1qUALVlhGLlRIwYLSpFYY1dpGKRIwSXFvxB
+ HkYjSAbofpaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,267,1589266800"; 
+   d="scan'208";a="278820561"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga006.jf.intel.com with SMTP; 22 Jun 2020 09:42:42 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 22 Jun 2020 19:42:41 +0300
+Date:   Mon, 22 Jun 2020 19:42:41 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@dell.com>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] thunderbolt: Add support for separating the flush to
+ SPI and authenticate
+Message-ID: <20200622164241.GW2795@lahna.fi.intel.com>
+References: <20200622143035.25327-1-mario.limonciello@dell.com>
+ <20200622143035.25327-2-mario.limonciello@dell.com>
 MIME-Version: 1.0
-References: <20200622030222.1370098-1-Jason@zx2c4.com> <CAHk-=wj5TPoHih-8m+s9UNShiKavUFLacmHFmNbDrXQem43kSA@mail.gmail.com>
- <20200622133747.GD2850@glitch>
-In-Reply-To: <20200622133747.GD2850@glitch>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 22 Jun 2020 09:42:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgR8TZi_M4p3PZQh5nGjUjNBeXqhGyxUe8eykyf8g6p=A@mail.gmail.com>
-Message-ID: <CAHk-=wgR8TZi_M4p3PZQh5nGjUjNBeXqhGyxUe8eykyf8g6p=A@mail.gmail.com>
-Subject: Re: [PATCH] Revert "kernel/printk: add kmsg SEEK_CUR handling"
-To:     Bruno Meneguele <bmeneg@redhat.com>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622143035.25327-2-mario.limonciello@dell.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 6:38 AM Bruno Meneguele <bmeneg@redhat.com> wrote:
->
-> However, the issue with glibc is their fd checking on dprintf using:
->
-> lseek(offset == 0, whence == SEEK_CUR)
->
-> Which, technically, isn't a relative seek operation in my opinion, thus
-> I'm also not sure that returning EINVAL is correct.
+On Mon, Jun 22, 2020 at 09:30:34AM -0500, Mario Limonciello wrote:
+> This allows userspace to have a shorter period of time that the device
+> is unusable and to call it at a more convenient time.
+> 
+> For example flushing the image may happen while the user is using the
+> machine and authenticating/rebooting may happen while logging out.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> ---
+>  .../ABI/testing/sysfs-bus-thunderbolt         | 11 ++++-
+>  drivers/thunderbolt/switch.c                  | 43 ++++++++++++-------
+>  drivers/thunderbolt/tb.h                      |  1 +
+>  3 files changed, 38 insertions(+), 17 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> index 82e80de78dd0..26b15cbc9881 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> +++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> @@ -178,11 +178,18 @@ KernelVersion:	4.13
+>  Contact:	thunderbolt-software@lists.01.org
+>  Description:	When new NVM image is written to the non-active NVM
+>  		area (through non_activeX NVMem device), the
+> -		authentication procedure is started by writing 1 to
+> -		this file. If everything goes well, the device is
+> +		authentication procedure is started by writing to
+> +		this file.
+> +		If everything goes well, the device is
+>  		restarted with the new NVM firmware. If the image
+>  		verification fails an error code is returned instead.
+>  
+> +		This file will accept writing values "1" or "2"
+> +		- Writing "1" will flush the image to the storage
+> +		area and authenticate the image in one action.
+> +		- Writing "2" will only flush the image to the storage
+> +		area.
 
-Well, I'm not sure there is a "correct". Normal file descriptors are
-seekable or not, this is kind of a special one. It's not like you can
-read it byte for byte anyway.
+Does this ("2") also do the basic validation? I think it does so
+probably good to mention that here.
 
-There is a "historical behavior".
+> +
+>  		When read holds status of the last authentication
+>  		operation if an error occurred during the process. This
+>  		is directly the status value from the DMA configuration
+> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+> index d7d60cd9226f..4c476a58db38 100644
+> --- a/drivers/thunderbolt/switch.c
+> +++ b/drivers/thunderbolt/switch.c
+> @@ -27,6 +27,11 @@
+>  #define NVM_MIN_SIZE		SZ_32K
+>  #define NVM_MAX_SIZE		SZ_512K
+>  
+> +enum nvm_write_ops {
+> +	WRITE_AND_AUTHENTICATE = 1,
+> +	WRITE_ONLY = 2,
+> +};
+> +
+>  static DEFINE_IDA(nvm_ida);
+>  
+>  struct nvm_auth_status {
+> @@ -164,8 +169,12 @@ static int nvm_validate_and_write(struct tb_switch *sw)
+>  	}
+>  
+>  	if (tb_switch_is_usb4(sw))
+> -		return usb4_switch_nvm_write(sw, 0, buf, image_size);
+> -	return dma_port_flash_write(sw->dma_port, 0, buf, image_size);
+> +		ret = usb4_switch_nvm_write(sw, 0, buf, image_size);
+> +	else
+> +		ret = dma_port_flash_write(sw->dma_port, 0, buf, image_size);
+> +	if (!ret)
+> +		sw->nvm->flushed = true;
+> +	return ret;
+>  }
+>  
+>  static int nvm_authenticate_host_dma_port(struct tb_switch *sw)
+> @@ -371,6 +380,7 @@ static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
+>  		}
+>  	}
+>  
+> +	sw->nvm->flushed = false;
+>  	sw->nvm->buf_data_size = offset + bytes;
+>  	memcpy(sw->nvm->buf + offset, val, bytes);
+>  
+> @@ -1536,7 +1546,7 @@ static ssize_t nvm_authenticate_store(struct device *dev,
+>  	struct device_attribute *attr, const char *buf, size_t count)
+>  {
+>  	struct tb_switch *sw = tb_to_switch(dev);
+> -	bool val;
+> +	int val;
+>  	int ret;
+>  
+>  	pm_runtime_get_sync(&sw->dev);
+> @@ -1552,25 +1562,28 @@ static ssize_t nvm_authenticate_store(struct device *dev,
+>  		goto exit_unlock;
+>  	}
+>  
+> -	ret = kstrtobool(buf, &val);
+> +	ret = kstrtoint(buf, 10, &val);
+>  	if (ret)
+>  		goto exit_unlock;
+>  
+>  	/* Always clear the authentication status */
+>  	nvm_clear_auth_status(sw);
+>  
+> -	if (val) {
+> -		if (!sw->nvm->buf) {
+> -			ret = -EINVAL;
+> -			goto exit_unlock;
+> -		}
+> -
+> -		ret = nvm_validate_and_write(sw);
+> -		if (ret)
+> -			goto exit_unlock;
+> +	if (val > 0) {
+> +		if (!sw->nvm->flushed) {
+> +			if (!sw->nvm->buf) {
+> +				ret = -EINVAL;
+> +				goto exit_unlock;
+> +			}
+>  
+> -		sw->nvm->authenticating = true;
+> -		ret = nvm_authenticate(sw);
+> +			ret = nvm_validate_and_write(sw);
+> +			if (ret || val == WRITE_ONLY)
+> +				goto exit_unlock;
+> +		}
+> +		if (val == WRITE_AND_AUTHENTICATE) {
+> +			sw->nvm->authenticating = true;
+> +			ret = nvm_authenticate(sw);
+> +		}
+>  	}
+>  
+>  exit_unlock:
+> diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+> index 2eb2bcd3cca3..222ec19737fa 100644
+> --- a/drivers/thunderbolt/tb.h
+> +++ b/drivers/thunderbolt/tb.h
+> @@ -40,6 +40,7 @@ struct tb_switch_nvm {
+>  	void *buf;
+>  	size_t buf_data_size;
+>  	bool authenticating;
+> +	bool flushed;
 
-> Would it make sense to return the next buffer index instead? Basically
-> the same as SEEK_END does? The first "if (offset)" in the function would
-> prevent any real relative move while SEEK_CUR would return a valid
-> address following this buffer behavior of specific points it could seek
-> to.
+Please add kernel-doc about this.
 
-Maybe. At the same time, the way we don't actually return a real
-position means that that's very dangerous too. We'll always return
-"we're at position zero".
-
-And we never accept byte-by-byte reads and require a "get the whole
-record" model.
-
-So I think we might as well accept "kmsg is special".
-
-I don't have hugely strong opinions on it - I certainly agree that
-"SEEK_CUR with offset zero could be a no-op", but I also don't think
-there's a huge reason to try to change it, considering just _how_
-special kmsg is.
-
-               Linus
+>  };
+>  
+>  #define TB_SWITCH_KEY_SIZE		32
+> -- 
+> 2.25.1
