@@ -2,137 +2,102 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F81DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24C69206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFB720706
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/FVEizN"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="hMaou2x9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgFVLSJ (ORCPT
+        id S1728886AbgFVLTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgFVLSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:18:02 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC05C061794;
-        Mon, 22 Jun 2020 04:18:02 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id dp18so17595287ejc.8;
-        Mon, 22 Jun 2020 04:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zTuD0pvK9ddq/193/N5U9u32frcmzUdwxwqpfYQjgV4=;
-        b=c/FVEizNmu//8AR+7hIlH701rjkqL2J9o+1R3gDqO39I/P87WYgoh3pF/1txlnGZyb
-         HrKnL88xf8Fr8Jr77DlaTDoD5BfWGYTKDvMLKiUDN8tXqUX3PRb61sTYbbdkZ5XRghcV
-         vN23fcOSigXZD+EEc9pN4M56c4lxjZ44nsRsVtuujT7b4/rdeebdRNhMeqPPbhYiDk+d
-         ed/G1jgJcdT3fYoTpIO82l5DNG95iCcWwzeku6+YWvMk7tR+VcBI8JsN1Flq2TZ+lRF9
-         XQFGXwpKGTCmnkC6uHt76uvBU9uy1YhS7SiHuYYIyE2CQgn1+tkVHoP8LsbMm7WeJ+g8
-         IgfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zTuD0pvK9ddq/193/N5U9u32frcmzUdwxwqpfYQjgV4=;
-        b=gw1R80k2klntpRG17NRe1eKm/+Q/esP68asQR9YGUh2oniR77lniH5mM9XCSVNLAWO
-         uEPU9gksQilWaqVu4I3nupmX321R6BumKnNr+yDGAjk9a4AiBoplHZVVxsqUHcP0vk3k
-         Ioxa3UB9r7t8LmE/++JBLbKu35qJhEZW5eG/gRWlBC2fWC+4kWdQxg8tRXBDmUZ+iWVN
-         kU8kAF21whGt6rq2A/06f+UsN83avrrnH4BhEBkgPomEmzNN9jPXVHrkgckRGukUrBBd
-         b2DVN5tCYlE3FdhskWBEd41iQ4ult2DAuXRX+2XxYWcAH7xLgPlE4+kS5g9WeWb4bYPQ
-         /7ng==
-X-Gm-Message-State: AOAM531yfl4i51/gviNnfdqy54FddsnEXpW8TjkIB4nlq/XxwC+uG1X3
-        nQGTo7lMk6RD1tEh2ByV26B11yOQ1rjo5QtafDM=
-X-Google-Smtp-Source: ABdhPJwttZ0XVywCYT66vUFeQ/CJWzTALslMCl4YzEdZZqWY491buLqoD4N2QmCEJ4OC/PBuo+Evi5yTO8YgflNYVSM=
-X-Received: by 2002:a17:906:492:: with SMTP id f18mr5336759eja.279.1592824681148;
- Mon, 22 Jun 2020 04:18:01 -0700 (PDT)
+        Mon, 22 Jun 2020 07:19:14 -0400
+Received: from vps.xff.cz ([195.181.215.36]:39930 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728424AbgFVLR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 07:17:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1592824673; bh=0Vk8stGqwL22qIG2VXDYwb4JGvkgfdgnlutpWfVaaAk=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=hMaou2x9rawSaJ4M5p19fxiRzhurhEBjn1CGSowMO2tYKM9IJoFSarK0qMn+8/iUC
+         QH14oc8yPRGUjFTfQRuHO4k7CSkHb5Ln3SzS/3PWhOfd5i/IKTAmlqdjH7LMHbhgSz
+         2stzJLkR41K8a25eokQMst0y1t2GMdOVo2NEgg60=
+Date:   Mon, 22 Jun 2020 13:17:52 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>,
+        Bhushan Shah <bshah@kde.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Luca Weiss <luca@z3ntu.xyz>,
+        Martijn Braam <martijn@brixit.nl>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 3/5] drm: panel: Add Xingbangda XBD599 panel (ST7703
+ controller)
+Message-ID: <20200622111752.jsz37zl7hidvkozw@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>, Bhushan Shah <bshah@kde.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Luca Weiss <luca@z3ntu.xyz>, Martijn Braam <martijn@brixit.nl>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200617003209.670819-1-megous@megous.com>
+ <20200617003209.670819-4-megous@megous.com>
+ <20200620212529.GB74146@ravnborg.org>
+ <20200620223010.fqjwijiixxkewk3p@core.my.home>
+ <20200622080802.GA650963@ravnborg.org>
 MIME-Version: 1.0
-References: <20200622110543.5035-1-krzk@kernel.org> <20200622110543.5035-2-krzk@kernel.org>
-In-Reply-To: <20200622110543.5035-2-krzk@kernel.org>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 22 Jun 2020 14:17:50 +0300
-Message-ID: <CA+h21hr+P6hq52jpLSR0xo8QKi-5aRUE2n4yeumSbrdUOJsgFQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] spi: spi-fsl-dspi: Fix lockup if device is
- shutdown during SPI transfer
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, Peng Ma <peng.ma@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200622080802.GA650963@ravnborg.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 at 14:08, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> During shutdown, the driver should unregister the SPI controller
-> and stop the hardware.  Otherwise the dspi_transfer_one_message() could
-> wait on completion infinitely.
->
-> Additionally, calling spi_unregister_controller() first in device
-> shutdown reverse-matches the probe function, where SPI controller is
-> registered at the end.
->
-> Fixes: dc234825997e ("spi: spi-fsl-dspi: Adding shutdown hook")
-> Cc: <stable@vger.kernel.org>
-> Reported-by: Vladimir Oltean <olteanv@gmail.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
+Hello Sam,
 
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Mon, Jun 22, 2020 at 10:08:02AM +0200, Sam Ravnborg wrote:
+> On Sun, Jun 21, 2020 at 12:30:10AM +0200, Ondřej Jirman wrote:
+> > On Sat, Jun 20, 2020 at 11:25:29PM +0200, Sam Ravnborg wrote:
+> > > Hi Ondrej et al.
 
->
-> kexec() not tested, only system shutdown.
->
-> Changes since v3:
-> 1. New patch.
-> ---
->  drivers/spi/spi-fsl-dspi.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
->
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index ec0fd0d366eb..ec7919d9c0d9 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -1452,20 +1452,7 @@ static int dspi_remove(struct platform_device *pdev)
->
->  static void dspi_shutdown(struct platform_device *pdev)
->  {
-> -       struct spi_controller *ctlr = platform_get_drvdata(pdev);
-> -       struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
-> -
-> -       /* Disable RX and TX */
-> -       regmap_update_bits(dspi->regmap, SPI_MCR,
-> -                          SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
-> -                          SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
-> -
-> -       /* Stop Running */
-> -       regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
-> -
-> -       dspi_release_dma(dspi);
-> -       clk_disable_unprepare(dspi->clk);
-> -       spi_unregister_controller(dspi->ctlr);
-> +       dspi_remove(pdev);
->  }
->
->  static struct platform_driver fsl_dspi_driver = {
-> --
-> 2.17.1
->
+...
+
+> > > Would it not be better to have one st7703 driver that suipports both
+> > > panels?
+> > >
+> > > The driver would need dedicated init functions depending on the panel.
+> > > But a lot could also be shared.
+> > 
+> > I guess I can move the code there. 
+> In the same process the river should then be renamed to follow other
+> sitronix based drivers.
+> So the next developer will recognize this and use the correct driver.
+
+Are driver/module names considered kernel ABI? Or is it possible to
+change them?
+
+regards,
+	o.
