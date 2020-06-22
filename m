@@ -2,158 +2,112 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BE2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50FA02075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:52:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Unr5f4zx"
+	by mail.kernel.org (Postfix) with ESMTP id 62C2A20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 17:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592848429;
+	bh=ByCENBapf+e7wZUtGPyV0Gp4Oa4uEA4xRBBYPbbvTcs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uSFmOX66ICerC+prko1tmvkizazKG9qHKHRJPlZklANmCzFOb/4R52ldHTVJieejw
+	 PBDlHtPn5bj/AqDEWH/iFcU9XyV4ZqhfjC2wXUD0MIoppiUEJv2WmjnW2VNTEjpb4y
+	 pbKAiJKwQK1saO3b6SSwPYBsL0CYGWGYBYmBqLe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730238AbgFVRwq (ORCPT
+        id S1730132AbgFVRxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
+        Mon, 22 Jun 2020 13:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730046AbgFVRwp (ORCPT
+        with ESMTP id S1729864AbgFVRxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 13:52:45 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACE3BC061573;
-        Mon, 22 Jun 2020 10:52:45 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id v13so13779617otp.4;
-        Mon, 22 Jun 2020 10:52:45 -0700 (PDT)
+        Mon, 22 Jun 2020 13:53:47 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC83C061573;
+        Mon, 22 Jun 2020 10:53:47 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id a14so2057866qvq.6;
+        Mon, 22 Jun 2020 10:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c3U81bx6gTZu2W3e+xYnSw5Jlusy05+ISUo5eh+2kNw=;
-        b=Unr5f4zxpWyYCGUAyXtqaimObdGmGC3elLdwRoYnR31VNUlv0Qbb6Zb2CdjAttYj+I
-         VnX4HFMBLGhGkweyGlkSM/jtXLHA61tBm5PrEoFqIQmms4s5IT913IOLeDkhPbnMLfL7
-         a8ugnSoJaTnsoRYHnSoyucUqs/L4S5yB+zU6ltiJSx1aPsBGmwC/46yI9SPeFlvG4EGs
-         t/wKxVJ48BfroR7HIDRdBifEVRaDLinqsbXBWxedoPY0COD7LSnxsoPwuNHZZFqnvntU
-         BR6cTnEAZZ+jheABPKvut/+MqKzgjzDPI/nZb9vkrvj+OZM9z+j4qctTlHpmrrtN8jbR
-         vfSA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aI7AFW3ATWYt7qJdSuoHvMFK956GDUQlWuGNOU4nfiI=;
+        b=CRWvA9PWU2ITV60zpx4EgXzCM55vziCjbaNwks/D63WzA5S+uC9bFIoRf/rrKIj+29
+         SkvDtsRjgbuErDRQjQU0J30xwxIx9q6ZzyTOCT9qWjW478v2Odeo6ldUnpEDk7W4+W+m
+         sLBlBSkYWta7t7EdcU1A4uRGMBOH6oRgW2QeA1aE4fA8iYBJdywSjoka2ZHJcADwd0I3
+         qu7CCA5PT5Q8sIsOjY68UDesnlLy3rPe/iMEiQyZqbJF2eb6RWt4o+SyUFGUdNaTA2Ol
+         zCcxR2WV9A4XFF0pr3gZ5P/uQIKywbZV+Bd5B1HXGadCdNLui3re2Qe+2FeoL1m8ls/+
+         1D1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c3U81bx6gTZu2W3e+xYnSw5Jlusy05+ISUo5eh+2kNw=;
-        b=qiJih6z+8ztxRfv96Xj+zGKP1R6VdVJRDASxagbk7iahWXijV831zJFhEI9HLEImrQ
-         KcCi2TBH4rPq+QCY1IxKfeUUugt6yihV1YU2AlniAiZ5WbIReC19z6b5wQHQLIMCSDUp
-         Y4aqnMTVdcXxciG5vIaysQNKpwQtYM5wfb8MSIkZsLF3lbaRpc6U8y6wFOtOU3IZKBeV
-         PdTJuHntOT600bTxq/zVbkMJKpeApE5wCoPiika0en1F0Pj6MjpjDbFUDULLmX7m9MI5
-         TtrIjaUTHc+T+3hAKdeDdiaKI/XZkGLgSYSDcXtOG6eDmfQ+OBP42yrFt0GPrHg7WjKQ
-         pylw==
-X-Gm-Message-State: AOAM5334oGVDEkyLnJu9KcWc+nLeNCRC+W/QsDIdOuCuCmeXL6PtvGa0
-        vYCqKO0R6MXCqnNn/ypCPZQ5vjLgwLHLwOjbi0s=
-X-Google-Smtp-Source: ABdhPJx5eB39CGljKy11xsnx0bd/2ros2b0o0ME+sXda1JV9InGs/LiwGuCe2IW0OuAoRtAUkyMzKJv4hF8AiOQzA/Y=
-X-Received: by 2002:a9d:6188:: with SMTP id g8mr14046396otk.43.1592848365088;
- Mon, 22 Jun 2020 10:52:45 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=aI7AFW3ATWYt7qJdSuoHvMFK956GDUQlWuGNOU4nfiI=;
+        b=kuCx6XmB5A39WEY7qSOF0MRbSKad1bCn8U6NUd3PmYVDuG6SaN2k3yzu84roznOmA5
+         id3+t66KtRN4WfDsJ6FSs+12HSAd7rMGZcgQQnQ5tUWGWUqRw9r4OnTdD+aonlFgbHxC
+         5VYDtAiql+98FMzaQhtf4AyaBBe97PnOvDpqq+BTRMDWLjW0RNEa6dhm3aoyc9qBq1Xe
+         WgmG3plwGB4fBniR5OLvjQUGR0ZYZ08f7IQoh67qAoHCSUOm45mdxlYq83UIYn4xfu8F
+         Dphy4dXwOTBng7VllO++ag+p7zu3AS1U6MA/4Tb1pM7AWro395s6vd0HK95hT8C0yDIE
+         NPeg==
+X-Gm-Message-State: AOAM530h0HtO6keS48D49IGxmPVfZQP/zU6WtOATD+qX2dpKq/3ZatfZ
+        6mx80TBoYPpQtGmWBUf0jc4=
+X-Google-Smtp-Source: ABdhPJzv3P99geGSDEBfnzJ929miMpBdopbd+1+vh8L6/V432OG2iCsT4kcU5NWLwQq6Ru3OMnJHQA==
+X-Received: by 2002:ad4:4374:: with SMTP id u20mr22835856qvt.144.1592848425956;
+        Mon, 22 Jun 2020 10:53:45 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id u27sm14366487qkm.121.2020.06.22.10.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 10:53:45 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 13:53:43 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
+Cc:     Ian Kent <raven@themaw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+Message-ID: <20200622175343.GC13061@mtj.duckdns.org>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+ <20200619153833.GA5749@mtj.thefacebook.com>
+ <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
+ <20200619222356.GA13061@mtj.duckdns.org>
+ <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <1591554886-21725-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591554886-21725-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 22 Jun 2020 18:52:18 +0100
-Message-ID: <CA+V-a8sMAkhLh9n7d=4QaNLDDJuExcu4ctWX2P1xH6Jqj-D3DA@mail.gmail.com>
-Subject: Re: [PATCH 00/11] Add support for HiHope RZ/G2M[N] Rev.3.0/4.0
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Fri, Jun 19, 2020 at 07:44:29PM -0700, Rick Lindsley wrote:
+>     echo 0 > /sys/devices//system/memory/memory10374/online
+> 
+> and boom - you've taken memory chunk 10374 offline.
+> 
+> These changes are not just a whim. I used lockstat to measure contention
+> during boot. The addition of 250,000 "devices" in parallel created
+> tremendous contention on the kernfs_mutex and, it appears, on one of the
+> directories within it where memory nodes are created. Using a mutex means
+> that the details of that mutex must bounce around all the cpus ... did I
+> mention 1500+ cpus? A whole lot of thrash ...
 
-On Sun, Jun 7, 2020 at 7:35 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Hi All,
->
-> This patch series adds supports for HiHope RZ/G2M[N] Rev.3.0/4.0
-> boards.
->
-> Patches are based on top of renesas-arm-dt-for-v5.9 branch [1].
->
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git
->
-> Cheers,
-> Prabhakar
->
-> Lad Prabhakar (11):
->   arm64: dts: renesas: r8a774a1-hihope-rzg2m[-ex/-ex-idk-1110wr]: Rename
->     HiHope RZ/G2M boards
->   arm64: dts: renesas: r8a774b1-hihope-rzg2n[-ex]: Rename HiHope RZ/G2N
->     boards
->   arm64: dts: renesas: hihope-common: Separate out Rev.2.0 specific into
->     hihope-common-rev2.dtsi file
->   arm64: dts: renesas: Add HiHope RZ/G2M[N] Rev.3.0/4.0 specific into
->     common file
->   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 main board support
->   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 sub board support
->   arm64: dts: renesas: hihope-rzg2-ex: Separate out lvds specific nodes
->     into common file
->   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 board with
->     idk-1110wr display
->   arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 main board support
->   arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 sub board support
->   arm64: dts: renesas: Add HiHope RZ/G2N Rev2.0/3.0/4.0 board with
->     idk-1110wr display
->
-Thank you for the Ack's for the above patches.
+I don't know. The above highlights the absurdity of the approach itself to
+me. You seem to be aware of it too in writing: 250,000 "devices".
 
-I shall re-spin the new version fixing the comments. I am waiting for
-your feedback on patch 03/11.
+Thanks.
 
-Cheers,
---Prabhakar
-
-
->  arch/arm64/boot/dts/renesas/Makefile          |  17 ++-
->  .../boot/dts/renesas/hihope-common-rev2.dtsi  | 101 +++++++++++++
->  .../boot/dts/renesas/hihope-common-rev4.dtsi  | 143 ++++++++++++++++++
->  .../arm64/boot/dts/renesas/hihope-common.dtsi |  87 +----------
->  .../boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi |  52 +++++++
->  .../boot/dts/renesas/hihope-rzg2-ex.dtsi      |  37 -----
->  .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts   |  43 +-----
->  .../dts/renesas/r8a774a1-hihope-rzg2m-ex.dts  |   6 +-
->  ...a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts |  15 ++
->  .../renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts |  19 +++
->  .../renesas/r8a774a1-hihope-rzg2m-rev2.dts    |  38 +++++
->  .../dts/renesas/r8a774a1-hihope-rzg2m.dts     |   5 +-
->  arch/arm64/boot/dts/renesas/r8a774a1.dtsi     |   2 +
->  .../r8a774b1-hihope-rzg2n-ex-idk-1110wr.dts   |  15 ++
->  .../dts/renesas/r8a774b1-hihope-rzg2n-ex.dts  |   6 +-
->  ...a774b1-hihope-rzg2n-rev2-ex-idk-1110wr.dts |  15 ++
->  .../renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts |  15 ++
->  .../renesas/r8a774b1-hihope-rzg2n-rev2.dts    |  42 +++++
->  .../dts/renesas/r8a774b1-hihope-rzg2n.dts     |   5 +-
->  arch/arm64/boot/dts/renesas/r8a774b1.dtsi     |   2 +
->  20 files changed, 490 insertions(+), 175 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
->  create mode 100644 arch/arm64/boot/dts/renesas/hihope-common-rev4.dtsi
->  create mode 100644 arch/arm64/boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-ex-idk-1110wr.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex-idk-1110wr.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2.dts
->
-> --
-> 2.17.1
->
+-- 
+tejun
