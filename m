@@ -2,222 +2,111 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31867C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA652073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013C620771
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:49:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cl2akqo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgFVSq7 (ORCPT
+        id S1730060AbgFVStm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:46:59 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51786 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729913AbgFVSq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:46:59 -0400
-IronPort-SDR: ff0Tlzxxgec2bOha4H8GWyCPPxqddjsoy3w4fkW3HufCsLZ8yW8krqUl+d2SSvMQg3nIa27ID5
- Plul8tRq20bQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123500360"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="123500360"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 11:46:57 -0700
-IronPort-SDR: fUvQXFGIprQ0Ie5IoxMVgI7gb9xOkbTmDVmp65OhnPgKTkd6Wj2y5BQ8h7R9GnuEt8JQAOsWqA
- X4gGKGuYg5FA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="311019119"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Jun 2020 11:46:57 -0700
-Received: from [10.251.30.218] (kliang2-mobl.ccr.corp.intel.com [10.251.30.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 0DA20580342;
-        Mon, 22 Jun 2020 11:46:54 -0700 (PDT)
-Subject: Re: [PATCH 17/21] x86/fpu: Use proper mask to replace full
- instruction mask
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, yu-cheng.yu@intel.com,
-        bigeasy@linutronix.de, gorcunov@gmail.com, hpa@zytor.com,
+        Mon, 22 Jun 2020 14:49:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729605AbgFVStl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 14:49:41 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7DAC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:49:41 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id n24so20502132lji.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:49:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6u6/dv+jBcWLjTJt7LasJyF0zDI1Q4uNreYy9wn0bVc=;
+        b=cl2akqo8GXtwM1zHfRkfLSphpe47oZ8yj12HrFnJamJmqOSANi0rHB7DiYOEqL3yGW
+         3MuD1JNydm4Evx/b+rsa4EFQ1sTdmmWbZwT4r48a+XFFN17cktC/NR6nBJpFkxb/XCKZ
+         rGjIK6feM9Pa+tgN8V1ODYrsPLJcdiM4ZhUEzKFodJZaeZm7B+wwZtH6PxqbvhvVc2Mc
+         txK0n7nXUH354YFXbYGziXZqZ9TQNm+xzaZNM90M3flT4o/yflDInzEkZaDvUgW+hK2r
+         x9uqQMxydGPny922GAMM4efz1w7h3uSkDbfxKq/otQ6U2rlYeAnOp8UDGCiyvG9Shn8t
+         Q1PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6u6/dv+jBcWLjTJt7LasJyF0zDI1Q4uNreYy9wn0bVc=;
+        b=ZzbuGNsh+hetNHQxy+ckYs1iWyBYEQOihIUXLdSVVtwPshtlGmSiUdiRrlx4xjMgRX
+         xZ8Qs3kdP05KApJ6x2swrL3VUlQNZEilCz1HUHezSypV85AvHZ4U0YNMGUNAALkdbt8s
+         B1USY29pWAFp5vc8fWnFFJg7YUTKviU6eqIAIyH3CN7B9jmbprRPlWl1llYmUUe5gHrI
+         tOTxGQms3P5d8YBpIPcZgzvNAVvSFNyhYBVhuCiRlMoZgD9bELYq8ishMxw4Vruo+CMD
+         D6eF1lB+2ctcWQWJHL21zD1EJa4EzUlkmly7//PZbBm1Jlap5OmakdOsE8MU5NLWdSGS
+         bHmQ==
+X-Gm-Message-State: AOAM531XiCnRkrmhLXS3ACgnPeuFmvy6mhZ7fxOlpShUFBQ9IMKwqy5D
+        gG1duvE5CcfGve2dufUU568=
+X-Google-Smtp-Source: ABdhPJyjdw0gCWhZYWsYqOYfenTFiKE5DOXJFAfjRTDyLc3XAjOsByeqUlnj6Jray2e4Qv67FLlYgw==
+X-Received: by 2002:a2e:7611:: with SMTP id r17mr9496407ljc.233.1592851779734;
+        Mon, 22 Jun 2020 11:49:39 -0700 (PDT)
+Received: from grain.localdomain ([5.18.102.224])
+        by smtp.gmail.com with ESMTPSA id m15sm3621826lfk.65.2020.06.22.11.49.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 11:49:37 -0700 (PDT)
+Received: by grain.localdomain (Postfix, from userid 1000)
+        id 7BCD81A007B; Mon, 22 Jun 2020 21:49:37 +0300 (MSK)
+Date:   Mon, 22 Jun 2020 21:49:37 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     kan.liang@linux.intel.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, dave.hansen@intel.com, yu-cheng.yu@intel.com,
+        bigeasy@linutronix.de, hpa@zytor.com,
         alexey.budankov@linux.intel.com, eranian@google.com,
         ak@linux.intel.com, like.xu@linux.intel.com,
         yao.jin@linux.intel.com
+Subject: Re: [PATCH 21/21] perf/x86/intel/lbr: Support XSAVES for arch LBR
+ read
+Message-ID: <20200622184937.GV134822@grain>
 References: <1592575449-64278-1-git-send-email-kan.liang@linux.intel.com>
- <1592575449-64278-18-git-send-email-kan.liang@linux.intel.com>
- <20200619193140.GI576888@hirez.programming.kicks-ass.net>
- <aa3d239b-6ffe-261e-e70a-ffd17b8b506b@linux.intel.com>
- <c95b6ade-2cc9-e065-01ab-b449dd846c50@intel.com>
- <56653932-4c11-60f9-1541-a19ea307c0a9@linux.intel.com>
- <5223f714-87eb-947e-e65c-886431cc7655@intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <ca901df8-5765-9483-1898-a27efb5b87a2@linux.intel.com>
-Date:   Mon, 22 Jun 2020 14:46:53 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ <1592575449-64278-22-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <5223f714-87eb-947e-e65c-886431cc7655@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592575449-64278-22-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.14.0 (2020-05-02)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 19, 2020 at 07:04:09AM -0700, kan.liang@linux.intel.com wrote:
+...
+> +static void intel_pmu_arch_lbr_read_xsave(struct cpu_hw_events *cpuc)
+> +{
+> +	struct x86_perf_task_context_arch_lbr_xsave *xsave = cpuc->lbr_xsave;
+> +	struct arch_lbr_entry *lbr;
+> +	int i;
+> +
+> +	if (!xsave)
+> +		goto rollback;
 
+Why not make it simplier?
 
-On 6/22/2020 2:05 PM, Dave Hansen wrote:
-> On 6/22/20 10:47 AM, Liang, Kan wrote:
->>> I'm wondering if we should just take these copy_*regs_to_*() functions
->>> and uninline them.  Yeah, they are basically wrapping one instruction,
->>> but it might literally be the most heavyweight instruction in the
->>> whole ISA.
->> Thanks for the suggestions, but I'm not sure if I follow these methods.
->>
->> I don't think simply removing the "inline" key word for the
->> copy_xregs_to_kernel() functions would help here.
->> Do you mean exporting the copy_*regs_to_*()?
-> The thing that worries me here is exporting "internal" FPU state like
-> xfeatures_mask_all.  I'm much happier exporting a function with a much
-> more defined purpose.
-> 
-> So, yes, I'm suggesting exporting the functions,*not*  the data structures.
-> 
+	if (!xsave) {
+		intel_pmu_arch_lbr_read(cpuc);
+		return;
+	}
 
-I think maybe we should just export the copy_fpregs_to_fpstate() as 
-below, because
-- KVM directly invokes this function. The copy_xregs_to_kernel() is 
-indirectly invoked via the function. I think we should export the 
-function which is directly used by other modules.
-- The copy_fpregs_to_fpstate() is a bigger function with many checks. 
-Uninline the function should not impact the performance.
-- it's also a function. It's a safer way than exporting the "internal" 
-FPU state. No one except the FPU can change the state 
-intentionally/unintentionally.
-
-
-diff --git a/arch/x86/include/asm/fpu/internal.h 
-b/arch/x86/include/asm/fpu/internal.h
-index 0388c792..d3724dc 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -411,43 +411,7 @@ static inline int copy_kernel_to_xregs_err(struct 
-xregs_state *xstate, u64 mask)
-  	return err;
-  }
-
--/*
-- * These must be called with preempt disabled. Returns
-- * 'true' if the FPU state is still intact and we can
-- * keep registers active.
-- *
-- * The legacy FNSAVE instruction cleared all FPU state
-- * unconditionally, so registers are essentially destroyed.
-- * Modern FPU state can be kept in registers, if there are
-- * no pending FP exceptions.
-- */
--static inline int copy_fpregs_to_fpstate(struct fpu *fpu)
--{
--	if (likely(use_xsave())) {
--		copy_xregs_to_kernel(&fpu->state.xsave);
--
--		/*
--		 * AVX512 state is tracked here because its use is
--		 * known to slow the max clock speed of the core.
--		 */
--		if (fpu->state.xsave.header.xfeatures & XFEATURE_MASK_AVX512)
--			fpu->avx512_timestamp = jiffies;
--		return 1;
--	}
--
--	if (likely(use_fxsr())) {
--		copy_fxregs_to_kernel(fpu);
--		return 1;
--	}
--
--	/*
--	 * Legacy FPU register saving, FNSAVE always clears FPU registers,
--	 * so we have to mark them inactive:
--	 */
--	asm volatile("fnsave %[fp]; fwait" : [fp] "=m" (fpu->state.fsave));
--
--	return 0;
--}
-+extern int copy_fpregs_to_fpstate(struct fpu *fpu);
-
-  static inline void __copy_kernel_to_fpregs(union fpregs_state 
-*fpstate, u64 mask)
-  {
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 06c8189..1bb7532 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -82,6 +82,45 @@ bool irq_fpu_usable(void)
-  }
-  EXPORT_SYMBOL(irq_fpu_usable);
-
-+/*
-+ * These must be called with preempt disabled. Returns
-+ * 'true' if the FPU state is still intact and we can
-+ * keep registers active.
-+ *
-+ * The legacy FNSAVE instruction cleared all FPU state
-+ * unconditionally, so registers are essentially destroyed.
-+ * Modern FPU state can be kept in registers, if there are
-+ * no pending FP exceptions.
-+ */
-+int copy_fpregs_to_fpstate(struct fpu *fpu)
-+{
-+	if (likely(use_xsave())) {
-+		copy_xregs_to_kernel(&fpu->state.xsave);
-+
-+		/*
-+		 * AVX512 state is tracked here because its use is
-+		 * known to slow the max clock speed of the core.
-+		 */
-+		if (fpu->state.xsave.header.xfeatures & XFEATURE_MASK_AVX512)
-+			fpu->avx512_timestamp = jiffies;
-+		return 1;
-+	}
-+
-+	if (likely(use_fxsr())) {
-+		copy_fxregs_to_kernel(fpu);
-+		return 1;
-+	}
-+
-+	/*
-+	 * Legacy FPU register saving, FNSAVE always clears FPU registers,
-+	 * so we have to mark them inactive:
-+	 */
-+	asm volatile("fnsave %[fp]; fwait" : [fp] "=m" (fpu->state.fsave));
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(copy_fpregs_to_fpstate);
-+
-  void kernel_fpu_begin(void)
-  {
-  	preempt_disable();
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 9c0541d..ca20029 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -58,7 +58,6 @@ static short xsave_cpuid_features[] __initdata = {
-   * XSAVE buffer, both supervisor and user xstates.
-   */
-  u64 xfeatures_mask_all __read_mostly;
--EXPORT_SYMBOL_GPL(xfeatures_mask_all);
-
-  static unsigned int xstate_offsets[XFEATURE_MAX] = { [ 0 ... 
-XFEATURE_MAX - 1] = -1}; static unsigned int xstate_sizes[XFEATURE_MAX] 
-  = { [ 0 ... XFEATURE_MAX - 1] = -1};
+The goto and "return" statement before the "rollback" label
+looks pretty ugly. I'm sorry I didn't follow the series
+in details so if you plan to add more handlers at "rollback"
+then sure.
