@@ -2,85 +2,135 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F812522B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DAC25246
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 02:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HUpMNTj1"
+	dkim=pass (1024-bit key) header.d=mitsubishielectricgroup.onmicrosoft.com header.i=@mitsubishielectricgroup.onmicrosoft.com header.b="PywAw7Rr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbgFVCmF (ORCPT
+        id S1731068AbgFVCrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jun 2020 22:42:05 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41723 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726659AbgFVCmF (ORCPT
+        Sun, 21 Jun 2020 22:47:09 -0400
+Received: from mx06.melco.co.jp ([192.218.140.146]:52916 "EHLO
+        mx06.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgFVCrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jun 2020 22:42:05 -0400
-X-UUID: fd81c072e57144a39b84c4196b87ed28-20200622
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cB8SOTSbnezNpmNBAOc7AwgCBVUaB05yWxYs3kD21Ak=;
-        b=HUpMNTj10uivzOWnCi5tAl7RzZ0gh0gQV6V3y/85EPEyCB+7dclnoG0opc7mJcWL5fjL0Sike7u/cbaj23vTrSXQfYQgy7d3v7rd6iTA27B2jwv5XPaj1gwpn7EbexQLmxgBjE7SdjesRFuH1EKhWGqY6oodnCFyKMhuehNAfhA=;
-X-UUID: fd81c072e57144a39b84c4196b87ed28-20200622
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 11815441; Mon, 22 Jun 2020 10:42:04 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 22 Jun 2020 10:42:01 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 22 Jun 2020 10:41:52 +0800
-Message-ID: <1592793722.11692.10.camel@mtksdaap41>
-Subject: Re: [PATCH v1 01/11] soc: mediatek: cmdq: add address shift in jump
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        HS Liao <hs.liao@mediatek.com>
-Date:   Mon, 22 Jun 2020 10:42:02 +0800
-In-Reply-To: <1592749115-24158-2-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1592749115-24158-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1592749115-24158-2-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
+        Sun, 21 Jun 2020 22:47:08 -0400
+Received: from mr06.melco.co.jp (mr06 [133.141.98.164])
+        by mx06.melco.co.jp (Postfix) with ESMTP id E0D803A4034;
+        Mon, 22 Jun 2020 11:47:04 +0900 (JST)
+Received: from mr06.melco.co.jp (unknown [127.0.0.1])
+        by mr06.imss (Postfix) with ESMTP id 49qv2J5vDHzRjky;
+        Mon, 22 Jun 2020 11:47:04 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr06.melco.co.jp (Postfix) with ESMTP id 49qv2J5ZV5zRjd4;
+        Mon, 22 Jun 2020 11:47:04 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 49qv2J5Z6yzRjr3;
+        Mon, 22 Jun 2020 11:47:04 +0900 (JST)
+Received: from APC01-PU1-obe.outbound.protection.outlook.com (unknown [104.47.126.51])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 49qv2J4K0BzRjc9;
+        Mon, 22 Jun 2020 11:47:04 +0900 (JST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G0j4MXmmxVSDMOJhPBrWLj7Q/Npob0V3+lu2CC1G2AhsH7YMKQ+z8mS9uDny3rrNAPph4QzXXp5MPKur7szqDfPIpdVBsgJP6iYxdLVpKjNzXwvOIb7nqe0dePA8NQaLfU5cq/cW62aWl5KmDCq/7syZrwNk440KorjTmiw41CeKNKCS4LQ8um1qyJqlfxVG9j6M8XUCVP5U7DvsUgNel4wGl+pNF6delV+iLQeHdrgFW1e21A66DmGXKEGaUntrZlOlI1urdfdEqOFsBYfO3oL+nxQBCY3DyV4HaThPOaPBwSXDbIkhCSFiz89q5J4ZYOzhFGCBuKGbKCUeR9ocmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8gkH8xJDZbJ+sE7AWrSSxs4GTa1tZ+ogzVCCN3WBYWU=;
+ b=Upq9yaJZjmjSeX042b9YslOLcvmFWt/TxGH/MP6pYY7vJ9hQMiaQJYJwb1lCusR0u9/diIOojzKwyTNBLATwc0IfpRjVy/rBAu2hblvVKDNRfUzmc2rde6Z5yNwfR/6gwjZ/RCpphpshKoyyV4Eru+J7MpsncnoOUmb7pUKWr2aPgAJSE8UO58qiPD3wRXzPtb10uPI+H1mMtNJN/G/9DWL8aiwHz32X8zlmhlsWwnYBlWLqNvVLFGjVqVZL/8w0sUg1DjNYoc0o5N6QbYmGDQTpUIuVlDc4MxBmMBJKMkNFDg3COYTbzUiCWW/OdPhjW8BMHxAzqbaC5G906tKKDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dc.mitsubishielectric.co.jp; dmarc=pass action=none
+ header.from=dc.mitsubishielectric.co.jp; dkim=pass
+ header.d=dc.mitsubishielectric.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mitsubishielectricgroup.onmicrosoft.com;
+ s=selector2-mitsubishielectricgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8gkH8xJDZbJ+sE7AWrSSxs4GTa1tZ+ogzVCCN3WBYWU=;
+ b=PywAw7Rr7BK1zitQwdyRa0+AVzdo5PhJGzzII07F4SLWn5F00ZUAEUtZpwZCnnxJtZGeSVuynSBGxJBc1ho77HNvFG533sYmWxqYCn7pxUAJ3F7I7pmc1J81X8QdTQJPswlsqRw2cP4ZeutOYP8meBz4klN6denrO+rjyVoui98=
+Received: from TY2PR01MB2875.jpnprd01.prod.outlook.com (2603:1096:404:6b::11)
+ by TY2PR01MB4858.jpnprd01.prod.outlook.com (2603:1096:404:10c::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.24; Mon, 22 Jun
+ 2020 02:47:03 +0000
+Received: from TY2PR01MB2875.jpnprd01.prod.outlook.com
+ ([fe80::51e1:c5ae:8ef8:4b76]) by TY2PR01MB2875.jpnprd01.prod.outlook.com
+ ([fe80::51e1:c5ae:8ef8:4b76%7]) with mapi id 15.20.3109.026; Mon, 22 Jun 2020
+ 02:47:03 +0000
+From:   "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
+        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     'Namjae Jeon' <linkinjeon@kernel.org>
+CC:     "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
+        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
+        "Motai.Hirotaka@aj.MitsubishiElectric.co.jp" 
+        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        'Tetsuhiro Kohada' <kohada.t2@gmail.com>,
+        'Christoph Hellwig' <hch@infradead.org>
+Subject: RE: [PATCH 1/2 v4] exfat: write multiple sectors at once
+Thread-Topic: [PATCH 1/2 v4] exfat: write multiple sectors at once
+Thread-Index: AQHWR3la8B54VJqyQkK0efdoiW1IbKjj7UmQ
+Date:   Mon, 22 Jun 2020 02:44:46 +0000
+Deferred-Delivery: Mon, 22 Jun 2020 02:47:00 +0000
+Message-ID: <TY2PR01MB2875F1888E60DEA85558A88C90970@TY2PR01MB2875.jpnprd01.prod.outlook.com>
+References: <20200619083855.15789-1-kohada.t2@gmail.com>
+ <CAKYAXd9qRx5q57xwG-d6-MzW-DK9jYAecX_6KuecCAhxrNbmmA@mail.gmail.com>
+In-Reply-To: <CAKYAXd9qRx5q57xwG-d6-MzW-DK9jYAecX_6KuecCAhxrNbmmA@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-melpop: 1
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none
+ header.from=dc.MitsubishiElectric.co.jp;
+x-originating-ip: [121.80.0.164]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccef1fa6-e1df-4de3-a94c-08d816568bab
+x-ms-traffictypediagnostic: TY2PR01MB4858:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB4858AFE512890BA40CF835C790970@TY2PR01MB4858.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0442E569BC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yaNR/nDhMUvOxTY0+qsjikabnyqMmoiDbX5K40VHei1RjlgPdg1y02kgMEVTe26Do8uynJtJ4vTWY+nnUvIB7ywXV1yQs6BbztsnWqh69FkN5enrt5CXVQ7cimxgx4os4nAJxnhDdFx6A0BGEp3xsgxNnzdavqJWnLyu5Jq/NE+dmO6RRStqEea8ow2BXhBsJjCw5F+fA68ZUKpBDQuiFkCnZYlXHGGaUG4LaAWcgPTeHFVofOOT/zXoYrrrQLvaKeRA+1XaQ86W6NSmM4EUQe/c7Cc3p+PQKu8eIcOV6UWqhuZnTYUMk5WfNKxMaSoV26SFAJmNDWkIa8KWpvT5QA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB2875.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(346002)(376002)(366004)(136003)(26005)(52536014)(186003)(54906003)(33656002)(9686003)(5660300002)(4326008)(6916009)(6506007)(6666004)(7696005)(478600001)(316002)(71200400001)(76116006)(66556008)(8936002)(83380400001)(64756008)(66446008)(66476007)(66946007)(55016002)(86362001)(2906002)(8676002)(4744005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: c0rkIVLbjDue1OSG7Z/f9Py9cED0SJaiJy1uIHGAU8bykgrJMEC4ETVFAsFxGqxt32UwnYrD1lfZkg3ZZzVwwhY0h8wHhcwCKLFOjXpL9khQsTNHgJmXHbNoM71k+lLxDkGTMsmVc/Bn3GAGjsgI4XhkkgThEzy/6fOWj9u+oZuWiEsQEb82GkDE/bgM6V+Lry3WRmyFX+6bPEAIP7zVXG/4EeaEpcTCqSMB3qZIf1+yb9kOfa3LgNib3G3to32P86TXuWEboKMI5xtoK0c6moH53Iu54VP///j+bCbewo/3QCHFXk9du6pSRM8U7UNcEoK6nkaNWHbIZEOTacKvj2qJ7Qoq1QJhQ9/HV48DeCgGVzU5L/Gs30Bx+k3KPDSTn4EBZmppWJe0iV+rkpDMvGTjQ3mUz5T6UO0xvxS4A0nDNoKhN3SLnk7hkRREbSpB1m0y2Zg7N7DiBzuwd5HCq95thmQZ1N3pLUpjuesRO6c=
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: dc.MitsubishiElectric.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccef1fa6-e1df-4de3-a94c-08d816568bab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 02:47:03.8647
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c5a75b62-4bff-4c96-a720-6621ce9978e5
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mr9EAGHaXCuS5Km+GtM3fWWiJsDbzYjsk2cNjROR/QpUHOp+fEDvhw5nYJGSgdY2rXt/6hoc1pKHkFSj3Zl+ow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4858
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEJpYmJ5IEhzaWVoIDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQoNClRo
-YW5rcy4NCg0KT24gU3VuLCAyMDIwLTA2LTIxIGF0IDIyOjE4ICswODAwLCBEZW5uaXMgWUMgSHNp
-ZWggd3JvdGU6DQo+IEFkZCBhZGRyZXNzIHNoaWZ0IHdoZW4gY29tcG9zZSBqdW1wIGluc3RydWN0
-aW9uDQo+IHRvIGNvbXBhdGlibGUgd2l0aCAzNWJpdCBmb3JtYXQuDQo+IA0KPiBTaWduZWQtb2Zm
-LWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+IC0t
-LQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgfCAgICAzICsrLQ0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJp
-dmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5kZXggYzY3MDgxNzU5NzI4
-Li45OGYyM2JhM2JhNDcgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1j
-bWRxLWhlbHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBl
-ci5jDQo+IEBAIC0yOTEsNyArMjkxLDggQEAgc3RhdGljIGludCBjbWRxX3BrdF9maW5hbGl6ZShz
-dHJ1Y3QgY21kcV9wa3QgKnBrdCkNCj4gIA0KPiAgCS8qIEpVTVAgdG8gZW5kICovDQo+ICAJaW5z
-dC5vcCA9IENNRFFfQ09ERV9KVU1QOw0KPiAtCWluc3QudmFsdWUgPSBDTURRX0pVTVBfUEFTUzsN
-Cj4gKwlpbnN0LnZhbHVlID0gQ01EUV9KVU1QX1BBU1MgPj4NCj4gKwkJY21kcV9tYm94X3NoaWZ0
-KCgoc3RydWN0IGNtZHFfY2xpZW50ICopcGt0LT5jbCktPmNoYW4pOw0KPiAgCWVyciA9IGNtZHFf
-cGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ICANCj4gIAlyZXR1cm4gZXJyOw0KDQo=
-
+PiAyMDIwLTA2LTE5IDE3OjM4IEdNVCswOTowMCwgVGV0c3VoaXJvIEtvaGFkYSA8a29oYWRhLnQy
+QGdtYWlsLmNvbT46DQo+ID4gV3JpdGUgbXVsdGlwbGUgc2VjdG9ycyBhdCBvbmNlIHdoZW4gdXBk
+YXRpbmcgZGlyLWVudHJpZXMuDQo+ID4gQWRkIGV4ZmF0X3VwZGF0ZV9iaHMoKSBmb3IgdGhhdC4g
+SXQgd2FpdCBmb3Igd3JpdGUgY29tcGxldGlvbiBvbmNlDQo+ID4gaW5zdGVhZCBvZiBzZWN0b3Ig
+Ynkgc2VjdG9yLg0KPiA+IEl0J3Mgb25seSBlZmZlY3RpdmUgaWYgc3luYyBlbmFibGVkLg0KPiA+
+DQo+ID4gUmV2aWV3ZWQtYnk6IENocmlzdG9waCBIZWxsd2lnIDxoY2hAaW5mcmFkZWFkLm9yZz4N
+Cj4gSGUgZGlkbid0IGdpdmUgcmV2aWV3ZWQtYnkgdGFnIGZvciB0aGlzIHBhdGNoLg0KPiBZb3Ug
+c2hvdWxkbid0IGFkZCBpdCBhdCB3aWxsLg0KDQpJIHVuZGVyc3RhbmQuDQpTaG91bGQgSSByZW1v
+dmUgcmV2aWV3ZWQtYnkgdGFnIGFuZCByZXBvc3QgdGhlIHBhdGNoPw0KDQpCUg0KLS0tDQpLb2hh
+ZGEgVGV0c3VoaXJvIDxLb2hhZGEuVGV0c3VoaXJvQGRjLk1pdHN1YmlzaGlFbGVjdHJpYy5jby5q
+cD4NCg==
