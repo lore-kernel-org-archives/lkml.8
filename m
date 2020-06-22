@@ -2,202 +2,170 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F59C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EE5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2DFC20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A96820720
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TFHqF71W"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="I/eaN9xr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgFVJk2 (ORCPT
+        id S1726947AbgFVJl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:40:28 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:61328 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgFVJk1 (ORCPT
+        Mon, 22 Jun 2020 05:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgFVJlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:40:27 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200622094025epoutp02eb66776922f48da7e66f603b8dd4c819~a1EhJI8T82050720507epoutp026
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 09:40:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200622094025epoutp02eb66776922f48da7e66f603b8dd4c819~a1EhJI8T82050720507epoutp026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592818825;
-        bh=A4AGWMlm9l2I2qTabktmMDMUD/HXo3xMtnah4m8F9aA=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=TFHqF71WUHlub2b9x7GEKWFGkkv7H+GmmkBs9BqYv7CTtzeaOTSShJMJcecJPcAxw
-         iyaWFYnYGpUOu3TWMmmjPWrlfl4FvIHKo9JHkpOVcy1lBRgFuPEzjy0EKr69R5izE3
-         i0/ElepOa+T6shM+hkRmQ9ynwdbaSF1Uh5mPlxN0=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200622094022epcas1p23dd4cd3675ad3105d9191ac34f8ba658~a1EedMFtj0317703177epcas1p2p;
-        Mon, 22 Jun 2020 09:40:22 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.163]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49r4C85WkTzMqYkV; Mon, 22 Jun
-        2020 09:40:20 +0000 (GMT)
-X-AuditID: b6c32a36-16fff70000004a59-3a-5ef07c84fc8b
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C6.07.19033.48C70FE5; Mon, 22 Jun 2020 18:40:20 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: [PATCH v4] page_alloc: consider highatomic reserve in watermark
- fast
-Reply-To: jaewon31.kim@samsung.com
-From:   =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
-To:     Michal Hocko <mhocko@kernel.org>,
-        =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
-CC:     "vbabka@suse.cz" <vbabka@suse.cz>,
-        "bhe@redhat.com" <bhe@redhat.com>,
-        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>,
-        =?UTF-8?B?7J207Jqp7YOd?= <ytk.lee@samsung.com>,
-        =?UTF-8?B?6rmA7LKg66+8?= <cmlaika.kim@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20200622091107.GC31426@dhcp22.suse.cz>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20200622094020epcms1p639cc33933fbb7a9d578adb16a6ea0734@epcms1p6>
-Date:   Mon, 22 Jun 2020 18:40:20 +0900
-X-CMS-MailID: 20200622094020epcms1p639cc33933fbb7a9d578adb16a6ea0734
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEJsWRmVeSWpSXmKPExsWy7bCmnm5LzYc4g8Yz2hZz1q9hszj/4Beb
-        xcp559gsVm/ytejePJPRovf9KyaLy7vmsFncW/Of1WLyu2eMFjuW7mOyeP1tGbPFsq/v2S1m
-        N/YxWjxez+3A53H4zXtmj52z7rJ7bFrVyeax6dMkdo8TM36zeLzfd5XNo2/LKkaPMwuOsHts
-        Pl3tsfWXncfnTXIB3FE5NhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2
-        Si4+AbpumTlAPygplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCgwNCvSKE3OLS/PS
-        9ZLzc60MDQyMTIEqE3IyVt14zlRwQL7i9Lf1rA2MT0S7GDk5JARMJBY1XmHsYuTiEBLYwSix
-        /Mcs1i5GDg5eAUGJvzuEQWqEBYIl1n9cwgRiCwkoSZz9cYUdIm4tsX/RDLA4m4ClxPabExlB
-        bBGBaIkpp9vYQWYyC5xikbjyawIbxDJeiRntT1kgbGmJ7cu3gjVwAh2xYEYjVI2oxM3Vb9lh
-        7PfH5jNC2CISrffOMkPYghIPfu6GiktJXN63iQXkZgmBeokNt/NA9koINDBKdJz8wgoR15f4
-        c5If4i1fiW0LK0A6WQRUJRY+mAA10UViW+9VsFeYBeQltr+dwwxSziygKbF+lz5EiaLEzt9z
-        GSFK+CTefe1hhXlqx7wnTBC2mkTLs69QcRmJv/+eQR3gIbG+QR0SgOsZJRpuuExgVJiFCOZZ
-        SPbOQti7gJF5FaNYakFxbnpqsWGBEXLMbmIEJ2Ytsx2Mk95+0DvEyMTBeIhRgoNZSYT3dcC7
-        OCHelMTKqtSi/Pii0pzU4kOMpkAfT2SWEk3OB+aGvJJ4Q1MjY2NjCxMzczNTYyVxXjWZC3FC
-        AumJJanZqakFqUUwfUwcnFINTFEaF+cvkqla5bKvYln8uxubPm56uPuIUr1p0y+GFve3Ezx/
-        GDCbHTfaKfRlaUDi1l8rzNz2vz+13fhQTee2l4d2iOl/53mk2tXGde/m7n0M/OUGMzjeRt/b
-        epvbXmaFdrKzcbv6xrcqVy9wXk3KnWW56rMYJ8uDOs4vfDk9YkHRs9UmpF3xPeFw7ZZrpcy+
-        fqMH3sfW71x93tE7/P7SfJW7UsbLnyi+OGY0Vfz1v1axmZMfbd3nseOf/dXZt9fejbjyzcxq
-        77IZ+l43PjTseb/hn9/DyBX7Jn++d317XVu59Ap7/Vsll2W261yY2rJTeLHBo/Ct/TYPXQ56
-        CGc/uLXl5trDy6O6T+V+TFvV2xpyTYmlOCPRUIu5qDgRALe6C1JVBAAA
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200619055816epcas1p184da90b01aff559fe3cd690ebcd921ca
-References: <20200622091107.GC31426@dhcp22.suse.cz>
-        <20200619235958.11283-1-jaewon31.kim@samsung.com>
-        <CGME20200619055816epcas1p184da90b01aff559fe3cd690ebcd921ca@epcms1p6>
+        Mon, 22 Jun 2020 05:41:24 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C3AC061796
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:23 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f18so2480358wml.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7JOFF+Nl1qiIhM1iOj4oCorX86E5B7hR8kg9WCnzUnw=;
+        b=I/eaN9xrQqwwgmhuM+4CqaeHsY6aV60kH8mKn4OebmUYtK7pNQK0wVGunsLFglKTAy
+         eUfthcd2EIQ1C+6upxc/23ua64/60kfHPQMRmNReX5PP2rqNblnCuw0jNW6ITtVZgxqW
+         JMjW13bHUWbsnkuYKGTXldz63/aT5JAfKOHfJsdcPLDI6CaCjZlEVCVN1/cNK9IA3bVM
+         sWSBmTqNhgt/nNmxR0EvpDrZ4oceKA+bx2hJY0Lo1o/pDYzIwKGHfLU+2NxtIdO7LXgx
+         9KJhrZfL7yYB7s5BDFwVOlo/2O7aGyMMJ8C/qk+ipYeZOh/5oEPkN+TeTC0+JThrTbg7
+         00hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7JOFF+Nl1qiIhM1iOj4oCorX86E5B7hR8kg9WCnzUnw=;
+        b=Fj/WCk+v/B4CXrXls+PiuSGf14IREVYnmxWt3kU7aV58U9o9yzW3/mtafwza1n58hN
+         OiWLDFUckUbzDtOaLEEfvekWu2A5pZXiyrhlw5qdBoaDnXNpGFydVQlVf6t6hWX5avGt
+         IIFpsx6MX0mY6lK2nXR8vnsw/aSjtJ9nDxPpcJ4ILqJ1QygiO7yiSWtZpY0DfeoVkn4a
+         FwdRzfYjIlr2GbBV0jbwlDy9NCzL5OLElbg5ulcN0Jk+KZ2IEpr61r6g4GMYtuNq0MVe
+         EF0I0WZ59SCxfKTa0Y7rFHBFmk4RQPPZf2QW0Vm22DZIPVIRQ28spv2ZBGsbrgHIvmT0
+         ROBg==
+X-Gm-Message-State: AOAM530w3qNlLj5zIt1UMmBy2f7fDoYBGfARcpO41Z9Eab0OnLSvxI8U
+        5BBk5xhfyatXmSCJt4Q/OUsXDA==
+X-Google-Smtp-Source: ABdhPJwbib6BkarNo+K48caVL1EEcMyD4P1NjsZ159e2tdZhAydKdMgyxCTWdsPKQgIV/5CqbPqSBg==
+X-Received: by 2002:a1c:4d0a:: with SMTP id o10mr17628133wmh.150.1592818881779;
+        Mon, 22 Jun 2020 02:41:21 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 02:41:21 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 00/15] net: phy: correctly model the PHY voltage supply in DT
+Date:   Mon, 22 Jun 2020 11:37:29 +0200
+Message-Id: <20200622093744.13685-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->On Sat 20-06-20 08:59:58, Jaewon Kim wrote:
->[...]
->> @@ -3502,19 +3525,12 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
->>          const bool alloc_harder = (alloc_flags & (ALLOC_HARDER|ALLOC_OOM));
->>  
->>          /* free_pages may go negative - that's OK */
->> -        free_pages -= (1 << order) - 1;
->> +        free_pages -= __zone_watermark_unusable_free(z, order, alloc_flags);
->>  
->>          if (alloc_flags & ALLOC_HIGH)
->>                  min -= min / 2;
->>  
->> -        /*
->> -         * If the caller does not have rights to ALLOC_HARDER then subtract
->> -         * the high-atomic reserves. This will over-estimate the size of the
->> -         * atomic reserve but it avoids a search.
->> -         */
->> -        if (likely(!alloc_harder)) {
->> -                free_pages -= z->nr_reserved_highatomic;
->> -        } else {
->> +        if (unlikely(alloc_harder)) {
->>                  /*
->>                   * OOM victims can try even harder than normal ALLOC_HARDER
->>                   * users on the grounds that it's definitely going to be in
->[...]
->> @@ -3582,25 +3591,22 @@ static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
->>                                  unsigned long mark, int highest_zoneidx,
->>                                  unsigned int alloc_flags)
->>  {
->> -        long free_pages = zone_page_state(z, NR_FREE_PAGES);
->> -        long cma_pages = 0;
->> +        long free_pages;
->> +        long unusable_free;
->>  
->> -#ifdef CONFIG_CMA
->> -        /* If allocation can't use CMA areas don't use free CMA pages */
->> -        if (!(alloc_flags & ALLOC_CMA))
->> -                cma_pages = zone_page_state(z, NR_FREE_CMA_PAGES);
->> -#endif
->> +        free_pages = zone_page_state(z, NR_FREE_PAGES);
->> +        unusable_free = __zone_watermark_unusable_free(z, order, alloc_flags);
->>  
->>          /*
->>           * Fast check for order-0 only. If this fails then the reserves
->> -         * need to be calculated. There is a corner case where the check
->> -         * passes but only the high-order atomic reserve are free. If
->> -         * the caller is !atomic then it'll uselessly search the free
->> -         * list. That corner case is then slower but it is harmless.
->> +         * need to be calculated.
->>           */
->> -        if (!order && (free_pages - cma_pages) >
->> -                                mark + z->lowmem_reserve[highest_zoneidx])
->> -                return true;
->> +        if (!order) {
->> +                long fast_free = free_pages - unusable_free;
->> +
->> +                if (fast_free > mark + z->lowmem_reserve[highest_zoneidx])
->> +                        return true;
->> +        }
-> 
->There is no user of unusable_free for order > 0. With you current code
->__zone_watermark_unusable_free would be called twice for high order
->allocations unless compiler tries to be clever..
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Yes you're right.
-Following code could be moved only for order-0.
- unusable_free = __zone_watermark_unusable_free(z, order, alloc_flags);
-Let me fix it at v5.
+PHY devices on an MDIO bus can have their own regulators. This is currently
+mostly modeled using the semi-standard phy-supply property on the MAC node.
+This seems to be conceptually wrong though, as the MAC shouldn't need to
+care about enabling the PHY regulator explicitly. Instead this should be
+done by the core PHY/MDIO code.
 
-> 
->But more importantly, I have hard time to follow why we need both
->zone_watermark_fast and zone_watermark_ok now. They should be
->essentially the same for anything but order == 0. For order 0 the
->only difference between the two is that zone_watermark_ok checks for
->ALLOC_HIGH resp ALLOC_HARDER, ALLOC_OOM. So what is exactly fast about
->the former and why do we need it these days?
-> 
+This series introduces a new DT property at the PHY node level in mdio.yaml
+and adds support for PHY regulator, then uses the new property on pumpkin
+boards. It also addresses several issues I noticed when working on this
+feature.
 
-I think the author, Mel, may ansewr. But I think the wmark_fast may
-fast by 1) not checking more condition about wmark and 2) using inline
-rather than function. According to description on commit 48ee5f3696f6,
-it seems to bring about 4% improvement.
+First four patches are just cosmetic improvements in source files we'll
+modify later in this series.
 
->> 
->>          return __zone_watermark_ok(z, order, mark, highest_zoneidx, alloc_flags,
->>                                          free_pages);
->> -- 
->> 2.17.1
->> 
-> 
->-- 
->Michal Hocko
->SUSE Labs
-> 
+Patches 5 and 6 modify the way PHY reset handling works. Currently the
+probe() callback needs to be implemented to take the PHY out of reset but
+PHY drivers without probe() can have resets defined as well.
+
+Patches 7-11 address an issue where we probe the PHY for ID without
+deasserting its reset signal. We delay the ID read until after the logical
+device is created and resets have been configured.
+
+Last four patches add the new DT property, implement support for PHY
+regulator in phy and mdio code and set the new property in the DT file
+for MediaTek's pumpkin boards.
+
+Bartosz Golaszewski (15):
+  net: phy: arrange headers in mdio_bus.c alphabetically
+  net: phy: arrange headers in mdio_device.c alphabetically
+  net: phy: arrange headers in phy_device.c alphabetically
+  net: mdio: add a forward declaration for reset_control to mdio.h
+  net: phy: reset the PHY even if probe() is not implemented
+  net: phy: mdio: reset MDIO devices even if probe() is not implemented
+  net: phy: split out the PHY driver request out of phy_device_create()
+  net: phy: check the PHY presence in get_phy_id()
+  net: phy: delay PHY driver probe until PHY registration
+  net: phy: simplify phy_device_create()
+  net: phy: drop get_phy_device()
+  dt-bindings: mdio: add phy-supply property to ethernet phy node
+  net: phy: mdio: add support for PHY supply regulator
+  net: phy: add PHY regulator support
+  ARM64: dts: mediatek: add a phy regulator to pumpkin-common.dtsi
+
+ .../devicetree/bindings/net/mdio.yaml         |   4 +
+ .../boot/dts/mediatek/pumpkin-common.dtsi     |   1 +
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-phy-v2.c   |   5 +-
+ .../net/ethernet/hisilicon/hns/hns_dsaf_mac.c |   2 +-
+ drivers/net/ethernet/socionext/netsec.c       |   3 +-
+ drivers/net/phy/fixed_phy.c                   |   2 +-
+ drivers/net/phy/mdio-xgene.c                  |   2 +-
+ drivers/net/phy/mdio_bus.c                    |  55 +++--
+ drivers/net/phy/mdio_device.c                 |  51 ++++-
+ drivers/net/phy/nxp-tja11xx.c                 |   2 +-
+ drivers/net/phy/phy_device.c                  | 216 ++++++++++--------
+ drivers/net/phy/sfp.c                         |   2 +-
+ drivers/of/of_mdio.c                          |  11 +-
+ include/linux/mdio.h                          |   4 +
+ include/linux/phy.h                           |  21 +-
+ 16 files changed, 240 insertions(+), 144 deletions(-)
+
+-- 
+2.26.1
+
