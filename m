@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FCBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D6A2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6123320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="p3puFYEO"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="A2nZUOgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgFVJmJ (ORCPT
+        id S1727775AbgFVJlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:42:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40782 "EHLO
+        Mon, 22 Jun 2020 05:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727797AbgFVJlr (ORCPT
+        with ESMTP id S1727010AbgFVJlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:41:47 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F25C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:46 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x16so5064539wmj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:46 -0700 (PDT)
+        Mon, 22 Jun 2020 05:41:32 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2259CC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a6so13983894wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0paM6XhitgV7f9qC2QMsgtm0qUC+Vh9Zw/7wnTkRdCU=;
-        b=p3puFYEON7LkHbRRFDYqexUJADfzkEU/dUHjBAt/PbcDJGO0LiqnjjeqsIrnr/DVi8
-         TrFkDpUdHsOTJT23y3iLd0/FPbAVUhoTCnRBnGU2vTS0/89DVGkpzmy+t4hbbzqoDU3B
-         KNlg5bNbRUucNBZgy88A9ZU09qNs5k/J6vh5JqNU5yWXSVkkc9yOsVgS02mQpY90/8V6
-         0oOVcA0uD5HC67mpqZzgj7Sw1oNu0MzvwMK7PgFS2M7LqNfuY/VGRHUtM65hVZ7AfhGx
-         9iE+ygyaLVwY/ZH++VpS+UD/5Poz5Tu6HHyjGXcqFdVGwfKkqG/ZHgm0AIs5WEiNvL2j
-         Bv5g==
+        bh=cfUc+TkUAgqz9MdoL32AGr8CBlEvrLInm5v62775Pps=;
+        b=A2nZUOgnmx1UP+ORv6aiykQQt+lLSQ1KO7Odnx9nMWmPGWBB/9zwG2qDldAgXJmqFF
+         xP5a4eGOadOLgU5l8x7N7j9+z2XQcTH/rFKkU1WWhZmJmVhXF2hTLLfHyQ5etAtMHKmX
+         GzjJGiUtKBqAj3ZO+9U33Aqe6H7sc3uFms0oEry7uZGxugnSgJBjckjsDuq2/0a7BeEq
+         I4qul8QuxKe+CEztgYEFZDIF1pwVYkuHKS4ZkApg+YQ/TcNclWYBEankibn6cVK3MPY7
+         ZU+9DUlAqUZCkiO9dP4Q1H37N9frUcXcUiOti5AX0YjukaK8I91Rvini9mJsIrmoYDWK
+         Og9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0paM6XhitgV7f9qC2QMsgtm0qUC+Vh9Zw/7wnTkRdCU=;
-        b=NDQJwbfM4gVct0G5e4IkN7q4r6PfJINqH9arLp336stdj62P4kQD4s04sBkrthbdy4
-         LY+sxtEF0TFibHhSrWYk2y6ry/QwrdVvrhq6tlue7hRRZ7JhCjQSpSB1yWay3CnFOKik
-         q/jxGda9v/yQ8d81dgpuSKdyOgfRnDouGlSvJqgeTANo3vw5twYhkXq0xq4eS7PCYIJj
-         WGyyGeO8AuscTD/gzm6dTtXBGuN6Pi4bnNcy+i4/1NYv20fhLdQeA+HGrzpauOm4boBp
-         ycN+UNhe2aJciMyB/E5oa3xPkU1N0RzrWU6kI7XKj3NKF5REEWlM8QXKypfmTl16v/2o
-         N1dQ==
-X-Gm-Message-State: AOAM533raqS8pWx6RcpovrLO+tlWQmFIeqPu3BXKir1XbpM3xRMY952d
-        ZhHIoMEQzgfm/LCWw/FSVMe/Ag==
-X-Google-Smtp-Source: ABdhPJzv5Re1aj4/hOY+M8/oLHAxe0wxNqcRaQ+JBsEotMr3fSKVkarmVoP6v3N5vfsL/r8R8lxAzQ==
-X-Received: by 2002:a1c:a3c5:: with SMTP id m188mr17122520wme.152.1592818905480;
-        Mon, 22 Jun 2020 02:41:45 -0700 (PDT)
+        bh=cfUc+TkUAgqz9MdoL32AGr8CBlEvrLInm5v62775Pps=;
+        b=BswNjuFz2ZIYLgc78pNLBlJgRO13rIOkEJ44gCgak/rP6aQZt7Kz7p974CBDJwmYuu
+         R7f99qUWI/c2BtE4dlbbnjf3LA6Mr+UsTQyk+WpUQyXYnzjGMHZn0moGPbptIwFndKQb
+         hYu/arsqodCaHfYlqqjDcsr+OUhES2B/IS1+1vrlfMdZEYKWroO/q4W20Yly7AOKZlDd
+         nmiZEa//IV7cxpe54NrfILeaB6OBPkiOwAcZyWlfiMBW+gPoEqlzBB7n+AjJ3A3K7Kfo
+         4dGnzXTo4qCTniVlHmYFsrM8wvQc0R4+D9WtnczxOKeV1hZNJgeQCiMbnZQxmTr1oBnP
+         BEeA==
+X-Gm-Message-State: AOAM531YIoQ+cSokS23Lm6ye3utfJPr7cpxaA1hk7zPi7FdibnPVllVH
+        J3k0AxkhL4HNQwSrcJyPJsP5yg==
+X-Google-Smtp-Source: ABdhPJzkmYuQpu0uNoygH8mU35nl1Z6nB3WJ2gtz2NCWG24AiJQNaa6UhDtUjU6DEUC2R04sQUctyQ==
+X-Received: by 2002:a5d:470a:: with SMTP id y10mr5777035wrq.405.1592818890889;
+        Mon, 22 Jun 2020 02:41:30 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.43
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:44 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:30 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -93,9 +93,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 13/15] net: phy: mdio: add support for PHY supply regulator
-Date:   Mon, 22 Jun 2020 11:37:42 +0200
-Message-Id: <20200622093744.13685-14-brgl@bgdev.pl>
+Subject: [PATCH 05/15] net: phy: reset the PHY even if probe() is not implemented
+Date:   Mon, 22 Jun 2020 11:37:34 +0200
+Message-Id: <20200622093744.13685-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -108,162 +108,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Currently many MAC drivers control the regulator supplying the PHY but
-this is conceptually wrong. The regulator should be defined as a property
-of the PHY node on the MDIO bus and controlled by the MDIO sub-system.
-
-Add support for an optional PHY regulator which will be enabled before
-optional deasserting of the reset signal.
+Currently we only call phy_device_reset() if the PHY driver implements
+the probe() callback. This is not mandatory and many drivers (e.g.
+realtek) don't need probe() for most devices but still can have reset
+GPIOs defined. There's no reason to depend on the presence of probe()
+here so pull the reset code out of the if clause.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/mdio_bus.c    | 21 ++++++++++++++++++++
- drivers/net/phy/mdio_device.c | 36 +++++++++++++++++++++++++++++++++++
- include/linux/mdio.h          |  3 +++
- 3 files changed, 60 insertions(+)
+ drivers/net/phy/phy_device.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 53e2fb0be7b9..19f0b9664fe3 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -27,6 +27,7 @@
- #include <linux/of_gpio.h>
- #include <linux/of_mdio.h>
- #include <linux/phy.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/skbuff.h>
- #include <linux/slab.h>
-@@ -67,6 +68,22 @@ static int mdiobus_register_reset(struct mdio_device *mdiodev)
- 	return 0;
- }
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 1b4df12c70ad..f6985db08340 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2690,16 +2690,13 @@ static int phy_probe(struct device *dev)
  
-+static int mdiobus_register_regulator(struct mdio_device *mdiodev)
-+{
-+	struct regulator *phy_supply;
-+
-+	phy_supply = regulator_get_optional(&mdiodev->dev, "phy");
-+	if (IS_ERR(phy_supply)) {
-+		if (PTR_ERR(phy_supply) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		phy_supply = NULL;
-+	}
-+
-+	mdiodev->phy_supply = phy_supply;
-+
-+	return 0;
-+}
-+
- int mdiobus_register_device(struct mdio_device *mdiodev)
- {
- 	int err;
-@@ -83,6 +100,10 @@ int mdiobus_register_device(struct mdio_device *mdiodev)
- 		if (err)
- 			return err;
+ 	mutex_lock(&phydev->lock);
  
-+		err = mdiobus_register_regulator(mdiodev);
+-	if (phydev->drv->probe) {
+-		/* Deassert the reset signal */
+-		phy_device_reset(phydev, 0);
++	/* Deassert the reset signal */
++	phy_device_reset(phydev, 0);
+ 
++	if (phydev->drv->probe) {
+ 		err = phydev->drv->probe(phydev);
+-		if (err) {
+-			/* Assert the reset signal */
+-			phy_device_reset(phydev, 1);
 +		if (err)
-+			return err;
-+
- 		/* Assert the reset signal */
- 		mdio_device_reset(mdiodev, 1);
+ 			goto out;
+-		}
  	}
-diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
-index be615504b829..0f698d7a770b 100644
---- a/drivers/net/phy/mdio_device.c
-+++ b/drivers/net/phy/mdio_device.c
-@@ -17,6 +17,7 @@
- #include <linux/mii.h>
- #include <linux/module.h>
- #include <linux/phy.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-@@ -136,6 +137,32 @@ void mdio_device_reset(struct mdio_device *mdiodev, int value)
- }
- EXPORT_SYMBOL(mdio_device_reset);
  
-+int mdio_device_power_on(struct mdio_device *mdiodev)
-+{
-+	int ret = 0;
-+
-+	if (mdiodev->phy_supply)
-+		/* TODO We may need a delay here just like reset_assert_delay
-+		 * but since no user currently needs it, I'm not adding it just
-+		 * yet.
-+		 */
-+		ret = regulator_enable(mdiodev->phy_supply);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(mdio_device_power_on);
-+
-+int mdio_device_power_off(struct mdio_device *mdiodev)
-+{
-+	int ret = 0;
-+
-+	if (mdiodev->phy_supply)
-+		ret = regulator_disable(mdiodev->phy_supply);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(mdio_device_power_off);
-+
- /**
-  * mdio_probe - probe an MDIO device
-  * @dev: device to probe
-@@ -150,6 +177,11 @@ static int mdio_probe(struct device *dev)
- 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
- 	int err = 0;
+ 	/* Start out supporting everything. Eventually,
+@@ -2761,6 +2758,10 @@ static int phy_probe(struct device *dev)
+ 	phydev->state = PHY_READY;
  
-+	/* Enable the power supply */
-+	err = mdio_device_power_on(mdiodev);
+ out:
++	/* Assert the reset signal */
 +	if (err)
-+		return err;
++		phy_device_reset(phydev, 1);
 +
- 	/* Deassert the reset signal */
- 	mdio_device_reset(mdiodev, 0);
+ 	mutex_unlock(&phydev->lock);
  
-@@ -158,6 +190,8 @@ static int mdio_probe(struct device *dev)
- 		if (err) {
- 			/* Assert the reset signal */
- 			mdio_device_reset(mdiodev, 1);
-+			/* Disable the power supply */
-+			mdio_device_power_off(mdiodev);
- 		}
- 	}
+ 	return err;
+@@ -2779,12 +2780,12 @@ static int phy_remove(struct device *dev)
+ 	sfp_bus_del_upstream(phydev->sfp_bus);
+ 	phydev->sfp_bus = NULL;
  
-@@ -175,6 +209,8 @@ static int mdio_remove(struct device *dev)
+-	if (phydev->drv && phydev->drv->remove) {
++	if (phydev->drv && phydev->drv->remove)
+ 		phydev->drv->remove(phydev);
  
- 	/* Assert the reset signal */
- 	mdio_device_reset(mdiodev, 1);
-+	/* Disable the power supply */
-+	mdio_device_power_off(mdiodev);
+-		/* Assert the reset signal */
+-		phy_device_reset(phydev, 1);
+-	}
++	/* Assert the reset signal */
++	phy_device_reset(phydev, 1);
++
+ 	phydev->drv = NULL;
  
  	return 0;
- }
-diff --git a/include/linux/mdio.h b/include/linux/mdio.h
-index 9ac5e7ff6156..0ae07365a6ca 100644
---- a/include/linux/mdio.h
-+++ b/include/linux/mdio.h
-@@ -46,6 +46,7 @@ struct mdio_device {
- 	int flags;
- 	struct gpio_desc *reset_gpio;
- 	struct reset_control *reset_ctrl;
-+	struct regulator *phy_supply;
- 	unsigned int reset_assert_delay;
- 	unsigned int reset_deassert_delay;
- };
-@@ -92,6 +93,8 @@ struct mdio_device *mdio_device_create(struct mii_bus *bus, int addr);
- int mdio_device_register(struct mdio_device *mdiodev);
- void mdio_device_remove(struct mdio_device *mdiodev);
- void mdio_device_reset(struct mdio_device *mdiodev, int value);
-+int mdio_device_power_on(struct mdio_device *mdiodev);
-+int mdio_device_power_off(struct mdio_device *mdiodev);
- int mdio_driver_register(struct mdio_driver *drv);
- void mdio_driver_unregister(struct mdio_driver *drv);
- int mdio_device_bus_match(struct device *dev, struct device_driver *drv);
 -- 
 2.26.1
 
