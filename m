@@ -2,115 +2,106 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9932C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B912076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YZ3w+n5H"
+	by mail.kernel.org (Postfix) with ESMTP id 1D51F20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 20:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592856138;
+	bh=PX8mbSXS0Biq6Nzob0uSuR9o5//z+fPwVz2kp0Bl48g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SptUbASCXC0qXykRTa23xCRZnFRnT7+wIJ4/6HC+wx/PXa7VvK9vdghtVvemn8/AE
+	 iHibqBApQPr5c9EWCGhoB7fU6G75YOqgilR8amb1E8LP4mXPqYyt8xN3a3rM0VVuhP
+	 MXOrBm/OGZigEFPMegmi0nhGrpcrV6WL8msOaE/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgFVUCB (ORCPT
+        id S1728527AbgFVUCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:02:01 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60938 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgFVUCB (ORCPT
+        Mon, 22 Jun 2020 16:02:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbgFVUCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:02:01 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MK1gA0118523;
-        Mon, 22 Jun 2020 15:01:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592856102;
-        bh=UnjtmQf18KHv3JEllemSjYzNN6dGsJqMcXI38xM2/bI=;
-        h=From:To:CC:Subject:Date;
-        b=YZ3w+n5H/tTKuBe/BFuUtyjzbyb2kY9YwBhSdTtLoDMccWHyygnOAqoJXgh9DUwaI
-         NikZRkBFG3FvCkKZtusxO4TEi9Tkf2sdWo4g873NGSknBXyJ1OkCVluXXwkOety+3C
-         7vmFQO7uyPv90vQedVYkW33tmQjFcI0rjinSmr5Q=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MK1gH1118398
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 15:01:42 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Jun 2020 15:01:41 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 22 Jun 2020 15:01:41 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MK1eSn061651;
-        Mon, 22 Jun 2020 15:01:41 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] soc: ti: k3-ringacc: fix: warn: variable dereferenced before check 'ring'
-Date:   Mon, 22 Jun 2020 23:01:37 +0300
-Message-ID: <20200622200137.30109-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 22 Jun 2020 16:02:14 -0400
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A44C061799;
+        Mon, 22 Jun 2020 12:45:48 -0700 (PDT)
+Received: by mail-ot1-x32e.google.com with SMTP id g5so14134167otg.6;
+        Mon, 22 Jun 2020 12:45:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JFdwqUBGOKpOca1lCZxVxlB36FkBn0nL9aGlhv7LobQ=;
+        b=mrE8dhiZyWSJCooMpy21gElfdlMaAnNp9S4hl13ZtuiGMzf/ygBGunFbF5dmV5mM/p
+         QEdNGQRCRelWjMeSbRkrB4Ee6T1l+Mn3IQ5BUOYLLwJrrOhvNctfo9SBqIP1g9JZRJ1j
+         W3zZ0LZyjLHsJRiW39Nfr3s0zrPOhvq3fbaCj/gvTwEeWuvy3sd6Orbmw7/JyuB+Bvvb
+         +pRSPATYij9WIgepBHhadboL9Hdq4LJNn589ASrqxthDNQsXR6ZdhbTmYajRu0hvu1BP
+         XBURiO+zCKMPHVDvFxGW4KEtasblhBHwfAy5VwWVK/ryo9VP1d+PVTFFHHdaD3ab/5t+
+         Ouuw==
+X-Gm-Message-State: AOAM531gnZC40uY2G0YSCwLmpYu2aFkcbX7ALzSx85vORPkRfWkz9c/F
+        7zCEVNRVBm1m9OFLDEBmzDhOZwM79yj0BvAZPy4=
+X-Google-Smtp-Source: ABdhPJzFBhhKiuOVJLgp/6u2eHYaM+BdlaOVk5hNruUWVQp/mkDCmKEpqA1WyHR1hMiGQclups9bzxfH49OF60PMmK8=
+X-Received: by 2002:a4a:6513:: with SMTP id y19mr15673738ooc.75.1592855147614;
+ Mon, 22 Jun 2020 12:45:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200616040442.21515-1-yu.c.chen@intel.com> <CAJZ5v0gBVBAjdCOXsM-Fa-iAkuv2JMi2mVkG5w7ADcg9dWencA@mail.gmail.com>
+ <20200622171759.GA26527@chenyu-office.sh.intel.com>
+In-Reply-To: <20200622171759.GA26527@chenyu-office.sh.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 22 Jun 2020 21:45:35 +0200
+Message-ID: <CAJZ5v0grJZyOX7fFx_nNjtOLT1NGyu1L10H3TY+e0HR3+T8JZA@mail.gmail.com>
+Subject: Re: [PATCH][v2] PM / s2idle: Clear _TIF_POLLING_NRFLAG before suspend
+ to idle
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rui Zhang <rui.zhang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix build warning in k3_ringacc_ring_cfg():
+On Mon, Jun 22, 2020 at 7:16 PM Chen Yu <yu.c.chen@intel.com> wrote:
+>
+> Hi Rafael,
+> On Mon, Jun 22, 2020 at 06:19:35PM +0200, Rafael J. Wysocki wrote:
+> [cut]
+> > > +{
+> > > +       if (!current_clr_polling_and_test())
+> > > +               s2idle_enter(drv, dev, index);
+> > > +
+> > > +       return index;
+> >
+> > Is the value returned here used at all?
+> >
+> It is not used for now IMO.
+> > >          */
+> > >         index = find_deepest_state(drv, dev, U64_MAX, 0, true);
+> > >         if (index > 0)
+> > > -               enter_s2idle_proper(drv, dev, index);
+> > > +               call_s2idle(drv, dev, index);
+> >
+> > I'm wondering why this can't be
+> >
+> >     if (index > 0 && !current_clr_polling_and_test())
+> >             enter_s2idle_proper(drv, dev, index);
+> >
+> Yes, it should be simpler, but I guess Peter was trying to
+> make call_s2idle() consistent with call_cpuidle(),
+> and also s2idle_enter() is analogous to cpuidle_enter().
 
-smatch warnings:
-drivers/soc/ti/k3-ringacc.c:562 k3_ringacc_ring_cfg() warn: variable dereferenced before check 'ring' (see line 559)
+So IMO it would be better to do the simplest fix first and then do the
+cleanup on top of it.
 
-  557  int k3_ringacc_ring_cfg(struct k3_ring *ring, struct k3_ring_cfg *cfg)
-  558  {
- @559           struct k3_ringacc *ringacc = ring->parent;
-                                             ^^^^^^^^^^^^
-Dereference.
-
-  560           int ret = 0;
-  561
- @562           if (!ring || !cfg)
-                    ^^^^
-
-Check too late.  Delete it?
-
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/soc/ti/k3-ringacc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-index 5fb2ee2ac978..19156f15af0a 100644
---- a/drivers/soc/ti/k3-ringacc.c
-+++ b/drivers/soc/ti/k3-ringacc.c
-@@ -556,11 +556,13 @@ static int k3_ringacc_ring_cfg_sci(struct k3_ring *ring)
- 
- int k3_ringacc_ring_cfg(struct k3_ring *ring, struct k3_ring_cfg *cfg)
- {
--	struct k3_ringacc *ringacc = ring->parent;
-+	struct k3_ringacc *ringacc;
- 	int ret = 0;
- 
- 	if (!ring || !cfg)
- 		return -EINVAL;
-+	ringacc = ring->parent;
-+
- 	if (cfg->elm_size > K3_RINGACC_RING_ELSIZE_256 ||
- 	    cfg->mode >= K3_RINGACC_RING_MODE_INVALID ||
- 	    cfg->size & ~K3_RINGACC_CFG_RING_SIZE_ELCNT_MASK ||
--- 
-2.17.1
-
+Thanks!
