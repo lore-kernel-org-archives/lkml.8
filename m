@@ -2,156 +2,107 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11322C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAF312068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E169620716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:26:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="HQ66IXUx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JQ2DZoSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgFVL0B (ORCPT
+        id S1728878AbgFVL0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:26:01 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:47288 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727996AbgFVLOd (ORCPT
+        Mon, 22 Jun 2020 07:26:10 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52510 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727996AbgFVL0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:14:33 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MB4TS3006545;
-        Mon, 22 Jun 2020 04:14:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=bH4mOeMSy3lXy+89A4sAb2b4q/8m1695Bsw+MK0lANA=;
- b=HQ66IXUxD3VT8UKVzBv1CVd27NRRufoDpewJ9g1F1/287ZyhCTD4fXJNQXwZNqPSCUrT
- dTJRlUXio8TRLn2YpN3T97kjRayO4fMksCLs5KMNg4V40mUDcoSuC4Y9FjKRYno5aUTB
- XudpR73VM0pvQ+aNoYJ5BA/5T39Es0Hm3Iw/0XAq9Bl8f4XnT+VK5tPnG4MwiURe//hC
- nKvl3lf6lx5yax/RMGNtqBD4d9GWL3azzq/BhA+5xIDmZ4dlhDkn7B9hXIX3vsv0ieAM
- kMZ78rzxeCYwh9ORUv6abZTYIyfuVHNUUnN0Kylpe4eKIpj6fuQ3lF9AcsE4bE0RAhxV iQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 31sftpg5wx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 04:14:32 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Jun
- 2020 04:14:30 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 22 Jun 2020 04:14:30 -0700
-Received: from NN-LT0049.marvell.com (unknown [10.193.39.36])
-        by maili.marvell.com (Postfix) with ESMTP id CD7173F703F;
-        Mon, 22 Jun 2020 04:14:26 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Yuval Mintz <yuval.mintz@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Ram Amrani" <ram.amrani@marvell.com>,
-        Tomer Tayar <tomer.tayar@marvell.com>,
-        Alexander Lobakin <alobakin@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net 2/9] net: qed: fix async event callbacks unregistering
-Date:   Mon, 22 Jun 2020 14:14:06 +0300
-Message-ID: <20200622111413.7006-3-alobakin@marvell.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200622111413.7006-1-alobakin@marvell.com>
-References: <20200622111413.7006-1-alobakin@marvell.com>
+        Mon, 22 Jun 2020 07:26:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592825164;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jvgK4KLrCZzFDYjMPOaGgUmxRiWf9yxcTyPhh0B1N/w=;
+        b=JQ2DZoSS3GFV9dxbNrV4gMW5GtCEwOV5u+PrMW8Xuaps2KMi8vit4GqFQ9T5yVCQr43120
+        0ln8uK05LlhO6Yjqhs6PQ/z8+EXWJwgNoQBYntb1te9MwLCWfaIs2pSKM4fHU8+aDwk8AI
+        6SxGEs+DBpyGqNARRUqY45GYwzShPu4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-QFsswXIUPQKDm9fXWiIXRQ-1; Mon, 22 Jun 2020 07:26:00 -0400
+X-MC-Unique: QFsswXIUPQKDm9fXWiIXRQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3561819200C4;
+        Mon, 22 Jun 2020 11:25:59 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.236])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5E8EF7C1FC;
+        Mon, 22 Jun 2020 11:25:57 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 22 Jun 2020 13:25:58 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 13:25:56 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>
+Subject: Re: [PATCH 1/2] exec: Don't set group_exit_task during a coredump
+Message-ID: <20200622112555.GB6516@redhat.com>
+References: <87pn9u6h8c.fsf@x220.int.ebiederm.org>
+ <87k1026h4x.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_04:2020-06-22,2020-06-22 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k1026h4x.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qed_spq_unregister_async_cb() should be called before
-qed_rdma_info_free() to avoid crash-spawning uses-after-free.
-Instead of calling it from each subsystem exit code, do it in one place
-on PF down.
+On 06/19, Eric W. Biederman wrote:
+>
+> --- a/fs/coredump.c
+> +++ b/fs/coredump.c
+> @@ -369,7 +369,6 @@ static int zap_threads(struct task_struct *tsk, struct mm_struct *mm,
+>  	spin_lock_irq(&tsk->sighand->siglock);
+>  	if (!signal_group_exit(tsk->signal)) {
+>  		mm->core_state = core_state;
+> -		tsk->signal->group_exit_task = tsk;
+>  		nr = zap_process(tsk, exit_code, 0);
+>  		clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
+>  	}
+> @@ -481,7 +480,6 @@ static void coredump_finish(struct mm_struct *mm, bool core_dumped)
+>  	spin_lock_irq(&current->sighand->siglock);
+>  	if (core_dumped && !__fatal_signal_pending(current))
+>  		current->signal->group_exit_code |= 0x80;
+> -	current->signal->group_exit_task = NULL;
+>  	current->signal->flags = SIGNAL_GROUP_EXIT;
+>  	spin_unlock_irq(&current->sighand->siglock);
+>  
+> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+> index 0ee5e696c5d8..92c72f5db111 100644
+> --- a/include/linux/sched/signal.h
+> +++ b/include/linux/sched/signal.h
+> @@ -265,7 +265,7 @@ static inline void signal_set_stop_flags(struct signal_struct *sig,
+>  /* If true, all threads except ->group_exit_task have pending SIGKILL */
+>  static inline int signal_group_exit(const struct signal_struct *sig)
+>  {
+> -	return	(sig->flags & SIGNAL_GROUP_EXIT) ||
+> +	return	(sig->flags & (SIGNAL_GROUP_EXIT | SIGNAL_GROUP_COREDUMP)) ||
+>  		(sig->group_exit_task != NULL);
+>  }
 
-Fixes: 291d57f67d24 ("qed: Fix rdma_info structure allocation")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
----
- drivers/net/ethernet/qlogic/qed/qed_dev.c   | 9 +++++++--
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 2 --
- drivers/net/ethernet/qlogic/qed/qed_roce.c  | 1 -
- 3 files changed, 7 insertions(+), 5 deletions(-)
+Looks correct.
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index 1eebf30fa798..b41ada668948 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -1368,6 +1368,8 @@ static void qed_dbg_user_data_free(struct qed_hwfn *p_hwfn)
- 
- void qed_resc_free(struct qed_dev *cdev)
- {
-+	struct qed_rdma_info *rdma_info;
-+	struct qed_hwfn *p_hwfn;
- 	int i;
- 
- 	if (IS_VF(cdev)) {
-@@ -1385,7 +1387,8 @@ void qed_resc_free(struct qed_dev *cdev)
- 	qed_llh_free(cdev);
- 
- 	for_each_hwfn(cdev, i) {
--		struct qed_hwfn *p_hwfn = &cdev->hwfns[i];
-+		p_hwfn = cdev->hwfns + i;
-+		rdma_info = p_hwfn->p_rdma_info;
- 
- 		qed_cxt_mngr_free(p_hwfn);
- 		qed_qm_info_free(p_hwfn);
-@@ -1404,8 +1407,10 @@ void qed_resc_free(struct qed_dev *cdev)
- 			qed_ooo_free(p_hwfn);
- 		}
- 
--		if (QED_IS_RDMA_PERSONALITY(p_hwfn))
-+		if (QED_IS_RDMA_PERSONALITY(p_hwfn) && rdma_info) {
-+			qed_spq_unregister_async_cb(p_hwfn, rdma_info->proto);
- 			qed_rdma_info_free(p_hwfn);
-+		}
- 
- 		qed_iov_free(p_hwfn);
- 		qed_l2_free(p_hwfn);
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index d2fe61a5cf56..5409a2da6106 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -2836,8 +2836,6 @@ int qed_iwarp_stop(struct qed_hwfn *p_hwfn)
- 	if (rc)
- 		return rc;
- 
--	qed_spq_unregister_async_cb(p_hwfn, PROTOCOLID_IWARP);
--
- 	return qed_iwarp_ll2_stop(p_hwfn);
- }
- 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
-index 4566815f7b87..7271dd7166e5 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
-@@ -113,7 +113,6 @@ void qed_roce_stop(struct qed_hwfn *p_hwfn)
- 			break;
- 		}
- 	}
--	qed_spq_unregister_async_cb(p_hwfn, PROTOCOLID_ROCE);
- }
- 
- static void qed_rdma_copy_gids(struct qed_rdma_qp *qp, __le32 *src_gid,
--- 
-2.21.0
+Oleg.
 
