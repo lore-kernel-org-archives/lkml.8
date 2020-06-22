@@ -2,52 +2,54 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A981C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A346C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE4FF20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592865787;
-	bh=adOZdv3SYieL9hgLbbyrBQ4+44f+L6BK/R5WYMPBOGI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GKxrw5tGVRoEjZv4zoSm3agRLHC2mz5pLuSBRqfgAwkqZt77XIvinZTtmMx2KtQKw
-	 B3MQc5pdlG4BFfjm+0IJ6vNZI2jKyE2VcPe/2VjdE0KUQgWC3bHlJrawanatFI90ff
-	 MK/pA93J8CyY7s3JgLkSPj6gpwPpEemdDWKgzyds=
+	by mail.kernel.org (Postfix) with ESMTP id 82BA52083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 22:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgFVWnF (ORCPT
+        id S1731285AbgFVWnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 18:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59682 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 18:43:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27426 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731255AbgFVWnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:43:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 121DC2075A;
-        Mon, 22 Jun 2020 22:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592865782;
-        bh=adOZdv3SYieL9hgLbbyrBQ4+44f+L6BK/R5WYMPBOGI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dKQ2UGXx2lqVnP12zlv3VXZHNqo8KJuNP4jza47Kp2uR8y0sRpSrB5kC7azBwJH1F
-         doLMCpyMs0AVsMdKmHYroNojUrHY4sPvPtIcKeW0XPN4hW9UCPzOpgC/eMzpDJo+1w
-         9+cBUeWoVfFhymY+6uN4BF4isDc1n8lpbaa1YIZA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     peterz@infradead.org
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        jolsa@redhat.com, alexey.budankov@linux.intel.com,
-        songliubraving@fb.com, acme@redhat.com, allison@lohutok.net,
-        sashal@kernel.org
-Subject: [PATCH v3 00/14] Fix up liblockdep for 5.8-rc
-Date:   Mon, 22 Jun 2020 18:42:44 -0400
-Message-Id: <20200622224258.1208588-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        id S1731253AbgFVWnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 18:43:03 -0400
+IronPort-SDR: Oa+ueFLW84wxFleKAjZD1s98UNCorBROw/tXAvsthQJoamNEhd8IDEzREIbp2oEMrjX+NkrzNm
+ V1Y3L420CKNg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131303579"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="131303579"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 15:42:56 -0700
+IronPort-SDR: 8FKNo0ARdxWg/XLV+akSa+b+mTj3mHGCb4vr3xHaKPfR6kaZmfvZtnIyT2/4/XL23ou7NMG/Az
+ tZ4G8WGCW/3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="264634945"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 15:42:55 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 14/15] KVM: VMX: Rename "vmx_msr_index" to "vmx_uret_msrs_list"
+Date:   Mon, 22 Jun 2020 15:42:48 -0700
+Message-Id: <20200622224249.29562-15-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200622224249.29562-1-sean.j.christopherson@intel.com>
+References: <20200622224249.29562-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,49 +57,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Rename "vmx_msr_index" to "vmx_uret_msrs_list" to associate it with the
+uret MSRs array, and to avoid conflating "MSR's ECX index" with "MSR's
+index into an array".  Similarly, don't use "slot" in the name as that
+terminology is claimed by the common x86 "user_return_msrs" mechanism.
 
-This series fixes up most of liblockdep to work with the current kernel
-tree.
+No functional change intended.
 
-Change in v3:
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
- - Rebase on top of the 5.8 merge window work.
-
-Sasha Levin (14):
-  tools headers: Add kprobes.h header
-  tools headers: Add rcupdate.h header
-  tools/kernel.h: extend with dummy RCU functions
-  tools bitmap: add bitmap_andnot definition
-  tools/lib/lockdep: add definition required for IRQ flag tracing
-  tools bitmap: add bitmap_clear definition
-  tools/lib/lockdep: Hook up vsprintf, find_bit, hweight libraries
-  tools/lib/lockdep: Enable building with CONFIG_TRACE_IRQFLAGS
-  tools/lib/lockdep: New stacktrace API
-  tools/lib/lockdep: call lockdep_init_task on init
-  tools/lib/lockdep: switch to using lockdep_init_map_waits
-  tools/kernel.h: hide noinstr
-  tools/lib/lockdep: explicitly declare lockdep_init_task()
-  tools/kernel.h: hide task_struct.hardirq_chain_key
-
- tools/include/linux/bitmap.h                  | 10 ++++++
- tools/include/linux/kernel.h                  | 11 ++++++
- tools/include/linux/kprobes.h                 |  7 ++++
- tools/include/linux/lockdep.h                 | 10 ++++++
- tools/include/linux/rcupdate.h                | 12 +++++++
- tools/include/linux/stacktrace.h              |  8 +++++
- tools/lib/bitmap.c                            | 35 +++++++++++++++++++
- tools/lib/lockdep/Build                       |  2 +-
- tools/lib/lockdep/Makefile                    |  2 +-
- tools/lib/lockdep/include/liblockdep/common.h |  4 +--
- tools/lib/lockdep/include/liblockdep/mutex.h  |  2 +-
- tools/lib/lockdep/include/liblockdep/rwlock.h |  2 +-
- tools/lib/lockdep/lockdep.c                   |  4 +--
- tools/lib/lockdep/preload.c                   |  8 ++++-
- 14 files changed, 108 insertions(+), 9 deletions(-)
- create mode 100644 tools/include/linux/kprobes.h
- create mode 100644 tools/include/linux/rcupdate.h
-
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 178315b2758b..e958c911dcf8 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -449,9 +449,9 @@ static unsigned long host_idt_base;
+  * will emulate SYSCALL in legacy mode if the vendor string in guest
+  * CPUID.0:{EBX,ECX,EDX} is "AuthenticAMD" or "AMDisbetter!" To
+  * support this emulation, IA32_STAR must always be included in
+- * vmx_msr_index[], even in i386 builds.
++ * vmx_uret_msrs_list[], even in i386 builds.
+  */
+-const u32 vmx_msr_index[] = {
++const u32 vmx_uret_msrs_list[] = {
+ #ifdef CONFIG_X86_64
+ 	MSR_SYSCALL_MASK, MSR_LSTAR, MSR_CSTAR,
+ #endif
+@@ -630,7 +630,7 @@ static inline int __vmx_find_uret_msr(struct vcpu_vmx *vmx, u32 msr)
+ 	int i;
+ 
+ 	for (i = 0; i < vmx->nr_uret_msrs; ++i)
+-		if (vmx_msr_index[vmx->guest_uret_msrs[i].index] == msr)
++		if (vmx_uret_msrs_list[vmx->guest_uret_msrs[i].index] == msr)
+ 			return i;
+ 	return -1;
+ }
+@@ -6888,10 +6888,10 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
+ 			goto free_vpid;
+ 	}
+ 
+-	BUILD_BUG_ON(ARRAY_SIZE(vmx_msr_index) != MAX_NR_USER_RETURN_MSRS);
++	BUILD_BUG_ON(ARRAY_SIZE(vmx_uret_msrs_list) != MAX_NR_USER_RETURN_MSRS);
+ 
+-	for (i = 0; i < ARRAY_SIZE(vmx_msr_index); ++i) {
+-		u32 index = vmx_msr_index[i];
++	for (i = 0; i < ARRAY_SIZE(vmx_uret_msrs_list); ++i) {
++		u32 index = vmx_uret_msrs_list[i];
+ 		u32 data_low, data_high;
+ 		int j = vmx->nr_uret_msrs;
+ 
+@@ -7997,8 +7997,8 @@ static __init int hardware_setup(void)
+ 	store_idt(&dt);
+ 	host_idt_base = dt.address;
+ 
+-	for (i = 0; i < ARRAY_SIZE(vmx_msr_index); ++i)
+-		kvm_define_user_return_msr(i, vmx_msr_index[i]);
++	for (i = 0; i < ARRAY_SIZE(vmx_uret_msrs_list); ++i)
++		kvm_define_user_return_msr(i, vmx_uret_msrs_list[i]);
+ 
+ 	if (setup_vmcs_config(&vmcs_config, &vmx_capability) < 0)
+ 		return -EIO;
 -- 
-2.25.1
+2.26.0
 
