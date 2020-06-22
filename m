@@ -2,147 +2,121 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C268C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E99C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B36A2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:02:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="N01y1zIP"
+	by mail.kernel.org (Postfix) with ESMTP id CBA4E2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592866934;
+	bh=6/yCpyjWjtd5QDSuX8I0LLUq4Bd1x+0uiGkmMMhUS0A=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=KUQj1srUa5V1XwsXS6J28BcVn1SWLyh8lqoj6z18ZdrNNc3DhRCBcPNwoiEHLTU0c
+	 9XX3V2dGhfl3iEj55V1hHMZEqQd4mj/Qy5R8h4ck6/jPztrD7NlBPBiozJzp1nlj8X
+	 xhju19WG2NrF4LEC3ARpiGd8bXHd3OWcnNZyAqQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbgFVXCH (ORCPT
+        id S1731415AbgFVXCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:02:07 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17060 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731268AbgFVXCG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:02:06 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef138130000>; Mon, 22 Jun 2020 16:00:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 22 Jun 2020 16:02:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 16:02:06 -0700
-Received: from [10.2.59.206] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jun
- 2020 23:01:51 +0000
-Subject: Re: [PATCH 13/16] mm: support THP migration to device private memory
-To:     Yang Shi <shy828301@gmail.com>, Zi Yan <ziy@nvidia.com>
-CC:     Ralph Campbell <rcampbell@nvidia.com>,
-        <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Ben Skeggs" <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Shuah Khan" <shuah@kernel.org>,
-        "Huang, Ying" <ying.huang@intel.com>
-References: <20200619215649.32297-1-rcampbell@nvidia.com>
- <20200619215649.32297-14-rcampbell@nvidia.com>
- <F1872509-3B1F-4A8A-BFF5-E4D44E451920@nvidia.com>
- <b6eed976-c515-72d6-a7be-2296cab8f0d4@nvidia.com>
- <C7BEB563-3698-442C-A188-1B66CBE4CF63@nvidia.com>
- <a5f502f8-70cd-014b-8066-bbaeb8024a29@nvidia.com>
- <4C364E23-0716-4D59-85A1-0C293B86BC2C@nvidia.com>
- <CAHbLzkqe50+KUsRH92O4Be2PjuwAYGw9nK+d-73syxi2Xnf9-Q@mail.gmail.com>
- <CAHbLzko=BqtPhxgf7f1bKKqoQxK9XCCPdp4YdL80K_uXFfcETQ@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <fa056e5e-ca87-aef1-e66e-58e8ebe5403e@nvidia.com>
-Date:   Mon, 22 Jun 2020 16:01:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 19:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731268AbgFVXCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 19:02:13 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C730720738;
+        Mon, 22 Jun 2020 23:02:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592866932;
+        bh=6/yCpyjWjtd5QDSuX8I0LLUq4Bd1x+0uiGkmMMhUS0A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dw14yVKDOtzqB8fZZ4UnYecQOb8+XUo3yiNw6ZP4jeGZSEZAUftgZfmGvIRbGQUN4
+         bDnsUxgzkhrEC0oCczHV/H2jrRHIrtqi2GanhqG0myZQnLatWFsusiz5QIR8agR57B
+         8KvzrCM3bOy9TJDABAoVE4H7f3akJ72VywG+iwyg=
+Date:   Mon, 22 Jun 2020 18:07:41 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] net: ipv6: Use struct_size() helper and kcalloc()
+Message-ID: <20200622230741.GA28911@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <CAHbLzko=BqtPhxgf7f1bKKqoQxK9XCCPdp4YdL80K_uXFfcETQ@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592866835; bh=Y6NBr0D1yM6UcnMk8vnlqkMWMVjsve14PP2JOfM1rUE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=N01y1zIPkJH/Lms5VPCw+1hdpKCS6PQZaY+D44RrVIXwNweSuXmYr3z3AfacpMrRd
-         G6+/fqzWMSPGkgXP5CHVQpYsuLjMkY+7UKSYaWnH1EkZLLsUN4HnVHQvpRTB4ETFdv
-         mhmHUu3UNo7z2CHs8x9IfXei5XwR3Y9Zs7z/4nGOSZHwHXZyStlyAfAisuSqTF6kJk
-         6gCLh23dt5mh+yBb98fGlamGj9DI3thkQ6Su+m8vH3eU9D0J67Zac+QkklzP31wVYD
-         lHOctZ9rMoZOScVyrBhik3PE1youRWx4x2Ase8LtWQUNfGk29QlDgJu+UXoKCypz1b
-         XQu2ultXjtJaw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22 15:33, Yang Shi wrote:
-> On Mon, Jun 22, 2020 at 3:30 PM Yang Shi <shy828301@gmail.com> wrote:
->> On Mon, Jun 22, 2020 at 2:53 PM Zi Yan <ziy@nvidia.com> wrote:
->>> On 22 Jun 2020, at 17:31, Ralph Campbell wrote:
->>>> On 6/22/20 1:10 PM, Zi Yan wrote:
->>>>> On 22 Jun 2020, at 15:36, Ralph Campbell wrote:
->>>>>> On 6/21/20 4:20 PM, Zi Yan wrote:
->>>>>>> On 19 Jun 2020, at 17:56, Ralph Campbell wrote:
-...
->>> Ying(cc=E2=80=99d) developed the code to swapout and swapin THP in one =
-piece: https://lore.kernel.org/linux-mm/20181207054122.27822-1-ying.huang@i=
-ntel.com/.
->>> I am not sure whether the patchset makes into mainstream or not. It cou=
-ld be a good technical reference
->>> for swapping in device private pages, although swapping in pages from d=
-isk and from device private
->>> memory are two different scenarios.
->>>
->>> Since the device private memory swapin impacts core mm performance, we =
-might want to discuss your patches
->>> with more people, like the ones from Ying=E2=80=99s patchset, in the ne=
-xt version.
->>
->> I believe Ying will give you more insights about how THP swap works.
->>
->> But, IMHO device memory migration (migrate to system memory) seems
->> like THP CoW more than swap.
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes. Also, remove unnecessary
+function ipv6_rpl_srh_alloc_size() and replace kzalloc() with kcalloc(),
+which has a 2-factor argument form for multiplication.
 
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-A fine point: overall, the desired behavior is "migrate", not CoW.
-That's important. Migrate means that you don't leave a page behind, even
-a read-only one. And that's exactly how device private migration is
-specified.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/net/rpl.h       | 6 ------
+ net/ipv6/exthdrs.c      | 2 +-
+ net/ipv6/rpl_iptunnel.c | 3 +--
+ 3 files changed, 2 insertions(+), 9 deletions(-)
 
-We should try to avoid any erosion of clarity here. Even if somehow
-(really?) the underlying implementation calls this THP CoW, the actual
-goal is to migrate pages over to the device (and back).
+diff --git a/include/net/rpl.h b/include/net/rpl.h
+index dceff60e8baf..308ef0a05cae 100644
+--- a/include/net/rpl.h
++++ b/include/net/rpl.h
+@@ -26,12 +26,6 @@ static inline void rpl_exit(void) {}
+ /* Worst decompression memory usage ipv6 address (16) + pad 7 */
+ #define IPV6_RPL_SRH_WORST_SWAP_SIZE (sizeof(struct in6_addr) + 7)
+ 
+-static inline size_t ipv6_rpl_srh_alloc_size(unsigned char n)
+-{
+-	return sizeof(struct ipv6_rpl_sr_hdr) +
+-		((n + 1) * sizeof(struct in6_addr));
+-}
+-
+ size_t ipv6_rpl_srh_size(unsigned char n, unsigned char cmpri,
+ 			 unsigned char cmpre);
+ 
+diff --git a/net/ipv6/exthdrs.c b/net/ipv6/exthdrs.c
+index 5a8bbcdcaf2b..e9b366994475 100644
+--- a/net/ipv6/exthdrs.c
++++ b/net/ipv6/exthdrs.c
+@@ -580,7 +580,7 @@ static int ipv6_rpl_srh_rcv(struct sk_buff *skb)
+ 	hdr->segments_left--;
+ 	i = n - hdr->segments_left;
+ 
+-	buf = kzalloc(ipv6_rpl_srh_alloc_size(n + 1) * 2, GFP_ATOMIC);
++	buf = kcalloc(struct_size(hdr, segments.addr, n + 2), 2, GFP_ATOMIC);
+ 	if (unlikely(!buf)) {
+ 		kfree_skb(skb);
+ 		return -1;
+diff --git a/net/ipv6/rpl_iptunnel.c b/net/ipv6/rpl_iptunnel.c
+index c3ececd7cfc1..5fdf3ebb953f 100644
+--- a/net/ipv6/rpl_iptunnel.c
++++ b/net/ipv6/rpl_iptunnel.c
+@@ -136,8 +136,7 @@ static int rpl_do_srh_inline(struct sk_buff *skb, const struct rpl_lwt *rlwt,
+ 
+ 	oldhdr = ipv6_hdr(skb);
+ 
+-	buf = kzalloc(ipv6_rpl_srh_alloc_size(srh->segments_left - 1) * 2,
+-		      GFP_ATOMIC);
++	buf = kcalloc(struct_size(srh, segments.addr, srh->segments_left), 2, GFP_ATOMIC);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+-- 
+2.27.0
 
-
->>
->> When migrating in:
->=20
-> Sorry for my fat finger, hit sent button inadvertently, let me finish her=
-e.
->=20
-> When migrating in:
->=20
->          - if THP is enabled: allocate THP, but need handle allocation
-> failure by falling back to base page
->          - if THP is disabled: fallback to base page
->=20
-
-OK, but *all* page entries (base and huge/large pages) need to be cleared,
-when migrating to device memory, unless I'm really confused here.
-So: not CoW.
-
-thanks,
---=20
-John Hubbard
-NVIDIA
