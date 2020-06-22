@@ -2,149 +2,117 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E30C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8059C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B942206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD2A206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="pXnn7VoV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PndyeTcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgFVPOV (ORCPT
+        id S1729321AbgFVPOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:14:21 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:59306 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728951AbgFVPOV (ORCPT
+        Mon, 22 Jun 2020 11:14:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60428 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729206AbgFVPOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:14:21 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MF80B4019238;
-        Mon, 22 Jun 2020 10:13:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=YA68rp2GcBNVbHKDQJaNZbD5aBuB8Gj1QhN4VwD4g18=;
- b=pXnn7VoViKb8ETOJPdlZm51DIPoT5w5oQZwY4HWFHDXP282cCpDAZglLe8A0cPjKou9E
- IuOYXhQUQh/MumzOWrCXkKprNWkKy9PQ3WuXb72IGD3/W+URRmbls64fGds2IRi8dSs8
- 1hTkTSp6+pbJHSXkKLge8W5G7tYoNZfkcAfERdeWSqSgsjX3p2yxWMonJzhZykY4P/Zj
- uf0QO2U4Pt00lJO9wN2uUXYLE52ebMiRL9+Bw6MNVjBwlMueJNsgJ8t1Frw/2aQ193yF
- rIPKyfW0n0Ep3Q0KgmMVBWfTA3xsOkX+Oi3SZm51RlmMc3s7psODNBa8gx9+Hbq4tuiQ WQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 31sfv1tftd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 22 Jun 2020 10:13:36 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 22 Jun
- 2020 16:13:34 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Mon, 22 Jun 2020 16:13:34 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 4884C2C5;
-        Mon, 22 Jun 2020 15:13:34 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 15:13:34 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-CC:     Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        <alsa-devel@alsa-project.org>, <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] ALSA: compress: document the compress audio state
- machine
-Message-ID: <20200622151334.GW71940@ediswmail.ad.cirrus.com>
-References: <20200622065811.221485-1-vkoul@kernel.org>
- <20200622065811.221485-2-vkoul@kernel.org>
- <800a2632-b263-500f-707e-c1ce94ce92d4@linux.intel.com>
+        Mon, 22 Jun 2020 11:14:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592838885;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NIQCA5ZckTuLuocOtdMBGLUU2Sj+VfxVeRxU4kvLvWg=;
+        b=PndyeTcrL8jquNZf4pLLLz3+hxIW6+xKHp7LjOtmNl+LFIASh1SGH+VWnb+cKKa/xDJypT
+        b/6w1KVbtiMVQFPnkzsIxGrqEhENIjY63sIcR4qdiwiFB1q0BPNZzbo66QSB5tyhxmzZei
+        UOKjKnP6JgHnO3p6dRYRmaKLfozGKjQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-19-9ya5N6rCP0iHAeJJWgqevw-1; Mon, 22 Jun 2020 11:14:40 -0400
+X-MC-Unique: 9ya5N6rCP0iHAeJJWgqevw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5F3C107ACF6;
+        Mon, 22 Jun 2020 15:14:38 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2551B60BE2;
+        Mon, 22 Jun 2020 15:14:36 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86/mmu: Avoid mixing gpa_t with gfn_t in walk_addr_generic()
+Date:   Mon, 22 Jun 2020 17:14:35 +0200
+Message-Id: <20200622151435.752560-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <800a2632-b263-500f-707e-c1ce94ce92d4@linux.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 clxscore=1011
- malwarescore=0 cotscore=-2147483648 spamscore=0 priorityscore=1501
- suspectscore=2 phishscore=0 mlxlogscore=871 lowpriorityscore=0
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220114
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:28:48AM -0500, Pierre-Louis Bossart wrote:
-> On 6/22/20 1:58 AM, Vinod Koul wrote:
-> >+                                        +----------+
-> >+                                        |          |
-> >+                                        |   OPEN   |
-> >+                                        |          |
-> >+                                        +----------+
-> >+                                             |
-> >+                                             |
-> >+                                             | compr_set_params()
-> >+                                             |
-> >+                                             v
-> >+         compr_free()                   +----------+
-> >+  +-------------------------------------|          |
-> >+  |                                     |   SETUP  |
-> >+  |           +------------------------>|          |<---------------------------------+
-> >+  |           | compr_drain_notify()    +----------+                                  |
-> >+  |           |                              |                                        |
-> >+  |           |                              |                                        |
-> >+  |           |                              | compr_write()                          |
-> >+  |           |                              |                                        |
-> >+  |           |                              v                                        |
-> >+  |           |                         +----------+                                  |
-> >+  |           |                         |          |                                  |
-> >+  |           |                         |  PREPARE |                                  |
-> >+  |           |                         |          |                                  |
-> >+  |           |                         +----------+                                  |
-> >+  |           |                              |                                        |
-> >+  |           |                              |                                        |
-> >+  |           |                              | compr_start()                          |
-> >+  |           |                              |                                        |
-> >+  |           |                              v                                        |
-> >+  |     +----------+                    +----------+  compr_pause()  +----------+     |
-> >+  |     |          |    compr_drain()   |          |---------------->|          |     |
-> >+  |     |  DRAIN   |<-------------------|  RUNNING |                 |  PAUSE   |     |
-> >+  |     |          |                    |          |<----------------|          |     |
-> >+  |     +----------+                    +----------+  compr_resume() +----------+     |
-> >+  |           |                           |      |                                    |
-> >+  |           |                           |      |                                    |
-> >+  |           |                           |      |                                    |
-> >+  |           |                           |      |          compr_stop()              |
-> >+  |           |                           |      +------------------------------------+
-> >+  |           |       +----------+        |
-> >+  |           |       |          |        |
-> >+  +-----------+------>|          |<-------+
-> >+     compr_free()     |   FREE   |  compr_free()
-> >+                      |          |
-> >+                      +----------+
-> a) can you clarify if we can go from running to free directly? is
-> this really a legit transition? There's already the option of doing
-> a stop and a a drain.
-> 
+translate_gpa() returns a GPA, assigning it to 'real_gfn' seems obviously
+wrong. There is no real issue because both 'gpa_t' and 'gfn_t' are u64 and
+we don't use the value in 'real_gfn' as a GFN, we do
 
-This is allowed in the current code, the kernel sends the stop
-internally in this case, so it kinda does go through the setup
-state just not from the users view point. I am not sure I have a
-good handle on if that makes sense or not.
+ real_gfn = gpa_to_gfn(real_gfn);
 
-> c) no way to stop a paused stream?
+instead. 'If you see a "buffalo" sign on an elephant's cage, do not trust
+your eyes', but let's fix it for good.
 
-Currently the code does allow this and it certainly makes sense
-so should probably be added.
+No functional change intended.
 
-Thanks,
-Charles
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/mmu/paging_tmpl.h | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index a6d484ea110b..58234bfaca07 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -360,7 +360,6 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+ 	++walker->level;
+ 
+ 	do {
+-		gfn_t real_gfn;
+ 		unsigned long host_addr;
+ 
+ 		pt_access = pte_access;
+@@ -375,7 +374,7 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+ 		walker->table_gfn[walker->level - 1] = table_gfn;
+ 		walker->pte_gpa[walker->level - 1] = pte_gpa;
+ 
+-		real_gfn = mmu->translate_gpa(vcpu, gfn_to_gpa(table_gfn),
++		real_gpa = mmu->translate_gpa(vcpu, gfn_to_gpa(table_gfn),
+ 					      nested_access,
+ 					      &walker->fault);
+ 
+@@ -389,12 +388,10 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+ 		 * information to fix the exit_qualification or exit_info_1
+ 		 * fields.
+ 		 */
+-		if (unlikely(real_gfn == UNMAPPED_GVA))
++		if (unlikely(real_gpa == UNMAPPED_GVA))
+ 			return 0;
+ 
+-		real_gfn = gpa_to_gfn(real_gfn);
+-
+-		host_addr = kvm_vcpu_gfn_to_hva_prot(vcpu, real_gfn,
++		host_addr = kvm_vcpu_gfn_to_hva_prot(vcpu, gpa_to_gfn(real_gpa),
+ 					    &walker->pte_writable[walker->level - 1]);
+ 		if (unlikely(kvm_is_error_hva(host_addr)))
+ 			goto error;
+-- 
+2.25.4
+
