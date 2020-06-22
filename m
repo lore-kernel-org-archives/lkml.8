@@ -2,187 +2,152 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E99CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7E222AB9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TV4xGCpF"
+	by mail.kernel.org (Postfix) with ESMTP id F2CCB25430
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 06:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgFVGq0 (ORCPT
+        id S1726897AbgFVGv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:46:26 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50250 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgFVGq0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 02:46:26 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05M6juET037132;
-        Mon, 22 Jun 2020 01:45:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592808356;
-        bh=CzFkttaRhi3JTEfc3yW2lucwElCU+YQ+OtTKPFDbd+8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TV4xGCpFnjxAd54nxcfg4xS7anK+kfMrUtfOPCWALgU8JXq75pmRXgFuxQbfkvnjc
-         0MJEkYepa+lk5Y+ay80qE201tbRvG79jkntXoVPsLE0AeXFYCqtlw66vakucwOaXZ/
-         1hVt52vzIVOVj0OggFbofvOoRUc2MH8qlreXQ1BA=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05M6juZ7102986
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 01:45:56 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Jun 2020 01:45:56 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 22 Jun 2020 01:45:56 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05M6jrhJ049545;
-        Mon, 22 Jun 2020 01:45:54 -0500
-Subject: Re: [PATCHv4 1/4] dt-bindings: watchdog: Add support for TI K3 RTI
- watchdog
-To:     Jan Kiszka <jan.kiszka@siemens.com>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200312095808.19907-1-t-kristo@ti.com>
- <20200312095808.19907-2-t-kristo@ti.com>
- <d576a40f-46fb-7ad9-7bfe-11891f9867a6@siemens.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <dac576e5-72a1-dfff-dbb3-9695ac0f687e@ti.com>
-Date:   Mon, 22 Jun 2020 09:45:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 02:51:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:9232 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726759AbgFVGv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 02:51:56 -0400
+IronPort-SDR: 5nWrg6B0VK/72Go0aKtnCQlt0FwmmDvMynErJhvx9qIvPC4f1QRTjg7ylLOPkw8hOlaNQJA13E
+ tF4J+i5SojmA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="205158538"
+X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
+   d="scan'208";a="205158538"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 23:51:54 -0700
+IronPort-SDR: mae3NZVYf60PRGI2OsIRA+5qxAf1kc77PZxsRa8NFfiQGe792q1FVfw666EYMxj+5Z0WCCBjKx
+ ym1SUMgMj3xQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
+   d="scan'208";a="478345162"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Jun 2020 23:51:51 -0700
+Date:   Mon, 22 Jun 2020 14:48:06 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, bhu@redhat.com, mtosatti@redhat.com,
+        gregkh@linuxfoundation.org, jun.j.tian@intel.com, hao.wu@intel.com,
+        yilun.xu@intel.com
+Subject: Re: [PATCH v7 0/7] Add interrupt support to FPGA DFL drivers
+Message-ID: <20200622064806.GA5101@yilunxu-OptiPlex-7050>
+References: <1592280528-6350-1-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <d576a40f-46fb-7ad9-7bfe-11891f9867a6@siemens.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592280528-6350-1-git-send-email-yilun.xu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2020 19:09, Jan Kiszka wrote:
-> On 12.03.20 10:58, Tero Kristo wrote:
->> TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
->> used to implement a windowed watchdog functionality. Windowed watchdog
->> will generate an error if it is petted outside the time window, either
->> too early or too late.
->>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->> v4:
->>    * changed license to dual
->>    * added documentation for missing properties
->>    * added ref to watchdog.yaml
->>    * renamed main_rti0 to watchdog0 in example
->>
->>   .../bindings/watchdog/ti,rti-wdt.yaml         | 65 +++++++++++++++++++
->>   1 file changed, 65 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
->> new file mode 100644
->> index 000000000000..e83026fef2e9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
->> @@ -0,0 +1,65 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Texas Instruments K3 SoC Watchdog Timer
->> +
->> +maintainers:
->> +  - Tero Kristo <t-kristo@ti.com>
->> +
->> +description:
->> +  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
->> +  Interrupt) IP module. This timer adds a support for windowed watchdog
->> +  mode, which will signal an error if it is pinged outside the watchdog
->> +  time window, meaning either too early or too late. The error signal
->> +  generated can be routed to either interrupt a safety controller or
->> +  to directly reset the SoC.
->> +
->> +allOf:
->> +  - $ref: "watchdog.yaml#"
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,j7-rti-wdt
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  assigned-clocks:
->> +    maxItems: 1
->> +
->> +  assigned-clocks-parents:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - power-domains
->> +
->> +examples:
->> +  - |
->> +    /*
->> +     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
->> +     * select the source clock for the watchdog, forcing it to tick with
->> +     * a 32kHz clock in this case.
->> +     */
->> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
->> +
->> +    watchdog0: rti@2200000 {
->> +        compatible = "ti,rti-wdt";
+Hi Moritz:
+
+Could you please help review the patchset when you have time?
+
+You have already reviewed the first 3 patches some time ago. The
+comments are all fixed. Hao and Redhat guys also have done several
+rounds of review. The patches are all Acked-by Hao, reviewed by
+Marcelo & Tom.
+
+There is little change to the code for several months, seems it stays
+ready and just need your final Ack.
+
+Actually this is the last feature for our first generation PAC A10 Card,
+and is important for users to have the full support.
+
+We really need your help on code review ...
+
+Many thanks!
+Yilun
+
+On Tue, Jun 16, 2020 at 12:08:41PM +0800, Xu Yilun wrote:
+> This patchset add interrupt support to FPGA DFL drivers.
 > 
-> At some stage, you changed the compatible string to something
-> J721e-specific. This one wasn't updated.
-
-Hmm nice catch, this should be fixed. I wonder why the DT test tools did 
-not catch this when I changed the compatible...
-
->> +        reg = <0x0 0x2200000 0x0 0x100>;
->> +        clocks = <&k3_clks 252 1>;
->> +        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
->> +        assigned-clocks = <&k3_clks 252 1>;
->> +        assigned-clock-parents = <&k3_clks 252 5>;
->> +    };
->>
+> With these patches, DFL driver will parse and assign interrupt resources
+> for enumerated feature devices and their sub features.
 > 
-> And where is the binding for the AM65x? I know that PG1 has nice
-> erratum, but I would expect PG2 to be fine and register-wise compatible, no?
-
-ti,am65-rti-wdt should be added as a new compatible to this binding once 
-we have a board where we can actually support this. Right now TI AM65x 
-boards depend on firmware for the ESM side support; there has been some 
-internal discussion about how to get this done and I believe you are 
-aware of that.
-
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> This patchset also introduces a set of APIs for user to monitor DFL
+> interrupts. Three sub features (DFL FME error, DFL AFU error and user
+> interrupt) drivers now support these APIs.
+> 
+> Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+>           driver, and add interrupt parsing and assignment for feature
+>           sub devices.
+> Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+> Patch #3: DFL framework change. Add helper functions for feature sub
+>           device drivers to handle interrupt and notify users.
+> Patch #4: Add interrupt support for AFU error reporting sub feature.
+> Patch #5: Add interrupt support for FME global error reporting sub
+>           feature.
+> Patch #6: Add interrupt support for a new sub feature, to handle user
+>           interrupts implemented in AFU.
+> Patch #7: Documentation for DFL interrupt handling.
+> 
+> Main changes from v1:
+>  - Early validating irq table for each feature in parse_feature_irq()
+>    in Patch #1.
+>  - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
+>    instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
+>    DFL_FPGA_FME/PORT_XXX_SET_IRQ param
+> 
+> Main changes from v2:
+>  - put parse_feature_irqs() inside create_feature_instance().
+>  - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
+>  - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
+> 
+> Main changes from v3:
+>  - rebased to 5.7-rc1.
+>  - fail the dfl enumeration when irq parsing error happens.
+>  - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
+>    drivers.
+> 
+> Main changes from v4:
+>  - Minor fixes for Hao's comments.
+> 
+> Main changes from v5:
+>  - Remove unnecessary type casting in Patch #1 & #3.
+>  - Minor fixes for Moritz's comments.
+> 
+> Main changes from v6:
+>  - Add the header file <linux/interrupt.h> for Patch #1, to fix build
+>    error on ARCH=xtensa
+>  - Minor fixes in Patch #2 & #3.
+> 
+> Xu Yilun (7):
+>   fpga: dfl: parse interrupt info for feature devices on enumeration
+>   fpga: dfl: pci: add irq info for feature devices enumeration
+>   fpga: dfl: introduce interrupt trigger setting API
+>   fpga: dfl: afu: add interrupt support for port error reporting
+>   fpga: dfl: fme: add interrupt support for global error reporting
+>   fpga: dfl: afu: add AFU interrupt support
+>   Documentation: fpga: dfl: add descriptions for interrupt related
+>     interfaces.
+> 
+>  Documentation/fpga/dfl.rst    |  19 +++
+>  drivers/fpga/dfl-afu-error.c  |  17 +++
+>  drivers/fpga/dfl-afu-main.c   |  32 +++++
+>  drivers/fpga/dfl-fme-error.c  |  18 +++
+>  drivers/fpga/dfl-fme-main.c   |   6 +
+>  drivers/fpga/dfl-pci.c        |  76 +++++++++--
+>  drivers/fpga/dfl.c            | 310 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/fpga/dfl.h            |  57 ++++++++
+>  include/uapi/linux/fpga-dfl.h |  82 +++++++++++
+>  9 files changed, 608 insertions(+), 9 deletions(-)
+> 
+> -- 
+> 2.7.4
