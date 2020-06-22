@@ -2,96 +2,199 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E608C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6B2A2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2342071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zg32g+4A"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XpSDFkYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgFVJm3 (ORCPT
+        id S1727938AbgFVJmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40878 "EHLO
+        Mon, 22 Jun 2020 05:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbgFVJmQ (ORCPT
+        with ESMTP id S1727123AbgFVJlm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:42:16 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2939CC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=F2oizOLIzSDPEGzqrIYZ4xws8WaXyX/j/TUJhooTcyU=; b=zg32g+4AN9irglsjqr2hDOmjNh
-        ENyc16HWc6CRdoarG5nw6uF10AUmuhdcLcwJuk8bUxT/psueyIFzHXDxQZ+8Ha/CVncCLFZTuevuE
-        Lpv1Nd1TAf94UDPDqgLypqaw2KqTI/Oq4JNngF1Hgqat85mcnq+T/Fv91SrVPYdVFqxRmq4lml7sc
-        bIY0K/qZltFHzUzXsbyYQ+wHH/zgAMuEMpdGQEEQGe5pKtQf+B825159zHJKgI59X2bq+sbbmPmmc
-        tu2NY/Tg/O4ebhxXUi+iahXgGtpWKohYG2QY4D2v4s42hUvo3L/qJujXa3iuf8uFRPK2BIwoD2X/x
-        lq4cMH3Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnIxE-0007gr-Md; Mon, 22 Jun 2020 09:41:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 21CD430018A;
-        Mon, 22 Jun 2020 11:41:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1304129BA14A3; Mon, 22 Jun 2020 11:41:26 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 11:41:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        paulmck@kernel.org, frederic@kernel.org
-Subject: Re: [PATCH 1/6] sched: Fix ttwu_queue_cond()
-Message-ID: <20200622094126.GN576888@hirez.programming.kicks-ass.net>
-References: <20200615125654.678940605@infradead.org>
- <20200615131143.130326165@infradead.org>
- <20200622091122.GG3129@suse.de>
+        Mon, 22 Jun 2020 05:41:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2209FC06179A
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:41 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q2so13511312wrv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 02:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=r7nW5+M2kh3cyRyjmx7rE7/COR4QWlNL8CdVe/fIbIs=;
+        b=XpSDFkYeVraxiwg/39otpkkJoHtYP4sFAfXMCtKdQJw1oTQbFoKREJWtbqNON3jfWc
+         EGdzjWhRvetEZZlr/I5j+Y99sKov/il4jFxNvZDmEZqLsj05w9DscD2q2xxItOV7NEn0
+         Ks0NxdCoBxv9IqVnzDoXUtuX3V4Tmr4PdQyGyVC2ZsCreOyID+ag5NQdk+BuXbrM9LaI
+         BGdjyyH7GCr2qq1OPt17TJtEH06ciHZSyAqQx0XLoZ5bSNK1Mi5eNtUeINHTvTKl8gSE
+         eNqCc3eEQOEUxA3S0GBF2Mfp+PTfRWQbgIYVM7JWIsVaP5PiUOxf3ffTQdRFjltEHbpn
+         c0vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=r7nW5+M2kh3cyRyjmx7rE7/COR4QWlNL8CdVe/fIbIs=;
+        b=YsmF4tcwAlojALmi9EokyXOsvBqFnV5mZGzOLb7wq9Ds/pWleWQdVG/KqUPy0odYtG
+         Y5228dgXIECfz0EMA00JWKCwpi8dn+agvkIa9Tv+7WVDkhZVQaRiBxx3Tck6FoGOdOVP
+         GQ+Pc+ROZnbLZzMTHFQDKZw0YDFgfzvuionbwoM9Q/TfAZgcjOcuIOCXKPgOCTskS6hE
+         SwrzSx3D0wwIAiwLVsc3C9hzYry49YVhyyuCZni7vt+eLxrQv5nketVgtl2wXuoHlbbV
+         nI+Uljaj6Tl4k8HxVhp/RnAfZLS8h1JzQkqWNhh+MMyM3Bx6CFo4fGKxU/Ux+TYTcnkH
+         iUpw==
+X-Gm-Message-State: AOAM532rvt2bpscZUCSZrP6YK514K+/caCUu8GfKb5VEKI5eGQNAlTXG
+        ryyW3cpUkuU1a/B50JbRCw5PuQ==
+X-Google-Smtp-Source: ABdhPJziJYcTjk6jm0fDfnLPlChK17pDk1Ty5W2fRkaBHu9dXXGiCcXlDIMMSfver6mQJh4kbChvSQ==
+X-Received: by 2002:adf:a34d:: with SMTP id d13mr17477047wrb.270.1592818899871;
+        Mon, 22 Jun 2020 02:41:39 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 02:41:39 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 10/15] net: phy: simplify phy_device_create()
+Date:   Mon, 22 Jun 2020 11:37:39 +0200
+Message-Id: <20200622093744.13685-11-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622091122.GG3129@suse.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 10:11:22AM +0100, Mel Gorman wrote:
-> On Mon, Jun 15, 2020 at 02:56:55PM +0200, Peter Zijlstra wrote:
-> > Where the condition:
-> > 
-> >   !cpus_share_cache(smp_processor_id(), cpu)
-> > 
-> > already implies 'cpu != smp_processor_id()', because a CPU always
-> > shares cache with itself, the secondary condition added in commit:
-> > 
-> >   2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
-> > 
-> > voids that implication, resulting in attempting to do local wake-ups
-> > through the queue mechanism.
-> > 
-> > Fixes: 2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
-> > Reported-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Tested-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> Yep, I mistakenly though this would be covered by the self-wakeup check
-> early in try_to_wake_up() but it is not
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-It is, one should not be able to observe 'p->on_cpu && task_cpu(cpu) ==
-smp_processor_id()); I've since found the actual problem, find here:
+The last argument passed to phy_device_create() (c45_ids) is never used
+in current mainline outside of the core PHY code - it can only be
+configured when reading the PHY ID from phy_device_read_id().
 
-  https://lkml.kernel.org/r/20200620184622.GA19696@paulmck-ThinkPad-P72
+Let's drop this argument treewide.
 
-I'm currently polishing the changelog a little, and will shortly post a
-new version of that.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/net/phy/nxp-tja11xx.c | 2 +-
+ drivers/net/phy/phy_device.c  | 8 +++-----
+ drivers/of/of_mdio.c          | 2 +-
+ include/linux/phy.h           | 3 +--
+ 4 files changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+index a72fa0d2e7c7..b98b620ef88c 100644
+--- a/drivers/net/phy/nxp-tja11xx.c
++++ b/drivers/net/phy/nxp-tja11xx.c
+@@ -507,7 +507,7 @@ static void tja1102_p1_register(struct work_struct *work)
+ 		}
+ 
+ 		/* Real PHY ID of Port 1 is 0 */
+-		phy = phy_device_create(bus, addr, PHY_ID_TJA1102, false, NULL);
++		phy = phy_device_create(bus, addr, PHY_ID_TJA1102, false);
+ 		if (IS_ERR(phy)) {
+ 			dev_err(dev, "Can't create PHY device for Port 1: %i\n",
+ 				addr);
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 94944fffa9bb..ad7c4cd9d357 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -613,8 +613,7 @@ static int phy_request_driver_module(struct phy_device *phydev)
+ }
+ 
+ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
+-				     bool is_c45,
+-				     struct phy_c45_device_ids *c45_ids)
++				     bool is_c45)
+ {
+ 	struct phy_device *dev;
+ 	struct mdio_device *mdiodev;
+@@ -647,8 +646,7 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
+ 
+ 	dev->is_c45 = is_c45;
+ 	dev->phy_id = phy_id;
+-	if (c45_ids)
+-		dev->c45_ids = *c45_ids;
++
+ 	dev->irq = bus->irq[addr];
+ 	dev_set_name(&mdiodev->dev, PHY_ID_FMT, bus->id, addr);
+ 
+@@ -829,7 +827,7 @@ static int phy_device_read_id(struct phy_device *phydev)
+  */
+ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
+ {
+-	return phy_device_create(bus, addr, PHY_ID_NONE, is_c45, NULL);
++	return phy_device_create(bus, addr, PHY_ID_NONE, is_c45);
+ }
+ EXPORT_SYMBOL(get_phy_device);
+ 
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index a04afe79529c..63843037673c 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -121,7 +121,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
+ 					 "ethernet-phy-ieee802.3-c45");
+ 
+ 	if (!is_c45 && !of_get_phy_id(child, &phy_id))
+-		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
++		phy = phy_device_create(mdio, addr, phy_id, 0);
+ 	else
+ 		phy = get_phy_device(mdio, addr, is_c45);
+ 	if (IS_ERR(phy)) {
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 2a695cd90c7c..662919c1dd27 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1213,8 +1213,7 @@ int phy_modify_paged(struct phy_device *phydev, int page, u32 regnum,
+ 		     u16 mask, u16 set);
+ 
+ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
+-				     bool is_c45,
+-				     struct phy_c45_device_ids *c45_ids);
++				     bool is_c45);
+ #if IS_ENABLED(CONFIG_PHYLIB)
+ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45);
+ int phy_device_register(struct phy_device *phy);
+-- 
+2.26.1
+
