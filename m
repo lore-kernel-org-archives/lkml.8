@@ -2,70 +2,77 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB83C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB02C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C9920732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592826806;
-	bh=p49NeIc0kpeFGr/02f2AC5waXFM9NEIZRqULrCZGSGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k2CG/CYQAnyDDWu/vaCjsARQ7D1qmq633ZBx5oDsIOAuA93tPlXtKXIgenU5+N6gf
-	 AwnIg5RQ6hyucYKznAejmGx/EKExpEgAHArS8lJXvoLyUp94g5VmAB/4qdKpHZ16Ct
-	 g9IstNHG4Irmyi/NA0i6b/zP7XG3IlAKIFMj8VfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 67B96206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgFVLxZ (ORCPT
+        id S1728099AbgFVLxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbgFVLxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:53:24 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80C53206EB;
-        Mon, 22 Jun 2020 11:53:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592826804;
-        bh=p49NeIc0kpeFGr/02f2AC5waXFM9NEIZRqULrCZGSGQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JSUxBhJzMLZEuTCQANk9t/tNvguviJO/p1au7dd4aDMaKEkchFIXVYL4S8Fc3rhEs
-         ngP87MlGp+eWUahARiLtHviMYo66HDW+qd9AVG711JMOKIRMHkj0PZiMKfSAV5gNh0
-         oTnP5r93R1tFHKuFq8weP3grwiRPeVjHdlpAZDZo=
-Date:   Mon, 22 Jun 2020 17:23:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
-        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: Re: [PATCH v2 0/6] soundwire: intel: transition to 3 steps
- initialization
-Message-ID: <20200622115320.GK2324254@vkoul-mobl>
-References: <20200531182102.27840-1-yung-chuan.liao@linux.intel.com>
+        Mon, 22 Jun 2020 07:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbgFVLxw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 07:53:52 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A53C061794;
+        Mon, 22 Jun 2020 04:53:52 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id AA30A36B; Mon, 22 Jun 2020 13:53:49 +0200 (CEST)
+Date:   Mon, 22 Jun 2020 13:53:48 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+Message-ID: <20200622115347.GG3701@8bytes.org>
+References: <20200528073344.GO5221@8bytes.org>
+ <20200601174104.GA734973@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200531182102.27840-1-yung-chuan.liao@linux.intel.com>
+In-Reply-To: <20200601174104.GA734973@bjorn-Precision-5520>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-06-20, 02:20, Bard Liao wrote:
-> This series is to split the original "soundwire: intel: transition to 3
-> steps initialization" patch into different patches for better review.
-> It also address comments from Vinod.
+On Mon, Jun 01, 2020 at 12:41:04PM -0500, Bjorn Helgaas wrote:
+> I found this [1] from Paul Menzel, which was a slowdown caused by
+> quirk_usb_early_handoff().  I think the real problem is individual
+> quirks that take a long time.
+> 
+> The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
+> course, they're only run for matching devices anyway.  So I'd rather
+> keep them as PCI_FIXUP_FINAL than add a whole new phase.
 
-Applied all, thanks
--- 
-~Vinod
+Okay, so if it is not a performance problem, then I am fine with using
+PCI_FIXUP_FINAL. But I dislike calling the fixups from IOMMU code, there
+must be a better solution.
+
+
+Regards,
+
+	Joerg
+
+> [1] https://lore.kernel.org/linux-pci/b1533fd5-1fae-7256-9597-36d3d5de9d2a@molgen.mpg.de/
