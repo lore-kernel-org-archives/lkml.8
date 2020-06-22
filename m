@@ -2,237 +2,262 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3338C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A43D206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83280206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="grffo/sH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeipoEn2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbgFVS6V (ORCPT
+        id S1730283AbgFVS7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:58:21 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:28918 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730030AbgFVS6N (ORCPT
+        Mon, 22 Jun 2020 14:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730030AbgFVS7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:58:13 -0400
-Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MImt9F030411;
-        Mon, 22 Jun 2020 14:58:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=smtpout1;
- bh=bhGtlthmytWHxyE+DamjBO10zvPDglN3uI+UX7bQQrQ=;
- b=grffo/sHHk5/ymgx0qaE2CtG5QbUcLnxkJyU219l5N95WQpscce4xP1XuG4cuGHOpW29
- dZOqF06F/cf0qhPF41O4+13L4ph9aGcqr1xK/tifZp7HPNAHnShmHlO6bJJyOdf0+mrg
- Ze8JO1srmuVpSjVRI12Ff++dgSrAd7nmpCIRXZY09Cg9WXu87hp8TzZKiXY1nJaUARLe
- MuMdmocBBej35cLwRqPrnCpKMja8AT3CnrqBmxW6ooUNPfoCO4GynY9kamWgvJ6ubYUl
- FJfq1a2YD5lw/cCFVRCa1kBUzEfLIWdCkht4h2chyotZJGkesZGl+EsI3AYt7neQU3Xb 2w== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 31sng6ddfc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 14:58:12 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MIspVt064442;
-        Mon, 22 Jun 2020 14:58:11 -0400
-Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
-        by mx0a-00154901.pphosted.com with ESMTP id 31tqd12cnp-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 14:58:11 -0400
-X-LoopCount0: from 10.173.37.130
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="1454816470"
-From:   Mario Limonciello <mario.limonciello@dell.com>
-To:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v2 1/2] thunderbolt: Add support for separating the flush to SPI and authenticate
-Date:   Mon, 22 Jun 2020 13:57:57 -0500
-Message-Id: <20200622185758.28145-2-mario.limonciello@dell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200622185758.28145-1-mario.limonciello@dell.com>
-References: <20200622185758.28145-1-mario.limonciello@dell.com>
+        Mon, 22 Jun 2020 14:59:15 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FDCC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:59:14 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f18so16587203qkh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :organization:user-agent:mime-version:content-transfer-encoding;
+        bh=UJAR19ZQh+sTT93leBEvrqV+pEQ6XvP1o7bASqIMgsM=;
+        b=LeipoEn2ydGrr/qIxHUn9PtwhmBuuEvdGb9+GYbxyVIT0TCx4iNlAIYen6lBAjEpsV
+         XgsdUbI6I96q3adC/dSCrGSdumZLcUv27RR+4dfVU4YjqeB6XFiAJsyx7z1zQJegi4U1
+         6NEfS+X4TyWRiHnBZgZqZBvc/1QPZonPSE97sr7Z/Vspp3HIgfGvnRVQQgZbfrVPjLKo
+         6BUbXn+uwo57TPTyIVrA07ow3zOQnvrnShakxgtMIFwL7/CDvNDv+j2MaQv/+4HnuyKP
+         e8BRqAs7RQSBsGZLdztJSx1b3h0rlPXnKreaZEBf8oDjlVBDwvZd6vKdCNj9F9lEu8GA
+         6B8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=UJAR19ZQh+sTT93leBEvrqV+pEQ6XvP1o7bASqIMgsM=;
+        b=c0LPjpL3sbAksAazbDwACLjTGEiblzfu875mzU/yyECGImOXTByKT5Yacv2V4Wogru
+         Mw4RUJ4p1jNIFpEkw3RJ9bA5nraXo4HqWT8lN4lv6V6ghZDzkK42Y4RjzgLDu2LjLDB3
+         zUf89bIkJRLmOZhZY7/AG+PmcI7frFolmZe32xJVkUVdyjg0vYq+dhdX7SIXlgxrc5sr
+         HCb/Z3yYVpm6X2jhcoZ6H0AdcC/wCtTGR2SLRMP97/hiZ7u8T6ILMJ1GLzSDwILNJPUY
+         jF3iXsRxNUuw+F3f/bUFxAaHMOb5q3x+ZdIqbQYfzy1wrGv0mFgfLhynW4tgtRd7Wyed
+         9KRQ==
+X-Gm-Message-State: AOAM532I/3Cmed4RLbme0fn47p2rlhddDSr2C00ZBI3yP5ggkFyF82dA
+        1HusXxW2PU2D4tolfeJCJoaodYsw
+X-Google-Smtp-Source: ABdhPJw3Fdoo4dZs+fR7uUjNE0nJB4yGTuFtPQwUEK3HCzivIlWeQ+GT7/xLbn050PlHT1NTXA1qUA==
+X-Received: by 2002:a05:620a:958:: with SMTP id w24mr3380351qkw.20.1592852353496;
+        Mon, 22 Jun 2020 11:59:13 -0700 (PDT)
+Received: from LeoBras (177-131-65-187.dynamic.desktop.com.br. [177.131.65.187])
+        by smtp.gmail.com with ESMTPSA id c80sm6260720qke.26.2020.06.22.11.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 11:59:12 -0700 (PDT)
+Message-ID: <c15189a5c77752ea62022608dab28601965afaaa.camel@gmail.com>
+Subject: Re: [PATCH 1/4] powerpc/pseries/iommu: Update call to
+ ibm,query-pe-dma-windows
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 22 Jun 2020 15:58:44 -0300
+In-Reply-To: <cfbcacde-ca7f-5fc7-2fcf-267f698f3d49@ozlabs.ru>
+References: <20200619050619.266888-1-leobras.c@gmail.com>
+         <20200619050619.266888-2-leobras.c@gmail.com>
+         <cfbcacde-ca7f-5fc7-2fcf-267f698f3d49@ozlabs.ru>
+Organization: IBM
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_11:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- malwarescore=0 adultscore=0 bulkscore=0 priorityscore=1501 spamscore=0
- phishscore=0 lowpriorityscore=0 impostorscore=0 cotscore=-2147483648
- suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220126
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006220125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows userspace to have a shorter period of time that the device
-is unusable and to call it at a more convenient time.
+Hello Alexey, thank you for the feedback!
 
-For example flushing the image may happen while the user is using the
-machine and authenticating/rebooting may happen while logging out.
+On Mon, 2020-06-22 at 20:02 +1000, Alexey Kardashevskiy wrote:
+> 
+> On 19/06/2020 15:06, Leonardo Bras wrote:
+> > From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can make the number of
+> > outputs from "ibm,query-pe-dma-windows" go from 5 to 6.
+> > 
+> > This change of output size is meant to expand the address size of
+> > largest_available_block PE TCE from 32-bit to 64-bit, which ends up
+> > shifting page_size and migration_capable.
+> > 
+> > This ends up requiring the update of
+> > ddw_query_response->largest_available_block from u32 to u64, and manually
+> > assigning the values from the buffer into this struct, according to
+> > output size.
+> > 
+> > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+> > ---
+> >  arch/powerpc/platforms/pseries/iommu.c | 57 +++++++++++++++++++++-----
+> >  1 file changed, 46 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+> > index 6d47b4a3ce39..e5a617738c8b 100644
+> > --- a/arch/powerpc/platforms/pseries/iommu.c
+> > +++ b/arch/powerpc/platforms/pseries/iommu.c
+> > @@ -334,7 +334,7 @@ struct direct_window {
+> >  /* Dynamic DMA Window support */
+> >  struct ddw_query_response {
+> >  	u32 windows_available;
+> > -	u32 largest_available_block;
+> > +	u64 largest_available_block;
+> >  	u32 page_size;
+> >  	u32 migration_capable;
+> >  };
+> > @@ -869,14 +869,32 @@ static int find_existing_ddw_windows(void)
+> >  }
+> >  machine_arch_initcall(pseries, find_existing_ddw_windows);
+> >  
+> > +/*
+> > + * From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can rule how many output
+> > + * parameters ibm,query-pe-dma-windows will have, ranging from 5 to 6.
+> > + */
+> > +
+> > +static int query_ddw_out_sz(struct device_node *par_dn)
+> 
+> Can easily be folded into query_ddw().
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- .../ABI/testing/sysfs-bus-thunderbolt         | 11 ++++-
- drivers/thunderbolt/nvm.c                     |  1 +
- drivers/thunderbolt/switch.c                  | 42 ++++++++++++-------
- drivers/thunderbolt/tb.h                      |  2 +
- 4 files changed, 39 insertions(+), 17 deletions(-)
+Sure, but it will get inlined by the compiler, and I think it reads
+better this way. 
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-index bd504ed323e8..7d0500b4d58a 100644
---- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
-+++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-@@ -178,11 +178,18 @@ KernelVersion:	4.13
- Contact:	thunderbolt-software@lists.01.org
- Description:	When new NVM image is written to the non-active NVM
- 		area (through non_activeX NVMem device), the
--		authentication procedure is started by writing 1 to
--		this file. If everything goes well, the device is
-+		authentication procedure is started by writing to
-+		this file.
-+		If everything goes well, the device is
- 		restarted with the new NVM firmware. If the image
- 		verification fails an error code is returned instead.
- 
-+		This file will accept writing values "1" or "2"
-+		- Writing "1" will flush the image to the storage
-+		area and authenticate the image in one action.
-+		- Writing "2" will run some basic validation on the image
-+		and flush it to the storage area.
-+
- 		When read holds status of the last authentication
- 		operation if an error occurred during the process. This
- 		is directly the status value from the DMA configuration
-diff --git a/drivers/thunderbolt/nvm.c b/drivers/thunderbolt/nvm.c
-index 4c6aa06ab3d5..29de6d95c6e7 100644
---- a/drivers/thunderbolt/nvm.c
-+++ b/drivers/thunderbolt/nvm.c
-@@ -100,6 +100,7 @@ int tb_nvm_write_buf(struct tb_nvm *nvm, unsigned int offset, void *val,
- 			return -ENOMEM;
- 	}
- 
-+	nvm->flushed = false;
- 	nvm->buf_data_size = offset + bytes;
- 	memcpy(nvm->buf + offset, val, bytes);
- 	return 0;
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 817c66c7adcf..bbfbfebeee7f 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -26,6 +26,11 @@ struct nvm_auth_status {
- 	u32 status;
- };
- 
-+enum nvm_write_ops {
-+	WRITE_AND_AUTHENTICATE = 1,
-+	WRITE_ONLY = 2,
-+};
-+
- /*
-  * Hold NVM authentication failure status per switch This information
-  * needs to stay around even when the switch gets power cycled so we
-@@ -155,8 +160,12 @@ static int nvm_validate_and_write(struct tb_switch *sw)
- 	}
- 
- 	if (tb_switch_is_usb4(sw))
--		return usb4_switch_nvm_write(sw, 0, buf, image_size);
--	return dma_port_flash_write(sw->dma_port, 0, buf, image_size);
-+		ret = usb4_switch_nvm_write(sw, 0, buf, image_size);
-+	else
-+		ret = dma_port_flash_write(sw->dma_port, 0, buf, image_size);
-+	if (!ret)
-+		sw->nvm->flushed = true;
-+	return ret;
- }
- 
- static int nvm_authenticate_host_dma_port(struct tb_switch *sw)
-@@ -1488,7 +1497,7 @@ static ssize_t nvm_authenticate_store(struct device *dev,
- 	struct device_attribute *attr, const char *buf, size_t count)
- {
- 	struct tb_switch *sw = tb_to_switch(dev);
--	bool val;
-+	int val;
- 	int ret;
- 
- 	pm_runtime_get_sync(&sw->dev);
-@@ -1504,25 +1513,28 @@ static ssize_t nvm_authenticate_store(struct device *dev,
- 		goto exit_unlock;
- 	}
- 
--	ret = kstrtobool(buf, &val);
-+	ret = kstrtoint(buf, 10, &val);
- 	if (ret)
- 		goto exit_unlock;
- 
- 	/* Always clear the authentication status */
- 	nvm_clear_auth_status(sw);
- 
--	if (val) {
--		if (!sw->nvm->buf) {
--			ret = -EINVAL;
--			goto exit_unlock;
--		}
--
--		ret = nvm_validate_and_write(sw);
--		if (ret)
--			goto exit_unlock;
-+	if (val > 0) {
-+		if (!sw->nvm->flushed) {
-+			if (!sw->nvm->buf) {
-+				ret = -EINVAL;
-+				goto exit_unlock;
-+			}
- 
--		sw->nvm->authenticating = true;
--		ret = nvm_authenticate(sw);
-+			ret = nvm_validate_and_write(sw);
-+			if (ret || val == WRITE_ONLY)
-+				goto exit_unlock;
-+		}
-+		if (val == WRITE_AND_AUTHENTICATE) {
-+			sw->nvm->authenticating = true;
-+			ret = nvm_authenticate(sw);
-+		}
- 	}
- 
- exit_unlock:
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index 736d1589c31e..43a8ca2eb3d8 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -42,6 +42,7 @@
-  *
-  * The user of this structure needs to handle serialization of possible
-  * concurrent access.
-+ * @flushed: The image has been flushed to the storage area
-  */
- struct tb_nvm {
- 	struct device *dev;
-@@ -53,6 +54,7 @@ struct tb_nvm {
- 	void *buf;
- 	size_t buf_data_size;
- 	bool authenticating;
-+	bool flushed;
- };
- 
- #define TB_SWITCH_KEY_SIZE		32
--- 
-2.25.1
+I mean, I understand you have a reason to think it's better to fold it
+in query_ddw(), and I would like to better understand that to improve
+my code in the future.
+
+> > +{
+> > +	int ret;
+> > +	u32 ddw_ext[3];
+> > +
+> > +	ret = of_property_read_u32_array(par_dn, "ibm,ddw-extensions",
+> > +					 &ddw_ext[0], 3);
+> > +	if (ret || ddw_ext[0] < 2 || ddw_ext[2] != 1)
+> 
+> Oh that PAPR thing again :-/
+> 
+> ===
+> The “ibm,ddw-extensions” property value is a list of integers the first
+> integer indicates the number of extensions implemented and subsequent
+> integers, one per extension, provide a value associated with that
+> extension.
+> ===
+> 
+> So ddw_ext[0] is length.
+> Listindex==2 is for "reset" says PAPR and
+> Listindex==3 is for this new 64bit "largest_available_block".
+> 
+> So I'd expect ddw_ext[2] to have the "reset" token and ddw_ext[3] to
+> have "1" for this new feature but indexes are smaller. I am confused.
+> Either way these "2" and "3" needs to be defined in macros, "0" probably
+> too.
+
+Remember these indexes are not C-like 0-starting indexes, where the
+size would be Listindex==1.
+Basically, in C-like array it's :
+a[0] == size, 
+a[1] == reset_token, 
+a[2] == new 64bit "largest_available_block"
+
+> Please post 'lsprop "ibm,ddw-extensions"' here. Thanks,
+
+Sure:
+[root@host pci@800000029004005]# lsprop "ibm,ddw-extensions"
+ibm,dd
+w-extensions
+                 00000002 00000056 00000000
+
+
+> 
+> > +		return 5;
+> > +	return 6;
+> > +}
+> > +
+> >  static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+> > -			struct ddw_query_response *query)
+> > +		     struct ddw_query_response *query,
+> > +		     struct device_node *par_dn)
+> >  {
+> >  	struct device_node *dn;
+> >  	struct pci_dn *pdn;
+> > -	u32 cfg_addr;
+> > +	u32 cfg_addr, query_out[5];
+> >  	u64 buid;
+> > -	int ret;
+> > +	int ret, out_sz;
+> >  
+> >  	/*
+> >  	 * Get the config address and phb buid of the PE window.
+> > @@ -888,12 +906,29 @@ static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+> >  	pdn = PCI_DN(dn);
+> >  	buid = pdn->phb->buid;
+> >  	cfg_addr = ((pdn->busno << 16) | (pdn->devfn << 8));
+> > +	out_sz = query_ddw_out_sz(par_dn);
+> > +
+> > +	ret = rtas_call(ddw_avail[0], 3, out_sz, query_out,
+> > +			cfg_addr, BUID_HI(buid), BUID_LO(buid));
+> > +	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x returned %d\n",
+> > +		 ddw_avail[0], cfg_addr, BUID_HI(buid), BUID_LO(buid), ret);
+> > +
+> > +	switch (out_sz) {
+> > +	case 5:
+> > +		query->windows_available = query_out[0];
+> > +		query->largest_available_block = query_out[1];
+> > +		query->page_size = query_out[2];
+> > +		query->migration_capable = query_out[3];
+> > +		break;
+> > +	case 6:
+> > +		query->windows_available = query_out[0];
+> > +		query->largest_available_block = ((u64)query_out[1] << 32) |
+> > +						 query_out[2];
+> > +		query->page_size = query_out[3];
+> > +		query->migration_capable = query_out[4];
+> > +		break;
+> > +	}
+> >  
+> > -	ret = rtas_call(ddw_avail[0], 3, 5, (u32 *)query,
+> > -		  cfg_addr, BUID_HI(buid), BUID_LO(buid));
+> > -	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x"
+> > -		" returned %d\n", ddw_avail[0], cfg_addr, BUID_HI(buid),
+> > -		BUID_LO(buid), ret);
+> >  	return ret;
+> >  }
+> >  
+> > @@ -1040,7 +1075,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+> >  	 * of page sizes: supported and supported for migrate-dma.
+> >  	 */
+> >  	dn = pci_device_to_OF_node(dev);
+> > -	ret = query_ddw(dev, ddw_avail, &query);
+> > +	ret = query_ddw(dev, ddw_avail, &query, pdn);
+> >  	if (ret != 0)
+> >  		goto out_failed;
+> >  
+> > @@ -1068,7 +1103,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+> >  	/* check largest block * page size > max memory hotplug addr */
+> >  	max_addr = ddw_memory_hotplug_max();
+> >  	if (query.largest_available_block < (max_addr >> page_shift)) {
+> > -		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %u "
+> > +		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu "
+> >  			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
+> >  			  1ULL << page_shift);
+> >  		goto out_failed;
+> > 
+
+Best regards,
+Leonardo
 
