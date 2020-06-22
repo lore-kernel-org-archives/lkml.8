@@ -2,76 +2,112 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30328C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D02E25480
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1124725480
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 07:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gLv6Z26W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731470AbgFVHyM (ORCPT
+        id S1731483AbgFVHyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:54:12 -0400
-Received: from mga02.intel.com ([134.134.136.20]:30156 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731412AbgFVHyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:54:12 -0400
-IronPort-SDR: 85C0lLCPOWRM6jTI/e44wfqbzgCw5BiCa/qdzAqmGh6Z2uAS98wbm5QdUvU9MGELlY27k45D3k
- GIF0oiQfTzDg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="132117252"
+        Mon, 22 Jun 2020 03:54:22 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:45228 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731412AbgFVHyU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 03:54:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592812460; x=1624348460;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=MmOrVI6xag5zI5id2G6sN9KnqWs1OFqBibVoZnsiqI4=;
+  b=gLv6Z26WBwgctTX9EM/XjrQar0m3qVJnAOtUet3JBaNhIDvNsfBeeH84
+   TSTDnIcw1uWpT0ZQHtLwexMF9r/tXE7YOTGG0ozFyj6LpPJL1fykPSz10
+   Wmzp0B1w1AS7YiGCqAkXm+Utq/8CVdmNSxPj1kP/vofbMfksipv+ESRhl
+   aoZPnc/tz4BlyJqBTv2r5iv96SC4peKkAiQLzMgzpob8NzsAtom27r8q3
+   cqCrJECN8/C84EgSpdRJMHZ7sMDCkOLUBBcZEM+lPrAkRZ8v5Sd9iuMKO
+   LACgR9IHVFvipj/v5XQEMLIOYIa09tHhDuO5HtkO7mMxPNwfX9rKHb2GF
+   A==;
+IronPort-SDR: uviGtuAC0yFKNGjCzU1nNdXKCv1JIyywNhcjNHt1jYuWmqd11nW6KCYOVSvoMHjyy6KLvvsd7T
+ kP7PdQH8Hj6a5hyVbf5z/73Hk7FztHPga06w9xvRl5OMv53VdDOsSoMjBu8tvHJcEJ/+035bsF
+ P1a1DPIE5tB7hQw7E6PQVEpp+WDb0UuvZrfaLHag7qgK8XbcqBO97bskPXEyA7zM5Y7O2NSL2I
+ MAXf/TXTmO94IxGtj/tQqkGiitJYeqknTK+pGXjbkLjjDScTRC8tLvYVaoxsbdDMYuubbXSApu
+ 3OI=
 X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
-   d="scan'208";a="132117252"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 00:54:12 -0700
-IronPort-SDR: Xg6Yslcxo7KOSm3oXQ2w0aPWKEwRBA0OmnOEYUdmLUfofTY5zlfyEDRplFdarueAfOVGzugmps
- LjZxpCSTjcMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
-   d="scan'208";a="353364613"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 22 Jun 2020 00:54:09 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 1B45D119; Mon, 22 Jun 2020 10:53:55 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] uuid: Remove unused uuid_le_to_bin() definition
-Date:   Mon, 22 Jun 2020 10:53:55 +0300
-Message-Id: <20200622075355.55936-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.27.0
+   d="scan'208";a="80326237"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jun 2020 00:54:19 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 22 Jun 2020 00:54:08 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 22 Jun 2020 00:54:05 -0700
+References: <20200615133242.24911-1-lars.povlsen@microchip.com> <20200615133242.24911-6-lars.povlsen@microchip.com> <CACRpkdaWZeMCNuwUNzyYd+g9Q75F_8o7K1Npxr46V+-Y4z-6wA@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v3 05/10] pinctrl: ocelot: Add Sparx5 SoC support
+In-Reply-To: <CACRpkdaWZeMCNuwUNzyYd+g9Q75F_8o7K1Npxr46V+-Y4z-6wA@mail.gmail.com>
+Date:   Mon, 22 Jun 2020 09:54:09 +0200
+Message-ID: <87k0zzy1r2.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no more user, so remove it.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/uuid.h | 2 --
- 1 file changed, 2 deletions(-)
+Linus Walleij writes:
 
-diff --git a/include/linux/uuid.h b/include/linux/uuid.h
-index d41b0d3e9474..8cdc0d3567cd 100644
---- a/include/linux/uuid.h
-+++ b/include/linux/uuid.h
-@@ -98,8 +98,6 @@ int guid_parse(const char *uuid, guid_t *u);
- int uuid_parse(const char *uuid, uuid_t *u);
- 
- /* backwards compatibility, don't use in new code */
--#define uuid_le_to_bin(guid, u)	guid_parse(guid, u)
--
- static inline int uuid_le_cmp(const guid_t u1, const guid_t u2)
- {
- 	return memcmp(&u1, &u2, sizeof(guid_t));
+> On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> This add support for Sparx5 pinctrl, using the ocelot drives as
+>> basis. It adds pinconfig support as well, as supported by the
+>> platform.
+>>
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>
+> Is it fine if I just apply this driver to the pinctrl tree?
+> Otherwise Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Hi Linus!
+
+Yes it would be fine with me for sure...
+
+Thank you very much.
+
+---Lars
+
+>
+> Yours,
+> Linus Walleij
+
 -- 
-2.27.0
-
+Lars Povlsen,
+Microchip
