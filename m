@@ -2,164 +2,134 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923CC20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3A820708
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 09:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jTb0PeUO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tuM30VCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgFVJdS (ORCPT
+        id S1727071AbgFVJdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:33:18 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:23725 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726982AbgFVJdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:33:16 -0400
+        Mon, 22 Jun 2020 05:33:43 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:35617 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727063AbgFVJdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:33:42 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592818395; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=GiwN0AIsCmamPXAsqGCaW2gTfZGIUbMaEVcxCKw9v3c=; b=jTb0PeUOAAglCl7Wdu8JUj5K0L2fDjIm4Sel6TiyzF9yQc/Bm5N/5oQHsNHf4Ia1RO/+W8y5
- AnD1iCbA/OLufK3A8h4cPwoGpf/ynEBUJhUj7djO3NYnHQJG3ON5ZgDXXXhV9pqbD8/V6yKD
- msqUYH3KvdzLAWOxH4DAeAm34Jg=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ s=smtp; t=1592818421; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
+ Subject: From: Sender; bh=vrHaCLVrBpW0c9FNy6REcSMG1UjdnzZ5O3XMh6dAXk8=;
+ b=tuM30VCUdo8nXEv7zd5KHPGJtsVB9sImh0xMSrQh1Cp0UK2rMyakKGeFAaHMoswRFo2ravtU
+ d3ORAohP1+QFYXx1SRuOcrckQe5j447W/8My9u5p5H9L1vVWMtnYDhgsxDilSOlIHSdQ3H2Q
+ l28837UqDxDbadiR6fgszRS1gPo=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5ef07acaf3deea03f3a90d69 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 09:32:58
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ef07aed567385e8e785d7a6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 09:33:33
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A77FFC433A1; Mon, 22 Jun 2020 09:32:58 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id 8968BC433C8; Mon, 22 Jun 2020 09:33:32 +0000 (UTC)
+Received: from [192.168.29.129] (unknown [49.36.71.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04AF5C4339C;
-        Mon, 22 Jun 2020 09:32:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04AF5C4339C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98211C433C8;
+        Mon, 22 Jun 2020 09:33:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98211C433C8
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
-To:     bjorn.andersson@linaro.org, maz@kernel.org,
-        linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v3 4/5] irqchip: qcom-pdc: Introduce irq_set_wake call
-Date:   Mon, 22 Jun 2020 15:01:47 +0530
-Message-Id: <1592818308-23001-5-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org>
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH] soc: qcom: rpmh: Use __fill_rpmh_msg API during
+ rpmh_write()
+To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org
+References: <1592486051-22256-1-git-send-email-mkshah@codeaurora.org>
+ <159255500790.62212.11790974984337702896@swboyd.mtv.corp.google.com>
+Message-ID: <31fe6700-b7ea-6d57-0e83-75bcfb118c08@codeaurora.org>
+Date:   Mon, 22 Jun 2020 15:03:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <159255500790.62212.11790974984337702896@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove irq_disable callback to allow lazy disable for pdc interrupts.
+Hi,
 
-Add irq_set_wake callback that unmask interrupt in HW when drivers
-mark interrupt for wakeup. Interrupt will be cleared in HW during
-lazy disable if its not marked for wakeup.
+On 6/19/2020 1:53 PM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-06-18 06:14:11)
+>> Use __fill_rpmh_msg API during rpmh_write(). This allows to
+>> remove duplication of code in error checking, copying commands
+>> and setting message state.
+>>
+>> Signed-off-by: Maulik Shah<mkshah@codeaurora.org>
+>> ---
+>>   drivers/soc/qcom/rpmh.c | 12 +++---------
+>>   1 file changed, 3 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+>> index f2b5b46c..a0a0b97 100644
+>> --- a/drivers/soc/qcom/rpmh.c
+>> +++ b/drivers/soc/qcom/rpmh.c
+>> @@ -181,8 +181,6 @@ static int __rpmh_write(const struct device *dev, enum rpmh_state state,
+>>          struct cache_req *req;
+>>          int i;
+>>   
+>> -       rpm_msg->msg.state = state;
+>> -
+>>          /* Cache the request in our store and link the payload */
+>>          for (i = 0; i < rpm_msg->msg.num_cmds; i++) {
+>>                  req = cache_rpm_request(ctrlr, state, &rpm_msg->msg.cmds[i]);
+>> @@ -190,8 +188,6 @@ static int __rpmh_write(const struct device *dev, enum rpmh_state state,
+>>                          return PTR_ERR(req);
+>>          }
+>>   
+>> -       rpm_msg->msg.state = state;
+>> -
+>>          if (state == RPMH_ACTIVE_ONLY_STATE) {
+>>                  WARN_ON(irqs_disabled());
+>>                  ret = rpmh_rsc_send_data(ctrlr_to_drv(ctrlr), &rpm_msg->msg);
+> Were these two hunks just nonsense assignments to rpm_msg->msg.state?
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/irqchip/qcom-pdc.c | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+yes, using  __fill_rpmh_msg() and DEFINE_RPMH_MSG_ONSTACK takes care of 
+setting this.
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 6ae9e1f..8beb6f7 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -36,6 +36,7 @@ struct pdc_pin_region {
- 	u32 cnt;
- };
- 
-+static DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
- static DEFINE_RAW_SPINLOCK(pdc_lock);
- static void __iomem *pdc_base;
- static struct pdc_pin_region *pdc_region;
-@@ -87,22 +88,17 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
- 	raw_spin_unlock(&pdc_lock);
- }
- 
--static void qcom_pdc_gic_disable(struct irq_data *d)
-+static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
- {
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
--
--	pdc_enable_intr(d, false);
--	irq_chip_disable_parent(d);
--}
--
--static void qcom_pdc_gic_enable(struct irq_data *d)
--{
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
-+	if (on) {
-+		pdc_enable_intr(d, true);
-+		irq_chip_enable_parent(d);
-+		set_bit(d->hwirq, pdc_wake_irqs);
-+	} else {
-+		clear_bit(d->hwirq, pdc_wake_irqs);
-+	}
- 
--	pdc_enable_intr(d, true);
--	irq_chip_enable_parent(d);
-+	return irq_chip_set_wake_parent(d, on);
- }
- 
- static void qcom_pdc_gic_mask(struct irq_data *d)
-@@ -111,6 +107,9 @@ static void qcom_pdc_gic_mask(struct irq_data *d)
- 		return;
- 
- 	irq_chip_mask_parent(d);
-+
-+	if (!test_bit(d->hwirq, pdc_wake_irqs))
-+		pdc_enable_intr(d, false);
- }
- 
- static void qcom_pdc_gic_unmask(struct irq_data *d)
-@@ -118,6 +117,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
- 		return;
- 
-+	pdc_enable_intr(d, true);
- 	irq_chip_unmask_parent(d);
- }
- 
-@@ -197,15 +197,13 @@ static struct irq_chip qcom_pdc_gic_chip = {
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_mask		= qcom_pdc_gic_mask,
- 	.irq_unmask		= qcom_pdc_gic_unmask,
--	.irq_disable		= qcom_pdc_gic_disable,
--	.irq_enable		= qcom_pdc_gic_enable,
- 	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
- 	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
-+	.irq_set_wake		= qcom_pdc_gic_set_wake,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
--				  IRQCHIP_SET_TYPE_MASKED |
--				  IRQCHIP_SKIP_SET_WAKE,
-+				  IRQCHIP_SET_TYPE_MASKED,
- 	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- };
+Thanks,
+Maulik
+
+>
+>> @@ -268,11 +264,9 @@ int rpmh_write(const struct device *dev, enum rpmh_state state,
+>>          DEFINE_RPMH_MSG_ONSTACK(dev, state, &compl, rpm_msg);
+>>          int ret;
+>>   
+>> -       if (!cmd || !n || n > MAX_RPMH_PAYLOAD)
+>> -               return -EINVAL;
+>> -
+>> -       memcpy(rpm_msg.cmd, cmd, n * sizeof(*cmd));
+>> -       rpm_msg.msg.num_cmds = n;
+>> +       ret = __fill_rpmh_msg(&rpm_msg, state, cmd, n);
+>> +       if (ret)
+>> +               return ret;
+> This part makes sense and is discussed in the commit text.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
