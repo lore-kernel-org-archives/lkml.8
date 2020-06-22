@@ -2,310 +2,107 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C088C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D98E320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:33:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGQhvkZ1"
+	by mail.kernel.org (Postfix) with ESMTP id 08A4320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 18:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592850819;
+	bh=59XEdP4OJOA001GIDb7mDGFieLVBIamDQavdly4pK7A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZWjjFqbFr+ABmKMCZLis1urPI+PWIofZ5p6d30+H7n/22zbL/wCstw+1A1tnCKwuI
+	 +fASId/bYGnKk9Ip7vAZtC24mO0Wji9/5UAsEhkZHXJPrN+/r16kY5q+ckFWIdsNAR
+	 8R9DWLGoC+fOFgwBrpv1ePFY0j3O87q5fJgbur4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbgFVSc7 (ORCPT
+        id S1730329AbgFVSdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 14:32:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730139AbgFVSc6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 14:32:58 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F6AC061573;
-        Mon, 22 Jun 2020 11:32:58 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id u17so13471830qtq.1;
-        Mon, 22 Jun 2020 11:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Qa0giDewd5/BjpzZP3fXaqaIK9XPuOo7WHB9rrHW7Rc=;
-        b=UGQhvkZ1r1ORRZH8XG8Md8iinMXUxgSOlwVxWaoyFSpIFJ4Fs0f7lVrEc6Bffagvkd
-         gqo1A2o04ybjHdJzoBbeYWcICrHmlFRrKTXf9+1NDAcEeZuJ95vtfYs77v37x2Gp8H+y
-         XzHQkO/9w8Ru07Q5UGp0Co7YWHu2R1Z5YBMKv//UKrzN6VP0fm0x7WXx+sOc+PmI9zX6
-         Ym+/+pi+IjO7H4JDJz10Vsr5hwhjK00fJTvAqorFn0XGc15TbXqPvl9EGjUqCtzMVVm0
-         nFq9jxB99udJxVgcsk5tXW5c71RnAbvbrDVKibdON2sqaecDzv6eEU/GXuyWAbZvNY4F
-         0cnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Qa0giDewd5/BjpzZP3fXaqaIK9XPuOo7WHB9rrHW7Rc=;
-        b=JVBHPmAwKMHm9EfnLeuNJVsTEIa18tRK9YkXolmZYCm0g+Ww6efKxH01G/p4Uj4Arn
-         40kn8eG7scJdWm/OA6xXbEIoaJXDktyfAeVoPp/r2dkBUbeJMemalM0b/IrEKc75+m6P
-         009jV0vrrB6MQKIrdi/JvDxWsOIjm9+UqlJKx+Me2a4gfNNzKKF5R5SEjBpEDyurm+z9
-         0dAynHJhDIPk8IZ4cLOnLJ5gLpnU9sH6xmq9Q2j8wYbyzOclxj8VUWFtGF39JGp+0BDe
-         VkVtIOKQ5C1r2t0k3BRswOCU4VWOA3rsrLDfJQfUzWOrFcXP/boBF7a56fbaSlMYx3fE
-         IhTg==
-X-Gm-Message-State: AOAM5322yI0LHri3pXFodhUcSSeN6XlbzJ1wvEdBek4VjOX96L+IEQCf
-        dpLzEPfqyNjvgebUwYhxshY=
-X-Google-Smtp-Source: ABdhPJzcvtzLM0af2Wlij43SJnI0LfqrdxraiQwsLE9dNdy+NeWX5630cvYvb/BCCeA1j0D7U31NPA==
-X-Received: by 2002:ac8:7b5a:: with SMTP id m26mr18248709qtu.70.1592850777527;
-        Mon, 22 Jun 2020 11:32:57 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f016:65e9:974:aec1:b314:98ea])
-        by smtp.gmail.com with ESMTPSA id g16sm7213811qko.5.2020.06.22.11.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 11:32:56 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id E9416C163B; Mon, 22 Jun 2020 15:32:53 -0300 (-03)
-Date:   Mon, 22 Jun 2020 15:32:53 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Michael Tuexen <Michael.Tuexen@lurchi.franken.de>
-Cc:     minyard@acm.org, Xin Long <lucien.xin@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        linux-sctp@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Strange problem with SCTP+IPv6
-Message-ID: <20200622183253.GQ2491@localhost.localdomain>
-References: <20200621155604.GA23135@minyard.net>
- <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
- <20200622165759.GA3235@minyard.net>
- <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
+        Mon, 22 Jun 2020 14:33:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730139AbgFVSdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 14:33:37 -0400
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABBB320768
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592850817;
+        bh=59XEdP4OJOA001GIDb7mDGFieLVBIamDQavdly4pK7A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=anpsJxdxhC2ZfmXBKaD1RhCgu1LcM3cg9ZDyoacYqpFUp5sEF6Sg2D/a4Jgxnfbmy
+         15pssc8oJ0Yayl5gzZZFWpKBbjHfWCBOhSxl8Oe1oGMzMwU6QVtC/cGUJQaPG9Q1nk
+         7yEBveMLs3mDZyECb4jkwrbgV3SPD1yjbMZVUdLA=
+Received: by mail-wr1-f42.google.com with SMTP id r12so399497wrj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 11:33:36 -0700 (PDT)
+X-Gm-Message-State: AOAM533GKpFVJG0lEkVjUGVNcyWAUBBOnHXFxE5KaGyE8SP1vDl6Sm+C
+        Okk0VyeXfKvuehap5yizRpkokmugUogIAzDiPYVmhQ==
+X-Google-Smtp-Source: ABdhPJwMOWCs7f1SNzuxPUORfevvHvfuyoYy+qTQ2aDC8jYotnbw0UsH7MFIMkG/K9FiJYPXyf8Si6Dez5OPvxtQj0U=
+X-Received: by 2002:adf:a111:: with SMTP id o17mr20328122wro.257.1592850815300;
+ Mon, 22 Jun 2020 11:33:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
+References: <20200619174127.22304-1-bp@alien8.de> <20200619174127.22304-2-bp@alien8.de>
+ <CALCETrXZhFJGJA2h4zP743KYTtni-rQSUME8mtSYUdk1-ZTauQ@mail.gmail.com> <20200622170908.GH32200@zn.tnic>
+In-Reply-To: <20200622170908.GH32200@zn.tnic>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 22 Jun 2020 11:33:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrU0C5yVwfAOj+v1RqNBZY+phXrdvCBZMKdOXOExBgMbVg@mail.gmail.com>
+Message-ID: <CALCETrU0C5yVwfAOj+v1RqNBZY+phXrdvCBZMKdOXOExBgMbVg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        jpa@kernelbug.mail.kapsi.fi, Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
-> > On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
-> > 
-> > On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
-> >> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
-> >>> 
-> >>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
-> >>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
-> >>> then I make a connection to it using ::1, the connection will drop after
-> >>> 2.5 seconds with an ECONNRESET error.
-> >>> 
-> >>> It only happens on SCTP, it doesn't have the issue if you connect to a
-> >>> full IPv6 address instead of ::1, and it doesn't happen if you don't
-> >>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
-> >>> I tried on an ARM system and x86_64.
-> >>> 
-> >>> I haven't dug into the kernel to see if I could find anything yet, but I
-> >>> thought I would go ahead and report it.  I am attaching a reproducer.
-> >>> Basically, compile the following code:
-> >> The code only set IPV6_V6ONLY on server side, so the client side will
-> >> still bind all the local ipv4 addresses (as you didn't call bind() to
-> >> bind any specific addresses ). Then after the connection is created,
-> >> the client will send HB on the v4 paths to the server. The server
-> >> will abort the connection, as it can't support v4.
-> >> 
-> >> So you can work around it by either:
-> >> 
-> >>  - set IPV6_V6ONLY on client side.
-> >> 
-> >> or
-> >> 
-> >>  - bind to the specific v6 addresses on the client side.
-> >> 
-> >> I don't see RFC said something about this.
-> >> So it may not be a good idea to change the current behaviour
-> >> to not establish the connection in this case, which may cause regression.
-> > 
-> > Ok, I understand this.  It's a little strange, but I see why it works
-> > this way.
-> I don't. I would expect it to work as I described in my email.
-> Could someone explain me how and why it is behaving different from
-> my expectation?
+On Mon, Jun 22, 2020 at 10:09 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Jun 19, 2020 at 11:01:44AM -0700, Andy Lutomirski wrote:
+> > On Fri, Jun 19, 2020 at 10:41 AM Borislav Petkov <bp@alien8.de> wrote:
+> > >
+> > > From: Petteri Aimonen <jpa@git.mail.kapsi.fi>
+> > >
+> > > Previously, kernel floating point code would run with the MXCSR control
+> > > register value last set by userland code by the thread that was active
+> > > on the CPU core just before kernel call. This could affect calculation
+> > > results if rounding mode was changed, or a crash if a FPU/SIMD exception
+> > > was unmasked.
+> > >
+> > > Restore MXCSR to the kernel's default value.
+> > >
+> > >  [ bp: Carve out from a bigger patch by Petteri, add feature check, add
+> > >    FNINIT call too (amluto). ]
+> >
+> > Acked-by: Andy Lutomirski <luto@kernel.org>
+> >
+> > but:
+> >
+> > shouldn't kernel_fpu_begin() end with a barrier()?
+>
+> the "fninit" thing is already asm volatile or do you want the explicit
+> memory clobber of barrier?
+>
+> If so, why?
+>
+> The LDMXCSR and FNINIT have effect only on hardware state...
+>
 
-It looks like a bug to me. Testing with this test app here, I can see
-the INIT_ACK being sent with a bunch of ipv4 addresses in it and
-that's unexpected for a v6only socket. As is, it's the server saying
-"I'm available at these other addresses too, but not."
+Suppose you do:
 
-Thanks,
-Marcelo
+double x = 1.0;
 
-> 
-> Best regards
-> Michael
-> > 
-> > Thanks,
-> > 
-> > -corey
-> > 
-> >> 
-> >>> 
-> >>>  gcc -g -o sctptest -Wall sctptest.c
-> >>> 
-> >>> and run it in one window as a server:
-> >>> 
-> >>>  ./sctptest a
-> >>> 
-> >>> (Pass in any option to be the server) and run the following in another
-> >>> window as the client:
-> >>> 
-> >>>  ./sctptest
-> >>> 
-> >>> It disconnects after about 2.5 seconds.  If it works, it should just sit
-> >>> there forever.
-> >>> 
-> >>> -corey
-> >>> 
-> >>> 
-> >>> #include <stdio.h>
-> >>> #include <stdbool.h>
-> >>> #include <string.h>
-> >>> #include <unistd.h>
-> >>> #include <fcntl.h>
-> >>> #include <sys/select.h>
-> >>> #include <arpa/inet.h>
-> >>> #include <netinet/sctp.h>
-> >>> #include <sys/types.h>
-> >>> #include <sys/socket.h>
-> >>> #include <netdb.h>
-> >>> 
-> >>> static int
-> >>> getaddr(const char *addr, const char *port, bool listen,
-> >>>        struct addrinfo **rai)
-> >>> {
-> >>>    struct addrinfo *ai, hints;
-> >>> 
-> >>>    memset(&hints, 0, sizeof(hints));
-> >>>    hints.ai_flags = AI_ADDRCONFIG;
-> >>>    if (listen)
-> >>>        hints.ai_flags |= AI_PASSIVE;
-> >>>    hints.ai_family = AF_UNSPEC;
-> >>>    hints.ai_socktype = SOCK_STREAM;
-> >>>    hints.ai_protocol = IPPROTO_SCTP;
-> >>>    if (getaddrinfo(addr, port, &hints, &ai)) {
-> >>>        perror("getaddrinfo");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    *rai = ai;
-> >>>    return 0;
-> >>> }
-> >>> 
-> >>> static int
-> >>> waitread(int s)
-> >>> {
-> >>>    char data[1];
-> >>>    ssize_t rv;
-> >>> 
-> >>>    rv = read(s, data, sizeof(data));
-> >>>    if (rv == -1) {
-> >>>        perror("read");
-> >>>        return -1;
-> >>>    }
-> >>>    printf("Read %d bytes\n", (int) rv);
-> >>>    return 0;
-> >>> }
-> >>> 
-> >>> static int
-> >>> do_server(void)
-> >>> {
-> >>>    int err, ls, s, optval;
-> >>>    struct addrinfo *ai;
-> >>> 
-> >>>    printf("Server\n");
-> >>> 
-> >>>    err = getaddr("::", "3023", true, &ai);
-> >>>    if (err)
-> >>>        return err;
-> >>> 
-> >>>    ls = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-> >>>    if (ls == -1) {
-> >>>        perror("socket");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    optval = 1;
-> >>>    if (setsockopt(ls, SOL_SOCKET, SO_REUSEADDR,
-> >>>                   (void *)&optval, sizeof(optval)) == -1) {
-> >>>        perror("setsockopt reuseaddr");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    /* Comment this out and it will work. */
-> >>>    if (setsockopt(ls, IPPROTO_IPV6, IPV6_V6ONLY, &optval,
-> >>>                   sizeof(optval)) == -1) {
-> >>>        perror("setsockopt ipv6 only");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    err = bind(ls, ai->ai_addr, ai->ai_addrlen);
-> >>>    if (err == -1) {
-> >>>        perror("bind");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    err = listen(ls, 5);
-> >>>    if (err == -1) {
-> >>>        perror("listen");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    s = accept(ls, NULL, NULL);
-> >>>    if (s == -1) {
-> >>>        perror("accept");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    close(ls);
-> >>> 
-> >>>    err = waitread(s);
-> >>>    close(s);
-> >>>    return err;
-> >>> }
-> >>> 
-> >>> static int
-> >>> do_client(void)
-> >>> {
-> >>>    int err, s;
-> >>>    struct addrinfo *ai;
-> >>> 
-> >>>    printf("Client\n");
-> >>> 
-> >>>    err = getaddr("::1", "3023", false, &ai);
-> >>>    if (err)
-> >>>        return err;
-> >>> 
-> >>>    s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-> >>>    if (s == -1) {
-> >>>        perror("socket");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    err = connect(s, ai->ai_addr, ai->ai_addrlen);
-> >>>    if (err == -1) {
-> >>>        perror("connect");
-> >>>        return -1;
-> >>>    }
-> >>> 
-> >>>    err = waitread(s);
-> >>>    close(s);
-> >>>    return err;
-> >>> }
-> >>> 
-> >>> int
-> >>> main(int argc, char *argv[])
-> >>> {
-> >>>    int err;
-> >>> 
-> >>>    if (argc > 1)
-> >>>        err = do_server();
-> >>>    else
-> >>>        err = do_client();
-> >>>    return !!err;
-> >>> }
-> >>> 
-> 
+kernel_fpu_begin();
+
+x += 2.0;
+
+We want to make sure that GCC puts things in the right order.  I
+suppose that even a memory clobber is insufficient here, though.
