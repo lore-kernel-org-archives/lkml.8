@@ -2,53 +2,52 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20573C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D70CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB75320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BE020706
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 11:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="veA55006"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="M3s3GvV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgFVLOh (ORCPT
+        id S1728184AbgFVLPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:14:37 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:14392 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728037AbgFVLO2 (ORCPT
+        Mon, 22 Jun 2020 07:15:09 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:39818 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728106AbgFVLOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:14:28 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MB87Or013048;
-        Mon, 22 Jun 2020 04:14:24 -0700
+        Mon, 22 Jun 2020 07:14:46 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MB4XTA006663;
+        Mon, 22 Jun 2020 04:14:45 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0818; bh=b3PntQKBqtZ3GatNaLsuAv2mZADAUCw5SRw2SUSm3BE=;
- b=veA55006wCV4Fg9Gm+A6kYWt6xtrdxdVia9qf57wN12BldisGJ1i6wiAC1mWi3YUYSjd
- DpoGveng2A1djV0wR6lSBvfaceVg96P5Vd/XhRzhs9eKmgKZ2jyeWpwb4D330kngN9Pg
- DBphqFTkqJ7PaEex1IogLT+d6gugLCMF8f2lRl/n0NcHaqdTeVViHc19FHcRRm9X4nYj
- XhkIXUoeBlxeslXZz3R1XtuZIaL2/mAIqHxCzRh5PAOgT+Lx6sDZb06QO7s0pqjtOecN
- 0eiSYbEGQvIG1utEFWc/9DGBZIsvvJoJkVMrLhnY/o1TYf3xHLgHai8I+it4OUTLx6mF KQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 31shynqp9c-1
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=jG2NUIRRR56+mF/BYI8dUn8Fi0KJomt8dysvNlA8Qwg=;
+ b=M3s3GvV4n01ysie1Z4XTGTXFwSOuqYdopIkMP5yE8FiMnadkhCy/dWeK8yGkWIqvzNmR
+ 1qMdDeThZgUWNtPX6noHfXkXpvXjLVrLUUXwagyxCdx0k/Mv04JJiIJxw8TZ6ktAXZxx
+ cCPUzI9+VjdtbGmDdsJewiMaXupLYOdG92CuObcAuKSwQrJnlLZ6jK8YADQF/rGQtqlV
+ EcNXNV5BCFsIC79IMUX3tN2fLaCDQr8EKw/2LqKOSsNVzvmYcinkUhPlQYD9nti/S+0R
+ cbcmdYewtYlVkshqAxE0Cj6vuPPtmL4WtSwFgi3h3Kb70yyguJy762q6jIjZOBxggYFs xg== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 31sftpg5xd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 04:14:24 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Jun
- 2020 04:14:22 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Jun
- 2020 04:14:21 -0700
+        Mon, 22 Jun 2020 04:14:45 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 22 Jun
+ 2020 04:14:44 -0700
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
  (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 22 Jun 2020 04:14:21 -0700
+ Transport; Mon, 22 Jun 2020 04:14:44 -0700
 Received: from NN-LT0049.marvell.com (unknown [10.193.39.36])
-        by maili.marvell.com (Postfix) with ESMTP id 2E0A93F703F;
-        Mon, 22 Jun 2020 04:14:16 -0700 (PDT)
+        by maili.marvell.com (Postfix) with ESMTP id 570333F703F;
+        Mon, 22 Jun 2020 04:14:40 -0700 (PDT)
 From:   Alexander Lobakin <alobakin@marvell.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -62,10 +61,12 @@ CC:     Igor Russkikh <irusskikh@marvell.com>,
         Alexander Lobakin <alobakin@marvell.com>,
         <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH net 0/9] net: qed/qede: various stability fixes
-Date:   Mon, 22 Jun 2020 14:14:04 +0300
-Message-ID: <20200622111413.7006-1-alobakin@marvell.com>
+Subject: [PATCH net 5/9] net: qed: fix excessive QM ILT lines consumption
+Date:   Mon, 22 Jun 2020 14:14:09 +0300
+Message-ID: <20200622111413.7006-6-alobakin@marvell.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200622111413.7006-1-alobakin@marvell.com>
+References: <20200622111413.7006-1-alobakin@marvell.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -76,32 +77,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set addresses several near-critical issues that were observed
-and reproduced on different test and production configurations.
+This is likely a copy'n'paste mistake. The amount of ILT lines to
+reserve for a single VF was being multiplied by the total VFs count.
+This led to a huge redundancy in reservation and potential lines
+drainouts.
 
-Alexander Lobakin (9):
-  net: qed: fix left elements count calculation
-  net: qed: fix async event callbacks unregistering
-  net: qede: stop adding events on an already destroyed workqueue
-  net: qed: fix NVMe login fails over VFs
-  net: qed: fix excessive QM ILT lines consumption
-  net: qede: fix PTP initialization on recovery
-  net: qede: fix use-after-free on recovery and AER handling
-  net: qed: reset ILT block sizes before recomputing to fix crashes
-  net: qed: fix "maybe uninitialized" warning
+Fixes: 1408cc1fa48c ("qed: Introduce VFs")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed_cxt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/net/ethernet/qlogic/qed/qed_cxt.c    | 21 ++++++++++++-
- drivers/net/ethernet/qlogic/qed/qed_dev.c    | 11 +++++--
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c  |  2 --
- drivers/net/ethernet/qlogic/qed/qed_roce.c   |  1 -
- drivers/net/ethernet/qlogic/qed/qed_vf.c     | 23 +++++++++++----
- drivers/net/ethernet/qlogic/qede/qede_main.c |  3 +-
- drivers/net/ethernet/qlogic/qede/qede_ptp.c  | 31 ++++++++------------
- drivers/net/ethernet/qlogic/qede/qede_ptp.h  |  2 +-
- drivers/net/ethernet/qlogic/qede/qede_rdma.c |  3 +-
- include/linux/qed/qed_chain.h                | 26 +++++++++-------
- 10 files changed, 80 insertions(+), 43 deletions(-)
-
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
+index 7b76667acaba..c0a769b5358c 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
+@@ -271,7 +271,7 @@ static void qed_cxt_qm_iids(struct qed_hwfn *p_hwfn,
+ 		vf_tids += segs[NUM_TASK_PF_SEGMENTS].count;
+ 	}
+ 
+-	iids->vf_cids += vf_cids * p_mngr->vf_count;
++	iids->vf_cids = vf_cids;
+ 	iids->tids += vf_tids * p_mngr->vf_count;
+ 
+ 	DP_VERBOSE(p_hwfn, QED_MSG_ILT,
 -- 
 2.21.0
 
