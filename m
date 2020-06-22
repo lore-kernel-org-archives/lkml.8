@@ -2,156 +2,106 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C30FB2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:17:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="L3h9g0M6"
+	by mail.kernel.org (Postfix) with ESMTP id 2A67720767
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgFVTRb (ORCPT
+        id S1728227AbgFVTSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:17:31 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54300 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgFVTRa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:17:30 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MIw7Be030691;
-        Mon, 22 Jun 2020 19:17:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=mq8kT3o8dLo2ItEFdRGaDe2nwGFwgbcNf7NesuhpOWo=;
- b=L3h9g0M6Mbl/xZQBRwuDwMjsPa6F6JpAf51cY9Iq2TfTbpp3kpiIqJ4pJgJnG2gkKopL
- e79od2xio/yt1iJ5XNp5vtnWAeyCJ/VaQO69xG+p3oRTqL4GpBxoI7HYx4rI1aEDGMa9
- o5w6Ft3NVU4RcuLEVXrw7Y53NuIrmT4mkADO5KAONgFKpFOtfgDAQ40tA1NRKQqUUe7F
- BTkRkO44C0JPiM+Awmgg0th4Kdxtk+rR8zPp2toieUzNKEnbc3OsF0BEtmYb+hLQI8Yu
- oOAxU1htMytkkjFm0lJVKHJX4KgT8greVZfGA562k84lRQ8k2j52tnJrg0516c2gi54H Vw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31sebbh7f5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jun 2020 19:17:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05MIw5Tx074902;
-        Mon, 22 Jun 2020 19:17:15 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 31sv7qktb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 19:17:14 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05MJHDKN013963;
-        Mon, 22 Jun 2020 19:17:13 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 22 Jun 2020 19:17:12 +0000
-Date:   Mon, 22 Jun 2020 15:17:39 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
+        Mon, 22 Jun 2020 15:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbgFVTSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 15:18:18 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08E862075A;
+        Mon, 22 Jun 2020 19:18:16 +0000 (UTC)
+Date:   Mon, 22 Jun 2020 15:18:15 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Sistare <steven.sistare@oracle.com>
-Subject: Re: [PATCH v2] x86/mm: use max memory block size on bare metal
-Message-ID: <20200622191739.4lekqrmjnzv2vwl2@ca-dmjordan1.us.oracle.com>
-References: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
- <20200619120704.GD12177@dhcp22.suse.cz>
+        Julia Lawall <julia.lawall@inria.fr>
+Subject: [PATCH] ring-buffer: Zero out time extend if it is nested and not
+ absolute
+Message-ID: <20200622151815.345d1bf5@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619120704.GD12177@dhcp22.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006220126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- adultscore=0 impostorscore=0 cotscore=-2147483648 mlxscore=0
- suspectscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220126
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Michal,
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-(I've been away and may be slow to respond for a little while)
+Currently the ring buffer makes events that happen in interrupts that preempt
+another event have a delta of zero. (Hopefully we can change this soon). But
+this is to deal with the races of updating a global counter with lockless
+and nesting functions updating deltas.
 
-On Fri, Jun 19, 2020 at 02:07:04PM +0200, Michal Hocko wrote:
-> On Tue 09-06-20 18:54:51, Daniel Jordan wrote:
-> [...]
-> > @@ -1390,6 +1391,15 @@ static unsigned long probe_memory_block_size(void)
-> >  		goto done;
-> >  	}
-> >  
-> > +	/*
-> > +	 * Use max block size to minimize overhead on bare metal, where
-> > +	 * alignment for memory hotplug isn't a concern.
-> 
-> This really begs a clarification why this is not a concern. Bare metal
-> can see physical memory hotadd as well. I just suspect that you do not
-> consider that to be very common so it is not a big deal?
+With the addition of absolute time stamps, the time extend didn't follow
+this rule. A time extend can happen if two events happen longer than 2^27
+nanoseconds appart, as the delta time field in each event is only 27 bits.
+If that happens, then a time extend is injected with 2^59 bits of
+nanoseconds to use (18 years). But if the 2^27 nanoseconds happen between
+two events, and as it is writing the event, an interrupt triggers, it will
+see the 2^27 difference as well and inject a time extend of its own. But a
+recent change made the time extend logic not take into account the nesting,
+and this can cause two time extend deltas to happen moving the time stamp
+much further ahead than the current time. This gets all reset when the ring
+buffer moves to the next page, but that can cause time to appear to go
+backwards.
 
-It's not only uncommon, it's also that boot_mem_end on bare metal may not align
-with any available memory block size.  For instance, this server's boot_mem_end
-is only 4M aligned and FWIW my desktop's is 2M aligned.  As far as I can tell,
-the logic that picks the size wasn't intended for bare metal.
+This was observed in a trace-cmd recording, and since the data is saved in a
+file, with trace-cmd report --debug, it was possible to see that this indeed
+did happen!
 
-> And I would
-> tend to agree but still we are just going to wait until first user
-> stumbles over this.
+  bash-52501   110d... 81778.908247: sched_switch:         bash:52501 [120] S ==> swapper/110:0 [120] [12770284:0x2e8:64]
+  <idle>-0     110d... 81778.908757: sched_switch:         swapper/110:0 [120] R ==> bash:52501 [120] [509947:0x32c:64]
+ TIME EXTEND: delta:306454770 length:0
+  bash-52501   110.... 81779.215212: sched_swap_numa:      src_pid=52501 src_tgid=52388 src_ngid=52501 src_cpu=110 src_nid=2 dst_pid=52509 dst_tgid=52388 dst_ngid=52501 dst_cpu=49 dst_nid=1 [0:0x378:48]
+ TIME EXTEND: delta:306458165 length:0
+  bash-52501   110dNh. 81779.521670: sched_wakeup:         migration/110:565 [0] success=1 CPU:110 [0:0x3b4:40]
 
-This isn't something new with this patch, 2G has been the default on big
-machines for years.  This is addressing an unintended side effect of
-078eb6aa50dc50, which was for qemu, by restoring the original behavior on bare
-metal to avoid oodles of sysfs files.
+and at the next page, caused the time to go backwards:
 
-> Btw. memblock interface just doesn't scale and it is a terrible
-> interface for large machines and for the memory hotplug in general (just
-> look at ppc and their insanely small memblocks).
+  bash-52504   110d... 81779.685411: sched_switch:         bash:52504 [120] S ==> swapper/110:0 [120] [8347057:0xfb4:64]
+CPU:110 [SUBBUFFER START] [81779379165886:0x1320000]
+  <idle>-0     110dN.. 81779.379166: sched_wakeup:         bash:52504 [120] success=1 CPU:110 [0:0x10:40]
+  <idle>-0     110d... 81779.379167: sched_switch:         swapper/110:0 [120] R ==> bash:52504 [120] [1168:0x3c:64]
 
-I agree that the status quo isn't ideal and is something to address going
-forward.
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: dc4e2801d400b ("ring-buffer: Redefine the unimplemented RINGBUF_TYPE_TIME_STAMP")
+Reported-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Most usecases I have seen simply want to either offline some portion of
-> memory without a strong requirement of the physical memory range as long
-> as it is from a particular node or simply offline and remove the full
-> node.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index b8e1ca48be50..00867ff82412 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2427,7 +2427,7 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
+ 	if (unlikely(info->add_timestamp)) {
+ 		bool abs = ring_buffer_time_stamp_abs(cpu_buffer->buffer);
+ 
+-		event = rb_add_time_stamp(event, info->delta, abs);
++		event = rb_add_time_stamp(event, abs ? info->delta : delta, abs);
+ 		length -= RB_LEN_TIME_EXTEND;
+ 		delta = 0;
+ 	}
+-- 
+2.25.4
 
-Interesting, would've thought that removing a single bad DIMM for RAS purposes
-would also be common relative to how often hotplug is done on real systems.
-
-> I believe that we should think about a future interface rather than
-> trying to ducktape the blocksize anytime it causes problems. I would be
-> even tempted to simply add a kernel command line option 
-> memory_hotplug=disable,legacy,new_shiny
-> 
-> for disable it would simply drop all the sysfs crud and speed up boot
-> for most users who simply do not care about memory hotplug. new_shiny
-> would ideally provide an interface that would either export logically
-> hotplugable memory ranges (e.g. DIMMs) or a query/action interface which
-> accepts physical ranges as input. Having gazillions of sysfs files is
-> simply unsustainable.
-
-So in this idea, presumably the default would start off being legacy and then
-later be changed to new_shiny?
-
-If new_shiny scales well, maybe 'disable' wouldn't be needed and so using the
-option could be avoided most of the time.  If some users really don't want it,
-they can build without it.
