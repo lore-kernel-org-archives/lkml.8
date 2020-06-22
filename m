@@ -2,179 +2,97 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F69FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACE92074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592842789;
-	bh=7CNmm4AwjmhFuwMT+ZusQGNpZT+eRVQyax7OgVJmhTw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LZ997kH7SzlbHk+VCeWfm1qo9JFo5yIJt5RtvOieOlmaIQpiOK9s5V47pwU7j/kjf
-	 NgKXLpQkiKJtqPZr697dyfbtfNDKF/ZyoRmqFe5GygLsKxh5rYiKJcXU3PYbFe3/wf
-	 8aZwwnBJo0PV7MyAqnkPr8q4ExZRqtyI951yjlg0=
+	by mail.kernel.org (Postfix) with ESMTP id CF8362073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 16:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgFVQTr (ORCPT
+        id S1729564AbgFVQYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:19:47 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:41069 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729275AbgFVQTr (ORCPT
+        Mon, 22 Jun 2020 12:24:35 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:59208 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729479AbgFVQYe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:19:47 -0400
-Received: by mail-oo1-f65.google.com with SMTP id y45so3470008ooi.8;
-        Mon, 22 Jun 2020 09:19:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Uo7tLE8Ng0ljtCXTtGcEJjxCELargRdsGzsyXemCgs=;
-        b=M7FCNXrYOqADFhXb+HDsMyqQDdUL7Rvl0WJZD5MP3UCiqTlV3YxTBO5tJ+O0QdH9Sq
-         KBAnm3p5HwWtyfzVaDnPd1tt5m1/phfq+pwVQEhCNa93TyIiRNUsL/xA3QBZ0p5YezTN
-         c0GbD0yHz6Yk4fGzcuxH36tk4zIVreAfB96qKwe+w5fJy/OhOA5EYGzT52XW8u3AG3hf
-         xrJfigNYyqrbljdbfNYv66abAHbuJxe8f14GdhusfOdGSTMVOojUMW3v+bMH4tHrNR7k
-         NzdwqG7fBHzjIO4SvpVik6QqPhUTSWswTAWphPd+N3EFAc0VH1ZFAK1TfHaOxLmdmlFD
-         dMyQ==
-X-Gm-Message-State: AOAM530xajK5zX5/hvrcycpl36yuntaPbs5DViwwLVsqps6nO3/tx3qx
-        OMbaKsFjYoNwMsQBLFhwXFY8Un16wQXV0bpD917DlpDQ
-X-Google-Smtp-Source: ABdhPJyJzMY+Ig5hfxqT84WrgEl4O2KCn/CA1QUseO7PZisUGMIMg9J9c1cy446Z1L7TJd1n36X5db7QuPeGS55+Gmc=
-X-Received: by 2002:a4a:5744:: with SMTP id u65mr14858682ooa.1.1592842786408;
- Mon, 22 Jun 2020 09:19:46 -0700 (PDT)
+        Mon, 22 Jun 2020 12:24:34 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jnPFJ-0001B5-RR; Mon, 22 Jun 2020 10:24:33 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jnPFI-00036S-V4; Mon, 22 Jun 2020 10:24:33 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>
+References: <87pn9u6h8c.fsf@x220.int.ebiederm.org>
+        <87k1026h4x.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgczNRMP-DK3Ga-e_HXvZMBbQNxthdGt=MqMZ0CFDHHcg@mail.gmail.com>
+Date:   Mon, 22 Jun 2020 11:20:11 -0500
+In-Reply-To: <CAHk-=wgczNRMP-DK3Ga-e_HXvZMBbQNxthdGt=MqMZ0CFDHHcg@mail.gmail.com>
+        (Linus Torvalds's message of "Sat, 20 Jun 2020 11:58:13 -0700")
+Message-ID: <87eeq7xebo.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200616040442.21515-1-yu.c.chen@intel.com>
-In-Reply-To: <20200616040442.21515-1-yu.c.chen@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 22 Jun 2020 18:19:35 +0200
-Message-ID: <CAJZ5v0gBVBAjdCOXsM-Fa-iAkuv2JMi2mVkG5w7ADcg9dWencA@mail.gmail.com>
-Subject: Re: [PATCH][v2] PM / s2idle: Clear _TIF_POLLING_NRFLAG before suspend
- to idle
-To:     Chen Yu <yu.c.chen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rui Zhang <rui.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jnPFI-00036S-V4;;;mid=<87eeq7xebo.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+6wsbR3bkAf75/oFgf7QvXKVQ+hcFeirM=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/2] exec: Don't set group_exit_task during a coredump
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 6:03 AM Chen Yu <yu.c.chen@intel.com> wrote:
->
-> Suspend to idle was found to not work on Goldmont CPU recently.
-> And the issue was triggered due to:
->
-> 1. On Goldmont the CPU in idle can only be woken up via IPIs,
->    not POLLING mode:
->    Commit 08e237fa56a1 ("x86/cpu: Add workaround for MONITOR
->    instruction erratum on Goldmont based CPUs")
-> 2. When the CPU is entering suspend to idle process, the
->    _TIF_POLLING_NRFLAG is kept on, due to cpuidle_enter_s2idle()
->    doesn't properly match call_cpuidle().
-> 3. Commit b2a02fc43a1f ("smp: Optimize send_call_function_single_ipi()")
->    makes use of _TIF_POLLING_NRFLAG to avoid sending IPIs to
->    idle CPUs.
-> 4. As a result, some IPIs related functions might not work
->    well during suspend to idle on Goldmont. For example, one
->    suspected victim:
->    tick_unfreeze() -> timekeeping_resume() -> hrtimers_resume()
->    -> clock_was_set() -> on_each_cpu() might wait forever,
->    because the IPIs will not be sent to the CPUs which are
->    sleeping with _TIF_POLLING_NRFLAG set, and Goldmont CPU
->    could not be woken up by only setting _TIF_NEED_RESCHED
->    on the monitor address.
->
-> I don't find a way in Ubuntu to update the firmware of Goldmont
-> and check if the issue was gone, a fix patch would do no harm.
-> Clear the _TIF_POLLING_NRFLAG flag before entering suspend to idle,
-> and let the driver's enter_s2idle() to decide whether to set
-> _TIF_POLLING_NRFLAG or not. So that to avoid the scenario described
-> above and keep the context consistent with before. Also adjust
-> the naming to be consistent with call_cpuidle().
->
-> Fixes: b2a02fc43a1f ("smp: Optimize send_call_function_single_ipi()")
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-Peter, any more comments here?
-
-> ---
-> v2: According to Peter's review, v1 is racy, if someone already
->     set TIF_NEED_RESCHED this patch just clear POLLING and go to sleep.
->     Check TIF_NEED_RESCHED before entering suspend to idle and
->     adjust the naming to be consistent with call_cpuidle().
-> --
->  drivers/cpuidle/cpuidle.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+> On Fri, Jun 19, 2020 at 11:36 AM Eric W. Biederman
+> <ebiederm@xmission.com> wrote:
+>>
+>> Instead test SIGNAL_GROUP_COREDUMP in signal_group_exit().
 >
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index c149d9e20dfd..b003767abebd 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -13,6 +13,7 @@
->  #include <linux/mutex.h>
->  #include <linux/sched.h>
->  #include <linux/sched/clock.h>
-> +#include <linux/sched/idle.h>
->  #include <linux/notifier.h>
->  #include <linux/pm_qos.h>
->  #include <linux/cpu.h>
-> @@ -133,8 +134,8 @@ int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->  }
+> You say "instead", but the patch itself doesn't agree:
 >
->  #ifdef CONFIG_SUSPEND
-> -static void enter_s2idle_proper(struct cpuidle_driver *drv,
-> -                               struct cpuidle_device *dev, int index)
-> +static void s2idle_enter(struct cpuidle_driver *drv,
-> +                        struct cpuidle_device *dev, int index)
->  {
->         ktime_t time_start, time_end;
+>>  static inline int signal_group_exit(const struct signal_struct *sig)
+>>  {
+>> -       return  (sig->flags & SIGNAL_GROUP_EXIT) ||
+>> +       return  (sig->flags & (SIGNAL_GROUP_EXIT | SIGNAL_GROUP_COREDUMP)) ||
+>>                 (sig->group_exit_task != NULL);
+>>  }
 >
-> @@ -168,6 +169,15 @@ static void enter_s2idle_proper(struct cpuidle_driver *drv,
->         dev->states_usage[index].s2idle_usage++;
->  }
->
-> +static int call_s2idle(struct cpuidle_driver *drv, struct cpuidle_device *dev,
-> +                      int index)
-> +{
-> +       if (!current_clr_polling_and_test())
-> +               s2idle_enter(drv, dev, index);
-> +
-> +       return index;
+> it does it _in_addition_to_.
 
-Is the value returned here used at all?
+Hmm.  I think I can change that line to:
+>> Instead add a test for SIGNAL_GROUP_COREDUMP in signal_group_exit().
 
-> +}
-> +
->  /**
->   * cpuidle_enter_s2idle - Enter an idle state suitable for suspend-to-idle.
->   * @drv: cpuidle driver for the given CPU.
-> @@ -187,7 +197,7 @@ int cpuidle_enter_s2idle(struct cpuidle_driver *drv, struct cpuidle_device *dev)
->          */
->         index = find_deepest_state(drv, dev, U64_MAX, 0, true);
->         if (index > 0)
-> -               enter_s2idle_proper(drv, dev, index);
-> +               call_s2idle(drv, dev, index);
+Does that read better?
 
-I'm wondering why this can't be
+> I think the whole test for "sig->group_exit_task != NULL" should be
+> removed for this commit to make sense.
 
-    if (index > 0 && !current_clr_polling_and_test())
-            enter_s2idle_proper(drv, dev, index);
+The code change is designed not to have a behavioral change in
+signal_group_exit().  As de_thread also sets sig->group_exit_task
+the test for sig->group_exit_task needs to remain in signal_group_exit()
+for the behavior of signal_group_exit() to remain unchanged.
 
->         return index;
->  }
-> --
+
+
+Why do you think the test sig->group_exit_task != NULL should be removed
+for the commit to make sense?
+
+Eric
