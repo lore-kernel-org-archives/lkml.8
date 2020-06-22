@@ -2,165 +2,199 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D450C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF2F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E40D20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 15:08:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Fj0FpYCN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WBirnmPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgFVPIm (ORCPT
+        id S1729461AbgFVPI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:08:42 -0400
-Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:3166
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728070AbgFVPIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:08:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CXtgm9ckzYPIk1ZGy+XVb+K77KApevxIz9GyCw6EL0Ijp8PcQdOtj5IOPLSrWIBKKueXxwJS0GWmewB6VHNOzt3pF4watLS8gZBhqgTCClsNo2DE/wnJVy1YN5orCNB/LjxM+jckDIM5LHtP2IV5ho6ioZ9oDtlwWycg+4KaHWQ0O5ZHNQ31L/786dG2xi5vWGiI1v/U418Zy7sQ2VkRVWQRuFPUcKBvko3lqKsxjmYtC5LYzPosAE/iRsLvQrIgzcpynrsbFW3zYiQ3l9YyXMarOVIMgl7ajCtKs2HPh2pFZf14gQFzuwVsQqqFnucPuLzLZcwjGpVRxMh+0bumaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lLvjArFfes3MGz/Bmb7zBxxAZ50O7eGjBqSgkaUXRP0=;
- b=HPxIB1WUulpvZZdkVU+uu2cIMYqZsrcYzXnd8M9phXD3BHu0Disdisr/TBI0yMeAWvYbYr4rrcwzDrLovFDev0MiD9GFyt60q07/YcJF+p+G+mZmNT3tUEGSREel4LolbGZu5z4ptBT4cNMaVt88ZWS+DD3UC4B2nrOFaVgjA/Ri3kw11VKWKYw/5rsjBCse1fkAtteKPWtpe6T1p17yBWqww9nj+pKZuKx0dKKiUvmMKvr+Ok26464rG0T46e6VMmK433HX3L6N/uYWapblBPOr8N8TiI6cI8n6cpQ4YoP4wNXvM58BcerbNfhvmmgBoqDMkvhoNoxRyYU+LZrSXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lLvjArFfes3MGz/Bmb7zBxxAZ50O7eGjBqSgkaUXRP0=;
- b=Fj0FpYCNgi3YAExc7kW0bA7UMYKReuFeuf5h4v8R23cLFQPZbZnuy7qzdgpOywMgmO/Mt7SmaKbSFpqVANdSp6CXt4f/AJHJFHOgI8YIs/YDyeVLkiEix0bfWyc1te9pnLNYZZATpKCU8GQ8pNhYVlcmdwUz2Et5vtc27DcTPL4=
-Received: from AM6PR04MB3976.eurprd04.prod.outlook.com (2603:10a6:209:3f::17)
- by AM6PR04MB6325.eurprd04.prod.outlook.com (2603:10a6:20b:bc::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Mon, 22 Jun
- 2020 15:08:36 +0000
-Received: from AM6PR04MB3976.eurprd04.prod.outlook.com
- ([fe80::8576:ca02:4334:31a3]) by AM6PR04MB3976.eurprd04.prod.outlook.com
- ([fe80::8576:ca02:4334:31a3%5]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 15:08:36 +0000
-From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florinel Iordache <florinel.iordache@nxp.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next v3 4/7] net: phy: add backplane kr driver support
-Thread-Topic: [PATCH net-next v3 4/7] net: phy: add backplane kr driver
- support
-Thread-Index: AQHWSJoP3RwMZ7Se1EqsHw8WDK+NGKjksHoAgAAIWpA=
-Date:   Mon, 22 Jun 2020 15:08:36 +0000
-Message-ID: <AM6PR04MB397677E90EFBD9749D01B061EC970@AM6PR04MB3976.eurprd04.prod.outlook.com>
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
- <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
- <20200622142430.GP279339@lunn.ch>
-In-Reply-To: <20200622142430.GP279339@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=oss.nxp.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [86.127.220.45]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c3e7b1bd-e807-489b-63cc-08d816be237c
-x-ms-traffictypediagnostic: AM6PR04MB6325:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB6325CD55DD5963D765CFA412AD970@AM6PR04MB6325.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0442E569BC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: J4sUZDWMsIO570svvjlLImWhMPKpgfCuBbs47umkDv4ydvX9qfi6BDCWNxVUF6Jkz5jgiNHGKCWmYBlY2LwRyL/KrAVNOVtSv/yOi5v+G1KhxB8HR0PfgFLS7Stj/n/38a+BfbY0lfjNEpNPW0Fdnd9qbyqfOQwByC9/+3Bs7L6X3EzN3O7JiDbWh1Jeu/Tc3+5QUYOxItTzpB46NUodQD4R3c3DchcsEe6V70kIJzuOGUv+vN31V/E4Tw5zMaCWdNP5OMlPcrf+QGntSF+FwskvHeMkp4zlNZcpYGNRiIkQRTMDHf0fbaCYB42m3oP+/veEZzUhi+nzMav1BCuc2Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB3976.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(396003)(39860400002)(366004)(6506007)(110136005)(83380400001)(54906003)(53546011)(26005)(8676002)(7416002)(7696005)(316002)(2906002)(55016002)(9686003)(52536014)(186003)(478600001)(5660300002)(4326008)(71200400001)(66946007)(76116006)(64756008)(66556008)(8936002)(86362001)(66446008)(33656002)(66476007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: N49+JdfIs/ee67oXri8sMxJvjpxorxPPQDh/O2TFQbASEIAD8ApZQwpGi2ngAwHMFGNI5KP4wQiOf58+UHzh9+IXVkxG7VAWg8cyWfy2yIFU5ZmpzPeBzNjcvxJpBfrtAqoBOttQHefU+UZjV2QIb39QcldcXLwXbsjis9eBOM05bhsOmtDt0pBN/d5X0a7HhR0hVsjgkWFRc3cLKgxexMqE8jTE/4PTZUhAsfjfUKOqErGWCPFYBbVbAuEWKEYuJwttf5T0iFFEeVv1izhureTf1TBa8y+hyVYLZhiD7rG5lOiUqFlXvsHCW+5m88HQRm7CDqJyljsC+Pp9rfKDX5gEPsa7fpnOGDGxULEowUtBnZMiEfVN/eDs2+KleYObM8a1Wbgqoy++CllTLFkgCh3USqtQJO6Ofp88UgBQ26Z8S6FvzZz8qLr+xOuELt+2HMXkPp6ufdvyT+pa5cF+aN20ej7fJbJhF6slNgRkU+w=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 22 Jun 2020 11:08:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48391 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729199AbgFVPI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 11:08:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592838534;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8oYy1vMMnjlXkMb5KlFpnjM4vXTLr/ztYLaDLjnq9SQ=;
+        b=WBirnmPmqU6xf1r8vS0AnU/j/OR9pOcv9wQ6SzjpOBqg3/K7EWTIZj43b1sOA6HHFHQ+da
+        VMLtpMLIZLmL6ebssMNLNr4l4k8F8XpFqIieY1ScWfUSHJ8uZBm9JyKN8KuWt/ZSYuEwzd
+        qJIdUW5n4F9G8X5y4G1MEhVYRlREjOc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-lgkvb_vvOFO-c3s33FNbMw-1; Mon, 22 Jun 2020 11:08:50 -0400
+X-MC-Unique: lgkvb_vvOFO-c3s33FNbMw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0247D1006B0C;
+        Mon, 22 Jun 2020 15:08:45 +0000 (UTC)
+Received: from ovpn-115-200.ams2.redhat.com (ovpn-115-200.ams2.redhat.com [10.36.115.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 28B015C1BD;
+        Mon, 22 Jun 2020 15:08:38 +0000 (UTC)
+Message-ID: <a5793938619c1c328b8283aab90166e352071317.camel@redhat.com>
+Subject: Re: [PATCH v2 00/11] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
+        pbonzini@redhat.com
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, babu.moger@amd.com
+Date:   Mon, 22 Jun 2020 17:08:36 +0200
+In-Reply-To: <5a52fd65-e1b2-ca87-e923-1d5ac167cfb9@amd.com>
+References: <20200619153925.79106-1-mgamal@redhat.com>
+         <5a52fd65-e1b2-ca87-e923-1d5ac167cfb9@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3e7b1bd-e807-489b-63cc-08d816be237c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 15:08:36.7037
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AyIlyg8/HkFayMHJRX4KpUWOYJFME5BtXkabnzMBh7fEnLUgWn8ojEPNV5xpd/t3tX3Yuy1dRauGt7EpNX+4PA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6325
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Andrew Lunn <andrew@lunn.ch>
-> Sent: Monday, June 22, 2020 5:25 PM
-> To: Florinel Iordache <florinel.iordache@nxp.com>
-> Cc: davem@davemloft.net; netdev@vger.kernel.org; f.fainelli@gmail.com;
-> hkallweit1@gmail.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
-> linux-doc@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> kuba@kernel.org; corbet@lwn.net; shawnguo@kernel.org; Leo Li
-> <leoyang.li@nxp.com>; Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>;
-> Ioana Ciornei <ioana.ciornei@nxp.com>; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH net-next v3 4/7] net: phy: add backplane kr driver
-> support
->=20
-> On Mon, Jun 22, 2020 at 04:35:21PM +0300, Florinel Iordache wrote:
-> > Add support for backplane kr generic driver including link training
-> > (ieee802.3ap/ba) and fixed equalization algorithm
->=20
-> Hi Florinel
->=20
-> This is still a PHY device. I don't remember any discussions which
-> resolved the issues of if at the end of the backplane there is another
-> PHY.
->=20
-> It makes little sense to repost this code until we have this problem
-> discussed and a way forward decided on. It fits into the discussion
-> Russell and Ioana are having about representing PCS drivers. Please
-> contribute to that.
->=20
-> 	Andrew
+On Fri, 2020-06-19 at 16:52 -0500, Tom Lendacky wrote:
+> On 6/19/20 10:39 AM, Mohammed Gamal wrote:
+> > When EPT/NPT is enabled, KVM does not really look at guest physical
+> > address size. Address bits above maximum physical memory size are
+> > reserved.
+> > Because KVM does not look at these guest physical addresses, it
+> > currently
+> > effectively supports guest physical address sizes equal to the
+> > host.
+> > 
+> > This can be problem when having a mixed setup of machines with 5-
+> > level page
+> > tables and machines with 4-level page tables, as live migration can
+> > change
+> > MAXPHYADDR while the guest runs, which can theoretically introduce
+> > bugs.
+> > 
+> > In this patch series we add checks on guest physical addresses in
+> > EPT
+> > violation/misconfig and NPF vmexits and if needed inject the proper
+> > page faults in the guest.
+> > 
+> > A more subtle issue is when the host MAXPHYADDR is larger than that
+> > of the
+> > guest. Page faults caused by reserved bits on the guest won't cause
+> > an EPT
+> > violation/NPF and hence we also check guest MAXPHYADDR and add
+> > PFERR_RSVD_MASK
+> > error code to the page fault if needed.
+> 
+> I'm probably missing something here, but I'm confused by this
+> statement. 
+> Is this for a case where a page has been marked not present and the
+> guest 
+> has also set what it believes are reserved bits? Then when the page
+> is 
+> accessed, the guest sees a page fault without the error code for
+> reserved 
+> bits? If so, my understanding is that is architecturally correct. P=0
+> is 
+> considered higher priority than other page faults, at least on AMD.
+> So if 
+> you have a P=0 and other issues exist within the PTE, AMD will report
+> the 
+> P=0 fault and that's it.
+> 
+> The priority of other page fault conditions when P=1 is not defined
+> and I 
+> don't think we guarantee that you would get all error codes on
+> fault. 
+> Software is always expected to address the page fault and retry, and
+> it 
+> may get another page fault when it does, with a different error
+> code. 
+> Assuming the other errors are addressed, eventually the reserved
+> bits 
+> would cause an NPF and that could be detected by the HV and handled 
+> appropriately.
+> 
+> > The last 3 patches (i.e. SVM bits and patch 11) are not intended
+> > for
+> > immediate inclusion and probably need more discussion.
+> > We've been noticing some unexpected behavior in handling NPF
+> > vmexits
+> > on AMD CPUs (see individual patches for details), and thus we are
+> > proposing a workaround (see last patch) that adds a capability that
+> > userspace can use to decide who to deal with hosts that might have
+> > issues supprting guest MAXPHYADDR < host MAXPHYADDR.
+> 
+> Also, something to consider. On AMD, when memory encryption is
+> enabled 
+> (via the SYS_CFG MSR), a guest can actually have a larger MAXPHYADDR
+> than 
+> the host. How do these patches all play into that?
 
-Hi Andrew, the reasons behind this selection:
+Well the patches definitely don't address that case. It's assumed a
+guest VM's MAXPHYADDR <= host MAXPHYADDR, and hence we handle the case
+where a guests's physical address space is smaller and try to trap
+faults that may go unnoticed by the host.
 
-- the PCS that is controlled by the backplane driver belongs to the PHY
-layer so the representation as a PHY device is legitimate
-- the PHY driver provides the state machine that is required, not using
-this representation backplane would need to add a separate, duplicate
-state machine
-- the limitation, that only one PHY layer entity can be managed by the
-PHYLib, is a known limitation that always existed, is not introduced by
-the backplane support; the unsupported scenario with a backplane connection
-to a PHY entity that needs to be managed relates to that limitation and
-a solution for it should not be added through the backplane support
-- afaik, Russell and Ioana are discussing the PCS representation in the
-context of PHYLink, this submission is using PHYLib. If we are to discuss
-about the PCS representation, it's the problem of the simplistic "one devic=
-e
-in the PHY layer" issue that needs to be addressed to have a proper PCS
-representation at all times.
+My question is in the case of guest MAXPHYADDR > host MAXPHYADDR, do we
+expect somehow that there might be guest physical addresses that
+contain what the host could see as reserved bits? And how'd the host
+handle that?
 
-Madalin
+Thanks,
+Mohammed
+
+> 
+> Thanks,
+> Tom
+> 
+> > 
+> > Mohammed Gamal (7):
+> >    KVM: x86: Add helper functions for illegal GPA checking and page
+> > fault
+> >      injection
+> >    KVM: x86: mmu: Move translate_gpa() to mmu.c
+> >    KVM: x86: mmu: Add guest physical address check in
+> > translate_gpa()
+> >    KVM: VMX: Add guest physical address check in EPT violation and
+> >      misconfig
+> >    KVM: SVM: introduce svm_need_pf_intercept
+> >    KVM: SVM: Add guest physical address check in NPF/PF
+> > interception
+> >    KVM: x86: SVM: VMX: Make GUEST_MAXPHYADDR < HOST_MAXPHYADDR
+> > support
+> >      configurable
+> > 
+> > Paolo Bonzini (4):
+> >    KVM: x86: rename update_bp_intercept to update_exception_bitmap
+> >    KVM: x86: update exception bitmap on CPUID changes
+> >    KVM: VMX: introduce vmx_need_pf_intercept
+> >    KVM: VMX: optimize #PF injection when MAXPHYADDR does not match
+> > 
+> >   arch/x86/include/asm/kvm_host.h | 10 ++------
+> >   arch/x86/kvm/cpuid.c            |  2 ++
+> >   arch/x86/kvm/mmu.h              |  6 +++++
+> >   arch/x86/kvm/mmu/mmu.c          | 12 +++++++++
+> >   arch/x86/kvm/svm/svm.c          | 41 +++++++++++++++++++++++++++-
+> > --
+> >   arch/x86/kvm/svm/svm.h          |  6 +++++
+> >   arch/x86/kvm/vmx/nested.c       | 28 ++++++++++++--------
+> >   arch/x86/kvm/vmx/vmx.c          | 45
+> > +++++++++++++++++++++++++++++----
+> >   arch/x86/kvm/vmx/vmx.h          |  6 +++++
+> >   arch/x86/kvm/x86.c              | 29 ++++++++++++++++++++-
+> >   arch/x86/kvm/x86.h              |  1 +
+> >   include/uapi/linux/kvm.h        |  1 +
+> >   12 files changed, 158 insertions(+), 29 deletions(-)
+> > 
+
