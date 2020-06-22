@@ -2,106 +2,97 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C9BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D277FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C02720767
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA54120706
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 19:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jQHFPHh/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FSeU5aq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbgFVTAH (ORCPT
+        id S1730546AbgFVTAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730519AbgFVTAD (ORCPT
+        Mon, 22 Jun 2020 15:00:14 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54112 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730519AbgFVTAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 15:00:03 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64D29C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 12:00:03 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0a2500329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:2500:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B1D881EC0315;
-        Mon, 22 Jun 2020 21:00:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592852401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=yNIrWdyXw+nImLtUPVb2517x4L9Mdf4hV8BjzW0wDRg=;
-        b=jQHFPHh/8kfJScpzFcdlgsneQyncWjSisgmsrS4P6F/mYQt52xMHavRdRAXdRqm090WY9R
-        z8bkXux2eUqnXkTV3UK1+4YHw6td/XJoNqhuDIZIrPkNC0JCD8l5f6sgtsMY0gzNyeTbw0
-        9jk/ZFB81Q4BPye0ZHnyag0R53EBRUA=
-Date:   Mon, 22 Jun 2020 20:59:54 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>,
-        jpa@kernelbug.mail.kapsi.fi, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
-Message-ID: <20200622185954.GK32200@zn.tnic>
-References: <20200619174127.22304-1-bp@alien8.de>
- <20200619174127.22304-2-bp@alien8.de>
- <CALCETrXZhFJGJA2h4zP743KYTtni-rQSUME8mtSYUdk1-ZTauQ@mail.gmail.com>
- <20200622170908.GH32200@zn.tnic>
- <CALCETrU0C5yVwfAOj+v1RqNBZY+phXrdvCBZMKdOXOExBgMbVg@mail.gmail.com>
- <ef327682-7e9f-5652-1664-3e201ac38f60@intel.com>
- <CALCETrUT1_WVjMbPZhUcX9sjFvLBZKCc2fxeJJsD940k1Ajyrw@mail.gmail.com>
+        Mon, 22 Jun 2020 15:00:08 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxVIF102667;
+        Mon, 22 Jun 2020 13:59:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592852371;
+        bh=duixcIbyvLfRQUl05kcDLZ9l5wNOLbe7Kwc9Cia/AFw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=FSeU5aq6cPZbz03hYKjj1gLFeIbC03rtMYc0uoQOSmKkEmvrf+QDP5zYdHHFpJFgg
+         8ne0TyJ0FR6BCCseSVldWIXJc/JrHHrIoOp+M7zo5kKieugOAO2rITolbmxXuWswAx
+         SO3ed4XXxMJckSkRQfmK//XR+ElV2BqQhMydX2L0=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05MIxVp6038079
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jun 2020 13:59:31 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
+ Jun 2020 13:59:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 22 Jun 2020 13:59:30 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05MIxUab113498;
+        Mon, 22 Jun 2020 13:59:30 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v29 12/16] ARM: defconfig: u8500: Add LP55XX_COMMON config flag
+Date:   Mon, 22 Jun 2020 13:59:15 -0500
+Message-ID: <20200622185919.2131-13-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200622185919.2131-1-dmurphy@ti.com>
+References: <20200622185919.2131-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CALCETrUT1_WVjMbPZhUcX9sjFvLBZKCc2fxeJJsD940k1Ajyrw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:40:38AM -0700, Andy Lutomirski wrote:
-> On Mon, Jun 22, 2020 at 11:38 AM Dave Hansen <dave.hansen@intel.com> wrote:
-> >
-> > On 6/22/20 11:33 AM, Andy Lutomirski wrote:
-> > > Suppose you do:
-> > >
-> > > double x = 1.0;
-> > >
-> > > kernel_fpu_begin();
-> > >
-> > > x += 2.0;
-> > >
-> > > We want to make sure that GCC puts things in the right order.  I
-> > > suppose that even a memory clobber is insufficient here, though.
-> >
-> > Even with CONFIG_PREEMPT disabled, we still have:
-> >
-> >         #define preempt_disable()                       barrier()
-> >
-> > I don't see us supporting preemptible kernel_fpu regions any time soon,
-> > so shouldn't this be sufficient now and for a long time?
-> 
-> That's on the wrong end of the function.  It'sL
-> 
-> preempt_disable();
-> LDMXCSR;
-> <-- some kind of barrier here might be nice
+The dependencies for the LP55XX LED drivers have been updated so that
+the child devices (i.e. LP5521) now depends on the LP55XX_COMMON config
+flag as opposed to the device selecting the LP55XX_COMMON flag.  The
+LP55XX_COMMON needs to be set in the defconfig.
 
-For what? LDMXCSR loads the MXCSR *hardware* register with a u32 from
-memory.
+CC: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ arch/arm/configs/u8500_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-In any case, I'm still unconvinced we should preemptively fix issues
-that might potentially happen when someone uses FPU in the kernel. And
-even if, this doesn't belong in this patch but in a separate one with a
-commit message explaining what is being fixed.
-
-Thx.
-
+diff --git a/arch/arm/configs/u8500_defconfig b/arch/arm/configs/u8500_defconfig
+index 28dd7cf56048..dea599e1c17e 100644
+--- a/arch/arm/configs/u8500_defconfig
++++ b/arch/arm/configs/u8500_defconfig
+@@ -113,6 +113,7 @@ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_LM3530=y
+ CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_LP55XX_COMMON=y
+ CONFIG_LEDS_LP5521=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ CONFIG_RTC_CLASS=y
 -- 
-Regards/Gruss,
-    Boris.
+2.26.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
