@@ -6,70 +6,71 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECDB206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB52620706
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 08:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgFVIjL (ORCPT
+        id S1726511AbgFVIkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:39:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59250 "EHLO
+        Mon, 22 Jun 2020 04:40:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59265 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFVIjL (ORCPT
+        with ESMTP id S1725883AbgFVIkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:39:11 -0400
+        Mon, 22 Jun 2020 04:40:01 -0400
 Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jnHys-0005eB-CX; Mon, 22 Jun 2020 08:39:06 +0000
-Date:   Mon, 22 Jun 2020 10:39:05 +0200
+        id 1jnHzj-0005fp-CR; Mon, 22 Jun 2020 08:39:59 +0000
+Date:   Mon, 22 Jun 2020 10:39:57 +0200
 From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
+To:     Dominique Martinet <asmadeus@codewreck.org>
 Cc:     Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        linux-kernel@vger.kernel.org, ebiederm@xmission.com,
-        akpm@linux-foundation.org, liuzhiqiang26@huawei.com,
-        joel@joelfernandes.org, paulmck@linux.vnet.ibm.com,
-        asmadeus@codewreck.org, kernel test robot <lkp@intel.com>
+        linux-kernel@vger.kernel.org, oleg@redhat.com,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        liuzhiqiang26@huawei.com, joel@joelfernandes.org,
+        paulmck@linux.vnet.ibm.com, kernel test robot <lkp@intel.com>
 Subject: Re: [PATCH] kernel/signal.c: Export symbol __lock_task_sighand
-Message-ID: <20200622083905.c3nurmkbo5yhd6lj@wittgenstein>
+Message-ID: <20200622083957.lfgz4j2dop5ryiz6@wittgenstein>
 References: <20200621133704.77896-1-alexander.kapshuk@gmail.com>
- <20200622062527.GA6516@redhat.com>
+ <20200621135437.GA18092@nautica>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200622062527.GA6516@redhat.com>
+In-Reply-To: <20200621135437.GA18092@nautica>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:25:28AM +0200, Oleg Nesterov wrote:
-> On 06/21, Alexander Kapshuk wrote:
-> >
+On Sun, Jun 21, 2020 at 03:54:37PM +0200, Dominique Martinet wrote:
+> Alexander Kapshuk wrote on Sun, Jun 21, 2020:
 > > Export symbol __lock_task_sighand, so it is accessible from code compiled
 > > as modules.
 > > This fixes the following modpost error:
 > > ERROR: modpost: "__lock_task_sighand" [net/9p/9pnet.ko] undefined!
-> >
-> > Where __lock_task_sighand is called via lock_task_sighand in net/9p/client.c
-> > See https://lore.kernel.org/lkml/20200620201456.14304-1-alexander.kapshuk@gmail.com/.
 > 
-> Why?
+> This can't fix something that's not broken (yet)! :)
 > 
-> current->sighand is stable and can't go away. Unless "current" is exiting and
-> has already passed exit_notify(). So I don't think net/9p needs this helper.
+> I think it'd make more sense to describe why you think we should export
+> it, rather than describe a precise usecase e.g. justify why this would
+> be interesting to use from modules (e.g. it would help modules like 9p
+> take a lock on the current signal handler safely and cleanly through
+> lock_task_sighand())
+> 
+> 
+> 
+> Christian, Andrew - assuming this passes reviews from someone else I'm
+> not sure how to go forward with this; it'd be simpler for me if I could
+> take it in the 9p tree as I need it for the patch Alexander pointed at,
+> but I'm not normally touching any file outside of the 9p tree.
+> Is it better to let either of you take it normally (I think it'd be
+> you?) and wait for that to land, or can I take it in my tree for the
+> next merge window?
 
-From what I can gather from the thread (cf. [1]) that is linked in the
-commit message the main motivation for all of this is sparse not being
-happy and not some bug. (Maybe I'm not seeing something though.)
-
-The patch itself linked here doesn't seem to buy anything. I agree with
-Oleg. Afaict, lock_task_sighand() would only be needed here if the task
-wouldn't be current. So maybe it should just be dropped from the series.
-
-[1]: https://lore.kernel.org/lkml/20200620201456.14304-1-alexander.kapshuk@gmail.com/
+Hm, I don't think the patch is really needed though; see my other mail. :)
 
 Christian
