@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F454C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8748CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F137A20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55DAA20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948621;
-	bh=qlTTFYshQ7DBmBTg+fQe79WObOFPLuIlr88AUawQXrI=;
+	s=default; t=1592948614;
+	bh=mICS6IT17jqvVb3FQXs4RmcZBR8NXgv1Y/Zpr11RqW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0XaCHqh2SrSg83cghv0bMsmZab/QCyUpb5VKXRQUR8lxgdD4JgB6K7+7H1Zx83i2
-	 Fh2/jFInuNnnoFCLX0fNsvCtTx8oC41hZ2IDbtQfHOr3QsDN8A9LApeXBTrnv0yOrY
-	 EH/8nBQU0GQ0m0zyhKLeds9/JYV/q49+1hpwT+6g=
+	b=2MBrfacuAZ6fvc7PXq5etYcjc7MsSbBmibC2rsDWV/82+MYKfQakDYo4URrdskVVF
+	 fkTBnJRYYU1itL9ydeNZdlf8x0+R56kpM6JCzwN1ZGg8FpihrJZ8y0pzLcBRAwptm0
+	 EGvlJ035jhIkWoEb43NzROjjNtk7U+VehHUX2chU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389580AbgFWVni (ORCPT
+        id S2388070AbgFWUDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:43:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41234 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388046AbgFWUDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:30 -0400
+        id S2388052AbgFWUDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E7122078A;
-        Tue, 23 Jun 2020 20:03:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2744A21473;
+        Tue, 23 Jun 2020 20:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942610;
-        bh=qlTTFYshQ7DBmBTg+fQe79WObOFPLuIlr88AUawQXrI=;
+        s=default; t=1592942612;
+        bh=mICS6IT17jqvVb3FQXs4RmcZBR8NXgv1Y/Zpr11RqW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DqXIfmEZeKWb8EkE/SYtVvDF1p0GUZbngvW2G7OSOvsAezvShS+G7PUb8VwBLQYGq
-         JU6WPhGobAebfHRSucpy3ZLNoRSclKhArn4n1+jkzav7K+RBSFFh9r8KkqktyiHiF5
-         gOWTYWKoGsKN5rU4wxzxIxKQINpSpBvf0lsFAxy4=
+        b=TSNMgQ94K3sFX/RBCAYIdBmUuotKFMKcw5a6XTYCnePfXKvyNCaWsdLVJPFaNf77O
+         Dm8rUDp86CG+5nLD66YEfQB4de6lICSk0tSwZafIVrvHNBVUJ3l/ufTfKMTcSdBkF7
+         oQDfqkK08vnS6A2aCQ7gECQCe+U8inQQBxKAGgxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bharata B Rao <bharata@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 064/477] powerpc/book3s64/radix/tlb: Determine hugepage flush correctly
-Date:   Tue, 23 Jun 2020 21:51:01 +0200
-Message-Id: <20200623195410.644046112@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 065/477] PCI: pci-bridge-emul: Fix PCIe bit conflicts
+Date:   Tue, 23 Jun 2020 21:51:02 +0200
+Message-Id: <20200623195410.691602310@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,56 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit 8f53f9c0f68ab2168f637494b9e24034899c1310 ]
+[ Upstream commit c88d19181771bd189147681ef38fc1533ebeff4c ]
 
-With a 64K page size flush with start and end:
+This patch fixes two bit conflicts in the pci-bridge-emul driver:
 
-  (start, end) = (721f680d0000, 721f680e0000)
+1. Bit 3 of Device Status (19 of Device Control) is marked as both
+   Write-1-to-Clear and Read-Only. It should be Write-1-to-Clear.
+   The Read-Only and Reserved bitmasks are shifted by 1 bit due to this
+   error.
 
-results in:
+2. Bit 12 of Slot Control is marked as both Read-Write and Reserved.
+   It should be Read-Write.
 
-  (hstart, hend) = (721f68200000, 721f68000000)
-
-ie. hstart is above hend, which indicates no huge page flush is
-needed.
-
-However the current logic incorrectly sets hflush = true in this case,
-because hstart != hend.
-
-That causes us to call __tlbie_va_range() passing hstart/hend, to do a
-huge page flush even though we don't need to. __tlbie_va_range() will
-skip the actual tlbie operation for start > end. But it will still end
-up calling fixup_tlbie_va_range() and doing the TLB fixups in there,
-which is harmless but unnecessary work.
-
-Reported-by: Bharata B Rao <bharata@linux.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-[mpe: Drop else case, hflush is already false, flesh out change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200513030616.152288-1-aneesh.kumar@linux.ibm.com
+Link: https://lore.kernel.org/r/20200511162117.6674-2-jonathan.derrick@intel.com
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s64/radix_tlb.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pci/pci-bridge-emul.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
-index 758ade2c2b6ed..b5cc9b23cf024 100644
---- a/arch/powerpc/mm/book3s64/radix_tlb.c
-+++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-@@ -884,9 +884,7 @@ is_local:
- 		if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
- 			hstart = (start + PMD_SIZE - 1) & PMD_MASK;
- 			hend = end & PMD_MASK;
--			if (hstart == hend)
--				hflush = false;
--			else
-+			if (hstart < hend)
- 				hflush = true;
- 		}
+diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+index 4f4f54bc732eb..faa414655f338 100644
+--- a/drivers/pci/pci-bridge-emul.c
++++ b/drivers/pci/pci-bridge-emul.c
+@@ -185,8 +185,8 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+ 		 * RO, the rest is reserved
+ 		 */
+ 		.w1c = GENMASK(19, 16),
+-		.ro = GENMASK(20, 19),
+-		.rsvd = GENMASK(31, 21),
++		.ro = GENMASK(21, 20),
++		.rsvd = GENMASK(31, 22),
+ 	},
  
+ 	[PCI_EXP_LNKCAP / 4] = {
+@@ -226,7 +226,7 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+ 			PCI_EXP_SLTSTA_CC | PCI_EXP_SLTSTA_DLLSC) << 16,
+ 		.ro = (PCI_EXP_SLTSTA_MRLSS | PCI_EXP_SLTSTA_PDS |
+ 		       PCI_EXP_SLTSTA_EIS) << 16,
+-		.rsvd = GENMASK(15, 12) | (GENMASK(15, 9) << 16),
++		.rsvd = GENMASK(15, 13) | (GENMASK(15, 9) << 16),
+ 	},
+ 
+ 	[PCI_EXP_RTCTL / 4] = {
 -- 
 2.25.1
 
