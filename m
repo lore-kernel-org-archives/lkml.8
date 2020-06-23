@@ -6,107 +6,47 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40249C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB573C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 219242070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A430820724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732700AbgFWNfX (ORCPT
+        id S1732719AbgFWNfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:35:23 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:59518 "EHLO
+        Tue, 23 Jun 2020 09:35:33 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:59562 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732616AbgFWNfW (ORCPT
+        with ESMTP id S1732616AbgFWNf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:35:22 -0400
+        Tue, 23 Jun 2020 09:35:27 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 5FFD01C0C0A; Tue, 23 Jun 2020 15:35:19 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 15:35:12 +0200
+        id 75CF31C0C0E; Tue, 23 Jun 2020 15:35:25 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 15:35:24 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Micha?? Miros??aw <mirq-linux@rere.qmqm.pl>,
-        kernel@collabora.com
-Subject: Re: [PATCH v2] Input: document inhibiting
-Message-ID: <20200623133512.GA2783@bug>
-References: <f9007f37-c526-5fa4-3188-a554d2434177@redhat.com>
- <20200617101822.8558-1-andrzej.p@collabora.com>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/13] ARM: dts: mmp3: Add the GPU
+Message-ID: <20200623133524.GB2783@bug>
+References: <20200616182341.944473-1-lkundrak@v3.sk>
+ <20200616182341.944473-13-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617101822.8558-1-andrzej.p@collabora.com>
+In-Reply-To: <20200616182341.944473-13-lkundrak@v3.sk>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Tue 2020-06-16 20:23:40, Lubomir Rintel wrote:
+> There's a GC2000 3D core accompanied by a GC300 2D core.
 
-> +Inhibiting input devices
-> +~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Inhibiting a device means ignoring input events from it. As such it is about maintaining
-> +relationships with input handlers - either already existing relationships, or relationships
-> +to be established while the device is in inhibited state.
-> +
-> +If a device is inhibited, no input handler will receive events from it.
-> +
-> +The fact that nobody wants events from the device is exploited further, by calling device's
-> +close() (if there are users) and open() (if there are users) on inhibit and uninhibit
-> +operations, respectively. Indeed, the meaning of close() is to stop providing events
-> +to the input core and that of open() is to start providing events to the input core.
-> +
-> +Calling the device's close() method on inhibit (if there are users) allows the driver
-> +to save power. Either by directly powering down the device or by releasing the
-> +runtime-pm reference it got in open() when the driver is using runtime-pm.
-> +
-> +Inhibiting and uninhibiting are orthogonal to opening and closing the device by input
-> +handlers. Userspace might want to inhibit a device in anticipation before any handler is
-> +positively matched against it.
-
-Ok.
-
-> +Inhibiting and uninhibiting are orthogonal to device's being a wakeup source, too. 
-> Being a +wakeup source plays a role when the system is sleeping, not when the system is 
-> operating. +How drivers should program their interaction between inhibiting, sleeping 
-> and being a wakeup +source is driver-specific. + +Taking the analogy with the network 
-
-I don't believe making interaction driver-specific is good idea. We should decide
-what reasonable behaviour is and then make drivers implement that...
+According to the next patch, it is GC200...
 
 Best regards,
 									Pavel
