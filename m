@@ -2,162 +2,240 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2645C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3EEA206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9626C206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:29:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="ajcInOE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731505AbgFWC1S (ORCPT
+        id S1731547AbgFWC3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
+        Mon, 22 Jun 2020 22:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731414AbgFWC1R (ORCPT
+        with ESMTP id S1730456AbgFWC3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:27:17 -0400
-Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C086C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:27:17 -0700 (PDT)
-Received: from mr2.cc.vt.edu (smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 05N2RE6a016599
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:27:14 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 05N2R9iT030880
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:27:14 -0400
-Received: by mail-qk1-f198.google.com with SMTP id h18so14345695qkj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:27:14 -0700 (PDT)
+        Mon, 22 Jun 2020 22:29:23 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A3AC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:29:22 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b16so9339584pfi.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PKchlRj+mdFPNw3XAQqo8a20PkKl15g0U5UqcJUkAYY=;
+        b=ajcInOE142WEcW8AQt0D8++Ywg/GihaqjVoyx83TFxOnEvo8Iy3/KEmQ/cMzVVXWIO
+         g2nPboXK4Pl3PUsPKDFBGvm5u2U0SC9oM+MR23a5BTbNts+kxAl8MzaVIqmjcY2Ze4Sz
+         2a2g2A+DBgZORXqRY9evRBSKHsU98xb/gKB6gsKWLxHR8/QL3ogGSxFSSW+1jKjtlVXf
+         5oWE8JdxinKY4vy2BHBzXXrYRvSXR193yfcKroOMQ2R6G29tZrTjbZLsyl5cdQbnhHYQ
+         tYEZ8dSu21tx5ybUCaOKFxqxPTDLJAB7XDw6ZHSG0/8ddgk7mo2X7kI4n1F0/tc8Cpaq
+         388g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=+tx+pOYJvZ9eTxB5UMFg+DUdHuZXQfS64TJtcUMMBrg=;
-        b=fxBPQQ8aUGO+BTv1IhKmmotDYkBn2GizNmdfy7lD+phX1QdS2HAVqk7ArlQgFuB3/z
-         GZN1+BTxhlwjkIspaj8RkYqQu3wCFn60Jtx9qESqiLvVgNZvrIY93gJxirvoCgPFWZ50
-         Kawcrp/eaPRadLiIoqqa03IjuGQeLwQ0JbSwMZ3kn8Rha0+qIekxktoOnTsnZpmkjvir
-         MwbH1KgCzoxGA8pM1nGcyhrJv7xp9WB7kadi/nrEdayH2cWpGvhVLhHGVRCugRMXDS0Q
-         uRv7kzi62if6n5funAEYpZ81n1ui7ERxmKfhl2KC6niFVoqnjb6MN6qIfuxtoY3Ljz6H
-         uUvQ==
-X-Gm-Message-State: AOAM53125Ux1+3xLkooROGCy/GUPLQk39s5sOVU0hQTGDn/ZUgbvfiA6
-        +n6Hk7CtvGZgW05uixksEqFfTrxy6Kyg2dAPvuh8mGEyYHSCHb39VjHAelG+KTnEMn9DjxF5ukM
-        gwbIQAWecawqRKmxo4Jm1e8R/auqzQkKxHVs=
-X-Received: by 2002:a0c:f991:: with SMTP id t17mr24855603qvn.123.1592879229056;
-        Mon, 22 Jun 2020 19:27:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwZwuTxC89TFwp2ScpxEmvcF4a++QGM55NORtq8+7aSkWI44MQlxsgKHE1A7EWob7dKi4JrnQ==
-X-Received: by 2002:a0c:f991:: with SMTP id t17mr24855586qvn.123.1592879228665;
-        Mon, 22 Jun 2020 19:27:08 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id d2sm15549488qti.62.2020.06.22.19.27.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 19:27:07 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: kbuild: separate kerneldoc warnings from compiler warnings
-In-Reply-To: <CAK7LNARevD4o1WCRatKqZcf9-arxsvBcyLKHcNSM1ih+TDS5Mw@mail.gmail.com>
-References: <591473.1592679153@turing-police>
- <CAK7LNARevD4o1WCRatKqZcf9-arxsvBcyLKHcNSM1ih+TDS5Mw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1592879225_62491P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 22 Jun 2020 22:27:06 -0400
-Message-ID: <771628.1592879226@turing-police>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=PKchlRj+mdFPNw3XAQqo8a20PkKl15g0U5UqcJUkAYY=;
+        b=pzxKKI95H384qYK+1JGCQRhlyqCoTZ02l/Wl/A9Zho8HmpUzThuGk+i0fItZHN1MRe
+         R/ec4TLlrXUn7W2vfjn1P5usVKwa170dZDQWHB7YfBGfTcSTDRsKKBveczPZS88i3ORG
+         S3QlIkcoksOkzhLVT6JyBKUDXgHWX8Pbw5UT7dXmmOq+1S5kRUcxIbCA8fVTkAqdueIy
+         3MR6OVrl32jI6efJeXoYdjxWBKDgk4xxdCeXnlrV+ZWYsuzBrDR+iKtPlzrXeVgPwyMT
+         pzgWNKVAtE4isVGik7FJVBrRc3EHteJzu9f+VJ2uEsfxAHGlLzc+0LRPaFQyUTA9sW2c
+         mkMw==
+X-Gm-Message-State: AOAM5307pko2chEwaEivHHoZi+sVlvNMw0DYA50ZEyZVfp2eJgeDW+Z7
+        Nt0df6cuK2gec7PSBhqiS4giTqf1U9ExxA==
+X-Google-Smtp-Source: ABdhPJz69THXTzvZ7ChYtCta7E7TdXXWAVr/+IByi35I2bhcTlHJmjJtvqGIz146qmGdYqRDU7Bi/g==
+X-Received: by 2002:a63:9246:: with SMTP id s6mr15049908pgn.22.1592879361575;
+        Mon, 22 Jun 2020 19:29:21 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id i22sm15191430pfo.92.2020.06.22.19.29.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 19:29:20 -0700 (PDT)
+Subject: Re: [PATCH 1/4] powerpc/pseries/iommu: Update call to
+ ibm,query-pe-dma-windows
+To:     Leonardo Bras <leobras.c@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200619050619.266888-1-leobras.c@gmail.com>
+ <20200619050619.266888-2-leobras.c@gmail.com>
+ <cfbcacde-ca7f-5fc7-2fcf-267f698f3d49@ozlabs.ru>
+ <c15189a5c77752ea62022608dab28601965afaaa.camel@gmail.com>
+ <4176ea2b-c778-2f59-ba57-7339b873ead5@ozlabs.ru>
+ <c331742c9f7a3e3ccead5d9db99a66d3f268b95f.camel@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <8b7482b4-ec5d-3c20-a5b7-3456e7592d6d@ozlabs.ru>
+Date:   Tue, 23 Jun 2020 12:29:15 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <c331742c9f7a3e3ccead5d9db99a66d3f268b95f.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1592879225_62491P
-Content-Type: text/plain; charset=us-ascii
 
-On Mon, 22 Jun 2020 14:10:13 +0900, Masahiro Yamada said:
 
-> > This patch introduces a new build flag 'K=1' which controls whether kerneldoc
-> > warnings should be issued, separating them from the compiler warnings that W=
-> > controls.
+On 23/06/2020 12:14, Leonardo Bras wrote:
+> On Tue, 2020-06-23 at 11:12 +1000, Alexey Kardashevskiy wrote:
+> [snip]
+>>>>> +static int query_ddw_out_sz(struct device_node *par_dn)
+>>>>
+>>>> Can easily be folded into query_ddw().
+>>>
+>>> Sure, but it will get inlined by the compiler, and I think it reads
+>>> better this way. 
+>>> I mean, I understand you have a reason to think it's better to fold it
+>>> in query_ddw(), and I would like to better understand that to improve
+>>> my code in the future.
+>>
+>> You have numbers 5 and 6 (the number of parameters) twice in the file,
+>> this is why I brought it up. query_ddw_out_sz() can potentially return
+>> something else than 5 or 6 and you will have to change the callsite(s)
+>> then, since these are not macros, this allows to think there may be more
+>> places with 5 and 6. Dunno. A single function will simplify things imho.
+> 
+> That's a good point. Thanks!
+> 
+>>
+>>
+>>>>> +{
+>>>>> +	int ret;
+>>>>> +	u32 ddw_ext[3];
+>>>>> +
+>>>>> +	ret = of_property_read_u32_array(par_dn, "ibm,ddw-extensions",
+>>>>> +					 &ddw_ext[0], 3);
+>>>>> +	if (ret || ddw_ext[0] < 2 || ddw_ext[2] != 1)
+>>>>
+>>>> Oh that PAPR thing again :-/
+>>>>
+>>>> ===
+>>>> The “ibm,ddw-extensions” property value is a list of integers the first
+>>>> integer indicates the number of extensions implemented and subsequent
+>>>> integers, one per extension, provide a value associated with that
+>>>> extension.
+>>>> ===
+>>>>
+>>>> So ddw_ext[0] is length.
+>>>> Listindex==2 is for "reset" says PAPR and
+>>>> Listindex==3 is for this new 64bit "largest_available_block".
+>>>>
+>>>> So I'd expect ddw_ext[2] to have the "reset" token and ddw_ext[3] to
+>>>> have "1" for this new feature but indexes are smaller. I am confused.
+>>>> Either way these "2" and "3" needs to be defined in macros, "0" probably
+>>>> too.
+>>>
+>>> Remember these indexes are not C-like 0-starting indexes, where the
+>>> size would be Listindex==1.
+>>
+>> Yeah I can see that is the assumption but out of curiosity - is it
+>> written anywhere? Across PAPR, they index bytes from 1 but bits from 0 :-/
+> 
+> From LoPAR: 
+> The “ibm,ddw-extensions” property value is a list of integers the first
+> integer indicates the number of extensions implemented and subsequent
+> integers, one per extension, provide a value associated with that
+> extension.
+> 
+> And the list/table then shows extensions from 2 on onwards:
+> List index 2 : Token of the ibm,reset-pe-dma-windows RTAS Call
+> (...)
 
-> I do not understand why this change is needed.
 
-> IIRC, our goal was to enable this check by default.
-> https://patchwork.kernel.org/patch/10030521/
-> but there are so many warnings.
+I means a place saying "we number things starting from 1 and not from
+zero", this kind of thing. The code implementing the spec uses the C
+language so it would make sense to count from zero, otoh the writer
+probably did not write any code for ages :)
 
-So are we getting any closer to actually achieving that goal?
-I've done a fair number of cleanup patches to make the kernel
-safe(r) to build with W=1, but there's still quite the pile.
 
-And actually, if you want people to actually fix up the kerneldoc
-issues, making it easier helps the chances of getting patches. If
-somebody is in the mood to do kerneldoc clean-ups, having an easy
-way to get just the kerneldoc messages rather than having to find
-them mixed in with all the rest helps...
 
-So I ran some numbers...
-
-A plain "make" for an arm allmodconfig weighs in at 40,184 lines.
-
-Building with K=1 produces 10,358 additional lines of output - that's what
-needs patching if you want the kerneldocs cleaned up.
-
-Building with W=1 (w/ this patch) adds 155,773 lines. Not A Typo. Of those, a
-whole whopping 116,699 are complaints from DTS issues, and 39,074 for all other
-gcc warnings. (Though I have 2 patches that I'll send later that will knock
-about 3,000 off the "all other gcc warnings" numbers).
-
-(And for completeness, building with C=1 for sparse adds 18,936 lines that say
-'CHECK', and 56,915 lines of sparse warnings)
-
-> Meanwhile, this is checked only when W= is given
-> because 0-day bot tests with W=1 to
-> block new kerneldoc warnings.
-
-Looking at the numbers, I really need to say "So how is that working out for
-us, anyhow?"
-
-In particular, is it just flagging them, or do we have an actual procedure that
-stops patches from being accepted if they add new kerneldoc warnings?
-
-Another issue that needs to be considered is how high-quality a fix for a
-kerneldoc warning is.  Getting rid of a warning by adding a comment line that
-says the 3rd parameter is a pointer to a 'struct wombat' does nobody any good
-if looking at the formal parameter list clearly states that the third parameter
-is a 'struct wombat *foo'. Heck, I could probably create a Perl script that
-automates that level of fixing.
-
-But making an *informative* comment requires doing a bunch of research so that
-you understand why *this* struct wombat is the one we care about (and whether
-we care *so* much that somebody better be holding a lock....)
-
-> K=1 ?   Do people need to learn this new switch?
-
---==_Exmh_1592879225_62491P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXvFoeQdmEQWDXROgAQL45g//RXlI5mcm9sTrsYpGogD7fPTZmf8rV5Ev
-kwvwylKgIZwB0K1kBrK4tK8hgq9BErcMpEjKsCdJcpXNzbGiyfKSIYylxOQtdspA
-nsENDIw4kh0HXOrbOJDpYyql58OKXKl5PPWLoQm8ZXWiLsMgo5mE7YAaLLoWxi3f
-t6Q04i4rCL/PjtgF9IcZgoGRS49G+9HwuPHRlmPgzwYuKtn2Jx3nAGdA3sjEzIFr
-J2G79OeRX88qwOxeehDcCM4AKbvjnsVichPrBJdcQh+n9kHdHJ+vrxvYtB644WFd
-qAva/xY7gkptMX97yO9eAQiZF/xg2qF/lIkRcM9ETdMM42HNLc+jkjkxIUKrTwFA
-Y4uqXWAzXi0vdZK+jAEWjgTnrrh1zIROY+6Uob11Zcp/vs9cCgtLFIdKMTndeh+/
-D23ZcjHyc3WbYKkFVj3gAc30VG5/pIB8lQ7Fm75orP0agqf3jJUclYOLb2VC4GiM
-HtplgK3ewJNkW4x3VDaNiOG0obFY6WnQgUxMsfLzGRmVEXEedshQ+3EapZPS0t0n
-fHDbGbU8wZLHsCKkosyy8iin/lwGQzan/rW3R98PQSYz6uGLD0p/rZKAmbHGThee
-Lqhn4oCZ+rBtgepfQhWACXwAmXBx6MthxJPMoveD2CVXh1IVc7c1cfaRq1O2vOn1
-S0ApTLmmm9Q=
-=5z/x
------END PGP SIGNATURE-----
-
---==_Exmh_1592879225_62491P--
+-- 
+Alexey
