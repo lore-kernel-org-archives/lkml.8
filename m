@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF00206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504FA2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948252;
-	bh=5/18Yhr+/Oor6qJ9G8gSqSPTEMjlTf2P2hTF0jAwBl4=;
+	s=default; t=1592948260;
+	bh=YeSMzpUEVd/Ea1T4A5u8LcMSo/luwXHnf3TWTA7I/8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CgQbYEl2vQlKaWD68vGABNidylfsdEEnOIV2einUjVFtXHpriVfucp5GSvHE2K5/2
-	 jAsYrxASC2Rk7JoWJJfFZbEXVf0pteDmUguuBlrXbDpiiQ7PwuWq/G3fD6OAdVL2TH
-	 +Zy7GZ+YV7KLHY+m65DQy0gpVWfuOwFccPFsNP/I=
+	b=aoxyvBVUt0nd4JKNVRwPkLmHAYgiUmtaxGCC/7+A/hNZMXBTmyNr3HG1NYqR0mYrr
+	 encn8tmH17SErgqV0mEiOPgbI8u8WNDF8FaVufEHFntVZALIKi4v6Sk4FL+5eWRKQJ
+	 9iKBVKwoEmLYhweegOBCaaD2wCWiCuqZ51OvkPp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393797AbgFWVha (ORCPT
+        id S2388887AbgFWVhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:37:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388293AbgFWUJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:00 -0400
+        id S2388182AbgFWUIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 720CD2078A;
-        Tue, 23 Jun 2020 20:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E63F32082F;
+        Tue, 23 Jun 2020 20:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942937;
-        bh=5/18Yhr+/Oor6qJ9G8gSqSPTEMjlTf2P2hTF0jAwBl4=;
+        s=default; t=1592942930;
+        bh=YeSMzpUEVd/Ea1T4A5u8LcMSo/luwXHnf3TWTA7I/8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uR7sAt6+Jw8+IwXO7+WbHHL1yubpobKyeLL+3GYOedgatUzVAKwAirHytkbeUHOj2
-         UcG+v+CHw22qAhgdbN57VFrCA2xd/tjTBQyKwegiI+6bAkdWEfVjUXXEIF8gu5xKM6
-         XeWxSazN9vxVo5fpL8Tf5qmz4NrZ0hnQuSjmI6Y8=
+        b=QThCtETvl+VfIPv3P4KRwezuS9BVwjsZgrGj8IOaMFH5oapmS8ybgVzsjE/Xe7cAC
+         u4Uk0X+g369QH/juq/rD+gEpK5bqEAXLFwmkOEfWrXj8/Pn6tUOc49mU6OyM4DgRtn
+         hpmAg5NHftPbM0HEzdTXiVzvo2FtLPP2V+KrKWGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 194/477] remoteproc: qcom_q6v5_mss: Drop accesses to MPSS PERPH register space
-Date:   Tue, 23 Jun 2020 21:53:11 +0200
-Message-Id: <20200623195416.759143353@linuxfoundation.org>
+Subject: [PATCH 5.7 191/477] ASoC: ux500: mop500: Fix some refcounted resources issues
+Date:   Tue, 23 Jun 2020 21:53:08 +0200
+Message-Id: <20200623195416.613650010@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,285 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit a9fdc79d488623d36341f0f3d08f5aa1bedb9d53 ]
+[ Upstream commit 4e8748fcaeec073e3ba794871ce86c545e4f961f ]
 
-7C retail devices using MSA based boot will result in a fuse combination
-which will prevent accesses to MSS PERPH register space where the mpss
-clocks and halt-nav reside. So drop all accesses to the MPSS PERPH
-register space. Issuing HALT NAV request and turning on the mss clocks
-as part of SSR will no longer be required since the modem firmware will
-have the necessary fixes to ensure that there are no pending NAV DMA
-transactions.
+There are 2 issues here:
+   - if one of the 'of_parse_phandle' fails, calling 'mop500_of_node_put()'
+     is a no-op because the 'mop500_dai_links' structure has not been
+     initialized yet, so the referenced are not decremented
+   - The reference stored in 'mop500_dai_links[i].codecs' is refcounted
+     only once in the probe and must be decremented only once.
 
-Tested-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200415145110.20624-3-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 39013bd60e79 ("ASoC: Ux500: Dispose of device nodes correctly")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20200512100705.246349-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_q6v5_mss.c | 102 +++++------------------------
- 1 file changed, 18 insertions(+), 84 deletions(-)
+ sound/soc/ux500/mop500.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 22416e86a1742..629abcee2c1d5 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -69,13 +69,9 @@
- #define AXI_HALTREQ_REG			0x0
- #define AXI_HALTACK_REG			0x4
- #define AXI_IDLE_REG			0x8
--#define NAV_AXI_HALTREQ_BIT		BIT(0)
--#define NAV_AXI_HALTACK_BIT		BIT(1)
--#define NAV_AXI_IDLE_BIT		BIT(2)
- #define AXI_GATING_VALID_OVERRIDE	BIT(0)
+diff --git a/sound/soc/ux500/mop500.c b/sound/soc/ux500/mop500.c
+index 2873e8e6f02be..cdae1190b930b 100644
+--- a/sound/soc/ux500/mop500.c
++++ b/sound/soc/ux500/mop500.c
+@@ -63,10 +63,11 @@ static void mop500_of_node_put(void)
+ {
+ 	int i;
  
- #define HALT_ACK_TIMEOUT_US		100000
--#define NAV_HALT_ACK_TIMEOUT_US		200
- 
- /* QDSP6SS_RESET */
- #define Q6SS_STOP_CORE			BIT(0)
-@@ -143,7 +139,7 @@ struct rproc_hexagon_res {
- 	int version;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
--	bool has_halt_nav;
-+	bool has_spare_reg;
- };
- 
- struct q6v5 {
-@@ -154,13 +150,11 @@ struct q6v5 {
- 	void __iomem *rmb_base;
- 
- 	struct regmap *halt_map;
--	struct regmap *halt_nav_map;
- 	struct regmap *conn_map;
- 
- 	u32 halt_q6;
- 	u32 halt_modem;
- 	u32 halt_nc;
--	u32 halt_nav;
- 	u32 conn_box;
- 
- 	struct reset_control *mss_restart;
-@@ -206,7 +200,7 @@ struct q6v5 {
- 	struct qcom_sysmon *sysmon;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
--	bool has_halt_nav;
-+	bool has_spare_reg;
- 	int mpss_perm;
- 	int mba_perm;
- 	const char *hexagon_mdt_image;
-@@ -427,21 +421,19 @@ static int q6v5_reset_assert(struct q6v5 *qproc)
- 		reset_control_assert(qproc->pdc_reset);
- 		ret = reset_control_reset(qproc->mss_restart);
- 		reset_control_deassert(qproc->pdc_reset);
--	} else if (qproc->has_halt_nav) {
-+	} else if (qproc->has_spare_reg) {
- 		/*
- 		 * When the AXI pipeline is being reset with the Q6 modem partly
- 		 * operational there is possibility of AXI valid signal to
- 		 * glitch, leading to spurious transactions and Q6 hangs. A work
- 		 * around is employed by asserting the AXI_GATING_VALID_OVERRIDE
--		 * BIT before triggering Q6 MSS reset. Both the HALTREQ and
--		 * AXI_GATING_VALID_OVERRIDE are withdrawn post MSS assert
--		 * followed by a MSS deassert, while holding the PDC reset.
-+		 * BIT before triggering Q6 MSS reset. AXI_GATING_VALID_OVERRIDE
-+		 * is withdrawn post MSS assert followed by a MSS deassert,
-+		 * while holding the PDC reset.
- 		 */
- 		reset_control_assert(qproc->pdc_reset);
- 		regmap_update_bits(qproc->conn_map, qproc->conn_box,
- 				   AXI_GATING_VALID_OVERRIDE, 1);
--		regmap_update_bits(qproc->halt_nav_map, qproc->halt_nav,
--				   NAV_AXI_HALTREQ_BIT, 0);
- 		reset_control_assert(qproc->mss_restart);
- 		reset_control_deassert(qproc->pdc_reset);
- 		regmap_update_bits(qproc->conn_map, qproc->conn_box,
-@@ -464,7 +456,7 @@ static int q6v5_reset_deassert(struct q6v5 *qproc)
- 		ret = reset_control_reset(qproc->mss_restart);
- 		writel(0, qproc->rmb_base + RMB_MBA_ALT_RESET);
- 		reset_control_deassert(qproc->pdc_reset);
--	} else if (qproc->has_halt_nav) {
-+	} else if (qproc->has_spare_reg) {
- 		ret = reset_control_reset(qproc->mss_restart);
- 	} else {
- 		ret = reset_control_deassert(qproc->mss_restart);
-@@ -761,32 +753,6 @@ static void q6v5proc_halt_axi_port(struct q6v5 *qproc,
- 	regmap_write(halt_map, offset + AXI_HALTREQ_REG, 0);
+-	for (i = 0; i < 2; i++) {
++	for (i = 0; i < 2; i++)
+ 		of_node_put(mop500_dai_links[i].cpus->of_node);
+-		of_node_put(mop500_dai_links[i].codecs->of_node);
+-	}
++
++	/* Both links use the same codec, which is refcounted only once */
++	of_node_put(mop500_dai_links[0].codecs->of_node);
  }
  
--static void q6v5proc_halt_nav_axi_port(struct q6v5 *qproc,
--				       struct regmap *halt_map,
--				       u32 offset)
--{
--	unsigned int val;
--	int ret;
--
--	/* Check if we're already idle */
--	ret = regmap_read(halt_map, offset, &val);
--	if (!ret && (val & NAV_AXI_IDLE_BIT))
--		return;
--
--	/* Assert halt request */
--	regmap_update_bits(halt_map, offset, NAV_AXI_HALTREQ_BIT,
--			   NAV_AXI_HALTREQ_BIT);
--
--	/* Wait for halt ack*/
--	regmap_read_poll_timeout(halt_map, offset, val,
--				 (val & NAV_AXI_HALTACK_BIT),
--				 5, NAV_HALT_ACK_TIMEOUT_US);
--
--	ret = regmap_read(halt_map, offset, &val);
--	if (ret || !(val & NAV_AXI_IDLE_BIT))
--		dev_err(qproc->dev, "port failed halt\n");
--}
--
- static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
- {
- 	unsigned long dma_attrs = DMA_ATTR_FORCE_CONTIGUOUS;
-@@ -951,9 +917,6 @@ static int q6v5_mba_load(struct q6v5 *qproc)
- halt_axi_ports:
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
--	if (qproc->has_halt_nav)
--		q6v5proc_halt_nav_axi_port(qproc, qproc->halt_nav_map,
--					   qproc->halt_nav);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
+ static int mop500_of_probe(struct platform_device *pdev,
+@@ -81,7 +82,9 @@ static int mop500_of_probe(struct platform_device *pdev,
  
- reclaim_mba:
-@@ -1001,9 +964,6 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
- 
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
--	if (qproc->has_halt_nav)
--		q6v5proc_halt_nav_axi_port(qproc, qproc->halt_nav_map,
--					   qproc->halt_nav);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
- 	if (qproc->version == MSS_MSM8996) {
- 		/*
-@@ -1447,36 +1407,12 @@ static int q6v5_init_mem(struct q6v5 *qproc, struct platform_device *pdev)
- 	qproc->halt_modem = args.args[1];
- 	qproc->halt_nc = args.args[2];
- 
--	if (qproc->has_halt_nav) {
--		struct platform_device *nav_pdev;
--
-+	if (qproc->has_spare_reg) {
- 		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
--						       "qcom,halt-nav-regs",
-+						       "qcom,spare-regs",
- 						       1, 0, &args);
- 		if (ret < 0) {
--			dev_err(&pdev->dev, "failed to parse halt-nav-regs\n");
--			return -EINVAL;
--		}
--
--		nav_pdev = of_find_device_by_node(args.np);
--		of_node_put(args.np);
--		if (!nav_pdev) {
--			dev_err(&pdev->dev, "failed to get mss clock device\n");
--			return -EPROBE_DEFER;
--		}
--
--		qproc->halt_nav_map = dev_get_regmap(&nav_pdev->dev, NULL);
--		if (!qproc->halt_nav_map) {
--			dev_err(&pdev->dev, "failed to get map from device\n");
--			return -EINVAL;
--		}
--		qproc->halt_nav = args.args[0];
--
--		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
--						       "qcom,halt-nav-regs",
--						       1, 1, &args);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "failed to parse halt-nav-regs\n");
-+			dev_err(&pdev->dev, "failed to parse spare-regs\n");
- 			return -EINVAL;
- 		}
- 
-@@ -1562,7 +1498,7 @@ static int q6v5_init_reset(struct q6v5 *qproc)
- 		return PTR_ERR(qproc->mss_restart);
+ 	if (!(msp_np[0] && msp_np[1] && codec_np)) {
+ 		dev_err(&pdev->dev, "Phandle missing or invalid\n");
+-		mop500_of_node_put();
++		for (i = 0; i < 2; i++)
++			of_node_put(msp_np[i]);
++		of_node_put(codec_np);
+ 		return -EINVAL;
  	}
- 
--	if (qproc->has_alt_reset || qproc->has_halt_nav) {
-+	if (qproc->has_alt_reset || qproc->has_spare_reg) {
- 		qproc->pdc_reset = devm_reset_control_get_exclusive(qproc->dev,
- 								    "pdc_reset");
- 		if (IS_ERR(qproc->pdc_reset)) {
-@@ -1688,7 +1624,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, qproc);
- 
--	qproc->has_halt_nav = desc->has_halt_nav;
-+	qproc->has_spare_reg = desc->has_spare_reg;
- 	ret = q6v5_init_mem(qproc, pdev);
- 	if (ret)
- 		goto free_rproc;
-@@ -1837,8 +1773,6 @@ static const struct rproc_hexagon_res sc7180_mss = {
- 	.active_clk_names = (char*[]){
- 		"mnoc_axi",
- 		"nav",
--		"mss_nav",
--		"mss_crypto",
- 		NULL
- 	},
- 	.active_pd_names = (char*[]){
-@@ -1853,7 +1787,7 @@ static const struct rproc_hexagon_res sc7180_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
--	.has_halt_nav = true,
-+	.has_spare_reg = true,
- 	.version = MSS_SC7180,
- };
- 
-@@ -1888,7 +1822,7 @@ static const struct rproc_hexagon_res sdm845_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = true,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_SDM845,
- };
- 
-@@ -1915,7 +1849,7 @@ static const struct rproc_hexagon_res msm8998_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_MSM8998,
- };
- 
-@@ -1945,7 +1879,7 @@ static const struct rproc_hexagon_res msm8996_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_MSM8996,
- };
- 
-@@ -1978,7 +1912,7 @@ static const struct rproc_hexagon_res msm8916_mss = {
- 	},
- 	.need_mem_protection = false,
- 	.has_alt_reset = false,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_MSM8916,
- };
- 
-@@ -2019,7 +1953,7 @@ static const struct rproc_hexagon_res msm8974_mss = {
- 	},
- 	.need_mem_protection = false,
- 	.has_alt_reset = false,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_MSM8974,
- };
  
 -- 
 2.25.1
