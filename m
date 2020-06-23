@@ -2,227 +2,113 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A734CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BE5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82446204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DC5204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XaG5IS7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387472AbgFWQr2 (ORCPT
+        id S2387460AbgFWQri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:47:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39094 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733073AbgFWQpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:45:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4FDDEAECB;
-        Tue, 23 Jun 2020 16:45:20 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org
-Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 22/50] staging: vchi: Use enum vchiq_bulk_mode instead of vchi's transmission flags
-Date:   Tue, 23 Jun 2020 18:42:08 +0200
-Message-Id: <20200623164235.29566-23-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
-References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
+        Tue, 23 Jun 2020 12:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733052AbgFWQrg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:47:36 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47383C061755;
+        Tue, 23 Jun 2020 09:47:36 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g21so4001237wmg.0;
+        Tue, 23 Jun 2020 09:47:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=2a8A3SZ7tBOcfEqWak8yyvM0vR1xvbK/AAfn7XUHse8=;
+        b=XaG5IS7m1eA+gI4FIsCp1abY5EaS5J4F++5cxdUwUG2r6Oj46qpLOXkCiesfyQ+75z
+         5e1kVESZ1WPd+WbF1ptJigMflNi8z0SqXlT85/Jy2hBzcQKK56SkP6qFr77pZHnkTVHU
+         og9a64+MImwd6LMEHElbEuslUPh57AbB7GqvCWjqbdwrAXyD/tMgKzx2DTeu64K4cUjJ
+         Ab295T4L4df3dCYNjJNyGD2Bnz58dIMwlJemGRZLq668ic4/wmCEsew/Di9V5GbP0z7T
+         bR7srReGDI5xCZ0am81PqoKq18wXCcaE/d9u27k0n0AMwjBJhcxh88BWphAs7Yz5thUe
+         IbsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=2a8A3SZ7tBOcfEqWak8yyvM0vR1xvbK/AAfn7XUHse8=;
+        b=LvvCRSC9gllARgeK+p+oKgKnVhyD8YD1d3dGDidQp8/eSyh24GW9lMqHJ0ICcz9Tlr
+         TI/7VI6/GW9e8vJxukmjEiAMTpygDmofls2vD67ew5+1ZDBgjLyU+HlWaS3unrAcJ4rn
+         WvBFFFihgZ3VDbug0l9BBLhA/rE7WI8Pjb81RjP1D4TTJffZanOX6i8x71NuCpMfnk18
+         XS14vRqH4eDuqFGhgyIjRiaNf//+szsFCtnZ6xDchiEsDzUP5zFFiI8Epr+FlUSwZqDH
+         /mVA4UREh5GTACjdLDL/OLHlllLIflq8bZ2B7rvu6fNW7re9VBmYfRw4qlG3rPafwiNk
+         1dSA==
+X-Gm-Message-State: AOAM5300vQpqnPa9XAOgN5nGXCW57x+cm37upcPCbxvc/TXJL13Ex/tV
+        Z5TtMJENEV90PH+CX/3Z5YE=
+X-Google-Smtp-Source: ABdhPJxSuhZVggr1/EQ+Jrz7f0zu6OuFXAZICwjiL3Xfp9K7vXfwNBCxLQtiBy6U5aX7CEwNsEZHRQ==
+X-Received: by 2002:a1c:2485:: with SMTP id k127mr22257875wmk.138.1592930855034;
+        Tue, 23 Jun 2020 09:47:35 -0700 (PDT)
+Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
+        by smtp.gmail.com with ESMTPSA id d28sm25319430wrc.50.2020.06.23.09.47.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 09:47:34 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 18:47:33 +0200
+From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: brocken devfreq simple_ondemand for Odroid XU3/4?
+Message-ID: <20200623164733.qbhua7b6cg2umafj@macmini.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vchi has a set of transfer flags which almost map 1:1 to vchiq's own
-transfer modes. For the sake of simplicity let's use the later and
-delete vchi's.
+Hi everybody,
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- .../bcm2835-audio/bcm2835-vchiq.c             |  2 +-
- .../vc04_services/bcm2835-audio/bcm2835.h     |  1 +
- .../vc04_services/interface/vchi/vchi.h       |  4 +-
- .../interface/vchi/vchi_common.h              |  9 ----
- .../interface/vchiq_arm/vchiq_shim.c          | 44 ++-----------------
- .../vc04_services/vchiq-mmal/mmal-vchiq.c     |  4 +-
- 6 files changed, 9 insertions(+), 55 deletions(-)
+Is DVFS for memory bus really working on Odroid XU3/4 board?
+Using a simple microbenchmark that is doing only memory accesses, memory DVFS
+seems to not working properly:
 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-index 68119246f10b..565853ec1e7a 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-@@ -348,7 +348,7 @@ int bcm2835_audio_write(struct bcm2835_alsa_stream *alsa_stream,
- 		/* Send the message to the videocore */
- 		status = vchi_bulk_queue_transmit(instance->service,
- 						  src, count,
--						  VCHI_FLAGS_BLOCK_UNTIL_DATA_READ,
-+						  VCHIQ_BULK_MODE_BLOCKING,
- 						  NULL);
- 	} else {
- 		while (count > 0) {
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-index 2a94e825194f..7a0e4ab50fc7 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-@@ -9,6 +9,7 @@
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/pcm-indirect.h>
-+#include "interface/vchiq_arm/vchiq_if.h"
- #include "interface/vchi/vchi.h"
- 
- #define MAX_SUBSTREAMS   (8)
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
-index 92ce811fc28d..9a74ca4e1062 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
-@@ -105,14 +105,14 @@ extern int32_t vchi_held_msg_release(struct vchi_held_msg *message);
- extern int32_t vchi_bulk_queue_receive(struct vchi_service *service,
- 				       void *data_dst,
- 				       uint32_t data_size,
--				       enum vchi_flags flags,
-+				       enum vchiq_bulk_mode mode,
- 				       void *transfer_handle);
- 
- // Routine to queue up data ready for transfer to the other (once they have signalled they are ready)
- extern int32_t vchi_bulk_queue_transmit(struct vchi_service *service,
- 					const void *data_src,
- 					uint32_t data_size,
--					enum vchi_flags flags,
-+				        enum vchiq_bulk_mode mode,
- 					void *transfer_handle);
- 
- /******************************************************************************
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi_common.h b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-index e07376fe4dfd..52b447c19445 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-@@ -4,15 +4,6 @@
- #ifndef VCHI_COMMON_H_
- #define VCHI_COMMON_H_
- 
--//flags used when sending messages (must be bitmapped)
--enum vchi_flags {
--	VCHI_FLAGS_NONE                      = 0x0,
--	VCHI_FLAGS_BLOCK_UNTIL_OP_COMPLETE   = 0x1,   // waits for message to be received, or sent (NB. not the same as being seen on other side)
--	VCHI_FLAGS_CALLBACK_WHEN_OP_COMPLETE = 0x2,   // run a callback when message sent
--	VCHI_FLAGS_BLOCK_UNTIL_QUEUED        = 0x4,   // return once the transfer is in a queue ready to go
--	VCHI_FLAGS_BLOCK_UNTIL_DATA_READ     = 0x10,
--};
--
- //callback reasons when an event occurs on a service
- enum vchi_callback_reason {
- 	/*
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-index 0466512cfe3c..3a5545e0db6b 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-@@ -3,6 +3,7 @@
- #include <linux/module.h>
- #include <linux/types.h>
- 
-+#include "vchiq_if.h"
- #include "../vchi/vchi.h"
- #include "vchiq.h"
- #include "vchiq_core.h"
-@@ -57,30 +58,11 @@ EXPORT_SYMBOL(vchi_queue_kernel_message);
-  *
-  ***********************************************************/
- int32_t vchi_bulk_queue_receive(struct vchi_service *service, void *data_dst,
--				uint32_t data_size, enum vchi_flags flags,
-+				uint32_t data_size, enum vchiq_bulk_mode mode,
- 				void *bulk_handle)
- {
--	enum vchiq_bulk_mode mode;
- 	enum vchiq_status status;
- 
--	switch ((int)flags) {
--	case VCHI_FLAGS_CALLBACK_WHEN_OP_COMPLETE
--		| VCHI_FLAGS_BLOCK_UNTIL_QUEUED:
--		WARN_ON(!service->callback);
--		mode = VCHIQ_BULK_MODE_CALLBACK;
--		break;
--	case VCHI_FLAGS_BLOCK_UNTIL_OP_COMPLETE:
--		mode = VCHIQ_BULK_MODE_BLOCKING;
--		break;
--	case VCHI_FLAGS_BLOCK_UNTIL_QUEUED:
--	case VCHI_FLAGS_NONE:
--		mode = VCHIQ_BULK_MODE_NOCALLBACK;
--		break;
--	default:
--		WARN(1, "unsupported message\n");
--		return VCHIQ_ERROR;
--	}
--
- 	while (1) {
- 		status = vchiq_bulk_receive(service->handle, data_dst,
- 			data_size, bulk_handle, mode);
-@@ -116,31 +98,11 @@ EXPORT_SYMBOL(vchi_bulk_queue_receive);
- int32_t vchi_bulk_queue_transmit(struct vchi_service *service,
- 				 const void *data_src,
- 				 uint32_t data_size,
--				 enum vchi_flags flags,
-+				 enum vchiq_bulk_mode mode,
- 				 void *bulk_handle)
- {
--	enum vchiq_bulk_mode mode;
- 	enum vchiq_status status;
- 
--	switch ((int)flags) {
--	case VCHI_FLAGS_CALLBACK_WHEN_OP_COMPLETE
--		| VCHI_FLAGS_BLOCK_UNTIL_QUEUED:
--		WARN_ON(!service->callback);
--		mode = VCHIQ_BULK_MODE_CALLBACK;
--		break;
--	case VCHI_FLAGS_BLOCK_UNTIL_DATA_READ:
--	case VCHI_FLAGS_BLOCK_UNTIL_OP_COMPLETE:
--		mode = VCHIQ_BULK_MODE_BLOCKING;
--		break;
--	case VCHI_FLAGS_BLOCK_UNTIL_QUEUED:
--	case VCHI_FLAGS_NONE:
--		mode = VCHIQ_BULK_MODE_NOCALLBACK;
--		break;
--	default:
--		WARN(1, "unsupported message\n");
--		return VCHIQ_ERROR;
--	}
--
- 	while (1) {
- 		status = vchiq_bulk_transmit(service->handle, data_src,
- 			data_size, bulk_handle, mode);
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index 4ee4601cba1c..153a81a11ffc 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -29,6 +29,7 @@
- #include "mmal-vchiq.h"
- #include "mmal-msg.h"
- 
-+#include "interface/vchiq_arm/vchiq_if.h"
- #include "interface/vchi/vchi.h"
- 
- /*
-@@ -300,8 +301,7 @@ static void buffer_to_host_work_cb(struct work_struct *work)
- 				       * of 4 bytes
- 				       */
- 				      (len + 3) & ~3,
--				      VCHI_FLAGS_CALLBACK_WHEN_OP_COMPLETE |
--				      VCHI_FLAGS_BLOCK_UNTIL_QUEUED,
-+				      VCHIQ_BULK_MODE_CALLBACK,
- 				      msg_context);
- 
- 	vchi_service_release(instance->service);
--- 
-2.27.0
+The microbenchmark is doing pointer chasing by following index in an array.
+Indices in the array are set to follow a random pattern (cutting prefetcher),
+and forcing RAM access.
 
+git clone https://github.com/wwilly/benchmark.git \
+  && cd benchmark \
+  && source env.sh \
+  && ./bench_build.sh \
+  && bash source/scripts/test_dvfs_mem.sh
+
+Python 3, cmake and sudo rights are required.
+
+Results:
+DVFS CPU with performance governor
+mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
+benchmark is running.
+- on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
+- on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
+
+While forcing DVFS memory bus to use performance governor,
+mem_gov = performance at 825000000 Hz in idle,
+- on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
+- on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
+
+The kernel used is the last 5.7.5 stable with default exynos_defconfig.
+
+Cheers,
+Willy
