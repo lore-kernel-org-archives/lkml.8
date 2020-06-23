@@ -2,99 +2,107 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBF9120702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8592B20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CfNyO82v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbgFWJHS (ORCPT
+        id S1732204AbgFWJH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:07:18 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44746 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731921AbgFWJGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:06:50 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2oexvFeJ7JIAA--.33S7;
-        Tue, 23 Jun 2020 17:06:44 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 5/7 RESEND] irqchip/loongson-pch-msi: Remove unneeded variable
-Date:   Tue, 23 Jun 2020 17:06:36 +0800
-Message-Id: <1592903198-5505-6-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1592903198-5505-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1592903198-5505-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxf2oexvFeJ7JIAA--.33S7
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFW7Jw17Kr47Cr15WryUZFb_yoWktwb_CF
-        1Iq3ZxGFy2yr43WF4xK3yYqFy2vFyDuF1v9FWFva13X3yYgws7AFW3Aan3JrW7Gr18Zr1f
-        CrZ5Gw1Syr129jkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbCxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-        IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0
-        c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2
-        IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv6xkF7I0E14v26rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv04
-        87Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
-        aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67
-        IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWr
-        XwCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4I
-        xYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IY
-        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4iubyAUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 23 Jun 2020 05:07:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732109AbgFWJH2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:07:28 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C941EC061573;
+        Tue, 23 Jun 2020 02:07:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ldF/aN/WggG+cvw07PS2qf0wY+Ysa/Xufqs3vIX/7fs=; b=CfNyO82vWkKTd5/tOSOB91ztt
+        gG2fiGzCuEWqnH3MABNjqRySpjdWdWACCUb0Swu7px6H/OceAZGBHBeAvpE520Qg6VezpvNCC6QyW
+        mMpdTLkn+H9snD1Xd2nXA88ixm/UIQY/q6/eLd3RselqnScIMFgB6/XSH0dFbH9Z+1UZZNsHBhPHA
+        8BOdfsY0Bq8vFoDHrkP01zbTs5qD0mF0B6j9MxLFXwiCHIWEcz13NcRYA52eHFcJEmX9kD8h1iqpT
+        1UoWct/v8vAsi7L7dEKMnJZDk7Rk8/JHPrWbRXHrfpNXA+APnehvlZ8Sfaj9icJpxB+f7LxFX7CiI
+        M3f376coQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59008)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jnetn-0001XI-Dr; Tue, 23 Jun 2020 10:07:23 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jneti-0000tY-Fs; Tue, 23 Jun 2020 10:07:18 +0100
+Date:   Tue, 23 Jun 2020 10:07:18 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 05/15] net: pylink.h: add kernel-doc descriptions for
+ new fields at phylink_config
+Message-ID: <20200623090718.GR1551@shell.armlinux.org.uk>
+References: <cover.1592895969.git.mchehab+huawei@kernel.org>
+ <34970f447ff86415a6cef10a785fbef81c2819a7.1592895969.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34970f447ff86415a6cef10a785fbef81c2819a7.1592895969.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-irq_domain_alloc_irqs_parent() returns 0 on success and non-zero value
-on failure, it is redudant to check its non-zero return value and then
-return it, so just remove the variable "ret" and return directly in the
-function pch_msi_parent_domain_alloc().
+On Tue, Jun 23, 2020 at 09:09:01AM +0200, Mauro Carvalho Chehab wrote:
+> Some fields were moved from struct phylink into phylink_config.
+> Update the kernel-doc markups for the config struct accordingly
+> 
+> Fixes: 5c05c1dbb177 ("net: phylink, dsa: eliminate phylink_fixed_state_cb()")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-loongson-pch-msi.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
-index 50becd2..12aeeab 100644
---- a/drivers/irqchip/irq-loongson-pch-msi.c
-+++ b/drivers/irqchip/irq-loongson-pch-msi.c
-@@ -100,17 +100,12 @@ static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
- 					unsigned int virq, int hwirq)
- {
- 	struct irq_fwspec fwspec;
--	int ret;
- 
- 	fwspec.fwnode = domain->parent->fwnode;
- 	fwspec.param_count = 1;
- 	fwspec.param[0] = hwirq;
- 
--	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
--	if (ret)
--		return ret;
--
--	return 0;
-+	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
- }
- 
- static int pch_msi_middle_domain_alloc(struct irq_domain *domain,
+Thanks.
+
+> ---
+>  include/linux/phylink.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/include/linux/phylink.h b/include/linux/phylink.h
+> index cc5b452a184e..02ff1419d4be 100644
+> --- a/include/linux/phylink.h
+> +++ b/include/linux/phylink.h
+> @@ -62,6 +62,10 @@ enum phylink_op_type {
+>   * @dev: a pointer to a struct device associated with the MAC
+>   * @type: operation type of PHYLINK instance
+>   * @pcs_poll: MAC PCS cannot provide link change interrupt
+> + * @poll_fixed_state: if true, starts link_poll,
+> + *		      if MAC link is at %MLO_AN_FIXED mode.
+> + * @get_fixed_state: callback to execute to determine the fixed link state,
+> + *		     if MAC link is at %MLO_AN_FIXED mode.
+>   */
+>  struct phylink_config {
+>  	struct device *dev;
+> -- 
+> 2.26.2
+> 
+> 
+
 -- 
-2.1.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
