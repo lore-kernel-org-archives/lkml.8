@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3107C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38FBD20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18D12064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943782;
-	bh=wmdbZ+QwQL1yY8DqKLZcXWO6BsUCJ9nveRhqOaXagVE=;
+	s=default; t=1592943787;
+	bh=a/lHXKCVrLSIa+JZAQDjfBCBrAxsRAXKYhxhhT2WEWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QP7JUWWR4C4Bah1kk9hgxnDaeTcB7OJpvyL/qXOxNJ67omWXlwqcd8/9oyLwjdNUO
-	 n0z7SVUpjLTCUZEMPQF3Tj+SL1mw+NUoNrz8Isxt2J+Jy7ql8QANpdDHggPuHWspOJ
-	 UD2MLLXO0TDfMYTqu7+apO5C4Ru2+lUXr8hp2HPo=
+	b=TAMaNVw2Rxkk2irbzhcdcy/pg+ZZ9SRKsC8assXclNi7+yWjsOQ8F5627LP7f+jTc
+	 MW2231MIetgibuSXvat9Xxup+I0tKzNWmQuIvykhMgRp5lNzU6HtIHSf/z5XJ6hyGK
+	 lVQlhf3FsGzlcTdSzwkMe73d34uobqyLhVgPElqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390239AbgFWUXA (ORCPT
+        id S2390252AbgFWUXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:23:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40940 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:23:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390223AbgFWUWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:22:53 -0400
+        id S2390196AbgFWUW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:22:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A7C2078A;
-        Tue, 23 Jun 2020 20:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CB512070E;
+        Tue, 23 Jun 2020 20:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943772;
-        bh=wmdbZ+QwQL1yY8DqKLZcXWO6BsUCJ9nveRhqOaXagVE=;
+        s=default; t=1592943776;
+        bh=a/lHXKCVrLSIa+JZAQDjfBCBrAxsRAXKYhxhhT2WEWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fBEhtMUxB9NTjm/EBFAuU05dkgCXIw2ou5NN2MAcCLm2Ge1n1S9uWtHBEaPNBFJnX
-         CvKpdVDhl/sNI/zL484NuDrDpCxK9zpOMVwRvyqD2c88BKq/v3YDoyG5Syft3C1xxb
-         Uod/AuxCtK86nGC4cTuIxmTJ8MdOCoFdwhiU+l/k=
+        b=01mvzEwrYS+WHwuFNvcWgj1bKSEFIEnbJWq4sGGeBJDfQIgxD2CpVrjvRLust5Yr4
+         e4M0oOmTuHUbi6KDRx3bRdtDCx9nhAh376fglr0DnZkOlyCQpFr0ODClclwCQ6ibwH
+         GthSt3tH3oDUs85rt6Cx8goK4SAYBP92e/2vzIlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/314] vfio/pci: fix memory leaks in alloc_perm_bits()
-Date:   Tue, 23 Jun 2020 21:54:00 +0200
-Message-Id: <20200623195340.961553948@linuxfoundation.org>
+Subject: [PATCH 5.4 047/314] RDMA/mlx5: Add init2init as a modify command
+Date:   Tue, 23 Jun 2020 21:54:02 +0200
+Message-Id: <20200623195341.055550965@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,72 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Aharon Landau <aharonl@mellanox.com>
 
-[ Upstream commit 3e63b94b6274324ff2e7d8615df31586de827c4e ]
+[ Upstream commit 819f7427bafd494ef7ca4942ec6322db20722d7b ]
 
-vfio_pci_disable() calls vfio_config_free() but forgets to call
-free_perm_bits() resulting in memory leaks,
+Missing INIT2INIT entry in the list of modify commands caused DEVX
+applications to be unable to modify_qp for this transition state. Add the
+MLX5_CMD_OP_INIT2INIT_QP opcode to the list of allowed DEVX opcodes.
 
-unreferenced object 0xc000000c4db2dee0 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
-    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
-    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
-    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
-    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
-unreferenced object 0xc000000c4db2e330 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
-
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Signed-off-by: Qian Cai <cai@lca.pw>
-[aw: rolled in follow-up patch]
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: e662e14d801b ("IB/mlx5: Add DEVX support for modify and query commands")
+Link: https://lore.kernel.org/r/20200513095550.211345-1-leon@kernel.org
+Signed-off-by: Aharon Landau <aharonl@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/devx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index f0891bd8444c7..c4d0cf9a1ab94 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1726,8 +1726,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
- 	vdev->vconfig = NULL;
- 	kfree(vdev->pci_config_map);
- 	vdev->pci_config_map = NULL;
--	kfree(vdev->msi_perm);
--	vdev->msi_perm = NULL;
-+	if (vdev->msi_perm) {
-+		free_perm_bits(vdev->msi_perm);
-+		kfree(vdev->msi_perm);
-+		vdev->msi_perm = NULL;
-+	}
- }
- 
- /*
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index d609f4659afb7..bba7ab0784305 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -814,6 +814,7 @@ static bool devx_is_obj_modify_cmd(const void *in)
+ 	case MLX5_CMD_OP_SET_L2_TABLE_ENTRY:
+ 	case MLX5_CMD_OP_RST2INIT_QP:
+ 	case MLX5_CMD_OP_INIT2RTR_QP:
++	case MLX5_CMD_OP_INIT2INIT_QP:
+ 	case MLX5_CMD_OP_RTR2RTS_QP:
+ 	case MLX5_CMD_OP_RTS2RTS_QP:
+ 	case MLX5_CMD_OP_SQERR2RTS_QP:
 -- 
 2.25.1
 
