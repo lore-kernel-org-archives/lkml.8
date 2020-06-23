@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867C3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D12D20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AAE20B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387766AbgFWWjl (ORCPT
+        id S2387686AbgFWWkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:39:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3909 "EHLO mga17.intel.com"
+        Tue, 23 Jun 2020 18:40:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:44271 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731930AbgFWWjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:39:40 -0400
-IronPort-SDR: 2SKvL9ofC92ljh4sqh91N5iTDj3LsDMhdOTY7E1Sa+GN9rDZRoQVNafqJlrA0+XHHu6Ia9mSjJ
- 81ncjhHS9oxA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="124501643"
+        id S2387453AbgFWWkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 18:40:37 -0400
+IronPort-SDR: eyMTNpMLuX4C++hjkOpvez5Zd99OkC2mER/m0tru3iBOL5pVPNrHaSIn7z4FOOz9/tD25QW1XF
+ OY+2yzdhLO3A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="144289487"
 X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="124501643"
+   d="scan'208";a="144289487"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 15:39:36 -0700
-IronPort-SDR: SrvnLUdU7F7oNugpbPr/Wh0FVm+4FcRxY5yeaWoPqsaBCGa+WdXQ4q2J/nmtBK+R9sQSeADeVC
- YUkMOr98qTJA==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 15:39:36 -0700
+IronPort-SDR: HqT8AvsGBFcFBsUAZOeEankBctXMhDHTcxf4AE6W7oeaE5Z683YYltQ6I4s2ZLbYL4D7M29euI
+ D4KRDKcfg2qQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="288280035"
+   d="scan'208";a="319282454"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 23 Jun 2020 15:39:34 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Jun 2020 15:39:34 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jnrZm-0000ZO-3R; Tue, 23 Jun 2020 22:39:34 +0000
-Date:   Wed, 24 Jun 2020 06:38:47 +0800
+        id 1jnrZm-0000ZL-2K; Tue, 23 Jun 2020 22:39:34 +0000
+Date:   Wed, 24 Jun 2020 06:38:49 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- 380dc20ce84341bb376371fd5ed5fe6a93d4f4cf
-Message-ID: <5ef28477.VG59g1n54NRhR2lX%lkp@intel.com>
+Subject: [tip:master] BUILD SUCCESS
+ b4ee11fe08b3140524a9d205199c96c77333eef8
+Message-ID: <5ef28479.WkpSduXYSoMjspz2%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,12 +54,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/urgent
-branch HEAD: 380dc20ce84341bb376371fd5ed5fe6a93d4f4cf  smp, irq_work: Continue smp_call_function*() and irq_work*() integration
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: b4ee11fe08b3140524a9d205199c96c77333eef8  Merge branch 'WIP.core/headers'
 
 elapsed time: 724m
 
-configs tested: 139
+configs tested: 133
 configs skipped: 9
 
 The following configs have been built successfully.
@@ -105,10 +105,10 @@ arc                          axs101_defconfig
 arc                              allyesconfig
 mips                     cu1000-neo_defconfig
 sparc                            alldefconfig
-sparc64                             defconfig
 mips                        nlm_xlr_defconfig
 sh                        sh7757lcr_defconfig
 arm                        multi_v7_defconfig
+sparc64                             defconfig
 arm                          gemini_defconfig
 powerpc                 mpc8272_ads_defconfig
 riscv                          rv32_defconfig
@@ -168,12 +168,6 @@ i386                 randconfig-a003-20200623
 i386                 randconfig-a001-20200623
 i386                 randconfig-a005-20200623
 i386                 randconfig-a004-20200623
-x86_64               randconfig-a012-20200623
-x86_64               randconfig-a011-20200623
-x86_64               randconfig-a013-20200623
-x86_64               randconfig-a014-20200623
-x86_64               randconfig-a015-20200623
-x86_64               randconfig-a016-20200623
 i386                 randconfig-a013-20200623
 i386                 randconfig-a016-20200623
 i386                 randconfig-a012-20200623
@@ -194,8 +188,8 @@ sparc64                          allyesconfig
 sparc64                          allmodconfig
 um                               allmodconfig
 um                                allnoconfig
-um                                  defconfig
 um                               allyesconfig
+um                                  defconfig
 x86_64                               rhel-7.6
 x86_64                    rhel-7.6-kselftests
 x86_64                               rhel-8.3
