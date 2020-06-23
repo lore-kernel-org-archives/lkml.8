@@ -2,106 +2,133 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE3620809
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A281520774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592923945;
+	bh=N5tTtJIP0Rc3W1tOT9EjsbcmdU+QsA32BbRAKafvgJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iVwkRSikRktqbZbegeps5WsxxNPRtkuwD4JCFIGGBe8RxlQ/u+42tie5ZmZD9JE4D
+	 W0/VS8IjZNNzOMmaC5CQ3YOUokVTiUmDOPLmHQwq5I+Ae5DReTqgj4e2+I3p5ZtxoQ
+	 GgdQUboI48saxTFRZZOFck2V2wJYsMQwULJUApQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732865AbgFWOtp (ORCPT
+        id S1732859AbgFWOwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:49:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38190 "EHLO mx2.suse.de"
+        Tue, 23 Jun 2020 10:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732738AbgFWOtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:49:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 16C4CADAA;
-        Tue, 23 Jun 2020 14:49:43 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 16:49:40 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623144940.GE14101@suse.de>
-References: <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200623094519.GF31822@suse.de>
- <20200623104559.GA4817@hirez.programming.kicks-ass.net>
- <20200623111107.GG31822@suse.de>
- <20200623111443.GC4817@hirez.programming.kicks-ass.net>
- <20200623114324.GA14101@suse.de>
- <20200623115014.GE4817@hirez.programming.kicks-ass.net>
- <20200623121237.GC14101@suse.de>
- <20200623130322.GH4817@hirez.programming.kicks-ass.net>
+        id S1732801AbgFWOwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 10:52:24 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C590020723;
+        Tue, 23 Jun 2020 14:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592923943;
+        bh=N5tTtJIP0Rc3W1tOT9EjsbcmdU+QsA32BbRAKafvgJ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z6N/8+dviHqm4Jkv5AoCSrmlP/51Oc0ovRXdYgAujUzo215r0oQeXQQE89ZEt113V
+         NqyVKXNVdr43sbhu9Hv2FljKosgPfoDpLMTXOIYJJGa2E1tF8f/M+kT4pFuIogOj3a
+         ZhzWKZiNwD4kndq6VUr4OSl1hZ2siGOruG1gpAls=
+Date:   Tue, 23 Jun 2020 15:52:18 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] arm64/build: Warn on orphan section placement
+Message-ID: <20200623145218.GC4336@willie-the-truck>
+References: <20200622205815.2988115-1-keescook@chromium.org>
+ <20200622205815.2988115-3-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623130322.GH4817@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200622205815.2988115-3-keescook@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 03:03:22PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 23, 2020 at 02:12:37PM +0200, Joerg Roedel wrote:
-> > On Tue, Jun 23, 2020 at 01:50:14PM +0200, Peter Zijlstra wrote:
-> > > If SNP is the sole reason #VC needs to be IST, then I'd strongly urge
-> > > you to only make it IST if/when you try and make SNP happen, not before.
-> > 
-> > It is not the only reason, when ES guests gain debug register support
-> > then #VC also needs to be IST, because #DB can be promoted into #VC
-> > then, and as #DB is IST for a reason, #VC needs to be too.
+On Mon, Jun 22, 2020 at 01:58:15PM -0700, Kees Cook wrote:
+> We don't want to depend on the linker's orphan section placement
+> heuristics as these can vary between linkers, and may change between
+> versions. All sections need to be explicitly named in the linker
+> script.
 > 
-> Didn't I read somewhere that that is only so for Rome/Naples but not for
-> the later chips (Milan) which have #DB pass-through?
+> Explicitly include debug sections when they're present. Add .eh_frame*
+> to discard as it seems that these are still generated even though
+> -fno-asynchronous-unwind-tables is being specified. Add .plt and
+> .data.rel.ro to discards as they are not actually used. Add .got.plt
+> to the image as it does appear to be mapped near .data. Finally enable
+> orphan section warnings.
 
-Probably, not sure which chips will get debug register virtualization
-under SEV-ES. But even when it is supported, the HV can (and sometimes
-will) intercept #DB, which then causes it to be promoted to #VC.
+Can you elaborate a bit on what .got.plt is being used for, please? I
+wonder if there's an interaction with an erratum workaround in the linker
+or something.
 
-> We're talking about the 3rd case where the only reason things 'work' is
-> because we'll have to panic():
-> 
->  - #MC
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index a0d94d063fa8..3e628983445a 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -29,6 +29,10 @@ LDFLAGS_vmlinux	+= --fix-cortex-a53-843419
+>    endif
+>  endif
+>  
+> +# We never want expected sections to be placed heuristically by the
+> +# linker. All sections should be explicitly named in the linker script.
+> +LDFLAGS_vmlinux += --orphan-handling=warn
+> +
+>  ifeq ($(CONFIG_ARM64_USE_LSE_ATOMICS), y)
+>    ifneq ($(CONFIG_ARM64_LSE_ATOMICS), y)
+>  $(warning LSE atomics not supported by binutils)
+> diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+> index 5427f502c3a6..c9ecb3b2007d 100644
+> --- a/arch/arm64/kernel/vmlinux.lds.S
+> +++ b/arch/arm64/kernel/vmlinux.lds.S
+> @@ -94,7 +94,8 @@ SECTIONS
+>  	/DISCARD/ : {
+>  		*(.interp .dynamic)
+>  		*(.dynsym .dynstr .hash .gnu.hash)
+> -		*(.eh_frame)
+> +		*(.plt) *(.data.rel.ro)
+> +		*(.eh_frame) *(.init.eh_frame)
 
-Okay, #MC is special and can only be handled on a best-effort basis, as
-#MC could happen anytime, also while already executing the #MC handler.
+Do we need to include .eh_frame_hdr here too?
 
->  - #DB with BUS LOCK DEBUG EXCEPTION
+>  	}
+>  
+>  	. = KIMAGE_VADDR + TEXT_OFFSET;
+> @@ -209,6 +210,7 @@ SECTIONS
+>  	_data = .;
+>  	_sdata = .;
+>  	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_ALIGN)
+> +	.got.plt : ALIGN(8) { *(.got.plt) }
+>  
+>  	/*
+>  	 * Data written with the MMU off but read with the MMU on requires
+> @@ -244,6 +246,7 @@ SECTIONS
+>  	_end = .;
+>  
+>  	STABS_DEBUG
+> +	DWARF_DEBUG
 
-If I understand the problem correctly, this can be solved by moving off
-the IST stack to the current task stack in the #DB handler, like I plan
-to do for #VC, no?
+I know you didn't add it, but do we _really_ care about stabs debug? Who
+generates that for arm64?
 
->  - #VC SNP
-
-This has to panic for other reasons that can't be worked around. It
-boils down to detecting that the HV is doing something fishy and bail
-out to avoid further harm (like in the #MC handler).
-
-
-Regards,
-
-	Joerg
+Will
