@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A594C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6023620656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DC720656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945942;
-	bh=wTUcvyaRwTesXtGMVTDj6Mrz4YdVH1yLn+g2m1mDfGM=;
+	s=default; t=1592945944;
+	bh=DdeM3ZpabKSxL178gInYFG9o/1ytqfpbP4udhnBgMxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+3LXkAy6eYQOgU8rloz5xmmYwqIABcTbV8Zx7Y0BMMetLe/tCC7ZJGHQvVGlgPOm
-	 YqGZll2QDOb/rnmrben1rxzdMn9IeVhyIR+2Hzlt0u5c3+f+wFtkQkB+t2QYNuLsbb
-	 azy+tqt6lvULRFFLoougbOGhzP9d/J5VZX5juErQ=
+	b=v1Kykyq6B3QbVALfBon5D1zblkHdpl62I1cIm6gbm78HNqpSm2nHscs2YBNAP6MbY
+	 x7+Gg/TxSjhOosGaiWF1a+vBxDPhQCAVhfM37ZjgUutjiPhUr+CINx3ygZwlnsCUub
+	 TqnRyHZM/td7yWfKM7GmuTbb8Lj9tWH8PZsNnN90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393007AbgFWU7A (ORCPT
+        id S2403994AbgFWU66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:59:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37790 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:58:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392315AbgFWUlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:21 -0400
+        id S2388315AbgFWUlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C7572084D;
-        Tue, 23 Jun 2020 20:41:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4154420675;
+        Tue, 23 Jun 2020 20:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944882;
-        bh=wTUcvyaRwTesXtGMVTDj6Mrz4YdVH1yLn+g2m1mDfGM=;
+        s=default; t=1592944884;
+        bh=DdeM3ZpabKSxL178gInYFG9o/1ytqfpbP4udhnBgMxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2dTTfpqyHSrE7EzkTc68+4+6IUz6Ip/eRGeAIABGkCIkikDV9aZNLPVzeclhyJd1u
-         EmHCIQdRyKerjUtwvGTeHV894JKqE0ZGM7114XirRWUgun+n3ZzoWI6bDVEeh+bGhK
-         Phx/55FjNP7h71gj1F7HP5s9Bw/uGX1S83c+3bPg=
+        b=w7LqLGyzlFqDrcnwjdaLvPgxeMyIksngv9FKQEt2lFM6Rp9qpqpfbHezPLITpvVFi
+         KsWbzivLhOiyRM6SrAj6zuqUcbUuxCcdd1hMH8HRsUjL8x2ylXYkVfV1ybcyXW1MYX
+         DGIjeQYRY7J52AGwGVgycjtBI2DbzQbXUS5SSU0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 131/206] pinctrl: imxl: Fix an error handling path in imx1_pinctrl_core_probe()
-Date:   Tue, 23 Jun 2020 21:57:39 +0200
-Message-Id: <20200623195323.427282113@linuxfoundation.org>
+Subject: [PATCH 4.19 132/206] pinctrl: freescale: imx: Fix an error handling path in imx_pinctrl_probe()
+Date:   Tue, 23 Jun 2020 21:57:40 +0200
+Message-Id: <20200623195323.477086110@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -63,34 +64,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 9eb728321286c4b31e964d2377fca2368526d408 ]
+[ Upstream commit 11d8da5cabf7c6c3263ba2cd9c00260395867048 ]
 
-When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
-an error handling path has not been updated.
+'pinctrl_unregister()' should not be called to undo
+'devm_pinctrl_register_and_init()', it is already handled by the framework.
 
-Axe a now unneeded 'pinctrl_unregister()'.
+This simplifies the error handling paths of the probe function.
+The 'imx_free_resources()' can be removed as well.
 
-Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
+Fixes: a51c158bf0f7 ("pinctrl: imx: use radix trees for groups and functions")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200530201952.585798-1-christophe.jaillet@wanadoo.fr
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Link: https://lore.kernel.org/r/20200530204955.588962-1-christophe.jaillet@wanadoo.fr
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx1-core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pinctrl/freescale/pinctrl-imx.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index deb7870b3d1a6..961c24e0cc8fd 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -638,7 +638,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index b04edc22dad76..90d414dd792cb 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -662,16 +662,6 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
+ 	return 0;
+ }
  
- 	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
- 	if (ret) {
+-/*
+- * imx_free_resources() - free memory used by this driver
+- * @info: info driver instance
+- */
+-static void imx_free_resources(struct imx_pinctrl *ipctl)
+-{
+-	if (ipctl->pctl)
 -		pinctrl_unregister(ipctl->pctl);
- 		dev_err(&pdev->dev, "Failed to populate subdevices\n");
- 		return ret;
+-}
+-
+ int imx_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct imx_pinctrl_soc_info *info)
+ {
+@@ -762,21 +752,16 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+ 					     &ipctl->pctl);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "could not register IMX pinctrl driver\n");
+-		goto free;
++		return ret;
  	}
+ 
+ 	ret = imx_pinctrl_probe_dt(pdev, ipctl);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "fail to probe dt properties\n");
+-		goto free;
++		return ret;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "initialized IMX pinctrl driver\n");
+ 
+ 	return pinctrl_enable(ipctl->pctl);
+-
+-free:
+-	imx_free_resources(ipctl);
+-
+-	return ret;
+ }
 -- 
 2.25.1
 
