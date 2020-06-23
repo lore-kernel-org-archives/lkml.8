@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA62E2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF04420780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943853;
-	bh=7jOIZZUblMJrgVmQcUKFWYKtW7WTO++BGTCorcYKPMM=;
+	s=default; t=1592943857;
+	bh=J6BtOatp0H0xxIehNq/YeWWaCUMLlsM3bkSFCVQqYCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h5xEgUZMUO5TKSqrdGStrBxKm4A2O/EyYd3o/Phit9wgcNcfzBXNLLHA3O6IiRbSK
-	 mBMBA5Avev6z4TeCCbX/3JjEEiJuwxz10AMEU6V4LtYLOyX7GM2ocxFiBV5D2tp05L
-	 AXW5mN/2VurExQqpkXYBeEl8wML5FZMED85/nL3M=
+	b=aPGgka7gL3OJTrUg/lHWYHdp/5ej2wL0aE3L0s1VkHqUllU9hAqBArYCas00vgp40
+	 nI8NTI4d1OescvrHlVyMXUCVZgsjRc2nIGPjv7vRkG5mwD4kJG66vcgAk3cK0yQlba
+	 qvJnZl4aA4CZZqKycc0peLqriEYcRc3K6JOyuKnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390383AbgFWUYL (ORCPT
+        id S2390395AbgFWUYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:24:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390382AbgFWUYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:08 -0400
+        id S2390377AbgFWUYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B28E2070E;
-        Tue, 23 Jun 2020 20:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB20D20780;
+        Tue, 23 Jun 2020 20:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943847;
-        bh=7jOIZZUblMJrgVmQcUKFWYKtW7WTO++BGTCorcYKPMM=;
+        s=default; t=1592943845;
+        bh=J6BtOatp0H0xxIehNq/YeWWaCUMLlsM3bkSFCVQqYCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1RghiQoP8D2KV/NdfzYq/HgkOu8CuHXj7XVInwlnvn0glKzYmu1eUiX0LjNFHQ3NS
-         3t0yFoiivm3xiGD90GHSh5avZAFIKXC86MHVEtej/kpNVMPT24rZzEqY4HiK1Sg0QO
-         GlhAQOsW4i0Urd+lbPh/VVexaeU1vu9jozVuDw1M=
+        b=XEtxpMTbOs9IsZ83CFMnguRUZHSIs34/abtasUBs5KvCkMkz/wjilaXVwq9QeT/e4
+         lyoGzLIFcXA3KlOpvTAKmL1xyA3SYWxlZ/C/WbgMtJwKmYIEuAntShfrspM7JXUY5h
+         GoRwciaNam+RiuqA73t1YaQlKzE2bZRIPja796P0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        John Johansen <john.johansen@canonical.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 075/314] net: dsa: lantiq_gswip: fix and improve the unsupported interface error
-Date:   Tue, 23 Jun 2020 21:54:30 +0200
-Message-Id: <20200623195342.426436190@linuxfoundation.org>
+Subject: [PATCH 5.4 074/314] apparmor: fix introspection of of task mode for unconfined tasks
+Date:   Tue, 23 Jun 2020 21:54:29 +0200
+Message-Id: <20200623195342.375946096@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,44 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: John Johansen <john.johansen@canonical.com>
 
-[ Upstream commit 4d3da2d8d91f66988a829a18a0ce59945e8ae4fb ]
+[ Upstream commit dd2569fbb053719f7df7ef8fdbb45cf47156a701 ]
 
-While trying to use the lantiq_gswip driver on one of my boards I made
-a mistake when specifying the phy-mode (because the out-of-tree driver
-wants phy-mode "gmii" or "mii" for the internal PHYs). In this case the
-following error is printed multiple times:
-  Unsupported interface: 3
+Fix two issues with introspecting the task mode.
 
-While it gives at least a hint at what may be wrong it is not very user
-friendly. Print the human readable phy-mode and also which port is
-configured incorrectly (this hardware supports ports 0..6) to improve
-the cases where someone made a mistake.
+1. If a task is attached to a unconfined profile that is not the
+   ns->unconfined profile then. Mode the mode is always reported
+   as -
 
-Fixes: 14fceff4771e51 ("net: dsa: Add Lantiq / Intel DSA driver for vrx200")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+      $ ps -Z
+      LABEL                               PID TTY          TIME CMD
+      unconfined                         1287 pts/0    00:00:01 bash
+      test (-)                           1892 pts/0    00:00:00 ps
+
+   instead of the correct value of (unconfined) as shown below
+
+      $ ps -Z
+      LABEL                               PID TTY          TIME CMD
+      unconfined                         2483 pts/0    00:00:01 bash
+      test (unconfined)                  3591 pts/0    00:00:00 ps
+
+2. if a task is confined by a stack of profiles that are unconfined
+   the output of label mode is again the incorrect value of (-) like
+   above, instead of (unconfined). This is because the visibile
+   profile count increment is skipped by the special casing of
+   unconfined.
+
+Fixes: f1bd904175e8 ("apparmor: add the base fns() for domain labels")
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/lantiq_gswip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ security/apparmor/label.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswip.c
-index a69c9b9878b7d..636966e93517e 100644
---- a/drivers/net/dsa/lantiq_gswip.c
-+++ b/drivers/net/dsa/lantiq_gswip.c
-@@ -1451,7 +1451,8 @@ static void gswip_phylink_validate(struct dsa_switch *ds, int port,
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index 470693239e64f..6c3acae701efd 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -1531,13 +1531,13 @@ static const char *label_modename(struct aa_ns *ns, struct aa_label *label,
  
- unsupported:
- 	bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
--	dev_err(ds->dev, "Unsupported interface: %d\n", state->interface);
-+	dev_err(ds->dev, "Unsupported interface '%s' for port %d\n",
-+		phy_modes(state->interface), port);
- 	return;
- }
- 
+ 	label_for_each(i, label, profile) {
+ 		if (aa_ns_visible(ns, profile->ns, flags & FLAG_VIEW_SUBNS)) {
+-			if (profile->mode == APPARMOR_UNCONFINED)
++			count++;
++			if (profile == profile->ns->unconfined)
+ 				/* special case unconfined so stacks with
+ 				 * unconfined don't report as mixed. ie.
+ 				 * profile_foo//&:ns1:unconfined (mixed)
+ 				 */
+ 				continue;
+-			count++;
+ 			if (mode == -1)
+ 				mode = profile->mode;
+ 			else if (mode != profile->mode)
 -- 
 2.25.1
 
