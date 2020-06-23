@@ -2,58 +2,58 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3785C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F87C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E86D20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4C020724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947392;
-	bh=n2OpNKv7H1fWL1ND+DYuYNLEP5rP7f2aXTHXyQ4asek=;
+	s=default; t=1592947395;
+	bh=MWwDrx+iqwUtflKI+9WT/qoTg9e9jV0I18ZTk3cUaaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XZ9cFXe2URqFMHhKOL2aGPM1wPC9agxoq77pxcgi2VPD+RoovkEWZHzRShJR6EA71
-	 be7hi8E3MyU9xn8SGjvWJJbsRUROy/eqfI8z0bWMBvIhv+jvo83MU4/asqu44QcCGj
-	 bgt7f1Z857VstAnnOhLPhDKEvIQb3iyvZ1zERdBE=
+	b=vq0BwjoMf1QhQnJEFwlqex6Ki/DblqC3lblIpQzMTsDSi45JroL+6psetmPOGHgoG
+	 E53Cl5COIfEFhh1Ghm5wSibhNkQqjzIDHIPoZclWRvbszMFmabmFOwAts7UCUHSB69
+	 jQyKqawdIDeLrQlUxxv24zzZBhsk9MvxEa15+16I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389755AbgFWUV2 (ORCPT
+        id S2390497AbgFWVXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38878 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:23:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390017AbgFWUVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:21:16 -0400
+        id S2390028AbgFWUV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:21:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 055D12078A;
-        Tue, 23 Jun 2020 20:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E22F20780;
+        Tue, 23 Jun 2020 20:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943675;
-        bh=n2OpNKv7H1fWL1ND+DYuYNLEP5rP7f2aXTHXyQ4asek=;
+        s=default; t=1592943686;
+        bh=MWwDrx+iqwUtflKI+9WT/qoTg9e9jV0I18ZTk3cUaaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s4c8fZ7ZYR5Hl3dT5HLE0d06Y13vmv5TXGYOZ32rfJd5sSjczglNk2GV5a5VXSKcT
-         qzoaY+54ufliy/WhW9CrCHBlbGYZoGGCozgDRL2tkR/FFvfGTdtMHQAiMLrt1r3TxL
-         idrqT7wIRlvTNCtgaVhnzD1wefOMRF7xjrp3Gzho=
+        b=pfCduUOPC4EoRrsf4tXuRZstFpVgwKSaXs9nhKWv1rPORypW8VBPnA3JlltnnhKZ+
+         xEm1uhtoudZ2sqg3MlNCVizycBCKjncK7g8GqXvZd52qLxm9M/cC5Ch4BbwI2RugWP
+         p4wzcOaPAxwtq84UC8V5XXCo2G8Hg8vRyqXqED2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.7 476/477] net: core: device_rename: Use rwsem instead of a seqcount
-Date:   Tue, 23 Jun 2020 21:57:53 +0200
-Message-Id: <20200623195430.048947101@linuxfoundation.org>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 011/314] ARM: dts: renesas: Fix IOMMU device node names
+Date:   Tue, 23 Jun 2020 21:53:26 +0200
+Message-Id: <20200623195339.332264599@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
+In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
+References: <20200623195338.770401005@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,156 +63,460 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmed S. Darwish <a.darwish@linutronix.de>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit 11d6011c2cf29f7c8181ebde6c8bc0c4d83adcd7 upstream.
+[ Upstream commit ae990a1de014396ffc8d0fcc31b6888c9b0ce59a ]
 
-Sequence counters write paths are critical sections that must never be
-preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
+Fix IOMMU device node names as "iommu@".
 
-Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
-netdev name retrieval.") handled a deadlock, observed with
-CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
-infinitely spinning: it got scheduled after the seqcount write side
-blocked inside its own critical section.
-
-To fix that deadlock, among other issues, the commit added a
-cond_resched() inside the read side section. While this will get the
-non-preemptible kernel eventually unstuck, the seqcount reader is fully
-exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
-
-The fix is also still broken: if the seqcount reader belongs to a
-real-time scheduling policy, it can spin forever and the kernel will
-livelock.
-
-Disabling preemption over the seqcount write side critical section will
-not work: inside it are a number of GFP_KERNEL allocations and mutex
-locking through the drivers/base/ :: device_rename() call chain.
-
->From all the above, replace the seqcount with a rwsem.
-
-Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
-Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
-Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
-Cc: <stable@vger.kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com> [ v1 missing up_read() on error exit ]
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com> [ v1 missing up_read() on error exit ]
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: bbb44da0b595 ("ARM: dts: r8a7743: Add IPMMU DT nodes")
+Fixes: 0dcba3de5835 ("ARM: dts: r8a7745: Add IPMMU DT nodes")
+Fixes: 350ae49b97c4 ("ARM: dts: r8a7744: Add IPMMU DT nodes")
+Fixes: 70496727c082 ("ARM: shmobile: r8a7790: Add IPMMU DT nodes")
+Fixes: f1951852ed17 ("ARM: shmobile: r8a7791: Add IPMMU DT nodes")
+Fixes: 098cb3a601e6 ("ARM: shmobile: r8a7793: Add IPMMU nodes")
+Fixes: 1cb2794f6082 ("ARM: shmobile: r8a7794: Add IPMMU DT nodes")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/1587461756-13317-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c |   40 ++++++++++++++++++----------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
+ arch/arm/boot/dts/r8a7743.dtsi | 12 ++++++------
+ arch/arm/boot/dts/r8a7744.dtsi | 12 ++++++------
+ arch/arm/boot/dts/r8a7745.dtsi | 12 ++++++------
+ arch/arm/boot/dts/r8a7790.dtsi | 12 ++++++------
+ arch/arm/boot/dts/r8a7791.dtsi | 14 +++++++-------
+ arch/arm/boot/dts/r8a7793.dtsi | 14 +++++++-------
+ arch/arm/boot/dts/r8a7794.dtsi | 12 ++++++------
+ 7 files changed, 44 insertions(+), 44 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -79,6 +79,7 @@
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
- #include <linux/mutex.h>
-+#include <linux/rwsem.h>
- #include <linux/string.h>
- #include <linux/mm.h>
- #include <linux/socket.h>
-@@ -194,7 +195,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
- static unsigned int napi_gen_id = NR_CPUS;
- static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index de981d629bddd..fdd267819319e 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -338,7 +338,7 @@
+ 			#thermal-sensor-cells = <0>;
+ 		};
  
--static seqcount_t devnet_rename_seq;
-+static DECLARE_RWSEM(devnet_rename_sem);
+-		ipmmu_sy0: mmu@e6280000 {
++		ipmmu_sy0: iommu@e6280000 {
+ 			compatible = "renesas,ipmmu-r8a7743",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6280000 0 0x1000>;
+@@ -348,7 +348,7 @@
+ 			status = "disabled";
+ 		};
  
- static inline void dev_base_seq_inc(struct net *net)
- {
-@@ -930,33 +931,28 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
-  *	@net: network namespace
-  *	@name: a pointer to the buffer where the name will be stored.
-  *	@ifindex: the ifindex of the interface to get the name from.
-- *
-- *	The use of raw_seqcount_begin() and cond_resched() before
-- *	retrying is required as we want to give the writers a chance
-- *	to complete when CONFIG_PREEMPTION is not set.
-  */
- int netdev_get_name(struct net *net, char *name, int ifindex)
- {
- 	struct net_device *dev;
--	unsigned int seq;
-+	int ret;
+-		ipmmu_sy1: mmu@e6290000 {
++		ipmmu_sy1: iommu@e6290000 {
+ 			compatible = "renesas,ipmmu-r8a7743",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6290000 0 0x1000>;
+@@ -357,7 +357,7 @@
+ 			status = "disabled";
+ 		};
  
--retry:
--	seq = raw_seqcount_begin(&devnet_rename_seq);
-+	down_read(&devnet_rename_sem);
- 	rcu_read_lock();
-+
- 	dev = dev_get_by_index_rcu(net, ifindex);
- 	if (!dev) {
--		rcu_read_unlock();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto out;
- 	}
+-		ipmmu_ds: mmu@e6740000 {
++		ipmmu_ds: iommu@e6740000 {
+ 			compatible = "renesas,ipmmu-r8a7743",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6740000 0 0x1000>;
+@@ -367,7 +367,7 @@
+ 			status = "disabled";
+ 		};
  
- 	strcpy(name, dev->name);
--	rcu_read_unlock();
--	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
--		cond_resched();
--		goto retry;
--	}
+-		ipmmu_mp: mmu@ec680000 {
++		ipmmu_mp: iommu@ec680000 {
+ 			compatible = "renesas,ipmmu-r8a7743",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xec680000 0 0x1000>;
+@@ -376,7 +376,7 @@
+ 			status = "disabled";
+ 		};
  
--	return 0;
-+	ret = 0;
-+out:
-+	rcu_read_unlock();
-+	up_read(&devnet_rename_sem);
-+	return ret;
- }
+-		ipmmu_mx: mmu@fe951000 {
++		ipmmu_mx: iommu@fe951000 {
+ 			compatible = "renesas,ipmmu-r8a7743",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xfe951000 0 0x1000>;
+@@ -386,7 +386,7 @@
+ 			status = "disabled";
+ 		};
  
- /**
-@@ -1228,10 +1224,10 @@ int dev_change_name(struct net_device *d
- 	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
- 		return -EBUSY;
+-		ipmmu_gp: mmu@e62a0000 {
++		ipmmu_gp: iommu@e62a0000 {
+ 			compatible = "renesas,ipmmu-r8a7743",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe62a0000 0 0x1000>;
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index fa74a262107bc..8264481bf8764 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -338,7 +338,7 @@
+ 			#thermal-sensor-cells = <0>;
+ 		};
  
--	write_seqcount_begin(&devnet_rename_seq);
-+	down_write(&devnet_rename_sem);
+-		ipmmu_sy0: mmu@e6280000 {
++		ipmmu_sy0: iommu@e6280000 {
+ 			compatible = "renesas,ipmmu-r8a7744",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6280000 0 0x1000>;
+@@ -348,7 +348,7 @@
+ 			status = "disabled";
+ 		};
  
- 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return 0;
- 	}
+-		ipmmu_sy1: mmu@e6290000 {
++		ipmmu_sy1: iommu@e6290000 {
+ 			compatible = "renesas,ipmmu-r8a7744",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6290000 0 0x1000>;
+@@ -357,7 +357,7 @@
+ 			status = "disabled";
+ 		};
  
-@@ -1239,7 +1235,7 @@ int dev_change_name(struct net_device *d
+-		ipmmu_ds: mmu@e6740000 {
++		ipmmu_ds: iommu@e6740000 {
+ 			compatible = "renesas,ipmmu-r8a7744",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6740000 0 0x1000>;
+@@ -367,7 +367,7 @@
+ 			status = "disabled";
+ 		};
  
- 	err = dev_get_valid_name(net, dev, newname);
- 	if (err < 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return err;
- 	}
+-		ipmmu_mp: mmu@ec680000 {
++		ipmmu_mp: iommu@ec680000 {
+ 			compatible = "renesas,ipmmu-r8a7744",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xec680000 0 0x1000>;
+@@ -376,7 +376,7 @@
+ 			status = "disabled";
+ 		};
  
-@@ -1254,11 +1250,11 @@ rollback:
- 	if (ret) {
- 		memcpy(dev->name, oldname, IFNAMSIZ);
- 		dev->name_assign_type = old_assign_type;
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return ret;
- 	}
+-		ipmmu_mx: mmu@fe951000 {
++		ipmmu_mx: iommu@fe951000 {
+ 			compatible = "renesas,ipmmu-r8a7744",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xfe951000 0 0x1000>;
+@@ -386,7 +386,7 @@
+ 			status = "disabled";
+ 		};
  
--	write_seqcount_end(&devnet_rename_seq);
-+	up_write(&devnet_rename_sem);
+-		ipmmu_gp: mmu@e62a0000 {
++		ipmmu_gp: iommu@e62a0000 {
+ 			compatible = "renesas,ipmmu-r8a7744",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe62a0000 0 0x1000>;
+diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+index c53f7ff20695f..c306713f2ab7d 100644
+--- a/arch/arm/boot/dts/r8a7745.dtsi
++++ b/arch/arm/boot/dts/r8a7745.dtsi
+@@ -302,7 +302,7 @@
+ 			resets = <&cpg 407>;
+ 		};
  
- 	netdev_adjacent_rename_links(dev, oldname);
+-		ipmmu_sy0: mmu@e6280000 {
++		ipmmu_sy0: iommu@e6280000 {
+ 			compatible = "renesas,ipmmu-r8a7745",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6280000 0 0x1000>;
+@@ -312,7 +312,7 @@
+ 			status = "disabled";
+ 		};
  
-@@ -1279,7 +1275,7 @@ rollback:
- 		/* err >= 0 after dev_alloc_name() or stores the first errno */
- 		if (err >= 0) {
- 			err = ret;
--			write_seqcount_begin(&devnet_rename_seq);
-+			down_write(&devnet_rename_sem);
- 			memcpy(dev->name, oldname, IFNAMSIZ);
- 			memcpy(oldname, newname, IFNAMSIZ);
- 			dev->name_assign_type = old_assign_type;
+-		ipmmu_sy1: mmu@e6290000 {
++		ipmmu_sy1: iommu@e6290000 {
+ 			compatible = "renesas,ipmmu-r8a7745",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6290000 0 0x1000>;
+@@ -321,7 +321,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_ds: mmu@e6740000 {
++		ipmmu_ds: iommu@e6740000 {
+ 			compatible = "renesas,ipmmu-r8a7745",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6740000 0 0x1000>;
+@@ -331,7 +331,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mp: mmu@ec680000 {
++		ipmmu_mp: iommu@ec680000 {
+ 			compatible = "renesas,ipmmu-r8a7745",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xec680000 0 0x1000>;
+@@ -340,7 +340,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mx: mmu@fe951000 {
++		ipmmu_mx: iommu@fe951000 {
+ 			compatible = "renesas,ipmmu-r8a7745",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xfe951000 0 0x1000>;
+@@ -350,7 +350,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_gp: mmu@e62a0000 {
++		ipmmu_gp: iommu@e62a0000 {
+ 			compatible = "renesas,ipmmu-r8a7745",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe62a0000 0 0x1000>;
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 5a2747758f676..e3ba00a22eebf 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -427,7 +427,7 @@
+ 			#thermal-sensor-cells = <0>;
+ 		};
+ 
+-		ipmmu_sy0: mmu@e6280000 {
++		ipmmu_sy0: iommu@e6280000 {
+ 			compatible = "renesas,ipmmu-r8a7790",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6280000 0 0x1000>;
+@@ -437,7 +437,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_sy1: mmu@e6290000 {
++		ipmmu_sy1: iommu@e6290000 {
+ 			compatible = "renesas,ipmmu-r8a7790",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6290000 0 0x1000>;
+@@ -446,7 +446,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_ds: mmu@e6740000 {
++		ipmmu_ds: iommu@e6740000 {
+ 			compatible = "renesas,ipmmu-r8a7790",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6740000 0 0x1000>;
+@@ -456,7 +456,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mp: mmu@ec680000 {
++		ipmmu_mp: iommu@ec680000 {
+ 			compatible = "renesas,ipmmu-r8a7790",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xec680000 0 0x1000>;
+@@ -465,7 +465,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mx: mmu@fe951000 {
++		ipmmu_mx: iommu@fe951000 {
+ 			compatible = "renesas,ipmmu-r8a7790",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xfe951000 0 0x1000>;
+@@ -475,7 +475,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_rt: mmu@ffc80000 {
++		ipmmu_rt: iommu@ffc80000 {
+ 			compatible = "renesas,ipmmu-r8a7790",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xffc80000 0 0x1000>;
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index 6f875502453cf..a26f86ccc5794 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -350,7 +350,7 @@
+ 			#thermal-sensor-cells = <0>;
+ 		};
+ 
+-		ipmmu_sy0: mmu@e6280000 {
++		ipmmu_sy0: iommu@e6280000 {
+ 			compatible = "renesas,ipmmu-r8a7791",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6280000 0 0x1000>;
+@@ -360,7 +360,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_sy1: mmu@e6290000 {
++		ipmmu_sy1: iommu@e6290000 {
+ 			compatible = "renesas,ipmmu-r8a7791",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6290000 0 0x1000>;
+@@ -369,7 +369,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_ds: mmu@e6740000 {
++		ipmmu_ds: iommu@e6740000 {
+ 			compatible = "renesas,ipmmu-r8a7791",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6740000 0 0x1000>;
+@@ -379,7 +379,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mp: mmu@ec680000 {
++		ipmmu_mp: iommu@ec680000 {
+ 			compatible = "renesas,ipmmu-r8a7791",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xec680000 0 0x1000>;
+@@ -388,7 +388,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mx: mmu@fe951000 {
++		ipmmu_mx: iommu@fe951000 {
+ 			compatible = "renesas,ipmmu-r8a7791",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xfe951000 0 0x1000>;
+@@ -398,7 +398,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_rt: mmu@ffc80000 {
++		ipmmu_rt: iommu@ffc80000 {
+ 			compatible = "renesas,ipmmu-r8a7791",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xffc80000 0 0x1000>;
+@@ -407,7 +407,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_gp: mmu@e62a0000 {
++		ipmmu_gp: iommu@e62a0000 {
+ 			compatible = "renesas,ipmmu-r8a7791",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe62a0000 0 0x1000>;
+diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
+index bf05110fac4e2..fa38397950188 100644
+--- a/arch/arm/boot/dts/r8a7793.dtsi
++++ b/arch/arm/boot/dts/r8a7793.dtsi
+@@ -336,7 +336,7 @@
+ 			#thermal-sensor-cells = <0>;
+ 		};
+ 
+-		ipmmu_sy0: mmu@e6280000 {
++		ipmmu_sy0: iommu@e6280000 {
+ 			compatible = "renesas,ipmmu-r8a7793",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6280000 0 0x1000>;
+@@ -346,7 +346,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_sy1: mmu@e6290000 {
++		ipmmu_sy1: iommu@e6290000 {
+ 			compatible = "renesas,ipmmu-r8a7793",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6290000 0 0x1000>;
+@@ -355,7 +355,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_ds: mmu@e6740000 {
++		ipmmu_ds: iommu@e6740000 {
+ 			compatible = "renesas,ipmmu-r8a7793",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6740000 0 0x1000>;
+@@ -365,7 +365,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mp: mmu@ec680000 {
++		ipmmu_mp: iommu@ec680000 {
+ 			compatible = "renesas,ipmmu-r8a7793",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xec680000 0 0x1000>;
+@@ -374,7 +374,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mx: mmu@fe951000 {
++		ipmmu_mx: iommu@fe951000 {
+ 			compatible = "renesas,ipmmu-r8a7793",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xfe951000 0 0x1000>;
+@@ -384,7 +384,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_rt: mmu@ffc80000 {
++		ipmmu_rt: iommu@ffc80000 {
+ 			compatible = "renesas,ipmmu-r8a7793",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xffc80000 0 0x1000>;
+@@ -393,7 +393,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_gp: mmu@e62a0000 {
++		ipmmu_gp: iommu@e62a0000 {
+ 			compatible = "renesas,ipmmu-r8a7793",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe62a0000 0 0x1000>;
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index 8d797d34816e3..9dd952479e680 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -290,7 +290,7 @@
+ 			resets = <&cpg 407>;
+ 		};
+ 
+-		ipmmu_sy0: mmu@e6280000 {
++		ipmmu_sy0: iommu@e6280000 {
+ 			compatible = "renesas,ipmmu-r8a7794",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6280000 0 0x1000>;
+@@ -300,7 +300,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_sy1: mmu@e6290000 {
++		ipmmu_sy1: iommu@e6290000 {
+ 			compatible = "renesas,ipmmu-r8a7794",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6290000 0 0x1000>;
+@@ -309,7 +309,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_ds: mmu@e6740000 {
++		ipmmu_ds: iommu@e6740000 {
+ 			compatible = "renesas,ipmmu-r8a7794",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe6740000 0 0x1000>;
+@@ -319,7 +319,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mp: mmu@ec680000 {
++		ipmmu_mp: iommu@ec680000 {
+ 			compatible = "renesas,ipmmu-r8a7794",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xec680000 0 0x1000>;
+@@ -328,7 +328,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_mx: mmu@fe951000 {
++		ipmmu_mx: iommu@fe951000 {
+ 			compatible = "renesas,ipmmu-r8a7794",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xfe951000 0 0x1000>;
+@@ -338,7 +338,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ipmmu_gp: mmu@e62a0000 {
++		ipmmu_gp: iommu@e62a0000 {
+ 			compatible = "renesas,ipmmu-r8a7794",
+ 				     "renesas,ipmmu-vmsa";
+ 			reg = <0 0xe62a0000 0 0x1000>;
+-- 
+2.25.1
+
 
 
