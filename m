@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E799EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C772B2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286FE206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942780;
-	bh=8jyORWYAsV4aRkIDoIFzlycpPl9x35H9VUEG9+YqYT0=;
+	s=default; t=1592942787;
+	bh=SV5AmBdV2XLsRVNE9gjOs2YjCbgcTFbLaI7+sLdkioo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZgK2x168vNmfJQ/zLG2tv0gmWm585tVzpw9DYjlwjLlk/okL3wlwnBjGvGGIg7OHb
-	 k0E67mJpoZoSo3zqVOxmJKbd9iaSbrUTew9V0Funu0tCFNrGINGmOMnwMJxm6PEm4c
-	 QeZhnqocrHnVKRnCV8pc/ox/wXTlFe0w4nmi8AuU=
+	b=yRpV3DuDqa+T7TqaN1hPUNYaN2eoCxLiEymjZrSSkB9fsjIXohvfzvtkkcDJ+Sdsd
+	 56pCbRxOwlYEdkr42ks7y7KIGE6acCyE46gxYdtZqwYMogAv59gy/AvMaD16es1UZY
+	 DqsA7tCqIav+7d0G+jydRCcGTAxjo2fLBcrgvjGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388451AbgFWUGS (ORCPT
+        id S2388016AbgFWUGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45976 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388424AbgFWUGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:05 -0400
+        id S2387485AbgFWUGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:06:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C024C206C3;
-        Tue, 23 Jun 2020 20:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEED4206C3;
+        Tue, 23 Jun 2020 20:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942765;
-        bh=8jyORWYAsV4aRkIDoIFzlycpPl9x35H9VUEG9+YqYT0=;
+        s=default; t=1592942770;
+        bh=SV5AmBdV2XLsRVNE9gjOs2YjCbgcTFbLaI7+sLdkioo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xtL+ytgiEimkVSZOiTUoGteDE5S/TJswLz7ohXuDcYve4lM89KvAdIZstB1Vs3gDm
-         x3rFlGnq6oAqKip57tpbRnCika28LuXw/K5Glph/AEBhChg9H5lClI62BVWW+g5HyD
-         rr4EuvmlfZC6pSs5GMrRJpJSez6XbfLXMmrse0Rg=
+        b=WQe8dKc3V7mVrCfKcIw70uncLQRe6QNIs/WkULoipn8zeMroN53GXMaddXzR0nFMw
+         Wp8Nj9htQ3JvsLNs34zfO1M6fvg7IgGzd9lX30zcKB4V8Otp+b7SuvWvzbV5H8cBBI
+         p7jGnwufFrH4skQ2/MjhSLdstxfVVfrbw5ZOQ1R0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 126/477] iio: buffer-dmaengine: use %zu specifier for sprintf(align)
-Date:   Tue, 23 Jun 2020 21:52:03 +0200
-Message-Id: <20200623195413.564474710@linuxfoundation.org>
+Subject: [PATCH 5.7 128/477] virtiofs: schedule blocking async replies in separate worker
+Date:   Tue, 23 Jun 2020 21:52:05 +0200
+Message-Id: <20200623195413.657967384@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,38 +60,203 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Vivek Goyal <vgoyal@redhat.com>
 
-[ Upstream commit 6eb3b8acfd079104571c207d4524743b6acc6550 ]
+[ Upstream commit bb737bbe48bea9854455cb61ea1dc06e92ce586c ]
 
-The 'size_t' type behaves differently on 64-bit architectures, and causes
-compiler a warning of the sort "format '%u' expects argument of type
-'unsigned int', but argument 3 has type 'size_t {aka long unsigned int}'".
+In virtiofs (unlike in regular fuse) processing of async replies is
+serialized.  This can result in a deadlock in rare corner cases when
+there's a circular dependency between the completion of two or more async
+replies.
 
-This change adds the correct specifier for the 'align' field.
+Such a deadlock can be reproduced with xfstests:generic/503 if TEST_DIR ==
+SCRATCH_MNT (which is a misconfiguration):
 
-Fixes: 4538c18568099 ("iio: buffer-dmaengine: Report buffer length requirements")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ - Process A is waiting for page lock in worker thread context and blocked
+   (virtio_fs_requests_done_work()).
+ - Process B is holding page lock and waiting for pending writes to
+   finish (fuse_wait_on_page_writeback()).
+ - Write requests are waiting in virtqueue and can't complete because
+   worker thread is blocked on page lock (process A).
+
+Fix this by creating a unique work_struct for each async reply that can
+block (O_DIRECT read).
+
+Fixes: a62a8ef9d97d ("virtio-fs: add virtiofs filesystem")
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/buffer/industrialio-buffer-dmaengine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/file.c      |   1 +
+ fs/fuse/fuse_i.h    |   1 +
+ fs/fuse/virtio_fs.c | 106 +++++++++++++++++++++++++++++---------------
+ 3 files changed, 73 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index b129693af0fd1..94da3b1ca3a28 100644
---- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -134,7 +134,7 @@ static ssize_t iio_dmaengine_buffer_get_length_align(struct device *dev,
- 	struct dmaengine_buffer *dmaengine_buffer =
- 		iio_buffer_to_dmaengine_buffer(indio_dev->buffer);
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 9d67b830fb7a2..d400b71b98d55 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -712,6 +712,7 @@ static ssize_t fuse_async_req_send(struct fuse_conn *fc,
+ 	spin_unlock(&io->lock);
  
--	return sprintf(buf, "%u\n", dmaengine_buffer->align);
-+	return sprintf(buf, "%zu\n", dmaengine_buffer->align);
+ 	ia->ap.args.end = fuse_aio_complete_req;
++	ia->ap.args.may_block = io->should_dirty;
+ 	err = fuse_simple_background(fc, &ia->ap.args, GFP_KERNEL);
+ 	if (err)
+ 		fuse_aio_complete_req(fc, &ia->ap.args, err);
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index ca344bf714045..d7cde216fc871 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -249,6 +249,7 @@ struct fuse_args {
+ 	bool out_argvar:1;
+ 	bool page_zeroing:1;
+ 	bool page_replace:1;
++	bool may_block:1;
+ 	struct fuse_in_arg in_args[3];
+ 	struct fuse_arg out_args[2];
+ 	void (*end)(struct fuse_conn *fc, struct fuse_args *args, int error);
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index bade747689033..0c6ef5d3c6ab8 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -60,6 +60,12 @@ struct virtio_fs_forget {
+ 	struct virtio_fs_forget_req req;
+ };
+ 
++struct virtio_fs_req_work {
++	struct fuse_req *req;
++	struct virtio_fs_vq *fsvq;
++	struct work_struct done_work;
++};
++
+ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
+ 				 struct fuse_req *req, bool in_flight);
+ 
+@@ -485,19 +491,67 @@ static void copy_args_from_argbuf(struct fuse_args *args, struct fuse_req *req)
  }
  
- static IIO_DEVICE_ATTR(length_align_bytes, 0444,
+ /* Work function for request completion */
++static void virtio_fs_request_complete(struct fuse_req *req,
++				       struct virtio_fs_vq *fsvq)
++{
++	struct fuse_pqueue *fpq = &fsvq->fud->pq;
++	struct fuse_conn *fc = fsvq->fud->fc;
++	struct fuse_args *args;
++	struct fuse_args_pages *ap;
++	unsigned int len, i, thislen;
++	struct page *page;
++
++	/*
++	 * TODO verify that server properly follows FUSE protocol
++	 * (oh.uniq, oh.len)
++	 */
++	args = req->args;
++	copy_args_from_argbuf(args, req);
++
++	if (args->out_pages && args->page_zeroing) {
++		len = args->out_args[args->out_numargs - 1].size;
++		ap = container_of(args, typeof(*ap), args);
++		for (i = 0; i < ap->num_pages; i++) {
++			thislen = ap->descs[i].length;
++			if (len < thislen) {
++				WARN_ON(ap->descs[i].offset);
++				page = ap->pages[i];
++				zero_user_segment(page, len, thislen);
++				len = 0;
++			} else {
++				len -= thislen;
++			}
++		}
++	}
++
++	spin_lock(&fpq->lock);
++	clear_bit(FR_SENT, &req->flags);
++	spin_unlock(&fpq->lock);
++
++	fuse_request_end(fc, req);
++	spin_lock(&fsvq->lock);
++	dec_in_flight_req(fsvq);
++	spin_unlock(&fsvq->lock);
++}
++
++static void virtio_fs_complete_req_work(struct work_struct *work)
++{
++	struct virtio_fs_req_work *w =
++		container_of(work, typeof(*w), done_work);
++
++	virtio_fs_request_complete(w->req, w->fsvq);
++	kfree(w);
++}
++
+ static void virtio_fs_requests_done_work(struct work_struct *work)
+ {
+ 	struct virtio_fs_vq *fsvq = container_of(work, struct virtio_fs_vq,
+ 						 done_work);
+ 	struct fuse_pqueue *fpq = &fsvq->fud->pq;
+-	struct fuse_conn *fc = fsvq->fud->fc;
+ 	struct virtqueue *vq = fsvq->vq;
+ 	struct fuse_req *req;
+-	struct fuse_args_pages *ap;
+ 	struct fuse_req *next;
+-	struct fuse_args *args;
+-	unsigned int len, i, thislen;
+-	struct page *page;
++	unsigned int len;
+ 	LIST_HEAD(reqs);
+ 
+ 	/* Collect completed requests off the virtqueue */
+@@ -515,38 +569,20 @@ static void virtio_fs_requests_done_work(struct work_struct *work)
+ 
+ 	/* End requests */
+ 	list_for_each_entry_safe(req, next, &reqs, list) {
+-		/*
+-		 * TODO verify that server properly follows FUSE protocol
+-		 * (oh.uniq, oh.len)
+-		 */
+-		args = req->args;
+-		copy_args_from_argbuf(args, req);
+-
+-		if (args->out_pages && args->page_zeroing) {
+-			len = args->out_args[args->out_numargs - 1].size;
+-			ap = container_of(args, typeof(*ap), args);
+-			for (i = 0; i < ap->num_pages; i++) {
+-				thislen = ap->descs[i].length;
+-				if (len < thislen) {
+-					WARN_ON(ap->descs[i].offset);
+-					page = ap->pages[i];
+-					zero_user_segment(page, len, thislen);
+-					len = 0;
+-				} else {
+-					len -= thislen;
+-				}
+-			}
+-		}
+-
+-		spin_lock(&fpq->lock);
+-		clear_bit(FR_SENT, &req->flags);
+ 		list_del_init(&req->list);
+-		spin_unlock(&fpq->lock);
+ 
+-		fuse_request_end(fc, req);
+-		spin_lock(&fsvq->lock);
+-		dec_in_flight_req(fsvq);
+-		spin_unlock(&fsvq->lock);
++		/* blocking async request completes in a worker context */
++		if (req->args->may_block) {
++			struct virtio_fs_req_work *w;
++
++			w = kzalloc(sizeof(*w), GFP_NOFS | __GFP_NOFAIL);
++			INIT_WORK(&w->done_work, virtio_fs_complete_req_work);
++			w->fsvq = fsvq;
++			w->req = req;
++			schedule_work(&w->done_work);
++		} else {
++			virtio_fs_request_complete(req, fsvq);
++		}
+ 	}
+ }
+ 
 -- 
 2.25.1
 
