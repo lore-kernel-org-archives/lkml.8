@@ -3,198 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF31C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B631E2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992702078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:45:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IujNulTy"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f7sfvr3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388258AbgFWWmX (ORCPT
+        id S2388275AbgFWWpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:42:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
+        Tue, 23 Jun 2020 18:45:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387603AbgFWWmV (ORCPT
+        with ESMTP id S2387815AbgFWWpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:42:21 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6453AC0619C1;
-        Tue, 23 Jun 2020 15:42:21 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id k6so267332ili.6;
-        Tue, 23 Jun 2020 15:42:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RPkcQXV410KGvavlVCIVYCWsyuTzlov4RUjatz1vzaA=;
-        b=IujNulTy12IJopV54aPDo96MaQ8AuvJmgkk1CoSOzSLpuqgHq7sgjQoCkguIDgYDwc
-         zD2zOD1EKHh55I4Y8iknpyCTK51Ny28Q3fB5M1lLfgAyOeHZ+i+pWl6sO03u1KNMvPJ2
-         FDcHW/zuVPR241Fyvknrg87pb1y8l4/2JBww7ftnRQM3JWLwWcbYbuDGsgKBnT0zfqx9
-         RsIj1+NiR0cY2c3Q4PR8eUf/IySurGEEz9Ia5UPt4Jzdav9RKp4KEv+VJcFTFqIdghD1
-         E1K2TUg8yYmuNc644Xl5u9ZXRIK5l756WquDjz8XTRv1cUcb3X8wXu814KW7CIqEIo5y
-         qv7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RPkcQXV410KGvavlVCIVYCWsyuTzlov4RUjatz1vzaA=;
-        b=grKF8mwYYPAsM3QjNjkKiR3KHyXLe/BoOshUrX1RNfygFvv8HYWPo8bsKJbNh99C4r
-         IdSf4euCdthsqfzjqETvMUkzk+TmHxSZSuHIGduCR2etHwoIYC9S+DTcHWrfjR0t3H39
-         ACQR8jQpeUThZqKL7T17t82W/7yqS2swhH/tgD4sG8EFU13SW3z4Z0ZipGn9M19JNcwv
-         fZR+EMHh5sEcL2C5sn37qiKURhB7C4l7mRMLA82IDBWr2weNfymAAL7eZDZsb49gaid2
-         5YbqXUHVx8grQvfQ4LXAeshyvWWpIwruE6ixV03J/71nmtNMsp0RSB9+1MABBl0MoFvH
-         U2sA==
-X-Gm-Message-State: AOAM530b5h2pYDAOxxnBHOX5mMDSY7ixU9F8+13ZijjWEGJGE92qq0qR
-        PiQFQW9cSf4KRbNxhvMw1m3QVL7EytW6fJjwZcU=
-X-Google-Smtp-Source: ABdhPJxTrJ6Dkq29+wII4eC4MiZK97MSBRGyjZBojzDstkyR1TH7oSUKHg41Slo1xys6gBGBRejCcsmGa/3Z27cA7kk=
-X-Received: by 2002:a92:b704:: with SMTP id k4mr24955972ili.129.1592952140677;
- Tue, 23 Jun 2020 15:42:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <1592280528-6350-1-git-send-email-yilun.xu@intel.com>
- <20200622064806.GA5101@yilunxu-OptiPlex-7050> <c9a33ee6-67f2-36b8-0870-ebc038b929ce@redhat.com>
- <20200623052613.GB23037@yilunxu-OptiPlex-7050>
-In-Reply-To: <20200623052613.GB23037@yilunxu-OptiPlex-7050>
-From:   Moritz Fischer <moritz.fischer.private@gmail.com>
-Date:   Tue, 23 Jun 2020 15:42:07 -0700
-Message-ID: <CAJYdmeM7ec4PMtRV+qJrMDA9V+yCEv-zPAnSCFjx1V2Ca-aw9g@mail.gmail.com>
-Subject: Re: [PATCH v7 0/7] Add interrupt support to FPGA DFL drivers
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     Tom Rix <trix@redhat.com>, linux-fpga@vger.kernel.org,
+        Tue, 23 Jun 2020 18:45:07 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D748C0619C1;
+        Tue, 23 Jun 2020 15:45:06 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49s1Z81khxz9sRR;
+        Wed, 24 Jun 2020 08:45:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592952305;
+        bh=tChZ5ngJ34qizWuYEBwfwH6ZaiLJwxDvT/lkEo4q9x0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=f7sfvr3LzTag9fmHGMc5JFPtOXxlJ8MOgiSBTmEOdXqUVNgWxVqnpszgWVGBk9g74
+         vsXEqfS+4VrzeLyuLSQrdUEXMD/pDnTNwHHSLzTRSnNIff7zaJ7Ze9u9kHiH36/BwV
+         n2HWwTyPeZhYE3p4e/ItoVIghaPbsVm6ZwyW80lb95EUW4znMO0Xr10Is0uV0Q1ksL
+         /vDfG+UZ0dqi0TGSlrFDdab0tDkR/p8E9mCsm4bSSGe2GtaQVmlGMDUhKZQURR59NL
+         Q8ZryN885BG0k2V+YVKWzt1kUiNciW4i1+iW8HCWE/Rm2foLOT/59m2RQKla4sMjzg
+         +mjecWu6h3Fbg==
+Date:   Wed, 24 Jun 2020 08:45:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bhu@redhat.com, mtosatti@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jun.j.tian@intel.com, Wu Hao <hao.wu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Chen Tao <chentao107@huawei.com>
+Subject: linux-next: Fixes tag needs some work in the amdgpu tree
+Message-ID: <20200624084503.42c9d5b8@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/X9YwbIPP/p9BLWtR10GVZ6S";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will look at it this week.
+--Sig_/X9YwbIPP/p9BLWtR10GVZ6S
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-- Moritz
+Hi all,
 
-On Mon, Jun 22, 2020 at 10:30 PM Xu Yilun <yilun.xu@intel.com> wrote:
->
-> On Mon, Jun 22, 2020 at 05:27:20AM -0700, Tom Rix wrote:
-> > In addition to reviewing, I have run these changes on the pac a10 card and while i do not have an afu using interrupts, I have exercised some of the new interfaces.
-> >
-> > The most useful i have submitted to selftests drivers/fpga.  In the future, this would be a good place to put other fpga unit tests.
-> >
-> > The selftest patch depends on this change.
-> >
-> > So you can also add
-> >
-> > Tested-by: Tom Rix <trix@redhat.com>
->
-> Yes I'll add your Tested-by tag.
->
-> Thanks,
-> Yilun
->
-> >
-> > Tom
-> >
-> > On 6/21/20 11:48 PM, Xu Yilun wrote:
-> > > Hi Moritz:
-> > >
-> > > Could you please help review the patchset when you have time?
-> > >
-> > > You have already reviewed the first 3 patches some time ago. The
-> > > comments are all fixed. Hao and Redhat guys also have done several
-> > > rounds of review. The patches are all Acked-by Hao, reviewed by
-> > > Marcelo & Tom.
-> > >
-> > > There is little change to the code for several months, seems it stays
-> > > ready and just need your final Ack.
-> > >
-> > > Actually this is the last feature for our first generation PAC A10 Card,
-> > > and is important for users to have the full support.
-> > >
-> > > We really need your help on code review ...
-> > >
-> > > Many thanks!
-> > > Yilun
-> > >
-> > > On Tue, Jun 16, 2020 at 12:08:41PM +0800, Xu Yilun wrote:
-> > >> This patchset add interrupt support to FPGA DFL drivers.
-> > >>
-> > >> With these patches, DFL driver will parse and assign interrupt resources
-> > >> for enumerated feature devices and their sub features.
-> > >>
-> > >> This patchset also introduces a set of APIs for user to monitor DFL
-> > >> interrupts. Three sub features (DFL FME error, DFL AFU error and user
-> > >> interrupt) drivers now support these APIs.
-> > >>
-> > >> Patch #1: DFL framework change. Accept interrupt info input from DFL bus
-> > >>           driver, and add interrupt parsing and assignment for feature
-> > >>           sub devices.
-> > >> Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
-> > >> Patch #3: DFL framework change. Add helper functions for feature sub
-> > >>           device drivers to handle interrupt and notify users.
-> > >> Patch #4: Add interrupt support for AFU error reporting sub feature.
-> > >> Patch #5: Add interrupt support for FME global error reporting sub
-> > >>           feature.
-> > >> Patch #6: Add interrupt support for a new sub feature, to handle user
-> > >>           interrupts implemented in AFU.
-> > >> Patch #7: Documentation for DFL interrupt handling.
-> > >>
-> > >> Main changes from v1:
-> > >>  - Early validating irq table for each feature in parse_feature_irq()
-> > >>    in Patch #1.
-> > >>  - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
-> > >>    instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
-> > >>    DFL_FPGA_FME/PORT_XXX_SET_IRQ param
-> > >>
-> > >> Main changes from v2:
-> > >>  - put parse_feature_irqs() inside create_feature_instance().
-> > >>  - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
-> > >>  - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
-> > >>
-> > >> Main changes from v3:
-> > >>  - rebased to 5.7-rc1.
-> > >>  - fail the dfl enumeration when irq parsing error happens.
-> > >>  - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
-> > >>    drivers.
-> > >>
-> > >> Main changes from v4:
-> > >>  - Minor fixes for Hao's comments.
-> > >>
-> > >> Main changes from v5:
-> > >>  - Remove unnecessary type casting in Patch #1 & #3.
-> > >>  - Minor fixes for Moritz's comments.
-> > >>
-> > >> Main changes from v6:
-> > >>  - Add the header file <linux/interrupt.h> for Patch #1, to fix build
-> > >>    error on ARCH=xtensa
-> > >>  - Minor fixes in Patch #2 & #3.
-> > >>
-> > >> Xu Yilun (7):
-> > >>   fpga: dfl: parse interrupt info for feature devices on enumeration
-> > >>   fpga: dfl: pci: add irq info for feature devices enumeration
-> > >>   fpga: dfl: introduce interrupt trigger setting API
-> > >>   fpga: dfl: afu: add interrupt support for port error reporting
-> > >>   fpga: dfl: fme: add interrupt support for global error reporting
-> > >>   fpga: dfl: afu: add AFU interrupt support
-> > >>   Documentation: fpga: dfl: add descriptions for interrupt related
-> > >>     interfaces.
-> > >>
-> > >>  Documentation/fpga/dfl.rst    |  19 +++
-> > >>  drivers/fpga/dfl-afu-error.c  |  17 +++
-> > >>  drivers/fpga/dfl-afu-main.c   |  32 +++++
-> > >>  drivers/fpga/dfl-fme-error.c  |  18 +++
-> > >>  drivers/fpga/dfl-fme-main.c   |   6 +
-> > >>  drivers/fpga/dfl-pci.c        |  76 +++++++++--
-> > >>  drivers/fpga/dfl.c            | 310 ++++++++++++++++++++++++++++++++++++++++++
-> > >>  drivers/fpga/dfl.h            |  57 ++++++++
-> > >>  include/uapi/linux/fpga-dfl.h |  82 +++++++++++
-> > >>  9 files changed, 608 insertions(+), 9 deletions(-)
-> > >>
-> > >> --
-> > >> 2.7.4
+In commit
+
+  82d6b9745744 ("drm/amdgpu/debugfs: fix memory leak when amdgpu_virt_enabl=
+e_access_debugfs failed")
+
+Fixes tag
+
+  Fixes: 95a2f917387a2 ("drm/amdgpu: restrict debugfs register accessunder =
+SR-IOV")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/X9YwbIPP/p9BLWtR10GVZ6S
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7yhe8ACgkQAVBC80lX
+0Gwt/AgAi7T9upqEqmwTL5Jo1e40mKR4uHvaSn/MPR/zjFHapH86Q4B+9ipQ6Xtm
+yMDA2MqLFRVHYCfpb0pEnsZOdty4ik9BYzm8g4//z+TKoiADsoKznEKZMQmWgqM2
+5ti5R0hqVtA+PC4vGs9z3ffr7QKnKLxG1K9HnjNoBp+jCcyihaL81IaMolkInKkd
+Oh4UMj4H6nhQWnrCrXRWbyr0JSq2IUPfFfYi/QL0LGH65gsWvkIBI1oweJpUx23t
+zYdaqTZyLRuOWzsstRKKcXIzmbcnIOn/yZ0i+bjI53j1vQ/2vw0BMo4kwZLHF+iI
+XUcaXMIVs1Gd6/N1WnbpA6AWXT6KnQ==
+=v9ii
+-----END PGP SIGNATURE-----
+
+--Sig_/X9YwbIPP/p9BLWtR10GVZ6S--
