@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B86C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E818CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A81282073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD082073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943403;
-	bh=qO2w1WAQY0W9g78yumPqSmR/mtWdlrTUoYZHbi4d/Rc=;
+	s=default; t=1592943406;
+	bh=P5F2rZemRLTnANMPkKWHcAJrGkkcoo6QKlbcVU9KaQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSfP/tbSYm8SBxOYFXEjNW5fM/QTUuaUj/7dRRZokKr+grfmZsdW/ARJk9foXL2s0
-	 0xRdbFij67bKT7M11MTUy9JKSoL3VNAf67IvXmsoaXgtk2xxgICLwpNokOQ9CYJB5E
-	 Medqo8tgiRfPJgvXUTanV6e1W6w9KWmIrudBlMyA=
+	b=IzZb6XrQTlfQFpXBasjbry7UAstShf/U+6rJfxN/Mn4hcc7MIQZcf87G30B3N9qo3
+	 2Le1lnLGBHffrO0+gcJOmYxSnR+P99p7ZuzeierHKVwMEwkJt1mbB6KulvEaVDssNK
+	 iNHi7yAv9dpLZeGkmYJoo6THGjwjZD8ccuSad50A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389450AbgFWUQl (ORCPT
+        id S2389458AbgFWUQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60162 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389434AbgFWUQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:34 -0400
+        id S2388703AbgFWUQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:16:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66D8720702;
-        Tue, 23 Jun 2020 20:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63A4C2080C;
+        Tue, 23 Jun 2020 20:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943394;
-        bh=qO2w1WAQY0W9g78yumPqSmR/mtWdlrTUoYZHbi4d/Rc=;
+        s=default; t=1592943401;
+        bh=P5F2rZemRLTnANMPkKWHcAJrGkkcoo6QKlbcVU9KaQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fj+4v35jNaure/ghmjDanBlNgI9Oz7hXP4+K5nC1O0b0WSeaWLjR4aXEYV8plRnHm
-         naQAYLlq6wWDWUvGfniV7H6t4pZV11KmSwBUneQmcpYakLG6pHbdcVaBG/Eff5qgT2
-         hQW0z3jIWuKYCR7vfcD0rwHzcBrEkIz9znTwhbwk=
+        b=zKdT1yZCHw6HkBecEQRRhFU2QVC5zWAD5A3Wzkxtj8loTqXvd9Ibac/C07sj26VKn
+         axsXhuRppBekmayeI/IoEED/CTrH3CGZ3kv6TqgknzzijKb7ctEZZ7jS5A3D6NRKSv
+         lRgfsWJP52yeuuzlorUlz6E+3V4afydY8AzsUWMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcelo Bandeira Condotta <mcondotta@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Andrey Ignatov <rdna@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 334/477] KVM: selftests: Fix build with "make ARCH=x86_64"
-Date:   Tue, 23 Jun 2020 21:55:31 +0200
-Message-Id: <20200623195423.325563135@linuxfoundation.org>
+Subject: [PATCH 5.7 378/477] bpf: Fix memlock accounting for sock_hash
+Date:   Tue, 23 Jun 2020 21:56:15 +0200
+Message-Id: <20200623195425.399940958@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,57 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Andrey Ignatov <rdna@fb.com>
 
-[ Upstream commit b80db73dc8be7022adae1b4414a1bebce50fe915 ]
+[ Upstream commit 60e5ca8a64bad8f3e2e20a1e57846e497361c700 ]
 
-Marcelo reports that kvm selftests fail to build with
-"make ARCH=x86_64":
+Add missed bpf_map_charge_init() in sock_hash_alloc() and
+correspondingly bpf_map_charge_finish() on ENOMEM.
 
-gcc -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99
- -fno-stack-protector -fno-PIE -I../../../../tools/include
- -I../../../../tools/arch/x86_64/include  -I../../../../usr/include/
- -Iinclude -Ilib -Iinclude/x86_64 -I.. -c lib/kvm_util.c
- -o /var/tmp/20200604202744-bin/lib/kvm_util.o
+It was found accidentally while working on unrelated selftest that
+checks "map->memory.pages > 0" is true for all map types.
 
-In file included from lib/kvm_util.c:11:
-include/x86_64/processor.h:14:10: fatal error: asm/msr-index.h: No such
- file or directory
+Before:
+	# bpftool m l
+	...
+	3692: sockhash  name m_sockhash  flags 0x0
+		key 4B  value 4B  max_entries 8  memlock 0B
 
- #include <asm/msr-index.h>
-          ^~~~~~~~~~~~~~~~~
-compilation terminated.
+After:
+	# bpftool m l
+	...
+	84: sockmap  name m_sockmap  flags 0x0
+		key 4B  value 4B  max_entries 8  memlock 4096B
 
-"make ARCH=x86", however, works. The problem is that arch specific headers
-for x86_64 live in 'tools/arch/x86/include', not in
-'tools/arch/x86_64/include'.
-
-Fixes: 66d69e081b52 ("selftests: fix kvm relocatable native/cross builds and installs")
-Reported-by: Marcelo Bandeira Condotta <mcondotta@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Message-Id: <20200605142028.550068-1-vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Andrey Ignatov <rdna@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200612000857.2881453-1-rdna@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/Makefile | 4 ++++
+ net/core/sock_map.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 42f4f49f2a488..2c85b9dd86f58 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -80,7 +80,11 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
- INSTALL_HDR_PATH = $(top_srcdir)/usr
- LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
- LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
-+ifeq ($(ARCH),x86_64)
-+LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
-+else
- LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
-+endif
- CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
- 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
- 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 7e858c1dd7113..591457fcbd028 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -984,11 +984,15 @@ static struct bpf_map *sock_hash_alloc(union bpf_attr *attr)
+ 		err = -EINVAL;
+ 		goto free_htab;
+ 	}
++	err = bpf_map_charge_init(&htab->map.memory, cost);
++	if (err)
++		goto free_htab;
+ 
+ 	htab->buckets = bpf_map_area_alloc(htab->buckets_num *
+ 					   sizeof(struct bpf_htab_bucket),
+ 					   htab->map.numa_node);
+ 	if (!htab->buckets) {
++		bpf_map_charge_finish(&htab->map.memory);
+ 		err = -ENOMEM;
+ 		goto free_htab;
+ 	}
 -- 
 2.25.1
 
