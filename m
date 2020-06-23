@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A479DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77423206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20047214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944418;
-	bh=0isMCShVUmt0PgznSHcfZZBMuds+0OqhFhci1HPEPVk=;
+	s=default; t=1592944422;
+	bh=kGRmZLItnQkLpbUnjXCwaWJEJgShGAHtqXcmb9eupoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K9vrioJ0xAYd2IatfjE65W5RhzJks0nkyX54trDWahw8MXYlU4s2STC0TamUpfwOD
-	 lzJv9sq0iJqUhSdrWjVGwAeqiJ27Fz6OPRbf8wfTe32XT+q+g+bxyzCphdQCT9f+Lk
-	 3FC9n/es2VgU39k3cGyOHkj6CWHKZ8eJBF5q3oeU=
+	b=wTPANTnC+hUUm3xa55byRSqLf6fpQduOnDi9G2u4Vv3hUR3S8GwiCfiMTqR6yRw52
+	 iFqQBGYgx7otXhcqTSUUmu9GRC0xTwE6e0LRAfHTM9Yu4OxKAegArGjCMXzVkTtJLO
+	 KOY8n8gkNBDtzbvVUtvEvgjKz74LoHBOGal8jdqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391434AbgFWUdg (ORCPT
+        id S2391442AbgFWUdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54646 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391409AbgFWUdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:21 -0400
+        id S2391419AbgFWUd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23218206C3;
-        Tue, 23 Jun 2020 20:33:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE852072E;
+        Tue, 23 Jun 2020 20:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944401;
-        bh=0isMCShVUmt0PgznSHcfZZBMuds+0OqhFhci1HPEPVk=;
+        s=default; t=1592944406;
+        bh=kGRmZLItnQkLpbUnjXCwaWJEJgShGAHtqXcmb9eupoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18Raxs/PuzJ1x5hQggaGQuCzppFkNmSpHl1FAIReb1L8XTCA1ctpcvrpEw39c1U7n
-         gw1/ZZZxrllt7VSCu2HYGJPacovQaqxfBJH3w5ah+1jWXe4FWLHxzdgNiIlfvx10zA
-         CoWRF2drNVYKS2lJ6R0jfffMmnx96PVVJJ9CJIWg=
+        b=YaI0PkBehFJj2cMyO/up2ZB2ylwBjIkRjBLI2VAGxaIEFaxBmodIP0Ur2nuQGNyxD
+         yc3ZxbrltP5vXDcCrswBeRLfLYcA+R5lOWY73odE335ULtEUyusQW1/1yQT3y9P9hA
+         tCA1Nt1iT263oWHuJIQbqhvF6F9Texmy8N3pSZ+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 290/314] drm/amd/display: Use swap() where appropriate
-Date:   Tue, 23 Jun 2020 21:58:05 +0200
-Message-Id: <20200623195352.809162782@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 291/314] x86/boot/compressed: Relax sed symbol type regex for LLVM ld.lld
+Date:   Tue, 23 Jun 2020 21:58:06 +0200
+Message-Id: <20200623195352.856096802@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -66,122 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 34b86b75dfc90ab3d996c224314ce51772a3b351 ]
+commit bc310baf2ba381c648983c7f4748327f17324562 upstream.
 
-Mostly a cocci-job, but it flat out refused to remove the
-declaration in drivers/gpu/drm/amd/display/dc/core/dc.c so
-had to do that part manually.
+The final build stage of the x86 kernel captures some symbol
+addresses from the decompressor binary and copies them into zoffset.h.
+It uses sed with a regular expression that matches the address, symbol
+type and symbol name, and mangles the captured addresses and the names
+of symbols of interest into #define directives that are added to
+zoffset.h
 
-@swap@
-identifier TEMP;
-expression A,B;
-@@
-- TEMP = A;
-- A = B;
-- B = TEMP;
-+ swap(A, B);
+The symbol type is indicated by a single letter, which we match
+strictly: only letters in the set 'ABCDGRSTVW' are matched, even
+though the actual symbol type is relevant and therefore ignored.
 
-@@
-type T;
-identifier swap.TEMP;
-@@
-(
-- T TEMP;
-|
-- T TEMP = {...};
-)
-... when != TEMP
+Commit bc7c9d620 ("efi/libstub/x86: Force 'hidden' visibility for
+extern declarations") made a change to the way external symbol
+references are classified, resulting in 'startup_32' now being
+emitted as a hidden symbol. This prevents the use of GOT entries to
+refer to this symbol via its absolute address, which recent toolchains
+(including Clang based ones) already avoid by default, making this
+change a no-op in the majority of cases.
 
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Leo Li <sunpeng.li@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc: amd-gfx@lists.freedesktop.org
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+However, as it turns out, the LLVM linker classifies such hidden
+symbols as symbols with static linkage in fully linked ELF binaries,
+causing tools such as NM to output a lowercase 't' rather than an upper
+case 'T' for the type of such symbols. Since our sed expression only
+matches upper case letters for the symbol type, the line describing
+startup_32 is disregarded, resulting in a build error like the following
+
+  arch/x86/boot/header.S:568:18: error: symbol 'ZO_startup_32' can not be
+                                        undefined in a subtraction expression
+  init_size: .long (0x00000000008fd000 - ZO_startup_32 +
+                    (((0x0000000001f6361c + ((0x0000000001f6361c >> 8) + 65536)
+                     - 0x00000000008c32e5) + 4095) & ~4095)) # kernel initialization size
+
+Given that we are only interested in the value of the symbol, let's match
+any character in the set 'a-zA-Z' instead.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/bios/bios_parser.c  | 7 ++-----
- drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c | 8 ++------
- drivers/gpu/drm/amd/display/dc/core/dc.c           | 6 +-----
- 3 files changed, 5 insertions(+), 16 deletions(-)
+ arch/x86/boot/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-index 221e0f56389f3..823843cd26133 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-@@ -2543,7 +2543,6 @@ static enum bp_result construct_integrated_info(
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index e2839b5c246c2..6539c50fb9aae 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -87,7 +87,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
  
- 	/* Sort voltage table from low to high*/
- 	if (result == BP_RESULT_OK) {
--		struct clock_voltage_caps temp = {0, 0};
- 		uint32_t i;
- 		uint32_t j;
+ SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
  
-@@ -2553,10 +2552,8 @@ static enum bp_result construct_integrated_info(
- 						info->disp_clk_voltage[j].max_supported_clk <
- 						info->disp_clk_voltage[j-1].max_supported_clk) {
- 					/* swap j and j - 1*/
--					temp = info->disp_clk_voltage[j-1];
--					info->disp_clk_voltage[j-1] =
--							info->disp_clk_voltage[j];
--					info->disp_clk_voltage[j] = temp;
-+					swap(info->disp_clk_voltage[j - 1],
-+					     info->disp_clk_voltage[j]);
- 				}
- 			}
- 		}
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-index dff65c0fe82f8..7873abea4112b 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-@@ -1613,8 +1613,6 @@ static enum bp_result construct_integrated_info(
+-sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
++sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
  
- 	struct atom_common_table_header *header;
- 	struct atom_data_revision revision;
--
--	struct clock_voltage_caps temp = {0, 0};
- 	uint32_t i;
- 	uint32_t j;
- 
-@@ -1644,10 +1642,8 @@ static enum bp_result construct_integrated_info(
- 				info->disp_clk_voltage[j-1].max_supported_clk
- 				) {
- 				/* swap j and j - 1*/
--				temp = info->disp_clk_voltage[j-1];
--				info->disp_clk_voltage[j-1] =
--					info->disp_clk_voltage[j];
--				info->disp_clk_voltage[j] = temp;
-+				swap(info->disp_clk_voltage[j - 1],
-+				     info->disp_clk_voltage[j]);
- 			}
- 		}
- 	}
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index b95a58aa82d91..47e7d11ca0c9c 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -907,15 +907,11 @@ static void program_timing_sync(
- 
- 		/* set first pipe with plane as master */
- 		for (j = 0; j < group_size; j++) {
--			struct pipe_ctx *temp;
--
- 			if (pipe_set[j]->plane_state) {
- 				if (j == 0)
- 					break;
- 
--				temp = pipe_set[0];
--				pipe_set[0] = pipe_set[j];
--				pipe_set[j] = temp;
-+				swap(pipe_set[0], pipe_set[j]);
- 				break;
- 			}
- 		}
+ quiet_cmd_zoffset = ZOFFSET $@
+       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
 -- 
 2.25.1
 
