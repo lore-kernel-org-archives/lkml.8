@@ -2,711 +2,567 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F396C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C421AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A172078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F73F20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592905998;
-	bh=Hqyy7ujXEgNcz+CfIub8oI+E19TZ58vdz7XwApLbxg8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fwqHhzlVBTluOmwcUX766bqC7CWoYosB3swWcVLPt9czm/d+Yek+t9ieHI6+h69rN
-	 A5Q0Ai6TRSTCri6PLYj/tKywP2YJ4HqL/DPKtV2mgkkaEE7SLIEW/D9eGIRHDOnqTw
-	 sDPl4e07Oj6aC0NCmgtC1DZ3X239gbFTSUfvvaKE=
+	s=default; t=1592906004;
+	bh=OUZvULT7cNmUiydBEetp+SRwmmohsnNgRSIIEac+QA0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2JStqk4xEjhYBfW9GOrgTI6aNSUbrXJYr9OnVWjV8WmuOCPQa9tftbPNYA918Gqhx
+	 u5sL7wjgnCt+Kk6kBF+s2UKtYuEbFX8TL75SzMkI7OwsvMhyrjTTnxj2dwpmX5oLte
+	 08Px3Q18RznK4IM1svuiB7buTf38avXubq3vDjfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732011AbgFWJxQ (ORCPT
+        id S1732231AbgFWJxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:53:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33340 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 05:53:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731887AbgFWJxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:53:07 -0400
+        id S1732189AbgFWJxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:53:09 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C4D20738;
-        Tue, 23 Jun 2020 09:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35EC620776;
+        Tue, 23 Jun 2020 09:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592905986;
-        bh=Hqyy7ujXEgNcz+CfIub8oI+E19TZ58vdz7XwApLbxg8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=09o6Q7I5R94bs2NtW/UpFS9W8eUGWTzZQB8MKXha4b2MiKfDCF1qHduD/0sYav6lS
-         3hWGrdXh/TvBeu1hGJTJ0nSvcrSZepfFEaKbiAYgyS+PhOq+Vl1UKi7AKynxoeIRRL
-         1uaccXqwtcfSx1bDZavhthCU9MR6OqA2bFI4Bdog=
+        bh=OUZvULT7cNmUiydBEetp+SRwmmohsnNgRSIIEac+QA0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nXizfnjLSuuRffk5Zr2JFzrimy8VNT80eDTe56x6MYEf4shP4+DT+5aw7JMvu3ABc
+         LsqbNEj9LLN2YmnKW3ykqopB0RJeDOIyx+FnwXcg+/w8KupQcNmt0OVtq7AvEEIui+
+         ZRCHzmnu7SIkTXFIxWoThDgYrZlBLxddVVnCZv8c=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jnfbz-004C35-Rn; Tue, 23 Jun 2020 11:53:03 +0200
+        id 1jnfbz-004C32-QD; Tue, 23 Jun 2020 11:53:03 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Yong Zhi <yong.zhi@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tian Shu Qiu <tian.shu.qiu@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-spdx@vger.kernel.org, linux-mm@kvack.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 1/9] docs: dt: convert booting-without-of.txt to ReST format
-Date:   Tue, 23 Jun 2020 11:52:54 +0200
-Message-Id: <8dce14af13f66cb8393c21b58f0693e667a7045f.1592905407.git.mchehab+huawei@kernel.org>
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v2 0/9] Convert the remaining text files to ReST and add SPDX for GFDL
+Date:   Tue, 23 Jun 2020 11:52:53 +0200
+Message-Id: <cover.1592905407.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1592905407.git.mchehab+huawei@kernel.org>
-References: <cover.1592905407.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document title;
-- Adjust document and section titles;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add table markups;
-- Add it to devicetree/index.rst.
+The main goal of this series is to finish the ReST conversion. After this
+series, we have just those files still in plain old format:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
+	- Documentation/RCU/RTFP.txt
+	- Documentation/atomic_bitops.txt
+	- Documentation/memory-barriers.txt
+	- Documentation/atomic_t.txt
+	- Documentation/filesystems/dax.txt
+	- Documentation/filesystems/path-lookup.txt
+	- Documentation/virt/kvm/devices/README
+
+PS.: I'm using a script to remove false-positives and ignore non-converted
+translated files.
+
+It is worth to mention that this fseries contain licenses for the two
+GFDL licenses used within the Kernel: GFDL-1.1+ and GFDL-1.2.
+
+Those licenses are the result of long discussions with the SPDX legal
+team, and are part of this commit, to be added for the future
+SPDX 3.10 version:
+	https://github.com/spdx/license-list-XML/pull/1048/commits/f695d2ac65230d0f4161ba58fff2f9d87bb5a053
+
+Mauro Carvalho Chehab (9):
+  docs: dt: convert booting-without-of.txt to ReST format
+  LICENSES: add GFDL licenses
+  media: docs: use SPDX GFDL-1.1-or-later-no-invariants
+  docs: trace: ring-buffer-design.txt: convert to ReST format
+  docs: move nommu-mmap.txt to admin-guide and rename to ReST
+  docs: move mailbox.txt to driver-api and rename it
+  docs: move other kAPI documents to core-api
+  docs: Add remaining Documentation/*.txt at staging/index.rst
+  docs: staging: use small font for literal includes
+
+ Documentation/admin-guide/mm/index.rst        |   1 +
+ .../mm/nommu-mmap.rst}                        |   0
+ Documentation/admin-guide/sysctl/vm.rst       |   2 +-
  Documentation/arm/booting.rst                 |   2 +-
- ...-without-of.txt => booting-without-of.rst} | 298 ++++++++++--------
+ .../bus-virt-phys-mapping.rst}                |   0
+ Documentation/core-api/index.rst              |   3 +
+ .../this_cpu_ops.rst}                         |   0
+ .../unaligned-memory-access.rst               |   0
+ ...-without-of.txt => booting-without-of.rst} | 298 ++++---
  Documentation/devicetree/index.rst            |   1 +
+ Documentation/driver-api/index.rst            |   1 +
+ .../{mailbox.txt => driver-api/mailbox.rst}   |   0
+ Documentation/gpu/drm-mm.rst                  |   2 +-
+ Documentation/staging/index.rst               |  24 +
+ Documentation/trace/index.rst                 |   1 +
+ ...ffer-design.txt => ring-buffer-design.rst} | 778 +++++++++---------
  Documentation/translations/zh_CN/arm/Booting  |   2 +-
- 4 files changed, 168 insertions(+), 135 deletions(-)
+ .../userspace-api/media/cec/cec-api.rst       |   9 +-
+ .../media/cec/cec-func-close.rst              |   9 +-
+ .../media/cec/cec-func-ioctl.rst              |   9 +-
+ .../userspace-api/media/cec/cec-func-open.rst |   9 +-
+ .../userspace-api/media/cec/cec-func-poll.rst |   9 +-
+ .../userspace-api/media/cec/cec-funcs.rst     |   9 +-
+ .../userspace-api/media/cec/cec-header.rst    |   9 +-
+ .../userspace-api/media/cec/cec-intro.rst     |   9 +-
+ .../media/cec/cec-ioc-adap-g-caps.rst         |   9 +-
+ .../media/cec/cec-ioc-adap-g-log-addrs.rst    |   9 +-
+ .../media/cec/cec-ioc-adap-g-phys-addr.rst    |   9 +-
+ .../media/cec/cec-ioc-dqevent.rst             |   9 +-
+ .../media/cec/cec-ioc-g-mode.rst              |   9 +-
+ .../media/cec/cec-ioc-receive.rst             |   9 +-
+ .../media/cec/cec-pin-error-inj.rst           |   9 +-
+ .../dvb/audio-bilingual-channel-select.rst    |   9 +-
+ .../media/dvb/audio-channel-select.rst        |   9 +-
+ .../media/dvb/audio-clear-buffer.rst          |   9 +-
+ .../media/dvb/audio-continue.rst              |   9 +-
+ .../userspace-api/media/dvb/audio-fclose.rst  |   9 +-
+ .../userspace-api/media/dvb/audio-fopen.rst   |   9 +-
+ .../userspace-api/media/dvb/audio-fwrite.rst  |   9 +-
+ .../media/dvb/audio-get-capabilities.rst      |   9 +-
+ .../media/dvb/audio-get-status.rst            |   9 +-
+ .../userspace-api/media/dvb/audio-pause.rst   |   9 +-
+ .../userspace-api/media/dvb/audio-play.rst    |   9 +-
+ .../media/dvb/audio-select-source.rst         |   9 +-
+ .../media/dvb/audio-set-av-sync.rst           |   9 +-
+ .../media/dvb/audio-set-bypass-mode.rst       |   9 +-
+ .../userspace-api/media/dvb/audio-set-id.rst  |   9 +-
+ .../media/dvb/audio-set-mixer.rst             |   9 +-
+ .../media/dvb/audio-set-mute.rst              |   9 +-
+ .../media/dvb/audio-set-streamtype.rst        |   9 +-
+ .../userspace-api/media/dvb/audio-stop.rst    |   9 +-
+ .../userspace-api/media/dvb/audio.rst         |   9 +-
+ .../media/dvb/audio_data_types.rst            |   9 +-
+ .../media/dvb/audio_function_calls.rst        |   9 +-
+ .../userspace-api/media/dvb/ca-fclose.rst     |   9 +-
+ .../userspace-api/media/dvb/ca-fopen.rst      |   9 +-
+ .../userspace-api/media/dvb/ca-get-cap.rst    |   9 +-
+ .../media/dvb/ca-get-descr-info.rst           |   9 +-
+ .../userspace-api/media/dvb/ca-get-msg.rst    |   9 +-
+ .../media/dvb/ca-get-slot-info.rst            |   9 +-
+ .../userspace-api/media/dvb/ca-reset.rst      |   9 +-
+ .../userspace-api/media/dvb/ca-send-msg.rst   |   9 +-
+ .../userspace-api/media/dvb/ca-set-descr.rst  |   9 +-
+ Documentation/userspace-api/media/dvb/ca.rst  |   9 +-
+ .../userspace-api/media/dvb/ca_data_types.rst |   9 +-
+ .../media/dvb/ca_function_calls.rst           |   9 +-
+ .../userspace-api/media/dvb/demux.rst         |   9 +-
+ .../userspace-api/media/dvb/dmx-add-pid.rst   |   9 +-
+ .../userspace-api/media/dvb/dmx-expbuf.rst    |   9 +-
+ .../userspace-api/media/dvb/dmx-fclose.rst    |   9 +-
+ .../userspace-api/media/dvb/dmx-fopen.rst     |   9 +-
+ .../userspace-api/media/dvb/dmx-fread.rst     |   9 +-
+ .../userspace-api/media/dvb/dmx-fwrite.rst    |   9 +-
+ .../media/dvb/dmx-get-pes-pids.rst            |   9 +-
+ .../userspace-api/media/dvb/dmx-get-stc.rst   |   9 +-
+ .../userspace-api/media/dvb/dmx-mmap.rst      |   9 +-
+ .../userspace-api/media/dvb/dmx-munmap.rst    |   9 +-
+ .../userspace-api/media/dvb/dmx-qbuf.rst      |   9 +-
+ .../userspace-api/media/dvb/dmx-querybuf.rst  |   9 +-
+ .../media/dvb/dmx-remove-pid.rst              |   9 +-
+ .../userspace-api/media/dvb/dmx-reqbufs.rst   |   9 +-
+ .../media/dvb/dmx-set-buffer-size.rst         |   9 +-
+ .../media/dvb/dmx-set-filter.rst              |   9 +-
+ .../media/dvb/dmx-set-pes-filter.rst          |   9 +-
+ .../userspace-api/media/dvb/dmx-start.rst     |   9 +-
+ .../userspace-api/media/dvb/dmx-stop.rst      |   9 +-
+ .../userspace-api/media/dvb/dmx_fcalls.rst    |   9 +-
+ .../userspace-api/media/dvb/dmx_types.rst     |   9 +-
+ .../media/dvb/dvb-fe-read-status.rst          |   9 +-
+ .../media/dvb/dvb-frontend-event.rst          |   9 +-
+ .../media/dvb/dvb-frontend-parameters.rst     |   9 +-
+ .../userspace-api/media/dvb/dvbapi.rst        |   9 +-
+ .../userspace-api/media/dvb/dvbproperty.rst   |   9 +-
+ .../userspace-api/media/dvb/examples.rst      |   9 +-
+ .../media/dvb/fe-bandwidth-t.rst              |   9 +-
+ .../media/dvb/fe-diseqc-recv-slave-reply.rst  |   9 +-
+ .../media/dvb/fe-diseqc-reset-overload.rst    |   9 +-
+ .../media/dvb/fe-diseqc-send-burst.rst        |   9 +-
+ .../media/dvb/fe-diseqc-send-master-cmd.rst   |   9 +-
+ .../dvb/fe-dishnetwork-send-legacy-cmd.rst    |   9 +-
+ .../media/dvb/fe-enable-high-lnb-voltage.rst  |   9 +-
+ .../userspace-api/media/dvb/fe-get-event.rst  |   9 +-
+ .../media/dvb/fe-get-frontend.rst             |   9 +-
+ .../userspace-api/media/dvb/fe-get-info.rst   |   9 +-
+ .../media/dvb/fe-get-property.rst             |   9 +-
+ .../userspace-api/media/dvb/fe-read-ber.rst   |   9 +-
+ .../media/dvb/fe-read-signal-strength.rst     |   9 +-
+ .../userspace-api/media/dvb/fe-read-snr.rst   |   9 +-
+ .../media/dvb/fe-read-status.rst              |   9 +-
+ .../media/dvb/fe-read-uncorrected-blocks.rst  |   9 +-
+ .../media/dvb/fe-set-frontend-tune-mode.rst   |   9 +-
+ .../media/dvb/fe-set-frontend.rst             |   9 +-
+ .../userspace-api/media/dvb/fe-set-tone.rst   |   9 +-
+ .../media/dvb/fe-set-voltage.rst              |   9 +-
+ .../userspace-api/media/dvb/fe-type-t.rst     |   9 +-
+ .../media/dvb/fe_property_parameters.rst      |   9 +-
+ .../media/dvb/frontend-header.rst             |   9 +-
+ .../dvb/frontend-property-cable-systems.rst   |   9 +-
+ .../frontend-property-satellite-systems.rst   |   9 +-
+ .../frontend-property-terrestrial-systems.rst |   9 +-
+ .../media/dvb/frontend-stat-properties.rst    |   9 +-
+ .../userspace-api/media/dvb/frontend.rst      |   9 +-
+ .../media/dvb/frontend_f_close.rst            |   9 +-
+ .../media/dvb/frontend_f_open.rst             |   9 +-
+ .../media/dvb/frontend_fcalls.rst             |   9 +-
+ .../media/dvb/frontend_legacy_api.rst         |   9 +-
+ .../media/dvb/frontend_legacy_dvbv3_api.rst   |   9 +-
+ .../userspace-api/media/dvb/headers.rst       |   9 +-
+ .../userspace-api/media/dvb/intro.rst         |   9 +-
+ .../media/dvb/legacy_dvb_apis.rst             |   9 +-
+ .../userspace-api/media/dvb/net-add-if.rst    |   9 +-
+ .../userspace-api/media/dvb/net-get-if.rst    |   9 +-
+ .../userspace-api/media/dvb/net-remove-if.rst |   9 +-
+ .../userspace-api/media/dvb/net-types.rst     |   9 +-
+ Documentation/userspace-api/media/dvb/net.rst |   9 +-
+ .../media/dvb/query-dvb-frontend-info.rst     |   9 +-
+ .../media/dvb/video-clear-buffer.rst          |   9 +-
+ .../userspace-api/media/dvb/video-command.rst |   9 +-
+ .../media/dvb/video-continue.rst              |   9 +-
+ .../media/dvb/video-fast-forward.rst          |   9 +-
+ .../userspace-api/media/dvb/video-fclose.rst  |   9 +-
+ .../userspace-api/media/dvb/video-fopen.rst   |   9 +-
+ .../userspace-api/media/dvb/video-freeze.rst  |   9 +-
+ .../userspace-api/media/dvb/video-fwrite.rst  |   9 +-
+ .../media/dvb/video-get-capabilities.rst      |   9 +-
+ .../media/dvb/video-get-event.rst             |   9 +-
+ .../media/dvb/video-get-frame-count.rst       |   9 +-
+ .../userspace-api/media/dvb/video-get-pts.rst |   9 +-
+ .../media/dvb/video-get-size.rst              |   9 +-
+ .../media/dvb/video-get-status.rst            |   9 +-
+ .../userspace-api/media/dvb/video-play.rst    |   9 +-
+ .../media/dvb/video-select-source.rst         |   9 +-
+ .../media/dvb/video-set-blank.rst             |   9 +-
+ .../media/dvb/video-set-display-format.rst    |   9 +-
+ .../media/dvb/video-set-format.rst            |   9 +-
+ .../media/dvb/video-set-streamtype.rst        |   9 +-
+ .../media/dvb/video-slowmotion.rst            |   9 +-
+ .../media/dvb/video-stillpicture.rst          |   9 +-
+ .../userspace-api/media/dvb/video-stop.rst    |   9 +-
+ .../media/dvb/video-try-command.rst           |   9 +-
+ .../userspace-api/media/dvb/video.rst         |   9 +-
+ .../media/dvb/video_function_calls.rst        |   9 +-
+ .../userspace-api/media/dvb/video_types.rst   |   9 +-
+ .../userspace-api/media/fdl-appendix.rst      |   9 +-
+ .../userspace-api/media/gen-errors.rst        |   9 +-
+ .../media/mediactl/media-controller-intro.rst |   9 +-
+ .../media/mediactl/media-controller-model.rst |   9 +-
+ .../media/mediactl/media-controller.rst       |   9 +-
+ .../media/mediactl/media-func-close.rst       |   9 +-
+ .../media/mediactl/media-func-ioctl.rst       |   9 +-
+ .../media/mediactl/media-func-open.rst        |   9 +-
+ .../media/mediactl/media-funcs.rst            |   9 +-
+ .../media/mediactl/media-header.rst           |   9 +-
+ .../media/mediactl/media-ioc-device-info.rst  |   9 +-
+ .../mediactl/media-ioc-enum-entities.rst      |   9 +-
+ .../media/mediactl/media-ioc-enum-links.rst   |   9 +-
+ .../media/mediactl/media-ioc-g-topology.rst   |   9 +-
+ .../mediactl/media-ioc-request-alloc.rst      |  26 +-
+ .../media/mediactl/media-ioc-setup-link.rst   |   9 +-
+ .../mediactl/media-request-ioc-queue.rst      |  26 +-
+ .../mediactl/media-request-ioc-reinit.rst     |  26 +-
+ .../media/mediactl/media-types.rst            |   9 +-
+ .../media/mediactl/request-api.rst            |  26 +-
+ .../media/mediactl/request-func-close.rst     |  26 +-
+ .../media/mediactl/request-func-ioctl.rst     |  26 +-
+ .../media/mediactl/request-func-poll.rst      |  26 +-
+ .../userspace-api/media/rc/keytable.c.rst     |   9 +-
+ .../userspace-api/media/rc/lirc-dev-intro.rst |   9 +-
+ .../userspace-api/media/rc/lirc-dev.rst       |   9 +-
+ .../userspace-api/media/rc/lirc-func.rst      |   9 +-
+ .../media/rc/lirc-get-features.rst            |   9 +-
+ .../media/rc/lirc-get-rec-mode.rst            |   9 +-
+ .../media/rc/lirc-get-rec-resolution.rst      |   9 +-
+ .../media/rc/lirc-get-send-mode.rst           |   9 +-
+ .../media/rc/lirc-get-timeout.rst             |   9 +-
+ .../userspace-api/media/rc/lirc-header.rst    |   9 +-
+ .../userspace-api/media/rc/lirc-read.rst      |   9 +-
+ .../rc/lirc-set-measure-carrier-mode.rst      |   9 +-
+ .../media/rc/lirc-set-rec-carrier-range.rst   |   9 +-
+ .../media/rc/lirc-set-rec-carrier.rst         |   9 +-
+ .../media/rc/lirc-set-rec-timeout-reports.rst |   9 +-
+ .../media/rc/lirc-set-rec-timeout.rst         |   9 +-
+ .../media/rc/lirc-set-send-carrier.rst        |   9 +-
+ .../media/rc/lirc-set-send-duty-cycle.rst     |   9 +-
+ .../media/rc/lirc-set-transmitter-mask.rst    |   9 +-
+ .../media/rc/lirc-set-wideband-receiver.rst   |   9 +-
+ .../userspace-api/media/rc/lirc-write.rst     |   9 +-
+ .../userspace-api/media/rc/rc-intro.rst       |   9 +-
+ .../userspace-api/media/rc/rc-protos.rst      |   4 +-
+ .../userspace-api/media/rc/rc-sysfs-nodes.rst |   9 +-
+ .../media/rc/rc-table-change.rst              |   9 +-
+ .../userspace-api/media/rc/rc-tables.rst      |   9 +-
+ .../media/rc/remote_controllers.rst           |   9 +-
+ .../userspace-api/media/v4l/app-pri.rst       |   9 +-
+ .../userspace-api/media/v4l/async.rst         |   9 +-
+ .../userspace-api/media/v4l/audio.rst         |   9 +-
+ .../userspace-api/media/v4l/biblio.rst        |   9 +-
+ .../userspace-api/media/v4l/buffer.rst        |   9 +-
+ .../media/v4l/capture-example.rst             |   9 +-
+ .../userspace-api/media/v4l/capture.c.rst     |   9 +-
+ .../media/v4l/colorspaces-defs.rst            |   9 +-
+ .../media/v4l/colorspaces-details.rst         |   9 +-
+ .../userspace-api/media/v4l/colorspaces.rst   |   9 +-
+ .../userspace-api/media/v4l/common-defs.rst   |   9 +-
+ .../userspace-api/media/v4l/common.rst        |   9 +-
+ .../userspace-api/media/v4l/compat.rst        |   9 +-
+ .../userspace-api/media/v4l/control.rst       |   9 +-
+ .../userspace-api/media/v4l/crop.rst          |   9 +-
+ .../userspace-api/media/v4l/depth-formats.rst |   9 +-
+ .../userspace-api/media/v4l/dev-capture.rst   |   9 +-
+ .../userspace-api/media/v4l/dev-event.rst     |   9 +-
+ .../userspace-api/media/v4l/dev-mem2mem.rst   |   9 +-
+ .../userspace-api/media/v4l/dev-meta.rst      |   9 +-
+ .../userspace-api/media/v4l/dev-osd.rst       |   9 +-
+ .../userspace-api/media/v4l/dev-output.rst    |   9 +-
+ .../userspace-api/media/v4l/dev-overlay.rst   |   9 +-
+ .../userspace-api/media/v4l/dev-radio.rst     |   9 +-
+ .../userspace-api/media/v4l/dev-raw-vbi.rst   |   9 +-
+ .../userspace-api/media/v4l/dev-rds.rst       |   9 +-
+ .../userspace-api/media/v4l/dev-sdr.rst       |   9 +-
+ .../media/v4l/dev-sliced-vbi.rst              |   9 +-
+ .../userspace-api/media/v4l/dev-subdev.rst    |   9 +-
+ .../userspace-api/media/v4l/dev-touch.rst     |   9 +-
+ .../userspace-api/media/v4l/devices.rst       |   9 +-
+ .../userspace-api/media/v4l/diff-v4l.rst      |   9 +-
+ .../userspace-api/media/v4l/dmabuf.rst        |   9 +-
+ .../userspace-api/media/v4l/dv-timings.rst    |   9 +-
+ .../media/v4l/ext-ctrls-camera.rst            |   9 +-
+ .../media/v4l/ext-ctrls-codec.rst             |   9 +-
+ .../media/v4l/ext-ctrls-detect.rst            |   9 +-
+ .../userspace-api/media/v4l/ext-ctrls-dv.rst  |   9 +-
+ .../media/v4l/ext-ctrls-flash.rst             |   9 +-
+ .../media/v4l/ext-ctrls-fm-rx.rst             |   9 +-
+ .../media/v4l/ext-ctrls-fm-tx.rst             |   9 +-
+ .../media/v4l/ext-ctrls-image-process.rst     |   9 +-
+ .../media/v4l/ext-ctrls-image-source.rst      |   9 +-
+ .../media/v4l/ext-ctrls-jpeg.rst              |   9 +-
+ .../media/v4l/ext-ctrls-rf-tuner.rst          |   9 +-
+ .../media/v4l/extended-controls.rst           |   9 +-
+ .../userspace-api/media/v4l/field-order.rst   |   9 +-
+ .../userspace-api/media/v4l/format.rst        |   9 +-
+ .../userspace-api/media/v4l/func-close.rst    |   9 +-
+ .../userspace-api/media/v4l/func-ioctl.rst    |   9 +-
+ .../userspace-api/media/v4l/func-mmap.rst     |   9 +-
+ .../userspace-api/media/v4l/func-munmap.rst   |   9 +-
+ .../userspace-api/media/v4l/func-open.rst     |   9 +-
+ .../userspace-api/media/v4l/func-poll.rst     |   9 +-
+ .../userspace-api/media/v4l/func-read.rst     |   9 +-
+ .../userspace-api/media/v4l/func-select.rst   |   9 +-
+ .../userspace-api/media/v4l/func-write.rst    |   9 +-
+ .../userspace-api/media/v4l/hist-v4l2.rst     |   9 +-
+ .../userspace-api/media/v4l/hsv-formats.rst   |   9 +-
+ Documentation/userspace-api/media/v4l/io.rst  |   9 +-
+ .../media/v4l/libv4l-introduction.rst         |   9 +-
+ .../userspace-api/media/v4l/libv4l.rst        |   9 +-
+ .../userspace-api/media/v4l/meta-formats.rst  |   9 +-
+ .../userspace-api/media/v4l/mmap.rst          |   9 +-
+ .../userspace-api/media/v4l/open.rst          |   9 +-
+ .../userspace-api/media/v4l/pixfmt-bayer.rst  |   9 +-
+ .../media/v4l/pixfmt-compressed.rst           |   9 +-
+ .../userspace-api/media/v4l/pixfmt-grey.rst   |   9 +-
+ .../media/v4l/pixfmt-indexed.rst              |   9 +-
+ .../userspace-api/media/v4l/pixfmt-intro.rst  |   9 +-
+ .../userspace-api/media/v4l/pixfmt-inzi.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-m420.rst   |   9 +-
+ .../media/v4l/pixfmt-meta-d4xx.rst            |   9 +-
+ .../media/v4l/pixfmt-meta-intel-ipu3.rst      |  25 +-
+ .../media/v4l/pixfmt-meta-uvc.rst             |   9 +-
+ .../media/v4l/pixfmt-meta-vivid.rst           |  26 +-
+ .../media/v4l/pixfmt-meta-vsp1-hgo.rst        |   9 +-
+ .../media/v4l/pixfmt-meta-vsp1-hgt.rst        |   9 +-
+ .../userspace-api/media/v4l/pixfmt-nv12.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-nv12m.rst  |   9 +-
+ .../userspace-api/media/v4l/pixfmt-nv12mt.rst |   9 +-
+ .../userspace-api/media/v4l/pixfmt-nv16.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-nv16m.rst  |   9 +-
+ .../userspace-api/media/v4l/pixfmt-nv24.rst   |   9 +-
+ .../media/v4l/pixfmt-packed-hsv.rst           |   9 +-
+ .../media/v4l/pixfmt-packed-yuv.rst           |   9 +-
+ .../media/v4l/pixfmt-reserved.rst             |   9 +-
+ .../userspace-api/media/v4l/pixfmt-rgb.rst    |   9 +-
+ .../media/v4l/pixfmt-sdr-cs08.rst             |   9 +-
+ .../media/v4l/pixfmt-sdr-cs14le.rst           |   9 +-
+ .../media/v4l/pixfmt-sdr-cu08.rst             |   9 +-
+ .../media/v4l/pixfmt-sdr-cu16le.rst           |   9 +-
+ .../media/v4l/pixfmt-sdr-pcu16be.rst          |   9 +-
+ .../media/v4l/pixfmt-sdr-pcu18be.rst          |   9 +-
+ .../media/v4l/pixfmt-sdr-pcu20be.rst          |   9 +-
+ .../media/v4l/pixfmt-sdr-ru12le.rst           |   9 +-
+ .../media/v4l/pixfmt-srggb10-ipu3.rst         |   9 +-
+ .../media/v4l/pixfmt-srggb10.rst              |   9 +-
+ .../media/v4l/pixfmt-srggb10alaw8.rst         |   9 +-
+ .../media/v4l/pixfmt-srggb10dpcm8.rst         |   9 +-
+ .../media/v4l/pixfmt-srggb10p.rst             |   9 +-
+ .../media/v4l/pixfmt-srggb12.rst              |   9 +-
+ .../media/v4l/pixfmt-srggb12p.rst             |   9 +-
+ .../media/v4l/pixfmt-srggb14.rst              |   9 +-
+ .../media/v4l/pixfmt-srggb14p.rst             |   9 +-
+ .../media/v4l/pixfmt-srggb16.rst              |   9 +-
+ .../userspace-api/media/v4l/pixfmt-srggb8.rst |   9 +-
+ .../media/v4l/pixfmt-tch-td08.rst             |   9 +-
+ .../media/v4l/pixfmt-tch-td16.rst             |   9 +-
+ .../media/v4l/pixfmt-tch-tu08.rst             |   9 +-
+ .../media/v4l/pixfmt-tch-tu16.rst             |   9 +-
+ .../userspace-api/media/v4l/pixfmt-uv8.rst    |   9 +-
+ .../userspace-api/media/v4l/pixfmt-uyvy.rst   |   9 +-
+ .../media/v4l/pixfmt-v4l2-mplane.rst          |   9 +-
+ .../userspace-api/media/v4l/pixfmt-v4l2.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-vyuy.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y10.rst    |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y10b.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y10p.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y12.rst    |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y12i.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y14.rst    |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y16-be.rst |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y16.rst    |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y41p.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-y8i.rst    |   9 +-
+ .../userspace-api/media/v4l/pixfmt-yuv410.rst |   9 +-
+ .../media/v4l/pixfmt-yuv411p.rst              |   9 +-
+ .../userspace-api/media/v4l/pixfmt-yuv420.rst |   9 +-
+ .../media/v4l/pixfmt-yuv420m.rst              |   9 +-
+ .../media/v4l/pixfmt-yuv422m.rst              |   9 +-
+ .../media/v4l/pixfmt-yuv422p.rst              |   9 +-
+ .../media/v4l/pixfmt-yuv444m.rst              |   9 +-
+ .../userspace-api/media/v4l/pixfmt-yuyv.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-yvyu.rst   |   9 +-
+ .../userspace-api/media/v4l/pixfmt-z16.rst    |   9 +-
+ .../userspace-api/media/v4l/pixfmt.rst        |   9 +-
+ .../userspace-api/media/v4l/planar-apis.rst   |   9 +-
+ .../userspace-api/media/v4l/querycap.rst      |   9 +-
+ Documentation/userspace-api/media/v4l/rw.rst  |   9 +-
+ .../userspace-api/media/v4l/sdr-formats.rst   |   9 +-
+ .../media/v4l/selection-api-configuration.rst |   9 +-
+ .../media/v4l/selection-api-examples.rst      |   9 +-
+ .../media/v4l/selection-api-intro.rst         |   9 +-
+ .../media/v4l/selection-api-targets.rst       |   9 +-
+ .../media/v4l/selection-api-vs-crop-api.rst   |   9 +-
+ .../userspace-api/media/v4l/selection-api.rst |   9 +-
+ .../media/v4l/selections-common.rst           |   9 +-
+ .../userspace-api/media/v4l/standard.rst      |   9 +-
+ .../userspace-api/media/v4l/streaming-par.rst |   9 +-
+ .../media/v4l/subdev-formats.rst              |   9 +-
+ .../userspace-api/media/v4l/tch-formats.rst   |   9 +-
+ .../userspace-api/media/v4l/tuner.rst         |   9 +-
+ .../userspace-api/media/v4l/user-func.rst     |   9 +-
+ .../userspace-api/media/v4l/userp.rst         |   9 +-
+ .../media/v4l/v4l2-selection-flags.rst        |   9 +-
+ .../media/v4l/v4l2-selection-targets.rst      |   9 +-
+ .../userspace-api/media/v4l/v4l2.rst          |   9 +-
+ .../media/v4l/v4l2grab-example.rst            |   9 +-
+ .../userspace-api/media/v4l/v4l2grab.c.rst    |   9 +-
+ .../userspace-api/media/v4l/video.rst         |   9 +-
+ .../userspace-api/media/v4l/videodev.rst      |   9 +-
+ .../media/v4l/vidioc-create-bufs.rst          |   9 +-
+ .../media/v4l/vidioc-cropcap.rst              |   9 +-
+ .../media/v4l/vidioc-dbg-g-chip-info.rst      |   9 +-
+ .../media/v4l/vidioc-dbg-g-register.rst       |   9 +-
+ .../media/v4l/vidioc-decoder-cmd.rst          |   9 +-
+ .../media/v4l/vidioc-dqevent.rst              |   9 +-
+ .../media/v4l/vidioc-dv-timings-cap.rst       |   9 +-
+ .../media/v4l/vidioc-encoder-cmd.rst          |   9 +-
+ .../media/v4l/vidioc-enum-dv-timings.rst      |   9 +-
+ .../media/v4l/vidioc-enum-fmt.rst             |   9 +-
+ .../media/v4l/vidioc-enum-frameintervals.rst  |   9 +-
+ .../media/v4l/vidioc-enum-framesizes.rst      |   9 +-
+ .../media/v4l/vidioc-enum-freq-bands.rst      |   9 +-
+ .../media/v4l/vidioc-enumaudio.rst            |   9 +-
+ .../media/v4l/vidioc-enumaudioout.rst         |   9 +-
+ .../media/v4l/vidioc-enuminput.rst            |   9 +-
+ .../media/v4l/vidioc-enumoutput.rst           |   9 +-
+ .../media/v4l/vidioc-enumstd.rst              |   9 +-
+ .../userspace-api/media/v4l/vidioc-expbuf.rst |   9 +-
+ .../media/v4l/vidioc-g-audio.rst              |   9 +-
+ .../media/v4l/vidioc-g-audioout.rst           |   9 +-
+ .../userspace-api/media/v4l/vidioc-g-crop.rst |   9 +-
+ .../userspace-api/media/v4l/vidioc-g-ctrl.rst |   9 +-
+ .../media/v4l/vidioc-g-dv-timings.rst         |   9 +-
+ .../userspace-api/media/v4l/vidioc-g-edid.rst |   9 +-
+ .../media/v4l/vidioc-g-enc-index.rst          |   9 +-
+ .../media/v4l/vidioc-g-ext-ctrls.rst          |   9 +-
+ .../userspace-api/media/v4l/vidioc-g-fbuf.rst |   9 +-
+ .../userspace-api/media/v4l/vidioc-g-fmt.rst  |   9 +-
+ .../media/v4l/vidioc-g-frequency.rst          |   9 +-
+ .../media/v4l/vidioc-g-input.rst              |   9 +-
+ .../media/v4l/vidioc-g-jpegcomp.rst           |   9 +-
+ .../media/v4l/vidioc-g-modulator.rst          |   9 +-
+ .../media/v4l/vidioc-g-output.rst             |   9 +-
+ .../userspace-api/media/v4l/vidioc-g-parm.rst |   9 +-
+ .../media/v4l/vidioc-g-priority.rst           |   9 +-
+ .../media/v4l/vidioc-g-selection.rst          |   9 +-
+ .../media/v4l/vidioc-g-sliced-vbi-cap.rst     |   9 +-
+ .../userspace-api/media/v4l/vidioc-g-std.rst  |   9 +-
+ .../media/v4l/vidioc-g-tuner.rst              |   9 +-
+ .../media/v4l/vidioc-log-status.rst           |   9 +-
+ .../media/v4l/vidioc-overlay.rst              |   9 +-
+ .../media/v4l/vidioc-prepare-buf.rst          |   9 +-
+ .../userspace-api/media/v4l/vidioc-qbuf.rst   |   9 +-
+ .../media/v4l/vidioc-query-dv-timings.rst     |   9 +-
+ .../media/v4l/vidioc-querybuf.rst             |   9 +-
+ .../media/v4l/vidioc-querycap.rst             |   9 +-
+ .../media/v4l/vidioc-queryctrl.rst            |   9 +-
+ .../media/v4l/vidioc-querystd.rst             |   9 +-
+ .../media/v4l/vidioc-reqbufs.rst              |   9 +-
+ .../media/v4l/vidioc-s-hw-freq-seek.rst       |   9 +-
+ .../media/v4l/vidioc-streamon.rst             |   9 +-
+ .../v4l/vidioc-subdev-enum-frame-interval.rst |   9 +-
+ .../v4l/vidioc-subdev-enum-frame-size.rst     |   9 +-
+ .../v4l/vidioc-subdev-enum-mbus-code.rst      |   9 +-
+ .../media/v4l/vidioc-subdev-g-crop.rst        |   9 +-
+ .../media/v4l/vidioc-subdev-g-fmt.rst         |   9 +-
+ .../v4l/vidioc-subdev-g-frame-interval.rst    |   9 +-
+ .../media/v4l/vidioc-subdev-g-selection.rst   |   9 +-
+ .../media/v4l/vidioc-subdev-querycap.rst      |   9 +-
+ .../media/v4l/vidioc-subscribe-event.rst      |   9 +-
+ .../userspace-api/media/v4l/yuv-formats.rst   |   9 +-
+ LICENSES/deprecated/GFDL-1.1+                 | 366 ++++++++
+ LICENSES/deprecated/GFDL-1.2                  | 408 +++++++++
+ arch/Kconfig                                  |   2 +-
+ init/Kconfig                                  |   2 +-
+ mm/Kconfig                                    |   2 +-
+ mm/nommu.c                                    |   2 +-
+ 443 files changed, 1801 insertions(+), 4023 deletions(-)
+ rename Documentation/{nommu-mmap.txt => admin-guide/mm/nommu-mmap.rst} (100%)
+ rename Documentation/{bus-virt-phys-mapping.txt => core-api/bus-virt-phys-mapping.rst} (100%)
+ rename Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst} (100%)
+ rename Documentation/{process => core-api}/unaligned-memory-access.rst (100%)
  rename Documentation/devicetree/{booting-without-of.txt => booting-without-of.rst} (90%)
+ rename Documentation/{mailbox.txt => driver-api/mailbox.rst} (100%)
+ rename Documentation/trace/{ring-buffer-design.txt => ring-buffer-design.rst} (57%)
+ create mode 100644 LICENSES/deprecated/GFDL-1.1+
+ create mode 100644 LICENSES/deprecated/GFDL-1.2
 
-diff --git a/Documentation/arm/booting.rst b/Documentation/arm/booting.rst
-index 4babb6c6ae1e..a2263451dc2c 100644
---- a/Documentation/arm/booting.rst
-+++ b/Documentation/arm/booting.rst
-@@ -128,7 +128,7 @@ it.  The recommended placement is in the first 16KiB of RAM.
- 
- The boot loader must load a device tree image (dtb) into system ram
- at a 64bit aligned address and initialize it with the boot data.  The
--dtb format is documented in Documentation/devicetree/booting-without-of.txt.
-+dtb format is documented in Documentation/devicetree/booting-without-of.rst.
- The kernel will look for the dtb magic value of 0xd00dfeed at the dtb
- physical address to determine if a dtb has been passed instead of a
- tagged list.
-diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.rst
-similarity index 90%
-rename from Documentation/devicetree/booting-without-of.txt
-rename to Documentation/devicetree/booting-without-of.rst
-index 4660ccee35a3..e9433350a20f 100644
---- a/Documentation/devicetree/booting-without-of.txt
-+++ b/Documentation/devicetree/booting-without-of.rst
-@@ -1,15 +1,19 @@
--           Booting the Linux/ppc kernel without Open Firmware
--           --------------------------------------------------
--
--(c) 2005 Benjamin Herrenschmidt <benh at kernel.crashing.org>,
--    IBM Corp.
--(c) 2005 Becky Bruce <becky.bruce at freescale.com>,
--    Freescale Semiconductor, FSL SOC and 32-bit additions
--(c) 2006 MontaVista Software, Inc.
--    Flash chip node definition
--
--Table of Contents
--=================
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==================================================
-+Booting the Linux/ppc kernel without Open Firmware
-+==================================================
-+
-+Copyright (c) 2005 Benjamin Herrenschmidt <benh at kernel.crashing.org>,
-+IBM Corp.
-+
-+Copyright (c) 2005 Becky Bruce <becky.bruce at freescale.com>,
-+Freescale Semiconductor, FSL SOC and 32-bit additions
-+
-+Copyright (c) 2006 MontaVista Software, Inc.
-+Flash chip node definition
-+
-+.. Table of Contents
- 
-   I - Introduction
-     1) Entry point for arch/arm
-@@ -61,15 +65,18 @@ Table of Contents
- Revision Information
- ====================
- 
--   May 18, 2005: Rev 0.1 - Initial draft, no chapter III yet.
-+   May 18, 2005: Rev 0.1
-+			 - Initial draft, no chapter III yet.
- 
--   May 19, 2005: Rev 0.2 - Add chapter III and bits & pieces here or
-+   May 19, 2005: Rev 0.2
-+			 - Add chapter III and bits & pieces here or
-                            clarifies the fact that a lot of things are
-                            optional, the kernel only requires a very
-                            small device tree, though it is encouraged
-                            to provide an as complete one as possible.
- 
--   May 24, 2005: Rev 0.3 - Precise that DT block has to be in RAM
-+   May 24, 2005: Rev 0.3
-+			 - Precise that DT block has to be in RAM
- 			 - Misc fixes
- 			 - Define version 3 and new format version 16
- 			   for the DT block (version 16 needs kernel
-@@ -82,7 +89,8 @@ Revision Information
- 			   "name" property is now automatically
- 			   deduced from the unit name
- 
--   June 1, 2005: Rev 0.4 - Correct confusion between OF_DT_END and
-+   June 1, 2005: Rev 0.4
-+			 - Correct confusion between OF_DT_END and
-                            OF_DT_END_NODE in structure definition.
-                          - Change version 16 format to always align
-                            property data to 4 bytes. Since tokens are
-@@ -115,7 +123,7 @@ Revision Information
- 	- Compare FSL SOC use of PCI to standard and make sure no new
- 	  node definition required.
- 	- Add more information about node definitions for SOC devices
--  	  that currently have no standard, like the FSL CPM.
-+	  that currently have no standard, like the FSL CPM.
- 
- 
- I - Introduction
-@@ -260,7 +268,7 @@ it with special cases.
- 
-         b) create your main platform file as
-         "arch/powerpc/platforms/myplatform/myboard_setup.c" and add it
--        to the Makefile under the condition of your CONFIG_
-+        to the Makefile under the condition of your ``CONFIG_``
-         option. This file will define a structure of type "ppc_md"
-         containing the various callbacks that the generic code will
-         use to get to your platform specific code
-@@ -271,7 +279,7 @@ it with special cases.
-   with classic Powerpc architectures.
- 
- 3) Entry point for arch/x86
---------------------------------
-+---------------------------
- 
-   There is one single 32bit entry point to the kernel at code32_start,
-   the decompressor (the real mode entry point goes to the same  32bit
-@@ -280,9 +288,9 @@ it with special cases.
-   Documentation/x86/boot.rst
-   The physical pointer to the device-tree block (defined in chapter II)
-   is passed via setup_data which requires at least boot protocol 2.09.
--  The type filed is defined as
-+  The type filed is defined as::
- 
--  #define SETUP_DTB                      2
-+    #define SETUP_DTB                      2
- 
-   This device-tree is used as an extension to the "boot page". As such it
-   does not parse / consider data which is already covered by the boot
-@@ -354,9 +362,9 @@ the block to RAM before passing it to the kernel.
- 
-    The kernel is passed the physical address pointing to an area of memory
-    that is roughly described in include/linux/of_fdt.h by the structure
--   boot_param_header:
-+   boot_param_header:::
- 
--struct boot_param_header {
-+      struct boot_param_header {
-         u32     magic;                  /* magic word OF_DT_HEADER */
-         u32     totalsize;              /* total size of DT block */
-         u32     off_dt_struct;          /* offset to structure */
-@@ -374,19 +382,19 @@ struct boot_param_header {
- 
-         /* version 17 fields below */
-         u32	size_dt_struct;		/* size of the DT structure block */
--};
-+      };
- 
--   Along with the constants:
-+   Along with the constants::
- 
--/* Definitions used by the flattened device tree */
--#define OF_DT_HEADER            0xd00dfeed      /* 4: version,
--						   4: total size */
--#define OF_DT_BEGIN_NODE        0x1             /* Start node: full name
--						   */
--#define OF_DT_END_NODE          0x2             /* End node */
--#define OF_DT_PROP              0x3             /* Property: name off,
--                                                   size, content */
--#define OF_DT_END               0x9
-+    /* Definitions used by the flattened device tree */
-+    #define OF_DT_HEADER            0xd00dfeed      /* 4: version,
-+						    4: total size */
-+    #define OF_DT_BEGIN_NODE        0x1             /* Start node: full name
-+						    */
-+    #define OF_DT_END_NODE          0x2             /* End node */
-+    #define OF_DT_PROP              0x3             /* Property: name off,
-+						    size, content */
-+    #define OF_DT_END               0x9
- 
-    All values in this header are in big endian format, the various
-    fields in this header are defined more precisely below. All
-@@ -430,7 +438,7 @@ struct boot_param_header {
-      way to avoid overriding critical things like, on Open Firmware
-      capable machines, the RTAS instance, or on some pSeries, the TCE
-      tables used for the iommu. Typically, the reserve map should
--     contain _at least_ this DT block itself (header,total_size). If
-+     contain **at least** this DT block itself (header,total_size). If
-      you are passing an initrd to the kernel, you should reserve it as
-      well. You do not need to reserve the kernel image itself. The map
-      should be 64-bit aligned.
-@@ -485,7 +493,7 @@ struct boot_param_header {
- 
-    So the typical layout of a DT block (though the various parts don't
-    need to be in that order) looks like this (addresses go from top to
--   bottom):
-+   bottom)::
- 
- 
-              ------------------------------
-@@ -511,9 +519,9 @@ struct boot_param_header {
-       |
-       --- (base + totalsize)
- 
--  (*) The alignment gaps are not necessarily present; their presence
--      and size are dependent on the various alignment requirements of
--      the individual data blocks.
-+     (*) The alignment gaps are not necessarily present; their presence
-+         and size are dependent on the various alignment requirements of
-+         the individual data blocks.
- 
- 
- 2) Device tree generalities
-@@ -600,7 +608,7 @@ discussed in a later chapter. At this point, it is only meant to give
- you a idea of what a device-tree looks like. I have purposefully kept
- the "name" and "linux,phandle" properties which aren't necessary in
- order to give you a better idea of what the tree looks like in
--practice.
-+practice::
- 
-   / o device-tree
-       |- name = "device-tree"
-@@ -650,6 +658,7 @@ properties and their content.
- 
- 
- 3) Device tree "structure" block
-+--------------------------------
- 
- The structure of the device tree is a linearized tree structure. The
- "OF_DT_BEGIN_NODE" token starts a new node, and the "OF_DT_END_NODE"
-@@ -666,12 +675,14 @@ Here's the basic structure of a single node:
-        root node)
-      * [align gap to next 4 bytes boundary]
-      * for each property:
-+
-         * token OF_DT_PROP (that is 0x00000003)
-         * 32-bit value of property value size in bytes (or 0 if no
-           value)
-         * 32-bit value of offset in string block of property name
-         * property value data if any
-         * [align gap to next 4 bytes boundary]
-+
-      * [child nodes if any]
-      * token OF_DT_END_NODE (that is 0x00000002)
- 
-@@ -688,6 +699,7 @@ manipulating a flattened tree must take care to preserve this
- constraint.
- 
- 4) Device tree "strings" block
-+------------------------------
- 
- In order to save space, property names, which are generally redundant,
- are stored separately in the "strings" block. This block is simply the
-@@ -700,15 +712,17 @@ strings block.
- III - Required content of the device tree
- =========================================
- 
--WARNING: All "linux,*" properties defined in this document apply only
--to a flattened device-tree. If your platform uses a real
--implementation of Open Firmware or an implementation compatible with
--the Open Firmware client interface, those properties will be created
--by the trampoline code in the kernel's prom_init() file. For example,
--that's where you'll have to add code to detect your board model and
--set the platform number. However, when using the flattened device-tree
--entry point, there is no prom_init() pass, and thus you have to
--provide those properties yourself.
-+.. Warning::
-+
-+   All ``linux,*`` properties defined in this document apply only
-+   to a flattened device-tree. If your platform uses a real
-+   implementation of Open Firmware or an implementation compatible with
-+   the Open Firmware client interface, those properties will be created
-+   by the trampoline code in the kernel's prom_init() file. For example,
-+   that's where you'll have to add code to detect your board model and
-+   set the platform number. However, when using the flattened device-tree
-+   entry point, there is no prom_init() pass, and thus you have to
-+   provide those properties yourself.
- 
- 
- 1) Note about cells and address representation
-@@ -769,7 +783,7 @@ addresses), all buses must contain a "ranges" property. If the
- "ranges" property is missing at a given level, it's assumed that
- translation isn't possible, i.e., the registers are not visible on the
- parent bus.  The format of the "ranges" property for a bus is a list
--of:
-+of::
- 
- 	bus address, parent bus address, size
- 
-@@ -877,7 +891,7 @@ address which can extend beyond that limit.
- 
-   This node is the parent of all individual CPU nodes. It doesn't
-   have any specific requirements, though it's generally good practice
--  to have at least:
-+  to have at least::
- 
-                #address-cells = <00000001>
-                #size-cells    = <00000000>
-@@ -887,7 +901,7 @@ address which can extend beyond that limit.
-   that format when reading the "reg" properties of a CPU node, see
-   below
- 
--  c) The /cpus/* nodes
-+  c) The ``/cpus/*`` nodes
- 
-   So under /cpus, you are supposed to create a node for every CPU on
-   the machine. There is no specific restriction on the name of the
-@@ -903,21 +917,23 @@ address which can extend beyond that limit.
-     - reg : This is the physical CPU number, it's a single 32-bit cell
-       and is also used as-is as the unit number for constructing the
-       unit name in the full path. For example, with 2 CPUs, you would
--      have the full path:
-+      have the full path::
-+
-         /cpus/PowerPC,970FX@0
-         /cpus/PowerPC,970FX@1
-+
-       (unit addresses do not require leading zeroes)
--    - d-cache-block-size : one cell, L1 data cache block size in bytes (*)
-+    - d-cache-block-size : one cell, L1 data cache block size in bytes [#]_
-     - i-cache-block-size : one cell, L1 instruction cache block size in
-       bytes
-     - d-cache-size : one cell, size of L1 data cache in bytes
-     - i-cache-size : one cell, size of L1 instruction cache in bytes
- 
--(*) The cache "block" size is the size on which the cache management
--instructions operate. Historically, this document used the cache
--"line" size here which is incorrect. The kernel will prefer the cache
--block size and will fallback to cache line size for backward
--compatibility.
-+    .. [#] The cache "block" size is the size on which the cache management
-+	   instructions operate. Historically, this document used the cache
-+	   "line" size here which is incorrect. The kernel will prefer the cache
-+	   block size and will fallback to cache line size for backward
-+	   compatibility.
- 
-   Recommended properties:
- 
-@@ -963,10 +979,10 @@ compatibility.
-       #address-cells and #size-cells of the root node. For example,
-       with both of these properties being 2 like in the example given
-       earlier, a 970 based machine with 6Gb of RAM could typically
--      have a "reg" property here that looks like:
-+      have a "reg" property here that looks like::
- 
--      00000000 00000000 00000000 80000000
--      00000001 00000000 00000001 00000000
-+        00000000 00000000 00000000 80000000
-+        00000001 00000000 00000001 00000000
- 
-       That is a range starting at 0 of 0x80000000 bytes and a range
-       starting at 0x100000000 and of 0x100000000 bytes. You can see
-@@ -1047,18 +1063,18 @@ compatibility.
-       See 1) above for more details on defining #address-cells.
-     - #size-cells : Size representation for "soc" devices
-     - #interrupt-cells : Defines the width of cells used to represent
--       interrupts.  Typically this value is <2>, which includes a
--       32-bit number that represents the interrupt number, and a
--       32-bit number that represents the interrupt sense and level.
--       This field is only needed if the SOC contains an interrupt
--       controller.
-+      interrupts.  Typically this value is <2>, which includes a
-+      32-bit number that represents the interrupt number, and a
-+      32-bit number that represents the interrupt sense and level.
-+      This field is only needed if the SOC contains an interrupt
-+      controller.
- 
-   The SOC node may contain child nodes for each SOC device that the
-   platform uses.  Nodes should not be created for devices which exist
-   on the SOC but are not used by a particular platform. See chapter VI
-   for more information on how to specify devices that are part of a SOC.
- 
--  Example SOC node for the MPC8540:
-+  Example SOC node for the MPC8540::
- 
- 	soc8540@e0000000 {
- 		#address-cells = <1>;
-@@ -1079,31 +1095,33 @@ IV - "dtc", the device tree compiler
- dtc source code can be found at
- <http://git.jdl.com/gitweb/?p=dtc.git>
- 
--WARNING: This version is still in early development stage; the
--resulting device-tree "blobs" have not yet been validated with the
--kernel. The current generated block lacks a useful reserve map (it will
--be fixed to generate an empty one, it's up to the bootloader to fill
--it up) among others. The error handling needs work, bugs are lurking,
--etc...
-+.. Warning::
-+
-+   This version is still in early development stage; the
-+   resulting device-tree "blobs" have not yet been validated with the
-+   kernel. The current generated block lacks a useful reserve map (it will
-+   be fixed to generate an empty one, it's up to the bootloader to fill
-+   it up) among others. The error handling needs work, bugs are lurking,
-+   etc...
- 
- dtc basically takes a device-tree in a given format and outputs a
- device-tree in another format. The currently supported formats are:
- 
--  Input formats:
--  -------------
-+Input formats
-+-------------
- 
-      - "dtb": "blob" format, that is a flattened device-tree block
-        with
--        header all in a binary blob.
-+       header all in a binary blob.
-      - "dts": "source" format. This is a text file containing a
-        "source" for a device-tree. The format is defined later in this
--        chapter.
-+       chapter.
-      - "fs" format. This is a representation equivalent to the
--        output of /proc/device-tree, that is nodes are directories and
--	properties are files
-+       output of /proc/device-tree, that is nodes are directories and
-+       properties are files
- 
-- Output formats:
-- ---------------
-+Output formats
-+--------------
- 
-      - "dtb": "blob" format
-      - "dts": "source" format
-@@ -1113,7 +1131,7 @@ device-tree in another format. The currently supported formats are:
-        assembly file exports some symbols that can be used.
- 
- 
--The syntax of the dtc tool is
-+The syntax of the dtc tool is::
- 
-     dtc [-I <input-format>] [-O <output-format>]
-         [-o output-filename] [-V output_version] input_filename
-@@ -1127,43 +1145,45 @@ Additionally, dtc performs various sanity checks on the tree, like the
- uniqueness of linux, phandle properties, validity of strings, etc...
- 
- The format of the .dts "source" file is "C" like, supports C and C++
--style comments.
-+style comments::
- 
--/ {
--}
-+    / {
-+    }
- 
- The above is the "device-tree" definition. It's the only statement
- supported currently at the toplevel.
- 
--/ {
--  property1 = "string_value";	/* define a property containing a 0
--                                 * terminated string
--				 */
-+::
- 
--  property2 = <0x1234abcd>;	/* define a property containing a
--                                 * numerical 32-bit value (hexadecimal)
--				 */
-+  / {
-+    property1 = "string_value";	   /* define a property containing a 0
-+				    * terminated string
-+				    */
- 
--  property3 = <0x12345678 0x12345678 0xdeadbeef>;
--                                /* define a property containing 3
--                                 * numerical 32-bit values (cells) in
--                                 * hexadecimal
--				 */
--  property4 = [0x0a 0x0b 0x0c 0x0d 0xde 0xea 0xad 0xbe 0xef];
--                                /* define a property whose content is
--                                 * an arbitrary array of bytes
--                                 */
-+    property2 = <0x1234abcd>;	   /* define a property containing a
-+				    * numerical 32-bit value (hexadecimal)
-+				    */
- 
--  childnode@address {	/* define a child node named "childnode"
--                                 * whose unit name is "childnode at
--				 * address"
--                                 */
-+    property3 = <0x12345678 0x12345678 0xdeadbeef>;
-+				   /* define a property containing 3
-+				    * numerical 32-bit values (cells) in
-+				    * hexadecimal
-+				    */
-+    property4 = [0x0a 0x0b 0x0c 0x0d 0xde 0xea 0xad 0xbe 0xef];
-+				   /* define a property whose content is
-+				    * an arbitrary array of bytes
-+				    */
- 
--    childprop = "hello\n";      /* define a property "childprop" of
--                                 * childnode (in this case, a string)
--                                 */
--  };
--};
-+    childnode@address {		   /* define a child node named "childnode"
-+				    * whose unit name is "childnode at
-+				    * address"
-+				    */
-+
-+	childprop = "hello\n";	       /* define a property "childprop" of
-+					* childnode (in this case, a string)
-+					*/
-+	};
-+    };
- 
- Nodes can contain other nodes etc... thus defining the hierarchical
- structure of the tree.
-@@ -1322,7 +1342,7 @@ phandle of the parent node.
- 
- If the interrupt-parent property is not defined for a node, its
- interrupt parent is assumed to be an ancestor in the node's
--_device tree_ hierarchy.
-+*device tree* hierarchy.
- 
- 3) OpenPIC Interrupt Controllers
- --------------------------------
-@@ -1334,10 +1354,12 @@ information.
- 
- Sense and level information should be encoded as follows:
- 
--	0 = low to high edge sensitive type enabled
--	1 = active low level sensitive type enabled
--	2 = active high level sensitive type enabled
--	3 = high to low edge sensitive type enabled
-+	==  ========================================
-+	0   low to high edge sensitive type enabled
-+	1   active low level sensitive type enabled
-+	2   active high level sensitive type enabled
-+	3   high to low edge sensitive type enabled
-+	==  ========================================
- 
- 4) ISA Interrupt Controllers
- ----------------------------
-@@ -1350,13 +1372,15 @@ information.
- ISA PIC interrupt controllers should adhere to the ISA PIC
- encodings listed below:
- 
--	0 =  active low level sensitive type enabled
--	1 =  active high level sensitive type enabled
--	2 =  high to low edge sensitive type enabled
--	3 =  low to high edge sensitive type enabled
-+	==  ========================================
-+	0   active low level sensitive type enabled
-+	1   active high level sensitive type enabled
-+	2   high to low edge sensitive type enabled
-+	3   low to high edge sensitive type enabled
-+	==  ========================================
- 
- VIII - Specifying Device Power Management Information (sleep property)
--===================================================================
-+======================================================================
- 
- Devices on SOCs often have mechanisms for placing devices into low-power
- states that are decoupled from the devices' own register blocks.  Sometimes,
-@@ -1387,6 +1411,7 @@ reasonably grouped in this manner, then create a virtual sleep controller
- sleep-map should wait until its necessity is demonstrated).
- 
- IX - Specifying dma bus information
-+===================================
- 
- Some devices may have DMA memory range shifted relatively to the beginning of
- RAM, or even placed outside of kernel RAM. For example, the Keystone 2 SoC
-@@ -1404,25 +1429,30 @@ coherent DMA operations. The "dma-coherent" property is intended to be used
- for identifying devices supported coherent DMA operations in DT.
- 
- * DMA Bus master
-+
- Optional property:
-+
- - dma-ranges: <prop-encoded-array> encoded as arbitrary number of triplets of
--	(child-bus-address, parent-bus-address, length). Each triplet specified
--	describes a contiguous DMA address range.
--	The dma-ranges property is used to describe the direct memory access (DMA)
--	structure of a memory-mapped bus whose device tree parent can be accessed
--	from DMA operations originating from the bus. It provides a means of
--	defining a mapping or translation between the physical address space of
--	the bus and the physical address space of the parent of the bus.
--	(for more information see the Devicetree Specification)
-+  (child-bus-address, parent-bus-address, length). Each triplet specified
-+  describes a contiguous DMA address range.
-+  The dma-ranges property is used to describe the direct memory access (DMA)
-+  structure of a memory-mapped bus whose device tree parent can be accessed
-+  from DMA operations originating from the bus. It provides a means of
-+  defining a mapping or translation between the physical address space of
-+  the bus and the physical address space of the parent of the bus.
-+  (for more information see the Devicetree Specification)
- 
- * DMA Bus child
-+
- Optional property:
-+
- - dma-ranges: <empty> value. if present - It means that DMA addresses
--	translation has to be enabled for this device.
-+  translation has to be enabled for this device.
- - dma-coherent: Present if dma operations are coherent
- 
--Example:
--soc {
-+Example::
-+
-+	soc {
- 		compatible = "ti,keystone","simple-bus";
- 		ranges = <0x0 0x0 0x0 0xc0000000>;
- 		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
-@@ -1435,11 +1465,13 @@ soc {
- 			[...]
- 			dma-coherent;
- 		};
--};
-+	};
- 
- Appendix A - Sample SOC node for MPC8540
- ========================================
- 
-+::
-+
- 	soc@e0000000 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
-index 54026763916d..d2a96e1af23e 100644
---- a/Documentation/devicetree/index.rst
-+++ b/Documentation/devicetree/index.rst
-@@ -15,3 +15,4 @@ Open Firmware and Device Tree
-    overlay-notes
- 
-    bindings/index
-+   booting-without-of
-diff --git a/Documentation/translations/zh_CN/arm/Booting b/Documentation/translations/zh_CN/arm/Booting
-index 562e9a2957e6..c3d26ce5f6de 100644
---- a/Documentation/translations/zh_CN/arm/Booting
-+++ b/Documentation/translations/zh_CN/arm/Booting
-@@ -124,7 +124,7 @@ bootloader 必须传递一个系统内存的位置和最小值，以及根文件
- 
- bootloader 必须以 64bit 地址对齐的形式加载一个设备树映像(dtb)到系统
- RAM 中，并用启动数据初始化它。dtb 格式在文档
--Documentation/devicetree/booting-without-of.txt 中。内核将会在
-+Documentation/devicetree/booting-without-of.rst 中。内核将会在
- dtb 物理地址处查找 dtb 魔数值（0xd00dfeed），以确定 dtb 是否已经代替
- 标签列表被传递进来。
- 
 -- 
 2.26.2
+
 
