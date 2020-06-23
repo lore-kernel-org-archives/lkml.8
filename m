@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8748CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55DAA20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85AE2089D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948614;
-	bh=mICS6IT17jqvVb3FQXs4RmcZBR8NXgv1Y/Zpr11RqW8=;
+	s=default; t=1592948629;
+	bh=QernnWIrNZoShJFEFkryGA5ELRGZ9HQRs7G6xqHKpqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2MBrfacuAZ6fvc7PXq5etYcjc7MsSbBmibC2rsDWV/82+MYKfQakDYo4URrdskVVF
-	 fkTBnJRYYU1itL9ydeNZdlf8x0+R56kpM6JCzwN1ZGg8FpihrJZ8y0pzLcBRAwptm0
-	 EGvlJ035jhIkWoEb43NzROjjNtk7U+VehHUX2chU=
+	b=c+z/IR1zSM0WdT32RNm4W0v4HuC++29aMnxuos854+RE5VYMAYCuyLOk/QY+zK9TP
+	 /6uOB5F25VgKUOZKg/pZE2myMVTBaDzhFgtUeDSjTILA4G+reXwUwQfWJ6vCDjECtm
+	 UjhEts7WSWFB40gn2K8qsP5LxDJJxUMkaHtOCMwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbgFWUDi (ORCPT
+        id S2393603AbgFWVns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41300 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388052AbgFWUDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:33 -0400
+        id S2387956AbgFWUDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2744A21473;
-        Tue, 23 Jun 2020 20:03:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA5152080C;
+        Tue, 23 Jun 2020 20:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942612;
-        bh=mICS6IT17jqvVb3FQXs4RmcZBR8NXgv1Y/Zpr11RqW8=;
+        s=default; t=1592942589;
+        bh=QernnWIrNZoShJFEFkryGA5ELRGZ9HQRs7G6xqHKpqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSNMgQ94K3sFX/RBCAYIdBmUuotKFMKcw5a6XTYCnePfXKvyNCaWsdLVJPFaNf77O
-         Dm8rUDp86CG+5nLD66YEfQB4de6lICSk0tSwZafIVrvHNBVUJ3l/ufTfKMTcSdBkF7
-         oQDfqkK08vnS6A2aCQ7gECQCe+U8inQQBxKAGgxE=
+        b=R8UmtN4yNdRxqEWmNyoMUBKFzFNZ1yd0ZQBwxERUo9rD+387Py0qDQvt+F5N8XysO
+         UB1sHkVZEbwLJ9Ri6VA3FqxATpD9rS4Nc/UbzN/1hiuKpK+LZB/pPRmyL6tl+e4VSK
+         GvNqbaRlN2gPbNCMTab1+pePXKvclHgDRdvfa0O0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 065/477] PCI: pci-bridge-emul: Fix PCIe bit conflicts
-Date:   Tue, 23 Jun 2020 21:51:02 +0200
-Message-Id: <20200623195410.691602310@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emmanuel Nicolet <emmanuel.nicolet@gmail.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 057/477] ps3disk: use the default segment boundary
+Date:   Tue, 23 Jun 2020 21:50:54 +0200
+Message-Id: <20200623195410.307868301@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,53 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
 
-[ Upstream commit c88d19181771bd189147681ef38fc1533ebeff4c ]
+[ Upstream commit 720bc316690bd27dea9d71510b50f0cd698ffc32 ]
 
-This patch fixes two bit conflicts in the pci-bridge-emul driver:
+Since commit dcebd755926b ("block: use bio_for_each_bvec() to compute
+multi-page bvec count"), the kernel will bug_on on the PS3 because
+bio_split() is called with sectors == 0:
 
-1. Bit 3 of Device Status (19 of Device Control) is marked as both
-   Write-1-to-Clear and Read-Only. It should be Write-1-to-Clear.
-   The Read-Only and Reserved bitmasks are shifted by 1 bit due to this
-   error.
+  kernel BUG at block/bio.c:1853!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  BE PAGE_SIZE=4K MMU=Hash PREEMPT SMP NR_CPUS=8 NUMA PS3
+  Modules linked in: firewire_sbp2 rtc_ps3(+) soundcore ps3_gelic(+) \
+  ps3rom(+) firewire_core ps3vram(+) usb_common crc_itu_t
+  CPU: 0 PID: 97 Comm: blkid Not tainted 5.3.0-rc4 #1
+  NIP:  c00000000027d0d0 LR: c00000000027d0b0 CTR: 0000000000000000
+  REGS: c00000000135ae90 TRAP: 0700   Not tainted  (5.3.0-rc4)
+  MSR:  8000000000028032 <SF,EE,IR,DR,RI>  CR: 44008240  XER: 20000000
+  IRQMASK: 0
+  GPR00: c000000000289368 c00000000135b120 c00000000084a500 c000000004ff8300
+  GPR04: 0000000000000c00 c000000004c905e0 c000000004c905e0 000000000000ffff
+  GPR08: 0000000000000000 0000000000000001 0000000000000000 000000000000ffff
+  GPR12: 0000000000000000 c0000000008ef000 000000000000003e 0000000000080001
+  GPR16: 0000000000000100 000000000000ffff 0000000000000000 0000000000000004
+  GPR20: c00000000062fd7e 0000000000000001 000000000000ffff 0000000000000080
+  GPR24: c000000000781788 c00000000135b350 0000000000000080 c000000004c905e0
+  GPR28: c00000000135b348 c000000004ff8300 0000000000000000 c000000004c90000
+  NIP [c00000000027d0d0] .bio_split+0x28/0xac
+  LR [c00000000027d0b0] .bio_split+0x8/0xac
+  Call Trace:
+  [c00000000135b120] [c00000000027d130] .bio_split+0x88/0xac (unreliable)
+  [c00000000135b1b0] [c000000000289368] .__blk_queue_split+0x11c/0x53c
+  [c00000000135b2d0] [c00000000028f614] .blk_mq_make_request+0x80/0x7d4
+  [c00000000135b3d0] [c000000000283a8c] .generic_make_request+0x118/0x294
+  [c00000000135b4b0] [c000000000283d34] .submit_bio+0x12c/0x174
+  [c00000000135b580] [c000000000205a44] .mpage_bio_submit+0x3c/0x4c
+  [c00000000135b600] [c000000000206184] .mpage_readpages+0xa4/0x184
+  [c00000000135b750] [c0000000001ff8fc] .blkdev_readpages+0x24/0x38
+  [c00000000135b7c0] [c0000000001589f0] .read_pages+0x6c/0x1a8
+  [c00000000135b8b0] [c000000000158c74] .__do_page_cache_readahead+0x118/0x184
+  [c00000000135b9b0] [c0000000001591a8] .force_page_cache_readahead+0xe4/0xe8
+  [c00000000135ba50] [c00000000014fc24] .generic_file_read_iter+0x1d8/0x830
+  [c00000000135bb50] [c0000000001ffadc] .blkdev_read_iter+0x40/0x5c
+  [c00000000135bbc0] [c0000000001b9e00] .new_sync_read+0x144/0x1a0
+  [c00000000135bcd0] [c0000000001bc454] .vfs_read+0xa0/0x124
+  [c00000000135bd70] [c0000000001bc7a4] .ksys_read+0x70/0xd8
+  [c00000000135be20] [c00000000000a524] system_call+0x5c/0x70
+  Instruction dump:
+  7fe3fb78 482e30dc 7c0802a6 482e3085 7c9e2378 f821ff71 7ca42b78 7d3e00d0
+  7c7d1b78 79290fe0 7cc53378 69290001 <0b090000> 81230028 7bca0020 7929ba62
+  [ end trace 313fec760f30aa1f ]---
 
-2. Bit 12 of Slot Control is marked as both Read-Write and Reserved.
-   It should be Read-Write.
+The problem originates from setting the segment boundary of the
+request queue to -1UL. This makes get_max_segment_size() return zero
+when offset is zero, whatever the max segment size. The test with
+BLK_SEG_BOUNDARY_MASK fails and 'mask - (mask & offset) + 1' overflows
+to zero in the return statement.
 
-Link: https://lore.kernel.org/r/20200511162117.6674-2-jonathan.derrick@intel.com
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Not setting the segment boundary and using the default
+value (BLK_SEG_BOUNDARY_MASK) fixes the problem.
+
+Signed-off-by: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/060a416c43138f45105c0540eff1a45539f7e2fc.1589049250.git.geoff@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-bridge-emul.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/block/ps3disk.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 4f4f54bc732eb..faa414655f338 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -185,8 +185,8 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- 		 * RO, the rest is reserved
- 		 */
- 		.w1c = GENMASK(19, 16),
--		.ro = GENMASK(20, 19),
--		.rsvd = GENMASK(31, 21),
-+		.ro = GENMASK(21, 20),
-+		.rsvd = GENMASK(31, 22),
- 	},
+diff --git a/drivers/block/ps3disk.c b/drivers/block/ps3disk.c
+index c5c6487a19d5a..7b55811c2a81d 100644
+--- a/drivers/block/ps3disk.c
++++ b/drivers/block/ps3disk.c
+@@ -454,7 +454,6 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
+ 	queue->queuedata = dev;
  
- 	[PCI_EXP_LNKCAP / 4] = {
-@@ -226,7 +226,7 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- 			PCI_EXP_SLTSTA_CC | PCI_EXP_SLTSTA_DLLSC) << 16,
- 		.ro = (PCI_EXP_SLTSTA_MRLSS | PCI_EXP_SLTSTA_PDS |
- 		       PCI_EXP_SLTSTA_EIS) << 16,
--		.rsvd = GENMASK(15, 12) | (GENMASK(15, 9) << 16),
-+		.rsvd = GENMASK(15, 13) | (GENMASK(15, 9) << 16),
- 	},
+ 	blk_queue_max_hw_sectors(queue, dev->bounce_size >> 9);
+-	blk_queue_segment_boundary(queue, -1UL);
+ 	blk_queue_dma_alignment(queue, dev->blk_size-1);
+ 	blk_queue_logical_block_size(queue, dev->blk_size);
  
- 	[PCI_EXP_RTCTL / 4] = {
 -- 
 2.25.1
 
