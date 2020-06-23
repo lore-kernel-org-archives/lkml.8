@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53857C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C28C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262202070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A600D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944265;
-	bh=ib/vrE2IBF7zJHsPZU9AqPkZOhsF5BhRE1Eu4q8KiUo=;
+	s=default; t=1592944269;
+	bh=Vzlziez2etOyHDxeMK8xVgG/C2LUpR0dM/kx/cWwAAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kklgKYeiWBcaxfi4WC2sjn8S2ihIaR90fRL8MiJyPsUQ20LWwOnZD2JUPjv/3RJCG
-	 nsfQOqKeVS8Spje2OBe/ibsHSGQoYV7UOC3xnlBkqt3LUt9krB5qq4RqA80dFEGJib
-	 zjLQGlDQ7jD0Z3aGIcI0eBRFYOEwuKWXdNIlMqrQ=
+	b=Ol125dwSap4fscdOEa5O03KbgZF1i/NPib69k5PhKEbUBpHNkax8/ogWfMCTY4X1+
+	 474SvTMb/sZFMlAE2Ti2oZpvAtGTr3YJk7MeQHqVCtlWlWPfGhTSzddrKXrIfOmf1y
+	 aPgROXK4hZVlcSU37Zs/BuZSZNmtX5dykhdfzues=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391180AbgFWUbD (ORCPT
+        id S2391188AbgFWUbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51394 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391057AbgFWUa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:30:58 -0400
+        id S2391081AbgFWUbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:31:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 610782070E;
-        Tue, 23 Jun 2020 20:30:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0CD4206C3;
+        Tue, 23 Jun 2020 20:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944259;
-        bh=ib/vrE2IBF7zJHsPZU9AqPkZOhsF5BhRE1Eu4q8KiUo=;
+        s=default; t=1592944261;
+        bh=Vzlziez2etOyHDxeMK8xVgG/C2LUpR0dM/kx/cWwAAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fcbWnLZHpoiBIcJqhIeQSSHz4I9ndE3gwi0P2cqvHuWxHYuzSU33TnQm/BQ5I0aSl
-         /sfeagVmLmo19vgmiPqjNH370ZcZFtLmqlv7nlvNHh9bb3SeBJ/4oalt33Sp+fvmQL
-         1APunOh7gmMiOM6i8yaVrbN96xvoYMWHmIYDcIMI=
+        b=ndq+Ze/VJ77wA7Spqjzn9y73gnhSf3pGFf3k/J1pqWJD9hQR8PSk/SM3+Thdk3gq+
+         lCpjQTXWwsTLIeOITQwET83Iif6uGPtONxg+sBb+BWibOmXjlAekz5cV9B1ltEexeL
+         oSxI1D3oepUKuRfcl41Wtpbp4KgDTNlFz5C4hD6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 203/314] ASoC: fsl_asrc_dma: Fix dma_chan leak when config DMA channel failed
-Date:   Tue, 23 Jun 2020 21:56:38 +0200
-Message-Id: <20200623195348.606822595@linuxfoundation.org>
+Subject: [PATCH 5.4 194/314] clk: ast2600: Fix AHB clock divider for A1
+Date:   Tue, 23 Jun 2020 21:56:29 +0200
+Message-Id: <20200623195348.178452084@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,44 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Eddie James <eajames@linux.ibm.com>
 
-[ Upstream commit 36124fb19f1ae68a500cd76a76d40c6e81bee346 ]
+[ Upstream commit 2d491066ccd4286538450c227fc5094ceb04b494 ]
 
-fsl_asrc_dma_hw_params() invokes dma_request_channel() or
-fsl_asrc_get_dma_channel(), which returns a reference of the specified
-dma_chan object to "pair->dma_chan[dir]" with increased refcnt.
+The latest specs for the AST2600 A1 chip include some different bit
+definitions for calculating the AHB clock divider. Implement these in
+order to get the correct AHB clock value in Linux.
 
-The reference counting issue happens in one exception handling path of
-fsl_asrc_dma_hw_params(). When config DMA channel failed for Back-End,
-the function forgets to decrease the refcnt increased by
-dma_request_channel() or fsl_asrc_get_dma_channel(), causing a refcnt
-leak.
-
-Fix this issue by calling dma_release_channel() when config DMA channel
-failed.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Link: https://lore.kernel.org/r/1590415966-52416-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Link: https://lkml.kernel.org/r/20200408203616.4031-1-eajames@linux.ibm.com
+Fixes: d3d04f6c330a ("clk: Add support for AST2600 SoC")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_asrc_dma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/clk-ast2600.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index 01052a0808b0b..5aee6b8366d27 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -241,6 +241,7 @@ static int fsl_asrc_dma_hw_params(struct snd_pcm_substream *substream,
- 	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
- 	if (ret) {
- 		dev_err(dev, "failed to config DMA channel for Back-End\n");
-+		dma_release_channel(pair->dma_chan[dir]);
- 		return ret;
- 	}
+diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+index b1318e6b655bc..675cab6fa7814 100644
+--- a/drivers/clk/clk-ast2600.c
++++ b/drivers/clk/clk-ast2600.c
+@@ -599,14 +599,22 @@ static const u32 ast2600_a0_axi_ahb_div_table[] = {
+ 	2, 2, 3, 5,
+ };
  
+-static const u32 ast2600_a1_axi_ahb_div_table[] = {
+-	4, 6, 2, 4,
++static const u32 ast2600_a1_axi_ahb_div0_tbl[] = {
++	3, 2, 3, 4,
++};
++
++static const u32 ast2600_a1_axi_ahb_div1_tbl[] = {
++	3, 4, 6, 8,
++};
++
++static const u32 ast2600_a1_axi_ahb200_tbl[] = {
++	3, 4, 3, 4, 2, 2, 2, 2,
+ };
+ 
+ static void __init aspeed_g6_cc(struct regmap *map)
+ {
+ 	struct clk_hw *hw;
+-	u32 val, div, chip_id, axi_div, ahb_div;
++	u32 val, div, divbits, chip_id, axi_div, ahb_div;
+ 
+ 	clk_hw_register_fixed_rate(NULL, "clkin", NULL, 0, 25000000);
+ 
+@@ -636,11 +644,22 @@ static void __init aspeed_g6_cc(struct regmap *map)
+ 	else
+ 		axi_div = 2;
+ 
++	divbits = (val >> 11) & 0x3;
+ 	regmap_read(map, ASPEED_G6_SILICON_REV, &chip_id);
+-	if (chip_id & BIT(16))
+-		ahb_div = ast2600_a1_axi_ahb_div_table[(val >> 11) & 0x3];
+-	else
++	if (chip_id & BIT(16)) {
++		if (!divbits) {
++			ahb_div = ast2600_a1_axi_ahb200_tbl[(val >> 8) & 0x3];
++			if (val & BIT(16))
++				ahb_div *= 2;
++		} else {
++			if (val & BIT(16))
++				ahb_div = ast2600_a1_axi_ahb_div1_tbl[divbits];
++			else
++				ahb_div = ast2600_a1_axi_ahb_div0_tbl[divbits];
++		}
++	} else {
+ 		ahb_div = ast2600_a0_axi_ahb_div_table[(val >> 11) & 0x3];
++	}
+ 
+ 	hw = clk_hw_register_fixed_factor(NULL, "ahb", "hpll", 0, 1, axi_div * ahb_div);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_AHB] = hw;
 -- 
 2.25.1
 
