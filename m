@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB69DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9801E20E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A6B2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943451;
-	bh=lzYnvigC7sLlpJXIV5q49x/6vjpAsUoOiwW9WvA8Mfw=;
+	s=default; t=1592943457;
+	bh=94WxdoVU7+b9Qy1pyIxdy5ZyQ2U+ODdroBYxQ5xZTlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yt0N9g9heZt1G75xazbJYy3j3iWgiRMhw16CMSe8QmfWQ47g1wSC+5Qu+493OUa9f
-	 zR4USTijRueea0OnyQ9gFEeW4Xv7N3LSSSsTMtSaznClPXX1xj+VgNsMa++sbxvnGX
-	 hy4CmBeZzedDkFfYWLQJqOkb6jivWH5udvXl52Zc=
+	b=I5k9nbSy4Orh9/w3CWLEUPht9fCGRm8BKJnROEdMpdzBSFt09j9N/H3ahWcZbHnzI
+	 c4BXBv40OIlYg/e4ZgySIWi+WkrAdBlaL9uFmp13BKGZSpwlDvq4lfYIYFWg5cWNNk
+	 AAYXRP9xZVmAZK2X7UQT7eHkdPrbQv6pojDkQQSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389045AbgFWURa (ORCPT
+        id S2388642AbgFWURf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33476 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:17:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389553AbgFWURY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:24 -0400
+        id S2388981AbgFWUR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 574ED20E65;
-        Tue, 23 Jun 2020 20:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D51EE2080C;
+        Tue, 23 Jun 2020 20:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943444;
-        bh=lzYnvigC7sLlpJXIV5q49x/6vjpAsUoOiwW9WvA8Mfw=;
+        s=default; t=1592943447;
+        bh=94WxdoVU7+b9Qy1pyIxdy5ZyQ2U+ODdroBYxQ5xZTlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kWSRn5z9VKOTFDS28MXWjeDxVJHoFyykHN49UTaSDqCT6luslkrvAroOxRJt8CwR
-         qO+M7059gWRWN850nsvcf7obtVlKKHm4xnACaE7EM4HiMiX6koGWQCPu31vrickBl/
-         Hi0z/YakTBp5PLJY2CrDzzpPSpFmX4yYRSIAt5V0=
+        b=WaQNg0Fpjlk2MoJ+7t66Gq7EtI7SemPepq02O3YMakJ500XhRP9X+cxOh4KLwgOid
+         O7NDQ9g09+bZmVU66atdGFTHCSOzyzjHojWjKK8wI6pn+JaqIHUsXuINVJ4c7SM2fa
+         DkIgF63VSx0A7Vb9tJ2+tRI04gOf+J4aDe41IzYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Dave Botsch <botsch@cnf.cornell.edu>,
+        Jeffrey Altman <jaltman@auristor.com>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 394/477] afs: Fix EOF corruption
-Date:   Tue, 23 Jun 2020 21:56:31 +0200
-Message-Id: <20200623195426.150729212@linuxfoundation.org>
+Subject: [PATCH 5.7 395/477] afs: Always include dir in bulk status fetch from afs_do_lookup()
+Date:   Tue, 23 Jun 2020 21:56:32 +0200
+Message-Id: <20200623195426.197188819@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,99 +63,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 3f4aa981816368fe6b1d13c2bfbe76df9687e787 ]
+[ Upstream commit 13fcc6356a94558a0a4857dc00cd26b3834a1b3e ]
 
-When doing a partial writeback, afs_write_back_from_locked_page() may
-generate an FS.StoreData RPC request that writes out part of a file when a
-file has been constructed from pieces by doing seek, write, seek, write,
-... as is done by ld.
+When a lookup is done in an AFS directory, the filesystem will speculate
+and fetch up to 49 other statuses for files in the same directory and fetch
+those as well, turning them into inodes or updating inodes that already
+exist.
 
-The FS.StoreData RPC is given the current i_size as the file length, but
-the server basically ignores it unless the data length is 0 (in which case
-it's just a truncate operation).  The revised file length returned in the
-result of the RPC may then not reflect what we suggested - and this leads
-to i_size getting moved backwards - which causes issues later.
+However, occasionally, a callback break might go missing due to NAT timing
+out, but the afs filesystem doesn't then realise that the directory is not
+up to date.
 
-Fix the client to take account of this by ignoring the returned file size
-unless the data version number jumped unexpectedly - in which case we're
-going to have to clear the pagecache and reload anyway.
+Alleviate this by using one of the status slots to check the directory in
+which the lookup is being done.
 
-This can be observed when doing a kernel build on an AFS mount.  The
-following pair of commands produce the issue:
-
-  ld -m elf_x86_64 -z max-page-size=0x200000 --emit-relocs \
-      -T arch/x86/realmode/rm/realmode.lds \
-      arch/x86/realmode/rm/header.o \
-      arch/x86/realmode/rm/trampoline_64.o \
-      arch/x86/realmode/rm/stack.o \
-      arch/x86/realmode/rm/reboot.o \
-      -o arch/x86/realmode/rm/realmode.elf
-  arch/x86/tools/relocs --realmode \
-      arch/x86/realmode/rm/realmode.elf \
-      >arch/x86/realmode/rm/realmode.relocs
-
-This results in the latter giving:
-
-	Cannot read ELF section headers 0/18: Success
-
-as the realmode.elf file got corrupted.
-
-The sequence of events can also be driven with:
-
-	xfs_io -t -f \
-		-c "pwrite -S 0x58 0 0x58" \
-		-c "pwrite -S 0x59 10000 1000" \
-		-c "close" \
-		/afs/example.com/scratch/a
-
-Fixes: 31143d5d515e ("AFS: implement basic file write support")
+Reported-by: Dave Botsch <botsch@cnf.cornell.edu>
+Suggested-by: Jeffrey Altman <jaltman@auristor.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/inode.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ fs/afs/dir.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/afs/inode.c b/fs/afs/inode.c
-index 281470fe1183c..a239884549c5b 100644
---- a/fs/afs/inode.c
-+++ b/fs/afs/inode.c
-@@ -170,6 +170,7 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
- 	struct timespec64 t;
- 	umode_t mode;
- 	bool data_changed = false;
-+	bool change_size = false;
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index d1e1caa23c8b3..3c486340b2208 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -658,7 +658,8 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
  
- 	BUG_ON(test_bit(AFS_VNODE_UNSET, &vnode->flags));
+ 	cookie->ctx.actor = afs_lookup_filldir;
+ 	cookie->name = dentry->d_name;
+-	cookie->nr_fids = 1; /* slot 0 is saved for the fid we actually want */
++	cookie->nr_fids = 2; /* slot 0 is saved for the fid we actually want
++			      * and slot 1 for the directory */
  
-@@ -225,6 +226,7 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
- 		} else {
- 			set_bit(AFS_VNODE_ZAP_DATA, &vnode->flags);
- 		}
-+		change_size = true;
- 	} else if (vnode->status.type == AFS_FTYPE_DIR) {
- 		/* Expected directory change is handled elsewhere so
- 		 * that we can locally edit the directory and save on a
-@@ -232,11 +234,19 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
- 		 */
- 		if (test_bit(AFS_VNODE_DIR_VALID, &vnode->flags))
- 			data_changed = false;
-+		change_size = true;
- 	}
+ 	read_seqlock_excl(&dvnode->cb_lock);
+ 	dcbi = rcu_dereference_protected(dvnode->cb_interest,
+@@ -709,7 +710,11 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
+ 	if (!cookie->inodes)
+ 		goto out_s;
  
- 	if (data_changed) {
- 		inode_set_iversion_raw(&vnode->vfs_inode, status->data_version);
--		afs_set_i_size(vnode, status->size);
+-	for (i = 1; i < cookie->nr_fids; i++) {
++	cookie->fids[1] = dvnode->fid;
++	cookie->statuses[1].cb_break = afs_calc_vnode_cb_break(dvnode);
++	cookie->inodes[1] = igrab(&dvnode->vfs_inode);
 +
-+		/* Only update the size if the data version jumped.  If the
-+		 * file is being modified locally, then we might have our own
-+		 * idea of what the size should be that's not the same as
-+		 * what's on the server.
-+		 */
-+		if (change_size)
-+			afs_set_i_size(vnode, status->size);
- 	}
- }
++	for (i = 2; i < cookie->nr_fids; i++) {
+ 		scb = &cookie->statuses[i];
  
+ 		/* Find any inodes that already exist and get their
 -- 
 2.25.1
 
