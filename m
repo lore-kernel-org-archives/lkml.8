@@ -2,80 +2,58 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C61C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8EA320707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8310920738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732613AbgFWMMm (ORCPT
+        id S1732590AbgFWMNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:12:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45112 "EHLO mx2.suse.de"
+        Tue, 23 Jun 2020 08:13:08 -0400
+Received: from verein.lst.de ([213.95.11.211]:39101 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732396AbgFWMMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:12:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 856F7AD5D;
-        Tue, 23 Jun 2020 12:12:39 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 14:12:37 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623121237.GC14101@suse.de>
-References: <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200623094519.GF31822@suse.de>
- <20200623104559.GA4817@hirez.programming.kicks-ass.net>
- <20200623111107.GG31822@suse.de>
- <20200623111443.GC4817@hirez.programming.kicks-ass.net>
- <20200623114324.GA14101@suse.de>
- <20200623115014.GE4817@hirez.programming.kicks-ass.net>
+        id S1732518AbgFWMNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:13:08 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B182C68AEF; Tue, 23 Jun 2020 14:13:04 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 14:13:04 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, hch@lst.de, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, peterz@infradead.org,
+        akpm@linux-foundation.org, jean-philippe@linaro.org,
+        bbhushan2@marvell.com
+Subject: Re: [PATCH v2] dma-remap: Align the size in dma_common_*_remap()
+Message-ID: <20200623121304.GA20261@lst.de>
+References: <20200623120755.27710-1-eric.auger@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623115014.GE4817@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200623120755.27710-1-eric.auger@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 01:50:14PM +0200, Peter Zijlstra wrote:
-> If SNP is the sole reason #VC needs to be IST, then I'd strongly urge
-> you to only make it IST if/when you try and make SNP happen, not before.
+On Tue, Jun 23, 2020 at 02:07:55PM +0200, Eric Auger wrote:
+> Running a guest with a virtio-iommu protecting virtio devices
+> is broken since commit 515e5b6d90d4 ("dma-mapping: use vmap insted
+> of reimplementing it"). Before the conversion, the size was
+> page aligned in __get_vm_area_node(). Doing so fixes the
+> regression.
+> 
+> Fixes: 515e5b6d90d4 ("dma-mapping: use vmap insted of reimplementing it")
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
-It is not the only reason, when ES guests gain debug register support
-then #VC also needs to be IST, because #DB can be promoted into #VC
-then, and as #DB is IST for a reason, #VC needs to be too.
+Thanks,
 
-Besides that, I am not a fan of delegating problems I already see coming
-to future-Joerg and future-Peter, but if at all possible deal with them
-now and be safe later.
-
-Regards,
-
-	Joerg
+I've applied this locally, waiting for git.infradead.org to be back
+up.
