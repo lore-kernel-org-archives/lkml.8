@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F78C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75848207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5E720774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933731;
-	bh=TQJveAd4iuxp3Js2y6oHTz1x2bBFGQmlIDZnSYRqzkY=;
+	s=default; t=1592933741;
+	bh=bPSC0VLNGxBmVNxo7KLFiEt74Q+P9vCaQXvNwq2eCQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9jMgNG3vC11VvEndTjRJv89OdndrGUPJ+lb2hp4WNHYwS+Kck03qY45m6yLtAaR9
-	 VL3irk0Z8/kSxTmeeFREkfqa+XvmkSWIFbYYyEjk70y2SggvKzTuQrwVvMF5nn8QVx
-	 AA078Z2gw+zMh1k986WDcDzOBBd3TMO6q7Wt8osI=
+	b=sPY+NJleEYolwdQ7Uuuwn6AX5bVxoNXrqHL8jC98VVTq7CVBLSQogXQ7NQ04NTJyU
+	 Vlb2Szs3ugFCCgiM4/5Er/scvdbil4wD0fWOhJYxffeZEsmNXbf2RgBbl3HNR7kCsr
+	 kiMaYN+eQN9BdDy8BEZgRWcz03QCTYEs41b9BncE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733193AbgFWRfa (ORCPT
+        id S1733257AbgFWRfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60014 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733171AbgFWRf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:28 -0400
+        id S1733209AbgFWRff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC6692078C;
-        Tue, 23 Jun 2020 17:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43C2C20706;
+        Tue, 23 Jun 2020 17:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933727;
-        bh=TQJveAd4iuxp3Js2y6oHTz1x2bBFGQmlIDZnSYRqzkY=;
+        s=default; t=1592933735;
+        bh=bPSC0VLNGxBmVNxo7KLFiEt74Q+P9vCaQXvNwq2eCQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C0lI0p2XA29CQ56pN07g4a2zueNXHRH/zt2F6GxCpmELLASHHp3j1Fc/vcFk6ez9n
-         zHY2fw+FyyyiIHaWxWVsSFq16h0WB7QF+u6lFiV+jOt4T0ngP8tsMDmxr+ukrMXuTp
-         EdOYPfWj1PQlSdWMZUUXGUGXm2yXqbFVEL9HESAk=
+        b=hlXOnHS7GQ1azK9gXwTlx7PN9K5XMXH3DXIyz9eERuEtDM48K40ck+hzwrMd6P705
+         gN1EPqcgHAFEIIbanNvCxSRRj/GfHFxip2JKUYOiPIJrbTo4uATX+sX+ugkk9lyS51
+         odoCutLZuZDqhhhjc0mlGX9Ni2/DUk3eZEN3TaCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 03/28] drm/amd/display: Use kfree() to free rgb_user in calculate_user_regamma_ramp()
-Date:   Tue, 23 Jun 2020 13:34:58 -0400
-Message-Id: <20200623173523.1355411-3-sashal@kernel.org>
+Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 09/28] net: alx: fix race condition in alx_remove
+Date:   Tue, 23 Jun 2020 13:35:04 -0400
+Message-Id: <20200623173523.1355411-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
 References: <20200623173523.1355411-1-sashal@kernel.org>
@@ -60,34 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Zekun Shen <bruceshenzk@gmail.com>
 
-[ Upstream commit 43a562774fceba867e8eebba977d7d42f8a2eac7 ]
+[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
 
-Use kfree() instead of kvfree() to free rgb_user in
-calculate_user_regamma_ramp() because the memory is allocated with
-kcalloc().
+There is a race condition exist during termination. The path is
+alx_stop and then alx_remove. An alx_schedule_link_check could be called
+before alx_stop by interrupt handler and invoke alx_link_check later.
+Alx_stop frees the napis, and alx_remove cancels any pending works.
+If any of the work is scheduled before termination and invoked before
+alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This patch fix the race condition by moving cancel_work_sync functions
+before alx_free_napis inside alx_stop. Because interrupt handler can call
+alx_schedule_link_check again, alx_free_irq is moved before
+cancel_work_sync calls too.
+
+Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-index cac09d500fda9..2c2caa7d335c8 100644
---- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-+++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-@@ -1777,7 +1777,7 @@ bool calculate_user_regamma_ramp(struct dc_transfer_func *output_tf,
+diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
+index b9b4edb913c13..9b7f1af5f5747 100644
+--- a/drivers/net/ethernet/atheros/alx/main.c
++++ b/drivers/net/ethernet/atheros/alx/main.c
+@@ -1249,8 +1249,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
  
- 	kfree(rgb_regamma);
- rgb_regamma_alloc_fail:
--	kvfree(rgb_user);
-+	kfree(rgb_user);
- rgb_user_alloc_fail:
- 	return ret;
+ static void __alx_stop(struct alx_priv *alx)
+ {
+-	alx_halt(alx);
+ 	alx_free_irq(alx);
++
++	cancel_work_sync(&alx->link_check_wk);
++	cancel_work_sync(&alx->reset_wk);
++
++	alx_halt(alx);
+ 	alx_free_rings(alx);
+ 	alx_free_napis(alx);
  }
+@@ -1855,9 +1859,6 @@ static void alx_remove(struct pci_dev *pdev)
+ 	struct alx_priv *alx = pci_get_drvdata(pdev);
+ 	struct alx_hw *hw = &alx->hw;
+ 
+-	cancel_work_sync(&alx->link_check_wk);
+-	cancel_work_sync(&alx->reset_wk);
+-
+ 	/* restore permanent mac address */
+ 	alx_set_macaddr(hw, hw->perm_addr);
+ 
 -- 
 2.25.1
 
