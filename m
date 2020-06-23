@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2571AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2520B2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8D92072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946710;
-	bh=hG/hd2J4dHLGSRu02sYKuZfaGjpfA6fauxrCVBm5Y5A=;
+	s=default; t=1592946713;
+	bh=yCnnmnrL8bLn9e8bY/dSWzWtulChL8RsibXQVL+oxy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q2tmY7Bubi8ZFYA6OfuaCa6ugEeOOU3QJIJOHfOKv5ME+IrDqCNjPsd94Ixmpn0Fd
-	 SHho/UVanqgtCqgDmj4FwaIwlcqzHFGgivAkZuPkvfQM8Aeq/fo5W9VkO162h9zvI/
-	 0kQPq4Z/XGlqDQKiiSJy5AoDAiuKGaDPBj+mTzzc=
+	b=kOyLPz0x6Ae2RqeyA/y6mUp+wRHmaj+Rg1OLwaUe3zvj1LPFYmKVu+nKpp1ArUxUe
+	 pGIxzqL+IxLghg+AXHhK7RSRGi0ODNtitVb+NOgWZ/xzFSnEaR1ru+Z0aZ9phlOlEL
+	 0Mu+hICEeJQJ7dOTltzNSUrNqs91XpmZLKitQWwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403784AbgFWVLs (ORCPT
+        id S2391269AbgFWUcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52962 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390824AbgFWUcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:32:10 -0400
+        id S2391242AbgFWUbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:31:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7CCF206C3;
-        Tue, 23 Jun 2020 20:32:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B22F52072E;
+        Tue, 23 Jun 2020 20:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944330;
-        bh=hG/hd2J4dHLGSRu02sYKuZfaGjpfA6fauxrCVBm5Y5A=;
+        s=default; t=1592944307;
+        bh=yCnnmnrL8bLn9e8bY/dSWzWtulChL8RsibXQVL+oxy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sg0gbTOrvmDcC1wC1mhzuxXyX/+TrxBMIlblXnR5xKnMTJ4LYAuqACPbejjhY4GKj
-         siNU4SAM0piHD3FOGyuj051ACCZPiN9u9qvvk/Lxpc9bVRPd9sfE3ffNJcXEG6PgJK
-         wXi9aNIAMmJjVQNsMeAsjtvxfDxJawBFSCYDgigw=
+        b=mHx/1WjHFD6x+kBqP4zdMJy5J4vQ69Ynb96a5OQaznHR3N2CVpL5llfhyyzzejt7K
+         LETbKXr8mpSY0bwqMXZ9aE/KpBQaVPbVAw49rAztud26HYE6COsXk3/uQOfLstI+zU
+         CCxYgSr6nSlscc1Rv8lVnldy7qnL86eBypioJVHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 232/314] NTB: ntb_tool: reading the link file should not end in a NULL byte
-Date:   Tue, 23 Jun 2020 21:57:07 +0200
-Message-Id: <20200623195350.019416168@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 253/314] x86/idt: Keep spurious entries unset in system_vectors
+Date:   Tue, 23 Jun 2020 21:57:28 +0200
+Message-Id: <20200623195351.031629578@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,49 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 912e12813dd03c602e4922fc34709ec4d4380cf0 ]
+[ Upstream commit 1f1fbc70c10e81f70e9fbe2102d439c883269811 ]
 
-When running ntb_test this warning is issued:
+With commit dc20b2d52653 ("x86/idt: Move interrupt gate initialization to
+IDT code") non assigned system vectors are also marked as used in
+'used_vectors' (now 'system_vectors') bitmap. This makes checks in
+arch_show_interrupts() whether a particular system vector is allocated to
+always pass and e.g. 'Hyper-V reenlightenment interrupts' entry always
+shows up in /proc/interrupts.
 
-./ntb_test.sh: line 200: warning: command substitution: ignored null
-byte in input
+Another side effect of having all unassigned system vectors marked as used
+is that irq_matrix_debug_show() will wrongly count them among 'System'
+vectors.
 
-This is caused by the kernel returning one more byte than is necessary
-when reading the link file.
+As it is now ensured that alloc_intr_gate() is not called after init, it is
+possible to leave unused entries in 'system_vectors' unset to fix these
+issues.
 
-Reduce the number of bytes read back to 2 as it was before the
-commit that regressed this.
-
-Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200428093824.1451532-4-vkuznets@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_tool.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kernel/idt.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
-index 025747c1568ea..311d6ab8d0160 100644
---- a/drivers/ntb/test/ntb_tool.c
-+++ b/drivers/ntb/test/ntb_tool.c
-@@ -504,7 +504,7 @@ static ssize_t tool_peer_link_read(struct file *filep, char __user *ubuf,
- 	buf[1] = '\n';
- 	buf[2] = '\0';
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 87ef69a72c52e..7bb4c3cbf4dcd 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -318,7 +318,11 @@ void __init idt_setup_apic_and_irq_gates(void)
  
--	return simple_read_from_buffer(ubuf, size, offp, buf, 3);
-+	return simple_read_from_buffer(ubuf, size, offp, buf, 2);
- }
- 
- static TOOL_FOPS_RDWR(tool_peer_link_fops,
-@@ -1690,4 +1690,3 @@ static void __exit tool_exit(void)
- 	debugfs_remove_recursive(tool_dbgfs_topdir);
- }
- module_exit(tool_exit);
--
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
+-		set_bit(i, system_vectors);
++		/*
++		 * Don't set the non assigned system vectors in the
++		 * system_vectors bitmap. Otherwise they show up in
++		 * /proc/interrupts.
++		 */
+ 		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
+ 		set_intr_gate(i, entry);
+ 	}
 -- 
 2.25.1
 
