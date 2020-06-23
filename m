@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538F22078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887C5207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943628;
-	bh=0RljbIrSJYmtRiqpkkHxXz0PZOqnpIji2puciASAjT8=;
+	s=default; t=1592943631;
+	bh=ZGdBxKQkCpdkOwGotuNsaRRU1i75i+LyQ6mnSPfgiF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LbRugaPS0kAw41JI+KjTw16Of5EGix58aUb7J8YZnBY+9PBtjaEKYluyc86V5kKQu
-	 KEKKJg9nwbYAZd6fJUOACPkpTn8M+wbXO7l8MaObTg99kfno//b/rtiVZV6kPDHoAt
-	 KwR57a/EaejWNYCjMI5VZx039fcn3kK76hjKowD4=
+	b=HJw11Chk6+5UeisO/8MRUaPJvpIJ7kha+y4MPiTLvYCu2rCSwssugdu5NwBC2FgSS
+	 trvSa+/BKKlljp5axIW6KVrdFFp2YcdcPqm805jGsg5G1RziDl3t/flg8KO2mtLcyz
+	 vF0xwjnnhyi0upDlPH+ETodq1KITzxuDEtpqwuLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389938AbgFWUU0 (ORCPT
+        id S2389461AbgFWUU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:20:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389887AbgFWUUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:20:19 -0400
+        id S2389926AbgFWUUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:20:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2809206C3;
-        Tue, 23 Jun 2020 20:20:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB16120723;
+        Tue, 23 Jun 2020 20:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943618;
-        bh=0RljbIrSJYmtRiqpkkHxXz0PZOqnpIji2puciASAjT8=;
+        s=default; t=1592943623;
+        bh=ZGdBxKQkCpdkOwGotuNsaRRU1i75i+LyQ6mnSPfgiF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2YWzRABMZM2nK8oFEXIA6COeWGPChf5Pceh4VTAbyDvrCV7zB0Pye0497fwdlEAJt
-         Rrb94Wx/JewTRT6SRDH/xWoR9TVffkzCQPh2btuCuLObCyT9V03iE/jGOuwkvp5jyF
-         tI9BKcSIPPHL8Lj6jpsGuAaVnwxJqZ3x4Yxw03gM=
+        b=qLAtI2kwJbt6X2tro2KX36nos1qZ+sN9cNl2//2x9TfhFFwkU4Yq5pGjRJiV0GvoB
+         EVoQnoAV5dKxyPX7qb491kXnB1ssrGHUcg3SUGs4W/CbrAApOhGUDs0S7p8mg90FwP
+         Q/yM/9Io5HPiyPWzqe9BwKxc5rclwPzZEn+IHlFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.7 462/477] tracing: Make ftrace packed events have align of 1
-Date:   Tue, 23 Jun 2020 21:57:39 +0200
-Message-Id: <20200623195429.388398627@linuxfoundation.org>
+Subject: [PATCH 5.7 463/477] tracing/probe: Fix memleak in fetch_op_data operations
+Date:   Tue, 23 Jun 2020 21:57:40 +0200
+Message-Id: <20200623195429.438369859@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,154 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
 
-commit 4649079b9de1ad86be9f4c989373adb8235a8485 upstream.
+commit 3aa8fdc37d16735e8891035becf25b3857d3efe0 upstream.
 
-When using trace-cmd on 5.6-rt for the function graph tracer, the output was
-corrupted. It gave output like this:
+kmemleak report:
+    [<57dcc2ca>] __kmalloc_track_caller+0x139/0x2b0
+    [<f1c45d0f>] kstrndup+0x37/0x80
+    [<f9761eb0>] parse_probe_arg.isra.7+0x3cc/0x630
+    [<055bf2ba>] traceprobe_parse_probe_arg+0x2f5/0x810
+    [<655a7766>] trace_kprobe_create+0x2ca/0x950
+    [<4fc6a02a>] create_or_delete_trace_kprobe+0xf/0x30
+    [<6d1c8a52>] trace_run_command+0x67/0x80
+    [<be812cc0>] trace_parse_run_command+0xa7/0x140
+    [<aecfe401>] probes_write+0x10/0x20
+    [<2027641c>] __vfs_write+0x30/0x1e0
+    [<6a4aeee1>] vfs_write+0x96/0x1b0
+    [<3517fb7d>] ksys_write+0x53/0xc0
+    [<dad91db7>] __ia32_sys_write+0x15/0x20
+    [<da347f64>] do_syscall_32_irqs_on+0x3d/0x260
+    [<fd0b7e7d>] do_fast_syscall_32+0x39/0xb0
+    [<ea5ae810>] entry_SYSENTER_32+0xaf/0x102
 
- funcgraph_entry:       func=0xffffffff depth=38982
- funcgraph_entry:       func=0x1ffffffff depth=16044
- funcgraph_exit:        func=0xffffffff overrun=0x92539aaf00000000 calltime=0x92539c9900000072 rettime=0x100000072 depth=11084
- funcgraph_exit:        func=0xffffffff overrun=0x9253946e00000000 calltime=0x92539e2100000072 rettime=0x72 depth=26033702
- funcgraph_entry:       func=0xffffffff depth=85798
- funcgraph_entry:       func=0x1ffffffff depth=12044
+Post parse_probe_arg(), the FETCH_OP_DATA operation type is overwritten
+to FETCH_OP_ST_STRING, as a result memory is never freed since
+traceprobe_free_probe_arg() iterates only over SYMBOL and DATA op types
 
-The reason was because the tracefs/events/ftrace/funcgraph_entry/exit format
-file was incorrect. The -rt kernel adds more common fields to the trace
-events. Namely, common_migrate_disable and common_preempt_lazy_count. Each
-is one byte in size. This changes the alignment of the normal payload. Most
-events are aligned normally, but the function and function graph events are
-defined with a "PACKED" macro, that packs their payload. As the offsets
-displayed in the format files are now calculated by an aligned field, the
-aligned field for function and function graph events should be 1, not their
-normal alignment.
+Setup fetch string operation correctly after fetch_op_data operation.
 
-With aligning of the funcgraph_entry event, the format file has:
-
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
-        field:unsigned char common_migrate_disable;     offset:8;       size:1; signed:0;
-        field:unsigned char common_preempt_lazy_count;  offset:9;       size:1; signed:0;
-
-        field:unsigned long func;       offset:16;      size:8; signed:0;
-        field:int depth;        offset:24;      size:4; signed:1;
-
-But the actual alignment is:
-
-	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-	field:int common_pid;	offset:4;	size:4;	signed:1;
-	field:unsigned char common_migrate_disable;	offset:8;	size:1;	signed:0;
-	field:unsigned char common_preempt_lazy_count;	offset:9;	size:1;	signed:0;
-
-	field:unsigned long func;	offset:12;	size:8;	signed:0;
-	field:int depth;	offset:20;	size:4;	signed:1;
-
-Link: https://lkml.kernel.org/r/20200609220041.2a3b527f@oasis.local.home
+Link: https://lkml.kernel.org/r/20200615143034.GA1734@cosmos
 
 Cc: stable@vger.kernel.org
-Fixes: 04ae87a52074e ("ftrace: Rework event_create_dir()")
+Fixes: a42e3c4de964 ("tracing/probe: Add immediate string parameter support")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.h         |    3 +++
- kernel/trace/trace_entries.h |   14 +++++++-------
- kernel/trace/trace_export.c  |   16 ++++++++++++++++
- 3 files changed, 26 insertions(+), 7 deletions(-)
+ kernel/trace/trace_probe.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -61,6 +61,9 @@ enum trace_type {
- #undef __field_desc
- #define __field_desc(type, container, item)
- 
-+#undef __field_packed
-+#define __field_packed(type, container, item)
-+
- #undef __array
- #define __array(type, item, size)	type	item[size];
- 
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -78,8 +78,8 @@ FTRACE_ENTRY_PACKED(funcgraph_entry, ftr
- 
- 	F_STRUCT(
- 		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
--		__field_desc(	unsigned long,	graph_ent,	func		)
--		__field_desc(	int,		graph_ent,	depth		)
-+		__field_packed(	unsigned long,	graph_ent,	func		)
-+		__field_packed(	int,		graph_ent,	depth		)
- 	),
- 
- 	F_printk("--> %ps (%d)", (void *)__entry->func, __entry->depth)
-@@ -92,11 +92,11 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftra
- 
- 	F_STRUCT(
- 		__field_struct(	struct ftrace_graph_ret,	ret	)
--		__field_desc(	unsigned long,	ret,		func	)
--		__field_desc(	unsigned long,	ret,		overrun	)
--		__field_desc(	unsigned long long, ret,	calltime)
--		__field_desc(	unsigned long long, ret,	rettime	)
--		__field_desc(	int,		ret,		depth	)
-+		__field_packed(	unsigned long,	ret,		func	)
-+		__field_packed(	unsigned long,	ret,		overrun	)
-+		__field_packed(	unsigned long long, ret,	calltime)
-+		__field_packed(	unsigned long long, ret,	rettime	)
-+		__field_packed(	int,		ret,		depth	)
- 	),
- 
- 	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d",
---- a/kernel/trace/trace_export.c
-+++ b/kernel/trace/trace_export.c
-@@ -45,6 +45,9 @@ static int ftrace_event_register(struct
- #undef __field_desc
- #define __field_desc(type, container, item)		type item;
- 
-+#undef __field_packed
-+#define __field_packed(type, container, item)		type item;
-+
- #undef __array
- #define __array(type, item, size)			type item[size];
- 
-@@ -85,6 +88,13 @@ static void __always_unused ____ftrace_c
- 	.size = sizeof(_type), .align = __alignof__(_type),		\
- 	is_signed_type(_type), .filter_type = _filter_type },
- 
-+
-+#undef __field_ext_packed
-+#define __field_ext_packed(_type, _item, _filter_type) {	\
-+	.type = #_type, .name = #_item,				\
-+	.size = sizeof(_type), .align = 1,			\
-+	is_signed_type(_type), .filter_type = _filter_type },
-+
- #undef __field
- #define __field(_type, _item) __field_ext(_type, _item, FILTER_OTHER)
- 
-@@ -94,6 +104,9 @@ static void __always_unused ____ftrace_c
- #undef __field_desc
- #define __field_desc(_type, _container, _item) __field_ext(_type, _item, FILTER_OTHER)
- 
-+#undef __field_packed
-+#define __field_packed(_type, _container, _item) __field_ext_packed(_type, _item, FILTER_OTHER)
-+
- #undef __array
- #define __array(_type, _item, _len) {					\
- 	.type = #_type"["__stringify(_len)"]", .name = #_item,		\
-@@ -129,6 +142,9 @@ static struct trace_event_fields ftrace_
- #undef __field_desc
- #define __field_desc(type, container, item)
- 
-+#undef __field_packed
-+#define __field_packed(type, container, item)
-+
- #undef __array
- #define __array(type, item, len)
- 
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -639,8 +639,8 @@ static int traceprobe_parse_probe_arg_bo
+ 			ret = -EINVAL;
+ 			goto fail;
+ 		}
+-		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM) ||
+-		     parg->count) {
++		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM ||
++		     code->op == FETCH_OP_DATA) || parg->count) {
+ 			/*
+ 			 * IMM, DATA and COMM is pointing actual address, those
+ 			 * must be kept, and if parg->count != 0, this is an
 
 
