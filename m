@@ -5,50 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C92E320738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D30BA20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947372;
-	bh=sp0TDNXO9/Ln/mO5zcG+iRknxXvXUQSn3EWDYj5QmRc=;
+	s=default; t=1592947387;
+	bh=e9QVDNPPdIYXFB1XLyPVDsSsiNUzkq05fbA6OgRLMg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WK3abJ/lUWerM1FKQunwdBhSQ5JVV6eZ8NFR90nWhalNGuPwPMszIJymLRAA+cvRK
-	 6Nx9BOrLI4Zs7SVMdcvjye+f1vPAQGlXNAkftVj1cRC8V5bEIrplEggehgH9eaoZpD
-	 oB3qoJV+vGmv/Fy7809pNhPL4nmcfOAA3utINCz8=
+	b=QUvPdAA+EaVE+HERWT3E6oIedQZ208IGNx/M/D/AmOmXhGYEjUCUD8+098j/xI+4G
+	 HfXCWjjRdXkWoM6eMf/D/tNm6Ayuc83uQU/OD024vxgVAJGTFqtebdwyWaNj8a+xCG
+	 kEJ9b/Xup0hm98JIj9YUCkibQFW9DRbiLWgX2VZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392064AbgFWVWv (ORCPT
+        id S2389098AbgFWVXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:22:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:23:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390064AbgFWUVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:21:39 -0400
+        id S2390048AbgFWUVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:21:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FC8C2073E;
-        Tue, 23 Jun 2020 20:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AE19206C3;
+        Tue, 23 Jun 2020 20:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943699;
-        bh=sp0TDNXO9/Ln/mO5zcG+iRknxXvXUQSn3EWDYj5QmRc=;
+        s=default; t=1592943693;
+        bh=e9QVDNPPdIYXFB1XLyPVDsSsiNUzkq05fbA6OgRLMg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vIK610/oDZgP5wLD0OqmONpcXaCcAGVT5WpQSCw+S2j97ZmWZUsMNJzsq4TaktAKY
-         DRHc0dvActV9LkRagIaqlt3CFD4yGuLCckiZqsZdl/riLx/LpK8wqO0H8sH8iIzHS6
-         V/Eo70zdlz4wMAafaeO2+10IKeyXjkWF+ODhRmZE=
+        b=ZRGgpb+bg44ZIr0h+WkQVvS9v5KsM34gFcY1GOTyiSlpypMYJXorIr/MQ3ZQDgSUg
+         L1+HrVotMR1+zzyr4B4rIC9F6TjpLTbrGz1TaEYz+FB6OrimFU+tGqj+tBbBtsm8kB
+         LaCI3DtUvRJMUk4653wcFCofYM7Qlqt93atCesCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Rangankar <mrangankar@marvell.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marek Vasut <marex@denx.de>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Patrick Delaunay <patrick.delaunay@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 016/314] scsi: qedi: Check for buffer overflow in qedi_set_path()
-Date:   Tue, 23 Jun 2020 21:53:31 +0200
-Message-Id: <20200623195339.561427930@linuxfoundation.org>
+Subject: [PATCH 5.4 014/314] ARM: dts: stm32: Add missing ethernet PHY reset on AV96
+Date:   Tue, 23 Jun 2020 21:53:29 +0200
+Message-Id: <20200623195339.467115145@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,43 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 4a4c0cfb4be74e216dd4446b254594707455bfc6 ]
+[ Upstream commit 010ca9fe500bfe365860b50220ff80541c18f0e1 ]
 
-Smatch complains that the "path_data->handle" variable is user controlled.
-It comes from iscsi_set_path() so that seems possible.  It's harmless to
-add a limit check.
+Add PHY reset GPIO on AV96 ethernet PHY.
 
-The qedi->ep_tbl[] array has qedi->max_active_conns elements (which is
-always ISCSI_MAX_SESS_PER_HBA (4096) elements).  The array is allocated in
-the qedi_cm_alloc_mem() function.
-
-Link: https://lore.kernel.org/r/20200428131939.GA696531@mwanda
-Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Patrice Chotard <patrice.chotard@st.com>
+Cc: Patrick Delaunay <patrick.delaunay@st.com>
+Cc: linux-stm32@st-md-mailman.stormreply.com
+To: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 8829880a54c38..84a639698343c 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -1214,6 +1214,10 @@ static int qedi_set_path(struct Scsi_Host *shost, struct iscsi_path *path_data)
- 	}
- 
- 	iscsi_cid = (u32)path_data->handle;
-+	if (iscsi_cid >= qedi->max_active_conns) {
-+		ret = -EINVAL;
-+		goto set_path_exit;
-+	}
- 	qedi_ep = qedi->ep_tbl[iscsi_cid];
- 	QEDI_INFO(&qedi->dbg_ctx, QEDI_LOG_INFO,
- 		  "iscsi_cid=0x%x, qedi_ep=%p\n", iscsi_cid, qedi_ep);
+diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+index 2e4742c53d048..7b8c3f25861c9 100644
+--- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
++++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+@@ -91,6 +91,9 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		compatible = "snps,dwmac-mdio";
++		reset-gpios = <&gpioz 2 GPIO_ACTIVE_LOW>;
++		reset-delay-us = <1000>;
++
+ 		phy0: ethernet-phy@7 {
+ 			reg = <7>;
+ 		};
 -- 
 2.25.1
 
