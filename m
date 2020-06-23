@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0146FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3DE92064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858B9206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944193;
-	bh=nYC6zV5cB3CqsqUoi8Se6DDAWTT7b6VGwCCfLbThw9k=;
+	s=default; t=1592944198;
+	bh=VfL9CLyZVLIp2zfGthrYY2e/74QZ38cKLsJZHIQkQwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uq/fFhyeo6rPM+ZNgS8kVPWPdDKlC849JCaflXxH5wH+nejeu0jK9YWcHQ/C6wEPs
-	 EuqSgWZ/6iZayJ6/Rip+GUPtpwh2TFwFu2yUKq8OoOiGGiN/oOE17jH0Nb98bsqU8I
-	 jKskfZb+FEue8q+ZkPhi/ZGExi8i4JSF9DbLPv4A=
+	b=n/FuV7KBKMTWB1pArqruaUFM/JnmiNQSC5MoXa9LJR8qSGpe0yq703UrxSwR7C4SF
+	 e7JIC1GauUHjRJW1wZ7CAzOAc9MLV9ALtTra8qhJx8TrhaN84Carlr96J53JYnNyX/
+	 W8ZdDDRl+UdwR4RPoq39HiwQ6ZCRlhZriSlEeitA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391040AbgFWU3u (ORCPT
+        id S2391094AbgFWU34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391009AbgFWU3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:29:38 -0400
+        id S2391018AbgFWU3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 800C02064B;
-        Tue, 23 Jun 2020 20:29:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 316C82064B;
+        Tue, 23 Jun 2020 20:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944179;
-        bh=nYC6zV5cB3CqsqUoi8Se6DDAWTT7b6VGwCCfLbThw9k=;
+        s=default; t=1592944186;
+        bh=VfL9CLyZVLIp2zfGthrYY2e/74QZ38cKLsJZHIQkQwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xB0lZqfRrd7ukt9Ufz8Cd4/mBQjc05e50pSMm9ra1221DZy3Zi1IOVSrqMi6eZ28m
-         36+9W/qfjgz/1CwH7wsyZNCNIWUz+n1bEo6gkMVvRLIzxBupqrgGPuv7cjD6e8FZV1
-         w+eS7Cv7r/2Ib6LaqIxrWXA8IwNGh9KArABUQnY4=
+        b=xIYW8dfmXWnoogIlN7dadE7HuPexQdK17aUzE2ivIl2w0xm9xPEjQRZdtXN5wMtJZ
+         Q4ggRrrvNYHBpzCt/h3G6tp5C1mV776rJWzvrdVZCfQvmG9iobDNrMyfx1HD1V2eva
+         /iH4vsk/RjPhzPCIx16t5SsJHmyWzNtoAs+1QBIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 204/314] vfio/mdev: Fix reference count leak in add_mdev_supported_type
-Date:   Tue, 23 Jun 2020 21:56:39 +0200
-Message-Id: <20200623195348.653071300@linuxfoundation.org>
+Subject: [PATCH 5.4 207/314] rxrpc: Adjust /proc/net/rxrpc/calls to display call->debug_id not user_ID
+Date:   Tue, 23 Jun 2020 21:56:42 +0200
+Message-Id: <20200623195348.793829014@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,39 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit aa8ba13cae3134b8ef1c1b6879f66372531da738 ]
+[ Upstream commit 32f71aa497cfb23d37149c2ef16ad71fce2e45e2 ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Thus,
-replace kfree() by kobject_put() to fix this issue. Previous
-commit "b8eb718348b8" fixed a similar problem.
+The user ID value isn't actually much use - and leaks a kernel pointer or a
+userspace value - so replace it with the call debug ID, which appears in trace
+points.
 
-Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/mdev/mdev_sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rxrpc/proc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-index 7570c7602ab40..f32c582611eb6 100644
---- a/drivers/vfio/mdev/mdev_sysfs.c
-+++ b/drivers/vfio/mdev/mdev_sysfs.c
-@@ -110,7 +110,7 @@ static struct mdev_type *add_mdev_supported_type(struct mdev_parent *parent,
- 				   "%s-%s", dev_driver_string(parent->dev),
- 				   group->name);
- 	if (ret) {
--		kfree(type);
-+		kobject_put(&type->kobj);
- 		return ERR_PTR(ret);
+diff --git a/net/rxrpc/proc.c b/net/rxrpc/proc.c
+index 8b179e3c802a1..543afd9bd6642 100644
+--- a/net/rxrpc/proc.c
++++ b/net/rxrpc/proc.c
+@@ -68,7 +68,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
+ 			 "Proto Local                                          "
+ 			 " Remote                                         "
+ 			 " SvID ConnID   CallID   End Use State    Abort   "
+-			 " UserID           TxSeq    TW RxSeq    RW RxSerial RxTimo\n");
++			 " DebugId  TxSeq    TW RxSeq    RW RxSerial RxTimo\n");
+ 		return 0;
  	}
  
+@@ -100,7 +100,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
+ 	rx_hard_ack = READ_ONCE(call->rx_hard_ack);
+ 	seq_printf(seq,
+ 		   "UDP   %-47.47s %-47.47s %4x %08x %08x %s %3u"
+-		   " %-8.8s %08x %lx %08x %02x %08x %02x %08x %06lx\n",
++		   " %-8.8s %08x %08x %08x %02x %08x %02x %08x %06lx\n",
+ 		   lbuff,
+ 		   rbuff,
+ 		   call->service_id,
+@@ -110,7 +110,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
+ 		   atomic_read(&call->usage),
+ 		   rxrpc_call_states[call->state],
+ 		   call->abort_code,
+-		   call->user_call_ID,
++		   call->debug_id,
+ 		   tx_hard_ack, READ_ONCE(call->tx_top) - tx_hard_ack,
+ 		   rx_hard_ack, READ_ONCE(call->rx_top) - rx_hard_ack,
+ 		   call->rx_serial,
 -- 
 2.25.1
 
