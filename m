@@ -2,198 +2,68 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ECBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CB42072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1T1Qono"
+	by mail.kernel.org (Postfix) with ESMTP id 8129320738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732597AbgFWMl1 (ORCPT
+        id S1732586AbgFWMmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729611AbgFWMl0 (ORCPT
+        Tue, 23 Jun 2020 08:42:14 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:41205 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729504AbgFWMmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:41:26 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC92C061573;
-        Tue, 23 Jun 2020 05:41:25 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id t194so3044701wmt.4;
-        Tue, 23 Jun 2020 05:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uudyXPmH4K+yrXT/65FBE/u5/bFJbJPus9HjMbmfelU=;
-        b=b1T1QonovDjAAKw3+0p/5r+gqachr/nXLStstkoUSpbKOsP08qa7jVVE90RkGUNJgE
-         9GAKldFVs/QctI0jaz9z0hKGczwJqGPPU4xFkkkj5+K51LvSMl+KE5V70CHzldzt3MYQ
-         C1h0VXvBV2VadSy5SLo3cptAQU+I6de4N2PdO8uqr9rXcjeZ5NLCNYoypDMbQLeIjepL
-         OV3LcqlZEbRFmAgd/FmdYBumZW73JJ0IH8prfIeCttVrUByxdCfZBbUCtX/JliL6aFki
-         f/F8BCiJ6IEpUUzVu1gnvVQoLR30yX7S+9So+gfYX6jyrnlyKOt4dPHHUPhW8QMCsLN+
-         0EJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=uudyXPmH4K+yrXT/65FBE/u5/bFJbJPus9HjMbmfelU=;
-        b=lIoSmwFVpbKG89fnAG/dJ6s6aQuqNNVzDfFeRWRZo1Vr3C093tdeYLayF3pvztU0ZV
-         zb0wuyK7Y8zNTZVtt1isxJQhBsdVWXzRLGjwTYgfK8oVqrIHPJbU9MCZz30dD+63ZBya
-         ge45tJ4H7IptTuGElltO1HhjFlMbKAPkpMfN1NdC06xonfF/Wq8OFyPV5jKrM994uQui
-         qRlQkfWzD5M46nlzynoZTu+pGg8YOKfKK0J9TF/O+kD6L2erGL6vH5TnIOJoCshOklKD
-         mCPtLhY3w4XAT8enTFoPWBllNNHF+sEK1pKfZwhZMmAKLSwcqHml956StFF2rYUOoYB6
-         fO9g==
-X-Gm-Message-State: AOAM530Xt9SSq43xD69zssYTmj7mcpG0Pdsz0HL+/Nc82BcrBoQUrYb9
-        t8huhibxfbkIXgyZAxHPfhFpqHKb
-X-Google-Smtp-Source: ABdhPJxzI5YsFNYkNy0DPB9ktvhLhkWqlcVEs8OAaanY4X48AOvK5sHWxdRfXL5P+H6zcTKaAQ9N+g==
-X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr5037879wmg.118.1592916084323;
-        Tue, 23 Jun 2020 05:41:24 -0700 (PDT)
-Received: from [192.168.43.181] ([5.100.193.85])
-        by smtp.gmail.com with ESMTPSA id f16sm3719586wmh.27.2020.06.23.05.41.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 05:41:23 -0700 (PDT)
-Subject: Re: [PATCH 15/15] io_uring: support true async buffered reads, if
- file provides it
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>
-References: <20200618144355.17324-1-axboe@kernel.dk>
- <20200618144355.17324-16-axboe@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <029947e3-7615-e446-3194-d48827730e1d@gmail.com>
-Date:   Tue, 23 Jun 2020 15:39:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 23 Jun 2020 08:42:13 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U0W2m8i_1592916130;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0W2m8i_1592916130)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 23 Jun 2020 20:42:11 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     mgorman@suse.de, akpm@linux-foundation.org,
+        richard.weiyang@linux.alibaba.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] mm/page_alloc.c: replace the definition of NR_MIGRATETYPE_BITS with PB_migratetype_bits
+Date:   Tue, 23 Jun 2020 20:41:58 +0800
+Message-Id: <20200623124201.8199-1-richard.weiyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20200618144355.17324-16-axboe@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2020 17:43, Jens Axboe wrote:
-> If the file is flagged with FMODE_BUF_RASYNC, then we don't have to punt
-> the buffered read to an io-wq worker. Instead we can rely on page
-> unlocking callbacks to support retry based async IO. This is a lot more
-> efficient than doing async thread offload.
-> 
-> The retry is done similarly to how we handle poll based retry. From
-> the unlock callback, we simply queue the retry to a task_work based
-> handler.
-> 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> ---
->  fs/io_uring.c | 145 +++++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 137 insertions(+), 8 deletions(-)
-> 
-...
->  static int io_read(struct io_kiocb *req, bool force_nonblock)
->  {
->  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
-> @@ -2784,10 +2907,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
->  		unsigned long nr_segs = iter.nr_segs;
->  		ssize_t ret2 = 0;
->  
-> -		if (req->file->f_op->read_iter)
-> -			ret2 = call_read_iter(req->file, kiocb, &iter);
-> -		else
-> -			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
-> +		ret2 = io_iter_do_read(req, &iter);
->  
->  		/* Catch -EAGAIN return for forced non-blocking submission */
->  		if (!force_nonblock || (ret2 != -EAGAIN && ret2 != -EIO)) {
-> @@ -2799,17 +2919,26 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
->  			ret = io_setup_async_rw(req, io_size, iovec,
->  						inline_vecs, &iter);
->  			if (ret)
-> -				goto out_free;
-> +				goto out;
->  			/* any defer here is final, must blocking retry */
->  			if (!(req->flags & REQ_F_NOWAIT) &&
->  			    !file_can_poll(req->file))
->  				req->flags |= REQ_F_MUST_PUNT;
-> +			/* if we can retry, do so with the callbacks armed */
-> +			if (io_rw_should_retry(req)) {
-> +				ret2 = io_iter_do_read(req, &iter);
-> +				if (ret2 == -EIOCBQUEUED) {
-> +					goto out;
-> +				} else if (ret2 != -EAGAIN) {
-> +					kiocb_done(kiocb, ret2);
-> +					goto out;
-> +				}
-> +			}
-> +			kiocb->ki_flags &= ~IOCB_WAITQ;
->  			return -EAGAIN;
->  		}
->  	}
-> -out_free:
-> -	kfree(iovec);
-> -	req->flags &= ~REQ_F_NEED_CLEANUP;
+We already have the definition of PB_migratetype_bits and current
+NR_MIGRATETYPE_BITS looks like a cyclic definition.
 
-This looks fishy. For instance, if it fails early on rw_verify_area(), how would
-it free yet on-stack iovec? Is it handled somehow?
+Just use PB_migratetype_bits is enough.
 
-> +out:
->  	return ret;
->  }
->  
-> 
+Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+---
+ include/linux/mmzone.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index df1f08486d81..eeb0da54ff5f 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -88,8 +88,7 @@ static inline bool is_migrate_movable(int mt)
+ 
+ extern int page_group_by_mobility_disabled;
+ 
+-#define NR_MIGRATETYPE_BITS (PB_migrate_end - PB_migrate + 1)
+-#define MIGRATETYPE_MASK ((1UL << NR_MIGRATETYPE_BITS) - 1)
++#define MIGRATETYPE_MASK ((1UL << PB_migratetype_bits) - 1)
+ 
+ #define get_pageblock_migratetype(page)					\
+ 	get_pfnblock_flags_mask(page, page_to_pfn(page),		\
 -- 
-Pavel Begunkov
+2.20.1 (Apple Git-117)
+
