@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8665D2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251862072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948208;
-	bh=FHSj8TZnsz1D0Yt76ksismIfOCjetZenOZ7Njffc0GY=;
+	s=default; t=1592948213;
+	bh=LWrU2odKBmE+FGHvUwgpN2pqOAW6X870RH4Af62eFBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OECCBfmPQFu+3yRcDtNyq+AHqcZ0eKVs6awHIVwWWf0SpAXDWgI3iq6WriOgGzyny
-	 qeGI/pxUt3lAvsjXUek9AXplrzX5ERXIa6ybQenvP9vYFTHb5dcwnQ86Ouyvb/GXrz
-	 83rad3pTh5GIa++yJoOUjEmP1cM0F3cIj0NJSnY8=
+	b=HO55JI5dOt15s0BzaFZKOFHXf0Rj+8Wg7kK6TxfhuGboNSWm4JhFocMs7OO3Q/w3U
+	 JZq7Lq6KOFny/E0TZGmDLjVoqKhTxkXO7h19NN88vk9rl5zmw3shlG1XomFF1yH8Ps
+	 dYCQJBz5csb399k/sbYpq1nYKOLcsabfIsNxgPn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393683AbgFWVgq (ORCPT
+        id S2393817AbgFWVgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50742 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388736AbgFWUJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:36 -0400
+        id S2388714AbgFWUJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E5C206C3;
-        Tue, 23 Jun 2020 20:09:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 037D320E65;
+        Tue, 23 Jun 2020 20:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942975;
-        bh=FHSj8TZnsz1D0Yt76ksismIfOCjetZenOZ7Njffc0GY=;
+        s=default; t=1592942968;
+        bh=LWrU2odKBmE+FGHvUwgpN2pqOAW6X870RH4Af62eFBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pFLwTmCWEx15iwZdlMn7gMTDpydBwRLy6hBrkYyvCrlvvx3R5Q+Dhrl7qFP1tC24N
-         nmOYxnrAyqSPHaq7+vozj9ZxU054lGB7mgy7nCw2kOLDj19irz61quEF/r+YrTo+m1
-         VkugAZNYVI0EArVw6+2idVIxIre+t1lNPX5fnJW0=
+        b=yS5Q5RlLVzZ2T4yfZ36z8ZtjJaym/n/tUkTUbkd8yZ6V9EQUA91edGxgbKHrYjJ8D
+         dmC1dEMV+U6mzkTTzP5lV4q1bACFCnAyqCpMcz0Aucq20qedSRlwk00WaO2VMXm1Pn
+         uLZehHcz+Qd3BalYod/XBE4TunQdpPgtQQ80uOU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Omer Shpigelman <oshpigelman@habana.ai>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 210/477] habanalabs: increase timeout during reset
-Date:   Tue, 23 Jun 2020 21:53:27 +0200
-Message-Id: <20200623195417.506979844@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 176/477] ALSA: firewire-lib: fix invalid assignment to union data for directional parameter
+Date:   Tue, 23 Jun 2020 21:52:53 +0200
+Message-Id: <20200623195415.900242027@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,42 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 7a65ee046b2238e053f6ebb610e1a082cfc49490 ]
+[ Upstream commit 8304cf77c92038cd1c50c27b69d30be695cc8003 ]
 
-When doing training, the DL framework (e.g. tensorflow) performs hundreds
-of thousands of memory allocations and mappings. In case the driver needs
-to perform hard-reset during training, the driver kills the application and
-unmaps all those memory allocations. Unfortunately, because of that large
-amount of mappings, the driver isn't able to do that in the current timeout
-(5 seconds). Therefore, increase the timeout significantly to 30 seconds
-to avoid situation where the driver resets the device with active mappings,
-which sometime can cause a kernel bug.
+Although the value of FDF is used just for outgoing stream, the assignment
+to union member is done for both directions of stream. At present this
+causes no issue because the value of same position is reassigned later for
+opposite stream. However, it's better to add if statement.
 
-BTW, it doesn't mean we will spend all the 30 seconds because the reset
-thread checks every one second if the unmap operation is done.
-
-Reviewed-by: Omer Shpigelman <oshpigelman@habana.ai>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Fixes: d3d10a4a1b19 ("ALSA: firewire-lib: use union for directional parameters")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200508043635.349339-2-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/habanalabs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/firewire/amdtp-am824.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 31ebcf9458fe1..a6dd8e6ca594c 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -23,7 +23,7 @@
+diff --git a/sound/firewire/amdtp-am824.c b/sound/firewire/amdtp-am824.c
+index 67d735e9a6a4c..fea92e148790f 100644
+--- a/sound/firewire/amdtp-am824.c
++++ b/sound/firewire/amdtp-am824.c
+@@ -82,7 +82,8 @@ int amdtp_am824_set_parameters(struct amdtp_stream *s, unsigned int rate,
+ 	if (err < 0)
+ 		return err;
  
- #define HL_MMAP_CB_MASK			(0x8000000000000000ull >> PAGE_SHIFT)
+-	s->ctx_data.rx.fdf = AMDTP_FDF_AM824 | s->sfc;
++	if (s->direction == AMDTP_OUT_STREAM)
++		s->ctx_data.rx.fdf = AMDTP_FDF_AM824 | s->sfc;
  
--#define HL_PENDING_RESET_PER_SEC	5
-+#define HL_PENDING_RESET_PER_SEC	30
- 
- #define HL_DEVICE_TIMEOUT_USEC		1000000 /* 1 s */
- 
+ 	p->pcm_channels = pcm_channels;
+ 	p->midi_ports = midi_ports;
 -- 
 2.25.1
 
