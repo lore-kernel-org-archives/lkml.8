@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE683C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C7E20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F14420724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947600;
-	bh=aOUdI9uRoCxAKootm2RDpqEy5nNznUOHDF9tGkse2iQ=;
+	s=default; t=1592947607;
+	bh=vA9mbqZEwE/CjXhTZ2ZQxo2eR5Oz8BcJq2rZsxxh6Wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dpNcg678bU2QoiCf5IpiQroe2vVxGbq/wWY3EWiGux1VAQRJJJhbm6zPljt6svj+r
-	 HEuD2fMAYvDj5bfRebSXPlvh+hxxbFobchpAPvjHl7mI3pIvUeA0SzRNuKQoyJ6v+9
-	 aB7lUhWbnl29AreVUaA2NuAhguOtT7kRnEuVqi44=
+	b=sYMAIr7l5z6rUMNRcHAB4Ax3NcUdnqPQl8Naddc5W42bVsY0i84UjGuvYkEbGn3uk
+	 //n9L2RUFYtouEiNPlCeJUEoHZoCWGezkwS2zktAfSeYXa1JreDqi6WP//QrUmr5Uf
+	 xSF4EKWO7za+smorKoOWeYEw+pTYlz9x7w5jjOXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392047AbgFWV0i (ORCPT
+        id S2392109AbgFWV0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:26:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34202 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:26:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389592AbgFWURr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:47 -0400
+        id S2388755AbgFWURq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF1E32137B;
-        Tue, 23 Jun 2020 20:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409E520E65;
+        Tue, 23 Jun 2020 20:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943467;
-        bh=aOUdI9uRoCxAKootm2RDpqEy5nNznUOHDF9tGkse2iQ=;
+        s=default; t=1592943464;
+        bh=vA9mbqZEwE/CjXhTZ2ZQxo2eR5Oz8BcJq2rZsxxh6Wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cIOJS2o/btazfsd6IMzkDz4jPs256F3SRvg1/rRsKCpenM4SdEXF7P3P2dkiFnI62
-         Zw3y7qpyrZboX2hU0Rsp1cjVVS4UEnZUbQosdf+i8qmO2s+lYBa3MXYyHT2MMMy2RQ
-         rXVRnFMGBR+74Iuf/gnEAJakOJdHcyjDC8T6YlEI=
+        b=WvrJWGE9SAImF8YGucKDP1jy+RcSvJUGYgbwTe5moftb/Rwg3WZK3ihLYzK8nPKJe
+         csBFnZ2hIgoESlRgneHu8gzTZI7eE0NUrUKB3r/LmGYf3/o/jfdy4eHHefcTr/Zzh7
+         glx+FKyg4qxFVYD/9ATahBD/MItxIBT+A0f1mqqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        stable@vger.kernel.org, Zheng Bin <zhengbin13@huawei.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 373/477] NFS: Fix direct WRITE throughput regression
-Date:   Tue, 23 Jun 2020 21:56:10 +0200
-Message-Id: <20200623195425.160972368@linuxfoundation.org>
+Subject: [PATCH 5.7 372/477] nfs: set invalid blocks after NFSv4 writes
+Date:   Tue, 23 Jun 2020 21:56:09 +0200
+Message-Id: <20200623195425.114179823@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,48 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Zheng Bin <zhengbin13@huawei.com>
 
-[ Upstream commit ba838a75e73f55a780f1ee896b8e3ecb032dba0f ]
+[ Upstream commit 3a39e778690500066b31fe982d18e2e394d3bce2 ]
 
-I measured a 50% throughput regression for large direct writes.
+Use the following command to test nfsv4(size of file1M is 1MB):
+mount -t nfs -o vers=4.0,actimeo=60 127.0.0.1/dir1 /mnt
+cp file1M /mnt
+du -h /mnt/file1M  -->0 within 60s, then 1M
 
-The observed on-the-wire behavior is that the client sends every
-NFS WRITE twice: once as an UNSTABLE WRITE plus a COMMIT, and once
-as a FILE_SYNC WRITE.
+When write is done(cp file1M /mnt), will call this:
+nfs_writeback_done
+  nfs4_write_done
+    nfs4_write_done_cb
+      nfs_writeback_update_inode
+        nfs_post_op_update_inode_force_wcc_locked(change, ctime, mtime
+nfs_post_op_update_inode_force_wcc_locked
+   nfs_set_cache_invalid
+   nfs_refresh_inode_locked
+     nfs_update_inode
 
-This is because the nfs_write_match_verf() check in
-nfs_direct_commit_complete() fails for every WRITE.
+nfsd write response contains change, ctime, mtime, the flag will be
+clear after nfs_update_inode. Howerver, write response does not contain
+space_used, previous open response contains space_used whose value is 0,
+so inode->i_blocks is still 0.
 
-Buffered writes use nfs_write_completion(), which sets req->wb_verf
-correctly. Direct writes use nfs_direct_write_completion(), which
-does not set req->wb_verf at all. This leaves req->wb_verf set to
-all zeroes for every direct WRITE, and thus
-nfs_direct_commit_completion() always sets NFS_ODIRECT_RESCHED_WRITES.
+nfs_getattr  -->called by "du -h"
+  do_update |= force_sync || nfs_attribute_cache_expired -->false in 60s
+  cache_validity = READ_ONCE(NFS_I(inode)->cache_validity)
+  do_update |= cache_validity & (NFS_INO_INVALID_ATTR    -->false
+  if (do_update) {
+        __nfs_revalidate_inode
+  }
 
-This fix appears to restore nearly all of the lost performance.
+Within 60s, does not send getattr request to nfsd, thus "du -h /mnt/file1M"
+is 0.
 
-Fixes: 1f28476dcb98 ("NFS: Fix O_DIRECT commit verifier handling")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Add a NFS_INO_INVALID_BLOCKS flag, set it when nfsv4 write is done.
+
+Fixes: 16e143751727 ("NFS: More fine grained attribute tracking")
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfs/inode.c         | 14 +++++++++++---
+ include/linux/nfs_fs.h |  1 +
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index a57e7c72c7f47..d49b1d1979084 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -731,6 +731,8 @@ static void nfs_direct_write_completion(struct nfs_pgio_header *hdr)
- 		nfs_list_remove_request(req);
- 		if (request_commit) {
- 			kref_get(&req->wb_kref);
-+			memcpy(&req->wb_verf, &hdr->verf.verifier,
-+			       sizeof(req->wb_verf));
- 			nfs_mark_request_commit(req, hdr->lseg, &cinfo,
- 				hdr->ds_commit_idx);
- 		}
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index b9d0921cb4fe3..0bf1f835de014 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -833,6 +833,8 @@ int nfs_getattr(const struct path *path, struct kstat *stat,
+ 		do_update |= cache_validity & NFS_INO_INVALID_ATIME;
+ 	if (request_mask & (STATX_CTIME|STATX_MTIME))
+ 		do_update |= cache_validity & NFS_INO_REVAL_PAGECACHE;
++	if (request_mask & STATX_BLOCKS)
++		do_update |= cache_validity & NFS_INO_INVALID_BLOCKS;
+ 	if (do_update) {
+ 		/* Update the attribute cache */
+ 		if (!(server->flags & NFS_MOUNT_NOAC))
+@@ -1764,7 +1766,8 @@ out_noforce:
+ 	status = nfs_post_op_update_inode_locked(inode, fattr,
+ 			NFS_INO_INVALID_CHANGE
+ 			| NFS_INO_INVALID_CTIME
+-			| NFS_INO_INVALID_MTIME);
++			| NFS_INO_INVALID_MTIME
++			| NFS_INO_INVALID_BLOCKS);
+ 	return status;
+ }
+ 
+@@ -1871,7 +1874,8 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
+ 			| NFS_INO_INVALID_ATIME
+ 			| NFS_INO_REVAL_FORCED
+-			| NFS_INO_REVAL_PAGECACHE);
++			| NFS_INO_REVAL_PAGECACHE
++			| NFS_INO_INVALID_BLOCKS);
+ 
+ 	/* Do atomic weak cache consistency updates */
+ 	nfs_wcc_update_inode(inode, fattr);
+@@ -2033,8 +2037,12 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 		inode->i_blocks = nfs_calc_block_size(fattr->du.nfs3.used);
+ 	} else if (fattr->valid & NFS_ATTR_FATTR_BLOCKS_USED)
+ 		inode->i_blocks = fattr->du.nfs2.blocks;
+-	else
++	else {
++		nfsi->cache_validity |= save_cache_validity &
++				(NFS_INO_INVALID_BLOCKS
++				| NFS_INO_REVAL_FORCED);
+ 		cache_revalidated = false;
++	}
+ 
+ 	/* Update attrtimeo value if we're out of the unstable period */
+ 	if (attr_changed) {
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 73eda45f1cfd9..6ee9119acc5d9 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -230,6 +230,7 @@ struct nfs4_copy_state {
+ #define NFS_INO_INVALID_OTHER	BIT(12)		/* other attrs are invalid */
+ #define NFS_INO_DATA_INVAL_DEFER	\
+ 				BIT(13)		/* Deferred cache invalidation */
++#define NFS_INO_INVALID_BLOCKS	BIT(14)         /* cached blocks are invalid */
+ 
+ #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
+ 		| NFS_INO_INVALID_CTIME \
 -- 
 2.25.1
 
