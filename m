@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5A4C20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED48C2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872313;
-	bh=3XxXc/vNDqGq7CdQmSK0xiKg/uFoGBJdCE+lcZMiNG0=;
+	s=default; t=1592872316;
+	bh=NikS6kZnJMgfWoKPGbJkJ7wcM3dKwmIyQMIP+gNRW3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f5BOSe941tZOuyFHUKfKg0XPulJx4fA4LcTX/Q4pTMhF7tqH1HiYFIDBoygbsHfuu
-	 Mt0vmg8zI/jGw14F82nZsiPIDIwHKl9pFt92cWSeX94eZ8e7cbhCw8pXX1ekb8vLNe
-	 /jpPKl+umvcFM3fv0UmEMBJzHXDXUuxNW7oAbmZQ=
+	b=nRGu9n6u2cN3BjzTye2sFcil2guC+hd3Kd9rA5vlykMORvZY2lltLWcTCIU3OpWGh
+	 EzIHvw67pmBRRc6KcO2PbPbejxz4ZDph+QBVxlGKQRQC50XUK5k5FOidkOuVcQMbcZ
+	 x++gLOzAhr9bmCdOz35Y8i4rtL/DHHWMufWkoY4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731933AbgFWAbv (ORCPT
+        id S1731941AbgFWAby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:31:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55236 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731670AbgFWAaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:30:18 -0400
+        id S1731664AbgFWAaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:30:17 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3763720890;
-        Tue, 23 Jun 2020 00:30:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E3320842;
+        Tue, 23 Jun 2020 00:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872218;
-        bh=3XxXc/vNDqGq7CdQmSK0xiKg/uFoGBJdCE+lcZMiNG0=;
+        s=default; t=1592872217;
+        bh=NikS6kZnJMgfWoKPGbJkJ7wcM3dKwmIyQMIP+gNRW3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hfCcutqR4Zj8Ey3NlqfJgqRPVNHih4rhp5YP9bARscI2zhrHLhRTt5iXbJG9nU9Vk
-         Fgs0+qmouLEm1EvA4CMUOEtvY3zUV4Ug+gSlo91/12FTlRA01Pi956I5CCWS/Go2NT
-         3ObunPeBedG2j4jwfExFZ2rnsrZbM2sDKVUq6iKE=
+        b=lW18rELvBcG5P/gw3h4KtzvoPbD183FWVQs9E6efVbxIDvE9l+S7xhnUKbuliGY5i
+         TSgsMnWdY0w9y10FjmcGAZah6cMEwkFz2xy7qmJDe5WAcVeadFkMevkZlLVJnmU/8i
+         NOI2UhRvfdU6mrNB8rHX80mUtOmrpegsIgXSbWAs=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 15/30] refperf: More closely synchronize reader start times
-Date:   Mon, 22 Jun 2020 17:29:58 -0700
-Message-Id: <20200623003013.26252-15-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 12/30] refperf: Make functions static
+Date:   Mon, 22 Jun 2020 17:29:55 -0700
+Message-Id: <20200623003013.26252-12-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002941.GA26089@paulmck-ThinkPad-P72>
 References: <20200623002941.GA26089@paulmck-ThinkPad-P72>
@@ -61,53 +61,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Currently, readers are awakened individually.  On most systems, this
-results in significant wakeup delay from one reader to the next, which
-can result in the first and last reader having sole access to the
-synchronization primitive in question.  If that synchronization primitive
-involves shared memory, those readers will rack up a huge number of
-operations in a very short time, causing large perturbations in the
-results.
+Because the reset_readers() and process_durations() functions are used
+only within kernel/rcu/refperf.c, this commit makes them static.
 
-This commit therefore has the readers busy-wait after being awakened,
-and uses a new n_started variable to synchronize their start times.
-
+Reported-by: kbuild test robot <lkp@intel.com>
 Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/refperf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/rcu/refperf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-index 2fd3ed1..234bb0e 100644
+index fc940e3..0a900f3 100644
 --- a/kernel/rcu/refperf.c
 +++ b/kernel/rcu/refperf.c
-@@ -99,6 +99,7 @@ static atomic_t nreaders_exp;
+@@ -283,7 +283,7 @@ ref_perf_reader(void *arg)
+ 	return 0;
+ }
  
- // Use to wait for all threads to start.
- static atomic_t n_init;
-+static atomic_t n_started;
+-void reset_readers(void)
++static void reset_readers(void)
+ {
+ 	int i;
+ 	struct reader_task *rt;
+@@ -296,7 +296,7 @@ void reset_readers(void)
+ }
  
- // Track which experiment is currently running.
- static int exp_idx;
-@@ -253,6 +254,9 @@ ref_perf_reader(void *arg)
- 	WARN_ON_ONCE(smp_processor_id() != me);
- 
- 	WRITE_ONCE(rt->start_reader, 0);
-+	if (!atomic_dec_return(&n_started))
-+		while (atomic_read_acquire(&n_started))
-+			cpu_relax();
- 
- 	VERBOSE_PERFOUT("ref_perf_reader %ld: experiment %d started", me, exp_idx);
- 
-@@ -367,6 +371,7 @@ static int main_func(void *arg)
- 
- 		reset_readers();
- 		atomic_set(&nreaders_exp, nreaders);
-+		atomic_set(&n_started, nreaders);
- 
- 		exp_idx = exp;
- 
+ // Print the results of each reader and return the sum of all their durations.
+-u64 process_durations(int n)
++static u64 process_durations(int n)
+ {
+ 	int i;
+ 	struct reader_task *rt;
 -- 
 2.9.5
 
