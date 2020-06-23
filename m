@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD22EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB457C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862E820702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DB820702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945548;
-	bh=E6trreKOq08MadMW0fAVgORvOM/a9Y36lusfwYyNt4U=;
+	s=default; t=1592945555;
+	bh=FErfLAtSgFwdrckrYiDutcgWgLZ2rUZ1zmULEUoVWeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JVxahcp+qF4G85Aev/yaQiCaJdaMF/lFNcJiytM8UqzQ6YMrSBgPP7lDGelbwAhHb
-	 G45Nc4E2DxWTVWoZF1uzdBNXmBSeanisTFO9B7io87imFSb2MbzXd3qje+1l5NvRJg
-	 mJfnNSHIdcazX3oY0BzmSVGY6MK9f7+vaQtAH3HE=
+	b=T8fRq0bMyKKlqvP+azPnJkcWKzgTDedcav0MTuCWigCUYUZX0/Zt0ZzG4eUz2xHJS
+	 HAtmKw/znuaOBvz2GDOCgQVg4QTCL9VWlJyytIklUwWwRaVSF+7jmP5WdpggsC73nE
+	 vPxmHeDN1jlILL5YXoPGAuaLEILpV5t1nDGJOy74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404040AbgFWUw1 (ORCPT
+        id S2404073AbgFWUwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46012 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404053AbgFWUrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:47:32 -0400
+        id S2392679AbgFWUrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:47:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48AE62098B;
-        Tue, 23 Jun 2020 20:47:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CF5620781;
+        Tue, 23 Jun 2020 20:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945252;
-        bh=E6trreKOq08MadMW0fAVgORvOM/a9Y36lusfwYyNt4U=;
+        s=default; t=1592945245;
+        bh=FErfLAtSgFwdrckrYiDutcgWgLZ2rUZ1zmULEUoVWeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJRhe74PHINcodBpmKP7WDHJq5Ufv6Wnumic7W80UI6NebpCxMh9s26ruPDUOe9+j
-         GrnpkEYCBgqlXoEAeITP/U04EuAbc2luJ7ZRoEPuxTgpJ0DEJHG26vpVDNBc8wNJWq
-         9mODeU3LLAQnx8rmH/bPvHzboRLTwI0R+8DN5lUA=
+        b=JrrX3HfuXU1RPJvEh1t10dwP/sFTdE+k0YxjTXlHBz97rO4E8BZ0YdD6hz7iinZ5R
+         QTJ8J8kEI7mjQfjnz6r9ReRd+wNEsFcAcixfCt2ljCnGgOalyZAp7ZOpV2mTgZX/2w
+         xZ/t7sOavTeDb/QcaPGT9tYcjzPlW1HqczIVy4pE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 097/136] blktrace: use errno instead of bi_status
-Date:   Tue, 23 Jun 2020 21:59:13 +0200
-Message-Id: <20200623195308.548366419@linuxfoundation.org>
+        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 068/136] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
+Date:   Tue, 23 Jun 2020 21:58:44 +0200
+Message-Id: <20200623195307.112744100@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,48 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 48bc3cd3e07a1486f45d9971c75d6090976c3b1b ]
+[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
 
-In blk_add_trace_spliti() blk_add_trace_bio_remap() use
-blk_status_to_errno() to pass the error instead of pasing the bi_status.
-This fixes the sparse warning.
+Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
+not account for the fact that Switch Downstream Ports are not permitted to
+have a PTM capability; their PTM behavior is controlled by the Upstream
+Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
+capability, we did not mark them as "ptm_enabled", which meant that
+pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
+enabled.
+
+Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
+Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index a60c09e0bda87..30a98156f4743 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1022,8 +1022,10 @@ static void blk_add_trace_split(void *ignore,
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 3008bba360f35..ec6f6213960b4 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -47,10 +47,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	if (!pci_is_pcie(dev))
+ 		return;
  
- 		__blk_add_trace(bt, bio->bi_iter.bi_sector,
- 				bio->bi_iter.bi_size, bio_op(bio), bio->bi_opf,
--				BLK_TA_SPLIT, bio->bi_status, sizeof(rpdu),
--				&rpdu, blk_trace_bio_get_cgid(q, bio));
-+				BLK_TA_SPLIT,
-+				blk_status_to_errno(bio->bi_status),
-+				sizeof(rpdu), &rpdu,
-+				blk_trace_bio_get_cgid(q, bio));
- 	}
- 	rcu_read_unlock();
- }
-@@ -1060,7 +1062,8 @@ static void blk_add_trace_bio_remap(void *ignore,
- 	r.sector_from = cpu_to_be64(from);
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+-	if (!pos)
+-		return;
+-
+ 	/*
+ 	 * Enable PTM only on interior devices (root ports, switch ports,
+ 	 * etc.) on the assumption that it causes no link traffic until an
+@@ -60,6 +56,23 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
+ 		return;
  
- 	__blk_add_trace(bt, bio->bi_iter.bi_sector, bio->bi_iter.bi_size,
--			bio_op(bio), bio->bi_opf, BLK_TA_REMAP, bio->bi_status,
-+			bio_op(bio), bio->bi_opf, BLK_TA_REMAP,
-+			blk_status_to_errno(bio->bi_status),
- 			sizeof(r), &r, blk_trace_bio_get_cgid(q, bio));
- 	rcu_read_unlock();
- }
++	/*
++	 * Switch Downstream Ports are not permitted to have a PTM
++	 * capability; their PTM behavior is controlled by the Upstream
++	 * Port (PCIe r5.0, sec 7.9.16).
++	 */
++	ups = pci_upstream_bridge(dev);
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
++	    ups && ups->ptm_enabled) {
++		dev->ptm_granularity = ups->ptm_granularity;
++		dev->ptm_enabled = 1;
++		return;
++	}
++
++	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
++	if (!pos)
++		return;
++
+ 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+ 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+ 
+@@ -69,7 +82,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
+ 	 * furthest upstream Time Source as the PTM Root.
+ 	 */
+-	ups = pci_upstream_bridge(dev);
+ 	if (ups && ups->ptm_enabled) {
+ 		ctrl = PCI_PTM_CTRL_ENABLE;
+ 		if (ups->ptm_granularity == 0)
 -- 
 2.25.1
 
