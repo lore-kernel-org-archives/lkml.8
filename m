@@ -2,227 +2,103 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0597C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBB12076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF99F20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592931741;
+	bh=lyjF5JCMRLkYfJgb+nOoi8e9pbWAuyRNl9vIReX7pT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J9mRVFlNmJKToZpyxMCxadlStZT1N9so0cd6Qal/wtZdSF0qYPOV1zRMGhfFe9jH1
+	 kFoWrcNRig69Sudpvkk92fVHBL74Lnmr1kN0OAS/VpgJ0UahOFkNh5vOD8zM59hkYD
+	 qcsxAfwf7no+Ua3le13bOMOORSvtVesXpzXPTqXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733177AbgFWQ5u (ORCPT
+        id S1732988AbgFWRCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:57:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:50069 "EHLO mga06.intel.com"
+        Tue, 23 Jun 2020 13:02:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733087AbgFWQ53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:57:29 -0400
-IronPort-SDR: y/xpvPA4U+KeRRZbBJ3LAKHy+kr0wVcuAbcg4DcydJ+u/zGQ6opJwL9SYRiRcLxE8Eb/Rv6oRR
- QuEV2c5Q8Edg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="205653761"
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="205653761"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 09:57:28 -0700
-IronPort-SDR: 6rWLdZr1MKX8EfLVte3qQNbQid/YwBhoEz3m5KJY/1rFE3Xc29LibDl1t9Y51wu8UPYQ8YPgtV
- uCJtSU+2Q5EA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="452290905"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 09:57:28 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Lu Baolu" <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v3 5/5] iommu/uapi: Support both kernel and user unbind guest PASID
-Date:   Tue, 23 Jun 2020 10:03:57 -0700
-Message-Id: <1592931837-58223-6-git-send-email-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592931837-58223-1-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1592931837-58223-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        id S1728916AbgFWRCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:02:19 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64B1A206EB;
+        Tue, 23 Jun 2020 17:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592931738;
+        bh=lyjF5JCMRLkYfJgb+nOoi8e9pbWAuyRNl9vIReX7pT4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wnSPXYVfbyX9CmJZGaMbnvuqnseTjcR/2VLVOrOsSiykjRDpg7yS4p10BPbMNJ5H/
+         1vQQyG7aPCqvBU5TCqzOBk+czJvnU83rKvnp9S5VcUSmzMoyGe22Akxn77qHm7Oji0
+         nNFApQc1NRvwSoeFRqGXilnnJZ6QHjaOuqN3QhRA=
+Date:   Tue, 23 Jun 2020 10:02:17 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        LTP List <ltp@lists.linux.it>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        lkft-triage@lists.linaro.org, linux-crypto@vger.kernel.org,
+        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: LTP: crypto: af_alg02 regression on linux-next 20200621 tag
+Message-ID: <20200623170217.GB150582@gmail.com>
+References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
+ <20200622224920.GA4332@42.do-not-panic.com>
+ <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
+ <20200623064056.GA8121@gondor.apana.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623064056.GA8121@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guest SVA unbind data can come from either kernel and user space, if a
-user pointer is passed in, IOMMU driver must copy from data from user.
-If the unbind data is assembled in kernel, data can be trusted and
-directly used. This patch creates a wrapper for unbind gpasid such that
-user pointer can be parsed and sanitized before calling into the kernel
-unbind function. Common user data copy code also consolidated.
+On Tue, Jun 23, 2020 at 04:40:56PM +1000, Herbert Xu wrote:
+> On Tue, Jun 23, 2020 at 11:53:43AM +0530, Naresh Kamboju wrote:
+> >
+> > Thanks for the investigation.
+> > After reverting, two test cases got PASS out of four reported failure cases.
+> >  ltp-crypto-tests:
+> >      * af_alg02 - still failing - Hung and time out
+> >      * af_alg05 - still failing - Hung and time out
+> >   ltp-syscalls-tests:
+> >      * keyctl07 - PASS
+> >      * request_key03 - PASS
+> > 
+> > Please suggest the way to debug / fix the af_alg02 and af_alg05 failures.
+> 
+> Did you clear the MSG_MORE flag in the final send(2) call before
+> you call recv(2)?
+> 
 
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/iommu.c | 70 ++++++++++++++++++++++++++++++++++++++-------------
- include/linux/iommu.h | 13 ++++++++--
- 2 files changed, 64 insertions(+), 19 deletions(-)
+The source code for the two failing AF_ALG tests is here:
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 4a025c429b41..595527e4c6b7 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2010,19 +2010,15 @@ int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
- }
- EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
- 
--int iommu_sva_bind_gpasid(struct iommu_domain *domain, struct device *dev,
--						void __user *udata)
--{
- 
--	struct iommu_gpasid_bind_data data;
-+static int iommu_sva_prepare_bind_data(void __user *udata, bool bind,
-+				       struct iommu_gpasid_bind_data *data)
-+{
- 	unsigned long minsz, maxsz;
- 
--	if (unlikely(!domain->ops->sva_bind_gpasid))
--		return -ENODEV;
--
- 	/* Current kernel data size is the max to be copied from user */
- 	maxsz = sizeof(struct iommu_gpasid_bind_data);
--	memset((void *)&data, 0, maxsz);
-+	memset((void *)data, 0, maxsz);
- 
- 	/*
- 	 * No new spaces can be added before the variable sized union, the
-@@ -2031,11 +2027,11 @@ int iommu_sva_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	minsz = offsetof(struct iommu_gpasid_bind_data, vendor);
- 
- 	/* Copy minsz from user to get flags and argsz */
--	if (copy_from_user(&data, udata, minsz))
-+	if (copy_from_user(data, udata, minsz))
- 		return -EFAULT;
- 
- 	/* Fields before variable size union is mandatory */
--	if (data.argsz < minsz)
-+	if (data->argsz < minsz)
- 		return -EINVAL;
- 	/*
- 	 * User might be using a newer UAPI header, we shall let IOMMU vendor
-@@ -2043,26 +2039,66 @@ int iommu_sva_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	 * can be vendor specific, larger argsz could be the result of extension
- 	 * for one vendor but it should not affect another vendor.
- 	 */
--	if (data.argsz > maxsz)
--		data.argsz = maxsz;
-+	if (data->argsz > maxsz)
-+		data->argsz = maxsz;
-+
-+	/*
-+	 * For unbind, we don't need any extra data, host PASID is included in
-+	 * the minsz and that is all we need.
-+	 */
-+	if (!bind)
-+		return 0;
- 
- 	/* Copy the remaining user data _after_ minsz */
--	if (copy_from_user((void *)&data + minsz, udata + minsz,
--				data.argsz - minsz))
-+	if (copy_from_user((void *)data + minsz, udata + minsz,
-+				data->argsz - minsz))
- 		return -EFAULT;
- 
-+	return 0;
-+}
-+
-+int iommu_sva_bind_gpasid(struct iommu_domain *domain, struct device *dev,
-+						void __user *udata)
-+{
-+
-+	struct iommu_gpasid_bind_data data;
-+	int ret;
-+
-+	if (unlikely(!domain->ops->sva_bind_gpasid))
-+		return -ENODEV;
-+
-+	ret = iommu_sva_prepare_bind_data(udata, true, &data);
-+	if (ret)
-+		return ret;
- 
- 	return domain->ops->sva_bind_gpasid(domain, dev, &data);
- }
- EXPORT_SYMBOL_GPL(iommu_sva_bind_gpasid);
- 
--int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
--			     ioasid_t pasid)
-+int __iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-+			struct iommu_gpasid_bind_data *data)
- {
- 	if (unlikely(!domain->ops->sva_unbind_gpasid))
- 		return -ENODEV;
- 
--	return domain->ops->sva_unbind_gpasid(dev, pasid);
-+	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
-+}
-+EXPORT_SYMBOL_GPL(__iommu_sva_unbind_gpasid);
-+
-+int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-+			void __user *udata)
-+{
-+	struct iommu_gpasid_bind_data data;
-+	int ret;
-+
-+	if (unlikely(!domain->ops->sva_bind_gpasid))
-+		return -ENODEV;
-+
-+	ret = iommu_sva_prepare_bind_data(udata, false, &data);
-+	if (ret)
-+		return ret;
-+
-+	return __iommu_sva_unbind_gpasid(domain, dev, &data);
- }
- EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
- 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index a688fea42ae5..2567c33dc4e8 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -437,7 +437,9 @@ extern int iommu_cache_invalidate(struct iommu_domain *domain,
- extern int iommu_sva_bind_gpasid(struct iommu_domain *domain,
- 				struct device *dev, void __user *udata);
- extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
--				struct device *dev, ioasid_t pasid);
-+				struct device *dev, void __user *udata);
-+extern int __iommu_sva_unbind_gpasid(struct iommu_domain *domain,
-+				struct device *dev, struct iommu_gpasid_bind_data *data);
- extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
- extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
- extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-@@ -1069,7 +1071,14 @@ static inline int iommu_sva_bind_gpasid(struct iommu_domain *domain,
- }
- 
- static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
--					   struct device *dev, int pasid)
-+					   struct device *dev, void __user *udata)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int __iommu_sva_unbind_gpasid(struct iommu_domain *domain,
-+					struct device *dev,
-+					struct iommu_gpasid_bind_data *data)
- {
- 	return -ENODEV;
- }
--- 
-2.7.4
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg02.c
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg05.c
 
+They use read() and write(), not send() and recv().
+
+af_alg02 uses read() to read from a "salsa20" request socket without writing
+anything to it.  It is expected that this returns 0, i.e. that behaves like
+encrypting an empty message.
+
+af_alg05 uses write() to write 15 bytes to a "cbc(aes-generic)" request socket,
+then read() to read 15 bytes.  It is expected that this fails with EINVAL, since
+the length is not aligned to the AES block size (16 bytes).
+
+- Eric
