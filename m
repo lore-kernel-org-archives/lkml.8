@@ -2,191 +2,85 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A80C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0209D20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y7xQpZIE"
+	by mail.kernel.org (Postfix) with ESMTP id D7AA820716
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732191AbgFWJ7a (ORCPT
+        id S1732269AbgFWKAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731947AbgFWJ73 (ORCPT
+        Tue, 23 Jun 2020 06:00:20 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:58589 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732168AbgFWKAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:59:29 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314F1C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:59:28 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id d7so11312540lfi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S+qNNJvPj82XIpOTVemM+3ukaRdqJiO16sjw+SINvto=;
-        b=Y7xQpZIELfj/IZLk6F58JA8yjaXRzK+OnoXwh0e5UY0T8XwF0JRi2sp3Vb55Apjdzl
-         BSi6UOkqflqZjIYef8cv7UxPHjAA7/9KsKdrR33U13EOqr6h7bg/dR9Jdk+NWpJ8ymvX
-         UC91iFxPSo9US6Co4+ZY1nXR8EW3/62ZjhAtls1kbdPJyw6mkaQEom/7iVp7+YWPwabA
-         +5bSyhJu5g7bdXz/lfL0GoXdTwOvdUjPK3YJ1ao7j0OWPdryjFjv4/6hhg/rbmEMXVpa
-         t/vrA87fmv4g3N0UtF4wcqAXTkgVFEhyCwu6KMP+BLan277W8KfEFtrcCa/f7aV/o/6h
-         ql1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+qNNJvPj82XIpOTVemM+3ukaRdqJiO16sjw+SINvto=;
-        b=gbC2ycc0yto8JmSe88N60zxVCKa8JCPLSNH79P/IhgaW20ZecwCg2XhnmFv8aiPTJq
-         k6W4X8J5b2+c0qg0glP+xtH4DetNEvco+E+UIBwXLvVHHZVeDG93sFTCtXN7cPL/LeHh
-         tibdlY36stqHmr00tRXDS+QZ6fyThuGeMRWP6qou0FieCwDr77zKp5yeBurF0yMhcn9G
-         05YV9MovygHDI9U3vWWXdV+6sWfpwhZBBaqip7xnegG8fWKiOvo+PVdAHQnfQrE9BD6g
-         ndS38DC7LrX9JMORELSQgM07Wryq9VEYlyOXmVtuPzEQWg/4Fatkx7GwmcBQ+bA9IEYq
-         Ro2A==
-X-Gm-Message-State: AOAM5323kKZyMsqQrjqRc+Pq9H5p4YMq6bo6KT1UZZr7S8PvNj1bi0f4
-        IQUzblg73aOJoyz7Yx7aQqJNWiW4H9kMNsuyXzNNJQ==
-X-Google-Smtp-Source: ABdhPJxkpAaMxPSdM3YL9bHG+P55yNE/K8vEWIahviaLzu2MN/Htj2Uu74ty5Acituc9zXDbDVkVHS+V8RASHfrlfXQ=
-X-Received: by 2002:ac2:47ed:: with SMTP id b13mr4365995lfp.21.1592906366549;
- Tue, 23 Jun 2020 02:59:26 -0700 (PDT)
+        Tue, 23 Jun 2020 06:00:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0U0VEqxu_1592906410;
+Received: from 30.27.116.246(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U0VEqxu_1592906410)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 23 Jun 2020 18:00:12 +0800
+Subject: Re: [PATCH v4 0/7] clean up redundant 'kvm_run' parameters
+To:     Paolo Bonzini <pbonzini@redhat.com>, tsbogend@alpha.franken.de,
+        paulus@ozlabs.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <fe463233-d094-fca5-b4e9-c1d97124fd69@redhat.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <3a2bee8b-20b4-5d33-7d12-09c374a5afde@linux.alibaba.com>
+Date:   Tue, 23 Jun 2020 18:00:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
- <1592835984-28613-5-git-send-email-sumit.garg@linaro.org> <20200622163621.s2322lmlv674bsds@holly.lan>
-In-Reply-To: <20200622163621.s2322lmlv674bsds@holly.lan>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 23 Jun 2020 15:29:15 +0530
-Message-ID: <CAFA6WYNc7hdagBknFGjSF3rXnKGXL4FY+PutkA8iensv9dJHEg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] serial: kgdb_nmi: Add support for interrupt based fallback
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fe463233-d094-fca5-b4e9-c1d97124fd69@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 at 22:06, Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Mon, Jun 22, 2020 at 07:56:21PM +0530, Sumit Garg wrote:
-> > From: Daniel Thompson <daniel.thompson@linaro.org>
-> >
-> > Add a generic NMI fallback to support kgdb NMI console feature which can
-> > be overridden by arch specific implementation.
->
-> arch_kgdb_ops.enable_nmi should probably be killed off. Given we now
-> have request_nmi() I'm dubious there are any good reasons to use this
-> API.
->
 
-Sounds reasonable. Along with this, kgdb_nmi_poll_knock() seems to be
-unused and can be removed as well.
 
--Sumit
+On 2020/6/23 17:42, Paolo Bonzini wrote:
+> On 27/04/20 06:35, Tianjia Zhang wrote:
+>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+>> structure. For historical reasons, many kvm-related function parameters
+>> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+>> patch does a unified cleanup of these remaining redundant parameters.
+>>
+>> This series of patches has completely cleaned the architecture of
+>> arm64, mips, ppc, and s390 (no such redundant code on x86). Due to
+>> the large number of modified codes, a separate patch is made for each
+>> platform. On the ppc platform, there is also a redundant structure
+>> pointer of 'kvm_run' in 'vcpu_arch', which has also been cleaned
+>> separately.
+> 
+> Tianjia, can you please refresh the patches so that each architecture
+> maintainer can pick them up?  Thanks very much for this work!
+> 
+> Paolo
+> 
 
->
-> Daniel.
->
->
-> > This common fallback mechanism utilizes kgdb IO based interrupt in order
-> > to support entry into kgdb if a user types in kgdb_nmi_magic sequence. So
-> > during NMI console init, NMI handler is installed corresponding to kgdb
-> > IO based NMI which is invoked when a character is pending and that can be
-> > cleared by calling @read_char until it returns NO_POLL_CHAR.
-> >
-> > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  drivers/tty/serial/kgdb_nmi.c | 47 ++++++++++++++++++++++++++++++++++++-------
-> >  1 file changed, 40 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/tty/serial/kgdb_nmi.c b/drivers/tty/serial/kgdb_nmi.c
-> > index b32c6b1..2580f39 100644
-> > --- a/drivers/tty/serial/kgdb_nmi.c
-> > +++ b/drivers/tty/serial/kgdb_nmi.c
-> > @@ -42,9 +42,46 @@ MODULE_PARM_DESC(magic, "magic sequence to enter NMI debugger (default $3#33)");
-> >  static atomic_t kgdb_nmi_num_readers = ATOMIC_INIT(0);
-> >  static struct console *orig_dbg_cons;
-> >
-> > +static int kgdb_nmi_poll_one_knock(void);
-> > +
-> > +static irqreturn_t kgdb_handle_nmi(int irq, void *dev_id)
-> > +{
-> > +     int ret;
-> > +
-> > +     if (kgdb_nmi_knock < 0) {
-> > +             kgdb_breakpoint();
-> > +             return IRQ_HANDLED;
-> > +     }
-> > +
-> > +     ret = kgdb_nmi_poll_one_knock();
-> > +     if (ret == NO_POLL_CHAR)
-> > +             return IRQ_NONE;
-> > +
-> > +     while (ret != 1) {
-> > +             ret = kgdb_nmi_poll_one_knock();
-> > +             if (ret == NO_POLL_CHAR)
-> > +                     return IRQ_HANDLED;
-> > +     }
-> > +
-> > +     kgdb_breakpoint();
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> >  static int kgdb_nmi_console_setup(struct console *co, char *options)
-> >  {
-> > -     arch_kgdb_ops.enable_nmi(1);
-> > +     int res;
-> > +
-> > +     if (arch_kgdb_ops.enable_nmi) {
-> > +             arch_kgdb_ops.enable_nmi(1);
-> > +     } else if (dbg_io_ops->request_nmi) {
-> > +             res = dbg_io_ops->request_nmi(kgdb_handle_nmi, co);
-> > +             if (res) {
-> > +                     pr_err("ttyNMI0: Cannot request nmi/irq\n");
-> > +                     return res;
-> > +             }
-> > +     } else {
-> > +             return -ENODEV;
-> > +     }
-> >
-> >       /* The NMI console uses the dbg_io_ops to issue console messages. To
-> >        * avoid duplicate messages during kdb sessions we must inform kdb's
-> > @@ -328,9 +365,6 @@ int kgdb_register_nmi_console(void)
-> >  {
-> >       int ret;
-> >
-> > -     if (!arch_kgdb_ops.enable_nmi)
-> > -             return 0;
-> > -
-> >       kgdb_nmi_tty_driver = alloc_tty_driver(1);
-> >       if (!kgdb_nmi_tty_driver) {
-> >               pr_err("%s: cannot allocate tty\n", __func__);
-> > @@ -380,9 +414,8 @@ int kgdb_unregister_nmi_console(void)
-> >  {
-> >       int ret;
-> >
-> > -     if (!arch_kgdb_ops.enable_nmi)
-> > -             return 0;
-> > -     arch_kgdb_ops.enable_nmi(0);
-> > +     if (arch_kgdb_ops.enable_nmi)
-> > +             arch_kgdb_ops.enable_nmi(0);
-> >
-> >       ret = unregister_console(&kgdb_nmi_console);
-> >       if (ret)
-> > --
-> > 2.7.4
-> >
+No problem, this is what I should do.
+After I update, do I submit separately for each architecture or submit 
+them together in a patchset?
+
+Thanks,
+Tianjia
