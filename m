@@ -2,98 +2,140 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD90C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B12C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBFA620724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qEhagxof"
+	by mail.kernel.org (Postfix) with ESMTP id 47AD9207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbgFWKoi (ORCPT
+        id S1732296AbgFWKor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732135AbgFWKoh (ORCPT
+        Tue, 23 Jun 2020 06:44:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41168 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732135AbgFWKoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:44:37 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4AAC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:44:36 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ga6so1317606pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dqfTmGA2mr5owmX+JGgs4wffhJI7qn1ybWwfAl5Tutk=;
-        b=qEhagxofi4lJjgjFsYM/B4xrt5iSXZggcDW/kcsd+R9YlLkUfQ6qUaM9vbBGQchmRq
-         UKJPIpGbwvei4iG3Q2PHL2yOADHfnNxAvy+q+ZEL1N/ym8vu7FGmA3Mif+7VIpVKqB/A
-         UkwROGWtz2qkjpSJ3R7vXdhB30+TsJdvlPvi0630ubrDAfwhayEUYp7t0nX1GTOCIoKa
-         50x1AYl9qqHgwJtoVqgmR+L/7VkoFMLfsuP16aEg2CRfwQTfflF+JBY6KzfSJozQZJJO
-         mcoOR7vA98wtpPeKHaKdgEHntcZ7RS5iQjei36/YlU3tvaenW8Y36whnb2nlaF2JUUlm
-         rT9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dqfTmGA2mr5owmX+JGgs4wffhJI7qn1ybWwfAl5Tutk=;
-        b=RYa/WuHXYBNdIxvJQvCEsxCoDckOTBzXWfbYZcAwUnOt2vRt3IcfDPptaZ3PkExpB1
-         GDkUfZcOBodnY7HVSckhSHXNjKRkpc9u6XQ5hc/aN7bG3PHLFYXKWZBBQijOok8uVOy0
-         bj1JjoYlfBp8YQ1kYDgm1mEDF2DG/FED+m6H1F1AHuO0NMM7xkjcgnwgRV9MVhy3fc/B
-         VmE0rChVhY4gmD22IZae618mTXHWUqlglEiNyuktnvxaJ6YmbfCANqaOqek2SdIks3z0
-         r2on2EJBPPer0QXINLu9zTsN0jVoIbmJQALW8ztX9R1pN/fgJ3OMPjQWzOQKc3k7S/6q
-         WiLA==
-X-Gm-Message-State: AOAM530vszrbfUqe+ufiW/QE2/sbdj2PCjVutwH/Z2pnqdW+Y+brmYjp
-        u7excNGIUPGfb/RGlev3TB8LQg==
-X-Google-Smtp-Source: ABdhPJx9+rNoGm24t+RpfH7bcHHY3qoa0VPMsj1T3NW/lZd6uiuTe2Ua9qxjs0tXPhyzFqgCwOhM4A==
-X-Received: by 2002:a17:90b:1292:: with SMTP id fw18mr21924791pjb.183.1592909075801;
-        Tue, 23 Jun 2020 03:44:35 -0700 (PDT)
-Received: from localhost ([122.172.111.76])
-        by smtp.gmail.com with ESMTPSA id j19sm16484355pfn.109.2020.06.23.03.44.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jun 2020 03:44:35 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 16:14:33 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        mka@chromium.org, nm@ti.com, bjorn.andersson@linaro.org,
-        agross@kernel.org, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org
-Subject: Re: [PATCH v6 0/5] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-Message-ID: <20200623104433.ok3vepuc55m7bxoi@vireshk-i7>
-References: <20200622081649.27280-1-sibis@codeaurora.org>
+        Tue, 23 Jun 2020 06:44:46 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NAXAXJ098070;
+        Tue, 23 Jun 2020 06:44:38 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ufmyruwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 06:44:38 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NAfv4U011201;
+        Tue, 23 Jun 2020 10:44:36 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03fra.de.ibm.com with ESMTP id 31sa381yp8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 10:44:36 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NAiX6H60293182
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 10:44:33 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 40494AE05F;
+        Tue, 23 Jun 2020 10:44:33 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C7F7AE055;
+        Tue, 23 Jun 2020 10:44:33 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.145.42.240])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 23 Jun 2020 10:44:33 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1jngPn-002vYU-Vw; Tue, 23 Jun 2020 12:44:32 +0200
+Date:   Tue, 23 Jun 2020 12:44:31 +0200
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     Mike Christie <michael.christie@oracle.com>
+Cc:     Bob Liu <bob.liu@oracle.com>, linux-kernel@vger.kernel.org,
+        tj@kernel.org, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+        lduncan@suse.com, maier@linux.ibm.com
+Subject: Re: [PATCH 2/2] scsi: register sysfs for scsi/iscsi workqueues
+Message-ID: <20200623104431.GE9340@t480-pf1aa2c2>
+References: <20200611100717.27506-1-bob.liu@oracle.com>
+ <20200611100717.27506-2-bob.liu@oracle.com>
+ <cf9ae940-87b2-c8a1-3dba-4d2b57ebe9dd@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200622081649.27280-1-sibis@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cf9ae940-87b2-c8a1-3dba-4d2b57ebe9dd@oracle.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_05:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 priorityscore=1501 phishscore=0 spamscore=0 clxscore=1011
+ cotscore=-2147483648 mlxlogscore=999 adultscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006230079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-06-20, 13:46, Sibi Sankar wrote:
-> This patch series aims to extend cpu based scaling support to L3/DDR on
-> SDM845 and SC7180 SoCs.
+On Mon, Jun 22, 2020 at 10:40:09AM -0500, Mike Christie wrote:
+> On 6/11/20 5:07 AM, Bob Liu wrote:
+> > This patch enable setting cpu affinity through "cpumask" for below
+> > scsi/iscsi workqueues, so as to get better isolation.
+> > - scsi_wq_*
+> > - scsi_tmf_*
+> > - iscsi_q_xx
+> > - iscsi_eh
+> > 
+> > Signed-off-by: Bob Liu <bob.liu@oracle.com>
+> > ---
+> >   drivers/scsi/hosts.c                | 4 ++--
+> >   drivers/scsi/libiscsi.c             | 2 +-
+> >   drivers/scsi/scsi_transport_iscsi.c | 2 +-
+> >   3 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
+> > index 1d669e4..4b9f80d 100644
+> > --- a/drivers/scsi/hosts.c
+> > +++ b/drivers/scsi/hosts.c
+> > @@ -272,7 +272,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
+> >   	if (shost->transportt->create_work_queue) {
+> >   		snprintf(shost->work_q_name, sizeof(shost->work_q_name),
+> >   			 "scsi_wq_%d", shost->host_no);
+> > -		shost->work_q = create_singlethread_workqueue(
+> > +		shost->work_q = create_singlethread_workqueue_noorder(
+> >   					shost->work_q_name);
+> >   		if (!shost->work_q) {
+> >   			error = -EINVAL;
 > 
-> Patches [1-2] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
-> Patches [3-5] - Update bw levels based on cpu frequency change
+> This patch seems ok for the iscsi, fc, tmf, and non transport class scan
+> uses. We are either heavy handed with flushes or did not need ordering.
 > 
-> V7:
->  * Fixup comments for correctness [Matthias]
->  * Initialize icc_scaling_enabled to false [Matthias]
->  * Make use of the increased per line character limit [Matthias]
+> I don't know about the zfcp use though, so I cc'd  the developers listed as
+> maintainers. It looks like for zfcp we can do:
 
-Applied. Thanks.
+Thx for the notice.
+
+> 
+> zfcp_scsi_rport_register->fc_remote_port_add->fc_remote_port_create->scsi_queue_work
+> to scan the scsi target on the rport.
+> 
+> and then zfcp_scsi_rport_register can call zfcp_unit_queue_scsi_scan->
+> scsi_queue_work which will scan for a specific lun.
+> 
+> It looks ok if those are not ordered, but I would get their review to make
+> sure.
+
+I am not aware of any temporal requirements of those LUN-scans, so I
+think making them not explicitly ordered shouldn't hurt us.
+
+The target scan itself is protected again by `shost->scan_mutex`.. so
+all fine I think.
 
 -- 
-viresh
+Best Regards, Benjamin Block  / Linux on IBM Z Kernel Development / IBM Systems
+IBM Deutschland Research & Development GmbH    /    https://www.ibm.com/privacy
+Vorsitz. AufsR.: Gregor Pillen         /        Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
