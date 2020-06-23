@@ -2,122 +2,132 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0425C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F640C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E82206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WSIkYB19"
+	by mail.kernel.org (Postfix) with ESMTP id 7E98B2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592948280;
+	bh=00LaLXwHMBQRfAvmBDri+hTtcKQVEn7pCEdWW67VnxY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tqkQ1ZKMIH/33M7Zt1IGrBxB3W4jcZ9aS9zt9GOlvnZtG3meUjcLBvWdVjOTJBDcL
+	 qhk99laDCLSRfeF97SfO6q24IYcrC/fsz5maDBDRXb6OL0lulO+2nM+G8GfBNJldJX
+	 8n52/LEsXcReZp3/GVOK5g2F2+QB5AslExWmTzP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390679AbgFWVhy (ORCPT
+        id S2393787AbgFWVh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388188AbgFWUIi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388033AbgFWUIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 16:08:38 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA4DC061573;
-        Tue, 23 Jun 2020 13:08:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IAo6LZgftQ+WfJhPV9ZsiUspETli4pnTXogO2KOnqZw=; b=WSIkYB191UtTcRJW24x6NoATDT
-        B1Pi94FgzTqQDr/rc+wtAw9pa6UWZp4fn7FYq7hdxNdlCMDTW6Ein61oTWBH64bwRHAQcJBmKD1/8
-        gZatC1EWYDVnQgTbBjACdaW6b3Xz5cyUiXquBDMC6IB6A5JRARMMD+4xQLKbVuVbFju2vPmjujzwF
-        Vzv7UGyJ02a6M7SWgurAq0oDJum+G5oj235k0ai4FLqtwb2uNmCLl26gARqoiOOPweLucCKnlZPy8
-        KRtwBq/tXGA4G1yN+YBjfR2DlDHdtEcBEzVw1TJrcqFd8yAIOl2Qe71DUGKqeXJo/LPe8Xxc1rBWZ
-        U8EMfpkQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnpD7-0001p5-BH; Tue, 23 Jun 2020 20:08:01 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5CA2B983A87; Tue, 23 Jun 2020 22:08:00 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 22:08:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, bigeasy@linutronix.de,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
-        Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-Message-ID: <20200623200800.GD2483@worktop.programming.kicks-ass.net>
-References: <20200623083645.277342609@infradead.org>
- <20200623083721.512673481@infradead.org>
- <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
- <20200623152450.GM4817@hirez.programming.kicks-ass.net>
- <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
- <20200623163730.GA4800@hirez.programming.kicks-ass.net>
- <20200623175957.GA106514@elver.google.com>
- <20200623181232.GB4800@hirez.programming.kicks-ass.net>
- <CANpmjNMmYYa-mVo_Ao_n+9KzwxhGYcb6B6C72yCHyD9sZudDfA@mail.gmail.com>
- <20200623191335.GA86296@elver.google.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 049C42080C;
+        Tue, 23 Jun 2020 20:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592942917;
+        bh=00LaLXwHMBQRfAvmBDri+hTtcKQVEn7pCEdWW67VnxY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AEmUFeQoqpTb5XZdtQLpgm6QWvxHydj/mch5UOHCyHY89vZ9gRW2rQMvEAOdTzgsy
+         yq0YBYmsVmiFPKUxI+ztc3XbcNKAU97jM3ib1721ZouIyZASKsLSlB/pu9YeyOhmQv
+         VrXGrtcXLqM5SvMHOkzdQ2hCgl5nU2F11qL3caEo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Jerome Pouiller <Jerome.Pouiller@silabs.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 169/477] staging: wfx: avoid compiler warning on empty array
+Date:   Tue, 23 Jun 2020 21:52:46 +0200
+Message-Id: <20200623195415.573848247@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
+References: <20200623195407.572062007@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623191335.GA86296@elver.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:13:35PM +0200, Marco Elver wrote:
-> [   10.182354] ------------[ cut here ]------------
-> [   10.183058] WARNING: CPU: 7 PID: 136 at kernel/locking/lockdep.c:398 lockdep_hardirqs_on_prepare+0x1c6/0x270
-> [   10.184347] Modules linked in:
-> [   10.184771] CPU: 7 PID: 136 Comm: systemd-journal Not tainted 5.8.0-rc1+ #3
-> [   10.185706] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> [   10.186821] RIP: 0010:lockdep_hardirqs_on_prepare+0x1c6/0x270
-> [   10.187594] Code: 75 28 65 48 8b 04 25 28 00 00 00 48 3b 44 24 08 0f 85 b9 00 00 00 48 83 c4 10 5b 41 5e 41 5f c3 65 48 ff 05 d4 24 4e 75 eb d8 <0f> 0b 90 41 c7 86 c4 08 00 00 00 00 00 00 eb c8 e8 65 09 71 01 85
-> [   10.190203] RSP: 0018:ffffa7ee802b7848 EFLAGS: 00010017
-> [   10.190989] RAX: 0000000000000001 RBX: ffff955e92a34ab0 RCX: 0000000000000001
-> [   10.192053] RDX: 0000000000000006 RSI: ffff955e92a34a88 RDI: ffff955e92a341c0
-> [   10.193117] RBP: ffffa7ee802b7be8 R08: 0000000000000000 R09: 0000ffffffffffff
-> [   10.194186] R10: 0000ffffffffffff R11: 0000ffff8d07e268 R12: 0000000000000001
-> [   10.195249] R13: ffffffff8e41bb10 R14: ffff955e92a341c0 R15: 0000000000000001
-> [   10.196312] FS:  00007fd6862aa8c0(0000) GS:ffff955e9fd80000(0000) knlGS:0000000000000000
-> [   10.197513] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   10.198373] CR2: 00007fd6837dd000 CR3: 0000000812acc001 CR4: 0000000000760ee0
-> [   10.199436] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   10.200494] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   10.201554] PKRU: 55555554
-> [   10.201967] Call Trace:
-> [   10.202348]  ? _raw_spin_unlock_irqrestore+0x40/0x70
-> [   10.203093]  trace_hardirqs_on+0x56/0x60			<----- enter IRQ flags tracing code?
-> [   10.203686]  _raw_spin_unlock_irqrestore+0x40/0x70  		<----- take report_lock
-> [   10.204406]  prepare_report+0x11f/0x150
-> [   10.204986]  kcsan_report+0xca/0x6c0 			<----- generating a KCSAN report
+From: Arnd Bergmann <arnd@arndb.de>
 
-Oh, duh.. that's because lockdep_off() ;-)
+[ Upstream commit 2eeefd3787fdc6319124945d453774be95b97897 ]
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index ab7571c1a1f5..c9ea05edce25 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -395,7 +395,7 @@ void lockdep_init_task(struct task_struct *task)
+When CONFIG_OF is disabled, gcc-9 produces a warning about the
+wfx_sdio_of_match[] array having a declaration without a dimension:
+
+drivers/staging/wfx/bus_sdio.c:159:34: error: array 'wfx_sdio_of_match' assumed to have one element [-Werror]
+  159 | static const struct of_device_id wfx_sdio_of_match[];
+      |                                  ^~~~~~~~~~~~~~~~~
+
+Move the proper declaration up and out of the #ifdef instead.
+
+Fixes: a7a91ca5a23d ("staging: wfx: add infrastructure for new driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Link: https://lore.kernel.org/r/20200429142119.1735196-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/staging/wfx/bus_sdio.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/staging/wfx/bus_sdio.c b/drivers/staging/wfx/bus_sdio.c
+index dedc3ff58d3eb..c2e4bd1e3b0a0 100644
+--- a/drivers/staging/wfx/bus_sdio.c
++++ b/drivers/staging/wfx/bus_sdio.c
+@@ -156,7 +156,13 @@ static const struct hwbus_ops wfx_sdio_hwbus_ops = {
+ 	.align_size		= wfx_sdio_align_size,
+ };
  
- static __always_inline void lockdep_recursion_finish(void)
+-static const struct of_device_id wfx_sdio_of_match[];
++static const struct of_device_id wfx_sdio_of_match[] = {
++	{ .compatible = "silabs,wfx-sdio" },
++	{ .compatible = "silabs,wf200" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
++
+ static int wfx_sdio_probe(struct sdio_func *func,
+ 			  const struct sdio_device_id *id)
  {
--	if (WARN_ON_ONCE(--current->lockdep_recursion))
-+	if (WARN_ON_ONCE((--current->lockdep_recursion) & LOCKDEP_RECURSION_MASK))
- 		current->lockdep_recursion = 0;
- }
+@@ -248,15 +254,6 @@ static const struct sdio_device_id wfx_sdio_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(sdio, wfx_sdio_ids);
  
+-#ifdef CONFIG_OF
+-static const struct of_device_id wfx_sdio_of_match[] = {
+-	{ .compatible = "silabs,wfx-sdio" },
+-	{ .compatible = "silabs,wf200" },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
+-#endif
+-
+ struct sdio_driver wfx_sdio_driver = {
+ 	.name = "wfx-sdio",
+ 	.id_table = wfx_sdio_ids,
+@@ -264,6 +261,6 @@ struct sdio_driver wfx_sdio_driver = {
+ 	.remove = wfx_sdio_remove,
+ 	.drv = {
+ 		.owner = THIS_MODULE,
+-		.of_match_table = of_match_ptr(wfx_sdio_of_match),
++		.of_match_table = wfx_sdio_of_match,
+ 	}
+ };
+-- 
+2.25.1
+
+
 
