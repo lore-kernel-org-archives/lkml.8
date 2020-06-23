@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E250F2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E622078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942721;
-	bh=+FXoorGIAmeqQJ91OQj3wccWwMLQU5jplFO6zwfKOac=;
+	s=default; t=1592942725;
+	bh=JMvlUhCjrGlUQV8cZmG5Jqmr1/kiIi4DV2YpJduhak4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCkm/EjpLZXI0bdErg5qsrOwtCC0/LjoKg4ANjT0vQL7j8D0GZVq7ldOAGA1j0Spp
-	 qIDVmJ0uvouCophrCi34GaRHq8jGPvmEjh3jh9R/YBr1G7R7ctH2PS9r23gYmLdiRk
-	 xlDZNs1BgAdJ7FWaThXT7M9zzmlq12DqzWpVSIbs=
+	b=jsY0ogudjpDgtsPIXSrbBzhNsAE5LmRUlER7FLq87qJjy01ZXcAqWg4LX1Ajciz+X
+	 7srObcPUjvZ8gxq5PzcMKGYGBDDUfQMR1FWo0m3AO/DXuu8vtcX7TTGIiLFyF/0jhe
+	 v/LwIF7+r4jCb5HX+1T2QTCgkjnOHtQse6BowA/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388343AbgFWUFU (ORCPT
+        id S2388352AbgFWUFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44480 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388329AbgFWUFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:05:14 -0400
+        id S2388341AbgFWUFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:05:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11F5C206C3;
-        Tue, 23 Jun 2020 20:05:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52B8C206C3;
+        Tue, 23 Jun 2020 20:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942713;
-        bh=+FXoorGIAmeqQJ91OQj3wccWwMLQU5jplFO6zwfKOac=;
+        s=default; t=1592942718;
+        bh=JMvlUhCjrGlUQV8cZmG5Jqmr1/kiIi4DV2YpJduhak4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m2AwDTqB54J2dWLhyazHvYC0ZFVc9NeSa8IPtp52r/lPhhvBvyIMzb/g+28SOBHRs
-         q3aJWL6CGqPJ8QW+TWaNDTbPGlLUaoKmLSzXGhoiCz7PvahdTQzp/ObKePcQ0cctBj
-         12Ff7LBASchJDFK0CjDs8MvIwYHMUWvPuERugM/g=
+        b=e0UsKnSBvq4zPn39NDUOAQYDXiFsFfFa8cAuLLB6hP4p2ARUUTRgyGAFGUcHBneSx
+         vltCN+WWz73Hg+HrkHUYev2Zv3kGxyphAmrbgVPh7svUQASTRSwVpIgOE+S0/f5Ueh
+         yE3iYmehPRK6B6H64LDU8Du0aT0WA6/uUq9F8FNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
-        James Smart <james.smart@broadcom.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 075/477] scsi: lpfc: Fix lpfc_nodelist leak when processing unsolicited event
-Date:   Tue, 23 Jun 2020 21:51:12 +0200
-Message-Id: <20200623195411.166706840@linuxfoundation.org>
+Subject: [PATCH 5.7 101/477] xfs: Add the missed xfs_perag_put() for xfs_ifree_cluster()
+Date:   Tue, 23 Jun 2020 21:51:38 +0200
+Message-Id: <20200623195412.362739481@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -63,49 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 7217e6e694da3aae6d17db8a7f7460c8d4817ebf ]
+[ Upstream commit 8cc0072469723459dc6bd7beff81b2b3149f4cf4 ]
 
-In order to create or activate a new node, lpfc_els_unsol_buffer() invokes
-lpfc_nlp_init() or lpfc_enable_node() or lpfc_nlp_get(), all of them will
-return a reference of the specified lpfc_nodelist object to "ndlp" with
-increased refcnt.
+xfs_ifree_cluster() calls xfs_perag_get() at the beginning, but forgets to
+call xfs_perag_put() in one failed path.
+Add the missed function call to fix it.
 
-When lpfc_els_unsol_buffer() returns, local variable "ndlp" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling path of
-lpfc_els_unsol_buffer(). When "ndlp" in DEV_LOSS, the function forgets to
-decrease the refcnt increased by lpfc_nlp_init() or lpfc_enable_node() or
-lpfc_nlp_get(), causing a refcnt leak.
-
-Fix this issue by calling lpfc_nlp_put() when "ndlp" in DEV_LOSS.
-
-Link: https://lore.kernel.org/r/1590416184-52592-1-git-send-email-xiyuyang19@fudan.edu.cn
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: ce92464c180b ("xfs: make xfs_trans_get_buf return an error code")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/xfs_inode.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 80d1e661b0d4e..35fbcb4d52eb5 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -8514,6 +8514,8 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
- 	spin_lock_irq(shost->host_lock);
- 	if (ndlp->nlp_flag & NLP_IN_DEV_LOSS) {
- 		spin_unlock_irq(shost->host_lock);
-+		if (newnode)
-+			lpfc_nlp_put(ndlp);
- 		goto dropit;
- 	}
- 	spin_unlock_irq(shost->host_lock);
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index d1772786af29d..8845faa8161a9 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -2639,8 +2639,10 @@ xfs_ifree_cluster(
+ 		error = xfs_trans_get_buf(tp, mp->m_ddev_targp, blkno,
+ 				mp->m_bsize * igeo->blocks_per_cluster,
+ 				XBF_UNMAPPED, &bp);
+-		if (error)
++		if (error) {
++			xfs_perag_put(pag);
+ 			return error;
++		}
+ 
+ 		/*
+ 		 * This buffer may not have been correctly initialised as we
 -- 
 2.25.1
 
