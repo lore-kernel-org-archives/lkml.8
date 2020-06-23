@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85491C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3190BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58523207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF05A207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944253;
-	bh=XxQjIkUsRGB+DDxM0YIwv0o9Puh0rXkbgJQOcQqSTBY=;
+	s=default; t=1592944256;
+	bh=Z4g01D/Ys5Kk7CGpGOkwVsmgrOaLnGIqNdtXtrjgml0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ub/ig3V8Sfaj6QQt2viQYRCvM054og55zmfr98gLjad0122+AyvBAATolwypLUpWS
-	 3nKr2OqC1YBN6bAXAULefczK855ZXBJusbUvNUh3Eu3uzik/dHV39v0HzLzDhAhZmF
-	 N74SFra5wHM6hfm23osGVrsZulbs4q/vAVQw25lU=
+	b=Qc5BQgnJLu9I3O7uG2LdrMlXdJnaEmJRqXO40sj1Xu8qxhTghWH6ElKqgG3wo9SnB
+	 YlPMM9IZVWpDw5VgxsUSwyd3GJIc0AIWYyvfVRDe2xOsF0THOi2PXQwyCHWR+51BPo
+	 bchd9fNg/rWPNIViOJfcyuEcJh3V5abYnBQl1HbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390146AbgFWUau (ORCPT
+        id S2390155AbgFWUay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51114 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390881AbgFWUap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:30:45 -0400
+        id S2391026AbgFWU3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8EB2070E;
-        Tue, 23 Jun 2020 20:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3A93206C3;
+        Tue, 23 Jun 2020 20:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944245;
-        bh=XxQjIkUsRGB+DDxM0YIwv0o9Puh0rXkbgJQOcQqSTBY=;
+        s=default; t=1592944189;
+        bh=Z4g01D/Ys5Kk7CGpGOkwVsmgrOaLnGIqNdtXtrjgml0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pov/4fQaZ/nKQtfY3D7ZCcygyKj1UtFU3Cxi6InaUnP2xqCOnNAHo6j9qDK86VTwS
-         suO+18gjlsgeVqrHnQyj92Q0CQ/RN1BWN0MYD8vMVBeOHyzHzOAp8+TtM9NZ7qnRN2
-         Bp/qtxWpr4l3tA9XYU1ygJ3/ymjrDnAu6SF6KZAg=
+        b=a2JAQYpwSJQ+vAC+LWouILwMWQele0H1QINmez3DgfBgQbtD6ItNrcEAd1lQtQbz7
+         JsMa2MjrdlVbXwTli3AKrjohGok22rftJJQpXVYDkR0gmGXsTQQ5o3KugjWA7XVlWr
+         CO9rb+T1N56x+L5XGtwExJ6jX/RYds4nOhC1ylAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 198/314] NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESSION
-Date:   Tue, 23 Jun 2020 21:56:33 +0200
-Message-Id: <20200623195348.368417937@linuxfoundation.org>
+Subject: [PATCH 5.4 208/314] openrisc: Fix issue with argument clobbering for clone/fork
+Date:   Tue, 23 Jun 2020 21:56:43 +0200
+Message-Id: <20200623195348.840241833@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,31 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Stafford Horne <shorne@gmail.com>
 
-[ Upstream commit 1c709b766e73e54d64b1dde1b7cfbcf25bcb15b9 ]
+[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
 
-Fixes: 02a95dee8cf0 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session_callback")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Working on the OpenRISC glibc port I found that sometimes clone was
+working strange.  That the tls data argument sent in r7 was always
+wrong.  Further investigation revealed that the arguments were getting
+clobbered in the entry code.  This patch removes the code that writes to
+the argument registers.  This was likely due to some old code hanging
+around.
+
+This patch fixes this up for clone and fork.  This fork clobber is
+harmless but also useless so remove.
+
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/openrisc/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index e257653f25abd..33c17c69aeaa3 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7870,7 +7870,7 @@ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
- }
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index e4a78571f8833..c6481cfc5220f 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -1166,13 +1166,13 @@ ENTRY(__sys_clone)
+ 	l.movhi	r29,hi(sys_clone)
+ 	l.ori	r29,r29,lo(sys_clone)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r7,r1,0
++	 l.nop
  
- static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
--	.rpc_call_done =  &nfs4_bind_one_conn_to_session_done,
-+	.rpc_call_done =  nfs4_bind_one_conn_to_session_done,
- };
+ ENTRY(__sys_fork)
+ 	l.movhi	r29,hi(sys_fork)
+ 	l.ori	r29,r29,lo(sys_fork)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r3,r1,0
++	 l.nop
  
- /*
+ ENTRY(sys_rt_sigreturn)
+ 	l.jal	_sys_rt_sigreturn
 -- 
 2.25.1
 
