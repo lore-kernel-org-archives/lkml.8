@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4468FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208C320781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5501C20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947841;
-	bh=5sWbhd69f98lLETBFKDPvPfYfT9N6UYvfFQw0X5a4eU=;
+	s=default; t=1592947844;
+	bh=Bv/vyaWA2VbHx5NcZWftjxFnx87M5TP/+lO8vxz4B+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LKggn5udJFalmnJezaX2hTJkJ7Jr5SGqAouFhq3yjz0AX9WkDixDYNBkNRe3p+5t2
-	 3x5fcbQZx8pMD7LFVIc+X3vV9BtqAbPKGXuj4RVGH+Kl5Ba625IfjpUAUXw64nZLMM
-	 n0+LQmPf+vKemFM9SoZpdnqO5EU/w/Vi+4ZWc6rQ=
+	b=FkBAGe0gD8DsZJ9UTkmTDVYFBarQwywAa/R/Y3cS347CBE4N/yz8DL3dz54voS82O
+	 2S49HaE+NCQ1A0X7/rdJJiPXYTIsSvDSFo0DkHinGPwFZYa+LslpBpcOvoNM+0+CgZ
+	 ZW2UNekfmG5joiincMhHjkYGS0+VzEfr7wRmXTfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389569AbgFWVaj (ORCPT
+        id S2389081AbgFWUN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389105AbgFWUNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:37 -0400
+        id S2389077AbgFWUNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAA22206C3;
-        Tue, 23 Jun 2020 20:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9976F20707;
+        Tue, 23 Jun 2020 20:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943217;
-        bh=5sWbhd69f98lLETBFKDPvPfYfT9N6UYvfFQw0X5a4eU=;
+        s=default; t=1592943202;
+        bh=Bv/vyaWA2VbHx5NcZWftjxFnx87M5TP/+lO8vxz4B+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ek661p1ckarKo+GmTW0nh2JsHGAqjtCR7Ao0Q1Iu3bqg03E9e9kEWvl9LrXvO1QNl
-         K5GH63jdfNJslkciu58yFC+9iyIQBzMIWReW1Lqa8jgfIkLllpjP6PBqaRomgAxGnf
-         6bQzgZSdT3em/ZjAQ334HfU1STHk3DZk86+GSD0w=
+        b=c2UUupfJsl1lsvM83KBjRZZk/ouvsyjLPYRAUVYQ4hH/RvGB2g187x4O4Pt2e/cKV
+         T28pylk5nMoALmEyHHKsuZk9w0VV+jhJDYNLFTCGPWE6cEqF7vUL2cXbvN9BFqxFoA
+         SuEZZ4INIPTkWmPl3kacBgr6PiE3yPGeyJc+Quos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 275/477] ASoC: fix incomplete error-handling in img_i2s_in_probe.
-Date:   Tue, 23 Jun 2020 21:54:32 +0200
-Message-Id: <20200623195420.563174993@linuxfoundation.org>
+Subject: [PATCH 5.7 298/477] usb: dwc3: meson-g12a: fix error path when fetching the reset line fails
+Date:   Tue, 23 Jun 2020 21:54:55 +0200
+Message-Id: <20200623195421.636373360@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,35 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 25bf943e4e7b47282bd86ae7d39e039217ebb007 ]
+[ Upstream commit be8c1001a7e681e8813882a42ed51c8dbffd8800 ]
 
-Function "pm_runtime_get_sync()" is not handled by "pm_runtime_put()"
-if "PTR_ERR(rst) == -EPROBE_DEFER". Fix this issue by adding
-"pm_runtime_put()" into this error path.
+Disable and unprepare the clocks when devm_reset_control_get_shared()
+fails. This fixes the error path as this must disable the clocks which
+were previously enabled.
 
-Fixes: f65bb92ca12e ("ASoC: img-i2s-in: Add runtime PM")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200525055011.31925-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 1e355f21d3fb96 ("usb: dwc3: Add Amlogic A1 DWC3 glue")
+Cc: Yue Wang <yue.wang@amlogic.com>
+Cc: Hanjie Lin <hanjie.lin@amlogic.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Link: https://lore.kernel.org/r/20200526202943.715220-2-martin.blumenstingl@googlemail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/img/img-i2s-in.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/dwc3/dwc3-meson-g12a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
-index a495d1050d490..e30b66b94bf67 100644
---- a/sound/soc/img/img-i2s-in.c
-+++ b/sound/soc/img/img-i2s-in.c
-@@ -482,6 +482,7 @@ static int img_i2s_in_probe(struct platform_device *pdev)
- 	if (IS_ERR(rst)) {
- 		if (PTR_ERR(rst) == -EPROBE_DEFER) {
- 			ret = -EPROBE_DEFER;
-+			pm_runtime_put(&pdev->dev);
- 			goto err_suspend;
- 		}
+diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+index 2d257bdfe8485..eabb3bb6fcaa1 100644
+--- a/drivers/usb/dwc3/dwc3-meson-g12a.c
++++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+@@ -505,7 +505,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->reset)) {
+ 		ret = PTR_ERR(priv->reset);
+ 		dev_err(dev, "failed to get device reset, err=%d\n", ret);
+-		return ret;
++		goto err_disable_clks;
+ 	}
  
+ 	ret = reset_control_reset(priv->reset);
 -- 
 2.25.1
 
