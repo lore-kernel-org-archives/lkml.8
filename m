@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D28C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54F520768
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC0F20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946122;
-	bh=nka1z1JeJotYw4mRLwT1jWGnMFhFzOVKfzEffkT2o7g=;
+	s=default; t=1592946134;
+	bh=rrB2UF7V1H+mQ2K95Cfve0V6X5yS/Ka9557uHo/F0LU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TcPw6SB55cLLw9Ri+MqoR59IAuqzgG6IjkTNJD62fmFIx8DWV687l8MmOJ52lK5kv
-	 0FwclAtCwFjDyBJvVZqI6qq/I1Frk3fxBoWp1EDxbBBeixLsxPypUKuYAGRtFe7j1/
-	 +JdfgHYO6iEvbNnDUIb9Zln2OGB3tgtrxZgnfZgY=
+	b=BqZQHOatZ+l/LHTA2W5IZc8tgLFJFyBzj1mFABSnQXZYVT9RoCbKhDqnUR1OxcZjP
+	 zU+meeXHAv7JyNg/NU1oK1pZkOhvztHcVFkV4gREgJZv35buPq28xWEP1CLeRm9MXg
+	 kbmlNas2maRhiN05MKJsV8FIO1JCTfNRZ2FljPSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404264AbgFWVCA (ORCPT
+        id S2404273AbgFWVCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:02:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35018 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392047AbgFWUjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:39:20 -0400
+        id S2392040AbgFWUjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:39:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C9BB21883;
-        Tue, 23 Jun 2020 20:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B885B2168B;
+        Tue, 23 Jun 2020 20:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944760;
-        bh=nka1z1JeJotYw4mRLwT1jWGnMFhFzOVKfzEffkT2o7g=;
+        s=default; t=1592944758;
+        bh=rrB2UF7V1H+mQ2K95Cfve0V6X5yS/Ka9557uHo/F0LU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dsa+qUdIi3+G6/6bg0bN1aGDzb0q+bVxA/TI/tTpKBeWhGUTHfe+sAKnzujFxxgWR
-         HFoHYhgsMiFjNCVj8yXlcwA5J4aun6UTjWpI7wirYc/gpHZUkWxyGrMT6DQ4BQqLmU
-         eP9Y9NI2aAA0yZyRqi76ytaFEIq1qPeHVFc0hWsk=
+        b=aGcUjPbC3/LInksP/5cdg/nhQykYoVRVQpG9iLp2hzFHQZAJxU3QzxKMZzDa36qdn
+         W4bez8LPTSbbrjjacOTfOI+X8dhv7EjSaPzqccwZRQ9F40bCDz6WmmcLvJU7htub/9
+         UB/qcmmhsE/6P/w4B0qHMTIPahAUspkgqnm4Is1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        David Disseldorp <ddiss@suse.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 114/206] scsi: target: tcmu: Fix a use after free in tcmu_check_expired_queue_cmd()
-Date:   Tue, 23 Jun 2020 21:57:22 +0200
-Message-Id: <20200623195322.553626574@linuxfoundation.org>
+Subject: [PATCH 4.19 113/206] ASoC: fix incomplete error-handling in img_i2s_in_probe.
+Date:   Tue, 23 Jun 2020 21:57:21 +0200
+Message-Id: <20200623195322.506414904@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -62,44 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 9d7464b18892332e35ff37f0b024429a1a9835e6 ]
+[ Upstream commit 25bf943e4e7b47282bd86ae7d39e039217ebb007 ]
 
-The pr_debug() dereferences "cmd" after we already freed it by calling
-tcmu_free_cmd(cmd).  The debug printk needs to be done earlier.
+Function "pm_runtime_get_sync()" is not handled by "pm_runtime_put()"
+if "PTR_ERR(rst) == -EPROBE_DEFER". Fix this issue by adding
+"pm_runtime_put()" into this error path.
 
-Link: https://lore.kernel.org/r/20200523101129.GB98132@mwanda
-Fixes: 61fb24822166 ("scsi: target: tcmu: Userspace must not complete queued commands")
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Reviewed-by: David Disseldorp <ddiss@suse.de>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: f65bb92ca12e ("ASoC: img-i2s-in: Add runtime PM")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200525055011.31925-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/img/img-i2s-in.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index ac523f247a9ca..8da89925a874d 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1303,13 +1303,13 @@ static void tcmu_check_expired_queue_cmd(struct tcmu_cmd *cmd)
- 	if (!time_after(jiffies, cmd->deadline))
- 		return;
- 
-+	pr_debug("Timing out queued cmd %p on dev %s.\n",
-+		  cmd, cmd->tcmu_dev->name);
-+
- 	list_del_init(&cmd->queue_entry);
- 	se_cmd = cmd->se_cmd;
- 	tcmu_free_cmd(cmd);
- 
--	pr_debug("Timing out queued cmd %p on dev %s.\n",
--		  cmd, cmd->tcmu_dev->name);
--
- 	target_complete_cmd(se_cmd, SAM_STAT_TASK_SET_FULL);
- }
+diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
+index 388cefd7340ab..c22880aea82a2 100644
+--- a/sound/soc/img/img-i2s-in.c
++++ b/sound/soc/img/img-i2s-in.c
+@@ -485,6 +485,7 @@ static int img_i2s_in_probe(struct platform_device *pdev)
+ 	if (IS_ERR(rst)) {
+ 		if (PTR_ERR(rst) == -EPROBE_DEFER) {
+ 			ret = -EPROBE_DEFER;
++			pm_runtime_put(&pdev->dev);
+ 			goto err_suspend;
+ 		}
  
 -- 
 2.25.1
