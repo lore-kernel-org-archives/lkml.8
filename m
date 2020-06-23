@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A24CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8974920E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9A220E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943287;
-	bh=v/vu0Mt0t8AGEPAQQro23PRx3LUfvzfkNaHAULRUE+I=;
+	s=default; t=1592943289;
+	bh=8YYy4IJZKQXxkpqZmR/qPfJb8IQWnmR6BkrYt1kPC/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UyoZnU0/cF/5csS3QTEJeu+k5yMf4IG7dY66amTyFkVNpVdNsya7DJ6dyGQWvKaqi
-	 qnqMETsE1pnWnvCAhS50fgtRGVjiJpd4sbXQ2hlfw7Y7QT7B3gQ03VNsZcEk5R0/74
-	 bY6LAWvBe9M1UWUFc+GbXrbrZinmrBLvtnh3MwxE=
+	b=xO/0Oa4JQr8r18RUSaHa985+ju1hx4K8BwIIqYbk+qI18MFtuBtyncsgta+DAKid8
+	 zA1xgb2SxFF9j2ATyB3mlqfxdEMfpko+1Uu87cmYS2+w0uB7Fw8IquWjibjAp7Sf/r
+	 x8pk4RZr8equQ1s2Hju2gPf39pDx80EMlrV6IF7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389227AbgFWUOo (ORCPT
+        id S2389236AbgFWUOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57206 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389217AbgFWUOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:40 -0400
+        id S2388946AbgFWUOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:14:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6E121473;
-        Tue, 23 Jun 2020 20:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00C5920E65;
+        Tue, 23 Jun 2020 20:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943280;
-        bh=v/vu0Mt0t8AGEPAQQro23PRx3LUfvzfkNaHAULRUE+I=;
+        s=default; t=1592943285;
+        bh=8YYy4IJZKQXxkpqZmR/qPfJb8IQWnmR6BkrYt1kPC/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JeURaZPnWlV5BrvlDmm1BMZN6rSY+iydPBbWocDIsR6HYJnW7ZyGg3yyrdCL3FHur
-         5Nw80iCVQ4xjYESXj1cYrU/qxFYEvfaZhhcqX0OIDTPl3kl/5Swex0zq5NdVUgW4Ha
-         0H+41QD2gFU+iAT/g9GOEHDC+xIGXvmm9LVSN3eU=
+        b=LVpiAf+Z6TzpxTurWWt8F/dh4d4patupxl3JuKwik3d7Ke9m4Yh4RoPcjlW18LAld
+         Ir+1mGLMNGWb6Djvm/KWvVDhA9/WFroTPf+NdYvOHlE/SjiStY659rNCpag8ex2aOD
+         B2mfWBgpp/irgq12uenSoEVADocezMe6FNub82P0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 303/477] mailbox: imx: Fix return in imx_mu_scu_xlate()
-Date:   Tue, 23 Jun 2020 21:55:00 +0200
-Message-Id: <20200623195421.869765709@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 331/477] blktrace: use errno instead of bi_status
+Date:   Tue, 23 Jun 2020 21:55:28 +0200
+Message-Id: <20200623195423.188125683@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,34 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[ Upstream commit 1b3a347b7d56aa637157da1b7df225071af1421f ]
+[ Upstream commit 48bc3cd3e07a1486f45d9971c75d6090976c3b1b ]
 
-This called from mbox_request_channel().  The caller is  expecting error
-pointers and not NULL so this "return NULL;" will lead to an Oops.
+In blk_add_trace_spliti() blk_add_trace_bio_remap() use
+blk_status_to_errno() to pass the error instead of pasing the bi_status.
+This fixes the sparse warning.
 
-Fixes: 0a67003b1985 ("mailbox: imx: add SCU MU support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/imx-mailbox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 7906624a731c1..9d6f0217077b2 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -374,7 +374,7 @@ static struct mbox_chan *imx_mu_scu_xlate(struct mbox_controller *mbox,
- 		break;
- 	default:
- 		dev_err(mbox->dev, "Invalid chan type: %d\n", type);
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 	}
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index ca39dc3230cb3..c6d59a457f50c 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -995,8 +995,10 @@ static void blk_add_trace_split(void *ignore,
  
- 	if (chan >= mbox->num_chans) {
+ 		__blk_add_trace(bt, bio->bi_iter.bi_sector,
+ 				bio->bi_iter.bi_size, bio_op(bio), bio->bi_opf,
+-				BLK_TA_SPLIT, bio->bi_status, sizeof(rpdu),
+-				&rpdu, blk_trace_bio_get_cgid(q, bio));
++				BLK_TA_SPLIT,
++				blk_status_to_errno(bio->bi_status),
++				sizeof(rpdu), &rpdu,
++				blk_trace_bio_get_cgid(q, bio));
+ 	}
+ 	rcu_read_unlock();
+ }
+@@ -1033,7 +1035,8 @@ static void blk_add_trace_bio_remap(void *ignore,
+ 	r.sector_from = cpu_to_be64(from);
+ 
+ 	__blk_add_trace(bt, bio->bi_iter.bi_sector, bio->bi_iter.bi_size,
+-			bio_op(bio), bio->bi_opf, BLK_TA_REMAP, bio->bi_status,
++			bio_op(bio), bio->bi_opf, BLK_TA_REMAP,
++			blk_status_to_errno(bio->bi_status),
+ 			sizeof(r), &r, blk_trace_bio_get_cgid(q, bio));
+ 	rcu_read_unlock();
+ }
 -- 
 2.25.1
 
