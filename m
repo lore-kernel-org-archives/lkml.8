@@ -2,281 +2,121 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62388C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67AF020774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42033207F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592934285;
+	bh=rddvpDfFVekss7/Pg3s+lxXRzrKvxWRTL8sw+yvTBNE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hrSE9Rlaejduqm/C10YstrIk9kDkXRi4X8w3ahFrXDD/5KA+NS2fCn3KyrhqJ2Sva
+	 qFzu7g89HG8ATVJKNKyA3LzDISFRnG21qGHY/DsosMV5zJdqzfjgA1YE8Pq8Eimmxg
+	 xs66IcdWCbKyqgNTU5CC0k7U5HoJCOePL6kOUWfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbgFWRo2 (ORCPT
+        id S1733045AbgFWRon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:44:28 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32784 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733159AbgFWRf1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:27 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NHNbKa031532;
-        Tue, 23 Jun 2020 13:35:10 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 31uk3grq2p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 13:35:10 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 05NHZ8s8031585
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 23 Jun 2020 13:35:09 -0400
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 23 Jun 2020 10:35:07 -0700
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 23 Jun 2020 10:35:07 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 23 Jun 2020 10:35:07 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05NHYxMT017521;
-        Tue, 23 Jun 2020 13:35:05 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v4 4/7] hwmon: pmbus: adm1266: Add ioctl commands
-Date:   Tue, 23 Jun 2020 20:36:56 +0300
-Message-ID: <20200623173659.41358-5-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200623173659.41358-1-alexandru.tachici@analog.com>
-References: <20200623173659.41358-1-alexandru.tachici@analog.com>
+        Tue, 23 Jun 2020 13:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733153AbgFWRfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:25 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 892AB20774;
+        Tue, 23 Jun 2020 17:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592933725;
+        bh=rddvpDfFVekss7/Pg3s+lxXRzrKvxWRTL8sw+yvTBNE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0poEAU+iLCFJpeQ1zms+YPfpUUd1elRRkx+EcDDwo8aNtHVdmJO65pIT1CACkahAO
+         I///GMi1Cf/Z/Uhy24zYGlFqEwGj32u21seozwBiMFV55g4qpSU3kiVDANVc/mV6/3
+         QDqkXcgW+xC9ovZU3UvGHh+XtGVNzUtlWDhpY6Oo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 01/28] sata_rcar: handle pm_runtime_get_sync failure cases
+Date:   Tue, 23 Jun 2020 13:34:56 -0400
+Message-Id: <20200623173523.1355411-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- bulkscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006120000 definitions=main-2006230123
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-Add two ioctl commands for reading the current state
-of the adm1266 sequencer and sending commands.
+[ Upstream commit eea1238867205b9e48a67c1a63219529a73c46fd ]
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
+
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/hwmon/adm1266.rst               | 15 +++
- .../userspace-api/ioctl/ioctl-number.rst      |  1 +
- drivers/hwmon/pmbus/adm1266.c                 | 97 +++++++++++++++++++
- include/uapi/linux/adm1266.h                  | 16 +++
- 4 files changed, 129 insertions(+)
- create mode 100644 include/uapi/linux/adm1266.h
+ drivers/ata/sata_rcar.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/hwmon/adm1266.rst b/Documentation/hwmon/adm1266.rst
-index 65662115750c..5dc05808db60 100644
---- a/Documentation/hwmon/adm1266.rst
-+++ b/Documentation/hwmon/adm1266.rst
-@@ -33,3 +33,18 @@ inX_min			Minimum Voltage.
- inX_max			Maximum voltage.
- inX_min_alarm		Voltage low alarm.
- inX_max_alarm		Voltage high alarm.
-+
-+
-+User API
-+========
-+
-+ioctls
-+------
-+
-+ADM1266_SET_GO_COMMAND:
-+
-+  Issue a GO_COMMAND to the device.
-+
-+ADM1266_GET_STATUS:
-+
-+  Returns state of the sequencer.
-diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-index f759edafd938..db4d912e3d86 100644
---- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-+++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-@@ -345,6 +345,7 @@ Code  Seq#    Include File                                           Comments
- 0xCC  00-0F  drivers/misc/ibmvmc.h                                   pseries VMC driver
- 0xCD  01     linux/reiserfs_fs.h
- 0xCF  02     fs/cifs/ioctl.c
-+0xD1  00-0F  linux/adm1266.h
- 0xDB  00-0F  drivers/char/mwave/mwavepub.h
- 0xDD  00-3F                                                          ZFCP device driver see drivers/s390/scsi/
-                                                                      <mailto:aherrman@de.ibm.com>
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-index 76bf2c78e737..0960ead8d96a 100644
---- a/drivers/hwmon/pmbus/adm1266.c
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -15,11 +15,16 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/proc_fs.h>
- #include <linux/slab.h>
-+#include <linux/uaccess.h>
+diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+index 980aacdbcf3b4..141ac600b64c8 100644
+--- a/drivers/ata/sata_rcar.c
++++ b/drivers/ata/sata_rcar.c
+@@ -907,7 +907,7 @@ static int sata_rcar_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(dev);
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0)
+-		goto err_pm_disable;
++		goto err_pm_put;
  
-+#include <linux/adm1266.h>
- #include "pmbus.h"
+ 	host = ata_host_alloc(dev, 1);
+ 	if (!host) {
+@@ -937,7 +937,6 @@ static int sata_rcar_probe(struct platform_device *pdev)
  
- #define ADM1266_PDIO_CONFIG	0xD4
-+#define ADM1266_GO_COMMAND	0xD8
-+#define ADM1266_READ_STATE	0xD9
- #define ADM1266_GPIO_CONFIG	0xE1
- #define ADM1266_PDIO_STATUS	0xE9
- #define ADM1266_GPIO_STATUS	0xEA
-@@ -46,6 +51,7 @@ struct adm1266_data {
- 	struct gpio_chip gc;
- 	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
- 	struct i2c_client *client;
-+	struct mutex ioctl_mutex; /* lock ioctl access */
- };
- 
- /* Different from Block Read as it sends data and waits for the slave to
-@@ -311,6 +317,93 @@ static int adm1266_config_gpio(struct adm1266_data *data)
+ err_pm_put:
+ 	pm_runtime_put(dev);
+-err_pm_disable:
+ 	pm_runtime_disable(dev);
+ 	return ret;
  }
- #endif
+@@ -991,8 +990,10 @@ static int sata_rcar_resume(struct device *dev)
+ 	int ret;
  
-+static int adm1266_set_go_command_op(struct adm1266_data *data, u8 val)
-+{
-+	val = FIELD_GET(GENMASK(4, 0), val);
-+
-+	return i2c_smbus_write_word_data(data->client, ADM1266_GO_COMMAND, val);
-+}
-+
-+static int adm1266_ioctl_unlocked(struct file *fp, unsigned int cmd,
-+				  unsigned long arg)
-+{
-+	int __user *argp = (int __user *)arg;
-+	struct adm1266_data *data;
-+	int val;
-+	int ret;
-+
-+	data = fp->private_data;
-+
-+	if (!argp)
-+		return -EINVAL;
-+
-+	switch (cmd) {
-+	case ADM1266_SET_GO_COMMAND:
-+		if (copy_from_user(&val, argp, sizeof(int)))
-+			return -EFAULT;
-+
-+		return adm1266_set_go_command_op(data, val);
-+	case ADM1266_GET_STATUS:
-+		ret = i2c_smbus_read_word_data(data->client,
-+					       ADM1266_READ_STATE);
-+
-+		if (ret < 0)
-+			return ret;
-+
-+		if (copy_to_user(argp, &ret, sizeof(int)))
-+			return -EFAULT;
-+
-+		break;
-+	default:
-+		return -ENOTTY;
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
 +	}
-+
-+	return 0;
-+}
-+
-+static long adm1266_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
-+{
-+	struct adm1266_data *data;
-+	long ret;
-+
-+	data = fp->private_data;
-+
-+	mutex_lock(&data->ioctl_mutex);
-+	ret = adm1266_ioctl_unlocked(fp, cmd, arg);
-+	mutex_unlock(&data->ioctl_mutex);
-+
-+	return ret;
-+}
-+
-+static int adm1266_open(struct inode *inode, struct file *filp)
-+{
-+	filp->private_data = PDE_DATA(inode);
-+
-+	return 0;
-+}
-+
-+static const struct proc_ops adm1266_proc_ops = {
-+	.proc_open	= adm1266_open,
-+	.proc_ioctl	= adm1266_ioctl,
-+};
-+
-+static int adm1266_init_procfs(struct adm1266_data *data)
-+{
-+	struct proc_dir_entry *proc_dir;
-+	u8 proc_fs_name[32];
-+
-+	mutex_init(&data->ioctl_mutex);
-+
-+	snprintf(proc_fs_name, 32, "adm1266-%x", data->client->addr);
-+	proc_dir = proc_create_data(proc_fs_name, 0, NULL, &adm1266_proc_ops,
-+				    data);
-+
-+	if (!proc_dir)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static int adm1266_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -333,6 +426,10 @@ static int adm1266_probe(struct i2c_client *client,
  
- 	crc8_populate_msb(pmbus_crc_table, 0x7);
+ 	if (priv->type == RCAR_GEN3_SATA) {
+ 		sata_rcar_init_module(priv);
+@@ -1017,8 +1018,10 @@ static int sata_rcar_restore(struct device *dev)
+ 	int ret;
  
-+	ret = adm1266_init_procfs(data);
-+	if (ret < 0)
-+		return ret;
-+
- 	info = &data->info;
- 	info->pages = 17;
- 	info->format[PSC_VOLTAGE_OUT] = linear;
-diff --git a/include/uapi/linux/adm1266.h b/include/uapi/linux/adm1266.h
-new file mode 100644
-index 000000000000..0db3c1129293
---- /dev/null
-+++ b/include/uapi/linux/adm1266.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * ADM1266 - Cascadable Super Sequencer with Margin
-+ * Control and Fault Recording
-+ *
-+ * Copyright 2020 Analog Devices Inc.
-+ */
-+
-+#ifndef _LINUX_ADM1266_H
-+#define _LINUX_ADM1266_H
-+
-+/* ADM1266 ioctl commands */
-+#define ADM1266_SET_GO_COMMAND		_IOW(0xD1, 0x00, int)
-+#define ADM1266_GET_STATUS		_IOR(0xD1, 0x01, int)
-+
-+#endif
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 
+ 	sata_rcar_setup_port(host);
+ 
 -- 
-2.20.1
+2.25.1
 
