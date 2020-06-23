@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9AB32076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE56020720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592871888;
-	bh=fvg7edpN5UhbdDyxgVut+DhMZyQFLMSLs4aQ8/dgmE0=;
+	s=default; t=1592871889;
+	bh=BYXm29KJj9Z265W9P4EdU/JUSgSluBZZAEaSUoJJsQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rXmT5JrLueb2xugXH2CSbjb6kG7tIWTDHc/57K2vBnzJBElwsPqNN3iJkxNyvSrwy
-	 m7iXH8BtvrCbZjhBX2i5yCbb4EFubl6X94W7BtCyXTK/712bLfgF/GnaextnGPuWDS
-	 bH2aDtlqQVqyF/NPmgNwhso7bRhih2oLpVdtqPgI=
+	b=X5gEyAhgoRzFiqAx6IyjKSkjtnbyLV3liXpqFk2hGwCZGMEXcLIFI2RzCrNy+fhzG
+	 zxYVkOCtRLEObM0sG2scNyXAWry5XoWvbLG3g8LByM6HCQ8rIg/fE6Jr+mYmmD16LW
+	 fifx1YCLn5e+HlUECcxf8Webr3jLcMQMR/dHbTbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731671AbgFWAYr (ORCPT
+        id S1731815AbgFWAYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:24:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51136 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731486AbgFWAYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730987AbgFWAYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:24:45 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ABA220780;
+        by mail.kernel.org (Postfix) with ESMTPSA id 08D1820702;
         Tue, 23 Jun 2020 00:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592871885;
-        bh=fvg7edpN5UhbdDyxgVut+DhMZyQFLMSLs4aQ8/dgmE0=;
+        bh=BYXm29KJj9Z265W9P4EdU/JUSgSluBZZAEaSUoJJsQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sfe5yPIxVv6YqTyMP7dj00iesVEr0E6J+SQ+7bCaf6M8jRsNEGzQJCxzslScYhsUz
-         aBQPVZnIFuljLRQjhCCVHgNAskRoMfkdNgkgD3GN3Ss0Xe4b48q8S/exwlQaD1rfx/
-         SpvOv/p7sdJHFgKBFka9WxmMrPX6+di/5zl7WoOE=
+        b=i7CKfT95tW8KyfFsxg+PGDlY0uHG/O2nqJn/dL8dJtxSHrRqIxikMbNu1WYuHEkhO
+         uVA3Ma/1zlyGV992up/UImsvQAUhdBrlW53ik5d9lwV8u2PDfpTwMWBxr0G9kpUjo4
+         cR/KsBj4EQqWGm/pOk4O0eTZeKQc0L0pJCab4RI0=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 2/5] rcu-tasks: Make rcu_tasks_postscan() be static
-Date:   Mon, 22 Jun 2020 17:24:40 -0700
-Message-Id: <20200623002443.25954-2-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 1/5] rcu-tasks: Convert sleeps to idle priority
+Date:   Mon, 22 Jun 2020 17:24:39 -0700
+Message-Id: <20200623002443.25954-1-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002423.GA25869@paulmck-ThinkPad-P72>
 References: <20200623002423.GA25869@paulmck-ThinkPad-P72>
@@ -61,28 +61,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The rcu_tasks_postscan() function is not used outside of RCU's tasks.h
-file, so this commit makes it be static.
+This commit converts the long-standing schedule_timeout_interruptible()
+and schedule_timeout_uninterruptible() calls used by the various Tasks
+RCU's grace-period kthreads to schedule_timeout_idle().  This conversion
+avoids polluting the load-average with Tasks-RCU-related sleeping.
 
-Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tasks.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/tasks.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 91fee81..da200e5 100644
+index ce23f6c..91fee81 100644
 --- a/kernel/rcu/tasks.h
 +++ b/kernel/rcu/tasks.h
-@@ -402,7 +402,7 @@ static void rcu_tasks_pertask(struct task_struct *t, struct list_head *hop)
- }
+@@ -205,7 +205,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+ 			if (!rtp->cbs_head) {
+ 				WARN_ON(signal_pending(current));
+ 				set_tasks_gp_state(rtp, RTGS_WAIT_WAIT_CBS);
+-				schedule_timeout_interruptible(HZ/10);
++				schedule_timeout_idle(HZ/10);
+ 			}
+ 			continue;
+ 		}
+@@ -227,7 +227,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+ 			cond_resched();
+ 		}
+ 		/* Paranoid sleep to keep this from entering a tight loop */
+-		schedule_timeout_uninterruptible(HZ/10);
++		schedule_timeout_idle(HZ/10);
  
- /* Processing between scanning taskslist and draining the holdout list. */
--void rcu_tasks_postscan(struct list_head *hop)
-+static void rcu_tasks_postscan(struct list_head *hop)
- {
- 	/*
- 	 * Wait for tasks that are in the process of exiting.  This
+ 		set_tasks_gp_state(rtp, RTGS_WAIT_CBS);
+ 	}
+@@ -336,7 +336,7 @@ static void rcu_tasks_wait_gp(struct rcu_tasks *rtp)
+ 
+ 		/* Slowly back off waiting for holdouts */
+ 		set_tasks_gp_state(rtp, RTGS_WAIT_SCAN_HOLDOUTS);
+-		schedule_timeout_interruptible(HZ/fract);
++		schedule_timeout_idle(HZ/fract);
+ 
+ 		if (fract > 1)
+ 			fract--;
 -- 
 2.9.5
 
