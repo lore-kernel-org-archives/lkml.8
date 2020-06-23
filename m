@@ -2,157 +2,103 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1504DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A6B2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C842053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWZ+7Xai"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Xe1VXlAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732465AbgFWBFB (ORCPT
+        id S1732484AbgFWBFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731526AbgFWBFB (ORCPT
+        Mon, 22 Jun 2020 21:05:12 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49147 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731526AbgFWBFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:05:01 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A7AC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:05:00 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id l63so181157oih.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6CfJ8Pc9YLqJXskuETsP85RAipKzoJPI0qElzgwT8aM=;
-        b=FWZ+7XaiqHMa4Q12NfmF5NoZFKlDHLyGxKbp5PLgnia7yxslU3AmjT/Tub3twO9gDe
-         JZNIHOvfwVBuymSj7SQheE1ekHMULPH3JEiw9Ug/zM2w+hA/V1+smCSPt3iUx4e27jgm
-         W6voYhCLJ38pJlnBoXJbyp+GYfWPxp3CTvliqZnHN4p+V5MyB2lTqlaArT+SxQXtIuLu
-         OwJpyBwxTt91GO3Q4WFHfjc3lkUliqPfhidG0B829V+rvohOyDbPReA0oFBFYOpZ9x6c
-         2NhQ6douaqGT2X7jkIEmK+d17RXs8fJEsFAr5f6DHJcMyusVryYdb4jRONe51aciTr7u
-         TrFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6CfJ8Pc9YLqJXskuETsP85RAipKzoJPI0qElzgwT8aM=;
-        b=rLny2s1YCFPmqkEgv9QnNXDymxpP4wb+5+ELOyLsVBd87sO7z+BWnVUSnDaU+6JJ0V
-         qSa1txFCB90Z0P7f4OEmus72ZGGLkiqcjm+MTjj1tBkO0xL1rLVJ2A6Gl1mrh+VX/JiT
-         lQBvJ90tniKobaqozqJbhW5krUGOjC7KxYGOIXZPPJFQ33tXj8V8ucdCNOIHy3s+6OJg
-         3fHDzYYKEX4FmYGTDs5JibVNnmC/wpfGUPXlMg2SRAU261kFZqsCN3Hs+sG3BTVkF34Z
-         eyaNw44OoB4l6xIAdwNdZ3PrvjqZaWiLEJoRR8JfvCpAwP4C0bqr2xvpprTPXq495LdW
-         wytQ==
-X-Gm-Message-State: AOAM53384qIwsVoz/yVURfE6jxyiRDmFOl4sHR4cpk8+dX5pqv8p0y7O
-        gHXJPmEc+hgpmeKhC5M2Vi0=
-X-Google-Smtp-Source: ABdhPJxXvXTYx0mxK9chxigSTiPWbhvGp8FLj5viZTi+p3AexRVBzIeK0hcCSQhjfng7kJbQZuiP2w==
-X-Received: by 2002:aca:aa4b:: with SMTP id t72mr13734421oie.99.1592874299402;
-        Mon, 22 Jun 2020 18:04:59 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id e17sm3614276oiy.21.2020.06.22.18.04.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 18:04:58 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] mailbox: imx: Mark PM functions as __maybe_unused
-Date:   Mon, 22 Jun 2020 18:04:03 -0700
-Message-Id: <20200623010403.517691-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+        Mon, 22 Jun 2020 21:05:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592874311; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=XSGSsXlXDBiekM7bF6DTX6/EWPB4KQKjvQGP3O6Lh6I=; b=Xe1VXlAYYaOJ5puYp9mJpG4ovM9iq15EPEi4dheASzpAT9zdOvD1ULleKrmHENg/qiOgmn43
+ HV41D3k5aRA3xZQE1DBsMZ938AQrYaD4gSqvOql/yLFwsRFisYzgcdSMBsC0aSTk48CLKyAe
+ /aN8aGQhc59LPinjmnrnyqH09zM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ef1553dad153efa344cc466 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 01:05:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A731AC433CB; Tue, 23 Jun 2020 01:05:00 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC876C433C6;
+        Tue, 23 Jun 2020 01:04:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC876C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org, elder@ieee.org,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH v5 0/2] Extend SSR notifications framework
+Date:   Mon, 22 Jun 2020 18:04:29 -0700
+Message-Id: <1592874271-26697-1-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_PM and CONFIG_PM_SLEEP are unset, the following warnings
-occur:
+This set of patches gives kernel client drivers the ability to register
+for a particular remoteproc's SSR notifications. Also the notifications
+are extended to before/after-powerup/shutdown stages.
+It also fixes the bug where clients need to register for notifications
+again if the platform driver is removed. This is done by creating a
+global list of per-remoteproc notification info data structures which
+remain static. An API is exported to register for a remoteproc's SSR
+notifications and uses remoteproc's ssr_name and notifier block as
+arguments.
 
-drivers/mailbox/imx-mailbox.c:638:12: warning: 'imx_mu_runtime_resume'
-defined but not used [-Wunused-function]
-  638 | static int imx_mu_runtime_resume(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~~~~~
-drivers/mailbox/imx-mailbox.c:629:12: warning: 'imx_mu_runtime_suspend'
-defined but not used [-Wunused-function]
-  629 | static int imx_mu_runtime_suspend(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~~~~~~
-drivers/mailbox/imx-mailbox.c:611:12: warning: 'imx_mu_resume_noirq'
-defined but not used [-Wunused-function]
-  611 | static int imx_mu_resume_noirq(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~~~
-drivers/mailbox/imx-mailbox.c:601:12: warning: 'imx_mu_suspend_noirq'
-defined but not used [-Wunused-function]
-  601 | static int imx_mu_suspend_noirq(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~~~~
+Changelog:
+v5 -> v4:
+- Make qcom_ssr_get_subsys static function
+- Fix mutex locking
+- Fix function comments
 
-Mark these functions as __maybe_unused, which is the standard procedure
-for PM functions.
+v4 -> v3:
+- Fix naming convention 
 
-Fixes: bb2b2624dbe2 ("mailbox: imx: Add runtime PM callback to handle MU clocks")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/mailbox/imx-mailbox.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+v3 -> v2:
+- Create a global list of per remoteproc notification data structure
+- Pass ssr_name and crashed information as part of notification data
+- Move notification type enum to qcom_rproc.h from remoteproc.h
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 7205b825c8b5..2543c7b6948b 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -598,7 +598,7 @@ static const struct of_device_id imx_mu_dt_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
- 
--static int imx_mu_suspend_noirq(struct device *dev)
-+static int __maybe_unused imx_mu_suspend_noirq(struct device *dev)
- {
- 	struct imx_mu_priv *priv = dev_get_drvdata(dev);
- 
-@@ -608,7 +608,7 @@ static int imx_mu_suspend_noirq(struct device *dev)
- 	return 0;
- }
- 
--static int imx_mu_resume_noirq(struct device *dev)
-+static int __maybe_unused imx_mu_resume_noirq(struct device *dev)
- {
- 	struct imx_mu_priv *priv = dev_get_drvdata(dev);
- 
-@@ -626,7 +626,7 @@ static int imx_mu_resume_noirq(struct device *dev)
- 	return 0;
- }
- 
--static int imx_mu_runtime_suspend(struct device *dev)
-+static int __maybe_unused imx_mu_runtime_suspend(struct device *dev)
- {
- 	struct imx_mu_priv *priv = dev_get_drvdata(dev);
- 
-@@ -635,7 +635,7 @@ static int imx_mu_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int imx_mu_runtime_resume(struct device *dev)
-+static int __maybe_unused imx_mu_runtime_resume(struct device *dev)
- {
- 	struct imx_mu_priv *priv = dev_get_drvdata(dev);
- 	int ret;
+v2 -> v1:
+- Fix commit text
 
-base-commit: 27f11fea33608cbd321a97cbecfa2ef97dcc1821
+Rishabh Bhatnagar (1):
+  remoteproc: qcom: Add per subsystem SSR notification
+
+Siddharth Gupta (1):
+  remoteproc: qcom: Add notification types to SSR
+
+ drivers/remoteproc/qcom_common.c      | 128 ++++++++++++++++++++++++++++++----
+ drivers/remoteproc/qcom_common.h      |   5 +-
+ include/linux/remoteproc/qcom_rproc.h |  36 ++++++++--
+ 3 files changed, 149 insertions(+), 20 deletions(-)
+
 -- 
-2.27.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
