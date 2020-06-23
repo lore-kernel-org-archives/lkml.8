@@ -2,151 +2,118 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E831C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73361C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB30206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435C0206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mojatatu-com.20150623.gappssmtp.com header.i=@mojatatu-com.20150623.gappssmtp.com header.b="qSsa6OU9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pCU7BT0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732201AbgFWKIj (ORCPT
+        id S1732244AbgFWKJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:08:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42110 "EHLO
+        Tue, 23 Jun 2020 06:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732056AbgFWKIj (ORCPT
+        with ESMTP id S1728265AbgFWKJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:08:39 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56BAC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:08:38 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id j10so6313779qtq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:08:38 -0700 (PDT)
+        Tue, 23 Jun 2020 06:09:19 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C34AC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:09:19 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id c194so18375023oig.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:09:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mojatatu-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9c5WFc7U6zTXjrlhiVZtfgtzr3l/N/zum3a6S9gkYE8=;
-        b=qSsa6OU9kW5ScBHY9Uije4v8qAfThq0HASHHxyOLqkFDkz2exTmO2KggpFOyzKBIIe
-         H1IYv3oIyFcJXZvRc95KHlIkeryIiG4gVJNUChVq+pu6qLQuIkeA4TLfygIIdd0z/ONF
-         uO3bIAr5JKQEmQ1cgYUhVJ6WVsNYtgxiF3EtVMad1Uy/fV8h7xlwdT5VP1vpON9Qj5bt
-         w3RGdJJWEmdWZCCWY0uo2QtXCt0R9SKbKjLRQ45lcDpczcHURFKtKFBrCrTBdM4VWx8e
-         K0d+KwQjdx6BPkqP4WZC6q8s/bqxzWSSnIbtBdPFXOq/JHYvw1N+13QsWe1Yr9wZWhkr
-         Nvqg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rU2hdhGD7fNtW6Y+12AGojPtiGkpRBwEsJIOODw6oSk=;
+        b=pCU7BT0tDtwCvaiAm4xPhpb1ZoO7AvlAMIiGWxQqFb9kiDu3fiYmT+Y1yteEWeSc8M
+         N1dfj19zTPci8X2KQTYhNOI719d7om5Q3LDRcDayt/Or/0DdPiNQ/Yu2eFHh7B9bQAk/
+         yhZILXAelpJfhCF34X76NuMC0NO+V2pFFftCrfwqJ/DNjQ7EzfIAYp21TpEW3BncSE2u
+         ADuFCObQQiM6P0oROGxUywcr1Xmu6rKUJ6P/+pTuhSyUWRhVizBeUVr3R7/6w9hGV40t
+         t/q9hOcDfwTdpaOkVqoy+jWDDyPuLd1gcisny5nVn5726xXHQfo6b6FjfE1K4dSGIqJ/
+         7rUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9c5WFc7U6zTXjrlhiVZtfgtzr3l/N/zum3a6S9gkYE8=;
-        b=dplu97cl+MizXd3b/QuyREucjOlq2IZSUHMskF7XOOimRoCtk0FW8Au/9DGLifOeak
-         SIJ61xbMhhsXFSc3JgLsrU0M/H8yJARKs4KWZArzL4CNUL3zp99q8bUzL9Sc1zcc44lp
-         OyoIQLhBbZ280e/MdvjTUFRB1mcl9g9DgRrq82NYdfY2A0QXV6Bug+3F3lwsEusMdBgy
-         qFBkq4XFI2HtvOC7cG78xshYjN6pn2zbRTpaLXlrsfXzlxgK9KF3TTcq1f53vaj0I7++
-         p5t+FRSXag44taMqf4Z8uvjww/pgQIBZYTklEyLUkZJst29SZLi4yvCtQfwowRzbCMU1
-         zYtg==
-X-Gm-Message-State: AOAM533g2gRoySIliDKSGREZS7bhUdMaPmg3SQRbP9KbY5EYb7MotpGL
-        xVEall6YkUcL3MY0ZdF9XFcgYw==
-X-Google-Smtp-Source: ABdhPJy24UnGM7Z8N2w5Eq1VoE3RKa41iF21QECGwxIDrvqHQGElYtwGPT2VGIyrKkEIqxzwgZtktQ==
-X-Received: by 2002:ac8:19cb:: with SMTP id s11mr20521359qtk.105.1592906918001;
-        Tue, 23 Jun 2020 03:08:38 -0700 (PDT)
-Received: from [192.168.1.117] (23-233-27-60.cpe.pppoe.ca. [23.233.27.60])
-        by smtp.googlemail.com with ESMTPSA id b53sm141741qtc.65.2020.06.23.03.08.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 03:08:37 -0700 (PDT)
-Subject: Re: [v1,net-next 3/4] net: qos: police action add index for tc flower
- offloading
-To:     Po Liu <po.liu@nxp.com>, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        idosch@idosch.org
-Cc:     jiri@resnulli.us, vinicius.gomes@intel.com, vlad@buslov.dev,
-        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
-        alexandru.marginean@nxp.com, michael.chan@broadcom.com,
-        vishal@chelsio.com, saeedm@mellanox.com, leon@kernel.org,
-        jiri@mellanox.com, idosch@mellanox.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        kuba@kernel.org, xiyou.wangcong@gmail.com,
-        simon.horman@netronome.com, pablo@netfilter.org,
-        moshe@mellanox.com, m-karicheri2@ti.com,
-        andre.guedes@linux.intel.com, stephen@networkplumber.org,
-        Edward Cree <ecree@solarflare.com>
-References: <20200306125608.11717-7-Po.Liu@nxp.com>
- <20200623063412.19180-1-po.liu@nxp.com>
- <20200623063412.19180-3-po.liu@nxp.com>
-From:   Jamal Hadi Salim <jhs@mojatatu.com>
-Message-ID: <77323916-6815-4044-eff5-8cafc4950749@mojatatu.com>
-Date:   Tue, 23 Jun 2020 06:08:34 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rU2hdhGD7fNtW6Y+12AGojPtiGkpRBwEsJIOODw6oSk=;
+        b=DC1JqkdHcYo4GblBpDEEDLOHFjJrv3OPa9SUeih0xjOiNi8aK5Pi6/8fjKE5l4peSt
+         PF3zAQsGltiEG8FI8961RRnj77AmXFVUjLFLCFu3pWU6RWA2ohemxr588ljZxTMPSd8c
+         OrrJK57H0XQjOgzRBH1lsDREnbtnQ9HlWqV/ae4D+MjW0NMEogJiZcK0GFbTNHL1iiAj
+         uagRhmmUE3VhxwIhIvaO1/YTwk46tnRcUObZbe26eV7JN78GMzdkJNgjI1Pbsc7LWFTp
+         vGDebOZBXr+0IML6l+KaM0KCnJhR+UMCzr4jzjIzUp4PeEHrxwAdH75D0RterxKQRXuh
+         MIJw==
+X-Gm-Message-State: AOAM533uv/6Jb1YsU4G379vLYE24K9Rk2Bc+3NsnKNboqRg+NbPy2HqV
+        xGHiypPbtIMnGZ3v5mX1jhfNfDCTY/8xZG62Mw5c2g==
+X-Google-Smtp-Source: ABdhPJyLbqT3YNW3hb8nC+z6sAupP/viLWv3tDVCgY+urTIUfRq5q9195OLwSA9zcAZDtENjTwGGr82qLFRD3gKojPU=
+X-Received: by 2002:aca:530e:: with SMTP id h14mr15692305oib.172.1592906958117;
+ Tue, 23 Jun 2020 03:09:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200623063412.19180-3-po.liu@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000c25ce105a8a8fcd9@google.com> <20200622094923.GP576888@hirez.programming.kicks-ass.net>
+ <20200623124413.08b2bd65@canb.auug.org.au> <20200623093230.GD4781@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200623093230.GD4781@hirez.programming.kicks-ass.net>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 23 Jun 2020 12:09:06 +0200
+Message-ID: <CANpmjNOeN=m5i-kEn-no5d3zUdAKv=gLidEENtgQCo5umNTSjw@mail.gmail.com>
+Subject: Re: linux-next build error (9)
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzbot <syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jim Mattson <jmattson@google.com>, joro@8bytes.org,
+        kvm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        sean.j.christopherson@intel.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>, vkuznets@redhat.com,
+        wanpengli@tencent.com, "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This certainly brings an interesting point which i brought up earlier
-when Jiri was doing offloading of stats.
-In this case the action index is being used as the offloaded
-policer index (note: there'd need to be a check whether the
-index is infact acceptable to the h/w etc unless there
-2^32 meters available in the hardware).
+On Tue, 23 Jun 2020 at 11:32, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Jun 23, 2020 at 12:44:13PM +1000, Stephen Rothwell wrote:
+> > Hi Peter,
+> >
+> > On Mon, 22 Jun 2020 11:49:23 +0200 Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> > > Hurmph, I though that was cured in GCC >= 8. Marco?
+> >
+> > So what causes this? Because we got a couple of these in our s390 builds last night as well.
+>
+> This is KASAN's __no_sanitize_address function attribute. Some GCC
+> versions are utterly wrecked when that function attribute is combined
+> with inlining. It wants to have matching attributes for the function
+> being inlined and function it is inlined into -- hence the function
+> attribute mismatch.
+>
+> > kernel/locking/lockdep.c:805:1: error: inlining failed in call to always_inline 'look_up_lock_class': function attribute mismatch
+> > include/linux/debug_locks.h:15:28: error: inlining failed in call to always_inline '__debug_locks_off': function attribute mismatch
+> >
+> > s390-linux-gcc (GCC) 8.1.0 / GNU ld (GNU Binutils) 2.30
+>
+> *groan*... So supposedly it was supposed to work on GCC-8 and later, see
+> commit 7b861a53e46b6. But now it turns out there's some later versions
+> that fail too.
+>
+> I suppose the next quest is finding a s390 compiler version that works
+> and then bumping the version test in the aforementioned commit.
 
-My question: Is this any different from how stats are structured?
-In this case you can map the s/w action index to a h/w table index
-(of meters).
-My comment then was: hardware i have encountered (and i pointed to P4
-model as well) assumes an indexed table of stats.
+ I'm trying to figure out by inspecting GCC changelogs which version
+and which arch is actually good.
 
-cheers,
-jamal
-
-On 2020-06-23 2:34 a.m., Po Liu wrote:
-> From: Po Liu <Po.Liu@nxp.com>
-> 
-> Hardware may own many entries for police flow. So that make one(or
->   multi) flow to be policed by one hardware entry. This patch add the
-> police action index provide to the driver side make it mapping the
-> driver hardware entry index.
-> 
-> Signed-off-by: Po Liu <Po.Liu@nxp.com>
-> ---
->   include/net/flow_offload.h | 1 +
->   net/sched/cls_api.c        | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
-> index c2ef19c6b27d..eed98075b1ae 100644
-> --- a/include/net/flow_offload.h
-> +++ b/include/net/flow_offload.h
-> @@ -232,6 +232,7 @@ struct flow_action_entry {
->   			bool			truncate;
->   		} sample;
->   		struct {				/* FLOW_ACTION_POLICE */
-> +			u32			index;
->   			s64			burst;
->   			u64			rate_bytes_ps;
->   			u32			mtu;
-> diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
-> index 6aba7d5ba1ec..fdc4c89ca1fa 100644
-> --- a/net/sched/cls_api.c
-> +++ b/net/sched/cls_api.c
-> @@ -3659,6 +3659,7 @@ int tc_setup_flow_action(struct flow_action *flow_action,
->   			entry->police.rate_bytes_ps =
->   				tcf_police_rate_bytes_ps(act);
->   			entry->police.mtu = tcf_police_tcfp_mtu(act);
-> +			entry->police.index = act->tcfa_index;
->   		} else if (is_tcf_ct(act)) {
->   			entry->id = FLOW_ACTION_CT;
->   			entry->ct.action = tcf_ct_action(act);
-> 
-
+Thanks,
+-- Marco
