@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 786DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1978C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDFB20809
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA3E2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872282;
-	bh=kYiQhMrNluGmJ/gH/lJElNvisMeCFkHWqBFYmA0RsSw=;
+	s=default; t=1592872285;
+	bh=Gz9z6ir3rGrxGlwUj+lXRqUdYYT2OYGIBdhVPWGhuRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeeCUSeSSUhQhzR0swc6IsBzNUOgVA55pZmaO4E8YA1ttVfkXDE2KcX0oxw2jiGR8
-	 1SnuWVhVl2/2zmTUIF1HyrBxSwYDqljqHvKNCtR4Vq2SHQJz7BPnRxrtrTnk3GKeMS
-	 9JL2xuBPUyKiINZdJWCoczdI74nnLSmPQV/lpwDs=
+	b=onC5A9rScViJ/9AyDrJhYK9hda+PtE5ZuDi1tBdpQ4yZwN8xxpFfFunmTSvW/Bgm2
+	 gorLEalTWhbiqyDDl/MKomywv41Rfiea7UUbRLVkxu3OwWR0hk+sOGyWBNmPPq2RKj
+	 cBHX5xUPLropC8CVA99BuGeAPsDQhqRJfqbWhu2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731630AbgFWAbN (ORCPT
+        id S1731696AbgFWAaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:31:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55780 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731716AbgFWAaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:30:20 -0400
+        id S1731633AbgFWAaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:30:16 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 734892100A;
-        Tue, 23 Jun 2020 00:30:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D98207DD;
+        Tue, 23 Jun 2020 00:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872220;
-        bh=kYiQhMrNluGmJ/gH/lJElNvisMeCFkHWqBFYmA0RsSw=;
+        s=default; t=1592872216;
+        bh=Gz9z6ir3rGrxGlwUj+lXRqUdYYT2OYGIBdhVPWGhuRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUd852T7roU9GgtDSLSmezRpfvEPxLihZ7g2DqSsaukAztKX4/YoxgwCSKw0mtp8t
-         mCzEMKcL5+qlzuYD3JsCGsq8OWdhOW7n1B8WI1c9nDz8BJKccXcaUairBuLJLk4miR
-         ESsi4+xBwAZgfchQf+BR/zlegUp/TWngip5eA7Zk=
+        b=uKRhy4OY97BG1yUTxZ7C+e0OJM0FylYcsQ6btG6bDDawdLEiL6nCxkjFCcn99OocO
+         HuSjBaBPhvtye3ZEJwEOKWVR/vseLjJ2s8YkkyK7tL6mUZR1sW6Hf2rF2MsQxmG7vC
+         B+4nzKiVxtn6btyTDRHa/5TZPks/UYqe4kcxmPkI=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 26/30] refperf: Add test for RCU Tasks readers
-Date:   Mon, 22 Jun 2020 17:30:09 -0700
-Message-Id: <20200623003013.26252-26-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 05/30] refperf: Add holdoff parameter to allow CPUs to come online
+Date:   Mon, 22 Jun 2020 17:29:48 -0700
+Message-Id: <20200623003013.26252-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002941.GA26089@paulmck-ThinkPad-P72>
 References: <20200623002941.GA26089@paulmck-ThinkPad-P72>
@@ -61,61 +61,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds testing for RCU Tasks readers to the refperf module.
-This also applies to RCU Rude readers, as both flavors have empty
-(as in non-existent) read-side markers.
+This commit adds an rcuperf module parameter named "holdoff" that
+defaults to 10 seconds if refperf is built in and to zero otherwise.
+The assumption is that all the CPUs are online by the time that the
+modprobe and insmod commands are going to do anything, and that normal
+systems will have all the CPUs online within ten seconds.
 
+Larger systems may take many tens of seconds or even minutes to get
+to this point, hence this being a module parameter instead of being a
+hard-coded constant.
+
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/refperf.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ kernel/rcu/refperf.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-index da7de9a..2bfdcdc 100644
+index 6116153..4d686fd 100644
 --- a/kernel/rcu/refperf.c
 +++ b/kernel/rcu/refperf.c
-@@ -192,6 +192,31 @@ static struct ref_perf_ops srcu_ops = {
- 	.name		= "srcu"
- };
+@@ -57,7 +57,10 @@ MODULE_PARM_DESC(perf_type, "Type of test (rcu, srcu, refcnt, rwsem, rwlock.");
  
-+// Definitions for RCU Tasks ref perf testing: Empty read markers.
-+// These definitions also work for RCU Rude readers.
-+static void rcu_tasks_ref_perf_read_section(const int nloops)
-+{
-+	int i;
-+
-+	for (i = nloops; i >= 0; i--)
-+		continue;
-+}
-+
-+static void rcu_tasks_ref_perf_delay_section(const int nloops, const int udl, const int ndl)
-+{
-+	int i;
-+
-+	for (i = nloops; i >= 0; i--)
-+		un_delay(udl, ndl);
-+}
-+
-+static struct ref_perf_ops rcu_tasks_ops = {
-+	.init		= rcu_sync_perf_init,
-+	.readsection	= rcu_tasks_ref_perf_read_section,
-+	.delaysection	= rcu_tasks_ref_perf_delay_section,
-+	.name		= "rcu-tasks"
-+};
-+
- // Definitions for RCU Tasks Trace ref perf testing.
- static void rcu_trace_ref_perf_read_section(const int nloops)
+ torture_param(int, verbose, 0, "Enable verbose debugging printk()s");
+ 
+-// Number of loops per experiment, all readers execute an operation concurrently
++// Wait until there are multiple CPUs before starting test.
++torture_param(int, holdoff, IS_BUILTIN(CONFIG_RCU_REF_PERF_TEST) ? 10 : 0,
++	      "Holdoff time before test start (s)");
++// Number of loops per experiment, all readers execute operations concurrently.
+ torture_param(long, loops, 10000000, "Number of loops per experiment.");
+ 
+ #ifdef MODULE
+@@ -248,6 +251,8 @@ ref_perf_reader(void *arg)
+ 	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
+ 	set_user_nice(current, MAX_NICE);
+ 	atomic_inc(&n_init);
++	if (holdoff)
++		schedule_timeout_interruptible(holdoff * HZ);
+ repeat:
+ 	VERBOSE_PERFOUT("ref_perf_reader %ld: waiting to start next experiment on cpu %d", me, smp_processor_id());
+ 
+@@ -357,6 +362,8 @@ static int main_func(void *arg)
+ 
+ 	// Wait for all threads to start.
+ 	wait_event(main_wq, atomic_read(&n_init) == (nreaders + 1));
++	if (holdoff)
++		schedule_timeout_interruptible(holdoff * HZ);
+ 
+ 	// Start exp readers up per experiment
+ 	for (exp = 0; exp < nreaders && !torture_must_stop(); exp++) {
+@@ -420,8 +427,8 @@ static void
+ ref_perf_print_module_parms(struct ref_perf_ops *cur_ops, const char *tag)
  {
-@@ -613,7 +638,8 @@ ref_perf_init(void)
- 	long i;
- 	int firsterr = 0;
- 	static struct ref_perf_ops *perf_ops[] = {
--		&rcu_ops, &srcu_ops, &rcu_trace_ops, &refcnt_ops, &rwlock_ops, &rwsem_ops,
-+		&rcu_ops, &srcu_ops, &rcu_trace_ops, &rcu_tasks_ops,
-+		&refcnt_ops, &rwlock_ops, &rwsem_ops,
- 	};
+ 	pr_alert("%s" PERF_FLAG
+-		 "--- %s:  verbose=%d shutdown=%d loops=%ld\n", perf_type, tag,
+-		 verbose, shutdown, loops);
++		 "--- %s:  verbose=%d shutdown=%d holdoff=%d loops=%ld\n", perf_type, tag,
++		 verbose, shutdown, holdoff, loops);
+ }
  
- 	if (!torture_init_begin(perf_type, verbose))
+ static void
 -- 
 2.9.5
 
