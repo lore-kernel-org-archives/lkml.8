@@ -2,235 +2,364 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5624C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F66C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73805206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592934264;
-	bh=593OyubN331LWjjdmxQZ5FO8EQpjPse/1PEqKhxkcfc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/ayxuAA9seW6xgDfMiYzTxbnveHUGIfWMJc4aYDqfl3VgsVPQ25P+wKiAa/TpAop
-	 8SeLRZfRxysq48VwPyzDNS4S1Yy5UbiVf2PuLwls6sim1D5WxTuNbEMH4CAPDLC/Rc
-	 eT27nlPVMCbpxI1lcjVeyUq6oU3kKvW7YIZCN/tE=
+	by mail.kernel.org (Postfix) with ESMTP id B23F5206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387504AbgFWRoX (ORCPT
+        id S2387997AbgFWRoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:44:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733158AbgFWRf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:44:30 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:31446 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733154AbgFWRf1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 13:35:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC0FC20781;
-        Tue, 23 Jun 2020 17:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933726;
-        bh=593OyubN331LWjjdmxQZ5FO8EQpjPse/1PEqKhxkcfc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=whAICuV+YwcEoKAA7uTArDim5gcQ4im4ObCDx4Pu6xwQ0TWXhxEcOx6z7fui0ftpW
-         J0GPXHZqoBr/Chxm0ELR9eNc0EixzbkaKvJYkucfMI+kYIxR/Gnc5DOaTwq2qxyvFq
-         YlFg3TCNFuHkapmh0rP0u11koF0DhMJP5KrDmdRU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ye Bin <yebin10@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 02/28] ata/libata: Fix usage of page address by page_address in ata_scsi_mode_select_xlat function
-Date:   Tue, 23 Jun 2020 13:34:57 -0400
-Message-Id: <20200623173523.1355411-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
-References: <20200623173523.1355411-1-sashal@kernel.org>
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NHNjnP031554;
+        Tue, 23 Jun 2020 13:35:08 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 31uk3grq2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 13:35:08 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 05NHZ7oG031582
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 23 Jun 2020 13:35:07 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 23 Jun 2020 13:35:06 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 23 Jun 2020 13:35:06 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 23 Jun 2020 13:35:06 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05NHYxMS017521;
+        Tue, 23 Jun 2020 13:35:03 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v4 3/7] hwmon: pmbus: adm1266: Add support for GPIOs
+Date:   Tue, 23 Jun 2020 20:36:55 +0300
+Message-ID: <20200623173659.41358-4-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200623173659.41358-1-alexandru.tachici@analog.com>
+References: <20200623173659.41358-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006120000 definitions=main-2006230123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-[ Upstream commit f650ef61e040bcb175dd8762164b00a5d627f20e ]
+Adm1266 exposes 9 GPIOs and 16 PDIOs which are currently read-only. They
+are controlled by the internal sequencing engine.
 
-BUG: KASAN: use-after-free in ata_scsi_mode_select_xlat+0x10bd/0x10f0
-drivers/ata/libata-scsi.c:4045
-Read of size 1 at addr ffff88803b8cd003 by task syz-executor.6/12621
+This patch makes adm1266 driver expose GPIOs and PDIOs to user-space
+using GPIO provider kernel api.
 
-CPU: 1 PID: 12621 Comm: syz-executor.6 Not tainted 4.19.95 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.10.2-1ubuntu1 04/01/2014
-Call Trace:
-__dump_stack lib/dump_stack.c:77 [inline]
-dump_stack+0xac/0xee lib/dump_stack.c:118
-print_address_description+0x60/0x223 mm/kasan/report.c:253
-kasan_report_error mm/kasan/report.c:351 [inline]
-kasan_report mm/kasan/report.c:409 [inline]
-kasan_report.cold+0xae/0x2d8 mm/kasan/report.c:393
-ata_scsi_mode_select_xlat+0x10bd/0x10f0 drivers/ata/libata-scsi.c:4045
-ata_scsi_translate+0x2da/0x680 drivers/ata/libata-scsi.c:2035
-__ata_scsi_queuecmd drivers/ata/libata-scsi.c:4360 [inline]
-ata_scsi_queuecmd+0x2e4/0x790 drivers/ata/libata-scsi.c:4409
-scsi_dispatch_cmd+0x2ee/0x6c0 drivers/scsi/scsi_lib.c:1867
-scsi_queue_rq+0xfd7/0x1990 drivers/scsi/scsi_lib.c:2170
-blk_mq_dispatch_rq_list+0x1e1/0x19a0 block/blk-mq.c:1186
-blk_mq_do_dispatch_sched+0x147/0x3d0 block/blk-mq-sched.c:108
-blk_mq_sched_dispatch_requests+0x427/0x680 block/blk-mq-sched.c:204
-__blk_mq_run_hw_queue+0xbc/0x200 block/blk-mq.c:1308
-__blk_mq_delay_run_hw_queue+0x3c0/0x460 block/blk-mq.c:1376
-blk_mq_run_hw_queue+0x152/0x310 block/blk-mq.c:1413
-blk_mq_sched_insert_request+0x337/0x6c0 block/blk-mq-sched.c:397
-blk_execute_rq_nowait+0x124/0x320 block/blk-exec.c:64
-blk_execute_rq+0xc5/0x112 block/blk-exec.c:101
-sg_scsi_ioctl+0x3b0/0x6a0 block/scsi_ioctl.c:507
-sg_ioctl+0xd37/0x23f0 drivers/scsi/sg.c:1106
-vfs_ioctl fs/ioctl.c:46 [inline]
-file_ioctl fs/ioctl.c:501 [inline]
-do_vfs_ioctl+0xae6/0x1030 fs/ioctl.c:688
-ksys_ioctl+0x76/0xa0 fs/ioctl.c:705
-__do_sys_ioctl fs/ioctl.c:712 [inline]
-__se_sys_ioctl fs/ioctl.c:710 [inline]
-__x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:710
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89
-f7 48
-89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-ff 0f
-83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb0e9602c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fb0e96036d4 RCX: 000000000045c479
-RDX: 0000000020000040 RSI: 0000000000000001 RDI: 0000000000000003
-RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000046d R14: 00000000004c6e1a R15: 000000000076bfcc
-
-Allocated by task 12577:
-set_track mm/kasan/kasan.c:460 [inline]
-kasan_kmalloc mm/kasan/kasan.c:553 [inline]
-kasan_kmalloc+0xbf/0xe0 mm/kasan/kasan.c:531
-__kmalloc+0xf3/0x1e0 mm/slub.c:3749
-kmalloc include/linux/slab.h:520 [inline]
-load_elf_phdrs+0x118/0x1b0 fs/binfmt_elf.c:441
-load_elf_binary+0x2de/0x4610 fs/binfmt_elf.c:737
-search_binary_handler fs/exec.c:1654 [inline]
-search_binary_handler+0x15c/0x4e0 fs/exec.c:1632
-exec_binprm fs/exec.c:1696 [inline]
-__do_execve_file.isra.0+0xf52/0x1a90 fs/exec.c:1820
-do_execveat_common fs/exec.c:1866 [inline]
-do_execve fs/exec.c:1883 [inline]
-__do_sys_execve fs/exec.c:1964 [inline]
-__se_sys_execve fs/exec.c:1959 [inline]
-__x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 12577:
-set_track mm/kasan/kasan.c:460 [inline]
-__kasan_slab_free+0x129/0x170 mm/kasan/kasan.c:521
-slab_free_hook mm/slub.c:1370 [inline]
-slab_free_freelist_hook mm/slub.c:1397 [inline]
-slab_free mm/slub.c:2952 [inline]
-kfree+0x8b/0x1a0 mm/slub.c:3904
-load_elf_binary+0x1be7/0x4610 fs/binfmt_elf.c:1118
-search_binary_handler fs/exec.c:1654 [inline]
-search_binary_handler+0x15c/0x4e0 fs/exec.c:1632
-exec_binprm fs/exec.c:1696 [inline]
-__do_execve_file.isra.0+0xf52/0x1a90 fs/exec.c:1820
-do_execveat_common fs/exec.c:1866 [inline]
-do_execve fs/exec.c:1883 [inline]
-__do_sys_execve fs/exec.c:1964 [inline]
-__se_sys_execve fs/exec.c:1959 [inline]
-__x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
-do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff88803b8ccf00
-which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 259 bytes inside of
-512-byte region [ffff88803b8ccf00, ffff88803b8cd100)
-The buggy address belongs to the page:
-page:ffffea0000ee3300 count:1 mapcount:0 mapping:ffff88806cc03080
-index:0xffff88803b8cc780 compound_mapcount: 0
-flags: 0x100000000008100(slab|head)
-raw: 0100000000008100 ffffea0001104080 0000000200000002 ffff88806cc03080
-raw: ffff88803b8cc780 00000000800c000b 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-ffff88803b8ccf00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-ffff88803b8ccf80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88803b8cd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-^
-ffff88803b8cd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-ffff88803b8cd100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-
-You can refer to "https://www.lkml.org/lkml/2019/1/17/474" reproduce
-this error.
-
-The exception code is "bd_len = p[3];", "p" value is ffff88803b8cd000
-which belongs to the cache kmalloc-512 of size 512. The "page_address(sg_page(scsi_sglist(scmd)))"
-maybe from sg_scsi_ioctl function "buffer" which allocated by kzalloc, so "buffer"
-may not page aligned.
-This also looks completely buggy on highmem systems and really needs to use a
-kmap_atomic.      --Christoph Hellwig
-To address above bugs, Paolo Bonzini advise to simpler to just make a char array
-of size CACHE_MPAGE_LEN+8+8+4-2(or just 64 to make it easy), use sg_copy_to_buffer
-to copy from the sglist into the buffer, and workthere.
-
-Signed-off-by: Ye Bin <yebin10@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 ---
- drivers/ata/libata-scsi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/hwmon/pmbus/adm1266.c | 233 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 232 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 36e588d88b956..c10deb87015ba 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -3692,12 +3692,13 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
- {
- 	struct scsi_cmnd *scmd = qc->scsicmd;
- 	const u8 *cdb = scmd->cmnd;
--	const u8 *p;
- 	u8 pg, spg;
- 	unsigned six_byte, pg_len, hdr_len, bd_len;
- 	int len;
- 	u16 fp = (u16)-1;
- 	u8 bp = 0xff;
-+	u8 buffer[64];
-+	const u8 *p = buffer;
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+index 381d89a8569f..76bf2c78e737 100644
+--- a/drivers/hwmon/pmbus/adm1266.c
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -6,8 +6,12 @@
+  * Copyright 2020 Analog Devices Inc.
+  */
  
- 	VPRINTK("ENTER\n");
++#include <linux/bitfield.h>
+ #include <linux/crc8.h>
++#include <linux/debugfs.h>
++#include <linux/gpio/driver.h>
+ #include <linux/i2c.h>
++#include <linux/i2c-smbus.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -15,10 +19,35 @@
  
-@@ -3731,12 +3732,14 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
- 	if (!scsi_sg_count(scmd) || scsi_sglist(scmd)->length < len)
- 		goto invalid_param_len;
+ #include "pmbus.h"
  
--	p = page_address(sg_page(scsi_sglist(scmd)));
--
- 	/* Move past header and block descriptors.  */
- 	if (len < hdr_len)
- 		goto invalid_param_len;
- 
-+	if (!sg_copy_to_buffer(scsi_sglist(scmd), scsi_sg_count(scmd),
-+			       buffer, sizeof(buffer)))
-+		goto invalid_param_len;
++#define ADM1266_PDIO_CONFIG	0xD4
++#define ADM1266_GPIO_CONFIG	0xE1
++#define ADM1266_PDIO_STATUS	0xE9
++#define ADM1266_GPIO_STATUS	0xEA
 +
- 	if (six_byte)
- 		bd_len = p[3];
- 	else
++/* ADM1266 GPIO defines */
++#define ADM1266_GPIO_NR			9
++#define ADM1266_GPIO_FUNCTIONS(x)	FIELD_GET(BIT(0), x)
++#define ADM1266_GPIO_INPUT_EN(x)	FIELD_GET(BIT(2), x)
++#define ADM1266_GPIO_OUTPUT_EN(x)	FIELD_GET(BIT(3), x)
++#define ADM1266_GPIO_OPEN_DRAIN(x)	FIELD_GET(BIT(4), x)
++
++/* ADM1266 PDIO defines */
++#define ADM1266_PDIO_NR			16
++#define ADM1266_PDIO_PIN_CFG(x)		FIELD_GET(GENMASK(15, 13), x)
++#define ADM1266_PDIO_GLITCH_FILT(x)	FIELD_GET(GENMASK(12, 9), x)
++#define ADM1266_PDIO_OUT_CFG(x)		FIELD_GET(GENMASK(2, 0), x)
++
+ #define ADM1266_PMBUS_BLOCK_MAX		255
+ 
+ DECLARE_CRC8_TABLE(pmbus_crc_table);
+ 
++struct adm1266_data {
++	struct pmbus_driver_info info;
++	struct gpio_chip gc;
++	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
++	struct i2c_client *client;
++};
++
+ /* Different from Block Read as it sends data and waits for the slave to
+  * return a value dependent on that data. The protocol is simply a Write Block
+  * followed by a Read Block without the Read-Block command field and the
+@@ -91,18 +120,220 @@ int pmbus_block_xfer(struct i2c_client *client, u8 cmd, u8 w_len,
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_GPIOLIB
++static const unsigned int adm1266_gpio_mapping[ADM1266_GPIO_NR][2] = {
++	{1, 0},
++	{2, 1},
++	{3, 2},
++	{4, 8},
++	{5, 9},
++	{6, 10},
++	{7, 11},
++	{8, 6},
++	{9, 7},
++};
++
++static const char *adm1266_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR] = {
++	"GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5", "GPIO6", "GPIO7", "GPIO8",
++	"GPIO9", "PDIO1", "PDIO2", "PDIO3", "PDIO4", "PDIO5", "PDIO6",
++	"PDIO7", "PDIO8", "PDIO9", "PDIO10", "PDIO11", "PDIO12", "PDIO13",
++	"PDIO14", "PDIO15", "PDIO16",
++};
++
++static int adm1266_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct adm1266_data *data = gpiochip_get_data(chip);
++	u8 read_buf[I2C_SMBUS_BLOCK_MAX + 1];
++	unsigned long pins_status;
++	unsigned int pmbus_cmd;
++	int ret;
++
++	if (offset < ADM1266_GPIO_NR)
++		pmbus_cmd = ADM1266_GPIO_STATUS;
++	else
++		pmbus_cmd = ADM1266_PDIO_STATUS;
++
++	ret = i2c_smbus_read_block_data(data->client, pmbus_cmd,
++					read_buf);
++	if (ret < 0)
++		return ret;
++
++	pins_status = read_buf[0] + (read_buf[1] << 8);
++	if (offset < ADM1266_GPIO_NR)
++		return test_bit(adm1266_gpio_mapping[offset][1], &pins_status);
++
++	return test_bit(offset - ADM1266_GPIO_NR, &pins_status);
++}
++
++static int adm1266_gpio_get_multiple(struct gpio_chip *chip,
++				     unsigned long *mask,
++				     unsigned long *bits)
++{
++	struct adm1266_data *data = gpiochip_get_data(chip);
++	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1];
++	unsigned long status;
++	unsigned int gpio_nr;
++	int ret;
++
++	ret = i2c_smbus_read_block_data(data->client, ADM1266_GPIO_STATUS,
++					read_buf);
++	if (ret < 0)
++		return ret;
++
++	status = read_buf[0] + (read_buf[1] << 8);
++
++	*bits = 0;
++	for_each_set_bit(gpio_nr, mask, ADM1266_GPIO_NR) {
++		if (test_bit(adm1266_gpio_mapping[gpio_nr][1], &status))
++			set_bit(gpio_nr, bits);
++	}
++
++	ret = i2c_smbus_read_block_data(data->client, ADM1266_PDIO_STATUS,
++					read_buf);
++	if (ret < 0)
++		return ret;
++
++	status = read_buf[0] + (read_buf[1] << 8);
++
++	*bits = 0;
++	for_each_set_bit_from(gpio_nr, mask,
++			      ADM1266_GPIO_NR + ADM1266_PDIO_STATUS) {
++		if (test_bit(gpio_nr - ADM1266_GPIO_NR, &status))
++			set_bit(gpio_nr, bits);
++	}
++
++	return 0;
++}
++
++static void adm1266_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
++{
++	struct adm1266_data *data = gpiochip_get_data(chip);
++	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1];
++	unsigned long gpio_config;
++	unsigned long pdio_config;
++	unsigned long pin_cfg;
++	u8 write_cmd;
++	int ret;
++	int i;
++
++	for (i = 0; i < ADM1266_GPIO_NR; i++) {
++		write_cmd = adm1266_gpio_mapping[i][1];
++		ret = pmbus_block_xfer(data->client, ADM1266_GPIO_CONFIG, 1,
++				       &write_cmd, read_buf);
++		if (ret != 2)
++			return;
++
++		gpio_config = read_buf[0];
++		seq_puts(s, adm1266_names[i]);
++
++		seq_puts(s, " ( ");
++		if (!ADM1266_GPIO_FUNCTIONS(gpio_config)) {
++			seq_puts(s, "high-Z )\n");
++			continue;
++		}
++		if (ADM1266_GPIO_INPUT_EN(gpio_config))
++			seq_puts(s, "input ");
++		if (ADM1266_GPIO_OUTPUT_EN(gpio_config))
++			seq_puts(s, "output ");
++		if (ADM1266_GPIO_OPEN_DRAIN(gpio_config))
++			seq_puts(s, "open-drain )\n");
++		else
++			seq_puts(s, "push-pull )\n");
++	}
++
++	write_cmd = 0xFF;
++	ret = pmbus_block_xfer(data->client, ADM1266_PDIO_CONFIG, 1, &write_cmd,
++			       read_buf);
++	if (ret != 32)
++		return;
++
++	for (i = 0; i < ADM1266_PDIO_NR; i++) {
++		seq_puts(s, adm1266_names[ADM1266_GPIO_NR + i]);
++
++		pdio_config = read_buf[2 * i];
++		pdio_config += (read_buf[2 * i + 1] << 8);
++		pin_cfg = ADM1266_PDIO_PIN_CFG(pdio_config);
++
++		seq_puts(s, " ( ");
++		if (!pin_cfg || pin_cfg > 5) {
++			seq_puts(s, "high-Z )\n");
++			continue;
++		}
++
++		if (pin_cfg & BIT(0))
++			seq_puts(s, "output ");
++
++		if (pin_cfg & BIT(1))
++			seq_puts(s, "input ");
++
++		seq_puts(s, ")\n");
++	}
++}
++
++static int adm1266_config_gpio(struct adm1266_data *data)
++{
++	const char *name = dev_name(&data->client->dev);
++	char *gpio_name;
++	int ret;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(data->gpio_names); i++) {
++		gpio_name = devm_kasprintf(&data->client->dev, GFP_KERNEL,
++					   "adm1266-%x-%s", data->client->addr,
++					   adm1266_names[i]);
++		if (!gpio_name)
++			return -ENOMEM;
++
++		data->gpio_names[i] = gpio_name;
++	}
++
++	data->gc.label = name;
++	data->gc.parent = &data->client->dev;
++	data->gc.owner = THIS_MODULE;
++	data->gc.base = -1;
++	data->gc.names = data->gpio_names;
++	data->gc.ngpio = ARRAY_SIZE(data->gpio_names);
++	data->gc.get = adm1266_gpio_get;
++	data->gc.get_multiple = adm1266_gpio_get_multiple;
++	data->gc.dbg_show = adm1266_gpio_dbg_show;
++
++	ret = devm_gpiochip_add_data(&data->client->dev, &data->gc, data);
++	if (ret)
++		dev_err(&data->client->dev, "GPIO registering failed (%d)\n",
++			ret);
++
++	return ret;
++}
++#else
++static int adm1266_config_gpio(struct adm1266_data *data)
++{
++	return 0;
++}
++#endif
++
+ static int adm1266_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+ 	struct pmbus_driver_info *info;
++	struct adm1266_data *data;
+ 	u32 funcs;
++	int ret;
+ 	int i;
+ 
+-	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
++	data = devm_kzalloc(&client->dev, sizeof(struct adm1266_data),
+ 			    GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->client = client;
++
++	ret = adm1266_config_gpio(data);
++	if (ret < 0)
++		return ret;
+ 
+ 	crc8_populate_msb(pmbus_crc_table, 0x7);
+ 
++	info = &data->info;
+ 	info->pages = 17;
+ 	info->format[PSC_VOLTAGE_OUT] = linear;
+ 	funcs = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
 -- 
-2.25.1
+2.20.1
 
