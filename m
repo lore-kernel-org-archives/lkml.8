@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C726C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F13E208A9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADD02078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388635AbgFWV6e (ORCPT
+        id S2388710AbgFWV7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:58:34 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:57574 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387455AbgFWV6d (ORCPT
+        Tue, 23 Jun 2020 17:59:09 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:42034 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387455AbgFWV7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 17:58:33 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        Tue, 23 Jun 2020 17:59:09 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.90_1)
         (envelope-from <ebiederm@xmission.com>)
-        id 1jnqw3-0004Nx-RL; Tue, 23 Jun 2020 15:58:31 -0600
+        id 1jnqwd-0002ux-QC; Tue, 23 Jun 2020 15:59:07 -0600
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1jnqw3-0003FG-0o; Tue, 23 Jun 2020 15:58:31 -0600
+        id 1jnqwc-0000mu-Qc; Tue, 23 Jun 2020 15:59:07 -0600
 From:   ebiederm@xmission.com (Eric W. Biederman)
 To:     <linux-kernel@vger.kernel.org>
 Cc:     <linux-fsdevel@vger.kernel.org>,
@@ -39,99 +39,76 @@ Cc:     <linux-fsdevel@vger.kernel.org>,
         Bernd Edlinger <bernd.edlinger@hotmail.de>
 References: <87pn9u6h8c.fsf@x220.int.ebiederm.org>
         <87r1u5laac.fsf@x220.int.ebiederm.org>
-Date:   Tue, 23 Jun 2020 16:54:07 -0500
+Date:   Tue, 23 Jun 2020 16:54:43 -0500
 In-Reply-To: <87r1u5laac.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
         message of "Tue, 23 Jun 2020 16:52:43 -0500")
-Message-ID: <87ftalla80.fsf_-_@x220.int.ebiederm.org>
+Message-ID: <87a70tla70.fsf_-_@x220.int.ebiederm.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1jnqw3-0003FG-0o;;;mid=<87ftalla80.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX192WU5omqc6II6syhD9LEG1XUFeakeHPL4=
+X-XM-SPF: eid=1jnqwc-0000mu-Qc;;;mid=<87a70tla70.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+kkhDUBissrPENOFQGDqoexIjbrQanp20=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 2/6] exec: Lock more defensively in exec
+Subject: [PATCH v2 3/6] signal: Implement SIGNAL_GROUP_DETHREAD
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-When taking the task_list_lock in de_thread also take the siglock.  This
-makes de_thread closer to fork the canonical place where these locks are
-taken.
-
-To complete the defensiveness always take siglock when clearing
-group_exit_task and notify_count.
-
-This gives now gives the guarantee that group_exit_task and notify_count
-are now always changed under siglock.  As anything multi-threaded in exec
-is a rare and slow path I don't think we care if we take an extra lock in
-practice.
-
-The practical reason for doing this is to enable setting signal->flags along
-with group_exit_task so that the function signal_group_exit can be simplified.
+To allow signal_group_exit to be simplfied so that it can only test
+signal->flags.  Add a new flag SIGNAL_GROUP_DETHREAD, that is set and
+cleared where de_thread sets and clears group_exit_task today.
 
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- fs/exec.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/exec.c                    | 3 +++
+ include/linux/sched/signal.h | 1 +
+ 2 files changed, 4 insertions(+)
 
 diff --git a/fs/exec.c b/fs/exec.c
-index e6e8a9a70327..33b5d9229c01 100644
+index 33b5d9229c01..9c4c1ab8f715 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -1171,6 +1171,7 @@ static int de_thread(struct task_struct *tsk)
- 		for (;;) {
- 			cgroup_threadgroup_change_begin(tsk);
- 			write_lock_irq(&tasklist_lock);
-+			spin_lock(lock);
- 			/*
- 			 * Do this under tasklist_lock to ensure that
- 			 * exit_notify() can't miss ->group_exit_task
-@@ -1179,6 +1180,7 @@ static int de_thread(struct task_struct *tsk)
- 			if (likely(leader->exit_state))
- 				break;
- 			__set_current_state(TASK_KILLABLE);
-+			spin_unlock(lock);
- 			write_unlock_irq(&tasklist_lock);
- 			cgroup_threadgroup_change_end(tsk);
- 			schedule();
-@@ -1234,14 +1236,17 @@ static int de_thread(struct task_struct *tsk)
- 		 */
- 		if (unlikely(leader->ptrace))
- 			__wake_up_parent(leader, leader->parent);
-+		spin_unlock(lock);
- 		write_unlock_irq(&tasklist_lock);
- 		cgroup_threadgroup_change_end(tsk);
- 
- 		release_task(leader);
+@@ -1145,6 +1145,7 @@ static int de_thread(struct task_struct *tsk)
+ 		return -EAGAIN;
  	}
  
-+	spin_lock_irq(lock);
++	sig->flags |= SIGNAL_GROUP_DETHREAD;
+ 	sig->group_exit_task = tsk;
+ 	sig->notify_count = zap_other_threads(tsk);
+ 	if (!thread_group_leader(tsk))
+@@ -1244,6 +1245,7 @@ static int de_thread(struct task_struct *tsk)
+ 	}
+ 
+ 	spin_lock_irq(lock);
++	sig->flags &= ~SIGNAL_GROUP_DETHREAD;
  	sig->group_exit_task = NULL;
  	sig->notify_count = 0;
-+	spin_unlock_irq(lock);
- 
- no_thread_group:
- 	/* we have changed execution domain */
-@@ -1252,10 +1257,12 @@ static int de_thread(struct task_struct *tsk)
- 
- killed:
+ 	spin_unlock_irq(lock);
+@@ -1259,6 +1261,7 @@ static int de_thread(struct task_struct *tsk)
  	/* protects against exit_notify() and __exit_signal() */
--	read_lock(&tasklist_lock);
-+	read_lock_irq(&tasklist_lock);
-+	spin_lock(lock);
+ 	read_lock_irq(&tasklist_lock);
+ 	spin_lock(lock);
++	sig->flags &= ~SIGNAL_GROUP_DETHREAD;
  	sig->group_exit_task = NULL;
  	sig->notify_count = 0;
--	read_unlock(&tasklist_lock);
-+	spin_unlock(lock);
-+	read_unlock_irq(&tasklist_lock);
- 	return -EAGAIN;
- }
+ 	spin_unlock(lock);
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index b4f36a11be5e..5ff8697b21cd 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -253,6 +253,7 @@ struct signal_struct {
+ /* Signal group actions. */
+ #define SIGNAL_GROUP_EXIT	0x00000100 /* group exit in progress */
+ #define SIGNAL_GROUP_COREDUMP	0x00000200 /* coredump in progress */
++#define SIGNAL_GROUP_DETHREAD	0x00000400 /* exec de_thread in progress */
  
+ /* Flags applicable to the entire signal group. */
+ #define SIGNAL_UNKILLABLE	0x00001000 /* for init: ignore fatal signals */
 -- 
 2.20.1
 
