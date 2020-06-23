@@ -2,58 +2,107 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C61C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE78C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8310920738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6C220738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732590AbgFWMNI (ORCPT
+        id S1732539AbgFWMQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:13:08 -0400
-Received: from verein.lst.de ([213.95.11.211]:39101 "EHLO verein.lst.de"
+        Tue, 23 Jun 2020 08:16:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49116 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732518AbgFWMNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:13:08 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B182C68AEF; Tue, 23 Jun 2020 14:13:04 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 14:13:04 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Eric Auger <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, hch@lst.de, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, peterz@infradead.org,
-        akpm@linux-foundation.org, jean-philippe@linaro.org,
-        bbhushan2@marvell.com
-Subject: Re: [PATCH v2] dma-remap: Align the size in dma_common_*_remap()
-Message-ID: <20200623121304.GA20261@lst.de>
-References: <20200623120755.27710-1-eric.auger@redhat.com>
+        id S1732458AbgFWMQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:16:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9D3BCAD5D;
+        Tue, 23 Jun 2020 12:16:38 +0000 (UTC)
+Date:   Tue, 23 Jun 2020 14:16:38 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: linux-next: build failure after merge of the printk tree
+Message-ID: <20200623121637.GA8444@alley>
+References: <20200621131554.5a662afe@canb.auug.org.au>
+ <20200623102655.6d16e610@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623120755.27710-1-eric.auger@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200623102655.6d16e610@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:07:55PM +0200, Eric Auger wrote:
-> Running a guest with a virtio-iommu protecting virtio devices
-> is broken since commit 515e5b6d90d4 ("dma-mapping: use vmap insted
-> of reimplementing it"). Before the conversion, the size was
-> page aligned in __get_vm_area_node(). Doing so fixes the
-> regression.
+On Tue 2020-06-23 10:26:55, Stephen Rothwell wrote:
+> Hi Stephen,
 > 
-> Fixes: 515e5b6d90d4 ("dma-mapping: use vmap insted of reimplementing it")
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> On Sun, 21 Jun 2020 13:15:54 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> > 
+> > After merging the printk tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> > 
+> > In file included from include/linux/printk.h:10,
+> >                  from include/linux/kernel.h:15,
+> >                  from include/linux/list.h:9,
+> >                  from include/linux/lockdep.h:43,
+> >                  from include/linux/spinlock_types.h:18,
+> >                  from include/linux/genalloc.h:32,
+> >                  from drivers/soc/fsl/qe/qe_common.c:16:
+> > include/linux/ratelimit_types.h:16:2: error: unknown type name 'raw_spinlock_t'
+> >    16 |  raw_spinlock_t lock;  /* protect the state */
+> >       |  ^~~~~~~~~~~~~~
+> > In file included from include/linux/wait.h:9,
+> >                  from include/linux/pid.h:6,
+> >                  from include/linux/sched.h:14,
+> >                  from include/linux/ratelimit.h:6,
+> >                  from include/linux/dev_printk.h:16,
+> >                  from include/linux/device.h:15,
+> >                  from include/linux/node.h:18,
+> >                  from include/linux/cpu.h:17,
+> >                  from include/linux/of_device.h:5,
+> >                  from drivers/soc/fsl/qe/qe_common.c:19:
+> > include/linux/ratelimit.h: In function 'ratelimit_state_init':
+> > include/linux/ratelimit.h:14:21: error: passing argument 1 of '__raw_spin_lock_init' from incompatible pointer type [-Werror=incompatible-pointer-types]
+> >    14 |  raw_spin_lock_init(&rs->lock);
+> > include/linux/spinlock.h:102:24: note: in definition of macro 'raw_spin_lock_init'
+> >   102 |  __raw_spin_lock_init((lock), #lock, &__key, LD_WAIT_SPIN); \
+> >       |                        ^~~~
+> > include/linux/spinlock.h:95:52: note: expected 'raw_spinlock_t *' {aka 'struct raw_spinlock *'} but argument is of type 'int *'
+> >    95 |   extern void __raw_spin_lock_init(raw_spinlock_t *lock, const char *name,
+> >       |                                    ~~~~~~~~~~~~~~~~^~~~
+> > 
+> > Caused by commit
+> > 
+> >   494c8512c90e ("printk: Make linux/printk.h self-contained")
+> > 
+> > changing include files is hadrer than it loooks :-(
+> > 
+> > I have used the printk tree from next-20200618 for today.
+> 
+> I am still getting this failure.
 
-Thanks,
+I have removed the problematic commit for now. It tried to remove
+some cyclic dependencies from heavily used include files. It clearly
+needs more love.
 
-I've applied this locally, waiting for git.infradead.org to be back
-up.
+I am sorry for the late reaction. I have semi-lost mails from last 4 days.
+I am still trying to recover them.
+
+Best Regards,
+Petr
