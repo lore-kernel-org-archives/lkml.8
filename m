@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9ACF20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CB320724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:47:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="lS195I7F"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="lcOmIh5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732501AbgFWLrT (ORCPT
+        id S1732511AbgFWLrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:47:19 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:54209 "EHLO
+        Tue, 23 Jun 2020 07:47:23 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:54260 "EHLO
         conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732424AbgFWLrQ (ORCPT
+        with ESMTP id S1732494AbgFWLrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:47:16 -0400
+        Tue, 23 Jun 2020 07:47:19 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05NBkITv013767;
-        Tue, 23 Jun 2020 20:46:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05NBkITv013767
+        by conuserg-11.nifty.com with ESMTP id 05NBkITw013767;
+        Tue, 23 Jun 2020 20:46:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05NBkITw013767
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
         s=dec2015msa; t=1592912780;
-        bh=CJ7xJNq8YhNLPWOGA/kPm5KL6uoxrz+Qf++mEvOnqZg=;
+        bh=+vQzGBmxVMQUIdgzH/KQsgAtEagEu6vSgTXMfq8htGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lS195I7FyGLI05cJtxANmHnbvT/1SFjMOAevI12V/gNPEk7EVcbav9x00Jz7LDm4I
-         Zq5uHgDRrxGoXj5HZ/18z0k2W+1gV9TIuOWUVweRuBSg0FLHPWWSQFjkvk/I5y66a4
-         ClmZfIti27iSEgtvy5DV3OkRXriIqOLS7smkG4bprkA30C4/I/8b3MmOteRkeim7SN
-         bGtyLd0e4WFPmf1QuIm4m/PyiA97p9XZycHypvYUu6XvQBenKze/cCDr0v6R1gyaIE
-         gmc5q9EySpapNwKr82iD5jMyacYELqU7tOnFFWpCCfpR8biJYQ53wVxCjaAdVNpHhK
-         QPfP67MSyBzug==
+        b=lcOmIh5PIb0NSH3F/W1hVs0bEu3AuRcyAjGSeZqcOOtbn+cwaeYLLgDrC4s83LVWK
+         hjFgzYn/E4RZ+64NBuS13jYwBXByvKv+CK6i557BuFye5i84kYHbqjyBghC9l2YEKi
+         iclLjmuXFoVZPqm0loHwPq/qQQCMR6AfCwyKh8SKkiHntD2l3jGS72Rjdr3uVQ1Yxw
+         fJ5WFM+x3Lhjb1QRbIwneqz72QVmHoTjeeXCQECze3YQkPztmgWi2VRO9Ue/xQKN+m
+         mg7XtGAuWbejQMP6Qj5z4JEk9PWbtL+nlEI6E0xo2YqCBXfYQs/hv9oKvSGFfMQ8so
+         7vu0T0wX8GExA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] ARM: dts: uniphier: rename support card serial node to fix schema warning
-Date:   Tue, 23 Jun 2020 20:46:13 +0900
-Message-Id: <20200623114614.792648-3-yamada.masahiro@socionext.com>
+Subject: [PATCH 4/4] ARM: dts: uniphier: change support card to simple-mfd from simple-bus
+Date:   Tue, 23 Jun 2020 20:46:14 +0900
+Message-Id: <20200623114614.792648-4-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623114614.792648-1-yamada.masahiro@socionext.com>
 References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
@@ -56,15 +56,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit e69f5dc623f9 ("dt-bindings: serial: Convert 8250 to
-json-schema"), the schema for "ns16550a" is checked.
-
 'make ARCH=arm dtbs_check' emits the following warning:
 
-  uart@b0000: $nodename:0: 'uart@b0000' does not match '^serial(@[0-9a-f,]+)*$'
+  support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
 
-Rename the node to follow the pattern defined in
-Documentation/devicetree/bindings/serial/serial.yaml
+Maybe, simple-mfd could be a better fit for this device.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
@@ -73,18 +69,18 @@ Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/boot/dts/uniphier-support-card.dtsi
-index bf441c2eff79..11e46e7de7c5 100644
+index 11e46e7de7c5..eedc10cbc6e6 100644
 --- a/arch/arm/boot/dts/uniphier-support-card.dtsi
 +++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
-@@ -23,7 +23,7 @@ ethsc: ethernet@0 {
- 			reg-io-width = <4>;
- 		};
+@@ -10,7 +10,7 @@ &system_bus {
+ 	ranges = <1 0x00000000 0x42000000 0x02000000>;
  
--		serialsc: uart@b0000 {
-+		serialsc: serial@b0000 {
- 			compatible = "ns16550a";
- 			reg = <0x000b0000 0x20>;
- 			clock-frequency = <12288000>;
+ 	support_card: support-card@1,1f00000 {
+-		compatible = "simple-bus";
++		compatible = "simple-mfd";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0x00000000 1 0x01f00000 0x00100000>;
 -- 
 2.25.1
 
