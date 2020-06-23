@@ -2,133 +2,159 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A86C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7610CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCE4207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552D0207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XtqJqEuJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ChgXJSDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733178AbgFWSNw (ORCPT
+        id S1733191AbgFWSOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbgFWSNv (ORCPT
+        Tue, 23 Jun 2020 14:14:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41951 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728916AbgFWSON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:13:51 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3498FC061573;
-        Tue, 23 Jun 2020 11:13:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Esyq+AEdoh1XonloiuoRagpt95xyDAj6PU4H+a2A370=; b=XtqJqEuJ6fk19CHHDiS/uWu7m0
-        RAcYnkqt4nYjb3KNc+oUduIZ4BmQP6z7+ubMqv/JvBbC0/xybPxcpQOpQ/lg78gd2x3ZCJn9O6mkt
-        Jd5I2z7aiGrouE6zK9gfUYo9bIvJl5dPbeWIYGWpiwKHEq2yefSrMbieDo8PwFR4ey3HjXZsEOZo+
-        kpeu2fan50uIPlXjGdc5H6SPIPfo5+/vVs7+Y3TBJ/eY4XYLK7YLqWy42vBSITC110wTLB/gjxvnQ
-        cqjN7VtvtR9/alVFGB6linsRbGqpzYe0uAFkxKU8EndRnmKY04OLN74stY8WRWXUSKeBa9tcMtxn0
-        Pl+jThxQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnnPO-0006JO-In; Tue, 23 Jun 2020 18:12:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9BF5E303DA0;
-        Tue, 23 Jun 2020 20:12:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8DE8F20267E51; Tue, 23 Jun 2020 20:12:32 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 20:12:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
-        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        bigeasy@linutronix.de, davem@davemloft.net,
-        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-Message-ID: <20200623181232.GB4800@hirez.programming.kicks-ass.net>
-References: <20200623083645.277342609@infradead.org>
- <20200623083721.512673481@infradead.org>
- <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
- <20200623152450.GM4817@hirez.programming.kicks-ass.net>
- <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
- <20200623163730.GA4800@hirez.programming.kicks-ass.net>
- <20200623175957.GA106514@elver.google.com>
+        Tue, 23 Jun 2020 14:14:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592936052;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9OSK+h7qYgAzWHaZZAbxLByby9nYNdBw4r3UMn9ujiY=;
+        b=ChgXJSDpv7r4ci3FVVMMUKIJwq2uAi55srVvaz2Bmaj6RKo1s3SKkR8GOG6iW9CmFnRurW
+        OxunnvFchQjprI2P3sjbDjO7LkqYpAf6vDNrORnyRIuNws27Z5pUIZ17HAEX9m8o5mUl0u
+        bd5WBjIKHI+/M+Q8tpUsVOSETCB9aU4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-tzzgtOxxN4ePEPQjCDtjvw-1; Tue, 23 Jun 2020 14:14:02 -0400
+X-MC-Unique: tzzgtOxxN4ePEPQjCDtjvw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77D1C804001;
+        Tue, 23 Jun 2020 18:14:00 +0000 (UTC)
+Received: from localhost (ovpn-116-11.gru2.redhat.com [10.97.116.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72BAD60CD3;
+        Tue, 23 Jun 2020 18:13:58 +0000 (UTC)
+Date:   Tue, 23 Jun 2020 15:13:57 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Maurizio Drocco <maurizio.drocco@ibm.com>
+Cc:     zohar@linux.ibm.com, Silviu.Vlasceanu@huawei.com,
+        dmitry.kasatkin@gmail.com, jejb@linux.ibm.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, mdrocco@linux.vnet.ibm.com,
+        roberto.sassu@huawei.com, serge@hallyn.com
+Subject: Re: [PATCH v2] ima_evm_utils: extended calc_bootaggr to PCRs 8 - 9
+Message-ID: <20200623181357.GC4983@glitch>
+References: <1592856871.4987.21.camel@linux.ibm.com>
+ <20200623180122.209-1-maurizio.drocco@ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200623180122.209-1-maurizio.drocco@ibm.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ctP54qlpMx3WjD+/"
 Content-Disposition: inline
-In-Reply-To: <20200623175957.GA106514@elver.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 07:59:57PM +0200, Marco Elver wrote:
-> On Tue, Jun 23, 2020 at 06:37PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 23, 2020 at 06:13:21PM +0200, Ahmed S. Darwish wrote:
-> > > Well, freshly merged code is using it. For example, KCSAN:
-> > > 
-> > >     => f1bc96210c6a ("kcsan: Make KCSAN compatible with lockdep")
-> > >     => kernel/kcsan/report.c:
-> > > 
-> > >     void kcsan_report(...)
-> > >     {
-> > > 	...
-> > >         /*
-> > >          * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
-> > >          * we do not turn off lockdep here; this could happen due to recursion
-> > >          * into lockdep via KCSAN if we detect a race in utilities used by
-> > >          * lockdep.
-> > >          */
-> > >         lockdep_off();
-> > > 	...
-> > >     }
-> > 
-> > Marco, do you remember what exactly happened there? Because I'm about to
-> > wreck that. That is, I'm going to make TRACE_IRQFLAGS ignore
-> > lockdep_off().
-> 
-> Yeah, I was trying to squash any kind of recursion:
-> 
-> 	lockdep -> other libs ->
-> 		-> KCSAN
-> 		-> print report
-> 		-> dump stack, printk and friends
-> 		-> lockdep -> other libs
-> 			-> KCSAN ...
-> 
-> Some history:
-> 
-> * Initial patch to fix:
-> 	https://lore.kernel.org/lkml/20200115162512.70807-1-elver@google.com/
+--ctP54qlpMx3WjD+/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That patch is weird; just :=n on lockdep.c should've cured that, the
-rest is massive overkill.
+On Tue, Jun 23, 2020 at 02:01:22PM -0400, Maurizio Drocco wrote:
+> From: Maurizio <maurizio.drocco@ibm.com>
+>=20
+> If PCRs 8 - 9 are set (i.e. not all-zeros), cal_bootaggr should include
+> them into the digest.
+>=20
+> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+> ---
+> Changelog:
+> v2:
+> - Always include PCRs 8 & 9 to non-sha1 hashes
+> v1:
+> - Include non-zero PCRs 8 & 9 to boot aggregates=20
+>=20
+>  src/evmctl.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/src/evmctl.c b/src/evmctl.c
+> index 1d065ce..46b7092 100644
+> --- a/src/evmctl.c
+> +++ b/src/evmctl.c
+> @@ -1930,6 +1930,16 @@ static void calc_bootaggr(struct tpm_bank_info *ba=
+nk)
+>  =09=09}
+>  =09}
+> =20
+> +=09if (strcmp(bank->algo_name, "sha1") !=3D 0) {
+> +=09=09for (i =3D 8; i < 10; i++) {
+> +=09=09=09err =3D EVP_DigestUpdate(pctx, bank->pcr[i], bank->digest_size)=
+;
+> +=09=09=09if (!err) {
+> +=09=09=09=09log_err("EVP_DigestUpdate() failed\n");
+> +=09=09=09=09return;
+> +=09=09=09}
+> +=09=09}
+> +=09}
+> +
+>  =09err =3D EVP_DigestFinal(pctx, bank->digest, &mdlen);
+>  =09if (!err) {
+>  =09=09log_err("EVP_DigestFinal() failed\n");
+> @@ -1972,8 +1982,9 @@ static int append_bootaggr(char *bootaggr, struct t=
+pm_bank_info *tpm_banks)
+>  /*
+>   * The IMA measurement list boot_aggregate is the link between the prebo=
+ot
+>   * event log and the IMA measurement list.  Read and calculate all the
+> - * possible per TPM bank boot_aggregate digests based on the existing
+> - * PCRs 0 - 7 to validate against the IMA boot_aggregate record.
+> + * possible per TPM bank boot_aggregate digests based on the existing PC=
+Rs
+> + * 0 - 9 to validate against the IMA boot_aggregate record. If the diges=
+t
+> + * algorithm is SHA1, only PCRs 0 - 7 are considered to avoid ambiguity.
+>   */
+>  static int cmd_ima_bootaggr(struct command *cmd)
+>  {
+> --=20
+> 2.17.1
+>=20
 
-> * KCSAN+lockdep+ftrace:
-> 	https://lore.kernel.org/lkml/20200214211035.209972-1-elver@google.com/
+Reviewed-by: Bruno Meneguele <bmeneg@redhat.com>
 
-That doesn't really have anything useful..
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
 
-> lockdep now has KCSAN_SANITIZE := n, but we still need to ensure that
-> there are no paths out of lockdep, or the IRQ flags tracing code, that
-> might lead through other libs, through KCSAN, libs used to generate a
-> report, and back to lockdep.
-> 
-> I never quite figured out the exact trace that led to corruption, but
-> avoiding any kind of potential for recursion was the only thing that
-> would avoid the check_flags() warnings.
+--ctP54qlpMx3WjD+/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
-anything happens.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7yRmUACgkQYdRkFR+R
+okOyDwf/csNoUdXIxPrHGfJ/7A6nZ6PNHG8xsHJ4EJnjxXDY1FGIBRSqtVwMc6wY
+09e1b2Q2c1j0qMtAx2PTJC7MXmQS9UFSIL+TEl+rZ6Z9LTK9x9xmop5Qt7EUqRA/
+nxqU0nI2srqfwMtF0e7wxrfMQC8NzS3gTT5zWbrbLyq2ejgtunBSdrTJ8yWoMTKQ
+EEMImoCdiNDoS3savbXfbie28gZcYYHZBmM4mbyvDVoGRrF4MztcvnJHtnbGgvST
++Do6Ti8LbLXdDUYJ0thiFO+NF+7pHMrZd6MWebse7s0cZw+nRk1Es2bQVNkpifK+
+IXHJW7lwIgQCDIAPK5W1270X8m+zkw==
+=jGnU
+-----END PGP SIGNATURE-----
+
+--ctP54qlpMx3WjD+/--
+
