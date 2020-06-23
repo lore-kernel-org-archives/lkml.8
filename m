@@ -5,61 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2042137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7C221582
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943294;
-	bh=m0lTzWeXLAZAc+bQnl4RhpPa6XP8ASvh6Sn+D3s1Wy0=;
+	s=default; t=1592943300;
+	bh=8YBXAY7CG7W/17W1hW1W0boUYytKY5wfZxTNJGuefTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSyT9xhCfAcg9lFb/pkKi6Ouzd7qiCu/CdZ0svHNV8O4705G71i8Y1SOLD4tQo+Q5
-	 Nimv3ZiQmvRyh3J8nby+aSthngQPJ9i7sKutC+1THaaYLWdxJBhOCihVBlElT1Ry78
-	 6+F1DkW4wZ5biAHtNScnxATnjO3Ap0OgQvl70dtM=
+	b=lmyDRFPm2TnsHieosEPEGvgcNJjctMSmejBm4X25eDIieHO9IMiiwmD68I/SnNDHP
+	 v0MJyxoC2AuKZJyrLxnj6OV1MorWbUs2k7a7+lefvVmVdKJ4rdEZ49hzIYsuVdDgNJ
+	 o9EBqBrSTSzkN05PfxjSkMCMJOek0fKq69DDlegI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389243AbgFWUOw (ORCPT
+        id S2389251AbgFWUO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:14:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57248 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:14:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389222AbgFWUOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:43 -0400
+        id S2389233AbgFWUOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:14:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ED0F2078A;
-        Tue, 23 Jun 2020 20:14:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C1462137B;
+        Tue, 23 Jun 2020 20:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943283;
-        bh=m0lTzWeXLAZAc+bQnl4RhpPa6XP8ASvh6Sn+D3s1Wy0=;
+        s=default; t=1592943288;
+        bh=8YBXAY7CG7W/17W1hW1W0boUYytKY5wfZxTNJGuefTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/zdewR9C/40CfIC0uGDU4T9mDoXnLEPpLG9aUxm87qn0vGNDRnyeaB7fnDhx94kT
-         7mj6cqYrJuC4E5k/hTN+OfSOPDHAN54cK5wOemZknTLQ5aGpCU4wMkKn5cLzMlz+Ny
-         xgfNtrmrqUb5iwgtPgfv72GWAeVt7dCDehQ4w+Kg=
+        b=I/55hkAv6RZzEUrXgB6B2+tyto4gepjGt7p6jsHRjNjP0Vzst/Lh9rxeTDQ783f8G
+         1NNcj9mQOJsoJMNUwXuabA6UwD72Si7zoP4nYEI+FizH/kmqEbTwQL/N7w/uwgwZR/
+         2v95J+w7gKU95KguOolyy4+Mx40RDhYeitaNCBQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ram Pai <linuxram@us.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 330/477] selftests/vm/pkeys: fix alloc_random_pkey() to make it really random
-Date:   Tue, 23 Jun 2020 21:55:27 +0200
-Message-Id: <20200623195423.137676549@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 332/477] blktrace: fix endianness in get_pdu_int()
+Date:   Tue, 23 Jun 2020 21:55:29 +0200
+Message-Id: <20200623195423.235940512@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -72,58 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ram Pai <linuxram@us.ibm.com>
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[ Upstream commit 6e373263ce07eeaa6410843179535fbdf561fc31 ]
+[ Upstream commit 71df3fd82e7cccec7b749a8607a4662d9f7febdd ]
 
-alloc_random_pkey() was allocating the same pkey every time.  Not all
-pkeys were geting tested.  This fixes it.
+In function get_pdu_len() replace variable type from __u64 to
+__be64. This fixes sparse warning.
 
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Michal Suchanek <msuchanek@suse.de>
-Cc: Shuah Khan <shuah@kernel.org>
-Link: http://lkml.kernel.org/r/0162f55816d4e783a0d6e49e554d0ab9a3c9a23b.1585646528.git.sandipan@linux.ibm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/protection_keys.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/protection_keys.c b/tools/testing/selftests/x86/protection_keys.c
-index 480995bceefa5..47191af466174 100644
---- a/tools/testing/selftests/x86/protection_keys.c
-+++ b/tools/testing/selftests/x86/protection_keys.c
-@@ -24,6 +24,7 @@
- #define _GNU_SOURCE
- #include <errno.h>
- #include <linux/futex.h>
-+#include <time.h>
- #include <sys/time.h>
- #include <sys/syscall.h>
- #include <string.h>
-@@ -612,10 +613,10 @@ int alloc_random_pkey(void)
- 	int nr_alloced = 0;
- 	int random_index;
- 	memset(alloced_pkeys, 0, sizeof(alloced_pkeys));
-+	srand((unsigned int)time(NULL));
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index c6d59a457f50c..cba2093edee22 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1256,7 +1256,7 @@ static inline __u16 t_error(const struct trace_entry *ent)
  
- 	/* allocate every possible key and make a note of which ones we got */
- 	max_nr_pkey_allocs = NR_PKEYS;
--	max_nr_pkey_allocs = 1;
- 	for (i = 0; i < max_nr_pkey_allocs; i++) {
- 		int new_pkey = alloc_pkey();
- 		if (new_pkey < 0)
+ static __u64 get_pdu_int(const struct trace_entry *ent, bool has_cg)
+ {
+-	const __u64 *val = pdu_start(ent, has_cg);
++	const __be64 *val = pdu_start(ent, has_cg);
+ 	return be64_to_cpu(*val);
+ }
+ 
 -- 
 2.25.1
 
