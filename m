@@ -2,119 +2,136 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C593C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE07D2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943876;
-	bh=4bFTiyTI+21Z9p8NR5i0JtG0TLkhfG+w1D0qOnIinuU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cgKE7YfcVq972xrB9n6TQQozhle2aQDzF5/bIBaKFx6Vl/bqy4p58b5yqQB4mPBjM
-	 p6+4TXzPUWAkjwxq+WoFp4JR8cYD4qGIIIshjrTrumhUeEWBsuQSf/Fhr7NIeTHajw
-	 RytHwD2n/UULG4zSMwAxTMtizqg0qKdUGI/tl81E=
+	by mail.kernel.org (Postfix) with ESMTP id 082A12073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CbxaxDD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390449AbgFWUYf (ORCPT
+        id S2390126AbgFWUYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390432AbgFWUYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DAF22158C;
-        Tue, 23 Jun 2020 20:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943871;
-        bh=4bFTiyTI+21Z9p8NR5i0JtG0TLkhfG+w1D0qOnIinuU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lu8pEeTwwBMUgrNnFdkJu0jznhLP4KUaUFI3XBla+OB/KU+ukuIO63lyyRhRgH11l
-         F36VbHEg7UE5yal51RLAEb6D9I5sSZS9MylacYJD4srzELUrPPbUsEiJSb3jeQ6MVp
-         5tluh2BhYiVfZfQyQOJp3+z6yRiU/NohdhIlSb7M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 083/314] x86/purgatory: Disable various profiling and sanitizing options
-Date:   Tue, 23 Jun 2020 21:54:38 +0200
-Message-Id: <20200623195342.828949467@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
-References: <20200623195338.770401005@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 16:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390440AbgFWUYc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:32 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18381C061573;
+        Tue, 23 Jun 2020 13:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nqLuJpwpk0A53PmvRN23yoDtfY4/X7aPFQklmjH025U=; b=CbxaxDD6KGmoDKlE+iZHVS3Fdo
+        WX5rKGhFi9UifHi3fhpVS0c3n5ae+3i2Al4d3lCr5Ji04Spo9FmrZxodYVQjX87tiDFWzQrx3PI3I
+        NevvGJ2fT2SJF/sfTRCcx+V5LepSslMyZY/fBaQFFSFYMW3Ds6KLSk62JTmmgEstJ0GAnCI3YQrbA
+        oQX43gmPUSuGcEWq5WZvkMcKClyAU3eITCvusiMPH0bQqyzC/rfkbAk4QryNwCs7993kYRBifyp+h
+        285p4O1IIgAuQYXB0wrjE+7+M6vZiHzcyqAKwuKVqqEbDx8FaeBrF3IgpcgClmRCjf8NvQOcf0R2V
+        zRHPIfpg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnpSe-0003Y5-I2; Tue, 23 Jun 2020 20:24:04 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 213A9983A87; Tue, 23 Jun 2020 22:24:04 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 22:24:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
+        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200623202404.GE2483@worktop.programming.kicks-ass.net>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net>
+ <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+ <20200623163730.GA4800@hirez.programming.kicks-ass.net>
+ <20200623175957.GA106514@elver.google.com>
+ <20200623181232.GB4800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623181232.GB4800@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
+> Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
+> anything happens.
 
-[ Upstream commit e2ac07c06058ae2d58b45bbf2a2a352771d76fcb ]
+OK, so the below patch doesn't seem to have any nasty recursion issues
+here. The only 'problem' is that lockdep now sees report_lock can cause
+deadlocks.
 
-Since the purgatory is a special stand-alone binary, various profiling
-and sanitizing options must be disabled. Having these options enabled
-typically will cause dependencies on various special symbols exported by
-special libs / stubs used by these frameworks. Since the purgatory is
-special, it is not linked against these stubs causing missing symbols in
-the purgatory if these options are not disabled.
+It is completely right about it too, but I don't suspect there's much we
+can do about it, it's pretty much the standard printk() with scheduler
+locks held report.
 
-Sync the set of disabled profiling and sanitizing options with that from
-drivers/firmware/efi/libstub/Makefile, adding
--DDISABLE_BRANCH_PROFILING to the CFLAGS and setting:
-
-  GCOV_PROFILE                    := n
-  UBSAN_SANITIZE                  := n
-
-This fixes broken references to ftrace_likely_update() when
-CONFIG_TRACE_BRANCH_PROFILING is enabled and to __gcov_init() and
-__gcov_exit() when CONFIG_GCOV_KERNEL is enabled.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200317130841.290418-1-hdegoede@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/purgatory/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index fb4ee54443799..9733d1cc791dd 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -17,7 +17,10 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
- LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
- targets += purgatory.ro
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 15f67949d11e..732623c30359 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -397,8 +397,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	}
  
-+# Sanitizer, etc. runtimes are unavailable and cannot be linked here.
-+GCOV_PROFILE	:= n
- KASAN_SANITIZE	:= n
-+UBSAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
+ 	if (!kcsan_interrupt_watcher)
+-		/* Use raw to avoid lockdep recursion via IRQ flags tracing. */
+-		raw_local_irq_save(irq_flags);
++		local_irq_save(irq_flags);
  
- # These are adjustments to the compiler flags used for objects that
-@@ -25,7 +28,7 @@ KCOV_INSTRUMENT := n
+ 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
+ 	if (watchpoint == NULL) {
+@@ -539,7 +538,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
+ out_unlock:
+ 	if (!kcsan_interrupt_watcher)
+-		raw_local_irq_restore(irq_flags);
++		local_irq_restore(irq_flags);
+ out:
+ 	user_access_restore(ua_flags);
+ }
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index ac5f8345bae9..ef31c1d2dac3 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -605,14 +605,6 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
+ 	if (WARN_ON(watchpoint_idx < 0 || watchpoint_idx >= ARRAY_SIZE(other_infos)))
+ 		goto out;
  
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
- PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
--PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
-+PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
+-	/*
+-	 * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
+-	 * we do not turn off lockdep here; this could happen due to recursion
+-	 * into lockdep via KCSAN if we detect a race in utilities used by
+-	 * lockdep.
+-	 */
+-	lockdep_off();
+-
+ 	if (prepare_report(&flags, type, &ai, other_info)) {
+ 		/*
+ 		 * Never report if value_change is FALSE, only if we it is
+@@ -628,7 +620,6 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
+ 		release_report(&flags, other_info);
+ 	}
  
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
--- 
-2.25.1
-
-
+-	lockdep_on();
+ out:
+ 	kcsan_enable_current();
+ }
 
