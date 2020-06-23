@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB733C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC16B2137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13A220EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943583;
-	bh=aAHP2yQ/zxHvxUsNP9s5qivNKq5cL42U1acJyxkcbQY=;
+	s=default; t=1592943590;
+	bh=FEBNMVsQfbahJqBSgdhnH+a1KU53iGwucQZwhHPz97k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wH+v8VikmfXA1V3Y0IGIGirdDDh3c4lRcSHHwl3iRUslT2v4ZNboZ7SQqnMG611KM
-	 3Vn5v8iIvUaalgWPWbzezzAnEmutBRZNE4Un8Y/ZuyjAj4JS1V4CK+oMvwmih89YbW
-	 IJewV1mpZhtW336v1kSAn+vB4p2OamQ9DCGojSDo=
+	b=AaEFiGwJ6v9y9byb2W4Dlkmgarbta0JU8XPHNjhRDwmTwkLB09tf4EJbS88oRQ2Re
+	 CMHfXH/HcTMHB8Jg2FYvtrub5y6CK8kqxg1Zhzh6oJuHtg/JgQCmizk71u0X3D+u7Y
+	 WMl6nm6TU1hWqW+XSU3WegDxSlxUXuvCuaZ5hx6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389842AbgFWUTm (ORCPT
+        id S2389857AbgFWUTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36830 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389833AbgFWUTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:19:40 -0400
+        id S2389846AbgFWUTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:19:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEF6C20EDD;
-        Tue, 23 Jun 2020 20:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0337C20EDD;
+        Tue, 23 Jun 2020 20:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943580;
-        bh=aAHP2yQ/zxHvxUsNP9s5qivNKq5cL42U1acJyxkcbQY=;
+        s=default; t=1592943585;
+        bh=FEBNMVsQfbahJqBSgdhnH+a1KU53iGwucQZwhHPz97k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zqKukeUu8/EZSUvBMsw/Aj7RiGvjZhO9u8rOOmQq+DlM1zcKwP42RtHDaVkNp3xXX
-         3z/huktj6Uo61FioYvl8jB1Ab+faICar/J26EGcMyuQXfJqikiC8dscS37vJF7KLKp
-         Ae5B6xEUWWfQgt58delW/1PWQL1Gg+00pO3ufr1U=
+        b=V1BsTJ4kS4tvQ3YGb7GTwUNxT9hqEW4UFRB2vVhdSKKmMD2Lz8PAxwcwcmhVoy8nD
+         IBTmy+P/gcw7Oyj1U5un9ukbSp4yoReAMmwzs4kUI4bOFc/MPknq4AcVrLajSsBVRd
+         GVzK6ON6soXMabKEFeaz1VoB1ErC7Y5hL2RaX/DE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 448/477] drm/amd/display: Use kvfree() to free coeff in build_regamma()
-Date:   Tue, 23 Jun 2020 21:57:25 +0200
-Message-Id: <20200623195428.712919208@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Khaled Almahallawy <khaled.almahallawy@intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Subject: [PATCH 5.7 450/477] drm/i915/tc: fix the reset of ln0
+Date:   Tue, 23 Jun 2020 21:57:27 +0200
+Message-Id: <20200623195428.807845801@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,33 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Khaled Almahallawy <khaled.almahallawy@intel.com>
 
-commit 81921a828b94ce2816932c19a5ec74d302972833 upstream.
+commit a43555ac908c604f45ed98628805aec9355b9737 upstream.
 
-Use kvfree() instead of kfree() to free coeff in build_regamma()
-because the memory is allocated with kvzalloc().
+Setting ln0 similar to ln1
 
-Fixes: e752058b8671 ("drm/amd/display: Optimize gamma calculations")
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 3b51be4e4061b ("drm/i915/tc: Update DP_MODE programming")
+Cc: <stable@vger.kernel.org> # v5.5+
+Signed-off-by: Khaled Almahallawy <khaled.almahallawy@intel.com>
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200608204537.28468-1-khaled.almahallawy@intel.com
+(cherry picked from commit 4f72a8ee819d57d7329d88f487a2fc9b45153177)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/modules/color/color_gamma.c |    2 +-
+ drivers/gpu/drm/i915/display/intel_ddi.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-+++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-@@ -843,7 +843,7 @@ static bool build_regamma(struct pwl_flo
- 	pow_buffer_ptr = -1; // reset back to no optimize
- 	ret = true;
- release:
--	kfree(coeff);
-+	kvfree(coeff);
- 	return ret;
- }
+--- a/drivers/gpu/drm/i915/display/intel_ddi.c
++++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+@@ -2866,7 +2866,7 @@ icl_program_mg_dp_mode(struct intel_digi
+ 		ln1 = intel_de_read(dev_priv, MG_DP_MODE(1, tc_port));
+ 	}
  
+-	ln0 &= ~(MG_DP_MODE_CFG_DP_X1_MODE | MG_DP_MODE_CFG_DP_X1_MODE);
++	ln0 &= ~(MG_DP_MODE_CFG_DP_X1_MODE | MG_DP_MODE_CFG_DP_X2_MODE);
+ 	ln1 &= ~(MG_DP_MODE_CFG_DP_X1_MODE | MG_DP_MODE_CFG_DP_X2_MODE);
+ 
+ 	/* DPPATC */
 
 
