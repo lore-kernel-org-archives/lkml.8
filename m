@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24662078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B752078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948551;
-	bh=YV+1VJ5JYSwSaat+J4HxS7eC7ksTiEVi8F1kPqLe/3s=;
+	s=default; t=1592948557;
+	bh=HQ2t6d3gCpOIFKAiS50mdeCP8+8IYXLjiZjOMSW8mA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VaYyRkMZiJ9wO9s/pXW/vs/KDjemsTBBORb8Ybsks3CYahSxwO9XgsvA5/Lv8+gzf
-	 H/CyA0BM5tt6BC6XHnhnSeXo8g19dWurXMdiERYwd7Vkrh/XfdxgpX70oC0n8erY+O
-	 ajeQvHdIPeVZwwGBu4BEDqzC74BEcnETm50FU+FM=
+	b=UXEjVpkdwwGMNEo82Qn/IrEaD4DRfG/pspWvv5Wd8TW4Ph1nBbxdXOSSXkf+7R9bO
+	 N7U7Q28g1YX5tv3Y9qFPeAoE3uRPvpevfWd0aIumWWXUhtQDod6Qqv1aIkl2DBzJYM
+	 B88aWNoZRscgZ24qxGf9hK+I3+LNLEik2XraSzZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388903AbgFWVm2 (ORCPT
+        id S2393591AbgFWVmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43642 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388259AbgFWUEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:49 -0400
+        id S2388250AbgFWUEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:04:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09EF3206C3;
-        Tue, 23 Jun 2020 20:04:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2C4C206C3;
+        Tue, 23 Jun 2020 20:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942688;
-        bh=YV+1VJ5JYSwSaat+J4HxS7eC7ksTiEVi8F1kPqLe/3s=;
+        s=default; t=1592942683;
+        bh=HQ2t6d3gCpOIFKAiS50mdeCP8+8IYXLjiZjOMSW8mA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qNBZVexHKF2XctSstGs4GJC7QPgOBBD1zd6a3BWCfdP1HXGv0yQrOZtYobSKx7KNM
-         y0p7fEZUnnnDk7BiWDey/F7treYNtwC0aB4dSIa5L7NEj/9ZhX9w6Pmnzm/NVbasfj
-         SMQtXZytrcIWePlAcmXILDbjCv7jjCPWMkb7meII=
+        b=dhOTi0bNi57PX4uAlOi/OWyS04anb813IW3fGgAOw+XuOlAmPPMlA2YdAiunMo7ao
+         2J+CSdCEBgJrxpV1A7cHpljLT+gnUuQnpWSylgTNmGZFDyKz6uiJAfFG2KeXqBWUv8
+         a+Q2CJfapCOI/Mr0e/MDqV8cwVCbg/Eoekg2EO2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 069/477] gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip de-registration
-Date:   Tue, 23 Jun 2020 21:51:06 +0200
-Message-Id: <20200623195410.882326905@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 094/477] NTB: ntb_pingpong: Choose doorbells based on port number
+Date:   Tue, 23 Jun 2020 21:51:31 +0200
+Message-Id: <20200623195412.049779050@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,75 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 494a94e38dcf62543a32a4424d646ff80b4b28bd ]
+[ Upstream commit ca93c45755da98302c93abdd788fc09113baf9e0 ]
 
-Add missed acpi_gpiochip_free_interrupts() call when unregistering ports.
+This commit fixes pingpong support for existing drivers that do not
+implement ntb_default_port_number() and ntb_default_peer_port_number().
+This is required for hardware (like the crosslink topology of
+switchtec) which cannot assign reasonable port numbers to each port due
+to its perfect symmetry.
 
-While at it, drop extra check to call acpi_gpiochip_request_interrupts().
-There is no need to have an additional check to call
-acpi_gpiochip_request_interrupts(). Even without any interrupts available
-the registered ACPI Event handlers can be useful for debugging purposes.
+Instead of picking the doorbell to use based on the the index of the
+peer, we use the peer's port number. This is a bit clearer and easier
+to understand.
 
-Fixes: e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Serge Semin <fancer.lancer@gmail.com>
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
-Link: https://lore.kernel.org/r/20200519131233.59032-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: c7aeb0afdcc2 ("NTB: ntb_pp: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-dwapb.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/ntb/test/ntb_pingpong.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 92e127e748134..02cf4c43a4c4c 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -533,26 +533,33 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 		dwapb_configure_irqs(gpio, port, pp);
+diff --git a/drivers/ntb/test/ntb_pingpong.c b/drivers/ntb/test/ntb_pingpong.c
+index 04dd46647db36..2164e8492772d 100644
+--- a/drivers/ntb/test/ntb_pingpong.c
++++ b/drivers/ntb/test/ntb_pingpong.c
+@@ -121,15 +121,14 @@ static int pp_find_next_peer(struct pp_ctx *pp)
+ 	link = ntb_link_is_up(pp->ntb, NULL, NULL);
  
- 	err = gpiochip_add_data(&port->gc, port);
--	if (err)
-+	if (err) {
- 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
- 			port->idx);
--	else
--		port->is_registered = true;
-+		return err;
-+	}
- 
- 	/* Add GPIO-signaled ACPI event support */
--	if (pp->has_irq)
--		acpi_gpiochip_request_interrupts(&port->gc);
-+	acpi_gpiochip_request_interrupts(&port->gc);
- 
--	return err;
-+	port->is_registered = true;
+ 	/* Find next available peer */
+-	if (link & pp->nmask) {
++	if (link & pp->nmask)
+ 		pidx = __ffs64(link & pp->nmask);
+-		out_db = BIT_ULL(pidx + 1);
+-	} else if (link & pp->pmask) {
++	else if (link & pp->pmask)
+ 		pidx = __ffs64(link & pp->pmask);
+-		out_db = BIT_ULL(pidx);
+-	} else {
++	else
+ 		return -ENODEV;
+-	}
 +
-+	return 0;
++	out_db = BIT_ULL(ntb_peer_port_number(pp->ntb, pidx));
+ 
+ 	spin_lock(&pp->lock);
+ 	pp->out_pidx = pidx;
+@@ -303,7 +302,7 @@ static void pp_init_flds(struct pp_ctx *pp)
+ 			break;
+ 	}
+ 
+-	pp->in_db = BIT_ULL(pidx);
++	pp->in_db = BIT_ULL(lport);
+ 	pp->pmask = GENMASK_ULL(pidx, 0) >> 1;
+ 	pp->nmask = GENMASK_ULL(pcnt - 1, pidx);
+ 
+@@ -432,4 +431,3 @@ static void __exit pp_exit(void)
+ 	debugfs_remove_recursive(pp_dbgfs_topdir);
  }
- 
- static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
- {
- 	unsigned int m;
- 
--	for (m = 0; m < gpio->nr_ports; ++m)
--		if (gpio->ports[m].is_registered)
--			gpiochip_remove(&gpio->ports[m].gc);
-+	for (m = 0; m < gpio->nr_ports; ++m) {
-+		struct dwapb_gpio_port *port = &gpio->ports[m];
-+
-+		if (!port->is_registered)
-+			continue;
-+
-+		acpi_gpiochip_free_interrupts(&port->gc);
-+		gpiochip_remove(&port->gc);
-+	}
- }
- 
- static struct dwapb_platform_data *
+ module_exit(pp_exit);
+-
 -- 
 2.25.1
 
