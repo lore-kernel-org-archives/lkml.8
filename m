@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A21C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB28CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264DD2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F042098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944469;
-	bh=TQ4RRLMwABj/h2pa92vRnNrTUg18wAIi0ZH1SJOFJI0=;
+	s=default; t=1592944471;
+	bh=XtFeMb8kGk3fuqPFWEzobBSlX/FA3bh16zbM1mW+u2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GH104wl6g65ktJVhbjIVO7ixpP1MKg09ePhM6cECJvB1+HrVE1Qcx2HtC5eW5R0bI
-	 kfoRbDMygmF0TyXM8d+NPdSF9j8joAFrcrEr1/R7gNxsWzk041DQ9L0KeMVc9dOPrN
-	 1/qZWJtDaKz5eckfFOLcTedBUmNCcUK10+WAtAUo=
+	b=Yfx/gsS+WuWYoIFPi49xk4uXJR4+CwHOhWCAFesewzruB/GbpBIHepqcS8IskXSWs
+	 YegDYFoLXJq9sj3ohNwl49tTgkKWxkXwvgQ60QZndkyOpV9MLzvyMz/3laE0xpQkv4
+	 ShwSK26wMeayWKGcgFoINUdTNTCuy4/RHkYXtEbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391241AbgFWUeZ (ORCPT
+        id S2391542AbgFWUe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:34:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56028 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:34:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403773AbgFWUeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:12 -0400
+        id S2391508AbgFWUeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDE0A2098B;
-        Tue, 23 Jun 2020 20:34:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4661A206C3;
+        Tue, 23 Jun 2020 20:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944452;
-        bh=TQ4RRLMwABj/h2pa92vRnNrTUg18wAIi0ZH1SJOFJI0=;
+        s=default; t=1592944454;
+        bh=XtFeMb8kGk3fuqPFWEzobBSlX/FA3bh16zbM1mW+u2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SkRXNt7pZ3KeiWfiSIO0tafAKJE8dyFPDFJ95JzwZVY9Rtqf02Zaqx5zTYQzWHBxB
-         tWjYa9aBQMu7TzxF2uIcS4Nu9876lFQVS48UIF0VTd7ai3CmxX0T/TWiQT6S/JWvna
-         irEBxvr45J1IpFETRdG7RdV5Coiun7O6gYjrS0M4=
+        b=Lon8or8hv8Gdn3auoQvG3lYDdhknOWiBzkn2V8qqetY0F9xT6Sz0/MnacXjBrCArd
+         1ksWmwuQbyH3+TozvKdoj127B46rM7cVpHYa9SVoflbaCckX3Eb/g/BUICmRqQLVYt
+         XlbzMBGGwkFnZ7rrVHxgH+Nelp3+y7nLQx6WXbE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 311/314] net: octeon: mgmt: Repair filling of RX ring
-Date:   Tue, 23 Jun 2020 21:58:26 +0200
-Message-Id: <20200623195353.836500091@linuxfoundation.org>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 5.4 312/314] pwm: jz4740: Enhance precision in calculation of duty cycle
+Date:   Tue, 23 Jun 2020 21:58:27 +0200
+Message-Id: <20200623195353.884541761@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,43 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit 0c34bb598c510e070160029f34efeeb217000f8d upstream.
+commit 9017dc4fbd59c09463019ce494cfe36d654495a8 upstream.
 
-The removal of mips_swiotlb_ops exposed a problem in octeon_mgmt Ethernet
-driver. mips_swiotlb_ops had an mb() after most of the operations and the
-removal of the ops had broken the receive functionality of the driver.
-My code inspection has shown no other places except
-octeon_mgmt_rx_fill_ring() where an explicit barrier would be obviously
-missing. The latter function however has to make sure that "ringing the
-bell" doesn't happen before RX ring entry is really written.
+Calculating the hardware value for the duty from the hardware value of
+the period resulted in a precision loss versus calculating it from the
+clock rate directly.
 
-The patch has been successfully tested on Octeon II.
+(Also remove a cast that doesn't really need to be here)
 
-Fixes: a999933db9ed ("MIPS: remove mips_swiotlb_ops")
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f6b8a5700057 ("pwm: Add Ingenic JZ4740 support")
+Cc: <stable@vger.kernel.org>
+Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+[ukl: backport to v5.4.y and adapt commit log accordingly]
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/cavium/octeon/octeon_mgmt.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pwm/pwm-jz4740.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-+++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-@@ -235,6 +235,11 @@ static void octeon_mgmt_rx_fill_ring(str
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -108,8 +108,8 @@ static int jz4740_pwm_apply(struct pwm_c
+ 	if (prescaler == 6)
+ 		return -EINVAL;
  
- 		/* Put it in the ring.  */
- 		p->rx_ring[p->rx_next_fill] = re.d64;
-+		/* Make sure there is no reorder of filling the ring and ringing
-+		 * the bell
-+		 */
-+		wmb();
-+
- 		dma_sync_single_for_device(p->dev, p->rx_ring_handle,
- 					   ring_size_to_bytes(OCTEON_MGMT_RX_RING_SIZE),
- 					   DMA_BIDIRECTIONAL);
+-	tmp = (unsigned long long)period * state->duty_cycle;
+-	do_div(tmp, state->period);
++	tmp = (unsigned long long)rate * state->duty_cycle;
++	do_div(tmp, NSEC_PER_SEC);
+ 	duty = period - tmp;
+ 
+ 	if (duty >= period)
 
 
