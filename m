@@ -2,94 +2,124 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C834BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE1420706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E76720720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592873559;
+	bh=Iqy7olmWTGFsAB7j1jAOyQi0betLtkAJ66NGYId1SDc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nlnqHDoRF82CLm1B7U+HtRJiQC0dG5JUlEJ5NUQ50mwuqB2TKyatQ2MR0O1ePghlh
+	 j+ykUCAnZSxvXqW+8ZmQzxhWyZ58Rwv7gWKd6qzaf8yGGmSBBeCMLi80cfxPRLpC8L
+	 lFqxAnd7YnlAeQFV0NSc9C6gxIGdhEOBqjTbApTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732363AbgFWAwX (ORCPT
+        id S1732401AbgFWAwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:52:23 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:35737 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731750AbgFWAwX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:52:23 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 45CB65AF5E4;
-        Tue, 23 Jun 2020 10:52:18 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jnXAg-0001Y7-9C; Tue, 23 Jun 2020 10:52:18 +1000
-Date:   Tue, 23 Jun 2020 10:52:18 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Bypass filesystems for reading cached pages
-Message-ID: <20200623005218.GF2040@dread.disaster.area>
-References: <20200619155036.GZ8681@bombadil.infradead.org>
- <20200622003215.GC2040@dread.disaster.area>
- <CAHc6FU4b_z+vhjVPmaU46VhqoD+Y7jLN3=BRDZPrS2v=_pVpfw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHc6FU4b_z+vhjVPmaU46VhqoD+Y7jLN3=BRDZPrS2v=_pVpfw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
-        a=8G3SpTuCT5XHdoEvo0oA:9 a=P48SZZe_48vTZzb1:21 a=B4xsomyZ1zPHdLA9:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Mon, 22 Jun 2020 20:52:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732368AbgFWAwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:52:34 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76D44207BC;
+        Tue, 23 Jun 2020 00:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592873553;
+        bh=Iqy7olmWTGFsAB7j1jAOyQi0betLtkAJ66NGYId1SDc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YhVn38JNBE+Duzezs5+vJuL8py6GLW5ne/ucgizcnofrzUh0/QGtyEd1IHnKkdvFR
+         kUajAUul164++BsWfgAB8s13WlKPjeao0Qa/3eg1TGYo9iy74iQseiLobaB3keS+ET
+         WskI+kr6xbB2mEK1eE8A3MBVp0JIuFY1Xs/uTPK8=
+From:   paulmck@kernel.org
+To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org
+Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
+        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        akiyks@gmail.com,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 03/14] Documentation: LKMM: Add litmus test for RCU GP guarantee where updater frees object
+Date:   Mon, 22 Jun 2020 17:52:20 -0700
+Message-Id: <20200623005231.27712-3-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200623005152.GA27459@paulmck-ThinkPad-P72>
+References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 04:35:05PM +0200, Andreas Gruenbacher wrote:
-> On Mon, Jun 22, 2020 at 2:32 AM Dave Chinner <david@fromorbit.com> wrote:
-> > On Fri, Jun 19, 2020 at 08:50:36AM -0700, Matthew Wilcox wrote:
-> > >
-> > > This patch lifts the IOCB_CACHED idea expressed by Andreas to the VFS.
-> > > The advantage of this patch is that we can avoid taking any filesystem
-> > > lock, as long as the pages being accessed are in the cache (and we don't
-> > > need to readahead any pages into the cache).  We also avoid an indirect
-> > > function call in these cases.
-> >
-> > What does this micro-optimisation actually gain us except for more
-> > complexity in the IO path?
-> >
-> > i.e. if a filesystem lock has such massive overhead that it slows
-> > down the cached readahead path in production workloads, then that's
-> > something the filesystem needs to address, not unconditionally
-> > bypass the filesystem before the IO gets anywhere near it.
-> 
-> I'm fine with not moving that functionality into the VFS. The problem
-> I have in gfs2 is that taking glocks is really expensive. Part of that
-> overhead is accidental, but we definitely won't be able to fix it in
-> the short term. So something like the IOCB_CACHED flag that prevents
-> generic_file_read_iter from issuing readahead I/O would save the day
-> for us. Does that idea stand a chance?
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-I have no problem with a "NOREADAHEAD" flag being passed to
-generic_file_read_iter(). It's not a "already cached" flag though,
-it's a "don't start any IO" directive, just like the NOWAIT flag is
-a "don't block on locks or IO in progress" directive and not an
-"already cached" flag. Readahead is something we should be doing,
-unless a filesystem has a very good reason not to, such as the gfs2
-locking case here...
+This adds an example for the important RCU grace period guarantee, which
+shows an RCU reader can never span a grace period.
 
-Cheers,
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ .../litmus-tests/rcu/RCU+sync+free.litmus          | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/litmus-tests/rcu/RCU+sync+free.litmus
 
-Dave.
+diff --git a/Documentation/litmus-tests/rcu/RCU+sync+free.litmus b/Documentation/litmus-tests/rcu/RCU+sync+free.litmus
+new file mode 100644
+index 0000000..4ee67e1
+--- /dev/null
++++ b/Documentation/litmus-tests/rcu/RCU+sync+free.litmus
+@@ -0,0 +1,42 @@
++C RCU+sync+free
++
++(*
++ * Result: Never
++ *
++ * This litmus test demonstrates that an RCU reader can never see a write that
++ * follows a grace period, if it did not see writes that precede that grace
++ * period.
++ *
++ * This is a typical pattern of RCU usage, where the write before the grace
++ * period assigns a pointer, and the writes following the grace period destroy
++ * the object that the pointer used to point to.
++ *
++ * This is one implication of the RCU grace-period guarantee, which says (among
++ * other things) that an RCU read-side critical section cannot span a grace period.
++ *)
++
++{
++int x = 1;
++int *y = &x;
++int z = 1;
++}
++
++P0(int *x, int *z, int **y)
++{
++	int *r0;
++	int r1;
++
++	rcu_read_lock();
++	r0 = rcu_dereference(*y);
++	r1 = READ_ONCE(*r0);
++	rcu_read_unlock();
++}
++
++P1(int *x, int *z, int **y)
++{
++	rcu_assign_pointer(*y, z);
++	synchronize_rcu();
++	WRITE_ONCE(*x, 0);
++}
++
++exists (0:r0=x /\ 0:r1=0)
 -- 
-Dave Chinner
-david@fromorbit.com
+2.9.5
+
