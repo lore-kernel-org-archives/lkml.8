@@ -2,101 +2,92 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66864C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1FA20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BB02078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592902509;
+	bh=aX9iuf1eAPHbnJVHVvIBTPmYhk5DcuRypTzSO36WQxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yWadPK+shVSSvd6tceAbCiqXVyWykanVUnBcWVFHDu6iXK5yqJNcADUyLN9Nf1vGT
+	 OBNIGzSLf/7JZfn+/CadUmuDuJuyBk4B6/lEbw/l8ZifEhCwz+C81g1oGXocxc0mfz
+	 tH/pvRGCWzjj6DhbM9PkJbv68MOg1rBZkyhEA7cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732078AbgFWIww (ORCPT
+        id S1731894AbgFWIzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:52:52 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:41232 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731805AbgFWIwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:52:22 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv2uFwvFecLBIAA--.12S4;
-        Tue, 23 Jun 2020 16:51:23 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Guo Ren <guoren@kernel.org>, Baruch Siach <baruch@tkos.co.il>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 2/7] irqchip/loongson-htpic: Remove redundant kfree operation
-Date:   Tue, 23 Jun 2020 16:51:11 +0800
-Message-Id: <1592902276-3969-3-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1592902276-3969-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1592902276-3969-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxv2uFwvFecLBIAA--.12S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr15XrW5ZrW3AF15Kr4xtFb_yoW3twb_Cr
-        WIqr9rJFW0gr1rC3y7ur47ZrySkw4kWF1kuF4aya4ft347tw1rAry7Ar4fJF47Wa1SkFn8
-        WFW7ZrykAw1xGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbDxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-        0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-        8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-        xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-        6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2
-        Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-        Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJw
-        CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUeMKuUUUU
-        U
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 23 Jun 2020 04:55:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40715 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731756AbgFWIzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:55:07 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n23so22477137ljh.7;
+        Tue, 23 Jun 2020 01:55:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aX9iuf1eAPHbnJVHVvIBTPmYhk5DcuRypTzSO36WQxU=;
+        b=Q66+CE+pOUngHdUu4Tb4drH3h+aM5bWV07JtULtGclXUH6PB5ZwkRMoG3oyzPeUGuQ
+         98MsZz8ag6K9mgzQMUgOzuVojUrsn/GRk9NKsYt7vamFHCWj4YaXpMq7NaGFSnOlIcU9
+         2Hpi6ii+etLAKWotBMNYOtcx6TbfUpnCkT7q+QAMAUUDHHH84rZhzPJAH2LphwvLgv+x
+         ZLOM0YbsL6f/NCrX/7PjR5RstKK17JN8xtQv0yzX4qK9x4SkerQv2pnQWaHf+jidGA4J
+         oHD4ntB8j0jrDAvCytBL6ieGkAusWiYP3NNN3oM16ZMrtm7lHn0QOEFuCL0HntI0ItIi
+         WbQg==
+X-Gm-Message-State: AOAM531azOh/gf0H3TsMih6ykZn8WYfIiWVf2945rK2Gce2Ax9f4Kji9
+        arp5QfbHUAj5NsQI5FmzS3g7NdvNefU=
+X-Google-Smtp-Source: ABdhPJx0zCO4imRfmuJ6NtUZg1JAuPEqEPOrd7ia12xz7mwrd0kqCZN593A7RqM1idGuR+nnxEXFrA==
+X-Received: by 2002:a2e:8950:: with SMTP id b16mr9977467ljk.349.1592902504426;
+        Tue, 23 Jun 2020 01:55:04 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id z17sm247655ljc.83.2020.06.23.01.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 01:55:03 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jnehq-0001yu-5r; Tue, 23 Jun 2020 10:55:02 +0200
+Date:   Tue, 23 Jun 2020 10:55:02 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     James Hilliard <james.hilliard1@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] USB: Serial: cypress_M8: Enable Simply Automated UPB
+ PIM
+Message-ID: <20200623085502.GG3334@localhost>
+References: <20200616220403.1807003-1-james.hilliard1@gmail.com>
+ <20200622085321.GA3334@localhost>
+ <CADvTj4rOYs6F3J2A72GiWGbYW_Fu7VNCd0GpWaJ9it6tEt+4Hw@mail.gmail.com>
+ <20200623075348.GD3334@localhost>
+ <CADvTj4qn0nwyBY09pi5SZVuWHAZ65fVSUMA8QTAs1t0mYw6rmg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADvTj4qn0nwyBY09pi5SZVuWHAZ65fVSUMA8QTAs1t0mYw6rmg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function htpic_of_init(), when kzalloc htpic fails, it should
-return -ENOMEM directly, no need to execute "goto" to kfree.
+On Tue, Jun 23, 2020 at 02:08:57AM -0600, James Hilliard wrote:
+> On Tue, Jun 23, 2020 at 1:53 AM Johan Hovold <johan@kernel.org> wrote:
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-loongson-htpic.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> > Don't you need to add this device to the HID driver's ignore list
+> > to prevent it from claiming the device (see hid_ignore_list) just like
+> > for the Cypress VID?
+>
+> Ah, yeah, that does look to be needed, do you want to edit my patch or
+> should I send a follow up patch with that added?
 
-diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
-index dd018c2..63f7280 100644
---- a/drivers/irqchip/irq-loongson-htpic.c
-+++ b/drivers/irqchip/irq-loongson-htpic.c
-@@ -93,10 +93,8 @@ int __init htpic_of_init(struct device_node *node, struct device_node *parent)
- 	}
- 
- 	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
--	if (!htpic) {
--		err = -ENOMEM;
--		goto out_free;
--	}
-+	if (!htpic)
-+		return -ENOMEM;
- 
- 	htpic->base = of_iomap(node, 0);
- 	if (!htpic->base) {
--- 
-2.1.0
+A follow-up patch is probably best.
 
+Send it to the HID maintainer and include a CC-stable tag so that it
+gets backported along with the new cypress_m8 entry.
+
+Johan
