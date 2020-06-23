@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78396C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 494432085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B543220723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944312;
-	bh=pkncohXc3N1rYuk3wS5rxPgdh0vP0fbE21NXGVVukP4=;
+	s=default; t=1592944318;
+	bh=01+YQWr4j3FbYj08pkDDK3koCDjAYk0NHqiSypUixvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGUIiaBO3aQsaqag4TvnzlWw+UwwayXmJDm+BGH696PLEOxb1zYUjDMQNGyuIGBOt
-	 HZKhJRKMJO/tmKHzaQ8/v42u/RDUSP+X98EPZvidpxCHHxordkDcEUWDW60RzM84ka
-	 ZJEpTgQi7Oi54GgXBkv+Jx4ZdZAWTv8iLHHRHOKY=
+	b=zZHoJVPjfKjxIM4/Qpk2ckTY38XPOxaGlrou3vhSvUxOq884hoTXIrR91ellRUad8
+	 Bnz2Qcyi5ZN8joKlvgOR4NwdaOdt8y2RJS7p0p48lXqoez3tejcQnBFUZL60k3N5gd
+	 BmlhLF3Ao2MzlZyEevvgzF/enRbAF03Q+7xBtoeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391244AbgFWUbt (ORCPT
+        id S2391209AbgFWUb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52148 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:31:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391209AbgFWUbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:31:32 -0400
+        id S2391216AbgFWUbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:31:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB11920702;
-        Tue, 23 Jun 2020 20:31:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20C9B20702;
+        Tue, 23 Jun 2020 20:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944292;
-        bh=pkncohXc3N1rYuk3wS5rxPgdh0vP0fbE21NXGVVukP4=;
+        s=default; t=1592944294;
+        bh=01+YQWr4j3FbYj08pkDDK3koCDjAYk0NHqiSypUixvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A1N2sMcAxwEvUuy6AW/ZhUn0/l97JzBCX35s49F9+l1f9NZYdxB5MPyIPA9GO85Fe
-         4LeSkU1pXdFMWMwtWwL68zeE4vDEGnZmq53/CwF8eRXuEmwWBqmxZM+LLZgoCkeumB
-         yDE81P7hGPAsfiDAvsDjcTRle1lUt24bQo8jRY/s=
+        b=ixc0EQNBUitBxFiPv+SyfqmjwnvbhUsOepKrvjrGMT2+e50hYbjf5uXqXnOtMPnWT
+         ur2blqbC+tnn0WzzfHmi4T28BEkBJBMbHz6Gf8KGlAVZBKuKcr7xfjdIGoQdvKrXCV
+         t2Kn+iakOUBtAYAyFdwNhGM14BbjEsUp+URVktEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Sanjay R Mehta <sanju.mehta@amd.com>,
-        Arindam Nath <arindam.nath@amd.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 230/314] ntb_perf: pass correct struct device to dma_alloc_coherent
-Date:   Tue, 23 Jun 2020 21:57:05 +0200
-Message-Id: <20200623195349.921527002@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 248/314] bpf, sockhash: Synchronize delete from bucket list on map free
+Date:   Tue, 23 Jun 2020 21:57:23 +0200
+Message-Id: <20200623195350.777739053@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,59 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-[ Upstream commit 98f4e140264eeb52f22ff05be6b6dd48237255ac ]
+[ Upstream commit 75e68e5bf2c7fa9d3e874099139df03d5952a3e1 ]
 
-Currently, ntb->dev is passed to dma_alloc_coherent
-and dma_free_coherent calls. The returned dma_addr_t
-is the CPU physical address. This works fine as long
-as IOMMU is disabled. But when IOMMU is enabled, we
-need to make sure that IOVA is returned for dma_addr_t.
-So the correct way to achieve this is by changing the
-first parameter of dma_alloc_coherent() as ntb->pdev->dev
-instead.
+We can end up modifying the sockhash bucket list from two CPUs when a
+sockhash is being destroyed (sock_hash_free) on one CPU, while a socket
+that is in the sockhash is unlinking itself from it on another CPU
+it (sock_hash_delete_from_link).
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+This results in accessing a list element that is in an undefined state as
+reported by KASAN:
+
+| ==================================================================
+| BUG: KASAN: wild-memory-access in sock_hash_free+0x13c/0x280
+| Write of size 8 at addr dead000000000122 by task kworker/2:1/95
+|
+| CPU: 2 PID: 95 Comm: kworker/2:1 Not tainted 5.7.0-rc7-02961-ge22c35ab0038-dirty #691
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x97/0xe0
+|  ? sock_hash_free+0x13c/0x280
+|  __kasan_report.cold+0x5/0x40
+|  ? mark_lock+0xbc1/0xc00
+|  ? sock_hash_free+0x13c/0x280
+|  kasan_report+0x38/0x50
+|  ? sock_hash_free+0x152/0x280
+|  sock_hash_free+0x13c/0x280
+|  bpf_map_free_deferred+0xb2/0xd0
+|  ? bpf_map_charge_finish+0x50/0x50
+|  ? rcu_read_lock_sched_held+0x81/0xb0
+|  ? rcu_read_lock_bh_held+0x90/0x90
+|  process_one_work+0x59a/0xac0
+|  ? lock_release+0x3b0/0x3b0
+|  ? pwq_dec_nr_in_flight+0x110/0x110
+|  ? rwlock_bug.part.0+0x60/0x60
+|  worker_thread+0x7a/0x680
+|  ? _raw_spin_unlock_irqrestore+0x4c/0x60
+|  kthread+0x1cc/0x220
+|  ? process_one_work+0xac0/0xac0
+|  ? kthread_create_on_node+0xa0/0xa0
+|  ret_from_fork+0x24/0x30
+| ==================================================================
+
+Fix it by reintroducing spin-lock protected critical section around the
+code that removes the elements from the bucket on sockhash free.
+
+To do that we also need to defer processing of removed elements, until out
+of atomic context so that we can unlink the socket from the map when
+holding the sock lock.
+
+Fixes: 90db6d772f74 ("bpf, sockmap: Remove bucket->lock from sock_{hash|map}_free")
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200607205229.2389672-3-jakub@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/core/sock_map.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index e9b7c2dfc7301..52c29791fc02a 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -556,7 +556,7 @@ static void perf_free_inbuf(struct perf_peer *peer)
- 		return;
- 
- 	(void)ntb_mw_clear_trans(peer->perf->ntb, peer->pidx, peer->gidx);
--	dma_free_coherent(&peer->perf->ntb->dev, peer->inbuf_size,
-+	dma_free_coherent(&peer->perf->ntb->pdev->dev, peer->inbuf_size,
- 			  peer->inbuf, peer->inbuf_xlat);
- 	peer->inbuf = NULL;
- }
-@@ -585,8 +585,9 @@ static int perf_setup_inbuf(struct perf_peer *peer)
- 
- 	perf_free_inbuf(peer);
- 
--	peer->inbuf = dma_alloc_coherent(&perf->ntb->dev, peer->inbuf_size,
--					 &peer->inbuf_xlat, GFP_KERNEL);
-+	peer->inbuf = dma_alloc_coherent(&perf->ntb->pdev->dev,
-+					 peer->inbuf_size, &peer->inbuf_xlat,
-+					 GFP_KERNEL);
- 	if (!peer->inbuf) {
- 		dev_err(&perf->ntb->dev, "Failed to alloc inbuf of %pa\n",
- 			&peer->inbuf_size);
-@@ -1517,4 +1518,3 @@ static void __exit perf_exit(void)
- 	destroy_workqueue(perf_wq);
- }
- module_exit(perf_exit);
--
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index ba65c608c2282..b22e9f1191803 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -861,6 +861,7 @@ static void sock_hash_free(struct bpf_map *map)
+ {
+ 	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+ 	struct bpf_htab_bucket *bucket;
++	struct hlist_head unlink_list;
+ 	struct bpf_htab_elem *elem;
+ 	struct hlist_node *node;
+ 	int i;
+@@ -872,13 +873,31 @@ static void sock_hash_free(struct bpf_map *map)
+ 	synchronize_rcu();
+ 	for (i = 0; i < htab->buckets_num; i++) {
+ 		bucket = sock_hash_select_bucket(htab, i);
+-		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
+-			hlist_del_rcu(&elem->node);
++
++		/* We are racing with sock_hash_delete_from_link to
++		 * enter the spin-lock critical section. Every socket on
++		 * the list is still linked to sockhash. Since link
++		 * exists, psock exists and holds a ref to socket. That
++		 * lets us to grab a socket ref too.
++		 */
++		raw_spin_lock_bh(&bucket->lock);
++		hlist_for_each_entry(elem, &bucket->head, node)
++			sock_hold(elem->sk);
++		hlist_move_list(&bucket->head, &unlink_list);
++		raw_spin_unlock_bh(&bucket->lock);
++
++		/* Process removed entries out of atomic context to
++		 * block for socket lock before deleting the psock's
++		 * link to sockhash.
++		 */
++		hlist_for_each_entry_safe(elem, node, &unlink_list, node) {
++			hlist_del(&elem->node);
+ 			lock_sock(elem->sk);
+ 			rcu_read_lock();
+ 			sock_map_unref(elem->sk, elem);
+ 			rcu_read_unlock();
+ 			release_sock(elem->sk);
++			sock_put(elem->sk);
+ 			sock_hash_free_elem(htab, elem);
+ 		}
+ 	}
 -- 
 2.25.1
 
