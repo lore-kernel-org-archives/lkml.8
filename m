@@ -2,124 +2,260 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 326C320874
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592954034;
-	bh=zcmvr4Y9pPzNHqW/fC4MryPx1/Q4WPq/R5GKk9EEgVk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xH1jdGPp+o/d30Pvgw2hqFpm1TQNtJhhq/nCNqHCHPhccyEJog3wCY5WGylwbh3Dq
-	 msuTe6vpsuEcvhlxf8ZYbwVRH9nHKpQxrKR0pWWu5B2oesXwOAC06rymMHqCwo0evb
-	 FDSFCtjRkyCzFFq7igq+lcvGBx1XuEa+r4XvxS2w=
+	by mail.kernel.org (Postfix) with ESMTP id 3AF3220888
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:18:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXkFFWod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387857AbgFWXNw (ORCPT
+        id S2387699AbgFWXS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50892 "EHLO
+        Tue, 23 Jun 2020 19:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387558AbgFWXNw (ORCPT
+        with ESMTP id S2387597AbgFWXSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:13:52 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA030C061573;
-        Tue, 23 Jun 2020 16:13:51 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e13so175865qkg.5;
-        Tue, 23 Jun 2020 16:13:51 -0700 (PDT)
+        Tue, 23 Jun 2020 19:18:25 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DCB2C0613ED
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:18:25 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id u8so169882pje.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:18:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=7+1p2mclyR0lfU/92KynyV/hto6Q//eZlxOYZJAVpWo=;
-        b=geuFFUr3+h96lNJq2jfjxCNm4/1+y5e+iBsysgZ1OalJqcN0IFyEMJIfCzvlPRq3bw
-         6+vHXO/pbyrw37z3DsErSTr0GaUttxeVS3xpzAIwqrvzOia2l+UxdmbKiOcq5UwroWp7
-         WKP+wPYO1DvLHUICBB5IA4TN37zdoqjKnq2gMn8Fsdj7som+7PAixMSxD+Br1NuU3Ej5
-         p/BBY0TCVj8oZsRhC1xAa1sL1ONggi++YOBwviHIRApMANsneQaThAjVCn5RDMGo7+Qf
-         6b1GlKrrbkm7EWZM2rmx4PhqOKUFRUF85xRFxy+VjmlB9Oxz2RhDBT0gnDVe/palJxHo
-         OnRw==
+        bh=pv5fYhHdfT+j+/8CDepP23KCELIyUAbwxjCT3/6Imj4=;
+        b=xXkFFWodpLXbx+arhapQoMUcG+KyCVMEPfMO0gsEA10a36iFeBrkt7Hd5N4wOCpg0s
+         DBuVfktF5Vfcttofp9SntDT//9mJpYU88z8uIzSQKEuqY76ZRI3/5hXn+KIzgQfjPZ8W
+         v42VEM7Pfb9/kp6JcJiKYZxtt4EXwVspQTF6Turli+nebC8jKYhO0rdxuyBB2T6uLuAA
+         AegLKmksvBpjeQl8RojFqM0bozIq3pSLixHzCgORwJYZE8Sv32qL2KyX5TZjNZda7pzI
+         SV1h+55bVp5LD6ScjTBQmiI17aR5I2BgL9cp6HYaiXIQe3QFuXPr2RhYUSCAgvVqw6xO
+         9Qtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=7+1p2mclyR0lfU/92KynyV/hto6Q//eZlxOYZJAVpWo=;
-        b=nObfUFFSNQyTpUZ+C9UU7Fa4kSe9sOBccEr6ckff5/t9q3TuPAGdBb6L5DfxqpBO50
-         TsjyST/ewIaOaaYvcPK7zdbcMD57EbmpUgTZ0Tf1nooY4ZVYkBnEpmjvDonAIJItxLLD
-         Ee44v5nzFvyHun+UiK6fEZxWCulXFvhl8LhCB2AZISG3P/1cR5iEC4U+5GOzNFAaLucf
-         JOW7CQtl3I81s2+PAHwROWmkODgltXIruhk5j7Beo2Y/6jLILgqN28cPkTQ6SOnBE7lS
-         G0yDnpQMQ55E+6XWBkWqn5ETXAKOUnN352HpwZkyJIVWhjQwXFN7DiCjMFERg75Fq70L
-         fkVQ==
-X-Gm-Message-State: AOAM533fLgxoFggN3H7NmHEDOl3TAXbFf1vL0mGbrseyMTE/o3KNjrKr
-        tKFr2/rhXTVBB78oUhu59As=
-X-Google-Smtp-Source: ABdhPJxJewiReujBdDg+I1QnTrOCMNrukNot2OLRnDJkFJlhcqD5N7RvZVyB/MRf1AzoKDFQqJEaoA==
-X-Received: by 2002:a37:a08:: with SMTP id 8mr23082871qkk.388.1592954030804;
-        Tue, 23 Jun 2020 16:13:50 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:896d])
-        by smtp.gmail.com with ESMTPSA id t36sm2036714qtj.58.2020.06.23.16.13.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pv5fYhHdfT+j+/8CDepP23KCELIyUAbwxjCT3/6Imj4=;
+        b=WfmQ4vqBhl4S67ntXRRIqUJpOEAGPJcdIto6vLSYZzAkT2dWEAMpD/Lf/baI3l6J/g
+         IQEjUNTvZkC/5yO2GP8L5rhN4ZyGfmhfX+93/hLvQEa1SgZ5p9/W2CgCTF472kcIL1ku
+         9XsVT9J+B9udWF0D5ESvrp6FghY7uHuWDeCTSw9FCIaW9cCaGfYlYRY3xwNJCE38eQXO
+         jJnUn9Mv4PW/2o7KVvQas8hq2GWvq3q8aKx6GUrZr1JHzpsMeyGFQxLmEIKYXidqVnNj
+         k9ZeY6VRjkjlPyZ1Fh5XhWjIUA/szZ8Rqo5F9DQLeyY9ApCl23VKN5LVhk74hKPPW83+
+         QRew==
+X-Gm-Message-State: AOAM532scHh1Ee2XjZSfjjpFv4llWEKTH4+Ydbr35gBw66zJf/yj9hFn
+        x9/hRn9TPegXCK0a+y57+WpcCA==
+X-Google-Smtp-Source: ABdhPJz8VfxvmKvH1Ueuv23hHzI1AbDHHVfZFV2n3sS4ypRhJ0TX26s+R3uh0PLCsh0BxAKq7sxYiw==
+X-Received: by 2002:a17:90a:f0cb:: with SMTP id fa11mr25146440pjb.113.1592954304498;
+        Tue, 23 Jun 2020 16:18:24 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b4sm18336847pfg.75.2020.06.23.16.18.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 16:13:49 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 19:13:48 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Cc:     Ian Kent <raven@themaw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-Message-ID: <20200623231348.GD13061@mtj.duckdns.org>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
- <20200622175343.GC13061@mtj.duckdns.org>
- <82b2379e-36d0-22c2-41eb-71571e992b37@linux.vnet.ibm.com>
+        Tue, 23 Jun 2020 16:18:23 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 16:15:41 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/12] arm64: dts: qcom: msm8994: Add support for SMD
+ RPM
+Message-ID: <20200623231541.GH128451@builder.lan>
+References: <20200623224813.297077-1-konradybcio@gmail.com>
+ <20200623224813.297077-5-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <82b2379e-36d0-22c2-41eb-71571e992b37@linux.vnet.ibm.com>
+In-Reply-To: <20200623224813.297077-5-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Rick.
+On Tue 23 Jun 15:48 PDT 2020, Konrad Dybcio wrote:
 
-On Mon, Jun 22, 2020 at 02:22:34PM -0700, Rick Lindsley wrote:
-> > I don't know. The above highlights the absurdity of the approach itself to
-> > me. You seem to be aware of it too in writing: 250,000 "devices".
+> Add support for SMD RPM, including pm8994 and pmi8994
+> regulators.
 > 
-> Just because it is absurd doesn't mean it wasn't built that way :)
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8994.dtsi | 111 ++++++++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
 > 
-> I agree, and I'm trying to influence the next hardware design. However,
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> index e7f4b06eb12c..a4edc3be7024 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> @@ -159,9 +159,100 @@ smem_mem: smem_region@6a00000 {
+>  		};
+>  	};
+>  
+> +	smd {
+> +		compatible = "qcom,smd";
+> +		rpm {
+> +			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+> +			qcom,ipc = <&apcs 8 0>;
 
-I'm not saying that the hardware should not segment things into however many
-pieces that it wants / needs to. That part is fine.
+Can you please extend qcom-apcs-ipc-mailbox and its binding to add
+MSM8994 and use mboxes = <&apcs 0>; here instead?
 
-> what's already out there is memory units that must be accessed in 256MB
-> blocks. If you want to remove/add a GB, that's really 4 blocks of memory
-> you're manipulating, to the hardware. Those blocks have to be registered
-> and recognized by the kernel for that to work.
+I do see that while I added this support a few years ago I migrated some
+of the remoteproc edges, but never any of the RPM ones. But it should
+work...
 
-The problem is fitting that into an interface which wholly doesn't fit that
-particular requirement. It's not that difficult to imagine different ways to
-represent however many memory slots, right? It'd take work to make sure that
-integrates well with whatever tooling or use cases but once done this
-particular problem will be resolved permanently and the whole thing will
-look a lot less silly. Wouldn't that be better?
+> +			qcom,smd-edge = <15>;
+> +			qcom,local-pid = <0>;
+> +			qcom,remote-pid = <6>;
+> +
+> +			rpm-requests {
+> +				compatible = "qcom,rpm-msm8994";
+> +				qcom,smd-channels = "rpm_requests";
+> +
+> +				rpmcc: rpmcc {
+> +					compatible = "qcom,rpmcc-msm8994";
+> +					#clock-cells = <1>;
+> +				};
+> +
+> +				pm8994_regulators: pm8994-regulators {
 
-Thanks.
+We've learned from experience that PMICs, naming of regulators and their
+routing are board specific (or at least OEM specific).
 
--- 
-tejun
+So please give rpm-requests a label and add pm8994-regulators and
+pmi8994-regulators to it in the board (your case platform) dts(i).
+
+Regards,
+Bjorn
+
+> +					compatible = "qcom,rpm-pm8994-regulators";
+> +					vdd_l1-supply = <&pm8994_s1>;
+> +					vdd_l2_26_28-supply = <&pm8994_s3>;
+> +					vdd_l3_11-supply = <&pm8994_s3>;
+> +					vdd_l4_27_31-supply = <&pm8994_s3>;
+> +					vdd_l5_7-supply = <&pm8994_s3>;
+> +					vdd_l6_12_32-supply = <&pm8994_s5>;
+> +					vdd_l8_16_30-supply = <&vreg_vph_pwr>;
+> +					vdd_l9_10_18_22-supply = <&vreg_vph_pwr>;
+> +					vdd_l13_19_23_24-supply = <&vreg_vph_pwr>;
+> +					vdd_l14_15-supply = <&pm8994_s5>;
+> +					vdd_l17_29-supply = <&vreg_vph_pwr>;
+> +					vdd_l20_21-supply = <&vreg_vph_pwr>;
+> +					vdd_l25-supply = <&pm8994_s5>;
+> +					vdd_lvs1_2 = <&pm8994_s4>;
+> +
+> +					pm8994_s1: s1 {};
+> +					pm8994_s2: s2 {};
+> +					pm8994_s3: s3 {};
+> +					pm8994_s4: s4 {};
+> +					pm8994_s5: s5 {};
+> +					pm8994_s6: s6 {};
+> +					pm8994_s7: s7 {};
+> +
+> +					pm8994_l1: l1 {};
+> +					pm8994_l2: l2 {};
+> +					pm8994_l3: l3 {};
+> +					pm8994_l4: l4 {};
+> +					pm8994_l6: l6 {};
+> +					pm8994_l8: l8 {};
+> +					pm8994_l9: l9 {};
+> +					pm8994_l10: l10 {};
+> +					pm8994_l11: l11 {};
+> +					pm8994_l12: l12 {};
+> +					pm8994_l13: l13 {};
+> +					pm8994_l14: l14 {};
+> +					pm8994_l15: l15 {};
+> +					pm8994_l16: l16 {};
+> +					pm8994_l17: l17 {};
+> +					pm8994_l18: l18 {};
+> +					pm8994_l19: l19 {};
+> +					pm8994_l20: l20 {};
+> +					pm8994_l21: l21 {};
+> +					pm8994_l22: l22 {};
+> +					pm8994_l23: l23 {};
+> +					pm8994_l24: l24 {};
+> +					pm8994_l25: l25 {};
+> +					pm8994_l26: l26 {};
+> +					pm8994_l27: l27 {};
+> +					pm8994_l28: l28 {};
+> +					pm8994_l29: l29 {};
+> +					pm8994_l30: l30 {};
+> +					pm8994_l31: l31 {};
+> +					pm8994_l32: l32 {};
+> +
+> +					pm8994_lvs1: lvs1 {};
+> +					pm8994_lvs2: lvs2 {};
+> +				};
+> +
+> +				pmi8994_regulators: pmi8994-regulators {
+> +					compatible = "qcom,rpm-pmi8994-regulators";
+> +
+> +					pmi8994_s1: s1 {};
+> +					pmi8994_s2: s2 {};
+> +					pmi8994_s3: s3 {};
+> +					pmi8994_bby: boost-bypass {};
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	smem {
+>  		compatible = "qcom,smem";
+>  		memory-region = <&smem_mem>;
+> +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+>  		hwlocks = <&tcsr_mutex 3>;
+>  	};
+>  
+> @@ -180,6 +271,11 @@ intc: interrupt-controller@f9000000 {
+>  				  <0xf9002000 0x1000>;
+>  		};
+>  
+> +		apcs: syscon@f900d000 {
+> +			compatible = "syscon";
+> +			reg = <0xf900d000 0x2000>;
+> +		};
+> +
+>  		timer@f9020000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> @@ -256,6 +352,11 @@ gcc: clock-controller@fc400000 {
+>  			reg = <0xfc400000 0x2000>;
+>  		};
+>  
+> +		rpm_msg_ram: memory@fc428000 {
+> +			compatible = "qcom,rpm-msg-ram";
+> +			reg = <0xfc428000 0x4000>;
+> +		};
+> +
+>  		restart@fc4ab000 {
+>  			compatible = "qcom,pshold";
+>  			reg = <0xfc4ab000 0x4>;
+> @@ -473,5 +574,15 @@ timer {
+>  					<1 4 0xff08>,
+>  					<1 1 0xff08>;
+>  	};
+> +
+> +	vreg_vph_pwr: vreg-vph-pwr {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vph-pwr";
+> +
+> +		regulator-min-microvolt = <3600000>;
+> +		regulator-max-microvolt = <3600000>;
+> +
+> +		regulator-always-on;
+> +	};
+>  };
+>  
+> -- 
+> 2.27.0
+> 
