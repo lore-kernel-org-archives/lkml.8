@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5882AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3655F20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC93720675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945497;
-	bh=9JfGyIO+8KFIailyOcCU39lQSbxxXvYSoDyUkehv/Jo=;
+	s=default; t=1592945503;
+	bh=a4CwcrJ/b+6dG6PyeIawfDbhllvX8ea47Bp08Yw/DgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2EE24H9cqD5HCqhy/DnpzaD+w1Zvb42ehk9ZTokAcXojaml4qKMMlawrf0eo2lfgv
-	 hPzs5THPLjRx4zbqdVYg6AiKT21FQ5tElxlsC680tHBkc0uAhBKRHlLxow46b7IGHg
-	 q3PiskK8VtLQzNqSd9g6GAhhh3rMNS6ssh9ALjYY=
+	b=S63ilbaRfHum3hp8Y1kDOJjTR1gOAuhd/Zfey4V5M3QlmlMWSBPE1w79EItALE+LR
+	 GMNVI58khBUpwNWDMZU4ALVaf7fEBHmntaGO7fJdKB4OGDOGombOc9NGpfJ/EcLZ5C
+	 kNypG1qPKH3GvFLcemvDRECDiliLRlDXEom5kcNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393009AbgFWUvf (ORCPT
+        id S2391159AbgFWUvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46844 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404089AbgFWUsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:48:00 -0400
+        id S2387547AbgFWUru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:47:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45CAD20781;
-        Tue, 23 Jun 2020 20:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0273320781;
+        Tue, 23 Jun 2020 20:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945280;
-        bh=9JfGyIO+8KFIailyOcCU39lQSbxxXvYSoDyUkehv/Jo=;
+        s=default; t=1592945270;
+        bh=a4CwcrJ/b+6dG6PyeIawfDbhllvX8ea47Bp08Yw/DgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AkXO041nlBTL3ILop9qQyawz4kiAnK3B3BFOwqx34FOoofUdORDBlv69lS5NFlLVJ
-         XKsI9Gv4+kRFPm9WevQjSidW1rpVUhYLAyvizCDECey1eJA40NmM7e/6x5D8OeLQdb
-         x2ABOrNDbaaMD48Kr0mECQYvfkjz07xtmf4RLwVU=
+        b=A/LdWTZNyKGVXEj6At3NgHBIMdCzZv43IUU7wVvQ1Xi2CuMaXag0npUWrZ8Ut+2gu
+         tUhQ/zlQZ+sebv4rDpoqflhqEAJNWCRYSyVQJjlPOKbONgfI6K56O39bPz4o9tt6DG
+         XR/ttgsIOxyU7Tl+/BxAgThnB66p2PFv405H5IZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 110/136] libata: Use per port sync for detach
-Date:   Tue, 23 Jun 2020 21:59:26 +0200
-Message-Id: <20200623195309.208905092@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 065/136] clk: samsung: exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
+Date:   Tue, 23 Jun 2020 21:58:41 +0200
+Message-Id: <20200623195306.961636697@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,91 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit b5292111de9bb70cba3489075970889765302136 ]
+[ Upstream commit 25bdae0f1c6609ceaf55fe6700654f0be2253d8e ]
 
-Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
-detach") may cause system freeze during suspend.
+Mark the SCLK clock for Exynos5433 I2S1 device with IGNORE_UNUSED flag to
+match its behaviour with SCLK clock for AUD_I2S (I2S0) device until
+a proper fix for Exynos I2S driver is ready.
 
-Using async_synchronize_full() in PM callbacks is wrong, since async
-callbacks that are already scheduled may wait for not-yet-scheduled
-callbacks, causes a circular dependency.
+This fixes the following synchronous abort issue revealed by the probe
+order change caused by the commit 93d2e4322aa7 ("of: platform: Batch
+fwnode parsing when adding all top level devices")
 
-Instead of using big hammer like async_synchronize_full(), use async
-cookie to make sure port probe are synced, without affecting other
-scheduled PM callbacks.
+Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
+Hardware name: Samsung TM2E board (DT)
+Workqueue: events deferred_probe_work_func
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : samsung_i2s_probe+0x768/0x8f0
+lr : samsung_i2s_probe+0x688/0x8f0
+...
+Call trace:
+ samsung_i2s_probe+0x768/0x8f0
+ platform_drv_probe+0x50/0xa8
+ really_probe+0x108/0x370
+ driver_probe_device+0x54/0xb8
+ __device_attach_driver+0x90/0xc0
+ bus_for_each_drv+0x70/0xc8
+ __device_attach+0xdc/0x140
+ device_initial_probe+0x10/0x18
+ bus_probe_device+0x94/0xa0
+ deferred_probe_work_func+0x70/0xa8
+ process_one_work+0x2a8/0x718
+ worker_thread+0x48/0x470
+ kthread+0x134/0x160
+ ret_from_fork+0x10/0x1c
+Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
+---[ end trace ccf721c9400ddbd6 ]---
 
-Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
-Suggested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: John Garry <john.garry@huawei.com>
-BugLink: https://bugs.launchpad.net/bugs/1867983
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-core.c | 11 +++++------
- include/linux/libata.h    |  3 +++
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ drivers/clk/samsung/clk-exynos5433.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 33eb5e342a7a9..a3a65f5490c02 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -57,7 +57,6 @@
- #include <linux/workqueue.h>
- #include <linux/scatterlist.h>
- #include <linux/io.h>
--#include <linux/async.h>
- #include <linux/log2.h>
- #include <linux/slab.h>
- #include <linux/glob.h>
-@@ -6536,7 +6535,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
- 	/* perform each probe asynchronously */
- 	for (i = 0; i < host->n_ports; i++) {
- 		struct ata_port *ap = host->ports[i];
--		async_schedule(async_port_probe, ap);
-+		ap->cookie = async_schedule(async_port_probe, ap);
- 	}
- 
- 	return 0;
-@@ -6676,11 +6675,11 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
- 
--	/* Ensure ata_port probe has completed */
--	async_synchronize_full();
--
--	for (i = 0; i < host->n_ports; i++)
-+	for (i = 0; i < host->n_ports; i++) {
-+		/* Ensure ata_port probe has completed */
-+		async_synchronize_cookie(host->ports[i]->cookie + 1);
- 		ata_port_detach(host->ports[i]);
-+	}
- 
- 	/* the host is dead now, dissociate ACPI */
- 	ata_acpi_dissociate(host);
-diff --git a/include/linux/libata.h b/include/linux/libata.h
-index 93838d98e3f38..5c9a44e3a0278 100644
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -38,6 +38,7 @@
- #include <linux/acpi.h>
- #include <linux/cdrom.h>
- #include <linux/sched.h>
-+#include <linux/async.h>
- 
- /*
-  * Define if arch has non-standard setup.  This is a _PCI_ standard
-@@ -884,6 +885,8 @@ struct ata_port {
- 	struct timer_list	fastdrain_timer;
- 	unsigned long		fastdrain_cnt;
- 
-+	async_cookie_t		cookie;
-+
- 	int			em_message_type;
- 	void			*private_data;
- 
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index 1d2265f9ee974..1c327d5de98cb 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -1674,7 +1674,8 @@ static const struct samsung_gate_clock peric_gate_clks[] __initconst = {
+ 	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
+ 			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
+-			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
++			ENABLE_SCLK_PERIC, 6,
++			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
+ 			5, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
 -- 
 2.25.1
 
