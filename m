@@ -2,111 +2,165 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BD8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCBA2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750E720767
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592873840;
+	bh=05udlpzSWzQmgwgjaqWrBPUYE+xOogoSHEOR+ovuGE4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Hu3n6VFawRvWD5wo7IH9pzN2p/l9mZZMriQc1pPcZ+mmM4Rky1IyvGMyCjvv2y28Y
+	 jawaAV+MvJMRY/s1QvHDEb9ASroO6sy5AHDiPyAjaMyynQMGyfcZIz83qnuT/LFGnm
+	 S/RwRAAo6gYEOWwu4wVXeCJx+HtDxzZDFQgEmr58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732481AbgFWA4z (ORCPT
+        id S1732494AbgFWA5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:56:55 -0400
-Received: from mga07.intel.com ([134.134.136.100]:19664 "EHLO mga07.intel.com"
+        Mon, 22 Jun 2020 20:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731716AbgFWA4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:56:54 -0400
-IronPort-SDR: dMa1X1y+N2nnzvE1cG/Uc0kJ4HstZshT9Iqpa89XLTrmbyeEOTSZXmu2Wzs1HZlTn7G6DEXDR0
- M+4FedR4LgNQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209105471"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="209105471"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 17:56:53 -0700
-IronPort-SDR: lPQvkJeKMRriPzHiopqrWej+qGnagrV1b1YED5Xmxo3yPIlTwlyqilTvzxHycxkWjyTZYKHmJF
- BReBbzD2SP9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="275175170"
-Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
-  by orsmga003.jf.intel.com with ESMTP; 22 Jun 2020 17:56:48 -0700
-Date:   Tue, 23 Jun 2020 03:56:47 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-integrity@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v3] acpi: Extend TPM2 ACPI table with missing log fields
-Message-ID: <20200623005647.GD28795@linux.intel.com>
-References: <20200331214949.883781-1-stefanb@linux.vnet.ibm.com>
- <20200401083729.GD17325@linux.intel.com>
- <CAJZ5v0gQ04h1+zN4wHj1vkwPvqu3RPfsY60VJ+GOtgUrvWuxLQ@mail.gmail.com>
- <20200402192145.GB10314@linux.intel.com>
- <dfd2d622-90cb-9621-7b7d-5282f5ee7359@linux.ibm.com>
+        id S1732128AbgFWA5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:57:18 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9FD20720;
+        Tue, 23 Jun 2020 00:57:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592873837;
+        bh=05udlpzSWzQmgwgjaqWrBPUYE+xOogoSHEOR+ovuGE4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=azWjNenU4MEpF0id13hiFnV045xuanksCpayKxXzQ2V+cWKCwzWMfs0QNCDV8RsNK
+         +aJ94CBmL+fgX3H7RUhktfeae/h9luapRZHAlDW9LGx9vn5xuCC0S0od6lTUHaAn9G
+         TQXkSE2b1nquMD6nuT5IJPZCfltain6vEPycNFSs=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B4EEB352306A; Mon, 22 Jun 2020 17:57:17 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 17:57:17 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     David Rientjes <rientjes@google.com>, rcu@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Ingo Molnar <mingo@kernel.org>, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        josh@joshtriplett.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>, fweisbec@gmail.com,
+        oleg@redhat.com, Joel Fernandes <joel@joelfernandes.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [PATCH tip/core/rcu 02/26] mm/mmap.c: Add cond_resched() for
+ exit_mmap() CPU stalls
+Message-ID: <20200623005717.GZ9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200623002128.GA25456@paulmck-ThinkPad-P72>
+ <20200623002147.25750-2-paulmck@kernel.org>
+ <CALvZod4yjC5dDsVHLLhW405pBeMLCcq1b6FYq77ZAxUOtsNCFQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dfd2d622-90cb-9621-7b7d-5282f5ee7359@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CALvZod4yjC5dDsVHLLhW405pBeMLCcq1b6FYq77ZAxUOtsNCFQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:14:20AM -0400, Stefan Berger wrote:
-> On 4/2/20 3:21 PM, Jarkko Sakkinen wrote:
-> > On Wed, Apr 01, 2020 at 11:05:36AM +0200, Rafael J. Wysocki wrote:
-> > > On Wed, Apr 1, 2020 at 10:37 AM Jarkko Sakkinen
-> > > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > > On Tue, Mar 31, 2020 at 05:49:49PM -0400, Stefan Berger wrote:
-> > > > > From: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > 
-> > > > > Recent extensions of the TPM2 ACPI table added 3 more fields
-> > > > > including 12 bytes of start method specific parameters and Log Area
-> > > > > Minimum Length (u32) and Log Area Start Address (u64). So, we extend
-> > > > > the existing structure with these fields to allow non-UEFI systems
-> > > > > to access the TPM2's log.
-> > > > > 
-> > > > > The specification that has the new fields is the following:
-> > > > >    TCG ACPI Specification
-> > > > >    Family "1.2" and "2.0"
-> > > > >    Version 1.2, Revision 8
-> > > > > 
-> > > > > Adapt all existing table size calculations to use
-> > > > > offsetof(struct acpi_table_tpm2, start_method_specific)
-> > > > > [where start_method_specific is a newly added field]
-> > > > > rather than sizeof(struct acpi_table_tpm2) so that the addition
-> > > > > of the new fields does not affect current systems that may not
-> > > > > have them.
-> > > > > 
-> > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > Cc: linux-acpi@vger.kernel.org
-> > > > I think I'm cool with this but needs an ack from ACPI maintainer.
-> > > > 
-> > > > Rafael, given that this not an intrusive change in any possible means,
-> > > > can I pick this patch and put it to my next pull request?
-> > > Yes, please.
-> > > 
-> > > Thanks!
-> > Great, thanks Rafael.
-> > 
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > 
-> > Do you mind if I add your ack to the commit?
+On Mon, Jun 22, 2020 at 05:47:19PM -0700, Shakeel Butt wrote:
+> On Mon, Jun 22, 2020 at 5:22 PM <paulmck@kernel.org> wrote:
+> >
+> > From: "Paul E. McKenney" <paulmck@kernel.org>
+> >
+> > A large process running on a heavily loaded system can encounter the
+> > following RCU CPU stall warning:
+> >
+> >   rcu: INFO: rcu_sched self-detected stall on CPU
+> >   rcu: \x093-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
+> >   \x09(t=21013 jiffies g=1005461 q=132576)
+> >   NMI backtrace for cpu 3
+> >   CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
+> >   Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
+> >   Call Trace:
+> >    <IRQ>
+> >    dump_stack+0x46/0x60
+> >    nmi_cpu_backtrace.cold.3+0x13/0x50
+> >    ? lapic_can_unplug_cpu.cold.27+0x34/0x34
+> >    nmi_trigger_cpumask_backtrace+0xba/0xca
+> >    rcu_dump_cpu_stacks+0x99/0xc7
+> >    rcu_sched_clock_irq.cold.87+0x1aa/0x397
+> >    ? tick_sched_do_timer+0x60/0x60
+> >    update_process_times+0x28/0x60
+> >    tick_sched_timer+0x37/0x70
+> >    __hrtimer_run_queues+0xfe/0x270
+> >    hrtimer_interrupt+0xf4/0x210
+> >    smp_apic_timer_interrupt+0x5e/0x120
+> >    apic_timer_interrupt+0xf/0x20
+> >    </IRQ>
+> >   RIP: 0010:kmem_cache_free+0x223/0x300
+> >   Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
+> >   RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+> >   RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
+> >   RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
+> >   RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
+> >   R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
+> >   R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
+> >    ? remove_vma+0x4f/0x60
+> >    remove_vma+0x4f/0x60
+> >    exit_mmap+0xd6/0x160
+> >    mmput+0x4a/0x110
+> >    do_exit+0x278/0xae0
+> >    ? syscall_trace_enter+0x1d3/0x2b0
+> >    ? handle_mm_fault+0xaa/0x1c0
+> >    do_group_exit+0x3a/0xa0
+> >    __x64_sys_exit_group+0x14/0x20
+> >    do_syscall_64+0x42/0x100
+> >    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
+> > for a very long time given a large process.  This commit therefore adds
+> > a cond_resched() to this loop, providing RCU any needed quiescent states.
+> >
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: <linux-mm@kvack.org>
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 > 
+> We have exactly the same change in our internal kernel since 2018. We
+> mostly observed the need_resched warnings on the processes mapping the
+> hugetlbfs.
 > 
-> Any chance to get v4 applied?
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-You should split the actbl3.h change to a separate patch and add 'Cc:'
-tag to Rafael to the commit message.
+Thank you very much, I will apply your Reviewed-by on the next rebase.
 
-/Jarkko
+Any other patches we should know about?  ;-)
+
+							Thanx, Paul
+
+> > ---
+> >  mm/mmap.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index 59a4682..972f839 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -3159,6 +3159,7 @@ void exit_mmap(struct mm_struct *mm)
+> >                 if (vma->vm_flags & VM_ACCOUNT)
+> >                         nr_accounted += vma_pages(vma);
+> >                 vma = remove_vma(vma);
+> > +               cond_resched();
+> >         }
+> >         vm_unacct_memory(nr_accounted);
+> >  }
+> > --
+> > 2.9.5
+> >
