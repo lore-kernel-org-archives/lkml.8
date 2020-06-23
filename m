@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2338BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1C4C2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E43720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946095;
-	bh=0ucHMYDFft9f8l+yGC+JoPvteAuq9Z9BYn60Xkfsr+w=;
+	s=default; t=1592946102;
+	bh=zALHqMiguNc+FwOzNshQCTuETpDJRuk1PqNXG/LKOjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUtS0BY7oAL59XEz1BjybX6QwSQfKTzjbxTY1Ex0s/tENri66rlM/bt1ybp8WbUHT
-	 9a7fuci/PuIjnxC0BhE4mbDq0hnUKXDLEG1C62/eYHl3ti6GNWRB9lHy7FFk6sVK7t
-	 xBAIU8bHciKqN8r7wadHE9nwXR6MMEkG6TR5oFfE=
+	b=G2Mg3AQbg8WJatZu+7xDn9prLIWk07yWf+XMDYcjP4I6dj7bhPYBidorhBgG3aF4Y
+	 gR3G0dvzVMPb9JDgeC8HI0VExrrOJk6WxOKhxjyiboJqfjpr2Cd+fenNOhghbm2YDK
+	 XbyhjaOjoi+dRV0jU90mY6DTq4vTpmFobSZD0dxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392113AbgFWUjv (ORCPT
+        id S2388028AbgFWUjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:39:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35500 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392085AbgFWUjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:39:44 -0400
+        id S2392064AbgFWUji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:39:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B12B217D8;
-        Tue, 23 Jun 2020 20:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E99421531;
+        Tue, 23 Jun 2020 20:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944783;
-        bh=0ucHMYDFft9f8l+yGC+JoPvteAuq9Z9BYn60Xkfsr+w=;
+        s=default; t=1592944778;
+        bh=zALHqMiguNc+FwOzNshQCTuETpDJRuk1PqNXG/LKOjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YsyXPi1+Etho+8HgzjAcUvwUzoCveOQTIIr2xecRviHzJunqDjqf1LQXtqTUYnmLO
-         Litnq+cI/0yFWzt1Igj11dmSv3pL4bnZ6sgMuefYHK2vYX2fZlqea2TybtVpz3+XzV
-         C1deHRK8/G81RnxJgSc6O3KqPwfbgV6HJ7G2zhbU=
+        b=G37DQPvd/peyjPM544MDuW2wJAjzfwYpISnYKCEA7n6q3ZT7ocq2YPWX+pBa090Nt
+         DGvAL8+uc9qFIH6V5cDJkmdFZphDIMaNRkUggOOd9H8rgXH03WU9YkUy9mj/MGtoZP
+         DZcYwYDfZxXYPl6XzzS8Ftm8bjB1mqklWQJiXcw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Souptick Joarder <jrdr.linux@gmail.com>,
-        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/206] fpga: dfl: afu: Corrected error handling levels
-Date:   Tue, 23 Jun 2020 21:57:04 +0200
-Message-Id: <20200623195321.662025579@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 121/206] of: Fix a refcounting bug in __of_attach_node_sysfs()
+Date:   Tue, 23 Jun 2020 21:57:29 +0200
+Message-Id: <20200623195322.910486024@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,42 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Souptick Joarder <jrdr.linux@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c9d7e3da1f3c4cf5dddfc5d7ce4d76d013aba1cc ]
+[ Upstream commit 8a325dd06f2358ea0888e4ff1c9ca4bc23bd53f3 ]
 
-Corrected error handling goto sequnece. Level put_pages should
-be called when pinned pages >= 0 && pinned != npages. Level
-free_pages should be called when pinned pages < 0.
+The problem in this code is that if kobject_add() fails, then it should
+call of_node_put(np) to drop the reference count.  I've actually moved
+the of_node_get(np) later in the function to avoid needing to do clean
+up.
 
-Fixes: fa8dda1edef9 ("fpga: dfl: afu: add DFL_FPGA_PORT_DMA_MAP/UNMAP ioctls support")
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-Acked-by: Wu Hao <hao.wu@intel.com>
-Reviewed-by: Xu Yilun <yilun.xu@intel.com>
-Link: https://lore.kernel.org/r/1589825991-3545-1-git-send-email-jrdr.linux@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 5b2c2f5a0ea3 ("of: overlay: add missing of_node_get() in __of_attach_node_sysfs")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/dfl-afu-dma-region.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/of/kobj.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
-index c9a613dc9eb7e..e056965ef97b3 100644
---- a/drivers/fpga/dfl-afu-dma-region.c
-+++ b/drivers/fpga/dfl-afu-dma-region.c
-@@ -106,10 +106,10 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
- 				     region->pages);
- 	if (pinned < 0) {
- 		ret = pinned;
--		goto put_pages;
-+		goto free_pages;
- 	} else if (pinned != npages) {
- 		ret = -EFAULT;
--		goto free_pages;
-+		goto put_pages;
- 	}
+diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
+index c72eef9880417..a32e60b024b8d 100644
+--- a/drivers/of/kobj.c
++++ b/drivers/of/kobj.c
+@@ -134,8 +134,6 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 	if (!name)
+ 		return -ENOMEM;
  
- 	dev_dbg(dev, "%d pages pinned\n", pinned);
+-	of_node_get(np);
+-
+ 	rc = kobject_add(&np->kobj, parent, "%s", name);
+ 	kfree(name);
+ 	if (rc)
+@@ -144,6 +142,7 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 	for_each_property_of_node(np, pp)
+ 		__of_add_property_sysfs(np, pp);
+ 
++	of_node_get(np);
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
