@@ -4,56 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B25CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F602137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A84C20EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942630;
-	bh=CxE7DB/DxfV2qd4+TdcBAW9MuHejz0PAQ9Qz9EB1qrA=;
+	s=default; t=1592942633;
+	bh=97ur8RLnc6uZV2ZwBva1Z/GnkPnVj4yOtOwXI3V349k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y0Aq3QLL/ksDGEaPMpotG4xUPc8YvtcWHdXLpeZT4cE70/2FZMRqxbiEP9AIuw/G/
-	 RgF7JB3SC1GeHzg+lmNP9bU20pmtNyj/dyAqq9ZGDEverXxKO0P0S6Gj4W86rTLAGa
-	 JDJoh3U/EAOv25NiDbHB7acmOzu8Ailf5XIBwD7A=
+	b=bvBeIa96c34ank15Tou1RqHpXVuxB/LtmfzJBTB/GvBOjUPQcPcnUDa1BGpup3jRj
+	 x58MWCl2dCexdA8PGXxBgYrcwpxjTLtZveVHkkPw7mCl76PdXxOUa8n4wXHdnga96R
+	 bfTYYVfI5DHS6oQKLfHB5QhQCIvhNtqH77MxUdlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388106AbgFWUDs (ORCPT
+        id S2388116AbgFWUDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41626 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388096AbgFWUDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:45 -0400
+        id S2388104AbgFWUDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 471762082F;
-        Tue, 23 Jun 2020 20:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D64E2206C3;
+        Tue, 23 Jun 2020 20:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942625;
-        bh=CxE7DB/DxfV2qd4+TdcBAW9MuHejz0PAQ9Qz9EB1qrA=;
+        s=default; t=1592942627;
+        bh=97ur8RLnc6uZV2ZwBva1Z/GnkPnVj4yOtOwXI3V349k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HdviU5AJ0DJC43qvr+RHGwYxeWjukwNqU/j0eMsJp0ChOduDyau5PawrmS86l1Ptf
-         +A/mb0UZpgGuM9frNTvEl29Jhben6v3SkI5VojFaUGhsGf6jW3V8wW/aptlsZeJiZt
-         6b6FhHdagmgLBDOH2ytDLb8CkrQDe4H1eptudgWQ=
+        b=W3R8SorGbnp7S4FynSPjfO8zZdaFqqcj92WUvjGtXSGMoebZmQJ7wcTQEjOmZ9U0N
+         G/iQbCPjn4vXt2xJ5ftZ8Z8exxZA4ywM4tx5xPgYGcSB0hpTfyu4JJbje5tkXHjiJn
+         wfcNdLFd6gZ0Rn+wQ33ff1gkU/fbwC/dwC05F6QY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        chenqiwu <chenqiwu@xiaomi.com>,
-        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 041/477] usb: roles: Switch on role-switch uevent reporting
-Date:   Tue, 23 Jun 2020 21:50:38 +0200
-Message-Id: <20200623195409.546274713@linuxfoundation.org>
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 042/477] serial: 8250: Fix max baud limit in generic 8250 port
+Date:   Tue, 23 Jun 2020 21:50:39 +0200
+Message-Id: <20200623195409.597252000@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -66,62 +72,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 3e63cff384e625f09758ce8f4d01ae3033402b63 ]
+[ Upstream commit 7b668c064ec33f3d687c3a413d05e355172e6c92 ]
 
-Right now we don't report to user-space a role switch when doing a
-usb_role_switch_set_role() despite having registered the uevent callbacks.
+Standard 8250 UART ports are designed in a way so they can communicate
+with baud rates up to 1/16 of a reference frequency. It's expected from
+most of the currently supported UART controllers. That's why the former
+version of serial8250_get_baud_rate() method called uart_get_baud_rate()
+with min and max baud rates passed as (port->uartclk / 16 / UART_DIV_MAX)
+and ((port->uartclk + tolerance) / 16) respectively. Doing otherwise, like
+it was suggested in commit ("serial: 8250_mtk: support big baud rate."),
+caused acceptance of bauds, which was higher than the normal UART
+controllers actually supported. As a result if some user-space program
+requested to set a baud greater than (uartclk / 16) it would have been
+permitted without truncation, but then serial8250_get_divisor(baud)
+(which calls uart_get_divisor() to get the reference clock divisor) would
+have returned a zero divisor. Setting zero divisor will cause an
+unpredictable effect varying from chip to chip. In case of DW APB UART the
+communications just stop.
 
-This patch switches on the notifications allowing user-space to see
-role-switch change notifications and subsequently determine the current
-controller data-role.
+Lets fix this problem by getting back the limitation of (uartclk +
+tolerance) / 16 maximum baud supported by the generic 8250 port. Mediatek
+8250 UART ports driver developer shouldn't have touched it in the first
+place  notably seeing he already provided a custom version of set_termios()
+callback in that glue-driver which took into account the extended baud
+rate values and accordingly updated the standard and vendor-specific
+divisor latch registers anyway.
 
-example:
-PFX=/devices/platform/soc/78d9000.usb/ci_hdrc.0
-
-root@somebox# udevadm monitor -p
-
-KERNEL[49.894994] change $PFX/usb_role/ci_hdrc.0-role-switch (usb_role)
-ACTION=change
-DEVPATH=$PFX/usb_role/ci_hdrc.0-role-switch
-SUBSYSTEM=usb_role
-DEVTYPE=usb_role_switch
-USB_ROLE_SWITCH=ci_hdrc.0-role-switch
-SEQNUM=2432
-
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Cc: chenqiwu <chenqiwu@xiaomi.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Link: https://lore.kernel.org/r/20200508162937.2566818-1-bryan.odonoghue@linaro.org
+Fixes: 81bb549fdf14 ("serial: 8250_mtk: support big baud rate.")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Long Cheng <long.cheng@mediatek.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Link: https://lore.kernel.org/r/20200506233136.11842-2-Sergey.Semin@baikalelectronics.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/roles/class.c | 4 +++-
+ drivers/tty/serial/8250/8250_port.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index 5b17709821dfd..27d92af296351 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -49,8 +49,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- 	mutex_lock(&sw->lock);
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index f77bf820b7a30..4d83c85a7389b 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2615,6 +2615,8 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 					     struct ktermios *termios,
+ 					     struct ktermios *old)
+ {
++	unsigned int tolerance = port->uartclk / 100;
++
+ 	/*
+ 	 * Ask the core to calculate the divisor for us.
+ 	 * Allow 1% tolerance at the upper limit so uart clks marginally
+@@ -2623,7 +2625,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 	 */
+ 	return uart_get_baud_rate(port, termios, old,
+ 				  port->uartclk / 16 / UART_DIV_MAX,
+-				  port->uartclk);
++				  (port->uartclk + tolerance) / 16);
+ }
  
- 	ret = sw->set(sw, role);
--	if (!ret)
-+	if (!ret) {
- 		sw->role = role;
-+		kobject_uevent(&sw->dev.kobj, KOBJ_CHANGE);
-+	}
- 
- 	mutex_unlock(&sw->lock);
- 
+ void
 -- 
 2.25.1
 
