@@ -2,128 +2,135 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03B22081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:54:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IxNJ+1Jt"
+	by mail.kernel.org (Postfix) with ESMTP id AD2EE20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732962AbgFWQy6 (ORCPT
+        id S1732985AbgFWQ4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732576AbgFWQy5 (ORCPT
+        Tue, 23 Jun 2020 12:56:21 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:36165 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732416AbgFWQ4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:54:57 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319CDC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:54:57 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i27so24213789ljb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ooMzjE9WFJyNnXxUflYIdbOsLymdxGSl5zf58v431ME=;
-        b=IxNJ+1JtIzIGXMCnQ6UO6123d8G4fJCPmS098u927TcDhfdHOKPGlYUz/rQt0gJK3+
-         Y9tElPyB+BcqwFwk8lE+tHDhpU+RIBse03WSrtFrJ6dWRHsp5CqNeGc5DHy/1eP0cr0G
-         8Ln9Brt5cTHNtTY/pjDHwrYcuC4aLr30LTPZPrbRn1aHRbzfSRXEO91llwyzK6TiSvsU
-         H+iIwRubMPpUZNOJfT1x+Nol8/rL2gubF16RVOWB3cqasfp7WwKYCxZAZEwBpwhwam7J
-         RhSUWH8bn6YFuzvBFgt0nK8CT0YOWbwxJ7xEk3q5zUfDDM8cUZgH7soPhaF4ZG5Rf6wq
-         UgAg==
+        Tue, 23 Jun 2020 12:56:19 -0400
+Received: by mail-io1-f72.google.com with SMTP id g17so6744360iob.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:56:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ooMzjE9WFJyNnXxUflYIdbOsLymdxGSl5zf58v431ME=;
-        b=gvPfLDKKqo1If5qOvjfVlV3/iByQ0z1SJs0xUioZ87t/qqzBewIxE1wtPTsOlJKaLG
-         ohJCFLa1N5PhQzfTIEG6FbLNsW5EJobK0AzxXiqKaXCMwnw1rZ/Fmq/hNVthvo6cte4g
-         Q1u7iBboH5s5sIb6v5LWw/3GKtrgdkkkDK/5LSSBdYHlA3uYWXgHltQLK+KZEZ18+bMl
-         9U6N/b7Habr/9HQOAzXNT8gLko7aFGxiErcdwE0tJZ0ZAkL1gTgqBB8nAptQo7sNLAzu
-         SIXNdjk85NLKEFa22lMI3Eamor/iZ2pOAKSKrPH/sgsCAdQbD1gnzx3Ca+9JzK0jqAiR
-         4PNA==
-X-Gm-Message-State: AOAM531IGVcmCfB58HXjqHtV/YbUExLCdThmZ8sZ0qU7bJ/ZXE8a2Ov5
-        UqmTQ8KLQZl0C4JldRu23+8Cyw==
-X-Google-Smtp-Source: ABdhPJxc24WApjfS0ez0g26JY8PMYXzcFXTVqfl5l9fvYBr3otvIMWXPE6vGzZKJqAJFrcvvx7gtoA==
-X-Received: by 2002:a2e:8858:: with SMTP id z24mr11893135ljj.128.1592931295540;
-        Tue, 23 Jun 2020 09:54:55 -0700 (PDT)
-Received: from [192.168.118.216] (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.gmail.com with ESMTPSA id g14sm3963877ljl.117.2020.06.23.09.54.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 09:54:54 -0700 (PDT)
-Subject: Re: [PATCH] media: i2c: imx290: replace msleep(10) with
- usleep_range(10000, 11000)
-To:     mchehab@kernel.org, sakari.ailus@iki.fi,
-        manivannan.sadhasivam@linaro.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, peter.griffin@linaro.org
-References: <20200623165226.12197-1-andrey.konovalov@linaro.org>
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-Message-ID: <af22cf49-80d2-3ee7-c490-939065b38bfa@linaro.org>
-Date:   Tue, 23 Jun 2020 19:54:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ROU0lx5jL4suhlbFQVzskyt8m5jF4lI6Zi/ObrujOXE=;
+        b=gqSelUMqPngNXlqAcfD33zKDs0OP/2P/K04KnYOXli3CtX5bKOLWgFUrqyfV8sOw0D
+         VewX0Gt1E8sx+2omtMvR1crqljNdt7ErZix7oWxKnp/PbXksqM8Gt4X8Wby2yffwFqAK
+         3D6JZgWUA95HL8Qw8tclSCzz/pY3RfquAaVJRIDlUKpxTParPND/ygMhXTOlSrg8XxCR
+         t/maTQyPKSBFAdxbAwnXVsiJdCFO2ppkmDx4u1gVNy714a4RtBPJLht7cDK7bqark+04
+         PGIj8f7FlzpaWdIH5OlwTDhdGmAPBVPwBfPhItM1QsutYitX4oTvcIt/Jr1Ut6w+nFPp
+         l/dQ==
+X-Gm-Message-State: AOAM532TjMTfmfVMX5hJm91KMHsPgloBfOt+d2MB0oo/M5TzIZx2Grwq
+        0u1hxaygfBTv5nXkMxQSGndMqXIUR/YVZMAW9qHA/ehnqL/Z
+X-Google-Smtp-Source: ABdhPJy0mXObbN07j+2xhO4/4c/cJ+P4vMTRDDOu/lmXTaPquN5P+yd4PnYAVvBO9vyZnpsOY6+lAIAfRx09DBDrLtsdLrjAXI8W
 MIME-Version: 1.0
-In-Reply-To: <20200623165226.12197-1-andrey.konovalov@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:128c:: with SMTP id y12mr19351210ilq.45.1592931378517;
+ Tue, 23 Jun 2020 09:56:18 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 09:56:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f7e03b05a8c33c97@google.com>
+Subject: KASAN: vmalloc-out-of-bounds Read in nl8NUM_dump_wpan_phy
+From:   syzbot <syzbot+736bcbcb11b60d0c0792@syzkaller.appspotmail.com>
+To:     alex.aring@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
+        netdev@vger.kernel.org, stefan@datenfreihafen.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch should be applied on top of "[PATCH v5 00/10] Improvements to IMX290 CMOS driver" series.
+Hello,
 
-Thanks,
-Andrey
+syzbot found the following crash on:
 
-On 23.06.2020 19:52, Andrey Konovalov wrote:
-> This fixes checkpatch warnings of "msleep < 20ms can sleep for up to 20ms".
-> 
-> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> ---
->   drivers/media/i2c/imx290.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index 9c97830164e9..adcddf3204f7 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -406,7 +406,7 @@ static int imx290_set_register_array(struct imx290 *imx290,
->   	}
->   
->   	/* Provide 10ms settle time */
-> -	msleep(10);
-> +	usleep_range(10000, 11000);
->   
->   	return 0;
->   }
-> @@ -484,14 +484,14 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
->   		if (ctrl->val) {
->   			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x00);
->   			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> -			msleep(10);
-> +			usleep_range(10000, 11000);
->   			imx290_write_reg(imx290, IMX290_PGCTRL,
->   					 (u8)(IMX290_PGCTRL_REGEN |
->   					 IMX290_PGCTRL_THRU |
->   					 IMX290_PGCTRL_MODE(ctrl->val)));
->   		} else {
->   			imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
-> -			msleep(10);
-> +			usleep_range(10000, 11000);
->   			if (imx290->bpp == 10)
->   				imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
->   						 0x3c);
-> 
+HEAD commit:    b835a71e usbnet: smsc95xx: Fix use-after-free after removal
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=12e7fa19100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
+dashboard link: https://syzkaller.appspot.com/bug?extid=736bcbcb11b60d0c0792
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106b4909100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a1bf8d100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+736bcbcb11b60d0c0792@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in nla_get_u32 include/net/netlink.h:1541 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in nl802154_dump_wpan_phy_parse net/ieee802154/nl802154.c:563 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in nl802154_dump_wpan_phy+0x98e/0x9c0 net/ieee802154/nl802154.c:593
+Read of size 4 at addr ffffc90005ea1018 by task syz-executor118/6820
+
+CPU: 1 PID: 6820 Comm: syz-executor118 Not tainted 5.8.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ nla_get_u32 include/net/netlink.h:1541 [inline]
+ nl802154_dump_wpan_phy_parse net/ieee802154/nl802154.c:563 [inline]
+ nl802154_dump_wpan_phy+0x98e/0x9c0 net/ieee802154/nl802154.c:593
+ genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
+ netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
+ __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
+ genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
+ genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
+ genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x441319
+Code: Bad RIP value.
+RSP: 002b:00007fff95574ae8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441319
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 00000000006cb018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402090
+R13: 0000000000402120 R14: 0000000000000000 R15: 0000000000000000
+
+
+Memory state around the buggy address:
+ ffffc90005ea0f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90005ea0f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+>ffffc90005ea1000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                            ^
+ ffffc90005ea1080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90005ea1100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
