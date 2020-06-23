@@ -2,172 +2,148 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02912C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E08062072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD93C2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:07:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="BUqM9YTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732493AbgFWMGn (ORCPT
+        id S1732560AbgFWMHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:06:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34544 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729552AbgFWMGm (ORCPT
+        Tue, 23 Jun 2020 08:07:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732333AbgFWMHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:06:42 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NC6984016333;
-        Tue, 23 Jun 2020 08:06:39 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ufgj3sj2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 08:06:38 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NC06Nw028394;
-        Tue, 23 Jun 2020 12:06:38 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma05wdc.us.ibm.com with ESMTP id 31sa38q15j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 12:06:38 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NC6cTt40239612
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 12:06:38 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC1E0124052;
-        Tue, 23 Jun 2020 12:06:37 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D416D124054;
-        Tue, 23 Jun 2020 12:06:37 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jun 2020 12:06:37 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v5 2/2] tpm: Add support for event log pointer found in TPM2 ACPI table
-Date:   Tue, 23 Jun 2020 08:06:36 -0400
-Message-Id: <20200623120636.1453470-3-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200623120636.1453470-1-stefanb@linux.vnet.ibm.com>
-References: <20200623120636.1453470-1-stefanb@linux.vnet.ibm.com>
+        Tue, 23 Jun 2020 08:07:05 -0400
+Received: from metanate.com (unknown [IPv6:2001:8b0:1628:5005::111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FC9C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 05:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=metanate.com; s=stronger; h=Content-Transfer-Encoding:Message-Id:Date:
+        Subject:Cc:To:From:Content-Type:Reply-To:Content-ID:Content-Description:
+        In-Reply-To:References; bh=+9P0veH3bRYGxJ7OmCEI28itKeJb+ud/P1u+38Hw3vw=; b=BU
+        qM9YTd4A6jMTR+fYWxjEio83Td52s3AwjFA+pgwOG4cbbKMN3WOe5Ts6elr2p+bzBsSBJ1cc/cSMb
+        qCqmX4ygHfBT1EWIMLogJWxQprw8eTOOisrR2y43eX+29Qr6S39vxjU4hWqFFWQ/nElcYXbCBp0/d
+        B3veK2LWXZxFSRji4tLFOyFVZRCGmyK0du+w9DxLo2NvRiGnbYNMP0XTLmLyRrHotvy+mAzc810GS
+        dIKjUjOyby0NBkM/U77qqHp0OFBoi0xsGk6bT+APxSQ7knvtH3Fm9uNgoHX3LxEaMi0p15RxdRVje
+        XJhAxXGe/32W9A5yZITYFmCDTgqER+nw==;
+Received: from [81.174.171.191] (helo=donbot.metanate.com)
+        by email.metanate.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <john@metanate.com>)
+        id 1jnhhc-0005dX-06; Tue, 23 Jun 2020 13:07:00 +0100
+From:   John Keeping <john@metanate.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     John Keeping <john@metanate.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: rk3x: support master_xfer_atomic
+Date:   Tue, 23 Jun 2020 13:06:46 +0100
+Message-Id: <20200623120646.2175569-1-john@metanate.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=999 impostorscore=0 spamscore=0
- adultscore=0 cotscore=-2147483648 clxscore=1015 bulkscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006230088
+X-Authenticated: YES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+Enable i2c transactions in irq disabled contexts like poweroff where the
+PMIC is connected via i2c.
 
-In case a TPM2 is attached, search for a TPM2 ACPI table when trying
-to get the event log from ACPI. If one is found, use it to get the
-start and length of the log area. This allows non-UEFI systems, such
-as SeaBIOS, to pass an event log when using a TPM2.
-
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: John Keeping <john@metanate.com>
 ---
- drivers/char/tpm/eventlog/acpi.c | 56 ++++++++++++++++++++------------
- 1 file changed, 35 insertions(+), 21 deletions(-)
+ drivers/i2c/busses/i2c-rk3x.c | 39 +++++++++++++++++++++++++++++++----
+ 1 file changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-index 63ada5e53f13..e714a2bd0423 100644
---- a/drivers/char/tpm/eventlog/acpi.c
-+++ b/drivers/char/tpm/eventlog/acpi.c
-@@ -49,9 +49,8 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	void __iomem *virt;
- 	u64 len, start;
- 	struct tpm_bios_log *log;
--
--	if (chip->flags & TPM_CHIP_FLAG_TPM2)
--		return -ENODEV;
-+	struct acpi_table_tpm2 *tbl;
-+	int format;
+diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+index 15324bfbc6cb..8e3cc85d1921 100644
+--- a/drivers/i2c/busses/i2c-rk3x.c
++++ b/drivers/i2c/busses/i2c-rk3x.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
++#include <linux/iopoll.h>
+ #include <linux/errno.h>
+ #include <linux/err.h>
+ #include <linux/platform_device.h>
+@@ -1040,8 +1041,21 @@ static int rk3x_i2c_setup(struct rk3x_i2c *i2c, struct i2c_msg *msgs, int num)
+ 	return ret;
+ }
  
- 	log = &chip->log;
- 
-@@ -61,23 +60,38 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	if (!chip->acpi_dev_handle)
- 		return -ENODEV;
- 
--	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
--	status = acpi_get_table(ACPI_SIG_TCPA, 1,
--				(struct acpi_table_header **)&buff);
--
--	if (ACPI_FAILURE(status))
--		return -ENODEV;
--
--	switch(buff->platform_class) {
--	case BIOS_SERVER:
--		len = buff->server.log_max_len;
--		start = buff->server.log_start_addr;
--		break;
--	case BIOS_CLIENT:
--	default:
--		len = buff->client.log_max_len;
--		start = buff->client.log_start_addr;
--		break;
-+	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-+		status = acpi_get_table("TPM2", 1,
-+					(struct acpi_table_header **)&tbl);
-+		if (ACPI_FAILURE(status))
-+			return -ENODEV;
-+		if (tbl->header.length < sizeof(*tbl))
-+			return -ENODEV;
-+		len = tbl->log_area_minimum_length;
-+		start = tbl->log_area_start_address;
-+		if (!start || !len)
-+			return -ENODEV;
-+		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-+	} else {
-+		/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-+		status = acpi_get_table(ACPI_SIG_TCPA, 1,
-+					(struct acpi_table_header **)&buff);
+-static int rk3x_i2c_xfer(struct i2c_adapter *adap,
+-			 struct i2c_msg *msgs, int num)
++static int rk3x_i2c_wait_xfer_poll(struct rk3x_i2c *i2c)
++{
++	ktime_t timeout = ktime_add_ms(ktime_get(), WAIT_TIMEOUT);
 +
-+		if (ACPI_FAILURE(status))
-+			return -ENODEV;
++	while (READ_ONCE(i2c->busy) &&
++	       ktime_compare(ktime_get(), timeout) < 0) {
++		udelay(5);
++		rk3x_i2c_irq(0, i2c);
++	}
 +
-+		switch (buff->platform_class) {
-+		case BIOS_SERVER:
-+			len = buff->server.log_max_len;
-+			start = buff->server.log_start_addr;
-+			break;
-+		case BIOS_CLIENT:
-+		default:
-+			len = buff->client.log_max_len;
-+			start = buff->client.log_start_addr;
-+			break;
++	return !i2c->busy;
++}
++
++static int rk3x_i2c_xfer_common(struct i2c_adapter *adap,
++				struct i2c_msg *msgs, int num, bool polling)
+ {
+ 	struct rk3x_i2c *i2c = (struct rk3x_i2c *)adap->algo_data;
+ 	unsigned long timeout, flags;
+@@ -1075,8 +1089,12 @@ static int rk3x_i2c_xfer(struct i2c_adapter *adap,
+ 
+ 		rk3x_i2c_start(i2c);
+ 
+-		timeout = wait_event_timeout(i2c->wait, !i2c->busy,
+-					     msecs_to_jiffies(WAIT_TIMEOUT));
++		if (!polling) {
++			timeout = wait_event_timeout(i2c->wait, !i2c->busy,
++						     msecs_to_jiffies(WAIT_TIMEOUT));
++		} else {
++			timeout = rk3x_i2c_wait_xfer_poll(i2c);
 +		}
-+		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
- 	}
- 	if (!len) {
- 		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
-@@ -98,7 +112,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	memcpy_fromio(log->bios_event_log, virt, len);
  
- 	acpi_os_unmap_iomem(virt, len);
--	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-+	return format;
+ 		spin_lock_irqsave(&i2c->lock, flags);
  
- err:
- 	kfree(log->bios_event_log);
+@@ -1110,6 +1128,18 @@ static int rk3x_i2c_xfer(struct i2c_adapter *adap,
+ 	return ret < 0 ? ret : num;
+ }
+ 
++static int rk3x_i2c_xfer(struct i2c_adapter *adap,
++			 struct i2c_msg *msgs, int num)
++{
++	return rk3x_i2c_xfer_common(adap, msgs, num, false);
++}
++
++static int rk3x_i2c_xfer_polling(struct i2c_adapter *adap,
++				 struct i2c_msg *msgs, int num)
++{
++	return rk3x_i2c_xfer_common(adap, msgs, num, true);
++}
++
+ static __maybe_unused int rk3x_i2c_resume(struct device *dev)
+ {
+ 	struct rk3x_i2c *i2c = dev_get_drvdata(dev);
+@@ -1126,6 +1156,7 @@ static u32 rk3x_i2c_func(struct i2c_adapter *adap)
+ 
+ static const struct i2c_algorithm rk3x_i2c_algorithm = {
+ 	.master_xfer		= rk3x_i2c_xfer,
++	.master_xfer_atomic	= rk3x_i2c_xfer_polling,
+ 	.functionality		= rk3x_i2c_func,
+ };
+ 
 -- 
-2.26.2
+2.27.0
 
