@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C72C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD22EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A2C20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862E820702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945542;
-	bh=uqj9LlV6wpnyksVFlwbmyPsNGWszrcyh1dI43T+emtY=;
+	s=default; t=1592945548;
+	bh=E6trreKOq08MadMW0fAVgORvOM/a9Y36lusfwYyNt4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2nskc4+ekjP8vRlXtAVCNIu+FouqqMjNCScpBfKK0vdjySa0LzlkI5p6U8z/OCDy7
-	 3aWTRGWgKrsOztBt9jRgiDQ3HlsBx/HVtGTUXOGVcB7t8u7mLxKgac3LWQrk0kqtgF
-	 InmF3YYb9sDmnqSasCZqUoe3HUaAoMWQ3OFMh0pg=
+	b=JVxahcp+qF4G85Aev/yaQiCaJdaMF/lFNcJiytM8UqzQ6YMrSBgPP7lDGelbwAhHb
+	 G45Nc4E2DxWTVWoZF1uzdBNXmBSeanisTFO9B7io87imFSb2MbzXd3qje+1l5NvRJg
+	 mJfnNSHIdcazX3oY0BzmSVGY6MK9f7+vaQtAH3HE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403923AbgFWUwU (ORCPT
+        id S2404040AbgFWUw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392699AbgFWUrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:47:37 -0400
+        id S2404053AbgFWUrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:47:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A2C82098B;
-        Tue, 23 Jun 2020 20:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48AE62098B;
+        Tue, 23 Jun 2020 20:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945257;
-        bh=uqj9LlV6wpnyksVFlwbmyPsNGWszrcyh1dI43T+emtY=;
+        s=default; t=1592945252;
+        bh=E6trreKOq08MadMW0fAVgORvOM/a9Y36lusfwYyNt4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUJkMCPOkHFC/rVgOibuCxmw4WIs3KNaeJr8wq2kRdTuGxLovrOJPMjbk8FIuNQAc
-         1ovUL6TgCCAOpZQ4pNWhjqvXNJdogRdTgHNLFA+anIaFFT+1nE5WMHk5D6TPWNHR08
-         XYT8FiAI6PTyEtvROz7ZVBD/7B/mV0xrrF32VK18=
+        b=GJRhe74PHINcodBpmKP7WDHJq5Ufv6Wnumic7W80UI6NebpCxMh9s26ruPDUOe9+j
+         GrnpkEYCBgqlXoEAeITP/U04EuAbc2luJ7ZRoEPuxTgpJ0DEJHG26vpVDNBc8wNJWq
+         9mODeU3LLAQnx8rmH/bPvHzboRLTwI0R+8DN5lUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 070/136] watchdog: da9062: No need to ping manually before setting timeout
-Date:   Tue, 23 Jun 2020 21:58:46 +0200
-Message-Id: <20200623195307.202137941@linuxfoundation.org>
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 097/136] blktrace: use errno instead of bi_status
+Date:   Tue, 23 Jun 2020 21:59:13 +0200
+Message-Id: <20200623195308.548366419@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -63,47 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Riedmueller <s.riedmueller@phytec.de>
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
+[ Upstream commit 48bc3cd3e07a1486f45d9971c75d6090976c3b1b ]
 
-There is actually no need to ping the watchdog before disabling it
-during timeout change. Disabling the watchdog already takes care of
-resetting the counter.
+In blk_add_trace_spliti() blk_add_trace_bio_remap() use
+blk_status_to_errno() to pass the error instead of pasing the bi_status.
+This fixes the sparse warning.
 
-This fixes an issue during boot when the userspace watchdog handler takes
-over and the watchdog is already running. Opening the watchdog in this case
-leads to the first ping and directly after that without the required
-heartbeat delay a second ping issued by the set_timeout call. Due to the
-missing delay this resulted in a reset.
-
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/da9062_wdt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ kernel/trace/blktrace.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index 79383ff620199..1443386bb590b 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -94,11 +94,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
- 					      unsigned int regval)
- {
- 	struct da9062 *chip = wdt->hw;
--	int ret;
--
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret)
--		return ret;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index a60c09e0bda87..30a98156f4743 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1022,8 +1022,10 @@ static void blk_add_trace_split(void *ignore,
  
- 	return regmap_update_bits(chip->regmap,
- 				  DA9062AA_CONTROL_D,
+ 		__blk_add_trace(bt, bio->bi_iter.bi_sector,
+ 				bio->bi_iter.bi_size, bio_op(bio), bio->bi_opf,
+-				BLK_TA_SPLIT, bio->bi_status, sizeof(rpdu),
+-				&rpdu, blk_trace_bio_get_cgid(q, bio));
++				BLK_TA_SPLIT,
++				blk_status_to_errno(bio->bi_status),
++				sizeof(rpdu), &rpdu,
++				blk_trace_bio_get_cgid(q, bio));
+ 	}
+ 	rcu_read_unlock();
+ }
+@@ -1060,7 +1062,8 @@ static void blk_add_trace_bio_remap(void *ignore,
+ 	r.sector_from = cpu_to_be64(from);
+ 
+ 	__blk_add_trace(bt, bio->bi_iter.bi_sector, bio->bi_iter.bi_size,
+-			bio_op(bio), bio->bi_opf, BLK_TA_REMAP, bio->bi_status,
++			bio_op(bio), bio->bi_opf, BLK_TA_REMAP,
++			blk_status_to_errno(bio->bi_status),
+ 			sizeof(r), &r, blk_trace_bio_get_cgid(q, bio));
+ 	rcu_read_unlock();
+ }
 -- 
 2.25.1
 
