@@ -3,69 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D225C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB80C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0B32072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207612072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbgFWGlN (ORCPT
+        id S1731169AbgFWGlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:41:13 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2529 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730540AbgFWGlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:41:12 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 42CEB7D1A30EFF123014;
-        Tue, 23 Jun 2020 14:41:11 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Tue, 23 Jun 2020 14:41:10 +0800
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 23 Jun 2020 14:41:10 +0800
-Subject: Re: [PATCH net-next v1 2/5] hinic: add support to set and get irq
- coalesce
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-References: <20200620094258.13181-1-luobin9@huawei.com>
- <20200620094258.13181-3-luobin9@huawei.com>
- <20200622150843.5c0a94ff@kicinski-fedora-PC1C0HJN>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <28520c1c-80b6-e955-7c7c-207fb1599683@huawei.com>
-Date:   Tue, 23 Jun 2020 14:41:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 23 Jun 2020 02:41:32 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:45028 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730540AbgFWGlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:41:31 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jncc4-0003im-6c; Tue, 23 Jun 2020 16:40:57 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 23 Jun 2020 16:40:56 +1000
+Date:   Tue, 23 Jun 2020 16:40:56 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        LTP List <ltp@lists.linux.it>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        lkft-triage@lists.linaro.org, linux-crypto@vger.kernel.org,
+        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>
+Subject: Re: LTP: crypto: af_alg02 regression on linux-next 20200621 tag
+Message-ID: <20200623064056.GA8121@gondor.apana.org.au>
+References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
+ <20200622224920.GA4332@42.do-not-panic.com>
+ <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622150843.5c0a94ff@kicinski-fedora-PC1C0HJN>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/23 6:08, Jakub Kicinski wrote:
->> +	if (coal->tx_max_coalesced_frames > COALESCE_MAX_PENDING_LIMIT) {
->> +		netif_err(nic_dev, drv, netdev,
->> +			  "Tx_max_coalesced_frames out of range[%d-%d]\n", 0,
->> +			  COALESCE_MAX_PENDING_LIMIT);
->> +		return -EOPNOTSUPP;
->> +	}
->> +
->> +	return 0;
->> +}
-> I think ERANGE is a more appropriate error code in these?
-Will fix. Thanks for your review.
+On Tue, Jun 23, 2020 at 11:53:43AM +0530, Naresh Kamboju wrote:
+>
+> Thanks for the investigation.
+> After reverting, two test cases got PASS out of four reported failure cases.
+>  ltp-crypto-tests:
+>      * af_alg02 - still failing - Hung and time out
+>      * af_alg05 - still failing - Hung and time out
+>   ltp-syscalls-tests:
+>      * keyctl07 - PASS
+>      * request_key03 - PASS
+> 
+> Please suggest the way to debug / fix the af_alg02 and af_alg05 failures.
+
+Did you clear the MSG_MORE flag in the final send(2) call before
+you call recv(2)?
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
