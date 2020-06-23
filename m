@@ -2,184 +2,167 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF7AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE42C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0DD206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ij3LAsP9"
+	by mail.kernel.org (Postfix) with ESMTP id A8197206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbgFWIfL (ORCPT
+        id S1731875AbgFWIfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731567AbgFWIfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:35:11 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1935CC061573;
-        Tue, 23 Jun 2020 01:35:11 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 18so1104434otv.6;
-        Tue, 23 Jun 2020 01:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=goSzzxDsgzxsQuY6F1h0SsNpCeO6nw7HQJbzXsVCZxo=;
-        b=ij3LAsP9p1irjc88wp1/WWNHRrwz3UZn4dmSUurQcPXlkh41m+MnezeltpEXliOxCt
-         3kxSCX/4mPnFXq4aU057VjYSGpTGZrzzbJh5hHQi7dNdKWoa+CeUDBGmwvYnMD0T0e7g
-         Zf3DMSrWTgKKz2RUHr6MjNXLPC7iat4GzmFDvoGBlMzY8c1YInfnPOGF2SOjDI/FkzUB
-         jGgTDY0j5xpx3tobTOPpKWUnG8uoy3BLAWFeis2vjxDOhRP25kXrtnKqd/ZB1ALr1kuQ
-         xX+XKpRAYJioif5IWq6jAiewZ4Oky2moCN/xQsOeuFpvjGUzrMMsAoCqh4Elq8QWcRD6
-         ZuXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=goSzzxDsgzxsQuY6F1h0SsNpCeO6nw7HQJbzXsVCZxo=;
-        b=PpfK3U8zyxd2buZJtox4W0jSmc1M1wMSeixVekqgfcqTyaH2ge/bkb2W0aQ2S2utaQ
-         nhaQoFsNlmorw8nKC3EWA0CLs7ZhZ1w4U9/4UB7kR+NXvjuTkaQBbp7dQ8+monyn1wr8
-         zmX+JhBejofPrLP7XMG7QAwzzVNWEqTY17mbLUL/neBdRyxTWkcMw8errylzRr38iv0M
-         rICWE9WP0FkNgP8i2W73otecrkzNAoDv3nc7rjg14nC3URZp9g8RNBM3LqV6zvdn9yNC
-         YIQ8c1lyX4tCxn6vYFTL+hzIhFdkWvWDIQl+n3f+AbcL1ezvqwctLKTg2nr+40gcSMOK
-         bmRw==
-X-Gm-Message-State: AOAM5317u/5teCkY10D2Q8VVweDdmDysQogfDgUzLTDFpMPSPfeMHzdE
-        70Qb1tzR9egnVvtZ0ze4TBRL9YPChizRtpePSvo=
-X-Google-Smtp-Source: ABdhPJwffdh0M4nKESM3uobBBa2UiPZNyiH0quaHQH7SdqqFBJmq9vJwUIlp8hKAj1M9RkRbx/6mjjn2BU9Qv+N0dQQ=
-X-Received: by 2002:a9d:6546:: with SMTP id q6mr16850481otl.365.1592901310350;
- Tue, 23 Jun 2020 01:35:10 -0700 (PDT)
+        Tue, 23 Jun 2020 04:35:33 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33318 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731567AbgFWIfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:35:31 -0400
+IronPort-SDR: 6iQP/UTYKWsWsUAckOwjhIfQBLMdbUxiagy/RPo8Wz8jOC3d8s/vtzcr8eMOsdnyIBiOb8XgM3
+ XvHgsQu+CjCA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123671419"
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="123671419"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 01:35:30 -0700
+IronPort-SDR: rFRootrZkIH0vya6Z3UizkgS5DSC2GOJujVhlZnezKonup3YqFAvhQsL6cQmp4YqA6g64LQREL
+ UBLBL2HBcaXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="310388231"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga008.jf.intel.com with ESMTP; 23 Jun 2020 01:35:28 -0700
+Subject: Re: [PATCH 2/2] xhci: Poll for U0 after disabling USB2 LPM
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200520101811.2623-1-kai.heng.feng@canonical.com>
+ <20200520101811.2623-2-kai.heng.feng@canonical.com>
+ <6c3ac2e5-73e9-6e4f-2940-63403821631f@linux.intel.com>
+ <8327233C-5DE8-43F8-9208-5FF888629047@canonical.com>
+ <9FC0BA5C-4D00-4D33-B040-AA5584A8E9A6@canonical.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <cd4d36eb-f953-e79f-f497-cba6fd5552d0@linux.intel.com>
+Date:   Tue, 23 Jun 2020 11:38:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
- <CA+V-a8ueb-3VD-=Bcg6dJqZhLRoCBxu-Zo+key_oEFchNc_APA@mail.gmail.com>
- <CA+V-a8vAfoQGpv-sXvJ11i9QC=EvKg750yusHBhLp8C17KmJbA@mail.gmail.com> <CAMuHMdWp6dL3g56EGDGnDBs+GNHeaO7ejy1k_4EaM_RY+dV=Cg@mail.gmail.com>
-In-Reply-To: <CAMuHMdWp6dL3g56EGDGnDBs+GNHeaO7ejy1k_4EaM_RY+dV=Cg@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 23 Jun 2020 09:34:44 +0100
-Message-ID: <CA+V-a8tUvT1Q+nhsk1Te5CrYSSTbEqvO1=8QyRHY4q2VYNzoKQ@mail.gmail.com>
-Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
- Rev.2.0 specific into hihope-common-rev2.dtsi file
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9FC0BA5C-4D00-4D33-B040-AA5584A8E9A6@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On 19.6.2020 17.19, Kai-Heng Feng wrote:
+> Hi Mathias,
+> 
+>> On Jun 9, 2020, at 18:15, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>>
+>>
+>>
+>>> On Jun 8, 2020, at 19:21, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
+>>>
+>>> On 20.5.2020 13.18, Kai-Heng Feng wrote:
+>>>> USB2 devices with LPM enabled may interrupt the system suspend:
+>>>> [  932.510475] usb 1-7: usb suspend, wakeup 0
+>>>> [  932.510549] hub 1-0:1.0: hub_suspend
+>>>> [  932.510581] usb usb1: bus suspend, wakeup 0
+>>>> [  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
+>>>> [  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
+>>>> ..
+>>>> [  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
+>>>
+>>> 400e03 = Connected, Enabled, U0 with port ink state change flag (PLC) set.
+>>>
+>>>> ..
+>>>> [  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
+>>>> [  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
+>>>> [  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
+>>>>
+>>>> During system suspend, USB core will let HC suspends the device if it
+>>>> doesn't have remote wakeup enabled and doesn't have any children.
+>>>> However, from the log above we can see that the usb 1-7 doesn't get bus
+>>>> suspended due to not in U0. After a while the port finished U2 -> U0
+>>>> transition, interrupts the suspend process.
+>>>
+>>> In USB2 HW link PM the PLC flag should not be set in U2Exit -> U0 transitions.
+>>> Only case we should see a port change event is U2Entry -> U0 due to STALL or
+>>> error/timeout. (see xhci 4.23.5.1.1.1)
+>>>
+>>>>
+>>>> The observation is that after disabling LPM, port doesn't transit to U0
+>>>> immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
+>>>> maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
+>>>> the affected device is advertised as 400us, which is still not enough
+>>>> based on my testing result.
+>>>>
+>>>> So let's use the maximum permitted latency, 10000, to poll for U0
+>>>> status to solve the issue.
+>>>
+>>> I don't recall all details, but it could be that disabling LPM before suspend
+>>> is unnecessary. 
+>>> At least xhci should be able to set a port to U3 from U1 and U2 (see xhci 4.15.1)
+>>> so that is one change that could be done to xhci_bus_suspend()
+>>
+>> Yes, put the device to U3 directly does the trick.
+> 
+> As discussed, will you pick this series over the v2?
+> Or is there anything I should improve for this one?
+> 
+> Kai-Heng
 
-On Tue, Jun 23, 2020 at 9:14 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Jun 23, 2020 at 9:51 AM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Mon, Jun 8, 2020 at 3:59 PM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Mon, Jun 8, 2020 at 3:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > > Separate out Rev.2.0 specific hardware changes into
-> > > > > hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
-> > > > > by all the variants for RZ/G2M[N] boards.
-> > > > >
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> > > > > @@ -0,0 +1,101 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +/*
-> > > > > + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
-> > > > > + * parts
-> > > > > + *
-> > > > > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > > > > + */
-> > > > > +
-> > > > > +#include <dt-bindings/gpio/gpio.h>
-> > > > > +
-> > > > > +/ {
-> > > > > +       leds {
-> > > > > +               compatible = "gpio-leds";
-> > > > > +
-> > > > > +               bt_active_led {
-> > > > > +                       label = "blue:bt";
-> > > > > +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
-> > > > > +                       linux,default-trigger = "hci0-power";
-> > > > > +                       default-state = "off";
-> > > > > +               };
-> > > > > +
-> > > > > +               led0 {
-> > > > > +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
-> > > > > +               };
-> > > > > +
-> > > > > +               led1 {
-> > > > > +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-> > > > > +               };
-> > > > > +
-> > > > > +               led2 {
-> > > > > +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
-> > > > > +               };
-> > > > > +
-> > > > > +               led3 {
-> > > > > +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
-> > > > > +               };
-> > > >
-> > > > led1, led2, and led3 are present on both, so I'd keep them in
-> > > > hihope-common.dtsi.
-> > > >
-> > > The leds defined in hihope-common-rev4.dtsi are as per the label names
-> > > on the schematics/board so that it's easier to identify the LED's by
-> > > name.
-> > >
-> > I was waiting on the above to be confirmed.
->
-> I can confirm the naming of the LEDs on the rev4 board.
-> However, following the same reasoning, the rev2 LEDs should be renamed
-> led2201, led2202, led2203, and led2402 ;-)
+Added this to queueI
 
-I didn't want to change any behaviour if some was using the LED's with names.
-
-> Does anyone rely on the names?  If not, it may make sense to use the
-> rev4 names for both, in the common file?
->
-Not sure, but I'll take your suggestion and just name them as per rev4 naming.
-
-> Not even considering the switches...
-> Seems they forgot to rename switches SW220[123] when renaming LED220[123].
-> Worse, on rev2, you have SW220_2_/LED220_1_ sharing a GPIO, and
-> SW220_1_/LED220_2_ sharing another one.
->
-> And on rev4, GP6_11/GP_LED/TSW_0_ is driving LED_4_ and SW220_2_?
->
-> Conclusion: I don't care how you name them ;-)
->
- :)
-
-Cheers,
---Prabhakar
-
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Thanks
+-Mathias
