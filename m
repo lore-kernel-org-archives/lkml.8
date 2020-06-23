@@ -2,251 +2,192 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B462C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4032AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2CC20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183E820706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fDQ6U3X0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733188AbgFWRZD (ORCPT
+        id S1733200AbgFWRZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:25:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17064 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733173AbgFWRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:24:59 -0400
-IronPort-SDR: 9zsascDBMbVXqjMcLJU/8hOOH6gVX/BUwXh/ZKcSmq/FlNBvQ/a++3QXxesI9sCy+ihFBUPkFx
- aPSSf4IneX/Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="144170852"
-X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="144170852"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 10:24:58 -0700
-IronPort-SDR: 6FKo5AYJO89uy2TXBhYaEwaeeIctRMkHeZWGpt5FsEfjVkRWN8B3u+8RM+if4UejheJbDZWIyo
- a/5Q+bRKp53Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="423080181"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.213.182.184])
-  by orsmga004.jf.intel.com with ESMTP; 23 Jun 2020 10:24:54 -0700
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3 10/10] module: Reorder functions
-Date:   Tue, 23 Jun 2020 10:23:27 -0700
-Message-Id: <20200623172327.5701-11-kristen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200623172327.5701-1-kristen@linux.intel.com>
-References: <20200623172327.5701-1-kristen@linux.intel.com>
+        Tue, 23 Jun 2020 13:25:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733191AbgFWRZg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:25:36 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA0EBC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:25:35 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i12so1756105pju.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cXLrIYCmsRYrUlW+MZ901zfNrzDQAzij3wzyORGTwhE=;
+        b=fDQ6U3X06ji/FJIFe6lJokBcNOZRlBEfjWGafMQm6Qbi9gxTJ5H1vc2I2GWd16eIkJ
+         RmEtQX9k8DEbANaUGqUT9v0Xmk9mqyYouzc/Y+foF9ugv4Sfmoi44X2C70UozewzySGy
+         aDXmjfIOJb+dIX9AcgqXxB2lVNHh+stJefoNfC35qLluth4GKRsyDxrGXURu8m5M09BD
+         mnsbUB3b20hiFZYeGy0PXeZWR1rhCvXSokyZqqVyYKuRwkwLAWkqu4InhbCBkAlPm9OL
+         Vj8eXq9sgpOAIdYDB64TrFafmGBM0XbonbjOZWpMF+/qFEyh9e9u4bfPqqKJTs7Z2M2O
+         XQqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cXLrIYCmsRYrUlW+MZ901zfNrzDQAzij3wzyORGTwhE=;
+        b=uAFLAnzNuM4bvN6H87l9I3qEsLmcQ9bUvrnkv3XjUcUFFEJY+XEJAmnmyzplu8Kx1D
+         YFC22vwwBkz73jn/POCr+F4PsjfYJtMPDL3pHeKe9ipMCVubSYzmihZjvU8SVzgLZH7k
+         WgHFQniTug/uMbEqoYBzhN6dTnmN/Mi+7zPPuR+zzjkoUrZOGwViCypoTSujXUs7KDmD
+         /r0vnIxFHxwYn2vDXnM19KKh1hmL0B9Eu58iJeB29BfcGflEi+AluLw8YNpuYnhIFdOQ
+         5tAXsmIFmIHFcsghaM6IK1AKbUn8IKz4Jf0Ko/3kBrQevhEv1PqkH8LRnktWeAxxcoYF
+         1uYg==
+X-Gm-Message-State: AOAM533T71Eurh8IGPOnxz5RH3sx0vvVmUTDB/K2XwOTFXhfPp0PEiTu
+        xnERZsUZc9MPbNLGKcELp7oTzA==
+X-Google-Smtp-Source: ABdhPJyXHN3Drl4LyciWoUA6XuU1ansdINyyc/nZRCLR43vV3CFcV4oAbuwbzz8KZgEd5VucBropBw==
+X-Received: by 2002:a17:90a:7504:: with SMTP id q4mr22739919pjk.44.1592933135144;
+        Tue, 23 Jun 2020 10:25:35 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 3sm7935671pfv.156.2020.06.23.10.25.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 10:25:34 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 11:25:32 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCHv3] coresight: tmc: Add shutdown callback for TMC ETR
+Message-ID: <20200623172532.GA1843779@xps15>
+References: <20200616045623.27549-1-saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616045623.27549-1-saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new config option to allow modules to be re-ordered
-by function. This option can be enabled independently of the
-kernel text KASLR or FG_KASLR settings so that it can be used
-by architectures that do not support either of these features.
-This option will be selected by default if CONFIG_FG_KASLR is
-selected.
+On Tue, Jun 16, 2020 at 10:26:23AM +0530, Sai Prakash Ranjan wrote:
+> Implement a shutdown callback to ensure ETR hardware is
+> properly shutdown in reboot/shutdown path. This is required
+> for ETR which has SMMU address translation enabled like on
+> SC7180 SoC and few others. If the hardware is still accessing
+> memory after SMMU translation is disabled as part of SMMU
+> shutdown callback in system reboot or shutdown path, then
+> IOVAs(I/O virtual address) which it was using will go on the
+> bus as the physical addresses which might result in unknown
+> crashes (NoC/interconnect errors). So we make sure from this
+> shutdown callback that the ETR is shutdown before SMMU translation
+> is disabled and device_link in SMMU driver will take care of
+> ordering of shutdown callbacks such that SMMU shutdown callback
+> is not called before any of its consumer shutdown callbacks.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
 
-If a module has functions split out into separate text sections
-(i.e. compiled with the -ffunction-sections flag), reorder the
-functions to provide some code diversification to modules.
+I have applied your patch.
 
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Tested-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Tested-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/Makefile |  5 +++
- init/Kconfig      | 12 +++++++
- kernel/kallsyms.c |  2 +-
- kernel/module.c   | 81 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 99 insertions(+), 1 deletion(-)
+Thanks,
+Mathieu
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 00e378de8bc0..0f2dbc46eb5c 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -51,6 +51,11 @@ ifdef CONFIG_X86_NEED_RELOCS
-         LDFLAGS_vmlinux := --emit-relocs --discard-none
- endif
- 
-+ifndef CONFIG_FG_KASLR
-+	ifdef CONFIG_MODULE_FG_KASLR
-+		KBUILD_CFLAGS_MODULE += -ffunction-sections
-+	endif
-+endif
- #
- # Prevent GCC from generating any FP code by mistake.
- #
-diff --git a/init/Kconfig b/init/Kconfig
-index e29c032e4d66..87706a08a2ca 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1994,6 +1994,7 @@ config FG_KASLR
- 	bool "Function Granular Kernel Address Space Layout Randomization"
- 	depends on $(cc-option, -ffunction-sections)
- 	depends on ARCH_HAS_FG_KASLR
-+	select MODULE_FG_KASLR
- 	default n
- 	help
- 	  This option improves the randomness of the kernel text
-@@ -2278,6 +2279,17 @@ config UNUSED_KSYMS_WHITELIST
- 	  one per line. The path can be absolute, or relative to the kernel
- 	  source tree.
- 
-+config MODULE_FG_KASLR
-+	depends on $(cc-option, -ffunction-sections)
-+	bool "Module Function Granular Layout Randomization"
-+	help
-+	  This option randomizes the module text section by reordering the text
-+	  section by function at module load time. In order to use this
-+	  feature, the module must have been compiled with the
-+	  -ffunction-sections compiler flag.
-+
-+	  If unsure, say N.
-+
- endif # MODULES
- 
- config MODULES_TREE_LOOKUP
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index df2b20e1b7f2..da65593bffc7 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -761,7 +761,7 @@ int get_all_symbol_name(void *data, const char *name, struct module *mod,
- 	return 0;
- }
- 
--#if defined(CONFIG_FG_KASLR)
-+#if defined(CONFIG_FG_KASLR) || defined(CONFIG_MODULE_FG_KASLR)
- /*
-  * When fine grained kaslr is enabled, we need to
-  * print out the symbols sorted by name rather than by
-diff --git a/kernel/module.c b/kernel/module.c
-index e8a198588f26..ff1e82b54127 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -56,6 +56,7 @@
- #include <linux/bsearch.h>
- #include <linux/dynamic_debug.h>
- #include <linux/audit.h>
-+#include <linux/random.h>
- #include <uapi/linux/module.h>
- #include "module-internal.h"
- 
-@@ -2388,6 +2389,83 @@ static long get_offset(struct module *mod, unsigned int *size,
- 	return ret;
- }
- 
-+/*
-+ * shuffle_text_list()
-+ * Use a Fisher Yates algorithm to shuffle a list of text sections.
-+ */
-+static void shuffle_text_list(Elf_Shdr **list, int size)
-+{
-+	int i;
-+	unsigned int j;
-+	Elf_Shdr *temp;
-+
-+	for (i = size - 1; i > 0; i--) {
-+		/*
-+		 * pick a random index from 0 to i
-+		 */
-+		get_random_bytes(&j, sizeof(j));
-+		j = j % (i + 1);
-+
-+		temp = list[i];
-+		list[i] = list[j];
-+		list[j] = temp;
-+	}
-+}
-+
-+/*
-+ * randomize_text()
-+ * Look through the core section looking for executable code sections.
-+ * Store sections in an array and then shuffle the sections
-+ * to reorder the functions.
-+ */
-+static void randomize_text(struct module *mod, struct load_info *info)
-+{
-+	int i;
-+	int num_text_sections = 0;
-+	Elf_Shdr **text_list;
-+	int size = 0;
-+	int max_sections = info->hdr->e_shnum;
-+	unsigned int sec = find_sec(info, ".text");
-+
-+	if (sec == 0)
-+		return;
-+
-+	text_list = kmalloc_array(max_sections, sizeof(*text_list), GFP_KERNEL);
-+	if (!text_list)
-+		return;
-+
-+	for (i = 0; i < max_sections; i++) {
-+		Elf_Shdr *shdr = &info->sechdrs[i];
-+		const char *sname = info->secstrings + shdr->sh_name;
-+
-+		if (!(shdr->sh_flags & SHF_ALLOC) ||
-+		    !(shdr->sh_flags & SHF_EXECINSTR) ||
-+		    strstarts(sname, ".init"))
-+			continue;
-+
-+		text_list[num_text_sections] = shdr;
-+		num_text_sections++;
-+	}
-+
-+	shuffle_text_list(text_list, num_text_sections);
-+
-+	for (i = 0; i < num_text_sections; i++) {
-+		Elf_Shdr *shdr = text_list[i];
-+
-+		/*
-+		 * get_offset has a section index for it's last
-+		 * argument, that is only used by arch_mod_section_prepend(),
-+		 * which is only defined by parisc. Since this this type
-+		 * of randomization isn't supported on parisc, we can
-+		 * safely pass in zero as the last argument, as it is
-+		 * ignored.
-+		 */
-+		shdr->sh_entsize = get_offset(mod, &size, shdr, 0);
-+	}
-+
-+	kfree(text_list);
-+}
-+
- /* Lay out the SHF_ALLOC sections in a way not dissimilar to how ld
-    might -- code, read-only data, read-write data, small data.  Tally
-    sizes, and place the offsets into sh_entsize fields: high bit means it
-@@ -2478,6 +2556,9 @@ static void layout_sections(struct module *mod, struct load_info *info)
- 			break;
- 		}
- 	}
-+
-+	if (IS_ENABLED(CONFIG_MODULE_FG_KASLR))
-+		randomize_text(mod, info);
- }
- 
- static void set_license(struct module *mod, const char *license)
--- 
-2.20.1
-
+> 
+> Changes since v2:
+>  * Remove ETF/ETB disable as suggested by Mathieu and Mike since they are
+>    not really affected.
+>  * Remove coresight and misc device unregister since it is not required
+>    for shutdown callback unlike remove callback and userspace is long gone
+>    by this time.
+> 
+> Changes since v1:
+>  * Use mode flag and drop enable flag as Mike suggested.
+>  * Use spinlock before tmc hw disable as Mike suggested.
+> 
+> ---
+>  .../hwtracing/coresight/coresight-tmc-etr.c   |  2 +-
+>  drivers/hwtracing/coresight/coresight-tmc.c   | 23 +++++++++++++++++++
+>  drivers/hwtracing/coresight/coresight-tmc.h   |  1 +
+>  3 files changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index 625882bc8b08..b29c2db94d96 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -1110,7 +1110,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>  
+>  }
+>  
+> -static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+>  	__tmc_etr_disable_hw(drvdata);
+>  	/* Disable CATU device if this ETR is connected to one */
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+> index 39fba1d16e6e..b13ce0daa572 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
+> @@ -538,6 +538,28 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>  	return ret;
+>  }
+>  
+> +static void tmc_shutdown(struct amba_device *adev)
+> +{
+> +	unsigned long flags;
+> +	struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
+> +
+> +	spin_lock_irqsave(&drvdata->spinlock, flags);
+> +
+> +	if (drvdata->mode == CS_MODE_DISABLED)
+> +		goto out;
+> +
+> +	if (drvdata->config_type == TMC_CONFIG_TYPE_ETR)
+> +		tmc_etr_disable_hw(drvdata);
+> +
+> +	/*
+> +	 * We do not care about coresight unregister here unlike remove
+> +	 * callback which is required for making coresight modular since
+> +	 * the system is going down after this.
+> +	 */
+> +out:
+> +	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+> +}
+> +
+>  static const struct amba_id tmc_ids[] = {
+>  	CS_AMBA_ID(0x000bb961),
+>  	/* Coresight SoC 600 TMC-ETR/ETS */
+> @@ -556,6 +578,7 @@ static struct amba_driver tmc_driver = {
+>  		.suppress_bind_attrs = true,
+>  	},
+>  	.probe		= tmc_probe,
+> +	.shutdown	= tmc_shutdown,
+>  	.id_table	= tmc_ids,
+>  };
+>  builtin_amba_driver(tmc_driver);
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+> index 71de978575f3..6e8d2dc33d17 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.h
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
+> @@ -268,6 +268,7 @@ ssize_t tmc_etb_get_sysfs_trace(struct tmc_drvdata *drvdata,
+>  /* ETR functions */
+>  int tmc_read_prepare_etr(struct tmc_drvdata *drvdata);
+>  int tmc_read_unprepare_etr(struct tmc_drvdata *drvdata);
+> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata);
+>  extern const struct coresight_ops tmc_etr_cs_ops;
+>  ssize_t tmc_etr_get_sysfs_trace(struct tmc_drvdata *drvdata,
+>  				loff_t pos, size_t len, char **bufpp);
+> 
+> base-commit: 059e38815950dbec65beafe03757bce9436e89a4
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
