@@ -2,145 +2,120 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89877C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F62C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD6F20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF32206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:11:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AZk02rCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbgFWRKD convert rfc822-to-8bit (ORCPT
+        id S1733024AbgFWRLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:10:03 -0400
-Received: from mail-n.franken.de ([193.175.24.27]:43943 "EHLO drew.franken.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728916AbgFWRKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:10:02 -0400
-Received: from mb.fritz.box (ip4d15f5fc.dynamic.kabel-deutschland.de [77.21.245.252])
-        (Authenticated sender: lurchi)
-        by mail-n.franken.de (Postfix) with ESMTPSA id 0117A7220B819;
-        Tue, 23 Jun 2020 19:09:57 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: Strange problem with SCTP+IPv6
-From:   Michael Tuexen <Michael.Tuexen@lurchi.franken.de>
-In-Reply-To: <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
-Date:   Tue, 23 Jun 2020 19:09:57 +0200
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "minyard@acm.org" <minyard@acm.org>,
-        Xin Long <lucien.xin@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <E5BF4DC9-7DC7-4057-8449-16F4BB49E233@lurchi.franken.de>
-References: <20200621155604.GA23135@minyard.net>
- <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
- <20200622165759.GA3235@minyard.net>
- <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
- <20200622183253.GQ2491@localhost.localdomain>
- <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 23 Jun 2020 13:11:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46333 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732565AbgFWRLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:11:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592932281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tgpqv+Z4YzvIf/4SqnrwWUNPhSAJzQTNmQO1fWEnu4g=;
+        b=AZk02rCAYz9FmShJrHLK/213qOgbmJRA0fQvN4CAdiR9hbgHLY6qLIlp57p+qsjV72qm7d
+        FZGHL+J5Hj22VmoFLPZLXzIeFkydt7/HL/gfzgGP2sl1kw6JvXThUxbfRmUeXIYqNQouc5
+        zT452za7dMG39a39mwssx7e0IGOONn8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-fa8R2lz4PIqGlC1xadbvrQ-1; Tue, 23 Jun 2020 13:11:19 -0400
+X-MC-Unique: fa8R2lz4PIqGlC1xadbvrQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E71B8C4BA1;
+        Tue, 23 Jun 2020 17:11:18 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F2AF5D9D3;
+        Tue, 23 Jun 2020 17:11:18 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for Linux 5.8-rc3
+Date:   Tue, 23 Jun 2020 13:11:17 -0400
+Message-Id: <20200623171117.326222-1-pbonzini@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 23. Jun 2020, at 15:17, David Laight <David.Laight@ACULAB.COM> wrote:
-> 
-> From: Marcelo Ricardo Leitner
->> Sent: 22 June 2020 19:33
->> On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
->>>> On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
->>>> 
->>>> On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
->>>>> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
->>>>>> 
->>>>>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
->>>>>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
->>>>>> then I make a connection to it using ::1, the connection will drop after
->>>>>> 2.5 seconds with an ECONNRESET error.
->>>>>> 
->>>>>> It only happens on SCTP, it doesn't have the issue if you connect to a
->>>>>> full IPv6 address instead of ::1, and it doesn't happen if you don't
->>>>>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
->>>>>> I tried on an ARM system and x86_64.
->>>>>> 
->>>>>> I haven't dug into the kernel to see if I could find anything yet, but I
->>>>>> thought I would go ahead and report it.  I am attaching a reproducer.
->>>>>> Basically, compile the following code:
->>>>> The code only set IPV6_V6ONLY on server side, so the client side will
->>>>> still bind all the local ipv4 addresses (as you didn't call bind() to
->>>>> bind any specific addresses ). Then after the connection is created,
->>>>> the client will send HB on the v4 paths to the server. The server
->>>>> will abort the connection, as it can't support v4.
->>>>> 
->>>>> So you can work around it by either:
->>>>> 
->>>>> - set IPV6_V6ONLY on client side.
->>>>> 
->>>>> or
->>>>> 
->>>>> - bind to the specific v6 addresses on the client side.
->>>>> 
->>>>> I don't see RFC said something about this.
->>>>> So it may not be a good idea to change the current behaviour
->>>>> to not establish the connection in this case, which may cause regression.
->>>> 
->>>> Ok, I understand this.  It's a little strange, but I see why it works
->>>> this way.
->>> I don't. I would expect it to work as I described in my email.
->>> Could someone explain me how and why it is behaving different from
->>> my expectation?
->> 
->> It looks like a bug to me. Testing with this test app here, I can see
->> the INIT_ACK being sent with a bunch of ipv4 addresses in it and
->> that's unexpected for a v6only socket. As is, it's the server saying
->> "I'm available at these other addresses too, but not."
-> 
-> Does it even make sense to mix IPv4 and IPv6 addresses on the same
-> connection?
-Sure, if you have an IPv6 socket, which has not enabled the IPV6ONLY
-socket option.
-> I don't remember ever seeing both types of address in a message,
-> but may not have looked.
-> 
-> I also wonder whether the connection should be dropped for an error
-> response on a path that has never been validated.
-Assuming that it is not an ERROR chunk which comes back, but an ABORT,
-this should happen as long as the verification tag is OK.
-> 
-> OTOH the whole 'multi-homing' part of SCTP sucks.
-> The IP addresses a server needs to bind to depend on where the
-> incoming connection will come from.
-Not sure what this means. The application can bind a wildcard
-address or a specific subset. However, when an INIT comes in,
-the INIT-ACK might contain only a subset of there due to
-scoping.
-> A local connection may be able to use a 192.168.x.x address
-> but a remote connection must not - as it may be defined locally
-> at the remote system.
-Yepp. Not sure what you can do about it.
-> But both connections can come into the public (routable) address.
-> We have to tell customers to explicitly configure the local IP
-> addresses - which means the application has to know what they are.
-> Fortunately these apps are pretty static - usually M3UA.
-Please note that in SIGRTRAN scenarios you normally not have NATs
-involved as you have usually in setups used at home.
+Linus,
 
-Best regards
-Michael
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to e4553b4976d1178c13da295cb5c7b21f55baf8f9:
+
+  KVM: VMX: Remove vcpu_vmx's defunct copy of host_pkru (2020-06-23 06:01:29 -0400)
+
+----------------------------------------------------------------
+All bugfixes except for a couple cleanup patches.
+
+----------------------------------------------------------------
+Huacai Chen (1):
+      KVM: MIPS: Fix a build error for !CPU_LOONGSON64
+
+Igor Mammedov (1):
+      kvm: lapic: fix broken vcpu hotplug
+
+Marcelo Tosatti (1):
+      KVM: x86: allow TSC to differ by NTP correction bounds without TSC scaling
+
+Paolo Bonzini (1):
+      KVM: LAPIC: ensure APIC map is up to date on concurrent update requests
+
+Qian Cai (1):
+      kvm/svm: disable KCSAN for svm_vcpu_run()
+
+Sean Christopherson (4):
+      KVM: VMX: Add helpers to identify interrupt type from intr_info
+      KVM: nVMX: Plumb L2 GPA through to PML emulation
+      KVM: VMX: Stop context switching MSR_IA32_UMWAIT_CONTROL
+      KVM: VMX: Remove vcpu_vmx's defunct copy of host_pkru
+
+Vitaly Kuznetsov (2):
+      Revert "KVM: VMX: Micro-optimize vmexit time when not exposing PMU"
+      KVM: x86/mmu: Avoid mixing gpa_t with gfn_t in walk_addr_generic()
+
+Xiaoyao Li (1):
+      KVM: X86: Fix MSR range of APIC registers in X2APIC mode
+
+ arch/mips/kvm/mips.c            |  2 ++
+ arch/x86/include/asm/kvm_host.h |  4 ++--
+ arch/x86/include/asm/mwait.h    |  2 --
+ arch/x86/kernel/cpu/umwait.c    |  6 -----
+ arch/x86/kvm/lapic.c            | 50 +++++++++++++++++++++++++----------------
+ arch/x86/kvm/mmu.h              |  2 +-
+ arch/x86/kvm/mmu/mmu.c          |  4 ++--
+ arch/x86/kvm/mmu/paging_tmpl.h  | 16 ++++++-------
+ arch/x86/kvm/svm/svm.c          |  2 +-
+ arch/x86/kvm/vmx/vmcs.h         | 32 ++++++++++++++++----------
+ arch/x86/kvm/vmx/vmx.c          | 27 ++++------------------
+ arch/x86/kvm/vmx/vmx.h          |  2 --
+ arch/x86/kvm/x86.c              |  7 +++---
+ 13 files changed, 74 insertions(+), 82 deletions(-)
 
