@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE93C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E28207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03E820724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947846;
-	bh=4nSZAdh0C+LyUZmGaYK7ICPBjH/eBkel2iGSn91HaAc=;
+	s=default; t=1592947851;
+	bh=/44GbRVFyzkusa5BAVSVz2mQoKHA5iPo6BBEtM4Gp6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vI4YS6od4dZD2a4c17OKkUV/fu4ydws2oZ1EKIlYOiGxC2cVbaXkMatXVMQjZF2HP
-	 Qr8Kkpaqgd3Hg7Jky3MgrPVN1jvx5ItOYOG+viNHPLG73Bo2XNDaetu+mBAo5X9v1v
-	 xFIFJR+w8+AVoP0VzS538xm+AR5towQmpzj6TLGY=
+	b=kWvI9/BsVzOfHcLQo+IWAMWBsvzzDcgIoCxW7eTn9bD1sMaNV5EzpbAmsA9Q0BNOa
+	 F746W1SrtblMzTD8VIlj+/3srG/nHYiht69d5L+UMm/Klk2SuMb3YugljNxNzwGDhV
+	 Rn5GeTNwU5kpyjzmmUSzH94khrVGwUjDJUlrCnnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387853AbgFWUNX (ORCPT
+        id S2392582AbgFWVas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55310 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389071AbgFWUNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:17 -0400
+        id S2388395AbgFWUNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93FEB2078A;
-        Tue, 23 Jun 2020 20:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1031E206C3;
+        Tue, 23 Jun 2020 20:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943197;
-        bh=4nSZAdh0C+LyUZmGaYK7ICPBjH/eBkel2iGSn91HaAc=;
+        s=default; t=1592943199;
+        bh=/44GbRVFyzkusa5BAVSVz2mQoKHA5iPo6BBEtM4Gp6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bk2cSn4ADawK4veEkDXOUjIECBqjRnbto4ytyr7eARofqpeBlDlNHdaOUuIDWDkpv
-         0tiAPre8BdlV/EZdEfv8l1Qhn8Ta4WTiRS49ml+4JFtg6OklU88s9O7lXAStFgOxUS
-         ho4HuI2rI97CW7rnz9ppj04TBjieGrVpjgDReEgo=
+        b=AODlnlh5/FQSDJkZcdniORC5tTXsOp5QfQyOGn2QuayqfjZhFd0w7hEnAoypXmewQ
+         axjGtOFExPElglYWgcKQWjjucMXPSJHzogs6rsSfumKdY++QASFCXm4ht/ehfcAC2n
+         v49UDpy6VR8UTGFHOx/g3ulAX9ua7mWfv1fW/Fzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 270/477] mfd: stmfx: Fix stmfx_irq_init error path
-Date:   Tue, 23 Jun 2020 21:54:27 +0200
-Message-Id: <20200623195420.331220213@linuxfoundation.org>
+Subject: [PATCH 5.7 297/477] extcon: adc-jack: Fix an error handling path in adc_jack_probe()
+Date:   Tue, 23 Jun 2020 21:54:54 +0200
+Message-Id: <20200623195421.591894072@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,46 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 60c2c4bcb9202acad4cc26af20b44b6bd7874f7b ]
+[ Upstream commit bc84cff2c92ae5ccb2c37da73756e7174b1b430f ]
 
-In case the interrupt signal can't be configured, IRQ domain needs to be
-removed.
+In some error handling paths, a call to 'iio_channel_get()' is not balanced
+by a corresponding call to 'iio_channel_release()'.
 
-Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
+
+This has the extra benefit to simplify the remove function.
+
+Fixes: 19939860dcae ("extcon: adc_jack: adc-jack driver to support 3.5 pi or simliar devices")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/stmfx.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/extcon/extcon-adc-jack.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
-index fde6541e347c8..1977fe95f876c 100644
---- a/drivers/mfd/stmfx.c
-+++ b/drivers/mfd/stmfx.c
-@@ -287,14 +287,19 @@ static int stmfx_irq_init(struct i2c_client *client)
+diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
+index ad02dc6747a43..0317b614b6805 100644
+--- a/drivers/extcon/extcon-adc-jack.c
++++ b/drivers/extcon/extcon-adc-jack.c
+@@ -124,7 +124,7 @@ static int adc_jack_probe(struct platform_device *pdev)
+ 	for (i = 0; data->adc_conditions[i].id != EXTCON_NONE; i++);
+ 	data->num_conditions = i;
  
- 	ret = regmap_write(stmfx->map, STMFX_REG_IRQ_OUT_PIN, irqoutpin);
- 	if (ret)
--		return ret;
-+		goto irq_exit;
+-	data->chan = iio_channel_get(&pdev->dev, pdata->consumer_channel);
++	data->chan = devm_iio_channel_get(&pdev->dev, pdata->consumer_channel);
+ 	if (IS_ERR(data->chan))
+ 		return PTR_ERR(data->chan);
  
- 	ret = devm_request_threaded_irq(stmfx->dev, client->irq,
- 					NULL, stmfx_irq_handler,
- 					irqtrigger | IRQF_ONESHOT,
- 					"stmfx", stmfx);
- 	if (ret)
--		stmfx_irq_exit(client);
-+		goto irq_exit;
-+
-+	return 0;
-+
-+irq_exit:
-+	stmfx_irq_exit(client);
+@@ -164,7 +164,6 @@ static int adc_jack_remove(struct platform_device *pdev)
  
- 	return ret;
+ 	free_irq(data->irq, data);
+ 	cancel_work_sync(&data->handler.work);
+-	iio_channel_release(data->chan);
+ 
+ 	return 0;
  }
 -- 
 2.25.1
