@@ -2,144 +2,126 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4018BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B37C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD3320771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592913224;
-	bh=LuOYdy9hM+E6UpW0wiB3dYuE7jDUweZJNS5ZAL1MAg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pa4tZ7H3+Q6vCNiMmrAH9Mcz3cul3O30f55MfdyPqDQZ4WXIwb6VKy+QZf5OXBiuP
-	 7RufIWDOPLMVGjgZ7Tih3jDGr5ydQ45q4HbDjwMQXpNok2BxXQOay8wbwGXqK1Sv42
-	 V1i6I1GKKrOdCHKRGUEi4pafIF4ausDVVKn5sGjU=
+	by mail.kernel.org (Postfix) with ESMTP id CB57420738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732471AbgFWLxm (ORCPT
+        id S1732489AbgFWLz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:53:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732333AbgFWLxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:53:42 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D5C720738;
-        Tue, 23 Jun 2020 11:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592913221;
-        bh=LuOYdy9hM+E6UpW0wiB3dYuE7jDUweZJNS5ZAL1MAg0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fMOOHNZtRJjXYvYkiawh185QMxi4FJyC9A+cQw7a/2YwNm4OscQj1wzIUDtDv6cOg
-         7ZlvXFKdiaJRkK5/syKubxz/yTWpCx9/876J6sDcc+CQapuC2QHUL9MtrQ58ydQJ8g
-         +wGKKKUlCBoP8SQ6BsNsguo0gVDaO6t21c6GGaSU=
-Date:   Tue, 23 Jun 2020 19:53:36 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] ARM: imx6plus: enable internal routing of
- clk_enet_ref where possible
-Message-ID: <20200623115335.GC30139@dragon>
-References: <20200613201703.16788-1-TheSven73@gmail.com>
+        Tue, 23 Jun 2020 07:55:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46796 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732400AbgFWLz1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:55:27 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jnhWN-00018K-3o; Tue, 23 Jun 2020 11:55:23 +0000
+Date:   Tue, 23 Jun 2020 13:55:21 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Dmitry Safonov <dima@arista.com>,
+        Andrei Vagin <avagin@gmail.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Serge Hallyn <serge@hallyn.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, adrian@lisas.de
+Subject: Re: [PATCH 3/3] nsproxy: support CLONE_NEWTIME with setns()
+Message-ID: <20200623115521.hk3xlhixrt2zrgkn@wittgenstein>
+References: <20200619153559.724863-1-christian.brauner@ubuntu.com>
+ <20200619153559.724863-4-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200613201703.16788-1-TheSven73@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200619153559.724863-4-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fugang,
-
-Can you take a look at this patch?  Thanks!
-
-Shawn
-
-On Sat, Jun 13, 2020 at 04:17:03PM -0400, Sven Van Asbroeck wrote:
-> On imx6, the ethernet reference clock (clk_enet_ref) can be generated
-> by either the imx6, or an external source (e.g. an oscillator or the
-> PHY). When generated by the imx6, the clock source (from ANATOP)
-> must be routed to the input of clk_enet_ref via two pads on the SoC,
-> typically via a dedicated track on the PCB.
+On Fri, Jun 19, 2020 at 05:35:59PM +0200, Christian Brauner wrote:
+> So far setns() was missing time namespace support. This was partially due
+> to it simply not being implemented but also because vdso_join_timens()
+> could still fail which made switching to multiple namespaces atomically
+> problematic. This is now fixed so support CLONE_NEWTIME with setns()
 > 
-> On an imx6 plus however, there is a new setting which enables this
-> clock to be routed internally on the SoC, from its ANATOP clock
-> source, straight to clk_enet_ref, without having to go through
-> the SoC pads.
-> 
-> Board designs where the clock is generated by the imx6 should not
-> be affected by routing the clock internally. Therefore on a plus,
-> we can enable internal routing by default.
-> 
-> To: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> Cc: Serge Hallyn <serge@hallyn.com>
+> Cc: Dmitry Safonov <dima@arista.com>
+> Cc: Andrei Vagin <avagin@gmail.com>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 > ---
->  arch/arm/mach-imx/mach-imx6q.c              | 18 ++++++++++++++++++
->  include/linux/mfd/syscon/imx6q-iomuxc-gpr.h |  1 +
->  2 files changed, 19 insertions(+)
-> 
-> Tree: next-20200613
-> 
-> diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-> index 85c084a716ab..4d22567bb650 100644
-> --- a/arch/arm/mach-imx/mach-imx6q.c
-> +++ b/arch/arm/mach-imx/mach-imx6q.c
-> @@ -203,6 +203,24 @@ static void __init imx6q_1588_init(void)
->  	else
->  		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
->  
-> +	/*
-> +	 * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
-> +	 * be the PTP clock source, instead of having to be routed through
-> +	 * pads.
-> +	 * Board designs which route the ANATOP/CCM clock through pads are
-> +	 * unaffected when routing happens internally. So on these designs,
-> +	 * route internally by default.
-> +	 */
-> +	if (clksel == IMX6Q_GPR1_ENET_CLK_SEL_ANATOP && cpu_is_imx6q() &&
-> +			imx_get_soc_revision() >= IMX_CHIP_REVISION_2_0) {
-> +		if (!IS_ERR(gpr))
-> +			regmap_update_bits(gpr, IOMUXC_GPR5,
-> +					IMX6Q_GPR5_ENET_TXCLK_SEL,
-> +					IMX6Q_GPR5_ENET_TXCLK_SEL);
-> +		else
-> +			pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
-> +		}
-> +
->  	clk_put(enet_ref);
->  put_ptp_clk:
->  	clk_put(ptp_clk);
-> diff --git a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-> index d4b5e527a7a3..eb65d48da0df 100644
-> --- a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-> +++ b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-> @@ -240,6 +240,7 @@
->  #define IMX6Q_GPR4_IPU_RD_CACHE_CTL		BIT(0)
->  
->  #define IMX6Q_GPR5_L2_CLK_STOP			BIT(8)
-> +#define IMX6Q_GPR5_ENET_TXCLK_SEL		BIT(9)
->  #define IMX6Q_GPR5_SATA_SW_PD			BIT(10)
->  #define IMX6Q_GPR5_SATA_SW_RST			BIT(11)
->  
-> -- 
-> 2.17.1
-> 
+
+Andrei,
+Dmitry,
+
+A little off-topic since its not related to the patch here but I've been
+going through the current time namespace semantics and i just want to
+confirm something with you:
+
+Afaict, unshare(CLONE_NEWTIME) currently works similar to
+unshare(CLONE_NEWPID) in that it only changes {pid,time}_for_children
+but does _not_ change the {pid, time} namespace of the caller itself.
+For pid namespaces that makes a lot of sense but I'm not completely
+clear why you're doing this for time namespaces, especially since the
+setns() behavior for CLONE_NEWPID and CLONE_NEWTIME is very different:
+Similar to unshare(CLONE_NEWPID), setns(CLONE_NEWPID) doesn't change the
+pid namespace of the caller itself, it only changes it for it's
+children by setting up pid_for_children. _But_ for setns(CLONE_NEWTIME)
+both the caller's and the children's time namespace is changed, i.e.
+unshare(CLONE_NEWTIME) behaves different from setns(CLONE_NEWTIME). Why?
+
+This also has the consequence that the unshare(CLONE_NEWTIME) +
+setns(CLONE_NEWTIME) sequence can be used to change the callers pid
+namespace. Is this intended?
+Here's some code where you can verify this (please excuse the aweful
+code I'm using to illustrate this):
+
+int main(int argc, char *argv[])
+{
+	char buf1[4096], buf2[4096];
+
+	if (unshare(0x00000080))
+		exit(1);
+
+	int fd = open("/proc/self/ns/time", O_RDONLY);
+	if (fd < 0)
+		exit(2);
+
+	readlink("/proc/self/ns/time", buf1, sizeof(buf1));
+	readlink("/proc/self/ns/time_for_children", buf2, sizeof(buf2));
+	printf("unshare(CLONE_NEWTIME):		time(%s) ~= time_for_children(%s)\n", buf1, buf2);
+
+	if (setns(fd, 0x00000080))
+		exit(3);
+
+	readlink("/proc/self/ns/time", buf1, sizeof(buf1));
+	readlink("/proc/self/ns/time_for_children", buf2, sizeof(buf2));
+	printf("setns(self, CLONE_NEWTIME):	time(%s) == time_for_children(%s)\n", buf1, buf2);
+
+	exit(EXIT_SUCCESS);
+}
+
+which gives:
+
+root@f2-vm:/# ./test
+unshare(CLONE_NEWTIME):		time(time:[4026531834]) ~= time_for_children(time:[4026532366])
+setns(self, CLONE_NEWTIME):	time(time:[4026531834]) == time_for_children(time:[4026531834])
+
+why is unshare(CLONE_NEWTIME) blocked from changing the callers pid
+namespace when setns(CLONE_NEWTIME) is allowed to do this?
+
+Christian
