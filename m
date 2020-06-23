@@ -2,52 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6246F21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869CD21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945005;
-	bh=0ncV6HTRfo/3u06mJYnRbHPw2o4yr/9wsxgVNim2oHg=;
+	s=default; t=1592945007;
+	bh=jNd3Ur46cox01HltkWv+2q8a/88h4/YW+XlwKdEV6EY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dnlS8rfF5g5e/GfQyjS/XsUrwxkAXF3XLGlBmIZz7LzAGtMG1Joqn7qDRuUQpEGka
-	 5SlG5qW+RAcnVCGiPzx9NZBsi8fOwHi1J8AVXNwMVlkHNNGnW27AG3q3OHFUj735Tf
-	 sY0F7uoSkqGNa+CBxlKA3iHwdXJSSY+gTM72C+f4=
+	b=PXyf0TeKvvdNBUKK1gx3wenTAsQ1EVRomOHsPB9gEa8MofNGMMo2ZKX76RozPc08O
+	 AxcfVFMvbRVVW2xE30jexq64gwy7KhpvKJEdiNy4BGXJJTF4AyLi+Gt5b5/zaPUJuD
+	 JlOGiBFsI0OFz17IFLKMEEv4Jwt3cnzB3HfESki8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392514AbgFWUnW (ORCPT
+        id S2392524AbgFWUnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40064 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392478AbgFWUnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:43:15 -0400
+        id S2390278AbgFWUnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:43:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4317C21941;
-        Tue, 23 Jun 2020 20:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAD252070E;
+        Tue, 23 Jun 2020 20:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944995;
-        bh=0ncV6HTRfo/3u06mJYnRbHPw2o4yr/9wsxgVNim2oHg=;
+        s=default; t=1592944998;
+        bh=jNd3Ur46cox01HltkWv+2q8a/88h4/YW+XlwKdEV6EY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LTyP/SGyyh8k5H+cjG1HOEbY4EKiuWw+ynGuHFAf8AmRu8/sz4zD4/kb6kuXoEc8R
-         xyyNdswpyxvNe45ItZIJrQQRTjcUpA0XXYLDtWNjkeg98+bBcMjYf8CGshs/IeQAUV
-         lJHnGngF2METcfifwL2W4pTP4xo0KFiWnnHxH/UY=
+        b=URdlmxONlPFnontGYRs5WJBmDIBHyb5BTlslOL19XVzhZBbSWx7bxSb4wCQ3BbHqO
+         Kly39wh4zPMIXRye4yvtXSTEWW25RUYZcOiQSy6vxNcf3yyYQJo3cu2oXPg6Hk1R2v
+         cpdEYyoXoOFDqI13bN5Tvpx8PnEEwsp1NAZKJFoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Joakim Tjernlund <joakim.tjernlund@infinera.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: [PATCH 4.19 206/206] Revert "dpaa_eth: fix usage as DSA master, try 3"
-Date:   Tue, 23 Jun 2020 21:58:54 +0200
-Message-Id: <20200623195327.188985616@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 194/206] mtd: rawnand: tmio: Fix the probe error path
+Date:   Tue, 23 Jun 2020 21:58:42 +0200
+Message-Id: <20200623195326.568883995@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,41 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+[ Upstream commit 75e9a330a9bd48f97a55a08000236084fe3dae56 ]
 
-This reverts commit b145710b69388aa4034d32b4a937f18f66b5538e which is
-commit 5d14c304bfc14b4fd052dc83d5224376b48f52f0 upstream.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-The patch is not wrong, but the Fixes: tag is. It should have been:
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if this commit is not
+introducing any bug.
 
-	Fixes: 060ad66f9795 ("dpaa_eth: change DMA device")
-
-which means that it's fixing a commit which was introduced in:
-
-git describe --tags 060ad66f97954
-v5.4-rc3-783-g060ad66f9795
-
-which then means it should have not been backported to linux-4.19.y,
-where things _were_ working and now they're not.
-
-Reported-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-57-miquel.raynal@bootlin.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 +-
+ drivers/mtd/nand/raw/tmio_nand.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2796,7 +2796,7 @@ static int dpaa_eth_probe(struct platfor
- 	}
+diff --git a/drivers/mtd/nand/raw/tmio_nand.c b/drivers/mtd/nand/raw/tmio_nand.c
+index 39594910e6f04..2a9a966ff2b9e 100644
+--- a/drivers/mtd/nand/raw/tmio_nand.c
++++ b/drivers/mtd/nand/raw/tmio_nand.c
+@@ -449,7 +449,7 @@ static int tmio_probe(struct platform_device *dev)
+ 	if (!retval)
+ 		return retval;
  
- 	/* Do this here, so we can be verbose early */
--	SET_NETDEV_DEV(net_dev, dev->parent);
-+	SET_NETDEV_DEV(net_dev, dev);
- 	dev_set_drvdata(dev, net_dev);
+-	nand_release(nand_chip);
++	nand_cleanup(nand_chip);
  
- 	priv = netdev_priv(net_dev);
+ err_irq:
+ 	tmio_hw_stop(dev, tmio);
+-- 
+2.25.1
+
 
 
