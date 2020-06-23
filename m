@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E491FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD032078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86FB20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947635;
-	bh=eyWgRdi5tMK43E1lbOLpRFsf4r7N3pu5AkTsIPxqdNQ=;
+	s=default; t=1592947638;
+	bh=ua2CwIbuX9rW6cSbfOZaPkhnt2NKjBdgLpNFabwYfcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DzGOSxUgNUvbhb3InIgT1l4lhpnXx1063ChAd1mjYRsZ88feVdOUX5v3EAQY3M6FC
-	 9u6eIaaE+VSaGG7ffyLAK0WtVfuSZtbqHoQQAXXkTbm9F6jPKdzxujCcNZX2EUlgNT
-	 7jFDxqiWcvUrJEV5hfCt6Yll7pG6D98lsvmSNF5A=
+	b=nGcs0w5VnhNcihFlAuxjsjj1s6+iqkIauMW1/a/bcFzs6375M2nLG6bDJSItc5vAS
+	 +aXAbjLZ/XKRRC3/5Zd04rfu/v5Z8/L3VYnRW3yn2W14iWmjPO824yzr6x5Hy3yxbM
+	 KTH7GirWdaSXSIKUgrUJ7KZEJgFOXEbbCG6ZO0u4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393447AbgFWV1O (ORCPT
+        id S2389514AbgFWURO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33274 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389523AbgFWURR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:17 -0400
+        id S2388879AbgFWURE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81D4C2080C;
-        Tue, 23 Jun 2020 20:17:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E36C2080C;
+        Tue, 23 Jun 2020 20:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943437;
-        bh=eyWgRdi5tMK43E1lbOLpRFsf4r7N3pu5AkTsIPxqdNQ=;
+        s=default; t=1592943424;
+        bh=ua2CwIbuX9rW6cSbfOZaPkhnt2NKjBdgLpNFabwYfcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ose9IMosNXfFs7xm4O3BZkSB6Y+HrwRbPw6EFD/2n6em4RZzDao33r06lMw10UUUB
-         HSAixKzVo1EOWSxWhP5CZsnqCoUB+yeY8LwWUIlW7kmOBNoE47xn8eECWR9NWK6ILt
-         4okuIJUoyKQiweZZ4yozUmlXEG72ykorwIPGmmYQ=
+        b=LXF/bVh8aXbnNBfJQq+ICqkPWucdcqQaQg/Y3yInOCaJmZag2siCzdDY/KE46GuSQ
+         UafWRpKg0okj7Mmce+kx6PgA7G2u8uym0sZgUhqZDoNdiMXBS7kkjuoNTPb5fAKAkO
+         0HPiorbqWMfITvIy0EwYNrqEmIzg7y4dI2/hcGFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Tobias Klauser <tklauser@distanz.ch>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 391/477] powerpc: Fix kernel crash in show_instructions() w/DEBUG_VIRTUAL
-Date:   Tue, 23 Jun 2020 21:56:28 +0200
-Message-Id: <20200623195426.016227755@linuxfoundation.org>
+Subject: [PATCH 5.7 369/477] tools, bpftool: Fix memory leak in codegen error cases
+Date:   Tue, 23 Jun 2020 21:56:06 +0200
+Message-Id: <20200623195424.972829781@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,84 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Tobias Klauser <tklauser@distanz.ch>
 
-[ Upstream commit a6e2c226c3d51fd93636320e47cabc8a8f0824c5 ]
+[ Upstream commit d4060ac969563113101c79433f2ae005feca1c29 ]
 
-With CONFIG_DEBUG_VIRTUAL=y, we can hit a BUG() if we take a hard
-lockup watchdog interrupt when in OPAL mode.
+Free the memory allocated for the template on error paths in function
+codegen.
 
-This happens in show_instructions() if the kernel takes the watchdog
-NMI IPI, or any other interrupt, with MSR_IR == 0. show_instructions()
-updates the variable pc in the loop and the second iteration will
-result in BUG().
-
-We hit the BUG_ON due the below check in  __va()
-
-  #define __va(x)
-  ({
-  	VIRTUAL_BUG_ON((unsigned long)(x) >= PAGE_OFFSET);
-  	(void *)(unsigned long)((phys_addr_t)(x) | PAGE_OFFSET);
-  })
-
-Fix it by moving the check out of the loop. Also update nip so that
-the nip == pc check still matches.
-
-Fixes: 4dd7554a6456 ("powerpc/64: Add VIRTUAL_BUG_ON checks for __va and __pa addresses")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-[mpe: Use IS_ENABLED(), massage change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200524093822.423487-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200610130804.21423-1-tklauser@distanz.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/process.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ tools/bpf/bpftool/gen.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 9c21288f86455..774476be591be 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -1241,29 +1241,31 @@ struct task_struct *__switch_to(struct task_struct *prev,
- static void show_instructions(struct pt_regs *regs)
- {
- 	int i;
-+	unsigned long nip = regs->nip;
- 	unsigned long pc = regs->nip - (NR_INSN_TO_PRINT * 3 / 4 * sizeof(int));
- 
- 	printk("Instruction dump:");
- 
-+	/*
-+	 * If we were executing with the MMU off for instructions, adjust pc
-+	 * rather than printing XXXXXXXX.
-+	 */
-+	if (!IS_ENABLED(CONFIG_BOOKE) && !(regs->msr & MSR_IR)) {
-+		pc = (unsigned long)phys_to_virt(pc);
-+		nip = (unsigned long)phys_to_virt(regs->nip);
-+	}
-+
- 	for (i = 0; i < NR_INSN_TO_PRINT; i++) {
- 		int instr;
- 
- 		if (!(i % 8))
- 			pr_cont("\n");
- 
--#if !defined(CONFIG_BOOKE)
--		/* If executing with the IMMU off, adjust pc rather
--		 * than print XXXXXXXX.
--		 */
--		if (!(regs->msr & MSR_IR))
--			pc = (unsigned long)phys_to_virt(pc);
--#endif
--
- 		if (!__kernel_text_address(pc) ||
- 		    probe_kernel_address((const void *)pc, instr)) {
- 			pr_cont("XXXXXXXX ");
+diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
+index f8113b3646f52..f5960b48c8615 100644
+--- a/tools/bpf/bpftool/gen.c
++++ b/tools/bpf/bpftool/gen.c
+@@ -225,6 +225,7 @@ static int codegen(const char *template, ...)
  		} else {
--			if (regs->nip == pc)
-+			if (nip == pc)
- 				pr_cont("<%08x> ", instr);
- 			else
- 				pr_cont("%08x ", instr);
+ 			p_err("unrecognized character at pos %td in template '%s'",
+ 			      src - template - 1, template);
++			free(s);
+ 			return -EINVAL;
+ 		}
+ 	}
+@@ -235,6 +236,7 @@ static int codegen(const char *template, ...)
+ 			if (*src != '\t') {
+ 				p_err("not enough tabs at pos %td in template '%s'",
+ 				      src - template - 1, template);
++				free(s);
+ 				return -EINVAL;
+ 			}
+ 		}
 -- 
 2.25.1
 
