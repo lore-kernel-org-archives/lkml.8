@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D15AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDF820707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBD5206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943200;
-	bh=1VP0a/n1pLxLlwN1Gt75R5tx+nl7nqYb5hTJPvj7j34=;
+	s=default; t=1592943210;
+	bh=/bg1x58Ag6ikIYmW32Pb0XFrnZpo+mvVuewEt2vywmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVBAWVix1Ofn2IrkaK5kGJ+k8K9T9AG8NOx7qYWcTq2IbgUDvabc7F6m03f1Wkj1q
-	 wzdKm2t6D2gSMV6aVF9agYN48/LvfmAjaQKcUxW0M2u/jgJuKEWAruCecHog0+s+Zv
-	 5BPJKEyANHGNvD6qXYr+rJum1QrfNp0Vv7wyyCco=
+	b=IbIBKPrcxI2hRpfc46k8QVg1yfeHjaaIjxTx/BVl8Op+IscSaOR3qN0Z+t+RTcBGc
+	 yjbep0KGxNvVlHq0j3Vg+tKeKR2fWNH+xCk95HR5PqU9EmjonFeY+SKw9y/QYu+Z8P
+	 VgeVt3lUFGz3GzeRieIZua+cUXlOF4iHgwwUAFvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389075AbgFWUNS (ORCPT
+        id S2389089AbgFWUN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:13:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55264 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389067AbgFWUNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:14 -0400
+        id S2388879AbgFWUNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B973206C3;
-        Tue, 23 Jun 2020 20:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA3072078A;
+        Tue, 23 Jun 2020 20:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943194;
-        bh=1VP0a/n1pLxLlwN1Gt75R5tx+nl7nqYb5hTJPvj7j34=;
+        s=default; t=1592943204;
+        bh=/bg1x58Ag6ikIYmW32Pb0XFrnZpo+mvVuewEt2vywmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4U01EqGTeIl1e6Mn2D8WHCq1a5k6QfdgXrii9bSYMNV+9lAWbHHfr3mV1ukJDneJ
-         TK0SHTfNjeAyJhk7rgHR9d1hDIW+pCKn7d0beTO+tWsNIzTTsWC5RvPFoiGipoHcP7
-         NxtU2YBx+iQv8Gy39ydsgc78mkOQDxNkzI7D4ykI=
+        b=nvE9NrobvSE0hP/tyZpmkvYy+E8IQG6k2JrDwUYGI7xOkfEq2bY72xYGQCMKSC+aL
+         44Cvx5UOTxE4Glr3magfNI9mI0wCaME0k2sYiIXqhOFayqVKHkcQzVP7Wwi3VE8OP3
+         cA9v1Wz5ue+bXKINqtTGQVkGOOBZeprpjCOXYl/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 296/477] powerpc/64s/kuap: Add missing isync to KUAP restore paths
-Date:   Tue, 23 Jun 2020 21:54:53 +0200
-Message-Id: <20200623195421.546123540@linuxfoundation.org>
+Subject: [PATCH 5.7 299/477] ASoC: fsl_asrc_dma: Fix dma_chan leak when config DMA channel failed
+Date:   Tue, 23 Jun 2020 21:54:56 +0200
+Message-Id: <20200623195421.683894250@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,60 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit cb2b53cbffe3c388cd676b63f34e54ceb2643ae2 ]
+[ Upstream commit 36124fb19f1ae68a500cd76a76d40c6e81bee346 ]
 
-Writing the AMR register is documented to require context
-synchronizing operations before and after, for it to take effect as
-expected. The KUAP restore at interrupt exit time deliberately avoids
-the isync after the AMR update because it only needs to take effect
-after the context synchronizing RFID that soon follows. Add a comment
-for this.
+fsl_asrc_dma_hw_params() invokes dma_request_channel() or
+fsl_asrc_get_dma_channel(), which returns a reference of the specified
+dma_chan object to "pair->dma_chan[dir]" with increased refcnt.
 
-The missing isync before the update doesn't have an obvious
-justification, and seems it could theoretically allow a rogue user
-access to leak past the AMR update. Add isyncs for these.
+The reference counting issue happens in one exception handling path of
+fsl_asrc_dma_hw_params(). When config DMA channel failed for Back-End,
+the function forgets to decrease the refcnt increased by
+dma_request_channel() or fsl_asrc_get_dma_channel(), causing a refcnt
+leak.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200429065654.1677541-3-npiggin@gmail.com
+Fix this issue by calling dma_release_channel() when config DMA channel
+failed.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Link: https://lore.kernel.org/r/1590415966-52416-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/book3s/64/kup-radix.h | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ sound/soc/fsl/fsl_asrc_dma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/kup-radix.h b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-index 3bcef989a35df..101d60f16d466 100644
---- a/arch/powerpc/include/asm/book3s/64/kup-radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-@@ -16,7 +16,9 @@
- #ifdef CONFIG_PPC_KUAP
- 	BEGIN_MMU_FTR_SECTION_NESTED(67)
- 	ld	\gpr, STACK_REGS_KUAP(r1)
-+	isync
- 	mtspr	SPRN_AMR, \gpr
-+	/* No isync required, see kuap_restore_amr() */
- 	END_MMU_FTR_SECTION_NESTED_IFSET(MMU_FTR_RADIX_KUAP, 67)
- #endif
- .endm
-@@ -62,8 +64,15 @@
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index e7178817d7a75..1ee10eafe3e6a 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -252,6 +252,7 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+ 	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
+ 	if (ret) {
+ 		dev_err(dev, "failed to config DMA channel for Back-End\n");
++		dma_release_channel(pair->dma_chan[dir]);
+ 		return ret;
+ 	}
  
- static inline void kuap_restore_amr(struct pt_regs *regs)
- {
--	if (mmu_has_feature(MMU_FTR_RADIX_KUAP))
-+	if (mmu_has_feature(MMU_FTR_RADIX_KUAP)) {
-+		isync();
- 		mtspr(SPRN_AMR, regs->kuap);
-+		/*
-+		 * No isync required here because we are about to RFI back to
-+		 * previous context before any user accesses would be made,
-+		 * which is a CSI.
-+		 */
-+	}
- }
- 
- static inline void kuap_check_amr(void)
 -- 
 2.25.1
 
