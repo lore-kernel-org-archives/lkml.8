@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3132CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A72C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D10520702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA54720702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945659;
-	bh=fDPxEN2laKuOofyfZvjWh8lcMNwzEztQA23LMtZmpKM=;
+	s=default; t=1592945661;
+	bh=wicaoCAJNuk7XntjN2HU1xs0spmHSn5Q2EMQqELHpJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hzz9dmmKt2ZQzuUbd4LTbdAFW6SI4rSJbwIcWIxvxrkPMfFEfo1lOozgLIOlxBaEL
-	 fPqpIRTnAxMVjLMFmGBwn0tBUI+21aM5pIyqBuxm9Xl4KPqHql+g6BPWENoRxadvCg
-	 51+xPmcmPAcTpFkXbJ6XEp/aShidBrUNmfyKl9lc=
+	b=kW7Sr/r20FFagNkUicQ/bWcOGf6yGR3nyU4yB+B/OzrhOPXKM+Qx+aLSQ7QYY9lI6
+	 ao2qcgcbATZtf3JduVQuGlHSUpHBgBFeTItISKoorBlbmOtB5H88GhXvYBNYq6L/QX
+	 yBITtz8Y881GN/S1VW3tqJzrDWNW5JPt8uLXSGCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392803AbgFWUqD (ORCPT
+        id S2392794AbgFWUqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43690 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:46:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390236AbgFWUp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:45:57 -0400
+        id S2392786AbgFWUpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:45:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2832221556;
-        Tue, 23 Jun 2020 20:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A851620656;
+        Tue, 23 Jun 2020 20:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945157;
-        bh=fDPxEN2laKuOofyfZvjWh8lcMNwzEztQA23LMtZmpKM=;
+        s=default; t=1592945155;
+        bh=wicaoCAJNuk7XntjN2HU1xs0spmHSn5Q2EMQqELHpJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xj1iLTntRWGGKokjTOht9eO5PA2guR7bDssFGno6nfkEohi03FdXJrdcrPRpGqBWl
-         Ltff/9HXLLBOWgmr1PKriKgPhM2Q0nf9ziDqcsiXjJtaT5gjOdKypzx7zpQ/FO5mK5
-         6AHGRK26O9MKxXfGFsxoRleUaLjCN8KUDWjvUIkM=
+        b=Qo87JOGE2/PPOX5IgETZs72tWFlAhpGFJHxMrRhyo/tQzxLcHq5ti2j9JFnlZWZ6k
+         1CHqec7lAYmYYFiWNyNJRMBlvnVIj3J97+f2cqClArfYSd6W6s+pmwfOJ2xU+ICn9B
+         Gy09AmYmTQrzNaAKvAG/jMGtNSLPPx1GrsmJ+ctA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Arlott <simon@octiron.net>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 034/136] scsi: sr: Fix sr_probe() missing deallocate of device minor
-Date:   Tue, 23 Jun 2020 21:58:10 +0200
-Message-Id: <20200623195305.359509797@linuxfoundation.org>
+Subject: [PATCH 4.14 060/136] vfio-pci: Mask cap zero
+Date:   Tue, 23 Jun 2020 21:58:36 +0200
+Message-Id: <20200623195306.701731577@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,45 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Arlott <simon@octiron.net>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
+[ Upstream commit bc138db1b96264b9c1779cf18d5a3b186aa90066 ]
 
-If the cdrom fails to be registered then the device minor should be
-deallocated.
+The PCI Code and ID Assignment Specification changed capability ID 0
+from reserved to a NULL capability in the v1.1 revision.  The NULL
+capability is defined to include only the 16-bit capability header,
+ie. only the ID and next pointer.  Unfortunately vfio-pci creates a
+map of config space, where ID 0 is used to reserve the standard type
+0 header.  Finding an actual capability with this ID therefore results
+in a bogus range marked in that map and conflicts with subsequent
+capabilities.  As this seems to be a dummy capability anyway and we
+already support dropping capabilities, let's hide this one rather than
+delving into the potentially subtle dependencies within our map.
 
-Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
-Signed-off-by: Simon Arlott <simon@octiron.net>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Seen on an NVIDIA Tesla T4.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sr.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/vfio/pci/vfio_pci_config.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index d0389b20574d0..5be3d6b7991b4 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -748,7 +748,7 @@ static int sr_probe(struct device *dev)
- 	cd->cdi.disk = disk;
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index c2d300bc37f64..36bc8f104e42e 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1464,7 +1464,12 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+ 		if (ret)
+ 			return ret;
  
- 	if (register_cdrom(&cd->cdi))
--		goto fail_put;
-+		goto fail_minor;
- 
- 	/*
- 	 * Initialize block layer runtime PM stuffs before the
-@@ -766,6 +766,10 @@ static int sr_probe(struct device *dev)
- 
- 	return 0;
- 
-+fail_minor:
-+	spin_lock(&sr_index_lock);
-+	clear_bit(minor, sr_index_bits);
-+	spin_unlock(&sr_index_lock);
- fail_put:
- 	put_disk(disk);
- fail_free:
+-		if (cap <= PCI_CAP_ID_MAX) {
++		/*
++		 * ID 0 is a NULL capability, conflicting with our fake
++		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
++		 * hidden for now.
++		 */
++		if (cap && cap <= PCI_CAP_ID_MAX) {
+ 			len = pci_cap_length[cap];
+ 			if (len == 0xFF) { /* Variable length */
+ 				len = vfio_cap_len(vdev, cap, pos);
 -- 
 2.25.1
 
