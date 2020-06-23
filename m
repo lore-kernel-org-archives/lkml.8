@@ -2,164 +2,121 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE59C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E001C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF94207F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F324207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcSZen6N"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="12ocHWdA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387438AbgFWTAG (ORCPT
+        id S1733296AbgFWTBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:00:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39920 "EHLO
+        Tue, 23 Jun 2020 15:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733138AbgFWTAB (ORCPT
+        with ESMTP id S1733200AbgFWTBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:00:01 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0920BC061573;
-        Tue, 23 Jun 2020 12:00:00 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s18so25081375ioe.2;
-        Tue, 23 Jun 2020 12:00:00 -0700 (PDT)
+        Tue, 23 Jun 2020 15:01:34 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDF4C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:01:33 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id w9so6573530ilk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:01:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aGUbgEtgaxHsjcsrQ07UW1rqk8aoviYgJaSln1LGDd0=;
-        b=HcSZen6NZMo6UPk9m4aZ+F0OquDp5o5fonlig3Y+Iisv31CZGb5X3JWXUoNMdREqXH
-         5TrcZ8PrlMwTz79F2u/OYjsF3cghwU4+zC7hbTjGBDJfN4cI4FFkBvAvYt4WjieY5xmA
-         qwdQu1DeyFQxZI5lyKJVAYoEK26G7otKLvm8kJ9cEUhWOf5FuFdVl+9Elmvf/+xZco2D
-         frh5UCjiZx3tYi+/mptW0vOFJm62yCZe+kipnlLVEGctF28A/tBi1OJib084pSUbFmcH
-         gxKYmD6SX+u24fQciOegp4Q1zGyuwh6huBJphVPQm6R22u3xye4bnilKCO8u5dz1RhSS
-         ZYWA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=fyjbQaae0NsOAvrxvCCKUMOuMj6tKFODQMatWItt/Yc=;
+        b=12ocHWdATKVhsusr9pw/ZzGbXNfGtGLgEK7lm+zqveEaASn/HtWRW2GyDQmdikfU6f
+         e18yFxs95bPGbophgL9JMyevGdF0L66cCZfwqInWflTALvAptqBlMIlcmAT9rkwzESoM
+         0yiDj2Tk1/5aRWSXk+l/IuKOYh/sSh0syTDEFs85yK7KJV0Z4JyCBZlxLwbEALH7bXwy
+         6SAlUFkaKhF60lU5GYI+5gZyRNhJIC1PcCv4+Q9Sdv2t8ofszYIOD8Ru60lcLobD290X
+         Cru1NqHkveGwCFHx+evF3MGY1lyafhaeqHwASnFOO0L6qXkzBU+xIoypXABzh6GGwL16
+         8OLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aGUbgEtgaxHsjcsrQ07UW1rqk8aoviYgJaSln1LGDd0=;
-        b=jmqQeXeL/xgDLrBtVpDDKpvGPmb1vayVbLR1FYtsvVbY6OT3KqEFbEVd9B44YjVdLP
-         Hw0sr4CGxUStgv/w++nTft1zYEM7L3ZhRvHJiaMhP3e2qGTegxYB5sYk0CMfhToeLJkA
-         R9HVbhbCy6PaoXZiAZ6fYzEZWdhobGrjbugXcmJar6eGT91mcXTIY8M9UUOybH3O2vkm
-         HdPGijzwdHXvjVRUIlLgTgrpWqV2uDRmWMF0NP6gTpXycxPc8t3DDVhux1dxLC1sZCcM
-         TU/DN7HUXje2b+ZIzpOy6xuO91Q+vQ6ZNnFKgZmENo9SHI3BkKPl+SMLUomkSjtTjW+O
-         QlgA==
-X-Gm-Message-State: AOAM533DzobI8q/RwScp9pJJ+guoRD7eCBydvAbhWLeT6TFcT9/bk18Y
-        6N/5BcqHqsHosVigKuVTwSRhsSP0uEBoaEka5vM=
-X-Google-Smtp-Source: ABdhPJwL5VLoYwmYCAC+c5kK726ih+QDfSbJxYCpUWbnFr4YW1zruh8hdkUj3rA+fuaf6zfn9dm7HYnWLxMdid4t0LM=
-X-Received: by 2002:a05:6602:14d0:: with SMTP id b16mr27168111iow.5.1592938799295;
- Tue, 23 Jun 2020 11:59:59 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fyjbQaae0NsOAvrxvCCKUMOuMj6tKFODQMatWItt/Yc=;
+        b=Z7gd3ZhhJeadX0OEznzKAWDX6u1VSW0birHhjx6aHSPM96oaIu9/HXllBw/Ax6apl4
+         dnPzaeujTTkZ8bP1AjrG3JeQlshalnUr6d5olCY6EXQRLpwcb8aF6Bsr6feNtjn3Q2xI
+         jYHS46sLGdyQnksgbc4l/McX/6DazSEyJCk/LDxO0bJRRhXMb5PSV3P6DhOg/RipHrK3
+         +eFRerTcfE3oUMqz5MtaiSgfkpl53+BcbIIqyjkB6WEK2hsaU3yF3nZgD7bd9WTd7Nk6
+         /bso4hSYEWwLGPDYxuUWIp2ZfotYeUVvGwVukVjxzH4fHxj7U/Q1Z9KUEFh+CFp6SLAO
+         TAgA==
+X-Gm-Message-State: AOAM532hlSuyeXFsGp63rdI/+oG9ONlCL29cClzQy6fY3byFTokbEUE+
+        3rKxv/OSoALd4Jefl+H4zfqh0C5muVo=
+X-Google-Smtp-Source: ABdhPJx2qOhZ90hWWKWjZSXmgBG+jZ0cb1KjGKxfREseIBLwZFd60CYItW4YPTyH592gZ4j9aQp9kQ==
+X-Received: by 2002:a92:d789:: with SMTP id d9mr12228762iln.107.1592938892319;
+        Tue, 23 Jun 2020 12:01:32 -0700 (PDT)
+Received: from [192.168.1.56] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t5sm10769796iov.53.2020.06.23.12.01.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 12:01:31 -0700 (PDT)
+Subject: Re: [PATCH 1/4] io_uring: fix hanging iopoll in case of -EAGAIN
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1592863245.git.asml.silence@gmail.com>
+ <0301f35644823a01cbae87e440df7d58ebcf2279.1592863245.git.asml.silence@gmail.com>
+ <95b720a6-926c-a208-e929-1d0203fa8701@kernel.dk>
+ <e05fc48b-684d-2980-3986-47a77af403e0@kernel.dk>
+ <6714cb8f-894c-9ff1-7b3a-4f86d7dbe52a@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d33e9006-b7ef-4925-ff3f-332ab655f2ae@kernel.dk>
+Date:   Tue, 23 Jun 2020 13:01:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200618012600.608744-1-sashal@kernel.org> <20200618012600.608744-90-sashal@kernel.org>
- <CA+G9fYuBGRz9=Q5KyCat0qk_8aiGvNsreY05rcGSjMZpvM1FJg@mail.gmail.com>
- <20200623171613.GB1931@sasha-vm> <CA+G9fYsqV9+QaBgWrJEf8QDT4LobO5vuA0i+AB0h6SyiCGmwhw@mail.gmail.com>
-In-Reply-To: <CA+G9fYsqV9+QaBgWrJEf8QDT4LobO5vuA0i+AB0h6SyiCGmwhw@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 23 Jun 2020 21:59:48 +0300
-Message-ID: <CAOQ4uxh9q_yQm9La2b3xYPqD9GPCHm8Gd+Ldi5HjVVD4NTOttA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.14 090/108] ovl: verify permissions in ovl_path_open()
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6714cb8f-894c-9ff1-7b3a-4f86d7dbe52a@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 9:28 PM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> On Tue, 23 Jun 2020 at 22:46, Sasha Levin <sashal@kernel.org> wrote:
-> >
-> > On Tue, Jun 23, 2020 at 08:55:38PM +0530, Naresh Kamboju wrote:
-> > >On Thu, 18 Jun 2020 at 07:18, Sasha Levin <sashal@kernel.org> wrote:
-> > >>
-> > >> From: Miklos Szeredi <mszeredi@redhat.com>
-> > >>
-> > >> [ Upstream commit 56230d956739b9cb1cbde439d76227d77979a04d ]
-> > >>
-> > >> Check permission before opening a real file.
-> > >>
-> > >> ovl_path_open() is used by readdir and copy-up routines.
-> > >>
-> > >> ovl_permission() theoretically already checked copy up permissions, but it
-> > >> doesn't hurt to re-do these checks during the actual copy-up.
-> > >>
-> > >> For directory reading ovl_permission() only checks access to topmost
-> > >> underlying layer.  Readdir on a merged directory accesses layers below the
-> > >> topmost one as well.  Permission wasn't checked for these layers.
-> > >>
-> > >> Note: modifying ovl_permission() to perform this check would be far more
-> > >> complex and hence more bug prone.  The result is less precise permissions
-> > >> returned in access(2).  If this turns out to be an issue, we can revisit
-> > >> this bug.
-> > >>
-> > >> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> > >> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > >> ---
-> > >>  fs/overlayfs/util.c | 27 ++++++++++++++++++++++++++-
-> > >>  1 file changed, 26 insertions(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-> > >> index afdc2533ce74..76d6610767f6 100644
-> > >> --- a/fs/overlayfs/util.c
-> > >> +++ b/fs/overlayfs/util.c
-> > >> @@ -307,7 +307,32 @@ bool ovl_is_whiteout(struct dentry *dentry)
-> > >>
-> > >>  struct file *ovl_path_open(struct path *path, int flags)
-> > >>  {
-> > >> -       return dentry_open(path, flags | O_NOATIME, current_cred());
-> > >> +       struct inode *inode = d_inode(path->dentry);
-> > >> +       int err, acc_mode;
-> > >> +
-> > >> +       if (flags & ~(O_ACCMODE | O_LARGEFILE))
-> > >> +               BUG();
-> > >> +
-> > >> +       switch (flags & O_ACCMODE) {
-> > >> +       case O_RDONLY:
-> > >> +               acc_mode = MAY_READ;
-> > >> +               break;
-> > >> +       case O_WRONLY:
-> > >> +               acc_mode = MAY_WRITE;
-> > >> +               break;
-> > >> +       default:
-> > >> +               BUG();
-> > >
-> > >This BUG: triggered on stable-rc 5.7, 5.4, 4.19 and 4.14.
-> > >
-> > >steps to reproduce:
-> > >          - cd /opt/ltp
-> > >          - ./runltp -s execveat03
-> >
-> > Yup, that patch has been dropped, thanks for testing!
->
-> After reverting this patch I see these messages while testing LTP execveat03.
-> [ 87.931537] overlayfs: upper fs does not support RENAME_WHITEOUT.
+On 6/23/20 5:57 AM, Pavel Begunkov wrote:
+> On 23/06/2020 05:18, Jens Axboe wrote:
+>> On 6/22/20 8:07 PM, Jens Axboe wrote:
+>>> On 6/22/20 4:16 PM, Pavel Begunkov wrote:
+>>>> io_do_iopoll() won't do anything with a request unless
+>>>> req->iopoll_completed is set. So io_complete_rw_iopoll() has to set
+>>>> it, otherwise io_do_iopoll() will poll a file again and again even
+>>>> though the request of interest was completed long ago.
+>>>
+>>> I need to look at this again, because with this change, I previously
+>>> got various use-after-free. I haven't seen any issues with it, but
+>>> I agree, from a quick look that I'm not quite sure how it's currently
+>>> not causing hangs. Yet I haven't seen any, with targeted -EAGAIN
+>>> testing.
+> 
+> Can io_complete_rw_iopoll() get -EAGAIN after being successfully enqueued
+> (i.e. EIOCBQUEUED)? It's reliably fails for me, because my hacked nullblk
+> _can_ (i.e. probabilistically returns BLK_STS_AGAIN from ->iopoll()).
 
-This warning is new.
+Yes it can. The primary example would be a polled bio that gets split, into
+let's say 4 bio's. First one queues fine, but one of the subsequent ones
+run into request allocation failures and it gets marked as -EAGAIN.
 
-> [ 87.937693] overlayfs: upper fs does not support xattr, falling back
-> to index=off and metacopy=off.>
+>> Ah I think I know what it is - if we run into:
+>>
+>> if (req->result == -EAGAIN)
+>> 	return -EAGAIN
+>>
+>> in io_issue_sqe() and race with it, we'll reissue twice potentially.
+>> So the above isn't quite enough, we'll need something a bit broader.
+> 
+> I see, I'll deal with it.
 
-This one is pretty old.
+Thanks!
 
-They will show up when testing with a filesystem that is suboptimal
-for upper fs.
+-- 
+Jens Axboe
 
-The warning is stating a fact. The suboptimal behavior with those
-filesystems has been there since the beginning.
-
-Thanks,
-Amir.
