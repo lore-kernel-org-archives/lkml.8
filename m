@@ -2,128 +2,124 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACDDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1235C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609CC2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CBF82070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BJSylrnT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQ+k9fFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731911AbgFWBfn (ORCPT
+        id S1731955AbgFWBgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47898 "EHLO
+        Mon, 22 Jun 2020 21:36:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731765AbgFWBfm (ORCPT
+        with ESMTP id S1731765AbgFWBgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:35:42 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CFCC061573;
-        Mon, 22 Jun 2020 18:35:42 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49rTPQ5Cvmz9sPF;
-        Tue, 23 Jun 2020 11:35:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592876139;
-        bh=gv/mXw/BbJZGLfHpBd4783FUndIhkUoL0uMKLMWOnn4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BJSylrnTPaBKP3LK6PNDofs1RnT+g7l1YfMYAGBd3EnjVtth5ia4iuBnm4u04bhun
-         MvcmtyRM2G07GsiYMldltLpYjiZN0/8/rIea7rbpJSqvv0fWe5BWWV4xmYiJf8P5NL
-         YIEaCVNzK8/PQEgMaJnI7nTnUBkEsYIrkRMu5U7IBxd7B9LtcTHUi1Fx7ZMU0muE6t
-         06wKEZh1GSFww8fT0WvqhSZJ+fFbt8DOCL/gFFw2+KtmbS+047vnEmb/EcpRicfXY2
-         5gks9kilXCz4o5WQApI+3+wA8xfSrD2ErsD0DwNMOuYepINzQg4nFdkchqeNG3G+ud
-         J4pu8GDsenzWA==
-Date:   Tue, 23 Jun 2020 11:35:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the drm-intel tree with Linus' tree
-Message-ID: <20200623113536.427ba57a@canb.auug.org.au>
+        Mon, 22 Jun 2020 21:36:20 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB45EC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:36:20 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id a137so17489615oii.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6xUzhKnsOu6gQ8wo5pNQ9aUbiM+zR6hakYUaVJ25KuY=;
+        b=jQ+k9fFJJ6wao/pAeyhtXubATETSraRIKy+LkYNdX0mwxIbSgAtWYLREjqUMYYasbm
+         AUShJj8cYZ3ySM5RLlfT6IebvuG7RlzJSVzbP6ndZJ+/fOqTzcjBiPyX2deW+Ag2k/wQ
+         082nggYK5t46GylyCV6wXBvULOw9xjfgM2Gwj1g0MN2ThzwzL1hw3pZanyS83XS4FNTX
+         cG5CA6zRBlKLbF0vWgBEVpHuDwj2vA9kGVRYlav7R143QbQE569WHfI9+1oJrfJY/nEC
+         yGDVKBb4He6zy2FkYSuwnT6QEvMDPSaIK2JZ8+MZ/HUCmBXh3/XWo9VZbgEqnHBWysbi
+         lRAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6xUzhKnsOu6gQ8wo5pNQ9aUbiM+zR6hakYUaVJ25KuY=;
+        b=h6AkyZgii3ZxSzREfIYXyZ46to/u+1jDpWawpVt3f16Bpgrmp/8lS0zzYwTeDQDZkw
+         FU5a3KC86p4qGZneBbI5o3acaIwzvACfMIgxsamkww4MVAK2vcPvxSR9wD9vRgL9jdOa
+         c0Fyz0FIznC8Rw1WZ1AWRsletNtzoioJtH3Tq1DRu2rPVIz0XeP5OLyYYAPYyR++n/N+
+         dJPDdcr252x9XlgoTzxZ3AbNDFM4KP36swiz+ZiSqd6XYkLJf+gG7HUBXZ23zQWFNUud
+         uAnC++n50JFpygI+Oy/041vVu/xrt7GYu4/DGOAC+46xB7NPXAvadBflxXj/cprLATZH
+         D+yw==
+X-Gm-Message-State: AOAM532/RhAyLjOp75jcmRtC2Ql9MUV31bNBlNH1Vzu/NwUvyTd/lxpm
+        kcRE9fiKQUUIs75jKHht0B4=
+X-Google-Smtp-Source: ABdhPJxaVLeLGTXxnw01SkIUJf4ClKrnziWYeidk+XMgDIH3PlOiFDay7sjX9ZcaDqPuG1tKRu2qBA==
+X-Received: by 2002:aca:4e0d:: with SMTP id c13mr14664131oib.30.1592876180059;
+        Mon, 22 Jun 2020 18:36:20 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id j71sm3624030otj.6.2020.06.22.18.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 18:36:19 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH] drm/omap: Remove aggregate initialization of new_mode in omap_connector_mode_valid
+Date:   Mon, 22 Jun 2020 18:36:10 -0700
+Message-Id: <20200623013610.555610-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SABs9GvvEkfEy8uX9Ob=Io1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SABs9GvvEkfEy8uX9Ob=Io1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+After commit 42acb06b01b1 ("drm: pahole struct drm_display_mode"), clang
+warns:
 
-Hi all,
+drivers/gpu/drm/omapdrm/omap_connector.c:92:39: warning: braces around
+scalar initializer [-Wbraced-scalar-init]
+        struct drm_display_mode new_mode = { { 0 } };
+                                             ^~~~~~
+1 warning generated.
 
-Today's linux-next merge of the drm-intel tree got a conflict in:
+After the struct was shuffled, the second set of braces is no longer
+needed because we are not initializing a structure (struct list_head)
+but a regular integer (int clock).
 
-  drivers/gpu/drm/i915/i915_drv.h
+However, looking into it further, this initialization is pointless
+because new_mode is used as the destination of drm_mode_copy, where the
+members of new_mode will just be completely overwritten with the members
+of mode. Just remove the initialization of new_mode so that there is no
+more warning and we don't need to worry about updating the
+initialization if the structure ever get shuffled again.
 
-between commit:
+Link: https://github.com/ClangBuiltLinux/linux/issues/1059
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/gpu/drm/omapdrm/omap_connector.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  7fb81e9d8073 ("drm/i915: Use drmm_add_final_kfree")
+diff --git a/drivers/gpu/drm/omapdrm/omap_connector.c b/drivers/gpu/drm/omapdrm/omap_connector.c
+index 528764566b17..ce4da1511920 100644
+--- a/drivers/gpu/drm/omapdrm/omap_connector.c
++++ b/drivers/gpu/drm/omapdrm/omap_connector.c
+@@ -89,7 +89,7 @@ static enum drm_mode_status omap_connector_mode_valid(struct drm_connector *conn
+ 				 struct drm_display_mode *mode)
+ {
+ 	struct omap_connector *omap_connector = to_omap_connector(connector);
+-	struct drm_display_mode new_mode = { { 0 } };
++	struct drm_display_mode new_mode;
+ 	enum drm_mode_status status;
+ 
+ 	status = omap_connector_mode_fixup(omap_connector->output, mode,
 
-from Linus' tree and commit:
+base-commit: 27f11fea33608cbd321a97cbecfa2ef97dcc1821
+-- 
+2.27.0
 
-  8a25c4be583d ("drm/i915/params: switch to device specific parameters")
-
-from the drm-intel tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/i915_drv.h
-index adb9bf34cf97,2697960f15a9..000000000000
---- a/drivers/gpu/drm/i915/i915_drv.h
-+++ b/drivers/gpu/drm/i915/i915_drv.h
-@@@ -826,9 -827,9 +827,12 @@@ struct i915_selftest_stash=20
-  struct drm_i915_private {
-  	struct drm_device drm;
- =20
-+ 	/* i915 device parameters */
-+ 	struct i915_params params;
-+=20
- +	/* FIXME: Device release actions should all be moved to drmm_ */
- +	bool do_release;
- +
-  	const struct intel_device_info __info; /* Use INTEL_INFO() to access. */
-  	struct intel_runtime_info __runtime; /* Use RUNTIME_INFO() to access. */
-  	struct intel_driver_caps caps;
-
---Sig_/SABs9GvvEkfEy8uX9Ob=Io1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7xXGgACgkQAVBC80lX
-0Gw8KQf/fWB/Dh7RSZ0e3knufDjbCy+pXUVrrSwOakMzSkHde+laUhmZQK8ckJvL
-v3sb+TPv2YlNKmY7tcSrkVnfKIaVw+scdrl0MUJHAg0qumJ3Y58CCGG7loFZNfQp
-H+4+LIQt/3/LudgUMDs4faUYdqVe7t/JNLlu7afcGACB95rZUHOuFyGp9A46Xsiv
-qowZISoffQTut1+Ry4fbVodArQRx+JlYLXXQEpVDN4z49kLYeX5/jFEeyzgM971J
-bmsai0wv8lSUNR+N2iqe2l81jZVmLINqpNfPtpfLbtbWztOGYJMsL5JqCL3DRizE
-cHcj2zjyOdmjvL4tm9IBoUFfSCbuYQ==
-=7AvC
------END PGP SIGNATURE-----
-
---Sig_/SABs9GvvEkfEy8uX9Ob=Io1--
