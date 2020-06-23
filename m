@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B30A206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B014206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944006;
-	bh=by/WlVmm+/tWieZc2nJ1fD/zD3sn1BSD5NO82MfLjhg=;
+	s=default; t=1592944009;
+	bh=wcg4lAdI+Kttyls8CHHSvvI9I6B33hXNzeASTBTkiME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=heUpl4Ti/CNGvXKheyhvMxn33DHDKF0SCnA+xroFREeC09uYBktkyCKiRf3e8E+Gt
-	 xNYsrW9SvZYeekrzPv2Deqk8CV/TgaPRbGZo4CuEfA/lzZo7EfkKzTBzWNUYssaRXe
-	 2DJquHUSPIX7ZR5v9gS2ho6zrE8hBuQK1I56FMPA=
+	b=NJYCaSYkREtopEM5q0n+fKrrVstJvrOz+iUY+jN+2qNDd/ZzydOWl4oF3Sf4P/8DE
+	 ZkRGSHa5uABCoAPak8SEAy0zEUMbL+Y+bhctCvXy01X7EYPZ0xC64bVftSDd22+yNv
+	 l2rTLRBE5UbasLQyQ8DoPJgWet3vQ4yYdMoErJBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390693AbgFWU0o (ORCPT
+        id S2390157AbgFWU0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45940 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390117AbgFWU0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:26:42 -0400
+        id S2390692AbgFWU0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:26:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0AAC206EB;
-        Tue, 23 Jun 2020 20:26:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F19320E65;
+        Tue, 23 Jun 2020 20:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944002;
-        bh=by/WlVmm+/tWieZc2nJ1fD/zD3sn1BSD5NO82MfLjhg=;
+        s=default; t=1592944004;
+        bh=wcg4lAdI+Kttyls8CHHSvvI9I6B33hXNzeASTBTkiME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q3GWUXT7bDr5CrHWm67oJGnD/gyve9LoIRY3qH96VVe4S+Ms3Z+0W2pgHKpY2BEEG
-         zEhTL4jSp75GqNZAgQwRd+mzxuIimi3Y+7miG1nf01vKop8ZGww0r09PGKiS+SV2nn
-         OFWfG8OvkcL2BbiEO+D3ko5K1knXRKQrHgybGKOc=
+        b=wKJOkyl4qvHrWND24Ktxgp8gI6rk/wXxWVWttIPetMGBCn7GLZg03120tVzJPf23J
+         5Ga6MWrhlFIBPCP4WeAP01CL9H3ioNicECvjMg6LdTZBE3T0sQ+JPbcre4cgQVLjQf
+         PTDrGrQumqALadXXafMzWxq0BX4dbj6KB41AXQx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Raghavendra Rao Ananta <rananta@codeaurora.org>,
+        stable@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 103/314] tty: hvc: Fix data abort due to race in hvc_open
-Date:   Tue, 23 Jun 2020 21:54:58 +0200
-Message-Id: <20200623195343.766152121@linuxfoundation.org>
+Subject: [PATCH 5.4 094/314] virtiofs: schedule blocking async replies in separate worker
+Date:   Tue, 23 Jun 2020 21:54:49 +0200
+Message-Id: <20200623195343.341828154@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,77 +60,201 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raghavendra Rao Ananta <rananta@codeaurora.org>
+From: Vivek Goyal <vgoyal@redhat.com>
 
-[ Upstream commit e2bd1dcbe1aa34ff5570b3427c530e4332ecf0fe ]
+[ Upstream commit bb737bbe48bea9854455cb61ea1dc06e92ce586c ]
 
-Potentially, hvc_open() can be called in parallel when two tasks calls
-open() on /dev/hvcX. In such a scenario, if the hp->ops->notifier_add()
-callback in the function fails, where it sets the tty->driver_data to
-NULL, the parallel hvc_open() can see this NULL and cause a memory abort.
-Hence, serialize hvc_open and check if tty->private_data is NULL before
-proceeding ahead.
+In virtiofs (unlike in regular fuse) processing of async replies is
+serialized.  This can result in a deadlock in rare corner cases when
+there's a circular dependency between the completion of two or more async
+replies.
 
-The issue can be easily reproduced by launching two tasks simultaneously
-that does nothing but open() and close() on /dev/hvcX.
-For example:
-$ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
+Such a deadlock can be reproduced with xfstests:generic/503 if TEST_DIR ==
+SCRATCH_MNT (which is a misconfiguration):
 
-Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
-Link: https://lore.kernel.org/r/20200428032601.22127-1-rananta@codeaurora.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ - Process A is waiting for page lock in worker thread context and blocked
+   (virtio_fs_requests_done_work()).
+ - Process B is holding page lock and waiting for pending writes to
+   finish (fuse_wait_on_page_writeback()).
+ - Write requests are waiting in virtqueue and can't complete because
+   worker thread is blocked on page lock (process A).
+
+Fix this by creating a unique work_struct for each async reply that can
+block (O_DIRECT read).
+
+Fixes: a62a8ef9d97d ("virtio-fs: add virtiofs filesystem")
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ fs/fuse/file.c      |   1 +
+ fs/fuse/fuse_i.h    |   1 +
+ fs/fuse/virtio_fs.c | 106 +++++++++++++++++++++++++++++---------------
+ 3 files changed, 73 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
-index cdcc64ea2554f..f8e43a6faea9b 100644
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
-  */
- static DEFINE_MUTEX(hvc_structs_mutex);
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 3dd37a998ea93..713d55a61890e 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -712,6 +712,7 @@ static ssize_t fuse_async_req_send(struct fuse_conn *fc,
+ 	spin_unlock(&io->lock);
  
-+/* Mutex to serialize hvc_open */
-+static DEFINE_MUTEX(hvc_open_mutex);
- /*
-  * This value is used to assign a tty->index value to a hvc_struct based
-  * upon order of exposure via hvc_probe(), when we can not match it to
-@@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver *driver, struct tty_struct *tty)
-  */
- static int hvc_open(struct tty_struct *tty, struct file * filp)
- {
--	struct hvc_struct *hp = tty->driver_data;
-+	struct hvc_struct *hp;
- 	unsigned long flags;
- 	int rc = 0;
+ 	ia->ap.args.end = fuse_aio_complete_req;
++	ia->ap.args.may_block = io->should_dirty;
+ 	err = fuse_simple_background(fc, &ia->ap.args, GFP_KERNEL);
+ 	if (err)
+ 		fuse_aio_complete_req(fc, &ia->ap.args, err);
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index ca344bf714045..d7cde216fc871 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -249,6 +249,7 @@ struct fuse_args {
+ 	bool out_argvar:1;
+ 	bool page_zeroing:1;
+ 	bool page_replace:1;
++	bool may_block:1;
+ 	struct fuse_in_arg in_args[3];
+ 	struct fuse_arg out_args[2];
+ 	void (*end)(struct fuse_conn *fc, struct fuse_args *args, int error);
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index a5c86048b96ed..7505f81027623 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -55,6 +55,12 @@ struct virtio_fs_forget {
+ 	struct list_head list;
+ };
  
-+	mutex_lock(&hvc_open_mutex);
++struct virtio_fs_req_work {
++	struct fuse_req *req;
++	struct virtio_fs_vq *fsvq;
++	struct work_struct done_work;
++};
 +
-+	hp = tty->driver_data;
-+	if (!hp) {
-+		rc = -EIO;
-+		goto out;
+ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
+ 				 struct fuse_req *req, bool in_flight);
+ 
+@@ -443,19 +449,67 @@ static void copy_args_from_argbuf(struct fuse_args *args, struct fuse_req *req)
+ }
+ 
+ /* Work function for request completion */
++static void virtio_fs_request_complete(struct fuse_req *req,
++				       struct virtio_fs_vq *fsvq)
++{
++	struct fuse_pqueue *fpq = &fsvq->fud->pq;
++	struct fuse_conn *fc = fsvq->fud->fc;
++	struct fuse_args *args;
++	struct fuse_args_pages *ap;
++	unsigned int len, i, thislen;
++	struct page *page;
++
++	/*
++	 * TODO verify that server properly follows FUSE protocol
++	 * (oh.uniq, oh.len)
++	 */
++	args = req->args;
++	copy_args_from_argbuf(args, req);
++
++	if (args->out_pages && args->page_zeroing) {
++		len = args->out_args[args->out_numargs - 1].size;
++		ap = container_of(args, typeof(*ap), args);
++		for (i = 0; i < ap->num_pages; i++) {
++			thislen = ap->descs[i].length;
++			if (len < thislen) {
++				WARN_ON(ap->descs[i].offset);
++				page = ap->pages[i];
++				zero_user_segment(page, len, thislen);
++				len = 0;
++			} else {
++				len -= thislen;
++			}
++		}
 +	}
 +
- 	spin_lock_irqsave(&hp->port.lock, flags);
- 	/* Check and then increment for fast path open. */
- 	if (hp->port.count++ > 0) {
- 		spin_unlock_irqrestore(&hp->port.lock, flags);
- 		hvc_kick();
--		return 0;
-+		goto out;
- 	} /* else count == 0 */
- 	spin_unlock_irqrestore(&hp->port.lock, flags);
++	spin_lock(&fpq->lock);
++	clear_bit(FR_SENT, &req->flags);
++	spin_unlock(&fpq->lock);
++
++	fuse_request_end(fc, req);
++	spin_lock(&fsvq->lock);
++	dec_in_flight_req(fsvq);
++	spin_unlock(&fsvq->lock);
++}
++
++static void virtio_fs_complete_req_work(struct work_struct *work)
++{
++	struct virtio_fs_req_work *w =
++		container_of(work, typeof(*w), done_work);
++
++	virtio_fs_request_complete(w->req, w->fsvq);
++	kfree(w);
++}
++
+ static void virtio_fs_requests_done_work(struct work_struct *work)
+ {
+ 	struct virtio_fs_vq *fsvq = container_of(work, struct virtio_fs_vq,
+ 						 done_work);
+ 	struct fuse_pqueue *fpq = &fsvq->fud->pq;
+-	struct fuse_conn *fc = fsvq->fud->fc;
+ 	struct virtqueue *vq = fsvq->vq;
+ 	struct fuse_req *req;
+-	struct fuse_args_pages *ap;
+ 	struct fuse_req *next;
+-	struct fuse_args *args;
+-	unsigned int len, i, thislen;
+-	struct page *page;
++	unsigned int len;
+ 	LIST_HEAD(reqs);
  
-@@ -383,6 +393,8 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
- 	/* Force wakeup of the polling thread */
- 	hvc_kick();
+ 	/* Collect completed requests off the virtqueue */
+@@ -473,38 +527,20 @@ static void virtio_fs_requests_done_work(struct work_struct *work)
  
-+out:
-+	mutex_unlock(&hvc_open_mutex);
- 	return rc;
+ 	/* End requests */
+ 	list_for_each_entry_safe(req, next, &reqs, list) {
+-		/*
+-		 * TODO verify that server properly follows FUSE protocol
+-		 * (oh.uniq, oh.len)
+-		 */
+-		args = req->args;
+-		copy_args_from_argbuf(args, req);
+-
+-		if (args->out_pages && args->page_zeroing) {
+-			len = args->out_args[args->out_numargs - 1].size;
+-			ap = container_of(args, typeof(*ap), args);
+-			for (i = 0; i < ap->num_pages; i++) {
+-				thislen = ap->descs[i].length;
+-				if (len < thislen) {
+-					WARN_ON(ap->descs[i].offset);
+-					page = ap->pages[i];
+-					zero_user_segment(page, len, thislen);
+-					len = 0;
+-				} else {
+-					len -= thislen;
+-				}
+-			}
+-		}
+-
+-		spin_lock(&fpq->lock);
+-		clear_bit(FR_SENT, &req->flags);
+ 		list_del_init(&req->list);
+-		spin_unlock(&fpq->lock);
+ 
+-		fuse_request_end(fc, req);
+-		spin_lock(&fsvq->lock);
+-		dec_in_flight_req(fsvq);
+-		spin_unlock(&fsvq->lock);
++		/* blocking async request completes in a worker context */
++		if (req->args->may_block) {
++			struct virtio_fs_req_work *w;
++
++			w = kzalloc(sizeof(*w), GFP_NOFS | __GFP_NOFAIL);
++			INIT_WORK(&w->done_work, virtio_fs_complete_req_work);
++			w->fsvq = fsvq;
++			w->req = req;
++			schedule_work(&w->done_work);
++		} else {
++			virtio_fs_request_complete(req, fsvq);
++		}
+ 	}
  }
  
 -- 
