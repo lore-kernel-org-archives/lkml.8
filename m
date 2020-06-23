@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C72C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C07720780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DC62078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943735;
-	bh=G7i77aO64Vn/HuKmSBMIphAENT2GJ98ArI3jrKSoYhs=;
+	s=default; t=1592943739;
+	bh=dyq/5I+pwZb6njWJWE9yQqqdAT2mPaplMPROOlNuX/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vn9CADbyI90ROzqT0vv0baKqaVAwdOLbDSv6bfAozeGUgRhcOM9d5/8zaVWM5ypyT
-	 cxdVFieVcZoeYvWnA+WzBvsqRChF3Q2rAnbqE7t/2U/+o6ODyx73408tDqOwBYZQHN
-	 WgRlGHfoIHO/ptQib1exuJYGG12hq7X2AnyQgscw=
+	b=jNGF5SLUE9yo2NDlqHF4/t06WsevZ0PNnVPSjTeac5clTMjsFOnT+oA4E1oAeoeHI
+	 gVL1rCb/keKMkXo1XbeW8ItnAEheihH06ZE9a/9oPjHjM2wbpqdlpuQ+mfG3Jdi8gq
+	 B69+mvELZ8UGmlqiekJZbfytpHgREVx0/DFSm7ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390148AbgFWUWN (ORCPT
+        id S2390154AbgFWUWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40004 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390126AbgFWUWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:22:09 -0400
+        id S2390140AbgFWUWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:22:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF2A62064B;
-        Tue, 23 Jun 2020 20:22:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B8532070E;
+        Tue, 23 Jun 2020 20:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943729;
-        bh=G7i77aO64Vn/HuKmSBMIphAENT2GJ98ArI3jrKSoYhs=;
+        s=default; t=1592943732;
+        bh=dyq/5I+pwZb6njWJWE9yQqqdAT2mPaplMPROOlNuX/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZawG/Dz5M9huVfhr5aM/HPxB8dlDCLA964UUeRZ+Vt4/0lnNLO5ZLfeX4TOyCVMs
-         URztqDaaji6Vk2FUJ0KBgfDJUZrnKtSueQkYFFiNwJ6eioqBMYXWC/8qtah0VGnapA
-         /OJO87G75NDxSrvw6cYlm6Uf/b5AUUYNFkHEng6Q=
+        b=Ua60HozJKOhKYFlTPM8DUZJ7e3zA8mUheM/2vuNJcVtL1ywSm4r6OGJxt+pOGufKK
+         lhpGn/O9dRbvwdKlN14H4ltxH9sW3d1fKW9ACEwiXbidKQHvS7MMvkIQRyTcc/V2Rs
+         HxLLysC6hOW/oIwWdhw0B0JLAt5DfwHJ5nsmnj4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/314] i2c: pxa: clear all master action bits in i2c_pxa_stop_message()
-Date:   Tue, 23 Jun 2020 21:53:42 +0200
-Message-Id: <20200623195340.103938497@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 003/314] ASoC: tegra: tegra_wm8903: Support nvidia, headset property
+Date:   Tue, 23 Jun 2020 21:53:18 +0200
+Message-Id: <20200623195338.936712533@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -59,42 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit e81c979f4e071d516aa27cf5a0c3939da00dc1ca ]
+[ Upstream commit 3ef9d5073b552d56bd6daf2af1e89b7e8d4df183 ]
 
-If we timeout during a message transfer, the control register may
-contain bits that cause an action to be set. Read-modify-writing the
-register leaving these bits set may trigger the hardware to attempt
-one of these actions unintentionally.
+The microphone-jack state needs to be masked in a case of a 4-pin jack
+when microphone and ground pins are shorted. Presence of nvidia,headset
+tells that WM8903 CODEC driver should mask microphone's status if short
+circuit is detected, i.e headphones are inserted.
 
-Always clear these bits when cleaning up after a message or after
-a timeout.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200330204011.18465-3-digetx@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ sound/soc/tegra/tegra_wm8903.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 2c3c3d6935c0f..c9cbc9894bacf 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -706,11 +706,9 @@ static inline void i2c_pxa_stop_message(struct pxa_i2c *i2c)
- {
- 	u32 icr;
+diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
+index 6211dfda21957..0fa01cacfec9a 100644
+--- a/sound/soc/tegra/tegra_wm8903.c
++++ b/sound/soc/tegra/tegra_wm8903.c
+@@ -159,6 +159,7 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
+ 	struct snd_soc_component *component = codec_dai->component;
+ 	struct snd_soc_card *card = rtd->card;
+ 	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
++	int shrt = 0;
  
--	/*
--	 * Clear the STOP and ACK flags
--	 */
-+	/* Clear the START, STOP, ACK, TB and MA flags */
- 	icr = readl(_ICR(i2c));
--	icr &= ~(ICR_STOP | ICR_ACKNAK);
-+	icr &= ~(ICR_START | ICR_STOP | ICR_ACKNAK | ICR_TB | ICR_MA);
- 	writel(icr, _ICR(i2c));
- }
+ 	if (gpio_is_valid(machine->gpio_hp_det)) {
+ 		tegra_wm8903_hp_jack_gpio.gpio = machine->gpio_hp_det;
+@@ -171,12 +172,15 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
+ 					&tegra_wm8903_hp_jack_gpio);
+ 	}
+ 
++	if (of_property_read_bool(card->dev->of_node, "nvidia,headset"))
++		shrt = SND_JACK_MICROPHONE;
++
+ 	snd_soc_card_jack_new(rtd->card, "Mic Jack", SND_JACK_MICROPHONE,
+ 			      &tegra_wm8903_mic_jack,
+ 			      tegra_wm8903_mic_jack_pins,
+ 			      ARRAY_SIZE(tegra_wm8903_mic_jack_pins));
+ 	wm8903_mic_detect(component, &tegra_wm8903_mic_jack, SND_JACK_MICROPHONE,
+-				0);
++				shrt);
+ 
+ 	snd_soc_dapm_force_enable_pin(&card->dapm, "MICBIAS");
  
 -- 
 2.25.1
