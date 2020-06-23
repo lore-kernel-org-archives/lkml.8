@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F50C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25A70214F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B33206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942965;
-	bh=xez/82YlJ7SYV4iZ5OSzgj55WpYE4zP+9siTcqExYDg=;
+	s=default; t=1592942968;
+	bh=L1KFZWaISOlQ5fqjJgTtxsiJupoKob/Q/99kIsaoPI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncbqVcRMw2hqwpaC3A+XMMuaI6TwF24HFiLSbQTn2ruryn0qJvx4dqeUVJvbRXpRh
-	 k+LAC1YaBmwuHIa73E1n8lyLazj8ab8rhm19UD7ZCKVp+10BpXO+SfsPMdtNl33oAM
-	 e1iv1lNT8f5K4KzjgEDFw1+j1J23cJPDVtFCNKoY=
+	b=rm9wLul7vF+o/MQx2cWbmWPq49c5P38S4mU1f3pLpxXhWgRBhMoD5ZgdB7C9hLBOp
+	 0sAs7czfZcbp0EIpXFoMsVpbYMPRg2PWp+Ro73W+0nBxdJbMhq0cKSPaELRuA/6mmC
+	 4nPWpzhc5M//qOpCRlbojXM/kGYvIcLZpq3tqTPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388388AbgFWUJX (ORCPT
+        id S2387660AbgFWUJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:09:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388208AbgFWUIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:40 -0400
+        id S2388267AbgFWUIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D58C20FC3;
-        Tue, 23 Jun 2020 20:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2459A2078A;
+        Tue, 23 Jun 2020 20:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942920;
-        bh=xez/82YlJ7SYV4iZ5OSzgj55WpYE4zP+9siTcqExYDg=;
+        s=default; t=1592942925;
+        bh=L1KFZWaISOlQ5fqjJgTtxsiJupoKob/Q/99kIsaoPI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PYkOYRnyEiMcJKBd22HGCOeAZ9vx9TNeONjuz60sV989sEOUjkRO85W0xqgsbVE1c
-         CYW7gTK0EatKR4dRPiuYmal8mlLZkvW/awbNBgj3IL0RU3AM+0fzQAjQ+nXNcQRf3M
-         f0WC0cI8M4wr4vz2X+mxULXNUn0Iv3Rmjit2+cMc=
+        b=0ImOcdUfkyFFW5omgglbEz59xjPdwOHTiwUHh/jWo7tsnK3RX2dsmnXl0peONrnpk
+         maWenPTNJ8zfymJ5meQBzD8aZmUUKLhbGrsGcwT2EKMdPnHI8H8Uyp8BRo/sonvVvt
+         PrlvbLqEsnENjq+uPGR+xB5TlpDXuiCO7u2ztpTw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daeho Jeong <daehojeong@google.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 187/477] f2fs: compress: fix zstd data corruption
-Date:   Tue, 23 Jun 2020 21:53:04 +0200
-Message-Id: <20200623195416.427934605@linuxfoundation.org>
+Subject: [PATCH 5.7 189/477] unicore32: do not evaluate compilers library path when cleaning
+Date:   Tue, 23 Jun 2020 21:53:06 +0200
+Message-Id: <20200623195416.525758805@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,44 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 1454c978efbb57b052670d50023f48c759d704ce ]
+[ Upstream commit 081b4b54ff6c58be2ffcf09d42e5df8f031eacd0 ]
 
-During zstd compression, ZSTD_endStream() may return non-zero value
-because distination buffer is full, but there is still compressed data
-remained in intermediate buffer, it means that zstd algorithm can not
-save at last one block space, let's just writeback raw data instead of
-compressed one, this can fix data corruption when decompressing
-incomplete stored compression data.
+Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
+-Wframe-larger-than="), 'make ARCH=unicore32 clean' emits error
+messages as follows:
 
-Fixes: 50cfa66f0de0 ("f2fs: compress: support zstd compress algorithm")
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+  $ make ARCH=unicore32 clean
+  gcc: error: missing argument to '-Wframe-larger-than='
+  gcc: error: missing argument to '-Wframe-larger-than='
+
+We do not care compiler flags when cleaning.
+
+Use the '=' operator for lazy expansion because we do not use
+GNU_LIBC_A or GNU_LIBGCC_A when cleaning.
+
+Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/unicore32/lib/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index c05801758a358..a5b2e72174bb1 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -369,6 +369,13 @@ static int zstd_compress_pages(struct compress_ctx *cc)
- 		return -EIO;
- 	}
+diff --git a/arch/unicore32/lib/Makefile b/arch/unicore32/lib/Makefile
+index 098981a01841b..5af06645b8f01 100644
+--- a/arch/unicore32/lib/Makefile
++++ b/arch/unicore32/lib/Makefile
+@@ -10,12 +10,12 @@ lib-y	+= strncpy_from_user.o strnlen_user.o
+ lib-y	+= clear_user.o copy_page.o
+ lib-y	+= copy_from_user.o copy_to_user.o
  
-+	/*
-+	 * there is compressed data remained in intermediate buffer due to
-+	 * no more space in cbuf.cdata
-+	 */
-+	if (ret)
-+		return -EAGAIN;
-+
- 	cc->clen = outbuf.pos;
- 	return 0;
- }
+-GNU_LIBC_A		:= $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libc.a)
++GNU_LIBC_A		= $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libc.a)
+ GNU_LIBC_A_OBJS		:= memchr.o memcpy.o memmove.o memset.o
+ GNU_LIBC_A_OBJS		+= strchr.o strrchr.o
+ GNU_LIBC_A_OBJS		+= rawmemchr.o			# needed by strrchr.o
+ 
+-GNU_LIBGCC_A		:= $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libgcc.a)
++GNU_LIBGCC_A		= $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libgcc.a)
+ GNU_LIBGCC_A_OBJS	:= _ashldi3.o _ashrdi3.o _lshrdi3.o
+ GNU_LIBGCC_A_OBJS	+= _divsi3.o _modsi3.o _ucmpdi2.o _umodsi3.o _udivsi3.o
+ 
 -- 
 2.25.1
 
