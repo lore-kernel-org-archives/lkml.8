@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B09C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1765EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A98D20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE58F20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945668;
-	bh=aX+lEto5wk3wPUElfWKnrhb60HTxaeneR+sp8EXlhXY=;
+	s=default; t=1592945670;
+	bh=08kRE9xJpAdoX2wEKMab3pugKkKAumuZV7XRl7t29kA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8Eur0xFrhwdu20Vs9JLyfm3EEomj/37HZ7xlebgj8spgB0tScCLJOOAneVq/u6Lw
-	 cpCgT9trDmBHhGZpaTNpRbzFEjmnZMWtc14WXRBoQlDtG+PJJtHfgmhllk8j7ikWe+
-	 JqmaAifoPpCLmnzs6or630j4GQ0UvLD0OdscaNH4=
+	b=oNpkbhXL+Jw3viwMSnIa4dvQU6i02swaQrwCIRR5551fFm9B+hggJ46t1C6kI0e5S
+	 ALWvEKPdtWKg57Dg3/S1gvnheSsMJU/4aDu8oXLj4eHhxRq6VemkoB58yWcvxTM/uB
+	 DvJrsg6lhcXCCOFzeP2COIRSFB8xO2EueQy1HV8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392812AbgFWUy0 (ORCPT
+        id S2392764AbgFWUpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:54:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43394 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391684AbgFWUpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:45:46 -0400
+        id S2392685AbgFWUp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:45:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF6220781;
-        Tue, 23 Jun 2020 20:45:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA13120781;
+        Tue, 23 Jun 2020 20:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945147;
-        bh=aX+lEto5wk3wPUElfWKnrhb60HTxaeneR+sp8EXlhXY=;
+        s=default; t=1592945129;
+        bh=08kRE9xJpAdoX2wEKMab3pugKkKAumuZV7XRl7t29kA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L1Xoyh/+shWMyeZnPSA0R+Q7XmluhXth4RmsWjk3MbU85AvlDpMvU2ZqVDckjBQS9
-         y++o7C1vZvQd9Rd2CY1E5A2T5L4PSAgFmAXxaKkinNMWwwG9RilhuWHhbZlURnY/eR
-         NsTu4vMraQASZpYLjE65Bbg/xYQgePtgpkaHPfuA=
+        b=OkTyD2vx19fjPPwgchpbD3MjxPcfxE8t/OKYi4LAD5oNyfMdqh5Jbd6An7xSPm1d9
+         ZTNuNcAp8tRg7EjFYcc139818z61JVDgUFj3fVbftlUbb3/d5wjSVzpEy6dJC2/con
+         AsctDGmCtSJ5DeYPeoLmMTzTWOXOsbwtbT24/KE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        John Johansen <john.johansen@canonical.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 057/136] tty: n_gsm: Fix waking up upper tty layer when room available
-Date:   Tue, 23 Jun 2020 21:58:33 +0200
-Message-Id: <20200623195306.546625618@linuxfoundation.org>
+Subject: [PATCH 4.14 033/136] apparmor: fix introspection of of task mode for unconfined tasks
+Date:   Tue, 23 Jun 2020 21:58:09 +0200
+Message-Id: <20200623195305.315757092@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,88 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: John Johansen <john.johansen@canonical.com>
 
-[ Upstream commit 01dbb362f0a114fbce19c8abe4cd6f4710e934d5 ]
+[ Upstream commit dd2569fbb053719f7df7ef8fdbb45cf47156a701 ]
 
-Warn the upper layer when n_gms is ready to receive data
-again. Without this the associated virtual tty remains blocked
-indefinitely.
+Fix two issues with introspecting the task mode.
 
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200512115323.1447922-4-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+1. If a task is attached to a unconfined profile that is not the
+   ns->unconfined profile then. Mode the mode is always reported
+   as -
+
+      $ ps -Z
+      LABEL                               PID TTY          TIME CMD
+      unconfined                         1287 pts/0    00:00:01 bash
+      test (-)                           1892 pts/0    00:00:00 ps
+
+   instead of the correct value of (unconfined) as shown below
+
+      $ ps -Z
+      LABEL                               PID TTY          TIME CMD
+      unconfined                         2483 pts/0    00:00:01 bash
+      test (unconfined)                  3591 pts/0    00:00:00 ps
+
+2. if a task is confined by a stack of profiles that are unconfined
+   the output of label mode is again the incorrect value of (-) like
+   above, instead of (unconfined). This is because the visibile
+   profile count increment is skipped by the special casing of
+   unconfined.
+
+Fixes: f1bd904175e8 ("apparmor: add the base fns() for domain labels")
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ security/apparmor/label.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index eabdcfa414aad..e7417eac3f216 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -677,7 +677,7 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
-  *	FIXME: lock against link layer control transmissions
-  */
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index ea63710442ae5..212a0f39ddae8 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -1536,13 +1536,13 @@ static const char *label_modename(struct aa_ns *ns, struct aa_label *label,
  
--static void gsm_data_kick(struct gsm_mux *gsm)
-+static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
- {
- 	struct gsm_msg *msg, *nmsg;
- 	int len;
-@@ -709,6 +709,24 @@ static void gsm_data_kick(struct gsm_mux *gsm)
- 
- 		list_del(&msg->list);
- 		kfree(msg);
-+
-+		if (dlci) {
-+			tty_port_tty_wakeup(&dlci->port);
-+		} else {
-+			int i = 0;
-+
-+			for (i = 0; i < NUM_DLCI; i++) {
-+				struct gsm_dlci *dlci;
-+
-+				dlci = gsm->dlci[i];
-+				if (dlci == NULL) {
-+					i++;
-+					continue;
-+				}
-+
-+				tty_port_tty_wakeup(&dlci->port);
-+			}
-+		}
- 	}
- }
- 
-@@ -760,7 +778,7 @@ static void __gsm_data_queue(struct gsm_dlci *dlci, struct gsm_msg *msg)
- 	/* Add to the actual output queue */
- 	list_add_tail(&msg->list, &gsm->tx_list);
- 	gsm->tx_bytes += msg->len;
--	gsm_data_kick(gsm);
-+	gsm_data_kick(gsm, dlci);
- }
- 
- /**
-@@ -1221,7 +1239,7 @@ static void gsm_control_message(struct gsm_mux *gsm, unsigned int command,
- 		gsm_control_reply(gsm, CMD_FCON, NULL, 0);
- 		/* Kick the link in case it is idling */
- 		spin_lock_irqsave(&gsm->tx_lock, flags);
--		gsm_data_kick(gsm);
-+		gsm_data_kick(gsm, NULL);
- 		spin_unlock_irqrestore(&gsm->tx_lock, flags);
- 		break;
- 	case CMD_FCOFF:
-@@ -2420,7 +2438,7 @@ static void gsmld_write_wakeup(struct tty_struct *tty)
- 	/* Queue poll */
- 	clear_bit(TTY_DO_WRITE_WAKEUP, &tty->flags);
- 	spin_lock_irqsave(&gsm->tx_lock, flags);
--	gsm_data_kick(gsm);
-+	gsm_data_kick(gsm, NULL);
- 	if (gsm->tx_bytes < TX_THRESH_LO) {
- 		gsm_dlci_data_sweep(gsm);
- 	}
+ 	label_for_each(i, label, profile) {
+ 		if (aa_ns_visible(ns, profile->ns, flags & FLAG_VIEW_SUBNS)) {
+-			if (profile->mode == APPARMOR_UNCONFINED)
++			count++;
++			if (profile == profile->ns->unconfined)
+ 				/* special case unconfined so stacks with
+ 				 * unconfined don't report as mixed. ie.
+ 				 * profile_foo//&:ns1:unconfined (mixed)
+ 				 */
+ 				continue;
+-			count++;
+ 			if (mode == -1)
+ 				mode = profile->mode;
+ 			else if (mode != profile->mode)
 -- 
 2.25.1
 
