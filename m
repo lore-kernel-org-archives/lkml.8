@@ -2,188 +2,212 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA900C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5398206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5EE3206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:49:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lt4FeIyK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EBWHr8MM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733226AbgFWRta (ORCPT
+        id S2387412AbgFWRtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733061AbgFWRt3 (ORCPT
+        Tue, 23 Jun 2020 13:49:39 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48732 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733236AbgFWRth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:49:29 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92520C061573;
-        Tue, 23 Jun 2020 10:49:29 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ne5so1788399pjb.5;
-        Tue, 23 Jun 2020 10:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mU2Mqb/3Lzu3sqpNfQHlFitWN9RRppFyAwuH1XGEq/o=;
-        b=Lt4FeIyKfPgR3dcCvP2WoEwHlKCPfb+zd+e7g56VPCjojWT8UAkOuMcNuZ8GfO1e9z
-         PLvj9Ie8IethxX+Hvch4tg+PMXZQfAMVl+k1MaZ49GWwd5HLN0nrU3kShISTA8iUUUiy
-         nmqzb/gb/ZMfRS87ayTJxcGIfmgVe9uTycEehOic1Q/13UayHkxdqmzzFHgScG0gfCDa
-         CzyWaQdhZTEt9hHIqWdlW2gIcur5ZpUV5KVNfWlhXTP58vy+DUtzuEl83SxW6UIjxckQ
-         GSn2Y7Zup2rr0S8eh3iENpeAEn8Xdy3XU1N/hIuEWA1Bb35+YYND8xOGo2Du4lwYp0Rr
-         XvKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mU2Mqb/3Lzu3sqpNfQHlFitWN9RRppFyAwuH1XGEq/o=;
-        b=qo247sr4+aOzUn6EMtWzYp1llc/MKp8y57ya7wrWmNhO2I27MqDGEqgzs2rewwukUQ
-         cFXtBO/JpG16Igultfq6falT7fjU7Ng+bIbUnV3qmNkTeyGq8ML5Z4ISc48ri1uOwfz2
-         UPnj/YYLeIccepC0F4l6PKxQdxzr2MOr6dRLAUpKZsbW5F2OxfBklQkwpw21xepL/chN
-         YHKO4DsTzVPmVzKiHyBSmJxcJ+8EA17vcxBUL3eLHkZvWFGTgPgv/Paviu5M2PVrwaSe
-         lYHxUxqsFLyGd8XJ+9/iZJJreZSVmE4tTtOxw6CwESjEHmLB8akO0EQWwVdnJ2/8YEOC
-         hdmg==
-X-Gm-Message-State: AOAM533kIzmNDzQrT6OrxV0s4RcbJ7i82fAA24ksHc61BubkeiPRj84a
-        cZTi3SxmIknr6AP0URjycNqPIz8lvg==
-X-Google-Smtp-Source: ABdhPJxw/501/ORteOExfhyBnl/+yEVHkdQ3mDOuLpARGMwKOdFv65cx46gPEERRdrAfgGM6ZQ1jSQ==
-X-Received: by 2002:a17:90a:70c6:: with SMTP id a6mr22379165pjm.16.1592934569041;
-        Tue, 23 Jun 2020 10:49:29 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2402:3a80:ceb:846:8098:13b7:478d:bfe2])
-        by smtp.gmail.com with ESMTPSA id y10sm14768935pgi.54.2020.06.23.10.49.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jun 2020 10:49:28 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Tue, 23 Jun 2020 23:19:20 +0530
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] kvm: Fix false positive RCU usage warning
-Message-ID: <20200623174920.GA13794@madhuparna-HP-Notebook>
-References: <20200516082227.22194-1-madhuparnabhowmik10@gmail.com>
- <9fff3c6b-1978-c647-16f7-563a1cdf62ff@redhat.com>
- <20200623150236.GD9005@google.com>
- <20200623153036.GB9914@madhuparna-HP-Notebook>
- <20200623153901.GG9247@paulmck-ThinkPad-P72>
+        Tue, 23 Jun 2020 13:49:37 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NHkU8U052004;
+        Tue, 23 Jun 2020 17:49:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=7K5gka4v1sYMhTHRsTe/SGfJEw5xbL/SewTNXudZia4=;
+ b=EBWHr8MMpqcVTFstzB1GgfsByPNmRS6zhGgAZ+vopjVtFeOP3qyrmCHTw0425zGmADF9
+ 6kCnyXBoojtjuARt/U37L8730nIf0vplQ54P9Y/8eqWsTVT5fTrqLA/yTKlr0uc8YUzn
+ nPaHfXttleplKYOF4lnoqWgQ+KeeeYEJdP3UC6gBZgvat8qPZDhESgfoONtFrL6n+Ket
+ TDNtP0fWgeu7nt5K1MLkw1ZD5zIeVOyUNYPlfmc6Fp6yCx2Pxd//4kvFcHuwOnQytkCj
+ eWgd1ZIGF5KRfFIKp+KAxmmxODrIHWzvpdniDbyL6UmFipPIckvagY8WPyeDbQbLwr2J Zg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 31uk2rsaxy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jun 2020 17:49:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NHnCSF093788;
+        Tue, 23 Jun 2020 17:49:31 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 31uk42ajje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 17:49:30 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05NHnRVS028385;
+        Tue, 23 Jun 2020 17:49:27 GMT
+Received: from [10.159.241.230] (/10.159.241.230)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Jun 2020 17:49:27 +0000
+Subject: Re: [PATCH] scsi: target: tcmu: Call flush_dcache_page() with proper
+ page struct
+To:     kernel test robot <lkp@intel.com>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, chris@zankel.net, jcmvbkbc@gmail.com,
+        linux-xtensa@linux-xtensa.org
+References: <1592592105-11497-1-git-send-email-henry.willard@oracle.com>
+ <202006200926.OYiV11oq%lkp@intel.com>
+From:   Henry Willard <henry.willard@oracle.com>
+Message-ID: <c5b68f83-ea07-d947-0ef0-9712942f621b@oracle.com>
+Date:   Tue, 23 Jun 2020 10:49:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623153901.GG9247@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <202006200926.OYiV11oq%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006120000
+ definitions=main-2006230124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ bulkscore=0 mlxscore=0 spamscore=0 clxscore=1011 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006120000 definitions=main-2006230124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 08:39:01AM -0700, Paul E. McKenney wrote:
-> On Tue, Jun 23, 2020 at 09:00:36PM +0530, Madhuparna Bhowmik wrote:
-> > On Tue, Jun 23, 2020 at 11:02:36AM -0400, Joel Fernandes wrote:
-> > > On Tue, Jun 23, 2020 at 09:39:53AM +0200, Paolo Bonzini wrote:
-> > > > On 16/05/20 10:22, madhuparnabhowmik10@gmail.com wrote:
-> > > > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > > > > 
-> > > > > Fix the following false positive warnings:
-> > > > > 
-> > > > > [ 9403.765413][T61744] =============================
-> > > > > [ 9403.786541][T61744] WARNING: suspicious RCU usage
-> > > > > [ 9403.807865][T61744] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
-> > > > > [ 9403.838945][T61744] -----------------------------
-> > > > > [ 9403.860099][T61744] arch/x86/kvm/mmu/page_track.c:257 RCU-list traversed in non-reader section!!
-> > > > > 
-> > > > > and
-> > > > > 
-> > > > > [ 9405.859252][T61751] =============================
-> > > > > [ 9405.859258][T61751] WARNING: suspicious RCU usage
-> > > > > [ 9405.880867][T61755] -----------------------------
-> > > > > [ 9405.911936][T61751] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
-> > > > > [ 9405.911942][T61751] -----------------------------
-> > > > > [ 9405.911950][T61751] arch/x86/kvm/mmu/page_track.c:232 RCU-list traversed in non-reader section!!
-> > > > > 
-> > > > > Since srcu read lock is held, these are false positive warnings.
-> > > > > Therefore, pass condition srcu_read_lock_held() to
-> > > > > list_for_each_entry_rcu().
-> > > > > 
-> > > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > > > > ---
-> > > > > v2:
-> > > > > -Rebase v5.7-rc5
-> > > > > 
-> > > > >  arch/x86/kvm/mmu/page_track.c | 6 ++++--
-> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
-> > > > > index ddc1ec3bdacd..1ad79c7aa05b 100644
-> > > > > --- a/arch/x86/kvm/mmu/page_track.c
-> > > > > +++ b/arch/x86/kvm/mmu/page_track.c
-> > > > > @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
-> > > > >  		return;
-> > > > >  
-> > > > >  	idx = srcu_read_lock(&head->track_srcu);
-> > > > > -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
-> > > > > +	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
-> > > > > +				srcu_read_lock_held(&head->track_srcu))
-> > > > >  		if (n->track_write)
-> > > > >  			n->track_write(vcpu, gpa, new, bytes, n);
-> > > > >  	srcu_read_unlock(&head->track_srcu, idx);
-> > > > > @@ -254,7 +255,8 @@ void kvm_page_track_flush_slot(struct kvm *kvm, struct kvm_memory_slot *slot)
-> > > > >  		return;
-> > > > >  
-> > > > >  	idx = srcu_read_lock(&head->track_srcu);
-> > > > > -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
-> > > > > +	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
-> > > > > +				srcu_read_lock_held(&head->track_srcu))
-> > > > >  		if (n->track_flush_slot)
-> > > > >  			n->track_flush_slot(kvm, slot, n);
-> > > > >  	srcu_read_unlock(&head->track_srcu, idx);
-> > > > > 
-> > > > 
-> > > > Hi, sorry for the delay in reviewing this patch.  I would like to ask
-> > > > Paul about it.
-> > > > 
-> > > > While you're correctly fixing a false positive, hlist_for_each_entry_rcu
-> > > > would have a false _negative_ if you called it under
-> > > > rcu_read_lock/unlock and the data structure was protected by SRCU.  This
-> > > > is why for example srcu_dereference is used instead of
-> > > > rcu_dereference_check, and why srcu_dereference uses
-> > > > __rcu_dereference_check (with the two underscores) instead of
-> > > > rcu_dereference_check.  Using rcu_dereference_check would add an "||
-> > > > rcu_read_lock_held()" to the condition which is wrong.
-> > > > 
-> > > > I think instead you should add hlist_for_each_srcu and
-> > > > hlist_for_each_entry_srcu macro to include/linux/rculist.h.
-> > > > 
-> > > > There is no need for equivalents of hlist_for_each_entry_continue_rcu
-> > > > and hlist_for_each_entry_from_rcu, because they use rcu_dereference_raw.
-> > > >  However, it's not documented why they do so.
-> > > 
-> > > You are right, this patch is wrong, we need a new SRCU list macro to do the
-> > > right thing which would also get rid of the last list argument.
-> > >
-> > Can we really get rid of the last argument? We would need the
-> > srcu_struct right for checking?
-> 
-> Agreed!  However, the API could be simplified by passing in a pointer to
-> the srcu_struct instead of a lockdep expression.  An optional lockdep
-> expression might still be helpful for calls from the update side,
-> of course.
+On 6/19/20 6:31 PM, kernel test robot wrote:
+> Hi Henry,
 >
-Sure, I will work on this.
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on mkp-scsi/for-next]
+> [also build test WARNING on scsi/for-next v5.8-rc1 next-20200618]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use  as documented in
+> https://git-scm.com/docs/git-format-patch]
+>
+> url:    https://github.com/0day-ci/linux/commits/Henry-Willard/scsi-target-tcmu-Call-flush_dcache_page-with-proper-page-struct/20200620-024740
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git for-next
+> config: xtensa-allyesconfig (attached as .config)
+> compiler: xtensa-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=xtensa
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>
+> In file included from include/linux/kernel.h:11,
+> from include/linux/list.h:9,
+> from include/linux/preempt.h:11,
+> from include/linux/spinlock.h:51,
+> from drivers/target/target_core_user.c:9:
+> include/linux/scatterlist.h: In function 'sg_set_buf':
+> arch/xtensa/include/asm/page.h:193:9: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+> 193 |  ((pfn) >= ARCH_PFN_OFFSET && ((pfn) - ARCH_PFN_OFFSET) < max_mapnr)
+> |         ^~
+> include/linux/compiler.h:78:42: note: in definition of macro 'unlikely'
+> 78 | # define unlikely(x) __builtin_expect(!!(x), 0)
+> |                                          ^
+> include/linux/scatterlist.h:143:2: note: in expansion of macro 'BUG_ON'
+> 143 |  BUG_ON(!virt_addr_valid(buf));
+> |  ^~~~~~
+> arch/xtensa/include/asm/page.h:201:32: note: in expansion of macro 'pfn_valid'
+> 201 | #define virt_addr_valid(kaddr) pfn_valid(__pa(kaddr) >> PAGE_SHIFT)
+> |                                ^~~~~~~~~
+> include/linux/scatterlist.h:143:10: note: in expansion of macro 'virt_addr_valid'
+> 143 |  BUG_ON(!virt_addr_valid(buf));
+> |          ^~~~~~~~~~~~~~~
+> In file included from ./arch/xtensa/include/generated/asm/bug.h:1,
+> from include/linux/bug.h:5,
+> from include/linux/thread_info.h:12,
+> from include/asm-generic/preempt.h:5,
+> from ./arch/xtensa/include/generated/asm/preempt.h:1,
+> from include/linux/preempt.h:78,
+> from include/linux/spinlock.h:51,
+> from drivers/target/target_core_user.c:9:
+> include/linux/dma-mapping.h: In function 'dma_map_resource':
+> arch/xtensa/include/asm/page.h:193:9: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+> 193 |  ((pfn) >= ARCH_PFN_OFFSET && ((pfn) - ARCH_PFN_OFFSET) < max_mapnr)
+> |         ^~
+> include/asm-generic/bug.h:144:27: note: in definition of macro 'WARN_ON_ONCE'
+> 144 |  int __ret_warn_once = !!(condition);            |                           ^~~~~~~~~
+> include/linux/dma-mapping.h:352:19: note: in expansion of macro 'pfn_valid'
+> 352 |  if (WARN_ON_ONCE(pfn_valid(PHYS_PFN(phys_addr))))
+> |                   ^~~~~~~~~
+> In file included from include/linux/mm_types_task.h:16,
+> from include/linux/mm_types.h:5,
+> from include/linux/mmzone.h:21,
+> from include/linux/gfp.h:6,
+> from include/linux/umh.h:4,
+> from include/linux/kmod.h:9,
+> from include/linux/module.h:16,
+> from drivers/target/target_core_user.c:10:
+> drivers/target/target_core_user.c: In function 'tcmu_flush_dcache_range':
+> arch/xtensa/include/asm/page.h:193:9: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+> 193 |  ((pfn) >= ARCH_PFN_OFFSET && ((pfn) - ARCH_PFN_OFFSET) < max_mapnr)
+> |         ^~
+> arch/xtensa/include/asm/page.h:201:32: note: in expansion of macro 'pfn_valid'
+> 201 | #define virt_addr_valid(kaddr) pfn_valid(__pa(kaddr) >> PAGE_SHIFT)
+> |                                ^~~~~~~~~
+> drivers/target/target_core_user.c:605:7: note: in expansion of macro 'virt_addr_valid'
+> 605 |   if (virt_addr_valid(start))
+> |       ^~~~~~~~~~~~~~~
+>>> drivers/target/target_core_user.c:600:15: warning: variable 'pg' set but not used [-Wunused-but-set-variable]
+> 600 |  struct page *pg;
+> |               ^~
+>
+> vim +/pg +600 drivers/target/target_core_user.c
+>
+>     595	
+>     596	static inline void tcmu_flush_dcache_range(void *vaddr, size_t size)
+>     597	{
+>     598		unsigned long offset = offset_in_page(vaddr);
+>     599		void *start = vaddr - offset;
+>   > 600		struct page *pg;
+>     601	
+>     602		size = round_up(size+offset, PAGE_SIZE);
+>     603	
+>     604		while (size) {
+>     605			if (virt_addr_valid(start))
+>     606				pg = virt_to_page(start);
+>     607			else if (is_vmalloc_addr(start))
+>     608				pg = vmalloc_to_page(start);
+>     609			else
+>     610				break;
+>     611	
+>     612			flush_dcache_page(pg);
+>     613			start += PAGE_SIZE;
+>     614			size -= PAGE_SIZE;
+>     615		}
+>     616	}
+>     617	
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+It doesn't really matter in this case because this patch has been 
+superseded by a different fix, but the warning appears to be caused by 
+an incorrect implementation of flush_dcache_page() in 
+arch/xtensa/include/asm/cacheflush.h. Depending on the variant and 
+options, flush_dcache_page can be defined as "do { } while (0)", which 
+covers the default null implementation of flush_dcache_page().
 
 Thanks,
-Madhuparna
-> 							Thanx, Paul
+Henry
