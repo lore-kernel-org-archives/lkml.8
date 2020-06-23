@@ -2,185 +2,124 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC8CC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2392620776
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592919130;
-	bh=tN9aRL4pHrBCYhyfhZTcndNej+VastPj+Z3hzYU/sxE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nfuxYMg63BOxOUgutx0i1t3QNUBAqcjsmeZFywhCS9+sm3T3dUKHdJgC9HExjFBjt
-	 b8+s0vhU8b9hqTnLbgPHI1zIRtNS+ZaZnGHSWr0ptFZyuKSwm8fL79QiOk1WO/xmId
-	 KCLXWxR1DSE1qnLtskNaBeGvK5Daw2nxQVJ6BN8o=
+	by mail.kernel.org (Postfix) with ESMTP id 9670F20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:34:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ozbYJ0dZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732761AbgFWNcJ (ORCPT
+        id S1732685AbgFWNeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732655AbgFWNbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:31:45 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26AD52082F;
-        Tue, 23 Jun 2020 13:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592919104;
-        bh=tN9aRL4pHrBCYhyfhZTcndNej+VastPj+Z3hzYU/sxE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nQU2DpCpmVq12wLuLrk0MrKQUOgMkCPGT+rmign2Kj5uahu12lS4nRQyauln7+ahW
-         gTYcHP0qWrjGLx1/iau3BvvNLNJtIQ6Eu3wWDw/kXAT7GaHzmYwLCO0GBvF0If4f7p
-         a6C/5dim3pncgyVECy1BGmVEZmukvtT4HfR6UV04=
-Received: from mchehab by mail.kernel.org with local (Exim 4.93)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jnj1Z-007VJh-DS; Tue, 23 Jun 2020 15:31:41 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nitin Gupta <nigupta@nvidia.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v3 3/7] docs: move nommu-mmap.txt to admin-guide and rename to ReST
-Date:   Tue, 23 Jun 2020 15:31:36 +0200
-Message-Id: <3a63d1833b513700755c85bf3bda0a6c4ab56986.1592918949.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1592918949.git.mchehab+huawei@kernel.org>
-References: <cover.1592918949.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
+        Tue, 23 Jun 2020 09:34:36 -0400
+Received: from mail-eopbgr680078.outbound.protection.outlook.com ([40.107.68.78]:45121
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732616AbgFWNef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:34:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n9GG1NyI6WMtE2Hl9BUh9UeAJd7ZqEHvyaBQl5qHGQzI1FbTedkHSBM5d+VOiBCAACp2EpldAWxB2asbLoyFbWnzC47aIFfYR2vsocNd2frrt4KI3PlLBO+ENcaB2Z4TS2pjbtfoUai8X/6G/9RIhbyu8nogOwEFjHlO/V4n6lE3EA/8pGlsKPOf5kXcgnWIMfTJVwmdAmPXxSWGOITzYhPWLzdNWB7nq/JMUQu4jLPx66ZkyGWFG4yh2wfTf7UHBJNCFEdO9Bxt/zIiQEix0zTtZS0HLO0T69X1QJB/4XN4QdrJChqHqq2CDzXusgiX5zqCXXgR9oNUvjiFcjHeTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yDxamDF/moxkEaZGQvhjYbbTsUXZMOKillh/xW7cEVI=;
+ b=kak4yktmOG0IP9MF7Ox4Prus82dv3lQNjE1DK44nEwYfV/5QBXwQHxRFF8na0DzGGGUBmVku4dlXFaaNzmzl1oHrhh5aupWb2lSiKa1qskY72EI56aG99DuEU4wn6czebJxV73HDfQrSNcdE0ZEJzM6sHVW4Cdprp6ZIxLyskzEXn6wLvPjf1pNXxahbKS25lYaBbg5WWQhT5wkOVwEcw4Gzwx05/H5M5AEKp7D4wywyUIf+qRykEDVL7k/58E8SDzexY+7CFYQ09RJWebtwk5RDXS1Pp8juNMLF7VOpGiZJEmU1g+39Lfoe3R81NkiQYOP6lfWjKPfLLpIzOwT6eQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yDxamDF/moxkEaZGQvhjYbbTsUXZMOKillh/xW7cEVI=;
+ b=ozbYJ0dZHrpif/XYdhxOMMNdnnqE28oEN/uXZAnDYnQyaQ0MJoRYq02XfT3ZqaG+PrR6H2l93pI8qkTQo3Gze8KWsUF4q+mLJThgIaaAtI1V+mzOoIoWANdxmQLj4+mHO/V8bi4t7NWlZZrERIsbC0d2UVYTvu3SfkrT+Xq8t0Q=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1337.namprd12.prod.outlook.com (2603:10b6:3:6e::11) by
+ DM6PR12MB2809.namprd12.prod.outlook.com (2603:10b6:5:4a::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3109.21; Tue, 23 Jun 2020 13:34:32 +0000
+Received: from DM5PR12MB1337.namprd12.prod.outlook.com
+ ([fe80::f51a:1689:5079:c01b]) by DM5PR12MB1337.namprd12.prod.outlook.com
+ ([fe80::f51a:1689:5079:c01b%11]) with mapi id 15.20.3109.027; Tue, 23 Jun
+ 2020 13:34:32 +0000
+From:   Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     akshu.agrawal@amd.com, rrangel@google.com,
+        nehal-bakulchandra.shah@amd.com,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] mmc: sdhci-acpi: For amd device set driver type as MMC_SET_DRIVER_TYPE_A
+Date:   Tue, 23 Jun 2020 19:03:27 +0530
+Message-Id: <20200623133347.4598-1-akshu.agrawal@amd.com>
+X-Mailer: git-send-email 2.20.1
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR0101CA0039.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:22::25) To DM5PR12MB1337.namprd12.prod.outlook.com
+ (2603:10b6:3:6e::11)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from akshu-HP-EliteBook-745-G4.dlink.router (122.171.36.38) by MA1PR0101CA0039.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Tue, 23 Jun 2020 13:34:24 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [122.171.36.38]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0a04825e-3573-4beb-4003-08d8177a2964
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2809:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB28098424AF0C17698AB02563F8940@DM6PR12MB2809.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1468;
+X-Forefront-PRVS: 04433051BF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: v82p10kRJhs3hjNigKGN3Yb6ZuI3J8RwJDD+RlC8VME+yPdY8Q99JmoiZl5UkTJn/in5L9VMppHniHWJpIC3wvglQnOKyIaczqtUIHF1TIk6f3j9oOvgpVSMbqaMCDeln8WckJc1eEobSm2UpchZR2i1u2po6ZoZhumnudefPgrRyuRamqkoQKfujD9D62MXlsdX7QfeBehU2c2MbIFDjGzDP8itvB/TqahZrRlUTk46mx4/rU1qtaHE/wC8Txvna43QaEdjLQ6/bt1YWkhKTDCODRKXi4gR1a194T0QtH866Br3Hx9yISm3R8bOUw1TNC4ejPK4m4zpgm7aa5+uyKoFSqlay3zYhv2IO/BbWy072y8JbxtpO/Zz3N54Kvwg
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1337.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(44832011)(8936002)(1076003)(8676002)(36756003)(5660300002)(86362001)(54906003)(4744005)(66946007)(66476007)(83380400001)(2906002)(2616005)(956004)(316002)(66556008)(52116002)(6486002)(109986005)(4326008)(6506007)(478600001)(26005)(16526019)(186003)(6512007)(266003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: B/QpJz/RqeYG8t2uuC5TYluuRgqFktMHmLFKLpJWiQBDgQHM6D/iTgYgVSlLc3DiOsq6ZrkIR7fk3MIheOuKeZUuNiUWMVuXEdIDgrpsXkA+nw6j/hvGVlakQiwbyjc1trYtN6W1E3mFkeb3mV3kJlbU/kRNdforaoe91k7RDMijsdtblVLIlc/oHz2LN5PTCXnKiVp4eJa9iRj3lbx8hkXZ3hQaDWyX8YRvVQ7L9sVIFEIxW/o/YnInoc/jxbv15bkcC4AMSVHeKRCnXybrkuiNR0GgsI5Uo9FfueW1JnOWUpduSLh0N6W2ofHNyNsrsvllD1I8o36RL728rrCsVU0n03j5wiPz2c5m2XLg50kf96SKv5O7GgVTrQ+oHDjtW9iBFnyv085xUokPHG8UE3rps4nCEYXVmtUEtiPpPvq4RQ1X0MswrmAViM6Iz481HrnIplOGOUuds1XCTEGyEMlvDTbxUobLFE3h0m4Yafg=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a04825e-3573-4beb-4003-08d8177a2964
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 13:34:32.6657
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HoL1IZMDHbX/ezNZSAhFElA9KnJ/i/AkSNKigbAUn1L/yBpPENYREN9s28m+hL4j5BC1ADwG8o+zpeYrmQKCPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2809
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nommu-mmap.txt file provides description of user visible
-behaviuour. So, move it to the admin-guide.
+HS400/HS200/eMMC HS doesn't have Preset Value register.
+Hence, sdhci_set_ios function overrides the value set by fmw to
+SDHCI_CTRL_DRV_TYPE_B.
+This patch sets drv_type to MMC_SET_DRIVER_TYPE_A
+so that host_control2 register gets updated with the required
+strength value.
 
-As it is already at the ReST, also rename it.
-
-Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-Suggested-by: Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
 ---
- Documentation/admin-guide/mm/index.rst                          | 1 +
- Documentation/{nommu-mmap.txt => admin-guide/mm/nommu-mmap.rst} | 0
- Documentation/admin-guide/sysctl/vm.rst                         | 2 +-
- Documentation/gpu/drm-mm.rst                                    | 2 +-
- init/Kconfig                                                    | 2 +-
- mm/Kconfig                                                      | 2 +-
- mm/nommu.c                                                      | 2 +-
- 7 files changed, 6 insertions(+), 5 deletions(-)
- rename Documentation/{nommu-mmap.txt => admin-guide/mm/nommu-mmap.rst} (100%)
+ drivers/mmc/host/sdhci-acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
-index 11db46448354..774dad6d3d29 100644
---- a/Documentation/admin-guide/mm/index.rst
-+++ b/Documentation/admin-guide/mm/index.rst
-@@ -31,6 +31,7 @@ the Linux memory management.
-    idle_page_tracking
-    ksm
-    memory-hotplug
-+   nommu-map
-    numa_memory_policy
-    numaperf
-    pagemap
-diff --git a/Documentation/nommu-mmap.txt b/Documentation/admin-guide/mm/nommu-mmap.rst
-similarity index 100%
-rename from Documentation/nommu-mmap.txt
-rename to Documentation/admin-guide/mm/nommu-mmap.rst
-diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-index 4b7c496199ca..4b9d2e8e9142 100644
---- a/Documentation/admin-guide/sysctl/vm.rst
-+++ b/Documentation/admin-guide/sysctl/vm.rst
-@@ -598,7 +598,7 @@ trimming of allocations is initiated.
+diff --git a/drivers/mmc/host/sdhci-acpi.c b/drivers/mmc/host/sdhci-acpi.c
+index d8b76cb8698a..48ecbd0b180d 100644
+--- a/drivers/mmc/host/sdhci-acpi.c
++++ b/drivers/mmc/host/sdhci-acpi.c
+@@ -542,6 +542,7 @@ static int amd_select_drive_strength(struct mmc_card *card,
+ 				     unsigned int max_dtr, int host_drv,
+ 				     int card_drv, int *drv_type)
+ {
++	*drv_type = MMC_SET_DRIVER_TYPE_A;
+ 	return MMC_SET_DRIVER_TYPE_A;
+ }
  
- The default value is 1.
- 
--See Documentation/nommu-mmap.txt for more information.
-+See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
- 
- 
- numa_zonelist_order
-diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
-index 8d10e6b38918..9abee1589c1e 100644
---- a/Documentation/gpu/drm-mm.rst
-+++ b/Documentation/gpu/drm-mm.rst
-@@ -311,7 +311,7 @@ To use drm_gem_cma_get_unmapped_area(), drivers must fill the struct
- a pointer on drm_gem_cma_get_unmapped_area().
- 
- More detailed information about get_unmapped_area can be found in
--Documentation/nommu-mmap.txt
-+Documentation/admin-guide/mm/nommu-mmap.rst
- 
- Memory Coherency
- ----------------
-diff --git a/init/Kconfig b/init/Kconfig
-index a46aa8f3174d..2dd5531dae98 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1957,7 +1957,7 @@ config MMAP_ALLOW_UNINITIALIZED
- 	  userspace.  Since that isn't generally a problem on no-MMU systems,
- 	  it is normally safe to say Y here.
- 
--	  See Documentation/nommu-mmap.txt for more information.
-+	  See Documentation/mm/nommu-mmap.rst for more information.
- 
- config SYSTEM_DATA_VERIFICATION
- 	def_bool n
-diff --git a/mm/Kconfig b/mm/Kconfig
-index f2104cc0d35c..d41f3fa7e923 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -387,7 +387,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
- 	  This option specifies the initial value of this option.  The default
- 	  of 1 says that all excess pages should be trimmed.
- 
--	  See Documentation/nommu-mmap.txt for more information.
-+	  See Documentation/mm/nommu-mmap.rst for more information.
- 
- config TRANSPARENT_HUGEPAGE
- 	bool "Transparent Hugepage Support"
-diff --git a/mm/nommu.c b/mm/nommu.c
-index f32a69095d50..314174817b04 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -5,7 +5,7 @@
-  *  Replacement code for mm functions to support CPU's that don't
-  *  have any form of memory management unit (thus no virtual memory).
-  *
-- *  See Documentation/nommu-mmap.txt
-+ *  See Documentation/mm/nommu-mmap.rst
-  *
-  *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
-  *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
 -- 
-2.26.2
+2.20.1
 
