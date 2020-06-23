@@ -2,133 +2,165 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D190C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA81FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B20A20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592934014;
-	bh=vAxBLdt3Y/Y1TxUezjMBmZChx3eOzeg6eGD0u+ydckw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XxzU3tmbaEKJSO7d6YhaEb8T3EO5z8R/XyECdIuyaYVhKH4wCeGhLsP/mPyOZKKNk
-	 32m2oYxe3nbllBGzqt+mt/7g6WTcHU27TGrHzLJofhTDBxJTO3n+rVQuJwecN9nqEW
-	 8Fd1mBq3aAvY3qVhoBvKF2oXncFH2pk4ExYLyeaQ=
+	by mail.kernel.org (Postfix) with ESMTP id D13C1206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733223AbgFWRkM (ORCPT
+        id S2387899AbgFWRkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33258 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:40:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:41562 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387517AbgFWRgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EB03207D0;
-        Tue, 23 Jun 2020 17:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933774;
-        bh=vAxBLdt3Y/Y1TxUezjMBmZChx3eOzeg6eGD0u+ydckw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0jJr/4tweJeW2SRQRCrs7trquBwufJORXxkHurkSszYZJT/ujH+yGs0DLtOvPVs02
-         6xf+pVt0WNY2yuYSKSVlrwdo0lzD63k+2BpN2JjTUXR2wu9RYnpcsAsxS8WU6YLYUV
-         gW71YELkLwz3cxhbvWN8rzzF/v+I/R5ze7SIWME8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/24] pinctrl: qcom: spmi-gpio: fix warning about irq chip reusage
-Date:   Tue, 23 Jun 2020 13:35:47 -0400
-Message-Id: <20200623173559.1355728-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
-References: <20200623173559.1355728-1-sashal@kernel.org>
+        id S2387757AbgFWRkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:40:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3B6A31B;
+        Tue, 23 Jun 2020 10:40:09 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A2763F73C;
+        Tue, 23 Jun 2020 10:40:07 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] sched: Optionally skip uclamp logic in fast path
+To:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+References: <20200619172011.5810-1-qais.yousef@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <6c1a6003-8f51-dadc-53e4-a2fa034dbe36@arm.com>
+Date:   Tue, 23 Jun 2020 19:39:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200619172011.5810-1-qais.yousef@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On 19/06/2020 19:20, Qais Yousef wrote> This series attempts to address the report that uclamp logic could be expensive
+> sometimes and shows a regression in netperf UDP_STREAM under certain
+> conditions.
+> 
+> The first patch is a fix for how struct uclamp_rq is initialized which is
+> required by the 2nd patch which contains the real 'fix'.
+> 
+> Worth noting that the root cause of the overhead is believed to be system
+> specific or related to potential certain code/data layout issues, leading to
+> worse I/D $ performance.
+> 
+> Different systems exhibited different behaviors and the regression did
+> disappear in certain kernel version while attempting to reporoduce.
+> 
+> More info can be found here:
+> 
+> https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
+> 
+> Having the static key seemed the best thing to do to ensure the effect of
+> uclamp is minimized for kernels that compile it in but don't have a userspace
+> that uses it, which will allow distros to distribute uclamp capable kernels by
+> default without having to compromise on performance for some systems that could
+> be affected.
 
-[ Upstream commit 5e50311556c9f409a85740e3cb4c4511e7e27da0 ]
+My test data indicates that the static key w/o any uclamp users (3)
+brings the performance number for the 'perf bench sched pipe'
+workload back (i.e. from w/ !CONFIG_UCLAMP_TASK) (1).
 
-Fix the following warnings caused by reusage of the same irq_chip
-instance for all spmi-gpio gpio_irq_chip instances. Instead embed
-irq_chip into pmic_gpio_state struct.
+platform:
 
-gpio gpiochip2: (c440000.qcom,spmi:pmic@2:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
-gpio gpiochip3: (c440000.qcom,spmi:pmic@4:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
-gpio gpiochip4: (c440000.qcom,spmi:pmic@a:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+    Arm64 Hikey960 (only little CPUs [0-3]), no CPUidle,
+    performance CPUfreq governor
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/20200604002817.667160-1-dmitry.baryshkov@linaro.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+workload:
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f1fece5b9c06a..3769ad08eadfe 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -170,6 +170,7 @@ struct pmic_gpio_state {
- 	struct regmap	*map;
- 	struct pinctrl_dev *ctrl;
- 	struct gpio_chip chip;
-+	struct irq_chip irq;
- };
- 
- static const struct pinconf_generic_params pmic_gpio_bindings[] = {
-@@ -917,16 +918,6 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
- 	return 0;
- }
- 
--static struct irq_chip pmic_gpio_irq_chip = {
--	.name = "spmi-gpio",
--	.irq_ack = irq_chip_ack_parent,
--	.irq_mask = irq_chip_mask_parent,
--	.irq_unmask = irq_chip_unmask_parent,
--	.irq_set_type = irq_chip_set_type_parent,
--	.irq_set_wake = irq_chip_set_wake_parent,
--	.flags = IRQCHIP_MASK_ON_SUSPEND,
--};
--
- static int pmic_gpio_domain_translate(struct irq_domain *domain,
- 				      struct irq_fwspec *fwspec,
- 				      unsigned long *hwirq,
-@@ -1053,8 +1044,16 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 	if (!parent_domain)
- 		return -ENXIO;
- 
-+	state->irq.name = "spmi-gpio",
-+	state->irq.irq_ack = irq_chip_ack_parent,
-+	state->irq.irq_mask = irq_chip_mask_parent,
-+	state->irq.irq_unmask = irq_chip_unmask_parent,
-+	state->irq.irq_set_type = irq_chip_set_type_parent,
-+	state->irq.irq_set_wake = irq_chip_set_wake_parent,
-+	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
-+
- 	girq = &state->chip.irq;
--	girq->chip = &pmic_gpio_irq_chip;
-+	girq->chip = &state->irq;
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_level_irq;
- 	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
--- 
-2.25.1
+    perf stat -n -r 20 -- perf bench sched pipe -T -l 100000
 
+
+(A) *** Performance results ***
+
+(1) tip/sched/core
+    # CONFIG_UCLAMP_TASK is not set
+
+    *1.39285* +- 0.00191 seconds time elapsed  ( +-  0.14% )
+
+(2) tip/sched/core
+    CONFIG_UCLAMP_TASK=y
+
+    *1.42877* +- 0.00181 seconds time elapsed  ( +-  0.13% )
+
+(3) tip/sched/core + opt_skip_uclamp_v2
+    CONFIG_UCLAMP_TASK=y
+
+    *1.38833* +- 0.00291 seconds time elapsed  ( +-  0.21% )
+
+(4) tip/sched/core + opt_skip_uclamp_v2
+    CONFIG_UCLAMP_TASK=y
+    echo 512 > /proc/sys/kernel/sched_util_clamp_min (enable uclamp)
+
+    *1.42062* +- 0.00238 seconds time elapsed  ( +-  0.17% )
+
+
+(B) *** Profiling on CPU0 and CPU1  ***
+
+    (further hp'ing out CPU2 and CPU3 to get consistent hit numbers)
+
+(1)
+
+CPU0:  Function             Hit    Time            Avg             s^2
+       --------             ---    ----            ---             ---
+       deactivate_task  1997346    2207642 us      *1.105* us      0.033 us
+       activate_task    1997391    1840057 us      *0.921* us      0.054 us
+
+CPU1:  Function             Hit    Time            Avg             s^2
+       --------             ---    ----            ---             ---
+       deactivate_task  1997455    2225960 us      1.114 us        0.034 us
+       activate_task    1997410    1842603 us      0.922 us        0.052 us
+
+(2)
+
+CPU0:  Function             Hit    Time            Avg             s^2
+       --------             ---    ----            ---             ---
+       deactivate_task  1998538    2419719 us      *1.210* us      0.061 us
+       activate_task    1997119    1960401 us      *0.981* us      0.034 us
+
+CPU1:  Function             Hit    Time            Avg             s^2
+       --------             ---    ----            ---             ---
+       deactivate_task  1996597    2400760 us      1.202 us        0.059 us
+       activate_task    1998016    1985013 us      0.993 us        0.028 us
+
+(3)
+
+CPU0:  Function             Hit    Time            Avg             s^2
+       --------             ---    ----            ---             ---
+       deactivate_task  1997525    2155416 us      *1.079* us      0.020 us
+       activate_task    1997874    1899002 us      *0.950* us      0.044 us
+
+CPU1:  Function             Hit    Time            Avg             s^2
+       --------             ---    ----            ---             ---
+       deactivate_task  1997935    2118648 us      1.060 us        0.017 us
+       activate_task    1997586    1895162 us      0.948 us        0.044 us
+
+(4)
+
+CPU0:  Function             Hit    Time            Avg             s^2
+       --------             ---    ----            ---             ---
+       deactivate_task  1998246    2428121 us      *1.215* us      0.062 us
+       activate_task    1998252    2132141 us      *1.067* us      0.020 us
+
+CPU1:  Function             Hit    Time            Avg             s^2
+       --------             ---    ----            ---             ---
+       deactivate_task  1996154    2414194 us      1.209 us        0.060 us
+       activate_task    1996148    2140667 us      1.072 us        0.021 us
