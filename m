@@ -2,140 +2,153 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B12C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47AD9207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C878B20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LD2YZjbc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732296AbgFWKor (ORCPT
+        id S1732293AbgFWKql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:44:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41168 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732135AbgFWKoq (ORCPT
+        Tue, 23 Jun 2020 06:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728472AbgFWKqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:44:46 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NAXAXJ098070;
-        Tue, 23 Jun 2020 06:44:38 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ufmyruwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 06:44:38 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NAfv4U011201;
-        Tue, 23 Jun 2020 10:44:36 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03fra.de.ibm.com with ESMTP id 31sa381yp8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 10:44:36 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NAiX6H60293182
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 10:44:33 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40494AE05F;
-        Tue, 23 Jun 2020 10:44:33 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C7F7AE055;
-        Tue, 23 Jun 2020 10:44:33 +0000 (GMT)
-Received: from t480-pf1aa2c2 (unknown [9.145.42.240])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 23 Jun 2020 10:44:33 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1jngPn-002vYU-Vw; Tue, 23 Jun 2020 12:44:32 +0200
-Date:   Tue, 23 Jun 2020 12:44:31 +0200
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     Mike Christie <michael.christie@oracle.com>
-Cc:     Bob Liu <bob.liu@oracle.com>, linux-kernel@vger.kernel.org,
-        tj@kernel.org, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
-        lduncan@suse.com, maier@linux.ibm.com
-Subject: Re: [PATCH 2/2] scsi: register sysfs for scsi/iscsi workqueues
-Message-ID: <20200623104431.GE9340@t480-pf1aa2c2>
-References: <20200611100717.27506-1-bob.liu@oracle.com>
- <20200611100717.27506-2-bob.liu@oracle.com>
- <cf9ae940-87b2-c8a1-3dba-4d2b57ebe9dd@oracle.com>
+        Tue, 23 Jun 2020 06:46:40 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDED1C061573;
+        Tue, 23 Jun 2020 03:46:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=B1WPwb6BmprV17sdTfJbm9Oox9tpXpQcWcJkTgOLOpY=; b=LD2YZjbcst8zK+3aVeIV1Er8++
+        Vty8JFIkh7rNw/YIQSSMUaA3vqu9Wr2kKwsX0WpCrzmvWsxNuyl9VlDW6HaWexE7PyqGNXvWx88Rp
+        8GuhkgsNwkZZWiEWwSTmoBjvqUb1cun5wNfV33EOhtrb375BURVbR+wWqSvL3ygGNrN1uKtPmcRHD
+        1PCEfMpdsDf5fFIBFs6da+HM6RP7uF8/Y8ACqYx/3MbIzKCL2klzrzuicid8RLoeDRAqiYTLVjpa2
+        D3REhWmBtBa7hwKYjQ67LSjPGsAS55Hfx6D40LWfWkMbJlC9szoHTpaHK0QmQMA1hwNMhCfZ5KhN5
+        oIlS+m+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jngRH-0005eM-1o; Tue, 23 Jun 2020 10:46:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F056303DA0;
+        Tue, 23 Jun 2020 12:45:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 637212B7BB5F2; Tue, 23 Jun 2020 12:45:59 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 12:45:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        Mike Stunes <mstunes@vmware.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
+        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        X86 ML <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
+ from userspace)
+Message-ID: <20200623104559.GA4817@hirez.programming.kicks-ass.net>
+References: <20200425191032.GK21900@8bytes.org>
+ <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
+ <20200425202316.GL21900@8bytes.org>
+ <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
+ <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
+ <20200623094519.GF31822@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cf9ae940-87b2-c8a1-3dba-4d2b57ebe9dd@oracle.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_05:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 priorityscore=1501 phishscore=0 spamscore=0 clxscore=1011
- cotscore=-2147483648 mlxlogscore=999 adultscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006230079
+In-Reply-To: <20200623094519.GF31822@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 10:40:09AM -0500, Mike Christie wrote:
-> On 6/11/20 5:07 AM, Bob Liu wrote:
-> > This patch enable setting cpu affinity through "cpumask" for below
-> > scsi/iscsi workqueues, so as to get better isolation.
-> > - scsi_wq_*
-> > - scsi_tmf_*
-> > - iscsi_q_xx
-> > - iscsi_eh
-> > 
-> > Signed-off-by: Bob Liu <bob.liu@oracle.com>
-> > ---
-> >   drivers/scsi/hosts.c                | 4 ++--
-> >   drivers/scsi/libiscsi.c             | 2 +-
-> >   drivers/scsi/scsi_transport_iscsi.c | 2 +-
-> >   3 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
-> > index 1d669e4..4b9f80d 100644
-> > --- a/drivers/scsi/hosts.c
-> > +++ b/drivers/scsi/hosts.c
-> > @@ -272,7 +272,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
-> >   	if (shost->transportt->create_work_queue) {
-> >   		snprintf(shost->work_q_name, sizeof(shost->work_q_name),
-> >   			 "scsi_wq_%d", shost->host_no);
-> > -		shost->work_q = create_singlethread_workqueue(
-> > +		shost->work_q = create_singlethread_workqueue_noorder(
-> >   					shost->work_q_name);
-> >   		if (!shost->work_q) {
-> >   			error = -EINVAL;
+On Tue, Jun 23, 2020 at 11:45:19AM +0200, Joerg Roedel wrote:
+> Hi Andy,
 > 
-> This patch seems ok for the iscsi, fc, tmf, and non transport class scan
-> uses. We are either heavy handed with flushes or did not need ordering.
+> On Mon, Apr 27, 2020 at 10:37:41AM -0700, Andy Lutomirski wrote:
+> > 1. Use IST for #VC and deal with all the mess that entails.
 > 
-> I don't know about the zfcp use though, so I cc'd  the developers listed as
-> maintainers. It looks like for zfcp we can do:
-
-Thx for the notice.
-
+> With the removal of IST shifting I wonder what you would suggest on how
+> to best implement an NMI-safe IST handler with nesting support.
 > 
-> zfcp_scsi_rport_register->fc_remote_port_add->fc_remote_port_create->scsi_queue_work
-> to scan the scsi target on the rport.
+> My current plan is to implement an IST handler which switches itself off
+> the IST stack as soon as possible, freeing it for re-use.
 > 
-> and then zfcp_scsi_rport_register can call zfcp_unit_queue_scsi_scan->
-> scsi_queue_work which will scan for a specific lun.
+> The flow would be roughly like this upon entering the handler;
 > 
-> It looks ok if those are not ordered, but I would get their review to make
-> sure.
+> 	build_pt_regs();
+> 
+> 	RSP = pt_regs->sp;
+> 
+> 	if (RSP in VC_IST_stack)
+> 		error("unallowed nesting")
+> 
+> 	if (RSP in current_kernel_stack)
+> 		RSP = round_down_to_8(RSP)
+> 	else
+> 		RSP = current_top_of_stack() // non-ist kernel stack
+> 
+> 	copy_pt_regs(pt_regs, RSP);
+> 	switch_stack_to(RSP);
+> 
+> To make this NMI safe, the NMI handler needs some logic too. Upon
+> entering NMI, it needs to check the return RSP, and if it is in the #VC
+> IST stack, it must do the above flow by itself and update the return RSP
+> and RIP. It needs to take into account the case when PT_REGS is not
+> fully populated on the return side.
+> 
+> Alternativly the NMI handler could safe/restore the contents of the #VC
+> IST stack or just switch to a special #VC-in-NMI IST stack.
+> 
+> All in all it could get complicated, and imho shift_ist would have been
+> simpler, but who am I anyway...
+> 
+> Or maybe you have a better idea how to implement this, so I'd like to
+> hear your opinion first before I spend too many days implementing
+> something.
 
-I am not aware of any temporal requirements of those LUN-scans, so I
-think making them not explicitly ordered shouldn't hurt us.
+OK, excuse my ignorance, but I'm not seeing how that IST shifting
+nonsense would've helped in the first place.
 
-The target scan itself is protected again by `shost->scan_mutex`.. so
-all fine I think.
+If I understand correctly the problem is:
 
--- 
-Best Regards, Benjamin Block  / Linux on IBM Z Kernel Development / IBM Systems
-IBM Deutschland Research & Development GmbH    /    https://www.ibm.com/privacy
-Vorsitz. AufsR.: Gregor Pillen         /        Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
+	<#VC>
+	  shift IST
+	  <NMI>
+	    ... does stuff
+	    <#VC> # again, safe because the shift
+
+But what happens if you get the NMI before your IST adjustment?
+
+	<#VC>
+	  <NMI>
+	    ... does stuff
+	    <#VC> # again, happily wrecks your earlier #VC
+	  shift IST # whoopsy, too late
+
+Either way around we get to fix this up in NMI (and any other IST
+exception that can happen while in #VC, hello #MC). And more complexity
+there is the very last thing we need :-(
+
+There's no way you can fix up the IDT without getting an NMI first.
+
+This entire exception model is fundamentally buggered :-/
