@@ -2,52 +2,55 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A50C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 136C321D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D10E21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945055;
-	bh=k6p8OcEuzK4UAhSHv16GJqWypDgF3hbJsp8dDXxMVwI=;
+	s=default; t=1592945059;
+	bh=nfBpttPTgdjEcAGwZzBdAE0VsG6wpa3cWqoOnuqOev0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SsqZelCLz0+JDL8qRJkVUpI8hMld0PZUpnJEvKmm99+mydm1DwyjJmPih62MqXXMn
-	 SPLPiDsyLta2K8EazPuQ+WRZTPYgTJAN9PjSjGBRRK8kCrNSi6xF6mvcZMXJaCERMF
-	 j7L/rv8DC31ykQn8WBWocZJ23y5ghdj4KAPjV34M=
+	b=v33cf5TqI6WeeUeWPfwaKSCzQapCYPY+y8Teyzznb8WGRd6hHNlkUpIUONKitSHOp
+	 7z52t8z9Awa/tUnaUm+57bv2wn55VVqDXhlvmHSi0xEny7ig4x4whhXGezqiGRPZph
+	 QudZICNXJx7Cnd34yUkO2T9Nw3sBxIqw6fj9taeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403980AbgFWUoN (ORCPT
+        id S2403986AbgFWUoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41204 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403968AbgFWUoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:44:09 -0400
+        id S2403978AbgFWUoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B992218AC;
-        Tue, 23 Jun 2020 20:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B22F321BE5;
+        Tue, 23 Jun 2020 20:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945049;
-        bh=k6p8OcEuzK4UAhSHv16GJqWypDgF3hbJsp8dDXxMVwI=;
+        s=default; t=1592945052;
+        bh=nfBpttPTgdjEcAGwZzBdAE0VsG6wpa3cWqoOnuqOev0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ll5GxhIsNx8hrHZoVYBZsZ8Hd5RAdtA8mM4rQKG7y6Tp9zgp2qY99KL+Z8k2f9KPR
-         cDNLyxaceeXLSEXuu/gApzDrJI/DDUQK4wV13ePjuD65Q/YHHJOheZ7xnQao+0TNRy
-         uOu5H9wh15dcBDU4tSfHyTQzCZh8yM73OUAmvDOU=
+        b=yk94XXjJB7cXcPV0Qruw3PHzj4R6y3u5yrAqPtt74QxPopGbB9adgQ0StaXedCZe3
+         nxwjCn74HGy1apvEWL6niLHEdStnYmbO9D065LUEcX5I6p66CVWlqBtWdHzdPzxExe
+         LwUcoHoREoGJhGX06J9053OxvKioLVHt7JN0WNXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 4.14 002/136] drm/i915: Whitelist context-local timestamp in the gen9 cmdparser
-Date:   Tue, 23 Jun 2020 21:57:38 +0200
-Message-Id: <20200623195303.734710487@linuxfoundation.org>
+        stable@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 020/136] PCI: aardvark: Dont blindly enable ASPM L0s and dont write to read-only register
+Date:   Tue, 23 Jun 2020 21:57:56 +0200
+Message-Id: <20200623195304.629278646@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,46 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Pali Rohár <pali@kernel.org>
 
-commit 273500ae71711c040d258a7b3f4b6f44c368fff2 upstream.
+[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
 
-Allow batch buffers to read their own _local_ cumulative HW runtime of
-their logical context.
+Trying to change Link Status register does not have any effect as this
+is a read-only register. Trying to overwrite bits for Negotiated Link
+Width does not make sense.
 
-Fixes: 0f2f39758341 ("drm/i915: Add gen9 BCS cmdparsing")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: <stable@vger.kernel.org> # v5.4+
-Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200601161942.30854-1-chris@chris-wilson.co.uk
-(cherry picked from commit f9496520df11de00fbafc3cbd693b9570d600ab3)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In future proper change of link width can be done via Lane Count Select
+bits in PCIe Control 0 register.
 
+Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+Control register is wrong. There should be at least some detection if
+endpoint supports L0s as isn't mandatory.
+
+Moreover ASPM Control bits in Link Control register are controlled by
+pcie/aspm.c code which sets it according to system ASPM settings,
+immediately after aardvark driver probes. So setting these bits by
+aardvark driver has no long running effect.
+
+Remove code which touches ASPM L0s bits from this driver and let
+kernel's ASPM implementation to set ASPM state properly.
+
+Some users are reporting issues that this code is problematic for some
+Intel wifi cards and removing it fixes them, see e.g.:
+https://bugzilla.kernel.org/show_bug.cgi?id=196339
+
+If problems with Intel wifi cards occur even after this commit, then
+pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
+for affected problematic cards.
+
+Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_cmd_parser.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/host/pci-aardvark.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_cmd_parser.c
-+++ b/drivers/gpu/drm/i915/i915_cmd_parser.c
-@@ -570,6 +570,9 @@ struct drm_i915_reg_descriptor {
- #define REG32(_reg, ...) \
- 	{ .addr = (_reg), __VA_ARGS__ }
+diff --git a/drivers/pci/host/pci-aardvark.c b/drivers/pci/host/pci-aardvark.c
+index 5f3048e75becb..c1db09fbbe041 100644
+--- a/drivers/pci/host/pci-aardvark.c
++++ b/drivers/pci/host/pci-aardvark.c
+@@ -365,10 +365,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
  
-+#define REG32_IDX(_reg, idx) \
-+	{ .addr = _reg(idx) }
-+
- /*
-  * Convenience macro for adding 64-bit registers.
-  *
-@@ -667,6 +670,7 @@ static const struct drm_i915_reg_descrip
- 	REG64_IDX(RING_TIMESTAMP, BSD_RING_BASE),
- 	REG32(BCS_SWCTRL),
- 	REG64_IDX(RING_TIMESTAMP, BLT_RING_BASE),
-+	REG32_IDX(RING_CTX_TIMESTAMP, BLT_RING_BASE),
- 	REG64_IDX(BCS_GPR, 0),
- 	REG64_IDX(BCS_GPR, 1),
- 	REG64_IDX(BCS_GPR, 2),
+ 	advk_pcie_wait_for_link(pcie);
+ 
+-	reg = PCIE_CORE_LINK_L0S_ENTRY |
+-		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
+-	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+-
+ 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+ 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+ 		PCIE_CORE_CMD_IO_ACCESS_EN |
+-- 
+2.25.1
+
 
 
