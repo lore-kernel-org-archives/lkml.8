@@ -2,120 +2,156 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC30C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71AE20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B57C20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:24:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGr+xeOy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZqRpRRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387500AbgFWTYm (ORCPT
+        id S2387514AbgFWTYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:24:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387440AbgFWTYk (ORCPT
+        Tue, 23 Jun 2020 15:24:50 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20790 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387440AbgFWTYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:24:40 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED92C061573;
-        Tue, 23 Jun 2020 12:24:39 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id c4so11572311iot.4;
-        Tue, 23 Jun 2020 12:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mf9Js1eSrEzYPANfjsLFha86P4LGEC3rg5oEXl/xm9w=;
-        b=HGr+xeOyIK71FoE7YCb/kzmOKUUhCDLYJthrKC3aiUZDFT5wx/bap624uYK89XKRRm
-         9GlMD8VT5jJNR6Xdgma1ORw39L3H+a5OQAqtEH8rLBgkJAGceey6c9WFhE7XARBYQF5T
-         ChUObGe0+rFZ3bRIXTZ8ydv8w9jC/1q2+MrW0RewOthJ1wfubrYQRDrriGh0dZA9rHlp
-         zH3MLtad1JCG2ETcnCyk6w1dUDv2WuU5ay0VHEg0aOTYceyUVqDLOM3NAtx8WgBbfhy7
-         wxA1o+E6HHRArd82AlkOCyCknPnU7iBgRIQci1awjbxzTdcDWXWTbXuOoXMJwNdLB4QL
-         qk8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mf9Js1eSrEzYPANfjsLFha86P4LGEC3rg5oEXl/xm9w=;
-        b=o1BzoWnS6ZRRgBUrpsWfLPrqMxkrw7dlu3bwAsW3Xn8r9DFbfe5D01rZwn2Jdjemqx
-         9iv0FBCkpKnJY3bcAJfKI+joL4qYGXADE5fB+PoKbFMNFWBNkPDR0H2vXgUFQabx0Vmp
-         f9mky717mg440volZPLF5ZaPqIUja3vOsAObBOi12mWxMCJCG/rlxkZoypEA/ojdAaYf
-         bjdG/TagTNmEXRe3cfKXZzbi85QE4Tu7XTnSLjIy+g0E4zNxQQqi8U3nrFtYVqJOXVa/
-         RNEW2sjrEgiggf/sFXZMJQPdJ6fNZ7wsV4SpzbQkAbQSFWBxEAMBMHZbaM353mT1zRms
-         l4/w==
-X-Gm-Message-State: AOAM530OmAX+xOmbO0yVPN3Dv6qIIHEGMkstIgsX7+HrfyhKHT8Z//Sh
-        lAHDVVlQ91vmD2Cuk6ClHLbz3P4KB84=
-X-Google-Smtp-Source: ABdhPJyjDqi9F8LfgEW43E9XiO7T/3m70HaxQ8gyJDkhV98i5ZmfexmCwBAFjBTnl0ZqTfezCAhebA==
-X-Received: by 2002:a6b:1ce:: with SMTP id 197mr14735915iob.76.1592940278940;
-        Tue, 23 Jun 2020 12:24:38 -0700 (PDT)
-Received: from james-x399.localdomain (71-218-100-23.hlrn.qwest.net. [71.218.100.23])
-        by smtp.gmail.com with ESMTPSA id b21sm3901503ioc.36.2020.06.23.12.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 12:24:38 -0700 (PDT)
-From:   James Hilliard <james.hilliard1@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH] HID: quirks: Ignore Simply Automated UPB PIM
-Date:   Tue, 23 Jun 2020 13:24:15 -0600
-Message-Id: <20200623192415.2024242-1-james.hilliard1@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 23 Jun 2020 15:24:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592940286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=6Plzu49CQyNDpryqfdib60Q5OShlIBOAwfSCIIwIMw8=;
+        b=VZqRpRRGZqTXkwfILivjQNmxNJirvK3oePF3AN2yLWqC6r3p1z3YCzztiQwoGFZCnqmH/m
+        DChEGS7pjl4Qa1iP5kcrthCx4MdwdjEYAEaK60I3Qd9aaWinrN3IgBR3qk6xTLdBloyN28
+        KtmNtczWVoOF8D2gWEWHd5VOV0ZBA6o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-56b5VRPTPtCA2vWSHQFSbw-1; Tue, 23 Jun 2020 15:24:24 -0400
+X-MC-Unique: 56b5VRPTPtCA2vWSHQFSbw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26B8A8005AD;
+        Tue, 23 Jun 2020 19:24:22 +0000 (UTC)
+Received: from virtlab423.virt.lab.eng.bos.redhat.com (virtlab423.virt.lab.eng.bos.redhat.com [10.19.152.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 22FDC610F3;
+        Tue, 23 Jun 2020 19:24:17 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com
+Subject: [PATCH v3 0/3] Preventing job distribution to isolated CPUs
+Date:   Tue, 23 Jun 2020 15:23:28 -0400
+Message-Id: <20200623192331.215557-1-nitesh@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As this is a cypress HID->COM RS232 style device that is handled
-by the cypress_M8 driver we also need to add it to the ignore list
-in hid-quirks.
-
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
----
- drivers/hid/hid-ids.h    | 2 ++
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 3 insertions(+)
-
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 1c71a1aa76b2..3261de0b6bde 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1005,6 +1005,8 @@
- #define USB_DEVICE_ID_ROCCAT_RYOS_MK_PRO	0x3232
- #define USB_DEVICE_ID_ROCCAT_SAVU	0x2d5a
+This patch-set is originated from one of the patches that have been
+posted earlier as a part of "Task_isolation" mode [1] patch series
+by Alex Belits <abelits@marvell.com>. There are only a couple of
+changes that I am proposing in this patch-set compared to what Alex
+has posted earlier.
  
-+#define USB_VENDOR_ID_SAI		0x17dd
-+
- #define USB_VENDOR_ID_SAITEK		0x06a3
- #define USB_DEVICE_ID_SAITEK_RUMBLEPAD	0xff17
- #define USB_DEVICE_ID_SAITEK_PS1000	0x0621
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index e4cb543de0cd..b54fe18f1ed0 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -831,6 +831,7 @@ static const struct hid_device_id hid_ignore_list[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_PETZL, USB_DEVICE_ID_PETZL_HEADLAMP) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_PHILIPS, USB_DEVICE_ID_PHILIPS_IEEE802154_DONGLE) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_POWERCOM, USB_DEVICE_ID_POWERCOM_UPS) },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SAI, USB_DEVICE_ID_CYPRESS_HIDCOM) },
- #if IS_ENABLED(CONFIG_MOUSE_SYNAPTICS_USB)
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_TP) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_INT_TP) },
+ 
+Context
+=======
+On a broad level, all three patches that are included in this patch
+set are meant to improve the driver/library to respect isolated
+CPUs by not pinning any job on it. Not doing so could impact
+the latency values in RT use-cases.
+
+
+Patches
+=======
+* Patch1:
+  The first patch is meant to make cpumask_local_spread()
+  aware of the isolated CPUs. It ensures that the CPUs that
+  are returned by this API only includes housekeeping CPUs.
+
+* Patch2:
+  This patch ensures that a probe function that is called
+  using work_on_cpu() doesn't run any task on an isolated CPU.
+
+* Patch3:
+  This patch makes store_rps_map() aware of the isolated
+  CPUs so that rps don't queue any jobs on an isolated CPU. 
+
+
+Proposed Changes
+================
+To fix the above-mentioned issues Alex has used housekeeping_cpumask().
+The only changes that I am proposing here are:
+- Removing the dependency on CONFIG_TASK_ISOLATION that was proposed by
+  Alex. As it should be safe to rely on housekeeping_cpumask()
+  even when we don't have any isolated CPUs and we want
+  to fall back to using all available CPUs in any of the above scenarios.
+- Using both HK_FLAG_DOMAIN and HK_FLAG_WQ in all three patches, this is
+  because we would want the above fixes not only when we have isolcpus but
+  also with something like systemd's CPU affinity.
+
+
+Testing
+=======
+* Patch 1:
+  Fix for cpumask_local_spread() is tested by creating VFs, loading
+  iavf module and by adding a tracepoint to confirm that only housekeeping
+  CPUs are picked when an appropriate profile is set up and all remaining
+  CPUs when no CPU isolation is configured.
+
+* Patch 2:
+  To test the PCI fix, I hotplugged a virtio-net-pci from qemu console
+  and forced its addition to a specific node to trigger the code path that
+  includes the proposed fix and verified that only housekeeping CPUs
+  are included via tracepoint.
+
+* Patch 3:
+  To test the fix in store_rps_map(), I tried configuring an isolated
+  CPU by writing to /sys/class/net/en*/queues/rx*/rps_cpus which
+  resulted in 'write error: Invalid argument' error. For the case
+  where a non-isolated CPU is writing in rps_cpus the above operation
+  succeeded without any error.
+
+
+Changes from v2[2]:
+==================
+- Patch1: Removed the extra while loop from cpumask_local_spread and fixed
+  the code styling issues.
+- Patch3: Change to use cpumask_empty() for verifying that the requested
+  CPUs are available in the housekeeping CPUs.
+
+Changes from v1[3]:
+==================
+- Included the suggestions made by Bjorn Helgaas in the commit message.
+- Included the 'Reviewed-by' and 'Acked-by' received for Patch-2.
+
+
+[1] https://patchwork.ozlabs.org/project/netdev/patch/51102eebe62336c6a4e584c7a503553b9f90e01c.camel@marvell.com/
+[2] https://patchwork.ozlabs.org/project/linux-pci/cover/20200622234510.240834-1-nitesh@redhat.com/
+[3] https://patchwork.ozlabs.org/project/linux-pci/cover/20200610161226.424337-1-nitesh@redhat.com/
+
+
+Alex Belits (3):
+  lib: Restrict cpumask_local_spread to houskeeping CPUs
+  PCI: Restrict probe functions to housekeeping CPUs
+  net: Restrict receive packets queuing to housekeeping CPUs
+
+ drivers/pci/pci-driver.c |  5 ++++-
+ lib/cpumask.c            | 16 +++++++++++-----
+ net/core/net-sysfs.c     | 10 +++++++++-
+ 3 files changed, 24 insertions(+), 7 deletions(-)
+
 -- 
-2.25.1
 
