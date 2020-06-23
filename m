@@ -2,143 +2,152 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D886AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD95C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59732076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:27:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pFf7M/f5"
+	by mail.kernel.org (Postfix) with ESMTP id 1BFCD20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592872184;
+	bh=e0daXwQDRMHOr/Ja0nG7+V2OLepHHXHl2Ifwn/PsucU=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=uIEssLBsbmyq7dcJ2Z98hJmoUG9qlW5+ndQ0qBuy0QUkCtEtrn3r8/cL6bH9O4w48
+	 UnNpdPvaabzEkqpPtE+yo6CGSlIgRwxAbjYUvdKJ09+XcUtk6i0aPO0T1LgIZX693E
+	 MK6LhTOKqkvVtDJNH5JGRWNScUOr0pLskrRA7htw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731602AbgFWA1M (ORCPT
+        id S1731572AbgFWA3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731260AbgFWA1L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:27:11 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C23C061573;
-        Mon, 22 Jun 2020 17:27:10 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id a3so17376399oid.4;
-        Mon, 22 Jun 2020 17:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fWf5NkTENMUpC6O7J3lNfTxHfRDt4jLtoXQpvqrBTOY=;
-        b=pFf7M/f58ncrECYTkyPx3dYKwvWKkZ4WIjMzLLbRJICkmQ/Xf/tJGa1boVcCzgIPtm
-         oT2+gIxCqbBbpHQDrmF4ROzNpN/VgKXh3fPA9oDIYXv93qACbNqdMTIzoP72wFoFRlY2
-         RuvRKEvtPM21n0wZXuXzuox1cnBjmU46C3qne4lrlirUKbU8FmN8erboc0GVKtM6B7K6
-         Rwgqye5s8oNUsZni7OYlU3cgosNaPb7meZSJt2htccGr6v1yfeSILBciGpAXFyFzojkd
-         mgxFJOGq9fa8RC9U7gfVY/ZMpIzonT01Qj78cblJbnpHFQ0jGObXtqjoP8HBKb3+4YPG
-         rn7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fWf5NkTENMUpC6O7J3lNfTxHfRDt4jLtoXQpvqrBTOY=;
-        b=KUtWPzH1u9Te6ag3h16skVO7UkcdMFb4ueP2cxFDapSgILdZ0NmcbEOkCLvdbVqcCR
-         KrTaujGNVgXmEHAInaXtS0Ju0ie74s+q8RnI9iIb0icVoUeVilkI4kCo7cjfpA2tdMD6
-         psA7fAMEe56RPsM6SOGMWqQ1nDTqXcQkBY4K0PcXVN/5Y8bj8gyBUTvVDxw/EiMHAv4K
-         kixI+rYnLbk2tHEivMcDVpF8SL8Y6eCX2Ypu15hVdzuBSOkfLtVySxvvwT6DjuX7htwu
-         mW15m7QK4KWub+60SRXUah4dpEGgpPh36F7TWK8W5g4ABI8piOHcFpXJatPHNBO2jRYo
-         gAhw==
-X-Gm-Message-State: AOAM532ZSb1ojllD60hvTmyALLOCvx3pBjdpeKyHOzsGqrZ2WkkXRNQZ
-        yKX9keeY8WkN5/r29V295jx4f8XnXu+0z2Zf+M4=
-X-Google-Smtp-Source: ABdhPJxbximI8yO3Ccy4jm1VK5GgFD3Qhrn8p/t7ScmpCFBOc5vwAMc+JrBhgmqspRlstnBk2vY411WTzWA3pMblbvg=
-X-Received: by 2002:aca:58c3:: with SMTP id m186mr14874684oib.5.1592872029524;
- Mon, 22 Jun 2020 17:27:09 -0700 (PDT)
+        Mon, 22 Jun 2020 20:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731222AbgFWA3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:29:42 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6822020706;
+        Tue, 23 Jun 2020 00:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592872181;
+        bh=e0daXwQDRMHOr/Ja0nG7+V2OLepHHXHl2Ifwn/PsucU=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=QU4WumCWneSt7f+bd1mWloEKUB89tYLAPt5UFUjuTgta4ZxAEBnIL5QNo54j6Q7WE
+         zuFadmMSCDt43IKhWXMNou+SLwnEs+pR9kOk5NCpo/A/OjjUb7wY0pZv9jycbyO3ro
+         S9aC8rHK5+yXZ70E8e2015EPyKVRhZCVK5dJ1j+Y=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 48E23352306A; Mon, 22 Jun 2020 17:29:41 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 17:29:41 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/30] Add read-side scalability tests for v5.9
+Message-ID: <20200623002941.GA26089@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-References: <20200622145953.41931-1-pbonzini@redhat.com>
-In-Reply-To: <20200622145953.41931-1-pbonzini@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 23 Jun 2020 08:26:59 +0800
-Message-ID: <CANRm+CyvtURKCMmpPvm-LPL6aqR5Qp2teL9pD7L8ufGWOM0LeQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: ensure APIC map is up to date on concurrent
- update requests
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Igor Mammedov <imammedo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 at 23:01, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> The following race can cause lost map update events:
->
->          cpu1                            cpu2
->
->                                 apic_map_dirty = true
->   ------------------------------------------------------------
->                                 kvm_recalculate_apic_map:
->                                      pass check
->                                          mutex_lock(&kvm->arch.apic_map_lock);
->                                          if (!kvm->arch.apic_map_dirty)
->                                      and in process of updating map
->   -------------------------------------------------------------
->     other calls to
->        apic_map_dirty = true         might be too late for affected cpu
->   -------------------------------------------------------------
->                                      apic_map_dirty = false
->   -------------------------------------------------------------
->     kvm_recalculate_apic_map:
->     bail out on
->       if (!kvm->arch.apic_map_dirty)
->
-> To fix it, record the beginning of an update of the APIC map in
-> apic_map_dirty.  If another APIC map change switches apic_map_dirty
-> back to DIRTY, kvm_recalculate_apic_map should not make it CLEAN and
-> let the other caller go through the slow path.
->
-> Reported-by: Igor Mammedov <imammedo@redhat.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  2 +-
->  arch/x86/kvm/lapic.c            | 45 +++++++++++++++++++--------------
->  2 files changed, 27 insertions(+), 20 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 1da5858501ca..d814032a81e7 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -943,7 +943,7 @@ struct kvm_arch {
->         atomic_t vapics_in_nmi_mode;
->         struct mutex apic_map_lock;
->         struct kvm_apic_map *apic_map;
-> -       bool apic_map_dirty;
-> +       atomic_t apic_map_dirty;
->
->         bool apic_access_page_done;
->         unsigned long apicv_inhibit_reasons;
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 34a7e0533dad..ef98f2fd3bbd 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -169,6 +169,18 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
->         kvfree(map);
->  }
->
-> +/*
-> + * CLEAN -> DIRTY and UPDATE_IN_PROGRESS -> DIRTY changes happen without a lock.
-> + *
-> + * DIRTY -> UPDATE_IN_PROGRESS and UPDATE_IN_PROGRESS -> CLEAN happen with
-> + * apic_map_lock_held.
-> + */
-> +enum {
-> +       CLEAN,
-> +       UPDATE_IN_PROGRESS,
-> +       DIRTY
-> +};
+Hello!
 
-Great! Thanks for the fix.
+This series adds a refscale set of read-side scalability tests for
+reference counting, reader-writer locking, and RCU.
 
-    Wanpeng
+1.	Remove useless while loops around wait_event, courtesy of
+	Joel Fernandes.
+
+2.	Add a test to measure performance of read-side synchronization,
+	courtesy of Joel Fernandes.
+
+3.	Add comments explaining the high reader overhead.
+
+4.	Add refperf to the rcutorture scripting.
+
+5.	Add holdoff parameter to allow CPUs to come online.
+
+6.	Hoist function-pointer calls out of the loop.
+
+7.	Allow decimal nanoseconds.
+
+8.	Convert nreaders to a module parameter.
+
+9.	Provide module parameter to specify number of experiments.
+
+10.	Dynamically allocate experiment-summary output buffer.
+
+11.	Dynamically allocate thread-summary output buffer.
+
+12.	Make functions static.
+
+13.	Tune reader measurement interval.
+
+14.	Convert reader_task structure's "start" field to int.
+
+15.	More closely synchronize reader start times.
+
+16.	Add warmup and cooldown processing phases.
+
+17.	Label experiment-number column "Runs".
+
+18.	Output per-experiment data points.
+
+19.	Simplify initialization-time wakeup protocol.
+
+20.	Add read-side delay module parameter.
+
+21.	Adjust refperf.loop default value.
+
+22.	Document rcuperf's module parameters.
+
+23.	Work around 64-bit division, courtesy of Arnd Bergmann.
+
+24.	Change readdelay module parameter to nanoseconds.
+
+25.	Add test for RCU Tasks Trace readers..
+
+26.	Add test for RCU Tasks readers.
+
+27.	rcu-tasks: Fix synchronize_rcu_tasks_trace() header comment.
+
+28.	Rename RCU_REF_PERF_TEST to RCU_REF_SCALE_TEST.
+
+29.	Rename refperf.c to refscale.c and change internal names.
+
+30.	Change --torture type from refperf to refscale.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ Documentation/admin-guide/kernel-parameters.txt                      |   53 
+ include/linux/rcupdate_trace.h                                       |    4 
+ kernel/rcu/Kconfig.debug                                             |   23 
+ kernel/rcu/Makefile                                                  |    5 
+ kernel/rcu/rcuperf.c                                                 |   25 
+ kernel/rcu/refperf.c                                                 | 1037 ++++++++--
+ kernel/rcu/refscale.c                                                |  182 -
+ kernel/rcu/tasks.h                                                   |    9 
+ tools/testing/selftests/rcutorture/bin/kvm-recheck-refperf.sh        |   73 
+ tools/testing/selftests/rcutorture/bin/kvm-recheck-refscale.sh       |    8 
+ tools/testing/selftests/rcutorture/bin/kvm.sh                        |   17 
+ tools/testing/selftests/rcutorture/bin/parse-console.sh              |    8 
+ tools/testing/selftests/rcutorture/configs/refperf/CFLIST            |    2 
+ tools/testing/selftests/rcutorture/configs/refperf/CFcommon          |    4 
+ tools/testing/selftests/rcutorture/configs/refperf/NOPREEMPT         |   18 
+ tools/testing/selftests/rcutorture/configs/refperf/PREEMPT           |   18 
+ tools/testing/selftests/rcutorture/configs/refperf/ver_functions.sh  |   20 
+ tools/testing/selftests/rcutorture/configs/refscale/ver_functions.sh |    1 
+ 18 files changed, 1205 insertions(+), 302 deletions(-)
