@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F88D20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB10120724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948062;
-	bh=SaQqvQFMNTh+YxDu89iw6n8Oqci79i/uH0NDjdrZvCY=;
+	s=default; t=1592948067;
+	bh=U41vo2J41mKdG0sSmbL4LAJnwKc8Gnby07k97bRSZCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QNXgG4AvS+4i6q5JT9HYzoY/qGznD71yBkeKrjSojzDG4Pcdkd4NJR8UZlr89/KJw
-	 RUbuYkfUGbE7NnHd5HWR5vI5BGsEdnr+O/YQfJE2AIDKjTxohRZep3MUUqtnGSn4mK
-	 W03CLohboHvTYxXGxV3HYCQEmPMTZfiCjAP/kOjM=
+	b=QhsIxEUi1my1l08YR0WxrZKdKeelx+y3Q2MRqQ8xSTHGmpcPH9SPcFbIHZ8Q2nbLG
+	 tSej96n+M1Dp13aAamkDXlgMrU8Owuyzbq04u0ElWfYSCC6qnrRgylQzuXfNqtAH2C
+	 1tpTEeVpq0kzbgMtfpEpUAMvBtHEZXE+oPDdicSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393725AbgFWVeU (ORCPT
+        id S2388863AbgFWULA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52292 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388374AbgFWULB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:11:01 -0400
+        id S2388805AbgFWUKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:10:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ED2A20707;
-        Tue, 23 Jun 2020 20:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E17EC20707;
+        Tue, 23 Jun 2020 20:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943061;
-        bh=SaQqvQFMNTh+YxDu89iw6n8Oqci79i/uH0NDjdrZvCY=;
+        s=default; t=1592943031;
+        bh=U41vo2J41mKdG0sSmbL4LAJnwKc8Gnby07k97bRSZCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V+X7svdXPSwPRP+i6eIEuYxi9iM0WYYXsL1IImrhPOUWEc88W/viIDR8NtwRKTVYq
-         Fppw2MxHKASPfgnJIgLMazbeg+3Ut4L0HTesCvXLu3Xva1hjYW+5yOHjt29DYY5zv3
-         Ndzwzyk0ZxMxZWi8wiA0g6kl6pKtRdoyRvZ9m6Hw=
+        b=sG/HDnBqf224kNiji3bfJgMY6nfcgJdGWQ/RrVjsBSb339Ud/8Qdo4PbbBCWnJBoF
+         IX0DOjp0bdfg1yUzqCf4e9Rsq8P0kqln1oyDS87HIGe7SK9bIPLuOc/JchO6lpmkvx
+         cUzuM1gh73B/gidiS+QYFiZlKH09aV4aHMomhBj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 245/477] powerpc/powernv: add NULL check after kzalloc
-Date:   Tue, 23 Jun 2020 21:54:02 +0200
-Message-Id: <20200623195419.151216738@linuxfoundation.org>
+Subject: [PATCH 5.7 231/477] tty: n_gsm: Fix bogus i++ in gsm_data_kick
+Date:   Tue, 23 Jun 2020 21:53:48 +0200
+Message-Id: <20200623195418.500791401@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,40 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit ceffa63acce7165c442395b7d64a11ab8b5c5dca ]
+[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
 
-Fixes coccicheck warning:
+When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
+layer when room available". It was suggested to switch from a while to
+a for loop, but when doing it, there was a remaining bogus i++.
 
-./arch/powerpc/platforms/powernv/opal.c:813:1-5:
-	alloc with no test, possible model on line 814
+This patch removes this i++ and also reorganizes the code making it more
+compact.
 
-Add NULL check after kzalloc.
-
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200509020838.121660-1-chenzhou10@huawei.com
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/opal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/n_gsm.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index 2b3dfd0b6cdd8..d95954ad4c0af 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -811,6 +811,10 @@ static int opal_add_one_export(struct kobject *parent, const char *export_name,
- 		goto out;
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index 0a8f241e537d9..f189579db7c4c 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -711,17 +711,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ 		} else {
+ 			int i = 0;
  
- 	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
-+	if (!attr) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
- 	name = kstrdup(export_name, GFP_KERNEL);
- 	if (!name) {
- 		rc = -ENOMEM;
+-			for (i = 0; i < NUM_DLCI; i++) {
+-				struct gsm_dlci *dlci;
+-
+-				dlci = gsm->dlci[i];
+-				if (dlci == NULL) {
+-					i++;
+-					continue;
+-				}
+-
+-				tty_port_tty_wakeup(&dlci->port);
+-			}
++			for (i = 0; i < NUM_DLCI; i++)
++				if (gsm->dlci[i])
++					tty_port_tty_wakeup(&gsm->dlci[i]->port);
+ 		}
+ 	}
+ }
 -- 
 2.25.1
 
