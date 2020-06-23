@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC39C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99652C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2819F20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F23520702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944038;
-	bh=E0vol963znMy9m2ePZE+9fOxempRSj6cd3mauL2dhXA=;
+	s=default; t=1592944041;
+	bh=B7+noFMSADoC1yQsvH+s6c+fEh2r7laiozc+L19iyCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWuhckW+6YKsvEdtlLIJBRNq06/VWyJ9CexF6rpm6KG9srdlVRjtvXbXy+bVuIbku
-	 Js+MKZ2Pk3GAUMcPGgM+u9AeXDWcxYCbu7yCqpVgIk0Y4foECbRzgZohdXrXsxZl4e
-	 VijUfcTzAJSPs27Zr8Sn498YF+pe9PyH5OUOr0A8=
+	b=T3dUzpIUcvRiP6sSSPU5JTlYLPuvrCJiS13ZlgFDA+FnP9B6EDddefoVZVtKXgFSF
+	 JA9P++IU36ysBHLgcRRCW4vH/5KFZFwqM++binpCEftUIKt+kjcrcnTA/XNPILIM61
+	 IebC2dsqZIiGHXDxiewsAXmIt+r+P/E4Ak2Up6Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390746AbgFWU1Q (ORCPT
+        id S2390753AbgFWU1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46488 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:27:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390538AbgFWU1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:27:06 -0400
+        id S2390240AbgFWU1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:27:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1704206EB;
-        Tue, 23 Jun 2020 20:27:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C8FA2070E;
+        Tue, 23 Jun 2020 20:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944025;
-        bh=E0vol963znMy9m2ePZE+9fOxempRSj6cd3mauL2dhXA=;
+        s=default; t=1592944030;
+        bh=B7+noFMSADoC1yQsvH+s6c+fEh2r7laiozc+L19iyCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j9WwSekwLXE5llEeoKLD1vKin84F4Tlckzmi1jZkBo2K608TLBBTkDc4ReKGHWK1G
-         RyCiHVltsVvVrgaBXmJDo8ar1UhB94vRzmA0p46PuNKS/R72f0b6/q5CUdPSTCN3eO
-         Q3pJdzo+skJY6Fq98Wuj0WNAMVnYxa2tBc6W5Q+4=
+        b=teaoCRn+oBa5ruSLY9/WLNeIkmnSjUSkb+6WDYuviuZEJ9hL9RnA70Y/L/uZZ+pb+
+         Vg29pe9vVzmnWY8XFGR1Be3qLY4Af7GOxweVkL25NGE3z/rT4y3hfKt7nH0bp0b9mS
+         I6OKJsgWShZ3qXFRe13/NMeDYQXsbq43GLurx9ns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Klein <cristian.klein@elastisys.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 144/314] HID: Add quirks for Trust Panora Graphic Tablet
-Date:   Tue, 23 Jun 2020 21:55:39 +0200
-Message-Id: <20200623195345.727365042@linuxfoundation.org>
+        stable@vger.kernel.org, Omer Shpigelman <oshpigelman@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 146/314] habanalabs: increase timeout during reset
+Date:   Tue, 23 Jun 2020 21:55:41 +0200
+Message-Id: <20200623195345.818635556@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,73 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Klein <cristian.klein@elastisys.com>
+From: Oded Gabbay <oded.gabbay@gmail.com>
 
-[ Upstream commit fb68ada81e65d593b51544fa43c284322107a742 ]
+[ Upstream commit 7a65ee046b2238e053f6ebb610e1a082cfc49490 ]
 
-The Trust Panora Graphic Tablet has two interfaces. Interface zero reports pen
-movement, pen pressure and pen buttons. Interface one reports tablet buttons
-and tablet scroll. Both use the mouse protocol.
+When doing training, the DL framework (e.g. tensorflow) performs hundreds
+of thousands of memory allocations and mappings. In case the driver needs
+to perform hard-reset during training, the driver kills the application and
+unmaps all those memory allocations. Unfortunately, because of that large
+amount of mappings, the driver isn't able to do that in the current timeout
+(5 seconds). Therefore, increase the timeout significantly to 30 seconds
+to avoid situation where the driver resets the device with active mappings,
+which sometime can cause a kernel bug.
 
-Without these quirks, libinput gets confused about what device it talks to.
+BTW, it doesn't mean we will spend all the 30 seconds because the reset
+thread checks every one second if the unmap operation is done.
 
-For completeness, here is the usbhid-dump:
-
-```
-$ sudo usbhid-dump -d 145f:0212
-003:013:001:DESCRIPTOR         1588949402.559961
- 05 0D 09 01 A1 01 85 07 A1 02 09 00 75 08 95 07
- 81 02 C0 C0 09 0E A1 01 85 05 09 23 A1 02 09 52
- 09 53 25 0A 75 08 95 02 B1 02 C0 C0 05 0C 09 36
- A1 00 85 06 05 09 19 01 29 20 15 00 25 01 95 20
- 75 01 81 02 C0
-
-003:013:000:DESCRIPTOR         1588949402.563942
- 05 01 09 02 A1 01 85 08 09 01 A1 00 05 09 19 01
- 29 03 15 00 25 01 95 03 75 01 81 02 95 05 81 01
- 05 01 09 30 09 31 09 38 09 00 15 81 25 7F 75 08
- 95 04 81 06 C0 C0 05 01 09 02 A1 01 85 09 09 01
- A1 00 05 09 19 01 29 03 15 00 25 01 95 03 75 01
- 81 02 95 05 81 01 05 01 09 30 09 31 26 FF 7F 95
- 02 75 10 81 02 05 0D 09 30 26 FF 03 95 01 75 10
- 81 02 C0 C0 05 01 09 00 A1 01 85 04 A1 00 26 FF
- 00 09 00 75 08 95 07 B1 02 C0 C0
-```
-
-Signed-off-by: Cristian Klein <cristian.klein@elastisys.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Reviewed-by: Omer Shpigelman <oshpigelman@habana.ai>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 3 +++
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/misc/habanalabs/habanalabs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 13b7222ef2c91..c552a6bc627eb 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1147,6 +1147,9 @@
- #define USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882	0x8882
- #define USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8883	0x8883
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 75862be53c60e..30addffd76f53 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -23,7 +23,7 @@
  
-+#define USB_VENDOR_ID_TRUST             0x145f
-+#define USB_DEVICE_ID_TRUST_PANORA_TABLET   0x0212
-+
- #define USB_VENDOR_ID_TURBOX		0x062a
- #define USB_DEVICE_ID_TURBOX_KEYBOARD	0x0201
- #define USB_DEVICE_ID_ASUS_MD_5110	0x5110
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 90ec2390ef688..168fdaa1999fe 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -168,6 +168,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8883), HID_QUIRK_NOGET },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_TRUST, USB_DEVICE_ID_TRUST_PANORA_TABLET), HID_QUIRK_MULTI_INPUT | HID_QUIRK_HIDINPUT_FORCE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TURBOX, USB_DEVICE_ID_TURBOX_KEYBOARD), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_UCLOGIC, USB_DEVICE_ID_UCLOGIC_TABLET_KNA5), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_UCLOGIC, USB_DEVICE_ID_UCLOGIC_TABLET_TWA60), HID_QUIRK_MULTI_INPUT },
+ #define HL_MMAP_CB_MASK			(0x8000000000000000ull >> PAGE_SHIFT)
+ 
+-#define HL_PENDING_RESET_PER_SEC	5
++#define HL_PENDING_RESET_PER_SEC	30
+ 
+ #define HL_DEVICE_TIMEOUT_USEC		1000000 /* 1 s */
+ 
 -- 
 2.25.1
 
