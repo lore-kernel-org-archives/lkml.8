@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E956EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A36CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF80620781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD9C20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933983;
-	bh=mf6tAQmnFenOeadPu9vq/CB00FjfAh+j+uraLXZXOKE=;
+	s=default; t=1592933989;
+	bh=xqkF8A5JWMCQtBX+thYMhVn4tOe+GI5s+rGwJFyFgrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qHdcBxX5mRSuKVbmCwZzp1cwX/0+XNRD4dR5kyT/ZZBp4asdR4VzwovED4SVeXy1q
-	 2hVCZANTtv56kG/1YLL/y2a8/zLNNz7mials91c2x58ImV4exw0xrul4lB2rqVhJRj
-	 JkVA6PC8aEzGj09wvhTogRfsNjL1Escjxl34nPCU=
+	b=HAQ+HR1DxWbYB+2LdOZKfm6vZ9otcpOB4mHPRILEapUNvh+7mrrAjkXCT1wRnk37A
+	 H5rUuR0Sz6QPqJR8vJLZDTTqU9UtCRVg0715hs77i3/TKBAM84mP87coo+iKxVPz9D
+	 MvjI0S3lUOjYWeBgFZmftvF5vjVebhE2rlT93K5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387892AbgFWRjm (ORCPT
+        id S2387897AbgFWRjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33574 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387494AbgFWRgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:25 -0400
+        id S2387552AbgFWRgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73C7320706;
-        Tue, 23 Jun 2020 17:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3019A20774;
+        Tue, 23 Jun 2020 17:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933784;
-        bh=mf6tAQmnFenOeadPu9vq/CB00FjfAh+j+uraLXZXOKE=;
+        s=default; t=1592933782;
+        bh=xqkF8A5JWMCQtBX+thYMhVn4tOe+GI5s+rGwJFyFgrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gfxFBFzzyY1cNiMWTVob09fu639gvCwaF/esZGE2taGRdjUJXbvXm/efDjiE5sf1h
-         jL4RNeMkKB6kXKsaahZucZ834qT1zYYZ5pcOK7dD1AXf5jMiWLXl7yrTw6mvKCmjG2
-         +FOd6wZiBDnsM7Hr/S4ZGltYpDeHklP+jsv2F0s4=
+        b=HMn5a6FEGOTtQ6UVgtONRoqKj48A+yMqEeaeoV7wngbuaTR/iSqxQFFGv3uCgz+UM
+         mkcknAvLhbW9nNNxLD7IIq3QFR3R6/t968iyASW8E/9gzK5pcIaTTKtKOm+Kca5RE1
+         uA93ESc34Loz8gvz0hzWX0fvIGxVy9CVI2P69VBk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matt Helsley <mhelsley@vmware.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 20/24] recordmcount: support >64k sections
-Date:   Tue, 23 Jun 2020 13:35:55 -0400
-Message-Id: <20200623173559.1355728-20-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
+        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 18/24] arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
+Date:   Tue, 23 Jun 2020 13:35:53 -0400
+Message-Id: <20200623173559.1355728-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
 References: <20200623173559.1355728-1-sashal@kernel.org>
@@ -62,229 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 4ef57b21d6fb49d2b25c47e4cff467a0c2c8b6b7 ]
+[ Upstream commit e575fb9e76c8e33440fb859572a8b7d430f053d6 ]
 
-When compiling a kernel with Clang and LTO, we need to run
-recordmcount on vmlinux.o with a large number of sections, which
-currently fails as the program doesn't understand extended
-section indexes. This change adds support for processing binaries
-with >64k sections.
+When I squashed the 'allnoconfig' compiler warning about the
+set_sve_default_vl() function being defined but not used in commit
+1e570f512cbd ("arm64/sve: Eliminate data races on sve_default_vl"), I
+accidentally broke the build for configs where ARM64_SVE is enabled, but
+SYSCTL is not.
 
-Link: https://lkml.kernel.org/r/20200424193046.160744-1-samitolvanen@google.com
-Link: https://lore.kernel.org/lkml/CAK7LNARbZhoaA=Nnuw0=gBrkuKbr_4Ng_Ei57uafujZf7Xazgw@mail.gmail.com/
+Fix this by only compiling the SVE sysctl support if both CONFIG_SVE=y
+and CONFIG_SYSCTL=y.
 
-Cc: Kees Cook <keescook@chromium.org>
-Reviewed-by: Matt Helsley <mhelsley@vmware.com>
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Dave Martin <Dave.Martin@arm.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200616131808.GA1040@lca.pw
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/recordmcount.h | 98 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 92 insertions(+), 6 deletions(-)
+ arch/arm64/kernel/fpsimd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 74eab03e31d4d..f9b19524da112 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -29,6 +29,11 @@
- #undef has_rel_mcount
- #undef tot_relsize
- #undef get_mcountsym
-+#undef find_symtab
-+#undef get_shnum
-+#undef set_shnum
-+#undef get_shstrndx
-+#undef get_symindex
- #undef get_sym_str_and_relp
- #undef do_func
- #undef Elf_Addr
-@@ -58,6 +63,11 @@
- # define __has_rel_mcount	__has64_rel_mcount
- # define has_rel_mcount		has64_rel_mcount
- # define tot_relsize		tot64_relsize
-+# define find_symtab		find_symtab64
-+# define get_shnum		get_shnum64
-+# define set_shnum		set_shnum64
-+# define get_shstrndx		get_shstrndx64
-+# define get_symindex		get_symindex64
- # define get_sym_str_and_relp	get_sym_str_and_relp_64
- # define do_func		do64
- # define get_mcountsym		get_mcountsym_64
-@@ -91,6 +101,11 @@
- # define __has_rel_mcount	__has32_rel_mcount
- # define has_rel_mcount		has32_rel_mcount
- # define tot_relsize		tot32_relsize
-+# define find_symtab		find_symtab32
-+# define get_shnum		get_shnum32
-+# define set_shnum		set_shnum32
-+# define get_shstrndx		get_shstrndx32
-+# define get_symindex		get_symindex32
- # define get_sym_str_and_relp	get_sym_str_and_relp_32
- # define do_func		do32
- # define get_mcountsym		get_mcountsym_32
-@@ -173,6 +188,67 @@ static int MIPS_is_fake_mcount(Elf_Rel const *rp)
- 	return is_fake;
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index d8895251a2aac..338e0966d3ca2 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -349,7 +349,7 @@ static unsigned int find_supported_vector_length(unsigned int vl)
+ 	return sve_vl_from_vq(__bit_to_vq(bit));
  }
  
-+static unsigned int get_symindex(Elf_Sym const *sym, Elf32_Word const *symtab,
-+				 Elf32_Word const *symtab_shndx)
-+{
-+	unsigned long offset;
-+	int index;
-+
-+	if (sym->st_shndx != SHN_XINDEX)
-+		return w2(sym->st_shndx);
-+
-+	offset = (unsigned long)sym - (unsigned long)symtab;
-+	index = offset / sizeof(*sym);
-+
-+	return w(symtab_shndx[index]);
-+}
-+
-+static unsigned int get_shnum(Elf_Ehdr const *ehdr, Elf_Shdr const *shdr0)
-+{
-+	if (shdr0 && !ehdr->e_shnum)
-+		return w(shdr0->sh_size);
-+
-+	return w2(ehdr->e_shnum);
-+}
-+
-+static void set_shnum(Elf_Ehdr *ehdr, Elf_Shdr *shdr0, unsigned int new_shnum)
-+{
-+	if (new_shnum >= SHN_LORESERVE) {
-+		ehdr->e_shnum = 0;
-+		shdr0->sh_size = w(new_shnum);
-+	} else
-+		ehdr->e_shnum = w2(new_shnum);
-+}
-+
-+static int get_shstrndx(Elf_Ehdr const *ehdr, Elf_Shdr const *shdr0)
-+{
-+	if (ehdr->e_shstrndx != SHN_XINDEX)
-+		return w2(ehdr->e_shstrndx);
-+
-+	return w(shdr0->sh_link);
-+}
-+
-+static void find_symtab(Elf_Ehdr *const ehdr, Elf_Shdr const *shdr0,
-+			unsigned const nhdr, Elf32_Word **symtab,
-+			Elf32_Word **symtab_shndx)
-+{
-+	Elf_Shdr const *relhdr;
-+	unsigned k;
-+
-+	*symtab = NULL;
-+	*symtab_shndx = NULL;
-+
-+	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
-+		if (relhdr->sh_type == SHT_SYMTAB)
-+			*symtab = (void *)ehdr + relhdr->sh_offset;
-+		else if (relhdr->sh_type == SHT_SYMTAB_SHNDX)
-+			*symtab_shndx = (void *)ehdr + relhdr->sh_offset;
-+
-+		if (*symtab && *symtab_shndx)
-+			break;
-+	}
-+}
-+
- /* Append the new shstrtab, Elf_Shdr[], __mcount_loc and its relocations. */
- static int append_func(Elf_Ehdr *const ehdr,
- 			Elf_Shdr *const shstr,
-@@ -188,10 +264,12 @@ static int append_func(Elf_Ehdr *const ehdr,
- 	char const *mc_name = (sizeof(Elf_Rela) == rel_entsize)
- 		? ".rela__mcount_loc"
- 		:  ".rel__mcount_loc";
--	unsigned const old_shnum = w2(ehdr->e_shnum);
- 	uint_t const old_shoff = _w(ehdr->e_shoff);
- 	uint_t const old_shstr_sh_size   = _w(shstr->sh_size);
- 	uint_t const old_shstr_sh_offset = _w(shstr->sh_offset);
-+	Elf_Shdr *const shdr0 = (Elf_Shdr *)(old_shoff + (void *)ehdr);
-+	unsigned int const old_shnum = get_shnum(ehdr, shdr0);
-+	unsigned int const new_shnum = 2 + old_shnum; /* {.rel,}__mcount_loc */
- 	uint_t t = 1 + strlen(mc_name) + _w(shstr->sh_size);
- 	uint_t new_e_shoff;
+-#ifdef CONFIG_SYSCTL
++#if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
  
-@@ -201,6 +279,8 @@ static int append_func(Elf_Ehdr *const ehdr,
- 	t += (_align & -t);  /* word-byte align */
- 	new_e_shoff = t;
- 
-+	set_shnum(ehdr, shdr0, new_shnum);
-+
- 	/* body for new shstrtab */
- 	if (ulseek(sb.st_size, SEEK_SET) < 0)
- 		return -1;
-@@ -255,7 +335,6 @@ static int append_func(Elf_Ehdr *const ehdr,
- 		return -1;
- 
- 	ehdr->e_shoff = _w(new_e_shoff);
--	ehdr->e_shnum = w2(2 + w2(ehdr->e_shnum));  /* {.rel,}__mcount_loc */
- 	if (ulseek(0, SEEK_SET) < 0)
- 		return -1;
- 	if (uwrite(ehdr, sizeof(*ehdr)) < 0)
-@@ -434,6 +513,8 @@ static int find_secsym_ndx(unsigned const txtndx,
- 				uint_t *const recvalp,
- 				unsigned int *sym_index,
- 				Elf_Shdr const *const symhdr,
-+				Elf32_Word const *symtab,
-+				Elf32_Word const *symtab_shndx,
- 				Elf_Ehdr const *const ehdr)
- {
- 	Elf_Sym const *const sym0 = (Elf_Sym const *)(_w(symhdr->sh_offset)
-@@ -445,7 +526,7 @@ static int find_secsym_ndx(unsigned const txtndx,
- 	for (symp = sym0, t = nsym; t; --t, ++symp) {
- 		unsigned int const st_bind = ELF_ST_BIND(symp->st_info);
- 
--		if (txtndx == w2(symp->st_shndx)
-+		if (txtndx == get_symindex(symp, symtab, symtab_shndx)
- 			/* avoid STB_WEAK */
- 		    && (STB_LOCAL == st_bind || STB_GLOBAL == st_bind)) {
- 			/* function symbols on ARM have quirks, avoid them */
-@@ -516,21 +597,23 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
- 	return totrelsz;
+ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
+ 				  void __user *buffer, size_t *lenp,
+@@ -395,9 +395,9 @@ static int __init sve_sysctl_init(void)
+ 	return 0;
  }
  
--
- /* Overall supervision for Elf32 ET_REL file. */
- static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 		   unsigned const reltype)
- {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
--	unsigned const nhdr = w2(ehdr->e_shnum);
--	Elf_Shdr *const shstr = &shdr0[w2(ehdr->e_shstrndx)];
-+	unsigned const nhdr = get_shnum(ehdr, shdr0);
-+	Elf_Shdr *const shstr = &shdr0[get_shstrndx(ehdr, shdr0)];
- 	char const *const shstrtab = (char const *)(_w(shstr->sh_offset)
- 		+ (void *)ehdr);
+-#else /* ! CONFIG_SYSCTL */
++#else /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+ static int __init sve_sysctl_init(void) { return 0; }
+-#endif /* ! CONFIG_SYSCTL */
++#endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
  
- 	Elf_Shdr const *relhdr;
- 	unsigned k;
- 
-+	Elf32_Word *symtab;
-+	Elf32_Word *symtab_shndx;
-+
- 	/* Upper bound on space: assume all relevant relocs are for mcount. */
- 	unsigned       totrelsz;
- 
-@@ -561,6 +644,8 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 		return -1;
- 	}
- 
-+	find_symtab(ehdr, shdr0, nhdr, &symtab, &symtab_shndx);
-+
- 	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
- 		char const *const txtname = has_rel_mcount(relhdr, shdr0,
- 			shstrtab, fname);
-@@ -577,6 +662,7 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 			result = find_secsym_ndx(w(relhdr->sh_info), txtname,
- 						&recval, &recsym,
- 						&shdr0[symsec_sh_link],
-+						symtab, symtab_shndx,
- 						ehdr);
- 			if (result)
- 				goto out;
+ #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
+ 	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
 -- 
 2.25.1
 
