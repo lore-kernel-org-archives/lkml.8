@@ -2,124 +2,112 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1235C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6540FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBF82070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:36:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQ+k9fFJ"
+	by mail.kernel.org (Postfix) with ESMTP id 478CD2070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbgFWBgV (ORCPT
+        id S1731977AbgFWBgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:36:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731765AbgFWBgU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:36:20 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB45EC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:36:20 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id a137so17489615oii.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:36:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6xUzhKnsOu6gQ8wo5pNQ9aUbiM+zR6hakYUaVJ25KuY=;
-        b=jQ+k9fFJJ6wao/pAeyhtXubATETSraRIKy+LkYNdX0mwxIbSgAtWYLREjqUMYYasbm
-         AUShJj8cYZ3ySM5RLlfT6IebvuG7RlzJSVzbP6ndZJ+/fOqTzcjBiPyX2deW+Ag2k/wQ
-         082nggYK5t46GylyCV6wXBvULOw9xjfgM2Gwj1g0MN2ThzwzL1hw3pZanyS83XS4FNTX
-         cG5CA6zRBlKLbF0vWgBEVpHuDwj2vA9kGVRYlav7R143QbQE569WHfI9+1oJrfJY/nEC
-         yGDVKBb4He6zy2FkYSuwnT6QEvMDPSaIK2JZ8+MZ/HUCmBXh3/XWo9VZbgEqnHBWysbi
-         lRAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6xUzhKnsOu6gQ8wo5pNQ9aUbiM+zR6hakYUaVJ25KuY=;
-        b=h6AkyZgii3ZxSzREfIYXyZ46to/u+1jDpWawpVt3f16Bpgrmp/8lS0zzYwTeDQDZkw
-         FU5a3KC86p4qGZneBbI5o3acaIwzvACfMIgxsamkww4MVAK2vcPvxSR9wD9vRgL9jdOa
-         c0Fyz0FIznC8Rw1WZ1AWRsletNtzoioJtH3Tq1DRu2rPVIz0XeP5OLyYYAPYyR++n/N+
-         dJPDdcr252x9XlgoTzxZ3AbNDFM4KP36swiz+ZiSqd6XYkLJf+gG7HUBXZ23zQWFNUud
-         uAnC++n50JFpygI+Oy/041vVu/xrt7GYu4/DGOAC+46xB7NPXAvadBflxXj/cprLATZH
-         D+yw==
-X-Gm-Message-State: AOAM532/RhAyLjOp75jcmRtC2Ql9MUV31bNBlNH1Vzu/NwUvyTd/lxpm
-        kcRE9fiKQUUIs75jKHht0B4=
-X-Google-Smtp-Source: ABdhPJxaVLeLGTXxnw01SkIUJf4ClKrnziWYeidk+XMgDIH3PlOiFDay7sjX9ZcaDqPuG1tKRu2qBA==
-X-Received: by 2002:aca:4e0d:: with SMTP id c13mr14664131oib.30.1592876180059;
-        Mon, 22 Jun 2020 18:36:20 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id j71sm3624030otj.6.2020.06.22.18.36.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 18:36:19 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH] drm/omap: Remove aggregate initialization of new_mode in omap_connector_mode_valid
-Date:   Mon, 22 Jun 2020 18:36:10 -0700
-Message-Id: <20200623013610.555610-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 22 Jun 2020 21:36:24 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27364 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731765AbgFWBgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 21:36:22 -0400
+IronPort-SDR: dlsQy92Mrlab15jQCyjMiF4qFGPTtFKqlZyeTiF6MbudlPHKRKk/cKrlzzdCdIl1xzXTC+nRuB
+ QF3slQC69iTg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="145428328"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="145428328"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 18:36:20 -0700
+IronPort-SDR: l0hgTZezbicPnpNQTxiqE2o0v0lv/Chi/rXanxIoShOuu8EKeXtf5Qig5J5D7f6EIG2OSBWmQR
+ 4wny8STu2B5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="264664177"
+Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Jun 2020 18:36:16 -0700
+Date:   Tue, 23 Jun 2020 04:36:14 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Andrey Pronin <apronin@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm_tis_spi: Prefer async probe
+Message-ID: <20200623013614.GJ28795@linux.intel.com>
+References: <20200619141958.1.I58d549fded1fd2299543ede6a103fe2bb94c805d@changeid>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619141958.1.I58d549fded1fd2299543ede6a103fe2bb94c805d@changeid>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 42acb06b01b1 ("drm: pahole struct drm_display_mode"), clang
-warns:
+On Fri, Jun 19, 2020 at 02:20:01PM -0700, Douglas Anderson wrote:
+> On a Chromebook I'm working on I noticed a big (~1 second) delay
+> during bootup where nothing was happening.  Right around this big
+> delay there were messages about the TPM:
+> 
+> [    2.311352] tpm_tis_spi spi0.0: TPM ready IRQ confirmed on attempt 2
+> [    3.332790] tpm_tis_spi spi0.0: Cr50 firmware version: ...
+> 
+> I put a few printouts in and saw that tpm_tis_spi_init() (specifically
+> tpm_chip_register() in that function) was taking the lion's share of
+> this time, though ~115 ms of the time was in cr50_print_fw_version().
+> 
+> Let's make a one-line change to prefer async probe for tpm_tis_spi.
+> There's no reason we need to block other drivers from probing while we
+> load.
+> 
+> NOTES:
+> * It's possible that other hardware runs through the init sequence
+>   faster than Cr50 and this isn't such a big problem for them.
+>   However, even if they are faster they are still doing _some_
+>   transfers over a SPI bus so this should benefit everyone even if to
+>   a lesser extent.
+> * It's possible that there are extra delays in the code that could be
+>   optimized out.  I didn't dig since once I enabled async probe they
+>   no longer impacted me.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  drivers/char/tpm/tpm_tis_spi_main.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_spi_main.c b/drivers/char/tpm/tpm_tis_spi_main.c
+> index d96755935529..422766445373 100644
+> --- a/drivers/char/tpm/tpm_tis_spi_main.c
+> +++ b/drivers/char/tpm/tpm_tis_spi_main.c
+> @@ -288,6 +288,7 @@ static struct spi_driver tpm_tis_spi_driver = {
+>  		.pm = &tpm_tis_pm,
+>  		.of_match_table = of_match_ptr(of_tis_spi_match),
+>  		.acpi_match_table = ACPI_PTR(acpi_tis_spi_match),
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  	},
+>  	.probe = tpm_tis_spi_driver_probe,
+>  	.remove = tpm_tis_spi_remove,
+> -- 
+> 2.27.0.111.gc72c7da667-goog
+> 
 
-drivers/gpu/drm/omapdrm/omap_connector.c:92:39: warning: braces around
-scalar initializer [-Wbraced-scalar-init]
-        struct drm_display_mode new_mode = { { 0 } };
-                                             ^~~~~~
-1 warning generated.
 
-After the struct was shuffled, the second set of braces is no longer
-needed because we are not initializing a structure (struct list_head)
-but a regular integer (int clock).
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-However, looking into it further, this initialization is pointless
-because new_mode is used as the destination of drm_mode_copy, where the
-members of new_mode will just be completely overwritten with the members
-of mode. Just remove the initialization of new_mode so that there is no
-more warning and we don't need to worry about updating the
-initialization if the structure ever get shuffled again.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/1059
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/gpu/drm/omapdrm/omap_connector.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/omapdrm/omap_connector.c b/drivers/gpu/drm/omapdrm/omap_connector.c
-index 528764566b17..ce4da1511920 100644
---- a/drivers/gpu/drm/omapdrm/omap_connector.c
-+++ b/drivers/gpu/drm/omapdrm/omap_connector.c
-@@ -89,7 +89,7 @@ static enum drm_mode_status omap_connector_mode_valid(struct drm_connector *conn
- 				 struct drm_display_mode *mode)
- {
- 	struct omap_connector *omap_connector = to_omap_connector(connector);
--	struct drm_display_mode new_mode = { { 0 } };
-+	struct drm_display_mode new_mode;
- 	enum drm_mode_status status;
- 
- 	status = omap_connector_mode_fixup(omap_connector->output, mode,
-
-base-commit: 27f11fea33608cbd321a97cbecfa2ef97dcc1821
--- 
-2.27.0
-
+/Jarkko
