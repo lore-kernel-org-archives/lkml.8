@@ -2,56 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD61C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A789D21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6246F21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945000;
-	bh=KoMH0rSMVEnUOmJIQ4+TiDlWsDKsNXFRvhsC87PjwDg=;
+	s=default; t=1592945005;
+	bh=0ncV6HTRfo/3u06mJYnRbHPw2o4yr/9wsxgVNim2oHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swHKyepzla1PUfq2XQY96J/QAImyQEjXJCOvXFyIGWlUrXKx9Kn+QsFPG6fwpZlSI
-	 5YrCNpfqJZ0HQ32EVfbItul6rhoI9a6yDGHP68kGHovXBS/3o+Hjhqp+CJdU14AhXx
-	 POqSzqVPE+g4XIU9wl+buzQuBxJ/D3EkOHWiHxOA=
+	b=dnlS8rfF5g5e/GfQyjS/XsUrwxkAXF3XLGlBmIZz7LzAGtMG1Joqn7qDRuUQpEGka
+	 5SlG5qW+RAcnVCGiPzx9NZBsi8fOwHi1J8AVXNwMVlkHNNGnW27AG3q3OHFUj735Tf
+	 sY0F7uoSkqGNa+CBxlKA3iHwdXJSSY+gTM72C+f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392504AbgFWUnR (ORCPT
+        id S2392514AbgFWUnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:43:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392491AbgFWUnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:43:13 -0400
+        id S2392478AbgFWUnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:43:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95A5A21883;
-        Tue, 23 Jun 2020 20:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4317C21941;
+        Tue, 23 Jun 2020 20:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944993;
-        bh=KoMH0rSMVEnUOmJIQ4+TiDlWsDKsNXFRvhsC87PjwDg=;
+        s=default; t=1592944995;
+        bh=0ncV6HTRfo/3u06mJYnRbHPw2o4yr/9wsxgVNim2oHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UAkW0wezhnG8/z0lV6oZxCGFmOLUhQsnMaNBKLaORa27gg4j1st9cZwz6+cNqeqaY
-         uKHsnpP92Wm5lfrXr3VHFqDKbi3A/WLedAxx2pp1Fwm6qHsbzEC5GAJm1HSvRMxHnJ
-         1MdB89Je/GKBhapx7vz/1LtQeU9NGL+ACIt7EdVk=
+        b=LTyP/SGyyh8k5H+cjG1HOEbY4EKiuWw+ynGuHFAf8AmRu8/sz4zD4/kb6kuXoEc8R
+         xyyNdswpyxvNe45ItZIJrQQRTjcUpA0XXYLDtWNjkeg98+bBcMjYf8CGshs/IeQAUV
+         lJHnGngF2METcfifwL2W4pTP4xo0KFiWnnHxH/UY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.19 205/206] net: core: device_rename: Use rwsem instead of a seqcount
-Date:   Tue, 23 Jun 2020 21:58:53 +0200
-Message-Id: <20200623195327.129719456@linuxfoundation.org>
+        Joakim Tjernlund <joakim.tjernlund@infinera.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: [PATCH 4.19 206/206] Revert "dpaa_eth: fix usage as DSA master, try 3"
+Date:   Tue, 23 Jun 2020 21:58:54 +0200
+Message-Id: <20200623195327.188985616@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -64,160 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-[ Upstream commit 11d6011c2cf29f7c8181ebde6c8bc0c4d83adcd7 ]
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Sequence counters write paths are critical sections that must never be
-preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
+This reverts commit b145710b69388aa4034d32b4a937f18f66b5538e which is
+commit 5d14c304bfc14b4fd052dc83d5224376b48f52f0 upstream.
 
-Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
-netdev name retrieval.") handled a deadlock, observed with
-CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
-infinitely spinning: it got scheduled after the seqcount write side
-blocked inside its own critical section.
+The patch is not wrong, but the Fixes: tag is. It should have been:
 
-To fix that deadlock, among other issues, the commit added a
-cond_resched() inside the read side section. While this will get the
-non-preemptible kernel eventually unstuck, the seqcount reader is fully
-exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
+	Fixes: 060ad66f9795 ("dpaa_eth: change DMA device")
 
-The fix is also still broken: if the seqcount reader belongs to a
-real-time scheduling policy, it can spin forever and the kernel will
-livelock.
+which means that it's fixing a commit which was introduced in:
 
-Disabling preemption over the seqcount write side critical section will
-not work: inside it are a number of GFP_KERNEL allocations and mutex
-locking through the drivers/base/ :: device_rename() call chain.
+git describe --tags 060ad66f97954
+v5.4-rc3-783-g060ad66f9795
 
->From all the above, replace the seqcount with a rwsem.
+which then means it should have not been backported to linux-4.19.y,
+where things _were_ working and now they're not.
 
-Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
-Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
-Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
-Cc: <stable@vger.kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com> [ v1 missing up_read() on error exit ]
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com> [ v1 missing up_read() on error exit ]
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c | 40 ++++++++++++++++++----------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 8db77e09387b8..1618d5a676c47 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -83,6 +83,7 @@
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
- #include <linux/mutex.h>
-+#include <linux/rwsem.h>
- #include <linux/string.h>
- #include <linux/mm.h>
- #include <linux/socket.h>
-@@ -195,7 +196,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
- static unsigned int napi_gen_id = NR_CPUS;
- static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
- 
--static seqcount_t devnet_rename_seq;
-+static DECLARE_RWSEM(devnet_rename_sem);
- 
- static inline void dev_base_seq_inc(struct net *net)
- {
-@@ -899,33 +900,28 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
-  *	@net: network namespace
-  *	@name: a pointer to the buffer where the name will be stored.
-  *	@ifindex: the ifindex of the interface to get the name from.
-- *
-- *	The use of raw_seqcount_begin() and cond_resched() before
-- *	retrying is required as we want to give the writers a chance
-- *	to complete when CONFIG_PREEMPTION is not set.
-  */
- int netdev_get_name(struct net *net, char *name, int ifindex)
- {
- 	struct net_device *dev;
--	unsigned int seq;
-+	int ret;
- 
--retry:
--	seq = raw_seqcount_begin(&devnet_rename_seq);
-+	down_read(&devnet_rename_sem);
- 	rcu_read_lock();
-+
- 	dev = dev_get_by_index_rcu(net, ifindex);
- 	if (!dev) {
--		rcu_read_unlock();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto out;
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2796,7 +2796,7 @@ static int dpaa_eth_probe(struct platfor
  	}
  
- 	strcpy(name, dev->name);
--	rcu_read_unlock();
--	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
--		cond_resched();
--		goto retry;
--	}
+ 	/* Do this here, so we can be verbose early */
+-	SET_NETDEV_DEV(net_dev, dev->parent);
++	SET_NETDEV_DEV(net_dev, dev);
+ 	dev_set_drvdata(dev, net_dev);
  
--	return 0;
-+	ret = 0;
-+out:
-+	rcu_read_unlock();
-+	up_read(&devnet_rename_sem);
-+	return ret;
- }
- 
- /**
-@@ -1198,10 +1194,10 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
- 		return -EBUSY;
- 
--	write_seqcount_begin(&devnet_rename_seq);
-+	down_write(&devnet_rename_sem);
- 
- 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return 0;
- 	}
- 
-@@ -1209,7 +1205,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 
- 	err = dev_get_valid_name(net, dev, newname);
- 	if (err < 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return err;
- 	}
- 
-@@ -1224,11 +1220,11 @@ rollback:
- 	if (ret) {
- 		memcpy(dev->name, oldname, IFNAMSIZ);
- 		dev->name_assign_type = old_assign_type;
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return ret;
- 	}
- 
--	write_seqcount_end(&devnet_rename_seq);
-+	up_write(&devnet_rename_sem);
- 
- 	netdev_adjacent_rename_links(dev, oldname);
- 
-@@ -1249,7 +1245,7 @@ rollback:
- 		/* err >= 0 after dev_alloc_name() or stores the first errno */
- 		if (err >= 0) {
- 			err = ret;
--			write_seqcount_begin(&devnet_rename_seq);
-+			down_write(&devnet_rename_sem);
- 			memcpy(dev->name, oldname, IFNAMSIZ);
- 			memcpy(oldname, newname, IFNAMSIZ);
- 			dev->name_assign_type = old_assign_type;
--- 
-2.25.1
-
+ 	priv = netdev_priv(net_dev);
 
 
