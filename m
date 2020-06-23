@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27393C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5710CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8DBB20E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AAB2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943439;
-	bh=huvVpYjrP3NosOEqCtPxYved0D52BnCcbaTeolmCz40=;
+	s=default; t=1592943445;
+	bh=b4gTfTW1pZ1m56c1doEGfZiFBU0YZ15qyZ7TENd/P4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1Mo5ag7pkRgT+HJfc42QZu0gVJnjo1/a0cNnFRc2TusDIjGLXQxwW4yTlRHgAgL1
-	 YA5eV7RbLOHAOePF8SNPJATW9BxUQn58dtJTvpI5HKPvTjO+KSfU+ZFctXfuinJ3qz
-	 +V0bsA9jUbaAzshWBd+jWuqAT3z1t+6X6BEYqBTY=
+	b=ovzlAVn7yxo+HFkeZ88LzuZmshwcXDxGoAofJV5K7gI4bQgRxWcbNoMDXuz7M9zPF
+	 yYt3bsBhU5AHJPF+Y8oT7nyKHLBr3hGpzAPkS+IilkhJwPtdcBKjNlQ3F0h63zSqYl
+	 90Ga7p2pNf8N6Oi7CkKLABztuMt0X1W+imrxrQ3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388764AbgFWURR (ORCPT
+        id S2389548AbgFWURX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:17:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33044 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389487AbgFWURK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:10 -0400
+        id S2389530AbgFWURT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26EEB21473;
-        Tue, 23 Jun 2020 20:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D0C22137B;
+        Tue, 23 Jun 2020 20:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943429;
-        bh=huvVpYjrP3NosOEqCtPxYved0D52BnCcbaTeolmCz40=;
+        s=default; t=1592943439;
+        bh=b4gTfTW1pZ1m56c1doEGfZiFBU0YZ15qyZ7TENd/P4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vst7Jv7DNOX4IpTUqT2bmD4nMMSvHQLs7TjZSMDRLtnFMbr3f/MMK7vOFp88ZaB0J
-         +1zmNLvmZ2s9WxLuOgh4DXkfPTGXZDLnjYUTotDGOsItZ1D14IWwVepbr+HtnOn/yQ
-         VaM8mVyzI2kdyAPMrqJR3yRhNvlVD5sxL0oAPZks=
+        b=F+/MS1oO8q+QNO7Q84R8NUuw3zpSn8b38KWL3dck9PYZfqhl300x2ZPVvriDia6iC
+         u1bA1kijaajVKH8a6aZ1s2b85cAvzu7JlrjfJRk760eS3fdB8nT4bLnUTbFgRDZfPn
+         hqtHsJIyC1tfj08F9vvuiI9Bva+Hpg9TwT16iZOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 388/477] bcache: fix potential deadlock problem in btree_gc_coalesce
-Date:   Tue, 23 Jun 2020 21:56:25 +0200
-Message-Id: <20200623195425.870783380@linuxfoundation.org>
+Subject: [PATCH 5.7 392/477] afs: Fix non-setting of mtime when writing into mmap
+Date:   Tue, 23 Jun 2020 21:56:29 +0200
+Message-Id: <20200623195426.056563871@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,94 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit be23e837333a914df3f24bf0b32e87b0331ab8d1 ]
+[ Upstream commit bb413489288e4e457353bac513fddb6330d245ca ]
 
-coccicheck reports:
-  drivers/md//bcache/btree.c:1538:1-7: preceding lock on line 1417
+The mtime on an inode needs to be updated when a write is made into an
+mmap'ed section.  There are three ways in which this could be done: update
+it when page_mkwrite is called, update it when a page is changed from dirty
+to writeback or leave it to the server and fix the mtime up from the reply
+to the StoreData RPC.
 
-In btree_gc_coalesce func, if the coalescing process fails, we will goto
-to out_nocoalesce tag directly without releasing new_nodes[i]->write_lock.
-Then, it will cause a deadlock when trying to acquire new_nodes[i]->
-write_lock for freeing new_nodes[i] before return.
+Found with the generic/215 xfstest.
 
-btree_gc_coalesce func details as follows:
-	if alloc new_nodes[i] fails:
-		goto out_nocoalesce;
-	// obtain new_nodes[i]->write_lock
-	mutex_lock(&new_nodes[i]->write_lock)
-	// main coalescing process
-	for (i = nodes - 1; i > 0; --i)
-		[snipped]
-		if coalescing process fails:
-			// Here, directly goto out_nocoalesce
-			 // tag will cause a deadlock
-			goto out_nocoalesce;
-		[snipped]
-	// release new_nodes[i]->write_lock
-	mutex_unlock(&new_nodes[i]->write_lock)
-	// coalesing succ, return
-	return;
-out_nocoalesce:
-	btree_node_free(new_nodes[i])	// free new_nodes[i]
-	// obtain new_nodes[i]->write_lock
-	mutex_lock(&new_nodes[i]->write_lock);
-	// set flag for reuse
-	clear_bit(BTREE_NODE_dirty, &ew_nodes[i]->flags);
-	// release new_nodes[i]->write_lock
-	mutex_unlock(&new_nodes[i]->write_lock);
-
-To fix the problem, we add a new tag 'out_unlock_nocoalesce' for
-releasing new_nodes[i]->write_lock before out_nocoalesce tag. If
-coalescing process fails, we will go to out_unlock_nocoalesce tag
-for releasing new_nodes[i]->write_lock before free new_nodes[i] in
-out_nocoalesce tag.
-
-(Coly Li helps to clean up commit log format.)
-
-Fixes: 2a285686c109816 ("bcache: btree locking rework")
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 1cf7a1518aef ("afs: Implement shared-writeable mmap")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/btree.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/afs/write.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 72856e5f23a39..fd1f288fd8015 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -1389,7 +1389,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 			if (__set_blocks(n1, n1->keys + n2->keys,
- 					 block_bytes(b->c)) >
- 			    btree_blocks(new_nodes[i]))
--				goto out_nocoalesce;
-+				goto out_unlock_nocoalesce;
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index cb76566763dba..371db86c6c5ec 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -811,6 +811,7 @@ vm_fault_t afs_page_mkwrite(struct vm_fault *vmf)
+ 			     vmf->page->index, priv);
+ 	SetPagePrivate(vmf->page);
+ 	set_page_private(vmf->page, priv);
++	file_update_time(file);
  
- 			keys = n2->keys;
- 			/* Take the key of the node we're getting rid of */
-@@ -1418,7 +1418,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 
- 		if (__bch_keylist_realloc(&keylist,
- 					  bkey_u64s(&new_nodes[i]->key)))
--			goto out_nocoalesce;
-+			goto out_unlock_nocoalesce;
- 
- 		bch_btree_node_write(new_nodes[i], &cl);
- 		bch_keylist_add(&keylist, &new_nodes[i]->key);
-@@ -1464,6 +1464,10 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 	/* Invalidated our iterator */
- 	return -EINTR;
- 
-+out_unlock_nocoalesce:
-+	for (i = 0; i < nodes; i++)
-+		mutex_unlock(&new_nodes[i]->write_lock);
-+
- out_nocoalesce:
- 	closure_sync(&cl);
- 
+ 	sb_end_pagefault(inode->i_sb);
+ 	return VM_FAULT_LOCKED;
 -- 
 2.25.1
 
