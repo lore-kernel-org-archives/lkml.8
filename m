@@ -2,124 +2,79 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF77C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ACFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE1D2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8C52053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945422;
-	bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMTnvhDEPAv/eHpuUlHcc+o/gmxiA8ZdDgEhL7u0BN+DKNrufoAJeZuC8fSbz0NT2
-	 xNSZ3VukoZwBKFkK4fauYywGKCqhYKeiproF39FhrlBlK5utS9FHuW2rpojTGy/eJH
-	 ++SmEBpybikLrlo5CJ1IeEiJ7aPmldR+TmRfPh8E=
+	s=default; t=1592945429;
+	bh=n3Dwo2ucZ0JQxiocnRaLLDeGlCzh4hohybtbn2oJiMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xmKCB/A61KqrXtscRl8oKyx2OZtpTRsNHT1d8blcD0+Kw6H+z5ZgILk+727WmT0w9
+	 WeLW7J/Mc+zeow7piU3KL0h8ZcybIytTvDq4Rjj0ItKWSvqGWtC8FHrlLLO3pSsAvT
+	 eX6GbhOOXB6p1JCsR59u1agldrAWC8KZPka+YEU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392772AbgFWUuV (ORCPT
+        id S2393155AbgFWUu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:50:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47996 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403925AbgFWUss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:48:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2404143AbgFWUuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:50:10 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 806C421548;
-        Tue, 23 Jun 2020 20:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDDE72145D;
+        Tue, 23 Jun 2020 20:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945329;
-        bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QmTvbjEX3xJKwPnGGKpEmylIbFYOSXRDuIXbZd89yeSejbjOYwwJsvcOzA6wFDaRz
-         Gs4VT5eCBXmK9VN/WeMMAoAGpJ0odC71O/TPGblscjK1uh7wJiqRiuEfAz/SV2AgSq
-         Y+glTGQdFB+EGIbiX39+Qxe1c6CZPIa1qFN0tKOU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/136] selftests/net: in timestamping, strncpy needs to preserve null byte
-Date:   Tue, 23 Jun 2020 21:59:17 +0200
-Message-Id: <20200623195308.752003832@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
-References: <20200623195303.601828702@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592945409;
+        bh=n3Dwo2ucZ0JQxiocnRaLLDeGlCzh4hohybtbn2oJiMA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Crr6UFiwqsiN4Km8Ra7FSY/aeoxMjRRnq7id5zOD+eMKMaql6akRAtOOt5QX2UTAv
+         KdJMIh1VoOE4k+cS0H+bS2UZciGUE/7BM4xad87ywPxneYmMrAW0XBJXmYrh/HHWY4
+         tJSsYSktkna61XWn8xc2SL/wcKg62kgVvG7PT4uA=
+Date:   Tue, 23 Jun 2020 13:50:07 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kaige Li <likaige@loongson.cn>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH RESEND] net/cisco: Fix a sleep-in-atomic-context bug in
+ enic_init_affinity_hint()
+Message-ID: <20200623135007.3105d067@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <1592899989-22049-1-git-send-email-likaige@loongson.cn>
+References: <1592899989-22049-1-git-send-email-likaige@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+On Tue, 23 Jun 2020 16:13:09 +0800 Kaige Li wrote:
+> The kernel module may sleep with holding a spinlock.
+> 
+> The function call paths (from bottom to top) are:
+> 
+> [FUNC] zalloc_cpumask_var(GFP_KERNEL)
+> drivers/net/ethernet/cisco/enic/enic_main.c, 125: zalloc_cpumask_var in enic_init_affinity_hint
+> drivers/net/ethernet/cisco/enic/enic_main.c, 1918: enic_init_affinity_hint in enic_open
+> drivers/net/ethernet/cisco/enic/enic_main.c, 2348: enic_open in enic_reset
+> drivers/net/ethernet/cisco/enic/enic_main.c, 2341: spin_lock in enic_reset
+> 
+> To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
+> 
+> Signed-off-by: Kaige Li <likaige@loongson.cn>
 
-[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
-
-If user passed an interface option longer than 15 characters, then
-device.ifr_name and hwtstamp.ifr_name became non-null-terminated
-strings. The compiler warned about this:
-
-timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
-destination size [-Wstringop-truncation]
-  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-
-Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
-index 5cdfd743447b7..900ed4b478996 100644
---- a/tools/testing/selftests/networking/timestamping/timestamping.c
-+++ b/tools/testing/selftests/networking/timestamping/timestamping.c
-@@ -332,10 +332,16 @@ int main(int argc, char **argv)
- 	int val;
- 	socklen_t len;
- 	struct timeval next;
-+	size_t if_len;
- 
- 	if (argc < 2)
- 		usage(0);
- 	interface = argv[1];
-+	if_len = strlen(interface);
-+	if (if_len >= IFNAMSIZ) {
-+		printf("interface name exceeds IFNAMSIZ\n");
-+		exit(1);
-+	}
- 
- 	for (i = 2; i < argc; i++) {
- 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
-@@ -369,12 +375,12 @@ int main(int argc, char **argv)
- 		bail("socket");
- 
- 	memset(&device, 0, sizeof(device));
--	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-+	memcpy(device.ifr_name, interface, if_len + 1);
- 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
- 		bail("getting interface IP address");
- 
- 	memset(&hwtstamp, 0, sizeof(hwtstamp));
--	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
-+	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
- 	hwtstamp.ifr_data = (void *)&hwconfig;
- 	memset(&hwconfig, 0, sizeof(hwconfig));
- 	hwconfig.tx_type =
--- 
-2.25.1
-
-
-
+I don't think this is sufficient. Calling open with a spin lock held
+seems like a very bad idea. At a quick look the driver also calls
+request_irq() from open - request_irq() can sleep.
