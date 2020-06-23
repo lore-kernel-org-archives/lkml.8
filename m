@@ -7,57 +7,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89313C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD61C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602A021927
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A789D21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944997;
-	bh=Hujp0Lv2r1Kw5z4R/aHZVV41Lsz/IsjSjII/Lr4698g=;
+	s=default; t=1592945000;
+	bh=KoMH0rSMVEnUOmJIQ4+TiDlWsDKsNXFRvhsC87PjwDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a852AVJdcXhJUY66yuhx/9pFvEsqPmbcbX4ci7WIm2vig8m16oqkoTvL79CFZePo0
-	 Vka7ta7hc7eSkVRUfQzj4zbdFKOhe2Qp0fX4smQkYRVN7phZi5cjrn9Ay4/kqSTPZE
-	 +KAQzXbLgswqLNBW8tAlq8TpI4yNj/ZhbjXgX2Z8=
+	b=swHKyepzla1PUfq2XQY96J/QAImyQEjXJCOvXFyIGWlUrXKx9Kn+QsFPG6fwpZlSI
+	 5YrCNpfqJZ0HQ32EVfbItul6rhoI9a6yDGHP68kGHovXBS/3o+Hjhqp+CJdU14AhXx
+	 POqSzqVPE+g4XIU9wl+buzQuBxJ/D3EkOHWiHxOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392494AbgFWUnO (ORCPT
+        id S2392504AbgFWUnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39848 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:43:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392478AbgFWUnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:43:07 -0400
+        id S2392491AbgFWUnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:43:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3FD12053B;
-        Tue, 23 Jun 2020 20:43:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95A5A21883;
+        Tue, 23 Jun 2020 20:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944987;
-        bh=Hujp0Lv2r1Kw5z4R/aHZVV41Lsz/IsjSjII/Lr4698g=;
+        s=default; t=1592944993;
+        bh=KoMH0rSMVEnUOmJIQ4+TiDlWsDKsNXFRvhsC87PjwDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5R20S5tsDZJGAARDadB3OikAADIDQ/5W5exPHVBzbU/892W/Am87oSRXEVKelj5+
-         zKVfGsojVdEQLkYD4Zq5OAleY4ir34JpPySnqp/ydnhr0vY8eVSTE9vgJlOhqArxAX
-         V/qDw4C6dYBOQAAlajlwnTNl86FwjUmc2nGSJYYU=
+        b=UAkW0wezhnG8/z0lV6oZxCGFmOLUhQsnMaNBKLaORa27gg4j1st9cZwz6+cNqeqaY
+         uKHsnpP92Wm5lfrXr3VHFqDKbi3A/WLedAxx2pp1Fwm6qHsbzEC5GAJm1HSvRMxHnJ
+         1MdB89Je/GKBhapx7vz/1LtQeU9NGL+ACIt7EdVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Ingo Molnar <mingo@elte.hu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 203/206] kretprobe: Prevent triggering kretprobe from within kprobe_flush_task
-Date:   Tue, 23 Jun 2020 21:58:51 +0200
-Message-Id: <20200623195327.027956628@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 4.19 205/206] net: core: device_rename: Use rwsem instead of a seqcount
+Date:   Tue, 23 Jun 2020 21:58:53 +0200
+Message-Id: <20200623195327.129719456@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -70,244 +64,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-[ Upstream commit 9b38cc704e844e41d9cf74e647bff1d249512cb3 ]
+[ Upstream commit 11d6011c2cf29f7c8181ebde6c8bc0c4d83adcd7 ]
 
-Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
-My test was also able to trigger lockdep output:
+Sequence counters write paths are critical sections that must never be
+preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
 
- ============================================
- WARNING: possible recursive locking detected
- 5.6.0-rc6+ #6 Not tainted
- --------------------------------------------
- sched-messaging/2767 is trying to acquire lock:
- ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
+Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
+netdev name retrieval.") handled a deadlock, observed with
+CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
+infinitely spinning: it got scheduled after the seqcount write side
+blocked inside its own critical section.
 
- but task is already holding lock:
- ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+To fix that deadlock, among other issues, the commit added a
+cond_resched() inside the read side section. While this will get the
+non-preemptible kernel eventually unstuck, the seqcount reader is fully
+exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+The fix is also still broken: if the seqcount reader belongs to a
+real-time scheduling policy, it can spin forever and the kernel will
+livelock.
 
-        CPU0
-        ----
-   lock(&(kretprobe_table_locks[i].lock));
-   lock(&(kretprobe_table_locks[i].lock));
+Disabling preemption over the seqcount write side critical section will
+not work: inside it are a number of GFP_KERNEL allocations and mutex
+locking through the drivers/base/ :: device_rename() call chain.
 
-  *** DEADLOCK ***
+>From all the above, replace the seqcount with a rwsem.
 
-  May be due to missing lock nesting notation
-
- 1 lock held by sched-messaging/2767:
-  #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
-
- stack backtrace:
- CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
- Call Trace:
-  dump_stack+0x96/0xe0
-  __lock_acquire.cold.57+0x173/0x2b7
-  ? native_queued_spin_lock_slowpath+0x42b/0x9e0
-  ? lockdep_hardirqs_on+0x590/0x590
-  ? __lock_acquire+0xf63/0x4030
-  lock_acquire+0x15a/0x3d0
-  ? kretprobe_hash_lock+0x52/0xa0
-  _raw_spin_lock_irqsave+0x36/0x70
-  ? kretprobe_hash_lock+0x52/0xa0
-  kretprobe_hash_lock+0x52/0xa0
-  trampoline_handler+0xf8/0x940
-  ? kprobe_fault_handler+0x380/0x380
-  ? find_held_lock+0x3a/0x1c0
-  kretprobe_trampoline+0x25/0x50
-  ? lock_acquired+0x392/0xbc0
-  ? _raw_spin_lock_irqsave+0x50/0x70
-  ? __get_valid_kprobe+0x1f0/0x1f0
-  ? _raw_spin_unlock_irqrestore+0x3b/0x40
-  ? finish_task_switch+0x4b9/0x6d0
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-
-The code within the kretprobe handler checks for probe reentrancy,
-so we won't trigger any _raw_spin_lock_irqsave probe in there.
-
-The problem is in outside kprobe_flush_task, where we call:
-
-  kprobe_flush_task
-    kretprobe_table_lock
-      raw_spin_lock_irqsave
-        _raw_spin_lock_irqsave
-
-where _raw_spin_lock_irqsave triggers the kretprobe and installs
-kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
-
-The kretprobe_trampoline handler is then executed with already
-locked kretprobe_table_locks, and first thing it does is to
-lock kretprobe_table_locks ;-) the whole lockup path like:
-
-  kprobe_flush_task
-    kretprobe_table_lock
-      raw_spin_lock_irqsave
-        _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
-
-        ---> kretprobe_table_locks locked
-
-        kretprobe_trampoline
-          trampoline_handler
-            kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
-
-Adding kprobe_busy_begin/end helpers that mark code with fake
-probe installed to prevent triggering of another kprobe within
-this code.
-
-Using these helpers in kprobe_flush_task, so the probe recursion
-protection check is hit and the probe is never set to prevent
-above lockup.
-
-Link: http://lkml.kernel.org/r/158927059835.27680.7011202830041561604.stgit@devnote2
-
-Fixes: ef53d9c5e4da ("kprobes: improve kretprobe scalability with hashed locking")
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>
-Cc: "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David Miller <davem@davemloft.net>
-Cc: Ingo Molnar <mingo@elte.hu>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Reported-by: "Ziqian SUN (Zamir)" <zsun@redhat.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
+Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
+Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
+Cc: <stable@vger.kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com> [ v1 missing up_read() on error exit ]
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com> [ v1 missing up_read() on error exit ]
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/kprobes/core.c | 16 +++-------------
- include/linux/kprobes.h        |  4 ++++
- kernel/kprobes.c               | 24 ++++++++++++++++++++++++
- 3 files changed, 31 insertions(+), 13 deletions(-)
+ net/core/dev.c | 40 ++++++++++++++++++----------------------
+ 1 file changed, 18 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 173e915e11d54..07e290244ca94 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -765,16 +765,11 @@ asm(
- NOKPROBE_SYMBOL(kretprobe_trampoline);
- STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 8db77e09387b8..1618d5a676c47 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -83,6 +83,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/mm.h>
+ #include <linux/mutex.h>
++#include <linux/rwsem.h>
+ #include <linux/string.h>
+ #include <linux/mm.h>
+ #include <linux/socket.h>
+@@ -195,7 +196,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
+ static unsigned int napi_gen_id = NR_CPUS;
+ static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
  
--static struct kprobe kretprobe_kprobe = {
--	.addr = (void *)kretprobe_trampoline,
--};
--
- /*
-  * Called from kretprobe_trampoline
-  */
- __visible __used void *trampoline_handler(struct pt_regs *regs)
+-static seqcount_t devnet_rename_seq;
++static DECLARE_RWSEM(devnet_rename_sem);
+ 
+ static inline void dev_base_seq_inc(struct net *net)
  {
--	struct kprobe_ctlblk *kcb;
- 	struct kretprobe_instance *ri = NULL;
- 	struct hlist_head *head, empty_rp;
- 	struct hlist_node *tmp;
-@@ -784,16 +779,12 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 	void *frame_pointer;
- 	bool skipped = false;
+@@ -899,33 +900,28 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
+  *	@net: network namespace
+  *	@name: a pointer to the buffer where the name will be stored.
+  *	@ifindex: the ifindex of the interface to get the name from.
+- *
+- *	The use of raw_seqcount_begin() and cond_resched() before
+- *	retrying is required as we want to give the writers a chance
+- *	to complete when CONFIG_PREEMPTION is not set.
+  */
+ int netdev_get_name(struct net *net, char *name, int ifindex)
+ {
+ 	struct net_device *dev;
+-	unsigned int seq;
++	int ret;
  
--	preempt_disable();
--
- 	/*
- 	 * Set a dummy kprobe for avoiding kretprobe recursion.
- 	 * Since kretprobe never run in kprobe handler, kprobe must not
- 	 * be running at this point.
- 	 */
--	kcb = get_kprobe_ctlblk();
--	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
--	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+	kprobe_busy_begin();
- 
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
-@@ -872,7 +863,7 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 			__this_cpu_write(current_kprobe, &ri->rp->kp);
- 			ri->ret_addr = correct_ret_addr;
- 			ri->rp->handler(ri, regs);
--			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
-+			__this_cpu_write(current_kprobe, &kprobe_busy);
- 		}
- 
- 		recycle_rp_inst(ri, &empty_rp);
-@@ -888,8 +879,7 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 
- 	kretprobe_hash_unlock(current, &flags);
- 
--	__this_cpu_write(current_kprobe, NULL);
--	preempt_enable();
-+	kprobe_busy_end();
- 
- 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
- 		hlist_del(&ri->hlist);
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 9adb92ad24d3f..9f22652d69bb0 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -363,6 +363,10 @@ static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
- 	return this_cpu_ptr(&kprobe_ctlblk);
- }
- 
-+extern struct kprobe kprobe_busy;
-+void kprobe_busy_begin(void);
-+void kprobe_busy_end(void);
+-retry:
+-	seq = raw_seqcount_begin(&devnet_rename_seq);
++	down_read(&devnet_rename_sem);
+ 	rcu_read_lock();
 +
- kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset);
- int register_kprobe(struct kprobe *p);
- void unregister_kprobe(struct kprobe *p);
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 3174fe1bb711b..97de04a52c9fe 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1227,6 +1227,26 @@ __releases(hlist_lock)
- }
- NOKPROBE_SYMBOL(kretprobe_table_unlock);
- 
-+struct kprobe kprobe_busy = {
-+	.addr = (void *) get_kprobe,
-+};
-+
-+void kprobe_busy_begin(void)
-+{
-+	struct kprobe_ctlblk *kcb;
-+
-+	preempt_disable();
-+	__this_cpu_write(current_kprobe, &kprobe_busy);
-+	kcb = get_kprobe_ctlblk();
-+	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+}
-+
-+void kprobe_busy_end(void)
-+{
-+	__this_cpu_write(current_kprobe, NULL);
-+	preempt_enable();
-+}
-+
- /*
-  * This function is called from finish_task_switch when task tk becomes dead,
-  * so that we can recycle any function-return probe instances associated
-@@ -1244,6 +1264,8 @@ void kprobe_flush_task(struct task_struct *tk)
- 		/* Early boot.  kretprobe_table_locks not yet initialized. */
- 		return;
- 
-+	kprobe_busy_begin();
-+
- 	INIT_HLIST_HEAD(&empty_rp);
- 	hash = hash_ptr(tk, KPROBE_HASH_BITS);
- 	head = &kretprobe_inst_table[hash];
-@@ -1257,6 +1279,8 @@ void kprobe_flush_task(struct task_struct *tk)
- 		hlist_del(&ri->hlist);
- 		kfree(ri);
+ 	dev = dev_get_by_index_rcu(net, ifindex);
+ 	if (!dev) {
+-		rcu_read_unlock();
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto out;
  	}
-+
-+	kprobe_busy_end();
- }
- NOKPROBE_SYMBOL(kprobe_flush_task);
  
+ 	strcpy(name, dev->name);
+-	rcu_read_unlock();
+-	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
+-		cond_resched();
+-		goto retry;
+-	}
+ 
+-	return 0;
++	ret = 0;
++out:
++	rcu_read_unlock();
++	up_read(&devnet_rename_sem);
++	return ret;
+ }
+ 
+ /**
+@@ -1198,10 +1194,10 @@ int dev_change_name(struct net_device *dev, const char *newname)
+ 	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
+ 		return -EBUSY;
+ 
+-	write_seqcount_begin(&devnet_rename_seq);
++	down_write(&devnet_rename_sem);
+ 
+ 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return 0;
+ 	}
+ 
+@@ -1209,7 +1205,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
+ 
+ 	err = dev_get_valid_name(net, dev, newname);
+ 	if (err < 0) {
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return err;
+ 	}
+ 
+@@ -1224,11 +1220,11 @@ rollback:
+ 	if (ret) {
+ 		memcpy(dev->name, oldname, IFNAMSIZ);
+ 		dev->name_assign_type = old_assign_type;
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return ret;
+ 	}
+ 
+-	write_seqcount_end(&devnet_rename_seq);
++	up_write(&devnet_rename_sem);
+ 
+ 	netdev_adjacent_rename_links(dev, oldname);
+ 
+@@ -1249,7 +1245,7 @@ rollback:
+ 		/* err >= 0 after dev_alloc_name() or stores the first errno */
+ 		if (err >= 0) {
+ 			err = ret;
+-			write_seqcount_begin(&devnet_rename_seq);
++			down_write(&devnet_rename_sem);
+ 			memcpy(dev->name, oldname, IFNAMSIZ);
+ 			memcpy(oldname, newname, IFNAMSIZ);
+ 			dev->name_assign_type = old_assign_type;
 -- 
 2.25.1
 
