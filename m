@@ -2,68 +2,178 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F277FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F68C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5BF520720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:40:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592923218;
-	bh=2gzWQlrlUbt8yYSj3sO6iIOtsSAOWbEMJh9zFKnUe2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mJkxVd02AP3KLPjaZpVuCb0ZFxNL0Q4h7xfmg7EV6nSyYpP5tIOTxfKZ8A0q34H8n
-	 qMRy37wXwVi+PAl+GYUS5rpkXLf2y/GFVPufLrTKTsYWDnyygKH0553F7lugOjifdt
-	 04rLxeLdISLG7i2gpmTfYTnsdV10VOBFmNd4SlgA=
+	by mail.kernel.org (Postfix) with ESMTP id 1D30520720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732890AbgFWOkR (ORCPT
+        id S1732891AbgFWOlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732738AbgFWOkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:40:16 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CE362053B;
-        Tue, 23 Jun 2020 14:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592923216;
-        bh=2gzWQlrlUbt8yYSj3sO6iIOtsSAOWbEMJh9zFKnUe2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IOJxyweiOt7o/Z2CRcui4ao8o1ebr70thXezTE5YZXPjHqEztwWy49qsTzyrhoG+B
-         YkAp6n7KmAJDAEKAdAPxGcN+xCraiaZ4KPRSR1oxLFclIX87YCfokQEO2Thhdfr4G1
-         mtl5M8jX9U99IMl3/tsVByW80AomcjrO2Essh3Ss=
-Date:   Tue, 23 Jun 2020 07:40:14 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     axboe@fb.com, hch@lst.de, sagi@grimberg.me, baolin.wang7@gmail.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] nvme: Add Arbitration Burst support
-Message-ID: <20200623144014.GB1288900@dhcp-10-100-145-180.wdl.wdc.com>
-References: <cover.1592916850.git.baolin.wang@linux.alibaba.com>
- <bf3f47ba50f72d0b775ca4bd098f183056d964ba.1592916850.git.baolin.wang@linux.alibaba.com>
+        Tue, 23 Jun 2020 10:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732841AbgFWOlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 10:41:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930B6C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:41:19 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jnk6m-00043q-NL; Tue, 23 Jun 2020 16:41:08 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jnk6j-0000GH-Mh; Tue, 23 Jun 2020 16:41:05 +0200
+Date:   Tue, 23 Jun 2020 16:41:05 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Roy Im <roy.im.opensource@diasemi.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [RESEND PATCH V13 3/3] Input: new da7280 haptic driver
+Message-ID: <20200623144105.mxhcrtezbghjb2vb@taurus.defre.kleine-koenig.org>
+References: <cover.1592221223.git.Roy.Im@diasemi.com>
+ <135761fd309eb9424faeb631b6e6c66147b57666.1592221223.git.Roy.Im@diasemi.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sap42vwa5imj2ksw"
 Content-Disposition: inline
-In-Reply-To: <bf3f47ba50f72d0b775ca4bd098f183056d964ba.1592916850.git.baolin.wang@linux.alibaba.com>
+In-Reply-To: <135761fd309eb9424faeb631b6e6c66147b57666.1592221223.git.Roy.Im@diasemi.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:24:32PM +0800, Baolin Wang wrote:
-> From the NVMe spec, "In order to make efficient use of the non-volatile
-> memory, it is often advantageous to execute multiple commands from a
-> Submission Queue in parallel. For Submission Queues that are using
-> weighted round robin with urgent priority class or round robin
-> arbitration, host software may configure an Arbitration Burst setting".
-> Thus add Arbitration Burst setting support.
 
-But if the user changed it to something else that better matches how
-they want to use queues, the driver is just going to undo that setting
-on the next reset.
+--sap42vwa5imj2ksw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+On Mon, Jun 15, 2020 at 08:40:23PM +0900, Roy Im wrote:
+> Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
+> multiple mode and integrated waveform memory and wideband support.
+> It communicates via an I2C bus to the device.
+>=20
+> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+
+Just some picky comments below.
+
+> +	error =3D pwm_apply_state(haptics->pwm_dev, &state);
+> +	if (error)
+> +		dev_err(haptics->dev,
+> +			"failed to apply pwm state: %pE\n",
+> +			ERR_PTR(error));
+
+You can save some horizontal space here by dropping the \n after the
+first comma. (There are a few more occurences.)
+
+> +	return error;
+> +}
+> +[...]
+> +
+> +		/* Sync up PWM state and ensure it is off. */
+> +		pwm_init_state(haptics->pwm_dev, &state);
+> +		state.enabled =3D false;
+> +		error =3D pwm_apply_state(haptics->pwm_dev, &state);
+> +		if (error) {
+> +			dev_err(dev,
+> +				"failed to apply initial PWM state: %pE\n",
+> +				ERR_PTR(error));
+> +			return error;
+> +		}
+> +
+> +		/* Check PWM Period, it must be in 10k ~ 250kHz */
+
+The unit of a PWM period is in (nano)seconds, to it cannot be in the
+range [10kHz, 250kHz]. (Is this too picky?)
+
+> +		period2freq =3D 1000000 / state.period;
+> +		if (period2freq < DA7280_MIN_PWM_FREQ_KHZ ||
+> +		    period2freq > DA7280_MAX_PWM_FREQ_KHZ) {
+> +			dev_err(dev, "Not supported PWM frequency(%d)\n",
+> +				period2freq);
+
+Doesn't the compiler warn here about period2freq being unsigned and %d
+being for signed int values?
+
+For my (non-native) English ear s/Not supported/Unsupported/ sounds
+better. Also my eyes would be pleases by a space before the opening
+brace.
+
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +
+> +[...]
+> +static struct i2c_driver da7280_driver =3D {
+> +	.driver	=3D {
+> +		.name		=3D "da7280",
+> +		.of_match_table	=3D of_match_ptr(da7280_of_match),
+> +		.pm		=3D &da7280_pm_ops,
+
+I don't like alignment of =3D, but I'm aware this is a subjective thing.
+(The reason for me is that adding a new member that is longer than the
+already existing requires touching all lines. So I stick to a single
+space before a =3D.)
+
+> +	},
+> +	.probe	  =3D da7280_probe,
+> +	.id_table =3D da7280_i2c_id,
+> +};
+> +module_i2c_driver(da7280_driver);
+> +
+> +MODULE_DESCRIPTION("DA7280 haptics driver");
+> +MODULE_AUTHOR("Roy Im <Roy.Im.Opensource@diasemi.com>");
+> +MODULE_LICENSE("GPL");
+> --=20
+> end-of-patch for RESEND PATCH V13
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--sap42vwa5imj2ksw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7yFH4ACgkQwfwUeK3K
+7AkzyQgAinqodG7O9W0MXAaThAuQIllst+boEpiHowQfbTKPWIfhEtcsGoBNoQvb
+hySvg0WAH6jI6LNsfnM2uIabLaPjC9mVIFyG0YU2g4ulASEOrOSqZrxCGEJxZPEi
+57o7NJCw7RaXvH/QGP0zg/+NP0o/kWZlr6GFP/ZPBi5/Xa7Nonqws+DRNjPzdN9v
+pKhKf6QJhNTQuVCn6an+Uo9kl4F28kvx4DLDfW3ljZC+g+1PH/4uZi9iNy83V8Uo
+XlY6hqJ3b70fotLm2Oo7chj3dPAeerkxx5mezIQpgidqqct2PcPzfUbPx+xPBm59
+tZsRyjSeuO9u/M3kgOBYaKTPWQb8oQ==
+=j9ju
+-----END PGP SIGNATURE-----
+
+--sap42vwa5imj2ksw--
