@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD59AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E84C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACDA21D90
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2FAF21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945111;
-	bh=2ywDc0xZpZr4pNeuplAx72Tl1vqpLH6y/lFRNLON1GE=;
+	s=default; t=1592945114;
+	bh=0ITsDM3fOKZh+tWWm63frmHczA2dJQnz3x74cD9OrLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4WbPVeuUDvQvdoNkcqN+mfd5stjtTuFOFo3dWQy+zMsuXmt3Du9dPRFe2TeVN5NV
-	 Ff7R4Ec9mNlcwFylO42hbJNOZo4VnbB5VbSN9SHk7u72UaKH616oPYgNGmvCouI2Rz
-	 yzbUVLUcwf7DRgmXi6g7r04d+gj1skSH4am+axCI=
+	b=e/NBEVn2ZeCoqYi7k4IwQcwdh9WrPYt+Iex4IsObH5i39R2N51GifZ8uN25yTEBP5
+	 RtIFdbeesUI2vkdYP29mbdRPZCaMiXTV+AUHvJ7ox9bGrxBhWRyhX1fmE3kZg97PAF
+	 rQj7jlxB78iSt+/2K/LWl6i35cZPzEhCXGqQbFc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404004AbgFWUpI (ORCPT
+        id S2392730AbgFWUpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42166 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392657AbgFWUox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:44:53 -0400
+        id S2389681AbgFWUo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5713E21927;
-        Tue, 23 Jun 2020 20:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB2421BE5;
+        Tue, 23 Jun 2020 20:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945092;
-        bh=2ywDc0xZpZr4pNeuplAx72Tl1vqpLH6y/lFRNLON1GE=;
+        s=default; t=1592945100;
+        bh=0ITsDM3fOKZh+tWWm63frmHczA2dJQnz3x74cD9OrLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cNTZSfB0bZ5gkk7fNnbjP5zDfF7kbb9f+V39YaSp+iGRjOncAbWVwc6E2oXVovyfo
-         T1YavHdy42HgkCYjqRnQ3qunT7DOTkx9IDwtLIQ95hDLnT4hdvAn4wNIhu9CqRwo0N
-         hFMW9LT97LxbB+WUmuJNecWxanEJHDzFjxNxPd3M=
+        b=cFdI+rrKPkpFIKKto9/J4AfXX4I5T/8zcJx8aq7ccEmSp6Sl3A6tNJqwHdxgFFVXc
+         CiTF29umMVTKsm5Ac6Mal5sIjU76o2yvDcAcz7S2YxHNz0mGilaxm1/BezHJ1qajk/
+         Ink+UYTnljUZmDYplGdiv/9hebaDLi8fWJ1JBU5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Georgi Djakov <georgi.djakov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        stable@vger.kernel.org, ashimida <ashimida@linux.alibaba.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 008/136] clk: qcom: msm8916: Fix the address location of pll->config_reg
-Date:   Tue, 23 Jun 2020 21:57:44 +0200
-Message-Id: <20200623195304.033620732@linuxfoundation.org>
+Subject: [PATCH 4.14 032/136] mksysmap: Fix the mismatch of .L symbols in System.map
+Date:   Tue, 23 Jun 2020 21:58:08 +0200
+Message-Id: <20200623195305.267444170@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -64,92 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: ashimida <ashimida@linux.alibaba.com>
 
-[ Upstream commit f47ab3c2f5338828a67e89d5f688d2cef9605245 ]
+[ Upstream commit 72d24accf02add25e08733f0ecc93cf10fcbd88c ]
 
-During the process of debugging a processor derived from the msm8916 which
-we found the new processor was not starting one of its PLLs.
+When System.map was generated, the kernel used mksysmap to
+filter the kernel symbols, but all the symbols with the
+second letter 'L' in the kernel were filtered out, not just
+the symbols starting with 'dot + L'.
 
-After tracing the addresses and writes that downstream was doing and
-comparing to upstream it became obvious that we were writing to a different
-register location than downstream when trying to configure the PLL.
+For example:
+ashimida@ubuntu:~/linux$ cat System.map |grep ' .L'
+ashimida@ubuntu:~/linux$ nm -n vmlinux |grep ' .L'
+ffff0000088028e0 t bLength_show
+......
+ffff0000092e0408 b PLLP_OUTC_lock
+ffff0000092e0410 b PLLP_OUTA_lock
 
-This error is also present in upstream msm8916.
+The original intent should be to filter out all local symbols
+starting with '.L', so the dot should be escaped.
 
-As an example clk-pll.c::clk_pll_recalc_rate wants to write to
-pll->config_reg updating the bit-field POST_DIV_RATIO. That bit-field is
-defined in PLL_USER_CTL not in PLL_CONFIG_CTL. Taking the BIMC PLL as an
-example
-
-lm80-p0436-13_c_qc_snapdragon_410_processor_hrd.pdf
-
-0x01823010 GCC_BIMC_PLL_USER_CTL
-0x01823014 GCC_BIMC_PLL_CONFIG_CTL
-
-This pattern is repeated for gpll0, gpll1, gpll2 and bimc_pll.
-
-This error is likely not apparent since the bootloader will already have
-initialized these PLLs.
-
-This patch corrects the location of config_reg from PLL_CONFIG_CTL to
-PLL_USER_CTL for all relevant PLLs on msm8916.
-
-Fixes commit 3966fab8b6ab ("clk: qcom: Add MSM8916 Global Clock Controller support")
-
-Cc: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Link: https://lkml.kernel.org/r/20200329124116.4185447-1-bryan.odonoghue@linaro.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 00902e984732 ("mksysmap: Add h8300 local symbol pattern")
+Signed-off-by: ashimida <ashimida@linux.alibaba.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-msm8916.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ scripts/mksysmap | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
-index 2057809219f4e..7426d910e0797 100644
---- a/drivers/clk/qcom/gcc-msm8916.c
-+++ b/drivers/clk/qcom/gcc-msm8916.c
-@@ -270,7 +270,7 @@ static struct clk_pll gpll0 = {
- 	.l_reg = 0x21004,
- 	.m_reg = 0x21008,
- 	.n_reg = 0x2100c,
--	.config_reg = 0x21014,
-+	.config_reg = 0x21010,
- 	.mode_reg = 0x21000,
- 	.status_reg = 0x2101c,
- 	.status_bit = 17,
-@@ -297,7 +297,7 @@ static struct clk_pll gpll1 = {
- 	.l_reg = 0x20004,
- 	.m_reg = 0x20008,
- 	.n_reg = 0x2000c,
--	.config_reg = 0x20014,
-+	.config_reg = 0x20010,
- 	.mode_reg = 0x20000,
- 	.status_reg = 0x2001c,
- 	.status_bit = 17,
-@@ -324,7 +324,7 @@ static struct clk_pll gpll2 = {
- 	.l_reg = 0x4a004,
- 	.m_reg = 0x4a008,
- 	.n_reg = 0x4a00c,
--	.config_reg = 0x4a014,
-+	.config_reg = 0x4a010,
- 	.mode_reg = 0x4a000,
- 	.status_reg = 0x4a01c,
- 	.status_bit = 17,
-@@ -351,7 +351,7 @@ static struct clk_pll bimc_pll = {
- 	.l_reg = 0x23004,
- 	.m_reg = 0x23008,
- 	.n_reg = 0x2300c,
--	.config_reg = 0x23014,
-+	.config_reg = 0x23010,
- 	.mode_reg = 0x23000,
- 	.status_reg = 0x2301c,
- 	.status_bit = 17,
+diff --git a/scripts/mksysmap b/scripts/mksysmap
+index a35acc0d0b827..9aa23d15862a0 100755
+--- a/scripts/mksysmap
++++ b/scripts/mksysmap
+@@ -41,4 +41,4 @@
+ # so we just ignore them to let readprofile continue to work.
+ # (At least sparc64 has __crc_ in the middle).
+ 
+-$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( .L\)' > $2
++$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)' > $2
 -- 
 2.25.1
 
