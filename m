@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C87C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12F4E20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EF420874
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aRORO8o+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="axVFq7kE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387735AbgFWXSl (ORCPT
+        id S2387886AbgFWXS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51626 "EHLO
+        Tue, 23 Jun 2020 19:18:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387597AbgFWXSk (ORCPT
+        with ESMTP id S2387749AbgFWXSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:18:40 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D9BC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:18:40 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g12so131874pll.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:18:40 -0700 (PDT)
+        Tue, 23 Jun 2020 19:18:55 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9EAC0613ED
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:18:55 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id f3so358480pgr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:18:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=0v96ac/leez1FdRm3ShEMVPeysWT8iB1v45wX2mCpIM=;
-        b=aRORO8o+nqm0mE17Kc1Nc9GsbcGXWmVGCFNn9ZXXMn821qjSFWp7c8OnDP1jwDLgMH
-         E13wrKo8PCLQp2Xsb8cluhdrpDe/FwwUqvkJ9sXF4hK7da04PDrd7mgWkieFE+3oteP6
-         f7oFZaCoy91XPcUkhQLRzDFDM+vwCC1KRi91+e80brRRQpQAtmUTYQWvaXrNp/IEDvhN
-         NKimV3EH/8GO2Gxy0gvmnhigASjTQcfqy5JkjtPS2IYLskBqHlZliyVC/B54hY+dLmzz
-         BaIEtpzCQIfj05ZFL1tCbdab078xleDKh8yQkvWLFdul3nXpx+5DMXA9SaIT97hZJs4Q
-         xNJw==
+        bh=owfnTjDg726NQtD8/qpHi9DHMAEWYAz9K7YSNYTVBdM=;
+        b=axVFq7kEpzc0dZ9A34HiMdj61yFalJrUM23DWP9yRZk52sePC29vY9KXZguGt9UnTd
+         R2lP2oCjUYJ47auAhoIl0cnMZJbnuAJwOWA7cSJD/huM4YhUJhxli5Jsoh71Ps9iwuvU
+         9al7bH1MI24TstseeTj6WwVU0wdOxix/wnF74p7kDjODXvt4Z15HXASEAotwmUvU+pKU
+         pnMo6iAvksTVm97jtBuWQdAsxxAHAQwOBSaiYb6ihu90IFOnjDHHONcQM3zGfrikE0kI
+         gaDWaALK7PEAJFMt8OclbWgTODw1MCGX36h1hDU3aFHU2NtlhBiRLxE/rLUAdVp0qF7r
+         Ylhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=0v96ac/leez1FdRm3ShEMVPeysWT8iB1v45wX2mCpIM=;
-        b=ZMeiSzRxRgIy/B/DYdid+xiy1eXUfoHjqFOFfwt5VK19mb0HDUjOUEMi15Kc/URH0S
-         O6TzHhBsMUc9zLBf7W4lDRXVvrUfZb6WF0xV1aicLti5braPndlCfm4qmmUkQFE2eU5i
-         ESi+Wt0ZE3N5tmukoX2MOU8v3ujSlZTJnEwgNfvpjWGc0xxrbGwVUMbVxeEH3msLefZP
-         Bpxm5WP2sLjmtsLvwTQgleRPI6yYRwEbgr5C+cIXMDRy0RIuYN2G1tLIfr2KZhru2OzN
-         sjIgfBC5kXQfEkrx1eG4NsQfWLDlduUTcaBaNteG5Y9cVXnUX9NAKg5qcuBX9Jsj5VEP
-         ZIKw==
-X-Gm-Message-State: AOAM533oFWCYeE6A3HbleARlHR6JotZHvlaV2qujIy8TYQ2hcFRRDihu
-        OHg8+eb2AGEz2LA5fvkyvwpDoQ==
-X-Google-Smtp-Source: ABdhPJwqwUenAMlMsZ6tp1FrBJrXVkaOur2qDdhej0ImlRcHJrseQcotofWyOJamvq1ST5/QPq+YCg==
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr25300027plt.243.1592954319500;
-        Tue, 23 Jun 2020 16:18:39 -0700 (PDT)
+        bh=owfnTjDg726NQtD8/qpHi9DHMAEWYAz9K7YSNYTVBdM=;
+        b=auKOuAQPAVtxgJzQiL/+6rtc4+Q2p8GbafqvLS/TLGmZRbP29HgrArsCFzkeXCc5Qm
+         2vi8gtqlbynDv+x+6oHsluCMNpzWXTdEOhhryBeYsDez5yB731APsy/Nb1qLF28JVy25
+         /QMWbchVRf5jjNQb82NyHTBjmXzsfcwcAFAhmzPE5VQAta2zlHGYDqizvmQglOT1a9xE
+         0B57kcbUt8GWH9WRich0P+ix+pa8qaRZqxuh54S4aJPwNgFjwO2Bp7HRoeaz6aty9Q3c
+         vx6xePh4XlY9WbYwyzAIXXxn8DR0K1giTQ3BeSSBvYicdj5GteumajeA/kaDa1cgWQbe
+         R+tA==
+X-Gm-Message-State: AOAM533xE05cN0RCJ+SGtL5Opx92BWt8B/NwcW1TF4+a3dZXhRl6WOrM
+        S5hPMMUYxGXfrnccI75Olee79g==
+X-Google-Smtp-Source: ABdhPJx06TX5OOHzlhkijzzldNPalHmTdguWii291hg2tgJdJvb1x61rBEowix+fbi8F4IW1FhWEXg==
+X-Received: by 2002:a62:ee1a:: with SMTP id e26mr26388637pfi.228.1592954334821;
+        Tue, 23 Jun 2020 16:18:54 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r9sm18816543pfq.31.2020.06.23.16.18.38
+        by smtp.gmail.com with ESMTPSA id 2sm3375297pfa.110.2020.06.23.16.18.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 16:18:38 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 16:15:56 -0700
+        Tue, 23 Jun 2020 16:18:54 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 16:16:11 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Konrad Dybcio <konradybcio@gmail.com>
 Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
@@ -69,15 +69,14 @@ Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/12] arm64: dts: qcom: msm8994: Add SPMI PMIC
- arbiter device
-Message-ID: <20200623231556.GI128451@builder.lan>
+Subject: Re: [PATCH v2 03/12] arm64: dts: qcom: msm8994: Add a proper CPU map
+Message-ID: <20200623231611.GJ128451@builder.lan>
 References: <20200623224813.297077-1-konradybcio@gmail.com>
- <20200623224813.297077-3-konradybcio@gmail.com>
+ <20200623224813.297077-4-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623224813.297077-3-konradybcio@gmail.com>
+In-Reply-To: <20200623224813.297077-4-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,44 +84,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue 23 Jun 15:48 PDT 2020, Konrad Dybcio wrote:
 
-> Add SPMI PMIC arbiter device to communicate with PMICs
-> attached to SPMI bus.
+> Add a proper CPU map to enable the use of all 8 cores.
 > 
 > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
 Applied, thanks
 
 > ---
->  arch/arm64/boot/dts/qcom/msm8994.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  arch/arm64/boot/dts/qcom/msm8994.dtsi | 112 +++++++++++++++++++++++---
+>  1 file changed, 102 insertions(+), 10 deletions(-)
 > 
 > diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-> index 79e6e46798c8..23e50c30669b 100644
+> index 23e50c30669b..e7f4b06eb12c 100644
 > --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
 > +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-> @@ -169,6 +169,22 @@ restart@fc4ab000 {
->  			reg = <0xfc4ab000 0x4>;
->  		};
+> @@ -28,24 +28,116 @@ sleep_clk: sleep_clk {
+>  	};
 >  
-> +		spmi_bus: spmi@fc4c0000 {
-> +			compatible = "qcom,spmi-pmic-arb";
-> +			reg = <0xfc4cf000 0x1000>,
-> +			      <0xfc4cb000 0x1000>,
-> +			      <0xfc4ca000 0x1000>;
-> +			reg-names = "core", "intr", "cnfg";
-> +			interrupt-names = "periph_irq";
-> +			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-> +			qcom,ee = <0>;
-> +			qcom,channel = <0>;
-> +			#address-cells = <2>;
-> +			#size-cells = <0>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <4>;
+>  	cpus {
+> -		#address-cells = <1>;
+> +		#address-cells = <2>;
+>  		#size-cells = <0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +			L2_0: l2-cache {
+> +				compatible = "cache";
+> +				cache-level = <2>;
+> +			};
 > +		};
 > +
->  		tcsr_mutex_regs: syscon@fd484000 {
->  			compatible = "syscon";
->  			reg = <0xfd484000 0x2000>;
+> +		CPU1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		CPU2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x2>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		CPU3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x3>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		CPU4: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_1>;
+> +			L2_1: l2-cache {
+> +				compatible = "cache";
+> +				cache-level = <2>;
+> +			};
+> +		};
+> +
+> +		CPU5: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57";
+> +			reg = <0x0 0x101>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_1>;
+> +		};
+> +
+> +		CPU6: cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57";
+> +			reg = <0x0 0x101>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_1>;
+> +		};
+> +
+> +		CPU7: cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57";
+> +			reg = <0x0 0x101>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_1>;
+> +		};
+> +
+>  		cpu-map {
+>  			cluster0 {
+>  				core0 {
+>  					cpu = <&CPU0>;
+>  				};
+> +
+> +				core1 {
+> +					cpu = <&CPU1>;
+> +				};
+> +
+> +				core2 {
+> +					cpu = <&CPU2>;
+> +				};
+> +
+> +				core3 {
+> +					cpu = <&CPU3>;
+> +				};
+>  			};
+> -		};
+>  
+> -		CPU0: cpu@0 {
+> -			device_type = "cpu";
+> -			compatible = "arm,cortex-a53";
+> -			reg = <0x0>;
+> -			next-level-cache = <&L2_0>;
+> -			L2_0: l2-cache {
+> -			      compatible = "cache";
+> -			      cache-level = <2>;
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&CPU4>;
+> +				};
+> +
+> +				core1 {
+> +					cpu = <&CPU5>;
+> +				};
+> +
+> +				core2 {
+> +					cpu = <&CPU6>;
+> +				};
+> +
+> +				core3 {
+> +					cpu = <&CPU7>;
+> +				};
+>  			};
+>  		};
+>  	};
 > -- 
 > 2.27.0
 > 
