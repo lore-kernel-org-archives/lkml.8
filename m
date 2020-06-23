@@ -2,121 +2,227 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CABEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1B920874
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CjRRJpp7"
+	by mail.kernel.org (Postfix) with ESMTP id 6A47E20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388178AbgFWXBk (ORCPT
+        id S2388370AbgFWXCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388099AbgFWXBi (ORCPT
+        Tue, 23 Jun 2020 19:02:36 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:55558 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387769AbgFWXCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:01:38 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD289C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:01:36 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id j4so125479plk.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:01:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SUKYA/zx+5E8AfDw1a6xG4cepErgkB5iNhcXF52h2ZE=;
-        b=CjRRJpp7O4KrJBdChXmFiWMm9EG6yH/eap519k/lQPjDkL7zy/FrkSIRCr1qyPBV5W
-         csuHCIvUQAygk7FdSASPC++PgXKy6aAVjHkFwKqW446qbCde6rXaDT9dKWJEAfY01Lru
-         GLIAQYX0rSyFwpz0swDlJXEFomHt6iTgJ9iZV5ZJKh8REKH6hpGu2LEm+ZF86Sd9JCKn
-         4YdrpUjSZUKoO3ATN5vL4adWFhFNf6+HA14FhjfssQdPhKUx5PR5J2mB7KqKo3PRlBZH
-         8hKnocdyoaAI5Fdjl3Q8ovP06z0ZAXn8PEQuC2B0IbkzMK7evUilC0A5f71fLvl/HZS5
-         6SyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SUKYA/zx+5E8AfDw1a6xG4cepErgkB5iNhcXF52h2ZE=;
-        b=X/Ln/NVJYjWwvrJhZaHVrpJOPhG821lMzuzKBrytAhAHAfs3E+/SHxvfOVFShSmGu7
-         gF1wAOtphd+LFBNJuOnNameQzC783Z4uXGUAWKztqgCPP7ParNcn9ZM8PzyY3/0tTqJu
-         vXMyqaocqjM95jcT9+wi1v3RLLb2PRtsNqW1ougDRg76YxzTSaOzA23W7XwQGD2+7ryx
-         EvybUeKRTgrUti6wFkVmC+MZV9vEO/2SyhOozS54McFs07pXQJ6w7FiFpivuZiDMk5WA
-         0gI4UsgxqFDX/R90JOTZjS2Mm4hhpCjg2/sAdwaGNHby+AFhvyJnDdk1gW2XrXdwmB2G
-         e7pA==
-X-Gm-Message-State: AOAM5310W+7ivygjZsC6igoq3aZsPQ/uUcZz/ApV9ip8h/1KjMhzB+ew
-        f7Wk3kyJp2bphfT2XydJHWrPSQ==
-X-Google-Smtp-Source: ABdhPJzgybR8vzFqX5nxfCrcmfJGlJ4QJ2rFl/bsaxFeggSSpxVo+uVXdeAJm0Uv3jij0Amg8K3HFg==
-X-Received: by 2002:a17:902:74c6:: with SMTP id f6mr26218114plt.121.1592953296227;
-        Tue, 23 Jun 2020 16:01:36 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s1sm3238410pjp.14.2020.06.23.16.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 16:01:35 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 15:58:53 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] soc: qcom: smd-rpm: Add msm8994 compatible
-Message-ID: <20200623225853.GF128451@builder.lan>
-References: <20200602200407.320908-1-konradybcio@gmail.com>
+        Tue, 23 Jun 2020 19:02:35 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 7EAF41A8342;
+        Wed, 24 Jun 2020 08:31:36 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jnrS3-0000sh-12; Wed, 24 Jun 2020 08:31:35 +1000
+Date:   Wed, 24 Jun 2020 08:31:35 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas_os@shipmail.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, linux-mm@kvack.org,
+        linux-rdma@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] mm: Track mmu notifiers in fs_reclaim_acquire/release
+Message-ID: <20200623223134.GC2005@dread.disaster.area>
+References: <20200604081224.863494-2-daniel.vetter@ffwll.ch>
+ <20200610194101.1668038-1-daniel.vetter@ffwll.ch>
+ <20200621174205.GB1398@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200602200407.320908-1-konradybcio@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200621174205.GB1398@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=8nJEP1OIZ-IA:10 a=nTHF0DUjJn0A:10 a=WwJGiR1sAAAA:8 a=Z4Rwk6OoAAAA:8
+        a=CbDCq_QkAAAA:8 a=37rDS-QxAAAA:8 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8
+        a=zd2uoN0lAAAA:8 a=7-415B0cAAAA:8 a=YFjDoilscawXd35iVQoA:9
+        a=wPNLvfGTeEIA:10 a=Ke8zcFn7cQlxtk25vvl_:22 a=HkZW87K1Qel5hWWM3VKY:22
+        a=1qrBK16LubpBFNPVNq2M:22 a=k1Nq6YrhK2t884LQW06G:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 02 Jun 13:04 PDT 2020, Konrad Dybcio wrote:
-
-> Add the compatible for the RPM in msm8994.
+On Sun, Jun 21, 2020 at 01:42:05PM -0400, Qian Cai wrote:
+> On Wed, Jun 10, 2020 at 09:41:01PM +0200, Daniel Vetter wrote:
+> > fs_reclaim_acquire/release nicely catch recursion issues when
+> > allocating GFP_KERNEL memory against shrinkers (which gpu drivers tend
+> > to use to keep the excessive caches in check). For mmu notifier
+> > recursions we do have lockdep annotations since 23b68395c7c7
+> > ("mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end").
+> > 
+> > But these only fire if a path actually results in some pte
+> > invalidation - for most small allocations that's very rarely the case.
+> > The other trouble is that pte invalidation can happen any time when
+> > __GFP_RECLAIM is set. Which means only really GFP_ATOMIC is a safe
+> > choice, GFP_NOIO isn't good enough to avoid potential mmu notifier
+> > recursion.
+> > 
+> > I was pondering whether we should just do the general annotation, but
+> > there's always the risk for false positives. Plus I'm assuming that
+> > the core fs and io code is a lot better reviewed and tested than
+> > random mmu notifier code in drivers. Hence why I decide to only
+> > annotate for that specific case.
+> > 
+> > Furthermore even if we'd create a lockdep map for direct reclaim, we'd
+> > still need to explicit pull in the mmu notifier map - there's a lot
+> > more places that do pte invalidation than just direct reclaim, these
+> > two contexts arent the same.
+> > 
+> > Note that the mmu notifiers needing their own independent lockdep map
+> > is also the reason we can't hold them from fs_reclaim_acquire to
+> > fs_reclaim_release - it would nest with the acquistion in the pte
+> > invalidation code, causing a lockdep splat. And we can't remove the
+> > annotations from pte invalidation and all the other places since
+> > they're called from many other places than page reclaim. Hence we can
+> > only do the equivalent of might_lock, but on the raw lockdep map.
+> > 
+> > With this we can also remove the lockdep priming added in 66204f1d2d1b
+> > ("mm/mmu_notifiers: prime lockdep") since the new annotations are
+> > strictly more powerful.
+> > 
+> > v2: Review from Thomas Hellstrom:
+> > - unbotch the fs_reclaim context check, I accidentally inverted it,
+> >   but it didn't blow up because I inverted it immediately
+> > - fix compiling for !CONFIG_MMU_NOTIFIER
+> > 
+> > Cc: Thomas Hellström (Intel) <thomas_os@shipmail.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Jason Gunthorpe <jgg@mellanox.com>
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-rdma@vger.kernel.org
+> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > Cc: Christian König <christian.koenig@amd.com>
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 > 
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-
-Applied
-
-Thanks,
-Bjorn
-
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
->  drivers/soc/qcom/smd-rpm.c                                  | 1 +
->  2 files changed, 2 insertions(+)
+> Replying the right patch here...
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-> index 616fddcd09fd..25541a475ead 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-> @@ -23,6 +23,7 @@ resources.
->  		    "qcom,rpm-msm8916"
->  		    "qcom,rpm-msm8974"
->  		    "qcom,rpm-msm8976"
-> +		    "qcom,rpm-msm8994"
->  		    "qcom,rpm-msm8998"
->  		    "qcom,rpm-sdm660"
->  		    "qcom,rpm-qcs404"
-> diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-> index 005dd30c58fa..54eb5cbc05fd 100644
-> --- a/drivers/soc/qcom/smd-rpm.c
-> +++ b/drivers/soc/qcom/smd-rpm.c
-> @@ -233,6 +233,7 @@ static const struct of_device_id qcom_smd_rpm_of_match[] = {
->  	{ .compatible = "qcom,rpm-msm8916" },
->  	{ .compatible = "qcom,rpm-msm8974" },
->  	{ .compatible = "qcom,rpm-msm8976" },
-> +	{ .compatible = "qcom,rpm-msm8994" },
->  	{ .compatible = "qcom,rpm-msm8996" },
->  	{ .compatible = "qcom,rpm-msm8998" },
->  	{ .compatible = "qcom,rpm-sdm660" },
-> -- 
-> 2.26.2
+> Reverting this commit [1] fixed the lockdep warning below while applying
+> some memory pressure.
 > 
+> [1] linux-next cbf7c9d86d75 ("mm: track mmu notifiers in fs_reclaim_acquire/release")
+> 
+> [  190.455003][  T369] WARNING: possible circular locking dependency detected
+> [  190.487291][  T369] 5.8.0-rc1-next-20200621 #1 Not tainted
+> [  190.512363][  T369] ------------------------------------------------------
+> [  190.543354][  T369] kswapd3/369 is trying to acquire lock:
+> [  190.568523][  T369] ffff889fcf694528 (&xfs_nondir_ilock_class){++++}-{3:3}, at: xfs_reclaim_inode+0xdf/0x860
+> spin_lock at include/linux/spinlock.h:353
+> (inlined by) xfs_iflags_test_and_set at fs/xfs/xfs_inode.h:166
+> (inlined by) xfs_iflock_nowait at fs/xfs/xfs_inode.h:249
+> (inlined by) xfs_reclaim_inode at fs/xfs/xfs_icache.c:1127
+> [  190.614359][  T369]
+> [  190.614359][  T369] but task is already holding lock:
+> [  190.647763][  T369] ffffffffb50ced00 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x0/0x30
+> __fs_reclaim_acquire at mm/page_alloc.c:4200
+> [  190.687845][  T369]
+> [  190.687845][  T369] which lock already depends on the new lock.
+> [  190.687845][  T369]
+> [  190.734890][  T369]
+> [  190.734890][  T369] the existing dependency chain (in reverse order) is:
+> [  190.775991][  T369]
+> [  190.775991][  T369] -> #1 (fs_reclaim){+.+.}-{0:0}:
+> [  190.808150][  T369]        fs_reclaim_acquire+0x77/0x80
+> [  190.832152][  T369]        slab_pre_alloc_hook.constprop.52+0x20/0x120
+> slab_pre_alloc_hook at mm/slab.h:507
+> [  190.862173][  T369]        kmem_cache_alloc+0x43/0x2a0
+> [  190.885602][  T369]        kmem_zone_alloc+0x113/0x3ef
+> kmem_zone_alloc at fs/xfs/kmem.c:129
+> [  190.908702][  T369]        xfs_inode_item_init+0x1d/0xa0
+> xfs_inode_item_init at fs/xfs/xfs_inode_item.c:639
+> [  190.934461][  T369]        xfs_trans_ijoin+0x96/0x100
+> xfs_trans_ijoin at fs/xfs/libxfs/xfs_trans_inode.c:34
+> [  190.961530][  T369]        xfs_setattr_nonsize+0x1a6/0xcd0
+
+OK, this patch has royally screwed something up if this path thinks
+it can enter memory reclaim. This path is inside a transaction, so
+it is running under PF_MEMALLOC_NOFS context, so should *never*
+enter memory reclaim.
+
+I'd suggest that whatever mods were made to fs_reclaim_acquire by
+this patch broke it's basic functionality....
+
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index 13cc653122b7..7536faaaa0fd 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -57,6 +57,7 @@
+> >  #include <trace/events/oom.h>
+> >  #include <linux/prefetch.h>
+> >  #include <linux/mm_inline.h>
+> > +#include <linux/mmu_notifier.h>
+> >  #include <linux/migrate.h>
+> >  #include <linux/hugetlb.h>
+> >  #include <linux/sched/rt.h>
+> > @@ -4124,7 +4125,7 @@ should_compact_retry(struct alloc_context *ac, unsigned int order, int alloc_fla
+> >  static struct lockdep_map __fs_reclaim_map =
+> >  	STATIC_LOCKDEP_MAP_INIT("fs_reclaim", &__fs_reclaim_map);
+> >  
+> > -static bool __need_fs_reclaim(gfp_t gfp_mask)
+> > +static bool __need_reclaim(gfp_t gfp_mask)
+> >  {
+> >  	gfp_mask = current_gfp_context(gfp_mask);
+
+This is applies the per-task memory allocation context flags to the
+mask that is checked here.
+
+> > @@ -4136,10 +4137,6 @@ static bool __need_fs_reclaim(gfp_t gfp_mask)
+> >  	if (current->flags & PF_MEMALLOC)
+> >  		return false;
+> >  
+> > -	/* We're only interested __GFP_FS allocations for now */
+> > -	if (!(gfp_mask & __GFP_FS))
+> > -		return false;
+> > -
+> >  	if (gfp_mask & __GFP_NOLOCKDEP)
+> >  		return false;
+> >  
+> > @@ -4158,15 +4155,25 @@ void __fs_reclaim_release(void)
+> >  
+> >  void fs_reclaim_acquire(gfp_t gfp_mask)
+> >  {
+> > -	if (__need_fs_reclaim(gfp_mask))
+> > -		__fs_reclaim_acquire();
+> > +	if (__need_reclaim(gfp_mask)) {
+> > +		if (gfp_mask & __GFP_FS)
+> > +			__fs_reclaim_acquire();
+
+.... and they have not been applied in this path. There's your
+breakage.
+
+For future reference, please post anything that changes NOFS
+allocation contexts or behaviours to linux-fsdevel, as filesystem
+developers need to know about proposed changes to infrastructure
+that is critical to the correct functioning of filesystems...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
