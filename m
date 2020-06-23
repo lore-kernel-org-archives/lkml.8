@@ -2,188 +2,140 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E75C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D492C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9759206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592879696;
-	bh=PFa3UeSbrlURwQy4qPxP1DbcUfO8jk5iXAMUrBqwC+8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X2qiB+sgdnNM5sJxamBfyU96w0ggYBHhZa65ozgIBSU0kJb6eIywS2OrxPOS+s+MP
-	 6i+YlBhcItn//gWpq/MBz9qPJCFCMHXhMDIydi7jJy3NHF4ZUwz40PmRJkNxCfIhf6
-	 9KcPOPvD6+XI10p2T5fH0W1xJouQrE/giYa/ph18=
+	by mail.kernel.org (Postfix) with ESMTP id 6074C2075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731596AbgFWCez (ORCPT
+        id S1731627AbgFWCf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:34:55 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:64796 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731312AbgFWCez (ORCPT
+        Mon, 22 Jun 2020 22:35:28 -0400
+Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:38806 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731312AbgFWCf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:34:55 -0400
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 05N2YUDW002966;
-        Tue, 23 Jun 2020 11:34:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 05N2YUDW002966
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592879671;
-        bh=1lLcYF/LZ8H1nk/8LWvCWpU+7OhJmGJjbhPMbdNSNjM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KD5WvljvJ/VSCYEfLYq/eXK4KdYBFYX3lGLWLv7E72p2xaTzFfnIhbBDOjp4nfOmt
-         ZXuwuykiGeeYQ6AfcALtoZbgvsLXKZjz0VSZgsmS9RAPWbjFZTeO5BmOPitUBgQLiZ
-         h9JuJHLHRiv9KzVuu3vBJwNZ3tFlMv6gwD7D11jYrq1EFp2JjmWE4dCr1rrYm4iqqI
-         eKz3PrOuGhb9ONPnzQP+RGW40Hl1Qq9Q77mlqgz2ivCOEGG831y9LbXpKJGb7dq78H
-         GK0zG8ETHt6rQEmv/Nvp+IiSHwFJIsGMmb8W9HB4L6TfasOqz0uLlVHWHhEdA1uHFZ
-         u/ahAJGhspCvQ==
-X-Nifty-SrcIP: [209.85.221.169]
-Received: by mail-vk1-f169.google.com with SMTP id h190so1829636vkh.6;
-        Mon, 22 Jun 2020 19:34:30 -0700 (PDT)
-X-Gm-Message-State: AOAM533uRRhKfs7Ij27eOTS16+0DNgLz3lf6hY5MJF5Ak3zbWjBjMIsY
-        fJXPZQAPE/3UmfxKGfFAKHjewjxTX5cWUZciJ0s=
-X-Google-Smtp-Source: ABdhPJzLme3JzQktv3O54XSU7arBkwLIhxipoyWUg+gtZndRoAHQqt3RnmD9gpQ6HyR5IRzDj51Zq47HLNs37weLKwo=
-X-Received: by 2002:a1f:a8d0:: with SMTP id r199mr17161979vke.26.1592879669325;
- Mon, 22 Jun 2020 19:34:29 -0700 (PDT)
+        Mon, 22 Jun 2020 22:35:27 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 5FCEBD5A410;
+        Tue, 23 Jun 2020 12:35:24 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jnYmL-0002E0-W3; Tue, 23 Jun 2020 12:35:18 +1000
+Date:   Tue, 23 Jun 2020 12:35:17 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        agruenba@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] Bypass filesystems for reading cached pages
+Message-ID: <20200623023517.GG2040@dread.disaster.area>
+References: <20200619155036.GZ8681@bombadil.infradead.org>
+ <20200622003215.GC2040@dread.disaster.area>
+ <20200622191857.GB21350@casper.infradead.org>
 MIME-Version: 1.0
-References: <202006221201.3641ED037E@keescook>
-In-Reply-To: <202006221201.3641ED037E@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 23 Jun 2020 11:33:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQL=XF+xvsRNTEGXtY7J-fx5FJKpMuScoxLt8SDKGB3_Q@mail.gmail.com>
-Message-ID: <CAK7LNAQL=XF+xvsRNTEGXtY7J-fx5FJKpMuScoxLt8SDKGB3_Q@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Provide way to actually disable stack protector
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622191857.GB21350@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
+        a=I5Ld6uvlkQaMZklyL9UA:9 a=AnJBR7kdrS1bbMZr:21 a=j-efh17Vv1HrvYRV:21
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 4:02 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Some builds of GCC enable stack protector by default. Simply removing
-> the arguments is not sufficient to disable stack protector, as the stack
-> protector for those GCC builds must be explicitly disabled. (Removing the
-> arguments is left as-is just to be sure there are no ordering problems. If
-> -fno-stack-protector ended up _before_ -fstack-protector, it would not
-> disable it: GCC uses whichever -f... comes last on the command line.)
->
-> Fixes: 20355e5f73a7 ("x86/entry: Exclude low level entry code from sanitizing")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  Makefile                          | 4 +++-
->  arch/Kconfig                      | 3 ---
->  arch/arm/boot/compressed/Makefile | 4 ++--
->  arch/x86/entry/Makefile           | 3 +++
->  4 files changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index ac2c61c37a73..b46e91bf0b0e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -762,7 +762,9 @@ ifneq ($(CONFIG_FRAME_WARN),0)
->  KBUILD_CFLAGS += -Wframe-larger-than=$(CONFIG_FRAME_WARN)
->  endif
->
-> -stackp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
-> +DISABLE_STACKPROTECTOR := $(call cc-option,-fno-stack-protector)
-> +export DISABLE_STACKPROTECTOR
-> +stackp-flags-y                                    := $(DISABLE_STACKPROTECTOR)
->  stackp-flags-$(CONFIG_STACKPROTECTOR)             := -fstack-protector
->  stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
->
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 8cc35dc556c7..1ea61290900a 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -478,9 +478,6 @@ config HAVE_STACKPROTECTOR
->           An arch should select this symbol if:
->           - it has implemented a stack canary (e.g. __stack_chk_guard)
->
-> -config CC_HAS_STACKPROTECTOR_NONE
-> -       def_bool $(cc-option,-fno-stack-protector)
-> -
->  config STACKPROTECTOR
->         bool "Stack Protector buffer overflow detection"
->         depends on HAVE_STACKPROTECTOR
-> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-> index 00602a6fba04..3693bac525d2 100644
-> --- a/arch/arm/boot/compressed/Makefile
-> +++ b/arch/arm/boot/compressed/Makefile
-> @@ -84,9 +84,9 @@ endif
->
->  # -fstack-protector-strong triggers protection checks in this code,
->  # but it is being used too early to link to meaningful stack_chk logic.
-> -nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
->  $(foreach o, $(libfdt_objs) atags_to_fdt.o, \
-> -       $(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt $(nossp-flags-y)))
-> +       $(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt \
-> +                             $(DISABLE_STACKPROTECTOR)))
->
->  # These were previously generated C files. When you are building the kernel
->  # with O=, make sure to remove the stale files in the output tree. Otherwise,
-> diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
-> index b7a5790d8d63..79902decc3d1 100644
-> --- a/arch/x86/entry/Makefile
-> +++ b/arch/x86/entry/Makefile
-> @@ -10,6 +10,9 @@ KCOV_INSTRUMENT := n
->  CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
->  CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
->  CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-> +CFLAGS_common.o += $(DISABLE_STACKPROTECTOR)
-> +CFLAGS_syscall_32.o += $(DISABLE_STACKPROTECTOR)
-> +CFLAGS_syscall_64.o += $(DISABLE_STACKPROTECTOR)
+On Mon, Jun 22, 2020 at 08:18:57PM +0100, Matthew Wilcox wrote:
+> On Mon, Jun 22, 2020 at 10:32:15AM +1000, Dave Chinner wrote:
+> > On Fri, Jun 19, 2020 at 08:50:36AM -0700, Matthew Wilcox wrote:
+> > > 
+> > > This patch lifts the IOCB_CACHED idea expressed by Andreas to the VFS.
+> > > The advantage of this patch is that we can avoid taking any filesystem
+> > > lock, as long as the pages being accessed are in the cache (and we don't
+> > > need to readahead any pages into the cache).  We also avoid an indirect
+> > > function call in these cases.
+> > 
+> > What does this micro-optimisation actually gain us except for more
+> > complexity in the IO path?
+> > 
+> > i.e. if a filesystem lock has such massive overhead that it slows
+> > down the cached readahead path in production workloads, then that's
+> > something the filesystem needs to address, not unconditionally
+> > bypass the filesystem before the IO gets anywhere near it.
+> 
+> You're been talking about adding a range lock to XFS for a while now.
 
-There is one more c file in this directory.
+I don't see what that has to do with this patch.
 
-Is it OK to not patch syscall_x32.c ?
+> I remain quite sceptical that range locks are a good idea; they have not
+> worked out well as a replacement for the mmap_sem, although the workload
+> for the mmap_sem is quite different and they may yet show promise for
+> the XFS iolock.
 
+<shrug>
 
->
->  CFLAGS_syscall_64.o            += $(call cc-option,-Wno-override-init,)
->  CFLAGS_syscall_32.o            += $(call cc-option,-Wno-override-init,)
+That was a really poor implementation of a range lock. It had no
+concurrency to speak of, because the tracking tree required a
+spinlock to be taken for every lock or unlock the range lock
+performed. Hence it had an expensive critical section that could not
+scale past the number of ops a single CPU could perform on that
+tree. IOWs, it topped out at about 150k lock cycles a second with
+2-3 concurrent AIO+DIO threads, and only went slower as the number
+of concurrent IO submitters went up.
 
+So, yeah, if you are going to talk about range locks, you need to
+forget about the what was tried on the mmap_sem because nobody
+actually scalability tested the lock implementation by itself and it
+turned out to be total crap....
 
+> There are production workloads that do not work well on top of a single
+> file on an XFS filesystem.  For example, using an XFS file in a host as
+> the backing store for a guest block device.  People tend to work around
+> that kind of performance bug rather than report it.
 
+*cough* AIO+DIO *cough*
 
-This patch is ugly.
+You may not like that answer, but anyone who cares about IO
+performance, especially single file IO performance, is using
+AIO+DIO. Buffered IO for VM image files in production environments
+tends to be the exception, not the norm, because caching is done in
+the guest by the guest page cache. Double caching IO data is
+generally considered a waste of resources that could otherwise be
+sold to customers.
 
-I'd rather want to fix this by one-liner.
+> Do you agree that the guarantees that XFS currently supplies regarding
+> locked operation will be maintained if the I/O is contained within a
+> single page and the mutex is not taken?
 
+Not at first glance because block size < file size configurations
+exist and hence filesystems might be punching out extents from a
+sub-page range....
 
+> ie add this check to the original
+> patch:
+> 
+>         if (iocb->ki_pos / PAGE_SIZE !=
+>             (iocb->ki_pos + iov_iter_count(iter) - 1) / PAGE_SIZE)
+>                 goto uncached;
+> 
+> I think that gets me almost everything I want.  Small I/Os are going to
+> notice the pain of the mutex more than large I/Os.
 
+Exactly what are you trying to optimise, Willy? You haven't
+explained to anyone what workload needs these micro-optimisations,
+and without understanding why you want to cut the filesystems out of
+the readahead path, I can't suggest alternative solutions...
 
-diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
-index b7a5790d8d63..0d41eb91aaea 100644
---- a/arch/x86/entry/Makefile
-+++ b/arch/x86/entry/Makefile
-@@ -11,6 +11,8 @@ CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE)
--fstack-protector -fstack-protector-
- CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector
--fstack-protector-strong
- CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector
--fstack-protector-strong
+Cheers,
 
-+ccflags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) += -fno-stack-protector
-+
- CFLAGS_syscall_64.o            += $(call cc-option,-Wno-override-init,)
- CFLAGS_syscall_32.o            += $(call cc-option,-Wno-override-init,)
- obj-y                          := entry_$(BITS).o thunk_$(BITS).o
-syscall_$(BITS).o
-
-
-
-
+Dave.
 -- 
-Best Regards
-Masahiro Yamada
+Dave Chinner
+david@fromorbit.com
