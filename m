@@ -2,188 +2,203 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76448C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321842076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3112078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwk2GFv/"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="q5PXizvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732985AbgFWQSD (ORCPT
+        id S1733018AbgFWQSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43136 "EHLO
+        Tue, 23 Jun 2020 12:18:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732185AbgFWQSB (ORCPT
+        with ESMTP id S1732185AbgFWQSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:18:01 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B6FC061573;
-        Tue, 23 Jun 2020 09:18:01 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id t25so19296891oij.7;
-        Tue, 23 Jun 2020 09:18:01 -0700 (PDT)
+        Tue, 23 Jun 2020 12:18:03 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5155C061795
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:18:02 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id o38so7141093qtf.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8kS+p2B98IcZ0DKHH6bGHBzlHBukklTo3te+GpuWHrw=;
-        b=fwk2GFv/oNKryY3pnvflFbNwLd5lN2atjIMk7zdevCcKj1F2EeJcTWRDUZ60/ifNUN
-         Wj15Yd1bh5CHrB8s8CZHQ3kZh6qjGC7V3Idw6HGWhiVRWqMqWKDXcFeqw5/D+6aMpt8s
-         5KStMJYiPP7zywQcWmPhIV+M1gz/ZiIMMF4J0G3qYVTZOK77nw2dbbklL6H84Qi/H6Fk
-         ul1PY6Verpvm9cf9evztaB6HfeadPVXBqtJ3FkT6+aN89rH+qojIB1UruiCp38aIz0kP
-         AaCosr8qHKaSxPo/f8R59+eNwA1J9+ojPOY/k1QI6kA2uYAZyQzv49io9YolZwZ579Wh
-         tIDA==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=SowX6r/DrbyMyIPo7bbmN6dCO4WOaZBpx8lXkNiYwRQ=;
+        b=q5PXizvouRcfNA2W9Djqc/Z84L8gq+5xyPGe7rkAVVUXYo0XRUHAEI4yVuKgTSfgc9
+         RoYCG4UkEgCC9vVO+IYyrz7JORXpNUWmlzMkIni2Vfw9kxBsp2K+YgamdfZElTJuJZTW
+         bbafUUDUQEhd51JcrBKUA9xHz8S+ZvnGFC/bx4j/zd/tIY4JT4nqabnA6jtnfro4Yx69
+         YevfddRvEKhgwHMyV0hQh6x3L1BXH3reCRQkEUr6zmcuCWOBikrw37RohUhW9xkrCqv7
+         nLIezDVzEaNlXEnFqrM5wDtOVHCyOyKL9todYtNNNUOatrNgrkdDPEXpNyPANNjAfT9T
+         s5yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=8kS+p2B98IcZ0DKHH6bGHBzlHBukklTo3te+GpuWHrw=;
-        b=PT4UP3TMNVP/6wqx5BeOu83otzFWoDFyZcJHw8PDVEnXwRqXtuoJq6DNCWFstGXhs7
-         zbBP6HQHoNtlOuo59biZ/fpNVnYGj2G/av1SZAcMUk0FK4ZHdONZwZmk9tsCizyFf4tQ
-         rYWq5onJfh6KSO14DKk3FaXdliaJiyhFSzeU17H4+ENUmYFt8AQpW+LF9okvqEXzLDnt
-         tP6T+BudMPqWOImR3a9LcShUGWdYlqzLYzGsj/tJXJprn+5WS5bVil1FEENEvVLEsXP2
-         x3hCcoGkWjwm/F7nvS2na9zZ+6M1uoh4qq6Jblti3oj1Qf0VW9QXH9yed9zXGhYq4dvQ
-         iShw==
-X-Gm-Message-State: AOAM533dh9hmOkE8SMgAL8Z8Jzb9Gb26pPKxe1C1ljTU+Skm/8PcyNS9
-        lcxSkMaAZCZvlzZ4PhUKdQ==
-X-Google-Smtp-Source: ABdhPJyp+26+EXVN9ZfYA7vkccvFu//lDHju4ffpArfw4UQtdP/wJAl81f9KxvP51qM4xOZIi5yS3Q==
-X-Received: by 2002:aca:902:: with SMTP id 2mr16140942oij.151.1592929079748;
-        Tue, 23 Jun 2020 09:17:59 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id w10sm4147433otp.44.2020.06.23.09.17.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=SowX6r/DrbyMyIPo7bbmN6dCO4WOaZBpx8lXkNiYwRQ=;
+        b=cDEXAX7a9F/KOnteo/6QtR1KTU+iTcJ4kWmHl009fG3Gj/SzYE2JizXbOT31UUH20m
+         583K7eQZnyLVbM2fGWU+Zj6DWJRqleY+HULBKxi/ogHK0zZN1dqXURBDmCScR5ACp9JK
+         sdjbvqBX5hCtVffc8H3zg7HJDa/LSQmGRocTEV648SgSgxYFuiwDFJvGin9I76KAWqkg
+         lo8h+Fa0NAHhrKtFUop0Tid2zed/ZokPBbt8LwpFBl7fiBRPd90DDbgL6IPqzUVBkU3P
+         yFlBv46pUR8C7m8tXkU/3IB/lwciHCWN4JvVT6cuUqoXYivehdOSYa0yKxKcF01cQ7Cc
+         +cRg==
+X-Gm-Message-State: AOAM533ncrikqeuQ9DgolaGagwWKcBPzy3hDKyNMrev4/7GM9KWXES5n
+        vMm7lNjurM2/h39K9OTDaVxwSQ==
+X-Google-Smtp-Source: ABdhPJy2/MUFYS3DJu96XPGFYPvGEfp9/cvT3JQEnV1SM172gUGWrPZ+0/Xawft3xZIbg4oUrttvEg==
+X-Received: by 2002:ac8:4448:: with SMTP id m8mr22935603qtn.4.1592929081912;
+        Tue, 23 Jun 2020 09:18:01 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d140sm966654qkc.22.2020.06.23.09.18.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 09:17:58 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:6d79:306:b4b0:35c1])
-        by serve.minyard.net (Postfix) with ESMTPSA id D42CB18003A;
-        Tue, 23 Jun 2020 16:17:57 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 11:17:56 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
-        Michael Tuexen <Michael.Tuexen@lurchi.franken.de>,
-        Xin Long <lucien.xin@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Strange problem with SCTP+IPv6
-Message-ID: <20200623161756.GE3235@minyard.net>
-Reply-To: minyard@acm.org
-References: <20200621155604.GA23135@minyard.net>
- <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
- <20200622165759.GA3235@minyard.net>
- <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
- <20200622183253.GQ2491@localhost.localdomain>
- <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
+        Tue, 23 Jun 2020 09:18:01 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 12:17:54 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas_os@shipmail.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] mm: Track mmu notifiers in fs_reclaim_acquire/release
+Message-ID: <20200623161754.GA1140@lca.pw>
+References: <20200604081224.863494-2-daniel.vetter@ffwll.ch>
+ <20200610194101.1668038-1-daniel.vetter@ffwll.ch>
+ <20200621174205.GB1398@lca.pw>
+ <CAKMK7uFZAFVmceoYvqPovOifGw_Y8Ey-OMy6wioMjwPWhu9dDg@mail.gmail.com>
+ <20200621200103.GV20149@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200621200103.GV20149@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 01:17:28PM +0000, David Laight wrote:
-> From: Marcelo Ricardo Leitner
-> > Sent: 22 June 2020 19:33
-> > On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
-> > > > On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
+On Sun, Jun 21, 2020 at 10:01:03PM +0200, Daniel Vetter wrote:
+> On Sun, Jun 21, 2020 at 08:07:08PM +0200, Daniel Vetter wrote:
+> > On Sun, Jun 21, 2020 at 7:42 PM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > On Wed, Jun 10, 2020 at 09:41:01PM +0200, Daniel Vetter wrote:
+> > > > fs_reclaim_acquire/release nicely catch recursion issues when
+> > > > allocating GFP_KERNEL memory against shrinkers (which gpu drivers tend
+> > > > to use to keep the excessive caches in check). For mmu notifier
+> > > > recursions we do have lockdep annotations since 23b68395c7c7
+> > > > ("mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end").
 > > > >
-> > > > On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
-> > > >> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
-> > > >>>
-> > > >>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
-> > > >>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
-> > > >>> then I make a connection to it using ::1, the connection will drop after
-> > > >>> 2.5 seconds with an ECONNRESET error.
-> > > >>>
-> > > >>> It only happens on SCTP, it doesn't have the issue if you connect to a
-> > > >>> full IPv6 address instead of ::1, and it doesn't happen if you don't
-> > > >>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
-> > > >>> I tried on an ARM system and x86_64.
-> > > >>>
-> > > >>> I haven't dug into the kernel to see if I could find anything yet, but I
-> > > >>> thought I would go ahead and report it.  I am attaching a reproducer.
-> > > >>> Basically, compile the following code:
-> > > >> The code only set IPV6_V6ONLY on server side, so the client side will
-> > > >> still bind all the local ipv4 addresses (as you didn't call bind() to
-> > > >> bind any specific addresses ). Then after the connection is created,
-> > > >> the client will send HB on the v4 paths to the server. The server
-> > > >> will abort the connection, as it can't support v4.
-> > > >>
-> > > >> So you can work around it by either:
-> > > >>
-> > > >>  - set IPV6_V6ONLY on client side.
-> > > >>
-> > > >> or
-> > > >>
-> > > >>  - bind to the specific v6 addresses on the client side.
-> > > >>
-> > > >> I don't see RFC said something about this.
-> > > >> So it may not be a good idea to change the current behaviour
-> > > >> to not establish the connection in this case, which may cause regression.
+> > > > But these only fire if a path actually results in some pte
+> > > > invalidation - for most small allocations that's very rarely the case.
+> > > > The other trouble is that pte invalidation can happen any time when
+> > > > __GFP_RECLAIM is set. Which means only really GFP_ATOMIC is a safe
+> > > > choice, GFP_NOIO isn't good enough to avoid potential mmu notifier
+> > > > recursion.
 > > > >
-> > > > Ok, I understand this.  It's a little strange, but I see why it works
-> > > > this way.
-> > > I don't. I would expect it to work as I described in my email.
-> > > Could someone explain me how and why it is behaving different from
-> > > my expectation?
+> > > > I was pondering whether we should just do the general annotation, but
+> > > > there's always the risk for false positives. Plus I'm assuming that
+> > > > the core fs and io code is a lot better reviewed and tested than
+> > > > random mmu notifier code in drivers. Hence why I decide to only
+> > > > annotate for that specific case.
+> > > >
+> > > > Furthermore even if we'd create a lockdep map for direct reclaim, we'd
+> > > > still need to explicit pull in the mmu notifier map - there's a lot
+> > > > more places that do pte invalidation than just direct reclaim, these
+> > > > two contexts arent the same.
+> > > >
+> > > > Note that the mmu notifiers needing their own independent lockdep map
+> > > > is also the reason we can't hold them from fs_reclaim_acquire to
+> > > > fs_reclaim_release - it would nest with the acquistion in the pte
+> > > > invalidation code, causing a lockdep splat. And we can't remove the
+> > > > annotations from pte invalidation and all the other places since
+> > > > they're called from many other places than page reclaim. Hence we can
+> > > > only do the equivalent of might_lock, but on the raw lockdep map.
+> > > >
+> > > > With this we can also remove the lockdep priming added in 66204f1d2d1b
+> > > > ("mm/mmu_notifiers: prime lockdep") since the new annotations are
+> > > > strictly more powerful.
+> > > >
+> > > > v2: Review from Thomas Hellstrom:
+> > > > - unbotch the fs_reclaim context check, I accidentally inverted it,
+> > > >   but it didn't blow up because I inverted it immediately
+> > > > - fix compiling for !CONFIG_MMU_NOTIFIER
+> > > >
+> > > > Cc: Thomas Hellström (Intel) <thomas_os@shipmail.org>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > Cc: Jason Gunthorpe <jgg@mellanox.com>
+> > > > Cc: linux-mm@kvack.org
+> > > > Cc: linux-rdma@vger.kernel.org
+> > > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > > > Cc: Christian König <christian.koenig@amd.com>
+> > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > >
+> > > Replying the right patch here...
+> > >
+> > > Reverting this commit [1] fixed the lockdep warning below while applying
+> > > some memory pressure.
+> > >
+> > > [1] linux-next cbf7c9d86d75 ("mm: track mmu notifiers in fs_reclaim_acquire/release")
 > > 
-> > It looks like a bug to me. Testing with this test app here, I can see
-> > the INIT_ACK being sent with a bunch of ipv4 addresses in it and
-> > that's unexpected for a v6only socket. As is, it's the server saying
-> > "I'm available at these other addresses too, but not."
+> > Hm, then I'm confused because
+> > - there's not mmut notifier lockdep map in the splat at a..
+> > - the patch is supposed to not change anything for fs_reclaim (but the
+> > interim version got that wrong)
+> > - looking at the paths it's kmalloc vs kswapd, both places I totally
+> > expect fs_reflaim to be used.
+> > 
+> > But you're claiming reverting this prevents the lockdep splat. If
+> > that's right, then my reasoning above is broken somewhere. Someone
+> > less blind than me having an idea?
+> > 
+> > Aside this is the first email I've typed, until I realized the first
+> > report was against the broken patch and that looked like a much more
+> > reasonable explanation (but didn't quite match up with the code
+> > paths).
 > 
-> Does it even make sense to mix IPv4 and IPv6 addresses on the same
-> connection?
-> I don't remember ever seeing both types of address in a message,
-> but may not have looked.
+> Below diff should undo the functional change in my patch. Can you pls test
+> whether the lockdep splat is really gone with that? Might need a lot of
+> testing and memory pressure to be sure, since all these reclaim paths
+> aren't very deterministic.
 
-That's an interesting question.  Do the RFCs say anything?  I would
-assume it was ok unless ipv6only was set.
+No, this patch does not help but reverting the whole patch still fixed
+the splat.
 
+> -Daniel
 > 
-> I also wonder whether the connection should be dropped for an error
-> response on a path that has never been validated.
-
-That actually bothered me a bit more.  Shouldn't it stay up if any path
-is up?  That's kind of the whole point of multihoming.
-
-> 
-> OTOH the whole 'multi-homing' part of SCTP sucks.
-
-I don't think so.
-
-> The IP addresses a server needs to bind to depend on where the
-> incoming connection will come from.
-> A local connection may be able to use a 192.168.x.x address
-> but a remote connection must not - as it may be defined locally
-> at the remote system.
-> But both connections can come into the public (routable) address.
-> We have to tell customers to explicitly configure the local IP
-> addresses - which means the application has to know what they are.
-> Fortunately these apps are pretty static - usually M3UA.
-
-Umm, no,  If you have a private address, it better be behind a firewall,
-and the firewall should handle rewriting the packet to fix the addresses.
-
-It doesn't appear that Linux netfilter does this.  There is a TODO in
-the code for this.  But that's how it *should* work.
-
--corey
-
-> 
-> 	David
-> 
+> ---
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d807587c9ae6..27ea763c6155 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4191,11 +4191,6 @@ void fs_reclaim_acquire(gfp_t gfp_mask)
+>  		if (gfp_mask & __GFP_FS)
+>  			__fs_reclaim_acquire();
+>  
+> -#ifdef CONFIG_MMU_NOTIFIER
+> -		lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
+> -		lock_map_release(&__mmu_notifier_invalidate_range_start_map);
+> -#endif
 > -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+>  	}
+>  }
+>  EXPORT_SYMBOL_GPL(fs_reclaim_acquire);
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
