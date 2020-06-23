@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FABC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB83C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D262C20E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF390208C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942701;
-	bh=zEPhArf7Bibyzv1Cx7hX5ix69EQLDU8ENiyIWeeyXtM=;
+	s=default; t=1592942707;
+	bh=1AqKlfd6M5YojP4FNJf1OomkrFGI570UNzHqRzWNUYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UXtTDqDiyBu5IpXrkAcVaxDu0zTBYTDDHNwcF/lrrKG8+j4dgN8jonXjZCgiNiTdY
-	 YeNPHptKEOZ8pLa4ukBUbxKPOSSZ/K/HWJbJvsrFDu9XuYtIGvmOKZba2aa3MDokev
-	 +TOyhGBXk1lJc3eCZhNtYlIAMpv0UEFb6Ypc2Z70=
+	b=Uv5fYq9cD0G+GA+LvdmO9hM6IKiNzY2127Y5TwgW9c14RY2K2wlwBmhJO5omhB+pE
+	 xp/TKq9TzEU2So7YWk8w6fN+BngZEscT78D4Fs8Yde5hO88B1U+fs6H3QQT53Xe9uf
+	 J9jh9jnsbTuTlszOqjhTZOmK6cBuxe57A1DDgGa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388289AbgFWUFA (ORCPT
+        id S2388306AbgFWUFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388268AbgFWUE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:57 -0400
+        id S2387744AbgFWUFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:05:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94EF520DD4;
-        Tue, 23 Jun 2020 20:04:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08B1A206C3;
+        Tue, 23 Jun 2020 20:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942696;
-        bh=zEPhArf7Bibyzv1Cx7hX5ix69EQLDU8ENiyIWeeyXtM=;
+        s=default; t=1592942701;
+        bh=1AqKlfd6M5YojP4FNJf1OomkrFGI570UNzHqRzWNUYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i5O8fYUgRgB4ox+f53H7sfN4KcAgcEgyNRWxlcuJjekehN6g42KuKo8X36HZ+fsc3
-         JwXVWyQtDamb5/dcISGdQP4kn0z+cQSBh2vhGv67m4O7BFiDOUL0/IQEeugUeoVRKZ
-         78Us77r7OVBBtxVIoedvRz9sp7zNGbsqkWS211Jg=
+        b=1K/mZMiCr722G1VGu50WX8tlxi5c0aKHNnIdO/ThIs1KMi/o75zjCTFfKyih2nZC8
+         CmVNqgsZSPtzxI9JcjYilcIkLo2hNz6qX7f037ipHUbLeoc9GAqYSHWlfhhjtZtqcR
+         OZg357iA5nBJncyZWfm7OvzLf/ww/QNCDHXsIYl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jun Li <jun.li@nxp.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 098/477] net: dsa: lantiq_gswip: fix and improve the unsupported interface error
-Date:   Tue, 23 Jun 2020 21:51:35 +0200
-Message-Id: <20200623195412.234492730@linuxfoundation.org>
+Subject: [PATCH 5.7 070/477] usb: gadget: core: sync interrupt before unbind the udc
+Date:   Tue, 23 Jun 2020 21:51:07 +0200
+Message-Id: <20200623195410.925918925@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,43 +61,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-[ Upstream commit 4d3da2d8d91f66988a829a18a0ce59945e8ae4fb ]
+[ Upstream commit 3c73bc52195def14165c3a7d91bdbb33b51725f5 ]
 
-While trying to use the lantiq_gswip driver on one of my boards I made
-a mistake when specifying the phy-mode (because the out-of-tree driver
-wants phy-mode "gmii" or "mii" for the internal PHYs). In this case the
-following error is printed multiple times:
-  Unsupported interface: 3
+The threaded interrupt handler may still be called after the
+usb_gadget_disconnect is called, it causes the structures used
+at interrupt handler was freed before it uses, eg the
+usb_request. This issue usually occurs we remove the udc function
+during the transfer. Below is the example when doing stress
+test for android switch function, the EP0's request is freed
+by .unbind (configfs_composite_unbind -> composite_dev_cleanup),
+but the threaded handler accesses this request during handling
+setup packet request.
 
-While it gives at least a hint at what may be wrong it is not very user
-friendly. Print the human readable phy-mode and also which port is
-configured incorrectly (this hardware supports ports 0..6) to improve
-the cases where someone made a mistake.
+In fact, there is no protection between unbind the udc
+and udc interrupt handling, so we have to avoid the interrupt
+handler is occurred or scheduled during the .unbind flow.
 
-Fixes: 14fceff4771e51 ("net: dsa: Add Lantiq / Intel DSA driver for vrx200")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+init: Sending signal 9 to service 'adbd' (pid 18077) process group...
+android_work: did not send uevent (0 0 000000007bec2039)
+libprocessgroup: Successfully killed process cgroup uid 0 pid 18077 in 6ms
+init: Service 'adbd' (pid 18077) received signal 9
+init: Sending signal 9 to service 'adbd' (pid 18077) process group...
+libprocessgroup: Successfully killed process cgroup uid 0 pid 18077 in 0ms
+init: processing action (init.svc.adbd=stopped) from (/init.usb.configfs.rc:14)
+init: Received control message 'start' for 'adbd' from pid: 399 (/vendor/bin/hw/android.hardware.usb@1.
+
+init: starting service 'adbd'...
+read descriptors
+read strings
+Unable to handle kernel read from unreadable memory at virtual address 000000000000002a
+android_work: sent uevent USB_STATE=CONNECTED
+Mem abort info:
+  ESR = 0x96000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000004
+  CM = 0, WnR = 0
+user pgtable: 4k pages, 48-bit VAs, pgdp=00000000e97f1000
+using random self ethernet address
+[000000000000002a] pgd=0000000000000000
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 232 Comm: irq/68-5b110000 Not tainted 5.4.24-06075-g94a6b52b5815 #92
+Hardware name: Freescale i.MX8QXP MEK (DT)
+pstate: 00400085 (nzcv daIf +PAN -UAO)
+using random host ethernet address
+pc : composite_setup+0x5c/0x1730
+lr : android_setup+0xc0/0x148
+sp : ffff80001349bba0
+x29: ffff80001349bba0 x28: ffff00083a50da00
+x27: ffff8000124e6000 x26: ffff800010177950
+x25: 0000000000000040 x24: ffff000834e18010
+x23: 0000000000000000 x22: 0000000000000000
+x21: ffff00083a50da00 x20: ffff00082e75ec40
+x19: 0000000000000000 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000001
+x11: ffff80001180fb58 x10: 0000000000000040
+x9 : ffff8000120fc980 x8 : 0000000000000000
+x7 : ffff00083f98df50 x6 : 0000000000000100
+x5 : 00000307e8978431 x4 : ffff800011386788
+x3 : 0000000000000000 x2 : ffff800012342000
+x1 : 0000000000000000 x0 : ffff800010c6d3a0
+Call trace:
+ composite_setup+0x5c/0x1730
+ android_setup+0xc0/0x148
+ cdns3_ep0_delegate_req+0x64/0x90
+ cdns3_check_ep0_interrupt_proceed+0x384/0x738
+ cdns3_device_thread_irq_handler+0x124/0x6e0
+ cdns3_thread_irq+0x94/0xa0
+ irq_thread_fn+0x30/0xa0
+ irq_thread+0x150/0x248
+ kthread+0xfc/0x128
+ ret_from_fork+0x10/0x18
+Code: 910e8000 f9400693 12001ed7 79400f79 (3940aa61)
+---[ end trace c685db37f8773fba ]---
+Kernel panic - not syncing: Fatal exception
+SMP: stopping secondary CPUs
+Kernel Offset: disabled
+CPU features: 0x0002,20002008
+Memory Limit: none
+Rebooting in 5 seconds..
+
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/lantiq_gswip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/udc/core.c | 2 ++
+ include/linux/usb/gadget.h    | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswip.c
-index cf6fa8fede334..521ebc072903b 100644
---- a/drivers/net/dsa/lantiq_gswip.c
-+++ b/drivers/net/dsa/lantiq_gswip.c
-@@ -1452,7 +1452,8 @@ static void gswip_phylink_validate(struct dsa_switch *ds, int port,
+diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
+index 9b11046480fed..2e28dde8376f6 100644
+--- a/drivers/usb/gadget/udc/core.c
++++ b/drivers/usb/gadget/udc/core.c
+@@ -1297,6 +1297,8 @@ static void usb_gadget_remove_driver(struct usb_udc *udc)
+ 	kobject_uevent(&udc->dev.kobj, KOBJ_CHANGE);
  
- unsupported:
- 	bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
--	dev_err(ds->dev, "Unsupported interface: %d\n", state->interface);
-+	dev_err(ds->dev, "Unsupported interface '%s' for port %d\n",
-+		phy_modes(state->interface), port);
- 	return;
- }
+ 	usb_gadget_disconnect(udc->gadget);
++	if (udc->gadget->irq)
++		synchronize_irq(udc->gadget->irq);
+ 	udc->driver->unbind(udc->gadget);
+ 	usb_gadget_udc_stop(udc);
+ 
+diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+index 9411c08a5c7e1..73a6113322c6c 100644
+--- a/include/linux/usb/gadget.h
++++ b/include/linux/usb/gadget.h
+@@ -373,6 +373,7 @@ struct usb_gadget_ops {
+  * @connected: True if gadget is connected.
+  * @lpm_capable: If the gadget max_speed is FULL or HIGH, this flag
+  *	indicates that it supports LPM as per the LPM ECN & errata.
++ * @irq: the interrupt number for device controller.
+  *
+  * Gadgets have a mostly-portable "gadget driver" implementing device
+  * functions, handling all usb configurations and interfaces.  Gadget
+@@ -427,6 +428,7 @@ struct usb_gadget {
+ 	unsigned			deactivated:1;
+ 	unsigned			connected:1;
+ 	unsigned			lpm_capable:1;
++	int				irq;
+ };
+ #define work_to_gadget(w)	(container_of((w), struct usb_gadget, work))
  
 -- 
 2.25.1
