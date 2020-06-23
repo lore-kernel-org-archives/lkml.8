@@ -2,98 +2,139 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6631AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3672820738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592873586;
-	bh=jNTNES8TzyLbIlxABgiLo6CoJEf7X3BZZA4/JCXPorU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nC95XfPlS/yeHJfYLd9xQz8jHryLl8y/aX3F2Z4YzJ3HWp3y5jnTACYzpbHVv7FJl
-	 fp5W0olcn9KNJTNequv1+19XczI4GmA/LCcn4iIYjuX5Ac1ln4GFBcT5H8YeUJdLru
-	 0CFpilIXWMmIocuuiY9bq9xUpkU7KN+JOqUYBXog=
+	by mail.kernel.org (Postfix) with ESMTP id 72AB220706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZvA8Z/nR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbgFWAxB (ORCPT
+        id S1732471AbgFWAxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732394AbgFWAwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:52:35 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9582920809;
-        Tue, 23 Jun 2020 00:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592873555;
-        bh=jNTNES8TzyLbIlxABgiLo6CoJEf7X3BZZA4/JCXPorU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mcTX7l2VAdvdJtTKR9dpFVPyMbyOnqev81s7+9i+utyQVGHvOF7Cv87JWNP+mdvzE
-         eC/S4u8fDSEyZNpAVUl59E3gY3tSFEeW12o5NACEWW1fXUZKlIwE7Fkm07bPfdn+L1
-         2132hdQO2dN4K8UwMKWZNXXc1+EWjziwzPeaa938=
-From:   paulmck@kernel.org
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 14/14] docs: fix references for DMA*.txt files
-Date:   Mon, 22 Jun 2020 17:52:31 -0700
-Message-Id: <20200623005231.27712-14-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200623005152.GA27459@paulmck-ThinkPad-P72>
-References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
+        Mon, 22 Jun 2020 20:53:07 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21159 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732460AbgFWAxE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:53:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592873583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qp7Q2GIXEixRBimL7E9VvblHlm9CvwZes19fF7Y/7hI=;
+        b=ZvA8Z/nRhRUQID1oEGpXmEllUe5w753/EAc1HLdUbtfjdE1BPwG5bjAx6nW/iN1WUtCA/d
+        N73Pcucr8SdDAlSckgbRSmuN+DybrwVTD0mPrV86Nvlaw6ZgBhANgA/CO0XIE1wRlotJUy
+        jQKyCFiRnvmd5C3ipB4sF/I2y654XHI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-507-D3OtTsFcNmm55oVsX2L50A-1; Mon, 22 Jun 2020 20:53:01 -0400
+X-MC-Unique: D3OtTsFcNmm55oVsX2L50A-1
+Received: by mail-wm1-f70.google.com with SMTP id t18so1586600wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:53:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qp7Q2GIXEixRBimL7E9VvblHlm9CvwZes19fF7Y/7hI=;
+        b=fL0sEPuaT3xsKVAGi0E+fX7HFfqV9JNlOFtq/7LSAkGw4zVgyOqYcQdSg9qj5a/FrM
+         5mQKj1ImbPqJbKQIyO0zzec6zTnSNJ1WUELVoDARe0TPLeKzx2yGQeuwo5l3ISgx1k3G
+         CVfAQ5oJ0Z5D1wFKTBMn7wHFL/1IbStjLx9MUL2uBGcufPdsRKmexnBc99utxSjfa2ZU
+         RXoCk5HcdmYgGBcBzq4dafXbJ4s2sFmNtnl1T8h3zIEeTrnCvi91rJtmDu+aZXMzsUxV
+         Kg1MoYCGtojEPgVQY7exH72jaPaA6B8uRpnRt4I6xiA01jWzDItv4wpGuIYuPwdptwDl
+         gRZA==
+X-Gm-Message-State: AOAM533YjVRWlDpELiqeupOA4KiJonn+GvjGA9bzIFqSAfoKf8Zfo3s5
+        Gf79FewFIBEHQhzGYevEGBbjcYPvAKy0Pm7C/D2rCphvDBzlLi2XLpJqp76JWXmPGRnFcvJbUvr
+        +Hn0FBM99o6eCOGBlfH+nHQPk
+X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr9573846wrx.50.1592873580742;
+        Mon, 22 Jun 2020 17:53:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyRM65nu3IaIw80ctmoGJZHcWszViI51kO24uJTmpp6hT6KbuSkgwjXSwFmD4MizZA8Cg4FPg==
+X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr9573825wrx.50.1592873580515;
+        Mon, 22 Jun 2020 17:53:00 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id d13sm6038408wrn.61.2020.06.22.17.52.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 17:52:59 -0700 (PDT)
+Subject: Re: [PATCH v2 00/11] KVM: Support guest MAXPHYADDR < host MAXPHYADDR
+To:     Andy Lutomirski <luto@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, babu.moger@amd.com
+References: <20200619153925.79106-1-mgamal@redhat.com>
+ <5a52fd65-e1b2-ca87-e923-1d5ac167cfb9@amd.com>
+ <52295811-f78a-46c5-ff9e-23709ba95a3d@redhat.com>
+ <2bcdb1cb-c0c5-5447-eed5-6fb094ae7f19@kernel.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f019cc1f-daa8-869b-6c06-0e2586cdf0a8@redhat.com>
+Date:   Tue, 23 Jun 2020 02:52:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <2bcdb1cb-c0c5-5447-eed5-6fb094ae7f19@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On 23/06/20 01:47, Andy Lutomirski wrote:
+> I believe that Xen does this.  Linux does not.)  For a guest to
+> actually be functional in this case, the guest needs to make sure
+> that it is not setting bits that are not, in fact, reserved on the
+> CPU.  This means the guest needs to check MAXPHYADDR and do something
+> different on different CPUs.
+> 
+> Do such guests exist?
 
-As we moved those files to core-api, fix references to point
-to their newer locations.
+I don't know; at least KVM does it too when EPT is disabled, though.  It
+tries to minimize the effect of this issue by preferring bit 51, but
+this does not help if the host MAXPHYADDR is 52.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- Documentation/memory-barriers.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> As far as I know, Xen is busted on systems
+> with unusually large MAXPHYADDR regardless of any virtualization
+> issues, so, at best, this series would make Xen, running as a KVM
+> guest, work better on new hardware than it does running bare metal on
+> that hardware.  This seems like an insufficient justification for a
+> performance-eating series like this.
+> 
+> And, unless I've misunderstood, this will eat performance quite
+> badly. Linux guests [0] (and probably many other guests), in quite a
+> few workloads, is fairly sensitive to the performance of ordinary 
+> write-protect or not-present faults.  Promoting these to VM exits 
+> because you want to check for bits above the guest's MAXPHYADDR is
+> going to hurt.
 
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index eaabc31..0e4947a 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -546,8 +546,8 @@ There are certain things that the Linux kernel memory barriers do not guarantee:
- 	[*] For information on bus mastering DMA and coherency please read:
- 
- 	    Documentation/driver-api/pci/pci.rst
--	    Documentation/DMA-API-HOWTO.txt
--	    Documentation/DMA-API.txt
-+	    Documentation/core-api/dma-api-howto.rst
-+	    Documentation/core-api/dma-api.rst
- 
- 
- DATA DEPENDENCY BARRIERS (HISTORICAL)
-@@ -1932,7 +1932,7 @@ There are some more advanced barrier functions:
-      here.
- 
-      See the subsection "Kernel I/O barrier effects" for more information on
--     relaxed I/O accessors and the Documentation/DMA-API.txt file for more
-+     relaxed I/O accessors and the Documentation/core-api/dma-api.rst file for more
-      information on consistent memory.
- 
- 
--- 
-2.9.5
+The series needs benchmarking indeed, however note that the vmexits do
+not occur for not-present faults.  QEMU sets a fixed MAXPHYADDR of 40
+but that is generally a bad idea and several distros change that to just
+use host MAXPHYADDR instead (which would disable the new code).
+
+> (Also, I'm confused.  Wouldn't faults like this be EPT/NPT
+> violations, not page faults?)
+
+Only if the pages are actually accessible.  Otherwise, W/U/F faults
+would prevail over the RSVD fault.  Tom is saying that there's no
+architectural promise that RSVD faults prevail, either, so that would
+remove the need to trap #PF.
+
+Paolo
+
+> --Andy
+> 
+> 
+> [0] From rather out-of-date memory, Linux doesn't make as much use
+> as one might expect of the A bit.  Instead it uses minor faults.
+> Ouch.
 
