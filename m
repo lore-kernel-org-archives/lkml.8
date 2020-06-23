@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4699EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 182E02072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0AC2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948197;
-	bh=EHaTjvHX7cveCes1GIEDu70R+KTHtORbW9TF6z7OUOM=;
+	s=default; t=1592948202;
+	bh=SigPQRGWvtPjEXyreRGfyr8fEmPoalFz2X9U0FSRtEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mqq04Xy/KjRpdrRFdxuccDnk4FK3ePKyf6hmXUWl5X4ZXN5CFNcSjgHJQkhW1Ndmk
-	 ZrYKhhP0RB7dF5+UHmVvIX8ja3RGnei+PzG/I6LQu0JS8IVztljZkfdwdpPQyOoN1n
-	 Q6FA60DBhs3x25uR5Y7A7/BETnBx8FvxwH+djVJs=
+	b=kbzoFJwjXbB8u4yN192bkNXwMG4018r9S0/gjwTMGpB+BxDrENEo6GdJ5CnFo4toy
+	 9mXb7xMWmF1IRNHLqlzDPDlspARDW2NTR2hEXkLwrqrQVhiSUGNKIrB/wWMGjS1bze
+	 EpJgxs5LTMdAQFpJQoL9F2zIwoSDru5x9Uztl7vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393786AbgFWVga (ORCPT
+        id S2387691AbgFWUJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51048 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:09:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388430AbgFWUJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:53 -0400
+        id S2388311AbgFWUJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E112082F;
-        Tue, 23 Jun 2020 20:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EA7B206C3;
+        Tue, 23 Jun 2020 20:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942993;
-        bh=EHaTjvHX7cveCes1GIEDu70R+KTHtORbW9TF6z7OUOM=;
+        s=default; t=1592942943;
+        bh=SigPQRGWvtPjEXyreRGfyr8fEmPoalFz2X9U0FSRtEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+TCQWet+c1W34ViTT7px70xk8HtsOKL1KXzvIuk1jD5twxzATZVh9kv2jBBFanxt
-         idiwgWdGk4PwyVPc8RsnoBoE+E2I1C3rcyBlJOiEBUEcxhqW/SX8D+8ippoefqEl0J
-         rG2/szkC4Ec2ITAv9wcv6ywWsBBIpYUsUPP50BxA=
+        b=pHg8tgrlYuvM384iExddmMqeMf/YDCyyxLz2LnYJZTN45/WiBqT+C66DJQk8H/uVt
+         CrOOHdavzuxOVlveGP7WuBD0CWvEopqzxylQbmQWSaDrhiVj62asIwkwhLGv7c3Sx1
+         rYoDQfA8xouesvVewVN4NMnDC0eanXaJMFnC9ezQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 217/477] powerpc/pseries/ras: Fix FWNMI_VALID off by one
-Date:   Tue, 23 Jun 2020 21:53:34 +0200
-Message-Id: <20200623195417.843037898@linuxfoundation.org>
+Subject: [PATCH 5.7 196/477] phy: ti: j721e-wiz: Fix some error return code in wiz_probe()
+Date:   Tue, 23 Jun 2020 21:53:13 +0200
+Message-Id: <20200623195416.849454492@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,44 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit deb70f7a35a22dffa55b2c3aac71bc6fb0f486ce ]
+[ Upstream commit e2ae8bca494481a9f38fcd1d52943ac04e654745 ]
 
-This was discovered developing qemu fwnmi sreset support. This
-off-by-one bug means the last 16 bytes of the rtas area can not
-be used for a 16 byte save area.
+Fix to return negative error code from some error handling
+cases instead of 0, as done elsewhere in this function.
 
-It's not a serious bug, and QEMU implementation has to retain a
-workaround for old kernels, but it's good to tighten it.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Acked-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200508043408.886394-7-npiggin@gmail.com
+Fixes: 091876cc355d ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Roger Quadros <rogerq@ti.com>
+Link: https://lore.kernel.org/r/20200507054109.110849-1-weiyongjun1@huawei.com
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/ras.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/phy/ti/phy-j721e-wiz.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
-index 1d1da639b8b7e..16ba5c542e55c 100644
---- a/arch/powerpc/platforms/pseries/ras.c
-+++ b/arch/powerpc/platforms/pseries/ras.c
-@@ -395,10 +395,11 @@ static irqreturn_t ras_error_interrupt(int irq, void *dev_id)
- /*
-  * Some versions of FWNMI place the buffer inside the 4kB page starting at
-  * 0x7000. Other versions place it inside the rtas buffer. We check both.
-+ * Minimum size of the buffer is 16 bytes.
-  */
- #define VALID_FWNMI_BUFFER(A) \
--	((((A) >= 0x7000) && ((A) < 0x7ff0)) || \
--	(((A) >= rtas.base) && ((A) < (rtas.base + rtas.size - 16))))
-+	((((A) >= 0x7000) && ((A) <= 0x8000 - 16)) || \
-+	(((A) >= rtas.base) && ((A) <= (rtas.base + rtas.size - 16))))
+diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
+index 7b51045df7836..c8e4ff341cefa 100644
+--- a/drivers/phy/ti/phy-j721e-wiz.c
++++ b/drivers/phy/ti/phy-j721e-wiz.c
+@@ -794,8 +794,10 @@ static int wiz_probe(struct platform_device *pdev)
+ 	}
  
- static inline struct rtas_error_log *fwnmi_get_errlog(void)
- {
+ 	base = devm_ioremap(dev, res.start, resource_size(&res));
+-	if (!base)
++	if (!base) {
++		ret = -ENOMEM;
+ 		goto err_addr_to_resource;
++	}
+ 
+ 	regmap = devm_regmap_init_mmio(dev, base, &wiz_regmap_config);
+ 	if (IS_ERR(regmap)) {
+@@ -812,6 +814,7 @@ static int wiz_probe(struct platform_device *pdev)
+ 
+ 	if (num_lanes > WIZ_MAX_LANES) {
+ 		dev_err(dev, "Cannot support %d lanes\n", num_lanes);
++		ret = -ENODEV;
+ 		goto err_addr_to_resource;
+ 	}
+ 
+@@ -897,6 +900,7 @@ static int wiz_probe(struct platform_device *pdev)
+ 	serdes_pdev = of_platform_device_create(child_node, NULL, dev);
+ 	if (!serdes_pdev) {
+ 		dev_WARN(dev, "Unable to create SERDES platform device\n");
++		ret = -ENOMEM;
+ 		goto err_pdev_create;
+ 	}
+ 	wiz->serdes_pdev = serdes_pdev;
 -- 
 2.25.1
 
