@@ -2,104 +2,94 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B178FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C185AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB3D2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tz4wtzJy"
+	by mail.kernel.org (Postfix) with ESMTP id 9B34B2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733294AbgFWSeu (ORCPT
+        id S2387452AbgFWSfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733149AbgFWSet (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:34:49 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7A8C061573;
-        Tue, 23 Jun 2020 11:34:49 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g1so17127771edv.6;
-        Tue, 23 Jun 2020 11:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n1T35J+HW/tfUciSMhCodCWFYqAaiFCQ5lEz9exQc/o=;
-        b=Tz4wtzJyPad5gy/IG2huil3XWoC4trTDH3+djIUF3u7v/4p/SjuUx+r/eYHwG9y8jd
-         nk5i/IcG6i09Svx0gslTFU6+uZleU99hIi5QCVx+oSEqkoxfnNJbMcK0xZue9Vo3T6a1
-         gxxXhLBXgoXWe23MRaAKzJTnsQKT/IAGiH0lmQZ1O9igePrxYt/j6p17WLpPYMiOfcDY
-         NOJGpdKZ9TYjFy8tzG3HPottQ3/h1xyLws2qMfEcLEvfXFnWOTLivm7isJ0zKvhUG+G4
-         cLVxTeiheNchYJcjJc5JnHmeJ3IGnuP3bB66TNZutt2n2pnGlcsVEucag+efFl5jFEZB
-         oHjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n1T35J+HW/tfUciSMhCodCWFYqAaiFCQ5lEz9exQc/o=;
-        b=EB6hDhyEfTiOsw4IbzKENf63EQq1tRE3BR7WGB5AhLad4y1eP3CaBuRrAQUX7Bavim
-         aGGCM05Ztdo1WkDPeUoDCoj6Ws/fSV+XAxjmxIkf2Brw6Ark0uGnGbg4Hb259lkImUYJ
-         WU4zVupQlkDW1XqtAqe4/bGenz2HCS7M6KWDZdOcCrjL1hkOFsU5r4WAhFP8ZN2Di1Sd
-         w30nrPIdKL57NFKwgKsR4nM+GO4soZfONlpcovVB6erFS+YZyvznS4K+oJHDw0CuzVu/
-         pCPs6M3a3dMsUkK+82YRPUQHJKj0bfwcIClOIaa+H5DcAdSwCbsnL9c6I/1HMYRGpTMj
-         d0HA==
-X-Gm-Message-State: AOAM533DepYh5o/vja5dvNgWRv2oft2GhTYX4Q3qiQtslYvojTyCn+7w
-        xe4PEGYwV/LaETnsehVpCrytpyv8OOs=
-X-Google-Smtp-Source: ABdhPJz4BjlhlNpvHxHxx5ypE7pv9WMsb5v1cQUv3j3XfPneaGq69WI+XsdYygOC7WX+OlWM9d/kEw==
-X-Received: by 2002:aa7:c41a:: with SMTP id j26mr23493827edq.13.1592937287680;
-        Tue, 23 Jun 2020 11:34:47 -0700 (PDT)
-Received: from localhost.localdomain (93-103-18-160.static.t-2.net. [93.103.18.160])
-        by smtp.gmail.com with ESMTPSA id y26sm15341379edv.91.2020.06.23.11.34.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 11:34:47 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH] KVM: x86: Use VMCALL and VMMCALL mnemonics in kvm_para.h
-Date:   Tue, 23 Jun 2020 20:34:39 +0200
-Message-Id: <20200623183439.5526-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 23 Jun 2020 14:35:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30245 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387410AbgFWSfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 14:35:22 -0400
+IronPort-SDR: /J8oXjFUuYg14SHni1jNsX34JN1GpociWlrye5qYrPnecgUpX6iJHXzyCvVP9QOGQoJIHTEQNE
+ D7tHF9KcmB8g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="145660538"
+X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
+   d="scan'208";a="145660538"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 11:35:22 -0700
+IronPort-SDR: T65E5eaxzGHXaK84hqmSkk0tXIzJkESRZm7y3qoUL43S8YwxQHAKvC+h9pJlterwG4fKDYlEaq
+ f4nFl2Ixal0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
+   d="scan'208";a="452332344"
+Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 11:35:20 -0700
+Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jnnlP-0000Tv-Sj; Tue, 23 Jun 2020 18:35:19 +0000
+Date:   Wed, 24 Jun 2020 02:34:16 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] soc: ti: k3: fix semicolon.cocci warnings
+Message-ID: <20200623183416.GA6477@aae0707f33c9>
+References: <202006240236.elBrFwVx%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006240236.elBrFwVx%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current minimum required version of binutils is 2.23,
-which supports VMCALL and VMMCALL instruction mnemonics.
+From: kernel test robot <lkp@intel.com>
 
-Replace the byte-wise specification of VMCALL and
-VMMCALL with these proper mnemonics.
+drivers/soc/ti/k3-ringacc.c:616:2-3: Unneeded semicolon
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-CC: Paolo Bonzini <pbonzini@redhat.com>
+
+ Remove unneeded semicolon.
+
+Generated by: scripts/coccinelle/misc/semicolon.cocci
+
+Fixes: 3277e8aa2504 ("soc: ti: k3: add navss ringacc driver")
+CC: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
 ---
- arch/x86/include/asm/kvm_para.h | 2 +-
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   3e08a95294a4fb3702bb3d35ed08028433c37fe6
+commit: 3277e8aa2504d97e022ecb9777d784ac1a439d36 soc: ti: k3: add navss ringacc driver
+
+ k3-ringacc.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-index 49d3a9edb06f..01317493807e 100644
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -18,7 +18,7 @@ static inline bool kvm_check_and_clear_guest_paused(void)
- #endif /* CONFIG_KVM_GUEST */
+--- a/drivers/soc/ti/k3-ringacc.c
++++ b/drivers/soc/ti/k3-ringacc.c
+@@ -613,7 +613,7 @@ int k3_ringacc_ring_cfg(struct k3_ring *
+ 		ring->ops = NULL;
+ 		ret = -EINVAL;
+ 		goto err_free_proxy;
+-	};
++	}
  
- #define KVM_HYPERCALL \
--        ALTERNATIVE(".byte 0x0f,0x01,0xc1", ".byte 0x0f,0x01,0xd9", X86_FEATURE_VMMCALL)
-+        ALTERNATIVE("vmcall", "vmmcall", X86_FEATURE_VMMCALL)
- 
- /* For KVM hypercalls, a three-byte sequence of either the vmcall or the vmmcall
-  * instruction.  The hypervisor may replace it with something else but only the
--- 
-2.26.2
-
+ 	ring->ring_mem_virt = dma_alloc_coherent(ringacc->dev,
+ 					ring->size * (4 << ring->elm_size),
