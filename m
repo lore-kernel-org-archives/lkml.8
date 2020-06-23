@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58657C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2606C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 309852064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89E32078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942820;
-	bh=IdCbGn+BD/zSCajYpboxueiJwEpe9JU+/3rkeyZ6MkI=;
+	s=default; t=1592942825;
+	bh=OCemDDGdOGHaCZXLKIZ8zQOVAJWfK5uDwvW0wZKu5ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yQatPlc4t8U+2El1IsBumNpaOgFhDfbQ1waxTIBCq3AmszxR+oKy8aFaw4108m009
-	 INSWHgvzYbh3qSUHBlNQ7VeWOs2/8zXr0Q8bhVL9hPADBDD94d/23Vsj+yoivsf9Gh
-	 dbC1a9hJKbNAPFp8CuTlHLr4Kz0kANq6i7qJNzJA=
+	b=frNOaDG49QDcZwjlnN5NpnaQhO6F3qS5XW0Uy/0W/DdzvKgPFPnYJmQbGAjX2oDO+
+	 rO8ujqTtsjQ9WgXJ+3RU3LUpnn/CC/1gsmSsshPcub8enTFkoEfBr1v4yMcNrWQxE6
+	 30u+/oEs16mIvaN8lQQj9MEjsepgPDzo7K8fiB3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388552AbgFWUG7 (ORCPT
+        id S2388562AbgFWUHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:06:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47202 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:07:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388538AbgFWUGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:54 -0400
+        id S2388553AbgFWUG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:06:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 339262078A;
-        Tue, 23 Jun 2020 20:06:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84E8E2078A;
+        Tue, 23 Jun 2020 20:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942813;
-        bh=IdCbGn+BD/zSCajYpboxueiJwEpe9JU+/3rkeyZ6MkI=;
+        s=default; t=1592942819;
+        bh=OCemDDGdOGHaCZXLKIZ8zQOVAJWfK5uDwvW0wZKu5ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4oPIOs3bIojw3cLPUurRYzH2bbqFkcGfcKyXeDz2LHs/VBqZkt23UAhm0gu1YIqH
-         bE98XD4IjcOjkPdFkHoOZhu5450CF+0Yo8OIOQOYPzSI/sVzFD68u8We/HmEYhtHEr
-         XJrCIvEVAKf+wCuK+QEqe9cbHeKBshqbFIW+ViMg=
+        b=qW/z862GqBPm8LgGv8ED62hn1aKACnDiKm7xp/mSGKZL5vxtA42nBOtxW2u9tp0/6
+         2MNXQ0Gkcgbp/iXGCKcOaq5mw6kfatCUbrAxppM7y0219rS96GMhsTDYto2S8JYGcp
+         6xaj1D36wOisw8Kjzu4/ZstlWEe+7KDKt0h8mhRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 146/477] of: property: Fix create device links for all child-supplier dependencies
-Date:   Tue, 23 Jun 2020 21:52:23 +0200
-Message-Id: <20200623195414.502212413@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 148/477] clk: meson: meson8b: Fix the first parent of vid_pll_in_sel
+Date:   Tue, 23 Jun 2020 21:52:25 +0200
+Message-Id: <20200623195414.596419713@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,43 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit ed3655729182a59b9bef1b564c6fc2dcbbbe954e ]
+[ Upstream commit da1978ac3d6cf278dedf5edbf350445a0fff2f08 ]
 
-Upon adding a new device from a DT node, we scan its properties and its
-children's properties in order to create a consumer/supplier
-relationship between the device and the property provider.
+Use hdmi_pll_lvds_out as parent of the vid_pll_in_sel clock. It's not
+easy to see that the vendor kernel does the same, but it actually does.
+meson_clk_pll_ops in mainline still cannot fully recalculate all rates
+from the HDMI PLL registers because some register bits (at the time of
+writing it's unknown which bits are used for this) double the HDMI PLL
+output rate (compared to simply considering M, N and FRAC) for some (but
+not all) PLL settings.
 
-That said, it's possible for some of the node's children to be disabled,
-which will create links that'll never be fulfilled.
+Update the vid_pll_in_sel parent so our clock calculation works for
+simple clock settings like the CVBS output (where no rate doubling is
+going on). The PLL ops need to be fixed later on for more complex clock
+settings (all HDMI rates).
 
-To get around this, use the for_each_available_child_of_node() function
-instead of for_each_available_node() when iterating over the node's
-children.
-
-Fixes: d4387cd11741 ("of: property: Create device links for all child-supplier depencencies")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes: 6cb57c678bb70 ("clk: meson: meson8b: add the read-only video clock trees")
+Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200417184127.1319871-2-martin.blumenstingl@googlemail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/property.c | 2 +-
+ drivers/clk/meson/meson8b.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index b4916dcc9e725..a8c2b13521b27 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1296,7 +1296,7 @@ static int of_link_to_suppliers(struct device *dev,
- 		if (of_link_property(dev, con_np, p->name))
- 			ret = -ENODEV;
- 
--	for_each_child_of_node(con_np, child)
-+	for_each_available_child_of_node(con_np, child)
- 		if (of_link_to_suppliers(dev, child) && !ret)
- 			ret = -EAGAIN;
- 
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index 34a70c4b48991..ac4a883acd2ac 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -1077,7 +1077,7 @@ static struct clk_regmap meson8b_vid_pll_in_sel = {
+ 		 * Meson8m2: vid2_pll
+ 		 */
+ 		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_hdmi_pll_dco.hw
++			&meson8b_hdmi_pll_lvds_out.hw
+ 		},
+ 		.num_parents = 1,
+ 		.flags = CLK_SET_RATE_PARENT,
 -- 
 2.25.1
 
