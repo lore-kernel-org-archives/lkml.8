@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43060C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09731C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D63B21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D872070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945039;
-	bh=gHBYt0rtO8XiuzadhP1xVHGHbMVIBh7cuuvOqycPJRM=;
+	s=default; t=1592945045;
+	bh=XNkhXmY1tC3RoZRIYENo9Ac3fpaA4tpaohXsc2LygiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NgjpJLgqUyAzbl8N1WX+AVy2rSPUBHySy6+ELW5I3YPbx/iuYVH/+idMaHj0+E+hU
-	 b9eZ16TDwWDy9IzElJ4FwenGbz8TSgD+MohrM9w0yOPbyO39ekSdM3lpSgT4xjjjZw
-	 3WhQ4W9ScB4g+J2+rwWenRUZviDYtzTs/6HJRDqk=
+	b=hkgVKOK1RvXE5urbgefCXOXthYr0wy73i897w35KnMcpPfzvYF3VtAm3HG/1k997n
+	 5R2mTlLlsgucPkZsO2dYZgPOTUwIOeEYU4/CZZ/kbP4EzZgzH7YmUDWJl1hkXE4ENM
+	 QG48Ayy3eGSXs94PTnKkaAOybCdiErXh3Y+LbGHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403943AbgFWUn4 (ORCPT
+        id S2403958AbgFWUoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392556AbgFWUnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:43:49 -0400
+        id S2403935AbgFWUoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2802521883;
-        Tue, 23 Jun 2020 20:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53DB52053B;
+        Tue, 23 Jun 2020 20:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945029;
-        bh=gHBYt0rtO8XiuzadhP1xVHGHbMVIBh7cuuvOqycPJRM=;
+        s=default; t=1592945041;
+        bh=XNkhXmY1tC3RoZRIYENo9Ac3fpaA4tpaohXsc2LygiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WfCEoMEV75x07gbd2/+dVGMLxwhjzJRaSKvWtKUrIqy7u9tfD9KvJAvqaGSFPteUM
-         bcFtzjQDKWMQzbuCysPiX9MpkW86oG18SvSEqZx1hrBuIptAyoU8WzyR65aeipklsQ
-         kV3NUQnd8RDDQ/9jaVSdbyUDXYWrJ9zSINIekPpk=
+        b=L8p+mxMv4PLvuXtCxleEyi5ZHrXxyZ/ikS59XVT9dEAgUkZL0MLUXGQKO+xd1a+JY
+         AcTXIN9IQmJDSbF0pSU3J5KrqEtIlqvvU2Z1tMdvIO6JkEPkpluyAoU4aEM80T+Ixh
+         M2W3BOct8ljQNwtL34LQjff/JCDXG79ZhrpdanN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Rangankar <mrangankar@marvell.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/136] scsi: qedi: Check for buffer overflow in qedi_set_path()
-Date:   Tue, 23 Jun 2020 21:57:48 +0200
-Message-Id: <20200623195304.236781281@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 017/136] i2c: pxa: clear all master action bits in i2c_pxa_stop_message()
+Date:   Tue, 23 Jun 2020 21:57:53 +0200
+Message-Id: <20200623195304.483648797@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -61,43 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 4a4c0cfb4be74e216dd4446b254594707455bfc6 ]
+[ Upstream commit e81c979f4e071d516aa27cf5a0c3939da00dc1ca ]
 
-Smatch complains that the "path_data->handle" variable is user controlled.
-It comes from iscsi_set_path() so that seems possible.  It's harmless to
-add a limit check.
+If we timeout during a message transfer, the control register may
+contain bits that cause an action to be set. Read-modify-writing the
+register leaving these bits set may trigger the hardware to attempt
+one of these actions unintentionally.
 
-The qedi->ep_tbl[] array has qedi->max_active_conns elements (which is
-always ISCSI_MAX_SESS_PER_HBA (4096) elements).  The array is allocated in
-the qedi_cm_alloc_mem() function.
+Always clear these bits when cleaning up after a message or after
+a timeout.
 
-Link: https://lore.kernel.org/r/20200428131939.GA696531@mwanda
-Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/i2c/busses/i2c-pxa.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 94f3829b1974a..1effac1111d5e 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -1224,6 +1224,10 @@ static int qedi_set_path(struct Scsi_Host *shost, struct iscsi_path *path_data)
- 	}
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 600d264e080c5..ecc84aea51319 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -709,11 +709,9 @@ static inline void i2c_pxa_stop_message(struct pxa_i2c *i2c)
+ {
+ 	u32 icr;
  
- 	iscsi_cid = (u32)path_data->handle;
-+	if (iscsi_cid >= qedi->max_active_conns) {
-+		ret = -EINVAL;
-+		goto set_path_exit;
-+	}
- 	qedi_ep = qedi->ep_tbl[iscsi_cid];
- 	QEDI_INFO(&qedi->dbg_ctx, QEDI_LOG_INFO,
- 		  "iscsi_cid=0x%x, qedi_ep=%p\n", iscsi_cid, qedi_ep);
+-	/*
+-	 * Clear the STOP and ACK flags
+-	 */
++	/* Clear the START, STOP, ACK, TB and MA flags */
+ 	icr = readl(_ICR(i2c));
+-	icr &= ~(ICR_STOP | ICR_ACKNAK);
++	icr &= ~(ICR_START | ICR_STOP | ICR_ACKNAK | ICR_TB | ICR_MA);
+ 	writel(icr, _ICR(i2c));
+ }
+ 
 -- 
 2.25.1
 
