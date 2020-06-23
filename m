@@ -2,101 +2,83 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3817C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 924DB206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C422520723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943686;
-	bh=DW8oNaq5G/IK2qNIGpWJC6dQnj+T8KIuiSJcvDOwp1g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnaxkAxRtSyD8rb18YwCpKIKxyXSegCzRMhC1xgCb1bnlV/GQfAjKJKyd78nCe/2M
-	 1gTSVJ+cFEow5IjHI//Iw8CuuLoBPd9HNi1SM/0ddvm9wTm343u58N7iICs/4FZ/Id
-	 dxmxvLoFz0ncA57uoRwqc8bX5JDHwsMpZ19gTTGc=
+	s=default; t=1592943695;
+	bh=x6UTuA/WddaRqfwQKiLLn/GM/jW6mmC2cZEISdCLu6o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LzDxvrtcQoryA7+fV7xh9zEu3uLDIcJFMROT8Vsqr3H3DtO4G3feIdhuI+OiK4UBd
+	 9CAIAHgCrKVWkYdZSqTW1MqTeCiB0Rz2aaRnK25Of5iPcS67KBuYq+RO0uzByJFyTb
+	 QbodW1yErH3NOJmqEP3N0cj9g9sUWym3G2nNqgn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389770AbgFWUVZ (ORCPT
+        id S2390053AbgFWUVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:21:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38812 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:21:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387827AbgFWUVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:21:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2389698AbgFWUVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:21:20 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7045B2064B;
-        Tue, 23 Jun 2020 20:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB0E2080C;
+        Tue, 23 Jun 2020 20:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943673;
-        bh=DW8oNaq5G/IK2qNIGpWJC6dQnj+T8KIuiSJcvDOwp1g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7B5uvaj4C0kbySqAdbSJ/rDdqzdGQrcwbXuMp3XgLv3GhuDHiiWPfoB5Kgy4u+40
-         ZHhNfENAHjZiiLmPTOCVigmn3ZTqOk7+uTKmhGpVKI8McTtSEQRCRkyqRC1gzePxl2
-         mp+MTPDNYdbOMGfDPyDpuikhA3OjeXsWcaGt/yy4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 475/477] net: octeon: mgmt: Repair filling of RX ring
-Date:   Tue, 23 Jun 2020 21:57:52 +0200
-Message-Id: <20200623195430.000963797@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592943680;
+        bh=x6UTuA/WddaRqfwQKiLLn/GM/jW6mmC2cZEISdCLu6o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HJWjyWXXM2pXhg0fQgG1kvauHo2jnKjUuz/KIrZIgMdeLKCahLAEEA+e/z2wO9gJQ
+         4krWUBHL8+ZWLgUfE1JgIACwlTnhNNwRPQtia9KaCJUTEepM81uEP1wCdlpqiCk2MO
+         /0lGWSy2kzy2crAsWxFRkpogn/lclXNSnwitIR+c=
+Date:   Tue, 23 Jun 2020 13:21:19 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ronald =?UTF-8?B?VHNjaGFsw6Ry?= <ronald@innovation.ch>,
+        Nicolai Stange <nicstange@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Srivatsa Vaddagiri <vatsa@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: debugfs_create_u32_array() memory leaks
+Message-ID: <20200623132119.5c4f2041@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200622193109.GA2163148@kroah.com>
+References: <20200619161734.25e99fa4@kicinski-fedora-PC1C0HJN>
+        <20200620074542.GA2298609@kroah.com>
+        <20200622122332.274c842e@kicinski-fedora-PC1C0HJN>
+        <20200622193109.GA2163148@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+On Mon, 22 Jun 2020 21:31:09 +0200 Greg Kroah-Hartman wrote:
+> > Ah, I wasn't sure how to fix but since you say that create functions
+> > shouldn't allocate memory seems like the fix will be to make callers
+> > pass an equivalent of struct debugfs_blob_wrapper for u32.  
+> 
+> Sounds good.
+> 
+> > I'm happy to send a patch to that effect - I have a process question
+> > tho - I need this change in net-next, should I sent the patch to you?
+> > Can it still make it into 5.8 (debugfs -> Linus -> net -> net-next) or
+> > perhaps can it go via net-next since there is no de facto bug in 5.8?  
+> 
+> I can take a fix now, and get it into 5.8 if that makes things easier
+> for you.
 
-commit 0c34bb598c510e070160029f34efeeb217000f8d upstream.
+Having thought about it - since I'm changing the prototype I'd have to
+wait with my networking changes for the patch to land in net-next.
 
-The removal of mips_swiotlb_ops exposed a problem in octeon_mgmt Ethernet
-driver. mips_swiotlb_ops had an mb() after most of the operations and the
-removal of the ops had broken the receive functionality of the driver.
-My code inspection has shown no other places except
-octeon_mgmt_rx_fill_ring() where an explicit barrier would be obviously
-missing. The latter function however has to make sure that "ringing the
-bell" doesn't happen before RX ring entry is really written.
-
-The patch has been successfully tested on Octeon II.
-
-Fixes: a999933db9ed ("MIPS: remove mips_swiotlb_ops")
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/ethernet/cavium/octeon/octeon_mgmt.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
---- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-+++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-@@ -234,6 +234,11 @@ static void octeon_mgmt_rx_fill_ring(str
- 
- 		/* Put it in the ring.  */
- 		p->rx_ring[p->rx_next_fill] = re.d64;
-+		/* Make sure there is no reorder of filling the ring and ringing
-+		 * the bell
-+		 */
-+		wmb();
-+
- 		dma_sync_single_for_device(p->dev, p->rx_ring_handle,
- 					   ring_size_to_bytes(OCTEON_MGMT_RX_RING_SIZE),
- 					   DMA_BIDIRECTIONAL);
-
-
+So I'll just send the debugfs fix with my other code to DaveM and CC
+appropriately..
