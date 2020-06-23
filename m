@@ -2,154 +2,105 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD141C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1483206FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D15A206FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h2qXYk8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732182AbgFWKQp (ORCPT
+        id S1732245AbgFWKRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:16:45 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40477 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731158AbgFWKQn (ORCPT
+        Tue, 23 Jun 2020 06:17:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731158AbgFWKRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:16:43 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i16so14916424qtr.7;
-        Tue, 23 Jun 2020 03:16:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dLf+6RaUJ+WjVSSc8pU+EQ+Il6WUvTAaxqQFEx3lJPM=;
-        b=MGiAZohg/9sCogTIdCUQUrIgl+/Dg6PFTKG5IrbOQcA01XS6u6YexRhAB3bz0guER8
-         LDYInWLy2FiQibm+iB90ART5+6L8CKRIiqxJ6VvDO4RKPoI1Lf27Lkkf5mYbeLuUY/94
-         mDN+75XGzz5deqV3jq04KzMKtcZDZMVNo9mdKaLL8nJKaULREIVwrIbti2vavMm+eTIB
-         YNtd9x+n6XmXq3me0ZnSXYb5QWFm21oGkjS1EczdsWOVsOSlH/vlzhAJqQKDNKnRNYQC
-         BUpwGCBFHtJJoXAPYOEiStYQhv4WUGnH7Ddi8RS5p53KeRlDqxdCAWCBtf8UkqdLPYXc
-         Gczw==
-X-Gm-Message-State: AOAM532SngXVsR2lUWSk6u7eODu2sKucvYpEkv1TI0U8Zsfg7OERxn7s
-        keMZ/F8NYlQ0Y4Zq7Gqr0RI=
-X-Google-Smtp-Source: ABdhPJxuRvc/VmmMVbPwa/dEsC4+zayVarCHx1giPyRlMP8M9Fyr7C/LTDJnDKULMy+9WBhaJEbfQw==
-X-Received: by 2002:aed:33c5:: with SMTP id v63mr20848512qtd.104.1592907402292;
-        Tue, 23 Jun 2020 03:16:42 -0700 (PDT)
-Received: from [10.9.0.18] ([185.248.161.177])
-        by smtp.gmail.com with ESMTPSA id h4sm159388qtd.43.2020.06.23.03.16.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 03:16:41 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH 5/5] gcc-plugins/stackleak: Don't instrument
- vgettimeofday.c in arm64 VDSO
-To:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc:     Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-6-alex.popov@linux.com>
- <20200604135806.GA3170@willie-the-truck> <202006091149.6C78419@keescook>
- <20200610073046.GA15939@willie-the-truck>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <02f576e5-6512-99ca-0de0-a4239c6063ca@linux.com>
-Date:   Tue, 23 Jun 2020 13:16:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 06:17:54 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6EFC061573;
+        Tue, 23 Jun 2020 03:17:54 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49rhzt60Frz9sRf;
+        Tue, 23 Jun 2020 20:17:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592907471;
+        bh=51NGv3klwUMIQque9QEeRxsT484NcqIVmv5bJ8240n0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=h2qXYk8D8AXp8AKqLEsgL8Tm33Eca1Nh3+P+VR3T04djzj3AQFvRip0Ceijke8/Pk
+         mUtvfdSAlrD2cGa0cURTIoK3Gl75Ti0hO7Xpv0J+DF/lgJ4nDlPaQyPLyVPhTt/yGI
+         Q8Omp6hWB2WOsXwBg/GhtpQr6cPhK/qX0uOV2D7nR7yTUf2YsCIHx6wq8jVV69j3QN
+         3WwYVhspCaytT5BwWIcUaa2DxGrmKbu2J3OuCBNWc5afgqIZBY2LvTf/TPrmW+E42w
+         Ub0qTF1UQ7mWTi36ugn1vxWcHwCOKuLYlDU+aL/lMQr6xHcaqISxKgoprGxS9AsxMx
+         x2wXfaBpuvaOQ==
+Date:   Tue, 23 Jun 2020 20:17:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     syzbot <syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com>,
+        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, mingo@redhat.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org, elver@google.com
+Subject: Re: linux-next build error (9)
+Message-ID: <20200623201730.6c085687@canb.auug.org.au>
+In-Reply-To: <20200623093230.GD4781@hirez.programming.kicks-ass.net>
+References: <000000000000c25ce105a8a8fcd9@google.com>
+        <20200622094923.GP576888@hirez.programming.kicks-ass.net>
+        <20200623124413.08b2bd65@canb.auug.org.au>
+        <20200623093230.GD4781@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200610073046.GA15939@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/.jBQgqJbruxCXR9TGfnbpGd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.06.2020 10:30, Will Deacon wrote:
-> On Tue, Jun 09, 2020 at 12:09:27PM -0700, Kees Cook wrote:
->> arm_ssp_per_task_plugin.c
->> 	32-bit ARM only (but likely needs disabling for 32-bit ARM vDSO?)
+--Sig_/.jBQgqJbruxCXR9TGfnbpGd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I tested: on 32-bit arm vDSO is built with plugin flags. I will filter them out
-in a separate patch in v2 of the series.
+Hi Peter,
 
-> On arm64, the 32-bit toolchain is picked up via CC_COMPAT -- does that still
-> get the plugins?
-I tested it with this command:
-  make  ARCH=arm64 CROSS_COMPILE_COMPAT=arm-linux-gnueabi-
-CROSS_COMPILE=aarch64-linux-gnu- V=1
+On Tue, 23 Jun 2020 11:32:30 +0200 Peter Zijlstra <peterz@infradead.org> wr=
+ote:
+>
+> I suppose the next quest is finding a s390 compiler version that works
+> and then bumping the version test in the aforementioned commit.
 
-I see that COMPAT_VDSO is built without plugin flags. So it's ok.
+Not a lot of help, but my Debian cross compiler seems to work:
 
-Best regards,
-Alexander
+$ s390x-linux-gnu-gcc --version
+s390x-linux-gnu-gcc (Debian 9.3.0-13) 9.3.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/.jBQgqJbruxCXR9TGfnbpGd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7x1roACgkQAVBC80lX
+0GxY8Af/XGxeY48bC9/qnGUVZknEFGDIcTw3WU0xZvWFtUuMEcsOXzZMovrrnc+2
+/LVoAnCwwgV6dA5oamCw7XT64/RY3Hs2re1FLKj7vANGeehucftZscVlfQ7qU5ax
+sxBRASh2KK+gr4a2kBHit8gZwFVvWJnjlqRq/JmSYoSdC2Mxrg1I0sm7pE2ekBn3
+z5mhtG2kRdk4u0tVrwjt3JtkQNDaNnUnQpfvlfLJCsSZZPcAswhCDQF5LS34hyfx
+Yh5qlDmMG0s4oWCkSNlrGNBkMAuDc3+4KJ/22RZO5AebA4Jssu4CrcKmiUtqk8Mg
+pIFf6KjU/OvbbWdw51jo36QXk99QKg==
+=cTbJ
+-----END PGP SIGNATURE-----
+
+--Sig_/.jBQgqJbruxCXR9TGfnbpGd--
