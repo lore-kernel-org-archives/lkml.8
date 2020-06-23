@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D556C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5199AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAEA92078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2011D20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943987;
-	bh=hAz4jq2t0EMuhW7aFZUM5ibPTOJW8HzUsRUw+saWNkg=;
+	s=default; t=1592943990;
+	bh=xlGFGp69053SdoDQvg0jjtckRZObmKizq7MUoMM0yy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vfu4q7+fotvetaOEzhTjgfMfeD8k7GvWgr6j4qXE++m7yRnLfw4aTD8RphUptO85b
-	 pPna1gY8OkmgrBipiOV1wQZGxykuIWo9YBv/x8QEYsZ6fN4PpP3b2J1q+SWN6K3vtk
-	 zW9FKviIRYGEX/j3Thhhq58N1wFl/rChdElSjiz0=
+	b=srAeUMXUeK7QFmtCaiULfRm6GKDdze9aCuURq7RIq4yM+7DzNX9tWi9Ha3FsO68oK
+	 JB+MOn+oZBRim7dhcWBHbEiL03AwCXN+JdOjXCfHs8d69jO2Qo1HhXPJwXznnMgVrg
+	 Ui0omBjDOjKSKjZh7JBJaLHpdmX8C318KOTjPDTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390644AbgFWU0Y (ORCPT
+        id S2389252AbgFWU02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45360 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:26:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389707AbgFWU0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:26:14 -0400
+        id S2390633AbgFWU0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:26:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E4932064B;
-        Tue, 23 Jun 2020 20:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6A1720702;
+        Tue, 23 Jun 2020 20:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943974;
-        bh=hAz4jq2t0EMuhW7aFZUM5ibPTOJW8HzUsRUw+saWNkg=;
+        s=default; t=1592943976;
+        bh=xlGFGp69053SdoDQvg0jjtckRZObmKizq7MUoMM0yy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h4XeN5cMEtOo1ydT0CYRGkGzzo808GJDrttfRD11rhAqY/RhdsMmS4unpGs00VyuD
-         ryM7OsLt+nbG2dzJG9VAhviCk4avw9laosBUANxfFuhiFBnNeoXmmL5mcS9gEs8SDZ
-         X3FY0kPLmJxtgH+VUFzoyxIftCbkC2zCuGleKpYs=
+        b=hRz5+ED2FEe6hjo/UE0lJMXFumvyer58MksQMoFuvX0BUtSihUbV9skQqF+bTCrfB
+         /liLoBH/jpP91tUFffEjzCzLRyELD4sbci69iqe9fAIKdQMH9Ks6VVZndfAuuSj6VG
+         gZ15mNfizGar32fiQzx7pY9nBkVLkSQsPRYH7I+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 123/314] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Tue, 23 Jun 2020 21:55:18 +0200
-Message-Id: <20200623195344.740642080@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 097/314] staging: gasket: Fix mapping refcnt leak when put attribute fails
+Date:   Tue, 23 Jun 2020 21:54:52 +0200
+Message-Id: <20200623195343.485555282@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,53 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
+[ Upstream commit 57a66838e1494cd881b7f4e110ec685736e8e3ca ]
 
-7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-Linux to enable ASPM, but for some undocumented reason, it didn't enable
-ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+gasket_sysfs_put_attr() invokes get_mapping(), which returns a reference
+of the specified gasket_sysfs_mapping object to "mapping" with increased
+refcnt.
 
-Remove this exclusion so we can enable ASPM on these links.
+When gasket_sysfs_put_attr() returns, local variable "mapping" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-Intel SoC to enter deeper Package C-states, which is a significant power
-savings.
+The reference counting issue happens in one path of
+gasket_sysfs_put_attr(). When mapping attribute is unknown, the function
+forgets to decrease the refcnt increased by get_mapping(), causing a
+refcnt leak.
 
-[bhelgaas: commit log]
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fix this issue by calling put_mapping() when put attribute fails due to
+unknown attribute.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Link: https://lore.kernel.org/r/1587618895-13660-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/staging/gasket/gasket_sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 5a1bbf2cb7e98..4a0ec34062d60 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -628,16 +628,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+diff --git a/drivers/staging/gasket/gasket_sysfs.c b/drivers/staging/gasket/gasket_sysfs.c
+index 5f0e089573a29..ad852ea1d4a92 100644
+--- a/drivers/staging/gasket/gasket_sysfs.c
++++ b/drivers/staging/gasket/gasket_sysfs.c
+@@ -339,6 +339,7 @@ void gasket_sysfs_put_attr(struct device *device,
  
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
--	/*
--	 * If the downstream component has pci bridge function, don't
--	 * do ASPM for now.
--	 */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
--			link->aspm_disable = ASPM_STATE_ALL;
--			break;
--		}
--	}
+ 	dev_err(device, "Unable to put unknown attribute: %s\n",
+ 		attr->attr.attr.name);
++	put_mapping(mapping);
+ }
+ EXPORT_SYMBOL(gasket_sysfs_put_attr);
  
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
 -- 
 2.25.1
 
