@@ -2,110 +2,100 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8F1C2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FFB2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ua9bUxKg"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="BCcgXjxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732400AbgFWLHg (ORCPT
+        id S1732287AbgFWLJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732189AbgFWLHg (ORCPT
+        Tue, 23 Jun 2020 07:09:47 -0400
+Received: from mail-40133.protonmail.ch ([185.70.40.133]:46312 "EHLO
+        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732205AbgFWLJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:07:36 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAE8C061573;
-        Tue, 23 Jun 2020 04:07:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4eAYveGOd5Gez3be6eH40cghw2s0xCHHy8CvDzPrHTA=; b=ua9bUxKgV6UuUKYXhlrAwvEA+M
-        JWMyWbeW4rCzaGNCKK8dur1jeln7leLjad6kn0qQtpEjgmKNWtFxZd7aFYNjSN+E2LtYgBR8ZfdC2
-        UZUcpLwpNSvy5cBKmWIEVq6w3lZjbeB+E1QK0vV9yhpGQU6WutF9uC7kROcxmox/0WbjhY9F95Y7i
-        R44TOUGibZYH1jJqDpxiGYXpstZlnEMCWDgYZdFoauoYsV4da0v+O79VK7jvOaUcf7wfVYLSrwJcJ
-        pu3eYomUVflopB7io2JVme0q9YdvUUDDhYCYum2qHANZwjKYdPEYfWkJiY4mjBiC0t3zhm02w+K8w
-        kZPZXtsw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnglf-0006E2-Dh; Tue, 23 Jun 2020 11:07:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 56694303DA0;
-        Tue, 23 Jun 2020 13:07:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 437002370FA3D; Tue, 23 Jun 2020 13:07:06 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 13:07:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623110706.GB4817@hirez.programming.kicks-ass.net>
-References: <20200425191032.GK21900@8bytes.org>
- <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200428075512.GP30814@suse.de>
+        Tue, 23 Jun 2020 07:09:46 -0400
+Date:   Tue, 23 Jun 2020 11:09:33 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1592910583; bh=twAyp3okr7kOUwXw1V0zgiy/sW5FRSDtzU2LxgNpArI=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=BCcgXjxKR/i/Wk7Lg+AP/wQU9CYm7lwjnWCZvfKrNyGFRkNyXf93czgX+hmRzsLbq
+         GKLVJJgP0ETycDY/+PpsjDg84X+djkHgI7ZqxEv3fwKpSlwyRAgovuQ0zwHMnW31W1
+         WT9uSLmGXUtJCYYp0//YbueWdegUThGDooujg96aTk1GRjaYVLKsvMnOFq0zZ/4Nat
+         0C97ouZp6RbIcISEunxecl0L8VwDQJMfgvk/xG0KlO83U9jg7XknS7QXWm+QnY1m0i
+         +EmKtdr1zQFOYtuz2pXkP4QJgmFlhbl9fRo+YRzxbcj/an7280MIQdzGnMFcGb6UHx
+         LFkxWG+aenBXw==
+To:     Amit Shah <amit@kernel.org>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?utf-8?Q?Sjur_Br=C3=A6ndeland?= <sjur.brandeland@stericsson.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Alexander Lobakin <alobakin@pm.me>,
+        virtualization@lists.linux-foundation.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: [PATCH resend] virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
+Message-ID: <x7C_CbeJtoGMy258nwAXASYz3xgFMFpyzmUvOyZzRnQrgWCREBjaqBOpAUS7ol4NnZYvSVwmTsCG0Ohyfvta-ygw6HMHcoeKK0C3QFiAO_Q=@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428075512.GP30814@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:55:12AM +0200, Joerg Roedel wrote:
-> On Mon, Apr 27, 2020 at 10:37:41AM -0700, Andy Lutomirski wrote:
-> > I have a somewhat serious question: should we use IST for #VC at all?
-> > As I understand it, Rome and Naples make it mandatory for hypervisors
-> > to intercept #DB, which means that, due to the MOV SS mess, it's sort
-> > of mandatory to use IST for #VC.  But Milan fixes the #DB issue, so,
-> > if we're running under a sufficiently sensible hypervisor, we don't
-> > need IST for #VC.
-> 
-> The reason for #VC being IST is not only #DB, but also SEV-SNP. SNP adds
-> page ownership tracking between guest and host, so that the hypervisor
-> can't remap guest pages without the guest noticing.
-> 
-> If there is a violation of ownership, which can happen at any memory
-> access, there will be a #VC exception to notify the guest. And as this
-> can happen anywhere, for example on a carefully crafted stack page set
-> by userspace before doing SYSCALL, the only robust choice for #VC is to
-> use IST.
+rproc_serial_id_table lacks an exposure to module devicetable, so
+when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
+is generated and no module autoloading occurs.
+Add missing MODULE_DEVICE_TABLE() annotation and move the existing
+one for VIRTIO_ID_CONSOLE right to the table itself.
 
-So what happens if this #VC triggers on the first access to the #VC
-stack, because the malicious host has craftily mucked with only the #VC
-IST stack page?
+Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc serial")
+Cc: <stable@vger.kernel.org> # v3.8+
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+Reviewed-by: Amit Shah <amit@kernel.org>
+---
+ drivers/char/virtio_console.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Or on the NMI IST stack, then we get #VC in NMI before the NMI can fix
-you up.
+diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+index 00c5e3acee46..ca691bce9791 100644
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -2116,6 +2116,7 @@ static struct virtio_device_id id_table[] =3D {
+ =09{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
+ =09{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, id_table);
+=20
+ static unsigned int features[] =3D {
+ =09VIRTIO_CONSOLE_F_SIZE,
+@@ -2128,6 +2129,7 @@ static struct virtio_device_id rproc_serial_id_table[=
+] =3D {
+ #endif
+ =09{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
+=20
+ static unsigned int rproc_serial_features[] =3D {
+ };
+@@ -2280,6 +2282,5 @@ static void __exit fini(void)
+ module_init(init);
+ module_exit(fini);
+=20
+-MODULE_DEVICE_TABLE(virtio, id_table);
+ MODULE_DESCRIPTION("Virtio console driver");
+ MODULE_LICENSE("GPL");
+--=20
+2.27.0
 
-AFAICT all of that is non-recoverable.
 
