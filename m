@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD96C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C187D20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7D320702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945567;
-	bh=dqfP+DpGNoUT/7MkC0vMgjncxLFGcWCFnLJ87T1wz9c=;
+	s=default; t=1592945570;
+	bh=KXNT2BGgxLyfWbI/dMW1t1lIfe+k9Gw1cvEYm9KvZbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CzjVWe2vod6xhamE0GUX0l9Y2ZQXYTEZUILv/S7Zxiw/FpBcicTUfXhsEDPcpmcGI
-	 yJtbvs5Ldn2KhXHi/GJFuPVEzbuZUTzKvPLxTj3stCJg2biewmgaaeW4+Zxt4PxjhR
-	 tQnPPDC1oynE5HIYN4bq2NtLuMlBX4/R5G9FiKGU=
+	b=eHZUpRdV1MOI24FGNyPcwkNxkWZR0Y1/aRz2mCB2rti3fIV8q2bE/JYPO6mjlA4TG
+	 oBUWEZrVBzCKE5EdabPJSnhhmalwRb9C5fHJX4eBKad5b9HM/sdweQYwRJHil/YohI
+	 jy42rqMDkQ6I7kykmaCZLvo8lWbnGjRtbOvxw3JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392645AbgFWUrR (ORCPT
+        id S2391813AbgFWUws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45158 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:52:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392893AbgFWUq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:46:56 -0400
+        id S2392359AbgFWUrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:47:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 067C821582;
-        Tue, 23 Jun 2020 20:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB03321548;
+        Tue, 23 Jun 2020 20:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945216;
-        bh=dqfP+DpGNoUT/7MkC0vMgjncxLFGcWCFnLJ87T1wz9c=;
+        s=default; t=1592945237;
+        bh=KXNT2BGgxLyfWbI/dMW1t1lIfe+k9Gw1cvEYm9KvZbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ao3t5hO4eQj2LDLQIsH6XSfsTMzBEVwRHX8g1PoRqa0m/ftmzUiiBxrZXeSuyKSGc
-         s7Pm0kTBHdsQnzSScGh6YkJTfHZlPGsHXO3SFMUrU5zNc3tlOkgTUMwR/0l1dhUjof
-         kVdyCVtwY7JGB92woegQSaPFYw9NZjuf4RznnCEU=
+        b=Aehq64tziRogofQ9ydJc7h7eva8uU+zec/v57Ziz9NmdJKY2oSk6IoOA+YhW1IwaH
+         KeBQuTMMaKvn5UPyvZQFHFNGiuxNcxluukvRvMsFs0Kov2oGAZ8Er+VQEbsf+veOhk
+         lH0ntjXwT4xg22chRyosms7q/h7/2BOuCv58U3wA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 067/136] dm zoned: return NULL if dmz_get_zone_for_reclaim() fails to find a zone
-Date:   Tue, 23 Jun 2020 21:58:43 +0200
-Message-Id: <20200623195307.065615717@linuxfoundation.org>
+Subject: [PATCH 4.14 092/136] geneve: change from tx_error to tx_dropped on missing metadata
+Date:   Tue, 23 Jun 2020 21:59:08 +0200
+Message-Id: <20200623195308.293838166@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -61,61 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit 489dc0f06a5837f87482c0ce61d830d24e17082e ]
+[ Upstream commit 9d149045b3c0e44c049cdbce8a64e19415290017 ]
 
-The only case where dmz_get_zone_for_reclaim() cannot return a zone is
-if the respective lists are empty. So we should just return a simple
-NULL value here as we really don't have an error code which would make
-sense.
+If the geneve interface is in collect_md (external) mode, it can't send any
+packets submitted directly to its net interface, as such packets won't have
+metadata attached. This is expected.
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+However, the kernel itself sends some packets to the interface, most
+notably, IPv6 DAD, IPv6 multicast listener reports, etc. This is not wrong,
+as tunnel metadata can be specified in routing table (although technically,
+that has never worked for IPv6, but hopefully will be fixed eventually) and
+then the interface must correctly participate in IPv6 housekeeping.
+
+The problem is that any such attempt increases the tx_error counter. Just
+bringing up a geneve interface with IPv6 enabled is enough to see a number
+of tx_errors. That causes confusion among users, prompting them to find
+a network error where there is none.
+
+Change the counter used to tx_dropped. That better conveys the meaning
+(there's nothing wrong going on, just some packets are getting dropped) and
+hopefully will make admins panic less.
+
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-zoned-metadata.c | 4 ++--
- drivers/md/dm-zoned-reclaim.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/geneve.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
-index 4d658a0c60258..c6d3a4bc811ca 100644
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1580,7 +1580,7 @@ static struct dm_zone *dmz_get_rnd_zone_for_reclaim(struct dmz_metadata *zmd)
- 			return dzone;
- 	}
+diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+index 6d3fa36b16160..3c9f8770f7e78 100644
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -915,9 +915,10 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	if (geneve->collect_md) {
+ 		info = skb_tunnel_info(skb);
+ 		if (unlikely(!info || !(info->mode & IP_TUNNEL_INFO_TX))) {
+-			err = -EINVAL;
+ 			netdev_dbg(dev, "no tunnel metadata\n");
+-			goto tx_error;
++			dev_kfree_skb(skb);
++			dev->stats.tx_dropped++;
++			return NETDEV_TX_OK;
+ 		}
+ 	} else {
+ 		info = &geneve->info;
+@@ -934,7 +935,7 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
  
--	return ERR_PTR(-EBUSY);
-+	return NULL;
- }
+ 	if (likely(!err))
+ 		return NETDEV_TX_OK;
+-tx_error:
++
+ 	dev_kfree_skb(skb);
  
- /*
-@@ -1600,7 +1600,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
- 			return zone;
- 	}
- 
--	return ERR_PTR(-EBUSY);
-+	return NULL;
- }
- 
- /*
-diff --git a/drivers/md/dm-zoned-reclaim.c b/drivers/md/dm-zoned-reclaim.c
-index 2fad512dce98f..1015b200330b8 100644
---- a/drivers/md/dm-zoned-reclaim.c
-+++ b/drivers/md/dm-zoned-reclaim.c
-@@ -350,8 +350,8 @@ static int dmz_do_reclaim(struct dmz_reclaim *zrc)
- 
- 	/* Get a data zone */
- 	dzone = dmz_get_zone_for_reclaim(zmd);
--	if (IS_ERR(dzone))
--		return PTR_ERR(dzone);
-+	if (!dzone)
-+		return -EBUSY;
- 
- 	start = jiffies;
- 
+ 	if (err == -ELOOP)
 -- 
 2.25.1
 
