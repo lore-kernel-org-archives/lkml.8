@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1978C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA3E2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C242053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872285;
-	bh=Gz9z6ir3rGrxGlwUj+lXRqUdYYT2OYGIBdhVPWGhuRk=;
+	s=default; t=1592872293;
+	bh=vsWLwEM2zL/AkX3vJvTMHn7tUWtKduFj/He0315EYPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=onC5A9rScViJ/9AyDrJhYK9hda+PtE5ZuDi1tBdpQ4yZwN8xxpFfFunmTSvW/Bgm2
-	 gorLEalTWhbiqyDDl/MKomywv41Rfiea7UUbRLVkxu3OwWR0hk+sOGyWBNmPPq2RKj
-	 cBHX5xUPLropC8CVA99BuGeAPsDQhqRJfqbWhu2I=
+	b=nL3gz0vCYxOgucWktleNZzfnGfT+kj+Pj65FGQSbgKPzQjyuApNXZ6pONgygIh2T8
+	 YA16cGQ3Mi185TBxYxGsltXFP/U/mwGSy8Jn2O3W3AALoqZY/+hcuB+LGtB+skmp0G
+	 9q37UvlGcp4uE0cEoDX63IPU8DdG88pP7FL8iKrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731696AbgFWAaT (ORCPT
+        id S1731904AbgFWAba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55220 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731633AbgFWAaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:30:16 -0400
+        id S1731684AbgFWAaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:30:19 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28D98207DD;
-        Tue, 23 Jun 2020 00:30:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1165F20720;
+        Tue, 23 Jun 2020 00:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872216;
-        bh=Gz9z6ir3rGrxGlwUj+lXRqUdYYT2OYGIBdhVPWGhuRk=;
+        s=default; t=1592872219;
+        bh=vsWLwEM2zL/AkX3vJvTMHn7tUWtKduFj/He0315EYPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKRhy4OY97BG1yUTxZ7C+e0OJM0FylYcsQ6btG6bDDawdLEiL6nCxkjFCcn99OocO
-         HuSjBaBPhvtye3ZEJwEOKWVR/vseLjJ2s8YkkyK7tL6mUZR1sW6Hf2rF2MsQxmG7vC
-         B+4nzKiVxtn6btyTDRHa/5TZPks/UYqe4kcxmPkI=
+        b=PjM56YrgSiu1KZqRWHd5TbNP7lArjBUTCRoS5WM+6RavWNUP2n1fyM729HVYYjRBz
+         YDJHcupZtQ9ex3p17JVKU5t09oWpyz4pa3Uige3ZmxwjL8EoIGK6wXTT7tYmIbPYxH
+         HbJhdLwhx66p9y71Xu3PxhNOV1dupPoNFZhspSjw=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 05/30] refperf: Add holdoff parameter to allow CPUs to come online
-Date:   Mon, 22 Jun 2020 17:29:48 -0700
-Message-Id: <20200623003013.26252-5-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 19/30] refperf: Simplify initialization-time wakeup protocol
+Date:   Mon, 22 Jun 2020 17:30:02 -0700
+Message-Id: <20200623003013.26252-19-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002941.GA26089@paulmck-ThinkPad-P72>
 References: <20200623002941.GA26089@paulmck-ThinkPad-P72>
@@ -61,67 +61,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds an rcuperf module parameter named "holdoff" that
-defaults to 10 seconds if refperf is built in and to zero otherwise.
-The assumption is that all the CPUs are online by the time that the
-modprobe and insmod commands are going to do anything, and that normal
-systems will have all the CPUs online within ten seconds.
-
-Larger systems may take many tens of seconds or even minutes to get
-to this point, hence this being a module parameter instead of being a
-hard-coded constant.
+This commit moves the reader-launch wait loop from ref_perf_init()
+to main_func(), removing one layer of wakeup and allowing slightly
+faster system boot.
 
 Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/refperf.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ kernel/rcu/refperf.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-index 6116153..4d686fd 100644
+index 2d2d227..7839237 100644
 --- a/kernel/rcu/refperf.c
 +++ b/kernel/rcu/refperf.c
-@@ -57,7 +57,10 @@ MODULE_PARM_DESC(perf_type, "Type of test (rcu, srcu, refcnt, rwsem, rwlock.");
+@@ -369,13 +369,14 @@ static int main_func(void *arg)
+ 		VERBOSE_PERFOUT_ERRSTRING("out of memory");
+ 		errexit = true;
+ 	}
+-	atomic_inc(&n_init);
+-
+-	// Wait for all threads to start.
+-	wait_event(main_wq, atomic_read(&n_init) == (nreaders + 1));
+ 	if (holdoff)
+ 		schedule_timeout_interruptible(holdoff * HZ);
  
- torture_param(int, verbose, 0, "Enable verbose debugging printk()s");
- 
--// Number of loops per experiment, all readers execute an operation concurrently
-+// Wait until there are multiple CPUs before starting test.
-+torture_param(int, holdoff, IS_BUILTIN(CONFIG_RCU_REF_PERF_TEST) ? 10 : 0,
-+	      "Holdoff time before test start (s)");
-+// Number of loops per experiment, all readers execute operations concurrently.
- torture_param(long, loops, 10000000, "Number of loops per experiment.");
- 
- #ifdef MODULE
-@@ -248,6 +251,8 @@ ref_perf_reader(void *arg)
- 	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
- 	set_user_nice(current, MAX_NICE);
- 	atomic_inc(&n_init);
-+	if (holdoff)
-+		schedule_timeout_interruptible(holdoff * HZ);
- repeat:
- 	VERBOSE_PERFOUT("ref_perf_reader %ld: waiting to start next experiment on cpu %d", me, smp_processor_id());
- 
-@@ -357,6 +362,8 @@ static int main_func(void *arg)
- 
- 	// Wait for all threads to start.
- 	wait_event(main_wq, atomic_read(&n_init) == (nreaders + 1));
-+	if (holdoff)
-+		schedule_timeout_interruptible(holdoff * HZ);
- 
++	// Wait for all threads to start.
++	atomic_inc(&n_init);
++	while (atomic_read(&n_init) < nreaders + 1)
++		schedule_timeout_uninterruptible(1);
++
  	// Start exp readers up per experiment
- 	for (exp = 0; exp < nreaders && !torture_must_stop(); exp++) {
-@@ -420,8 +427,8 @@ static void
- ref_perf_print_module_parms(struct ref_perf_ops *cur_ops, const char *tag)
- {
- 	pr_alert("%s" PERF_FLAG
--		 "--- %s:  verbose=%d shutdown=%d loops=%ld\n", perf_type, tag,
--		 verbose, shutdown, loops);
-+		 "--- %s:  verbose=%d shutdown=%d holdoff=%d loops=%ld\n", perf_type, tag,
-+		 verbose, shutdown, holdoff, loops);
- }
+ 	for (exp = 0; exp < nruns && !torture_must_stop(); exp++) {
+ 		if (errexit)
+@@ -565,14 +566,6 @@ ref_perf_init(void)
+ 	firsterr = torture_create_kthread(main_func, NULL, main_task);
+ 	if (firsterr)
+ 		goto unwind;
+-	schedule_timeout_uninterruptible(1);
+-
+-
+-	// Wait until all threads start
+-	while (atomic_read(&n_init) < nreaders + 1)
+-		schedule_timeout_uninterruptible(1);
+-
+-	wake_up(&main_wq);
  
- static void
+ 	torture_init_end();
+ 	return 0;
 -- 
 2.9.5
 
