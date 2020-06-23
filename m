@@ -2,194 +2,139 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D048DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C256EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A30EF2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC4420780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DmJFQfwz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9C/YB9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732483AbgFWQQL (ORCPT
+        id S1732970AbgFWQQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:16:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34704 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732137AbgFWQQK (ORCPT
+        Tue, 23 Jun 2020 12:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729562AbgFWQQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:16:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592928969;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tQbe5rqyYjvehV1zKMS5pdkClT9pyr1+42ShsT+YZus=;
-        b=DmJFQfwzRtEngtqKFZqGzvVnvQLHiPxR1TKRKSVzeIKDIprxlwQsMFG63rHD2YwosrunS5
-        t4E5ksxJh49kIJkL/kNb+uHe9zwwanbrcZRAtb3MGh4bxehXg5zVSkqXGFQOgD5rT4mPrF
-        ruJMYmZJN52Okpq+ZTNUQ2Zuzj+DC6U=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-324-cryNFz_uPFKmKosCZV361A-1; Tue, 23 Jun 2020 12:16:03 -0400
-X-MC-Unique: cryNFz_uPFKmKosCZV361A-1
-Received: by mail-qv1-f69.google.com with SMTP id q5so15214937qvp.23
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:16:03 -0700 (PDT)
+        Tue, 23 Jun 2020 12:16:15 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0954C061573;
+        Tue, 23 Jun 2020 09:16:14 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id l63so2061316oih.13;
+        Tue, 23 Jun 2020 09:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C6zRBd638da/3Puon0/mPbz+ZaserpAdoN60zWcOdLI=;
+        b=q9C/YB9xTNbi+bUSIqxvhX2J9LG6GOkMQDm2VwP8GJuPHssugJJEnTrXF14R/INoZm
+         iQ3QQg0wqJoIaDQyOOD1zmAkdyvzdQOTkpEqUo1eToIrWFs218PHZY70QZpcx+QrFdMK
+         jAtWK64XxxLGBW3F3rH1BvCX5JgmKQHoHxZyIOSX0oMlLlrJNn6nEtv5BZj+Cbp2560/
+         zlaRxu3as1JLgaOJ+na3a+VHQ2XrYJk6y9bdNMIwF4Ix5TAm0p1uZCHFpGD5xwxXIS6v
+         ykFuyNpN+nJpjTNyGim8dGKr9squI6WXic/xGGxLACODlOQop6inLVWvexoI711WdhwQ
+         PmvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tQbe5rqyYjvehV1zKMS5pdkClT9pyr1+42ShsT+YZus=;
-        b=OOVyJ2tI57UwwzdEI/uvo4RNhgIJ6B+Vzep0dK1f2HUxnY6b0QuM2Bgu/uGzDC9Xod
-         7pcl79UwrwKxh4I0iExxgNBQeK/yWjsobIkHOMBcCMLJzo0qPRdp5V4BkeJ8hO/oA/9Y
-         v+KGf8mK5bH5/nWsPD7/BzEK7PYRhN+r8p5BAGTN5OYkjU/ghHFrcmHLZmKasaQDpniz
-         2nb461J7EhKcoDGVso0eF2zVDuFQEiFViRhRA9SiLyKItXtHx5OL9SWbh3jhFV5Zxuok
-         ZXZDYf6CpPnIUfB/h8adoRIo/+ViaiDHIh2hTjj+8a9Riol1N+zj7ZGQKjBth5KXZoxv
-         JSSA==
-X-Gm-Message-State: AOAM532/VVDHrfr62Xp54PSn4WapWwnx02o2Jv4P4V062wo6Z8Ijt6lU
-        F8FHYYy3cxU8rZ+PS4MdU3TNm8jtmTx0mR3JrAxeXTjNj9pWMAtFS96+Vtix927kfNZ64kPm5Nx
-        7KIOOt8C5OIa/fslX/g5/sV84ppovqViHRo9c2s+Y
-X-Received: by 2002:ad4:4732:: with SMTP id l18mr3881513qvz.208.1592928963231;
-        Tue, 23 Jun 2020 09:16:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy7yTqnj7uaB03wNLu96uz9OlO0RH8CN880kbmRfNOi6PGV8nVOyNP6bAd1kbfBqw7cKF6f/d17HlC1XDYmWqU=
-X-Received: by 2002:ad4:4732:: with SMTP id l18mr3881493qvz.208.1592928962969;
- Tue, 23 Jun 2020 09:16:02 -0700 (PDT)
+        bh=C6zRBd638da/3Puon0/mPbz+ZaserpAdoN60zWcOdLI=;
+        b=Rz/7gBS48BPOcrbwwtDNugeM3F7x8GM08u67sp57Ig/wA3qwk8nRq1gRZ44ErE4zGp
+         USaW7P1rG9jvKPwpYBG6/yXWWgGd3SeEu0peASB6T66jsCEiOhSv4u0VsJdN03l1bBjb
+         Y6Q6HBB+X1lAv0ycKBZrHZvOo2kpUTdGUqCeIgRloyL67smcJsAbIKIAaHs9B1PvWYZh
+         HxE5UvHBwv5FmkTMeEC6JNIQEdlOyTBI8w3t4lm01Uy+FX6O9q3sfAct8c9wphV8TEKk
+         AJ8OxEmdEnGRgggrXjUoGv732tBDHCs24HMI40Vb/NvPKidV8NF1Fp9HFnp11KxinfPL
+         +qpg==
+X-Gm-Message-State: AOAM532G/FZsBk0EElqrUlvCGmPmB2rjdA4AHhJNjTJS1W9iFEc8bo1e
+        Zu98ttM6Qx7G/AFC/nnQTuCUosX0BToVWGoPmLzm4fCluTw=
+X-Google-Smtp-Source: ABdhPJzPGRoNQwYV7prpiLP4l6woYoYftSSNf32Kxl7WYaM4Qub1H/LpMosSXlZwcAOlEq6NpTl/ZwSS1zQ0t3F6Uy0=
+X-Received: by 2002:a05:6808:4b:: with SMTP id v11mr16344641oic.31.1592928973611;
+ Tue, 23 Jun 2020 09:16:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200611113404.17810-1-mst@redhat.com> <20200611113404.17810-3-mst@redhat.com>
- <20200611152257.GA1798@char.us.oracle.com> <CAJaqyWdwXMX0JGhmz6soH2ZLNdaH6HEdpBM8ozZzX9WUu8jGoQ@mail.gmail.com>
- <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
- <20200622114622-mutt-send-email-mst@kernel.org> <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
- <20200622122546-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200622122546-mutt-send-email-mst@kernel.org>
-From:   Eugenio Perez Martin <eperezma@redhat.com>
-Date:   Tue, 23 Jun 2020 18:15:26 +0200
-Message-ID: <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>
+References: <xmqqzh9mu4my.fsf@gitster.c.googlers.com> <CABPp-BF+xvzroi5QU8zPp-7KoSS16v1CsM43vWx1WO5NjyU0BQ@mail.gmail.com>
+In-Reply-To: <CABPp-BF+xvzroi5QU8zPp-7KoSS16v1CsM43vWx1WO5NjyU0BQ@mail.gmail.com>
+From:   Elijah Newren <newren@gmail.com>
+Date:   Tue, 23 Jun 2020 09:16:02 -0700
+Message-ID: <CABPp-BFo=SRkMezdD_FvM92-bgdeBzfExpjtjYiEvg0UM1rWQQ@mail.gmail.com>
+Subject: [ANNOUNCE] git-filter-repo v2.27.1
+To:     Git Mailing List <git@vger.kernel.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 6:29 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+Hi,
+
+On Mon, Jun 1, 2020 at 10:08 AM Elijah Newren <newren@gmail.com> wrote:
 >
-> On Mon, Jun 22, 2020 at 06:11:21PM +0200, Eugenio Perez Martin wrote:
-> > On Mon, Jun 22, 2020 at 5:55 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Fri, Jun 19, 2020 at 08:07:57PM +0200, Eugenio Perez Martin wrote:
-> > > > On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
-> > > > <eperezma@redhat.com> wrote:
-> > > > >
-> > > > > On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
-> > > > > <konrad.wilk@oracle.com> wrote:
-> > > > > >
-> > > > > > On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
-> > > > > > > As testing shows no performance change, switch to that now.
-> > > > > >
-> > > > > > What kind of testing? 100GiB? Low latency?
-> > > > > >
-> > > > >
-> > > > > Hi Konrad.
-> > > > >
-> > > > > I tested this version of the patch:
-> > > > > https://lkml.org/lkml/2019/10/13/42
-> > > > >
-> > > > > It was tested for throughput with DPDK's testpmd (as described in
-> > > > > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html)
-> > > > > and kernel pktgen. No latency tests were performed by me. Maybe it is
-> > > > > interesting to perform a latency test or just a different set of tests
-> > > > > over a recent version.
-> > > > >
-> > > > > Thanks!
-> > > >
-> > > > I have repeated the tests with v9, and results are a little bit different:
-> > > > * If I test opening it with testpmd, I see no change between versions
-> > >
-> > >
-> > > OK that is testpmd on guest, right? And vhost-net on the host?
-> > >
-> >
-> > Hi Michael.
-> >
-> > No, sorry, as described in
-> > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html.
-> > But I could add to test it in the guest too.
-> >
-> > These kinds of raw packets "bursts" do not show performance
-> > differences, but I could test deeper if you think it would be worth
-> > it.
->
-> Oh ok, so this is without guest, with virtio-user.
-> It might be worth checking dpdk within guest too just
-> as another data point.
->
+> The latest release of git-filter-repo, v2.27.0, is also now available.
+> It is comprised of 26 non-merge commits since v2.26.0, including two
+> changes from new contributors.
 
-Ok, I will do it!
+I missed sending out this email earlier, but v2.27.1 of
+git-filter-repo was released a week and a half ago.  v2.27.0
+accidentally broke the most prominent example in the README.md file;
+v2.27.1 fixes that bug /and/ makes sure that example is actually in
+the testsuite to prevent a repeat.
 
-> > > > * If I forward packets between two vhost-net interfaces in the guest
-> > > > using a linux bridge in the host:
-> > >
-> > > And here I guess you mean virtio-net in the guest kernel?
-> >
-> > Yes, sorry: Two virtio-net interfaces connected with a linux bridge in
-> > the host. More precisely:
-> > * Adding one of the interfaces to another namespace, assigning it an
-> > IP, and starting netserver there.
-> > * Assign another IP in the range manually to the other virtual net
-> > interface, and start the desired test there.
-> >
-> > If you think it would be better to perform then differently please let me know.
->
->
-> Not sure why you bother with namespaces since you said you are
-> using L2 bridging. I guess it's unimportant.
->
+The public repo of filter-repo is at
 
-Sorry, I think I should have provided more context about that.
+    https://github.com/newren/git-filter-repo
 
-The only reason to use namespaces is to force the traffic of these
-netperf tests to go through the external bridge. To test netperf
-different possibilities than the testpmd (or pktgen or others "blast
-of frames unconditionally" tests).
+The tarballs can be found at:
 
-This way, I make sure that is the same version of everything in the
-guest, and is a little bit easier to manage cpu affinity, start and
-stop testing...
+    https://github.com/newren/git-filter-repo/releases
 
-I could use a different VM for sending and receiving, but I find this
-way a faster one and it should not introduce a lot of noise. I can
-test with two VM if you think that this use of network namespace
-introduces too much noise.
+git-filter-repo can also be installed via a variety of package managers
+across Windows, Mac OS, or Linux (and maybe others)[1].
 
-Thanks!
+[1] https://github.com/newren/git-filter-repo/blob/master/INSTALL.md
 
-> > >
-> > > >   - netperf UDP_STREAM shows a performance increase of 1.8, almost
-> > > > doubling performance. This gets lower as frame size increase.
-> > > >   - rests of the test goes noticeably worse: UDP_RR goes from ~6347
-> > > > transactions/sec to 5830
-> > >
-> > > OK so it seems plausible that we still have a bug where an interrupt
-> > > is delayed. That is the main difference between pmd and virtio.
-> > > Let's try disabling event index, and see what happens - that's
-> > > the trickiest part of interrupts.
-> > >
-> >
-> > Got it, will get back with the results.
-> >
-> > Thank you very much!
-> >
-> > >
-> > >
-> > > >   - TCP_STREAM goes from ~10.7 gbps to ~7Gbps
-> > > >   - TCP_RR from 6223.64 transactions/sec to 5739.44
-> > >
->
+----------------------------------------------------------------
 
+git-filter-repo 2.27.1 Release Notes
+====================================
+
+(Note: Additional information is available for many release notes at
+    https://github.com/newren/git-filter-repo/issues/<NUMBER>)
+
+* Fixes:
+  * fix "extract subdirectory for merging into a monorepo" example (#110)
+  * add tests to make sure we don't break that example again
+  * avoid applying --replace-text to binary files
+
+* Documentation:
+  * simplify manual installation using git's --man-path and --html-path (#107)
+  * make discovery of code formatting and linting examples easier (#99)
+  * many wording clarifications
+
+* contrib scripts:
+  * avoid applying --replace-text to binary files in bfg-ish
+  * new simple barebones example
+  * default replacement text is now a variable to allow overriding
+
+Changes since v2.27.0 are as follows:
+
+Elijah Newren (13):
+      converting-from-bfg-repo-cleaner.md: add a small clarification
+      converting-from-filter-branch.md: add a small clarification
+      filter-repo: avoid applying --replace-text to binary files
+      filter-repo: make default replacement text a variable
+      contrib: new simple no-op-example
+      contrib, docs: make discovery of code formatting and linting easier
+      Contributing.md: add a small clarification about line coverage
+      contrib: avoid applying --replace-text to binary files in bfg-ish
+      git-filter-repo.txt: briefly explain steps for pushing to original url
+      Revert "filter-repo: fix ugly bug with mixing path filtering and renaming"
+      filter-repo: clarify interactions between path filtering and path renaming
+      git-filter-repo.txt: discourage use of random clone flags
+      INSTALL.md: simplify manual installation instructions
