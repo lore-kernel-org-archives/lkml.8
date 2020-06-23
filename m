@@ -2,102 +2,145 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC96C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89877C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 463EE20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD6F20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733146AbgFWRHr convert rfc822-to-8bit (ORCPT
+        id S1732975AbgFWRKD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:07:47 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:7610 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728916AbgFWRHr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:07:47 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NGoKxT012000
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:07:46 -0700
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31uk2ugyu7-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:07:46 -0700
-Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 23 Jun 2020 10:07:44 -0700
-Received: by devvm1828.vll1.facebook.com (Postfix, from userid 172786)
-        id 1C8A73D84E272; Tue, 23 Jun 2020 10:07:39 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Jonathan Lemon <jonathan.lemon@gmail.com>
-Smtp-Origin-Hostname: devvm1828.vll1.facebook.com
-To:     <linux-kernel@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, <kernel-team@fb.com>
-Smtp-Origin-Cluster: vll1c12
-Subject: [PATCH] linux/log2.h: enclose macro arg in parens
-Date:   Tue, 23 Jun 2020 10:07:39 -0700
-Message-ID: <20200623170739.3151706-1-jonathan.lemon@gmail.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Jun 2020 13:10:03 -0400
+Received: from mail-n.franken.de ([193.175.24.27]:43943 "EHLO drew.franken.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728916AbgFWRKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:10:02 -0400
+Received: from mb.fritz.box (ip4d15f5fc.dynamic.kabel-deutschland.de [77.21.245.252])
+        (Authenticated sender: lurchi)
+        by mail-n.franken.de (Postfix) with ESMTPSA id 0117A7220B819;
+        Tue, 23 Jun 2020 19:09:57 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Strange problem with SCTP+IPv6
+From:   Michael Tuexen <Michael.Tuexen@lurchi.franken.de>
+In-Reply-To: <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
+Date:   Tue, 23 Jun 2020 19:09:57 +0200
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "minyard@acm.org" <minyard@acm.org>,
+        Xin Long <lucien.xin@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: 8BIT
-X-FB-Internal: Safe
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=790
- bulkscore=0 priorityscore=1501 spamscore=0 malwarescore=0 suspectscore=1
- adultscore=0 clxscore=1034 phishscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006120000 definitions=main-2006230122
-X-FB-Internal: deliver
+Message-Id: <E5BF4DC9-7DC7-4057-8449-16F4BB49E233@lurchi.franken.de>
+References: <20200621155604.GA23135@minyard.net>
+ <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
+ <20200622165759.GA3235@minyard.net>
+ <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
+ <20200622183253.GQ2491@localhost.localdomain>
+ <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Lemon <bsd@fb.com>
+> On 23. Jun 2020, at 15:17, David Laight <David.Laight@ACULAB.COM> wrote:
+> 
+> From: Marcelo Ricardo Leitner
+>> Sent: 22 June 2020 19:33
+>> On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
+>>>> On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
+>>>> 
+>>>> On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
+>>>>> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
+>>>>>> 
+>>>>>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
+>>>>>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
+>>>>>> then I make a connection to it using ::1, the connection will drop after
+>>>>>> 2.5 seconds with an ECONNRESET error.
+>>>>>> 
+>>>>>> It only happens on SCTP, it doesn't have the issue if you connect to a
+>>>>>> full IPv6 address instead of ::1, and it doesn't happen if you don't
+>>>>>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
+>>>>>> I tried on an ARM system and x86_64.
+>>>>>> 
+>>>>>> I haven't dug into the kernel to see if I could find anything yet, but I
+>>>>>> thought I would go ahead and report it.  I am attaching a reproducer.
+>>>>>> Basically, compile the following code:
+>>>>> The code only set IPV6_V6ONLY on server side, so the client side will
+>>>>> still bind all the local ipv4 addresses (as you didn't call bind() to
+>>>>> bind any specific addresses ). Then after the connection is created,
+>>>>> the client will send HB on the v4 paths to the server. The server
+>>>>> will abort the connection, as it can't support v4.
+>>>>> 
+>>>>> So you can work around it by either:
+>>>>> 
+>>>>> - set IPV6_V6ONLY on client side.
+>>>>> 
+>>>>> or
+>>>>> 
+>>>>> - bind to the specific v6 addresses on the client side.
+>>>>> 
+>>>>> I don't see RFC said something about this.
+>>>>> So it may not be a good idea to change the current behaviour
+>>>>> to not establish the connection in this case, which may cause regression.
+>>>> 
+>>>> Ok, I understand this.  It's a little strange, but I see why it works
+>>>> this way.
+>>> I don't. I would expect it to work as I described in my email.
+>>> Could someone explain me how and why it is behaving different from
+>>> my expectation?
+>> 
+>> It looks like a bug to me. Testing with this test app here, I can see
+>> the INIT_ACK being sent with a bunch of ipv4 addresses in it and
+>> that's unexpected for a v6only socket. As is, it's the server saying
+>> "I'm available at these other addresses too, but not."
+> 
+> Does it even make sense to mix IPv4 and IPv6 addresses on the same
+> connection?
+Sure, if you have an IPv6 socket, which has not enabled the IPV6ONLY
+socket option.
+> I don't remember ever seeing both types of address in a message,
+> but may not have looked.
+> 
+> I also wonder whether the connection should be dropped for an error
+> response on a path that has never been validated.
+Assuming that it is not an ERROR chunk which comes back, but an ABORT,
+this should happen as long as the verification tag is OK.
+> 
+> OTOH the whole 'multi-homing' part of SCTP sucks.
+> The IP addresses a server needs to bind to depend on where the
+> incoming connection will come from.
+Not sure what this means. The application can bind a wildcard
+address or a specific subset. However, when an INIT comes in,
+the INIT-ACK might contain only a subset of there due to
+scoping.
+> A local connection may be able to use a 192.168.x.x address
+> but a remote connection must not - as it may be defined locally
+> at the remote system.
+Yepp. Not sure what you can do about it.
+> But both connections can come into the public (routable) address.
+> We have to tell customers to explicitly configure the local IP
+> addresses - which means the application has to know what they are.
+> Fortunately these apps are pretty static - usually M3UA.
+Please note that in SIGRTRAN scenarios you normally not have NATs
+involved as you have usually in setups used at home.
 
-roundup_pow_of_two uses its arg without enclosing it in parens.
-
-A call of the form:
-
-   roundup_pow_of_two(boolval ? PAGE_SIZE : frag_size)
-
-resulted in an compile warning:
-
-warning: ?: using integer constants in boolean context [-Wint-in-bool-context]
-              PAGE_SIZE :
-../include/linux/log2.h:176:4: note: in definition of macro ‘roundup_pow_of_two’
-   (n == 1) ? 1 :  \
-    ^
-And the resulting code used '1' as the result of the operation.
-
-Fixes: 312a0c170945 ("[PATCH] LOG2: Alter roundup_pow_of_two() so that it can use a ilog2() on a constant")
-
-Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
----
- include/linux/log2.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/log2.h b/include/linux/log2.h
-index 83a4a3ca3e8a..c619ec6eff4a 100644
---- a/include/linux/log2.h
-+++ b/include/linux/log2.h
-@@ -173,7 +173,7 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
- #define roundup_pow_of_two(n)			\
- (						\
- 	__builtin_constant_p(n) ? (		\
--		(n == 1) ? 1 :			\
-+		((n) == 1) ? 1 :		\
- 		(1UL << (ilog2((n) - 1) + 1))	\
- 				   ) :		\
- 	__roundup_pow_of_two(n)			\
--- 
-2.24.1
+Best regards
+Michael
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
 
