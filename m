@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1840BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E084206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C9220774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592934199;
-	bh=qa3ui2/kDGMV+cg74CBa2bCjyT0eCU4DDQlNS1iEZY0=;
+	s=default; t=1592934209;
+	bh=hlJzryK0YI2B6UOeX5mG0dMrQH8hcdUBIULXt+JZ1TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RgL1FhyCEMGVgXpxAEdgHqUvwJrmdoDs2XUWnB65Aid47MPrH2HERHDFTI5Z+vlas
-	 oh1QA+8n9UbA0/NC/Qj7PLJDPEP+7kdqOJ1iBCiY9crrCkOgzhP/rdxvUac2cqeOrp
-	 N/DJRzQ5Ke5mGnKAxKlSIRO856f6YKus80J4k3uc=
+	b=1FoqMPemH3Y1ZoNv6WclE71ofbWvMlWzrB1VvSxmMsUPP9Ed/60U5yLqqf9PeoLyJ
+	 sXrTUb5kqo01H34gCViWrZXN6Zgozu0mmkzvVcihtKa27JuciiYEsA3wqUPCuIkvZq
+	 VeA45UejRCKPHDYBy8Q8GOVn5rbOaFrD4IknGIwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387836AbgFWRnS (ORCPT
+        id S2387867AbgFWRn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:43:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:43:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733209AbgFWRfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:41 -0400
+        id S1733248AbgFWRfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E30207F9;
-        Tue, 23 Jun 2020 17:35:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C317C20706;
+        Tue, 23 Jun 2020 17:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933741;
-        bh=qa3ui2/kDGMV+cg74CBa2bCjyT0eCU4DDQlNS1iEZY0=;
+        s=default; t=1592933739;
+        bh=hlJzryK0YI2B6UOeX5mG0dMrQH8hcdUBIULXt+JZ1TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AJill2gcN6v+6mGk4/2Z5HHxZWDumye57oY2ZVNd4bVHgmlLTDxblXYFuMkt/mJ/N
-         RRKWHHWXtoFEs2k6+FoojW0DGuC680eLRoa4yMKoZzPqdHiZH/bjqgyhy2Gh9lKHd1
-         j7H+LoPGj5/W4rXnSyegc6rE2DSSEkbZFAxkBV5k=
+        b=oZF9tmz/OEPdPLe+/j5oGqT5Pk4L6SwaSEq05JoD6M2nZd9JMGLM7Yef1PQLsFDiy
+         jU6BK+RrZ9UivcWrk34ZL7aEJ9h1MitybNaF2dEknxivEW0OJeVHWJE/u4hAIw8Ntk
+         V5mQg1YHlLno5Vwjmzr1ztiy+CVyoV8n2nSfDvjM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
+Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 14/28] pinctrl: tegra: Use noirq suspend/resume callbacks
-Date:   Tue, 23 Jun 2020 13:35:09 -0400
-Message-Id: <20200623173523.1355411-14-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 13/28] pinctrl: qcom: spmi-gpio: fix warning about irq chip reusage
+Date:   Tue, 23 Jun 2020 13:35:08 -0400
+Message-Id: <20200623173523.1355411-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
 References: <20200623173523.1355411-1-sashal@kernel.org>
@@ -61,38 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit 782b6b69847f34dda330530493ea62b7de3fd06a ]
+[ Upstream commit 5e50311556c9f409a85740e3cb4c4511e7e27da0 ]
 
-Use noirq suspend/resume callbacks as other drivers which implement
-noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
-configure the signals used by their respective devices in the noirq phase.
+Fix the following warnings caused by reusage of the same irq_chip
+instance for all spmi-gpio gpio_irq_chip instances. Instead embed
+irq_chip into pmic_gpio_state struct.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20200604174935.26560-1-vidyas@nvidia.com
+gpio gpiochip2: (c440000.qcom,spmi:pmic@2:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+gpio gpiochip3: (c440000.qcom,spmi:pmic@4:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+gpio gpiochip4: (c440000.qcom,spmi:pmic@a:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lore.kernel.org/r/20200604002817.667160-1-dmitry.baryshkov@linaro.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 21661f6490d68..195cfe557511b 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -731,8 +731,8 @@ static int tegra_pinctrl_resume(struct device *dev)
- }
- 
- const struct dev_pm_ops tegra_pinctrl_pm = {
--	.suspend = &tegra_pinctrl_suspend,
--	.resume = &tegra_pinctrl_resume
-+	.suspend_noirq = &tegra_pinctrl_suspend,
-+	.resume_noirq = &tegra_pinctrl_resume
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index fe0be8a6ebb7b..092a48e4dff57 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -170,6 +170,7 @@ struct pmic_gpio_state {
+ 	struct regmap	*map;
+ 	struct pinctrl_dev *ctrl;
+ 	struct gpio_chip chip;
++	struct irq_chip irq;
  };
  
- static bool tegra_pinctrl_gpio_node_has_range(struct tegra_pmx *pmx)
+ static const struct pinconf_generic_params pmic_gpio_bindings[] = {
+@@ -917,16 +918,6 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
+ 	return 0;
+ }
+ 
+-static struct irq_chip pmic_gpio_irq_chip = {
+-	.name = "spmi-gpio",
+-	.irq_ack = irq_chip_ack_parent,
+-	.irq_mask = irq_chip_mask_parent,
+-	.irq_unmask = irq_chip_unmask_parent,
+-	.irq_set_type = irq_chip_set_type_parent,
+-	.irq_set_wake = irq_chip_set_wake_parent,
+-	.flags = IRQCHIP_MASK_ON_SUSPEND,
+-};
+-
+ static int pmic_gpio_domain_translate(struct irq_domain *domain,
+ 				      struct irq_fwspec *fwspec,
+ 				      unsigned long *hwirq,
+@@ -1053,8 +1044,16 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	if (!parent_domain)
+ 		return -ENXIO;
+ 
++	state->irq.name = "spmi-gpio",
++	state->irq.irq_ack = irq_chip_ack_parent,
++	state->irq.irq_mask = irq_chip_mask_parent,
++	state->irq.irq_unmask = irq_chip_unmask_parent,
++	state->irq.irq_set_type = irq_chip_set_type_parent,
++	state->irq.irq_set_wake = irq_chip_set_wake_parent,
++	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
++
+ 	girq = &state->chip.irq;
+-	girq->chip = &pmic_gpio_irq_chip;
++	girq->chip = &state->irq;
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_level_irq;
+ 	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
 -- 
 2.25.1
 
