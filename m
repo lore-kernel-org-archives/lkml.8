@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C57C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 326AF20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDDB2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946431;
-	bh=zxQyyLtD996EZcvH5NyTe9/WJiecHNn8RzhHOeffVXs=;
+	s=default; t=1592946439;
+	bh=U1hRUOhJZ/JCrmzx2rAOSfSXkH8mgDkhe1hEwGQQEwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mn7QsHaRdrD1rMwYKmtivp6rO5/5Av50TfcRWhbVjYcV1HQU/9dXZ56BN8y5snsvS
-	 6msG2FByKW4fA+H3Otg+4MLDpu8d1VMsARVNgLb88kopZm4avAE9+xyS9PYbak+k02
-	 dyGKfzuhJCm11qFLSKfs5pruc+4zvkYQUXB9UfXg=
+	b=azpTCBnHGe8SfIkFKG4Ja0kGwfRvY63MCTBab9nd78Z0UPfvSgpzJoxv8t5hiG8i5
+	 5PEu1GtOBD1DMPK6fOAmFxNiyCtxYdd8YEqiURI7y2PFBf4T6hYVNS/XlHAOKRflW9
+	 +2rq63qM+2xIL4BgrqTeeh4oUDh7M7jprd8xzaog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393208AbgFWVHI (ORCPT
+        id S2391668AbgFWUfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58006 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387904AbgFWUfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:35:31 -0400
+        id S2391659AbgFWUfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:35:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6F462080C;
-        Tue, 23 Jun 2020 20:35:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ABAF206C3;
+        Tue, 23 Jun 2020 20:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944532;
-        bh=zxQyyLtD996EZcvH5NyTe9/WJiecHNn8RzhHOeffVXs=;
+        s=default; t=1592944516;
+        bh=U1hRUOhJZ/JCrmzx2rAOSfSXkH8mgDkhe1hEwGQQEwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UHMcf1ywXasgwrwKD1rZJDxgoHUo1oMZK1ESbpQm0HDW313A7k5t/7HQlbt3dJMyq
-         1aZEVmMXm3FrQ6RXv44swzo7/gupxuyqew/JQJM5Fp4t0h3oFhzUzcbXUZ0jqhGwiO
-         xORz1Z/lS3LbaTuvtEsRA1vlUzNaWD/OBfkk3a68=
+        b=J7AyMlU4W507tULdQQng6BdKCncGqOhVRkK3nuqXFId9//4/LlDqxciRSy14eBGZV
+         uIaq0Dch8LuyhlGKod3E6LKfCEjxZbvWTpuD0Nz0PcX6G/w7W8jtukbmzIPPLkQrIH
+         Dhvn2+RWT+dx0dwGqzIh2WGXvyxRZ2LP+PAnHIM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/206] RDMA/mlx5: Add init2init as a modify command
-Date:   Tue, 23 Jun 2020 21:55:54 +0200
-Message-Id: <20200623195318.265184999@linuxfoundation.org>
+Subject: [PATCH 4.19 020/206] usblp: poison URBs upon disconnect
+Date:   Tue, 23 Jun 2020 21:55:48 +0200
+Message-Id: <20200623195317.965416175@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -62,37 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aharon Landau <aharonl@mellanox.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 819f7427bafd494ef7ca4942ec6322db20722d7b ]
+[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
 
-Missing INIT2INIT entry in the list of modify commands caused DEVX
-applications to be unable to modify_qp for this transition state. Add the
-MLX5_CMD_OP_INIT2INIT_QP opcode to the list of allowed DEVX opcodes.
+syzkaller reported an URB that should have been killed to be active.
+We do not understand it, but this should fix the issue if it is real.
 
-Fixes: e662e14d801b ("IB/mlx5: Add DEVX support for modify and query commands")
-Link: https://lore.kernel.org/r/20200513095550.211345-1-leon@kernel.org
-Signed-off-by: Aharon Landau <aharonl@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/devx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/class/usblp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
-index 02f36ab72ad42..4c90a007e09db 100644
---- a/drivers/infiniband/hw/mlx5/devx.c
-+++ b/drivers/infiniband/hw/mlx5/devx.c
-@@ -328,6 +328,7 @@ static bool devx_is_obj_modify_cmd(const void *in)
- 	case MLX5_CMD_OP_SET_L2_TABLE_ENTRY:
- 	case MLX5_CMD_OP_RST2INIT_QP:
- 	case MLX5_CMD_OP_INIT2RTR_QP:
-+	case MLX5_CMD_OP_INIT2INIT_QP:
- 	case MLX5_CMD_OP_RTR2RTS_QP:
- 	case MLX5_CMD_OP_RTS2RTS_QP:
- 	case MLX5_CMD_OP_SQERR2RTS_QP:
+diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
+index 4a80103675d59..419804c9c974b 100644
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -468,7 +468,8 @@ static int usblp_release(struct inode *inode, struct file *file)
+ 	usb_autopm_put_interface(usblp->intf);
+ 
+ 	if (!usblp->present)		/* finish cleanup from disconnect */
+-		usblp_cleanup(usblp);
++		usblp_cleanup(usblp);	/* any URBs must be dead */
++
+ 	mutex_unlock(&usblp_mutex);
+ 	return 0;
+ }
+@@ -1375,9 +1376,11 @@ static void usblp_disconnect(struct usb_interface *intf)
+ 
+ 	usblp_unlink_urbs(usblp);
+ 	mutex_unlock(&usblp->mut);
++	usb_poison_anchored_urbs(&usblp->urbs);
+ 
+ 	if (!usblp->used)
+ 		usblp_cleanup(usblp);
++
+ 	mutex_unlock(&usblp_mutex);
+ }
+ 
 -- 
 2.25.1
 
