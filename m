@@ -2,88 +2,68 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5735EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C15F20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:29:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="oRMFmqO+"
+	by mail.kernel.org (Postfix) with ESMTP id 40E57206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbgFWG3g (ORCPT
+        id S1730747AbgFWGaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:29:36 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:38260 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730406AbgFWG3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:29:35 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05N6SID1008028;
-        Tue, 23 Jun 2020 15:28:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05N6SID1008028
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592893698;
-        bh=uTXPjrpCh4fD/aE1Dd8b26sBzP/nRgftIkj2Y3t4u6E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oRMFmqO+anwp5IKFFMuw2tKuP+TF8VvvV75yUpel96GyZ+BUSKrqnKVFe1TYw18Da
-         W2vUUBO7GnLCYLPu+Kv5pD9EI9AhnbsYsrvbAbLCfTDf3pFH0EwwBIN7vQnxqcsjdL
-         WZO9SCL00p+YjCGEb94LO+AkFumx49KjBNh+7h1nquErcuJIL+bDKL2PHrfWZona0P
-         exQiZSMXD2356Wh4cIfZFZPav3Y3jSxnwSzUJXbX8sjgW3mImavJOp2hRD3uURS1cy
-         7/fuBv7ANLJqTXEsOoeGsDiCoAfLjasPNhkOYWciFgrqgkFPpqw+XQjgaf525sb8dh
-         UsM5W0pVbfIRw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: bus: uniphier-system-bus: fix warning in example
-Date:   Tue, 23 Jun 2020 15:28:11 +0900
-Message-Id: <20200623062812.705264-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 23 Jun 2020 02:30:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48920 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730395AbgFWGaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:30:23 -0400
+IronPort-SDR: Nu3Gc0Y9dlI+gDp4D2ADUj64OZJCbF2H1xKLNvvypAU7dw6r8X2aow+PlawkZM5Z4NMTN5Brxy
+ pwNTHkjLVZOQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209177388"
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="209177388"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 23:30:23 -0700
+IronPort-SDR: XE6v9h5pzfQ/W9LnwjMZ8WxUjPUMJvdrMXd6aYsQlTxm69N1Idkzz7G9HMtW2CdtA47DTbmbTd
+ sPhic+o+Lh4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="275245005"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga003.jf.intel.com with ESMTP; 22 Jun 2020 23:30:21 -0700
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH 0/2][v3] Fix IPI missing issue when woken from suspend to idle
+Date:   Tue, 23 Jun 2020 14:31:08 +0800
+Message-Id: <cover.1592892767.git.yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit e69f5dc623f9 ("dt-bindings: serial: Convert 8250 to
-json-schema"), the schema for "ns16550a" is checked.
+After an recent optimization on IPIs among idle Cores, the Goldmont failed to
+resume from suspend to idle due to missing IPIs. This is because
+Goldmont could only be woken up from idle via IPIs rather than POLLING.
+Clear the POLLING flag before suspend to idle so that Goldmont will always
+get IPIs during suspend to idle.
 
-'make dt_binding_check' emits the following warning:
+Chen Yu (2):
+  PM / s2idle: Clear _TIF_POLLING_NRFLAG before suspend to idle
+  PM / s2idle: Code cleanup to make s2idle consistent with normal idle
+    path
 
-  uart@5,00200000: $nodename:0: 'uart@5,00200000' does not match '^serial(@[0-9a-f,]+)*$'
+ drivers/cpuidle/cpuidle.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Rename the node to follow the pattern defined in
-Documentation/devicetree/bindings/serial/serial.yaml
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- .../devicetree/bindings/bus/socionext,uniphier-system-bus.yaml  | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
-index c4c9119e4a20..9fa4f891fa00 100644
---- a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
-+++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
-@@ -87,7 +87,7 @@ examples:
-             phy-mode = "mii";
-         };
- 
--        uart@5,00200000 {
-+        serial@5,00200000 {
-             compatible = "ns16550a";
-             reg = <5 0x00200000 0x20>;
-             interrupts = <0 49 4>;
 -- 
-2.25.1
+2.17.1
 
