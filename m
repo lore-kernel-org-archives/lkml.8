@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37593C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F81C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B55F20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DAB20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947891;
-	bh=zALHqMiguNc+FwOzNshQCTuETpDJRuk1PqNXG/LKOjE=;
+	s=default; t=1592947899;
+	bh=zkS5E5Jh9wPyO6MweZX0CvEzTtrSALDFUfY+ccR6C1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IsbqRGdkOaSTFZ6/jjDGX1QxuxBpy9pVkqdacaQaU3XEHEXYB5qnD6vtlpSVGemLx
-	 ohJ+PCZLk3AlyH+MrVpxyjhqU7MbkJ6Mjsj3h8tsY8qkFTWWyIh9a/8jkSfq9mBtzP
-	 HGGrwro7z/iVQAeXmLwqSo13P20FYIOXdC6JHgBQ=
+	b=hUnFtS7gfZxaU86dqXxRbsDHVc9MYrmyR1AgTIzP/zQz6G9AcnGK6HOt+z2FhxxRi
+	 DDT6XBRDAqg0/L3S6ViB0bEGsNTIKbQ/nOAT2Jt9umeMSBVlB66eTPBF4xTqtIQnqp
+	 8sTJT3+DCUtz0+bghPc8UVrc4A4RHo6IMX92Sxjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393645AbgFWVb2 (ORCPT
+        id S2393650AbgFWVbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55030 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388669AbgFWUNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:05 -0400
+        id S2389031AbgFWUM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:12:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68B19206C3;
-        Tue, 23 Jun 2020 20:13:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7A97206C3;
+        Tue, 23 Jun 2020 20:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943184;
-        bh=zALHqMiguNc+FwOzNshQCTuETpDJRuk1PqNXG/LKOjE=;
+        s=default; t=1592943179;
+        bh=zkS5E5Jh9wPyO6MweZX0CvEzTtrSALDFUfY+ccR6C1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zos3LqJ96ahgZjFaA5PHqG125uUPFe/fDywsgFBz+zIyZkt7YDVQdJA4yKJ82sEuD
-         co8yMVXdljjy1UBAzDcPJmw/Cwo3Lbmui4/971ENjJgG3lWGaCN2+I4dgqyetIB2HE
-         NlUQWMCaHG3QQDJ08md3LZCqMKgQb87uawIhqFPI=
+        b=V+CcAmNRezaMCEWB6DOQ1EpjuqQQeaccM/F/DfLFumtlejgO9qeqGdADuXNKS3UZ7
+         nqNnrHg2kHZ8nXIsj7LtXsIPB/W+dNP+8ED/Azy1VLyNtIWywh+hUaIXzIB9qDS+MN
+         yUAIfgOJF2omZkXL93+kfoKX3GDDiz4vQi//7vn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 292/477] of: Fix a refcounting bug in __of_attach_node_sysfs()
-Date:   Tue, 23 Jun 2020 21:54:49 +0200
-Message-Id: <20200623195421.360973175@linuxfoundation.org>
+        stable@vger.kernel.org, Fedor Tokarev <ftokarev@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 290/477] net: sunrpc: Fix off-by-one issues in rpc_ntop6
+Date:   Tue, 23 Jun 2020 21:54:47 +0200
+Message-Id: <20200623195421.274736141@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Fedor Tokarev <ftokarev@gmail.com>
 
-[ Upstream commit 8a325dd06f2358ea0888e4ff1c9ca4bc23bd53f3 ]
+[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
 
-The problem in this code is that if kobject_add() fails, then it should
-call of_node_put(np) to drop the reference count.  I've actually moved
-the of_node_get(np) later in the function to avoid needing to do clean
-up.
+Fix off-by-one issues in 'rpc_ntop6':
+ - 'snprintf' returns the number of characters which would have been
+   written if enough space had been available, excluding the terminating
+   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
+   last character was dropped.
+ - 'strcat' adds a terminating null byte to the string, thus if len ==
+   buflen, the null byte is written past the end of the buffer.
 
-Fixes: 5b2c2f5a0ea3 ("of: overlay: add missing of_node_get() in __of_attach_node_sysfs")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/kobj.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/sunrpc/addr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index c72eef9880417..a32e60b024b8d 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -134,8 +134,6 @@ int __of_attach_node_sysfs(struct device_node *np)
- 	if (!name)
- 		return -ENOMEM;
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 8b4d72b1a0667..010dcb876f9d7 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -82,11 +82,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
  
--	of_node_get(np);
--
- 	rc = kobject_add(&np->kobj, parent, "%s", name);
- 	kfree(name);
- 	if (rc)
-@@ -144,6 +142,7 @@ int __of_attach_node_sysfs(struct device_node *np)
- 	for_each_property_of_node(np, pp)
- 		__of_add_property_sysfs(np, pp);
+ 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
+ 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
+-	if (unlikely((size_t)rc > sizeof(scopebuf)))
++	if (unlikely((size_t)rc >= sizeof(scopebuf)))
+ 		return 0;
  
-+	of_node_get(np);
- 	return 0;
- }
+ 	len += rc;
+-	if (unlikely(len > buflen))
++	if (unlikely(len >= buflen))
+ 		return 0;
  
+ 	strcat(buf, scopebuf);
 -- 
 2.25.1
 
