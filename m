@@ -2,266 +2,178 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C705C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ED9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30D9C206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6D620774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592934241;
+	bh=sc5f8187uxVzY6pGmrOQEZXwwHoqL0rU2Y3yzc/cin4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FgdKQYXh9xQMlmnd99ZTmVdNcotEpL3N1jtQIlBNSw7ocnSSg+hRa9XtjYj4iHYmu
+	 zWL7DGj6+CV6SGiUPP5q1km8YAydJ1awL267ruUBdjljhcf1f1Pcz3jvKdVIGbcJOm
+	 /nwCbZvm/4fJeaezIkxzDEQuvGhpewaDtkn1sSN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733206AbgFWRfe (ORCPT
+        id S2387764AbgFWRoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 23 Jun 2020 13:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733202AbgFWRfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 13:35:34 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:34038 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733168AbgFWRf2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:28 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NHNTru031510;
-        Tue, 23 Jun 2020 13:35:11 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 31uk3grq2r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 13:35:11 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05NHZ9JP002019
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 23 Jun 2020 13:35:10 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 23 Jun
- 2020 10:35:08 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 23 Jun 2020 10:35:08 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05NHYxMU017521;
-        Tue, 23 Jun 2020 13:35:06 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v4 5/7] hwmon: pmbus: adm1266: read blackbox
-Date:   Tue, 23 Jun 2020 20:36:57 +0300
-Message-ID: <20200623173659.41358-6-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200623173659.41358-1-alexandru.tachici@analog.com>
-References: <20200623173659.41358-1-alexandru.tachici@analog.com>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1603207E8;
+        Tue, 23 Jun 2020 17:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592933732;
+        bh=sc5f8187uxVzY6pGmrOQEZXwwHoqL0rU2Y3yzc/cin4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZTqU+bYtDRdcMXr5XB46UgXBNWmmEqZWcCJbM3Buad+Qifk6KI7H/sUh5F+2is0gc
+         4cgbAr4ZORICkUf6SJX47t9EYLEBmu2Vy31+lkjKJTI0ew3KtizT84NTfi65QZ0cKG
+         anSKBqyaHSVbHyhQkcfddGGzTcvHS/M2WAI7A+Cg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dave Martin <Dave.Martin@arm.com>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 07/28] arm64/sve: Eliminate data races on sve_default_vl
+Date:   Tue, 23 Jun 2020 13:35:02 -0400
+Message-Id: <20200623173523.1355411-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
+References: <20200623173523.1355411-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- bulkscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006120000 definitions=main-2006230123
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+From: Dave Martin <Dave.Martin@arm.com>
 
-Use the nvmem kernel api to expose the black box
-chip functionality to userspace.
+[ Upstream commit 1e570f512cbdc5e9e401ba640d9827985c1bea1e ]
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+sve_default_vl can be modified via the /proc/sys/abi/sve_default_vl
+sysctl concurrently with use, and modified concurrently by multiple
+threads.
+
+Adding a lock for this seems overkill, and I don't want to think any
+more than necessary, so just define wrappers using READ_ONCE()/
+WRITE_ONCE().
+
+This will avoid the possibility of torn accesses and repeated loads
+and stores.
+
+There's no evidence yet that this is going wrong in practice: this
+is just hygiene.  For generic sysctl users, it would be better to
+build this kind of thing into the sysctl common code somehow.
+
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Link: https://lore.kernel.org/r/1591808590-20210-3-git-send-email-Dave.Martin@arm.com
+[will: move set_sve_default_vl() inside #ifdef to squash allnoconfig warning]
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/adm1266.c | 134 ++++++++++++++++++++++++++++++++++
- 1 file changed, 134 insertions(+)
+ arch/arm64/kernel/fpsimd.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-index 0960ead8d96a..b9e92ab1e39a 100644
---- a/drivers/hwmon/pmbus/adm1266.c
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -15,6 +15,8 @@
- #include <linux/init.h>
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 94289d1269933..4a77263c183b3 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -12,6 +12,7 @@
+ #include <linux/bug.h>
+ #include <linux/cache.h>
+ #include <linux/compat.h>
++#include <linux/compiler.h>
+ #include <linux/cpu.h>
+ #include <linux/cpu_pm.h>
  #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/nvmem-consumer.h>
-+#include <linux/nvmem-provider.h>
- #include <linux/proc_fs.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
-@@ -22,10 +24,13 @@
- #include <linux/adm1266.h>
- #include "pmbus.h"
+@@ -119,10 +120,20 @@ struct fpsimd_last_state_struct {
+ static DEFINE_PER_CPU(struct fpsimd_last_state_struct, fpsimd_last_state);
  
-+#define ADM1266_BLACKBOX_CONFIG	0xD3
- #define ADM1266_PDIO_CONFIG	0xD4
- #define ADM1266_GO_COMMAND	0xD8
- #define ADM1266_READ_STATE	0xD9
-+#define ADM1266_READ_BLACKBOX	0xDE
- #define ADM1266_GPIO_CONFIG	0xE1
-+#define ADM1266_BLACKBOX_INFO	0xE6
- #define ADM1266_PDIO_STATUS	0xE9
- #define ADM1266_GPIO_STATUS	0xEA
- 
-@@ -42,6 +47,9 @@
- #define ADM1266_PDIO_GLITCH_FILT(x)	FIELD_GET(GENMASK(12, 9), x)
- #define ADM1266_PDIO_OUT_CFG(x)		FIELD_GET(GENMASK(2, 0), x)
- 
-+#define ADM1266_BLACKBOX_OFFSET		0x7F700
-+#define ADM1266_BLACKBOX_SIZE		64
+ /* Default VL for tasks that don't set it explicitly: */
+-static int sve_default_vl = -1;
++static int __sve_default_vl = -1;
 +
- #define ADM1266_PMBUS_BLOCK_MAX		255
++static int get_sve_default_vl(void)
++{
++	return READ_ONCE(__sve_default_vl);
++}
  
- DECLARE_CRC8_TABLE(pmbus_crc_table);
-@@ -52,6 +60,17 @@ struct adm1266_data {
- 	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
- 	struct i2c_client *client;
- 	struct mutex ioctl_mutex; /* lock ioctl access */
-+	struct nvmem_config nvmem_config;
-+	struct nvmem_device *nvmem;
-+	u8 *dev_mem;
-+};
+ #ifdef CONFIG_ARM64_SVE
+ 
++static void set_sve_default_vl(int val)
++{
++	WRITE_ONCE(__sve_default_vl, val);
++}
 +
-+static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
-+	{
-+		.name           = "blackbox",
-+		.offset         = ADM1266_BLACKBOX_OFFSET,
-+		.bytes          = 2048,
-+	},
- };
+ /* Maximum supported vector length across all CPUs (initially poisoned) */
+ int __ro_after_init sve_max_vl = SVE_VL_MIN;
+ int __ro_after_init sve_max_virtualisable_vl = SVE_VL_MIN;
+@@ -345,7 +356,7 @@ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
+ 				  loff_t *ppos)
+ {
+ 	int ret;
+-	int vl = sve_default_vl;
++	int vl = get_sve_default_vl();
+ 	struct ctl_table tmp_table = {
+ 		.data = &vl,
+ 		.maxlen = sizeof(vl),
+@@ -362,7 +373,7 @@ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
+ 	if (!sve_vl_valid(vl))
+ 		return -EINVAL;
  
- /* Different from Block Read as it sends data and waits for the slave to
-@@ -404,6 +423,117 @@ static int adm1266_init_procfs(struct adm1266_data *data)
+-	sve_default_vl = find_supported_vector_length(vl);
++	set_sve_default_vl(find_supported_vector_length(vl));
  	return 0;
  }
  
-+static int adm1266_nvmem_read_blackbox(struct adm1266_data *data, u8 *buf)
-+{
-+	u8 read_buf[5];
-+	char index;
-+	int record_count;
-+	int ret;
-+
-+	ret = i2c_smbus_read_block_data(data->client, ADM1266_BLACKBOX_INFO,
-+					read_buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	record_count = read_buf[3];
-+
-+	for (index = 0; index < record_count; index++) {
-+		ret = pmbus_block_xfer(data->client, ADM1266_READ_BLACKBOX, 1,
-+				       &index, buf);
-+		if (ret < 0)
-+			return ret;
-+
-+		buf += ADM1266_BLACKBOX_SIZE;
-+	}
-+
-+	return 0;
-+}
-+
-+static bool adm1266_cell_is_accessed(const struct nvmem_cell_info *mem_cell,
-+				     unsigned int offset, size_t bytes)
-+{
-+	unsigned int start_addr = offset;
-+	unsigned int end_addr = offset + bytes;
-+	unsigned int cell_start = mem_cell->offset;
-+	unsigned int cell_end = mem_cell->offset + mem_cell->bytes;
-+
-+	if (start_addr <= cell_end && cell_start <= end_addr)
-+		return true;
-+
-+	return false;
-+}
-+
-+static int adm1266_read_mem_cell(struct adm1266_data *data,
-+				 const struct nvmem_cell_info *mem_cell)
-+{
-+	u8 *mem_offset;
-+	int ret;
-+
-+	switch (mem_cell->offset) {
-+	case ADM1266_BLACKBOX_OFFSET:
-+		mem_offset = data->dev_mem + mem_cell->offset;
-+		ret = adm1266_nvmem_read_blackbox(data, mem_offset);
-+		if (ret)
-+			dev_err(&data->client->dev, "Could not read blackbox!");
-+		return ret;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int adm1266_nvmem_read(void *priv, unsigned int offset, void *val,
-+			      size_t bytes)
-+{
-+	const struct nvmem_cell_info *mem_cell;
-+	struct adm1266_data *data = priv;
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < data->nvmem_config.ncells; i++) {
-+		mem_cell = &adm1266_nvmem_cells[i];
-+		if (!adm1266_cell_is_accessed(mem_cell, offset, bytes))
-+			continue;
-+
-+		ret = adm1266_read_mem_cell(data, mem_cell);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	memcpy(val, data->dev_mem + offset, bytes);
-+
-+	return 0;
-+}
-+
-+static int adm1266_config_nvmem(struct adm1266_data *data)
-+{
-+	data->nvmem_config.name = dev_name(&data->client->dev);
-+	data->nvmem_config.dev = &data->client->dev;
-+	data->nvmem_config.root_only = true;
-+	data->nvmem_config.read_only = true;
-+	data->nvmem_config.owner = THIS_MODULE;
-+	data->nvmem_config.reg_read = adm1266_nvmem_read;
-+	data->nvmem_config.cells = adm1266_nvmem_cells;
-+	data->nvmem_config.ncells = ARRAY_SIZE(adm1266_nvmem_cells);
-+	data->nvmem_config.priv = data;
-+	data->nvmem_config.stride = 1;
-+	data->nvmem_config.word_size = 1;
-+	data->nvmem_config.size = 0x80000;
-+
-+	data->nvmem = nvmem_register(&data->nvmem_config);
-+	if (IS_ERR(data->nvmem)) {
-+		dev_err(&data->client->dev, "Could not register nvmem!");
-+		return PTR_ERR(data->nvmem);
-+	}
-+
-+	data->dev_mem = devm_kzalloc(&data->client->dev,
-+				     data->nvmem_config.size,
-+				     GFP_KERNEL);
-+	if (!data->dev_mem)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
- static int adm1266_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -430,6 +560,10 @@ static int adm1266_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
+@@ -869,7 +880,7 @@ void __init sve_setup(void)
+ 	 * For the default VL, pick the maximum supported value <= 64.
+ 	 * VL == 64 is guaranteed not to grow the signal frame.
+ 	 */
+-	sve_default_vl = find_supported_vector_length(64);
++	set_sve_default_vl(find_supported_vector_length(64));
  
-+	ret = adm1266_config_nvmem(data);
-+	if (ret < 0)
-+		return ret;
-+
- 	info = &data->info;
- 	info->pages = 17;
- 	info->format[PSC_VOLTAGE_OUT] = linear;
+ 	bitmap_andnot(tmp_map, sve_vq_partial_map, sve_vq_map,
+ 		      SVE_VQ_MAX);
+@@ -890,7 +901,7 @@ void __init sve_setup(void)
+ 	pr_info("SVE: maximum available vector length %u bytes per vector\n",
+ 		sve_max_vl);
+ 	pr_info("SVE: default vector length %u bytes per vector\n",
+-		sve_default_vl);
++		get_sve_default_vl());
+ 
+ 	/* KVM decides whether to support mismatched systems. Just warn here: */
+ 	if (sve_max_virtualisable_vl < sve_max_vl)
+@@ -1030,13 +1041,13 @@ void fpsimd_flush_thread(void)
+ 		 * vector length configured: no kernel task can become a user
+ 		 * task without an exec and hence a call to this function.
+ 		 * By the time the first call to this function is made, all
+-		 * early hardware probing is complete, so sve_default_vl
++		 * early hardware probing is complete, so __sve_default_vl
+ 		 * should be valid.
+ 		 * If a bug causes this to go wrong, we make some noise and
+ 		 * try to fudge thread.sve_vl to a safe value here.
+ 		 */
+ 		vl = current->thread.sve_vl_onexec ?
+-			current->thread.sve_vl_onexec : sve_default_vl;
++			current->thread.sve_vl_onexec : get_sve_default_vl();
+ 
+ 		if (WARN_ON(!sve_vl_valid(vl)))
+ 			vl = SVE_VL_MIN;
 -- 
-2.20.1
+2.25.1
 
