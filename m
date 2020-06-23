@@ -2,116 +2,99 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 216CB2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2AC32072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592915812;
+	bh=ncCDhwHGz3SwSyuNyAKZ6i/uKhm4xkq6pQFwYaYDVOM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xb+kTbLLi4Ij9/keV54yAMhpsrJJr4gvorNKc6haB9LMOoYD/WbfOtwLqp0VDCMwv
+	 8mntCLGnI1Ed6ZR8szUDTrhoUsJQGvFLb9qPgO3Kw0cFIkmjh7MeXQZqvyGG4yrwNo
+	 5LVonfKRvRQ7SD4p6UGO5Q/ic6jevC5hU6P627mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732623AbgFWMfW (ORCPT
+        id S1732582AbgFWMgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:35:22 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60732 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732553AbgFWMfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:35:21 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E6C9CBDEAA656743EC89;
-        Tue, 23 Jun 2020 20:35:17 +0800 (CST)
-Received: from [127.0.0.1] (10.67.76.251) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 23 Jun 2020
- 20:35:11 +0800
-Subject: Re: [PATCH] drivers/perf: hisi: Add identifier sysfs file
-To:     John Garry <john.garry@huawei.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
-        <jolsa@redhat.com>, <linuxarm@huawei.com>
-References: <1592399111-134786-1-git-send-email-john.garry@huawei.com>
- <089b4276-a247-5d39-4227-32629d3ee888@hisilicon.com>
- <086e0fd0-590b-8a95-5ac9-9d585e8a3342@huawei.com>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <ae89e842-8bec-91f6-e758-a269c596ed5e@hisilicon.com>
-Date:   Tue, 23 Jun 2020 20:35:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 23 Jun 2020 08:36:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729611AbgFWMgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:36:50 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 852B62072E;
+        Tue, 23 Jun 2020 12:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592915809;
+        bh=ncCDhwHGz3SwSyuNyAKZ6i/uKhm4xkq6pQFwYaYDVOM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jJqVdaRxXKjWVuwbqKdXLjVlvHTD+xCFWIRMLMpsxa/GdehMpprwbno8i4IuZBXQi
+         utwXlCdEciZj9BsJmrnjZynaY7LyuWn7EfTZ/j8cWazIMu+tJKyv3uCy/JR5juJjdV
+         CkHe+6W6H3v0v8q7rYohVC29WDKr5Lz8GXjt6Pf0=
+Received: by mail-oi1-f171.google.com with SMTP id p70so18630990oic.12;
+        Tue, 23 Jun 2020 05:36:49 -0700 (PDT)
+X-Gm-Message-State: AOAM531VkarxYaGkqebeKXVmUnjbRMXgg/hGwotlauhbS1oFaC/nXVuS
+        LG09yU1A1Mo8287NOT9zEKL4aqQ4I/HNcf5Ko+Q=
+X-Google-Smtp-Source: ABdhPJzI9PCaEenZ9gXjSD7l7z3pli13IsJGj059pBU3A2yTyp2GloZp1fsskrx517tdO6E5XpVFOj2Sap97eU2Uvf8=
+X-Received: by 2002:aca:4947:: with SMTP id w68mr15198126oia.116.1592915808917;
+ Tue, 23 Jun 2020 05:36:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <086e0fd0-590b-8a95-5ac9-9d585e8a3342@huawei.com>
+References: <cf810c93-297c-c02c-9bba-8c3d097b8e31@web.de> <2ab2cc9f-c720-75ca-e20c-0e4236ff45fd@huawei.com>
+ <1542979d-f7f6-bcf1-53c3-22b7c076ddc7@web.de> <20200623073220.GV30139@dragon>
+ <5300cb30-2243-9bfe-125c-96e720cd1f29@web.de> <20200623110222.GX30139@dragon>
+ <9f429c51-0fa9-16dc-4d62-d456551c5376@web.de> <20200623120919.GE30139@dragon> <66038b6c-6691-eda2-af15-f315270d4bee@web.de>
+In-Reply-To: <66038b6c-6691-eda2-af15-f315270d4bee@web.de>
+From:   Shawn Guo <shawnguo@kernel.org>
+Date:   Tue, 23 Jun 2020 20:36:37 +0800
+X-Gmail-Original-Message-ID: <CAJBJ56J9NfYPxnqtLfbeCHkRy2-xPEUJq7r3RvM8yi434AQF2Q@mail.gmail.com>
+Message-ID: <CAJBJ56J9NfYPxnqtLfbeCHkRy2-xPEUJq7r3RvM8yi434AQF2Q@mail.gmail.com>
+Subject: Re: ARM: imx6: add missing put_device() call in imx6q_suspend_init()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Sascha Hauer <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Yu Kuai <yukuai3@huawei.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Yi Zhang <yi.zhang@huawei.com>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.76.251]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On Tue, Jun 23, 2020 at 8:29 PM Markus Elfring <Markus.Elfring@web.de> wrot=
+e:
+>
+> >>>>>>>> ARM: imx6: Add missing put_device() call in imx6q_suspend_init()
+> >>>>>>>> https://lore.kernel.org/linux-arm-kernel/5acd7308-f6e1-4b1e-c744=
+-bb2e5fdca1be@web.de/
+> >>>>>>>> https://lore.kernel.org/patchwork/patch/1151158/
+> >>>>>>>> https://lkml.org/lkml/2019/11/9/125
+> =E2=80=A6
+> >>>  - The patch applies to v5.8-rc.
+> >>
+> >> Would you like to try it out if my proposal is still valid?
+>
+> Are you going to compare the published patches any further?
+>
+>
+> >> Does the change approach by Yu Kuai supersede it?
+>
+> Which patch variant will be integrated finally?
 
-Thanks your further explaination and I'm ok on it, so for this patch:
+Just picked up Yu Kuai's patch.
 
-Acked-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-
-Thanks,
-Shaokun
-
-在 2020/6/18 17:18, John Garry 写道:
-> On 18/06/2020 02:40, Shaokun Zhang wrote:
->>> }
->>>   +    hha_pmu->identifier = readl(hha_pmu->base + HHA_VERSION);
->> Since we are now refactoring the PMU framework, the PMU version offset
->> is always the same except DDRC PMU and other uncore PMU modules will
->> also use this, how about we do it as the common code:
->>
->> #define HISI_PMU_VERSION_REG   0x1CF0
->> int hisi_uncore_pmu_version(struct hisi_pmu *hisi_pmu)
->> {
->>         return readl(hisi_pmu->base + HISI_PMU_VERSION_REG);
->> }
->> EXPORT_SYMBOL_GPL(hisi_uncore_pmu_version);
-> 
-> Hi Shaokun,
-> 
-> Some points to make:
-> 
-> - It's hardly worth having a separate function to do this 1-line readl()
-> call, especially since it not even generic (DDRC is different)
-> 
-> - We would have to export it (or put in a common header file with static
-> inline keywords) - less exports are good
-> 
-> - with factoring out common code, it's good to reduce total code - this
-> change would increase it, AFAICS
-> 
-> - This is HW specific. The driver is currently layered such that all HW
-> specific stuff is in the HW driver (like hisi_uncore_ddrc_pmu.c), and
-> not library code (hisi_uncore_pmu.c). I don't see why you want to mix
-> that, like you're proposing in the framework revision you proposed
-> internally.
-> 
-> Thanks,
-> John
-> 
->>
->> hha_pmu->identifier = hisi_uncore_pmu_version(hha_pmu);
->> we can remove the duplicated PMU version register definition in each
->> module.
->>
->> Thanks,
->> Shaokun
->>
->>> +
->>>       return 0;
->>>   }
->>>   @@ -320,10 +323,23 @@ static const struct attribute_group
->>> hisi_hha_pmu_cpumask_attr_group = {
->>>       .attrs = hisi_hha_pmu_cpumask_attrs,
->>>   };
-> 
-> 
-> .
-
+Shawn
