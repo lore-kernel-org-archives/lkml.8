@@ -2,186 +2,149 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC11C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8764BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E172E2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647FD20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:28:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bk10in67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387430AbgFWS1U (ORCPT
+        id S1733271AbgFWS2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:27:20 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12868 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733149AbgFWS1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:27:09 -0400
-IronPort-SDR: cdxIC0ZwR0tH5KKyuCh1mLVZqECpPnYyEPnLXWdCoFdYswnbKYYoHJYb3enbN1U+KYjzyGwJzz
- QL1xkpLMwhKQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="132578330"
-X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="132578330"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 11:27:08 -0700
-IronPort-SDR: oO4cTV/P6SdMUJshynRroAFhwkIYV4FzlUfiNEMgMTk0rT/yjiAYxhbRBeWju4mUXRkKKMNUFm
- krl/iQTq+C7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="452329753"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.255.228.214])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 11:27:07 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, lenb@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 1/2] cpufreq: intel_pstate: Allow enable/disable energy efficiency
-Date:   Tue, 23 Jun 2020 11:27:04 -0700
-Message-Id: <20200623182705.1425539-2-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200623182705.1425539-1-srinivas.pandruvada@linux.intel.com>
-References: <20200623182705.1425539-1-srinivas.pandruvada@linux.intel.com>
+        Tue, 23 Jun 2020 14:28:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733149AbgFWS2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 14:28:43 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1F8C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:28:42 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id m26so12218218lfo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MIC7rinwx2pMi5XBt1XaWunZWpw6bdSnQpQcCkwHcik=;
+        b=Bk10in67hNn+fw+1MYYqorcFjKBXPYfNMNIM1ld8uUTWo2J40PtAxEyYxjXMXaGhhk
+         gdQNLj0ZytPLg+GFFaD6ypHNMiYxY0czOKXBb1sjiD15ZRc2AVk+0oqEbpjI02rLzZ9R
+         pWfryzDHXcMjkVPLozPUTOmlBRlUGuMLbHRG/0/hKOW8M3pE+srQjRyjgq5GRIL/EiVQ
+         ptfzQ7H1F4tUY0Rh27vCRhlyL/sPNq3IKVVGu9mDdn/ofJ0JcFL0eAHxvNdKEl53PfPh
+         3t7HE9X6XrpkVtufxAYJB5MjmQKO14xcMNSrdYYbJ3jLOdlMAHVhvsPHMRztMCIUjwMH
+         C6yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MIC7rinwx2pMi5XBt1XaWunZWpw6bdSnQpQcCkwHcik=;
+        b=QQsZaoyHUhXLItqDxYtq+6EQYYvJYtbkdr2XJtAo5srSj+Qk4zXLZXZUWKJQ9lbAls
+         k5S1sMUZcV8vMT2qvH3l/OqoJ7Mq4hIP7tBq14wKACo2BBn0DjloclRc9llDvBSEN1P8
+         lcnwHz57q9Rl/P2ADPohtlkFlIV0YkmmgJNY+03dpd+CcDSI4QuknjmifeC23DZeLz8U
+         z0P6KxlygPA2+ixcXBvrJPq+1BzI1t7Q2DmtMfwSiv9U1+qOHZ9RQ9Wpd4eLSuhW8ub+
+         OirthSGRX2IZ2saTkQ3fiBnjenSiThviOLTyQu0gmI10Ij54ztRmCuC/94/K46rwpzg5
+         PZLA==
+X-Gm-Message-State: AOAM531SXJMAGe+PDPC8tKTu/VfRDTk2A+yHrhBj1m/lYhpTc1Icj3EG
+        x1v6saWoJ9AJB2W/tESRwY3t2yYwMJp93HOcBPMwdQ==
+X-Google-Smtp-Source: ABdhPJwyll2wtyv9RPvruQ+2iQWzC1zZIRIhfCyFwYgQq7Y56Isr4RiHgDGF7CcywkpKW2DafMGF5zUcZBt/EoRxVlI=
+X-Received: by 2002:ac2:5226:: with SMTP id i6mr13425420lfl.55.1592936921054;
+ Tue, 23 Jun 2020 11:28:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200618012600.608744-1-sashal@kernel.org> <20200618012600.608744-90-sashal@kernel.org>
+ <CA+G9fYuBGRz9=Q5KyCat0qk_8aiGvNsreY05rcGSjMZpvM1FJg@mail.gmail.com> <20200623171613.GB1931@sasha-vm>
+In-Reply-To: <20200623171613.GB1931@sasha-vm>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 23 Jun 2020 23:58:29 +0530
+Message-ID: <CA+G9fYsqV9+QaBgWrJEf8QDT4LobO5vuA0i+AB0h6SyiCGmwhw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.14 090/108] ovl: verify permissions in ovl_path_open()
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        linux-unionfs@vger.kernel.org, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default intel_pstate driver disables energy efficiency by setting
-MSR_IA32_POWER_CTL bit 19 for Kaby Lake desktop CPU model in HWP mode.
-This CPU model is also shared by Coffee Lake desktop CPUs. This allows
-these systems to reach maximum possible frequency. But this adds power
-penalty, which some customers don't want. They want some way to enable/
-disable dynamically.
+On Tue, 23 Jun 2020 at 22:46, Sasha Levin <sashal@kernel.org> wrote:
+>
+> On Tue, Jun 23, 2020 at 08:55:38PM +0530, Naresh Kamboju wrote:
+> >On Thu, 18 Jun 2020 at 07:18, Sasha Levin <sashal@kernel.org> wrote:
+> >>
+> >> From: Miklos Szeredi <mszeredi@redhat.com>
+> >>
+> >> [ Upstream commit 56230d956739b9cb1cbde439d76227d77979a04d ]
+> >>
+> >> Check permission before opening a real file.
+> >>
+> >> ovl_path_open() is used by readdir and copy-up routines.
+> >>
+> >> ovl_permission() theoretically already checked copy up permissions, but it
+> >> doesn't hurt to re-do these checks during the actual copy-up.
+> >>
+> >> For directory reading ovl_permission() only checks access to topmost
+> >> underlying layer.  Readdir on a merged directory accesses layers below the
+> >> topmost one as well.  Permission wasn't checked for these layers.
+> >>
+> >> Note: modifying ovl_permission() to perform this check would be far more
+> >> complex and hence more bug prone.  The result is less precise permissions
+> >> returned in access(2).  If this turns out to be an issue, we can revisit
+> >> this bug.
+> >>
+> >> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> >> ---
+> >>  fs/overlayfs/util.c | 27 ++++++++++++++++++++++++++-
+> >>  1 file changed, 26 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
+> >> index afdc2533ce74..76d6610767f6 100644
+> >> --- a/fs/overlayfs/util.c
+> >> +++ b/fs/overlayfs/util.c
+> >> @@ -307,7 +307,32 @@ bool ovl_is_whiteout(struct dentry *dentry)
+> >>
+> >>  struct file *ovl_path_open(struct path *path, int flags)
+> >>  {
+> >> -       return dentry_open(path, flags | O_NOATIME, current_cred());
+> >> +       struct inode *inode = d_inode(path->dentry);
+> >> +       int err, acc_mode;
+> >> +
+> >> +       if (flags & ~(O_ACCMODE | O_LARGEFILE))
+> >> +               BUG();
+> >> +
+> >> +       switch (flags & O_ACCMODE) {
+> >> +       case O_RDONLY:
+> >> +               acc_mode = MAY_READ;
+> >> +               break;
+> >> +       case O_WRONLY:
+> >> +               acc_mode = MAY_WRITE;
+> >> +               break;
+> >> +       default:
+> >> +               BUG();
+> >
+> >This BUG: triggered on stable-rc 5.7, 5.4, 4.19 and 4.14.
+> >
+> >steps to reproduce:
+> >          - cd /opt/ltp
+> >          - ./runltp -s execveat03
+>
+> Yup, that patch has been dropped, thanks for testing!
 
-So, add an additional attribute "energy_efficiency_enable" under
-/sys/devices/system/cpu/intel_pstate/ for these CPU models. This allows
-to read and write bit 19 ("Disable Energy Efficiency Optimization") in
-the MSR IA32_POWER_CTL.
+After reverting this patch I see these messages while testing LTP execveat03.
+[ 87.931537] overlayfs: upper fs does not support RENAME_WHITEOUT.
+[ 87.937693] overlayfs: upper fs does not support xattr, falling back
+to index=off and metacopy=off.>
 
-This attribute is present in both HWP and non-HWP mode as this has an
-effect in both modes. Refer to Intel Software Developer's manual for
-details. The scope of this bit is package wide.
+- Naresh
 
-Suggested-by: Len Brown <lenb@kernel.org>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- Documentation/admin-guide/pm/intel_pstate.rst |  7 +++
- drivers/cpufreq/intel_pstate.c                | 49 ++++++++++++++++++-
- 2 files changed, 54 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-guide/pm/intel_pstate.rst
-index 39d80bc29ccd..939bfdc53f4f 100644
---- a/Documentation/admin-guide/pm/intel_pstate.rst
-+++ b/Documentation/admin-guide/pm/intel_pstate.rst
-@@ -431,6 +431,13 @@ argument is passed to the kernel in the command line.
- 	supported in the current configuration, writes to this attribute will
- 	fail with an appropriate error.
- 
-+``energy_efficiency_enable``
-+	This attribute is only present on platforms, which has CPUs matching
-+	Kaby Lake desktop CPU model. By default "energy_efficiency" is disabled
-+	on these CPU models in HWP mode by this driver. Enabling energy
-+	efficiency may limit maximum operating frequency in both HWP and non
-+	HWP mode.
-+
- Interpretation of Policy Attributes
- -----------------------------------
- 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 8e23a698ce04..1cf6d06f2314 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -1218,6 +1218,44 @@ static ssize_t store_hwp_dynamic_boost(struct kobject *a,
- 	return count;
- }
- 
-+#define MSR_IA32_POWER_CTL_BIT_EE	19
-+
-+static ssize_t show_energy_efficiency_enable(struct kobject *kobj,
-+					     struct kobj_attribute *attr,
-+					     char *buf)
-+{
-+	u64 power_ctl;
-+	int enable;
-+
-+	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
-+	enable = (power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE)) >> MSR_IA32_POWER_CTL_BIT_EE;
-+	return sprintf(buf, "%d\n", !enable);
-+}
-+
-+static ssize_t store_energy_efficiency_enable(struct kobject *a,
-+					      struct kobj_attribute *b,
-+					      const char *buf, size_t count)
-+{
-+	u64 power_ctl;
-+	u32 input;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 10, &input);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&intel_pstate_driver_lock);
-+	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
-+	if (input)
-+		power_ctl &= ~BIT(MSR_IA32_POWER_CTL_BIT_EE);
-+	else
-+		power_ctl |= BIT(MSR_IA32_POWER_CTL_BIT_EE);
-+	wrmsrl(MSR_IA32_POWER_CTL, power_ctl);
-+	mutex_unlock(&intel_pstate_driver_lock);
-+
-+	return count;
-+}
-+
- show_one(max_perf_pct, max_perf_pct);
- show_one(min_perf_pct, min_perf_pct);
- 
-@@ -1228,6 +1266,7 @@ define_one_global_rw(min_perf_pct);
- define_one_global_ro(turbo_pct);
- define_one_global_ro(num_pstates);
- define_one_global_rw(hwp_dynamic_boost);
-+define_one_global_rw(energy_efficiency_enable);
- 
- static struct attribute *intel_pstate_attributes[] = {
- 	&status.attr,
-@@ -1241,6 +1280,8 @@ static const struct attribute_group intel_pstate_attr_group = {
- 	.attrs = intel_pstate_attributes,
- };
- 
-+static const struct x86_cpu_id intel_pstate_cpu_ee_disable_ids[];
-+
- static void __init intel_pstate_sysfs_expose_params(void)
- {
- 	struct kobject *intel_pstate_kobject;
-@@ -1273,6 +1314,12 @@ static void __init intel_pstate_sysfs_expose_params(void)
- 				       &hwp_dynamic_boost.attr);
- 		WARN_ON(rc);
- 	}
-+
-+	if (x86_match_cpu(intel_pstate_cpu_ee_disable_ids)) {
-+		rc = sysfs_create_file(intel_pstate_kobject,
-+				       &energy_efficiency_enable.attr);
-+		WARN_ON(rc);
-+	}
- }
- /************************** sysfs end ************************/
- 
-@@ -1288,8 +1335,6 @@ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
- 		cpudata->epp_default = intel_pstate_get_epp(cpudata, 0);
- }
- 
--#define MSR_IA32_POWER_CTL_BIT_EE	19
--
- /* Disable energy efficiency optimization */
- static void intel_pstate_disable_ee(int cpu)
- {
--- 
-2.25.4
-
+> --
+> Thanks,
+> Sasha
