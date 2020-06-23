@@ -2,640 +2,156 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE19C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9BA20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6D420706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="K84hCkUI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QBEgr4qw";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="H6kb3mKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733048AbgFWRET (ORCPT
+        id S1733077AbgFWRFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:04:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbgFWRER (ORCPT
+        Tue, 23 Jun 2020 13:05:05 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:38461 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732868AbgFWRFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:04:17 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3172C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:04:15 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h15so1370742wrq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:04:15 -0700 (PDT)
+        Tue, 23 Jun 2020 13:05:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592931903; x=1624467903;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=pn9JizKPe31HLoolAah0q8bZRJY2HWWvirmSXRLNz5I=;
+  b=QBEgr4qwURd2lbY75n/tsfjLgO+iQIVPlRdRLh4vYkQMK1143Pw9WRBW
+   dP++QjB3vrcQQBi+rB7wqo9buKZY+Xl1nc74tUFIx+M8qIg9cSbaRLIMa
+   HS00B6TD/uuKuf9+NV6UCbFJgVmIdzFuJcNAVLY4mPU+zznWYMMxwJWgv
+   otOrnY2W0jRak27QoMStfYHxSoO3LtTpz7efR42Lkoh3GuVoFCiCSlOQt
+   g1WfjYMwX7Vebwv0i/NbASW/QPtvCQvV0UYRXuschAfTrdGQupihIy/U2
+   goiObnysB8pKUdoJJlXpd5bm8CHwqrSzJd1N01IeQNNkuFroY1SCIGmAY
+   g==;
+IronPort-SDR: tjYNQ20FN+LfnioKgHMmzfow+xk0sxEJ/Yv59xDCWV7eWvvaQ3uv/Ql6lNbguZaDhMBF8rn2ni
+ zA+pdscoFhSCXvIYq+a09OtX+lxjfAWb0yIdolZOhNe/LuFbq/kAgXgw1OG6fe1ok3zv82UyRr
+ ourkufxnIOEvDD6KBe4jI+e8qCI19SIxfUhFquCjLt5EE8rJE+Bfe6idNvTjDa2gjyI/oDW7hS
+ 66bOmKGJWg+rMEkBqbEQwj+VK1qGLhu4zX8wLs2nUW7Fy2G1y49tX0nUrnI/xbwQxSOe5M69hs
+ 0Ns=
+X-IronPort-AV: E=Sophos;i="5.75,271,1589212800"; 
+   d="scan'208";a="145041758"
+Received: from mail-sn1nam02lp2052.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.52])
+  by ob1.hgst.iphmx.com with ESMTP; 24 Jun 2020 01:05:02 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XIIPzPQVy/aEoPi1KKeW9JoxBqvbauG/ki5BfNX7XzQRbgv9x+fW+i3NyErIrztPkjUlcSHoH4hcZ2lQAZCAgXo2cq5vcEnvtWaXkMu4xM4AzBQ4cB45OQW2K+vpyUKZEXypaF7hWu/tEBwrJI1+HHN1f0KQcYfGWUlbMPCMGTVjwy9kMbC8+PRTv8Qy2zmYduRrqYoo7qhk9jY4bX8+UOjkfXYchjXtvZBUNgCobFO1GfwKx759NLhsfKHBvGn0rV8aUbOhcghmnV/jXvbjc5TzS3LNrUJfXEY/Rfy4aGpgIiGAxcT05A8LH2O44gibR8jO3h+Yq9TTBtCxPnFInw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pn9JizKPe31HLoolAah0q8bZRJY2HWWvirmSXRLNz5I=;
+ b=LZVRzPiPOfIdADGIMMjjzrupt9x8ZEP8g+ojC421F0h0FOk3I/4qBj1VucAtt8AWybXLLS+mIHYO0iQLlKlHWrctkm5+jXEz8ZpCd6wXb+dR0mH9VXyR0WOqJp5yhdN0FVL7s1cd156U84JdmQpWpScSZthaE6plVD70xYBOnZYfQrvkhxcJXvnYQg1mmNxNm1VY2v04uWJrnNHT8jWIB8t0QopP5D7AoWd4UTfuipBkhgw/Eavt4uao762czrGoOk+mUpim4tAOUOre3y540O1cU5w9t3fo+z7CimyTtBbaOou7SzQ1NnhuLTAdpzPTG7cjwymvU5RHWz2aKUwnYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=L5fFBdU/xElidZoFCiGurv+f6yejjTqnHOKQFNezkTI=;
-        b=K84hCkUInUV+mfxAxNY2tA3sv2WE64yRNevBfvQpSyxMERLEQMpdnV4of09/bZPkuM
-         LT2czQ2NIWw44G/uwHYMSvFTtF6/XQU2YZmpQv1ZY9M0N664CrsqIbtto9kQSuhB/0mH
-         aJUCzfOAioaZqoBZ/9rAzGX/9JGJ4YKssocqw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=L5fFBdU/xElidZoFCiGurv+f6yejjTqnHOKQFNezkTI=;
-        b=ioFVJVN981/+2H1dq7y5mIbVoW2SMdD4qahu5mflQ4cxOErAapW6jyGXH1AuHch1Tp
-         GKxhwIpaO2YAZoxDfNQrrNxwTYTWPkKCjkZPqYRrNYqa1mdFaroEwA+PT9bER9KuzruL
-         J/Lctq/6Pcxa3whyJtiQEekduLain1cNJmFJFiQj+ioAus5RI8vJORIOI0l5Rr3AAqzY
-         5YyoCSpz2YmCM2EMj4hregJZSEHSdsXfVYsgVpKsCaWSlWRVYaUJ+lt6c8h6f+mLvDmX
-         NBNuYRoc8dBxKDayDB+Z8oOs68CjqMzVzPmEv5SqrZEtaNOPg85uYlnke0Hu2pdsFzFs
-         y9nQ==
-X-Gm-Message-State: AOAM5327XxAHl57ykCgqfBSCnLt3YwmrRME9+not01Ulaq/kxoGd74qM
-        qr+u1YFL+rzhgtfwIg5ylAmCNQ==
-X-Google-Smtp-Source: ABdhPJwxs+jSvQXM2yELu4tJNDAitcvKrsNagY/8yyz51Y9OKGQxgzQeKKzEcioqAiD38fSSgfZzmA==
-X-Received: by 2002:adf:8b5a:: with SMTP id v26mr25995548wra.165.1592931854276;
-        Tue, 23 Jun 2020 10:04:14 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id r1sm15336537wrt.73.2020.06.23.10.04.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 10:04:13 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 19:04:11 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Daniel Vetter <daniel@ffwll.ch>, Tejun Heo <tj@kernel.org>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v5 02/10] drm/vblank: Add vblank works
-Message-ID: <20200623170411.GO20149@phenom.ffwll.local>
-Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Tejun Heo <tj@kernel.org>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200622200730.120716-1-lyude@redhat.com>
- <20200622200730.120716-3-lyude@redhat.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pn9JizKPe31HLoolAah0q8bZRJY2HWWvirmSXRLNz5I=;
+ b=H6kb3mKPxm146on1d4viHQH2H1NNQ9XYUvwxOHNd5ypVfupO22FWT8hDYNgOJC+E3xZLJSc+1SLMQWKM3mZG8kRJdPiqlIfqWCIzV/WTuH6uu51oHYIQw3fiEEa7yYBl2Jj7ydSqLR9pDgIhH7UZOvYn4ockNCw9hVrK9e3JT7Y=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB3887.namprd04.prod.outlook.com
+ (2603:10b6:805:49::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Tue, 23 Jun
+ 2020 17:05:01 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
+ 17:05:01 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "nstange@suse.de" <nstange@suse.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "yukuai3@huawei.com" <yukuai3@huawei.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v7 5/8] loop: be paranoid on exit and prevent new
+ additions / removals
+Thread-Topic: [PATCH v7 5/8] loop: be paranoid on exit and prevent new
+ additions / removals
+Thread-Index: AQHWRnrpoqa46jyoHkuzQr78h5o56w==
+Date:   Tue, 23 Jun 2020 17:05:01 +0000
+Message-ID: <SN4PR0401MB35982B3522B95FADDD06DC4C9B940@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200619204730.26124-1-mcgrof@kernel.org>
+ <20200619204730.26124-6-mcgrof@kernel.org>
+ <7e76d892-b5fd-18ec-c96e-cf4537379eba@acm.org>
+ <20200622122742.GU11244@42.do-not-panic.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c32a78fc-c7ee-4e1e-773d-08d8179790e8
+x-ms-traffictypediagnostic: SN6PR04MB3887:
+x-microsoft-antispam-prvs: <SN6PR04MB388720C98D3AA5CB7809D7709B940@SN6PR04MB3887.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 04433051BF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7SRzUoD5MSBTHEwkU5ZMpPwEAXOABbbCn+1GtAVIm2MYnN94se/cuuufrufdHHbiXUbu49IcxQ4I9wGO71rQjo8TFHY5ekCAZjcpJJZ1/Rc8Dh6NBVKtTnkoBojzW2+xopaAfZprhr1PvgwG8FkeAOiOGDQwnrqQInpWmT5NMxL9F0kYjonIhAtLp2hjn9NGBka9MJMqwaMAMJz+UTHDDtLHwLDaLnncbEmjYXXQcjrslTmevpjdm+lX9Z6zoJVl9ywqfNpchpNBXGvQKYorYCkiDnohCy1Hsjkb8t+NlLhp1M+RUOmTmJacT0OUO29K3xJsic6FUxSkpGYuIQs76ZYoayKMzvmIIj+U2LKXRho8EVDFpKlFG5mFfQ+apY3VJr3qVR4k3RicJurlVMNaxQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(71200400001)(26005)(6506007)(186003)(7696005)(52536014)(54906003)(53546011)(33656002)(91956017)(66946007)(8936002)(8676002)(110136005)(66556008)(66446008)(64756008)(76116006)(66476007)(4744005)(9686003)(7416002)(55016002)(4326008)(966005)(498600001)(83380400001)(86362001)(5660300002)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ge+oPKMAo3XavSJyoDqZV9iOp/I6gfB6EItcBpYG6ptRVO6Zqo3QHjfsCrHKMUBem7LR293QnZmz4MarjlhcFJEUEpgqWKF1PvHLuFZoZtWVj5OjGrvqPmHDSdRHo/CEcn580aSjjfHbSucqJqHuie2ujLphyb81AlwEW5L2fWCnGvUy+XBxYtR8K4P561p7ALTgzAvhzsBaUUpcsGFaeCTFn53sWJ8yxPDPVhfTcwUk7RTdQKi/4gWLm8HpszhOtiW4Ij5jmo1pafsD/f/XsJobG+vBbqbOLCSuYjY4ZGjxto49afGOOogI3C8IR4rDDT5IbLZ3HoQqW4fZYOxd1gz1+bN/a2ibifDD4I8YOC7klJ3cS02eWp45Il9y6nsuZv6hv3PHvmGsjdDiPYmuzBUABhw9flY/HxeyUkBDxtya0LmFHuWel7DbjrRDiwbHrNIF/OzmH2vzz3oV/2C4wy5tXH7b46aJ+CNcAhKA/Yb9t9HLmi4abbWak6eYZwtf
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200622200730.120716-3-lyude@redhat.com>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c32a78fc-c7ee-4e1e-773d-08d8179790e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2020 17:05:01.0726
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3uiIexeHZm/kZ4Xv0P4IpmtArwCdVr5oJx4k1D2jWGSqu1RSqNkqxP2DwtE0CmhKCTvNOj/2E0vnDyM5xlsnIk+Fw8uLeRLAXlN7cxqzXNs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3887
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 04:07:22PM -0400, Lyude Paul wrote:
-> Add some kind of vblank workers. The interface is similar to regular
-> delayed works, and is mostly based off kthread_work. It allows for
-> scheduling delayed works that execute once a particular vblank sequence
-> has passed. It also allows for accurate flushing of scheduled vblank
-> works - in that flushing waits for both the vblank sequence and job
-> execution to complete, or for the work to get cancelled - whichever
-> comes first.
-> 
-> Whatever hardware programming we do in the work must be fast (must at
-> least complete during the vblank or scanout period, sometimes during the
-> first few scanlines of the vblank). As such we use a high-priority
-> per-CRTC thread to accomplish this.
-> 
-> [based off patches from Ville Syrjälä <ville.syrjala@linux.intel.com>,
-> change below to signoff later]
-> 
-> Changes since v4:
-> * Get rid of kthread interfaces we tried adding and move all of the
->   locking into drm_vblank.c. For implementing drm_vblank_work_flush(),
->   we now use a wait_queue and sequence counters in order to
->   differentiate between multiple work item executions.
-> * Get rid of drm_vblank_work_cancel() - this would have been pretty
->   difficult to actually reimplement and it occurred to me that neither
->   nouveau or i915 are even planning to use this function. Since there's
->   also no async cancel function for most of the work interfaces in the
->   kernel, it seems a bit unnecessary anyway.
-> * Get rid of to_drm_vblank_work() since we now are also able to just
->   pass the struct drm_vblank_work to work item callbacks anyway
-> Changes since v3:
-> * Use our own spinlocks, don't integrate so tightly with kthread_works
-> Changes since v2:
-> * Use kthread_workers instead of reinventing the wheel.
-> 
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: nouveau@lists.freedesktop.org
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-
-Ok, I think this melted my brain a bit, but I tried to review this
-carefully. Bunch of suggestions to simplify the flow, but might also
-simply be that I missed something and my suggestions dont work at all.
-
-Thanks for doing all this!
-
-Cheers, Daniel
-
-> ---
->  drivers/gpu/drm/drm_vblank.c | 266 +++++++++++++++++++++++++++++++++++
->  include/drm/drm_vblank.h     |  49 +++++++
->  2 files changed, 315 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> index ce5c1e1d29963..4d76eb2fed5e9 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -25,7 +25,9 @@
->   */
->  
->  #include <linux/export.h>
-> +#include <linux/kthread.h>
->  #include <linux/moduleparam.h>
-> +#include <uapi/linux/sched/types.h>
->  
->  #include <drm/drm_crtc.h>
->  #include <drm/drm_drv.h>
-> @@ -155,6 +157,8 @@
->  static bool
->  drm_get_last_vbltimestamp(struct drm_device *dev, unsigned int pipe,
->  			  ktime_t *tvblank, bool in_vblank_irq);
-> +static int drm_vblank_get(struct drm_device *dev, unsigned int pipe);
-> +static void drm_vblank_put(struct drm_device *dev, unsigned int pipe);
->  
->  static unsigned int drm_timestamp_precision = 20;  /* Default to 20 usecs. */
->  
-> @@ -490,6 +494,35 @@ static void vblank_disable_fn(struct timer_list *t)
->  	spin_unlock_irqrestore(&dev->vbl_lock, irqflags);
->  }
->  
-> +static void drm_vblank_work_release(struct drm_vblank_crtc *vblank)
-> +{
-> +	struct kthread_worker *worker = vblank->worker;
-> +	struct drm_vblank_work *work, *tmp;
-> +	bool wake = false;
-> +
-> +	if (!worker)
-> +		return;
-> +
-> +	spin_lock_irq(&vblank->work_lock);
-> +	vblank->worker = NULL;
-> +
-> +	list_for_each_entry_safe(work, tmp, &vblank->pending_work, node) {
-> +		drm_vblank_put(vblank->dev, vblank->pipe);
-> +		list_del(&work->node);
-> +
-> +		if (!--work->pending) {
-> +			write_seqcount_invalidate(&work->seqcount);
-> +			wake = true;
-> +		}
-> +	}
-> +
-> +	spin_unlock_irq(&vblank->work_lock);
-> +
-> +	if (wake)
-> +		wake_up_all(&vblank->work_wait_queue);
-
-So drmm_ is for cleaning up software stuff, but the above is for cleaning
-up vblank callbacks and things. Those should all be cleaned up and stop
-after the hardware is gone.
-
-If you look at drm_crtc_vblank_off, that already has code to send out any
-pending vblank events. I think that's also where we should clean up any
-leaked vblank worker things, to make sure they don't get re-queued. Once
-the vblank is off it shouldn't be possible to have new stuff enqueued.
-
-In vblank_off we probably want an additional kthrea_flush_worker() to make
-sure nothing spills out.
-
-> +	kthread_destroy_worker(worker);
-
-This one looks good here I think, but maybe just inline it since it's
-just one line after you moved the cleanup.
-
-> +}
-> +
->  static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
->  {
->  	struct drm_vblank_crtc *vblank = ptr;
-> @@ -497,9 +530,66 @@ static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
->  	drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
->  		    drm_core_check_feature(dev, DRIVER_MODESET));
->  
-> +	drm_vblank_work_release(vblank);
->  	del_timer_sync(&vblank->disable_timer);
->  }
->  
-> +static void vblank_work_fn(struct kthread_work *base)
-> +{
-> +	struct drm_vblank_work *work =
-> +		container_of(base, struct drm_vblank_work, base);
-> +	struct drm_vblank_crtc *vblank = work->vblank;
-> +
-> +	work->func(work);
-> +
-> +	spin_lock_irq(&vblank->work_lock);
-> +	work->pending--;
-> +
-> +	write_seqcount_invalidate(&work->seqcount);
-> +	wake_up_all(&vblank->work_wait_queue);
-> +	spin_unlock_irq(&vblank->work_lock);
-> +}
-> +
-> +/**
-> + * drm_vblank_work_init - initialize a vblank work item
-> + * @work: vblank work item
-> + * @crtc: CRTC whose vblank will trigger the work execution
-> + * @func: work function to be executed
-> + *
-> + * Initialize a vblank work item for a specific crtc.
-> + */
-> +void drm_vblank_work_init(struct drm_vblank_work *work, struct drm_crtc *crtc,
-> +			  void (*func)(struct drm_vblank_work *work))
-> +{
-
-Hm I think a WARN_ON(work->func) would be nice here, just for paranoia.
-Nothing good happens if we reinit a life work.
-
-Also disappointingly no object debugging support in kthread_work, not sure
-whether it's worth the bother to set that up.
-
-> +	kthread_init_work(&work->base, vblank_work_fn);
-> +	work->func = func;
-> +	INIT_LIST_HEAD(&work->node);
-> +	seqcount_init(&work->seqcount);
-> +	work->vblank = &crtc->dev->vblank[drm_crtc_index(crtc)];
-> +}
-> +EXPORT_SYMBOL(drm_vblank_work_init);
-> +
-> +static int vblank_worker_init(struct drm_vblank_crtc *vblank)
-> +{
-> +	struct sched_param param = {
-> +		.sched_priority = MAX_RT_PRIO - 1,
-> +	};
-> +	struct kthread_worker *worker;
-> +
-> +	INIT_LIST_HEAD(&vblank->pending_work);
-> +	spin_lock_init(&vblank->work_lock);
-
-Do we really need our own spinlock here? If we align vblank work with
-vblank events as much as possible I think can fully piggy-pack on top of
-vblank->event_lock.
-
-> +	init_waitqueue_head(&vblank->work_wait_queue);
-> +	worker = kthread_create_worker(0, "card%d-crtc%d",
-> +				       vblank->dev->primary->index,
-> +				       vblank->pipe);
-> +	if (IS_ERR(worker))
-> +		return PTR_ERR(worker);
-> +
-> +	vblank->worker = worker;
-> +
-> +	return sched_setscheduler(vblank->worker->task, SCHED_FIFO, &param);
-> +}
-> +
->  /**
->   * drm_vblank_init - initialize vblank support
->   * @dev: DRM device
-> @@ -539,6 +629,10 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
->  					       vblank);
->  		if (ret)
->  			return ret;
-> +
-> +		ret = vblank_worker_init(vblank);
-> +		if (ret)
-> +			return ret;
->  	}
->  
->  	return 0;
-> @@ -1891,6 +1985,24 @@ static void drm_handle_vblank_events(struct drm_device *dev, unsigned int pipe)
->  	trace_drm_vblank_event(pipe, seq, now, high_prec);
->  }
->  
-> +static void drm_handle_vblank_works(struct drm_vblank_crtc *vblank)
-> +{
-> +	struct drm_vblank_work *work, *next;
-> +	u64 count = atomic64_read(&vblank->count);
-> +
-> +	spin_lock(&vblank->work_lock);
-> +	list_for_each_entry_safe(work, next, &vblank->pending_work, node) {
-> +		if (!vblank_passed(count, work->count))
-> +			continue;
-> +
-> +		list_del_init(&work->node);
-> +		drm_vblank_put(vblank->dev, vblank->pipe);
-> +		if (!kthread_queue_work(vblank->worker, &work->base))
-> +			work->pending--;
-> +	}
-> +	spin_unlock(&vblank->work_lock);
-> +}
-> +
->  /**
->   * drm_handle_vblank - handle a vblank event
->   * @dev: DRM device
-> @@ -1932,6 +2044,7 @@ bool drm_handle_vblank(struct drm_device *dev, unsigned int pipe)
->  
->  	spin_unlock(&dev->vblank_time_lock);
->  
-> +	drm_handle_vblank_works(vblank);
-
-Just for symmetry I'd put that right next to drm_handle_vblank_events.
-
->  	wake_up(&vblank->queue);
->  
->  	/* With instant-off, we defer disabling the interrupt until after
-> @@ -2146,3 +2259,156 @@ int drm_crtc_queue_sequence_ioctl(struct drm_device *dev, void *data,
->  	kfree(e);
->  	return ret;
->  }
-> +
-> +/**
-> + * drm_vblank_work_schedule - schedule a vblank work
-> + * @work: vblank work to schedule
-> + * @count: target vblank count
-> + * @nextonmiss: defer until the next vblank if target vblank was missed
-> + *
-> + * Schedule @work for execution once the crtc vblank count reaches @count.
-> + *
-> + * If the crtc vblank count has already reached @count and @nextonmiss is
-> + * %false the work starts to execute immediately.
-> + *
-> + * If the crtc vblank count has already reached @count and @nextonmiss is
-> + * %true the work is deferred until the next vblank (as if @count has been
-> + * specified as crtc vblank count + 1).
-> + *
-> + * If @work is already scheduled, this function will reschedule said work
-> + * using the new @count.
-> + *
-> + * Returns:
-> + * 0 on success, error code on failure.
-> + */
-> +int drm_vblank_work_schedule(struct drm_vblank_work *work,
-> +			     u64 count, bool nextonmiss)
-> +{
-> +	struct drm_vblank_crtc *vblank = work->vblank;
-> +	struct drm_device *dev = vblank->dev;
-> +	u64 cur_vbl;
-> +	unsigned long irqflags;
-> +	bool passed, rescheduling = false;
-> +	int ret = 0;
-> +
-> +	spin_lock_irqsave(&vblank->work_lock, irqflags);
-> +	if (!vblank->worker || work->cancelling)
-> +		goto out;
-> +
-> +	if (list_empty(&work->node)) {
-> +		ret = drm_vblank_get(dev, vblank->pipe);
-> +		if (ret < 0)
-> +			goto out;
-> +	} else if (work->count == count) {
-> +		/* Already scheduled w/ same vbl count */
-> +		goto out;
-> +	} else {
-> +		rescheduling = true;
-> +	}
-> +
-> +	work->count = count;
-> +	cur_vbl = drm_vblank_count(dev, vblank->pipe);
-> +	passed = vblank_passed(cur_vbl, count);
-> +	if (passed)
-> +		DRM_ERROR("crtc %d vblank %llu already passed (current %llu)\n",
-> +			  vblank->pipe, count, cur_vbl);
-> +
-> +	if (!nextonmiss && passed) {
-> +		drm_vblank_put(dev, vblank->pipe);
-> +		work->pending += kthread_queue_work(vblank->worker,
-> +						    &work->base);
-> +		if (rescheduling) {
-> +			list_del_init(&work->node);
-> +			work->pending--;
-> +		}
-> +	} else if (rescheduling) {
-> +		list_move_tail(&work->node, &vblank->pending_work);
-
-Not sure this matters, we walk the entire list anyway. Just complicates
-the code. The other thing which I think can be simplified is the ->pending
-tracking. If I'm reading everything correctly then ->pending is only ever
-1 or 0, so changing it to a boolean and setting it here like
-
-
-	work->pending = !ret;
-
-Plus setting it explicitly instead of increments/decrements in all other
-places should make this a pile easier to understand I think.
-
-> +	} else {
-> +		list_add_tail(&work->node, &vblank->pending_work);
-> +		work->pending++;
-> +	}
-> +
-> + out:
-> +	spin_unlock_irqrestore(&vblank->work_lock, irqflags);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(drm_vblank_work_schedule);
-> +
-> +/**
-> + * drm_vblank_work_cancel_sync - cancel a vblank work and wait for it to
-> + * finish executing
-> + * @work: vblank work to cancel
-> + *
-> + * Cancel an already scheduled vblank work and wait for its
-> + * execution to finish.
-> + *
-> + * On return @work is no longer guaraneed to be executing.
-
-I think this is confusing wording. I think what it should say is that we
-guarantee it's not longer running, even when it's self-arming. That's what
-the entire _sync suffix is all about.
-
-What you wrote is more like "We'll try cancel it once, but if it's
-self-arming it might still be running", so just normal _cancel.
-
-> + *
-> + * Returns:
-> + * %True if the work was cancelled before it started to execute, %false
-> + * otherwise.
-> + */
-> +bool drm_vblank_work_cancel_sync(struct drm_vblank_work *work)
-> +{
-> +	struct drm_vblank_crtc *vblank = work->vblank;
-> +	bool ret = false, cancelled, queued;
-> +
-> +	spin_lock_irq(&vblank->work_lock);
-> +
-> +	if (!list_empty(&work->node)) {
-> +		list_del_init(&work->node);
-> +		drm_vblank_put(vblank->dev, vblank->pipe);
-> +		work->pending--;
-> +		ret = true;
-> +	}
-> +
-> +	queued = work->pending;
-> +	if (queued)
-
-So if I'm reading the code correctly, then we do all the pending tracking
-just for this condition here. Given that performance for cancel_sync
-doesn't matter, can't we just unconditionally do the full cancelling? It
-would simplify the code a bunch.
-
-Or am I missing something.
-
-> +		work->cancelling++;
-> +	spin_unlock_irq(&vblank->work_lock);
-> +
-> +	if (!queued)
-> +		return false;
-> +
-> +	cancelled = kthread_cancel_work_sync(&work->base);
-> +
-> +	spin_lock_irq(&vblank->work_lock);
-> +	if (cancelled) {
-> +		ret = true;
-> +		work->pending--;
-> +	}
-> +
-> +	write_seqcount_invalidate(&work->seqcount);
-> +	wake_up_all(&vblank->work_wait_queue);
-> +
-> +	work->cancelling--;
-> +	drm_WARN_ON_ONCE(vblank->dev, work->pending);
-> +	spin_unlock_irq(&vblank->work_lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(drm_vblank_work_cancel_sync);
-> +
-> +/**
-> + * drm_vblank_work_flush - wait for a scheduled vblank work to finish
-> + * executing
-> + * @work: vblank work to flush
-> + *
-> + * Wait until @work has finished executing once.
-> + */
-> +void drm_vblank_work_flush(struct drm_vblank_work *work)
-> +{
-> +	struct drm_vblank_crtc *vblank = work->vblank;
-> +	unsigned int seq;
-> +
-> +	seq = read_seqcount_begin(&work->seqcount);
-> +	if (!work->pending)
-> +		return;
-> +
-> +	/* Once the sequence counter has changed, our work instance has
-> +	 * finished
-> +	 */
-> +	wait_event(vblank->work_wait_queue,
-> +		   read_seqcount_retry(&work->seqcount, seq));
-
-Uh abusing a locking primitive as an event queue ...
-
-So maybe ignore my comment above about removing ->pending completely (we
-can still simplify cancel_sync, I think that would help readability), you
-can just wait on wait->pending. wake_up and wait_event have all the
-required barriers to make this work. So roughly
-
-	wait_event(vblank->work_wait_queue,
-		   !READ_ONCE(work->pending)));
-
-Also becaue this all works with barriers and ordering, and not locking,
-it's imo much clearer if you pull all the wake_up() calls out from under
-the spinlock protection.
-
-> +}
-> +EXPORT_SYMBOL(drm_vblank_work_flush);
-> diff --git a/include/drm/drm_vblank.h b/include/drm/drm_vblank.h
-> index dd9f5b9e56e4e..b1cd6ee9f5b65 100644
-> --- a/include/drm/drm_vblank.h
-> +++ b/include/drm/drm_vblank.h
-> @@ -27,6 +27,7 @@
->  #include <linux/seqlock.h>
->  #include <linux/idr.h>
->  #include <linux/poll.h>
-> +#include <linux/kthread.h>
->  
->  #include <drm/drm_file.h>
->  #include <drm/drm_modes.h>
-> @@ -203,8 +204,56 @@ struct drm_vblank_crtc {
->  	 * disabling functions multiple times.
->  	 */
->  	bool enabled;
-> +
-> +	/**
-> +	 * @worker: The &kthread_worker used for executing vblank works.
-> +	 */
-> +	struct kthread_worker *worker;
-> +
-> +	/**
-> +	 * @work_lock: The spinlock that protects @pending_work, along with
-> +	 * any modifications to &drm_vblank_work items
-> +	 */
-> +	spinlock_t work_lock;
-> +
-> +	/**
-> +	 * @pending_work: A list of scheduled &drm_vblank_work items that are
-> +	 * waiting for a future vblank.
-> +	 */
-> +	struct list_head pending_work;
-> +
-> +	/**
-> +	 * @work_wait_queue: The wait queue used for signaling that a
-> +	 * &drm_vblank_work item has either finished executing, or was
-> +	 * cancelled.
-> +	 */
-> +	wait_queue_head_t work_wait_queue;
->  };
->  
-> +struct drm_vblank_work {
-
-Kerneldoc for this entire thing would be nice, since that's the part
-drivers use. On the kerneldoc side of things, I think drm_vblank.c is
-already fairly big, and fairly tricky for driver writers to understand.
-I'm feeling a bit like doing a separate drm_vblank_work.[hc], with
-seperate section for them in the docs plus small intro section would be
-great. Or at least add a new separate overview section for vblank work,
-with 1-2 sentences or so for main functions and this datastructure here.
-
-Othewise this nice stuff you're creating will be too hard to find for
-others I think :-/
-
-> +	struct kthread_work base;
-> +	void (*func)(struct drm_vblank_work *work);
-> +	struct drm_vblank_crtc *vblank;
-> +	u64 count;
-> +
-> +	int cancelling; /* The number of cancelling calls currently running */
-> +	u8 pending; /* How many instances of this work item are pending */
-> +
-> +	/* Updated every time this work item finishes executing or is
-> +	 * cancelled.
-> +	 */
-> +	seqcount_t seqcount;
-> +
-> +	struct list_head node;
-> +};
-> +
-> +int drm_vblank_work_schedule(struct drm_vblank_work *work,
-> +			     u64 count, bool nextonmiss);
-> +void drm_vblank_work_init(struct drm_vblank_work *work, struct drm_crtc *crtc,
-> +			  void (*func)(struct drm_vblank_work *work));
-> +bool drm_vblank_work_cancel_sync(struct drm_vblank_work *work);
-> +void drm_vblank_work_flush(struct drm_vblank_work *work);
-> +
->  int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs);
->  bool drm_dev_has_vblank(const struct drm_device *dev);
->  u64 drm_crtc_vblank_count(struct drm_crtc *crtc);
-> -- 
-> 2.26.2
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+On 22/06/2020 14:27, Luis Chamberlain wrote:=0A=
+[...]> If you run run_0004.sh from break-blktrace [0]. Even with all my pat=
+ches=0A=
+> merged we still run into this. And so the bug lies within the block=0A=
+> layer or on the driver. I haven't been able to find the issue yet.=0A=
+> =0A=
+> [0] https://github.com/mcgrof/break-blktrace=0A=
+=0A=
+Would it be a good idea to merge this into blktests? Maybe start a blktrace=
+ =0A=
+section for it, which could host other regression test for blktrace.=0A=
+=0A=
+Thoughts?=0A=
