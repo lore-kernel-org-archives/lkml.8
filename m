@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A82C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1EB620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D58520702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946538;
-	bh=lVgjihfpqJXf5zAVwEVqRRYd2aypVWrRBu+KUG+YTIQ=;
+	s=default; t=1592946548;
+	bh=y6ffQj4qH7Omef1MmsNgOQ0VBr1XnTxBNwn3tmYwFh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OgpTv492zbDkjFG91Etx+WPYOi+eDgFoOSGZ19wAlfscd1QkSOiUR7r7CenVjv6WI
-	 LyzfGbehF4595zk9JeB9V8LmXJxbSdEH+jqKkx222cFdJAhQckhBhm0PyVJZcM1FnV
-	 ApYiHsQZ3cPSSs13lMyPOq3ZqH2IwhrWtVs4nxNQ=
+	b=EBbqjKkW5eWpd/64caWtnR2aVShij5lfBKP67qyYT28lmjui324wXbjNpSloSdHLI
+	 g3DWO0uxVb7xd7RLq4sqYL/2SgvumK/Six95/hi6KUVhZtkjo0uhWhaR1c33cJsQsY
+	 VdCaML3mCc3ksDiXps8lYzRy6u7JuZ0SKun12RCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389066AbgFWVI5 (ORCPT
+        id S2393207AbgFWVJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:08:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56496 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:09:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391508AbgFWUea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:30 -0400
+        id S2391533AbgFWUeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA0B62064B;
-        Tue, 23 Jun 2020 20:34:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4930206C3;
+        Tue, 23 Jun 2020 20:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944470;
-        bh=lVgjihfpqJXf5zAVwEVqRRYd2aypVWrRBu+KUG+YTIQ=;
+        s=default; t=1592944465;
+        bh=y6ffQj4qH7Omef1MmsNgOQ0VBr1XnTxBNwn3tmYwFh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N50N9j7eKcvsVCre7zMownFnTFGRE0j4xY1AUmzqvknC5KI6pyGalrpRzCLezZ0e8
-         ZzZto6jxeflmsilrUcHS5+sfI5l/553yn2zeOIEBABQNKvqKL+VmkQ3uWe4hfk1h3J
-         xsG5iov4JnGvf3Y958nOwhMsSY0UttTWDuGx6qHk=
+        b=jJzK+EoRfBTiRO7VSSjqOq6/NuD9hIdCuW/N7rQlGWJHuE7cW4rA1LMTGloyxgCIX
+         vNcbuthMEisublOtpNnteTp4H+r5yOzqMCud7JdckpQ7Ud2lAWK3APPTP6aavsGwf4
+         e6gXm5CUZYc+SHDgZNgAxvWyd+3GgQYE+p4P8iPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Maciej Patelczyk <maciej.patelczyk@intel.com>,
+        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.4 299/314] drm/i915/gem: Avoid iterating an empty list
-Date:   Tue, 23 Jun 2020 21:58:14 +0200
-Message-Id: <20200623195353.256372059@linuxfoundation.org>
+Subject: [PATCH 5.4 297/314] drm/i915: Fix AUX power domain toggling across TypeC mode resets
+Date:   Tue, 23 Jun 2020 21:58:12 +0200
+Message-Id: <20200623195353.162475199@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,77 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Imre Deak <imre.deak@intel.com>
 
-commit 757a9395f33c51c4e6eff2c7c0fbd50226a58224 upstream.
+commit d96536f0fe699729a0974eb5b65eb0d87cc747e1 upstream.
 
-Our __sgt_iter assumes that the scattergather list has at least one
-element. But during construction we may fail in allocating the first
-page, and so mark the first element as the terminator. This is
-unexpected!
+Make sure to select the port's AUX power domain while holding the TC
+port lock. The domain depends on the port's current TC mode, which may
+get changed under us if we're not holding the lock.
 
-[22555.524752] RIP: 0010:shmem_get_pages+0x506/0x710 [i915]
-[22555.524759] Code: 49 8b 2c 24 31 c0 66 89 44 24 40 48 85 ed 0f 84 62 01 00 00 4c 8b 75 00 8b 5d 08 44 8b 7d 0c 48 8b 0d 7e 34 07 e2 49 83 e6 fc <49> 8b 16 41 01 df 48 89 cf 48 89 d0 48 c1 e8 2d 48 85 c9 0f 84 c8
-[22555.524765] RSP: 0018:ffffc9000053f9d0 EFLAGS: 00010246
-[22555.524770] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff8881ffffa000
-[22555.524774] RDX: fffffffffffffff4 RSI: ffffffffffffffff RDI: ffffffff821efe00
-[22555.524778] RBP: ffff8881b099ab00 R08: 0000000000000000 R09: 00000000fffffff4
-[22555.524782] R10: 0000000000000002 R11: 00000000ffec0a02 R12: ffff8881cd3c8d60
-[22555.524786] R13: 00000000fffffff4 R14: 0000000000000000 R15: 0000000000000000
-[22555.524790] FS:  00007f4fbeb9b9c0(0000) GS:ffff8881f8580000(0000) knlGS:0000000000000000
-[22555.524795] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[22555.524799] CR2: 0000000000000000 CR3: 00000001ec7f0004 CR4: 00000000001606e0
-[22555.524803] Call Trace:
-[22555.524919]  __i915_gem_object_get_pages+0x4f/0x60 [i915]
+This was left out from
+commit 8c10e2262663 ("drm/i915: Keep the TypeC port mode fixed for detect/AUX transfers")
 
-Fixes: 85d1225ec066 ("drm/i915: Introduce & use new lightweight SGL iterators")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Matthew Auld <matthew.auld@intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: <stable@vger.kernel.org> # v4.8+
-Reviewed-by: Matthew Auld <matthew.auld@intel.com>
-Reviewed-by: Maciej Patelczyk <maciej.patelczyk@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200522132706.5133-1-chris@chris-wilson.co.uk
-(cherry picked from commit 957ad9a02be6faa87594c58ac09460cd3d190d0e)
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200514204553.27193-1-imre.deak@intel.com
+(cherry picked from commit ae9b6cfe1352da25931bce3ea4acfd4dc1ac8a85)
 Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/i915/display/intel_dp.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-@@ -36,7 +36,6 @@ static int shmem_get_pages(struct drm_i9
- 	unsigned long last_pfn = 0;	/* suppress gcc warning */
- 	unsigned int max_segment = i915_sg_segment_size();
- 	unsigned int sg_page_sizes;
--	struct pagevec pvec;
- 	gfp_t noreclaim;
- 	int ret;
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -1292,8 +1292,7 @@ intel_dp_aux_xfer(struct intel_dp *intel
+ 	bool is_tc_port = intel_phy_is_tc(i915, phy);
+ 	i915_reg_t ch_ctl, ch_data[5];
+ 	u32 aux_clock_divider;
+-	enum intel_display_power_domain aux_domain =
+-		intel_aux_power_domain(intel_dig_port);
++	enum intel_display_power_domain aux_domain;
+ 	intel_wakeref_t aux_wakeref;
+ 	intel_wakeref_t pps_wakeref;
+ 	int i, ret, recv_bytes;
+@@ -1308,6 +1307,8 @@ intel_dp_aux_xfer(struct intel_dp *intel
+ 	if (is_tc_port)
+ 		intel_tc_port_lock(intel_dig_port);
  
-@@ -188,13 +187,17 @@ err_sg:
- 	sg_mark_end(sg);
- err_pages:
- 	mapping_clear_unevictable(mapping);
--	pagevec_init(&pvec);
--	for_each_sgt_page(page, sgt_iter, st) {
--		if (!pagevec_add(&pvec, page))
-+	if (sg != st->sgl) {
-+		struct pagevec pvec;
++	aux_domain = intel_aux_power_domain(intel_dig_port);
 +
-+		pagevec_init(&pvec);
-+		for_each_sgt_page(page, sgt_iter, st) {
-+			if (!pagevec_add(&pvec, page))
-+				check_release_pagevec(&pvec);
-+		}
-+		if (pagevec_count(&pvec))
- 			check_release_pagevec(&pvec);
- 	}
--	if (pagevec_count(&pvec))
--		check_release_pagevec(&pvec);
- 	sg_free_table(st);
- 	kfree(st);
+ 	aux_wakeref = intel_display_power_get(i915, aux_domain);
+ 	pps_wakeref = pps_lock(intel_dp);
  
 
 
