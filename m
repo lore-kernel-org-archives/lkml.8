@@ -2,111 +2,67 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF69C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA08B2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:48:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljMRR2zA"
+	by mail.kernel.org (Postfix) with ESMTP id BB0692078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389042AbgFWWsw (ORCPT
+        id S2389126AbgFWWs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:48:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388806AbgFWWsq (ORCPT
+        Tue, 23 Jun 2020 18:48:59 -0400
+Received: from smtprelay0107.hostedemail.com ([216.40.44.107]:59950 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389002AbgFWWsw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:48:46 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4948C061795;
-        Tue, 23 Jun 2020 15:48:45 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g21so424180wmg.0;
-        Tue, 23 Jun 2020 15:48:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4YzpTtuQd8igcmEb94rslBu/tpG/FsBo/caSislaGaQ=;
-        b=ljMRR2zAT5bki6xwhOGzyGih/88e9uZhIr5rjLQ0ImujfRGpwsg8WbLIUOrI0AaIUy
-         0LJenVT0dbIxWdv7jzXxTVSJRd4YVFsTTcwKeoPH8dbQVNEL2+5OY1U8NTEUYMpdLhb5
-         UJktKzRrW+pJh2DNj1IT3K/XXymj02wxlID5AhFUqRIyFxqm/3nOgPY9RU24kkZa5HC9
-         KGy7puklT019cqMoKEc/+OmGNf6xfiyH60yFeMP85HDzHNiwggkhOr4UotWKacHuOWyy
-         TYCzOOQJJybxHNbEGbPvWl6wKupTeTe2o7oLd5BwfDFr2i7/+bBCuZP8JfcCk7PBYURX
-         790g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4YzpTtuQd8igcmEb94rslBu/tpG/FsBo/caSislaGaQ=;
-        b=Eq4VMOmB/zqAdAsEHAetXpmhe6swuHDBfE9KpkZxwdMwmOaumQkXjac7SFGtYpblmh
-         vMBhnN8bGq9RGRkFY4pQ/1nzUYuXueWOP+dyJg8jDz2gi/xi2qe7orfxWB2PNKTWAt4U
-         nS4FI/UCRaaEwjDxI2zilLTX+R+CHYjfMsOpP8bsKpeW13DLeVRWKMPPtIW549QohFHa
-         Jhsidm53UTB+1ckxp0O1EW13Thj8uzY7+pjZPqzxJZwS8YfSMU26Liqw15M/IuJbZ5PC
-         vQrNYDXbb6xMcklu86lOQlqyarWBaso1dAJBMtkoh8HhgzyN7jM7FCgWyZN2KqbC2HLc
-         OZ4g==
-X-Gm-Message-State: AOAM532PGcNSj+SrP7zQ5BGew5NW7z9Imu6H0U03WfS8OvcK9TXW1S+A
-        m0zT1SSMmnJ1hfEtwEKptws=
-X-Google-Smtp-Source: ABdhPJxkkA2PF3LfDKai0ks0Y6V5z4FRRkDy4QNo3xBjRp8NJvoEZ7mIXCMbyG27Cd5awP/M0WyTQQ==
-X-Received: by 2002:a1c:dcc2:: with SMTP id t185mr27817665wmg.91.1592952524492;
-        Tue, 23 Jun 2020 15:48:44 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id g144sm5671179wme.2.2020.06.23.15.48.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 15:48:44 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/12] arm64: dts: qcom: angler: Add qcom,msm-id and pmic-id
-Date:   Wed, 24 Jun 2020 00:48:09 +0200
-Message-Id: <20200623224813.297077-11-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623224813.297077-1-konradybcio@gmail.com>
-References: <20200623224813.297077-1-konradybcio@gmail.com>
+        Tue, 23 Jun 2020 18:48:52 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id 4A36C809D2DE
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 22:33:29 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 2ABE622030;
+        Tue, 23 Jun 2020 22:33:29 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: glass61_5e0187126e3f
+X-Filterd-Recvd-Size: 1381
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 23 Jun 2020 22:33:28 +0000 (UTC)
+Message-ID: <70e4841dd72c4c667d45e147c03e1227934701e3.camel@perches.com>
+Subject: Re: [PATCH v3] checkpatch: fix CONST_STRUCT when
+ const_structs.checkpatch is missing
+From:   Joe Perches <joe@perches.com>
+To:     Quentin Monnet <quentin@isovalent.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Tue, 23 Jun 2020 15:33:27 -0700
+In-Reply-To: <20200623221822.3727-1-quentin@isovalent.com>
+References: <20200623221822.3727-1-quentin@isovalent.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add properties required for the bootloader to select
-the correct bootloader blob. They have been removed from
-the SoC device tree as they should be set on a per-device
-basis.
+On Tue, 2020-06-23 at 23:18 +0100, Quentin Monnet wrote:
+> Checkpatch reports warnings when some specific structs are not declared
+> as const in the code. The list of structs to consider was initially
+> defined in the checkpatch.pl script itself, but it was later moved to an
+> external file (scripts/const_structs.checkpatch), in commit bf1fa1dae68e
+> ("checkpatch: externalize the structs that should be const"). This
+> introduced two minor issues:
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks Quentin.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-index a5f9a6ab512c..baa55643b40f 100644
---- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-@@ -11,6 +11,8 @@ / {
- 	model = "Huawei Nexus 6P";
- 	compatible = "huawei,angler", "qcom,msm8994";
- 	/* required for bootloader to select correct board */
-+	qcom,msm-id = <207 0x20000>;
-+	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
- 	qcom,board-id = <8026 0>;
- 
- 	aliases {
--- 
-2.27.0
+Acked-by: Joe Perches <joe@perches.com>
+
 
