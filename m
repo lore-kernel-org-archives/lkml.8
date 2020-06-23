@@ -2,261 +2,84 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA505C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24050C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA6FA2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B172072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730928AbgFWGgr (ORCPT
+        id S1730957AbgFWGkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:36:47 -0400
-Received: from mga14.intel.com ([192.55.52.115]:5416 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730540AbgFWGgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:36:47 -0400
-IronPort-SDR: nsmTi8ocRiUWvXLoPH8IMlCJmhc1CUCkBdAz69f7SSeVRvbX312vZC0lpgb7DocI0FC7GYQh3N
- PZK0a168hk9g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="143043212"
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="143043212"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 23:36:42 -0700
-IronPort-SDR: tX/2AxVwRB59zBI8qq+V05rF3uOKO4vT9Qt+z5oG4lsarvbMhj1J34QrUC3Nhu+0UsMxtUsklG
- Rbcl5daCwLQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="478750232"
-Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Jun 2020 23:36:38 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, wei.huang2@amd.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Like Xu <like.xu@linux.intel.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Chai Wen <chaiwen@baidu.com>, Jia Lina <jialina01@baidu.com>
-Subject: [PATCH] KVM: X86: Emulate APERF/MPERF to report actual VCPU frequency
-Date:   Tue, 23 Jun 2020 14:35:30 +0800
-Message-Id: <20200623063530.81917-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.3
+        Tue, 23 Jun 2020 02:40:31 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2528 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730669AbgFWGkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:40:31 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 7295683C5B8EFC013719;
+        Tue, 23 Jun 2020 14:40:29 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Tue, 23 Jun 2020 14:40:29 +0800
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 23 Jun 2020 14:40:28 +0800
+Subject: Re: [PATCH net-next v1 2/5] hinic: add support to set and get irq
+ coalesce
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+References: <20200620094258.13181-1-luobin9@huawei.com>
+ <20200620094258.13181-3-luobin9@huawei.com>
+ <20200622150756.3624dab2@kicinski-fedora-PC1C0HJN>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <ee54d69c-2c94-7c40-4a92-761a73445e14@huawei.com>
+Date:   Tue, 23 Jun 2020 14:40:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200622150756.3624dab2@kicinski-fedora-PC1C0HJN>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The aperf/mperf are used to report current CPU frequency after 7d5905dc14a
-"x86 / CPU: Always show current CPU frequency in /proc/cpuinfo". But guest
-kernel always reports a fixed VCPU frequency in the /proc/cpuinfo, which
-may confuse users especially when turbo is enabled on the host.
-
-Emulate guest APERF/MPERF capability based their values on the host.
-
-Co-developed-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Reviewed-by: Chai Wen <chaiwen@baidu.com>
-Reviewed-by: Jia Lina <jialina01@baidu.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
----
- arch/x86/include/asm/kvm_host.h | 12 ++++++
- arch/x86/kvm/cpuid.c            |  8 +++-
- arch/x86/kvm/x86.c              | 76 ++++++++++++++++++++++++++++++++-
- 3 files changed, 94 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f852ee350beb..c48b9a0a086e 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -539,6 +539,16 @@ struct kvm_vcpu_hv_stimer {
- 	bool msg_pending;
- };
- 
-+/* vCPU thermal and power context */
-+struct kvm_vcpu_hwp {
-+	/* Hardware Coordination Feedback Capability (Presence of APERF/MPERF) */
-+	bool hw_coord_fb_cap;
-+	/* MPERF increases with a fixed frequency */
-+	u64 mperf;
-+	/* APERF increases with the current/actual frequency */
-+	u64 aperf;
-+};
-+
- /* Hyper-V synthetic interrupt controller (SynIC)*/
- struct kvm_vcpu_hv_synic {
- 	u64 version;
-@@ -829,6 +839,8 @@ struct kvm_vcpu_arch {
- 
- 	/* AMD MSRC001_0015 Hardware Configuration */
- 	u64 msr_hwcr;
-+
-+	struct kvm_vcpu_hwp hwp;
- };
- 
- struct kvm_lpage_info {
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 8a294f9747aa..7057809e7cfd 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -78,6 +78,11 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 			apic->lapic_timer.timer_mode_mask = 1 << 17;
- 	}
- 
-+	best = kvm_find_cpuid_entry(vcpu, 0x6, 0);
-+	if (best && best->function == 0x6 &&
-+	    boot_cpu_has(X86_FEATURE_APERFMPERF) && (best->ecx & 0x1))
-+		vcpu->arch.hwp.hw_coord_fb_cap = true;
-+
- 	best = kvm_find_cpuid_entry(vcpu, 7, 0);
- 	if (best && boot_cpu_has(X86_FEATURE_PKU) && best->function == 0x7)
- 		cpuid_entry_change(best, X86_FEATURE_OSPKE,
-@@ -561,7 +566,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 	case 6: /* Thermal management */
- 		entry->eax = 0x4; /* allow ARAT */
- 		entry->ebx = 0;
--		entry->ecx = 0;
-+		/* allow aperf/mperf to report the true VCPU frequency. */
-+		entry->ecx = boot_cpu_has(X86_FEATURE_APERFMPERF) ? 0x1 : 0;
- 		entry->edx = 0;
- 		break;
- 	/* function 7 has additional index. */
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 00c88c2f34e4..d220d9cc904a 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3056,6 +3056,16 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 1;
- 		vcpu->arch.msr_misc_features_enables = data;
- 		break;
-+	case MSR_IA32_MPERF:
-+		if (!msr_info->host_initiated && !vcpu->arch.hwp.hw_coord_fb_cap)
-+			return 1;
-+		vcpu->arch.hwp.mperf = 0;
-+		return 0;
-+	case MSR_IA32_APERF:
-+		if (!msr_info->host_initiated && !vcpu->arch.hwp.hw_coord_fb_cap)
-+			return 1;
-+		vcpu->arch.hwp.aperf = 0;
-+		return 0;
- 	default:
- 		if (msr && (msr == vcpu->kvm->arch.xen_hvm_config.msr))
- 			return xen_hvm_config(vcpu, data);
-@@ -3323,6 +3333,16 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_K7_HWCR:
- 		msr_info->data = vcpu->arch.msr_hwcr;
- 		break;
-+	case MSR_IA32_MPERF:
-+		if (!msr_info->host_initiated && !vcpu->arch.hwp.hw_coord_fb_cap)
-+			return 1;
-+		msr_info->data = vcpu->arch.hwp.mperf;
-+		break;
-+	case MSR_IA32_APERF:
-+		if (!msr_info->host_initiated && !vcpu->arch.hwp.hw_coord_fb_cap)
-+			return 1;
-+		msr_info->data = vcpu->arch.hwp.aperf;
-+		break;
- 	default:
- 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
- 			return kvm_pmu_get_msr(vcpu, msr_info);
-@@ -8300,6 +8320,50 @@ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
- }
- EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
- 
-+static inline void get_host_amperf(u64 *mperf, u64 *aperf)
-+{
-+	rdmsrl(MSR_IA32_MPERF, *mperf);
-+	rdmsrl(MSR_IA32_APERF, *aperf);
-+}
-+
-+static inline u64 get_amperf_delta(u64 enter, u64 exit)
-+{
-+	return (exit >= enter) ? (exit - enter) : (ULONG_MAX - enter + exit);
-+}
-+
-+static inline void vcpu_update_amperf(struct kvm_vcpu *vcpu, u64 adelta, u64 mdelta)
-+{
-+	u64 aperf_left, mperf_left, delta, tmp;
-+
-+	aperf_left = ULONG_MAX - vcpu->arch.hwp.aperf;
-+	mperf_left = ULONG_MAX - vcpu->arch.hwp.mperf;
-+
-+	/* fast path when neither MSR overflows */
-+	if (adelta <= aperf_left && mdelta <= mperf_left) {
-+		vcpu->arch.hwp.aperf += adelta;
-+		vcpu->arch.hwp.mperf += mdelta;
-+		return;
-+	}
-+
-+	/* when either MSR overflows, both MSRs are reset to zero and continue to increment. */
-+	delta = min(adelta, mdelta);
-+	if (delta > aperf_left || delta > mperf_left) {
-+		tmp = max(vcpu->arch.hwp.aperf, vcpu->arch.hwp.mperf);
-+		tmp = delta - (ULONG_MAX - tmp) - 1;
-+		vcpu->arch.hwp.aperf = tmp + adelta - delta;
-+		vcpu->arch.hwp.mperf = tmp + mdelta - delta;
-+		return;
-+	}
-+
-+	if (mdelta > adelta && mdelta > aperf_left) {
-+		vcpu->arch.hwp.mperf = mdelta - mperf_left - 1;
-+		vcpu->arch.hwp.aperf = 0;
-+	} else {
-+		vcpu->arch.hwp.mperf = 0;
-+		vcpu->arch.hwp.aperf = adelta - aperf_left - 1;
-+	}
-+}
-+
- /*
-  * Returns 1 to let vcpu_run() continue the guest execution loop without
-  * exiting to the userspace.  Otherwise, the value will be returned to the
-@@ -8312,7 +8376,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		dm_request_for_irq_injection(vcpu) &&
- 		kvm_cpu_accept_dm_intr(vcpu);
- 	fastpath_t exit_fastpath;
--
-+	u64 enter_mperf = 0, enter_aperf = 0, exit_mperf = 0, exit_aperf = 0;
- 	bool req_immediate_exit = false;
- 
- 	if (kvm_request_pending(vcpu)) {
-@@ -8516,8 +8580,17 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
- 	}
- 
-+	if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap))
-+		get_host_amperf(&enter_mperf, &enter_aperf);
-+
- 	exit_fastpath = kvm_x86_ops.run(vcpu);
- 
-+	if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap)) {
-+		get_host_amperf(&exit_mperf, &exit_aperf);
-+		vcpu_update_amperf(vcpu, get_amperf_delta(enter_aperf, exit_aperf),
-+			get_amperf_delta(enter_mperf, exit_mperf));
-+	}
-+
- 	/*
- 	 * Do this here before restoring debug registers on the host.  And
- 	 * since we do this before handling the vmexit, a DR access vmexit
-@@ -9482,6 +9555,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 
- 	vcpu->arch.pending_external_vector = -1;
- 	vcpu->arch.preempted_in_kernel = false;
-+	vcpu->arch.hwp.hw_coord_fb_cap = false;
- 
- 	kvm_hv_vcpu_init(vcpu);
- 
--- 
-2.21.3
-
+On 2020/6/23 6:07, Jakub Kicinski wrote:
+> On Sat, 20 Jun 2020 17:42:55 +0800 Luo bin wrote:
+>> @@ -1144,8 +1190,16 @@ static int nic_dev_init(struct pci_dev *pdev)
+>>  		goto err_reg_netdev;
+>>  	}
+>>  
+>> +	err = hinic_init_intr_coalesce(nic_dev);
+>> +	if (err) {
+>> +		netif_err(nic_dev, drv, netdev, "Failed to init_intr_coalesce\n");
+>> +		goto err_init_intr;
+>> +	}
+>> +
+>>  	return 0;
+>>  
+>> +err_init_intr:
+>> +	unregister_netdev(netdev);
+>>  err_reg_netdev:
+>>  err_set_features:
+>>  	hinic_hwdev_cb_unregister(nic_dev->hwdev,
+> 
+> A little suspicious - you should finish all init before device is
+> registered, once registered the interface can be immediately brought
+> up.
+> .
+> 
+Will fix. Thanks for your review.
