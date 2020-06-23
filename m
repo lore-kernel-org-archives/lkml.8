@@ -2,107 +2,199 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8592B20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F8D20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CfNyO82v"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O8JG556f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732204AbgFWJH3 (ORCPT
+        id S1732213AbgFWJHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732109AbgFWJH2 (ORCPT
+        Tue, 23 Jun 2020 05:07:34 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22642 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731973AbgFWJH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 05:07:28 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C941EC061573;
-        Tue, 23 Jun 2020 02:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ldF/aN/WggG+cvw07PS2qf0wY+Ysa/Xufqs3vIX/7fs=; b=CfNyO82vWkKTd5/tOSOB91ztt
-        gG2fiGzCuEWqnH3MABNjqRySpjdWdWACCUb0Swu7px6H/OceAZGBHBeAvpE520Qg6VezpvNCC6QyW
-        mMpdTLkn+H9snD1Xd2nXA88ixm/UIQY/q6/eLd3RselqnScIMFgB6/XSH0dFbH9Z+1UZZNsHBhPHA
-        8BOdfsY0Bq8vFoDHrkP01zbTs5qD0mF0B6j9MxLFXwiCHIWEcz13NcRYA52eHFcJEmX9kD8h1iqpT
-        1UoWct/v8vAsi7L7dEKMnJZDk7Rk8/JHPrWbRXHrfpNXA+APnehvlZ8Sfaj9icJpxB+f7LxFX7CiI
-        M3f376coQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59008)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jnetn-0001XI-Dr; Tue, 23 Jun 2020 10:07:23 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jneti-0000tY-Fs; Tue, 23 Jun 2020 10:07:18 +0100
-Date:   Tue, 23 Jun 2020 10:07:18 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 05/15] net: pylink.h: add kernel-doc descriptions for
- new fields at phylink_config
-Message-ID: <20200623090718.GR1551@shell.armlinux.org.uk>
-References: <cover.1592895969.git.mchehab+huawei@kernel.org>
- <34970f447ff86415a6cef10a785fbef81c2819a7.1592895969.git.mchehab+huawei@kernel.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592903246;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xUhedPr/j0Zt6HlxSwFeY7buhUrUP8KB8aI1O09bZl0=;
+        b=O8JG556fKAX/wHTsqjad+ueQJH1Hsx4eb16YAhn/aP6T+Bku7oyblOzUm0JEKWvGc3FGz5
+        V4jtKrEUCgaqgI6z8cNK8lkcBZchlXsh/tA8hB+bfN/yMeelDGHy9z5jKpBSMpCUkAuClI
+        LVy/3oIWCXVeJn/4IWk7kX0iufuYvps=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-eZ4iTMOGNsak_3TE5F9RgA-1; Tue, 23 Jun 2020 05:07:24 -0400
+X-MC-Unique: eZ4iTMOGNsak_3TE5F9RgA-1
+Received: by mail-ed1-f72.google.com with SMTP id z8so9969122edr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:07:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xUhedPr/j0Zt6HlxSwFeY7buhUrUP8KB8aI1O09bZl0=;
+        b=ltcCnGFJ9F7r72MHBBKfUJU+yWS5KGR+7bGgf/eaBWUBlLxW+4OG92oam/IK9VsUtd
+         CiQMOzKAnqHQVjPqpTbM6/xc/JV1JjHKYXQjf2PQfld4RXb6RKGZ8/0dJS/4EtfIXJjS
+         m4shOeRiv0pSLJSoWtJlB1jSDQPxXiG1F/QjNB2CNufwe8mu/WPfbXVtlN9yFLgdQyZY
+         sxKiHZD64nsgUNcM9CDvA1I6iumaaGN7FJLoM1f9tEZur5HuGA/F19DQrHchQcNFLl3E
+         K5LNJTBI4aXzzGTNfcrqQvdylvgAlvSt9zWApuVAASjvEjmk+hDrqe2Cokeyv8Qe2M9u
+         XJEg==
+X-Gm-Message-State: AOAM530g7jSljQoHeAjlRUz0s0qa83pH5NecfXFfCYoXTv0/ujmI77AE
+        NdwSMIfCdXKLeL7ihZrDcF4weanLhVYHNPW1Dk6Fe1aGQ0Y6i4a+HFKjWr/JGYaWhuhiD37W690
+        ZpWWN1ky2JTC/pX06OLUwTD2x
+X-Received: by 2002:a17:907:7283:: with SMTP id dt3mr19954359ejc.195.1592903243232;
+        Tue, 23 Jun 2020 02:07:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw972fIHdUzv66dXpLtZVIXmYxb51SJLbr0O/Yf+RV8EuSjV+zcR4Y3hr8taeCbChsNVy6uCg==
+X-Received: by 2002:a17:907:7283:: with SMTP id dt3mr19954335ejc.195.1592903242968;
+        Tue, 23 Jun 2020 02:07:22 -0700 (PDT)
+Received: from localhost ([2001:470:5b39:29:79fc:ff4e:48ab:b845])
+        by smtp.gmail.com with ESMTPSA id z1sm13289301eji.92.2020.06.23.02.07.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 02:07:22 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 11:07:21 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        David Rientjes <rientjes@google.com>,
+        Arjun Roy <arjunroy@google.com>
+Subject: Re: [PATCH v8 0/4]  introduce memory hinting API for external process
+Message-ID: <20200623090721.5owt4cxjji6isqe3@butterfly.localdomain>
+References: <20200622192900.22757-1-minchan@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <34970f447ff86415a6cef10a785fbef81c2819a7.1592895969.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200622192900.22757-1-minchan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:09:01AM +0200, Mauro Carvalho Chehab wrote:
-> Some fields were moved from struct phylink into phylink_config.
-> Update the kernel-doc markups for the config struct accordingly
+On Mon, Jun 22, 2020 at 12:28:56PM -0700, Minchan Kim wrote:
+> Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+> application could give hints to kernel what memory range are preferred to be
+> reclaimed. However, in some platform(e.g., Android), the information
+> required to make the hinting decision is not known to the app.
+> Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+> and that daemon must be able to initiate reclaim on its own without any app
+> involvement.
 > 
-> Fixes: 5c05c1dbb177 ("net: phylink, dsa: eliminate phylink_fixed_state_cb()")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
-
-Thanks.
-
-> ---
->  include/linux/phylink.h | 4 ++++
->  1 file changed, 4 insertions(+)
+> To solve the concern, this patch introduces new syscall - process_madvise(2).
+> Bascially, it's same with madvise(2) syscall but it has some differences.
 > 
-> diff --git a/include/linux/phylink.h b/include/linux/phylink.h
-> index cc5b452a184e..02ff1419d4be 100644
-> --- a/include/linux/phylink.h
-> +++ b/include/linux/phylink.h
-> @@ -62,6 +62,10 @@ enum phylink_op_type {
->   * @dev: a pointer to a struct device associated with the MAC
->   * @type: operation type of PHYLINK instance
->   * @pcs_poll: MAC PCS cannot provide link change interrupt
-> + * @poll_fixed_state: if true, starts link_poll,
-> + *		      if MAC link is at %MLO_AN_FIXED mode.
-> + * @get_fixed_state: callback to execute to determine the fixed link state,
-> + *		     if MAC link is at %MLO_AN_FIXED mode.
->   */
->  struct phylink_config {
->  	struct device *dev;
+> 1. It needs pidfd of target process to provide the hint
+> 2. It supports only MADV_{COLD|PAGEOUT} at this moment.
+>    Other hints in madvise will be opened when there are explicit requests from
+>    community to prevent unexpected bugs we couldn't support.
+> 3. Only privileged processes can do something for other process's address
+>    space.
+> 
+> For more detail of the new API, please see "mm: introduce external memory hinting API"
+> description in this patchset.
+> 
+> * from v7 -  http://lore.kernel.org/r/20200302193630.68771-1-minchan@kernel.org
+>   * dropping pid support from new syscall and fold releated patches into syscall patch
+>   * dropping KSM patch by discussion - Oleksandr, I lost the discussion.
+>     Please resend the single patch against of the patchset if you resolves the discussion.
+>     https://lore.kernel.org/linux-api/20200302193630.68771-8-minchan@kernel.org/
+
+What "next" tag this (v8) submission is based on please?
+
+> * from v6 - https://lore.kernel.org/linux-api/20200219014433.88424-1-minchan@kernel.org/
+>   * fix comments and descriptions - Suren
+>   * Add Reviewed-by - Suren
+>   * fix build break reported by 0-day
+> 
+> * from v5 - https://lore.kernel.org/linux-mm/20200214170520.160271-1-minchan@kernel.org/
+>   * use null task and requestor's mm for io_madvise - Jann and Jens
+>   * use right commit description for moving pidfd_get_pid - Christoph
+> 
+> * from v4 - https://lore.kernel.org/linux-mm/20200212233946.246210-1-minchan@kernel.org/
+>   * pass mm down to functions, not accessing task->mm - Jann
+>   * clean up - Alexander
+>   * add Reviewed-by - Alexander, SeongJae
+>   * patch reordering
+> 
+> * from v3 - https://lore.kernel.org/linux-mm/20200128001641.5086-1-minchan@kernel.org/
+>   * verify task->mm aftere access_mm - Oleg
+>   * split some patches for easy review - Alexander
+>   * clean up fatal signal checking - Suren
+> 
+> * from v2 - https://lore.kernel.org/linux-mm/20200116235953.163318-1-minchan@kernel.org/
+>   * check signal callee and caller to bail out - Kirill Tkhai
+>   * put more clarification for justification of new API
+> 
+> * from v1 - https://lore.kernel.org/linux-mm/20200110213433.94739-1-minchan@kernel.org/
+>   * fix syscall number - SeongJae
+>   * use get_pid_task - Kirill Tkhai
+>   * extend API to support pid as well as pidfd - Kirill Tkhai
+> 
+> Minchan Kim (4):
+>   mm/madvise: pass task and mm to do_madvise
+>   pid: move pidfd_get_pid() to pid.c
+>   mm/madvise: introduce process_madvise() syscall: an external memory
+>     hinting API
+>   mm/madvise: check fatal signal pending of target process
+> 
+>  arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+>  arch/arm/tools/syscall.tbl                  |   1 +
+>  arch/arm64/include/asm/unistd.h             |   2 +-
+>  arch/arm64/include/asm/unistd32.h           |   2 +
+>  arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |   2 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+>  fs/io_uring.c                               |   2 +-
+>  include/linux/compat.h                      |   4 +
+>  include/linux/mm.h                          |   3 +-
+>  include/linux/pid.h                         |   1 +
+>  include/linux/syscalls.h                    |   2 +
+>  include/uapi/asm-generic/unistd.h           |   4 +-
+>  kernel/exit.c                               |  17 --
+>  kernel/pid.c                                |  17 ++
+>  kernel/sys_ni.c                             |   2 +
+>  mm/madvise.c                                | 190 +++++++++++++++++---
+>  28 files changed, 217 insertions(+), 46 deletions(-)
+> 
 > -- 
-> 2.26.2
-> 
+> 2.27.0.111.gc72c7da667-goog
 > 
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Principal Software Maintenance Engineer
+
