@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21A8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADBC620774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD2F20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933865;
-	bh=f2UiAtHANs9tFRVesQfBZNsitQGOznVCjZKCH6GXzDk=;
+	s=default; t=1592933872;
+	bh=qvqP4soC5gZ2anWBJAEP+JMKWxsurLUH0d5vSfNG5GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mES0xcAL6YWD1KxJp81X2sFNmKhf0jGKO94FlhMQUG4EfI21rfsU2lgbpQLgpovFc
-	 lTFiZfK5Mugg+p8PZnTueSXvsa8TAPEPwuDyWFPTapWnlDf2q30HUzNe6/sia4v+Sg
-	 5uB8TAJYjY7QIlIr8A4NWTpxeAbDpb5rGDz2uOa0=
+	b=TiYe7j7G4cTeN3bb3EAaERZXLHpxu+9cFmiV88rgS4R+jl7V5Y1qb7+en4WlXFtJO
+	 4iVnXb8x3aYIEJyj9VQ+kydnKU0QAtIjsskc7Tfw/rI0+DZbMQ90aJgJwN0k1UCO0n
+	 bkJnl/61lEoVFe6BexYth5Ybfl75QZGcWXZPRDpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387737AbgFWRhG (ORCPT
+        id S2387817AbgFWRhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:37:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34530 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:37:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387694AbgFWRg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:56 -0400
+        id S2387719AbgFWRhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:37:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE8520706;
-        Tue, 23 Jun 2020 17:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0AD6207D0;
+        Tue, 23 Jun 2020 17:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933816;
-        bh=f2UiAtHANs9tFRVesQfBZNsitQGOznVCjZKCH6GXzDk=;
+        s=default; t=1592933822;
+        bh=qvqP4soC5gZ2anWBJAEP+JMKWxsurLUH0d5vSfNG5GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJ2WD/+HZrk8Fn+AB4WJn1dbzKLF4UvIloxjUtekrDsc3rMVN2Oess7eD3FMPxWxe
-         DZii6T/k+UBMADNtuKaGLPyN7xZDtoJGdJP1JHQRc2goHZHwAXJuLtUa5bRD6i2OcG
-         yqQ46KeyulzKnYcgtwTpgSXWtOw+5SGoomlRsxz0=
+        b=O92kSKOGj0dG1DsRuLzo2lyig1+S1vIbMEWQQzYGxtqbLE/c5Q1g28K3GYJYkeEdu
+         VvIBgUmNzbPAYbO4wFv8MDnaYt86Ti/seT873wd08tPoIxY95ZMhWpbzBtWTw61SNQ
+         /33Vdk5jO468G2bx/PqaEmx/YF/nkNsbZZnY1dgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 5/6] kbuild: improve cc-option to clean up all temporary files
-Date:   Tue, 23 Jun 2020 13:36:48 -0400
-Message-Id: <20200623173649.1356142-5-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 3/6] rocker: fix incorrect error handling in dma_rings_init
+Date:   Tue, 23 Jun 2020 13:36:55 -0400
+Message-Id: <20200623173658.1356241-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623173649.1356142-1-sashal@kernel.org>
-References: <20200623173649.1356142-1-sashal@kernel.org>
+In-Reply-To: <20200623173658.1356241-1-sashal@kernel.org>
+References: <20200623173658.1356241-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,70 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
+[ Upstream commit 58d0c864e1a759a15c9df78f50ea5a5c32b3989e ]
 
-When cc-option and friends evaluate compiler flags, the temporary file
-$$TMP is created as an output object, and automatically cleaned up.
-The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
-ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
-escape sequence of $$).
+In rocker_dma_rings_init, the goto blocks in case of errors
+caused by the functions rocker_dma_cmd_ring_waits_alloc() and
+rocker_dma_ring_create() are incorrect. The patch fixes the
+order consistent with cleanup in rocker_dma_rings_fini().
 
-Such garbage files are cleaned up in most cases, but some compiler flags
-create additional output files.
-
-For example, -gsplit-dwarf creates a .dwo file.
-
-When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
-left in the top of build directories. You may not notice them unless you
-do 'ls -a', but the garbage files will increase every time you run 'make'.
-
-This commit changes the temporary object path to .tmp_<pid>/tmp, and
-removes .tmp_<pid> directory when exiting. Separate build artifacts such
-as *.dwo will be cleaned up all together because their file paths are
-usually determined based on the base name of the object.
-
-Another example is -ftest-coverage, which outputs the coverage data into
-<base-name-of-object>.gcno
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kbuild.include | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/rocker/rocker_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index a33fa1a918731..28bfb4378dbd8 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -82,20 +82,21 @@ cc-cross-prefix =  \
- 		fi)))
- 
- # output directory for tests below
--TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
-+TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
- 
- # try-run
- # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
- # Exit code chooses option. "$$TMP" serves as a temporary file and is
- # automatically cleaned up.
- try-run = $(shell set -e;		\
--	TMP="$(TMPOUT).$$$$.tmp";	\
--	TMPO="$(TMPOUT).$$$$.o";	\
-+	TMP=$(TMPOUT)/tmp;		\
-+	TMPO=$(TMPOUT)/tmp.o;		\
-+	mkdir -p $(TMPOUT);		\
-+	trap "rm -rf $(TMPOUT)" EXIT;	\
- 	if ($(1)) >/dev/null 2>&1;	\
- 	then echo "$(2)";		\
- 	else echo "$(3)";		\
--	fi;				\
--	rm -f "$$TMP" "$$TMPO")
-+	fi)
- 
- # as-option
- # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
+diff --git a/drivers/net/ethernet/rocker/rocker_main.c b/drivers/net/ethernet/rocker/rocker_main.c
+index 24b746406bc7a..4640e6c4aecf3 100644
+--- a/drivers/net/ethernet/rocker/rocker_main.c
++++ b/drivers/net/ethernet/rocker/rocker_main.c
+@@ -648,10 +648,10 @@ static int rocker_dma_rings_init(struct rocker *rocker)
+ err_dma_event_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->event_ring);
+ err_dma_event_ring_create:
++	rocker_dma_cmd_ring_waits_free(rocker);
++err_dma_cmd_ring_waits_alloc:
+ 	rocker_dma_ring_bufs_free(rocker, &rocker->cmd_ring,
+ 				  PCI_DMA_BIDIRECTIONAL);
+-err_dma_cmd_ring_waits_alloc:
+-	rocker_dma_cmd_ring_waits_free(rocker);
+ err_dma_cmd_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->cmd_ring);
+ 	return err;
 -- 
 2.25.1
 
