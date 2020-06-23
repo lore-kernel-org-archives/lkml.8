@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00CE92078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EF72078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948713;
-	bh=4E57143XZa7/6DgY2WIedkbwpyMH6w0CIGlhoqORTvg=;
+	s=default; t=1592948715;
+	bh=6KYGowrzrr9cciLk8MGC+ETxd//Kcx5ni1exb4LNYrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HdnFhKQnidiujgEXJBwZ9RUVE114sLq65kajaJrALlnz6hPAJC4zQx5D/1JHvVkU8
-	 iDWQ+9fBuNQDlOfNZOnk3F2hMwb76TZ3RpSj/+X7GaxxQQIlO9u7XnKFS+xz7szRGg
-	 XgQqRmCALR8S0tZ9HINRX/Buub06TeSSwH70L0HY=
+	b=0Ev2k4u9DXlvESarmRkcJdaWszbFvlWCoPEsTF+ED/WdKzW8Y31yguNw7WrvWt/XX
+	 OGUpwgQvJyvLnuVDls3CX3hUPPpc0deVb2iD5pcKKXAnb6mc1a99Kx8Dhkg0gXyDzk
+	 U9q4C2z7aTfDpHJDyNyW50f6fU8eBTu49K5Aj180=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387465AbgFWUBc (ORCPT
+        id S2390295AbgFWVpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:01:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37926 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:45:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387634AbgFWUBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:01:24 -0400
+        id S2387661AbgFWUBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:01:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45A1A206C3;
-        Tue, 23 Jun 2020 20:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D57E20706;
+        Tue, 23 Jun 2020 20:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942483;
-        bh=4E57143XZa7/6DgY2WIedkbwpyMH6w0CIGlhoqORTvg=;
+        s=default; t=1592942491;
+        bh=6KYGowrzrr9cciLk8MGC+ETxd//Kcx5ni1exb4LNYrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W/m1xqzULL9TGiUlSv9+x/reby4FNIcrrv9WwRNtKCf8k6H8F8SFaf33Gt2N6XV67
-         VfiHvgj7GeEJamMxl5xz3lHqmuyrfLRJZEcfcjPQcB5GkPm3Oc0IgZ+UKnxPMbyPFx
-         MASrfQzdaCENf/BAus7GOuflqeLNJkLqJFP2XNTI=
+        b=qy3GdmyXLWzSLoG1wzDbNmb5bHTdhW3t0f7HG2wmJ02B3gT5ekoB2/up5jwUTQWsM
+         dStm3nBH6Ej3snIMGzb9mRiY4ZpEI/1AdL3q3cB6kSjBp6crp6j+/UnwY+aZqtYCZS
+         /4RTkz3lOu9czvx7dIu+AG8V4euWmMMGXJawDfVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Marek Vasut <marex@denx.de>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Patrick Delaunay <patrick.delaunay@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 017/477] ARM: dts: stm32: Add missing ethernet PHY reset on AV96
-Date:   Tue, 23 Jun 2020 21:50:14 +0200
-Message-Id: <20200623195408.416046837@linuxfoundation.org>
+Subject: [PATCH 5.7 002/477] power: supply: bq24257_charger: Replace depends on REGMAP_I2C with select
+Date:   Tue, 23 Jun 2020 21:49:59 +0200
+Message-Id: <20200623195407.699660932@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -66,41 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 010ca9fe500bfe365860b50220ff80541c18f0e1 ]
+[ Upstream commit 87c3d579c8ed0eaea6b1567d529a8daa85a2bc6c ]
 
-Add PHY reset GPIO on AV96 ethernet PHY.
+regmap is a library function that gets selected by drivers that need
+it. No driver modules should depend on it. Depending on REGMAP_I2C makes
+this driver only build if another driver already selected REGMAP_I2C,
+as the symbol can't be selected through the menu kernel configuration.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Patrice Chotard <patrice.chotard@st.com>
-Cc: Patrick Delaunay <patrick.delaunay@st.com>
-Cc: linux-stm32@st-md-mailman.stormreply.com
-To: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Fixes: 2219a935963e ("power_supply: Add TI BQ24257 charger driver")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp157a-avenger96.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/power/supply/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-index 425175f7d83c3..081037b510bcb 100644
---- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-@@ -92,6 +92,9 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		compatible = "snps,dwmac-mdio";
-+		reset-gpios = <&gpioz 2 GPIO_ACTIVE_LOW>;
-+		reset-delay-us = <1000>;
-+
- 		phy0: ethernet-phy@7 {
- 			reg = <7>;
- 		};
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index f3424fdce341a..d37ec0d03237f 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -577,7 +577,7 @@ config CHARGER_BQ24257
+ 	tristate "TI BQ24250/24251/24257 battery charger driver"
+ 	depends on I2C
+ 	depends on GPIOLIB || COMPILE_TEST
+-	depends on REGMAP_I2C
++	select REGMAP_I2C
+ 	help
+ 	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 battery
+ 	  chargers.
 -- 
 2.25.1
 
