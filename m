@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67941C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ECCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 263C2215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F77C2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944732;
-	bh=VvWcYTcAdeukDGRD9ZCvgnDfvEVfrwEEP5tSCW5oGtY=;
+	s=default; t=1592944736;
+	bh=LqXoPAKS6pHMH0wXYUQDjax07COwK/Y2Q/NCHGyioSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hZ+ykPgHIHZCOEQCP68vtLhn8vQjjmZYtQ02rTJBVqufsUJ5LWO/0RsdYL18/arw4
-	 7OSAn+sOi/jxx0O8DAcZY/ukfLsRn2PghEgJSFH3Z5sljPJaxiU85HL73Yq1hlnSAA
-	 H4GVqWvdKBxbhHqBFjjyt3W33daWnAbKdko4BPZs=
+	b=vWBwSb0Q1si6nERox+TW/IFNNAxY/E5ZM6t1z37sJKvCZcrgpS3LLLzw9Z9qr1WBf
+	 kxgLpUGqIBXWV4Ee4Ui3upNO4LCk1gbc0K/4iM62IBipeQajJT4FSQ2FR+MF3n0LHC
+	 CtEj2kKdERkBz9VD5B+2xWgdUtlLlQXs/TZ/H250=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391995AbgFWUiu (ORCPT
+        id S2392002AbgFWUix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34102 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:38:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391644AbgFWUig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:38:36 -0400
+        id S2390619AbgFWUil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:38:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A5392085B;
-        Tue, 23 Jun 2020 20:38:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A0AF217D9;
+        Tue, 23 Jun 2020 20:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944716;
-        bh=VvWcYTcAdeukDGRD9ZCvgnDfvEVfrwEEP5tSCW5oGtY=;
+        s=default; t=1592944721;
+        bh=LqXoPAKS6pHMH0wXYUQDjax07COwK/Y2Q/NCHGyioSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NJpOfj+N38KojrNkv7BeJO+GljAHNn8JO70UxK7qJUR/gJbAeEVDyirx3fJotY/ON
-         KthrkpMu+i6qTpVJrnrUyv8FVvL6nOa03+z+RN/Me8p9Ne+6UxXsHNW6mydpimJTsk
-         Xusafo+uZCgQ322hn2CcDKScoAxFo/SqyQ+Z1oyo=
+        b=mVT2FVT7PAz6dEJ+BLP/pmC+aG65kVZ18SmdddLnxLLpGh71+iU2+qSQGsZyejf8+
+         Ys5e2tJDu0Uj+WkAsn5UOTc/tIGLQO7XKMsQ6pXhJaeqnZvm9ie95W8fPksp+NO2Oy
+         oy+0kFI+W5Ee2azMyLiNTBqSxBcBImPj4XE3IEUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 067/206] usb: dwc3: gadget: Properly handle failed kick_transfer
-Date:   Tue, 23 Jun 2020 21:56:35 +0200
-Message-Id: <20200623195320.257797907@linuxfoundation.org>
+Subject: [PATCH 4.19 069/206] PCI: v3-semi: Fix a memory leak in v3_pci_probe() error handling paths
+Date:   Tue, 23 Jun 2020 21:56:37 +0200
+Message-Id: <20200623195320.356521394@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,65 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 8d99087c2db863c5fa3a4a1f3cb82b3a493705ca ]
+[ Upstream commit bca718988b9008d0d5f504e2d318178fc84958c1 ]
 
-If dwc3 fails to issue START_TRANSFER/UPDATE_TRANSFER command, then we
-should properly end an active transfer and give back all the started
-requests. However if it's for an isoc endpoint, the failure maybe due to
-bus-expiry status. In this case, don't give back the requests and wait
-for the next retry.
+If we fails somewhere in 'v3_pci_probe()', we need to free 'host'.
 
-Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Use the managed version of 'pci_alloc_host_bridge()' to do that easily.
+The use of managed resources is already widely used in this driver.
+
+Link: https://lore.kernel.org/r/20200418081637.1585-1-christophe.jaillet@wanadoo.fr
+Fixes: 68a15eb7bd0c ("PCI: v3-semi: Add V3 Semiconductor PCI host driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/pci/controller/pci-v3-semi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 8e66954dfcd4e..2f5f4ca5c0d04 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1217,6 +1217,8 @@ static void dwc3_prepare_trbs(struct dwc3_ep *dep)
- 	}
- }
+diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+index d219404bad92b..9a86bb7448acf 100644
+--- a/drivers/pci/controller/pci-v3-semi.c
++++ b/drivers/pci/controller/pci-v3-semi.c
+@@ -743,7 +743,7 @@ static int v3_pci_probe(struct platform_device *pdev)
+ 	int ret;
+ 	LIST_HEAD(res);
  
-+static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep);
-+
- static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
- {
- 	struct dwc3_gadget_ep_cmd_params params;
-@@ -1253,14 +1255,20 @@ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
- 
- 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
- 	if (ret < 0) {
--		/*
--		 * FIXME we need to iterate over the list of requests
--		 * here and stop, unmap, free and del each of the linked
--		 * requests instead of what we do now.
--		 */
--		if (req->trb)
--			memset(req->trb, 0, sizeof(struct dwc3_trb));
--		dwc3_gadget_del_and_unmap_request(dep, req, ret);
-+		struct dwc3_request *tmp;
-+
-+		if (ret == -EAGAIN)
-+			return ret;
-+
-+		dwc3_stop_active_transfer(dep, true, true);
-+
-+		list_for_each_entry_safe(req, tmp, &dep->started_list, list)
-+			dwc3_gadget_move_cancelled_request(req);
-+
-+		/* If ep isn't started, then there's no end transfer pending */
-+		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING))
-+			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
-+
- 		return ret;
- 	}
+-	host = pci_alloc_host_bridge(sizeof(*v3));
++	host = devm_pci_alloc_host_bridge(dev, sizeof(*v3));
+ 	if (!host)
+ 		return -ENOMEM;
  
 -- 
 2.25.1
