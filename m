@@ -2,141 +2,309 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9227720774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E045F20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LPrLU7KO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VUKxJ92I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732261AbgFWKjJ (ORCPT
+        id S1732278AbgFWKj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:39:09 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58944 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732224AbgFWKjI (ORCPT
+        Tue, 23 Jun 2020 06:39:26 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:28512 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732256AbgFWKjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:39:08 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NAc0Rb070633;
-        Tue, 23 Jun 2020 10:39:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=n5XuAR9+O0ifIvp3nJRV9lwMwdmcqKft/1latpOpeYQ=;
- b=LPrLU7KO0gkf8k23PUy0TAS0eZYp+yxfHXBAjkajr7TXfhheo7k/y9bKFyTr72LOP27z
- qMwGSRjqavkOUpC2cZARjsWWlN/4uP5fbIE2I0J0ThuRlx0YsVsVf1QYCaDyrg4fMcOR
- 2SmPrY/4Rav17QntGS4MifdDCcex1XlfVggOEDf7qQ2wqN1Hwfd4iOJFgeP2mhdzqMef
- 2juKPhaDLe9NuYYAIsVTqp1tutooQ9mlWf3Siu6CNpFlebpI+/YVtIsy6PfpE12R0lTD
- gnpZZjJh0cuFofpTUabw3L6WHbyd3z2x0C8ICmOgRQ3N7Np4vYJ2Juzi4WVhkzk6iOq+ Iw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31sebbcgfm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jun 2020 10:39:01 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NAS8CW154650;
-        Tue, 23 Jun 2020 10:37:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31sv7rkm22-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 10:37:00 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05NAaw2K028133;
-        Tue, 23 Jun 2020 10:36:59 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jun 2020 10:36:57 +0000
-Date:   Tue, 23 Jun 2020 13:36:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     "kbuild@lists.01.org" <kbuild@lists.01.org>,
-        "lkp@intel.com" <lkp@intel.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: Re: [kbuild] drivers/usb/gadget/udc/fsl_udc_core.c:1055
- fsl_ep_fifo_status() error: we previously assumed '_ep->desc' could be null
- (see line 1055)
-Message-ID: <20200623103651.GZ4282@kadam>
-References: <20200622182023.GX4282@kadam>
- <AM6PR04MB54138B87957CFB06EC9DF351F1940@AM6PR04MB5413.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR04MB54138B87957CFB06EC9DF351F1940@AM6PR04MB5413.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006230083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
- lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006230084
+        Tue, 23 Jun 2020 06:39:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592908764; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=CouxC2DGFR4NJhbdc8lffjguwuFMqjzdSjQ49qc1cSw=; b=VUKxJ92IvzIntUmcFCdJ5NkWMLuJZ3M1L4dswEi+x/61UDxk4PSd2z4MWEnth07+pdYiIUE1
+ DAvLuVLb30ANX+bEsMsSVCQGtbm+w4KebaNGwaO/bL5fh8qJK2zPgsu3foUdrGTM2OBefH0i
+ QFaBCfZCp1E/FYqXLnMAk88kn2k=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ef1dbd886de6ccd4492b9e3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 10:39:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A859EC43395; Tue, 23 Jun 2020 10:39:19 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5F19C433CA;
+        Tue, 23 Jun 2020 10:39:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A5F19C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@codeaurora.org,
+        linux-kernel@vger.kernel.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V8 1/8] soc: qcom: geni: Support for ICC voting
+Date:   Tue, 23 Jun 2020 16:08:50 +0530
+Message-Id: <1592908737-7068-2-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
+References: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:22:18AM +0000, Ran Wang wrote:
-> Hi Dan
-> 
-> On Tuesday, June 23, 2020 2:20 AM, Dan Carpenter wrote:
-> 
-> <snip>
-> 
-> > 
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > 
-> > New smatch warnings:
-> > drivers/usb/gadget/udc/fsl_udc_core.c:1055 fsl_ep_fifo_status() error: we
-> > previously assumed '_ep->desc' could be null (see line 1055)
-> > 
-> 
-> <snip>
-> 
-> > 
-> > 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> > 2011-04-18  1047  static int fsl_ep_fifo_status(struct usb_ep *_ep)
-> > 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> > 2011-04-18  1048  {
-> > 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> > 2011-04-18  1049  	struct fsl_ep *ep;
-> > 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> > 2011-04-18  1050  	struct fsl_udc *udc;
-> > 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> > 2011-04-18  1051  	int size = 0;
-> > 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> > 2011-04-18  1052  	u32 bitmask;
-> > 6414e94c203d92 drivers/usb/gadget/fsl_udc_core.c     Li Yang
-> > 2011-11-23  1053  	struct ep_queue_head *qh;
-> > 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> > 2011-04-18  1054
-> > 75eaa498c99eeb drivers/usb/gadget/udc/fsl_udc_core.c Nikhil Badola
-> > 2019-10-21 @1055  	if (!_ep || _ep->desc || !(_ep->desc->bEndpointAddress&0xF))
-> >                                          ^^^^^^^^^ Reversed NULL test.  This will always return -ENODEV.  (Or possibly crash.  But I suspect it always returns -ENODEV instead of crashing).
-> 
-> So the kernel test reports warning in case of '_ep->desc is null', right? 
-> 
-> My understanding is that this judgement would return -ENODEV when
-> executing '... || _ep-desc ||..' and never execute '_ep->desc->bEndpointAddress' part,
-> so crash would not happen, am I right?
+Add necessary macros and structure variables to support ICC BW
+voting from individual SE drivers.
 
-Yeah.  I can't imagine how _ep->desc is NULL.  It gets set to non-NULL
-in fsl_ep_enable() and then set to NULL in fsl_ep_disable().
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Changes in V2:
+ - As per Bjorn's comment dropped enums for ICC paths, given the three
+   paths individual members
 
-regards,
-dan carpenter
+Changes in V3:
+ - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
+ - Add geni_icc_path structure in common header
+
+Changes in V4:
+ - As per Bjorn's comment print error message in geni_icc_get if return
+   value is not -EPROBE_DEFER.
+ - As per Bjorn's comment remove NULL on path before calling icc_set_bw
+   API.
+ - As per Bjorn's comment drop __func__ print.
+ - As per Matthias's comment, make ICC path a array instead of individual
+   member entry in geni_se struct.
+
+Changes in V5:
+ - As per Matthias's comment defined enums for ICC paths.
+ - Integrate icc_enable/disable with power on/off call for driver.
+ - As per Matthias's comment added icc_path_names array to print icc path name
+   in failure case.
+ - As per Georgi's suggestion assume peak_bw = avg_bw if not mentioned.
+
+Changes in V6:
+ - Addressed nitpicks from Matthias.
+
+Changes in V7:
+ - As per Matthias's comment removed usage of peak_bw variable because we don't
+   have explicit peak requirement, we were voting peak = avg and this can be
+   tracked using single variable for avg bw.
+ - As per Matthias's comment improved print log.
+
+Changes in V8:
+ - No change.
+
+Note: I have ignored below check patch suggestion because it was throwing
+      compilation error as 'icc_ddr' is not compile time comstant.
+
+WARNING: char * array declaration might be better as static const
+ - FILE: drivers/soc/qcom/qcom-geni-se.c:726:
+ - const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
+
+ drivers/soc/qcom/qcom-geni-se.c | 82 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/qcom-geni-se.h    | 38 +++++++++++++++++++
+ 2 files changed, 120 insertions(+)
+
+diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+index 7d622ea..950e347 100644
+--- a/drivers/soc/qcom/qcom-geni-se.c
++++ b/drivers/soc/qcom/qcom-geni-se.c
+@@ -92,6 +92,9 @@ struct geni_wrapper {
+ 	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+ };
+ 
++static const char * const icc_path_names[] = {"qup-core", "qup-config",
++						"qup-memory"};
++
+ #define QUP_HW_VER_REG			0x4
+ 
+ /* Common SE registers */
+@@ -720,6 +723,85 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
+ }
+ EXPORT_SYMBOL(geni_se_rx_dma_unprep);
+ 
++int geni_icc_get(struct geni_se *se, const char *icc_ddr)
++{
++	int i, err;
++	const char *icc_names[] = {"qup-core", "qup-config", icc_ddr};
++
++	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
++		if (!icc_names[i])
++			continue;
++
++		se->icc_paths[i].path = devm_of_icc_get(se->dev, icc_names[i]);
++		if (IS_ERR(se->icc_paths[i].path))
++			goto err;
++	}
++
++	return 0;
++
++err:
++	err = PTR_ERR(se->icc_paths[i].path);
++	if (err != -EPROBE_DEFER)
++		dev_err_ratelimited(se->dev, "Failed to get ICC path '%s': %d\n",
++					icc_names[i], err);
++	return err;
++
++}
++EXPORT_SYMBOL(geni_icc_get);
++
++int geni_icc_set_bw(struct geni_se *se)
++{
++	int i, ret;
++
++	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
++		ret = icc_set_bw(se->icc_paths[i].path,
++			se->icc_paths[i].avg_bw, se->icc_paths[i].avg_bw);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "ICC BW voting failed on path '%s': %d\n",
++					icc_path_names[i], ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(geni_icc_set_bw);
++
++/* To do: Replace this by icc_bulk_enable once it's implemented in ICC core */
++int geni_icc_enable(struct geni_se *se)
++{
++	int i, ret;
++
++	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
++		ret = icc_enable(se->icc_paths[i].path);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "ICC enable failed on path '%s': %d\n",
++					icc_path_names[i], ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(geni_icc_enable);
++
++int geni_icc_disable(struct geni_se *se)
++{
++	int i, ret;
++
++	for (i = 0; i < ARRAY_SIZE(se->icc_paths); i++) {
++		ret = icc_disable(se->icc_paths[i].path);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "ICC disable failed on path '%s': %d\n",
++					icc_path_names[i], ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(geni_icc_disable);
++
+ static int geni_se_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+index dd46494..80dbc01 100644
+--- a/include/linux/qcom-geni-se.h
++++ b/include/linux/qcom-geni-se.h
+@@ -6,6 +6,8 @@
+ #ifndef _LINUX_QCOM_GENI_SE
+ #define _LINUX_QCOM_GENI_SE
+ 
++#include <linux/interconnect.h>
++
+ /* Transfer mode supported by GENI Serial Engines */
+ enum geni_se_xfer_mode {
+ 	GENI_SE_INVALID,
+@@ -25,6 +27,17 @@ enum geni_se_protocol_type {
+ struct geni_wrapper;
+ struct clk;
+ 
++enum geni_icc_path_index {
++	GENI_TO_CORE,
++	CPU_TO_GENI,
++	GENI_TO_DDR
++};
++
++struct geni_icc_path {
++	struct icc_path *path;
++	unsigned int avg_bw;
++};
++
+ /**
+  * struct geni_se - GENI Serial Engine
+  * @base:		Base Address of the Serial Engine's register block
+@@ -33,6 +46,7 @@ struct clk;
+  * @clk:		Handle to the core serial engine clock
+  * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
+  * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
++ * @icc_paths:		Array of ICC paths for SE
+  */
+ struct geni_se {
+ 	void __iomem *base;
+@@ -41,6 +55,7 @@ struct geni_se {
+ 	struct clk *clk;
+ 	unsigned int num_clk_levels;
+ 	unsigned long *clk_perf_tbl;
++	struct geni_icc_path icc_paths[3];
+ };
+ 
+ /* Common SE registers */
+@@ -229,6 +244,21 @@ struct geni_se {
+ #define GENI_SE_VERSION_MINOR(ver) ((ver & HW_VER_MINOR_MASK) >> HW_VER_MINOR_SHFT)
+ #define GENI_SE_VERSION_STEP(ver) (ver & HW_VER_STEP_MASK)
+ 
++/*
++ * Define bandwidth thresholds that cause the underlying Core 2X interconnect
++ * clock to run at the named frequency. These baseline values are recommended
++ * by the hardware team, and are not dynamically scaled with GENI bandwidth
++ * beyond basic on/off.
++ */
++#define CORE_2X_19_2_MHZ		960
++#define CORE_2X_50_MHZ			2500
++#define CORE_2X_100_MHZ			5000
++#define CORE_2X_150_MHZ			7500
++#define CORE_2X_200_MHZ			10000
++#define CORE_2X_236_MHZ			16383
++
++#define GENI_DEFAULT_BW			Bps_to_icc(1000)
++
+ #if IS_ENABLED(CONFIG_QCOM_GENI_SE)
+ 
+ u32 geni_se_get_qup_hw_version(struct geni_se *se);
+@@ -416,5 +446,13 @@ int geni_se_rx_dma_prep(struct geni_se *se, void *buf, size_t len,
+ void geni_se_tx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len);
+ 
+ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len);
++
++int geni_icc_get(struct geni_se *se, const char *icc_ddr);
++
++int geni_icc_set_bw(struct geni_se *se);
++
++int geni_icc_enable(struct geni_se *se);
++
++int geni_icc_disable(struct geni_se *se);
+ #endif
+ #endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
