@@ -2,396 +2,97 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DC5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2DDA20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946058;
-	bh=03Vx9bYBw2g4gtieMnplFKmT/n2KFg5wGS+Rdg58dEI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lmlyvvMVBAsLiVBtVBhpVmXSd3o9wF09x8A916oggV4e3TcLPJo9ErLYxNV4MjdQj
-	 UEFw1qkKAHt0IFM+m6RyFUQhiXstT+ard1oDjWlrPWWY0CrVs8Vn35Hb/NxvU7aKwm
-	 2iYemyE/eTp3Oa9UkJDkqvtWbgi0SH0TEFZsdwbM=
+	by mail.kernel.org (Postfix) with ESMTP id 090F320663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oVFWJM2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404010AbgFWVA5 (ORCPT
+        id S2404261AbgFWVBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:00:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392189AbgFWUj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:39:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF8321852;
-        Tue, 23 Jun 2020 20:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944796;
-        bh=03Vx9bYBw2g4gtieMnplFKmT/n2KFg5wGS+Rdg58dEI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzIWxo25EznOgqAJIWB6+/0XfiIW9RKB80UR0HL8xEPgGnWwJwfSaJ++nRlsCEzjX
-         4dx0D7lDkPdeLN9kPRTQs9alinlrgVudBmsgQvktfoEPtri+uMQnt09GVyvlxW2poO
-         yZ+EmCuQalxu1+dXx+49RhD4ZSHizgFv7OCnUYXg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 098/206] scsi: target: tcmu: Userspace must not complete queued commands
-Date:   Tue, 23 Jun 2020 21:57:06 +0200
-Message-Id: <20200623195321.763673881@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 17:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391320AbgFWVBN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:01:13 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2072AC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:01:13 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c139so2353887qkg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IJiEAsm35OSf4Kwkxjuxcv6ZYgsjC9KkGStnrzjC88Y=;
+        b=oVFWJM2bXi+g6I82oVYXQLlJ9lk1WSeyy3qQIY7hXM1+QNiyL941g9vTUMmMF2+NZj
+         jO57gJMY8YB4KiVWgfaxBYL5R7ILDVFDX5GoulqsBQvOIyBuNRFYDjD4Tl3g70DrkOVQ
+         FJDsY8GpK2/cuO9HayQAONyJQty6l81z3Zg5I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IJiEAsm35OSf4Kwkxjuxcv6ZYgsjC9KkGStnrzjC88Y=;
+        b=D8jitMye7x/uLF3jKsfB1rzBrBrxWJhBs6vnUUN8Z1GDJjVkDoc/xhUjNxSaD3rMhT
+         SIx9LRLCvyUnK6HymAu2tWPpYnz9Q4qfiIzxGJY6YP1aLNDmzGYntnWKPf8t+3CriDbm
+         MRDBe+wuQCpbIG45t/MMJfP059LtBP4oo+yO3tt5yBZI7QrZRdU5B7eCc/5NjroD/HbL
+         qIDcyb6f++S/omn4P/nFaR6mv/gyMUlJFWLDtRibaHAbQMNuVv0R9DHRoc6D+pH86hrP
+         D0wVRzo5AGRl3WDWWbApSquFfhs+Lpng6Xi6abZ9a8LBFf8v/x2iEJVaAKLIKxCXo2DP
+         kiLA==
+X-Gm-Message-State: AOAM530S9o64uSuL9rintKIeZISr5N02ORquSbq0gSe38B3Adzwx+2bZ
+        66r/2latBzrR+TpnG8FTDM0o7g==
+X-Google-Smtp-Source: ABdhPJyGfilx6CEztNReVMBgYC0n2g4vy+LYXCPCtYQvtlo+uVU0OgHhBU/jN8roRMjV0yw8NAAcyA==
+X-Received: by 2002:a37:9b04:: with SMTP id d4mr21002794qke.58.1592946072304;
+        Tue, 23 Jun 2020 14:01:12 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 185sm1595326qke.92.2020.06.23.14.01.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 14:01:11 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 17:01:11 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, linux-mm@kvack.org
+Subject: Re: [PATCH tip/core/rcu 02/26] mm/mmap.c: Add cond_resched() for
+ exit_mmap() CPU stalls
+Message-ID: <20200623210111.GA117936@google.com>
+References: <20200623002128.GA25456@paulmck-ThinkPad-P72>
+ <20200623002147.25750-2-paulmck@kernel.org>
+ <20200623193431.GA68372@google.com>
+ <20200623205508.GS9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623205508.GS9247@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+On Tue, Jun 23, 2020 at 01:55:08PM -0700, Paul E. McKenney wrote:
+[..] 
+> > Just for my understanding, cond_resched_tasks_rcu_qs() may not help here
+> > because preemption is not disabled right? Still I see no harm in using it
+> > here either as it may give a slight speed up for tasks-RCU.
+> 
+> The RCU-tasks stall-warning interval is ten minutes, and I have not yet
+> seen evidence that we are getting close to that.  If we do, then yes,
+> a cond_resched_tasks_rcu_qs() might be in this code's future.  But it
+> does add overhead, so we need to see the evidence first.
 
-[ Upstream commit 61fb2482216679b9e1e797440c148bb143a5040a ]
+Yes, true about that overhead. Ok, this is fine with me too, thanks :)
 
-When tcmu queues a new command - no matter whether in command ring or in
-qfull_queue - a cmd_id from IDR udev->commands is assigned to the command.
-
-If userspace sends a wrong command completion containing the cmd_id of a
-command on the qfull_queue, tcmu_handle_completions() finds the command in
-the IDR and calls tcmu_handle_completion() for it. This might do some nasty
-things because commands in qfull_queue do not have a valid dbi list.
-
-To fix this bug, we no longer add queued commands to the idr.  Instead the
-cmd_id is assign when a command is written to the command ring.
-
-Due to this change I had to adapt the source code at several places where
-up to now an idr_for_each had been done.
-
-[mkp: fix checkpatch warnings]
-
-Link: https://lore.kernel.org/r/20200518164833.12775-1-bstroesser@ts.fujitsu.com
-Acked-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/target/target_core_user.c | 154 ++++++++++++++----------------
- 1 file changed, 71 insertions(+), 83 deletions(-)
-
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index eff1e36ca03c2..ac523f247a9ca 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -893,41 +893,24 @@ static inline size_t tcmu_cmd_get_cmd_size(struct tcmu_cmd *tcmu_cmd,
- 	return command_size;
- }
- 
--static int tcmu_setup_cmd_timer(struct tcmu_cmd *tcmu_cmd, unsigned int tmo,
--				struct timer_list *timer)
-+static void tcmu_setup_cmd_timer(struct tcmu_cmd *tcmu_cmd, unsigned int tmo,
-+				 struct timer_list *timer)
- {
--	struct tcmu_dev *udev = tcmu_cmd->tcmu_dev;
--	int cmd_id;
--
--	if (tcmu_cmd->cmd_id)
--		goto setup_timer;
--
--	cmd_id = idr_alloc(&udev->commands, tcmu_cmd, 1, USHRT_MAX, GFP_NOWAIT);
--	if (cmd_id < 0) {
--		pr_err("tcmu: Could not allocate cmd id.\n");
--		return cmd_id;
--	}
--	tcmu_cmd->cmd_id = cmd_id;
--
--	pr_debug("allocated cmd %u for dev %s tmo %lu\n", tcmu_cmd->cmd_id,
--		 udev->name, tmo / MSEC_PER_SEC);
--
--setup_timer:
- 	if (!tmo)
--		return 0;
-+		return;
- 
- 	tcmu_cmd->deadline = round_jiffies_up(jiffies + msecs_to_jiffies(tmo));
- 	if (!timer_pending(timer))
- 		mod_timer(timer, tcmu_cmd->deadline);
- 
--	return 0;
-+	pr_debug("Timeout set up for cmd %p, dev = %s, tmo = %lu\n", tcmu_cmd,
-+		 tcmu_cmd->tcmu_dev->name, tmo / MSEC_PER_SEC);
- }
- 
- static int add_to_qfull_queue(struct tcmu_cmd *tcmu_cmd)
- {
- 	struct tcmu_dev *udev = tcmu_cmd->tcmu_dev;
- 	unsigned int tmo;
--	int ret;
- 
- 	/*
- 	 * For backwards compat if qfull_time_out is not set use
-@@ -942,13 +925,11 @@ static int add_to_qfull_queue(struct tcmu_cmd *tcmu_cmd)
- 	else
- 		tmo = TCMU_TIME_OUT;
- 
--	ret = tcmu_setup_cmd_timer(tcmu_cmd, tmo, &udev->qfull_timer);
--	if (ret)
--		return ret;
-+	tcmu_setup_cmd_timer(tcmu_cmd, tmo, &udev->qfull_timer);
- 
- 	list_add_tail(&tcmu_cmd->queue_entry, &udev->qfull_queue);
--	pr_debug("adding cmd %u on dev %s to ring space wait queue\n",
--		 tcmu_cmd->cmd_id, udev->name);
-+	pr_debug("adding cmd %p on dev %s to ring space wait queue\n",
-+		 tcmu_cmd, udev->name);
- 	return 0;
- }
- 
-@@ -970,7 +951,7 @@ static int queue_cmd_ring(struct tcmu_cmd *tcmu_cmd, sense_reason_t *scsi_err)
- 	struct tcmu_mailbox *mb;
- 	struct tcmu_cmd_entry *entry;
- 	struct iovec *iov;
--	int iov_cnt, ret;
-+	int iov_cnt, cmd_id;
- 	uint32_t cmd_head;
- 	uint64_t cdb_off;
- 	bool copy_to_data_area;
-@@ -1071,14 +1052,21 @@ static int queue_cmd_ring(struct tcmu_cmd *tcmu_cmd, sense_reason_t *scsi_err)
- 	}
- 	entry->req.iov_bidi_cnt = iov_cnt;
- 
--	ret = tcmu_setup_cmd_timer(tcmu_cmd, udev->cmd_time_out,
--				   &udev->cmd_timer);
--	if (ret) {
--		tcmu_cmd_free_data(tcmu_cmd, tcmu_cmd->dbi_cnt);
-+	cmd_id = idr_alloc(&udev->commands, tcmu_cmd, 1, USHRT_MAX, GFP_NOWAIT);
-+	if (cmd_id < 0) {
-+		pr_err("tcmu: Could not allocate cmd id.\n");
- 
-+		tcmu_cmd_free_data(tcmu_cmd, tcmu_cmd->dbi_cnt);
- 		*scsi_err = TCM_OUT_OF_RESOURCES;
- 		return -1;
- 	}
-+	tcmu_cmd->cmd_id = cmd_id;
-+
-+	pr_debug("allocated cmd id %u for cmd %p dev %s\n", tcmu_cmd->cmd_id,
-+		 tcmu_cmd, udev->name);
-+
-+	tcmu_setup_cmd_timer(tcmu_cmd, udev->cmd_time_out, &udev->cmd_timer);
-+
- 	entry->hdr.cmd_id = tcmu_cmd->cmd_id;
- 
- 	/*
-@@ -1290,50 +1278,39 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
- 	return handled;
- }
- 
--static int tcmu_check_expired_cmd(int id, void *p, void *data)
-+static void tcmu_check_expired_ring_cmd(struct tcmu_cmd *cmd)
- {
--	struct tcmu_cmd *cmd = p;
--	struct tcmu_dev *udev = cmd->tcmu_dev;
--	u8 scsi_status;
- 	struct se_cmd *se_cmd;
--	bool is_running;
--
--	if (test_bit(TCMU_CMD_BIT_EXPIRED, &cmd->flags))
--		return 0;
- 
- 	if (!time_after(jiffies, cmd->deadline))
--		return 0;
-+		return;
- 
--	is_running = test_bit(TCMU_CMD_BIT_INFLIGHT, &cmd->flags);
-+	set_bit(TCMU_CMD_BIT_EXPIRED, &cmd->flags);
-+	list_del_init(&cmd->queue_entry);
- 	se_cmd = cmd->se_cmd;
-+	cmd->se_cmd = NULL;
- 
--	if (is_running) {
--		/*
--		 * If cmd_time_out is disabled but qfull is set deadline
--		 * will only reflect the qfull timeout. Ignore it.
--		 */
--		if (!udev->cmd_time_out)
--			return 0;
-+	pr_debug("Timing out inflight cmd %u on dev %s.\n",
-+		 cmd->cmd_id, cmd->tcmu_dev->name);
- 
--		set_bit(TCMU_CMD_BIT_EXPIRED, &cmd->flags);
--		/*
--		 * target_complete_cmd will translate this to LUN COMM FAILURE
--		 */
--		scsi_status = SAM_STAT_CHECK_CONDITION;
--		list_del_init(&cmd->queue_entry);
--		cmd->se_cmd = NULL;
--	} else {
--		list_del_init(&cmd->queue_entry);
--		idr_remove(&udev->commands, id);
--		tcmu_free_cmd(cmd);
--		scsi_status = SAM_STAT_TASK_SET_FULL;
--	}
-+	target_complete_cmd(se_cmd, SAM_STAT_CHECK_CONDITION);
-+}
- 
--	pr_debug("Timing out cmd %u on dev %s that is %s.\n",
--		 id, udev->name, is_running ? "inflight" : "queued");
-+static void tcmu_check_expired_queue_cmd(struct tcmu_cmd *cmd)
-+{
-+	struct se_cmd *se_cmd;
- 
--	target_complete_cmd(se_cmd, scsi_status);
--	return 0;
-+	if (!time_after(jiffies, cmd->deadline))
-+		return;
-+
-+	list_del_init(&cmd->queue_entry);
-+	se_cmd = cmd->se_cmd;
-+	tcmu_free_cmd(cmd);
-+
-+	pr_debug("Timing out queued cmd %p on dev %s.\n",
-+		  cmd, cmd->tcmu_dev->name);
-+
-+	target_complete_cmd(se_cmd, SAM_STAT_TASK_SET_FULL);
- }
- 
- static void tcmu_device_timedout(struct tcmu_dev *udev)
-@@ -1418,16 +1395,15 @@ static struct se_device *tcmu_alloc_device(struct se_hba *hba, const char *name)
- 	return &udev->se_dev;
- }
- 
--static bool run_qfull_queue(struct tcmu_dev *udev, bool fail)
-+static void run_qfull_queue(struct tcmu_dev *udev, bool fail)
- {
- 	struct tcmu_cmd *tcmu_cmd, *tmp_cmd;
- 	LIST_HEAD(cmds);
--	bool drained = true;
- 	sense_reason_t scsi_ret;
- 	int ret;
- 
- 	if (list_empty(&udev->qfull_queue))
--		return true;
-+		return;
- 
- 	pr_debug("running %s's cmdr queue forcefail %d\n", udev->name, fail);
- 
-@@ -1436,11 +1412,10 @@ static bool run_qfull_queue(struct tcmu_dev *udev, bool fail)
- 	list_for_each_entry_safe(tcmu_cmd, tmp_cmd, &cmds, queue_entry) {
- 		list_del_init(&tcmu_cmd->queue_entry);
- 
--	        pr_debug("removing cmd %u on dev %s from queue\n",
--		         tcmu_cmd->cmd_id, udev->name);
-+		pr_debug("removing cmd %p on dev %s from queue\n",
-+			 tcmu_cmd, udev->name);
- 
- 		if (fail) {
--			idr_remove(&udev->commands, tcmu_cmd->cmd_id);
- 			/*
- 			 * We were not able to even start the command, so
- 			 * fail with busy to allow a retry in case runner
-@@ -1455,10 +1430,8 @@ static bool run_qfull_queue(struct tcmu_dev *udev, bool fail)
- 
- 		ret = queue_cmd_ring(tcmu_cmd, &scsi_ret);
- 		if (ret < 0) {
--		        pr_debug("cmd %u on dev %s failed with %u\n",
--			         tcmu_cmd->cmd_id, udev->name, scsi_ret);
--
--			idr_remove(&udev->commands, tcmu_cmd->cmd_id);
-+			pr_debug("cmd %p on dev %s failed with %u\n",
-+				 tcmu_cmd, udev->name, scsi_ret);
- 			/*
- 			 * Ignore scsi_ret for now. target_complete_cmd
- 			 * drops it.
-@@ -1473,13 +1446,11 @@ static bool run_qfull_queue(struct tcmu_dev *udev, bool fail)
- 			 * the queue
- 			 */
- 			list_splice_tail(&cmds, &udev->qfull_queue);
--			drained = false;
- 			break;
- 		}
- 	}
- 
- 	tcmu_set_next_deadline(&udev->qfull_queue, &udev->qfull_timer);
--	return drained;
- }
- 
- static int tcmu_irqcontrol(struct uio_info *info, s32 irq_on)
-@@ -1663,6 +1634,8 @@ static void tcmu_dev_kref_release(struct kref *kref)
- 		if (tcmu_check_and_free_pending_cmd(cmd) != 0)
- 			all_expired = false;
- 	}
-+	if (!list_empty(&udev->qfull_queue))
-+		all_expired = false;
- 	idr_destroy(&udev->commands);
- 	WARN_ON(!all_expired);
- 
-@@ -2031,9 +2004,6 @@ static void tcmu_reset_ring(struct tcmu_dev *udev, u8 err_level)
- 	mutex_lock(&udev->cmdr_lock);
- 
- 	idr_for_each_entry(&udev->commands, cmd, i) {
--		if (!test_bit(TCMU_CMD_BIT_INFLIGHT, &cmd->flags))
--			continue;
--
- 		pr_debug("removing cmd %u on dev %s from ring (is expired %d)\n",
- 			  cmd->cmd_id, udev->name,
- 			  test_bit(TCMU_CMD_BIT_EXPIRED, &cmd->flags));
-@@ -2071,6 +2041,8 @@ static void tcmu_reset_ring(struct tcmu_dev *udev, u8 err_level)
- 
- 	del_timer(&udev->cmd_timer);
- 
-+	run_qfull_queue(udev, false);
-+
- 	mutex_unlock(&udev->cmdr_lock);
- }
- 
-@@ -2692,6 +2664,7 @@ static void find_free_blocks(void)
- static void check_timedout_devices(void)
- {
- 	struct tcmu_dev *udev, *tmp_dev;
-+	struct tcmu_cmd *cmd, *tmp_cmd;
- 	LIST_HEAD(devs);
- 
- 	spin_lock_bh(&timed_out_udevs_lock);
-@@ -2702,9 +2675,24 @@ static void check_timedout_devices(void)
- 		spin_unlock_bh(&timed_out_udevs_lock);
- 
- 		mutex_lock(&udev->cmdr_lock);
--		idr_for_each(&udev->commands, tcmu_check_expired_cmd, NULL);
- 
--		tcmu_set_next_deadline(&udev->inflight_queue, &udev->cmd_timer);
-+		/*
-+		 * If cmd_time_out is disabled but qfull is set deadline
-+		 * will only reflect the qfull timeout. Ignore it.
-+		 */
-+		if (udev->cmd_time_out) {
-+			list_for_each_entry_safe(cmd, tmp_cmd,
-+						 &udev->inflight_queue,
-+						 queue_entry) {
-+				tcmu_check_expired_ring_cmd(cmd);
-+			}
-+			tcmu_set_next_deadline(&udev->inflight_queue,
-+					       &udev->cmd_timer);
-+		}
-+		list_for_each_entry_safe(cmd, tmp_cmd, &udev->qfull_queue,
-+					 queue_entry) {
-+			tcmu_check_expired_queue_cmd(cmd);
-+		}
- 		tcmu_set_next_deadline(&udev->qfull_queue, &udev->qfull_timer);
- 
- 		mutex_unlock(&udev->cmdr_lock);
--- 
-2.25.1
-
-
+ - Joel
 
