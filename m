@@ -2,96 +2,97 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8931EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC84C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E716204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3E9204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592946675;
+	bh=tR2mCtOJIk3gJlYWdrIJKcfS816pyQ4QKSEg4t94mKo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GBRXbwvJu8WjiUZ/RtQx4c3h2vZ6/fMjZp/nRGDfa3aKymFh91fhOQNUXijSuvq7h
+	 ECABLOtldaEwrBUOgccOvLCcHccpSoZETHLH8N3fpYV+zW1YJqEySrauKcezjxgteh
+	 l5ZYKLkrgQ97tOc0kcBcbhGahkVzhtcnWAJVP1D4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390850AbgFWVLK (ORCPT
+        id S2391305AbgFWVLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:11:10 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:53408 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389684AbgFWVLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 17:11:05 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 56CED1C0C0A; Tue, 23 Jun 2020 23:11:03 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 23:11:03 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 066/206] soundwire: slave: dont init debugfs on
- device registration error
-Message-ID: <20200623211102.GB4401@amd>
-References: <20200623195316.864547658@linuxfoundation.org>
- <20200623195320.204985936@linuxfoundation.org>
+        Tue, 23 Jun 2020 17:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390942AbgFWUci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:32:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC0692064B;
+        Tue, 23 Jun 2020 20:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592944358;
+        bh=tR2mCtOJIk3gJlYWdrIJKcfS816pyQ4QKSEg4t94mKo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gChuzPRa7/+mttExnDnlyLbOJUCNY+u0TiKc0EuvFlhNF9paODJgnGs8KsJlwlHrr
+         IaykzVs0tlFg/76bt8Fgz8EEw7Uz4M3TQMy53b8QXW5UFouz5nhgZOUcerrYIrR7jy
+         v3z0+X9XS3dD8VeR/enQa/Sy2wDEC30C7gHd5rsg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 274/314] bnxt_en: Return from timer if interface is not in open state.
+Date:   Tue, 23 Jun 2020 21:57:49 +0200
+Message-Id: <20200623195352.055262490@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
+References: <20200623195338.770401005@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
-Content-Disposition: inline
-In-Reply-To: <20200623195320.204985936@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
---i0/AhcQY5QxfSsSZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit e000940473d1423a42ef9c823fb23ccffe3f07ea ]
 
-Hi!
+This will avoid many uneccessary error logs when driver or firmware is
+in reset.
 
-> [ Upstream commit 8893ab5e8ee5d7c12e0fc1dca4a309475064473d ]
->=20
-> The error handling flow seems incorrect, there is no reason to try and
-> add debugfs support if the device registration did not
-> succeed. Return on error.
+Fixes: 230d1f0de754 ("bnxt_en: Handle firmware reset.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +++ b/drivers/soundwire/slave.c
-> @@ -55,6 +55,8 @@ static int sdw_slave_add(struct sdw_bus *bus,
->  		list_del(&slave->node);
->  		mutex_unlock(&bus->bus_lock);
->  		put_device(&slave->dev);
-> +
-> +		return ret;
->  	}
-> =20
->  	return ret;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 63ee0c49be7cf..b5147bd6cba6d 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -9992,7 +9992,7 @@ static void bnxt_timer(struct timer_list *t)
+ 	struct bnxt *bp = from_timer(bp, t, timer);
+ 	struct net_device *dev = bp->dev;
+ 
+-	if (!netif_running(dev))
++	if (!netif_running(dev) || !test_bit(BNXT_STATE_OPEN, &bp->state))
+ 		return;
+ 
+ 	if (atomic_read(&bp->intr_sem) != 0)
+-- 
+2.25.1
 
-Mainline is significantly different here; this patch does not make
-sense in v4.19 -- as it does not do anything.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---i0/AhcQY5QxfSsSZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7yb+YACgkQMOfwapXb+vIpBgCguXIYBDydvxHF/VrSJvIq1C6u
-CrEAn3RXvz12D0iGQtA1lz2By4y491LE
-=qSV3
------END PGP SIGNATURE-----
-
---i0/AhcQY5QxfSsSZ--
