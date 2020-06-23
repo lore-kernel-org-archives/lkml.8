@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2167DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E73372070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924212070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943661;
-	bh=4hMKVjlVproshcN/Edkim4wPjbOfJOron7b84ERO0RE=;
+	s=default; t=1592943663;
+	bh=oYl5wT15U5jPC3XS3EeFMjCr+tLCo+LVYg3TGPmb+SA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=df1A6K9Sz152TlcXkv3u/u3se/ZeQF8cinN1amvWaejiUgbnxVkrzSJVNf2Dnt8On
-	 CicqE5KVVg/DDf0cLG8oodzFPvmWkSFvDMCW0/Hs8zlTlFcHl4rzPWdZV9Fy7FXpXn
-	 bksP8hY8sI3I9vdUuYe30Z2VL8fnDquTF6Uu1jsI=
+	b=k/pI2cRTycpxbbwry+wj6x+/oj/AMl9ezWaYU038bI4XHjczR9Z9Vo8LMQyBDzWfh
+	 ObC3iaQX1xCjXIkJIcQr1jZgs5RV7++aeVp7H+TIcc7xwA2peJzcUv+4B/WVLd0jFS
+	 i6UEhQOby99FDSYkzBEPjDSz3JSXY0a4tnOgpIDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389990AbgFWUU7 (ORCPT
+        id S2389997AbgFWUVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387771AbgFWUUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:20:55 -0400
+        id S2389876AbgFWUUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:20:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 903D9206C3;
-        Tue, 23 Jun 2020 20:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFC132064B;
+        Tue, 23 Jun 2020 20:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943655;
-        bh=4hMKVjlVproshcN/Edkim4wPjbOfJOron7b84ERO0RE=;
+        s=default; t=1592943652;
+        bh=oYl5wT15U5jPC3XS3EeFMjCr+tLCo+LVYg3TGPmb+SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DoNZoxPBG3/kJr7N31F5jBz8Ec3GbTZHWkqbk+cfKJAF4gfA1MXvsUwKT/Ik5fIN/
-         pAAMMzdlkUW5L8Xn2G12mCTCxVGD2eqK2ZPc7BfEdwijs2dNONHaDqjKfePPmNUB+f
-         xJj5+NtfweITaV2h+LIbgIndXm3onUkducrnH448=
+        b=cl3XWPnkdW0Oa2feBJYBcxQdKC2zpnqxcksYTT4oNiZ6OR0t+dde4T18rtnVocfJW
+         BU2TLbIJh5dw3GiTjc6WuJHqAEf2wnYmbyvMO3lxXLmF4ZT5tY7r+tefs6x74F53/m
+         cYpTf3ik1J3o721ZXm+tMIC0ZpUiUfNmp5B8dynM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sushma Kalakota <sushmax.kalakota@intel.com>
-Subject: [PATCH 5.7 477/477] iommu/vt-d: Remove real DMA lookup in find_domain
-Date:   Tue, 23 Jun 2020 21:57:54 +0200
-Message-Id: <20200623195430.097419726@linuxfoundation.org>
+        stable@vger.kernel.org, Divya Indi <divya.indi@oracle.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.7 468/477] sample-trace-array: Fix sleeping function called from invalid context
+Date:   Tue, 23 Jun 2020 21:57:45 +0200
+Message-Id: <20200623195429.670042579@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,39 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-commit bba9cc2cf82840bd3c9b3f4f7edac2dc8329c241 upstream.
+commit e9b7b1c0c103a623be1a65c39f98719803440871 upstream.
 
-By removing the real DMA indirection in find_domain(), we can allow
-sub-devices of a real DMA device to have their own valid
-device_domain_info. The dmar lookup and context entry removal paths have
-been fixed to account for sub-devices.
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+ in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/5
+ 1 lock held by swapper/5/0:
+  #0: ffff80001002bd90 (samples/ftrace/sample-trace-array.c:38){+.-.}-{0:0}, at: call_timer_fn+0x8/0x3e0
+ CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.7.0+ #8
+ Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
+ Call trace:
+  dump_backtrace+0x0/0x1a0
+  show_stack+0x20/0x30
+  dump_stack+0xe4/0x150
+  ___might_sleep+0x160/0x200
+  __might_sleep+0x58/0x90
+  __mutex_lock+0x64/0x948
+  mutex_lock_nested+0x3c/0x58
+  __ftrace_set_clr_event+0x44/0x88
+  trace_array_set_clr_event+0x24/0x38
+  mytimer_handler+0x34/0x40 [sample_trace_array]
 
-Fixes: 2b0140c69637 ("iommu/vt-d: Use pci_real_dma_dev() for mapping")
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Link: https://lore.kernel.org/r/20200527165617.297470-4-jonathan.derrick@intel.com
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207575
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sushma Kalakota <sushmax.kalakota@intel.com>
+mutex_lock() will be called in interrupt context, using workqueue to fix it.
+
+Link: https://lkml.kernel.org/r/20200610011244.2209486-1-wangkefeng.wang@huawei.com
+
+Cc: stable@vger.kernel.org
+Fixes: 89ed42495ef4 ("tracing: Sample module to demonstrate kernel access to Ftrace instances.")
+Reviewed-by: Divya Indi <divya.indi@oracle.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |    3 ---
- 1 file changed, 3 deletions(-)
+ samples/ftrace/sample-trace-array.c |   18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2518,9 +2518,6 @@ struct dmar_domain *find_domain(struct d
- 	if (unlikely(attach_deferred(dev) || iommu_dummy(dev)))
- 		return NULL;
+--- a/samples/ftrace/sample-trace-array.c
++++ b/samples/ftrace/sample-trace-array.c
+@@ -6,6 +6,7 @@
+ #include <linux/timer.h>
+ #include <linux/err.h>
+ #include <linux/jiffies.h>
++#include <linux/workqueue.h>
  
--	if (dev_is_pci(dev))
--		dev = &pci_real_dma_dev(to_pci_dev(dev))->dev;
--
- 	/* No lock here, assumes no domain exit in normal case */
- 	info = dev->archdata.iommu;
- 	if (likely(info))
+ /*
+  * Any file that uses trace points, must include the header.
+@@ -20,6 +21,16 @@ struct trace_array *tr;
+ static void mytimer_handler(struct timer_list *unused);
+ static struct task_struct *simple_tsk;
+ 
++static void trace_work_fn(struct work_struct *work)
++{
++	/*
++	 * Disable tracing for event "sample_event".
++	 */
++	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
++			false);
++}
++static DECLARE_WORK(trace_work, trace_work_fn);
++
+ /*
+  * mytimer: Timer setup to disable tracing for event "sample_event". This
+  * timer is only for the purposes of the sample module to demonstrate access of
+@@ -29,11 +40,7 @@ static DEFINE_TIMER(mytimer, mytimer_han
+ 
+ static void mytimer_handler(struct timer_list *unused)
+ {
+-	/*
+-	 * Disable tracing for event "sample_event".
+-	 */
+-	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
+-			false);
++	schedule_work(&trace_work);
+ }
+ 
+ static void simple_thread_func(int count)
+@@ -76,6 +83,7 @@ static int simple_thread(void *arg)
+ 		simple_thread_func(count++);
+ 
+ 	del_timer(&mytimer);
++	cancel_work_sync(&trace_work);
+ 
+ 	/*
+ 	 * trace_array_put() decrements the reference counter associated with
 
 
