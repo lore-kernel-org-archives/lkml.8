@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A75EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DABF2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04262080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942687;
-	bh=oWN/GHMJ1I/nfSKHPsEfpd0EtGfTOxA4OujpXXhXAN8=;
+	s=default; t=1592942690;
+	bh=tT/PXHaRQ8O76+29X1ggI+b7E1cA3ew3/FHpIhduOTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L++oZs0L47KsUXK5WvKi6H3VjH+GG7ThVdiJUQcVKhT0crMx0Mr+mJ25w/DjiSBgE
-	 Yqfn9idH0FD/KVWPb/pQzsnsqVgZwmdJtMtA97BG+wrU2/jgSr+h+9T1xvmr6SQUWK
-	 hoUJdmA+DyisJ+pe/jzpLSG817pHLi4dgJWxmQhI=
+	b=Ysl9ExmmoDeHMKHZdr9pN3sKVNucJWCdkqZKl+GKGrSOFagl/kQp5+C3d0StEgLGP
+	 UqkFxkg3SDSB1JVbSWBKm3w4EAWI/UsBw4f4m23opD5WLIfIn/0EQC7jwtr+pDpmY2
+	 sIw4wC1Eic8rb3kSdzEE8g1mdZ6LxR4vxrBlBcbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388253AbgFWUEq (ORCPT
+        id S2388262AbgFWUEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43338 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:04:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388236AbgFWUEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:38 -0400
+        id S2388239AbgFWUEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:04:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0E502080C;
-        Tue, 23 Jun 2020 20:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64C38206C3;
+        Tue, 23 Jun 2020 20:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942678;
-        bh=oWN/GHMJ1I/nfSKHPsEfpd0EtGfTOxA4OujpXXhXAN8=;
+        s=default; t=1592942680;
+        bh=tT/PXHaRQ8O76+29X1ggI+b7E1cA3ew3/FHpIhduOTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BDL82bVEr8NNXB3x0M8rdHRzC9Ms9KhLaIf23vG8t3YjaEA+CONZSZaliGmL/jWYx
-         4AoRiBxB5YX1J9M8CSEiaXMg8hR9VWDVwA8eu+g2IkUNnvReAPvY56aREA7XikV69o
-         FBZI9v7YBq4Gk9ANQNRxs1q9NX5E/AA2H+zMqHpY=
+        b=Idsc29hQPmDsdR+BdEx3h4X8VQDUDk5iJE392eQAUxoobXKChcsTot/jMvec9ai4h
+         oSI85QehNAXLBZaOYXhXycyScqILnsqqD6Izn1Rg40uEk9R2CVfa+s5jnFGZCnrU8V
+         PscwKE9xi8a+UOg1F1wmmezaLSk/+LLnMzBdwXbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 092/477] net: mdiobus: Disable preemption upon u64_stats update
-Date:   Tue, 23 Jun 2020 21:51:29 +0200
-Message-Id: <20200623195411.952647146@linuxfoundation.org>
+Subject: [PATCH 5.7 093/477] ASoC: meson: fix memory leak of links if allocation of ldata fails
+Date:   Tue, 23 Jun 2020 21:51:30 +0200
+Message-Id: <20200623195412.002476182@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,48 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmed S. Darwish <a.darwish@linutronix.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit c7e261d81783387a0502878cd229327e7c54322e ]
+[ Upstream commit 6e801dc411329aff592fbd48fb116183d0acdb00 ]
 
-The u64_stats mechanism uses sequence counters to protect against 64-bit
-values tearing on 32-bit architectures. Updating u64_stats is thus a
-sequence counter write side critical section where preemption must be
-disabled.
+Currently if the allocation of ldata fails the error return path
+does not kfree the allocated links object.  Fix this by adding
+an error exit return path that performs the necessary kfree'ing.
 
-For mdiobus_stats_acct(), disable preemption upon the u64_stats update.
-It is called from process context through mdiobus_read() and
-mdiobus_write().
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7864a79f37b5 ("ASoC: meson: add axg sound card support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Addresses-Coverity: ("Resource leak")
+Link: https://lore.kernel.org/r/20200604171216.60043-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio_bus.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/meson/meson-card-utils.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 7a4eb3f2cb743..a1a4dee2a033a 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -757,6 +757,7 @@ EXPORT_SYMBOL(mdiobus_scan);
+diff --git a/sound/soc/meson/meson-card-utils.c b/sound/soc/meson/meson-card-utils.c
+index 2ca8c98e204f2..5a4a91c887347 100644
+--- a/sound/soc/meson/meson-card-utils.c
++++ b/sound/soc/meson/meson-card-utils.c
+@@ -49,19 +49,26 @@ int meson_card_reallocate_links(struct snd_soc_card *card,
+ 	links = krealloc(priv->card.dai_link,
+ 			 num_links * sizeof(*priv->card.dai_link),
+ 			 GFP_KERNEL | __GFP_ZERO);
++	if (!links)
++		goto err_links;
++
+ 	ldata = krealloc(priv->link_data,
+ 			 num_links * sizeof(*priv->link_data),
+ 			 GFP_KERNEL | __GFP_ZERO);
+-
+-	if (!links || !ldata) {
+-		dev_err(priv->card.dev, "failed to allocate links\n");
+-		return -ENOMEM;
+-	}
++	if (!ldata)
++		goto err_ldata;
  
- static void mdiobus_stats_acct(struct mdio_bus_stats *stats, bool op, int ret)
- {
-+	preempt_disable();
- 	u64_stats_update_begin(&stats->syncp);
- 
- 	u64_stats_inc(&stats->transfers);
-@@ -771,6 +772,7 @@ static void mdiobus_stats_acct(struct mdio_bus_stats *stats, bool op, int ret)
- 		u64_stats_inc(&stats->writes);
- out:
- 	u64_stats_update_end(&stats->syncp);
-+	preempt_enable();
+ 	priv->card.dai_link = links;
+ 	priv->link_data = ldata;
+ 	priv->card.num_links = num_links;
+ 	return 0;
++
++err_ldata:
++	kfree(links);
++err_links:
++	dev_err(priv->card.dev, "failed to allocate links\n");
++	return -ENOMEM;
++
  }
+ EXPORT_SYMBOL_GPL(meson_card_reallocate_links);
  
- /**
 -- 
 2.25.1
 
