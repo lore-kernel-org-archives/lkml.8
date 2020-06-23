@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E065C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06CEE2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AB92080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943752;
-	bh=iH08VnW3uKA0g3AvFh8w+vi2WfhazxAAViYMCsS7Izo=;
+	s=default; t=1592943755;
+	bh=y7rN6xPn3IrYjM8zQzP7wSXSU9juKi2XesxHLYHex9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZ2MngpQ1tWOuN2Tb+iqVfABwgKc0EmV8RdnCXllOp/i3veBdM7BOAuhMXU2aGfsZ
-	 xOr8TSZG2Fo22iMS7P7wPRnedVpyZ0/vCoIQMMEF/z5aVeUdLORgQEi4pRWglmnXaV
-	 qmuydR2n5DFi4XLtTSEhei5ogqkfqPutI7ExaMOI=
+	b=UGWWC+o/9vb+XoKc/S3MXZoFNryZax6AVY7Zq4KV1wg1wESfT5KFKuGjLZvJJ1ECs
+	 aGv/gwrXXMT3F2JxlyZbgA7b+Jpt71bu9E9KUqoRvvdVtSAWt9xSUnCLHB3vX2jY5a
+	 4Vc2xXSi35A9x49jDY7QIVRnT1u59Yx2qTskqHBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390183AbgFWUWa (ORCPT
+        id S2389872AbgFWUW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40266 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389898AbgFWUWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:22:22 -0400
+        id S2390140AbgFWUWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:22:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA1042064B;
-        Tue, 23 Jun 2020 20:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF4CA2064B;
+        Tue, 23 Jun 2020 20:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943742;
-        bh=iH08VnW3uKA0g3AvFh8w+vi2WfhazxAAViYMCsS7Izo=;
+        s=default; t=1592943737;
+        bh=y7rN6xPn3IrYjM8zQzP7wSXSU9juKi2XesxHLYHex9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YdItPIm0xRBa91oCT71M4hFMUNunUPbfK8JgeKOTBa3XfIfI9uUtMH4G5ftTrfr9j
-         02X3jV0kghq7bteEJOD/bi8lWE5nRuEndp1gDlDmfGlSgyVn68j+Q2rjjTX9fJ/js+
-         ar06lGSOxAYvIYRrXHgq9OSYpg1s3glTpxwBXSmc=
+        b=LoXmkTSkxSoHmyCJzrzTRibvJQGlVsIkelk3sYB0b4cC+BtYpIFso5p3PsY4EIe2W
+         OO/jDyDjbFo4OLPNu/7XjNZJ+DZwvG+t9K82KK0Y8TZ59kV37H4mQuSNqAETuIz9Id
+         vC9OSdKlEB+zHuZpUhI70/+8LM57A8rbd4lCgMNE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Elder <elder@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 007/314] remoteproc: Fix IDR initialisation in rproc_alloc()
-Date:   Tue, 23 Jun 2020 21:53:22 +0200
-Message-Id: <20200623195339.144198310@linuxfoundation.org>
+Subject: [PATCH 5.4 005/314] ASoC: SOF: imx8: Fix randbuild error
+Date:   Tue, 23 Jun 2020 21:53:20 +0200
+Message-Id: <20200623195339.038060117@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,58 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 6442df49400b466431979e7634849a464a5f1861 ]
+[ Upstream commit fe17e6cdc0fefca96ba9659be4b2b07487cbf0c5 ]
 
-If ida_simple_get() returns an error when called in rproc_alloc(),
-put_device() is called to clean things up.  By this time the rproc
-device type has been assigned, with rproc_type_release() as the
-release function.
+when do randconfig like this:
+CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
+CONFIG_SND_SOC_SOF_IMX8=y
+CONFIG_SND_SOC_SOF_OF=y
+CONFIG_IMX_DSP=m
+CONFIG_IMX_SCU=y
 
-The first thing rproc_type_release() does is call:
-    idr_destroy(&rproc->notifyids);
+there is a link error:
 
-But at the time the ida_simple_get() call is made, the notifyids
-field in the remoteproc structure has not been initialized.
+sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
+imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
 
-I'm not actually sure this case causes an observable problem, but
-it's incorrect.  Fix this by initializing the notifyids field before
-calling ida_simple_get() in rproc_alloc().
+Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
 
-Fixes: b5ab5e24e960 ("remoteproc: maintain a generic child device for each rproc")
-Signed-off-by: Alex Elder <elder@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200415204858.2448-2-mathieu.poirier@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20200409071832.2039-2-daniel.baluta@oss.nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/remoteproc_core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/soc/sof/imx/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 0896b3614eb11..ce92ae227aa10 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -2036,6 +2036,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 	rproc->dev.type = &rproc_type;
- 	rproc->dev.class = &rproc_class;
- 	rproc->dev.driver_data = rproc;
-+	idr_init(&rproc->notifyids);
- 
- 	/* Assign a unique device index and name */
- 	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
-@@ -2060,8 +2061,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 
- 	mutex_init(&rproc->lock);
- 
--	idr_init(&rproc->notifyids);
--
- 	INIT_LIST_HEAD(&rproc->carveouts);
- 	INIT_LIST_HEAD(&rproc->mappings);
- 	INIT_LIST_HEAD(&rproc->traces);
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index 71f318bc2c74f..b4f0426685c42 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -14,7 +14,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+ config SND_SOC_SOF_IMX8_SUPPORT
+ 	bool "SOF support for i.MX8"
+ 	depends on IMX_SCU
+-	depends on IMX_DSP
++	select IMX_DSP
+ 	help
+           This adds support for Sound Open Firmware for NXP i.MX8 platforms
+           Say Y if you have such a device.
 -- 
 2.25.1
 
