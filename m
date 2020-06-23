@@ -2,159 +2,176 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7610CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B592CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 552D0207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B690207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ChgXJSDp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dodDBLcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733191AbgFWSOO (ORCPT
+        id S1733181AbgFWSQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:14:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41951 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728916AbgFWSON (ORCPT
+        Tue, 23 Jun 2020 14:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728916AbgFWSQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:14:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592936052;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9OSK+h7qYgAzWHaZZAbxLByby9nYNdBw4r3UMn9ujiY=;
-        b=ChgXJSDpv7r4ci3FVVMMUKIJwq2uAi55srVvaz2Bmaj6RKo1s3SKkR8GOG6iW9CmFnRurW
-        OxunnvFchQjprI2P3sjbDjO7LkqYpAf6vDNrORnyRIuNws27Z5pUIZ17HAEX9m8o5mUl0u
-        bd5WBjIKHI+/M+Q8tpUsVOSETCB9aU4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-512-tzzgtOxxN4ePEPQjCDtjvw-1; Tue, 23 Jun 2020 14:14:02 -0400
-X-MC-Unique: tzzgtOxxN4ePEPQjCDtjvw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77D1C804001;
-        Tue, 23 Jun 2020 18:14:00 +0000 (UTC)
-Received: from localhost (ovpn-116-11.gru2.redhat.com [10.97.116.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 72BAD60CD3;
-        Tue, 23 Jun 2020 18:13:58 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 15:13:57 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Maurizio Drocco <maurizio.drocco@ibm.com>
-Cc:     zohar@linux.ibm.com, Silviu.Vlasceanu@huawei.com,
-        dmitry.kasatkin@gmail.com, jejb@linux.ibm.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, mdrocco@linux.vnet.ibm.com,
-        roberto.sassu@huawei.com, serge@hallyn.com
-Subject: Re: [PATCH v2] ima_evm_utils: extended calc_bootaggr to PCRs 8 - 9
-Message-ID: <20200623181357.GC4983@glitch>
-References: <1592856871.4987.21.camel@linux.ibm.com>
- <20200623180122.209-1-maurizio.drocco@ibm.com>
+        Tue, 23 Jun 2020 14:16:55 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3FCC061573;
+        Tue, 23 Jun 2020 11:16:55 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id q198so11881385qka.2;
+        Tue, 23 Jun 2020 11:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mldfnWKkii9NqHOu/tXDKOQ3f+s/hvhqqjnpq5hhPWY=;
+        b=dodDBLcldmPsxJt8X89WGwJOvoTtN0MpO3DcU1SWAop3JWBYfEMfQXH8Q8v5FQI21y
+         M3tssQMT05tLDv9R6ymn0+i+m6N+QuzwN5Y1qdZ7B2/KDYUC+Itt2Vm4F2QXgwgvZjNz
+         mlaaaiiHmj7FsvhyXxCgyHHA40Zcq0kzHC3visY014WNtJ6l5BO/j/i6CQIkwfBEBwjv
+         HC3BFqGOvFA1pg1s2Z1gj3WyPbjUC+BkSwUvzeBfkz3ioODYf/cWvuwnlGnDf59yfTzz
+         iBTXm5nq4tQtXWf8f1LYCbt+oq81CmnvCVBA07qKm2CLXoYpx1zzOi7AFSP02d2m7WgV
+         eQlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mldfnWKkii9NqHOu/tXDKOQ3f+s/hvhqqjnpq5hhPWY=;
+        b=jPIW7q/drsEbtxivgUQeAsG2s1wjZJDya7nYpMfYpMeAQn0v0I9fiB6ZOok/lpTBKO
+         Lwh8ht6Uh3EoqmNEdo4k0g66WfPS/sTGNkR9SUNEc4bEXH5wpICW2oqg+HsoY664HTg5
+         lg1yD6Z2wTzJLjZG1uB9uVSNqSXpTaMOeP1F67owQnOXXBBb6i0b6NzeB1TeyrkkmFuY
+         MYz2VlHMX5mWXD/ocM/oDkMUWiD/bNMlm5OTbPDZVJB+PatxypXkffy9WPZhqQ599FBK
+         AgvZziNBedwdgOSJbLG5NvqD2oNRPSRhSDmGkjqLoy4b3rQFi7YOBu1djgK+FTWNZXIn
+         UQ4A==
+X-Gm-Message-State: AOAM533ppAyMwwmImd2aHVlpFbjeyGqUJSMYKkbaCJFBaD4r1HN3AEol
+        rgS+tU3IMNiilNSr0Ek0AMi/We9B8FXaSKvUc0c=
+X-Google-Smtp-Source: ABdhPJxMvYx/vjH10MXjHGXbvqn7hdYEvl3XK2YxTRCzZrJu73OVTYkeMJKAEbWqQ32ml9obQ63nvUw8ppJjHInKoJ4=
+X-Received: by 2002:a05:620a:12d2:: with SMTP id e18mr22426657qkl.437.1592936214457;
+ Tue, 23 Jun 2020 11:16:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200623180122.209-1-maurizio.drocco@ibm.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ctP54qlpMx3WjD+/"
-Content-Disposition: inline
+References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com> <1592914031-31049-9-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1592914031-31049-9-git-send-email-alan.maguire@oracle.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 23 Jun 2020 11:16:43 -0700
+Message-ID: <CAEf4BzZ8cbMBVNhxXRXapyZCm_b70y-85Xb5SpB0MWBixJ9h_w@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 8/8] bpf/selftests: add tests for %pT format specifier
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---ctP54qlpMx3WjD+/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 23, 2020 at 02:01:22PM -0400, Maurizio Drocco wrote:
-> From: Maurizio <maurizio.drocco@ibm.com>
->=20
-> If PCRs 8 - 9 are set (i.e. not all-zeros), cal_bootaggr should include
-> them into the digest.
->=20
-> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+On Tue, Jun 23, 2020 at 5:12 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+> tests verify we get 0 return value from bpf_trace_print()
+> using %pT format specifier with various modifiers/pointer
+> values.
+>
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 > ---
-> Changelog:
-> v2:
-> - Always include PCRs 8 & 9 to non-sha1 hashes
-> v1:
-> - Include non-zero PCRs 8 & 9 to boot aggregates=20
->=20
->  src/evmctl.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
->=20
-> diff --git a/src/evmctl.c b/src/evmctl.c
-> index 1d065ce..46b7092 100644
-> --- a/src/evmctl.c
-> +++ b/src/evmctl.c
-> @@ -1930,6 +1930,16 @@ static void calc_bootaggr(struct tpm_bank_info *ba=
-nk)
->  =09=09}
->  =09}
-> =20
-> +=09if (strcmp(bank->algo_name, "sha1") !=3D 0) {
-> +=09=09for (i =3D 8; i < 10; i++) {
-> +=09=09=09err =3D EVP_DigestUpdate(pctx, bank->pcr[i], bank->digest_size)=
-;
-> +=09=09=09if (!err) {
-> +=09=09=09=09log_err("EVP_DigestUpdate() failed\n");
-> +=09=09=09=09return;
-> +=09=09=09}
-> +=09=09}
-> +=09}
+
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+>  .../selftests/bpf/prog_tests/trace_printk_btf.c    | 45 +++++++++++++++++++++
+>  .../selftests/bpf/progs/netif_receive_skb.c        | 47 ++++++++++++++++++++++
+>  2 files changed, 92 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_printk_btf.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/netif_receive_skb.c
+>
+
+[...]
+
+> diff --git a/tools/testing/selftests/bpf/progs/netif_receive_skb.c b/tools/testing/selftests/bpf/progs/netif_receive_skb.c
+> new file mode 100644
+> index 0000000..03ca1d8
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/netif_receive_skb.c
+> @@ -0,0 +1,47 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2020, Oracle and/or its affiliates. */
+> +#include "vmlinux.h"
+> +#include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
 > +
->  =09err =3D EVP_DigestFinal(pctx, bank->digest, &mdlen);
->  =09if (!err) {
->  =09=09log_err("EVP_DigestFinal() failed\n");
-> @@ -1972,8 +1982,9 @@ static int append_bootaggr(char *bootaggr, struct t=
-pm_bank_info *tpm_banks)
->  /*
->   * The IMA measurement list boot_aggregate is the link between the prebo=
-ot
->   * event log and the IMA measurement list.  Read and calculate all the
-> - * possible per TPM bank boot_aggregate digests based on the existing
-> - * PCRs 0 - 7 to validate against the IMA boot_aggregate record.
-> + * possible per TPM bank boot_aggregate digests based on the existing PC=
-Rs
-> + * 0 - 9 to validate against the IMA boot_aggregate record. If the diges=
-t
-> + * algorithm is SHA1, only PCRs 0 - 7 are considered to avoid ambiguity.
->   */
->  static int cmd_ima_bootaggr(struct command *cmd)
->  {
-> --=20
-> 2.17.1
->=20
+> +char _license[] SEC("license") = "GPL";
+> +
+> +int ret;
+> +int num_subtests;
+> +int ran_subtests;
 
-Reviewed-by: Bruno Meneguele <bmeneg@redhat.com>
+oh, interesting, so Clang doesn't put these into the COM section
+anymore? We used to need to explicitly zero-initialize these global
+vars because of that.
 
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
+> +
+> +#define CHECK_PRINTK(_fmt, _p, res)                                    \
+> +       do {                                                            \
+> +               char fmt[] = _fmt;                                      \
 
---ctP54qlpMx3WjD+/
-Content-Type: application/pgp-signature; name="signature.asc"
+pro tip: you can use `static const char fmt[] = _fmt` and it will just work.
 
------BEGIN PGP SIGNATURE-----
+> +               ++num_subtests;                                         \
+> +               if (ret >= 0) {                                         \
+> +                       ++ran_subtests;                                 \
+> +                       ret = bpf_trace_printk(fmt, sizeof(fmt), (_p)); \
+> +               }                                                       \
+> +       } while (0)
+> +
+> +/* TRACE_EVENT(netif_receive_skb,
+> + *     TP_PROTO(struct sk_buff *skb),
+> + */
+> +SEC("tp_btf/netif_receive_skb")
+> +int BPF_PROG(trace_netif_receive_skb, struct sk_buff *skb)
+> +{
+> +       char skb_type[] = "struct sk_buff";
 
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7yRmUACgkQYdRkFR+R
-okOyDwf/csNoUdXIxPrHGfJ/7A6nZ6PNHG8xsHJ4EJnjxXDY1FGIBRSqtVwMc6wY
-09e1b2Q2c1j0qMtAx2PTJC7MXmQS9UFSIL+TEl+rZ6Z9LTK9x9xmop5Qt7EUqRA/
-nxqU0nI2srqfwMtF0e7wxrfMQC8NzS3gTT5zWbrbLyq2ejgtunBSdrTJ8yWoMTKQ
-EEMImoCdiNDoS3savbXfbie28gZcYYHZBmM4mbyvDVoGRrF4MztcvnJHtnbGgvST
-+Do6Ti8LbLXdDUYJ0thiFO+NF+7pHMrZd6MWebse7s0cZw+nRk1Es2bQVNkpifK+
-IXHJW7lwIgQCDIAPK5W1270X8m+zkw==
-=jGnU
------END PGP SIGNATURE-----
+same, `static const char` will generate more optimal code (good to
+have good examples in selftests for people to follow). But don't
+bother re-spinning just for this.
 
---ctP54qlpMx3WjD+/--
 
+> +       struct btf_ptr nullp = { .ptr = 0, .type = skb_type };
+> +       struct btf_ptr p = { .ptr = skb, .type = skb_type };
+> +
+> +       CHECK_PRINTK("%pT\n", &p, &res);
+> +       CHECK_PRINTK("%pTc\n", &p, &res);
+> +       CHECK_PRINTK("%pTN\n", &p, &res);
+> +       CHECK_PRINTK("%pTx\n", &p, &res);
+> +       CHECK_PRINTK("%pT0\n", &p, &res);
+> +       CHECK_PRINTK("%pTcNx0\n", &p, &res);
+> +       CHECK_PRINTK("%pT\n", &nullp, &res);
+> +       CHECK_PRINTK("%pTc\n", &nullp, &res);
+> +       CHECK_PRINTK("%pTN\n", &nullp, &res);
+> +       CHECK_PRINTK("%pTx\n", &nullp, &res);
+> +       CHECK_PRINTK("%pT0\n", &nullp, &res);
+> +       CHECK_PRINTK("%pTcNx0\n", &nullp, &res);
+> +
+> +       return 0;
+> +}
+> --
+> 1.8.3.1
+>
