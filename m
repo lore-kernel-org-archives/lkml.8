@@ -2,54 +2,59 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B815C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4017CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C16220716
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4AC2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K+5qbULP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b53/TDeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732878AbgFWOYM (ORCPT
+        id S1732884AbgFWOYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:24:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48291 "EHLO
+        Tue, 23 Jun 2020 10:24:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46746 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732812AbgFWOYJ (ORCPT
+        with ESMTP id S1732872AbgFWOYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:24:09 -0400
+        Tue, 23 Jun 2020 10:24:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592922248;
+        s=mimecast20190719; t=1592922251;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=0M/+0rqIyvw5HF3akQ4a93oj+m8BY4YLLuWdWfaRSzQ=;
-        b=K+5qbULPk/HCbDSlTzE4yazPtHMTrSfobl/ub0U7w8fiX4MoxZscDib0F1LXNAuRPgnHX8
-        bREpFQcR8dtSgquvHF0qKYTLmoJFFparehZCxpwIc+E9x81sobV+Mml/mIUTuhHuNzELdq
-        Uwh5TacEENZBPKDfcPz840f3VQ4oRps=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cgN7tmFj25tx6e5PNZ63Ky6t5MTHpxwjxxdlmrg0Pyc=;
+        b=b53/TDeTo9oqAV+/MfU8z45IjJ+PrVhRpwCIrFQ/90vLVqDv6GC0TLH8V1L2DSA8VLiUVH
+        O022GPkf81ngWmGeg3nJAzy7+NVlb47woKlq3ExDlHCcnLB4/Vxqwu3L/KjmAC5EdJoQ7h
+        vZW8tmrjzpKx/OZv8Ez3fSfvbx7UJbo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-398-w43fZNodM-O5sKXbQQcMXw-1; Tue, 23 Jun 2020 10:24:04 -0400
-X-MC-Unique: w43fZNodM-O5sKXbQQcMXw-1
+ us-mta-175-9vUvhybtMAGn9NTh0htpaQ-1; Tue, 23 Jun 2020 10:24:07 -0400
+X-MC-Unique: 9vUvhybtMAGn9NTh0htpaQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 958E6835BE1;
-        Tue, 23 Jun 2020 14:24:03 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 798608035C0;
+        Tue, 23 Jun 2020 14:24:06 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-114-58.ams2.redhat.com [10.36.114.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A045E5D9DA;
-        Tue, 23 Jun 2020 14:24:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 63D185D9DA;
+        Tue, 23 Jun 2020 14:24:05 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/8] virt: vbox: Add support for the new VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl
-Date:   Tue, 23 Jun 2020 16:23:53 +0200
-Message-Id: <20200623142401.3742-1-hdegoede@redhat.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v2 2/8] virt: vbox: Fix guest capabilities mask check
+Date:   Tue, 23 Jun 2020 16:23:55 +0200
+Message-Id: <20200623142401.3742-3-hdegoede@redhat.com>
+In-Reply-To: <20200623142401.3742-1-hdegoede@redhat.com>
+References: <20200623142401.3742-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
@@ -58,17 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Check the passed in capabilities against VMMDEV_GUEST_CAPABILITIES_MASK
+instead of against VMMDEV_EVENT_VALID_EVENT_MASK.
+This tightens the allowed mask from 0x7ff to 0x7.
 
-Here is v2 of my vboxguest driver patch-set adding support for the
-new VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl which is necessary to
-make guest resizing work with the new(ish) VMSVGA emulation in vbox +
-some other small fixes.
+Fixes: 0ba002bc4393 ("virt: Add vboxguest driver for Virtual Box Guest integration")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/virt/vboxguest/vboxguest_core.c | 2 +-
+ drivers/virt/vboxguest/vmmdev.h         | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-The only change since v2 is rate-limiting the error-logging in:
-[PATCH v2 7/8] virt: vbox: Log unknown ioctl requests as error
-
-Regards,
-
-Hans
+diff --git a/drivers/virt/vboxguest/vboxguest_core.c b/drivers/virt/vboxguest/vboxguest_core.c
+index 8fab04e76c14..18ebd7a6af98 100644
+--- a/drivers/virt/vboxguest/vboxguest_core.c
++++ b/drivers/virt/vboxguest/vboxguest_core.c
+@@ -1444,7 +1444,7 @@ static int vbg_ioctl_change_guest_capabilities(struct vbg_dev *gdev,
+ 	or_mask = caps->u.in.or_mask;
+ 	not_mask = caps->u.in.not_mask;
+ 
+-	if ((or_mask | not_mask) & ~VMMDEV_EVENT_VALID_EVENT_MASK)
++	if ((or_mask | not_mask) & ~VMMDEV_GUEST_CAPABILITIES_MASK)
+ 		return -EINVAL;
+ 
+ 	ret = vbg_set_session_capabilities(gdev, session, or_mask, not_mask,
+diff --git a/drivers/virt/vboxguest/vmmdev.h b/drivers/virt/vboxguest/vmmdev.h
+index 6337b8d75d96..21f408120e3f 100644
+--- a/drivers/virt/vboxguest/vmmdev.h
++++ b/drivers/virt/vboxguest/vmmdev.h
+@@ -206,6 +206,8 @@ VMMDEV_ASSERT_SIZE(vmmdev_mask, 24 + 8);
+  * not.
+  */
+ #define VMMDEV_GUEST_SUPPORTS_GRAPHICS                      BIT(2)
++/* The mask of valid capabilities, for sanity checking. */
++#define VMMDEV_GUEST_CAPABILITIES_MASK                      0x00000007U
+ 
+ /** struct vmmdev_hypervisorinfo - Hypervisor info structure. */
+ struct vmmdev_hypervisorinfo {
+-- 
+2.26.2
 
