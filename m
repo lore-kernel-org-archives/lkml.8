@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8187AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2DC217A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE9121548
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945317;
-	bh=9qEEOibyO+UeBbgruNVcxalCX8lLeefGOc9hf40Qzps=;
+	s=default; t=1592945323;
+	bh=/8gCY5X9pERgShbmmKJyfJr5Kwu2OB8VA3tfZ/WPk7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bQ4ObIY1v0sXQgvD6bWZOq/P+DPS4g/dwNA/rTttZwAIpt6nxDjOV8yICyQVpj2c/
-	 iYJHQiv2Spvrc3EhWpktjSaPkGlnz2MgBkEoTlRo0VODXs+Fxbl6KC4HKgovOlMfUb
-	 FHFXhooM5YYlPCFk4qwr5wtzfVHo5PfIGwsQiP64=
+	b=LlcIW+KkVivuNZf+HePXedQCJyciKFPBcNYzdss5jUR0Tueqr6RvZT/5ZBv5IcGlL
+	 xMkcKF5F3O8e7+oH/oD/gPO25juEyNXH/hiDVvWIDD1VmeF3dRbw723UfdijMgsIm6
+	 sxQi0dfu5JuNh+cLlp74pXF4fa6SkfQp84rY2KK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392726AbgFWUsc (ORCPT
+        id S2392955AbgFWUsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47368 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:48:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392932AbgFWUsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:48:20 -0400
+        id S2392938AbgFWUsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:48:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D4F721548;
-        Tue, 23 Jun 2020 20:48:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAAD5217D8;
+        Tue, 23 Jun 2020 20:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945301;
-        bh=9qEEOibyO+UeBbgruNVcxalCX8lLeefGOc9hf40Qzps=;
+        s=default; t=1592945311;
+        bh=/8gCY5X9pERgShbmmKJyfJr5Kwu2OB8VA3tfZ/WPk7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJqxqVFQYWrOsKujaBTCMCyvhVC3JGIx+2H/eyMolpLpKBbZg+ysYaJbcM4nJD61h
-         14HbDr2iHy2qjF7kpEqTfrEUIIB1Kq/rC69wsPWIaVzNFCEkiGNLjSivKHcRxsT7R6
-         SW4uMLV/ZOfquR2OKDpH/hnMXD2Kt1HQSlELBudc=
+        b=gGewX5VNEZLI6upEkBogkggUSk0fCEy3FGAplXmm76qfU5n1OtYOF+9Usdac9wzdn
+         HNjju/O5UHi+iw53WUzTiLDz/t4D+bSVCwBNUi5bHMreMoVj0G4jsbL0E3m6b6alO0
+         8m0k2tMJUjdGRop75JO6htPI34K/qtyJNx65Eatg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 100/136] gfs2: fix use-after-free on transaction ail lists
-Date:   Tue, 23 Jun 2020 21:59:16 +0200
-Message-Id: <20200623195308.699308038@linuxfoundation.org>
+Subject: [PATCH 4.14 121/136] mtd: rawnand: sharpsl: Fix the probe error path
+Date:   Tue, 23 Jun 2020 21:59:37 +0200
+Message-Id: <20200623195309.825152891@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,77 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
+[ Upstream commit 0f44b3275b3798ccb97a2f51ac85871c30d6fbbc ]
 
-Before this patch, transactions could be merged into the system
-transaction by function gfs2_merge_trans(), but the transaction ail
-lists were never merged. Because the ail flushing mechanism can run
-separately, bd elements can be attached to the transaction's buffer
-list during the transaction (trans_add_meta, etc) but quickly moved
-to its ail lists. Later, in function gfs2_trans_end, the transaction
-can be freed (by gfs2_trans_end) while it still has bd elements
-queued to its ail lists, which can cause it to either lose track of
-the bd elements altogether (memory leak) or worse, reference the bd
-elements after the parent transaction has been freed.
+nand_release() is supposed be called after MTD device registration.
+Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-Although I've not seen any serious consequences, the problem becomes
-apparent with the previous patch's addition of:
+There is no Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense.
 
-	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
-
-to function gfs2_trans_free().
-
-This patch adds logic into gfs2_merge_trans() to move the merged
-transaction's ail lists to the sdp transaction. This prevents the
-use-after-free. To do this properly, we need to hold the ail lock,
-so we pass sdp into the function instead of the transaction itself.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-49-miquel.raynal@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/log.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/sharpsl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index a3208511f35aa..f30418911e1bd 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -804,8 +804,10 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl,
-  * @new: New transaction to be merged
-  */
+diff --git a/drivers/mtd/nand/sharpsl.c b/drivers/mtd/nand/sharpsl.c
+index 6cfff0c81153f..c245d66609c1f 100644
+--- a/drivers/mtd/nand/sharpsl.c
++++ b/drivers/mtd/nand/sharpsl.c
+@@ -192,7 +192,7 @@ static int sharpsl_nand_probe(struct platform_device *pdev)
+ 	return 0;
  
--static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
-+static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
- {
-+	struct gfs2_trans *old = sdp->sd_log_tr;
-+
- 	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
+ err_add:
+-	nand_release(this);
++	nand_cleanup(this);
  
- 	old->tr_num_buf_new	+= new->tr_num_buf_new;
-@@ -817,6 +819,11 @@ static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
- 
- 	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
- 	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
-+
-+	spin_lock(&sdp->sd_ail_lock);
-+	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
-+	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
-+	spin_unlock(&sdp->sd_ail_lock);
- }
- 
- static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
-@@ -828,7 +835,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
- 	gfs2_log_lock(sdp);
- 
- 	if (sdp->sd_log_tr) {
--		gfs2_merge_trans(sdp->sd_log_tr, tr);
-+		gfs2_merge_trans(sdp, tr);
- 	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
- 		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
- 		sdp->sd_log_tr = tr;
+ err_scan:
+ 	iounmap(sharpsl->io);
 -- 
 2.25.1
 
