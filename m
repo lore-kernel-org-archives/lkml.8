@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22344C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F258B2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CB52073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943835;
-	bh=9ZBvvwumbqVmD4E7N8e1DZ4AV4BqvVsv4cpUi2t8YHU=;
+	s=default; t=1592943838;
+	bh=mUUu3G3kX/MG6RIEg98bdeapRrbqiepmG9DOcONQhRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Po0BUM1PQ+OAnsEmBitUikPxuzp/p7gA2ajkE9p8yQxougoVDy8Mrn314PdMHMm/t
-	 2lVwOxT/dYb2jlQsTmMYpCR2SqHDstxcvfzR+hZX6D88HC2O+XF9E+/CImR4YxcHp4
-	 GgBnQxOWTuBpyuldfdwc95TyybXw8j2CRjU7Y+FQ=
+	b=Gi2j3x713A3p/KaLXuFj2oKLe7/iBGheAPT8O/sZUgHOqvfEQ6CbowuXn+y1XJJUF
+	 mIvoREfgbYul4w6NfLJBsJQCgVejFHkcRwMk3Gf+nBgd8sgx7r3FKijdDHkwwLk9Fn
+	 IKwlf028ZeYkbA4k2I3bXLyG8kxu9IQDa8Ji3L8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389943AbgFWUXx (ORCPT
+        id S2390001AbgFWUX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42118 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390348AbgFWUXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:23:50 -0400
+        id S2390353AbgFWUXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:23:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53CAB20723;
-        Tue, 23 Jun 2020 20:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 011252070E;
+        Tue, 23 Jun 2020 20:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943829;
-        bh=9ZBvvwumbqVmD4E7N8e1DZ4AV4BqvVsv4cpUi2t8YHU=;
+        s=default; t=1592943832;
+        bh=mUUu3G3kX/MG6RIEg98bdeapRrbqiepmG9DOcONQhRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZacpgP15JFA/lBNWfIqBmP9NsL/U5xvV/fKKdOH6KxpdGPnMmpyR/ObiEZn1QD8yU
-         FyqhZb6OO7A1J/XUcsYXOxQOWEhg5ug6nsG3cko+zrvaAd0hheY1k2spntOdZFaqyx
-         mCXHkN0ucYXqPN+KD3ASHfA+7dTAhLpaVzmwhcW0=
+        b=FRjMR1/N9JphnOJUNKkTWoVby5qOqcB6SvIOARHUMK7a7typzSDtjOO4MuIj4V9Fd
+         W21flfmYjBaC8bK55hgXBJQexCdXo5Oa2gEXeGwjwIkIrH6DlvlZ7bKD1x3ADvg9Fs
+         82bnb0+O+n8kukTRxladH+lthjExlU+VRMUp0WY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 037/314] arm64: dts: juno: Fix GIC child nodes
-Date:   Tue, 23 Jun 2020 21:53:52 +0200
-Message-Id: <20200623195340.576949501@linuxfoundation.org>
+Subject: [PATCH 5.4 028/314] remoteproc: qcom_q6v5_mss: map/unmap mpss segments before/after use
+Date:   Tue, 23 Jun 2020 21:53:43 +0200
+Message-Id: <20200623195340.150783120@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,130 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit a78aee9e434932a500db36cc6d88daeff3745e9f ]
+[ Upstream commit be050a3429f46ecf13eb2b80f299479f8bb823fb ]
 
-The GIC DT nodes for the Juno boards were not fully compliant with
-the DT binding, which has certain expectations about child nodes and
-their size and address cells values.
+The application processor accessing the mpss region when the Q6 modem is
+running will lead to an XPU violation. Fix this by un-mapping the mpss
+segments post copy during mpss authentication and coredumps.
 
-Use smaller #address-cells and #size-cells values, as the binding
-requests, and adjust the reg properties accordingly.
-This requires adjusting the interrupt nexus nodes as well, as one
-field of the interrupt-map property depends on the GIC's address-size.
-
-Link: https://lore.kernel.org/r/20200513103016.130417-10-andre.przywara@arm.com
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Tested-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200415071619.6052-1-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/arm/juno-base.dtsi | 50 +++++++++++++-------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ drivers/remoteproc/qcom_q6v5_mss.c | 31 +++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 8c11660bbe40c..c47f76b01c4b5 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -62,35 +62,35 @@
- 		      <0x0 0x2c02f000 0 0x2000>,
- 		      <0x0 0x2c04f000 0 0x2000>,
- 		      <0x0 0x2c06f000 0 0x2000>;
--		#address-cells = <2>;
-+		#address-cells = <1>;
- 		#interrupt-cells = <3>;
--		#size-cells = <2>;
-+		#size-cells = <1>;
- 		interrupt-controller;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
--		ranges = <0 0 0 0x2c1c0000 0 0x40000>;
-+		ranges = <0 0 0x2c1c0000 0x40000>;
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 6ba065d5c4d95..d84e9f306086b 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1005,7 +1005,13 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			goto release_firmware;
+ 		}
  
- 		v2m_0: v2m@0 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0 0 0 0x10000>;
-+			reg = <0 0x10000>;
- 		};
+-		ptr = qproc->mpss_region + offset;
++		ptr = ioremap_wc(qproc->mpss_phys + offset, phdr->p_memsz);
++		if (!ptr) {
++			dev_err(qproc->dev,
++				"unable to map memory region: %pa+%zx-%x\n",
++				&qproc->mpss_phys, offset, phdr->p_memsz);
++			goto release_firmware;
++		}
  
- 		v2m@10000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0 0x10000 0 0x10000>;
-+			reg = <0x10000 0x10000>;
- 		};
+ 		if (phdr->p_filesz && phdr->p_offset < fw->size) {
+ 			/* Firmware is large enough to be non-split */
+@@ -1014,6 +1020,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 					"failed to load segment %d from truncated file %s\n",
+ 					i, fw_name);
+ 				ret = -EINVAL;
++				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
  
- 		v2m@20000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0 0x20000 0 0x10000>;
-+			reg = <0x20000 0x10000>;
- 		};
+@@ -1024,6 +1031,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
+ 			if (ret) {
+ 				dev_err(qproc->dev, "failed to load %s\n", fw_name);
++				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
  
- 		v2m@30000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0 0x30000 0 0x10000>;
-+			reg = <0x30000 0x10000>;
- 		};
- 	};
+@@ -1036,6 +1044,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			memset(ptr + phdr->p_filesz, 0,
+ 			       phdr->p_memsz - phdr->p_filesz);
+ 		}
++		iounmap(ptr);
+ 		size += phdr->p_memsz;
+ 	}
  
-@@ -519,10 +519,10 @@
- 			 <0x42000000 0x40 0x00000000 0x40 0x00000000 0x1 0x00000000>;
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 0 2 &gic 0 0 GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 0 3 &gic 0 0 GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 0 4 &gic 0 0 GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map = <0 0 0 1 &gic 0 GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 2 &gic 0 GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 3 &gic 0 GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 4 &gic 0 GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
- 		msi-parent = <&v2m_0>;
- 		status = "disabled";
- 		iommu-map-mask = <0x0>;	/* RC has no means to output PCI RID */
-@@ -786,19 +786,19 @@
+@@ -1075,7 +1084,8 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 	int ret = 0;
+ 	struct q6v5 *qproc = rproc->priv;
+ 	unsigned long mask = BIT((unsigned long)segment->priv);
+-	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
++	int offset = segment->da - qproc->mpss_reloc;
++	void *ptr = NULL;
  
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 15>;
--		interrupt-map = <0 0  0 &gic 0 0 GIC_SPI  68 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  1 &gic 0 0 GIC_SPI  69 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  2 &gic 0 0 GIC_SPI  70 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  3 &gic 0 0 GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  4 &gic 0 0 GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  5 &gic 0 0 GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  6 &gic 0 0 GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  7 &gic 0 0 GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  8 &gic 0 0 GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  9 &gic 0 0 GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 10 &gic 0 0 GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 11 &gic 0 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 12 &gic 0 0 GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map = <0 0  0 &gic 0 GIC_SPI  68 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  1 &gic 0 GIC_SPI  69 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  2 &gic 0 GIC_SPI  70 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  3 &gic 0 GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  4 &gic 0 GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  5 &gic 0 GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  6 &gic 0 GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  7 &gic 0 GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  8 &gic 0 GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  9 &gic 0 GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 10 &gic 0 GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 11 &gic 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 12 &gic 0 GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
- 	};
+ 	/* Unlock mba before copying segments */
+ 	if (!qproc->dump_mba_loaded) {
+@@ -1089,10 +1099,15 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 		}
+ 	}
  
- 	site2: tlx@60000000 {
-@@ -808,6 +808,6 @@
- 		ranges = <0 0 0x60000000 0x10000000>;
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0>;
--		interrupt-map = <0 0 &gic 0 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map = <0 0 &gic 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- };
+-	if (!ptr || ret)
+-		memset(dest, 0xff, segment->size);
+-	else
++	if (!ret)
++		ptr = ioremap_wc(qproc->mpss_phys + offset, segment->size);
++
++	if (ptr) {
+ 		memcpy(dest, ptr, segment->size);
++		iounmap(ptr);
++	} else {
++		memset(dest, 0xff, segment->size);
++	}
+ 
+ 	qproc->dump_segment_mask |= mask;
+ 
+@@ -1393,12 +1408,6 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
+ 
+ 	qproc->mpss_phys = qproc->mpss_reloc = r.start;
+ 	qproc->mpss_size = resource_size(&r);
+-	qproc->mpss_region = devm_ioremap_wc(qproc->dev, qproc->mpss_phys, qproc->mpss_size);
+-	if (!qproc->mpss_region) {
+-		dev_err(qproc->dev, "unable to map memory region: %pa+%zx\n",
+-			&r.start, qproc->mpss_size);
+-		return -EBUSY;
+-	}
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
