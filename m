@@ -2,94 +2,92 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33282C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03488C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC7A20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:09:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FQhz1hU9"
+	by mail.kernel.org (Postfix) with ESMTP id D586820780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592885358;
+	bh=ZRJiyt96N9POXJVP7NHy1iE13kRK0Ty6Vm6e9HZ9pdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1jvC0C4QXyTNfU6KxbRLDWmDO/xbJxFBi1f0QrUERngB3mX00Y6O10Ly0a3Y7o8Yn
+	 Q+SBQTanWG8mw/6g08lKqKXOTVFSO4MsLKArJKCZhjC235bbeJMlkqdetnesLDkNbH
+	 thUnJACzdmFH6oYDZpidvohj1eR+3bOMIvLUolHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732296AbgFWEJE (ORCPT
+        id S1732058AbgFWEJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 00:09:04 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36045 "EHLO m43-7.mailgun.net"
+        Tue, 23 Jun 2020 00:09:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732222AbgFWEJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 00:09:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592885340; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=LS4JnOpUAKsNo8Zt5QnpjhczJmn2rGcrdAVF8H4PvvE=; b=FQhz1hU9nKKldvdMHYHoUCDDClyNafiOnqUls5GrH3DCKJnYsqDdfLyWm1ARl786mdbKY7lH
- /qUxjXbJUAhx6YVz3zMw9OF+VerdSslG3zp/Pd+DgtVTt/vjvy2ri6doP1hdbKQ/8j995l8B
- xyHktRGVy/BF5QZiIM+9xVWFOwI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
- 5ef1803f567385e8e794f61f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 04:08:31
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DC6A0C433A1; Tue, 23 Jun 2020 04:08:30 +0000 (UTC)
-Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1732100AbgFWEJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 00:09:14 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1977BC433CB;
-        Tue, 23 Jun 2020 04:08:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1977BC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-From:   Mike Tipton <mdtipton@codeaurora.org>
-To:     georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Tipton <mdtipton@codeaurora.org>
-Subject: [PATCH 2/4] interconnect: qcom: Only wait for completion in AMC/WAKE by default
-Date:   Mon, 22 Jun 2020 21:08:12 -0700
-Message-Id: <20200623040814.23791-3-mdtipton@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200623040814.23791-1-mdtipton@codeaurora.org>
-References: <20200623040814.23791-1-mdtipton@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FE95208A7;
+        Tue, 23 Jun 2020 04:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592885354;
+        bh=ZRJiyt96N9POXJVP7NHy1iE13kRK0Ty6Vm6e9HZ9pdc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GT81H/dR7h27MNGFDfBssIYh31YIzJ0kJgkvPdw3ZuIg8vEN+VBiNFzSUx/clnqV5
+         76i9o1tJgtjDMR2ioYpVIi2dBvy3ZTg3mirN4jIYKzIavI3R3W8rpyI21vi+QWnlAQ
+         0B9wtwCgZe+YGtvP+uiQwBuU3jgbe3eGPcaI+oac=
+Date:   Tue, 23 Jun 2020 09:39:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] ALSA: compress: document the compress audio state
+ machine
+Message-ID: <20200623040910.GP2324254@vkoul-mobl>
+References: <20200622065811.221485-1-vkoul@kernel.org>
+ <20200622065811.221485-2-vkoul@kernel.org>
+ <800a2632-b263-500f-707e-c1ce94ce92d4@linux.intel.com>
+ <20200622151334.GW71940@ediswmail.ad.cirrus.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622151334.GW71940@ediswmail.ad.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the default TCS wait behavior to only wait for completion in AMC
-and WAKE. Waiting isn't necessary in the SLEEP TCS, since votes are only
-being removed in this case. Resources can be safely disabled
-asynchronously in parallel with the rest of the power collapse sequence.
-This reduces the sleep entry latency.
+On 22-06-20, 15:13, Charles Keepax wrote:
+> On Mon, Jun 22, 2020 at 08:28:48AM -0500, Pierre-Louis Bossart wrote:
+> > On 6/22/20 1:58 AM, Vinod Koul wrote:
+                      +----------+
+> > a) can you clarify if we can go from running to free directly? is
+> > this really a legit transition? There's already the option of doing
+> > a stop and a a drain.
+> > 
+> 
+> This is allowed in the current code, the kernel sends the stop
+> internally in this case, so it kinda does go through the setup
+> state just not from the users view point. I am not sure I have a
+> good handle on if that makes sense or not.
 
-Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
----
- drivers/interconnect/qcom/bcm-voter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The idea was to stop first so that we can handle dmas which might be
+setup (like running/paused/prepared). So we should stop first and then
+free up. But i think it was an overkill... :)
 
-diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-index e9f66f5c8a91..bb83ce7554b7 100644
---- a/drivers/interconnect/qcom/bcm-voter.c
-+++ b/drivers/interconnect/qcom/bcm-voter.c
-@@ -345,7 +345,7 @@ static int qcom_icc_bcm_voter_probe(struct platform_device *pdev)
- 	voter->np = np;
- 
- 	if (of_property_read_u32(np, "qcom,tcs-wait", &voter->tcs_wait))
--		voter->tcs_wait = QCOM_ICC_TAG_ALWAYS;
-+		voter->tcs_wait = QCOM_ICC_TAG_ACTIVE_ONLY;
- 
- 	mutex_init(&voter->lock);
- 	INIT_LIST_HEAD(&voter->commit_list);
+> > c) no way to stop a paused stream?
+> 
+> Currently the code does allow this and it certainly makes sense so
+> should probably be added.
+
+Yes will add
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+~Vinod
