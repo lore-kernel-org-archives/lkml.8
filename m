@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC36C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD922C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 393B020724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972A820724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="NZHC7gFl"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="J/fxfp0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732717AbgFWNxs (ORCPT
+        id S1732806AbgFWNxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:53:48 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:64112 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732766AbgFWNxf (ORCPT
+        Tue, 23 Jun 2020 09:53:52 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:48460 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732839AbgFWNxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:53:35 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NDfGgf007439;
-        Tue, 23 Jun 2020 06:53:32 -0700
+        Tue, 23 Jun 2020 09:53:45 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NDjF1Y024287;
+        Tue, 23 Jun 2020 06:53:44 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=pfpt0818;
- bh=+Co9Ft7Uzbh1Ky3wgCVqb+oZGDxSXFJEtWjn9zOnP+E=;
- b=NZHC7gFlC46ASAn+7ZMY1sFTvjCa4V+cIPJLfabPN6zP3OD69lE8cWh0EQO4ilKAlkXt
- Fn6yaHANTGlFVLfVX7lgM1Cuum38G8ZNVVmhmqcaUn/gkYqvzOihe6nSjJr6R/Fe0I6M
- PzrzL/KD6RHT5kn0mab1R2hxtcFXMax8cOoF5mSWBp6L/QN9MFSyGsSskcgupby58Gh7
- fPPe9kTsFA5AKbDZZIyOznA+F0jjwl1wKfoHDyHM+reaHsJ2MlSeSwFFuUKEXcoY/fIo
- WLXuJiBjO9EvaXXzle3xQSAdSeIcjhWYfKwdyhZCNdG6sVzBmrgE38xd8j3xtSt1m+lO EA== 
+ bh=DKWK9CpRVAvQkoxisBXYMM/Xz6SkoJgZLB0I9KtnpPU=;
+ b=J/fxfp0np53IopvHSZShbp0nn6Unygvb1Y66t8/L7WL+uZhnrBeevILUwC2Uc3zK5V3p
+ eSPNXnZYeEk9Rgg7EDi07eUXggcvewP2FDvUbtcFwAUn0Zrq5rxOFCTMyXyaPcgqQaqV
+ f/HOlK/SHt4WaGKvHetl+G2jHreHDCyymLk5K60dlVBqL14UgDeBYP4Ds6RAheEdDoqn
+ czVsvx4xLCvMBgSXmlJ881uf34szPdvdIhiB82jLHN9eQd+uj6u8JS6lopnq0wXcNbaH
+ Vsq137/e/GVfdCNL/1jD70ITwfTDz7eHK3Wzc4/+XII+neOrC7SQCs4kOKKdDjX4DuaQ Jw== 
 Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 31shynwjfv-1
+        by mx0a-0016f401.pphosted.com with ESMTP id 31ujw9r0ym-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 06:53:32 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
+        Tue, 23 Jun 2020 06:53:44 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
  (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Jun
- 2020 06:53:30 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 23 Jun 2020 06:53:30 -0700
+ 2020 06:53:42 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 23 Jun 2020 06:53:43 -0700
 Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.39.36])
-        by maili.marvell.com (Postfix) with ESMTP id AC7613F703F;
-        Tue, 23 Jun 2020 06:53:26 -0700 (PDT)
+        by maili.marvell.com (Postfix) with ESMTP id 6FD083F703F;
+        Tue, 23 Jun 2020 06:53:39 -0700 (PDT)
 From:   Alexander Lobakin <alobakin@marvell.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -59,9 +59,9 @@ CC:     Igor Russkikh <irusskikh@marvell.com>,
         Alexander Lobakin <alobakin@marvell.com>,
         <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net 4/9] net: qed: fix NVMe login fails over VFs
-Date:   Tue, 23 Jun 2020 16:51:32 +0300
-Message-ID: <20200623135136.3185-5-alobakin@marvell.com>
+Subject: [PATCH v2 net 7/9] net: qede: fix use-after-free on recovery and AER handling
+Date:   Tue, 23 Jun 2020 16:51:35 +0300
+Message-ID: <20200623135136.3185-8-alobakin@marvell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623135136.3185-1-alobakin@marvell.com>
 References: <20200623135136.3185-1-alobakin@marvell.com>
@@ -75,72 +75,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25ms sleep cycles in waiting for PF response are excessive and may lead
-to different timeout failures.
+Set edev->cdev pointer to NULL after calling remove() callback to avoid
+using of already freed object.
 
-Start to wait with short udelays, and in most cases polling will end
-here. If the time was not sufficient, switch to msleeps.
-usleep_range() may go far beyond 100us depending on platform and tick
-configuration, hence atomic udelays for consistency.
-
-Also add explicit DMA barriers since 'done' always comes from a shared
-request-response DMA pool, and note that in the comment nearby.
-
-Fixes: 1408cc1fa48c ("qed: Introduce VFs")
+Fixes: ccc67ef50b90 ("qede: Error recovery process")
 Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
 Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 ---
- drivers/net/ethernet/qlogic/qed/qed_vf.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/qlogic/qede/qede_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
-index 856051f50eb7..adc2c8f3d48e 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
-@@ -81,12 +81,17 @@ static void qed_vf_pf_req_end(struct qed_hwfn *p_hwfn, int req_status)
- 	mutex_unlock(&(p_hwfn->vf_iov_info->mutex));
- }
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index f6ff31e73ebe..29e285430f99 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -1318,6 +1318,7 @@ static void __qede_remove(struct pci_dev *pdev, enum qede_remove_mode mode)
+ 	if (system_state == SYSTEM_POWER_OFF)
+ 		return;
+ 	qed_ops->common->remove(cdev);
++	edev->cdev = NULL;
  
-+#define QED_VF_CHANNEL_USLEEP_ITERATIONS	90
-+#define QED_VF_CHANNEL_USLEEP_DELAY		100
-+#define QED_VF_CHANNEL_MSLEEP_ITERATIONS	10
-+#define QED_VF_CHANNEL_MSLEEP_DELAY		25
-+
- static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
- {
- 	union vfpf_tlvs *p_req = p_hwfn->vf_iov_info->vf2pf_request;
- 	struct ustorm_trigger_vf_zone trigger;
- 	struct ustorm_vf_zone *zone_data;
--	int rc = 0, time = 100;
-+	int iter, rc = 0;
- 
- 	zone_data = (struct ustorm_vf_zone *)PXP_VF_BAR0_START_USDM_ZONE_B;
- 
-@@ -126,11 +131,19 @@ static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
- 	REG_WR(p_hwfn, (uintptr_t)&zone_data->trigger, *((u32 *)&trigger));
- 
- 	/* When PF would be done with the response, it would write back to the
--	 * `done' address. Poll until then.
-+	 * `done' address from a coherent DMA zone. Poll until then.
- 	 */
--	while ((!*done) && time) {
--		msleep(25);
--		time--;
-+
-+	iter = QED_VF_CHANNEL_USLEEP_ITERATIONS;
-+	while (!*done && iter--) {
-+		udelay(QED_VF_CHANNEL_USLEEP_DELAY);
-+		dma_rmb();
-+	}
-+
-+	iter = QED_VF_CHANNEL_MSLEEP_ITERATIONS;
-+	while (!*done && iter--) {
-+		msleep(QED_VF_CHANNEL_MSLEEP_DELAY);
-+		dma_rmb();
- 	}
- 
- 	if (!*done) {
+ 	/* Since this can happen out-of-sync with other flows,
+ 	 * don't release the netdevice until after slowpath stop
 -- 
 2.25.1
 
