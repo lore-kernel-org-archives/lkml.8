@@ -2,105 +2,105 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A52C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D15A206FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h2qXYk8D"
+	by mail.kernel.org (Postfix) with ESMTP id E4C7620702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732245AbgFWKRz (ORCPT
+        id S1732189AbgFWKVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:17:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731158AbgFWKRy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:17:54 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6EFC061573;
-        Tue, 23 Jun 2020 03:17:54 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49rhzt60Frz9sRf;
-        Tue, 23 Jun 2020 20:17:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592907471;
-        bh=51NGv3klwUMIQque9QEeRxsT484NcqIVmv5bJ8240n0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=h2qXYk8D8AXp8AKqLEsgL8Tm33Eca1Nh3+P+VR3T04djzj3AQFvRip0Ceijke8/Pk
-         mUtvfdSAlrD2cGa0cURTIoK3Gl75Ti0hO7Xpv0J+DF/lgJ4nDlPaQyPLyVPhTt/yGI
-         Q8Omp6hWB2WOsXwBg/GhtpQr6cPhK/qX0uOV2D7nR7yTUf2YsCIHx6wq8jVV69j3QN
-         3WwYVhspCaytT5BwWIcUaa2DxGrmKbu2J3OuCBNWc5afgqIZBY2LvTf/TPrmW+E42w
-         Ub0qTF1UQ7mWTi36ugn1vxWcHwCOKuLYlDU+aL/lMQr6xHcaqISxKgoprGxS9AsxMx
-         x2wXfaBpuvaOQ==
-Date:   Tue, 23 Jun 2020 20:17:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     syzbot <syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org, elver@google.com
-Subject: Re: linux-next build error (9)
-Message-ID: <20200623201730.6c085687@canb.auug.org.au>
-In-Reply-To: <20200623093230.GD4781@hirez.programming.kicks-ass.net>
-References: <000000000000c25ce105a8a8fcd9@google.com>
-        <20200622094923.GP576888@hirez.programming.kicks-ass.net>
-        <20200623124413.08b2bd65@canb.auug.org.au>
-        <20200623093230.GD4781@hirez.programming.kicks-ass.net>
+        Tue, 23 Jun 2020 06:21:21 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2356 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731158AbgFWKVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 06:21:18 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id E5BDFB336F6AE3172B42;
+        Tue, 23 Jun 2020 11:21:16 +0100 (IST)
+Received: from [127.0.0.1] (10.47.2.88) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 23 Jun
+ 2020 11:21:15 +0100
+Subject: Re: [PATCH 4/4] iommu/arm-smmu-v3: Remove cmpxchg() in
+ arm_smmu_cmdq_issue_cmdlist()
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+CC:     kernel test robot <lkp@intel.com>, <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "trivial@kernel.org" <trivial@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>, "maz@kernel.org" <maz@kernel.org>
+References: <1592846920-45338-5-git-send-email-john.garry@huawei.com>
+ <202006230905.3HpPgtSC%lkp@intel.com>
+ <5ba2e240-b324-d316-c00c-38c03ee49baa@huawei.com>
+ <CADRDgG4=uD3Ni6r7D3kHdSo=ketaXKGririHfFvPYq4qz8KjfQ@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ee2d7a1e-3e22-f25a-ced9-82ccced28f8c@huawei.com>
+Date:   Tue, 23 Jun 2020 11:19:47 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.jBQgqJbruxCXR9TGfnbpGd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CADRDgG4=uD3Ni6r7D3kHdSo=ketaXKGririHfFvPYq4qz8KjfQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.2.88]
+X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.jBQgqJbruxCXR9TGfnbpGd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 23/06/2020 10:35, Rikard Falkeborn wrote:
+> 
+>     I'd say that GENMASK_INPUT_CHECK() should be able to handle a l=0 and
+>     h=unsigned value, so I doubt this warn.
+> 
+>     Using GENMASK((int)cmdq->q.llq.max_n_shift, 0) resolves it, but it
+>     looks
+>     like GENMASK_INPUT_CHECK() could be improved.
+> 
+> 
+> Indeed it could, it is fixed in -next.
 
-Hi Peter,
+ok, thanks for the pointer, but I still see this on today's -next with 
+this patch:
 
-On Tue, 23 Jun 2020 11:32:30 +0200 Peter Zijlstra <peterz@infradead.org> wr=
-ote:
->
-> I suppose the next quest is finding a s390 compiler version that works
-> and then bumping the version test in the aforementioned commit.
+make W=1 drivers/iommu/arm-smmu-v3.o
 
-Not a lot of help, but my Debian cross compiler seems to work:
+In file included from ./include/linux/bits.h:23:0,
+                 from ./include/linux/ioport.h:15,
+                 from ./include/linux/acpi.h:12,
+                 from drivers/iommu/arm-smmu-v3.c:12:
+drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_cmdq_issue_cmdlist’:
+./include/linux/bits.h:27:7: warning: comparison of unsigned expression 
+< 0 is always false [-Wtype-limits]
+   (l) > (h), 0)))
+       ^
+./include/linux/build_bug.h:16:62: note: in definition of macro 
+‘BUILD_BUG_ON_ZERO’
+#define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+                                                              ^
+./include/linux/bits.h:40:3: note: in expansion of macro 
+‘GENMASK_INPUT_CHECK’
+  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+   ^~~~~~~~~~~~~~~~~~~
+drivers/iommu/arm-smmu-v3.c:1404:18: note: in expansion of macro ‘GENMASK’
+  u32 prod_mask = GENMASK(cmdq->q.llq.max_n_shift, 0);
 
-$ s390x-linux-gnu-gcc --version
-s390x-linux-gnu-gcc (Debian 9.3.0-13) 9.3.0
+That's gcc 7.5.0 .
 
---=20
 Cheers,
-Stephen Rothwell
+John
 
---Sig_/.jBQgqJbruxCXR9TGfnbpGd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7x1roACgkQAVBC80lX
-0GxY8Af/XGxeY48bC9/qnGUVZknEFGDIcTw3WU0xZvWFtUuMEcsOXzZMovrrnc+2
-/LVoAnCwwgV6dA5oamCw7XT64/RY3Hs2re1FLKj7vANGeehucftZscVlfQ7qU5ax
-sxBRASh2KK+gr4a2kBHit8gZwFVvWJnjlqRq/JmSYoSdC2Mxrg1I0sm7pE2ekBn3
-z5mhtG2kRdk4u0tVrwjt3JtkQNDaNnUnQpfvlfLJCsSZZPcAswhCDQF5LS34hyfx
-Yh5qlDmMG0s4oWCkSNlrGNBkMAuDc3+4KJ/22RZO5AebA4Jssu4CrcKmiUtqk8Mg
-pIFf6KjU/OvbbWdw51jo36QXk99QKg==
-=cTbJ
------END PGP SIGNATURE-----
-
---Sig_/.jBQgqJbruxCXR9TGfnbpGd--
