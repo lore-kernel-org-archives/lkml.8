@@ -2,102 +2,237 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E48C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C43DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC922078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592915991;
-	bh=Sf31bbv+NizJQ/qfUekYBQVAKaQoqsrAkLY4dLIG+kw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=HwnELDmb9gyuH1HdoTJSfgvepEZHrpUwCAPe0IG46Oj1Bh2PHxMI/d1OuxEACd1yk
-	 19n5A+uleLIrA6keGpET0hzlgsMsJ2Ge3IonBOcb1+jPSwZhYEPzEVPVhhMQgpI5/D
-	 pDH/jzeqX7+YGAaCIKl9b4n1ADvxW63vnKlunIn0=
+	by mail.kernel.org (Postfix) with ESMTP id E019C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbgFWMju (ORCPT
+        id S1732651AbgFWMkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:39:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51704 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 08:40:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:43994 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729667AbgFWMjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:39:49 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4245220776;
-        Tue, 23 Jun 2020 12:39:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592915988;
-        bh=Sf31bbv+NizJQ/qfUekYBQVAKaQoqsrAkLY4dLIG+kw=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=nirshNN0aFNNjSoexxgBlu3LFSV/A7dCq9dEs54XwdLipJdJZI2dIMYBwVLzlOIux
-         gEJO2xMSvsDvUB9qSGN8dlNlAOyF/nqQpS3cKoYSGiNqpXkLYcPsyMR+u6Dd0DhSgQ
-         OeFAt7QY8Xs3Eu3wv3HphKRraiQpqo1IGrybx0gQ=
-Date:   Tue, 23 Jun 2020 13:39:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     skrzynka@konradybcio.pl, Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Andy Gross <agross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Colin Cross <ccross@android.com>
-In-Reply-To: <20200620144639.335093-1-konradybcio@gmail.com>
-References: <20200620144639.335093-1-konradybcio@gmail.com>
-Subject: Re: [PATCH 00/21] MSM8994 peripheral enablement, DTS updates
-Message-Id: <159291598139.44727.6998255676582744850.b4-ty@kernel.org>
+        id S1729667AbgFWMkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:40:16 -0400
+IronPort-SDR: gpBueS7DOmCnqwOvGG1aSv1LxeztbThOqTj2rMqDBtfy0mHrlvUX9d7aCJmibfWTQ3JKXx9Ojc
+ ayo6wgpExhcg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="132456225"
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="132456225"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 05:40:16 -0700
+IronPort-SDR: 5lRppJexD/ARHDG5mePXGJ6sfnJXLRvXiDKtvitz2J+G7BLb6RJ6uxLoFK4H0s7hzIyWJkiQF1
+ s23kOdoFhmpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="293186482"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jun 2020 05:40:11 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jniDk-00FMag-OT; Tue, 23 Jun 2020 15:40:12 +0300
+Date:   Tue, 23 Jun 2020 15:40:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
+        arnaldo.melo@gmail.com, kafai@fb.com, songliubraving@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux@rasmusvillemoes.dk, joe@perches.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com, corbet@lwn.net,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 bpf-next 4/8] printk: add type-printing %pT format
+ specifier which uses BTF
+Message-ID: <20200623124012.GV2428291@smile.fi.intel.com>
+References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
+ <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 20 Jun 2020 16:46:16 +0200, Konrad Dybcio wrote:
-> In this series I added support for various buses and peripherals
-> such as I2C or SMD RPM. I also did some housekeeping when it comes
-> to the DTS. This series also includes a new board (SoMC Kitakami
-> Sumire / Xperia Z5).
+On Tue, Jun 23, 2020 at 01:07:07PM +0100, Alan Maguire wrote:
+> printk supports multiple pointer object type specifiers (printing
+> netdev features etc).  Extend this support using BTF to cover
+> arbitrary types.
+
+Is there any plans to cover (all?) existing %p extensions?
+
+> "%pT"
+
+One letter namespace is quite busy area. Perhaps %pOT ?
+
+> specifies the typed format, and the pointer
+> argument is a "struct btf_ptr *" where struct btf_ptr is as follows:
 > 
-> I have a MMCC driver coming along with GCC updates/completion
-> (almost ready, need to polish a few things) and I sincerely
-> hope somebody is going to write a 20nm DSI PLL driver (for 8992/4)
-> as I have no clue how that works.
+> struct btf_ptr {
+>         void *ptr;
+>         const char *type;
+>         u32 id;
+> };
 > 
-> [...]
+> Either the "type" string ("struct sk_buff") or the BTF "id" can be
+> used to identify the type to use in displaying the associated "ptr"
+> value.  A convenience function to create and point at the struct
+> is provided:
+> 
+>         printk(KERN_INFO "%pT", BTF_PTR_TYPE(skb, struct sk_buff));
+> 
+> When invoked, BTF information is used to traverse the sk_buff *
+> and display it.  Support is present for structs, unions, enums,
+> typedefs and core types (though in the latter case there's not
+> much value in using this feature of course).
+> 
+> Default output is indented, but compact output can be specified
+> via the 'c' option.  Type names/member values can be suppressed
+> using the 'N' option.  Zero values are not displayed by default
+> but can be using the '0' option.  Pointer values are obfuscated
+> unless the 'x' option is specified.  As an example:
+> 
+>   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+>   pr_info("%pT", BTF_PTR_TYPE(skb, struct sk_buff));
+> 
+> ...gives us:
+> 
+> (struct sk_buff){
+>  .transport_header = (__u16)65535,
+>  .mac_header = (__u16)65535,
+>  .end = (sk_buff_data_t)192,
+>  .head = (unsigned char *)0x000000006b71155a,
+>  .data = (unsigned char *)0x000000006b71155a,
+>  .truesize = (unsigned int)768,
+>  .users = (refcount_t){
+>   .refs = (atomic_t){
+>    .counter = (int)1,
+>   },
+>  },
+>  .extensions = (struct skb_ext *)0x00000000f486a130,
+> }
 
-Applied to
+I don't see how it looks on a real console when kernel dumps something.
+Care to provide? These examples better to have documented.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+> printk output is truncated at 1024 bytes.  For cases where overflow
+> is likely, the compact/no type names display modes may be used.
 
-Thanks!
+How * is handled? (I mean %*pOT case)
 
-[1/1] regulator: qcom_smd: Fix pmi8994 label
-      commit: 0d46f69881c34351b6ec523c31225b90ea89ee20
+...
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+> +#define	BTF_PTR_TYPE(ptrval, typeval) \
+> +	(&((struct btf_ptr){.ptr = ptrval, .type = #typeval}))
+> +
+> +#define BTF_PTR_ID(ptrval, idval) \
+> +	(&((struct btf_ptr){.ptr = ptrval, .id = idval}))
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Wouldn't be better if these will leave in its own (linker) section?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+...
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> +static noinline_for_stack
+> +char *btf_string(char *buf, char *end, void *ptr, struct printf_spec spec,
+> +		 const char *fmt)
+> +{
 
-Thanks,
-Mark
+> +	struct btf_ptr *bp = (struct btf_ptr *)ptr;
+
+Unneeded casting.
+
+> +	u8 btf_kind = BTF_KIND_TYPEDEF;
+> +	const struct btf_type *t;
+> +	const struct btf *btf;
+> +	char *buf_start = buf;
+> +	const char *btf_type;
+> +	u64 flags = 0, mod;
+> +	s32 btf_id;
+> +
+> +	if (check_pointer(&buf, end, ptr, spec))
+> +		return buf;
+> +
+> +	if (check_pointer(&buf, end, bp->ptr, spec))
+> +		return buf;
+
+> +	while (isalnum(*fmt)) {
+> +		mod = btf_modifier_flag(*fmt);
+> +		if (!mod)
+> +			break;
+> +		flags |= mod;
+> +		fmt++;
+> +	}
+
+Can't we have explicitly all handled flags here, like other extensions do?
+
+> +	btf = bpf_get_btf_vmlinux();
+> +	if (IS_ERR_OR_NULL(btf))
+> +		return ptr_to_id(buf, end, bp->ptr, spec);
+> +
+> +	if (bp->type != NULL) {
+> +		btf_type = bp->type;
+> +
+> +		if (strncmp(bp->type, "struct ", strlen("struct ")) == 0) {
+> +			btf_kind = BTF_KIND_STRUCT;
+> +			btf_type += strlen("struct ");
+> +		} else if (strncmp(btf_type, "union ", strlen("union ")) == 0) {
+> +			btf_kind = BTF_KIND_UNION;
+> +			btf_type += strlen("union ");
+> +		} else if (strncmp(btf_type, "enum ", strlen("enum ")) == 0) {
+> +			btf_kind = BTF_KIND_ENUM;
+> +			btf_type += strlen("enum ");
+> +		}
+
+Can't you provide a simple structure and do this in a loop?
+Or even something like match_[partial]string() to implement?
+
+> +		if (strlen(btf_type) == 0)
+
+Interesting way of checking btf_type == '\0'.
+
+> +			return ptr_to_id(buf, end, bp->ptr, spec);
+> +
+> +		/*
+> +		 * Assume type specified is a typedef as there's not much
+> +		 * benefit in specifying int types other than wasting time
+> +		 * on BTF lookups; we optimize for the most useful path.
+> +		 *
+> +		 * Fall back to BTF_KIND_INT if this fails.
+> +		 */
+> +		btf_id = btf_find_by_name_kind(btf, btf_type, btf_kind);
+> +		if (btf_id < 0)
+> +			btf_id = btf_find_by_name_kind(btf, btf_type,
+> +						       BTF_KIND_INT);
+> +	} else if (bp->id > 0)
+> +		btf_id = bp->id;
+> +	else
+> +		return ptr_to_id(buf, end, bp->ptr, spec);
+> +
+
+> +	if (btf_id > 0)
+> +		t = btf_type_by_id(btf, btf_id);
+> +	if (btf_id <= 0 || !t)
+> +		return ptr_to_id(buf, end, bp->ptr, spec);
+
+This can be easily incorporated in previous conditional tree.
+
+> +	buf += btf_type_snprintf_show(btf, btf_id, bp->ptr, buf,
+> +				      end - buf_start, flags);
+> +
+> +	return widen_string(buf, buf - buf_start, end, spec);
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
