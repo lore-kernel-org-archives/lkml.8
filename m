@@ -2,164 +2,330 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3694AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E37C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13EB720724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:47:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HzuYPfh0"
+	by mail.kernel.org (Postfix) with ESMTP id 83030207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731846AbgFWIr4 (ORCPT
+        id S1731895AbgFWIs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:47:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57802 "EHLO
+        Tue, 23 Jun 2020 04:48:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731735AbgFWIr4 (ORCPT
+        with ESMTP id S1731735AbgFWIs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:47:56 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4288C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 01:47:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u26so1728618wmn.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 01:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mK2XH2F62KC0dzjl6MoR3O0LMJboyHyTQgDKfSlJMR0=;
-        b=HzuYPfh0bxtvG9mILlo8pgf/0+amN/m7osnMFTk4M2cn6/Zf0aWvF8lrkWI+yn0Ece
-         y4n0TxF2qqrLi+Yndk4g0ChYfTzFzXyNFpJsVTB/8sU+1FEvBB43PsITSkGCLMq8Eo32
-         3gGMGMlbSeQ1wHbXIlor8XVXnF6z2lR7c0mBG9ugk1GEn1JRyC2QJtwwc+zb29cOEYgO
-         DqTkU/Zv8CHmldk06Ynxxvjrg7759ghXSn4xVF1EAARroaWxQj9RSB9/oSzR8FqE8lRW
-         MwOjeByEJ9EW7JXV7kR7x8wXEQd4LIVcW4QQjFi9zYGLBJYUBYq/uQSppDRyH+r79gVl
-         m/yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mK2XH2F62KC0dzjl6MoR3O0LMJboyHyTQgDKfSlJMR0=;
-        b=BOxu9ONGi8OMMt++jyXkx9Lp0ekyBxYhFRz86K4adyQkyM4d5jlpUnYhsvF2/gbXqJ
-         aGnaRAWmFm6swT38OMdXi3gOIzHieXfaATLc/dAGTiiq8AD6Zzrio+3gUxChK9dON1ll
-         iynby1iyUjN+BpFiVZDXGqH2ajL/zycUSwI0aO3SNtgArUPosvReiA0x6joPrizyuFBD
-         wC0ut/hXTr+M5eT+DEqUgW4iFYNp4bOH37E0sZdyHY4BzNMHUPTW5+SRWQNCQRUVbWZM
-         8mIlcL6z76ow5s2+UOyUE4Y2KhE6cuG6Zo8GkUc30jsLaY9fJ+wrYbnA8Of7jM+S7XDb
-         Ludw==
-X-Gm-Message-State: AOAM533R+3eBb6gg+rB2PVQG50o05ahayhfznhfXKzi7c52YFPWQ9Cn0
-        stHYlPtb6fIXwpnqzrkpd6N07Q==
-X-Google-Smtp-Source: ABdhPJztIXvAT7Qva2MC0fsZEora0Dp/33fevpZKOr7vKVxIw/QPlkAhOnIops+yzHGXRXyGvYOYyA==
-X-Received: by 2002:a1c:2c45:: with SMTP id s66mr24072590wms.40.1592902073099;
-        Tue, 23 Jun 2020 01:47:53 -0700 (PDT)
-Received: from [192.168.0.41] (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.googlemail.com with ESMTPSA id y6sm3074241wmy.0.2020.06.23.01.47.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 01:47:52 -0700 (PDT)
-Subject: Re: [PATCH v4 1/2] thermal: add support for the MCU controlled FAN on
- Khadas boards
-To:     Neil Armstrong <narmstrong@baylibre.com>, lee.jones@linaro.org
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com,
-        Amit Kucheria <amit.kucheria@linaro.org>
-References: <20200618133818.15857-1-narmstrong@baylibre.com>
- <20200618133818.15857-2-narmstrong@baylibre.com>
- <53aa62a3-1d8e-bc91-1a2b-88c766276beb@linaro.org>
- <5f7154f6-c527-6665-4f7b-affd3cd62b70@baylibre.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <5fdd616f-812d-55fa-0c2f-301bd3c5edeb@linaro.org>
-Date:   Tue, 23 Jun 2020 10:47:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 04:48:29 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0DDC061755;
+        Tue, 23 Jun 2020 01:48:28 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jnebR-0005RK-42; Tue, 23 Jun 2020 10:48:25 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 930EB1C0244;
+        Tue, 23 Jun 2020 10:48:24 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 08:48:24 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] smp, irq_work: Continue smp_call_function*() and
+ irq_work*() integration
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200622100825.844455025@infradead.org>
+References: <20200622100825.844455025@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <5f7154f6-c527-6665-4f7b-affd3cd62b70@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Message-ID: <159290210432.16989.16948965035386609509.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the sched/urgent branch of tip:
 
-Hi Neil,
+Commit-ID:     380dc20ce84341bb376371fd5ed5fe6a93d4f4cf
+Gitweb:        https://git.kernel.org/tip/380dc20ce84341bb376371fd5ed5fe6a93d4f4cf
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 22 Jun 2020 12:01:25 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 23 Jun 2020 10:42:39 +02:00
 
-On 23/06/2020 10:25, Neil Armstrong wrote:
-> Hi Daniel,
-> 
-> On 22/06/2020 21:46, Daniel Lezcano wrote:
->> On 18/06/2020 15:38, Neil Armstrong wrote:
->>> The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
->>> on-board microcontroller.
->>>
->>> This implements the FAN control as thermal devices and as cell of the Khadas
->>> MCU MFD driver.
->>>
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
->>> ---
->>> Hi Lee,
->>>
->>> Could you apply this patch via the MFD tree since it depends on
->>> the linux/mfd/khadas-mcu.h header ?
->>>
->>> This patch is unchanged from the v3 serie.
->>>
+smp, irq_work: Continue smp_call_function*() and irq_work*() integration
 
-[ ... ]
+Instead of relying on BUG_ON() to ensure the various data structures
+line up, use a bunch of horrible unions to make it all automatic.
 
->> Nitpicking : move the save section to suspend.
-> 
-> OK, but moving this makes khadas_mcu_fan_disable() useless.
+Much of the union magic is to ensure irq_work and smp_call_function do
+not (yet) see the members of their respective data structures change
+name.
 
-It is fine. Seeing the shutdown calling the disable function which in
-turn saves the state looks strange but it is not critical.
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lkml.kernel.org/r/20200622100825.844455025@infradead.org
+---
+ include/linux/irq_work.h  | 26 ++++-----------
+ include/linux/sched.h     |  5 +---
+ include/linux/smp.h       | 23 ++++---------
+ include/linux/smp_types.h | 66 ++++++++++++++++++++++++++++++++++++++-
+ kernel/sched/core.c       |  6 +--
+ kernel/smp.c              | 18 +----------
+ 6 files changed, 86 insertions(+), 58 deletions(-)
+ create mode 100644 include/linux/smp_types.h
 
-If you want to keep it as it is, I'm fine with that too.
-
->>> +	return 0;
->>> +}
->>> +
->>> +static void khadas_mcu_fan_shutdown(struct platform_device *pdev)
->>> +{
->>> +	khadas_mcu_fan_disable(&pdev->dev);
->>> +}
->>> +
->>> +#ifdef CONFIG_PM_SLEEP
->>> +static int khadas_mcu_fan_suspend(struct device *dev)
->>> +{
->>> +	return khadas_mcu_fan_disable(dev);
->>> +}
->>> +
->>> +static int khadas_mcu_fan_resume(struct device *dev)
->>> +{
->>> +	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
->>> +
->>> +	return khadas_mcu_fan_set_level(ctx, ctx->level);
->>
->> Out of curiosity, did you check the fan is not continuously spinning
->> after a resume when the suspend happened during a mitigation phase?
-> 
-> No, but I took the logic from the hmwmon pwm-fan driver.
-> 
-> Not sure this is critical here.
-No, logically you should the fan spinning at resume time even if the
-board is not hot, until the post resume notification is called which
-will update the thermal zone and set the cooling device state to zero again.
-
-Thanks
-  -- Daniel
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
+index 2735da5..3082378 100644
+--- a/include/linux/irq_work.h
++++ b/include/linux/irq_work.h
+@@ -2,7 +2,7 @@
+ #ifndef _LINUX_IRQ_WORK_H
+ #define _LINUX_IRQ_WORK_H
+ 
+-#include <linux/llist.h>
++#include <linux/smp_types.h>
+ 
+ /*
+  * An entry can be in one of four states:
+@@ -13,24 +13,14 @@
+  * busy      NULL, 2 -> {free, claimed} : callback in progress, can be claimed
+  */
+ 
+-/* flags share CSD_FLAG_ space */
+-
+-#define IRQ_WORK_PENDING	BIT(0)
+-#define IRQ_WORK_BUSY		BIT(1)
+-
+-/* Doesn't want IPI, wait for tick: */
+-#define IRQ_WORK_LAZY		BIT(2)
+-/* Run hard IRQ context, even on RT */
+-#define IRQ_WORK_HARD_IRQ	BIT(3)
+-
+-#define IRQ_WORK_CLAIMED	(IRQ_WORK_PENDING | IRQ_WORK_BUSY)
+-
+-/*
+- * structure shares layout with single_call_data_t.
+- */
+ struct irq_work {
+-	struct llist_node llnode;
+-	atomic_t flags;
++	union {
++		struct __call_single_node node;
++		struct {
++			struct llist_node llnode;
++			atomic_t flags;
++		};
++	};
+ 	void (*func)(struct irq_work *);
+ };
+ 
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 224b5de..692e327 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -654,11 +654,8 @@ struct task_struct {
+ 	unsigned int			ptrace;
+ 
+ #ifdef CONFIG_SMP
+-	struct {
+-		struct llist_node		wake_entry;
+-		unsigned int			wake_entry_type;
+-	};
+ 	int				on_cpu;
++	struct __call_single_node	wake_entry;
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ 	/* Current CPU: */
+ 	unsigned int			cpu;
+diff --git a/include/linux/smp.h b/include/linux/smp.h
+index 7ee202a..80d557e 100644
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -12,29 +12,22 @@
+ #include <linux/list.h>
+ #include <linux/cpumask.h>
+ #include <linux/init.h>
+-#include <linux/llist.h>
++#include <linux/smp_types.h>
+ 
+ typedef void (*smp_call_func_t)(void *info);
+ typedef bool (*smp_cond_func_t)(int cpu, void *info);
+ 
+-enum {
+-	CSD_FLAG_LOCK		= 0x01,
+-
+-	/* IRQ_WORK_flags */
+-
+-	CSD_TYPE_ASYNC		= 0x00,
+-	CSD_TYPE_SYNC		= 0x10,
+-	CSD_TYPE_IRQ_WORK	= 0x20,
+-	CSD_TYPE_TTWU		= 0x30,
+-	CSD_FLAG_TYPE_MASK	= 0xF0,
+-};
+-
+ /*
+  * structure shares (partial) layout with struct irq_work
+  */
+ struct __call_single_data {
+-	struct llist_node llist;
+-	unsigned int flags;
++	union {
++		struct __call_single_node node;
++		struct {
++			struct llist_node llist;
++			unsigned int flags;
++		};
++	};
+ 	smp_call_func_t func;
+ 	void *info;
+ };
+diff --git a/include/linux/smp_types.h b/include/linux/smp_types.h
+new file mode 100644
+index 0000000..364b3ae
+--- /dev/null
++++ b/include/linux/smp_types.h
+@@ -0,0 +1,66 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_SMP_TYPES_H
++#define __LINUX_SMP_TYPES_H
++
++#include <linux/llist.h>
++
++enum {
++	CSD_FLAG_LOCK		= 0x01,
++
++	IRQ_WORK_PENDING	= 0x01,
++	IRQ_WORK_BUSY		= 0x02,
++	IRQ_WORK_LAZY		= 0x04, /* No IPI, wait for tick */
++	IRQ_WORK_HARD_IRQ	= 0x08, /* IRQ context on PREEMPT_RT */
++
++	IRQ_WORK_CLAIMED	= (IRQ_WORK_PENDING | IRQ_WORK_BUSY),
++
++	CSD_TYPE_ASYNC		= 0x00,
++	CSD_TYPE_SYNC		= 0x10,
++	CSD_TYPE_IRQ_WORK	= 0x20,
++	CSD_TYPE_TTWU		= 0x30,
++
++	CSD_FLAG_TYPE_MASK	= 0xF0,
++};
++
++/*
++ * struct __call_single_node is the primary type on
++ * smp.c:call_single_queue.
++ *
++ * flush_smp_call_function_queue() only reads the type from
++ * __call_single_node::u_flags as a regular load, the above
++ * (anonymous) enum defines all the bits of this word.
++ *
++ * Other bits are not modified until the type is known.
++ *
++ * CSD_TYPE_SYNC/ASYNC:
++ *	struct {
++ *		struct llist_node node;
++ *		unsigned int flags;
++ *		smp_call_func_t func;
++ *		void *info;
++ *	};
++ *
++ * CSD_TYPE_IRQ_WORK:
++ *	struct {
++ *		struct llist_node node;
++ *		atomic_t flags;
++ *		void (*func)(struct irq_work *);
++ *	};
++ *
++ * CSD_TYPE_TTWU:
++ *	struct {
++ *		struct llist_node node;
++ *		unsigned int flags;
++ *	};
++ *
++ */
++
++struct __call_single_node {
++	struct llist_node	llist;
++	union {
++		unsigned int	u_flags;
++		atomic_t	a_flags;
++	};
++};
++
++#endif /* __LINUX_SMP_TYPES_H */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index f778067..ca5db40 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2293,7 +2293,7 @@ void sched_ttwu_pending(void *arg)
+ 	rq_lock_irqsave(rq, &rf);
+ 	update_rq_clock(rq);
+ 
+-	llist_for_each_entry_safe(p, t, llist, wake_entry) {
++	llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
+ 		if (WARN_ON_ONCE(p->on_cpu))
+ 			smp_cond_load_acquire(&p->on_cpu, !VAL);
+ 
+@@ -2329,7 +2329,7 @@ static void __ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags
+ 	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
+ 
+ 	WRITE_ONCE(rq->ttwu_pending, 1);
+-	__smp_call_single_queue(cpu, &p->wake_entry);
++	__smp_call_single_queue(cpu, &p->wake_entry.llist);
+ }
+ 
+ void wake_up_if_idle(int cpu)
+@@ -2786,7 +2786,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
+ #endif
+ 	init_numa_balancing(clone_flags, p);
+ #ifdef CONFIG_SMP
+-	p->wake_entry_type = CSD_TYPE_TTWU;
++	p->wake_entry.u_flags = CSD_TYPE_TTWU;
+ #endif
+ }
+ 
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 472c2b2..aa17eed 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -669,24 +669,6 @@ void __init smp_init(void)
+ {
+ 	int num_nodes, num_cpus;
+ 
+-	/*
+-	 * Ensure struct irq_work layout matches so that
+-	 * flush_smp_call_function_queue() can do horrible things.
+-	 */
+-	BUILD_BUG_ON(offsetof(struct irq_work, llnode) !=
+-		     offsetof(struct __call_single_data, llist));
+-	BUILD_BUG_ON(offsetof(struct irq_work, func) !=
+-		     offsetof(struct __call_single_data, func));
+-	BUILD_BUG_ON(offsetof(struct irq_work, flags) !=
+-		     offsetof(struct __call_single_data, flags));
+-
+-	/*
+-	 * Assert the CSD_TYPE_TTWU layout is similar enough
+-	 * for task_struct to be on the @call_single_queue.
+-	 */
+-	BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+-		     offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist));
+-
+ 	idle_threads_init();
+ 	cpuhp_threads_init();
+ 
