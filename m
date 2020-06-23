@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A364C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E49AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 107B720724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B69B20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947767;
-	bh=VfL9CLyZVLIp2zfGthrYY2e/74QZ38cKLsJZHIQkQwc=;
+	s=default; t=1592947775;
+	bh=J8gLyxuh7i1Ph5mKliRbbrUkmLcIN1tXAi/qcBYfNoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJP6H+OGcd2u+ozrz2qFLVreUQKRr5UJVv0p3eqQWpXLO7PDKK/xBPPK4C940vzIv
-	 DEgYCkoz0F5kmDw0n+8PGL57JOaawpJ1Ns5FZ8bg8ywUWk6gWMRsegQe3eUzVj5x/F
-	 V4EoGbXiQ3PrffQ5Mn1if7pmUi0wIyvj9VdUvQJY=
+	b=hkwet74DaOTwQoerL+0iBMvbfXzgve9FhonrT4Gh9hCmJX5tquRhudzWZnm33piGm
+	 ccXU/UyI0rldUjfGfEEbUY26gb2P98QnHhT6YFCP1IE0D4+lr4fFM7c96mm+DDBVpE
+	 hMBIGRpEJzTFyVle8CXnwgJHa7EZTfCSgKt80aZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389303AbgFWUPJ (ORCPT
+        id S2404218AbgFWV3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57620 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388673AbgFWUO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:56 -0400
+        id S2389239AbgFWUPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:15:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2797D2137B;
-        Tue, 23 Jun 2020 20:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E72212073E;
+        Tue, 23 Jun 2020 20:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943295;
-        bh=VfL9CLyZVLIp2zfGthrYY2e/74QZ38cKLsJZHIQkQwc=;
+        s=default; t=1592943303;
+        bh=J8gLyxuh7i1Ph5mKliRbbrUkmLcIN1tXAi/qcBYfNoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z9ksRvgaHO24OYPq/QRQMwpnSVn2SX5yKtyYFcDV/8tbETs6lI8UEpOWV9Py1Hz4z
-         0pxV7z8yjsi/59CS4x5PPwyBbxj8wj8rlWkFuq70VUYjB17qvSxqQkdtrDUoR1vBOz
-         CtSx0E2gX0kHoiKsOT+dazaZfaWDAEBzYxNTG8/w=
+        b=rhI2FRJqwhD87/rKDoujkUmD2o/49UjrD2lWrRSpZfyZ6C+kBKTCDVjshMMK8uWeY
+         m7u7rM8P7s+LNXpXlSDzJnLNOBqYNgdb6qiCYTO3upwLnGXz8SGlRCBkl8UAZ6D8MR
+         Pjm5RbLTQdE5nMrZ+a6qR3zw2FSZ3voTke7aztqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 305/477] rxrpc: Adjust /proc/net/rxrpc/calls to display call->debug_id not user_ID
-Date:   Tue, 23 Jun 2020 21:55:02 +0200
-Message-Id: <20200623195421.964479469@linuxfoundation.org>
+Subject: [PATCH 5.7 308/477] ceph: dont return -ESTALE if theres still an open file
+Date:   Tue, 23 Jun 2020 21:55:05 +0200
+Message-Id: <20200623195422.097412353@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,51 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit 32f71aa497cfb23d37149c2ef16ad71fce2e45e2 ]
+[ Upstream commit 878dabb64117406abd40977b87544d05bb3031fc ]
 
-The user ID value isn't actually much use - and leaks a kernel pointer or a
-userspace value - so replace it with the call debug ID, which appears in trace
-points.
+Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+a file handle to dentry"), this fixes another corner case with
+name_to_handle_at/open_by_handle_at.  The issue has been detected by
+xfstest generic/467, when doing:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+ - name_to_handle_at("/cephfs/myfile")
+ - open("/cephfs/myfile")
+ - unlink("/cephfs/myfile")
+ - sync; sync;
+ - drop caches
+ - open_by_handle_at()
+
+The call to open_by_handle_at should not fail because the file hasn't been
+deleted yet (only unlinked) and we do have a valid handle to it.  -ESTALE
+shall be returned only if i_nlink is 0 *and* i_count is 1.
+
+This patch also makes sure we have LINK caps before checking i_nlink.
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/proc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/ceph/export.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/net/rxrpc/proc.c b/net/rxrpc/proc.c
-index 8b179e3c802a1..543afd9bd6642 100644
---- a/net/rxrpc/proc.c
-+++ b/net/rxrpc/proc.c
-@@ -68,7 +68,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
- 			 "Proto Local                                          "
- 			 " Remote                                         "
- 			 " SvID ConnID   CallID   End Use State    Abort   "
--			 " UserID           TxSeq    TW RxSeq    RW RxSerial RxTimo\n");
-+			 " DebugId  TxSeq    TW RxSeq    RW RxSerial RxTimo\n");
- 		return 0;
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 79dc06881e78e..e088843a7734c 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -172,9 +172,16 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+ static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+ {
+ 	struct inode *inode = __lookup_inode(sb, ino);
++	int err;
++
+ 	if (IS_ERR(inode))
+ 		return ERR_CAST(inode);
+-	if (inode->i_nlink == 0) {
++	/* We need LINK caps to reliably check i_nlink */
++	err = ceph_do_getattr(inode, CEPH_CAP_LINK_SHARED, false);
++	if (err)
++		return ERR_PTR(err);
++	/* -ESTALE if inode as been unlinked and no file is open */
++	if ((inode->i_nlink == 0) && (atomic_read(&inode->i_count) == 1)) {
+ 		iput(inode);
+ 		return ERR_PTR(-ESTALE);
  	}
- 
-@@ -100,7 +100,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
- 	rx_hard_ack = READ_ONCE(call->rx_hard_ack);
- 	seq_printf(seq,
- 		   "UDP   %-47.47s %-47.47s %4x %08x %08x %s %3u"
--		   " %-8.8s %08x %lx %08x %02x %08x %02x %08x %06lx\n",
-+		   " %-8.8s %08x %08x %08x %02x %08x %02x %08x %06lx\n",
- 		   lbuff,
- 		   rbuff,
- 		   call->service_id,
-@@ -110,7 +110,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
- 		   atomic_read(&call->usage),
- 		   rxrpc_call_states[call->state],
- 		   call->abort_code,
--		   call->user_call_ID,
-+		   call->debug_id,
- 		   tx_hard_ack, READ_ONCE(call->tx_top) - tx_hard_ack,
- 		   rx_hard_ack, READ_ONCE(call->rx_top) - rx_hard_ack,
- 		   call->rx_serial,
 -- 
 2.25.1
 
