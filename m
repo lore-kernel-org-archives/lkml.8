@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5091C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8513E2100A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8413C2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942657;
-	bh=Ydou3JAf9zArP0VfSPlqKoiKSwL2uJ7zPPbMfdmwPWc=;
+	s=default; t=1592942661;
+	bh=H3qIbqGd1WjyK0/fZVWrc7oncYZArdjABl6fgpBU420=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DwwxSF2e87bgQu4PKEcWEtNN+sOVKxm++7R45lIWaCebDUxq7nvr3HPvDwXxqUgdt
-	 daZgsRUqfZVrIjTo+VNQtDyGXuH4kk5zE76d6TBu/xGvrIfOva5T49OuwoM3/8jDvO
-	 NlhY/fjSsrM6SRQuTG5mkeXRpxU93xugdGU9X1iM=
+	b=BSGjf1rCgppkD55Zm4tCU1DsfVjgtMSrP56J4fP9XG2texJaxXb23AAdrmw3K7iYn
+	 1G43hAMAvkel8WN2kt2qYyFbc8TbgB6jZbkjV3JxNe0UXDr+EPXwjFqmsdPNtvMT0u
+	 qYU2s/ZTrZK1AukLudFyyzCgfo4fHbrwJ7tz2eE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388172AbgFWUEP (ORCPT
+        id S2387542AbgFWUET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:04:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42234 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388145AbgFWUED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:03 -0400
+        id S2388150AbgFWUEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:04:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2539720EDD;
-        Tue, 23 Jun 2020 20:04:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2338C2082F;
+        Tue, 23 Jun 2020 20:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942642;
-        bh=Ydou3JAf9zArP0VfSPlqKoiKSwL2uJ7zPPbMfdmwPWc=;
+        s=default; t=1592942652;
+        bh=H3qIbqGd1WjyK0/fZVWrc7oncYZArdjABl6fgpBU420=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=erNRN+LOXFBiY23OszhxoIX+yysYld/YhbkT3jLBHs4jrjG6Klejj006k0kYWtWi7
-         aqUjw7zyEwcANeQnpf4ylMEYV6PgzOFbePpqSDwRvtsw33CaBEol2Dx1/Mv9lSWTRm
-         MuguO4tvSJyZS8DL9ClPuRGmhyXsqYZc7Tz+7aV4=
+        b=Iv4AQlARc/cOab1bpR+in/1eCpuqi1hUrfkYXeg2Z5MuF5I06UaMrtJtCixov2676
+         diyCmH+9foNzfl1BOlUNJAEOCbG45Qa5VAUNf3sB1XlEwChu5+zAlB8fCeeGfxo/Sp
+         g8KawAcsaiL5YUh3Ab0A08ekrl8pjrxCtKFbys0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 079/477] powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple hv-24x7 events run
-Date:   Tue, 23 Jun 2020 21:51:16 +0200
-Message-Id: <20200623195411.345982604@linuxfoundation.org>
+Subject: [PATCH 5.7 083/477] cifs: set up next DFS target before generic_ip_connect()
+Date:   Tue, 23 Jun 2020 21:51:20 +0200
+Message-Id: <20200623195411.529694650@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -63,93 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kajol Jain <kjain@linux.ibm.com>
+From: Paulo Alcantara <pc@cjr.nz>
 
-[ Upstream commit b4ac18eead28611ff470d0f47a35c4e0ac080d9c ]
+[ Upstream commit aaa3aef34d3ab9499a5c7633823429f7a24e6dff ]
 
-Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
-values")' added to print _change_ in the counter value rather then raw
-value for 24x7 counters. Incase of transactions, the event count
-is set to 0 at the beginning of the transaction. It also sets
-the event's prev_count to the raw value at the time of initialization.
-Because of setting event count to 0, we are seeing some weird behaviour,
-whenever we run multiple 24x7 events at a time.
+If we mount a very specific DFS link
 
-For example:
+    \\FS0.FOO.COM\dfs\link -> \FS0\share1, \FS1\share2
 
-command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
-			   hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
-	  		   -C 0 -I 1000 sleep 100
+where its target list contains NB names ("FS0" & "FS1") rather than
+FQDN ones ("FS0.FOO.COM" & "FS1.FOO.COM"), we end up connecting to
+\FOO\share1 but server->hostname will have "FOO.COM".  The reason is
+because both "FS0" and "FS0.FOO.COM" resolve to same IP address and
+they share same TCP server connection, but "FS0.FOO.COM" was the first
+hostname set -- which is OK.
 
-     1.000121704                120 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     1.000121704                  5 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     2.000357733                  8 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     2.000357733                 10 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     4.000641884                 56 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     4.000641884 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     5.000791887 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+However, if the echo thread timeouts and we still have a good
+connection to "FS0", in cifs_reconnect()
 
-Getting these large values in case we do -I.
+    rc = generic_ip_connect(server) -> success
+    if (rc) {
+            ...
+            reconn_inval_dfs_target(server, cifs_sb, &tgt_list,
+	                            &tgt_it);
+            ...
+     }
+     ...
 
-As we are setting event_count to 0, for interval case, overall event_count is not
-coming in incremental order. As we may can get new delta lesser then previous count.
-Because of which when we print intervals, we are getting negative value which create
-these large values.
+it successfully reconnects to "FS0" server but does not set up next
+DFS target - which should be the same target server "\FS0\share1" -
+and server->hostname remains set to "FS0.FOO.COM" rather than "FS0",
+as reconn_inval_dfs_target() would have it set to "FS0" if called
+earlier.
 
-This patch removes part where we set event_count to 0 in function
-'h_24x7_event_read'. There won't be much impact as we do set event->hw.prev_count
-to the raw value at the time of initialization to print change value.
+Finally, in __smb2_reconnect(), the reconnect of tcons would fail
+because tcon->ses->server->hostname (FS0.FOO.COM) does not match DFS
+target's hostname (FS0).
 
-With this patch
-In power9 platform
+Fix that by calling reconn_inval_dfs_target() before
+generic_ip_connect() so server->hostname will get updated correctly
+prior to reconnecting its tcons in __smb2_reconnect().
 
-command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
-		           hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
-			   -C 0 -I 1000 sleep 100
+With "cifs: handle hostnames that resolve to same ip in failover"
+patch
 
-     1.000117685                 93 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     1.000117685                  1 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     2.000349331                 98 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     2.000349331                  2 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     3.000495900                131 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     3.000495900                  4 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     4.000645920                204 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     4.000645920                 61 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     4.284169997                 22 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+    - The above problem would not occur.
+    - We could save an DNS query to find out that they both resolve to
+      the same ip address.
 
-Suggested-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200525104308.9814-2-kjain@linux.ibm.com
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/hv-24x7.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ fs/cifs/connect.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-index 573e0b309c0ca..48e8f4b17b91b 100644
---- a/arch/powerpc/perf/hv-24x7.c
-+++ b/arch/powerpc/perf/hv-24x7.c
-@@ -1400,16 +1400,6 @@ static void h_24x7_event_read(struct perf_event *event)
- 			h24x7hw = &get_cpu_var(hv_24x7_hw);
- 			h24x7hw->events[i] = event;
- 			put_cpu_var(h24x7hw);
--			/*
--			 * Clear the event count so we can compute the _change_
--			 * in the 24x7 raw counter value at the end of the txn.
--			 *
--			 * Note that we could alternatively read the 24x7 value
--			 * now and save its value in event->hw.prev_count. But
--			 * that would require issuing a hcall, which would then
--			 * defeat the purpose of using the txn interface.
--			 */
--			local64_set(&event->count, 0);
- 		}
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 28268ed461b82..47b9fbb70bf5e 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -572,26 +572,26 @@ cifs_reconnect(struct TCP_Server_Info *server)
+ 		try_to_freeze();
  
- 		put_cpu_var(hv_24x7_reqb);
+ 		mutex_lock(&server->srv_mutex);
++#ifdef CONFIG_CIFS_DFS_UPCALL
+ 		/*
+ 		 * Set up next DFS target server (if any) for reconnect. If DFS
+ 		 * feature is disabled, then we will retry last server we
+ 		 * connected to before.
+ 		 */
++		reconn_inval_dfs_target(server, cifs_sb, &tgt_list, &tgt_it);
++#endif
++		rc = reconn_set_ipaddr(server);
++		if (rc) {
++			cifs_dbg(FYI, "%s: failed to resolve hostname: %d\n",
++				 __func__, rc);
++		}
++
+ 		if (cifs_rdma_enabled(server))
+ 			rc = smbd_reconnect(server);
+ 		else
+ 			rc = generic_ip_connect(server);
+ 		if (rc) {
+ 			cifs_dbg(FYI, "reconnect error %d\n", rc);
+-#ifdef CONFIG_CIFS_DFS_UPCALL
+-			reconn_inval_dfs_target(server, cifs_sb, &tgt_list,
+-						&tgt_it);
+-#endif
+-			rc = reconn_set_ipaddr(server);
+-			if (rc) {
+-				cifs_dbg(FYI, "%s: failed to resolve hostname: %d\n",
+-					 __func__, rc);
+-			}
+ 			mutex_unlock(&server->srv_mutex);
+ 			msleep(3000);
+ 		} else {
 -- 
 2.25.1
 
