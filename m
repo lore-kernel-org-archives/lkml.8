@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9370A20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B7120702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945756;
-	bh=aVC0bzsG9b9HjVAWAadwDR5xt8QVdC5i7Yfqow4dtPc=;
+	s=default; t=1592945765;
+	bh=uzp3mKvVRrBvfecNk35oT5htFvfV3OuITUf9HZ4FDOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZynjR/AKDM9Uihf6u7/8x3XkT0vpEMAq2IFl6K0y0IwS82FTGrdj9rro8R1dwthU
-	 2ehFV4NIy3Avph/SlUbCm3agEur2t20llLCUkMlupK6+woiOtmSHECVZKfuMXAce/j
-	 XN/6gJUXZjJ9qKON/P33eEaNuEuj8u2NpWtm0s1I=
+	b=K7HaCc52k99mm7b2ejLJxg+NqAzmfgzmKhSI7smlhXaz/swD1g0Eahju5Yh21qUOS
+	 DM1QUkrf3TPKMZoTO4mjtIQ7NO7i3QR6aivvya1xH21da/wKmj7YRTM9W1QwcrHb0n
+	 G82h/6HFMG4XlpK7enZz1aXZBFjR8yf2GMRxsd4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404184AbgFWUzy (ORCPT
+        id S2403949AbgFWUoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41438 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392567AbgFWUoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:44:19 -0400
+        id S2403944AbgFWUn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:43:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1FA21BE5;
-        Tue, 23 Jun 2020 20:44:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74CD32053B;
+        Tue, 23 Jun 2020 20:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945060;
-        bh=aVC0bzsG9b9HjVAWAadwDR5xt8QVdC5i7Yfqow4dtPc=;
+        s=default; t=1592945036;
+        bh=uzp3mKvVRrBvfecNk35oT5htFvfV3OuITUf9HZ4FDOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wrcFvdmLBImh9ELWdpRxVUcqkqew+gksvgzz0Y9wR/vs8NMW/uNN8wJz21Har4aTS
-         ucT6+SH8zK+qW593YcJO65ezCkDMwaeWoFn2lidGL4Zv4sltKUKZCWPWuxXx9qL+Zl
-         ls9vcydX+DOr/xIEJ6vq3fuvWzF4+tQZqWonCCkU=
+        b=q2YG61S7TADHx+RBP2o0nJnB1G0zbckbGcMGIiORhrsPiWFzAGC7ovosZ3E2PuI+1
+         QcNSU7dlCFfEpsrZOx4s1rIJQDG51eHVC160axw5fSeAZPgqUs46xTNkKUI6Y7TNp7
+         h7VHux8KvMXLg8tg4CRUrUmGUEQGU4JNEVFZPwsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
+        stable@vger.kernel.org, Andreas Klinger <ak@it-klinger.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 023/136] m68k/PCI: Fix a memory leak in an error handling path
-Date:   Tue, 23 Jun 2020 21:57:59 +0200
-Message-Id: <20200623195304.796176655@linuxfoundation.org>
+Subject: [PATCH 4.14 015/136] iio: bmp280: fix compensation of humidity
+Date:   Tue, 23 Jun 2020 21:57:51 +0200
+Message-Id: <20200623195304.383283498@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -62,37 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Andreas Klinger <ak@it-klinger.de>
 
-[ Upstream commit c3f4ec050f56eeab7c1f290321f9b762c95bd332 ]
+[ Upstream commit dee2dabc0e4115b80945fe2c91603e634f4b4686 ]
 
-If 'ioremap' fails, we must free 'bridge', as done in other error handling
-path bellow.
+Limit the output of humidity compensation to the range between 0 and 100
+percent.
 
-Fixes: 19cc4c843f40 ("m68k/PCI: Replace pci_fixup_irqs() call with host bridge IRQ mapping hooks")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Depending on the calibration parameters of the individual sensor it
+happens, that a humidity above 100 percent or below 0 percent is
+calculated, which don't make sense in terms of relative humidity.
+
+Add a clamp to the compensation formula as described in the datasheet of
+the sensor in chapter 4.2.3.
+
+Although this clamp is documented, it was never in the driver of the
+kernel.
+
+It depends on the circumstances (calibration parameters, temperature,
+humidity) if one can see a value above 100 percent without the clamp.
+The writer of this patch was working with this type of sensor without
+noting this error. So it seems to be a rare event when this bug occures.
+
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/coldfire/pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/pressure/bmp280-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/m68k/coldfire/pci.c b/arch/m68k/coldfire/pci.c
-index 3097fa2ca7467..1e428d18d268a 100644
---- a/arch/m68k/coldfire/pci.c
-+++ b/arch/m68k/coldfire/pci.c
-@@ -316,8 +316,10 @@ static int __init mcf_pci_init(void)
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index 3204dff34e0ad..ae415b4e381af 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -182,6 +182,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
+ 		+ (s32)2097152) * H2 + 8192) >> 14);
+ 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)H1) >> 4;
  
- 	/* Keep a virtual mapping to IO/config space active */
- 	iospace = (unsigned long) ioremap(PCI_IO_PA, PCI_IO_SIZE);
--	if (iospace == 0)
-+	if (iospace == 0) {
-+		pci_free_host_bridge(bridge);
- 		return -ENODEV;
-+	}
- 	pr_info("Coldfire: PCI IO/config window mapped to 0x%x\n",
- 		(u32) iospace);
++	var = clamp_val(var, 0, 419430400);
++
+ 	return var >> 12;
+ };
  
 -- 
 2.25.1
