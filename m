@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79529C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4551520707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADA920707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948015;
-	bh=HLzOiefQ1tuFa6TaGJxdnT/uOr7JEOvkaTFTsiAOlH0=;
+	s=default; t=1592948025;
+	bh=QsDsrIuCNz9nnH17iOuQOCqtLaGXJvouEXfxf07aTyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VhxH6frson18vT1zJ1MTZP1QtITA6O9dv26RTCkV7jC5r9ogwuISQMesouIBe1Aj7
-	 1oo7O0diniEOzXaPl/q4PbHr3JZ7tZAZa9UtzUwffgBu7U+o+KcPY3a1DgOVKKzTz3
-	 erqAs0HCg9/wlF1IAwzygoaM0jnvBRIMDMiLwuYE=
+	b=a5cIgx0V9xiIF3pK/5lJ+tujeIMNJID8UxoY5LxOmJYc0bp/Z2yxHcjFKxpqu/3qb
+	 HsinDlxGHaMFnSw76laciy1ayiPbuAGjUBKLnAy5KLZIoW2X7c0M/GU2G9UZqE8Oam
+	 xIx/8xmwcSiSMZVoK542+QFYOeQbqWRjne3+HM7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388928AbgFWVde (ORCPT
+        id S2393711AbgFWVdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:33:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52854 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388255AbgFWULa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:11:30 -0400
+        id S2388677AbgFWULY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:11:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6087420707;
-        Tue, 23 Jun 2020 20:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0D7E20707;
+        Tue, 23 Jun 2020 20:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943089;
-        bh=HLzOiefQ1tuFa6TaGJxdnT/uOr7JEOvkaTFTsiAOlH0=;
+        s=default; t=1592943084;
+        bh=QsDsrIuCNz9nnH17iOuQOCqtLaGXJvouEXfxf07aTyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCmuUS844cZ11uPsdqetEQPs33qaCHx10tPRonFxw2wc7MtY5oDUAAXx7Ko7JPaHP
-         MBvVR3SWX6PyXgDK2ohlw1iQ7y1+sj8Kw5Vwa+pT89NBzDjHO0MCHfK+pbLvUkcS2a
-         AUHrX5z/r8OVR1/CIU1rOinDfwyemG+qN+TMNjWE=
+        b=idK5vmLiWjmoId4zTc7nJbEScOSqZwr1lEjKSE/M/ZBIEmkPW1svPQN2xmCkO9Rti
+         r4H9SBAhWHZE4q4x0QKuFP3+61KnXYQhLG9pz+5GyBB9nG3/mammljpyvRMnX2Gi5D
+         i2/72SrEOkqtjvQrjvo5GpPOQZi+6FyX40Rq8/LE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 255/477] PCI: amlogic: meson: Dont use FAST_LINK_MODE to set up link
-Date:   Tue, 23 Jun 2020 21:54:12 +0200
-Message-Id: <20200623195419.626428173@linuxfoundation.org>
+        stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 236/477] RDMA/hns: Bugfix for querying qkey
+Date:   Tue, 23 Jun 2020 21:53:53 +0200
+Message-Id: <20200623195418.730724554@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,55 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Lijun Ou <oulijun@huawei.com>
 
-[ Upstream commit 87dccf09323fc363bd0d072fcc12b96622ab8c69 ]
+[ Upstream commit 349be276509455ac2f19fa4051ed773082c6a27e ]
 
-The vim3l board does not work with a standard PCIe switch (ASM1184e),
-spitting all kind of errors - hinting at HW misconfiguration (no link,
-port enumeration issues, etc).
+The qkey queried through the query ud qp verb is a fixed value and it
+should be read from qp context.
 
-According to the the Synopsys DWC PCIe Reference Manual, in the section
-dedicated to the PLCR register, bit 7 is described (FAST_LINK_MODE) as:
-
-"Sets all internal timers to fast mode for simulation purposes."
-
-it is sound to set this bit from a simulation perspective, but on actual
-silicon, which expects timers to have a nominal value, it is not.
-
-Make sure the FAST_LINK_MODE bit is cleared when configuring the RC
-to solve this problem.
-
-Link: https://lore.kernel.org/r/20200429164230.309922-1-maz@kernel.org
-Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Fixes: 926a01dc000d ("RDMA/hns: Add QP operations support for hip08 SoC")
+Link: https://lore.kernel.org/r/1588931159-56875-2-git-send-email-liweihang@huawei.com
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Weihang Li <liweihang@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 3715dceca1bfa..ca59ba9e0ecd3 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
- 	meson_cfg_writel(mp, val, PCIE_CFG0);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index c3316672b70e6..96ff610bbdc4e 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4639,7 +4639,7 @@ static int hns_roce_v2_query_qp(struct ib_qp *ibqp, struct ib_qp_attr *qp_attr,
+ 	qp_attr->path_mig_state = IB_MIG_ARMED;
+ 	qp_attr->ah_attr.type   = RDMA_AH_ATTR_TYPE_ROCE;
+ 	if (hr_qp->ibqp.qp_type == IB_QPT_UD)
+-		qp_attr->qkey = V2_QKEY_VAL;
++		qp_attr->qkey = le32_to_cpu(context.qkey_xrcd);
  
- 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
--	val &= ~LINK_CAPABLE_MASK;
-+	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
- 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
- 
- 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
--	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
-+	val |= LINK_CAPABLE_X1;
- 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
- 
- 	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
+ 	qp_attr->rq_psn = roce_get_field(context.byte_108_rx_reqepsn,
+ 					 V2_QPC_BYTE_108_RX_REQ_EPSN_M,
 -- 
 2.25.1
 
