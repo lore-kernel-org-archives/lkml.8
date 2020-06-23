@@ -2,105 +2,64 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81014C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 474102078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:50:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EDvXpjRw"
+	by mail.kernel.org (Postfix) with ESMTP id 64FE420706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732585AbgFWLuu (ORCPT
+        id S1732596AbgFWLu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:50:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732225AbgFWLuu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:50:50 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B441CC061573;
-        Tue, 23 Jun 2020 04:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aiVkeicD79xrHH2MDVHjdOtjMnN8FcgFYepOS8k0muE=; b=EDvXpjRwRiWz5VfLeVl7JzHg3f
-        x4dHtqMUkLsONa0nUGU8wT3Ft9ryJmQ5THUfSCggkT3OzDNJlDqGXdOUBd+TRGH85/sOLi5lDHl9G
-        lOV1OE1pxKcRl3T92sVXNqPNFTB7t3KsMUo98+uLsk+SlcUpsCQxejCEMg40knl3T2IkFX2bzXPeZ
-        xnJ5wgAWm9Z7m2KkkmdtZJVdJOhzLBBBlYoCOoR3z4BH8prfDBy/FdcOzSpostBvsjevokivifqnF
-        V32Tzv5H/+7uSj+u0LdpX8PXd9vugeJH8ciDz2WAGJbRGbYz2FDxDn1Ddqrf8P0/ml1+v+KoOoQKM
-        QKuRBYlA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnhRQ-0002Cb-IP; Tue, 23 Jun 2020 11:50:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A0F95300F28;
-        Tue, 23 Jun 2020 13:50:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 860502370F7D2; Tue, 23 Jun 2020 13:50:14 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 13:50:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623115014.GE4817@hirez.programming.kicks-ass.net>
-References: <20200425191032.GK21900@8bytes.org>
- <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200623094519.GF31822@suse.de>
- <20200623104559.GA4817@hirez.programming.kicks-ass.net>
- <20200623111107.GG31822@suse.de>
- <20200623111443.GC4817@hirez.programming.kicks-ass.net>
- <20200623114324.GA14101@suse.de>
+        Tue, 23 Jun 2020 07:50:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57060 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732225AbgFWLuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:50:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 8372EAFB1;
+        Tue, 23 Jun 2020 11:50:52 +0000 (UTC)
+Date:   Tue, 23 Jun 2020 13:50:52 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] block: remove unnecessary ioc nested locking
+Message-ID: <20200623115052.comb37q22kjgzyen@beryllium.lan>
+References: <20200619151718.22338-1-john.ogness@linutronix.de>
+ <20200619151718.22338-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623114324.GA14101@suse.de>
+In-Reply-To: <20200619151718.22338-2-john.ogness@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 01:43:24PM +0200, Joerg Roedel wrote:
-> On Tue, Jun 23, 2020 at 01:14:43PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 23, 2020 at 01:11:07PM +0200, Joerg Roedel wrote:
+On Fri, Jun 19, 2020 at 05:23:17PM +0206, John Ogness wrote:
+> The legacy CFQ IO scheduler could call put_io_context() in its exit_icq()
+> elevator callback. This led to a lockdep warning, which was fixed in
+> commit d8c66c5d5924 ("block: fix lockdep warning on io_context release
+> put_io_context()") by using a nested subclass for the ioc spinlock.
+> However, with commit f382fb0bcef4 ("block: remove legacy IO schedulers")
+> the CFQ IO scheduler no longer exists.
 > 
-> > > The v3 patchset implements an unconditional shift of the #VC IST entry
-> > > in the NMI handler, before it can trigger a #VC exception.
-> > 
-> > Going by that other thread -- where you said that any memory access can
-> > trigger a #VC, there just isn't such a guarantee.
+> The BFQ IO scheduler also implements the exit_icq() elevator callback but
+> does not call put_io_context().
 > 
-> As I wrote in the other mail, this can only happen when SNP gets enabled
-> (which is follow-on work to this) and is handled by a stack recursion
-> check in the #VC handler.
+> The nested subclass for the ioc spinlock is no longer needed. Since it
+> existed as an exception and no longer applies, remove the nested subclass
+> usage.
 > 
-> The reason I mentioned the #VC-anywhere case is to make it more clear
-> why #VC needs an IST handler.
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-If SNP is the sole reason #VC needs to be IST, then I'd strongly urge
-you to only make it IST if/when you try and make SNP happen, not before.
+As far I can tell, looks good.
+
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
