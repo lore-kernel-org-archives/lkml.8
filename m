@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80497C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4795220724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C27820724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947655;
-	bh=bv9Z9bRkVEK1uJdMpJsnfzvM9UksgRkyNNheuFYz8ek=;
+	s=default; t=1592947662;
+	bh=m/2JE2rT+Paibu0VmyrxoGCzTRL7oQHg/PwXjAzflgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMNugY6UkSKYxCksa22gspHDNVIloNBW0UKfp/hcsBDekyf9KbhPaihqFqrmjyzb/
-	 UJE/+mW7pxYknklbLNdGE/I4p8srF5wB4G7h2t761dssjoPkN+jXkEuNSbAwZaiyhO
-	 u8OBYV4JFQdTrxMQlqjoqhUHuKECYRHsiCRdqliI=
+	b=vtqj/UY734LZ17GLiR5wm3qCnT7UQltsSGsMcIiDM2gjzYTYxTkrVjSLpRl3r8m18
+	 iJw4WdutfzG0DGmdQMO+shc7nVqKxCX9ZRa93C7540/esyce0ktMPo6VlMLwWbPlS5
+	 o3L3ujkWQi0uklCB8clJ/h/UTruTPpXznrpR0BhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392523AbgFWV1e (ORCPT
+        id S2390225AbgFWV1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:27:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389225AbgFWUQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:52 -0400
+        id S2388539AbgFWUQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC7E12080C;
-        Tue, 23 Jun 2020 20:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A81542073E;
+        Tue, 23 Jun 2020 20:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943412;
-        bh=bv9Z9bRkVEK1uJdMpJsnfzvM9UksgRkyNNheuFYz8ek=;
+        s=default; t=1592943399;
+        bh=m/2JE2rT+Paibu0VmyrxoGCzTRL7oQHg/PwXjAzflgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HQiQFTJzM0DOVH39KFSUNT4R4VkXFTQ16uMNgMFJHSQUMyLV/TdVxbffv1GAkhyTZ
-         Fh2bU5AUCroK2LKimgtjdO0YGJxjuCHe/+Pd/b/IL23/KMk3EV/pvHutppxUTAnOwe
-         FWjf1mBY/DsgP5FWmxEZ0vL8kdlwqtnJqQ04LEJM=
+        b=EPh2U70HUg13bZz1i0uT2hiu9MGvzvCHpfDjB+PevFGG69bbJxwKRn4ZaoHRy0OEL
+         o/CfucACeNZReS9RtdKvB+CXxid3MFsWWE4cD3++uZqbaIz0X0XomJWS1nB0u8Jx0f
+         W3DaLu640koJG5kCeTJj5ajDWD3gRuVkKmokMfIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Oliver Neukum <oneukum@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 382/477] usb/ehci-platform: Set PM runtime as active on resume
-Date:   Tue, 23 Jun 2020 21:56:19 +0200
-Message-Id: <20200623195425.583047605@linuxfoundation.org>
+Subject: [PATCH 5.7 377/477] bpf: sockmap: Dont attach programs to UDP sockets
+Date:   Tue, 23 Jun 2020 21:56:14 +0200
+Message-Id: <20200623195425.352558802@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -64,49 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-[ Upstream commit 16bdc04cc98ab0c74392ceef2475ecc5e73fcf49 ]
+[ Upstream commit f6fede8569689dd31e7b0ed15024b25e5ce2e2e5 ]
 
-Follow suit of ohci-platform.c and perform pm_runtime_set_active() on
-resume.
+The stream parser infrastructure isn't set up to deal with UDP
+sockets, so we mustn't try to attach programs to them.
 
-ohci-platform.c had a warning reported due to the missing
-pm_runtime_set_active() [1].
+I remember making this change at some point, but I must have lost
+it while rebasing or something similar.
 
-[1] https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Tony Prisk <linux@prisktech.co.nz>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Mathias Nyman <mathias.nyman@intel.com>
-CC: Oliver Neukum <oneukum@suse.de>
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-usb@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20200518154931.6144-3-qais.yousef@arm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7b98cd42b049 ("bpf: sockmap: Add UDP support")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Jakub Sitnicki <jakub@cloudflare.com>
+Link: https://lore.kernel.org/bpf/20200611172520.327602-1-lmb@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-platform.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/core/sock_map.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index e4fc3f66d43bf..e9a49007cce4a 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -455,6 +455,10 @@ static int ehci_platform_resume(struct device *dev)
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 050bfac97cfb5..7e858c1dd7113 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -417,10 +417,7 @@ static int sock_map_get_next_key(struct bpf_map *map, void *key, void *next)
+ 	return 0;
+ }
  
- 	ehci_resume(hcd, priv->reset_on_resume);
+-static bool sock_map_redirect_allowed(const struct sock *sk)
+-{
+-	return sk->sk_state != TCP_LISTEN;
+-}
++static bool sock_map_redirect_allowed(const struct sock *sk);
  
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
+ static int sock_map_update_common(struct bpf_map *map, u32 idx,
+ 				  struct sock *sk, u64 flags)
+@@ -501,6 +498,11 @@ static bool sk_is_udp(const struct sock *sk)
+ 	       sk->sk_protocol == IPPROTO_UDP;
+ }
+ 
++static bool sock_map_redirect_allowed(const struct sock *sk)
++{
++	return sk_is_tcp(sk) && sk->sk_state != TCP_LISTEN;
++}
 +
- 	if (priv->quirk_poll)
- 		quirk_poll_init(priv);
- 
+ static bool sock_map_sk_is_suitable(const struct sock *sk)
+ {
+ 	return sk_is_tcp(sk) || sk_is_udp(sk);
 -- 
 2.25.1
 
