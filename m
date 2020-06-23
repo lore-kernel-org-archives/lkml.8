@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF9BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17472C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE56206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA9F2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942603;
-	bh=ETVQV97saw+ydWD4BwAxXdz3de9wHC72zewN7Xcb5Ao=;
+	s=default; t=1592942609;
+	bh=dRaVsz9tJX9n0AtQS7ehfhgzM9qmQ1Tqodmrvki3EKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M86pxuvSM2dhB95ncRUmvQbtEBv7RF7qXTXta00u/4bch2soLdsOx/k0uEC1kAUUi
-	 aK9B+MnIfZ2KlFSJQooo2FN0yJO2PRE/HZQ9n01m9FRxeWZzPsZUlkv0x2muYRLZbK
-	 EFnfTNStA2ISxl9TzDmdRMFGqAbWUHM8rbAe2AVs=
+	b=ma7mH0uZfp+pTccudhBJ+/m4balFdmVdtJGtstIuVRCa0udHYB7/26jO1mKuiIAH9
+	 YlmFNDTLVJNKQOBYKGm0md241Tf4jrBE0TTz4xe+xsDnmjvdMAOsxwKtX/ACC4L8iV
+	 I9B5wot1llev9Pc7ze+kTW99lFNXnpAvHivNqyTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388028AbgFWUDW (ORCPT
+        id S2388039AbgFWUD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388018AbgFWUDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:20 -0400
+        id S2388027AbgFWUDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05FA32078A;
-        Tue, 23 Jun 2020 20:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A13972078A;
+        Tue, 23 Jun 2020 20:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942599;
-        bh=ETVQV97saw+ydWD4BwAxXdz3de9wHC72zewN7Xcb5Ao=;
+        s=default; t=1592942602;
+        bh=dRaVsz9tJX9n0AtQS7ehfhgzM9qmQ1Tqodmrvki3EKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BajNlbRyufPbEmUE4KNo/Zj64pcUyD9Ev2r/hggCOL4pkwr/MwW4G+yDasKGt3q/o
-         A5nio31PMBjM0Vk7Dkwl8ukqnqWr4UCdS+ldhmENDhvbFXeVFAWdf18h0hFDr8HWsX
-         P3hAFUHKN6EXN5FMMmPXAYuJpnrkmUJ9WLsccq9Y=
+        b=Xftk3+crkymQmhBsh6xaxCoARMgqox8YDq/CswUuGOOZWf91TwR65wHBMdjTzY1MC
+         ljgfAXbdGcOweTKn6qkISbu3TB+bIIGvT9PNun3hij++ML+kWH3UiPQx/QQMg0xB3p
+         Gc14w7n+G38UMLKMVUt26u8nTXIEouzuNo2EN5DU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 061/477] coresight: tmc: Fix TMC mode read in tmc_read_prepare_etb()
-Date:   Tue, 23 Jun 2020 21:50:58 +0200
-Message-Id: <20200623195410.498926754@linuxfoundation.org>
+Subject: [PATCH 5.7 062/477] RDMA/mlx5: Add init2init as a modify command
+Date:   Tue, 23 Jun 2020 21:50:59 +0200
+Message-Id: <20200623195410.547456588@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,91 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From: Aharon Landau <aharonl@mellanox.com>
 
-[ Upstream commit 347adb0d6385c3220dc01ab61807a5b1892901cc ]
+[ Upstream commit 819f7427bafd494ef7ca4942ec6322db20722d7b ]
 
-On some QCOM platforms like SC7180, SDM845 and SM8150,
-reading TMC mode register without proper coresight power
-management can lead to async exceptions like the one in
-the call trace below in tmc_read_prepare_etb(). This can
-happen if the user tries to read the TMC etf data via
-device node without setting up source and the sink first.
-Fix this by having a check for coresight sysfs mode
-before reading TMC mode management register.
+Missing INIT2INIT entry in the list of modify commands caused DEVX
+applications to be unable to modify_qp for this transition state. Add the
+MLX5_CMD_OP_INIT2INIT_QP opcode to the list of allowed DEVX opcodes.
 
- Kernel panic - not syncing: Asynchronous SError Interrupt
- CPU: 7 PID: 2605 Comm: hexdump Tainted: G S                5.4.30 #122
- Call trace:
-  dump_backtrace+0x0/0x188
-  show_stack+0x20/0x2c
-  dump_stack+0xdc/0x144
-  panic+0x168/0x36c
-  panic+0x0/0x36c
-  arm64_serror_panic+0x78/0x84
-  do_serror+0x130/0x138
-  el1_error+0x84/0xf8
-  tmc_read_prepare_etb+0x88/0xb8
-  tmc_open+0x40/0xd8
-  misc_open+0x120/0x158
-  chrdev_open+0xb8/0x1a4
-  do_dentry_open+0x268/0x3a0
-  vfs_open+0x34/0x40
-  path_openat+0x39c/0xdf4
-  do_filp_open+0x90/0x10c
-  do_sys_open+0x150/0x3e8
-  __arm64_compat_sys_openat+0x28/0x34
-  el0_svc_common+0xa8/0x160
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
-
-Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200518180242.7916-14-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e662e14d801b ("IB/mlx5: Add DEVX support for modify and query commands")
+Link: https://lore.kernel.org/r/20200513095550.211345-1-leon@kernel.org
+Signed-off-by: Aharon Landau <aharonl@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/infiniband/hw/mlx5/devx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index d0cc3985b72a0..36cce2bfb7449 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -596,13 +596,6 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
- 		goto out;
- 	}
- 
--	/* There is no point in reading a TMC in HW FIFO mode */
--	mode = readl_relaxed(drvdata->base + TMC_MODE);
--	if (mode != TMC_MODE_CIRCULAR_BUFFER) {
--		ret = -EINVAL;
--		goto out;
--	}
--
- 	/* Don't interfere if operated from Perf */
- 	if (drvdata->mode == CS_MODE_PERF) {
- 		ret = -EINVAL;
-@@ -616,8 +609,15 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
- 	}
- 
- 	/* Disable the TMC if need be */
--	if (drvdata->mode == CS_MODE_SYSFS)
-+	if (drvdata->mode == CS_MODE_SYSFS) {
-+		/* There is no point in reading a TMC in HW FIFO mode */
-+		mode = readl_relaxed(drvdata->base + TMC_MODE);
-+		if (mode != TMC_MODE_CIRCULAR_BUFFER) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
- 		__tmc_etb_disable_hw(drvdata);
-+	}
- 
- 	drvdata->reading = true;
- out:
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index 46e1ab771f106..d0742823ab497 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -819,6 +819,7 @@ static bool devx_is_obj_modify_cmd(const void *in)
+ 	case MLX5_CMD_OP_SET_L2_TABLE_ENTRY:
+ 	case MLX5_CMD_OP_RST2INIT_QP:
+ 	case MLX5_CMD_OP_INIT2RTR_QP:
++	case MLX5_CMD_OP_INIT2INIT_QP:
+ 	case MLX5_CMD_OP_RTR2RTS_QP:
+ 	case MLX5_CMD_OP_RTS2RTS_QP:
+ 	case MLX5_CMD_OP_SQERR2RTS_QP:
 -- 
 2.25.1
 
