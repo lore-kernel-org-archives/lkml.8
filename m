@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF04F2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2E420724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947180;
-	bh=68Ym+y1+gLnemj0N+S31ojaZseghsrnEg25EKYH3tZs=;
+	s=default; t=1592947186;
+	bh=7e30EfUiSxO/sFuvj8K/fgjGMIOHz30SAJcVZVXkjhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l2ZkKezwUUKeNXUSQ1/Cs+qh68gw6lWbIn2+tk6s1cWw+5Ub36sMrK8inMWRd0Va4
-	 Q8v12+Y5I9q7hxTNb8pXTFk6d7G+urhKqVt7HoSFOIE6sqzQFg64sigpg8P99Yuu93
-	 uNcVqP/xlsbKV/aXkzBrcekfDPA9JQZhjwuMl59g=
+	b=a5hu3DdJhBxVk4MVU2cD4lIqbItAntlQz3wbVPowvtz75+qMDgWAaZyu5ByI7Z7kn
+	 sHNLaR1HKLYPcyki+O51911Zzv1NDhr1dAO42bCRz3tzopSbkon0UFNY/5+UFPrDfg
+	 mAgvoNSTb4hx/V+7Rr9Qt1WFfxFDBzaARKC8Y7KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403802AbgFWVTi (ORCPT
+        id S2390889AbgFWVTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43442 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:19:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390454AbgFWUYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:42 -0400
+        id S2389874AbgFWUYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 320FF206C3;
-        Tue, 23 Jun 2020 20:24:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 295962073E;
+        Tue, 23 Jun 2020 20:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943881;
-        bh=68Ym+y1+gLnemj0N+S31ojaZseghsrnEg25EKYH3tZs=;
+        s=default; t=1592943873;
+        bh=7e30EfUiSxO/sFuvj8K/fgjGMIOHz30SAJcVZVXkjhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPvO5rjDNn2AgrB4AsM1E0XdFYe9yvZPEagefzf2tAb1StOFM8HQXJmeXwVOcZs9h
-         hg+NHuxLjEsKukV/xmsEb2kCmbz7o9Ae2f/nvq/fLxDS4WO1skF3dRCU6AGZ1WXQPL
-         6RW4Ql+wdV08/3dqrXmMwUSElMwZ51tPPr9ARhZ4=
+        b=0X/cT2CLA9JWlyufgjrcU6ZK5EeTWj2Zr1tgez5B5FCSJOou00WWnCzyV6w7KQrhM
+         hQR0aW+8xKbqlzTWa7hQVnNLDvbfbbHcD8rf9jeHzOXxh7Gflj11xT0MB3ArZiO49w
+         IEkL42e9P8RWUsGIuFMG6f9D23xuy9zZJ/+sYm04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/314] scsi: qedi: Do not flush offload work if ARP not resolved
-Date:   Tue, 23 Jun 2020 21:54:42 +0200
-Message-Id: <20200623195343.026414161@linuxfoundation.org>
+Subject: [PATCH 5.4 084/314] staging: greybus: fix a missing-check bug in gb_lights_light_config()
+Date:   Tue, 23 Jun 2020 21:54:39 +0200
+Message-Id: <20200623195342.876247014@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,95 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nilesh Javali <njavali@marvell.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 927527aea0e2a9c1d336c7d33f77f1911481d008 ]
+[ Upstream commit 9bb086e5ba9495ac150fbbcc5c8c2bccc06261dd ]
 
-For an unreachable target, offload_work is not initialized and the endpoint
-state is set to OFLDCONN_NONE. This results in a WARN_ON due to the check
-of the work function field being set to zero.
+In gb_lights_light_config(), 'light->name' is allocated by kstrndup().
+It returns NULL when fails, add check for it.
 
-------------[ cut here ]------------
-WARNING: CPU: 24 PID: 18587 at ../kernel/workqueue.c:3037 __flush_work+0x1c1/0x1d0
-:
-Hardware name: HPE ProLiant DL380 Gen10/ProLiant DL380 Gen10, BIOS U30 02/01/2020
-RIP: 0010:__flush_work+0x1c1/0x1d0
-Code: ba 6d 00 03 80 c9 f0 eb b6 48 c7 c7 20 ee 6c a4 e8 52 d3 04 00 0f 0b 31 c0 e9 d1 fe ff
-ff 48 c7 c7 20 ee 6c a4 e8 3d d3 04 00 <0f> 0b 31 c0 e9 bc fe ff ff e8 11 f3 f
- 00 31 f6
-RSP: 0018:ffffac5a8cd47a80 EFLAGS: 00010282
-RAX: 0000000000000024 RBX: ffff98d68c1fcaf0 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff98ce9fd99898 RDI: ffff98ce9fd99898
-RBP: ffff98d68c1fcbc0 R08: 00000000000006fa R09: 0000000000000001
-R10: ffffac5a8cd47b50 R11: 0000000000000001 R12: 0000000000000000
-R13: 000000000000489b R14: ffff98d68c1fc800 R15: ffff98d692132c00
-FS:  00007f65f7f62280(0000) GS:ffff98ce9fd80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd2435e880 CR3: 0000000809334003 CR4: 00000000007606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- ? class_create_release+0x40/0x40
- ? klist_put+0x2c/0x80
- qedi_ep_disconnect+0xdd/0x400 [qedi]
- iscsi_if_ep_disconnect.isra.20+0x59/0x70 [scsi_transport_iscsi]
- iscsi_if_rx+0x129b/0x1670 [scsi_transport_iscsi]
- ? __netlink_lookup+0xe7/0x160
- netlink_unicast+0x21d/0x300
- netlink_sendmsg+0x30f/0x430
- sock_sendmsg+0x5b/0x60
- ____sys_sendmsg+0x1e2/0x240
- ? copy_msghdr_from_user+0xd9/0x160
- ___sys_sendmsg+0x88/0xd0
- ? ___sys_recvmsg+0xa2/0xe0
- ? hrtimer_try_to_cancel+0x25/0x100
- ? do_nanosleep+0x9c/0x170
- ? __sys_sendmsg+0x5e/0xa0
- __sys_sendmsg+0x5e/0xa0
- do_syscall_64+0x60/0x1f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f65f6f16107
-Code: 64 89 02 48 c7 c0 ff ff ff ff eb b9 0f 1f 80 00 00 00 00 8b 05 aa d2 2b 00 48 63 d2 48
-63 ff 85 c0 75 18 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 59 f3 c3 0f 1f 8
-    0 00 00 00 00 53 48 89 f3 48
- RSP: 002b:00007ffd24367ca8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
- RAX: ffffffffffffffda RBX: 000055a7aeaaf110 RCX: 00007f65f6f16107
- RDX: 0000000000000000 RSI: 00007ffd24367cc0 RDI: 0000000000000003
- RBP: 0000000000000070 R08: 0000000000000000 R09: 0000000000000000
- R10: 000000000000075c R11: 0000000000000246 R12: 00007ffd24367cc0
- R13: 000055a7ae560008 R14: 00007ffd24367db0 R15: 0000000000000000
- ---[ end trace 54f499c05d41f8bb ]---
-
-Only flush if the connection endpoint state if different from
-OFLDCONN_NONE.
-
-[mkp: clarified commit desc]
-
-Link: https://lore.kernel.org/r/20200408064332.19377-5-mrangankar@marvell.com
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Link: https://lore.kernel.org/r/20200401030017.100274-1-chenzhou10@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 3 ++-
+ drivers/staging/greybus/light.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 84a639698343c..0f57c80734061 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -997,7 +997,8 @@ static void qedi_ep_disconnect(struct iscsi_endpoint *ep)
- 	if (qedi_ep->state == EP_STATE_OFLDCONN_START)
- 		goto ep_exit_recover;
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index d6ba25f21d807..d2672b65c3f49 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -1026,7 +1026,8 @@ static int gb_lights_light_config(struct gb_lights *glights, u8 id)
  
--	flush_work(&qedi_ep->offload_work);
-+	if (qedi_ep->state != EP_STATE_OFLDCONN_NONE)
-+		flush_work(&qedi_ep->offload_work);
- 
- 	if (qedi_ep->conn) {
- 		qedi_conn = qedi_ep->conn;
+ 	light->channels_count = conf.channel_count;
+ 	light->name = kstrndup(conf.name, NAMES_MAX, GFP_KERNEL);
+-
++	if (!light->name)
++		return -ENOMEM;
+ 	light->channels = kcalloc(light->channels_count,
+ 				  sizeof(struct gb_channel), GFP_KERNEL);
+ 	if (!light->channels)
 -- 
 2.25.1
 
