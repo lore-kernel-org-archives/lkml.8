@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D42AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F136EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D91962078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55712078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948476;
-	bh=cURi996Y/4EFOeLRBNaN9bVB5fpanWqms+W9KOwEDgw=;
+	s=default; t=1592948481;
+	bh=4REpVL5hvX1aLg8ZryAcXS5cvr5m8Q1j9q5VCTAu5Xc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lCRYP98uDzvYaYigZsuatjsXoyfDZdnCCfHkJ6v2twWSiorSpPt0km8R+/czxJmnc
-	 MCU8j3XJA13BCtCbwUmBSRnTh5nGu2RCfGeBo5CQ95k0M17iahaS9jSEkBmnSbdyG3
-	 SaIm1iXB+hJqR/EE/GBNKS6e8A4g8UPdewTbEmtE=
+	b=1IIisPjKYH+1bLiBeTBz0vABaIPjJkzg6lvdxiQ+qg1qBySCQzFaenTGUadm7qBY8
+	 eQRrtsvkqESZp4E+2ycrQ7vrmjXBtJ1+KOzvSGz/qNCfu0BvgjN885MvpSOtJ/0+aN
+	 IFk87L+uTBd7rL0LrdUGaGShUf1nOSOBZjUgblmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388443AbgFWUGQ (ORCPT
+        id S2394007AbgFWVlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:06:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388428AbgFWUGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:03 -0400
+        id S2388440AbgFWUGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:06:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E13E2064B;
-        Tue, 23 Jun 2020 20:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06984206C3;
+        Tue, 23 Jun 2020 20:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942762;
-        bh=cURi996Y/4EFOeLRBNaN9bVB5fpanWqms+W9KOwEDgw=;
+        s=default; t=1592942775;
+        bh=4REpVL5hvX1aLg8ZryAcXS5cvr5m8Q1j9q5VCTAu5Xc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sbf+q5PBnxf0Fcb3bocIqj8fnvn+xXXuCgydWam1ktXNA+L/PAeKQDx57dMzxx6t/
-         zSDpcAypQOfwd90JM8UMDVVdJ1g2IrwDd8y45uMgu8JrNHUjx8YqE/W9LWQstnV4Sj
-         DgQ7aK0vPpUhlOQttbB8lz75GsUPsL3ZZrQQgNk4=
+        b=USB7EATfytTyE7HgV/TtTyaY6RP+H/rzUyKEtwZjW72/5Iz7hSLnb9w/TPNKVNGCS
+         iBBbsI+iUGU3UM47/QRTicGIyqzcSaKJMZ3Dwl3Ql7oNtCk5kqDDcHftIkMPdne6gi
+         l5ryAcOmRAQK/2YMFu1XgmFvJPjm1mHDjYwMPBUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chad Dupuis <cdupuis@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 125/477] scsi: qedf: Fix crash when MFW calls for protocol stats while function is still probing
-Date:   Tue, 23 Jun 2020 21:52:02 +0200
-Message-Id: <20200623195413.517678603@linuxfoundation.org>
+Subject: [PATCH 5.7 103/477] bpf, sockhash: Fix memory leak when unlinking sockets in sock_hash_free
+Date:   Tue, 23 Jun 2020 21:51:40 +0200
+Message-Id: <20200623195412.458988977@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,127 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chad Dupuis <cdupuis@marvell.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-[ Upstream commit ad40f5256095c68dc17c991eb976261d5ea2daaa ]
+[ Upstream commit 33a7c831565c43a7ee2f38c7df4c4a40e1dfdfed ]
 
-The MFW may make a call to qed and then to qedf for protocol statistics
-while the function is still probing.  If this happens it's possible that
-some members of the struct qedf_ctx may not be fully initialized which can
-result in a NULL pointer dereference or general protection fault.
+When sockhash gets destroyed while sockets are still linked to it, we will
+walk the bucket lists and delete the links. However, we are not freeing the
+list elements after processing them, leaking the memory.
 
-To prevent this, add a new flag call QEDF_PROBING and set it when the
-__qedf_probe() function is active. Then in the qedf_get_protocol_tlv_data()
-function we can check if the function is still probing and return
-immediantely before any uninitialized structures can be touched.
+The leak can be triggered by close()'ing a sockhash map when it still
+contains sockets, and observed with kmemleak:
 
-Link: https://lore.kernel.org/r/20200416084314.18851-9-skashyap@marvell.com
-Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
-Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  unreferenced object 0xffff888116e86f00 (size 64):
+    comm "race_sock_unlin", pid 223, jiffies 4294731063 (age 217.404s)
+    hex dump (first 32 bytes):
+      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+      81 de e8 41 00 00 00 00 c0 69 2f 15 81 88 ff ff  ...A.....i/.....
+    backtrace:
+      [<00000000dd089ebb>] sock_hash_update_common+0x4ca/0x760
+      [<00000000b8219bd5>] sock_hash_update_elem+0x1d2/0x200
+      [<000000005e2c23de>] __do_sys_bpf+0x2046/0x2990
+      [<00000000d0084618>] do_syscall_64+0xad/0x9a0
+      [<000000000d96f263>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Fix it by freeing the list element when we're done with it.
+
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200607205229.2389672-2-jakub@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedf/qedf.h      |  1 +
- drivers/scsi/qedf/qedf_main.c | 35 +++++++++++++++++++++++++++++++----
- 2 files changed, 32 insertions(+), 4 deletions(-)
+ net/core/sock_map.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qedf/qedf.h b/drivers/scsi/qedf/qedf.h
-index f3f399fe10c86..0da4e16fb23a6 100644
---- a/drivers/scsi/qedf/qedf.h
-+++ b/drivers/scsi/qedf/qedf.h
-@@ -355,6 +355,7 @@ struct qedf_ctx {
- #define QEDF_GRCDUMP_CAPTURE		4
- #define QEDF_IN_RECOVERY		5
- #define QEDF_DBG_STOP_IO		6
-+#define QEDF_PROBING			8
- 	unsigned long flags; /* Miscellaneous state flags */
- 	int fipvlan_retries;
- 	u8 num_queues;
-diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
-index 5b19f5175c5cd..3a7d034729228 100644
---- a/drivers/scsi/qedf/qedf_main.c
-+++ b/drivers/scsi/qedf/qedf_main.c
-@@ -3153,7 +3153,7 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
- {
- 	int rc = -EINVAL;
- 	struct fc_lport *lport;
--	struct qedf_ctx *qedf;
-+	struct qedf_ctx *qedf = NULL;
- 	struct Scsi_Host *host;
- 	bool is_vf = false;
- 	struct qed_ll2_params params;
-@@ -3183,6 +3183,7 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
- 
- 		/* Initialize qedf_ctx */
- 		qedf = lport_priv(lport);
-+		set_bit(QEDF_PROBING, &qedf->flags);
- 		qedf->lport = lport;
- 		qedf->ctlr.lp = lport;
- 		qedf->pdev = pdev;
-@@ -3206,9 +3207,12 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
- 	} else {
- 		/* Init pointers during recovery */
- 		qedf = pci_get_drvdata(pdev);
-+		set_bit(QEDF_PROBING, &qedf->flags);
- 		lport = qedf->lport;
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index b08dfae10f88e..7edbf1e924571 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -1024,6 +1024,7 @@ static void sock_hash_free(struct bpf_map *map)
+ 			sock_map_unref(elem->sk, elem);
+ 			rcu_read_unlock();
+ 			release_sock(elem->sk);
++			sock_hash_free_elem(htab, elem);
+ 		}
  	}
- 
-+	QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_DISC, "Probe started.\n");
-+
- 	host = lport->host;
- 
- 	/* Allocate mempool for qedf_io_work structs */
-@@ -3513,6 +3517,10 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
- 	else
- 		fc_fabric_login(lport);
- 
-+	QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_DISC, "Probe done.\n");
-+
-+	clear_bit(QEDF_PROBING, &qedf->flags);
-+
- 	/* All good */
- 	return 0;
- 
-@@ -3538,6 +3546,11 @@ err2:
- err1:
- 	scsi_host_put(lport->host);
- err0:
-+	if (qedf) {
-+		QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_DISC, "Probe done.\n");
-+
-+		clear_bit(QEDF_PROBING, &qedf->flags);
-+	}
- 	return rc;
- }
- 
-@@ -3687,11 +3700,25 @@ void qedf_get_protocol_tlv_data(void *dev, void *data)
- {
- 	struct qedf_ctx *qedf = dev;
- 	struct qed_mfw_tlv_fcoe *fcoe = data;
--	struct fc_lport *lport = qedf->lport;
--	struct Scsi_Host *host = lport->host;
--	struct fc_host_attrs *fc_host = shost_to_fc_host(host);
-+	struct fc_lport *lport;
-+	struct Scsi_Host *host;
-+	struct fc_host_attrs *fc_host;
- 	struct fc_host_statistics *hst;
- 
-+	if (!qedf) {
-+		QEDF_ERR(NULL, "qedf is null.\n");
-+		return;
-+	}
-+
-+	if (test_bit(QEDF_PROBING, &qedf->flags)) {
-+		QEDF_ERR(&qedf->dbg_ctx, "Function is still probing.\n");
-+		return;
-+	}
-+
-+	lport = qedf->lport;
-+	host = lport->host;
-+	fc_host = shost_to_fc_host(host);
-+
- 	/* Force a refresh of the fc_host stats including offload stats */
- 	hst = qedf_fc_get_host_stats(host);
  
 -- 
 2.25.1
