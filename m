@@ -2,117 +2,129 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E83C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00874C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEDA206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41E620706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="itSqhEL9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732130AbgFWJaZ (ORCPT
+        id S1732174AbgFWJae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:30:25 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:46772 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731968AbgFWJaY (ORCPT
+        Tue, 23 Jun 2020 05:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731968AbgFWJac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:30:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U0V8lOr_1592904618;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0V8lOr_1592904618)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 23 Jun 2020 17:30:18 +0800
-Date:   Tue, 23 Jun 2020 17:30:18 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
- don't read garbage memmaps
-Message-ID: <20200623093018.GA6069@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200619125923.22602-2-david@redhat.com>
- <20200622082635.GA93552@L-31X9LVDL-1304.local>
- <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
- <20200622092221.GA96699@L-31X9LVDL-1304.local>
- <34f36733-805e-cc61-38da-2ee578ae096c@redhat.com>
- <20200622131003.GA98415@L-31X9LVDL-1304.local>
- <0f4edc1f-1ce2-95b4-5866-5c4888db7c65@redhat.com>
- <20200622215520.wa6gjr2hplurwy57@master>
- <4b7ee49c-9bee-a905-3497-e3addd8896b8@redhat.com>
- <c0b62330-11d3-e628-a811-b54789d8f182@redhat.com>
+        Tue, 23 Jun 2020 05:30:32 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE9FC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:30:31 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id q8so22820810iow.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oLaLVpG0MyDInMfdyKDIo+dI3RLGik3lpc5kwQdQ/vw=;
+        b=itSqhEL9M1HNMjjg0HmGB6ODcp78KKoys2tcbmkfbxbnFf0gtzRbl1v0p9UyS87C8U
+         yBHI8y2mDuy/mYr4ZiVTXs0cIFQwbnoQ+DZ9UbLCGrsDywa5eSErM0ZGFTcKNGqeHDAk
+         I0xodIoqS41AnBblnoQzKSN47HDqK9EAE48fnMz7osH1NcTj39rXx6xxY1XJla4eeFm5
+         9FR6iUvRSFkvNghRKuu/IUf2XlRd3VycKWML0IuQRexvK7ewZL+Qhna1Amw9TZZjSCfF
+         4ISeQ29W2dUdLJDTabFJPAc9GXCAnZuqCrfBpDCrs8JLKV9piimbaQ8MqthMBFgCJdF3
+         lHmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oLaLVpG0MyDInMfdyKDIo+dI3RLGik3lpc5kwQdQ/vw=;
+        b=fzoQArEqJTe9Z5WuBSx3jmRLlZCC9PtQjLslfTnrvdL1XmKRodZnKZpUnJKBWrrRPO
+         bYA7uuMWbUJYYeAMrOQHlDefzX1x7/wMV3H0ufkLRqiO/M2h2WvdI5Ej9WeNpfoGO5+n
+         30kgF2Tx6xYjhC+M7rwNpSzXAN2K64+eCspP1/QK9/uqqVSwRbDzDXoO4FoAH6cffvGb
+         UZmE/77TfuLuCQkZeT04IHHgvwosmxWuqjaqS48MiyTyj4hlgSUWJM6uBPI+Me9LyOsG
+         J9iE62psoxXiin6ef+5ai6iXxQJBd8lOJRK2V10hj4Vxtb69jFE8x0Tahz2Ym01sqYeq
+         MTSQ==
+X-Gm-Message-State: AOAM53013/FyPZhRynkpEr1AaPDHRdqEEaguohGPmCBfjps1IonmRu18
+        +NoTkvZ2LplX7+cXI5RyacOXo5jyDrxCy3i/8ChPbg==
+X-Google-Smtp-Source: ABdhPJzAIxv0yIi9GjnJO0SiHwTFon80qm+0CZass27KwI8p5hZbCaGVWbdjSE1htxm4yeVgmXJhlPla03/26+P1YPU=
+X-Received: by 2002:a05:6638:979:: with SMTP id o25mr21315946jaj.24.1592904630490;
+ Tue, 23 Jun 2020 02:30:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c0b62330-11d3-e628-a811-b54789d8f182@redhat.com>
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-14-brgl@bgdev.pl>
+ <20200622132504.GH1551@shell.armlinux.org.uk>
+In-Reply-To: <20200622132504.GH1551@shell.armlinux.org.uk>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 23 Jun 2020 11:30:19 +0200
+Message-ID: <CAMRc=MeXst5fOD+PJHHzXbDvf-i_jcJp_srzjH1P=Y03OPGxag@mail.gmail.com>
+Subject: Re: [PATCH 13/15] net: phy: mdio: add support for PHY supply regulator
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:55:43AM +0200, David Hildenbrand wrote:
->On 23.06.20 09:39, David Hildenbrand wrote:
->>> Hmm.. I thought this is the behavior for early section, while it looks current
->>> code doesn't work like this:
->>>
->>>        if (section_is_early && memmap)
->>>                free_map_bootmem(memmap);
->>>        else
->>> 	       depopulate_section_memmap(pfn, nr_pages, altmap);
->>>
->>> section_is_early is always "true" for early section, while memmap is not-NULL
->>> only when sub-section map is empty.
->>>
->>> If my understanding is correct, when we remove a sub-section in early section,
->>> the code would call depopulate_section_memmap(), which in turn free related
->>> memmap. By removing the memmap, the return value from pfn_to_online_page() is
->>> not a valid one.
->> 
->> I think you're right, and pfn_valid() would also return true, as it is
->> an early section. This looks broken.
->> 
->>>
->>> Maybe we want to write the code like this:
->>>
->>>        if (section_is_early)
->>>                if (memmap)
->>>                        free_map_bootmem(memmap);
->>>        else
->>> 	       depopulate_section_memmap(pfn, nr_pages, altmap);
->>>
->> 
->> I guess that should be the way to go
->> 
->> @Dan, I think what Wei proposes here is correct, right? Or how does it
->> work in the VMEMMAP case with early sections?
->> 
+pon., 22 cze 2020 o 15:25 Russell King - ARM Linux admin
+<linux@armlinux.org.uk> napisa=C5=82(a):
 >
->Especially, if you would re-hot-add, section_activate() would assume
->there is a memmap, it must not be removed.
+> On Mon, Jun 22, 2020 at 11:37:42AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Currently many MAC drivers control the regulator supplying the PHY but
+> > this is conceptually wrong. The regulator should be defined as a proper=
+ty
+> > of the PHY node on the MDIO bus and controlled by the MDIO sub-system.
+> >
+> > Add support for an optional PHY regulator which will be enabled before
+> > optional deasserting of the reset signal.
+>
+> I wonder if this is the right place for this - MDIO devices do not have
+> to be PHYs - they can be switches, and using "phy-supply" for a switch
+> doesn't seem logical.
+>
+> However, I can see the utility of having having a supply provided for
+> all mdio devices, so it seems to me to be a naming issue.  Andrew?
 >
 
-You are right here. I didn't notice it.
+I followed the example of the phy reset retrieved in
+mdiobus_register_reset(). I'm happy to change it to some other name.
 
->@Wei, can you send a patch?
->
-
-Sure, let me prepare for it.
-
->-- 
->Thanks,
->
->David / dhildenb
-
--- 
-Wei Yang
-Help you, Help me
+Bart
