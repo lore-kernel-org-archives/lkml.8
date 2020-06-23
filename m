@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251862072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45602072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948213;
-	bh=LWrU2odKBmE+FGHvUwgpN2pqOAW6X870RH4Af62eFBQ=;
+	s=default; t=1592948222;
+	bh=PfoDjZcxUjZx5UEqy5DdFaGjmuvbOOHvh6MYV1tTNJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HO55JI5dOt15s0BzaFZKOFHXf0Rj+8Wg7kK6TxfhuGboNSWm4JhFocMs7OO3Q/w3U
-	 JZq7Lq6KOFny/E0TZGmDLjVoqKhTxkXO7h19NN88vk9rl5zmw3shlG1XomFF1yH8Ps
-	 dYCQJBz5csb399k/sbYpq1nYKOLcsabfIsNxgPn8=
+	b=wyxR9Whax78R5fnY9sTBvR89iP21MmsRz5xbdNGsSQzJ7yZfwPYYDB2HIjVGSvYF6
+	 TycGLI7VnVbRAlC4ss1WnAMkCzDNnnUKCv8v5U5ta37KTMUDS+ORGUwmw0FfBNCAHG
+	 z+fhSWqO4Xt+5rUhd6ffpC+Vk38SDLDcMKhtKXJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393817AbgFWVgv (ORCPT
+        id S2393640AbgFWVhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50604 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388714AbgFWUJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:28 -0400
+        id S2388709AbgFWUJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 037D320E65;
-        Tue, 23 Jun 2020 20:09:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44DC3206C3;
+        Tue, 23 Jun 2020 20:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942968;
-        bh=LWrU2odKBmE+FGHvUwgpN2pqOAW6X870RH4Af62eFBQ=;
+        s=default; t=1592942963;
+        bh=PfoDjZcxUjZx5UEqy5DdFaGjmuvbOOHvh6MYV1tTNJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yS5Q5RlLVzZ2T4yfZ36z8ZtjJaym/n/tUkTUbkd8yZ6V9EQUA91edGxgbKHrYjJ8D
-         dmC1dEMV+U6mzkTTzP5lV4q1bACFCnAyqCpMcz0Aucq20qedSRlwk00WaO2VMXm1Pn
-         uLZehHcz+Qd3BalYod/XBE4TunQdpPgtQQ80uOU0=
+        b=GCEbSfe5kH0JVhb+7+3ERFgCCQKLxpGtE/71DOYgo8zCWgsVZl8ilosPsxzRPk8fP
+         SfY2cRUFbQI0YZbH1no7dxsMvGsuqIf9bwd3k4/GTYY1koz06zO5Ij8h3D2LxDOCRr
+         X70GisMgerjTdA4Q70WEZeYxLQeHhv5W+08U/6/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 176/477] ALSA: firewire-lib: fix invalid assignment to union data for directional parameter
-Date:   Tue, 23 Jun 2020 21:52:53 +0200
-Message-Id: <20200623195415.900242027@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 174/477] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
+Date:   Tue, 23 Jun 2020 21:52:51 +0200
+Message-Id: <20200623195415.809201245@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,38 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 8304cf77c92038cd1c50c27b69d30be695cc8003 ]
+[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
 
-Although the value of FDF is used just for outgoing stream, the assignment
-to union member is done for both directions of stream. At present this
-causes no issue because the value of same position is reassigned later for
-opposite stream. However, it's better to add if statement.
+7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
+Linux to enable ASPM, but for some undocumented reason, it didn't enable
+ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
 
-Fixes: d3d10a4a1b19 ("ALSA: firewire-lib: use union for directional parameters")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200508043635.349339-2-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Remove this exclusion so we can enable ASPM on these links.
+
+The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
+PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
+Intel SoC to enter deeper Package C-states, which is a significant power
+savings.
+
+[bhelgaas: commit log]
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/amdtp-am824.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/aspm.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/sound/firewire/amdtp-am824.c b/sound/firewire/amdtp-am824.c
-index 67d735e9a6a4c..fea92e148790f 100644
---- a/sound/firewire/amdtp-am824.c
-+++ b/sound/firewire/amdtp-am824.c
-@@ -82,7 +82,8 @@ int amdtp_am824_set_parameters(struct amdtp_stream *s, unsigned int rate,
- 	if (err < 0)
- 		return err;
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 2378ed6925346..b17e5ffd31b14 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -628,16 +628,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
  
--	s->ctx_data.rx.fdf = AMDTP_FDF_AM824 | s->sfc;
-+	if (s->direction == AMDTP_OUT_STREAM)
-+		s->ctx_data.rx.fdf = AMDTP_FDF_AM824 | s->sfc;
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable = link->aspm_support;
+-	/*
+-	 * If the downstream component has pci bridge function, don't
+-	 * do ASPM for now.
+-	 */
+-	list_for_each_entry(child, &linkbus->devices, bus_list) {
+-		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+-			link->aspm_disable = ASPM_STATE_ALL;
+-			break;
+-		}
+-	}
  
- 	p->pcm_channels = pcm_channels;
- 	p->midi_ports = midi_ports;
+ 	/* Get and check endpoint acceptable latencies */
+ 	list_for_each_entry(child, &linkbus->devices, bus_list) {
 -- 
 2.25.1
 
