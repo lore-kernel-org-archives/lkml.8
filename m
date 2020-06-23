@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1682FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F454C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E37742078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F137A20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948611;
-	bh=/2CYLF6f8t7m6yhxykhDd6BFoqe6kUko8+ah4vtC1uk=;
+	s=default; t=1592948621;
+	bh=qlTTFYshQ7DBmBTg+fQe79WObOFPLuIlr88AUawQXrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wR6NojgFUZuvK1CfV1j2IGG2LNiY3lu+eCfk2E3GkCr1Od3uM8kHWqZlgBEil8UzK
-	 n/F/5cvuzIqEAOEpBmAb9zzZmOfSNAwzORyKqsE+5J7o4qdRE7DRb/uRYuWbhK4tk9
-	 jZFEowIj1rD/imJ0vJb0bVJw2AKbduwxEsGixzaU=
+	b=e0XaCHqh2SrSg83cghv0bMsmZab/QCyUpb5VKXRQUR8lxgdD4JgB6K7+7H1Zx83i2
+	 Fh2/jFInuNnnoFCLX0fNsvCtTx8oC41hZ2IDbtQfHOr3QsDN8A9LApeXBTrnv0yOrY
+	 EH/8nBQU0GQ0m0zyhKLeds9/JYV/q49+1hpwT+6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389185AbgFWVna (ORCPT
+        id S2389580AbgFWVni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:43:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:43:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388086AbgFWUDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:42 -0400
+        id S2388046AbgFWUDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D2C206C3;
-        Tue, 23 Jun 2020 20:03:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E7122078A;
+        Tue, 23 Jun 2020 20:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942622;
-        bh=/2CYLF6f8t7m6yhxykhDd6BFoqe6kUko8+ah4vtC1uk=;
+        s=default; t=1592942610;
+        bh=qlTTFYshQ7DBmBTg+fQe79WObOFPLuIlr88AUawQXrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FYyP3kvd6GIN9U8vW5/X2YXmOvbxZXSPwSGvCexiGh3iMG9+jpu6VcZaHUduIkeYB
-         JKuPh7vFd2PACKaU/oXvOJOiyqP5CZ+Ss7SkMnH33LIsznqTTpX/RGFySKWoJECX2y
-         aXVe0IfJxySq4loabCj+SuOVN/+m+MdNqg1LPBgE=
+        b=DqXIfmEZeKWb8EkE/SYtVvDF1p0GUZbngvW2G7OSOvsAezvShS+G7PUb8VwBLQYGq
+         JU6WPhGobAebfHRSucpy3ZLNoRSclKhArn4n1+jkzav7K+RBSFFh9r8KkqktyiHiF5
+         gOWTYWKoGsKN5rU4wxzxIxKQINpSpBvf0lsFAxy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Bharata B Rao <bharata@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 040/477] usblp: poison URBs upon disconnect
-Date:   Tue, 23 Jun 2020 21:50:37 +0200
-Message-Id: <20200623195409.499720909@linuxfoundation.org>
+Subject: [PATCH 5.7 064/477] powerpc/book3s64/radix/tlb: Determine hugepage flush correctly
+Date:   Tue, 23 Jun 2020 21:51:01 +0200
+Message-Id: <20200623195410.644046112@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,47 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
+[ Upstream commit 8f53f9c0f68ab2168f637494b9e24034899c1310 ]
 
-syzkaller reported an URB that should have been killed to be active.
-We do not understand it, but this should fix the issue if it is real.
+With a 64K page size flush with start and end:
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  (start, end) = (721f680d0000, 721f680e0000)
+
+results in:
+
+  (hstart, hend) = (721f68200000, 721f68000000)
+
+ie. hstart is above hend, which indicates no huge page flush is
+needed.
+
+However the current logic incorrectly sets hflush = true in this case,
+because hstart != hend.
+
+That causes us to call __tlbie_va_range() passing hstart/hend, to do a
+huge page flush even though we don't need to. __tlbie_va_range() will
+skip the actual tlbie operation for start > end. But it will still end
+up calling fixup_tlbie_va_range() and doing the TLB fixups in there,
+which is harmless but unnecessary work.
+
+Reported-by: Bharata B Rao <bharata@linux.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+[mpe: Drop else case, hflush is already false, flesh out change log]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200513030616.152288-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/usblp.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/book3s64/radix_tlb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
-index 0d8e3f3804a3f..084c48c5848fc 100644
---- a/drivers/usb/class/usblp.c
-+++ b/drivers/usb/class/usblp.c
-@@ -468,7 +468,8 @@ static int usblp_release(struct inode *inode, struct file *file)
- 	usb_autopm_put_interface(usblp->intf);
- 
- 	if (!usblp->present)		/* finish cleanup from disconnect */
--		usblp_cleanup(usblp);
-+		usblp_cleanup(usblp);	/* any URBs must be dead */
-+
- 	mutex_unlock(&usblp_mutex);
- 	return 0;
- }
-@@ -1375,9 +1376,11 @@ static void usblp_disconnect(struct usb_interface *intf)
- 
- 	usblp_unlink_urbs(usblp);
- 	mutex_unlock(&usblp->mut);
-+	usb_poison_anchored_urbs(&usblp->urbs);
- 
- 	if (!usblp->used)
- 		usblp_cleanup(usblp);
-+
- 	mutex_unlock(&usblp_mutex);
- }
+diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
+index 758ade2c2b6ed..b5cc9b23cf024 100644
+--- a/arch/powerpc/mm/book3s64/radix_tlb.c
++++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+@@ -884,9 +884,7 @@ is_local:
+ 		if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+ 			hstart = (start + PMD_SIZE - 1) & PMD_MASK;
+ 			hend = end & PMD_MASK;
+-			if (hstart == hend)
+-				hflush = false;
+-			else
++			if (hstart < hend)
+ 				hflush = true;
+ 		}
  
 -- 
 2.25.1
