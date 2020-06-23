@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC359C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A518BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3422080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D3020836
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944597;
-	bh=g/yMneZRt9yTHKNV0jIo5/IB/jXZm+WZ7sIlY8B56d4=;
+	s=default; t=1592944603;
+	bh=GQpq5PSM1CJd3KQdWyoslefYy7Sg5Ub3MKIpGf6V8mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJoe+rExej6O+nP5W2HzRW+P3AZ1hLrYtirN8n8jGV6ZYU9jfWv1xuWvWkosFKB+o
-	 3hcY1imt0x2QSxmM4B92vJUgs2WTEAV84lOiS7rFm0HvTvfFGisEPV2RprD3idUtP0
-	 bdGH8XzFoYVFYEMmYpyTQ/s/S1NIxrawzxoiN1E0=
+	b=gf8Bs+uvPyxmeYw4Rf3U8FUUMEJZBfXKvkY3AE37XXLEFQtmGWCtVUb0gf+aiPu6j
+	 SnwyZ8Ib+aesaO9EwrQlCmoUlynFEA6fZ/7G8QCtyS9UTm72DqBZaua5QzmLSrSHoP
+	 OPyqn/mKbjKEUjGlFjed8MPirr3NqDAud2e//C0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391790AbgFWUgf (ORCPT
+        id S2391799AbgFWUgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59560 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391233AbgFWUg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:36:28 -0400
+        id S2391778AbgFWUga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:36:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21D42080C;
-        Tue, 23 Jun 2020 20:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B87B20781;
+        Tue, 23 Jun 2020 20:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944588;
-        bh=g/yMneZRt9yTHKNV0jIo5/IB/jXZm+WZ7sIlY8B56d4=;
+        s=default; t=1592944590;
+        bh=GQpq5PSM1CJd3KQdWyoslefYy7Sg5Ub3MKIpGf6V8mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NCiQuB1u+6iJq9fVN3GMBqx9K+1cATgU/TCk/wK9hiT3ePVeM/UzQNqn8+eMnaYrl
-         6Lln7SF4BkpS3Q1wivEfRDIzR9jbZlARe7x+HbLtE1JIAmEEvl654L+WaEG+TAlSdO
-         jijU+alFFFdoE/Mm8uT7haQQaOU7beTiB/2O6Lhk=
+        b=Uyq+NwgqAqSfVukNh+NSuH78Pbfs47wJkpHyhCULwkEsk5InxnYg9sBKDVFbOtYVf
+         18n8M1Mautg+sIUR0CJ+/Jl5N6KH/ErZr+0q1jezIcph1V102DducrPO7a0dc8OZTD
+         ltzufu2r5IF7phfL4+J/+SL3iZKIYCO5guJCzGMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 047/206] x86/purgatory: Disable various profiling and sanitizing options
-Date:   Tue, 23 Jun 2020 21:56:15 +0200
-Message-Id: <20200623195319.295257819@linuxfoundation.org>
+        stable@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 048/206] staging: greybus: fix a missing-check bug in gb_lights_light_config()
+Date:   Tue, 23 Jun 2020 21:56:16 +0200
+Message-Id: <20200623195319.346074031@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,60 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit e2ac07c06058ae2d58b45bbf2a2a352771d76fcb ]
+[ Upstream commit 9bb086e5ba9495ac150fbbcc5c8c2bccc06261dd ]
 
-Since the purgatory is a special stand-alone binary, various profiling
-and sanitizing options must be disabled. Having these options enabled
-typically will cause dependencies on various special symbols exported by
-special libs / stubs used by these frameworks. Since the purgatory is
-special, it is not linked against these stubs causing missing symbols in
-the purgatory if these options are not disabled.
+In gb_lights_light_config(), 'light->name' is allocated by kstrndup().
+It returns NULL when fails, add check for it.
 
-Sync the set of disabled profiling and sanitizing options with that from
-drivers/firmware/efi/libstub/Makefile, adding
--DDISABLE_BRANCH_PROFILING to the CFLAGS and setting:
-
-  GCOV_PROFILE                    := n
-  UBSAN_SANITIZE                  := n
-
-This fixes broken references to ftrace_likely_update() when
-CONFIG_TRACE_BRANCH_PROFILING is enabled and to __gcov_init() and
-__gcov_exit() when CONFIG_GCOV_KERNEL is enabled.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200317130841.290418-1-hdegoede@redhat.com
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Link: https://lore.kernel.org/r/20200401030017.100274-1-chenzhou10@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/purgatory/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/staging/greybus/light.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index b81b5172cf994..2cfa0caef1336 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -15,7 +15,10 @@ $(obj)/sha256.o: $(srctree)/lib/sha256.c FORCE
- LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
- targets += purgatory.ro
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index 40680eaf3974f..db06cd544af58 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -1028,7 +1028,8 @@ static int gb_lights_light_config(struct gb_lights *glights, u8 id)
  
-+# Sanitizer, etc. runtimes are unavailable and cannot be linked here.
-+GCOV_PROFILE	:= n
- KASAN_SANITIZE	:= n
-+UBSAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
- 
- # These are adjustments to the compiler flags used for objects that
-@@ -23,7 +26,7 @@ KCOV_INSTRUMENT := n
- 
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
- PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
--PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
-+PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+ 	light->channels_count = conf.channel_count;
+ 	light->name = kstrndup(conf.name, NAMES_MAX, GFP_KERNEL);
+-
++	if (!light->name)
++		return -ENOMEM;
+ 	light->channels = kcalloc(light->channels_count,
+ 				  sizeof(struct gb_channel), GFP_KERNEL);
+ 	if (!light->channels)
 -- 
 2.25.1
 
