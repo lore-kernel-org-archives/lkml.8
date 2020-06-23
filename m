@@ -2,87 +2,121 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9507C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B3920707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:39:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CwkFXbXW"
+	by mail.kernel.org (Postfix) with ESMTP id 5AE4120720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732043AbgFWIjx (ORCPT
+        id S1731867AbgFWIkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:39:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732018AbgFWIju (ORCPT
+        Tue, 23 Jun 2020 04:40:46 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41656 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731744AbgFWIkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:39:50 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB018C061573;
-        Tue, 23 Jun 2020 01:39:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=FMNlTrNFAQom/fM3Ojz/Fdv/nPQOBbOyqE/rlw7eqec=; b=CwkFXbXWqPUILWTCSOQfNZsMpr
-        dk318OA7fw8HN5vE/SECPGzq7honG7rlRILJCv4/d6eyGqXnwYOegXo9kghJ7rGQ1KiocuD6QaxZw
-        jp1iVULoN1w2ERoRlXSvpYyPyg5soeg+EeM5aa7Cy8UUyiJiffEMHB9zE3jCkrA0bYtCvZRGgFgSK
-        gZaspPStNlDhcY/jrvgjpkNsxu3r1xKLqGUKeTkeNE6/11dmmSRqViaO7rUqEZQOqMNXoKqw9jf0e
-        wvRXQyqshVsnGYIL94bq0kc8lUmpH0HhRiaJfQrt4m7NAsfTlUC/SG7bY/WGvRi+yIi218eNrGNPy
-        OvVXu6aA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jneS3-0000fw-Qn; Tue, 23 Jun 2020 08:38:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BEA81307959;
-        Tue, 23 Jun 2020 10:38:41 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id EFB1A237095FE; Tue, 23 Jun 2020 10:38:39 +0200 (CEST)
-Message-ID: <20200623083721.454517573@infradead.org>
-User-Agent: quilt/0.66
-Date:   Tue, 23 Jun 2020 10:36:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        a.darwish@linutronix.de, rostedt@goodmis.org,
-        bigeasy@linutronix.de, peterz@infradead.org, davem@davemloft.net,
-        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk
-Subject: [PATCH v4 6/8] arm: Break cyclic percpu include
-References: <20200623083645.277342609@infradead.org>
+        Tue, 23 Jun 2020 04:40:45 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jneTt-00035w-7Y; Tue, 23 Jun 2020 08:40:37 +0000
+Date:   Tue, 23 Jun 2020 10:40:36 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH 2/6] arm64/vdso: Zap vvar pages when switching to a time
+ namespace
+Message-ID: <20200623084036.enigighejqw2vdkt@wittgenstein>
+References: <20200616075545.312684-1-avagin@gmail.com>
+ <20200616075545.312684-3-avagin@gmail.com>
+ <20200619153812.2d6anaynb4p37qv2@wittgenstein>
+ <20200623073305.GA23557@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200623073305.GA23557@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to use <asm/percpu.h> in irqflags.h, we need to make sure
-asm/percpu.h does not itself depend on irqflags.h.
+On Tue, Jun 23, 2020 at 12:33:05AM -0700, Andrei Vagin wrote:
+> On Fri, Jun 19, 2020 at 05:38:12PM +0200, Christian Brauner wrote:
+> > On Tue, Jun 16, 2020 at 12:55:41AM -0700, Andrei Vagin wrote:
+> > > The VVAR page layout depends on whether a task belongs to the root or
+> > > non-root time namespace. Whenever a task changes its namespace, the VVAR
+> > > page tables are cleared and then they will be re-faulted with a
+> > > corresponding layout.
+> > > 
+> > > Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> > > Reviewed-by: Dmitry Safonov <dima@arista.com>
+> > > Signed-off-by: Andrei Vagin <avagin@gmail.com>
+> > > ---
+> > >  arch/arm64/kernel/vdso.c | 32 ++++++++++++++++++++++++++++++++
+> > >  1 file changed, 32 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+> > > index b0aec4e8c9b4..df4bb736d28a 100644
+> > > --- a/arch/arm64/kernel/vdso.c
+> > > +++ b/arch/arm64/kernel/vdso.c
+> > > @@ -125,6 +125,38 @@ static int __vdso_init(enum vdso_abi abi)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +#ifdef CONFIG_TIME_NS
+> > > +/*
+> > > + * The vvar page layout depends on whether a task belongs to the root or
+> > > + * non-root time namespace. Whenever a task changes its namespace, the VVAR
+> > > + * page tables are cleared and then they will re-faulted with a
+> > > + * corresponding layout.
+> > > + * See also the comment near timens_setup_vdso_data() for details.
+> > > + */
+> > > +int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+> > > +{
+> > > +	struct mm_struct *mm = task->mm;
+> > > +	struct vm_area_struct *vma;
+> > > +
+> > > +	if (mmap_write_lock_killable(mm))
+> > > +		return -EINTR;
+> > 
+> > Hey,
+> > 
+> > Just a heads-up I'm about to plumb CLONE_NEWTIME support into setns()
+> 
+> Hmm. I am not sure that I unserstand what you mean. I think setns(nsfd,
+> CLONE_NEWTIME) works now. For example, we use it in
+> tools/testing/selftests/timens/timens.c. Do you mean setns(pidfd,
+> CLONE_NEWTIME | CLONE_something)?
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/arm/include/asm/percpu.h |    2 ++
- 1 file changed, 2 insertions(+)
+Indeed, I'm talking about setns(pidfd, CLONE_NEWUSER | CLONE_NEWNS |
+CLONE_NEWTIME). But also in general, the setns infrastructure has been
+reworked and ideally all namespaces only perform permissions checks and
+install the namespace into the passed in new struct nsset (which was
+introduced this cycle) in their install handler (e.g. timens_install())
+and don't make any task-visible changes yet but instead provide an
+install routine that does not fail which is then called from 
+static void commit_nsset(struct nsset *nsset)
+in kernel/nsproxy.c.
 
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -10,6 +10,8 @@
-  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
-  */
- #if defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
-+register unsigned long current_stack_pointer asm ("sp");
-+
- static inline void set_my_cpu_offset(unsigned long off)
- {
- 	/* Set TPIDRPRW */
-
-
+> 
+> > which would mean that vdso_join_timens() ould not be allowed to fail
+> > anymore to make it easy to switch to multiple namespaces atomically. So
+> > this would probably need to be changed to mmap_write_lock() which I've
+> > already brought up upstream:
+> > https://lore.kernel.org/lkml/20200611110221.pgd3r5qkjrjmfqa2@wittgenstein/
+> > (Assuming that people agree. I just sent the series and most people here
+> > are Cced.)
+> > 
+> > Thanks!
+> > Christian
