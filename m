@@ -3,241 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C4EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 497F220780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1E22072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731595AbgFWH3j (ORCPT
+        id S1731611AbgFWH3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:29:39 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:46184 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731241AbgFWH3j (ORCPT
+        Tue, 23 Jun 2020 03:29:42 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:38313 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731547AbgFWH3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:29:39 -0400
-Received: by mail-ej1-f68.google.com with SMTP id p20so20498092ejd.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:29:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :message-id:date:mime-version;
-        bh=r6iBQ+a2psL8/1ILnpQrZHrTmcPpkjqZptSkXvzX8Eg=;
-        b=T9oFbPnWpGwSyRhsb/QenBP5D/C2Nx1b08qSV1qI0icMOVO1xV5iUiJcybBRq8sM6D
-         5nHoqpUltQA5Bke+wyM1IAEvDd4zYwxxuUar/lf2qVbnrBBkJAm88VRJQ2nhZf2NWgqJ
-         Om10SPL6ZqHPzmc/krglaDb3m8u5Mbcr1YzducPC46XN89KJb6i5Lih7gJNNE3yJfGjC
-         cBZtTkVbB1m6aA63WjGmy55C/rMs094AsjZI3UdIQeNfuBP/o0pNq7NYsicRQ4+s7Gbw
-         YUrA341zSfXeY/za+Ym9eI3yVYIBp5jhToF6kENr8cbrORd3vrwiwR7zzS8QgcmDrV/1
-         vSOQ==
-X-Gm-Message-State: AOAM533YjTDYDUlCo1iWxLe1BpaWLN7OgpUDMFZOVTFBOquOo0OA9xN7
-        5m59Rb5uhNJTRFuy/YNIEDk=
-X-Google-Smtp-Source: ABdhPJw14PEhroxBRn5Ky9cJUsdoVIXcoM1ev4h6Rn3pgF0r/zi0Uh3FgGUizQTYAZJGzKx9nefgFg==
-X-Received: by 2002:a17:906:b88c:: with SMTP id hb12mr18414146ejb.483.1592897376297;
-        Tue, 23 Jun 2020 00:29:36 -0700 (PDT)
-Received: from darkstar ([2a04:ee41:4:5025:8295:1d2:ca0d:985e])
-        by smtp.gmail.com with ESMTPSA id u3sm14601451edx.25.2020.06.23.00.29.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 00:29:35 -0700 (PDT)
-References: <87v9kv2545.derkling@matbug.com> <87h7wd15v2.derkling@matbug.net> <87imgrlrqi.derkling@matbug.net> <87mu5sqwkt.derkling@matbug.net> <87eer42clt.derkling@matbug.net>
-User-agent: mu4e 1.4.10; emacs 26.3
-From:   Patrick Bellasi <patrick.bellasi@matbug.net>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>, Ben Segall <bsegall@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Josef Bacik <jbacik@fb.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Parth Shah <parth@linux.ibm.com>
-Subject: Scheduler wakeup path tuning surface: Use-Cases and Requirements
-Message-ID: <87imfi2qbk.derkling@matbug.net>
-Date:   Tue, 23 Jun 2020 09:29:03 +0200
+        Tue, 23 Jun 2020 03:29:40 -0400
+Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MqZE0-1j15Ck2VDU-00me7Z for <linux-kernel@vger.kernel.org>; Tue, 23 Jun
+ 2020 09:29:38 +0200
+Received: by mail-qv1-f52.google.com with SMTP id d12so9232921qvn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:29:38 -0700 (PDT)
+X-Gm-Message-State: AOAM5324PO5P+HFq27Yt/Wji+KDMVt5mz2GhEKv31+Ru2qXnnv2E4mcy
+        tWBPFJK6TP0PZ1pW2GrdpJBOEfza0jlofZYr+nM=
+X-Google-Smtp-Source: ABdhPJzjlRBoHZR9GcNE5/qkGwbBsJCgbkV8+pXhkUlrRsDkq4pzT3YrjStQaZfeOqbW5DNjXIp6bHI22SV4czm23XY=
+X-Received: by 2002:a0c:ba0e:: with SMTP id w14mr25299097qvf.222.1592897377432;
+ Tue, 23 Jun 2020 00:29:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200623065744.18393-1-rppt@kernel.org>
+In-Reply-To: <20200623065744.18393-1-rppt@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 23 Jun 2020 09:29:21 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1gsE8AbcYEu=MKYwYqc_AsPGcA_oBcePg_RS7UjdDh4g@mail.gmail.com>
+Message-ID: <CAK8P3a1gsE8AbcYEu=MKYwYqc_AsPGcA_oBcePg_RS7UjdDh4g@mail.gmail.com>
+Subject: Re: [PATCH 0/8] remove unicore32 support
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Guan Xuetao <gxt@pku.edu.cn>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:q7okKZlL+/EvXtQVt7rDhgVgSOYy9epYHdaw3Ky9xoUcZBXVFq8
+ kz4co4P2UXR5XCxgH4N8jX1tAajW3Kjy/nVrn+brd6ISElkJc5TqEoKnQiVT9t7zbfmVWzy
+ zRmmrEVvXwh2IMIlD3JQhnOSK1W9HdNe/pkLLUPdYReJuuu3VeSwyHLgrkwneVrBR8EppRU
+ yKvQSk9AAIxTXwQTmYWiA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cr459Vo/5Ms=:S+kqGEjP38OBCdFK89cjE6
+ zs3px56Gdw+D2FZ/ZmD1PrwYdR215tsksPLPsKRLelYtyXlHOdKts0RHxSMuRnZYE2r6xmRYV
+ EQ23UrrZsqaifnPQJKl2y/kZz07FRFFb9a+/8pcAbQUq16so1TYPo3Y87CKt/nE0VC19Dq45j
+ f2Vzma6Z8EmvWsoO5Dnuflvup1Qt18m8njk4oifdN5qQ+oiNtkI3qcq/24dRIO7kvmBvtSl/k
+ O+fCSjqZD/WuMdM2bfhNUo8mP9F2AErETwOeJd8sq57OChMa2PjEj2AA6S6nTeMiiUHrYCMv5
+ yo7m55JoYUpRnUUWNyeHc7phLfOiUz2zsT61YFYSlJntMYCQoYPGvU2nnKwSfqxV4a4IqyVR8
+ wPprV/TQlTsa1XVordri9BsDQvX6DCjahxEl5Nal6b0EAJiq50nRrTi1hb6AHRdAv96tYifPS
+ CVVMefF665hvG3MgiMOffxsVjlnYZcjEy/PBRvXgl4ajZDgnc5v8cYEL8IcgFCpir9fQ5WDwu
+ ULnaE5wkVZgv+BYkxx8IdVk3ubO6iIG5gOwoLdfo1kaz5HOaZazx0GvYmkuqF5b2t3OKKmSY8
+ +E1D6jctLXKZFE5fH4q1J+68Vgvux7XTFysI3Wf7sb0NAhoLuyNGmR3x2Q6oPyEvD8Hoh24he
+ 14KAZZ5ndkgAj8gq4OWTdOR9wjrIaI0oiOucRaYZdPhJp4uqdRhkDdUZt4quOiTN1nFJZ452m
+ R2dmx7nSIE0FDMQhs5/DrC5Z9Ee60G57XkSsnwwNdpriKdmIGz5X3/nzsaT6RiH+KH5t/DSvS
+ wjpbSmmsWu6iYfwiw+qDwrc/DJq87nAeAROV65aqdRAZtkVi9w=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 23, 2020 at 8:57 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>
+> The unicore32 port do not seem maintained for a long time now, there is no
+> upstream toolchain that can create unicore32 binaries and all the links to
+> prebuilt toolchains for unicore32 are dead. Even compilers that were
+> available are not supported by the kernel anymore.
 
-Since last year's OSPM Summit we started conceiving the idea that task
-wakeup path could be better tuned for certain classes of workloads
-and usage scenarios. Various people showed interest for a possible
-tuning interface for the scheduler wakeup path.
+Peter Maydell also brought this up recently, since there is also a stale
+qemu port.
 
+I agree in principle that this port is about as dead as it gets and presumably
+nobody has attempted running a kernel later than linux-4.9 nor will they
+do that in the future. I see that the hardware support was never fully completed
+either, with at least the "PKUnity-v3-UMAL" ethernet driver getting submitted
+in 2011 but never merged and no public information on a driver for the
+"PKUnity-v3-MMC" device that presumably holds the rootfs and the
+"PKUnity-v3-UART" device.
 
-.:: The Problem
-===============
+However, it's worth pointing out two arguments against removal:
 
-The discussions we had so far [1] have not been effective in clearly
-identifying if a common tuning surface is possible. The last discussion
-at this year's OSPM Summit [2,3] was also kind of inconclusive and left
-us with the message: start by collecting the requirements and then see
-what interface fits them the best.
+- Guan Xuetao is still listed as maintainer and asked for the port to be
+   kept around the last time I suggested removing it two years ago.
+   He promised that there would be compiler sources (llvm I think), but
+   has not made those available since.
 
-General consensus is that a unified interface can be challenging and
-maybe not feasible. However, generalisation is also a value
-and we should strive for it whenever it's possible.
+- https://github.com/gxt has patches to linux-4.9 and qemu-2.7, both
+  released in 2016, with patches dated early 2019. These patches mainly
+  restore a syscall ABI that was never part of mainline Linux but apparently
+  used in production. qemu-2.8 removed support for that ABI and
+  newer kernels (4.19+) as you say can no longer be built with the old
+  toolchain, so I would guess there will not be any future updates to that
+  git tree.
 
-Someone might think that we did not put enough effort in the analysis of
-requirements. Perhaps what we missed so far is also a structured and
-organised way to collect requirements which also can help in factoring
-out the things they have in common.
+With that information added to the pull request and the maintainer
+added to Cc:
 
-
-.:: The Proposal
-================
-
-This thread aims at providing a guided template for the description of
-different task wakeup use-cases. It does that by setting a series of
-questions aimed at precisely describing what's "currently broken", what
-we would like to have instead and how we could achieve it.
-
-What we propose here is that, for each wakeup use-case, we start
-by replying to this email to provide the required details/comments for
-a predefined list of questions. This will generate independent
-discussion threads. Each thread will be free to focus on a specific
-proposal but still all the thread will be reasoning around a common set
-of fundamental concepts.
-
-The hope is that, by representing all the use-cases as sufficiently
-detailed responses to a common set of questions, once the discussion
-settles down, we can more easily verify if there are common things
-surfacing which then can be naturally wrapped into a unified user-space
-API.
-
-A first use-case description, following the template guidelines, will
-be posted shortly after this message. This also will provide an example
-for how to use the template.
-
-NOTE: Whenever required, pseudo-code or simplified C can be used.
-
-I hope this can drive a fruitful discussion in preparation for LPC!
-
-Best,
-Patrick
-
-
----8<--- For templates submissions: reply only to the following ---8<---
-
-
-.:: Scheduler Wakeup Path Requirements Collection Template
-==========================================================
-
-A) Name: unique one-liner name for the proposed use-case
-
-B) Target behaviour: one paragraph to describe the wakeup path issue
-
-C) Existing control paths: reference to code paths to justify B)
-
-   Assuming v5.6 as the reference kernel, this section should provide
-   links to code paths such as, e.g.
-
-   fair.c:3917
-   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/sched/fair.c?h=v5.6#n3917
-
-   Alternatively code snippets can be added inline, e.g.
-
-        /*
-	 * The 'current' period is already promised to the current tasks,
-	 * however the extra weight of the new task will slow them down a
-	 * little, place the new task so that it fits in the slot that
-	 * stays open at the end.
-	 */
-	if (initial && sched_feat(START_DEBIT))
-		vruntime += sched_vslice(cfs_rq, se);
-
-   NOTE: if the use-case exists only outside the mainline Linux kernel
-         this section can stay empty
-
-D) Desired behaviour: one paragraph to describe the desired update
-
-   NOTE: the current mainline expression is assumed to be correct
-         for existing use-cases. Thus, here we are looking for run-time
-         tuning of those existing features.
-
-E) Existing knobs (if any): reference to whatever existing tunable
-
-   Some features can already be tuned, but perhaps only via compile time
-   knobs, SCHED_FEATs or system wide tunable.
-   If that's the case, we should document them here and explain how they
-   currently work and what are (if any) the implicit assumptions, e.g.
-   what is the currently implemented scheduling policy/heuristic.
-
-F) Existing knobs (if any): one paragraph description of the limitations
-
-   If the existing knobs are not up to the job for this use-case,
-   shortly explain here why. It could be because a tuning surface is
-   already there but it's hardcoded (e.g. compile time knob) or too
-   coarse grained (e.g. a SCHED_FEAT).
-
-G) Proportionality Analysis: check the nature of the target behavior
-
-   Goal here is to verify and discuss if the behaviour (B) has a
-   proportional nature: different values of the control knobs (E) are
-   expected to produce different effects for (B).
-   
-   Special care should be taken to check if the target behaviour has an
-   intrinsically "binary nature", i.e. only two values make really
-   sense. In this case it would be very useful to argument why a
-   generalisation towards a non-binary behaviours does NOT make sense.
-
-H) Range Analysis: identify meaningful ranges
-
-   If (G) was successfully, i.e. there is a proportional correlation
-   between (E) and (B), discuss here about a meaningful range for (E)
-   and (F).
-
-I) System-Wide tuning: which knobs are required
-
-   If required, list new additional tunables here, how they should be
-   exposed and (if required) which scheduling classes will be affected.
-
-J) Per-Task tuning: which knobs are required
-
-   Describe which knobs should be added and which task specific API
-   (e.g. sched_setscheduler(), prctl(), ...) they should be used.
-
-K) Task-Group tuning: which knobs are required
-
-   If the use-case can benefit from a task-group tuning, here it should
-   **briefly described** how the expected behaviour can be mapped on a
-   cgroup v2 unified hierarchy.
-
-   NOTE: implementation details are not required but we should be able
-         to hint at which cgroup v2 resource distribution model [5]
-         should be applied.
-
-
----8<--- For templates submissions: exclude the following ---8<---
-
-
-.:: References
-==============
-
-[1] [Discussion v2] Usecases for the per-task latency-nice attribute
-    Message-ID: 2bd46086-43ff-f130-8720-8eec694eb55b@linux.ibm.com
-    https://lore.kernel.org/lkml/2bd46086-43ff-f130-8720-8eec694eb55b@linux.ibm.com
-
-[2] Latency Nice: Implementation and UseCases for Scheduler Optmizations
-    https://ospm.lwn.net/playback/presentation/2.0/playback.html?meetingId=380dd88f044f67ee4c94d0a2a4fb7c3f46cb6391-1589459486615&t=42m37s
-
-[3] LWN: The many faces of "latency nice"
-    https://lwn.net/Articles/820659
-
-[4] [PATCH v5 0/4] Introduce per-task latency_nice for scheduler hints
-    Message-ID: 20200228090755.22829-1-parth@linux.ibm.com
-    https://lore.kernel.org/lkml/20200228090755.22829-1-parth@linux.ibm.com
-
-[5] Control Group v2: Resource Distribution Models
-    https://www.kernel.org/doc/Documentation/admin-guide/cgroup-v2.rst
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
