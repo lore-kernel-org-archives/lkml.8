@@ -2,66 +2,105 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D80FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A22582072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B8620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:22:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="k8rKfaM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732542AbgFWMTv (ORCPT
+        id S1732518AbgFWMWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:19:51 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:45798 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbgFWMTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:19:51 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jnhtp-0002xX-A6; Tue, 23 Jun 2020 22:19:38 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 23 Jun 2020 22:19:37 +1000
-Date:   Tue, 23 Jun 2020 22:19:37 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: build failure after merge of the printk tree
-Message-ID: <20200623121937.GA9671@gondor.apana.org.au>
-References: <20200621131554.5a662afe@canb.auug.org.au>
- <20200623102655.6d16e610@canb.auug.org.au>
- <20200623121637.GA8444@alley>
+        Tue, 23 Jun 2020 08:22:45 -0400
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:54972 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbgFWMWo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:22:44 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 49rlm25JhGzQlHl;
+        Tue, 23 Jun 2020 14:22:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1592914960;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RYHSllEovlG/ggKWbzjoHZNr+XGOCzS41sbjd+LaIDQ=;
+        b=k8rKfaM2yGBcX5Lh+/hvSyBCgDekndra36mbf6smBWLAmcq8PwBdQI7KwTFjsB8+lI5gQM
+        4YodSwxtrdz22nviYR5io9boV6+kdaJYkYj8nz1kxFYSuQlZy7ETvynx4dIsA4LSBBK1dS
+        mrQEJVTfxs+zwbzbs6mg0LLO54CGRu2r9/ZA9iE1dB1ZVVc0RPQz28Vo3XMWwSJCMpZ8Wh
+        NJZXBZj2zf9TFP1tWbSDtMv0TODPKXzAE7gXRzerQifc/iOkvwkWUICwOqCE5AthJ3gySC
+        m8xLcd6xKlZzAl7x9JOFVUxi8FXvO0qnQnUzz9gAc3/UJa1yB2ez+Gomp8ytxA==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id tkqN7V3qW95u; Tue, 23 Jun 2020 14:22:39 +0200 (CEST)
+Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
+To:     Michael Walle <michael@walle.cc>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20200623060526.29922-1-mans0n@gorani.run>
+ <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
+From:   Sungbo Eo <mans0n@gorani.run>
+Message-ID: <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run>
+Date:   Tue, 23 Jun 2020 21:22:32 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623121637.GA8444@alley>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
+Content-Type: text/plain; charset=euc-kr; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -2.22 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 5F9161754
+X-Rspamd-UID: 0b831e
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:16:38PM +0200, Petr Mladek wrote:
->
-> I have removed the problematic commit for now. It tried to remove
-> some cyclic dependencies from heavily used include files. It clearly
-> needs more love.
+Hi Michael,
 
-Hmm, the cyclic dependencies are there because you didn't pull in
-the lockdep_types patch.  The printk patch must go on top of the
-lockdep_types patch.  How about just putting this into the x86 tree
-alongside the lockdep_types patch?
+On 2020-06-23 17:31, Michael Walle wrote:
+> Hi Sungbo,
+> 
+> Am 2020-06-23 08:05, schrieb Sungbo Eo:
+>> This patch adds support for the PCA9570 I2C GPO expander.
+>>
+>> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+>> ---
+>> Tested in kernel 5.4 on an ipq40xx platform.
+>>
+>> This is my first time submitting a whole driver patch, and I'm not
+>> really familiar with this PCA expander series.
+>> Please let me know how I can improve this patch further. (Do I also
+>> need to document the DT compatible string?)
+> 
+> Did you have a look at drivers/gpio/gpio-regmap.c ? Your driver seems
+> to be simple enough to be easily integrated with that. If you need a
+> blueprint; because at the moment there is no driver in the kernel
+> using that, you could have a look at:
+> https://lore.kernel.org/linux-gpio/20200604211039.12689-7-michael@walle.cc/
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks for your advice. I didn't really know what regmap is for...
+It seems gpio-regmap is for gpio controllers having val/dir registers. 
+But pca9570 does not use port registers. The master only sends a data 
+byte without reg address. I'm not sure how to apply gpio-regmap or 
+regmap-i2c here.
+I'll try to investigate if setting reg_size or reg_bits to zero is possible.
+
+Please correct me if I'm in the wrong direction.
+
+Thanks.
+
+> 
+> -michael
