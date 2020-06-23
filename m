@@ -2,120 +2,109 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B928C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C84620774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31AAE20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731609AbgFWH7o (ORCPT
+        id S1731578AbgFWIAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:59:44 -0400
-Received: from mga18.intel.com ([134.134.136.126]:33474 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731396AbgFWH7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:59:44 -0400
-IronPort-SDR: 7KicQLmqbqzfu2rINqef6mK6b7tIcYXOleC/yxcb7mkEuN0boBxDI472dPFLW9ZotBCvDlEg6S
- iy/VvVgKdHtg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131405963"
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="131405963"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 00:59:43 -0700
-IronPort-SDR: guciHM9+Q5fHNPBrFOCzI9Awwyfb/rwf9UJW1Y8dwKtdJ0C67EG4C68f3Hql8c6ElPsV+5Dnlp
- fHrh352pdYkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="353730797"
-Received: from mylly.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by orsmga001.jf.intel.com with ESMTP; 23 Jun 2020 00:59:41 -0700
-Subject: Re: [PATCH] i2c: designware: Fix functionality in !CONFIG_ACPI case
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org
-References: <20200623025144.34246-1-john.stultz@linaro.org>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <d6c317ee-4f97-9c57-6b04-1eabd814b6ce@linux.intel.com>
-Date:   Tue, 23 Jun 2020 10:59:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 23 Jun 2020 04:00:05 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:40347 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731296AbgFWIAE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:00:04 -0400
+X-IronPort-AV: E=Sophos;i="5.75,270,1589234400"; 
+   d="scan'208";a="456171988"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 09:59:58 +0200
+Date:   Tue, 23 Jun 2020 09:59:57 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Joe Perches <joe@perches.com>
+cc:     trivial@kernel.org, kernel-janitors@vger.kernel.org,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] trivial: fix kerneldoc comments
+In-Reply-To: <6b0649c53e853fd2a35e9996f13e702daa0d7e2f.camel@perches.com>
+Message-ID: <alpine.DEB.2.22.394.2006230954560.2367@hadrien>
+References: <1592854669-20606-1-git-send-email-Julia.Lawall@inria.fr> <6b0649c53e853fd2a35e9996f13e702daa0d7e2f.camel@perches.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <20200623025144.34246-1-john.stultz@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
 
-On 6/23/20 5:51 AM, John Stultz wrote:
-> On the HiKey board, where CONFIG_ACPI is not set, we started
-> to see a graphics regression where the adv7511 HDMI bridge driver
-> wasn't probing. This was due to the i2c bus failing to start up.
-> 
-> I bisected the problem down to commit f9288fcc5c615 ("i2c:
-> designware: Move ACPI parts into common module") and after
-> looking at it a bit, I realized that change moved some
-> initialization into i2c_dw_acpi_adjust_bus_speed(). However,
-> i2c_dw_acpi_adjust_bus_speed() is only functional if CONFIG_ACPI
-> is set.
-> 
-> This patch pulls i2c_dw_acpi_adjust_bus_speed() out of the
-> ifdef CONFIG_ACPI conditional, and gets the board working again.
-> 
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> Cc: Wolfram Sang <wsa@kernel.org>
-> Cc: linux-i2c@vger.kernel.org
-> Fixes: f9288fcc5c615 ("i2c: designware: Move ACPI parts into common module")
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->   drivers/i2c/busses/i2c-designware-common.c | 4 ++--
->   drivers/i2c/busses/i2c-designware-core.h   | 3 +--
->   2 files changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-common.c b/drivers/i2c/busses/i2c-designware-common.c
-> index e3a8640db7da..33de185e15f2 100644
-> --- a/drivers/i2c/busses/i2c-designware-common.c
-> +++ b/drivers/i2c/busses/i2c-designware-common.c
-> @@ -286,6 +286,8 @@ int i2c_dw_acpi_configure(struct device *device)
->   }
->   EXPORT_SYMBOL_GPL(i2c_dw_acpi_configure);
->   
-> +#endif	/* CONFIG_ACPI */
-> +
 
-I think the regression is in these lines below that were moved from 
-probe to i2c_dw_acpi_adjust_bus_speed() and cause that neither 
-"cloock-frequency" device property or I2C_MAX_FAST_MODE_FREQ affect the 
-bus speed when CONFIG_ACPI is not set.
+On Mon, 22 Jun 2020, Joe Perches wrote:
 
-+       /*
-+        * Find bus speed from the "clock-frequency" device property, ACPI
-+        * or by using fast mode if neither is set.
-+        */
-+       if (acpi_speed && t->bus_freq_hz)
-+               t->bus_freq_hz = min(t->bus_freq_hz, acpi_speed);
-+       else if (acpi_speed || t->bus_freq_hz)
-+               t->bus_freq_hz = max(t->bus_freq_hz, acpi_speed);
-+       else
-+               t->bus_freq_hz = I2C_MAX_FAST_MODE_FREQ;
+> On Mon, 2020-06-22 at 21:37 +0200, Julia Lawall wrote:
+> > Fix the parameter names in the comment to correspond to those in the
+> > function header.
+> >
+> > Drop comments about return values when there is no return value.
+>
+> Done by hand or script?
 
-Andy: what you think should the i2c_dw_acpi_adjust_bus_speed() fixed to 
-return adjusted speed or zero if not found (also for !CONFIG_ACPI) and 
-move above lines back to probe? It looks more clear to me that way and 
-should fix the regression I think.
+Found by script but done by hand.  Unfortuntely, I can't figure even a
+hackish way to get Coccinelle to modify comments.  I guess I could have
+used Coccinelle to print out a patch and then run that, but since the
+result has to be checked anyway, I just made the changes by hand.
 
--- 
-Jarkko
+>
+> []
+> > diff --git a/arch/mips/cavium-octeon/executive/cvmx-spi.c b/arch/mips/cavium-octeon/executive/cvmx-spi.c
+> []
+> > @@ -69,9 +69,7 @@ static cvmx_spi_callbacks_t cvmx_spi_callbacks = {
+> >  /**
+> >   * Get current SPI4 initialization callbacks
+> >   *
+> > - * @callbacks:	Pointer to the callbacks structure.to fill
+> > - *
+> > - * Returns Pointer to cvmx_spi_callbacks_t structure.
+> > + * @callbacks:	Pointer to the callbacks structure, to fill.
+>
+> If scripted, odd comma after structure
+
+Hmm, maybe I interpreted the words slightly differently.  t looks like it
+would be fine without the comma.
+
+>
+> > diff --git a/drivers/crypto/bcm/spu.c b/drivers/crypto/bcm/spu.c
+> []
+> > @@ -519,7 +519,7 @@ u32 spum_assoc_resp_len(enum spu_cipher_mode cipher_mode,
+> >   * spu_aead_ivlen() - Calculate the length of the AEAD IV to be included
+> >   * in a SPU request after the AAD and before the payload.
+> >   * @cipher_mode:  cipher mode
+> > - * @iv_ctr_len:   initialization vector length in bytes
+> > + * @iv_len:   initialization vector length in bytes
+> >   *
+> >   * In Linux ~4.2 and later, the assoc_data sg includes the IV. So no need
+> >   * to include the IV as a separate field in the SPU request msg.
+> > @@ -917,7 +917,7 @@ u16 spum_cipher_req_init(u8 *spu_hdr, struct spu_cipher_parms *cipher_parms)
+> >   * setkey() time in spu_cipher_req_init().
+> >   * @spu_hdr:         Start of the request message header (MH field)
+> >   * @spu_req_hdr_len: Length in bytes of the SPU request header
+> > - * @isInbound:       0 encrypt, 1 decrypt
+> > + * @is_inbound:       0 encrypt, 1 decrypt
+>
+> odd alignments
+
+Sorry to have missed these.
+
+> etc...
+
+Are there a lot of other such problems?  I did look through the whole
+patch several times by hand, but perhaps it is just too big to see
+everything.
+
+julia
