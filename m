@@ -2,164 +2,110 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C034AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F24C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89EF22070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="Ncz6GPbX"
+	by mail.kernel.org (Postfix) with ESMTP id 8EA992070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592921300;
+	bh=W8SifQZMmjCYOz9qiXwOH2QVh2XWoUWbt24ej70khxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rSHjyAFEjbJywbfHXasWTqbB15x1aFS/ciogbArzQCce6njkohqcMeU03UmjEhzcx
+	 s+ZkT2joKp3LXNLXtjlUSndLsjO4WP1hoGKXdtZmdg687wjjipGV2EXMaXUI7/pNrc
+	 wg2oKvhY3x9Owv5pstZumH/MtYt0NlVtXXgjXmWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732771AbgFWOHq (ORCPT
+        id S1732803AbgFWOIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:07:46 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:49684 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732698AbgFWOHp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:07:45 -0400
-X-Greylist: delayed 1351 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Jun 2020 10:07:45 EDT
-Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
-        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NDbK4H011866;
-        Tue, 23 Jun 2020 14:43:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=jan2016.eng;
- bh=VAlZ9T7k1ajEt0jZVlyc2Uc0FxRs9kP3mpORv6qIfbk=;
- b=Ncz6GPbXzeMEkE7nwAQ8WuzgERexiBK4CTD/DUy2NRDmyu4q+bvjFayhuTs+6pwuhisl
- xfO1zBP8+BmA2VfbyB0IazCaplBq1QdzuAb4DIenNvup97u80ffsdxzneWW9VFVSF5cx
- FaWKXdoxcE7aG68AFQCL2U2OXSjTtSoAxrYCPchv1lHLI9eY7/zlvUIjvbc0gjzMEY4M
- snhIeXliwuwQ6QIA6QZ06VR+PDoHePndcDoUDZZc+A/omjNzDzO7oQ3BOTCZTmfWbTKZ
- H0sg2dugPNYSa5OpEUWc/MX+P+WG8jFuEKP6uYYgWHBxzS4bisXKkBvcy5ijs/uyJi0V BQ== 
-Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61] (may be forged))
-        by mx0a-00190b01.pphosted.com with ESMTP id 31s9qg6bb3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 14:43:08 +0100
-Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
-        by prod-mail-ppoint6.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 05NDZEE1032373;
-        Tue, 23 Jun 2020 09:43:07 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.31])
-        by prod-mail-ppoint6.akamai.com with ESMTP id 31sdswuxbd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 09:43:06 -0400
-Received: from USMA1EX-CAS1.msg.corp.akamai.com (172.27.123.30) by
- usma1ex-dag3mb4.msg.corp.akamai.com (172.27.123.56) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Tue, 23 Jun 2020 09:43:05 -0400
-Received: from bos-lpii8.145bw.corp.akamai.com (172.28.3.11) by
- USMA1EX-CAS1.msg.corp.akamai.com (172.27.123.30) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Tue, 23 Jun 2020 09:43:05 -0400
-Received: by bos-lpii8.145bw.corp.akamai.com (Postfix, from userid 42339)
-        id A0A8E17F650; Tue, 23 Jun 2020 09:43:05 -0400 (EDT)
-From:   Michael Zhivich <mzhivich@akamai.com>
-To:     <jonas.bonn@netrounds.com>
-CC:     <davem@davemloft.net>, <john.fastabend@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <pabeni@redhat.com>, <johunt@akamai.com>, <mzhivich@akamai.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc 
-Date:   Tue, 23 Jun 2020 09:42:59 -0400
-Message-ID: <20200623134259.8197-1-mzhivich@akamai.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+        Tue, 23 Jun 2020 10:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732698AbgFWOIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 10:08:18 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D41420723;
+        Tue, 23 Jun 2020 14:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592921298;
+        bh=W8SifQZMmjCYOz9qiXwOH2QVh2XWoUWbt24ej70khxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s5IZW2unLbgPcf1GaXFLgEYZkEpAwlHKNREQy+AWFQWgADend2w3xj37HI3ZnMxoY
+         e8S87CU7nCCyEn/88gb3SOmk5G9NovgAKDbzAeKUq7MGfMKxllqbYk1fw1CMlhlpts
+         cVbTTbU819ljJGLFxkJDcC17wuzu2rplU0wXHYO8=
+Date:   Tue, 23 Jun 2020 15:08:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v2 3/6] spi: dw: Add Microchip Sparx5 support
+Message-ID: <20200623140815.GF5582@sirena.org.uk>
+References: <20200619113121.9984-1-lars.povlsen@microchip.com>
+ <20200619113121.9984-4-lars.povlsen@microchip.com>
+ <20200619121107.GE5396@sirena.org.uk>
+ <87imfjxtrq.fsf@soft-dev15.microsemi.net>
+ <20200622121706.GF4560@sirena.org.uk>
+ <878sgddh2l.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 adultscore=0
- suspectscore=3 mlxlogscore=999 phishscore=0 spamscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006230108
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 suspectscore=3
- phishscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
- cotscore=-2147483648 priorityscore=1501 mlxscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006230108
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ChQOR20MqfxkMJg9"
+Content-Disposition: inline
+In-Reply-To: <878sgddh2l.fsf@soft-dev15.microsemi.net>
+X-Cookie: No motorized vehicles allowed.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jonas Bonn <jonas.bonn@netrounds.com>
-> To: Paolo Abeni <pabeni@redhat.com>,
-> 	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-> 	LKML <linux-kernel@vger.kernel.org>,
-> 	"David S . Miller" <davem@davemloft.net>,
-> 	John Fastabend <john.fastabend@gmail.com>
-> Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-> Date: Fri, 11 Oct 2019 02:39:48 +0200
-> Message-ID: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com> (raw)
-> In-Reply-To: <95c5a697932e19ebd6577b5dac4d7052fe8c4255.camel@redhat.com>
-> 
-> Hi Paolo,
-> 
-> On 09/10/2019 21:14, Paolo Abeni wrote:
-> > Something alike the following code - completely untested - can possibly
-> > address the issue, but it's a bit rough and I would prefer not adding
-> > additonal complexity to the lockless qdiscs, can you please have a spin
-> > a it?
-> 
-> We've tested a couple of variants of this patch today, but unfortunately 
-> it doesn't fix the problem of packets getting stuck in the queue.
-> 
-> A couple of comments:
-> 
-> i) On 5.4, there is the BYPASS path that also needs the same treatment 
-> as it's essentially replicating the behavour of qdisc_run, just without 
-> the queue/dequeue steps
-> 
-> ii)  We are working a lot with the 4.19 kernel so I backported to the 
-> patch to this version and tested there.  Here the solution would seem to 
-> be more robust as the BYPASS path does not exist.
-> 
-> Unfortunately, in both cases we continue to see the issue of the "last 
-> packet" getting stuck in the queue.
-> 
-> /Jonas
 
-Hello Jonas, Paolo,
+--ChQOR20MqfxkMJg9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-We have observed the same problem with pfifo_fast qdisc when sending periodic small
-packets on a TCP flow with multiple simultaneous connections on a 4.19.75
-kernel.  We've been able to catch it in action using perf probes (see trace
-below).  For qdisc = 0xffff900d7c247c00, skb = 0xffff900b72c334f0,
-it takes 200270us to traverse the networking stack on a system that's not otherwise busy.
-qdisc only resumes processing when another enqueued packet comes in,
-so the packet could have been stuck indefinitely.
+On Tue, Jun 23, 2020 at 03:53:22PM +0200, Lars Povlsen wrote:
+> Mark Brown writes:
 
-   proc-19902 19902 [032] 580644.045480: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0xffff900bfc294af0 band=2 atomic_qlen=0
-   proc-19902 19902 [032] 580644.045480:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=2
-   proc-19927 19927 [014] 580644.045480:      probe:tcp_transmit_skb2: (ffffffff9b6dc4e5) skb=0xffff900b72c334f0 sk=0xffff900d62958040 source=0x4b4e dest=0x9abe
-   proc-19902 19902 [032] 580644.045480: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0x0 band=3 atomic_qlen=0
-   proc-19927 19927 [014] 580644.045481:      probe:ip_finish_output2: (ffffffff9b6bc650) net=0xffffffff9c107c80 sk=0xffff900d62958040 skb=0xffff900b72c334f0 __func__=0x0
-   proc-19902 19902 [032] 580644.045481:        probe:sch_direct_xmit: (ffffffff9b69e570) skb=0xffff900bfc294af0 q=0xffff900d7c247c00 dev=0xffff900d6a140000 txq=0xffff900d6a181180 root_lock=0x0 validate=1 ret=-1 again=155
-   proc-19927 19927 [014] 580644.045481:            net:net_dev_queue: dev=eth0 skbaddr=0xffff900b72c334f0 len=115
-   proc-19902 19902 [032] 580644.045482:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=1
-   proc-19927 19927 [014] 580644.045483:     probe:pfifo_fast_enqueue: (ffffffff9b69d9f0) skb=0xffff900b72c334f0 qdisc=0xffff900d7c247c00 to_free=18446622925407304000
-   proc-19902 19902 [032] 580644.045483: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0x0 band=3 atomic_qlen=0
-   proc-19927 19927 [014] 580644.045483: probe:pfifo_fast_enqueue_end: (ffffffff9b69da9f) skb=0xffff900b72c334f0 qdisc=0xffff900d7c247c00 to_free=0xffff91d0f67ab940 atomic_qlen=1
-   proc-19902 19902 [032] 580644.045484:          probe:__qdisc_run_2: (ffffffff9b69ea5a) q=0xffff900d7c247c00 packets=1
-   proc-19927 19927 [014] 580644.245745:     probe:pfifo_fast_enqueue: (ffffffff9b69d9f0) skb=0xffff900d98fdf6f0 qdisc=0xffff900d7c247c00 to_free=18446622925407304000
-   proc-19927 19927 [014] 580644.245745: probe:pfifo_fast_enqueue_end: (ffffffff9b69da9f) skb=0xffff900d98fdf6f0 qdisc=0xffff900d7c247c00 to_free=0xffff91d0f67ab940 atomic_qlen=2
-   proc-19927 19927 [014] 580644.245746:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=0
-   proc-19927 19927 [014] 580644.245746: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0xffff900b72c334f0 band=2 atomic_qlen=1
-   proc-19927 19927 [014] 580644.245747:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=2
-   proc-19927 19927 [014] 580644.245747: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0xffff900d98fdf6f0 band=2 atomic_qlen=0
-   proc-19927 19927 [014] 580644.245748:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=2
-   proc-19927 19927 [014] 580644.245748: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0x0 band=3 atomic_qlen=0
-   proc-19927 19927 [014] 580644.245749:          qdisc:qdisc_dequeue: dequeue ifindex=5 qdisc handle=0x0 parent=0xF txq_state=0x0 packets=2 skbaddr=0xffff900b72c334f0
-   proc-19927 19927 [014] 580644.245749:        probe:sch_direct_xmit: (ffffffff9b69e570) skb=0xffff900b72c334f0 q=0xffff900d7c247c00 dev=0xffff900d6a140000 txq=0xffff900d6a181180 root_lock=0x0 validate=1 ret=-1 again=155
-   proc-19927 19927 [014] 580644.245750:       net:net_dev_start_xmit: dev=eth0 queue_mapping=14 skbaddr=0xffff900b72c334f0 vlan_tagged=0 vlan_proto=0x0000 vlan_tci=0x0000 protocol=0x0800 ip_summed=3 len=115 data_len=0 network_offset=14 transport_offset_valid=1 transport_offset=34 tx_flags=0 gso_size=0 gso_segs=1 gso_type=0x1
+> >If there's a mux that needs to be handled specially that mux should be
+> >described in DT on the relevant boards, there shouldn't just be
+> >something hard coded in the controller driver.
 
-I was wondering if you had any more luck in finding a solution or workaround for this problem
-(that is, aside from switching to a different qdisc)?
+> I looked at the spi-mux driver, but that is more for muxing the CS's, as
+> I understand - not the actual bus segment. I could use it, but it would
 
-Thanks,
-~ Michael
+It doesn't matter that much exactly what signals get switched I think,
+we can't really tell by the time we get back to the controller.
+
+> require encoding the bus segment into the CS (double the normal
+> range). Also, selecting the bus interface is tightly coupled to the
+> controller - its not an externally constructed board mux.
+
+It sounds like this controller should be describing a mux all the time -
+if there's completely separate output buses that you can switch between
+then we'll need to know about that if someone wires up a GPIO chip
+select.
+
+--ChQOR20MqfxkMJg9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7yDM8ACgkQJNaLcl1U
+h9BfZgf+JDO/cCKJ4sjkHrz8THiBZ35D3xuuzurTm4Tr8gePq3LGdQdvbnaLi+kh
+ybEPdfXHOunOJtY1eV1Loo3ckwW0KEOLa5M8GuFXFicZmomG51V+/5Xx0tuf27lS
+sK5o15TjgRKD3PGmIrquSL3vdunu/X2xkV7HT5IS9sv2t6Iwh/ulyFIgD0Q/dUS/
+rTIMg7VaQAiEVYtnheZdDHIAxS8Djgwj5u4im0Wv+HtKDa4MB0GtGOB/lV9YOkzv
+DKPm2/KgoSvBGALhUslEHDJCae8z642b13PnX4vCYgCNn5fm38/a3gk3GNQWd1l5
+hJvmc2AR85/s5cD47zvzaPRz1pl35w==
+=7Tnk
+-----END PGP SIGNATURE-----
+
+--ChQOR20MqfxkMJg9--
