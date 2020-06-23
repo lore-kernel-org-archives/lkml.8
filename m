@@ -2,53 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D3D20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDC220702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945893;
-	bh=Gs21tgiMFl5DiApiKPmnEbobYTjCIKXQhdHQfSDUvr0=;
+	s=default; t=1592945897;
+	bh=RmSu6XXD+IBvpCB9zN9SurpmHVEngIjc+XGj9sgt19g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PyHPUKgDmsyUk0o3tjExV4dRdJwPPFV/QuywDkwVLRKci8qOa6SGhHgAxUMGxIPyz
-	 IQC7mAs57dwG+SHhQcuJfgSTVulaWnxA8FK+moHtWQlJfyEC81KeoDRlGLo+I5P6j4
-	 O//lkpEtJvm6UrbgA10pcKkZt4qAV0zIqFdpTtkc=
+	b=tfS14b87hr9bfsDDiKmn2zJ9qnRyXOKYx43rIesLBJ832+xQF9S/bTGiYCObHGr0c
+	 LvEh0yqKzJSOkoFHgGEX+Pq1XFvf+IIAEMojRBKMW/OF9JXhHtJ8x8pOZN0txEtare
+	 u/gQfijCbu9jjcHwUO11NaICs0395pshH50v+Mz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403909AbgFWU6M (ORCPT
+        id S2403894AbgFWUl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:58:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38550 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391974AbgFWUmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:02 -0400
+        id S2391951AbgFWUlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BA6D20702;
-        Tue, 23 Jun 2020 20:42:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8160121531;
+        Tue, 23 Jun 2020 20:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944923;
-        bh=Gs21tgiMFl5DiApiKPmnEbobYTjCIKXQhdHQfSDUvr0=;
+        s=default; t=1592944913;
+        bh=RmSu6XXD+IBvpCB9zN9SurpmHVEngIjc+XGj9sgt19g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+fuE3LokzLbLoxux99b0sf7t8BwNCwzv0AFgx2k/+NPB/e1xlj/N+5/hq3X/INVv
-         5+qSPBWya+7NxChIjOk6yQixKsguSSVIfIZBY0lUL2pONJhDrPLkP7tgLEagoXXgeE
-         to2xJHlYxcDmTp7/5lPMDyXXrFKN9yE52GlPqkqQ=
+        b=ni7WQnapttaLN7j2e8KyKZETl+rEpcexN8losBPth8244k3O/pX2SAihotAWIUYqc
+         V9oeqYZ56DRP4ZjTDvDIANlkcQL6IThUKZqg3eOyU+M6gEKS0Bdj/fClwr4rTOcx4P
+         opm3qF70J3wE3MDuFiVzZ01NQJ4RLRDuUFVlTF7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Eric Whitney <enwlinux@gmail.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        stable@kernel.org
-Subject: [PATCH 4.19 178/206] ext4: fix partial cluster initialization when splitting extent
-Date:   Tue, 23 Jun 2020 21:58:26 +0200
-Message-Id: <20200623195325.794849583@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Sean Paul <sean@poorly.run>
+Subject: [PATCH 4.19 174/206] drm/dp_mst: Reformat drm_dp_check_act_status() a bit
+Date:   Tue, 23 Jun 2020 21:58:22 +0200
+Message-Id: <20200623195325.589459183@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,120 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cfb3c85a600c6aa25a2581b3c1c4db3460f14e46 ]
+From: Lyude Paul <lyude@redhat.com>
 
-Fix the bug when calculating the physical block number of the first
-block in the split extent.
+commit a5cb5fa6c3a5c2cf492db667b8670ee7b044b79f upstream.
 
-This bug will cause xfstests shared/298 failure on ext4 with bigalloc
-enabled occasionally. Ext4 error messages indicate that previously freed
-blocks are being freed again, and the following fsck will fail due to
-the inconsistency of block bitmap and bg descriptor.
+Just add a bit more line wrapping, get rid of some extraneous
+whitespace, remove an unneeded goto label, and move around some variable
+declarations. No functional changes here.
 
-The following is an example case:
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+[this isn't a fix, but it's needed for the fix that comes after this]
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Cc: Sean Paul <sean@poorly.run>
+Cc: <stable@vger.kernel.org> # v3.17+
+Reviewed-by: Sean Paul <sean@poorly.run>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200406221253.1307209-3-lyude@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-1. First, Initialize a ext4 filesystem with cluster size '16K', block size
-'4K', in which case, one cluster contains four blocks.
-
-2. Create one file (e.g., xxx.img) on this ext4 filesystem. Now the extent
-tree of this file is like:
-
-...
-36864:[0]4:220160
-36868:[0]14332:145408
-51200:[0]2:231424
-...
-
-3. Then execute PUNCH_HOLE fallocate on this file. The hole range is
-like:
-
-..
-ext4_ext_remove_space: dev 254,16 ino 12 since 49506 end 49506 depth 1
-ext4_ext_remove_space: dev 254,16 ino 12 since 49544 end 49546 depth 1
-ext4_ext_remove_space: dev 254,16 ino 12 since 49605 end 49607 depth 1
-...
-
-4. Then the extent tree of this file after punching is like
-
-...
-49507:[0]37:158047
-49547:[0]58:158087
-...
-
-5. Detailed procedure of punching hole [49544, 49546]
-
-5.1. The block address space:
-```
-lblk        ~49505  49506   49507~49543     49544~49546    49547~
-	  ---------+------+-------------+----------------+--------
-	    extent | hole |   extent	|	hole	 | extent
-	  ---------+------+-------------+----------------+--------
-pblk       ~158045  158046  158047~158083  158084~158086   158087~
-```
-
-5.2. The detailed layout of cluster 39521:
-```
-		cluster 39521
-	<------------------------------->
-
-		hole		  extent
-	<----------------------><--------
-
-lblk      49544   49545   49546   49547
-	+-------+-------+-------+-------+
-	|	|	|	|	|
-	+-------+-------+-------+-------+
-pblk     158084  1580845  158086  158087
-```
-
-5.3. The ftrace output when punching hole [49544, 49546]:
-- ext4_ext_remove_space (start 49544, end 49546)
-  - ext4_ext_rm_leaf (start 49544, end 49546, last_extent [49507(158047), 40], partial [pclu 39522 lblk 0 state 2])
-    - ext4_remove_blocks (extent [49507(158047), 40], from 49544 to 49546, partial [pclu 39522 lblk 0 state 2]
-      - ext4_free_blocks: (block 158084 count 4)
-        - ext4_mballoc_free (extent 1/6753/1)
-
-5.4. Ext4 error message in dmesg:
-EXT4-fs error (device vdb): mb_free_blocks:1457: group 1, block 158084:freeing already freed block (bit 6753); block bitmap corrupt.
-EXT4-fs error (device vdb): ext4_mb_generate_buddy:747: group 1, block bitmap and bg descriptor inconsistent: 19550 vs 19551 free clusters
-
-In this case, the whole cluster 39521 is freed mistakenly when freeing
-pblock 158084~158086 (i.e., the first three blocks of this cluster),
-although pblock 158087 (the last remaining block of this cluster) has
-not been freed yet.
-
-The root cause of this isuue is that, the pclu of the partial cluster is
-calculated mistakenly in ext4_ext_remove_space(). The correct
-partial_cluster.pclu (i.e., the cluster number of the first block in the
-next extent, that is, lblock 49597 (pblock 158086)) should be 39521 rather
-than 39522.
-
-Fixes: f4226d9ea400 ("ext4: fix partial cluster initialization")
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Eric Whitney <enwlinux@gmail.com>
-Cc: stable@kernel.org # v3.19+
-Link: https://lore.kernel.org/r/1590121124-37096-1-git-send-email-jefflexu@linux.alibaba.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 6e8049031c1a2..3a4570e37cb0b 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -2905,7 +2905,7 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
- 			 * in use to avoid freeing it when removing blocks.
- 			 */
- 			if (sbi->s_cluster_ratio > 1) {
--				pblk = ext4_ext_pblock(ex) + end - ee_block + 2;
-+				pblk = ext4_ext_pblock(ex) + end - ee_block + 1;
- 				partial_cluster =
- 					-(long long) EXT4_B2C(sbi, pblk);
- 			}
--- 
-2.25.1
-
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2837,33 +2837,31 @@ fail:
+  */
+ int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
+ {
++	int count = 0, ret;
+ 	u8 status;
+-	int ret;
+-	int count = 0;
+ 
+ 	do {
+-		ret = drm_dp_dpcd_readb(mgr->aux, DP_PAYLOAD_TABLE_UPDATE_STATUS, &status);
+-
++		ret = drm_dp_dpcd_readb(mgr->aux,
++					DP_PAYLOAD_TABLE_UPDATE_STATUS,
++					&status);
+ 		if (ret < 0) {
+-			DRM_DEBUG_KMS("failed to read payload table status %d\n", ret);
+-			goto fail;
++			DRM_DEBUG_KMS("failed to read payload table status %d\n",
++				      ret);
++			return ret;
+ 		}
+ 
+ 		if (status & DP_PAYLOAD_ACT_HANDLED)
+ 			break;
+ 		count++;
+ 		udelay(100);
+-
+ 	} while (count < 30);
+ 
+ 	if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
+-		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n", status, count);
+-		ret = -EINVAL;
+-		goto fail;
++		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n",
++			      status, count);
++		return -EINVAL;
+ 	}
+ 	return 0;
+-fail:
+-	return ret;
+ }
+ EXPORT_SYMBOL(drm_dp_check_act_status);
+ 
 
 
