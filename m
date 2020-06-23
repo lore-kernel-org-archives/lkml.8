@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08906C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE02C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7D172073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4542073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943474;
-	bh=GsRTFshCHugL5/nlerjFhpHXaegZzLl2NBuFjjLUqwg=;
+	s=default; t=1592943477;
+	bh=bV7BUloC7jlCvLKAtRiDjl5NFTDVv4DSEHmeddckrc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmHf3f/Ssn8TtF0EZHSpmXSUxLKTajWa4pXrFK7RX5KVhiEyDRoTHmNj5TpbYeIpL
-	 YCn5Sh3+dirDaUzYF1MBPZPHMjToQBzLZ3ea9JCFnHuOs8YsvFJtlgk61SfTF8mKdn
-	 E24pn8dFZuWbhQeJUh36X/Emb6jn0u1xIn0qdXAs=
+	b=qgC0gMiTeljaGv2uFo77+Vf8KVJOYP+vHWj4uvKhn2GHItlYWhYv6pOZNn/pdWgSl
+	 A+1gUJr5yxaTJ6hJnXl3jOvUfs2ID1+YUN6yBg5Zq1WKgYChUuWKgwDzcSSmO5lun2
+	 W+wLTren/tekm+6PXBlKkeROX8UjRxwU9Xvr4dcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389603AbgFWURw (ORCPT
+        id S2389611AbgFWUR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:17:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:17:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389582AbgFWURk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:40 -0400
+        id S2389595AbgFWURt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905772073E;
-        Tue, 23 Jun 2020 20:17:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 317B020E65;
+        Tue, 23 Jun 2020 20:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943460;
-        bh=GsRTFshCHugL5/nlerjFhpHXaegZzLl2NBuFjjLUqwg=;
+        s=default; t=1592943469;
+        bh=bV7BUloC7jlCvLKAtRiDjl5NFTDVv4DSEHmeddckrc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJDJVIhQtS3xEWxGHdwGBQIbJt1Rf49dGecs5Rzjce9efQEamignA2kmw6IXe/EnF
-         YxQW9lMXX9TXNHrVjeIrXHPV9gux2scrFF0RC94LGgDgN5FK/cKsqusZV8EGt4RvSr
-         Z47B1vO0iWW340CpyfH76fAGLD2fl5XgSPvheRCE=
+        b=PKgKdmuQurJvB+aZ9EErYNe31J+XvTaTbXKoSwx5Dcl8qn7QxA5oPUfly9HgE9gBA
+         sCKm+OlDqN8TqxBw2TyHLxXjsYAW/5KClf741E1h6/HPnfHrzkXSiErVoXXYK2LxxL
+         Ai0YT6ZRbXfn392HDQozb6t1HYNZDpWp4puRYf1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 399/477] bnxt_en: Simplify bnxt_resume().
-Date:   Tue, 23 Jun 2020 21:56:36 +0200
-Message-Id: <20200623195426.390369657@linuxfoundation.org>
+Subject: [PATCH 5.7 374/477] xdp: Fix xsk_generic_xmit errno
+Date:   Tue, 23 Jun 2020 21:56:11 +0200
+Message-Id: <20200623195425.208617243@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,49 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 2084ccf6259cc95e0575f0fafc93595d0219a9f6 ]
+[ Upstream commit aa2cad0600ed2ca6a0ab39948d4db1666b6c962b ]
 
-The separate steps we do in bnxt_resume() can be done more simply by
-calling bnxt_hwrm_func_qcaps().  This change will add an extra
-__bnxt_hwrm_func_qcaps() call which is needed anyway on older
-firmware.
+Propagate sock_alloc_send_skb error code, not set it to
+EAGAIN unconditionally, when fail to allocate skb, which
+might cause that user space unnecessary loops.
 
-Fixes: f9b69d7f6279 ("bnxt_en: Fix suspend/resume path on 57500 chips")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 35fcde7f8deb ("xsk: support for Tx")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Link: https://lore.kernel.org/bpf/1591852266-24017-1-git-send-email-lirongqing@baidu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ net/xdp/xsk.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 58e0d9a781e9a..fbfb3e092e0dc 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -12097,19 +12097,9 @@ static int bnxt_resume(struct device *device)
- 		goto resume_exit;
- 	}
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index c350108aa38de..a4676107fad05 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -397,10 +397,8 @@ static int xsk_generic_xmit(struct sock *sk)
  
--	if (bnxt_hwrm_queue_qportcfg(bp)) {
--		rc = -ENODEV;
-+	rc = bnxt_hwrm_func_qcaps(bp);
-+	if (rc)
- 		goto resume_exit;
--	}
--
--	if (bp->hwrm_spec_code >= 0x10803) {
--		if (bnxt_alloc_ctx_mem(bp)) {
--			rc = -ENODEV;
--			goto resume_exit;
+ 		len = desc.len;
+ 		skb = sock_alloc_send_skb(sk, len, 1, &err);
+-		if (unlikely(!skb)) {
+-			err = -EAGAIN;
++		if (unlikely(!skb))
+ 			goto out;
 -		}
--	}
--	if (BNXT_NEW_RM(bp))
--		bnxt_hwrm_func_resc_qcaps(bp, false);
  
- 	if (bnxt_hwrm_func_drv_rgtr(bp, NULL, 0, false)) {
- 		rc = -ENODEV;
+ 		skb_put(skb, len);
+ 		addr = desc.addr;
 -- 
 2.25.1
 
