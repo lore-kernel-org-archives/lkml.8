@@ -2,145 +2,147 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26221C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFF8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 025A020772
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592892165;
-	bh=x3bd9T22dLZovGnPn6q+wbS6I/RZshP+fVHKJEby0w4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xOQmfwso5QHGP9N0PpET3LNUfVHVZ4SH85ugnzJ5rknv7MsbZ4sK8+q/tt1wh3zVn
-	 dmbQ5LNBCdxughJtil8h9pqUFFiIGMvRPAojKFaTPmVdUgIVrWYzacZ/cS1VGjQf3A
-	 5uKVgo6+Hz/ef2pIU0RxmJt2JEoQKIPd+XJ1LbiU=
+	by mail.kernel.org (Postfix) with ESMTP id DD72420656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:05:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qCtbnkfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbgFWGCn (ORCPT
+        id S1730619AbgFWGFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:02:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbgFWGCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:02:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF14520738;
-        Tue, 23 Jun 2020 06:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592892162;
-        bh=x3bd9T22dLZovGnPn6q+wbS6I/RZshP+fVHKJEby0w4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pY+2PLfuJR0CNNlu0VkLooa8HwaGUnpA6E73k1IKCI66P+z3Q/qeq4j4OnsM76pfs
-         BeCTfcSh22YxTRw9e8A2ZDplEHT+CIwNqLQVR5Q0ZM5WmaqDsDByJ8BGz345mTCnL/
-         cJLJ42FiTD4Gihi4ldIYl13BkYgKkE76Aeqsn3m0=
-Date:   Tue, 23 Jun 2020 08:02:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ian Kent <raven@themaw.net>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-Message-ID: <20200623060236.GA3818201@kroah.com>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
- <20200622174845.GB13061@mtj.duckdns.org>
- <20200622180306.GA1917323@kroah.com>
- <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
+        Tue, 23 Jun 2020 02:05:37 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1393 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730149AbgFWGFh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:05:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef19b830000>; Mon, 22 Jun 2020 23:04:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 23:05:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 23:05:36 -0700
+Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jun
+ 2020 06:05:30 +0000
+Subject: Re: [TEGRA194_CPUFREQ Patch v3 1/4] dt-bindings: arm: Add t194 ccplex
+ compatible and bpmp property
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
+        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
+References: <1592775274-27513-1-git-send-email-sumitg@nvidia.com>
+ <1592775274-27513-2-git-send-email-sumitg@nvidia.com>
+ <20200622072247.agrvmw6sl3jwgjkz@vireshk-i7>
+From:   Sumit Gupta <sumitg@nvidia.com>
+Message-ID: <3ef570ec-1a55-5449-58fb-4e0039350299@nvidia.com>
+Date:   Tue, 23 Jun 2020 11:35:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
+In-Reply-To: <20200622072247.agrvmw6sl3jwgjkz@vireshk-i7>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592892291; bh=x7pllGVCRVcZl/z7oNpDAAgML8RbNEkRhkrXs3sdRss=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qCtbnkfaHgvl3zipzaZafhR7lVvhAKG8qv/fMpHfK859kAvg4dPHxQeojQOW9d6b3
+         cTeJr3AN+fK98HqEPlFq6ZzbBEKm5xSA2lgMtePQ/6shHf4t6UYdPKkW0100JQLSzR
+         6EdgrcydReThwiJX9TAlcsKZSRmBaEyHVWqilL+wJYYIt0mxQMAohe4xD1gO6LSghc
+         5bjDaPzrcL8iCe4+gl94JXUAP98cUiTPOKeyOHd9gnTAdoHxZBvqsazNBgWNOWAhWD
+         jT18qyd5C7ZJvS0GLrR2YM17NJ24DxUJy2KRBp5Ht+qffE2wEEb2tA3cEtSy18ZI//
+         U7mMuO8NceS9w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 01:09:08PM +0800, Ian Kent wrote:
-> On Mon, 2020-06-22 at 20:03 +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Jun 22, 2020 at 01:48:45PM -0400, Tejun Heo wrote:
-> > > Hello, Ian.
-> > > 
-> > > On Sun, Jun 21, 2020 at 12:55:33PM +0800, Ian Kent wrote:
-> > > > > > They are used for hotplugging and partitioning memory. The
-> > > > > > size of
-> > > > > > the
-> > > > > > segments (and thus the number of them) is dictated by the
-> > > > > > underlying
-> > > > > > hardware.
-> > > > > 
-> > > > > This sounds so bad. There gotta be a better interface for that,
-> > > > > right?
-> > > > 
-> > > > I'm still struggling a bit to grasp what your getting at but ...
-> > > 
-> > > I was more trying to say that the sysfs device interface with per-
-> > > object
-> > > directory isn't the right interface for this sort of usage at all.
-> > > Are these
-> > > even real hardware pieces which can be plugged in and out? While
-> > > being a
-> > > discrete piece of hardware isn't a requirement to be a device model
-> > > device,
-> > > the whole thing is designed with such use cases on mind. It
-> > > definitely isn't
-> > > the right design for representing six digit number of logical
-> > > entities.
-> > > 
-> > > It should be obvious that representing each consecutive memory
-> > > range with a
-> > > separate directory entry is far from an optimal way of representing
-> > > something like this. It's outright silly.
-> > 
-> > I agree.  And again, Ian, you are just "kicking the problem down the
-> > road" if we accept these patches.  Please fix this up properly so
-> > that
-> > this interface is correctly fixed to not do looney things like this.
+
+
+On 22/06/20 12:52 PM, Viresh Kumar wrote:
+> External email: Use caution opening links or attachments
 > 
-> Fine, mitigating this problem isn't the end of the story, and you
-> don't want to do accept a change to mitigate it because that could
-> mean no further discussion on it and no further work toward solving
-> it.
 > 
-> But it seems to me a "proper" solution to this will cross a number
-> of areas so this isn't just "my" problem and, as you point out, it's
-> likely to become increasingly problematic over time.
+> On 22-06-20, 03:04, Sumit Gupta wrote:
+>> To do frequency scaling on all CPUs within T194 CPU Complex, we need
+>> to query BPMP for data on valid operating points. Document a compatible
+>> string under 'cpus' node to represent the CPU Complex for binding drivers
+>> like cpufreq which don't have their node or CPU Complex node to bind to.
+>> Also, document a property to point to the BPMP device that can be queried
+>> for all CPUs.
 > 
-> So what are your ideas and recommendations on how to handle hotplug
-> memory at this granularity for this much RAM (and larger amounts)?
+> You shouldn't be putting how linux is going to use this information and entries
+> shouldn't be made just so cpufreq can bind to a driver.
+> 
+> Though I see that this is a real hardware register which you can use to interact
+> with the firmware ? And so it makes sense to have it, maybe in different form
+> though.
+> 
+CPUFREQ driver doesn't communicate directly with BPMP firmware. It uses 
+BPMP node's reference to call api's exported by BPMP driver which 
+communicates with BPMP firmware.
 
-First off, this is not my platform, and not my problem, so it's funny
-you ask me :)
+> I will let Rob explain what would be the right way of doing this though.
+> 
+This is already discussed by Thierry with Rob.
+Please refer https://marc.info/?l=linux-arm-kernel&m=158999171528418&w=2
 
-Anyway, as I have said before, my first guesses would be:
-	- increase the granularity size of the "memory chunks", reducing
-	  the number of devices you create.
-	- delay creating the devices until way after booting, or do it
-	  on a totally different path/thread/workqueue/whatever to
-	  prevent delay at booting
-
-And then there's always:
-	- don't create them at all, only only do so if userspace asks
-	  you to.
-
-You all have the userspace tools/users for this interface and know it
-best to know what will work for them.  If you don't, then hey, let's
-just delete the whole thing and see who screams :)
-
-thanks,
-
-greg k-h
+>>
+>> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+>> ---
+>>   Documentation/devicetree/bindings/arm/cpus.yaml | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+>> index a018147..737b55e 100644
+>> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+>> @@ -162,6 +162,7 @@ properties:
+>>         - nvidia,tegra132-denver
+>>         - nvidia,tegra186-denver
+>>         - nvidia,tegra194-carmel
+>> +      - nvidia,tegra194-ccplex
+>>         - qcom,krait
+>>         - qcom,kryo
+>>         - qcom,kryo260
+>> @@ -255,6 +256,14 @@ properties:
+>>
+>>         where voltage is in V, frequency is in MHz.
+>>
+>> +  nvidia,bpmp:
+>> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+>> +    descrption: |
+>> +      Specifies the bpmp node that needs to be queried to get
+>> +      operating point data for all CPUs.
+>> +
+>> +      Optional for NVIDIA Tegra194 Carmel CPUs
+>> +
+>>     power-domains:
+>>       $ref: '/schemas/types.yaml#/definitions/phandle-array'
+>>       description:
+>> --
+>> 2.7.4
+> 
+> --
+> viresh
+> 
