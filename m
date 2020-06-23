@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57052C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E19020656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2DA20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945167;
-	bh=VDpoRRqnG5j5UuTahOZVlHdffJFEYj7+m59b2DsLsac=;
+	s=default; t=1592945173;
+	bh=UVp5OmduPnw/nEMLzWnUN8SYvlWYf5TeIche6W/rs3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pLFinCjJD/0jUloXxU0/SdBlGCTTYlQbmwU8gqJU02OlxegNqCV5TndpWTFeWDQJk
-	 k0oe1Q0CiUr+9bs7HXkXG5YzNrVVR6j4FqMjAT6g8SMPBwL7sIWnzXSZyKlMrSz0E8
-	 BnHuhaEYVIT1pU4m5SGVP0mJwImIcZzUUu4380Jk=
+	b=owGeE056K8LO8BMKRzhq/pyILYnyLmzbocR08C3PBYVItqHZ5HeduIRRKkm1HQlUf
+	 Ustw+9I39Z2azyS9xe0DnPZd0OJVadfyjJX/QerhrFyzm8Nohk+tpiAJWQdtbtK8uD
+	 wmh+f3eVHiPSf9rDzrDfPb6QYZib2k0Hw5f0KIZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404015AbgFWUqF (ORCPT
+        id S2392447AbgFWUqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:46:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43762 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:46:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392131AbgFWUqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:46:00 -0400
+        id S2392800AbgFWUqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:46:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F40C20656;
-        Tue, 23 Jun 2020 20:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C8CC2098B;
+        Tue, 23 Jun 2020 20:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945160;
-        bh=VDpoRRqnG5j5UuTahOZVlHdffJFEYj7+m59b2DsLsac=;
+        s=default; t=1592945162;
+        bh=UVp5OmduPnw/nEMLzWnUN8SYvlWYf5TeIche6W/rs3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aqOxi/lBJkDBDicwgxHPukm54h2IH3kiKv/xzz+kc60eZ3gdf0vEngRJeqOlQRw7P
-         jJwR0mZcvdgp1zy6yWalDlCgNEJQg8QCSCVvV5wbiNOIZ70grk/vrfxyclgogThP41
-         ASOe6MX/Nri8FEPEBEdfGKKRo89po69qwqEO44gc=
+        b=WYx+oibkR1mukYvOBo3G4xTtEBbO5/NiXPyACNy8BYaCWJo/I8/Ib1qOkmYcWBbDC
+         dEyvQZ82P1XgbF/px0bJuUmGfZDqLMsSrOkNe6Pv/H+meAdhw6/goaP2tLJk68LZSl
+         e4nf3gS3GnzFYg0JlzBYfQP50y+70lkzVl00c4rs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Oliver Neukum <oneukum@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        stable@vger.kernel.org, Roy Spliet <nouveau@spliet.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 061/136] usb/ohci-platform: Fix a warning when hibernating
-Date:   Tue, 23 Jun 2020 21:58:37 +0200
-Message-Id: <20200623195306.759097665@linuxfoundation.org>
+Subject: [PATCH 4.14 062/136] drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
+Date:   Tue, 23 Jun 2020 21:58:38 +0200
+Message-Id: <20200623195306.812414837@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -64,100 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Roy Spliet <nouveau@spliet.org>
 
-[ Upstream commit 1cb3b0095c3d0bb96912bfbbce4fc006d41f367c ]
+[ Upstream commit e4337877c5d578722c0716f131fb774522013cf5 ]
 
-The following warning was observed when attempting to suspend to disk
-using a USB flash as a swap device.
+When allocation for mdp5_kms fails, calling mdp5_destroy() leads to undefined
+behaviour, likely a nullptr exception or use-after-free troubles.
 
-[  111.779649] ------------[ cut here ]------------
-[  111.788382] URB (____ptrval____) submitted while active
-[  111.796646] WARNING: CPU: 3 PID: 365 at drivers/usb/core/urb.c:363 usb_submit_urb+0x3d8/0x590
-[  111.805417] Modules linked in:
-[  111.808584] CPU: 3 PID: 365 Comm: kworker/3:2 Not tainted 5.6.0-rc6-00002-gdfd1731f9a3e-dirty #545
-[  111.817796] Hardware name: ARM Juno development board (r2) (DT)
-[  111.823896] Workqueue: usb_hub_wq hub_event
-[  111.828217] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  111.833156] pc : usb_submit_urb+0x3d8/0x590
-[  111.837471] lr : usb_submit_urb+0x3d8/0x590
-[  111.841783] sp : ffff800018de38b0
-[  111.845205] x29: ffff800018de38b0 x28: 0000000000000003
-[  111.850682] x27: ffff000970530b20 x26: ffff8000133fd000
-[  111.856159] x25: ffff8000133fd000 x24: ffff800018de3b38
-[  111.861635] x23: 0000000000000004 x22: 0000000000000c00
-[  111.867112] x21: 0000000000000000 x20: 00000000fffffff0
-[  111.872589] x19: ffff0009704e7a00 x18: ffffffffffffffff
-[  111.878065] x17: 00000000a7c8f4bc x16: 000000002af33de8
-[  111.883542] x15: ffff8000133fda88 x14: 0720072007200720
-[  111.889019] x13: 0720072007200720 x12: 0720072007200720
-[  111.894496] x11: 0000000000000000 x10: 00000000a5286134
-[  111.899973] x9 : 0000000000000002 x8 : ffff000970c837a0
-[  111.905449] x7 : 0000000000000000 x6 : ffff800018de3570
-[  111.910926] x5 : 0000000000000001 x4 : 0000000000000003
-[  111.916401] x3 : 0000000000000000 x2 : ffff800013427118
-[  111.921879] x1 : 9d4e965b4b7d7c00 x0 : 0000000000000000
-[  111.927356] Call trace:
-[  111.929892]  usb_submit_urb+0x3d8/0x590
-[  111.933852]  hub_activate+0x108/0x7f0
-[  111.937633]  hub_resume+0xac/0x148
-[  111.941149]  usb_resume_interface.isra.10+0x60/0x138
-[  111.946265]  usb_resume_both+0xe4/0x140
-[  111.950225]  usb_runtime_resume+0x24/0x30
-[  111.954365]  __rpm_callback+0xdc/0x138
-[  111.958236]  rpm_callback+0x34/0x98
-[  111.961841]  rpm_resume+0x4a8/0x720
-[  111.965445]  rpm_resume+0x50c/0x720
-[  111.969049]  __pm_runtime_resume+0x4c/0xb8
-[  111.973276]  usb_autopm_get_interface+0x28/0x60
-[  111.977948]  hub_event+0x80/0x16d8
-[  111.981466]  process_one_work+0x2a4/0x748
-[  111.985604]  worker_thread+0x48/0x498
-[  111.989387]  kthread+0x13c/0x140
-[  111.992725]  ret_from_fork+0x10/0x18
-[  111.996415] irq event stamp: 354
-[  111.999756] hardirqs last  enabled at (353): [<ffff80001019ea1c>] console_unlock+0x504/0x5b8
-[  112.008441] hardirqs last disabled at (354): [<ffff8000100a95d0>] do_debug_exception+0x1a8/0x258
-[  112.017479] softirqs last  enabled at (350): [<ffff8000100818a4>] __do_softirq+0x4bc/0x568
-[  112.025984] softirqs last disabled at (343): [<ffff8000101145a4>] irq_exit+0x144/0x150
-[  112.034129] ---[ end trace dc96030b9cf6c8a3 ]---
-
-The problem was tracked down to a missing call to
-pm_runtime_set_active() on resume in ohci-platform.
-
-Link: https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Tony Prisk <linux@prisktech.co.nz>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Mathias Nyman <mathias.nyman@intel.com>
-CC: Oliver Neukum <oneukum@suse.de>
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-usb@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20200518154931.6144-1-qais.yousef@arm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Roy Spliet <nouveau@spliet.org>
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ohci-platform.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index 61fe2b985070f..742cefa22c2b5 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -355,6 +355,11 @@ static int ohci_platform_resume(struct device *dev)
- 	}
+diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
+index f7c0698fec401..791a74b9907d8 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
+@@ -972,7 +972,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
  
- 	ohci_resume(hcd, false);
-+
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
  	return 0;
+ fail:
+-	mdp5_destroy(pdev);
++	if (mdp5_kms)
++		mdp5_destroy(pdev);
+ 	return ret;
  }
- #endif /* CONFIG_PM_SLEEP */
+ 
 -- 
 2.25.1
 
