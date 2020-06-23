@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50F49204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9845204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946653;
-	bh=vSHQ+YDY/gw7mpzO9YWRrdcHmIh6D564DwmdvkyEkC4=;
+	s=default; t=1592946660;
+	bh=6XFOWRwqP51ncHyM1K4Bi9eh6F1DgMWmP/TQ/75CFAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pAfdgQ0fuXRi5j0Qfp5hfTifwYNdM4tkY7ZOE1K6CBaEYwBdYW6rYPBLhFiP2NhOu
-	 iVyiWogfpeehK6gYkC7iCeAD6oEDFx6eXdfwDdr+gsgJUQEmb3SP5O2smheucBHjy6
-	 y2GhaVixwsnLGBzK80Vo+pOk4BqmXsJgyN/BxFW8=
+	b=f9g2KAAzxp7uMnWnVSl2in1imI1j0olXHWghjAJ0tXKWKV4krE9f9SQhHWTMLCCFk
+	 c7lEJ80Dc9g+KjNhrDN3+TpEaLuC3JUMBcOFF6fCUGocW7jEsV1bHuSWhskZSRyzGO
+	 7L4gwpVYa+gHMZprjM7ca2xe5kuw5Zp0Ao0TeCOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393317AbgFWVKv (ORCPT
+        id S2393333AbgFWVK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:10:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53998 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390870AbgFWUc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:32:56 -0400
+        id S2391343AbgFWUck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:32:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C690B20836;
-        Tue, 23 Jun 2020 20:32:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 605A42064B;
+        Tue, 23 Jun 2020 20:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944376;
-        bh=vSHQ+YDY/gw7mpzO9YWRrdcHmIh6D564DwmdvkyEkC4=;
+        s=default; t=1592944360;
+        bh=6XFOWRwqP51ncHyM1K4Bi9eh6F1DgMWmP/TQ/75CFAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBtfNhfPGEzFK941kdYKnQ2O2oqljYNi0GmLpWO97bm1nFOCgWsmAgy5YFlL90QkM
-         8DsDfnhINrngprz7lk4MRLlQB5KFO9qrt+JH5dkiOfmZtaXTGENjTRpYeoxxgFgo/l
-         qpbRQnXsQuoFEgwqLiujHRoaN4HR4Fz9ecLPip4k=
+        b=H15HTdQ5+xFUpF4fbyjH3KSuJwpJVCUXJI8/ifxmH5aBj0LF9frtHok9z2I49sQNM
+         Gqu60+hc0ALm8OmWELMBQV3v8HnxlHyZQ21RWDoVfKQ26jNfUii+1GuXEslD+pHSNM
+         9p0Ngos69aSCYLWeBY1O+yCjFa2e1EpqdStDI+uw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Gaurav Singh <gaurav1086@gmail.com>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 263/314] perf report: Fix NULL pointer dereference in hists__fprintf_nr_sample_events()
-Date:   Tue, 23 Jun 2020 21:57:38 +0200
-Message-Id: <20200623195351.518962999@linuxfoundation.org>
+Subject: [PATCH 5.4 275/314] scsi: ufs-bsg: Fix runtime PM imbalance on error
+Date:   Tue, 23 Jun 2020 21:57:50 +0200
+Message-Id: <20200623195352.102621485@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -66,43 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Singh <gaurav1086@gmail.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 11b6e5482e178055ec1f2444b55f2518713809d1 ]
+[ Upstream commit a1e17eb03e69bb61bd1b1a14610436b7b9be12d9 ]
 
-The 'evname' variable can be NULL, as it is checked a few lines back,
-check it before using.
+When ufs_bsg_alloc_desc_buffer() returns an error code, a pairing runtime
+PM usage counter decrement is needed to keep the counter balanced.
 
-Fixes: 9e207ddfa207 ("perf report: Show call graph from reference events")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Link: https://lore.kernel.org/r/20200522045932.31795-1-dinghao.liu@zju.edu.cn
+Fixes: 74e5e468b664 (scsi: ufs-bsg: Wake the device before sending raw upiu commands)
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-report.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/ufs/ufs_bsg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 4d8db41b949a4..d3c0b04e2e22b 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -462,8 +462,7 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
- 	if (rep->time_str)
- 		ret += fprintf(fp, " (time slices: %s)", rep->time_str);
+diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
+index d2197a31abe58..bad366e491591 100644
+--- a/drivers/scsi/ufs/ufs_bsg.c
++++ b/drivers/scsi/ufs/ufs_bsg.c
+@@ -106,8 +106,10 @@ static int ufs_bsg_request(struct bsg_job *job)
+ 		desc_op = bsg_request->upiu_req.qr.opcode;
+ 		ret = ufs_bsg_alloc_desc_buffer(hba, job, &desc_buff,
+ 						&desc_len, desc_op);
+-		if (ret)
++		if (ret) {
++			pm_runtime_put_sync(hba->dev);
+ 			goto out;
++		}
  
--	if (symbol_conf.show_ref_callgraph &&
--	    strstr(evname, "call-graph=no")) {
-+	if (symbol_conf.show_ref_callgraph && evname && strstr(evname, "call-graph=no")) {
- 		ret += fprintf(fp, ", show reference callgraph");
- 	}
- 
+ 		/* fall through */
+ 	case UPIU_TRANSACTION_NOP_OUT:
 -- 
 2.25.1
 
