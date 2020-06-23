@@ -2,83 +2,99 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3817C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF019C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C422520723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8D8206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943695;
-	bh=x6UTuA/WddaRqfwQKiLLn/GM/jW6mmC2cZEISdCLu6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LzDxvrtcQoryA7+fV7xh9zEu3uLDIcJFMROT8Vsqr3H3DtO4G3feIdhuI+OiK4UBd
-	 9CAIAHgCrKVWkYdZSqTW1MqTeCiB0Rz2aaRnK25Of5iPcS67KBuYq+RO0uzByJFyTb
-	 QbodW1yErH3NOJmqEP3N0cj9g9sUWym3G2nNqgn4=
+	s=default; t=1592943698;
+	bh=zBrIn/MzAW3cwxarvXWOuOO3A/8UoIoNEtHfB09phO0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Xswo72HeAubg6D+lJNaacPnU7zII6GgL93ddRMfLvI+Kr1e2/uxPsXq0wdLfCIC7P
+	 krjksn18gjm3ZR4tjjuaH5/2kWYHk3n93GL3PXyu/qzuuPd7Ux0PSVIXNCnOb2L+8k
+	 xEiF/lZqpURHs7+SlshfrL28RvgWPai5ryxvpk9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390053AbgFWUVe (ORCPT
+        id S2390057AbgFWUVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:21:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389698AbgFWUVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389693AbgFWUVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 16:21:20 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CB0E2080C;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5481520780;
         Tue, 23 Jun 2020 20:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592943680;
-        bh=x6UTuA/WddaRqfwQKiLLn/GM/jW6mmC2cZEISdCLu6o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HJWjyWXXM2pXhg0fQgG1kvauHo2jnKjUuz/KIrZIgMdeLKCahLAEEA+e/z2wO9gJQ
-         4krWUBHL8+ZWLgUfE1JgIACwlTnhNNwRPQtia9KaCJUTEepM81uEP1wCdlpqiCk2MO
-         /0lGWSy2kzy2crAsWxFRkpogn/lclXNSnwitIR+c=
-Date:   Tue, 23 Jun 2020 13:21:19 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ronald =?UTF-8?B?VHNjaGFsw6Ry?= <ronald@innovation.ch>,
-        Nicolai Stange <nicstange@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Srivatsa Vaddagiri <vatsa@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: debugfs_create_u32_array() memory leaks
-Message-ID: <20200623132119.5c4f2041@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200622193109.GA2163148@kroah.com>
-References: <20200619161734.25e99fa4@kicinski-fedora-PC1C0HJN>
-        <20200620074542.GA2298609@kroah.com>
-        <20200622122332.274c842e@kicinski-fedora-PC1C0HJN>
-        <20200622193109.GA2163148@kroah.com>
+        bh=zBrIn/MzAW3cwxarvXWOuOO3A/8UoIoNEtHfB09phO0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DAfQqrMvbI9txyzRYooMziN6+F2IFgPfpNbT1g5RtjKyeOxx8+mk3bQ/Bw8Nv1qNE
+         m9ONJ15YL4Z5Kn1WUMq/az31Xlr55abRqVaQZ3F8hbbW65aEaYFrOfTutn/q7Fs1/I
+         /rcZ4W6Wa+cGxwGEjMqrnLTkTu7kDbrMhR4Qu00U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 001/314] power: supply: bq24257_charger: Replace depends on REGMAP_I2C with select
+Date:   Tue, 23 Jun 2020 21:53:16 +0200
+Message-Id: <20200623195338.848250499@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
+References: <20200623195338.770401005@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 21:31:09 +0200 Greg Kroah-Hartman wrote:
-> > Ah, I wasn't sure how to fix but since you say that create functions
-> > shouldn't allocate memory seems like the fix will be to make callers
-> > pass an equivalent of struct debugfs_blob_wrapper for u32.  
-> 
-> Sounds good.
-> 
-> > I'm happy to send a patch to that effect - I have a process question
-> > tho - I need this change in net-next, should I sent the patch to you?
-> > Can it still make it into 5.8 (debugfs -> Linus -> net -> net-next) or
-> > perhaps can it go via net-next since there is no de facto bug in 5.8?  
-> 
-> I can take a fix now, and get it into 5.8 if that makes things easier
-> for you.
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Having thought about it - since I'm changing the prototype I'd have to
-wait with my networking changes for the patch to land in net-next.
+[ Upstream commit 87c3d579c8ed0eaea6b1567d529a8daa85a2bc6c ]
 
-So I'll just send the debugfs fix with my other code to DaveM and CC
-appropriately..
+regmap is a library function that gets selected by drivers that need
+it. No driver modules should depend on it. Depending on REGMAP_I2C makes
+this driver only build if another driver already selected REGMAP_I2C,
+as the symbol can't be selected through the menu kernel configuration.
+
+Fixes: 2219a935963e ("power_supply: Add TI BQ24257 charger driver")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/power/supply/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index c84a7b1caeb68..d6fdc10c29f0b 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -577,7 +577,7 @@ config CHARGER_BQ24257
+ 	tristate "TI BQ24250/24251/24257 battery charger driver"
+ 	depends on I2C
+ 	depends on GPIOLIB || COMPILE_TEST
+-	depends on REGMAP_I2C
++	select REGMAP_I2C
+ 	help
+ 	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 battery
+ 	  chargers.
+-- 
+2.25.1
+
+
+
