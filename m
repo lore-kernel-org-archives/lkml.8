@@ -2,52 +2,55 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 850A320702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2826C20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944379;
-	bh=PiYBw99wmfKJ//27nR5ikWPerKfd4ko8JO+p5q8jgSI=;
+	s=default; t=1592944387;
+	bh=378uOhPw4trf/EYBvinGEcHsXnmJkRgo2SeAskqxB0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pefyckClH4Z0G/1hsGbEywySJnGYoikySsDagllGTVGxehLHqH2uYHGECavMdDubr
-	 DAVuZcbGGv+/CFJDfblajZt4iUhx0reLT7LwaZhwzvm9qqPP+w/S/oojgjWTUpPd9J
-	 4L/tFc1N6vkfGawn30cfPbVi5B32K1wSJqjzILvM=
+	b=XGh4cAaUbSCApX3JS3dWFIhJjbjvGLMsVJCyMP/yDUyMXYIE+4HFWGH5I5qtW0dTh
+	 2q0f5n4Z7WiglVKPxonAqHYx4c/kctfHqvHUC0lTlbrJqoKo2adKh5mXkDpANtYAV4
+	 hiIqir5pgJAdIydF/xvUvJJEjNyWg2nTvb4dwooE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391358AbgFWUc5 (ORCPT
+        id S2391385AbgFWUdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:32:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53882 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:33:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391354AbgFWUcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:32:51 -0400
+        id S2391370AbgFWUdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B20BD206C3;
-        Tue, 23 Jun 2020 20:32:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1957E206C3;
+        Tue, 23 Jun 2020 20:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944371;
-        bh=PiYBw99wmfKJ//27nR5ikWPerKfd4ko8JO+p5q8jgSI=;
+        s=default; t=1592944381;
+        bh=378uOhPw4trf/EYBvinGEcHsXnmJkRgo2SeAskqxB0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jwL/yGqSJS6CkE6jF3EspmDtb27Ayqip3nSpRaLDbbjQTpVKKmxolx74lmvzng9+4
-         swdV9Q/5RljIYP4x5fogx9Veo8XKSTT/N/xrTOyOrESG22LzK1C3zi5SJnUuFjfCxi
-         dZR4fqOG8R4n5VoTwGMh15BWFtjjzXSUteZzEmm8=
+        b=z40so3pc4HWYzB2CVLjVepYaKOaoQnjpKzqzU5BXUVrTT+V8sJb9Anu6DI3d0Tm29
+         lbJQzCMY0LAigDq3FGwRteiKEVpzByC2Z1s2MnyJ5KMHj2QRYnp13McYifCttH+TQk
+         KJh3AMwrJwaUfMQmHyXRuEhZyY70iC1udqwvlkFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 279/314] libata: Use per port sync for detach
-Date:   Tue, 23 Jun 2020 21:57:54 +0200
-Message-Id: <20200623195352.290658446@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Rosenberg <drosen@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
+        Eric Biggers <ebiggers@google.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.4 282/314] ext4: avoid utf8_strncasecmp() with unstable name
+Date:   Tue, 23 Jun 2020 21:57:57 +0200
+Message-Id: <20200623195352.429875944@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,93 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit b5292111de9bb70cba3489075970889765302136 ]
+commit 2ce3ee931a097e9720310db3f09c01c825a4580c upstream.
 
-Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
-detach") may cause system freeze during suspend.
+If the dentry name passed to ->d_compare() fits in dentry::d_iname, then
+it may be concurrently modified by a rename.  This can cause undefined
+behavior (possibly out-of-bounds memory accesses or crashes) in
+utf8_strncasecmp(), since fs/unicode/ isn't written to handle strings
+that may be concurrently modified.
 
-Using async_synchronize_full() in PM callbacks is wrong, since async
-callbacks that are already scheduled may wait for not-yet-scheduled
-callbacks, causes a circular dependency.
+Fix this by first copying the filename to a stack buffer if needed.
+This way we get a stable snapshot of the filename.
 
-Instead of using big hammer like async_synchronize_full(), use async
-cookie to make sure port probe are synced, without affecting other
-scheduled PM callbacks.
+Fixes: b886ee3e778e ("ext4: Support case-insensitive file name lookups")
+Cc: <stable@vger.kernel.org> # v5.2+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Daniel Rosenberg <drosen@google.com>
+Cc: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Link: https://lore.kernel.org/r/20200601200543.59417-1-ebiggers@kernel.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
-Suggested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: John Garry <john.garry@huawei.com>
-BugLink: https://bugs.launchpad.net/bugs/1867983
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-core.c | 11 +++++------
- include/linux/libata.h    |  3 +++
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ fs/ext4/dir.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 581595b355736..35f75c691d7cf 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -41,7 +41,6 @@
- #include <linux/workqueue.h>
- #include <linux/scatterlist.h>
- #include <linux/io.h>
--#include <linux/async.h>
- #include <linux/log2.h>
- #include <linux/slab.h>
- #include <linux/glob.h>
-@@ -6592,7 +6591,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
- 	/* perform each probe asynchronously */
- 	for (i = 0; i < host->n_ports; i++) {
- 		struct ata_port *ap = host->ports[i];
--		async_schedule(async_port_probe, ap);
-+		ap->cookie = async_schedule(async_port_probe, ap);
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -677,6 +677,7 @@ static int ext4_d_compare(const struct d
+ 	struct qstr qstr = {.name = str, .len = len };
+ 	const struct dentry *parent = READ_ONCE(dentry->d_parent);
+ 	const struct inode *inode = READ_ONCE(parent->d_inode);
++	char strbuf[DNAME_INLINE_LEN];
+ 
+ 	if (!inode || !IS_CASEFOLDED(inode) ||
+ 	    !EXT4_SB(inode->i_sb)->s_encoding) {
+@@ -685,6 +686,21 @@ static int ext4_d_compare(const struct d
+ 		return memcmp(str, name->name, len);
  	}
  
- 	return 0;
-@@ -6732,11 +6731,11 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
- 
--	/* Ensure ata_port probe has completed */
--	async_synchronize_full();
--
--	for (i = 0; i < host->n_ports; i++)
-+	for (i = 0; i < host->n_ports; i++) {
-+		/* Ensure ata_port probe has completed */
-+		async_synchronize_cookie(host->ports[i]->cookie + 1);
- 		ata_port_detach(host->ports[i]);
++	/*
++	 * If the dentry name is stored in-line, then it may be concurrently
++	 * modified by a rename.  If this happens, the VFS will eventually retry
++	 * the lookup, so it doesn't matter what ->d_compare() returns.
++	 * However, it's unsafe to call utf8_strncasecmp() with an unstable
++	 * string.  Therefore, we have to copy the name into a temporary buffer.
++	 */
++	if (len <= DNAME_INLINE_LEN - 1) {
++		memcpy(strbuf, str, len);
++		strbuf[len] = 0;
++		qstr.name = strbuf;
++		/* prevent compiler from optimizing out the temporary buffer */
++		barrier();
 +	}
- 
- 	/* the host is dead now, dissociate ACPI */
- 	ata_acpi_dissociate(host);
-diff --git a/include/linux/libata.h b/include/linux/libata.h
-index c44e4cfbcb16a..b9970f5bab67c 100644
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -22,6 +22,7 @@
- #include <linux/acpi.h>
- #include <linux/cdrom.h>
- #include <linux/sched.h>
-+#include <linux/async.h>
- 
- /*
-  * Define if arch has non-standard setup.  This is a _PCI_ standard
-@@ -870,6 +871,8 @@ struct ata_port {
- 	struct timer_list	fastdrain_timer;
- 	unsigned long		fastdrain_cnt;
- 
-+	async_cookie_t		cookie;
 +
- 	int			em_message_type;
- 	void			*private_data;
+ 	return ext4_ci_compare(inode, name, &qstr, false);
+ }
  
--- 
-2.25.1
-
 
 
