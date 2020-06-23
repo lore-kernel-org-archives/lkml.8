@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA286C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E88C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822B520702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0FC520702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947113;
-	bh=jElpdD2JnmLtaZJ1/jVxVgHBsbX7pJBgIf86wQfunRA=;
+	s=default; t=1592947125;
+	bh=Gr+7mGqsDHE2+PVmXGg8TKqDKTF5Xxt5FkTcsG3CXhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h1L8plToofOeawj6fwkjCB+fl5B3ALyPxiozOfyfDMUyArYHq3VC8tL8kktvPCvE2
-	 nPDGipLu2ODSZKB2hQGKPgItYlHGLJWmlB8rpxV1/s0JDrVlzJ1/yvdbV+qCHTZpsd
-	 Ar1qZ75cTTsgyi3r+szgoE1pQGDX49mufn80h630=
+	b=iskoAnHcOaSJWdQqfKYAo0z14H1qku2/yBCyAq4QWTqa9iIWC/8xOnukHsPIwuBmk
+	 VtHEqBPnBGMeP/Q16mL7+m3Oro2fz0imINNCJP3x58PMhbBfP4r75C0V7d1j+yGmL0
+	 0iR/vjxPAJjgwZMP6R6/3MHpUX5T+PWdagxq12lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389375AbgFWVSb (ORCPT
+        id S2390894AbgFWVSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44874 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:18:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390579AbgFWUZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:25:50 -0400
+        id S2390292AbgFWUZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:25:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3241206EB;
-        Tue, 23 Jun 2020 20:25:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80062206EB;
+        Tue, 23 Jun 2020 20:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943950;
-        bh=jElpdD2JnmLtaZJ1/jVxVgHBsbX7pJBgIf86wQfunRA=;
+        s=default; t=1592943938;
+        bh=Gr+7mGqsDHE2+PVmXGg8TKqDKTF5Xxt5FkTcsG3CXhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=booRV3aYSPz0zEERfL5LIH2SqhSgfwHaS+SI6qorW+I9G9N3sEI2UNlxggUsGZPkP
-         dWM+zrLSIClMoz2B+zyv8WB48pLfc3i09tI51RJscpuNtiWGFOJu9Rz6zBcXLpuqqb
-         W+D5/3tXFaDyHCjGREzIka0UQucloQfZZQTXoHc0=
+        b=BDMgwemldoN9/qdLOYWwX4vMo3oWbCxtE0QOsIfVcCIOeCD7ZkSeJUuLDSivJ6Ds8
+         4DB5hoEF+boTrgX3IrV5cpD1PzC/MRoSfkW9etWHYZBOmrAOB4yFq+O7ZJyfp5rVPq
+         euU2LlSarsk20EFrht5bB46DE6HV1d2xQ7Fdzrk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 114/314] usb: dwc3: gadget: Properly handle ClearFeature(halt)
-Date:   Tue, 23 Jun 2020 21:55:09 +0200
-Message-Id: <20200623195344.307486770@linuxfoundation.org>
+Subject: [PATCH 5.4 110/314] clk: meson: meson8b: Dont rely on u-boot to init all GP_PLL registers
+Date:   Tue, 23 Jun 2020 21:55:05 +0200
+Message-Id: <20200623195344.114396450@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,89 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit cb11ea56f37a36288cdd0a4799a983ee3aa437dd ]
+[ Upstream commit a29ae8600d50ece1856b062a39ed296b8b952259 ]
 
-DWC3 must not issue CLEAR_STALL command to control endpoints. The
-controller automatically clears the STALL when it receives the SETUP
-token. Also, when the driver receives ClearFeature(halt_ep), DWC3 must
-stop any active transfer from the endpoint and give back all the
-requests to the function drivers.
+Not all u-boot versions initialize the HHI_GP_PLL_CNTL[2-5] registers.
+In that case all HHI_GPLL_PLL_CNTL[1-5] registers are 0x0 and when
+booting Linux the PLL fails to lock.
+The initialization sequence from u-boot is:
+- put the PLL into reset
+- write 0x59C88000 to HHI_GP_PLL_CNTL2
+- write 0xCA463823 to HHI_GP_PLL_CNTL3
+- write 0x0286A027 to HHI_GP_PLL_CNTL4
+- write 0x00003000 to HHI_GP_PLL_CNTL5
+- set M, N, OD and the enable bit
+- take the PLL out of reset
+- check if it has locked
+- disable the PLL
 
-Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+In Linux we already initialize M, N, OD, the enable and the reset bits.
+Also the HHI_GP_PLL_CNTL[2-5] registers with these magic values (the
+exact meaning is unknown) so the PLL can lock when the vendor u-boot did
+not initialize these registers yet.
+
+Fixes: b882964b376f21 ("clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200501215717.735393-1-martin.blumenstingl@googlemail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ drivers/clk/meson/meson8b.c | 9 +++++++++
+ drivers/clk/meson/meson8b.h | 4 ++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index c30c5b1c478c2..05180a09e70d4 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1505,6 +1505,10 @@ static void dwc3_gadget_ep_skip_trbs(struct dwc3_ep *dep, struct dwc3_request *r
- {
- 	int i;
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index 4f9b79ed79d7d..082178a0f41a3 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -1910,6 +1910,13 @@ static struct clk_regmap meson8b_mali = {
+ 	},
+ };
  
-+	/* If req->trb is not set, then the request has not started */
-+	if (!req->trb)
-+		return;
++static const struct reg_sequence meson8m2_gp_pll_init_regs[] = {
++	{ .reg = HHI_GP_PLL_CNTL2,	.def = 0x59c88000 },
++	{ .reg = HHI_GP_PLL_CNTL3,	.def = 0xca463823 },
++	{ .reg = HHI_GP_PLL_CNTL4,	.def = 0x0286a027 },
++	{ .reg = HHI_GP_PLL_CNTL5,	.def = 0x00003000 },
++};
 +
- 	/*
- 	 * If request was already started, this means we had to
- 	 * stop the transfer. With that we also need to ignore
-@@ -1595,6 +1599,8 @@ int __dwc3_gadget_ep_set_halt(struct dwc3_ep *dep, int value, int protocol)
- {
- 	struct dwc3_gadget_ep_cmd_params	params;
- 	struct dwc3				*dwc = dep->dwc;
-+	struct dwc3_request			*req;
-+	struct dwc3_request			*tmp;
- 	int					ret;
- 
- 	if (usb_endpoint_xfer_isoc(dep->endpoint.desc)) {
-@@ -1631,13 +1637,37 @@ int __dwc3_gadget_ep_set_halt(struct dwc3_ep *dep, int value, int protocol)
- 		else
- 			dep->flags |= DWC3_EP_STALL;
- 	} else {
-+		/*
-+		 * Don't issue CLEAR_STALL command to control endpoints. The
-+		 * controller automatically clears the STALL when it receives
-+		 * the SETUP token.
-+		 */
-+		if (dep->number <= 1) {
-+			dep->flags &= ~(DWC3_EP_STALL | DWC3_EP_WEDGE);
-+			return 0;
-+		}
- 
- 		ret = dwc3_send_clear_stall_ep_cmd(dep);
--		if (ret)
-+		if (ret) {
- 			dev_err(dwc->dev, "failed to clear STALL on %s\n",
- 					dep->name);
--		else
--			dep->flags &= ~(DWC3_EP_STALL | DWC3_EP_WEDGE);
-+			return ret;
-+		}
-+
-+		dep->flags &= ~(DWC3_EP_STALL | DWC3_EP_WEDGE);
-+
-+		dwc3_stop_active_transfer(dep, true, true);
-+
-+		list_for_each_entry_safe(req, tmp, &dep->started_list, list)
-+			dwc3_gadget_move_cancelled_request(req);
-+
-+		list_for_each_entry_safe(req, tmp, &dep->pending_list, list)
-+			dwc3_gadget_move_cancelled_request(req);
-+
-+		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING)) {
-+			dep->flags &= ~DWC3_EP_DELAY_START;
-+			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
-+		}
- 	}
- 
- 	return ret;
+ static const struct pll_params_table meson8m2_gp_pll_params_table[] = {
+ 	PLL_PARAMS(182, 3),
+ 	{ /* sentinel */ },
+@@ -1943,6 +1950,8 @@ static struct clk_regmap meson8m2_gp_pll_dco = {
+ 			.width   = 1,
+ 		},
+ 		.table = meson8m2_gp_pll_params_table,
++		.init_regs = meson8m2_gp_pll_init_regs,
++		.init_count = ARRAY_SIZE(meson8m2_gp_pll_init_regs),
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "gp_pll_dco",
+diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+index c889fbeec30f0..c91fb07fcb657 100644
+--- a/drivers/clk/meson/meson8b.h
++++ b/drivers/clk/meson/meson8b.h
+@@ -20,6 +20,10 @@
+  * [0] http://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+  */
+ #define HHI_GP_PLL_CNTL			0x40  /* 0x10 offset in data sheet */
++#define HHI_GP_PLL_CNTL2		0x44  /* 0x11 offset in data sheet */
++#define HHI_GP_PLL_CNTL3		0x48  /* 0x12 offset in data sheet */
++#define HHI_GP_PLL_CNTL4		0x4C  /* 0x13 offset in data sheet */
++#define HHI_GP_PLL_CNTL5		0x50  /* 0x14 offset in data sheet */
+ #define HHI_VIID_CLK_DIV		0x128 /* 0x4a offset in data sheet */
+ #define HHI_VIID_CLK_CNTL		0x12c /* 0x4b offset in data sheet */
+ #define HHI_GCLK_MPEG0			0x140 /* 0x50 offset in data sheet */
 -- 
 2.25.1
 
