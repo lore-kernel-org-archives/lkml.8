@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC05C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C072206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E5A2070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943955;
-	bh=9IyFQ1LxdVrwBZSwUEShij5X2ILrV9XEJsqS8gNrNjQ=;
+	s=default; t=1592943959;
+	bh=7tn3+LkNzV8RzkZITVnbZCfoVAFQL/OCfYXaY1Yzibc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FhHfmg/cqbNkP43XAxumwCjHJ6wFQp8jzdtgsZ0z3Vtp3SyMyFCg/2s8F2jiD+MW/
-	 Skk5fXc0T9aBUNZmAqXov/gVbtZXBc6PuYfT2b/dSGuy5QblS+HFwtc1cPHfuH5smk
-	 oVx9aenmKWUYmATm3Rzd+bSZMx8MefRe7Uza9g08=
+	b=c17wATKiw8EmJbaUKuSjXJ1R2IbFWjHurpMd9+V0RV1Cl4ISW6fHuu2umjSWUvuwv
+	 Rpja9hmSavrWKWtUqQ/V8ue80GPmO/wH+e0lNJRvZLikPhA0Fp+0hD8Ri4NTvpZMMg
+	 7SUkbugrqUxoUPqGJfjLwwjmQZyMtM6aqpNsIJsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389478AbgFWUZw (ORCPT
+        id S2389228AbgFWUZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44784 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390329AbgFWUZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:25:45 -0400
+        id S2390584AbgFWUZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:25:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFC8F206EB;
-        Tue, 23 Jun 2020 20:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4974320702;
+        Tue, 23 Jun 2020 20:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943945;
-        bh=9IyFQ1LxdVrwBZSwUEShij5X2ILrV9XEJsqS8gNrNjQ=;
+        s=default; t=1592943947;
+        bh=7tn3+LkNzV8RzkZITVnbZCfoVAFQL/OCfYXaY1Yzibc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXdQuyuDe1SFgvItjpqkDdvWM3fVkNSD/eR6PFyXsntrX7BO0OCX534kvTAfWXsLi
-         OLgykoAPB+FLFnz+1JF8686YTJvJZReqaWZPpzMjywZpFj9kkPJJLv6obPhGWSNB5n
-         ZcRDWxrby0c7/yk2rADB1dTGISufLl7EEbJ6jNyo=
+        b=q1ryKc6Vcw6FaVxDReokF1bCq5jCLaE2RhDODaEF4WESF5DfLdXBFIm+P25fnL4ny
+         I63QWJy5qQ+4xr5e3Rf5CvezNyZy3308BfRt00Igw9ayuAIQ/U0OUlsOLrj0AbT852
+         onsb0eRqd7OwrXeV4n2Cp3YcRvxPlUwnYHlRE4yQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 113/314] HID: intel-ish-hid: avoid bogus uninitialized-variable warning
-Date:   Tue, 23 Jun 2020 21:55:08 +0200
-Message-Id: <20200623195344.257639843@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 096/314] firmware: qcom_scm: fix bogous abuse of dma-direct internals
+Date:   Tue, 23 Jun 2020 21:54:51 +0200
+Message-Id: <20200623195343.436160469@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,54 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 0b66fb3e6b7a53688f8e20945ac78cd3d832c65f ]
+[ Upstream commit 459b1f86f1cba7de813fbc335df476c111feec22 ]
 
-Older compilers like gcc-4.8 don't see that the variable is
-initialized when it is used:
+As far as the device is concerned the dma address is the physical
+address.  There is no need to convert it to a physical address,
+especially not using dma-direct internals that are not available
+to drivers and which will interact badly with IOMMUs.  Last but not
+least the commit introducing it claimed to just fix a type issue,
+but actually changed behavior.
 
-In file included from include/linux/compiler_types.h:68:0,
-                 from <command-line>:0:
-drivers/hid/intel-ish-hid/ishtp-fw-loader.c: In function 'load_fw_from_host':
-include/linux/compiler-gcc.h:75:45: warning: 'fw_info.ldr_capability.max_dma_buf_size' may be used uninitialized in this function [-Wmaybe-uninitialized]
- #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
-                                             ^
-drivers/hid/intel-ish-hid/ishtp-fw-loader.c:770:22: note: 'fw_info.ldr_capability.max_dma_buf_size' was declared here
-  struct shim_fw_info fw_info;
-                      ^
-
-Make sure to initialize it before returning an error from ish_query_loader_prop().
-
-Fixes: 91b228107da3 ("HID: intel-ish-hid: ISH firmware loader client driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 6e37ccf78a532 ("firmware: qcom_scm: Use proper types for dma mappings")
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20200414123136.441454-1-hch@lst.de
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/firmware/qcom_scm.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-index aa2dbed30fc36..6cf59fd26ad78 100644
---- a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-+++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-@@ -480,6 +480,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
- 			    sizeof(ldr_xfer_query_resp));
- 	if (rv < 0) {
- 		client_data->flag_retry = true;
-+		*fw_info = (struct shim_fw_info){};
- 		return rv;
- 	}
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 4802ab170fe51..b9fdc20b4eb9b 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -9,7 +9,6 @@
+ #include <linux/init.h>
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
+-#include <linux/dma-direct.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+@@ -441,8 +440,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	struct qcom_scm_mem_map_info *mem_to_map;
+ 	phys_addr_t mem_to_map_phys;
+ 	phys_addr_t dest_phys;
+-	phys_addr_t ptr_phys;
+-	dma_addr_t ptr_dma;
++	dma_addr_t ptr_phys;
+ 	size_t mem_to_map_sz;
+ 	size_t dest_sz;
+ 	size_t src_sz;
+@@ -459,10 +457,9 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
+ 			ALIGN(dest_sz, SZ_64);
  
-@@ -489,6 +490,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
- 			"data size %d is not equal to size of loader_xfer_query_response %zu\n",
- 			rv, sizeof(struct loader_xfer_query_response));
- 		client_data->flag_retry = true;
-+		*fw_info = (struct shim_fw_info){};
- 		return -EMSGSIZE;
- 	}
+-	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
++	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
+ 	if (!ptr)
+ 		return -ENOMEM;
+-	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
  
+ 	/* Fill source vmid detail */
+ 	src = ptr;
+@@ -490,7 +487,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 
+ 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
+ 				    ptr_phys, src_sz, dest_phys, dest_sz);
+-	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
++	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_phys);
+ 	if (ret) {
+ 		dev_err(__scm->dev,
+ 			"Assign memory protection call failed %d\n", ret);
 -- 
 2.25.1
 
