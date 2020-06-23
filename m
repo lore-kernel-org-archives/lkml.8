@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B52CA20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B7820702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946284;
-	bh=DRFsV92GDkJasMMkP1EiCsfu8ldMUDEVDgx+9jRJSq0=;
+	s=default; t=1592946287;
+	bh=e5olAQa2168Y12AwxA8wag4NGC2SyeuofjYAZkfcgpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4G747fUYhgcj8+g5UlQ8mN7JSmq6nqqEdyyzh3iik5Tx13ObeBIW1ppdmTxlUHhe
-	 BCAS1q6YTntFKc+nMcMXgE9Xm6h7OfgNbzCyJLTX0VFkirJPnJl3kZPXESc12iD7w/
-	 AcxgHdtrgY/m3SOIATopPR8Zdw1Yfg5UIggOobMk=
+	b=lZx5Vf7p1RItFwwDe0GK3r6HCqmGdENtGHg4Zd4r9rCqNtbQEE60RontxepMOW83N
+	 oSQH11cx3zG2KU8cy1zBapmqi3f2FOe9q6aMgTG9W7KJcsXhEx+2n0xMomj92hu287
+	 pz5OErF4XfUS/0MwzYQYaHj23uRZRI6oqw+aWc1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393015AbgFWVEm (ORCPT
+        id S2391887AbgFWUhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:04:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391549AbgFWUhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:37:53 -0400
+        id S2391869AbgFWUhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:37:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95B542080C;
-        Tue, 23 Jun 2020 20:37:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35DA92080C;
+        Tue, 23 Jun 2020 20:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944673;
-        bh=DRFsV92GDkJasMMkP1EiCsfu8ldMUDEVDgx+9jRJSq0=;
+        s=default; t=1592944654;
+        bh=e5olAQa2168Y12AwxA8wag4NGC2SyeuofjYAZkfcgpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUpd8rwkvthF+p3IAcoKpkmQzUX2zBddqQdnBIfbndXD6C6e5s5Zc4E32zKk/L4Be
-         /cJNujD4By2A7shPZgAmCboYb7GY1MxaJLrujJF47CblJzKU+ReFp9wd2pV70Fo285
-         GHklqxTeJ+YXJ637jEm/FpwDTb+4oqc1uE9Socx8=
+        b=ui40uzQpDB/QIWVjIfr8/UgAAoJSGMK+cxfP8tmEZ74y3vEmiNmTkikLFMrgTCH5P
+         mxLEJAzqIJFzZaa4PR3XKVtMOGHqkWE0Zaw9ba6jLhamP8lxUC+ly5Q29enOc7okUh
+         OurQq1lgfrnYlfVh7C/lJgfIAx+ukUiqv9yvf8Ts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        clang-built-linux@googlegroups.com, Arnd Bergmann <arnd@arndb.de>,
-        David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 080/206] dlm: remove BUG() before panic()
-Date:   Tue, 23 Jun 2020 21:56:48 +0200
-Message-Id: <20200623195320.884128005@linuxfoundation.org>
+Subject: [PATCH 4.19 074/206] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
+Date:   Tue, 23 Jun 2020 21:56:42 +0200
+Message-Id: <20200623195320.585211060@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,49 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit fe204591cc9480347af7d2d6029b24a62e449486 ]
+[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
 
-Building a kernel with clang sometimes fails with an objtool error in dlm:
+7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
+Linux to enable ASPM, but for some undocumented reason, it didn't enable
+ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
 
-fs/dlm/lock.o: warning: objtool: revert_lock_pc()+0xbd: can't find jump dest instruction at .text+0xd7fc
+Remove this exclusion so we can enable ASPM on these links.
 
-The problem is that BUG() never returns and the compiler knows
-that anything after it is unreachable, however the panic still
-emits some code that does not get fully eliminated.
+The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
+PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
+Intel SoC to enter deeper Package C-states, which is a significant power
+savings.
 
-Having both BUG() and panic() is really pointless as the BUG()
-kills the current process and the subsequent panic() never hits.
-In most cases, we probably don't really want either and should
-replace the DLM_ASSERT() statements with WARN_ON(), as has
-been done for some of them.
-
-Remove the BUG() here so the user at least sees the panic message
-and we can reliably build randconfig kernels.
-
-Fixes: e7fd41792fc0 ("[DLM] The core of the DLM for GFS2/CLVM")
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David Teigland <teigland@redhat.com>
+[bhelgaas: commit log]
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/dlm_internal.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/pcie/aspm.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-index 748e8d59e6111..cb287df13a7aa 100644
---- a/fs/dlm/dlm_internal.h
-+++ b/fs/dlm/dlm_internal.h
-@@ -99,7 +99,6 @@ do { \
-                __LINE__, __FILE__, #x, jiffies); \
-     {do} \
-     printk("\n"); \
--    BUG(); \
-     panic("DLM:  Record message above and reboot.\n"); \
-   } \
- }
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index db2efa219028c..6e50f84733b75 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -633,16 +633,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable = link->aspm_support;
+-	/*
+-	 * If the downstream component has pci bridge function, don't
+-	 * do ASPM for now.
+-	 */
+-	list_for_each_entry(child, &linkbus->devices, bus_list) {
+-		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+-			link->aspm_disable = ASPM_STATE_ALL;
+-			break;
+-		}
+-	}
+ 
+ 	/* Get and check endpoint acceptable latencies */
+ 	list_for_each_entry(child, &linkbus->devices, bus_list) {
 -- 
 2.25.1
 
