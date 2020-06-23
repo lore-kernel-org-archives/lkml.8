@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F41C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E037520DD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C62320FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943002;
-	bh=jVjffcSOIbJYK+zbCM3/dVavuvMb866W3gt3yZzkCaE=;
+	s=default; t=1592943007;
+	bh=yItsOb0vjv8EY8WTOLP76RqeWSHHUvjPYpzTzB2C/zA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oUwaGpI8p5GXi+29nunR8qXQ1cTO8PlMt0d6F7mPKuGiXO0RHUI42edOYNk2vBGNm
-	 krKxYuNeK5BUfJG1hNmNIfc0WRXsHJQ3s8GAN+hIP5xW3FCr2QPgS/HXrWdg2u0THm
-	 WEC/AVB1rAwz0gttkgoZzfD9ATVEim3ZxbnH0zak=
+	b=CkRfr5MEbgojAcHGLm1G7TVnfBmlg3FeDRLQMFqYhWcTWdm6HYTYvyCUOv9sAKEn+
+	 AhRImjwweVsrOS9XnZBfdONPpL1DbaekpW0vewuiIuvtqEoUHC6Y0Y1cV6u0GWYtUT
+	 bdgPq+5DdwFbL4nMqR8QB+rzLx24q6K6G+XAcuD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388780AbgFWUKB (ORCPT
+        id S2388001AbgFWUKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:10:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:10:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387464AbgFWUJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:22 -0400
+        id S2388716AbgFWUJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98D3A206C3;
-        Tue, 23 Jun 2020 20:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B8B20DD4;
+        Tue, 23 Jun 2020 20:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942961;
-        bh=jVjffcSOIbJYK+zbCM3/dVavuvMb866W3gt3yZzkCaE=;
+        s=default; t=1592942966;
+        bh=yItsOb0vjv8EY8WTOLP76RqeWSHHUvjPYpzTzB2C/zA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxobtJPqXNWVK8z8zv477bSTV8yWctKuErRbFVtNQHRcZJi8/qoH0Xrp9Ppam0iVA
-         Ot7P17ffSIpARLLLF+IQ1Ze65DFfCLBrU4KYgsjG8BtnexT1iq6VF1XYMYu6u4mCI0
-         Huc6WJ+cFZdze2vUkNtAAwvPu4dZDDVD2hWCNWoc=
+        b=WMfQBbSOexa2tiYQrrgvMFRQXFzmxWz2TORgDmCI3lMz5750Jo1RFuID71QTM4RTG
+         I/Z1SW5T2gvJKLdBnDbYBbC94ImIECuQz1ildzZPDICNdE+pWBJ54HlKORaofioQoq
+         PdPMHDV8PL/t0X907GwEtCWFFYCUDDIYSIayMcYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, Roman Bolshakov <r.bolshakov@yadro.com>,
+        Viacheslav Dubeyko <v.dubeiko@yadro.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 173/477] PCI: rcar: Fix incorrect programming of OB windows
-Date:   Tue, 23 Jun 2020 21:52:50 +0200
-Message-Id: <20200623195415.761293840@linuxfoundation.org>
+Subject: [PATCH 5.7 175/477] scsi: qla2xxx: Fix warning after FC target reset
+Date:   Tue, 23 Jun 2020 21:52:52 +0200
+Message-Id: <20200623195415.853878426@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,72 +61,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+From: Viacheslav Dubeyko <v.dubeiko@yadro.com>
 
-[ Upstream commit 2b9f217433e31d125fb697ca7974d3de3ecc3e92 ]
+[ Upstream commit f839544ccff60cbe534282aac68858fc3fb278ca ]
 
-The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
-a CPU address (which is determined by the window number 'x') and a
-programmed PCI address - Thus allowing the controller to translate CPU
-accesses into PCI accesses.
+Currently, FC target reset finishes with the warning message:
 
-However the existing code incorrectly writes the CPU address - lets fix
-this by writing the PCI address instead.
+[84010.596893] ------------[ cut here ]------------
+[84010.596917] WARNING: CPU: 238 PID: 279973 at ../drivers/scsi/qla2xxx/qla_target.c:6644 qlt_enable_vha+0x1d0/0x260 [qla2xxx]
+[84010.596918] Modules linked in: vrf af_packet 8021q garp mrp stp llc netlink_diag target_tatlin_tblock(OEX) dm_ec(OEX) ttln_rdma(OEX) dm_frontend(OEX) nvme_rdma nvmet tcm_qla2xxx iscsi_target_mod target_core_mod at24 nvmem_core pnv_php ipmi_watchdog ipmi_ssif vmx_crypto gf128mul crct10dif_vpmsum qla2xxx rpcrdma nvme_fc powernv_flash(X) nvme_fabrics uio_pdrv_genirq mtd rtc_opal(X) ibmpowernv(X) opal_prd(X) uio scsi_transport_fc i2c_opal(X) ses enclosure ipmi_poweroff ast i2c_algo_bit ttm bmc_mcu(OEX) drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm drm_panel_orientation_quirks agpgart nfsd auth_rpcgss nfs_acl ipmi_powernv(X) lockd ipmi_devintf ipmi_msghandler grace dummy ext4 crc16 jbd2 mbcache sd_mod rdma_ucm ib_iser rdma_cm ib_umad iw_cm ib_ipoib libiscsi scsi_transport_iscsi ib_cm
+[84010.596975]  configfs mlx5_ib ib_uverbs ib_core mlx5_core crc32c_vpmsum xhci_pci xhci_hcd mpt3sas(OEX) tg3 usbcore mlxfw tls raid_class libphy scsi_transport_sas devlink ptp pps_core nvme nvme_core sunrpc dm_mirror dm_region_hash dm_log sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua scsi_mod autofs4
+[84010.597001] Supported: Yes, External
+[84010.597004] CPU: 238 PID: 279973 Comm: bash Tainted: G           OE      4.12.14-197.29-default #1 SLE15-SP1
+[84010.597006] task: c000000a104c0000 task.stack: c000000b52188000
+[84010.597007] NIP: d00000001ffd7f78 LR: d00000001ffd7f6c CTR: c0000000001676c0
+[84010.597008] REGS: c000000b5218b910 TRAP: 0700   Tainted: G           OE       (4.12.14-197.29-default)
+[84010.597008] MSR: 900000010282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>
+[84010.597015]   CR: 48242424  XER: 00000000
+[84010.597016] CFAR: d00000001ff45d08 SOFTE: 1
+               GPR00: d00000001ffd7f6c c000000b5218bb90 d00000002001b228 0000000000000102
+               GPR04: 0000000000000001 0000000000000001 00013d91ed0a5e2d 0000000000000000
+               GPR08: c000000007793300 0000000000000000 0000000000000000 c000000a086e7818
+               GPR12: 0000000000002200 c000000007793300 0000000000000000 000000012bc937c0
+               GPR16: 000000012bbf7ed0 0000000000000000 000000012bc3dd10 0000000000000000
+               GPR20: 000000012bc4db28 0000010036442810 000000012bc97828 000000012bc96c70
+               GPR24: 00000100365b1550 0000000000000000 00000100363f3d80 c000000be20d3080
+               GPR28: c000000bda7eae00 c000000be20db7e8 c000000be20d3778 c000000be20db7e8
+[84010.597042] NIP [d00000001ffd7f78] qlt_enable_vha+0x1d0/0x260 [qla2xxx]
+[84010.597051] LR [d00000001ffd7f6c] qlt_enable_vha+0x1c4/0x260 [qla2xxx]
+[84010.597051] Call Trace:
+[84010.597061] [c000000b5218bb90] [d00000001ffd7f6c] qlt_enable_vha+0x1c4/0x260 [qla2xxx] (unreliable)
+[84010.597064] [c000000b5218bc20] [d000000009820b6c] tcm_qla2xxx_tpg_enable_store+0xc4/0x130 [tcm_qla2xxx]
+[84010.597067] [c000000b5218bcb0] [d0000000185d0e68] configfs_write_file+0xd0/0x190 [configfs]
+[84010.597072] [c000000b5218bd00] [c0000000003d0edc] __vfs_write+0x3c/0x1e0
+[84010.597074] [c000000b5218bd90] [c0000000003d2ea8] vfs_write+0xd8/0x220
+[84010.597076] [c000000b5218bde0] [c0000000003d4ddc] SyS_write+0x6c/0x110
+[84010.597079] [c000000b5218be30] [c00000000000b188] system_call+0x3c/0x130
+[84010.597080] Instruction dump:
+[84010.597082] 7d0050a8 7d084b78 7d0051ad 40c2fff4 7fa3eb78 4bf73965 60000000 7fa3eb78
+[84010.597086] 4bf6dcd9 60000000 2fa30000 419eff40 <0fe00000> 4bffff38 e95f0058 a12a0180
+[84010.597090] ---[ end trace e32abaf6e6fee826 ]---
 
-For memory transactions, existing DT users describe a 1:1 identity mapping
-and thus this change should have no effect. However the same isn't true for
-I/O.
+To reproduce:
 
-Link: https://lore.kernel.org/r/20191004132941.6660-1-andrew.murray@arm.com
-Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+echo 0x7fffffff > /sys/module/qla2xxx/parameters/logging
+modprobe target_core_mod
+modprobe tcm_qla2xxx
+mkdir /sys/kernel/config/target/qla2xxx
+mkdir /sys/kernel/config/target/qla2xxx/<port-name>
+mkdir /sys/kernel/config/target/qla2xxx/<port-name>/tpgt_1
+echo 1 > /sys/kernel/config/target/qla2xxx/<port-name>/tpgt_1/enable
+echo 0 > /sys/kernel/config/target/qla2xxx/<port-name>/tpgt_1/enable
+echo 1 > /sys/kernel/config/target/qla2xxx/<port-name>/tpgt_1/enable
+
+SYSTEM START
+kernel: pid 327:drivers/scsi/qla2xxx/qla_init.c:2174 qla2x00_initialize_adapter(): vha->flags.online 0x0
+<...>
+kernel: pid 327:drivers/scsi/qla2xxx/qla_os.c:3444 qla2x00_probe_one(): vha->flags.online 0x1
+
+echo 1 > /sys/kernel/config/target/qla2xxx/21:00:00:24:ff:86:a6:2a/tpgt_1/enable
+kernel: pid 348:drivers/scsi/qla2xxx/qla_init.c:6641 qla2x00_abort_isp_cleanup(): vha->flags.online 0x0, ISP_ABORT_NEEDED 0x0
+<...>
+kernel: pid 348:drivers/scsi/qla2xxx/qla_init.c:6998 qla2x00_restart_isp(): vha->flags.online 0x0
+
+echo 0 > /sys/kernel/config/target/qla2xxx/21:00:00:24:ff:86:a6:2a/tpgt_1/enable
+kernel: pid 348:drivers/scsi/qla2xxx/qla_init.c:6641 qla2x00_abort_isp_cleanup(): vha->flags.online 0x0, ISP_ABORT_NEEDED 0x0
+<...>
+kernel: pid 1404:drivers/scsi/qla2xxx/qla_os.c:1107 qla2x00_wait_for_hba_online(): base_vha->flags.online 0x0
+
+echo 1 > /sys/kernel/config/target/qla2xxx/21:00:00:24:ff:86:a6:2a/tpgt_1/enable
+kernel: pid 1404:drivers/scsi/qla2xxx/qla_os.c:1107 qla2x00_wait_for_hba_online(): base_vha->flags.online 0x0
+kernel: -----------[ cut here ]-----------
+kernel: WARNING: CPU: 1 PID: 1404 at drivers/scsi/qla2xxx/qla_target.c:6654 qlt_enable_vha+0x1e0/0x280 [qla2xxx]
+
+The issue happens because no real ISP reset is executed.  The
+qla2x00_abort_isp(scsi_qla_host_t *vha) function expects that
+vha->flags.online will be not zero for ISP reset procedure.  This patch
+sets vha->flags.online to 1 before calling ->abort_isp() for starting the
+ISP reset.
+
+Link: https://lore.kernel.org/r/1d7b21bf9f7676643239eb3d60eaca7cfa505cf0.camel@yadro.com
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Viacheslav Dubeyko <v.dubeiko@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-rcar.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-index 759c6542c5c80..1bae6a4abaaeb 100644
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -333,11 +333,12 @@ static struct pci_ops rcar_pcie_ops = {
- };
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 1d9a4866f9a74..9179bb4caed84 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -6871,6 +6871,7 @@ qla2x00_do_dpc(void *data)
  
- static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
--				   struct resource *res)
-+				   struct resource_entry *window)
- {
- 	/* Setup PCIe address space mappings for each resource */
- 	resource_size_t size;
- 	resource_size_t res_start;
-+	struct resource *res = window->res;
- 	u32 mask;
- 
- 	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
-@@ -351,9 +352,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
- 	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
- 
- 	if (res->flags & IORESOURCE_IO)
--		res_start = pci_pio_to_address(res->start);
-+		res_start = pci_pio_to_address(res->start) - window->offset;
- 	else
--		res_start = res->start;
-+		res_start = res->start - window->offset;
- 
- 	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
- 	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
-@@ -382,7 +383,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
- 		switch (resource_type(res)) {
- 		case IORESOURCE_IO:
- 		case IORESOURCE_MEM:
--			rcar_pcie_setup_window(i, pci, res);
-+			rcar_pcie_setup_window(i, pci, win);
- 			i++;
- 			break;
- 		case IORESOURCE_BUS:
+ 			if (do_reset && !(test_and_set_bit(ABORT_ISP_ACTIVE,
+ 			    &base_vha->dpc_flags))) {
++				base_vha->flags.online = 1;
+ 				ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
+ 				    "ISP abort scheduled.\n");
+ 				if (ha->isp_ops->abort_isp(base_vha)) {
 -- 
 2.25.1
 
