@@ -2,102 +2,206 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8923C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3067720724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592895794;
-	bh=gio4N1dA4fGuZAJ5nVNg44IgyAGoEia9pKq64sAKoIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YP7w1pVc0r1BZ0ijn3nYqNdRIntO10W0jlbYreNkd7vk92YmBHwMNcp0zqkcsaaEl
-	 WZ5m7fyIU7SWCDC8YtDqIJ+DHBeXoMmkgN5lDMdWZRTviHNsMAa2vjUePYwqw28TEj
-	 ChHqYgm0FxX95dZIdWxKgVV2Cng5YfDEtPVgoLs0=
+	by mail.kernel.org (Postfix) with ESMTP id B25A720738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgFWHDM (ORCPT
+        id S1730989AbgFWHEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:03:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730830AbgFWHDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:03:12 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D34C061573;
-        Tue, 23 Jun 2020 00:03:12 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s10so9462481pgm.0;
-        Tue, 23 Jun 2020 00:03:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4JVWCz8+lqtSop9dl2ZAnWPRN6EuY7Bv8qrsUVE3nXI=;
-        b=eOert1F3W3A+fuUjzfaUw/OvDWW+QrwyruMv33b8OO6vVCo45o56Wqe2hKdpObJ6/k
-         0Mya8f7dxVC+Y0xaw5ty1qtaZjKs2W39IhD+HUmDbrHFGncL5wGhXqBOZCnceQNDqrm+
-         AdhnJF6heFeUcHGTdQPDrNlERwOJMkQ83wFl4QG2TRSnfaHzqeQ+WvSUwDNZnoCjNH4j
-         IuH/Z3nqf8i5oHVwiAJixTbpYGr2nYXL5YUUQeOEE+1sguNP8TaLNDukiImeazNAMuyo
-         CKL8TfrnChJdSJRDkC+Yk36DdtMWk+gCaA+CqIKtq68CuYvUiG1gxeP0pk+JkV4PsREL
-         zMnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=4JVWCz8+lqtSop9dl2ZAnWPRN6EuY7Bv8qrsUVE3nXI=;
-        b=bdvgGHRvsEQe2KKudQ9N8e86zBf1Kyj+Mzp0tCa7rP/YUFl50PvBvLRh/CQfFmLUi0
-         bDwpX1YRNdJYd4F+pnbxgzpJTkO8lqChimYy/2bJwWvvuxSSns+Coe4kgmUvQnIfjQdr
-         L9gBk9236bcsw65zcbFUUAd+tTORJRwKY42cjlEUJVH7+wl7mR1m27rNI1NxDr83X2MX
-         l8OeCOROaNhRXFKqykfMr0y5M+MLcMWMrNOx6LSwn0UzXIiZPPSTcvLk0HaPF0l/6xaP
-         u0pilt1jhgE9T2oQuY0uwKVPJdPy/SKbrpj0bSFXuCX85AwCmwXqirtRwc13A1OK3S7k
-         RegA==
-X-Gm-Message-State: AOAM5339cgXphQia6WptCgfMhIfvKcv1c8yy3fHRJoN2YQr6TUgg2STK
-        yDZGWctYF7yNWoXvelsJ1cU=
-X-Google-Smtp-Source: ABdhPJxwNxkZOf7Lk7xd3jy8Z+Qwdj4VK/Om3PshkykoWiSM8D32CqOWsfyLOHBjXexj0MN1jzYFoQ==
-X-Received: by 2002:a63:7707:: with SMTP id s7mr15672418pgc.295.1592895791467;
-        Tue, 23 Jun 2020 00:03:11 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id z144sm16857370pfc.195.2020.06.23.00.03.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 00:03:09 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 00:03:08 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Nitin Gupta <ngupta@vflare.org>,
-        Steffen Maier <maier@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wade Mealing <wmealing@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v2] Revert "zram: convert remaining CLASS_ATTR() to
- CLASS_ATTR_RO()"
-Message-ID: <20200623070308.GA186116@google.com>
-References: <20200617103412.GA2027053@kroah.com>
- <20200617114946.GA2131650@kroah.com>
+        Tue, 23 Jun 2020 03:04:07 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6386 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730765AbgFWHEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:04:07 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 14EE8C2AE916BDDE6F2F;
+        Tue, 23 Jun 2020 15:04:05 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.101) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Tue, 23 Jun 2020
+ 15:03:59 +0800
+Subject: Re: [PATCH] cpufreq: cppc: Reorder code and remove
+ apply_hisi_workaround variable
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>
+CC:     <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        <linux-kernel@vger.kernel.org>
+References: <b217dc843935e3f86584a73893d330fd99a4e472.1592889188.git.viresh.kumar@linaro.org>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <eeb00973-3333-747b-b75a-72360db67042@huawei.com>
+Date:   Tue, 23 Jun 2020 15:03:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617114946.GA2131650@kroah.com>
+In-Reply-To: <b217dc843935e3f86584a73893d330fd99a4e472.1592889188.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.101]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:49:46PM +0200, Greg Kroah-Hartman wrote:
-> From: Wade Mealing <wmealing@redhat.com>
-> 
-> Turns out that the permissions for 0400 really are what we want here,
-> otherwise any user can read from this file.
-> 
-> [fixed formatting, added changelog, and made attribute static - gregkh]
-> 
-> Reported-by: Wade Mealing <wmealing@redhat.com>
-> Cc: stable <stable@vger.kernel.org>
-> Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hi Viresh,
 
-Acked-by: Minchan Kim <minchan@kernel.org>
+On 2020/6/23 13:15, Viresh Kumar wrote:
+> With the current approach we have an extra check in the
+> cppc_cpufreq_get_rate() callback, which checks if hisilicon's get rate
+> implementation should be used instead. While it works fine, the approach
+> isn't very straight forward, over that we have an extra check in the
+> routine.
+> 
+> Rearrange code and update the cpufreq driver's get() callback pointer
+> directly for the hisilicon case. This gets the extra variable is removed
+> and the extra check isn't required anymore as well.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> Xiongfeng Wang, will it be possible for you to give this a try as I
+> can't really test it locally.
+
+I have tested it on D05. It works well.
+
+Tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+
+
+Thanks,
+Xiongfeng
+
+> 
+>  drivers/cpufreq/cppc_cpufreq.c | 91 ++++++++++++++++------------------
+>  1 file changed, 42 insertions(+), 49 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index 257d726a4456..03a21daddbec 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -45,8 +45,6 @@ struct cppc_workaround_oem_info {
+>  	u32 oem_revision;
+>  };
+>  
+> -static bool apply_hisi_workaround;
+> -
+>  static struct cppc_workaround_oem_info wa_info[] = {
+>  	{
+>  		.oem_id		= "HISI  ",
+> @@ -59,50 +57,6 @@ static struct cppc_workaround_oem_info wa_info[] = {
+>  	}
+>  };
+>  
+> -static unsigned int cppc_cpufreq_perf_to_khz(struct cppc_cpudata *cpu,
+> -					unsigned int perf);
+> -
+> -/*
+> - * HISI platform does not support delivered performance counter and
+> - * reference performance counter. It can calculate the performance using the
+> - * platform specific mechanism. We reuse the desired performance register to
+> - * store the real performance calculated by the platform.
+> - */
+> -static unsigned int hisi_cppc_cpufreq_get_rate(unsigned int cpunum)
+> -{
+> -	struct cppc_cpudata *cpudata = all_cpu_data[cpunum];
+> -	u64 desired_perf;
+> -	int ret;
+> -
+> -	ret = cppc_get_desired_perf(cpunum, &desired_perf);
+> -	if (ret < 0)
+> -		return -EIO;
+> -
+> -	return cppc_cpufreq_perf_to_khz(cpudata, desired_perf);
+> -}
+> -
+> -static void cppc_check_hisi_workaround(void)
+> -{
+> -	struct acpi_table_header *tbl;
+> -	acpi_status status = AE_OK;
+> -	int i;
+> -
+> -	status = acpi_get_table(ACPI_SIG_PCCT, 0, &tbl);
+> -	if (ACPI_FAILURE(status) || !tbl)
+> -		return;
+> -
+> -	for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
+> -		if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
+> -		    !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
+> -		    wa_info[i].oem_revision == tbl->oem_revision) {
+> -			apply_hisi_workaround = true;
+> -			break;
+> -		}
+> -	}
+> -
+> -	acpi_put_table(tbl);
+> -}
+> -
+>  /* Callback function used to retrieve the max frequency from DMI */
+>  static void cppc_find_dmi_mhz(const struct dmi_header *dm, void *private)
+>  {
+> @@ -402,9 +356,6 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>  	struct cppc_cpudata *cpu = all_cpu_data[cpunum];
+>  	int ret;
+>  
+> -	if (apply_hisi_workaround)
+> -		return hisi_cppc_cpufreq_get_rate(cpunum);
+> -
+>  	ret = cppc_get_perf_ctrs(cpunum, &fb_ctrs_t0);
+>  	if (ret)
+>  		return ret;
+> @@ -455,6 +406,48 @@ static struct cpufreq_driver cppc_cpufreq_driver = {
+>  	.name = "cppc_cpufreq",
+>  };
+>  
+> +/*
+> + * HISI platform does not support delivered performance counter and
+> + * reference performance counter. It can calculate the performance using the
+> + * platform specific mechanism. We reuse the desired performance register to
+> + * store the real performance calculated by the platform.
+> + */
+> +static unsigned int hisi_cppc_cpufreq_get_rate(unsigned int cpunum)
+> +{
+> +	struct cppc_cpudata *cpudata = all_cpu_data[cpunum];
+> +	u64 desired_perf;
+> +	int ret;
+> +
+> +	ret = cppc_get_desired_perf(cpunum, &desired_perf);
+> +	if (ret < 0)
+> +		return -EIO;
+> +
+> +	return cppc_cpufreq_perf_to_khz(cpudata, desired_perf);
+> +}
+> +
+> +static void cppc_check_hisi_workaround(void)
+> +{
+> +	struct acpi_table_header *tbl;
+> +	acpi_status status = AE_OK;
+> +	int i;
+> +
+> +	status = acpi_get_table(ACPI_SIG_PCCT, 0, &tbl);
+> +	if (ACPI_FAILURE(status) || !tbl)
+> +		return;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
+> +		if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
+> +		    !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
+> +		    wa_info[i].oem_revision == tbl->oem_revision) {
+> +			/* Overwrite the get() callback */
+> +			cppc_cpufreq_driver.get = hisi_cppc_cpufreq_get_rate;
+> +			break;
+> +		}
+> +	}
+> +
+> +	acpi_put_table(tbl);
+> +}
+> +
+>  static int __init cppc_cpufreq_init(void)
+>  {
+>  	int i, ret = 0;
+> 
+
