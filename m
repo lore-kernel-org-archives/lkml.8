@@ -2,125 +2,152 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D386C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A09FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3673820724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592906035;
-	bh=bq8CoMqSMZ8uYUWvgHDvhKEDwfU1WGAh6kK39NUzLyw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zIIPMloKlCIBSLxizOcJMurJ8JJzl/SCJj8w/fkwpa3cEaOVeUuo6LE6KXp/uVQBy
-	 P8N6UXyrUPVp3NsLORwxtCTkMR2lgiMpXiyG9ehee3wS3g1FnWW81L7wGDdv38Gh2p
-	 YBPyWZl17T6oQLtoDCji2jTQ8S1bqW8IQsBjXi0E=
+	by mail.kernel.org (Postfix) with ESMTP id 3839D20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:56:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zgSWOu4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732329AbgFWJxx (ORCPT
+        id S1732202AbgFWJ4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:53:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732158AbgFWJxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:53:07 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E07520791;
-        Tue, 23 Jun 2020 09:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592905986;
-        bh=bq8CoMqSMZ8uYUWvgHDvhKEDwfU1WGAh6kK39NUzLyw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwV0w7+c+4KgVFSyQ6qfVc4+O2eNDLiQtVd0exq8jkJUQBMLarkIVYX10KXFYtISg
-         2AZI94v62JrtywFPNBEz8sUi4ppYYDXbBiYmk4MXSxoLrjTt8d54fhcbTaO+hUVOJw
-         xy4KH71V+mmR4/4/FNcal6JDlUqS0ryytOUpcpKA=
-Received: from mchehab by mail.kernel.org with local (Exim 4.93)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jnfc0-004C3Z-DG; Tue, 23 Jun 2020 11:53:04 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 7/9] docs: move other kAPI documents to core-api
-Date:   Tue, 23 Jun 2020 11:53:00 +0200
-Message-Id: <d4ee2e60590b605eeba7c9d14fe75f28d17e4272.1592905407.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1592905407.git.mchehab+huawei@kernel.org>
-References: <cover.1592905407.git.mchehab+huawei@kernel.org>
+        Tue, 23 Jun 2020 05:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731947AbgFWJ4v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:56:51 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A97C061573;
+        Tue, 23 Jun 2020 02:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fVbOM75xv50lUOUamFW/PCZWwW1H+bw+wE9vcoAR+6c=; b=zgSWOu4NiJmUNVTnO3A59o0wG
+        LnICkTXubnN/Yj6EczhmPZGplS3lQuoufgG+aHHXAPqPHOHndEFVYwHCeU3yoHXFwTKA2mW09/z1u
+        ApMlIuqhIyf5Pubd/Ei2XrjJ269MP+GMf4pJhEyAIHDrqlABTFhN2MhU9+XK5w9rXFEau5Im8nQkQ
+        +wkNyBSTQ1FEMNjcoBS0NTYCD9pClnruDphijin/IJY5VANUP61vWzdMcQ4+vfcUoEKW5NOdcc/gP
+        8LQ8ZKMHJGWh7cieC//06HoEQhQe+N72OVdWUFKOOpOuublBfvh6iMb0IlX5p1hYWWVqiQExSy4W8
+        kDWugzM2g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59012)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jnffc-0001cC-38; Tue, 23 Jun 2020 10:56:48 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jnffa-0000vi-KS; Tue, 23 Jun 2020 10:56:46 +0100
+Date:   Tue, 23 Jun 2020 10:56:46 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
+Message-ID: <20200623095646.GT1551@shell.armlinux.org.uk>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-15-brgl@bgdev.pl>
+ <20200622132921.GI1551@shell.armlinux.org.uk>
+ <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
+ <20200623094252.GS1551@shell.armlinux.org.uk>
+ <CAMpxmJVP9db-4-AA4e1JkEfrajvJ4s0T6zo5+oFzpJHRBcuSsg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJVP9db-4-AA4e1JkEfrajvJ4s0T6zo5+oFzpJHRBcuSsg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a number of random documents that seem to be
-describing some aspects of the core-api. Move them to such
-directory, adding them at the core-api/index.rst file.
+On Tue, Jun 23, 2020 at 11:46:15AM +0200, Bartosz Golaszewski wrote:
+> wt., 23 cze 2020 o 11:43 Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> napisał(a):
+> >
+> > On Tue, Jun 23, 2020 at 11:41:11AM +0200, Bartosz Golaszewski wrote:
+> > > pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> napisał(a):
+> > > >
+> > >
+> > > [snip!]
+> > >
+> > > >
+> > > > This is likely to cause issues for some PHY drivers.  Note that we have
+> > > > some PHY drivers which register a temperature sensor in the probe
+> > > > function, which means they can be accessed independently of the lifetime
+> > > > of the PHY bound to the network driver (which may only be while the
+> > > > network device is "up".)  We certainly do not want hwmon failing just
+> > > > because the network device is down.
+> > > >
+> > > > That's kind of worked around for the reset stuff, because there are two
+> > > > layers to that: the mdio device layer reset support which knows nothing
+> > > > of the PHY binding state to the network driver, and the phylib reset
+> > > > support, but it is not nice.
+> > > >
+> > >
+> > > Regulators are reference counted so if the hwmon driver enables it
+> > > using mdio_device_power_on() it will stay on even after the PHY driver
+> > > calls phy_device_power_off(), right? Am I missing something?
+> >
+> > If that is true, you will need to audit the PHY drivers to add that.
+> >
+> 
+> This change doesn't have any effect on devices which don't have a
+> regulator assigned in DT though. The one I'm adding in the last patch
+> is the first to use this.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../bus-virt-phys-mapping.rst}                                 | 0
- Documentation/core-api/index.rst                               | 3 +++
- Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst}  | 0
- .../{process => core-api}/unaligned-memory-access.rst          | 0
- arch/Kconfig                                                   | 2 +-
- 5 files changed, 4 insertions(+), 1 deletion(-)
- rename Documentation/{bus-virt-phys-mapping.txt => core-api/bus-virt-phys-mapping.rst} (100%)
- rename Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst} (100%)
- rename Documentation/{process => core-api}/unaligned-memory-access.rst (100%)
+It's quality of implementation.
 
-diff --git a/Documentation/bus-virt-phys-mapping.txt b/Documentation/core-api/bus-virt-phys-mapping.rst
-similarity index 100%
-rename from Documentation/bus-virt-phys-mapping.txt
-rename to Documentation/core-api/bus-virt-phys-mapping.rst
-diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-index 15ab86112627..69171b1799f2 100644
---- a/Documentation/core-api/index.rst
-+++ b/Documentation/core-api/index.rst
-@@ -39,6 +39,8 @@ Library functionality that is used throughout the kernel.
-    rbtree
-    generic-radix-tree
-    packing
-+   bus-virt-phys-mapping
-+   this_cpu_ops
-    timekeeping
-    errseq
- 
-@@ -82,6 +84,7 @@ more memory-management documentation in :doc:`/vm/index`.
-    :maxdepth: 1
- 
-    memory-allocation
-+   unaligned-memory-access
-    dma-api
-    dma-api-howto
-    dma-attributes
-diff --git a/Documentation/this_cpu_ops.txt b/Documentation/core-api/this_cpu_ops.rst
-similarity index 100%
-rename from Documentation/this_cpu_ops.txt
-rename to Documentation/core-api/this_cpu_ops.rst
-diff --git a/Documentation/process/unaligned-memory-access.rst b/Documentation/core-api/unaligned-memory-access.rst
-similarity index 100%
-rename from Documentation/process/unaligned-memory-access.rst
-rename to Documentation/core-api/unaligned-memory-access.rst
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 8cc35dc556c7..2a439fb8069e 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -147,7 +147,7 @@ config HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	  problems with received packets if doing so would not help
- 	  much.
- 
--	  See Documentation/unaligned-memory-access.txt for more
-+	  See Documentation/core-api/unaligned-memory-access.rst for more
- 	  information on the topic of unaligned memory accesses.
- 
- config ARCH_USE_BUILTIN_BSWAP
+Should we wait for someone else to make use of the new regulator
+support that has been added with a PHY that uses hwmon, and they
+don't realise that it breaks hwmon on it, and several kernel versions
+go by without it being noticed.  It will only be a noticable issue
+when the associated network device is down, and that network device
+driver detaches from the PHY, so _is_ likely not to be noticed.
+
+Or should we do a small amount of work now to properly implement
+regulator support, which includes a trivial grep for "hwmon" amongst
+the PHY drivers, and add the necessary call to avoid the regulator
+being shut off.
+
 -- 
-2.26.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
