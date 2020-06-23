@@ -2,405 +2,162 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1C4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD80320780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li5DpHS2"
+	by mail.kernel.org (Postfix) with ESMTP id C3EEA206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbgFWC0k (ORCPT
+        id S1731505AbgFWC1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55688 "EHLO
+        Mon, 22 Jun 2020 22:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728447AbgFWC0j (ORCPT
+        with ESMTP id S1731414AbgFWC1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:26:39 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A41C061573;
-        Mon, 22 Jun 2020 19:26:39 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id e5so15011029ote.11;
-        Mon, 22 Jun 2020 19:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mKZtZ5OrQtHQh8JuJC9z7n/06lUZZJPEU7u0mg0qJIQ=;
-        b=li5DpHS2aQdcYr6Jbvoac5/oXlaVKPiinz7Nn4860//NMwUqvXCQRlk8LESXeIkDCi
-         phyzjhnvPuFu6TuGBaK7H9mCug1DxhuqEHVvFTjtQKOFgCjmjSOCOzRvjxWit4inhArq
-         ojEAofE4b1tdk7nadTLam5vvF8NW1PKDAiGWIXX2ztD3zc9vpHQVqS0BvBG6jqZ5qpjK
-         yW1zjqlAbidMDOvBuLUrR6DWxhAZuQRoudxiHiu63ePCivoaPTUDAxeDrPIv4cFYFr0a
-         2Gm45gDBuHzM1hmglZLYPKVN7Eb3bM9xtnFY8ykUyUoYXVCWT5750ukKWhlRNJgRx1DS
-         mBEQ==
+        Mon, 22 Jun 2020 22:27:17 -0400
+Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C086C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:27:17 -0700 (PDT)
+Received: from mr2.cc.vt.edu (smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 05N2RE6a016599
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:27:14 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 05N2R9iT030880
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:27:14 -0400
+Received: by mail-qk1-f198.google.com with SMTP id h18so14345695qkj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:27:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mKZtZ5OrQtHQh8JuJC9z7n/06lUZZJPEU7u0mg0qJIQ=;
-        b=Mt0oCaIHOx1yTs8Yni/z8O2le29fqJC1xkn/ciVemF1ch2wPuoHW0Qon6EtCk5TXwd
-         uVUrMkG6WYnQndWwTbYp0sb3x7ZpWx+/LpM5VrJ/lvhWzpA01wjngtUmtWPhgu1msS4E
-         exKZRzTJ0C6I/u1YLuZPJuFeHYx0xa1aZml++KNoEOE4524gHHth1Fw3AuFbgTUj9RDJ
-         MC3jdeW10e2TSc28ySJFi7vj+QfjO3NGtwxhbEZxL8ILPvWSS+/HHG4XY/usSlveg5Zw
-         Rn60xMZUzUqF7eJYlD74AZSczkWei38hYu9cR0A8Q+D/ez1Wb0tvqhmdJIpxiDuq7wU+
-         gQuA==
-X-Gm-Message-State: AOAM5319Comw/VPOehkQPwVgcf59NAZB2w/8DIrJPhJwU2Ibxe5hkFnk
-        pekGc9AHhD28A6nYxRfcH9g=
-X-Google-Smtp-Source: ABdhPJzycELRa2UXfT68HWgIYPWo2b8CCwQJo+dVO2j8vLteCdOMpJbnARRduPJaeUv6WtUShchgCg==
-X-Received: by 2002:a9d:4c0b:: with SMTP id l11mr17298541otf.139.1592879198609;
-        Mon, 22 Jun 2020 19:26:38 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id 190sm3872900oon.2.2020.06.22.19.26.37
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=+tx+pOYJvZ9eTxB5UMFg+DUdHuZXQfS64TJtcUMMBrg=;
+        b=fxBPQQ8aUGO+BTv1IhKmmotDYkBn2GizNmdfy7lD+phX1QdS2HAVqk7ArlQgFuB3/z
+         GZN1+BTxhlwjkIspaj8RkYqQu3wCFn60Jtx9qESqiLvVgNZvrIY93gJxirvoCgPFWZ50
+         Kawcrp/eaPRadLiIoqqa03IjuGQeLwQ0JbSwMZ3kn8Rha0+qIekxktoOnTsnZpmkjvir
+         MwbH1KgCzoxGA8pM1nGcyhrJv7xp9WB7kadi/nrEdayH2cWpGvhVLhHGVRCugRMXDS0Q
+         uRv7kzi62if6n5funAEYpZ81n1ui7ERxmKfhl2KC6niFVoqnjb6MN6qIfuxtoY3Ljz6H
+         uUvQ==
+X-Gm-Message-State: AOAM53125Ux1+3xLkooROGCy/GUPLQk39s5sOVU0hQTGDn/ZUgbvfiA6
+        +n6Hk7CtvGZgW05uixksEqFfTrxy6Kyg2dAPvuh8mGEyYHSCHb39VjHAelG+KTnEMn9DjxF5ukM
+        gwbIQAWecawqRKmxo4Jm1e8R/auqzQkKxHVs=
+X-Received: by 2002:a0c:f991:: with SMTP id t17mr24855603qvn.123.1592879229056;
+        Mon, 22 Jun 2020 19:27:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwZwuTxC89TFwp2ScpxEmvcF4a++QGM55NORtq8+7aSkWI44MQlxsgKHE1A7EWob7dKi4JrnQ==
+X-Received: by 2002:a0c:f991:: with SMTP id t17mr24855586qvn.123.1592879228665;
+        Mon, 22 Jun 2020 19:27:08 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id d2sm15549488qti.62.2020.06.22.19.27.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 19:26:37 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 19:26:36 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nitin Gupta <nigupta@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Nitin Gupta <ngupta@nitingupta.dev>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v8] mm: Proactive compaction
-Message-ID: <20200623022636.GA1051134@ubuntu-n2-xlarge-x86>
-References: <20200616204527.19185-1-nigupta@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200616204527.19185-1-nigupta@nvidia.com>
+        Mon, 22 Jun 2020 19:27:07 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: kbuild: separate kerneldoc warnings from compiler warnings
+In-Reply-To: <CAK7LNARevD4o1WCRatKqZcf9-arxsvBcyLKHcNSM1ih+TDS5Mw@mail.gmail.com>
+References: <591473.1592679153@turing-police>
+ <CAK7LNARevD4o1WCRatKqZcf9-arxsvBcyLKHcNSM1ih+TDS5Mw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1592879225_62491P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 22 Jun 2020 22:27:06 -0400
+Message-ID: <771628.1592879226@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 01:45:27PM -0700, Nitin Gupta wrote:
-> For some applications, we need to allocate almost all memory as
-> hugepages. However, on a running system, higher-order allocations can
-> fail if the memory is fragmented. Linux kernel currently does on-demand
-> compaction as we request more hugepages, but this style of compaction
-> incurs very high latency. Experiments with one-time full memory
-> compaction (followed by hugepage allocations) show that kernel is able
-> to restore a highly fragmented memory state to a fairly compacted memory
-> state within <1 sec for a 32G system. Such data suggests that a more
-> proactive compaction can help us allocate a large fraction of memory as
-> hugepages keeping allocation latencies low.
-> 
-> For a more proactive compaction, the approach taken here is to define a
-> new sysctl called 'vm.compaction_proactiveness' which dictates bounds
-> for external fragmentation which kcompactd tries to maintain.
-> 
-> The tunable takes a value in range [0, 100], with a default of 20.
-> 
-> Note that a previous version of this patch [1] was found to introduce
-> too many tunables (per-order extfrag{low, high}), but this one reduces
-> them to just one sysctl. Also, the new tunable is an opaque value
-> instead of asking for specific bounds of "external fragmentation", which
-> would have been difficult to estimate. The internal interpretation of
-> this opaque value allows for future fine-tuning.
-> 
-> Currently, we use a simple translation from this tunable to [low, high]
-> "fragmentation score" thresholds (low=100-proactiveness, high=low+10%).
-> The score for a node is defined as weighted mean of per-zone external
-> fragmentation. A zone's present_pages determines its weight.
-> 
-> To periodically check per-node score, we reuse per-node kcompactd
-> threads, which are woken up every 500 milliseconds to check the same. If
-> a node's score exceeds its high threshold (as derived from user-provided
-> proactiveness value), proactive compaction is started until its score
-> reaches its low threshold value. By default, proactiveness is set to 20,
-> which implies threshold values of low=80 and high=90.
-> 
-> This patch is largely based on ideas from Michal Hocko [2]. See also the
-> LWN article [3].
-> 
-> Performance data
-> ================
-> 
-> System: x64_64, 1T RAM, 80 CPU threads.
-> Kernel: 5.6.0-rc3 + this patch
-> 
-> echo madvise | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
-> echo madvise | sudo tee /sys/kernel/mm/transparent_hugepage/defrag
-> 
-> Before starting the driver, the system was fragmented from a userspace
-> program that allocates all memory and then for each 2M aligned section,
-> frees 3/4 of base pages using munmap. The workload is mainly anonymous
-> userspace pages, which are easy to move around. I intentionally avoided
-> unmovable pages in this test to see how much latency we incur when
-> hugepage allocations hit direct compaction.
-> 
-> 1. Kernel hugepage allocation latencies
-> 
-> With the system in such a fragmented state, a kernel driver then
-> allocates as many hugepages as possible and measures allocation
-> latency:
-> 
-> (all latency values are in microseconds)
-> 
-> - With vanilla 5.6.0-rc3
-> 
->   percentile latency
->   –––––––––– –––––––
-> 	   5    7894
-> 	  10    9496
-> 	  25   12561
-> 	  30   15295
-> 	  40   18244
-> 	  50   21229
-> 	  60   27556
-> 	  75   30147
-> 	  80   31047
-> 	  90   32859
-> 	  95   33799
-> 
-> Total 2M hugepages allocated = 383859 (749G worth of hugepages out of
-> 762G total free => 98% of free memory could be allocated as hugepages)
-> 
-> - With 5.6.0-rc3 + this patch, with proactiveness=20
-> 
-> sysctl -w vm.compaction_proactiveness=20
-> 
->   percentile latency
->   –––––––––– –––––––
-> 	   5       2
-> 	  10       2
-> 	  25       3
-> 	  30       3
-> 	  40       3
-> 	  50       4
-> 	  60       4
-> 	  75       4
-> 	  80       4
-> 	  90       5
-> 	  95     429
-> 
-> Total 2M hugepages allocated = 384105 (750G worth of hugepages out of
-> 762G total free => 98% of free memory could be allocated as hugepages)
-> 
-> 2. JAVA heap allocation
-> 
-> In this test, we first fragment memory using the same method as for (1).
-> 
-> Then, we start a Java process with a heap size set to 700G and request
-> the heap to be allocated with THP hugepages. We also set THP to madvise
-> to allow hugepage backing of this heap.
-> 
-> /usr/bin/time
->  java -Xms700G -Xmx700G -XX:+UseTransparentHugePages -XX:+AlwaysPreTouch
-> 
-> The above command allocates 700G of Java heap using hugepages.
-> 
-> - With vanilla 5.6.0-rc3
-> 
-> 17.39user 1666.48system 27:37.89elapsed
-> 
-> - With 5.6.0-rc3 + this patch, with proactiveness=20
-> 
-> 8.35user 194.58system 3:19.62elapsed
-> 
-> Elapsed time remains around 3:15, as proactiveness is further increased.
-> 
-> Note that proactive compaction happens throughout the runtime of these
-> workloads. The situation of one-time compaction, sufficient to supply
-> hugepages for following allocation stream, can probably happen for more
-> extreme proactiveness values, like 80 or 90.
-> 
-> In the above Java workload, proactiveness is set to 20. The test starts
-> with a node's score of 80 or higher, depending on the delay between the
-> fragmentation step and starting the benchmark, which gives more-or-less
-> time for the initial round of compaction. As t	he benchmark consumes
-> hugepages, node's score quickly rises above the high threshold (90) and
-> proactive compaction starts again, which brings down the score to the
-> low threshold level (80).  Repeat.
-> 
-> bpftrace also confirms proactive compaction running 20+ times during the
-> runtime of this Java benchmark. kcompactd threads consume 100% of one of
-> the CPUs while it tries to bring a node's score within thresholds.
-> 
-> Backoff behavior
-> ================
-> 
-> Above workloads produce a memory state which is easy to compact.
-> However, if memory is filled with unmovable pages, proactive compaction
-> should essentially back off. To test this aspect:
-> 
-> - Created a kernel driver that allocates almost all memory as hugepages
->   followed by freeing first 3/4 of each hugepage.
-> - Set proactiveness=40
-> - Note that proactive_compact_node() is deferred maximum number of times
->   with HPAGE_FRAG_CHECK_INTERVAL_MSEC of wait between each check
->   (=> ~30 seconds between retries).
-> 
-> [1] https://patchwork.kernel.org/patch/11098289/
-> [2] https://lore.kernel.org/linux-mm/20161230131412.GI13301@dhcp22.suse.cz/
-> [3] https://lwn.net/Articles/817905/
-> 
-> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-> Reviewed-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> To: Andrew Morton <akpm@linux-foundation.org>
-> CC: Vlastimil Babka <vbabka@suse.cz>
-> CC: Khalid Aziz <khalid.aziz@oracle.com>
-> CC: Michal Hocko <mhocko@suse.com>
-> CC: Mel Gorman <mgorman@techsingularity.net>
-> CC: Matthew Wilcox <willy@infradead.org>
-> CC: Mike Kravetz <mike.kravetz@oracle.com>
-> CC: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> CC: David Rientjes <rientjes@google.com>
-> CC: Nitin Gupta <ngupta@nitingupta.dev>
-> CC: Oleksandr Natalenko <oleksandr@redhat.com>
-> CC: linux-kernel <linux-kernel@vger.kernel.org>
-> CC: linux-mm <linux-mm@kvack.org>
-> CC: Linux API <linux-api@vger.kernel.org>
+--==_Exmh_1592879225_62491P
+Content-Type: text/plain; charset=us-ascii
 
-This is now in -next and causes the following build failure:
+On Mon, 22 Jun 2020 14:10:13 +0900, Masahiro Yamada said:
 
-$ make -skj"$(nproc)" ARCH=mips CROSS_COMPILE=mipsel-linux- O=out/mipsel distclean malta_kvm_guest_defconfig mm/compaction.o
-In file included from include/linux/dev_printk.h:14,
-                 from include/linux/device.h:15,
-                 from include/linux/node.h:18,
-                 from include/linux/cpu.h:17,
-                 from mm/compaction.c:11:
-In function 'fragmentation_score_zone',
-    inlined from '__compact_finished' at mm/compaction.c:1982:11,
-    inlined from 'compact_zone' at mm/compaction.c:2062:8:
-include/linux/compiler.h:339:38: error: call to '__compiletime_assert_301' declared with attribute error: BUILD_BUG failed
-  339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                      ^
-include/linux/compiler.h:320:4: note: in definition of macro '__compiletime_assert'
-  320 |    prefix ## suffix();    \
-      |    ^~~~~~
-include/linux/compiler.h:339:2: note: in expansion of macro '_compiletime_assert'
-  339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
-      |                     ^~~~~~~~~~~~~~~~
-arch/mips/include/asm/page.h:70:30: note: in expansion of macro 'BUILD_BUG'
-   70 | #define HUGETLB_PAGE_ORDER ({BUILD_BUG(); 0; })
-      |                              ^~~~~~~~~
-mm/compaction.c:66:32: note: in expansion of macro 'HUGETLB_PAGE_ORDER'
-   66 | #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
-      |                                ^~~~~~~~~~~~~~~~~~
-mm/compaction.c:1898:28: note: in expansion of macro 'COMPACTION_HPAGE_ORDER'
- 1898 |    extfrag_for_order(zone, COMPACTION_HPAGE_ORDER);
-      |                            ^~~~~~~~~~~~~~~~~~~~~~
-In function 'fragmentation_score_zone',
-    inlined from 'kcompactd' at mm/compaction.c:1918:12:
-include/linux/compiler.h:339:38: error: call to '__compiletime_assert_301' declared with attribute error: BUILD_BUG failed
-  339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                      ^
-include/linux/compiler.h:320:4: note: in definition of macro '__compiletime_assert'
-  320 |    prefix ## suffix();    \
-      |    ^~~~~~
-include/linux/compiler.h:339:2: note: in expansion of macro '_compiletime_assert'
-  339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
-      |                     ^~~~~~~~~~~~~~~~
-arch/mips/include/asm/page.h:70:30: note: in expansion of macro 'BUILD_BUG'
-   70 | #define HUGETLB_PAGE_ORDER ({BUILD_BUG(); 0; })
-      |                              ^~~~~~~~~
-mm/compaction.c:66:32: note: in expansion of macro 'HUGETLB_PAGE_ORDER'
-   66 | #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
-      |                                ^~~~~~~~~~~~~~~~~~
-mm/compaction.c:1898:28: note: in expansion of macro 'COMPACTION_HPAGE_ORDER'
- 1898 |    extfrag_for_order(zone, COMPACTION_HPAGE_ORDER);
-      |                            ^~~~~~~~~~~~~~~~~~~~~~
-In function 'fragmentation_score_zone',
-    inlined from 'kcompactd' at mm/compaction.c:1918:12:
-include/linux/compiler.h:339:38: error: call to '__compiletime_assert_301' declared with attribute error: BUILD_BUG failed
-  339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                      ^
-include/linux/compiler.h:320:4: note: in definition of macro '__compiletime_assert'
-  320 |    prefix ## suffix();    \
-      |    ^~~~~~
-include/linux/compiler.h:339:2: note: in expansion of macro '_compiletime_assert'
-  339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
-      |                     ^~~~~~~~~~~~~~~~
-arch/mips/include/asm/page.h:70:30: note: in expansion of macro 'BUILD_BUG'
-   70 | #define HUGETLB_PAGE_ORDER ({BUILD_BUG(); 0; })
-      |                              ^~~~~~~~~
-mm/compaction.c:66:32: note: in expansion of macro 'HUGETLB_PAGE_ORDER'
-   66 | #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
-      |                                ^~~~~~~~~~~~~~~~~~
-mm/compaction.c:1898:28: note: in expansion of macro 'COMPACTION_HPAGE_ORDER'
- 1898 |    extfrag_for_order(zone, COMPACTION_HPAGE_ORDER);
-      |                            ^~~~~~~~~~~~~~~~~~~~~~
-In function 'fragmentation_score_zone',
-    inlined from 'kcompactd' at mm/compaction.c:1918:12:
-include/linux/compiler.h:339:38: error: call to '__compiletime_assert_301' declared with attribute error: BUILD_BUG failed
-  339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |                                      ^
-include/linux/compiler.h:320:4: note: in definition of macro '__compiletime_assert'
-  320 |    prefix ## suffix();    \
-      |    ^~~~~~
-include/linux/compiler.h:339:2: note: in expansion of macro '_compiletime_assert'
-  339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
-      |                     ^~~~~~~~~~~~~~~~
-arch/mips/include/asm/page.h:70:30: note: in expansion of macro 'BUILD_BUG'
-   70 | #define HUGETLB_PAGE_ORDER ({BUILD_BUG(); 0; })
-      |                              ^~~~~~~~~
-mm/compaction.c:66:32: note: in expansion of macro 'HUGETLB_PAGE_ORDER'
-   66 | #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
-      |                                ^~~~~~~~~~~~~~~~~~
-mm/compaction.c:1898:28: note: in expansion of macro 'COMPACTION_HPAGE_ORDER'
- 1898 |    extfrag_for_order(zone, COMPACTION_HPAGE_ORDER);
-      |                            ^~~~~~~~~~~~~~~~~~~~~~
-make[3]: *** [scripts/Makefile.build:281: mm/compaction.o] Error 1
-make[3]: Target '__build' not remade because of errors.
-make[2]: *** [Makefile:1765: mm] Error 2
-make[2]: Target 'mm/compaction.o' not remade because of errors.
-make[1]: *** [Makefile:336: __build_one_by_one] Error 2
-make[1]: Target 'distclean' not remade because of errors.
-make[1]: Target 'malta_kvm_guest_defconfig' not remade because of errors.
-make[1]: Target 'mm/compaction.o' not remade because of errors.
-make: *** [Makefile:185: __sub-make] Error 2
-make: Target 'distclean' not remade because of errors.
-make: Target 'malta_kvm_guest_defconfig' not remade because of errors.
-make: Target 'mm/compaction.o' not remade because of errors.
+> > This patch introduces a new build flag 'K=1' which controls whether kerneldoc
+> > warnings should be issued, separating them from the compiler warnings that W=
+> > controls.
 
-I am not sure why MIPS is special with its handling of hugepage support
-but I am far from a MIPS expert :)
+> I do not understand why this change is needed.
 
-Cheers,
-Nathan
+> IIRC, our goal was to enable this check by default.
+> https://patchwork.kernel.org/patch/10030521/
+> but there are so many warnings.
+
+So are we getting any closer to actually achieving that goal?
+I've done a fair number of cleanup patches to make the kernel
+safe(r) to build with W=1, but there's still quite the pile.
+
+And actually, if you want people to actually fix up the kerneldoc
+issues, making it easier helps the chances of getting patches. If
+somebody is in the mood to do kerneldoc clean-ups, having an easy
+way to get just the kerneldoc messages rather than having to find
+them mixed in with all the rest helps...
+
+So I ran some numbers...
+
+A plain "make" for an arm allmodconfig weighs in at 40,184 lines.
+
+Building with K=1 produces 10,358 additional lines of output - that's what
+needs patching if you want the kerneldocs cleaned up.
+
+Building with W=1 (w/ this patch) adds 155,773 lines. Not A Typo. Of those, a
+whole whopping 116,699 are complaints from DTS issues, and 39,074 for all other
+gcc warnings. (Though I have 2 patches that I'll send later that will knock
+about 3,000 off the "all other gcc warnings" numbers).
+
+(And for completeness, building with C=1 for sparse adds 18,936 lines that say
+'CHECK', and 56,915 lines of sparse warnings)
+
+> Meanwhile, this is checked only when W= is given
+> because 0-day bot tests with W=1 to
+> block new kerneldoc warnings.
+
+Looking at the numbers, I really need to say "So how is that working out for
+us, anyhow?"
+
+In particular, is it just flagging them, or do we have an actual procedure that
+stops patches from being accepted if they add new kerneldoc warnings?
+
+Another issue that needs to be considered is how high-quality a fix for a
+kerneldoc warning is.  Getting rid of a warning by adding a comment line that
+says the 3rd parameter is a pointer to a 'struct wombat' does nobody any good
+if looking at the formal parameter list clearly states that the third parameter
+is a 'struct wombat *foo'. Heck, I could probably create a Perl script that
+automates that level of fixing.
+
+But making an *informative* comment requires doing a bunch of research so that
+you understand why *this* struct wombat is the one we care about (and whether
+we care *so* much that somebody better be holding a lock....)
+
+> K=1 ?   Do people need to learn this new switch?
+
+--==_Exmh_1592879225_62491P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXvFoeQdmEQWDXROgAQL45g//RXlI5mcm9sTrsYpGogD7fPTZmf8rV5Ev
+kwvwylKgIZwB0K1kBrK4tK8hgq9BErcMpEjKsCdJcpXNzbGiyfKSIYylxOQtdspA
+nsENDIw4kh0HXOrbOJDpYyql58OKXKl5PPWLoQm8ZXWiLsMgo5mE7YAaLLoWxi3f
+t6Q04i4rCL/PjtgF9IcZgoGRS49G+9HwuPHRlmPgzwYuKtn2Jx3nAGdA3sjEzIFr
+J2G79OeRX88qwOxeehDcCM4AKbvjnsVichPrBJdcQh+n9kHdHJ+vrxvYtB644WFd
+qAva/xY7gkptMX97yO9eAQiZF/xg2qF/lIkRcM9ETdMM42HNLc+jkjkxIUKrTwFA
+Y4uqXWAzXi0vdZK+jAEWjgTnrrh1zIROY+6Uob11Zcp/vs9cCgtLFIdKMTndeh+/
+D23ZcjHyc3WbYKkFVj3gAc30VG5/pIB8lQ7Fm75orP0agqf3jJUclYOLb2VC4GiM
+HtplgK3ewJNkW4x3VDaNiOG0obFY6WnQgUxMsfLzGRmVEXEedshQ+3EapZPS0t0n
+fHDbGbU8wZLHsCKkosyy8iin/lwGQzan/rW3R98PQSYz6uGLD0p/rZKAmbHGThee
+Lqhn4oCZ+rBtgepfQhWACXwAmXBx6MthxJPMoveD2CVXh1IVc7c1cfaRq1O2vOn1
+S0ApTLmmm9Q=
+=5z/x
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1592879225_62491P--
