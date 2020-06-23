@@ -2,154 +2,273 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5675BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83416C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345A32073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="HgkSIv6t"
+	by mail.kernel.org (Postfix) with ESMTP id 5F2EC2077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731675AbgFWHtX (ORCPT
+        id S1731703AbgFWHtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:49:23 -0400
-Received: from mout.web.de ([212.227.15.3]:44685 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731371AbgFWHtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:49:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592898536;
-        bh=0Id89Q8KMAQDXyesOVHf4HPskkYmahuHWvjdnRF1kDA=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=HgkSIv6t8x9dbU9L4QHxRReqpTT5qI6u5SQuiWLTH6A/SE7IsarJ9ZtrJuKKRrDUZ
-         x/2/0CrVHbs0p5S0MXulLILf1frxl7ZMbLPUYcYFZF6/CTXWyZt4MI4hatBvg/+w0p
-         fmra/w1i5p3GKj4g7WGfLmAtOoCRoUrvQ0uo5MAk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.105.198]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M3V6E-1joBdd3rYA-000fLv; Tue, 23
- Jun 2020 09:48:56 +0200
-Subject: Re: ARM: imx6: add missing put_device() call in imx6q_suspend_init()
-To:     Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
-Cc:     Yu Kuai <yukuai3@huawei.com>, Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Yi Zhang <yi.zhang@huawei.com>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cf810c93-297c-c02c-9bba-8c3d097b8e31@web.de>
- <2ab2cc9f-c720-75ca-e20c-0e4236ff45fd@huawei.com>
- <1542979d-f7f6-bcf1-53c3-22b7c076ddc7@web.de> <20200623073220.GV30139@dragon>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <5300cb30-2243-9bfe-125c-96e720cd1f29@web.de>
-Date:   Tue, 23 Jun 2020 09:48:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 23 Jun 2020 03:49:31 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:33369 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731371AbgFWHta (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:49:30 -0400
+Received: by mail-ej1-f66.google.com with SMTP id n24so20649228ejd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:49:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:message-id:date:mime-version;
+        bh=l09/8jo/rEHXkzrKqwLw2bzjE9TUHXuLUACt0K57wZI=;
+        b=AZ9jN7czsMZOwbrgFMdFYy7i4nrsvN+KrRZNTy7IqZmUCuHg0UUZHE32TAckOuNbOz
+         AY/edgv9pzUJpmDKu/yQUCULLzRbL+xFNzq1Lb5xmlECQ9L2u/+XorV0+x0cSn7bbHri
+         Xkx25j5uq3zVSFKwZGFdNUSkOminGC6B4w50rRpGcVfiPUIAvp/jOYizEJLyJsL8iEkP
+         ZhvtOsDSkCH+eh1uKjRCAYz4KVp1foAdOzOCVVErH7kVgdd1zwvstZvgPZxGDCPJTK/5
+         msaML3DD4UvH0EguJTZ3Csd9EBlXw+mOS7yMyYAx0MuMqjC+oMR2W5cafqlZJVauNsyY
+         4Itw==
+X-Gm-Message-State: AOAM530cI5RNfR4C3HCtpGtFVu4InROGXesm+XaIfAmpSsFDP7G/gMRI
+        /owPGEN3aW02740F04RhwTM=
+X-Google-Smtp-Source: ABdhPJwj5pP7MDpsdnXw7cj4Ajtks15J+7Czd+L3XDdUAxS0P2q7MWVoTd2hPLTHEIUi4qMOoIyGTg==
+X-Received: by 2002:a17:906:16d3:: with SMTP id t19mr18407664ejd.297.1592898567680;
+        Tue, 23 Jun 2020 00:49:27 -0700 (PDT)
+Received: from darkstar ([2a04:ee41:4:5025:8295:1d2:ca0d:985e])
+        by smtp.gmail.com with ESMTPSA id k8sm13923072edn.28.2020.06.23.00.49.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 00:49:26 -0700 (PDT)
+References: <87v9kv2545.derkling@matbug.com> <87h7wd15v2.derkling@matbug.net> <87imgrlrqi.derkling@matbug.net> <87mu5sqwkt.derkling@matbug.net> <87eer42clt.derkling@matbug.net> <87imfi2qbk.derkling@matbug.net>
+User-agent: mu4e 1.4.10; emacs 26.3
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>, Ben Segall <bsegall@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Josef Bacik <jbacik@fb.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Parth Shah <parth@linux.ibm.com>
+Subject: [SchedulerWakeupLatency] Per-task vruntime wakeup bonus
+In-reply-to: <87imfi2qbk.derkling@matbug.net>
+Message-ID: <87blla2pdt.derkling@matbug.net>
+Date:   Tue, 23 Jun 2020 09:49:18 +0200
 MIME-Version: 1.0
-In-Reply-To: <20200623073220.GV30139@dragon>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bxPnG0KD82IuweOlPCG2u8tbRnGbLQ3MNsqQmnyyuQFyBvfmE0Q
- NB2EyNTluasOFF+NZNf16rN9TpiNNd3GGf3Pet/wKb7itvMStTzVaYUHi9yyuHG/v8FgSUS
- f0uqpgInybuOpvM1WTISDrIs5d4LTpy1cFB4i10NuvtTyxxwJhYxxj05vYn6rDGPeMUFeUg
- OLkXzuGUKWik+cJOh8W2A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FU+tt021O+g=:9zf2srTC9H133Hss4LoPLF
- j6rmhvUm+3ybh652Vo5k/Y6+hJVz9S70NzKNR2kHqFq/gkjyHNYZ7+sHHtmFy7Ez+X7YeNoup
- ruphG8EW69sJ7RzmYhNgZy/R4U5SjeF72/wOuXaHpqcbMsL49PoNqobJiVuWwbRKN3r+/Go8P
- p3ilNgTVbDzhUN2SO5qbLM16z8p5MV2ukN7yFwLrDvaTAT39HDVVlqgEJC9+x9Ju/alGv/PSW
- 7NFxGe2InMbTEjGJ5XkKYRuiAz55hfkptSqMni07v8DEDmeYnInSkdVBWXCr88OgssbixhEEA
- Oygt/5meho6ecqTtVIOMfQDktT+ovJa5d49zs0dzsKTy1chhmkwe5OKtxIJ3wZFSqKmxRVdkw
- kpdhqzOVYWYBtLc8336aUPAztX7b4EK8aNUZOTDCzDbfD5HG02SntgFepcOwzvG1TgUqNXhBk
- 1jms0LD/nzgWrjSulfqxBSUbxfo9UQiCQL8p/V3tGszTe6ZY0Ef3FDX4M6/0sObXe5kOyRy/5
- H2OGV5omIdYvI3ETEae9Y6DQzFJJqhdpcyEuEGUo0II6xmXYRCYIdFnWkz1yWbwFkUPeQKXqH
- BZtU7LUH2BuEnjvwfZX1r2xjgzl9n5FoP2HxuRd3rsZD6ExH7UJhhKLQA7FZwNvXagX3a7t1a
- j65PK9UIjbgrgxGvYo7EyiTYR4HHJ/8Ig9SwxkHbQHU3VBaaku+cuDyP/nHqb0ULjy/02GBfo
- i/cmzr/lROy5VVnW6PO/EFJ3PEBIaq40AaplFFt6tXUQlYFpn4j9nwpEo++Wqw4HfKkX9a28b
- 0AUb3fSZW12qkKnnDGd8Z6/oa0N+GjHrFAmu1pGD2Q5gVyzWry+V+4l53Cd30v7PY98gPkEym
- jrntBZnuWdA93yNRTkl4i0iQQoWCD3hCeEQz1BnE9v9k8GPRfHEdYMMpokOTP8jAwlvMyN4n6
- sOeWNY7V6ojAvV6nUng2X4MGJGQlzSIchbFzQ3cK9uAB/ostMGi/eLu0InpVhGACd535i0uJK
- PMd/h94xzEBxqo66N3tVpSQazeEkLRGGq98eFhVSM+10AeYObbycnuL1wsPtVVmd/LzwHoFLg
- H7UjqHPElq83Vsq1Hq4cbM4o19r889yfUVsfDU7VQI9V62ciSg/v3LUfLIUfHNM+eYhje1tzb
- 8rgsH7Hlne7Alyf5cyKfItTkCXBa2nUq4E1n3K2Wyep9Lh9+9pRaUTgeb5sef5ddNdQd5/Xhs
- ui9vwzSf4cSrLLEhV
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>> Do you find a previous update suggestion useful?
->>>>
->>>> ARM: imx6: Add missing put_device() call in imx6q_suspend_init()
->>>> https://lore.kernel.org/linux-arm-kernel/5acd7308-f6e1-4b1e-c744-bb2e=
-5fdca1be@web.de/
->>>> https://lore.kernel.org/patchwork/patch/1151158/
->>>> https://lkml.org/lkml/2019/11/9/125
->> =E2=80=A6
->>> It is useful indeed.
-=E2=80=A6
->>> Any idea why these pathes didn't get applied ?
->>
->> I can make assumptions about the reasons for the possibly questionable =
-handling
->> of such patches.
->
-> Markus,
->
-> Could you resend it to my kernel.org address?
 
-You can get relevant information from the referenced message archive inter=
-faces,
-can't you?
+On Tue, Jun 23, 2020 at 09:29:03 +0200, Patrick Bellasi <patrick.bellasi@matbug.net> wrote...
 
-Regards,
-Markus
+> .:: Scheduler Wakeup Path Requirements Collection Template
+> ==========================================================
+>
+> A) Name
+
+Runtime tunable vruntime wakeup bonus.
+
+
+> B) Target behavior
+
+All SCHED_OTHER tasks get the same (max) vruntime wakeup bonus. This
+bonus affects the chance the task has to preempt the currently running
+task. Some tasks, which are (known to be) latency tolerant, should have
+a smaller chance to preempt a (known to be) latency sensitive task. To
+the contrary, latency sensitive tasks should have a higher chance to
+preempt a currently running latency tolerant task.
+
+This task specific distinction is not provided by the current
+implementation and all SCHED_OTHER tasks are handled according to the
+same simple, system-wide and not run-time tunable policy.
+
+
+> C) Existing control paths
+
+Assuming:
+
+ C: CFS task currently running on CPUx
+ W: CFS task waking up on the same CPUx
+
+And considering the overall simplified workflow:
+
+core::try_to_wake_up()
+
+  // 1) Select on which CPU W will run
+  core::select_task_rq()
+    fair::select_task_rq_fair()
+
+  // 2) Enqueue W on the selected CPU
+  core::ttwu_queue()
+    core::ttwu_do_activate()
+      core::activate_task()
+        core::enqueue_task()
+          fair::enqueue_task_fair()
+            fair::enqueue_entity()
+
+              // 3) Set W's vruntime bonus
+              fair::place_entity()
+                se->vruntime = ...
+
+      // 4) Check if C can be preempted by W
+      core::ttwu_do_wakeup()
+        core::check_preempt_curr()
+          fair::check_preempt_curr()
+            fair::check_preempt_wakeup(curr, se)
+              fair::wakeup_preempt_entity(curr, se)
+                vdiff = curr.vruntime - se.vruntime
+                return vdiff > wakeup_gran(se)
+
+We see that W preempts C iff:
+
+   vdiff > wakeup_gran(se)
+
+Since:
+
+enqueue_entity(cfs_rq, se, flags)
+  place_entity(cfs_rq, se, initial=0)
+    thresh = sysctl_sched_latency / (GENTLE_FAIR_SLEEPERS ? 2 : 1)
+    vruntime = cfs_rq->min_vruntime - thresh
+    se->vruntime = max_vruntime(se->vruntime, vruntime)
+
+a waking task's W.vruntime can get a "vruntime bonus" up to:
+ - 1   scheduler latency (w/  GENTLE_FAIR_SLEEPERS)
+ - 1/2 scheduler latency (w/o GENTLE_FAIR_SLEEPERS)
+
+
+> D) Desired behavior
+
+The "vruntime bonus" (thresh) computed in place_entity() should have a
+per-task definition, which defaults to the current implementation.
+
+A bigger vruntime bonus can be configured for latency sensitive tasks.
+A smaller vruntime bonus can be configured for latency tolerant tasks.
+
+TL;DR
+
+The "vruntime bonus" is meant to give sleepers a compensation for the
+service deficit due to them not having (possibly) fully consumed their
+assigned fair CPU quota within the current sched_latency interval, see:
+
+  commit 51e0304ce6e5 ("sched: Implement a gentler fair-sleepers feature")
+
+The scheduler does that based on a conservative assumption: when a task
+sleeps it gives up a portion (P) of its fair CPU bandwidth share in the
+current sched_latency period.
+Willing to be FAIR, i.e. each task gets a FAIR quota of the CPU in each
+sched_latency period, the scheduler wants to give back P to waking
+tasks.
+
+However, striving to minimize overheads and complexity, the CFS
+scheduler does that using a simple heuristic: each task waking up gets a
+bonus, which is capped at one sched_latency period, independently from
+"its nature".
+
+What the scheduler completely disregards is that being completely FAIR
+is not always necessary. Depending on the nature of a task, not all
+tasks require a bonus. To the contrary:
+
+ - a GENTLE_FAIR_SLEEPERS bonus given to a background task could result
+   in preempting a latency sensitive currently running task
+
+ - giving only 1/2 scheduler latency bonus to a latency sensitive task
+   could result in that task being preempted before it completes its
+   current activation.
+
+
+> E) Existing knobs
+
+The SCHED_FEAT(GENTLE_FAIR_SLEEPERS, true) defined vruntime bonus value
+can be considered the current mainline default value.
+
+This means that "all" CFS tasks waking up will get a
+
+   0.5 * sysctl_sched_latency
+
+vruntime bonus wrt the cfs_rq->min_vruntime.
+
+
+> F) Existing knobs limitations
+
+GENTLE_FAIR_SLEEPERS is a system-wide knob and it's not run-time
+tunable on production systems (being a SCHED_DEBUG feature).
+
+Thus, the sched_feature should be removed and replaced by a per-task
+knob.
+
+
+> G) Proportionality Analysis
+
+The value of the vruntime bonus directly affects the chance a task has
+to preempt the currently running task.
+
+Indeed, from the code analysis in C:
+
+  thresh = sysctl_sched_latency / (GENTLE_FAIR_SLEEPERS ? 2 : 1)
+
+is the "wakeup bonus", which is used as:
+
+  vruntime = cfs_rq->min_vruntime - thresh
+  se->vruntime = max_vruntime(se->vruntime, vruntime)
+  vdiff = curr.vruntime - se.vruntime
+
+  preempt condition: vdiff > wakeup_gran(se)
+
+
+> H) Range Analysis
+
+The new per-task knob can cover the range [0..sysctl_sched_latency]
+
+Latency sensitive tasks will get sysctl_sched_latency as bonus.
+Latency tolerant tasks will get 0.
+
+Values lower than the default sysctl_sched_latency/2 will require
+special capabilities (e.g. CAP_SYS_NICE). OTHA, a task can relax
+its wakeup latency requirement by asking for a bonus smaller than the
+default.
+
+Mapping Analysis: check if the range can be mapped into a generic one
+=================
+
+The latency_nice proposal [2] offers a [-20, 19] range which can be
+easily mapped into a vruntime bonus range, e.g. using a simpler linear
+transformation function.
+
+A more elaborated mapping could be defined, based on recomputed
+constants, to provide a relative constant increment.
+
+
+> I) System-Wide tuning
+
+The latency_nice provided knobs should be enough to get the desired
+effect.
+
+In (the remote) case a range wider than the one proposed in [H] should
+be required, perhaps an additional sysctl_sched_latency's multiplier
+knob could be required.
+
+
+> J) Per-Task tuning
+
+The latency_nice provided knobs.
+
+
+> K) Task-Group tuning
+
+For tasks-groups, similarly to what uclamp does, a pair of
+latency_nice_{min,max} clamps should be enough.
+
+The task-specific latency_nice requested value will be restricted by the
+task group's clamps.
+
