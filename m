@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F35C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D783C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74212206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCB32070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943796;
-	bh=YV+1VJ5JYSwSaat+J4HxS7eC7ksTiEVi8F1kPqLe/3s=;
+	s=default; t=1592943804;
+	bh=YafA3EWnVKlPgcnGlE3EnN71/mS7K93tAvScmovO+Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqQGJjSpDfaxj1bt+ES/eV/CUZGfqW3pmqj386PnvzYQLp40HP3sWqjcaa3vMTxvv
-	 oGCyxotlUO1w5g97LR5qyDEX9FKQSsSqhD0PcdMaIVsNY4LxmABoaRaiMrX4GPcTvj
-	 Tntk1P4sglwNatc6lrB0m7IpPSBsNUAOSw2/3ryc=
+	b=FjWv0XxURzhnf+BePAW+et5Ay9+YgG65I+3k6KrVVgkwBxOv9C3N6aqsVwPaGN3Ys
+	 jdq/IuD/gpgVvkkWBfe1iG/3cjn/6NOpMm9kRge/Myr/gnfO68GV+59R6UaT/dkz6t
+	 lT5CnebfLlpn790RHIBzJilUcxtt+AgMK4NkMXqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390273AbgFWUXO (ORCPT
+        id S2390288AbgFWUXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:23:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41256 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:23:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390260AbgFWUXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:23:09 -0400
+        id S2389742AbgFWUXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:23:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA3E20780;
-        Tue, 23 Jun 2020 20:23:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A40E206C3;
+        Tue, 23 Jun 2020 20:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943789;
-        bh=YV+1VJ5JYSwSaat+J4HxS7eC7ksTiEVi8F1kPqLe/3s=;
+        s=default; t=1592943792;
+        bh=YafA3EWnVKlPgcnGlE3EnN71/mS7K93tAvScmovO+Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGSBDhNOzYAFzMzVPWqYidKwwnGF7gISkB9pxRXY16Zttj3mIz6r7Yi/UOerT8PW7
-         OmXffixVEpEW49tviWOgRx8KQ4PMKXJxIdqIJcpslCfIrOzrWjfI/yTt0YYmFma1aw
-         BGIsj45rv4obsHkLYMBCTNdSTEqyW9eVMJBnA60g=
+        b=xjmJkKU4rrd5ZmPvLTYBYJJ715go3BoPQbWWXf8vTShAGxYf4Wbzbq72tWfVEOL8T
+         uH+2BYhWGByafcncd/o084TQbBST9ishMDJH2wbU7QIaMVy7Tr5qRV+X+DNWFWKl1Y
+         Grz6qCmRXYztNIYFPLejlzfWYDS4JrzORzRtyPWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Jun Li <jun.li@nxp.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/314] gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip de-registration
-Date:   Tue, 23 Jun 2020 21:54:06 +0200
-Message-Id: <20200623195341.259273685@linuxfoundation.org>
+Subject: [PATCH 5.4 052/314] usb: gadget: core: sync interrupt before unbind the udc
+Date:   Tue, 23 Jun 2020 21:54:07 +0200
+Message-Id: <20200623195341.306535044@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,75 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-[ Upstream commit 494a94e38dcf62543a32a4424d646ff80b4b28bd ]
+[ Upstream commit 3c73bc52195def14165c3a7d91bdbb33b51725f5 ]
 
-Add missed acpi_gpiochip_free_interrupts() call when unregistering ports.
+The threaded interrupt handler may still be called after the
+usb_gadget_disconnect is called, it causes the structures used
+at interrupt handler was freed before it uses, eg the
+usb_request. This issue usually occurs we remove the udc function
+during the transfer. Below is the example when doing stress
+test for android switch function, the EP0's request is freed
+by .unbind (configfs_composite_unbind -> composite_dev_cleanup),
+but the threaded handler accesses this request during handling
+setup packet request.
 
-While at it, drop extra check to call acpi_gpiochip_request_interrupts().
-There is no need to have an additional check to call
-acpi_gpiochip_request_interrupts(). Even without any interrupts available
-the registered ACPI Event handlers can be useful for debugging purposes.
+In fact, there is no protection between unbind the udc
+and udc interrupt handling, so we have to avoid the interrupt
+handler is occurred or scheduled during the .unbind flow.
 
-Fixes: e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Serge Semin <fancer.lancer@gmail.com>
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
-Link: https://lore.kernel.org/r/20200519131233.59032-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+init: Sending signal 9 to service 'adbd' (pid 18077) process group...
+android_work: did not send uevent (0 0 000000007bec2039)
+libprocessgroup: Successfully killed process cgroup uid 0 pid 18077 in 6ms
+init: Service 'adbd' (pid 18077) received signal 9
+init: Sending signal 9 to service 'adbd' (pid 18077) process group...
+libprocessgroup: Successfully killed process cgroup uid 0 pid 18077 in 0ms
+init: processing action (init.svc.adbd=stopped) from (/init.usb.configfs.rc:14)
+init: Received control message 'start' for 'adbd' from pid: 399 (/vendor/bin/hw/android.hardware.usb@1.
+
+init: starting service 'adbd'...
+read descriptors
+read strings
+Unable to handle kernel read from unreadable memory at virtual address 000000000000002a
+android_work: sent uevent USB_STATE=CONNECTED
+Mem abort info:
+  ESR = 0x96000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000004
+  CM = 0, WnR = 0
+user pgtable: 4k pages, 48-bit VAs, pgdp=00000000e97f1000
+using random self ethernet address
+[000000000000002a] pgd=0000000000000000
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 232 Comm: irq/68-5b110000 Not tainted 5.4.24-06075-g94a6b52b5815 #92
+Hardware name: Freescale i.MX8QXP MEK (DT)
+pstate: 00400085 (nzcv daIf +PAN -UAO)
+using random host ethernet address
+pc : composite_setup+0x5c/0x1730
+lr : android_setup+0xc0/0x148
+sp : ffff80001349bba0
+x29: ffff80001349bba0 x28: ffff00083a50da00
+x27: ffff8000124e6000 x26: ffff800010177950
+x25: 0000000000000040 x24: ffff000834e18010
+x23: 0000000000000000 x22: 0000000000000000
+x21: ffff00083a50da00 x20: ffff00082e75ec40
+x19: 0000000000000000 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000001
+x11: ffff80001180fb58 x10: 0000000000000040
+x9 : ffff8000120fc980 x8 : 0000000000000000
+x7 : ffff00083f98df50 x6 : 0000000000000100
+x5 : 00000307e8978431 x4 : ffff800011386788
+x3 : 0000000000000000 x2 : ffff800012342000
+x1 : 0000000000000000 x0 : ffff800010c6d3a0
+Call trace:
+ composite_setup+0x5c/0x1730
+ android_setup+0xc0/0x148
+ cdns3_ep0_delegate_req+0x64/0x90
+ cdns3_check_ep0_interrupt_proceed+0x384/0x738
+ cdns3_device_thread_irq_handler+0x124/0x6e0
+ cdns3_thread_irq+0x94/0xa0
+ irq_thread_fn+0x30/0xa0
+ irq_thread+0x150/0x248
+ kthread+0xfc/0x128
+ ret_from_fork+0x10/0x18
+Code: 910e8000 f9400693 12001ed7 79400f79 (3940aa61)
+---[ end trace c685db37f8773fba ]---
+Kernel panic - not syncing: Fatal exception
+SMP: stopping secondary CPUs
+Kernel Offset: disabled
+CPU features: 0x0002,20002008
+Memory Limit: none
+Rebooting in 5 seconds..
+
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-dwapb.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/usb/gadget/udc/core.c | 2 ++
+ include/linux/usb/gadget.h    | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 92e127e748134..02cf4c43a4c4c 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -533,26 +533,33 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 		dwapb_configure_irqs(gpio, port, pp);
+diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
+index 51fa614b40794..0e7820158aaa9 100644
+--- a/drivers/usb/gadget/udc/core.c
++++ b/drivers/usb/gadget/udc/core.c
+@@ -1297,6 +1297,8 @@ static void usb_gadget_remove_driver(struct usb_udc *udc)
+ 	kobject_uevent(&udc->dev.kobj, KOBJ_CHANGE);
  
- 	err = gpiochip_add_data(&port->gc, port);
--	if (err)
-+	if (err) {
- 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
- 			port->idx);
--	else
--		port->is_registered = true;
-+		return err;
-+	}
+ 	usb_gadget_disconnect(udc->gadget);
++	if (udc->gadget->irq)
++		synchronize_irq(udc->gadget->irq);
+ 	udc->driver->unbind(udc->gadget);
+ 	usb_gadget_udc_stop(udc);
  
- 	/* Add GPIO-signaled ACPI event support */
--	if (pp->has_irq)
--		acpi_gpiochip_request_interrupts(&port->gc);
-+	acpi_gpiochip_request_interrupts(&port->gc);
+diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+index 124462d65eac4..67f5adc9b8753 100644
+--- a/include/linux/usb/gadget.h
++++ b/include/linux/usb/gadget.h
+@@ -373,6 +373,7 @@ struct usb_gadget_ops {
+  * @connected: True if gadget is connected.
+  * @lpm_capable: If the gadget max_speed is FULL or HIGH, this flag
+  *	indicates that it supports LPM as per the LPM ECN & errata.
++ * @irq: the interrupt number for device controller.
+  *
+  * Gadgets have a mostly-portable "gadget driver" implementing device
+  * functions, handling all usb configurations and interfaces.  Gadget
+@@ -427,6 +428,7 @@ struct usb_gadget {
+ 	unsigned			deactivated:1;
+ 	unsigned			connected:1;
+ 	unsigned			lpm_capable:1;
++	int				irq;
+ };
+ #define work_to_gadget(w)	(container_of((w), struct usb_gadget, work))
  
--	return err;
-+	port->is_registered = true;
-+
-+	return 0;
- }
- 
- static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
- {
- 	unsigned int m;
- 
--	for (m = 0; m < gpio->nr_ports; ++m)
--		if (gpio->ports[m].is_registered)
--			gpiochip_remove(&gpio->ports[m].gc);
-+	for (m = 0; m < gpio->nr_ports; ++m) {
-+		struct dwapb_gpio_port *port = &gpio->ports[m];
-+
-+		if (!port->is_registered)
-+			continue;
-+
-+		acpi_gpiochip_free_interrupts(&port->gc);
-+		gpiochip_remove(&port->gc);
-+	}
- }
- 
- static struct dwapb_platform_data *
 -- 
 2.25.1
 
