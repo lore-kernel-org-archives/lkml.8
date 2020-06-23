@@ -2,139 +2,108 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D283C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37AE82070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D920320702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946239;
-	bh=by/WlVmm+/tWieZc2nJ1fD/zD3sn1BSD5NO82MfLjhg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H2Ewc4KHhmHyQC8ctLQR0o0O9oZ7LQfyocY+N8cOUB2ocBy36n23ke0DJhP3x/HPP
-	 56fuATLsmTZe6FA+vF8fEhPrPwUpEbNL1yWgJi8x+UOKtP8yrLqjqAz96zOmzjS/ZZ
-	 wKlc4rqQPrTQdoPvm2zWZKGsF1T3nRvwK8h1tnoQ=
+	s=default; t=1592946242;
+	bh=li/oRgdLLDIhMxiF7/Lp7mtYZP2mwCtijwdf+7Qnn5g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=Vd5zo3u3EVZS8Waj0CnpPVJCdt2UmXI4+SQf0TZVEq1SPMeqWgZquapWpitSztm7V
+	 lfdq6hD6BEQLeNNkIgac4Y4L0GJ7+u9LzWOyrsmCNDb9D5ktXswZmF3u7fpYXMk1jd
+	 WX9OIvpxsPlI8BNc2aTndDjgbYCLCci1jFR+cnQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391376AbgFWVD5 (ORCPT
+        id S2392413AbgFWVEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33800 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:04:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391941AbgFWUiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:38:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2389281AbgFWVDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:03:51 -0400
+Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8881D2085B;
-        Tue, 23 Jun 2020 20:38:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0EE20663;
+        Tue, 23 Jun 2020 21:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944699;
-        bh=by/WlVmm+/tWieZc2nJ1fD/zD3sn1BSD5NO82MfLjhg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ChV+7UGHJI7GXJ/kPL+KxaIL6Pk+xZIscxeH+xGqalc7YXuNRV8+koVbFaMg9LfHY
-         Y5BawhqTe+TJhOWuR9GZcBaKKbD8+Qvv8yhpywGUmf3a2t6xI1UWSqg8exMxLktR8I
-         /sbDRMyzuhOwYZb+JO2Abnc5Aj+KI02EcrkFE9nI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Raghavendra Rao Ananta <rananta@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/206] tty: hvc: Fix data abort due to race in hvc_open
-Date:   Tue, 23 Jun 2020 21:56:31 +0200
-Message-Id: <20200623195320.062485366@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1592946230;
+        bh=li/oRgdLLDIhMxiF7/Lp7mtYZP2mwCtijwdf+7Qnn5g=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=G2j4A721OYP7lRsAgAZ2dEgJm/gKD9ZGtJpxpdMzlIvttpwekkgi7e7mv1OzfobGr
+         q9OOfDDkm+4g9P+COxHy3lBe85MF9zuVhLsInZfUjpCoE/hGclSsrQjO9WrOS837Do
+         CUY8/Aa4RijfnDYj/Oxt9TOuL3afhElqSw5gXnhI=
+Message-ID: <bdcdd6d10342005a8c773f4ffb882dabf398e5ac.camel@kernel.org>
+Subject: Re: [PATCH 0/2] tracing: Fix config dependency and trigger parser
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 23 Jun 2020 16:03:48 -0500
+In-Reply-To: <159262474473.185015.177609153974879988.stgit@devnote2>
+References: <159262474473.185015.177609153974879988.stgit@devnote2>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raghavendra Rao Ananta <rananta@codeaurora.org>
+Hi Masami,
 
-[ Upstream commit e2bd1dcbe1aa34ff5570b3427c530e4332ecf0fe ]
+On Sat, 2020-06-20 at 12:45 +0900, Masami Hiramatsu wrote:
+> Hi,
+> 
+> These are some fixes which I found recentry on ftrace.
+> 
+>  - Since the boot-time tracing synthetic event feature is decoupled
+>    from trigger recenty, it should use CONFIG_SYNTH_EVENT.
 
-Potentially, hvc_open() can be called in parallel when two tasks calls
-open() on /dev/hvcX. In such a scenario, if the hp->ops->notifier_add()
-callback in the function fails, where it sets the tty->driver_data to
-NULL, the parallel hvc_open() can see this NULL and cause a memory abort.
-Hence, serialize hvc_open and check if tty->private_data is NULL before
-proceeding ahead.
+Oops, yeah, I missed this one in the update, thanks for finding it.
 
-The issue can be easily reproduced by launching two tasks simultaneously
-that does nothing but open() and close() on /dev/hvcX.
-For example:
-$ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
+>  - The parser of event trigger seems rejecting some redundant
+>    spaces. But it is hard users to find the wrong point. Such
+>    spaces should be accepted.
+> 
 
-Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
-Link: https://lore.kernel.org/r/20200428032601.22127-1-rananta@codeaurora.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Agreed, your patch makes things much better, thanks.
 
-diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
-index cdcc64ea2554f..f8e43a6faea9b 100644
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
-  */
- static DEFINE_MUTEX(hvc_structs_mutex);
- 
-+/* Mutex to serialize hvc_open */
-+static DEFINE_MUTEX(hvc_open_mutex);
- /*
-  * This value is used to assign a tty->index value to a hvc_struct based
-  * upon order of exposure via hvc_probe(), when we can not match it to
-@@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver *driver, struct tty_struct *tty)
-  */
- static int hvc_open(struct tty_struct *tty, struct file * filp)
- {
--	struct hvc_struct *hp = tty->driver_data;
-+	struct hvc_struct *hp;
- 	unsigned long flags;
- 	int rc = 0;
- 
-+	mutex_lock(&hvc_open_mutex);
-+
-+	hp = tty->driver_data;
-+	if (!hp) {
-+		rc = -EIO;
-+		goto out;
-+	}
-+
- 	spin_lock_irqsave(&hp->port.lock, flags);
- 	/* Check and then increment for fast path open. */
- 	if (hp->port.count++ > 0) {
- 		spin_unlock_irqrestore(&hp->port.lock, flags);
- 		hvc_kick();
--		return 0;
-+		goto out;
- 	} /* else count == 0 */
- 	spin_unlock_irqrestore(&hp->port.lock, flags);
- 
-@@ -383,6 +393,8 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
- 	/* Force wakeup of the polling thread */
- 	hvc_kick();
- 
-+out:
-+	mutex_unlock(&hvc_open_mutex);
- 	return rc;
- }
- 
--- 
-2.25.1
+You can add my reviewed-by for both patches.
 
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
 
+Thanks,
+
+Tom
+
+> BTW, I also found the trigger parser accepts some inputs which
+> may not correctly formatted, e.g.
+> 
+>  # echo "traceon 1" > events/ftrace/print/trigger
+> 
+> (from the document, it must be "traceon:1")
+> But I think this does not decrease the usability.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (2):
+>       tracing/boot: Fix config dependency for synthedic event
+>       tracing: Fix event trigger to accept redundant spaces
+> 
+> 
+>  kernel/trace/trace_boot.c           |    2 +-
+>  kernel/trace/trace_events_trigger.c |   21 +++++++++++++++++++--
+>  2 files changed, 20 insertions(+), 3 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
 
