@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88690C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D308C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B74B2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756072064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942877;
-	bh=4j1JP4plDK8RFUqLRz601YOa8jIR0m3WIxNF4zfQGLg=;
+	s=default; t=1592942880;
+	bh=X61rj44CRvPjMIclrt+UCbO0Ch259GU8VWfsCnwJ99c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tiBoVlqWfV0EiHmXyqGBOzK550e+72+ueOAKamLf+w42fcBLFfnkgdjOURTQHdYf5
-	 0t85GWC1JKlk/j2oSVshsI1677at576iJUHRlsX3F8I3wS/UzSdWDU+GpmBTOXu012
-	 voErUY/AOVkzWMWmTxBV2ibafznvZo6sLyejRnfs=
+	b=JV6VX6MuVUOfBIBrUAdweX+wOQ31z3k465zHK/XmhuzEN4x2rybyC3M8wrGCnrLz9
+	 yZDWSAQVWNLaEIbxeVqDWPQlgHhUVK/2vsvbCJ+WIkEX67k71nZupsBt4DsorMGBkv
+	 QnAJv7TmdXNh9J1YWFCBfVIVzn3xBCUCK1Wgysrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388680AbgFWUHz (ORCPT
+        id S2388687AbgFWUH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:07:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388098AbgFWUHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:07:50 -0400
+        id S2388678AbgFWUHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765F32064B;
-        Tue, 23 Jun 2020 20:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68CE12082F;
+        Tue, 23 Jun 2020 20:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942869;
-        bh=4j1JP4plDK8RFUqLRz601YOa8jIR0m3WIxNF4zfQGLg=;
+        s=default; t=1592942874;
+        bh=X61rj44CRvPjMIclrt+UCbO0Ch259GU8VWfsCnwJ99c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aSpZY0Xiab8SeTlqQMFVHjuSHCr8XzOgSjxJYpWkLr8aPZCaIiRj7ApOK1azZVk0I
-         YShvd7jXTJ24isiVx0shdfzTQPociy6JlQvKjTv+ujUFI2HCD7JprToitktOYf8B+9
-         hp7tUbJ0a7o5OVwFzrhRn5RzWf0GF7+Xd7ThG0xo=
+        b=oS1FVFbKruL9eX2W9sV05ToKmGHznyV9z1gwoKPx1fTkH5I9zc1q5/HKd/rAJwfJd
+         kGeI8qjZXA91sr0lfX0AgL9Xa2HUecwbB+OPrTgXqb7LfCowJZ3JTEEtT1JyXJnwfj
+         hqG6APRvfwKaCUm9Vj4GpkUcx+dONbPaW0NGsvC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 166/477] usb: dwc3: gadget: Properly handle failed kick_transfer
-Date:   Tue, 23 Jun 2020 21:52:43 +0200
-Message-Id: <20200623195415.432186897@linuxfoundation.org>
+Subject: [PATCH 5.7 138/477] s390/qdio: consistently restore the IRQ handler
+Date:   Tue, 23 Jun 2020 21:52:15 +0200
+Message-Id: <20200623195414.129419213@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,66 +61,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 8d99087c2db863c5fa3a4a1f3cb82b3a493705ca ]
+[ Upstream commit 7b942b4be971d49cb185ce4690d7fbf94636e88a ]
 
-If dwc3 fails to issue START_TRANSFER/UPDATE_TRANSFER command, then we
-should properly end an active transfer and give back all the started
-requests. However if it's for an isoc endpoint, the failure maybe due to
-bus-expiry status. In this case, don't give back the requests and wait
-for the next retry.
+For rolling back after an error, qdio_establish() calls qdio_shutdown().
+If the error occurs early enough, then the qdio_irq's state still is
+QDIO_IRQ_STATE_INACTIVE and qdio_shutdown() does nothing.
 
-Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+But at _any_ point where qdio_establish() bails out in this way,
+qdio_setup_irq() will have already replaced the IRQ handler. This then
+won't be restored after an early error, and the device can end up being
+returned to the device driver with qdio's IRQ handler still installed.
+
+Slightly reorder qdio_setup_irq() so we can be 100% sure that the IRQ
+handler was replaced. Then fix the bug in qdio_establish() by calling a
+helper that rolls back only the IRQ handler modification.
+
+Also use the new helper in qdio_shutdown() to keep things in sync, and
+slightly clean up the locking while doing so.
+This makes minor semantical changes, but holding setup_mutex gives us
+sufficient leeway to eg. pull qdio_shutdown_thinint() outside of the
+ccwdev lock's scope.
+
+Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/s390/cio/qdio.h       |  1 +
+ drivers/s390/cio/qdio_main.c  | 18 +++++-------------
+ drivers/s390/cio/qdio_setup.c | 20 ++++++++++++++++----
+ 3 files changed, 22 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index ab6562c5b9279..de3b92680935a 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1220,6 +1220,8 @@ static void dwc3_prepare_trbs(struct dwc3_ep *dep)
+diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
+index b8453b5946794..3cf223bc1d5f4 100644
+--- a/drivers/s390/cio/qdio.h
++++ b/drivers/s390/cio/qdio.h
+@@ -389,6 +389,7 @@ int qdio_setup_get_ssqd(struct qdio_irq *irq_ptr,
+ 			struct subchannel_id *schid,
+ 			struct qdio_ssqd_desc *data);
+ int qdio_setup_irq(struct qdio_irq *irq_ptr, struct qdio_initialize *init_data);
++void qdio_shutdown_irq(struct qdio_irq *irq);
+ void qdio_print_subchannel_info(struct qdio_irq *irq_ptr);
+ void qdio_release_memory(struct qdio_irq *irq_ptr);
+ int qdio_setup_init(void);
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index bcc3ab14e72df..da5a111380201 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -1154,35 +1154,27 @@ int qdio_shutdown(struct ccw_device *cdev, int how)
+ 
+ 	/* cleanup subchannel */
+ 	spin_lock_irq(get_ccwdev_lock(cdev));
+-
++	qdio_set_state(irq_ptr, QDIO_IRQ_STATE_CLEANUP);
+ 	if (how & QDIO_FLAG_CLEANUP_USING_CLEAR)
+ 		rc = ccw_device_clear(cdev, QDIO_DOING_CLEANUP);
+ 	else
+ 		/* default behaviour is halt */
+ 		rc = ccw_device_halt(cdev, QDIO_DOING_CLEANUP);
++	spin_unlock_irq(get_ccwdev_lock(cdev));
+ 	if (rc) {
+ 		DBF_ERROR("%4x SHUTD ERR", irq_ptr->schid.sch_no);
+ 		DBF_ERROR("rc:%4d", rc);
+ 		goto no_cleanup;
  	}
+ 
+-	qdio_set_state(irq_ptr, QDIO_IRQ_STATE_CLEANUP);
+-	spin_unlock_irq(get_ccwdev_lock(cdev));
+ 	wait_event_interruptible_timeout(cdev->private->wait_q,
+ 		irq_ptr->state == QDIO_IRQ_STATE_INACTIVE ||
+ 		irq_ptr->state == QDIO_IRQ_STATE_ERR,
+ 		10 * HZ);
+-	spin_lock_irq(get_ccwdev_lock(cdev));
+ 
+ no_cleanup:
+ 	qdio_shutdown_thinint(irq_ptr);
+-
+-	/* restore interrupt handler */
+-	if ((void *)cdev->handler == (void *)qdio_int_handler) {
+-		cdev->handler = irq_ptr->orig_handler;
+-		cdev->private->intparm = 0;
+-	}
+-	spin_unlock_irq(get_ccwdev_lock(cdev));
++	qdio_shutdown_irq(irq_ptr);
+ 
+ 	qdio_set_state(irq_ptr, QDIO_IRQ_STATE_INACTIVE);
+ 	mutex_unlock(&irq_ptr->setup_mutex);
+@@ -1352,8 +1344,8 @@ int qdio_establish(struct ccw_device *cdev,
+ 
+ 	rc = qdio_establish_thinint(irq_ptr);
+ 	if (rc) {
++		qdio_shutdown_irq(irq_ptr);
+ 		mutex_unlock(&irq_ptr->setup_mutex);
+-		qdio_shutdown(cdev, QDIO_FLAG_CLEANUP_USING_CLEAR);
+ 		return rc;
+ 	}
+ 
+@@ -1371,8 +1363,8 @@ int qdio_establish(struct ccw_device *cdev,
+ 	if (rc) {
+ 		DBF_ERROR("%4x est IO ERR", irq_ptr->schid.sch_no);
+ 		DBF_ERROR("rc:%4x", rc);
++		qdio_shutdown_irq(irq_ptr);
+ 		mutex_unlock(&irq_ptr->setup_mutex);
+-		qdio_shutdown(cdev, QDIO_FLAG_CLEANUP_USING_CLEAR);
+ 		return rc;
+ 	}
+ 
+diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
+index 3083edd61f0c9..d12f094db056e 100644
+--- a/drivers/s390/cio/qdio_setup.c
++++ b/drivers/s390/cio/qdio_setup.c
+@@ -491,6 +491,12 @@ int qdio_setup_irq(struct qdio_irq *irq_ptr, struct qdio_initialize *init_data)
+ 
+ 	/* qdr, qib, sls, slsbs, slibs, sbales are filled now */
+ 
++	/* set our IRQ handler */
++	spin_lock_irq(get_ccwdev_lock(cdev));
++	irq_ptr->orig_handler = cdev->handler;
++	cdev->handler = qdio_int_handler;
++	spin_unlock_irq(get_ccwdev_lock(cdev));
++
+ 	/* get qdio commands */
+ 	ciw = ccw_device_get_ciw(cdev, CIW_TYPE_EQUEUE);
+ 	if (!ciw) {
+@@ -506,12 +512,18 @@ int qdio_setup_irq(struct qdio_irq *irq_ptr, struct qdio_initialize *init_data)
+ 	}
+ 	irq_ptr->aqueue = *ciw;
+ 
+-	/* set new interrupt handler */
++	return 0;
++}
++
++void qdio_shutdown_irq(struct qdio_irq *irq)
++{
++	struct ccw_device *cdev = irq->cdev;
++
++	/* restore IRQ handler */
+ 	spin_lock_irq(get_ccwdev_lock(cdev));
+-	irq_ptr->orig_handler = cdev->handler;
+-	cdev->handler = qdio_int_handler;
++	cdev->handler = irq->orig_handler;
++	cdev->private->intparm = 0;
+ 	spin_unlock_irq(get_ccwdev_lock(cdev));
+-	return 0;
  }
  
-+static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep);
-+
- static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
- {
- 	struct dwc3_gadget_ep_cmd_params params;
-@@ -1259,14 +1261,20 @@ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
- 
- 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
- 	if (ret < 0) {
--		/*
--		 * FIXME we need to iterate over the list of requests
--		 * here and stop, unmap, free and del each of the linked
--		 * requests instead of what we do now.
--		 */
--		if (req->trb)
--			memset(req->trb, 0, sizeof(struct dwc3_trb));
--		dwc3_gadget_del_and_unmap_request(dep, req, ret);
-+		struct dwc3_request *tmp;
-+
-+		if (ret == -EAGAIN)
-+			return ret;
-+
-+		dwc3_stop_active_transfer(dep, true, true);
-+
-+		list_for_each_entry_safe(req, tmp, &dep->started_list, list)
-+			dwc3_gadget_move_cancelled_request(req);
-+
-+		/* If ep isn't started, then there's no end transfer pending */
-+		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING))
-+			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
-+
- 		return ret;
- 	}
- 
+ void qdio_print_subchannel_info(struct qdio_irq *irq_ptr)
 -- 
 2.25.1
 
