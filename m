@@ -2,166 +2,149 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80660214F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944478;
-	bh=4tyMlFgs0n6T8h33O2zuVSoue6oR5PGOWFBf8TqmLko=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DrK1p3ImyTrO1afdlLOsZLZRV6T+4sPShg2oCgf2M7Ird85oBLCMYeKLtuwhMXQou
-	 TIqWCZMEWz0u/RBcL5nnVGvE4w7t5uOQdLeWHk+1zxQlk0hVYPVjfkbWT2qnECkMh5
-	 vx2n4jHzM99XktjIK4n4Uoe+wpJkMSFEaDiDxpbw=
+	by mail.kernel.org (Postfix) with ESMTP id 522B22072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jS7aQ3o7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391561AbgFWUeg (ORCPT
+        id S2389223AbgFWUej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:34:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391540AbgFWUe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BBA7206C3;
-        Tue, 23 Jun 2020 20:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944467;
-        bh=4tyMlFgs0n6T8h33O2zuVSoue6oR5PGOWFBf8TqmLko=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwH3f2ojNPMnQi+PfFmKBdz1OcO+v+LpFd9zI9q+9lo0rhM3u8Ms175arlkpPa2JL
-         RXhaeOdM4cf5OL2aRP2ynKEPssZlIohkyBV4D82E6wlB4AKEeU0d4o1mT1ESLip0XH
-         4YSN0FEu7yYgkb806e84GqZJUWKBP66vBQoA5ZMk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>
-Subject: [PATCH 5.4 298/314] drm/msm: Check for powered down HW in the devfreq callbacks
-Date:   Tue, 23 Jun 2020 21:58:13 +0200
-Message-Id: <20200623195353.209141599@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
-References: <20200623195338.770401005@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 16:34:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391546AbgFWUeb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:31 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2272C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:34:31 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id i25so25528713iog.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:34:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rUiCHEG4ixMC5q0G/sMhdsDeiOjcEJ6AH6URjseTZ2I=;
+        b=jS7aQ3o7RZ0sGf7Y6qNQMZ73+JgsgYaV6djG8um9Xh0EJx3rlZHQq9i1WM8uSYY7L7
+         3UuWr3RTyQQALhaPmjJFrCRQWjiA4oyuIkj4MrE8gCT+yjWOo4+QFz6XBPeWMRkjR0B6
+         S44OQf0pHhD2hYe/8iFO/qAepNbPD7AZjGmUFicmouMAuAB2eZPuMG0B5qTmXtU88viJ
+         d7nXJ1B8DACEohbJSj4vQuwC1qEnZH9y84RQSEguVuQw6/GIJ169SJKIppfkb4QCpRFT
+         fOLmxWuc5o4LyfCm3z6PgWlob05vqqzyCsxClnr3yIx+iOUf2zUAN9kR3ZTBtC+DN3lW
+         MGzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rUiCHEG4ixMC5q0G/sMhdsDeiOjcEJ6AH6URjseTZ2I=;
+        b=F1rgPxP8boZ5cZrtybVNjXhFO8OnELDeZxpj8FVvb+XIWYVclamIcfJwHK7uSOmj3O
+         P+uB0RYULJbjcitEFp3FbZ0+PsUIvwgAP9QBQQCkrC7DQyXsQYDnwbdMsXNEly+Dhcyk
+         Tv/8Gt1qebgAhv0/0UFy7E8+VRMS5t0mB/PdOrDIXAIf7B6551R25CFFrfiiHDsyGov3
+         MkIXN9uFYDfpa2Sgse4sKO9oKxSMPwh8jJyaTRcpOENbtkZCY2wL7Qb8ZB/qFIkP/VLh
+         zz49QXuxluM0JPCkXJqN+mCPvhO86N+btBYvme71d2RUE94i6je5ewYfJP62D0N8Bd2d
+         h8pg==
+X-Gm-Message-State: AOAM533jpcGdkozJRGOtRR2iujOidT7427QJUtAN1x1c4foNxJ3e2hlh
+        yRWeuzEuo6sALjjpLYRxMQyQj9H0hbEUKLRBsPxbCw==
+X-Google-Smtp-Source: ABdhPJwfm8XDqnBkXmZM+wEVnYTzuqs80hrvV6imIFZdo26vR5Av0UBgP+Vt1OTBs2oIXFx+rhbDdEZ6diDAEaWeESA=
+X-Received: by 2002:a05:6638:979:: with SMTP id o25mr24234722jaj.24.1592944471021;
+ Tue, 23 Jun 2020 13:34:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200623063530.81917-1-like.xu@linux.intel.com>
+ <20200623182910.GA24107@linux.intel.com> <CALMp9eQPA40FWBEOiQ8T5JX2fv+uEfU_x6js8WhAguQ8TL6frA@mail.gmail.com>
+ <20200623190504.GC24107@linux.intel.com>
+In-Reply-To: <20200623190504.GC24107@linux.intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 23 Jun 2020 13:34:19 -0700
+Message-ID: <CALMp9eTYKQ3LrWKu32mJKPzkWMcN5tGSFmj352TPCSrSp7jGxw@mail.gmail.com>
+Subject: Re: [PATCH] KVM: X86: Emulate APERF/MPERF to report actual VCPU frequency
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, wei.huang2@amd.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Li RongQing <lirongqing@baidu.com>,
+        Chai Wen <chaiwen@baidu.com>, Jia Lina <jialina01@baidu.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+On Tue, Jun 23, 2020 at 12:05 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Tue, Jun 23, 2020 at 11:39:16AM -0700, Jim Mattson wrote:
+> > On Tue, Jun 23, 2020 at 11:29 AM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > >
+> > > On Tue, Jun 23, 2020 at 02:35:30PM +0800, Like Xu wrote:
+> > > > The aperf/mperf are used to report current CPU frequency after 7d5905dc14a
+> > > > "x86 / CPU: Always show current CPU frequency in /proc/cpuinfo". But guest
+> > > > kernel always reports a fixed VCPU frequency in the /proc/cpuinfo, which
+> > > > may confuse users especially when turbo is enabled on the host.
+> > > >
+> > > > Emulate guest APERF/MPERF capability based their values on the host.
+> > > >
+> > > > Co-developed-by: Li RongQing <lirongqing@baidu.com>
+> > > > Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> > > > Reviewed-by: Chai Wen <chaiwen@baidu.com>
+> > > > Reviewed-by: Jia Lina <jialina01@baidu.com>
+> > > > Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> > > > ---
+> > >
+> > > ...
+> > >
+> > > > @@ -8312,7 +8376,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+> > > >               dm_request_for_irq_injection(vcpu) &&
+> > > >               kvm_cpu_accept_dm_intr(vcpu);
+> > > >       fastpath_t exit_fastpath;
+> > > > -
+> > > > +     u64 enter_mperf = 0, enter_aperf = 0, exit_mperf = 0, exit_aperf = 0;
+> > > >       bool req_immediate_exit = false;
+> > > >
+> > > >       if (kvm_request_pending(vcpu)) {
+> > > > @@ -8516,8 +8580,17 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+> > > >               vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
+> > > >       }
+> > > >
+> > > > +     if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap))
+> > > > +             get_host_amperf(&enter_mperf, &enter_aperf);
+> > > > +
+> > > >       exit_fastpath = kvm_x86_ops.run(vcpu);
+> > > >
+> > > > +     if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap)) {
+> > > > +             get_host_amperf(&exit_mperf, &exit_aperf);
+> > > > +             vcpu_update_amperf(vcpu, get_amperf_delta(enter_aperf, exit_aperf),
+> > > > +                     get_amperf_delta(enter_mperf, exit_mperf));
+> > > > +     }
+> > > > +
+> > >
+> > > Is there an alternative approach that doesn't require 4 RDMSRs on every VMX
+> > > round trip?  That's literally more expensive than VM-Enter + VM-Exit
+> > > combined.
+> > >
+> > > E.g. what about adding KVM_X86_DISABLE_EXITS_APERF_MPERF and exposing the
+> > > MSRs for read when that capability is enabled?
+> >
+> > When would you load the hardware MSRs with the guest/host values?
+>
+> Ugh, I was thinking the MSRs were read-only.
 
-commit eadf79286a4badebc95af7061530bdb50a7e6f38 upstream.
+EVen if they were read-only, they should power on to zero, and they
+will most likely not be zero when a guest powers on.
 
-Writing to the devfreq sysfs nodes while the GPU is powered down can
-result in a system crash (on a5xx) or a nasty GMU error (on a6xx):
+> Doesn't this also interact with TSC scaling?
 
- $ /sys/class/devfreq/5000000.gpu# echo 500000000 > min_freq
-  [  104.841625] platform 506a000.gmu: [drm:a6xx_gmu_set_oob]
-	*ERROR* Timeout waiting for GMU OOB set GPU_DCVS: 0x0
-
-Despite the fact that we carefully try to suspend the devfreq device when
-the hardware is powered down there are lots of holes in the governors that
-don't check for the suspend state and blindly call into the devfreq
-callbacks that end up triggering hardware reads in the GPU driver.
-
-Call pm_runtime_get_if_in_use() in the gpu_busy() and gpu_set_freq()
-callbacks to skip the hardware access if it isn't active.
-
-v3: Only check pm_runtime_get_if_in_use() for == 0 per Eric Anholt
-v2: Use pm_runtime_get_if_in_use() per Eric Anholt
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c |    6 ++++++
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c |    8 ++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c |    7 +++++++
- 3 files changed, 21 insertions(+)
-
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -1359,6 +1359,10 @@ static unsigned long a5xx_gpu_busy(struc
- {
- 	u64 busy_cycles, busy_time;
- 
-+	/* Only read the gpu busy if the hardware is already active */
-+	if (pm_runtime_get_if_in_use(&gpu->pdev->dev) == 0)
-+		return 0;
-+
- 	busy_cycles = gpu_read64(gpu, REG_A5XX_RBBM_PERFCTR_RBBM_0_LO,
- 			REG_A5XX_RBBM_PERFCTR_RBBM_0_HI);
- 
-@@ -1367,6 +1371,8 @@ static unsigned long a5xx_gpu_busy(struc
- 
- 	gpu->devfreq.busy_cycles = busy_cycles;
- 
-+	pm_runtime_put(&gpu->pdev->dev);
-+
- 	if (WARN_ON(busy_time > ~0LU))
- 		return ~0LU;
- 
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -107,6 +107,13 @@ static void __a6xx_gmu_set_freq(struct a
- 	struct msm_gpu *gpu = &adreno_gpu->base;
- 	int ret;
- 
-+	/*
-+	 * This can get called from devfreq while the hardware is idle. Don't
-+	 * bring up the power if it isn't already active
-+	 */
-+	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
-+		return;
-+
- 	gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
- 
- 	gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
-@@ -133,6 +140,7 @@ static void __a6xx_gmu_set_freq(struct a
- 	 * for now leave it at max so that the performance is nominal.
- 	 */
- 	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-+	pm_runtime_put(gmu->dev);
- }
- 
- void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -803,6 +803,11 @@ static unsigned long a6xx_gpu_busy(struc
- 	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
- 	u64 busy_cycles, busy_time;
- 
-+
-+	/* Only read the gpu busy if the hardware is already active */
-+	if (pm_runtime_get_if_in_use(a6xx_gpu->gmu.dev) == 0)
-+		return 0;
-+
- 	busy_cycles = gmu_read64(&a6xx_gpu->gmu,
- 			REG_A6XX_GMU_CX_GMU_POWER_COUNTER_XOCLK_0_L,
- 			REG_A6XX_GMU_CX_GMU_POWER_COUNTER_XOCLK_0_H);
-@@ -812,6 +817,8 @@ static unsigned long a6xx_gpu_busy(struc
- 
- 	gpu->devfreq.busy_cycles = busy_cycles;
- 
-+	pm_runtime_put(a6xx_gpu->gmu.dev);
-+
- 	if (WARN_ON(busy_time > ~0LU))
- 		return ~0LU;
- 
-
-
+Yes, it should!
