@@ -2,56 +2,79 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BECC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA23FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761A520675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54C720675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7HHrTI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731879AbgFWBVg (ORCPT
+        id S1731916AbgFWBVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:21:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46212 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731572AbgFWBVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:21:36 -0400
-IronPort-SDR: IbRy4fJK4+YNZ70Y9w7GpQ6wQpsHZDZlGMCAdMRWxMxX1qn7faro/jFlaQ/fMYyqf6o/PwyPhC
- uU/Qr4L5jIqA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142981585"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="142981585"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 18:21:33 -0700
-IronPort-SDR: NJCoHCZ+AMJML+u+hGRiDYyfdvwTNoPe1ZJ4e13d6brq6k3Yk1liOi0KKov6DaPssxFSQpxlwQ
- nwwB8i83hJQQ==
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="452039604"
-Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 18:21:30 -0700
-Subject: Re: [PATCH] KVM: VMX: Stop context switching MSR_IA32_UMWAIT_CONTROL
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jingqi Liu <jingqi.liu@intel.com>,
-        Tao Xu <tao3.xu@intel.com>
-References: <20200623005135.10414-1-sean.j.christopherson@intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <7e840f1c-d8e2-3374-5009-f2ab41a87386@intel.com>
-Date:   Tue, 23 Jun 2020 09:21:28 +0800
+        Mon, 22 Jun 2020 21:21:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731898AbgFWBVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 21:21:42 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE86EC061573;
+        Mon, 22 Jun 2020 18:21:41 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id n24so21453730lji.10;
+        Mon, 22 Jun 2020 18:21:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=F+RvqEz6PG/X+CuXMBwrvKY9rrg/o+DXQrz2YG0godc=;
+        b=G7HHrTI9fPnjkyBjlhBAlYh3R/lTyai5eZRt1sIWWTU3Y2h+ozMOd94I+5aC4yiLVu
+         zK2wfAj7UkBfFXGwpqVyuw1Huy/AsrQCFd1dpZaY1dzuZvHnWl46lfVsNy2yJufcP9cp
+         37lzbzNkq6NtIpnBDpFW2FNN+IA9hrxg9pjL+uLeb1/SEOoH3SXpBUfdbKAfVZx84bhn
+         eCpi1VNCvkl82CfIzU6j2q8I8yesPLW0fb6vehW73JLckcRLGI7V/+c7wMXkrmho1wWP
+         r3xER19+4wKPEkl0B+iYLsSpkSXG+22GGx5mJsnGerWmWg+17n32PlkfDmMm/D5ihYwN
+         9v8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=F+RvqEz6PG/X+CuXMBwrvKY9rrg/o+DXQrz2YG0godc=;
+        b=XX+RJhtrzFdDeJ/ScWyB+Oh1cWieY5NNN24KU549qwSfSa+BxwVsCgxKO8oK+9ozPe
+         Xxj5dpdK9MicVNZQU1lN3E2SQLSYKb5uAu66G9t+mQxjs0EKWPNFXKcbf+Nigzz/VyWG
+         /DBFgaFHIbU0OqdNVdFSw7ZKAYgyvclxLx3Myiw/i8hTXJcChGyrZQ/21PhsfOav7VuX
+         Semz/UBwl6FGhIU+HhLlZA4zRDQ00FsQKTapzmMwHaORg0e1Hv+YoQYlTmMkW2piOdwp
+         rybxOGdCERS7xXj1z8w6/69iVryJYzs+gdwZqCzJcHH5Bu4FLBCT96taU6l6eXXEhtIQ
+         a7Fg==
+X-Gm-Message-State: AOAM531qYEsP1XNa86+LeustqjDQteC5U+JOb34LCqQ6qBXQ9qVJ2dhC
+        K2yVo0IueC0Bncs5EabpRDGlv2JGWdU=
+X-Google-Smtp-Source: ABdhPJxEkZKfCXZNxGovVdsdLGGCiUn3lOCAIEVP6qJZiadlOHDLrbw/GdTXxmtsOEmPZLmWvLagAQ==
+X-Received: by 2002:a2e:910c:: with SMTP id m12mr10356326ljg.332.1592875299285;
+        Mon, 22 Jun 2020 18:21:39 -0700 (PDT)
+Received: from [192.168.10.34] ([178.150.133.249])
+        by smtp.gmail.com with ESMTPSA id l16sm3795745lfg.2.2020.06.22.18.21.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 18:21:38 -0700 (PDT)
+Subject: Re: [PATCH] isofs: fix High Sierra dirent flag accesses
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Egor Chelak <egor.chelak@gmail.com>
+References: <20200621040817.3388-1-egor.chelak@gmail.com>
+ <20200622212245.GC21350@casper.infradead.org>
+From:   Egor Chelak <egor.chelak@gmail.com>
+Message-ID: <71f6cef7-f392-e1ba-1e79-2b767d2cff15@gmail.com>
+Date:   Tue, 23 Jun 2020 04:21:17 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200623005135.10414-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200622212245.GC21350@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,40 +82,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/2020 8:51 AM, Sean Christopherson wrote:
-> Remove support for context switching between the guest's and host's
-> desired UMWAIT_CONTROL.  Propagating the guest's value to hardware isn't
-> required for correct functionality, e.g. KVM intercepts reads and writes
-> to the MSR, and the latency effects of the settings controlled by the
-> MSR are not architecturally visible.
-> 
-> As a general rule, KVM should not allow the guest to control power
-> management settings unless explicitly enabled by userspace, e.g. see
-> KVM_CAP_X86_DISABLE_EXITS.  E.g. Intel's SDM explicitly states that C0.2
-> can improve the performance of SMT siblings.  A devious guest could
-> disable C0.2 so as to improve the performance of their workloads at the
-> detriment to workloads running in the host or on other VMs.
-> 
-> Wholesale removal of UMWAIT_CONTROL context switching also fixes a race
-> condition where updates from the host may cause KVM to enter the guest
-> with the incorrect value.  Because updates are are propagated to all
-> CPUs via IPI (SMP function callback), the value in hardware may be
-> stale with respect to the cached value and KVM could enter the guest
-> with the wrong value in hardware.  As above, the guest can't observe the
-> bad value, but it's a weird and confusing wart in the implementation.
-> 
-> Removal also fixes the unnecessary usage of VMX's atomic load/store MSR
-> lists.  Using the lists is only necessary for MSRs that are required for
-> correct functionality immediately upon VM-Enter/VM-Exit, e.g. EFER on
-> old hardware, or for MSRs that need to-the-uop precision, e.g. perf
-> related MSRs.  For UMWAIT_CONTROL, the effects are only visible in the
-> kernel via TPAUSE/delay(), and KVM doesn't do any form of delay in
-> vcpu_vmx_run(). 
+On 6/23/2020 12:22 AM, Matthew Wilcox wrote:
+> It's been about 22 years since I contributed the patch which added
+> support for the Acorn extensions ;-)  But I'm pretty sure that it's not
+> possible to have an Acorn CD-ROM that is also an HSF CD-ROM.  That is,
+> all Acorn formatted CD-ROMs are ISO-9660 compatible.  So I think this
+> chunk of the patch is not required.
 
->Using the atomic lists is undesirable as they are more
-> expensive than direct RDMSR/WRMSR.
+I couldn't find any info on Acorn extensions online, so I wasn't sure if
+they were mutually exclusive or not, and fixed it there too, just to be
+safe. Still, even though it won't be needed in practice, I think it's
+better to access the flags in the same way everywhere. Having the same
+field accessed differently in different places raises the question "why
+it's done differently here?". If we go that way, at the very least there
+should be an explanatory comment saying HSF+Acorn is an impossible
+combination, and perhaps some logic to prevent HSF discs from mounting
+with -o map=acorn. Just leaving it be doesn't seem like a clean
+solution.
 
-Do you mean the extra handling of atomic list facility in kvm? Or just 
-mean vm-exit/-entry MSR-load/save in VMX hardware is expensive than 
-direct RDMSR/WRMSR instruction?
-
+On 6/23/2020 12:31 AM, Matthew Wilcox wrote:
+> Also, ew.  Why on earth do we do 'de->flags[-sbi->s_high_sierra]'?
+> I'm surprised we don't have any tools that warn about references outside
+> an array.  I would do this as ...
+> 
+> static inline u8 de_flags(struct isofs_sb_info *sbi,
+> 		struct iso_directory_record *de)
+> {
+> 	if (sbi->s_high_sierra)
+> 		return de->date[6];
+> 	return de->flags;
+> }
+I would do something like that, but for this patch I'm just trying to do
+a simple bugfix. The isofs code definitely needs a clean up, and perhaps
+I'll do it in a future patch. I haven't submitted a patch before, so I
+want to start with something simple and uncontroversial, while I learn
+the process. :-)
