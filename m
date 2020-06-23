@@ -2,176 +2,116 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B592CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDDEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B690207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A3B207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dodDBLcl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pNUPDEbs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733181AbgFWSQ4 (ORCPT
+        id S1733152AbgFWSUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33238 "EHLO
+        Tue, 23 Jun 2020 14:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbgFWSQz (ORCPT
+        with ESMTP id S1732913AbgFWSUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:16:55 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3FCC061573;
-        Tue, 23 Jun 2020 11:16:55 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id q198so11881385qka.2;
-        Tue, 23 Jun 2020 11:16:55 -0700 (PDT)
+        Tue, 23 Jun 2020 14:20:43 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70BBC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:20:42 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id c16so9742949ioi.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mldfnWKkii9NqHOu/tXDKOQ3f+s/hvhqqjnpq5hhPWY=;
-        b=dodDBLcldmPsxJt8X89WGwJOvoTtN0MpO3DcU1SWAop3JWBYfEMfQXH8Q8v5FQI21y
-         M3tssQMT05tLDv9R6ymn0+i+m6N+QuzwN5Y1qdZ7B2/KDYUC+Itt2Vm4F2QXgwgvZjNz
-         mlaaaiiHmj7FsvhyXxCgyHHA40Zcq0kzHC3visY014WNtJ6l5BO/j/i6CQIkwfBEBwjv
-         HC3BFqGOvFA1pg1s2Z1gj3WyPbjUC+BkSwUvzeBfkz3ioODYf/cWvuwnlGnDf59yfTzz
-         iBTXm5nq4tQtXWf8f1LYCbt+oq81CmnvCVBA07qKm2CLXoYpx1zzOi7AFSP02d2m7WgV
-         eQlw==
+        bh=e21GOxkW1jWzhvdZJoi4FLyBWJfKpI2RdakLYHhUv8g=;
+        b=pNUPDEbsj3LXnapU8PbQOKn+BfClHZhKeHLGL9QLze3xrrlEu2kgFyDy5J3Zjxqg6f
+         DhUN2qvUGcfVVUmfb+u/XQ9K7BBECK3mON0OvGtZhph9IvrdGZ1GRwEmpB5Js3bXcy3w
+         oRYCC/9tx/oT5j3cgMxa/rgvpPvr23esA7MrXUPKUfqkdgZxsnf88yn+2mKsXsBcgvWy
+         Fu+vnJ43vP45Cr/yWOlMqfBNEQvSPRxVxBTasneabIc+FDck/NduuOpEP8V+c8W7Jlug
+         1LvSJQPGrMlvwPGNnDjB99j/x/oYPxkKv+RTMxIeaPdMPkPiFUSg9t4K4f3SGS74gfSN
+         74/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mldfnWKkii9NqHOu/tXDKOQ3f+s/hvhqqjnpq5hhPWY=;
-        b=jPIW7q/drsEbtxivgUQeAsG2s1wjZJDya7nYpMfYpMeAQn0v0I9fiB6ZOok/lpTBKO
-         Lwh8ht6Uh3EoqmNEdo4k0g66WfPS/sTGNkR9SUNEc4bEXH5wpICW2oqg+HsoY664HTg5
-         lg1yD6Z2wTzJLjZG1uB9uVSNqSXpTaMOeP1F67owQnOXXBBb6i0b6NzeB1TeyrkkmFuY
-         MYz2VlHMX5mWXD/ocM/oDkMUWiD/bNMlm5OTbPDZVJB+PatxypXkffy9WPZhqQ599FBK
-         AgvZziNBedwdgOSJbLG5NvqD2oNRPSRhSDmGkjqLoy4b3rQFi7YOBu1djgK+FTWNZXIn
-         UQ4A==
-X-Gm-Message-State: AOAM533ppAyMwwmImd2aHVlpFbjeyGqUJSMYKkbaCJFBaD4r1HN3AEol
-        rgS+tU3IMNiilNSr0Ek0AMi/We9B8FXaSKvUc0c=
-X-Google-Smtp-Source: ABdhPJxMvYx/vjH10MXjHGXbvqn7hdYEvl3XK2YxTRCzZrJu73OVTYkeMJKAEbWqQ32ml9obQ63nvUw8ppJjHInKoJ4=
-X-Received: by 2002:a05:620a:12d2:: with SMTP id e18mr22426657qkl.437.1592936214457;
- Tue, 23 Jun 2020 11:16:54 -0700 (PDT)
+        bh=e21GOxkW1jWzhvdZJoi4FLyBWJfKpI2RdakLYHhUv8g=;
+        b=au8ek54ZmWm2IF9CncHAhwMmeLnGa5s+fNnWnzT9K5w4qSnJah9uWxltNJiK6JMF6T
+         wE/ooENVs3gCiU477YhIQm5JYwD48vG6/9WOByHYLO3AtP1v237BHO3p1qWLEGcb5iIS
+         LjB9STK2pqppHIk5Lb/hGY+HRJccuTgpHUa25qh4wKXKFbbbNwtFg/JuSMEysv5wwyb7
+         pa+fJb8NF3A7Wx3OtYATzo62QweuD77JRnyU2eH8Z32ISbf6GAEK8+LNe8PBQEp0abMX
+         l40+2jnibVnwJceKglwTBTVAEzT78h7csGaIlUipMQlERpMxrHN1j+ZYoskEbk5QgdX8
+         Cueg==
+X-Gm-Message-State: AOAM530KfsftXMy7d3VBXwYg3ORBGq3W5aLg5rs+dGszCh/IdG4KHJEo
+        ADh7eF+w5XY9RT9a/f2Ba86lG4TNNCF3PWcV/l0oRA==
+X-Google-Smtp-Source: ABdhPJxaGzjfNh6BQfLb1ueNVoQADHqkOg76L4JYuELLLcDhVXfOvWRjzxEf7j/9HaI/FWHPs8UFADNvMWhpXPQgEJ8=
+X-Received: by 2002:a02:c785:: with SMTP id n5mr7612695jao.75.1592936441902;
+ Tue, 23 Jun 2020 11:20:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com> <1592914031-31049-9-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1592914031-31049-9-git-send-email-alan.maguire@oracle.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 23 Jun 2020 11:16:43 -0700
-Message-ID: <CAEf4BzZ8cbMBVNhxXRXapyZCm_b70y-85Xb5SpB0MWBixJ9h_w@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 8/8] bpf/selftests: add tests for %pT format specifier
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org
+References: <20200623115816.24132-1-xiaoyao.li@intel.com> <20200623115816.24132-2-xiaoyao.li@intel.com>
+In-Reply-To: <20200623115816.24132-2-xiaoyao.li@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 23 Jun 2020 11:20:31 -0700
+Message-ID: <CALMp9eRsWqM-OAKO+y7EpoX7Oq1Qee0vAzgOBpYixUVH8Df1JA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] KVM: X86: Reset vcpu->arch.cpuid_nent to 0 if
+ SET_CPUID fails
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 5:12 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+On Tue, Jun 23, 2020 at 4:58 AM Xiaoyao Li <xiaoyao.li@intel.com> wrote:
 >
-> tests verify we get 0 return value from bpf_trace_print()
-> using %pT format specifier with various modifiers/pointer
-> values.
+> It needs to invalidate CPUID configruations if usersapce provides
+
+Nits: configurations, userspace
+
+> illegal input.
 >
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > ---
-
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
->  .../selftests/bpf/prog_tests/trace_printk_btf.c    | 45 +++++++++++++++++++++
->  .../selftests/bpf/progs/netif_receive_skb.c        | 47 ++++++++++++++++++++++
->  2 files changed, 92 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/trace_printk_btf.c
->  create mode 100644 tools/testing/selftests/bpf/progs/netif_receive_skb.c
+>  arch/x86/kvm/cpuid.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-
-[...]
-
-> diff --git a/tools/testing/selftests/bpf/progs/netif_receive_skb.c b/tools/testing/selftests/bpf/progs/netif_receive_skb.c
-> new file mode 100644
-> index 0000000..03ca1d8
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/netif_receive_skb.c
-> @@ -0,0 +1,47 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2020, Oracle and/or its affiliates. */
-> +#include "vmlinux.h"
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +int ret;
-> +int num_subtests;
-> +int ran_subtests;
-
-oh, interesting, so Clang doesn't put these into the COM section
-anymore? We used to need to explicitly zero-initialize these global
-vars because of that.
-
-> +
-> +#define CHECK_PRINTK(_fmt, _p, res)                                    \
-> +       do {                                                            \
-> +               char fmt[] = _fmt;                                      \
-
-pro tip: you can use `static const char fmt[] = _fmt` and it will just work.
-
-> +               ++num_subtests;                                         \
-> +               if (ret >= 0) {                                         \
-> +                       ++ran_subtests;                                 \
-> +                       ret = bpf_trace_printk(fmt, sizeof(fmt), (_p)); \
-> +               }                                                       \
-> +       } while (0)
-> +
-> +/* TRACE_EVENT(netif_receive_skb,
-> + *     TP_PROTO(struct sk_buff *skb),
-> + */
-> +SEC("tp_btf/netif_receive_skb")
-> +int BPF_PROG(trace_netif_receive_skb, struct sk_buff *skb)
-> +{
-> +       char skb_type[] = "struct sk_buff";
-
-same, `static const char` will generate more optimal code (good to
-have good examples in selftests for people to follow). But don't
-bother re-spinning just for this.
-
-
-> +       struct btf_ptr nullp = { .ptr = 0, .type = skb_type };
-> +       struct btf_ptr p = { .ptr = skb, .type = skb_type };
-> +
-> +       CHECK_PRINTK("%pT\n", &p, &res);
-> +       CHECK_PRINTK("%pTc\n", &p, &res);
-> +       CHECK_PRINTK("%pTN\n", &p, &res);
-> +       CHECK_PRINTK("%pTx\n", &p, &res);
-> +       CHECK_PRINTK("%pT0\n", &p, &res);
-> +       CHECK_PRINTK("%pTcNx0\n", &p, &res);
-> +       CHECK_PRINTK("%pT\n", &nullp, &res);
-> +       CHECK_PRINTK("%pTc\n", &nullp, &res);
-> +       CHECK_PRINTK("%pTN\n", &nullp, &res);
-> +       CHECK_PRINTK("%pTx\n", &nullp, &res);
-> +       CHECK_PRINTK("%pT0\n", &nullp, &res);
-> +       CHECK_PRINTK("%pTcNx0\n", &nullp, &res);
-> +
-> +       return 0;
-> +}
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 8a294f9747aa..1d13bad42bf9 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -207,6 +207,8 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>         kvm_apic_set_version(vcpu);
+>         kvm_x86_ops.cpuid_update(vcpu);
+>         r = kvm_update_cpuid(vcpu);
+> +       if (r)
+> +               vcpu->arch.cpuid_nent = 0;
+>
+>         kvfree(cpuid_entries);
+>  out:
+> @@ -230,6 +232,8 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>         kvm_apic_set_version(vcpu);
+>         kvm_x86_ops.cpuid_update(vcpu);
+>         r = kvm_update_cpuid(vcpu);
+> +       if (r)
+> +               vcpu->arch.cpuid_nent = 0;
+>  out:
+>         return r;
+>  }
 > --
-> 1.8.3.1
->
+> 2.18.2
+
+What if vcpu->arch.cpuid_nent was greater than 0 before the ioctl in question?
