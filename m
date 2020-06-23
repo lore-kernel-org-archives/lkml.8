@@ -2,86 +2,103 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA08C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7362D20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DCE2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732389AbgFWLK1 (ORCPT
+        id S1732415AbgFWLLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:10:27 -0400
-Received: from comms.puri.sm ([159.203.221.185]:55998 "EHLO comms.puri.sm"
+        Tue, 23 Jun 2020 07:11:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37814 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732332AbgFWLK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:10:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 02D7FDF849;
-        Tue, 23 Jun 2020 04:10:27 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RS5o28ebxMJH; Tue, 23 Jun 2020 04:10:26 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm, Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH] scsi: sd: add runtime pm to open / release
-Date:   Tue, 23 Jun 2020 13:10:18 +0200
-Message-Id: <20200623111018.31954-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        id S1732189AbgFWLLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:11:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 04EFDAEE6;
+        Tue, 23 Jun 2020 11:11:09 +0000 (UTC)
+Date:   Tue, 23 Jun 2020 13:11:07 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        Mike Stunes <mstunes@vmware.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
+        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        X86 ML <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
+ from userspace)
+Message-ID: <20200623111107.GG31822@suse.de>
+References: <20200425191032.GK21900@8bytes.org>
+ <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
+ <20200425202316.GL21900@8bytes.org>
+ <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
+ <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
+ <20200623094519.GF31822@suse.de>
+ <20200623104559.GA4817@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623104559.GA4817@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This add a very conservative but simple implementation for runtime PM
-to the sd scsi driver:
-Resume when opened (mounted) and suspend when released (unmounted).
+Hi Peter,
 
-Improvements that allow suspending while a device is "open" can
-be added later, but now we save power when no filesystem is mounted
-and runtime PM is enabled.
+On Tue, Jun 23, 2020 at 12:45:59PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 23, 2020 at 11:45:19AM +0200, Joerg Roedel wrote:
+> > Or maybe you have a better idea how to implement this, so I'd like to
+> > hear your opinion first before I spend too many days implementing
+> > something.
+> 
+> OK, excuse my ignorance, but I'm not seeing how that IST shifting
+> nonsense would've helped in the first place.
+> 
+> If I understand correctly the problem is:
+> 
+> 	<#VC>
+> 	  shift IST
+> 	  <NMI>
+> 	    ... does stuff
+> 	    <#VC> # again, safe because the shift
+> 
+> But what happens if you get the NMI before your IST adjustment?
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
- drivers/scsi/sd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+The v3 patchset implements an unconditional shift of the #VC IST entry
+in the NMI handler, before it can trigger a #VC exception.
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index d90fefffe31b..fe4cb7c50ec1 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1372,6 +1372,7 @@ static int sd_open(struct block_device *bdev, fmode_t mode)
- 	SCSI_LOG_HLQUEUE(3, sd_printk(KERN_INFO, sdkp, "sd_open\n"));
- 
- 	sdev = sdkp->device;
-+	scsi_autopm_get_device(sdev);
- 
- 	/*
- 	 * If the device is in error recovery, wait until it is done.
-@@ -1418,6 +1419,9 @@ static int sd_open(struct block_device *bdev, fmode_t mode)
- 
- error_out:
- 	scsi_disk_put(sdkp);
-+
-+	scsi_autopm_put_device(sdev);
-+
- 	return retval;	
- }
- 
-@@ -1441,6 +1445,8 @@ static void sd_release(struct gendisk *disk, fmode_t mode)
- 
- 	SCSI_LOG_HLQUEUE(3, sd_printk(KERN_INFO, sdkp, "sd_release\n"));
- 
-+	scsi_autopm_put_device(sdev);
-+
- 	if (atomic_dec_return(&sdkp->openers) == 0 && sdev->removable) {
- 		if (scsi_block_when_processing_errors(sdev))
- 			scsi_set_medium_removal(sdev, SCSI_REMOVAL_ALLOW);
--- 
-2.20.1
+> Either way around we get to fix this up in NMI (and any other IST
+> exception that can happen while in #VC, hello #MC). And more complexity
+> there is the very last thing we need :-(
 
+Yes, in whatever way this gets implemented, it needs some fixup in the
+NMI handler. But that can happen in C code, so it does not make the
+assembly more complex, at least.
+
+> There's no way you can fix up the IDT without getting an NMI first.
+
+Not sure what you mean by this.
+
+> This entire exception model is fundamentally buggered :-/
+
+Regards,
+
+	Joerg
