@@ -2,263 +2,1116 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82928C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4832A20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FBB02078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Pr0uOWSW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dTQ5GzLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732305AbgFWEDM (ORCPT
+        id S1732323AbgFWEDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 00:03:12 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:21868 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732241AbgFWEDG (ORCPT
+        Tue, 23 Jun 2020 00:03:15 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:62532 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732255AbgFWEDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 00:03:06 -0400
-X-UUID: bd2d35281db1495b9f582c8778a958cc-20200623
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=e5gLSl/1mTN2/gkuRR/doutH5GxfcozvGZbTJlualu0=;
-        b=Pr0uOWSWrbSgcGJtlofyCmQ8KXfhY1NFbA6jXTQVfgisYCnCZO9UtqnXZL7Zm1wbgoYuj+wxPu6LxM92eYnQ8i8Wr0XI/YiT+nAV28yJJp6veHxvMsGY+eZc6wdUA0PXDqDU9bKMcVeI1jKp4y/mWK1DDJ+e19+g5NRfn+2zerQ=;
-X-UUID: bd2d35281db1495b9f582c8778a958cc-20200623
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2006745245; Tue, 23 Jun 2020 12:02:58 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 23 Jun 2020 12:02:51 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 23 Jun 2020 12:02:51 +0800
-Message-ID: <1592884977.14160.1.camel@mtkswgap22>
-Subject: Re: [PATCH v2 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 23 Jun 2020 12:02:57 +0800
-In-Reply-To: <CAAOTY_-ZGcsv+LEYs+3qfEE=pv8ToWSPFu+7Oum=s-nUuSsDJw@mail.gmail.com>
-References: <1592559720-8482-1-git-send-email-neal.liu@mediatek.com>
-         <1592559720-8482-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_8JRnhGKOB+faOaHR6p2nknHiMjAnbfo=390c5jNHtp=A@mail.gmail.com>
-         <1592623132.15277.7.camel@mtkswgap22>
-         <CAAOTY_-ZGcsv+LEYs+3qfEE=pv8ToWSPFu+7Oum=s-nUuSsDJw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: E4501519B3A57E7D1488FAEBD1E9F8F9321B0C6E1892EB37DAC542BC5E176C632000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 23 Jun 2020 00:03:08 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200623040302epoutp042057200b903e2764484f99c98303b180~bEHOtFad_0962009620epoutp04a
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 04:03:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200623040302epoutp042057200b903e2764484f99c98303b180~bEHOtFad_0962009620epoutp04a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592884982;
+        bh=8DeZLBFBzWguDLMtujRMlFAynTF5hjGShewIM4bhZsI=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=dTQ5GzLEl0pUCcF4+/hZ+e5+T5RFDvFekAFttPJhldnIzR5wUUYecedt4CRirxHRe
+         eCeFELJgpyk4z15ybt4NG2GuZvJQcaMGJOvqG+MwUmU55HCB3t9KPgiB4QzWYmVo06
+         MWceuQ1dfUscsePH/Cjau2/+vvGeMNuO0raMR0U0=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200623040301epcas1p1d393cfdd468e5517ba37e0a041e84fbc~bEHOQXd3J1650516505epcas1p1c;
+        Tue, 23 Jun 2020 04:03:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [RFC PATCH v3 3/5] scsi: ufs: Introduce HPB module
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "huobean@gmail.com" <huobean@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <963815509.21592884502243.JavaMail.epsvc@epcpadp1>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01592884981694.JavaMail.epsvc@epcpadp2>
+Date:   Tue, 23 Jun 2020 12:56:42 +0900
+X-CMS-MailID: 20200623035642epcms2p6ab2e3f3ec3481fe60c2c969e986e17a6
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200623010201epcms2p11aebdf1fbc719b409968cba997507114
+References: <963815509.21592884502243.JavaMail.epsvc@epcpadp1>
+        <231786897.01592884381695.JavaMail.epsvc@epcpadp2>
+        <963815509.21592879582091.JavaMail.epsvc@epcpadp2>
+        <CGME20200623010201epcms2p11aebdf1fbc719b409968cba997507114@epcms2p6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KDQpPbiBTdW4sIDIwMjAtMDYtMjEgYXQgMDc6MzYgKzA4MDAsIENo
-dW4tS3VhbmcgSHUgd3JvdGU6DQo+IEhpLCBOZWFsOg0KPiANCj4gTmVhbCBMaXUgPG5lYWwubGl1
-QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ25pyIMjDml6Ug6YCx5YWtIOS4iuWNiDExOjE45a+r
-6YGT77yaDQo+ID4NCj4gPiBIaSBDaHVuLUt1YW5nLA0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3Vy
-IHF1aWNrIGZlZWRiYWNrLg0KPiA+DQo+ID4gT24gU2F0LCAyMDIwLTA2LTIwIGF0IDAwOjI1ICsw
-ODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0KPiA+ID4gSGksIE5lYWw6DQo+ID4gPg0KPiA+ID4g
-TmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ25pyIMTnml6Ug6YCx
-5LqUIOS4i+WNiDY6MDHlr6vpgZPvvJoNCj4gPiA+ID4NCj4gPiA+ID4gTVQ2ODczIGJ1cyBmcmFi
-cmljIHByb3ZpZGVzIFRydXN0Wm9uZSBzZWN1cml0eSBzdXBwb3J0IGFuZCBkYXRhDQo+ID4gPiA+
-IHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4
-cGVjdGVkDQo+ID4gPiA+IG1hc3RlcnMuDQo+ID4gPiA+IFRoZSBzZWN1cml0eSB2aW9sYXRpb25z
-IGFyZSBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHByb2Nlc3NvciBmb3INCj4gPiA+ID4gZnVydGhl
-ciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4gPiA+DQo+ID4gPiA+IEFueSBvY2N1
-cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1cHQsIGFu
-ZA0KPiA+ID4gPiBpdCB3aWxsIGJlIGhhbmRsZWQgYnkgZGV2YXBjLW10Njg3MyBkcml2ZXIuIFRo
-ZSB2aW9sYXRpb24NCj4gPiA+ID4gaW5mb3JtYXRpb24gaXMgcHJpbnRlZCBpbiBvcmRlciB0byBm
-aW5kIHRoZSBtdXJkZXJlci4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTmVhbCBM
-aXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPg0KPiA+ID4gW3Nu
-aXBdDQo+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKg0KPiA+ID4gPiArICogbXRrX2RldmFw
-Y19wZF9nZXQgLSBnZXQgZGV2YXBjIHBkX3R5cGVzIG9mIHJlZ2lzdGVyIGFkZHJlc3MuDQo+ID4g
-PiA+ICsgKg0KPiA+ID4gPiArICogUmV0dXJucyB0aGUgdmFsdWUgb2YgcmVnIGFkZHINCj4gPiA+
-ID4gKyAqLw0KPiA+ID4gPiArc3RhdGljIHZvaWQgX19pb21lbSAqbXRrX2RldmFwY19wZF9nZXQo
-c3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqZGV2YXBjX2N0eCwNCj4gPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IHNsYXZlX3R5cGUsDQo+ID4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVudW0gREVWQVBDX1BEX1JFR19U
-WVBFIHBkX3JlZ190eXBlLA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB1MzIgaW5kZXgpDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsgICAgICAgc3RydWN0IG10
-a19kZXZhcGNfdmlvX2luZm8gKnZpb19pbmZvID0gZGV2YXBjX2N0eC0+c29jLT52aW9faW5mbzsN
-Cj4gPiA+ID4gKyAgICAgICB1MzIgc2xhdmVfdHlwZV9udW0gPSBkZXZhcGNfY3R4LT5zb2MtPnNs
-YXZlX3R5cGVfbnVtOw0KPiA+ID4gPiArICAgICAgIGNvbnN0IHUzMiAqZGV2YXBjX3BkcyA9IGRl
-dmFwY19jdHgtPnNvYy0+ZGV2YXBjX3BkczsNCj4gPiA+DQo+ID4gPiBkZXZhcGNfcGRzID0gbXQ2
-ODczX2RldmFwY19wZHM7DQo+ID4NCj4gPiBBcmUgeW91IHNheWluZyBhbGwgcGxhdGZvcm0gcmVs
-YXRlZCB2YXJpYWJsZXMgJiBmdW5jdGlvbnMgc2hvdWxkIGFzc2lnbg0KPiA+ICYgY2FsbCBpdCBk
-aXJlY3RseSBpbiB0aGlzIGNvbW1vbiBmbG93Pw0KPiA+IEkgZG9uJ3QgdGhpbmsgaXQncyBhIGdv
-b2QgaWRlYSB0byBnbyBiYWNrd2FyZHMgc2luY2Ugd2UgYWxyZWFkeSBleHRyYWN0DQo+ID4gdGhl
-IGNvbW1vbiBvdXQgb2YgaXQuDQo+IA0KPiBJIHRoaW5rIHdlIHNob3VsZCAiZG8gb25lIHRoaW5n
-IGluIG9uZSBwYXRjaCIuIFdoZW4geW91IG1peCB0d28gdGhpbmdzDQo+IGludG8gb25lIHBhdGNo
-LCBob3cgZG9lcyByZXZpZXdlciBrbm93IGVhY2ggbW9kaWZpY2F0aW9uIGJlbG9uZyB0bw0KPiBm
-aXJzdCB0aGluZyBvciBzZWNvbmQgdGhpbmc/IEZvciBzdXBwb3J0aW5nIG11bHRpcGxlIFNvQywg
-dGhlIHBhdGNoZXMNCj4gc2VxdWVuY2UgbG9vayBsaWtlIHRoaXM6DQo+IA0KPiBQYXRjaCAxOiBB
-ZGQgc3VwcG9ydCBTb0MgMS4NCj4gUGF0Y2ggMjogQWJzdHJhY3QgZnVuY3Rpb24gYW5kIHZhcmlh
-YmxlIGZvciBTb0MgMi4NCj4gUGF0Y2ggMzogQWRkIHN1cHBvcnQgU29DIDIuDQo+IFBhdGNoIDQ6
-IEFic3RyYWN0IGZ1bmN0aW9uIGFuZCB2YXJpYWJsZSBmb3IgU29DIDMuDQo+IFBhdGNoIDU6IEFk
-ZCBzdXBwb3J0IFNvQyAzLg0KPiBQYXRjaCA2OiBBYnN0cmFjdCBmdW5jdGlvbiBhbmQgdmFyaWFi
-bGUgZm9yIFNvQyA0Lg0KPiBQYXRjaCA3OiBBZGQgc3VwcG9ydCBTb0MgNC4NCj4gDQo+IEluIHBh
-dGNoIDEsIHlvdSBzaG91bGQgbm90IGRvIGFueSB0aGluZyBhYm91dCBhYnN0cmFjdGlvbiwgYnV0
-IHlvdQ0KPiB3YW50IHRvIG1lcmdlIHBhdGNoIDIsIDQsIDYgaW50byB0aGlzIHBhdGNoLCBzbyB0
-aGlzIHBhdGNoJ3MgdGl0bGUNCj4gc2hvdWxkIGJlICJBZGQgc3VwcG9ydCBTb0MgMSBhbmQgYWJz
-dHJhY3QgZnVuY3Rpb24gYW5kIHZhcmlibGUgZm9yIFNvQw0KPiAyLCBTb0MgMywgYW5kIFNvQyA0
-Ig0KPiANCg0KT2theSwgSSdsbCB0cnkgdG8gc3BsaXQgZHJpdmVyIHRvIG11bHRpcGxlIHBhdGNo
-ZXMgZm9yIGRpZmZlcmVudA0KZnVuY3Rpb25hbGl0eS4gVGhhbmtzIGZvciBzdWdnZXN0aW9uLg0K
-DQo+ID4NCj4gPiA+DQo+ID4gPg0KPiA+ID4gPiArICAgICAgIHZvaWQgX19pb21lbSAqcmVnOw0K
-PiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgaWYgKCFkZXZhcGNfcGRzKQ0KPiA+ID4NCj4gPiA+
-IE5ldmVyIGhhcHBlbi4NCj4gPiA+DQo+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gTlVM
-TDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIGlmICgoc2xhdmVfdHlwZSA8IHNsYXZlX3R5
-cGVfbnVtICYmDQo+ID4gPiA+ICsgICAgICAgICAgICBpbmRleCA8IHZpb19pbmZvLT52aW9fbWFz
-a19zdGFfbnVtW3NsYXZlX3R5cGVdKSAmJg0KPiA+ID4gPiArICAgICAgICAgICBwZF9yZWdfdHlw
-ZSA8IFBEX1JFR19UWVBFX05VTSkgew0KPiA+ID4NCj4gPiA+IEFsd2F5cyB0cnVlLg0KPiA+ID4N
-Cj4gPiA+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IGRldmFwY19jdHgtPmRldmFwY19wZF9iYXNl
-W3NsYXZlX3R5cGVdICsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2YXBjX3Bk
-c1twZF9yZWdfdHlwZV07DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIGlmIChw
-ZF9yZWdfdHlwZSA9PSBWSU9fTUFTSyB8fCBwZF9yZWdfdHlwZSA9PSBWSU9fU1RBKQ0KPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICByZWcgKz0gMHg0ICogaW5kZXg7DQo+ID4gPiA+ICsN
-Cj4gPiA+ID4gKyAgICAgICB9IGVsc2Ugew0KPiA+ID4gPiArICAgICAgICAgICAgICAgcHJfZXJy
-KFBGWCAiT3V0IE9mIEJvdW5kYXJ5LCBzbGF2ZV90eXBlOjB4JXgvcGRfcmVnX3R5cGU6MHgleC9p
-bmRleDoweCV4XG4iLA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgIHNsYXZlX3R5cGUs
-IHBkX3JlZ190eXBlLCBpbmRleCk7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gTlVM
-TDsNCj4gPiA+ID4gKyAgICAgICB9DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICByZXR1cm4g
-cmVnOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4gPg0KPiA+ID4gW3NuaXBdDQo+ID4gPg0K
-PiA+ID4gPiArDQo+ID4gPiA+ICsvKg0KPiA+ID4gPiArICogc3RhcnRfZGV2YXBjIC0gaW5pdGlh
-bGl6ZSBkZXZhcGMgc3RhdHVzIGFuZCBzdGFydCByZWNlaXZpbmcgaW50ZXJydXB0DQo+ID4gPiA+
-ICsgKiAgICAgICAgICAgICAgIHdoaWxlIGRldmFwYyB2aW9sYXRpb24gaXMgdHJpZ2dlcmVkLg0K
-PiA+ID4gPiArICovDQo+ID4gPiA+ICtzdGF0aWMgdm9pZCBzdGFydF9kZXZhcGMoc3RydWN0IG10
-a19kZXZhcGNfY29udGV4dCAqZGV2YXBjX2N0eCkNCj4gPiA+ID4gK3sNCj4gPiA+ID4gKyAgICAg
-ICB1MzIgc2xhdmVfdHlwZV9udW0gPSBkZXZhcGNfY3R4LT5zb2MtPnNsYXZlX3R5cGVfbnVtOw0K
-PiA+ID4gPiArICAgICAgIGNvbnN0IHN0cnVjdCBtdGtfZGV2aWNlX2luZm8gKipkZXZpY2VfaW5m
-bzsNCj4gPiA+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgbXRrX2RldmljZV9udW0gKm5kZXZpY2Vz
-Ow0KPiA+ID4gPiArICAgICAgIHZvaWQgX19pb21lbSAqcGRfdmlvX3NoaWZ0X3N0YV9yZWc7DQo+
-ID4gPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICpwZF9hcGNfY29uX3JlZzsNCj4gPiA+ID4gKyAg
-ICAgICBpbnQgc2xhdmVfdHlwZSwgaSwgdmlvX2lkeCwgaW5kZXg7DQo+ID4gPiA+ICsgICAgICAg
-dTMyIHZpb19zaGlmdF9zdGE7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBuZGV2aWNlcyA9
-IGRldmFwY19jdHgtPnNvYy0+bmRldmljZXM7DQo+ID4gPg0KPiA+ID4gbmRldmljZXMgPSBtdGs2
-ODczX2RldmljZXNfbnVtOw0KPiA+ID4NCj4gPiA+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAg
-ICBkZXZpY2VfaW5mbyA9IGRldmFwY19jdHgtPnNvYy0+ZGV2aWNlX2luZm87DQo+ID4gPiA+ICsN
-Cj4gPiA+ID4gKyAgICAgICBmb3IgKHNsYXZlX3R5cGUgPSAwOyBzbGF2ZV90eXBlIDwgc2xhdmVf
-dHlwZV9udW07IHNsYXZlX3R5cGUrKykgew0KPiA+ID4gPiArICAgICAgICAgICAgICAgcGRfYXBj
-X2Nvbl9yZWcgPSBtdGtfZGV2YXBjX3BkX2dldChkZXZhcGNfY3R4LCBzbGF2ZV90eXBlLA0KPiA+
-ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBB
-UENfQ09OLCAwKTsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHBkX3Zpb19zaGlmdF9zdGFfcmVn
-ID0gbXRrX2RldmFwY19wZF9nZXQoZGV2YXBjX2N0eCwgc2xhdmVfdHlwZSwNCj4gPiA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVklP
-X1NISUZUX1NUQSwgMCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIGlmICgh
-cGRfYXBjX2Nvbl9yZWcgfHwgIXBkX3Zpb19zaGlmdF9zdGFfcmVnIHx8ICFkZXZpY2VfaW5mbykN
-Cj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuOw0KPiA+ID4gPiArDQo+ID4g
-PiA+ICsgICAgICAgICAgICAgICAvKiBDbGVhciBERVZBUEMgdmlvbGF0aW9uIHN0YXR1cyAqLw0K
-PiA+ID4gPiArICAgICAgICAgICAgICAgd3JpdGVsKEJJVCgzMSksIHBkX2FwY19jb25fcmVnKTsN
-Cj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgICAgICAgICAgLyogQ2xlYXIgdmlvbGF0aW9uIHNo
-aWZ0IHN0YXR1cyAqLw0KPiA+ID4gPiArICAgICAgICAgICAgICAgdmlvX3NoaWZ0X3N0YSA9IHJl
-YWRsKHBkX3Zpb19zaGlmdF9zdGFfcmVnKTsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIGlmICh2
-aW9fc2hpZnRfc3RhKQ0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICB3cml0ZWwodmlv
-X3NoaWZ0X3N0YSwgcGRfdmlvX3NoaWZ0X3N0YV9yZWcpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsg
-ICAgICAgICAgICAgICAvKiBDbGVhciB0eXBlIDIgdmlvbGF0aW9uIHN0YXR1cyAqLw0KPiA+ID4g
-PiArICAgICAgICAgICAgICAgY2hlY2tfdHlwZTJfdmlvX3N0YXR1cyhkZXZhcGNfY3R4LCBzbGF2
-ZV90eXBlLCAmdmlvX2lkeCwgJmkpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgICAgICAg
-ICAvKiBDbGVhciB2aW9sYXRpb24gc3RhdHVzICovDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBm
-b3IgKGkgPSAwOyBpIDwgbmRldmljZXNbc2xhdmVfdHlwZV0udmlvX3NsYXZlX251bTsgaSsrKSB7
-DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHZpb19pZHggPSBkZXZpY2VfaW5mb1tz
-bGF2ZV90eXBlXVtpXS52aW9faW5kZXg7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGlmICgoY2hlY2tfdmlvX3N0YXR1cyhkZXZhcGNfY3R4LCBzbGF2ZV90eXBlLCB2aW9faWR4KQ0K
-PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPT0g
-VklPTEFUSU9OX1RSSUdHRVJFRCkgJiYNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBjbGVhcl92aW9fc3RhdHVzKGRldmFwY19jdHgsIHNsYXZlX3R5cGUsDQo+ID4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2aW9faWR4KSkgew0K
-PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByX3dhcm4oUEZYICJDbGVh
-ciB2aW8gc3RhdHVzIGZhaWxlZCwgc2xhdmVfdHlwZToweCV4LCB2aW9faW5kZXg6MHgleFxuIiwN
-Cj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNsYXZlX3R5
-cGUsIHZpb19pZHgpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgaW5kZXggPSBpOw0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIG10a19kZXZhcGNfZHVtcF92aW9fZGJnKGRldmFwY19jdHgsIHNsYXZlX3R5cGUsDQo+ID4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgJnZpb19pZHgsICZpbmRleCk7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgaSA9IGluZGV4IC0gMTsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfQ0K
-PiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2ly
-cShkZXZhcGNfY3R4LCBzbGF2ZV90eXBlLCB2aW9faWR4LCBmYWxzZSk7DQo+ID4gPiA+ICsgICAg
-ICAgICAgICAgICB9DQo+ID4gPiA+ICsgICAgICAgfQ0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+
-ID4gPiA+ICtzdGF0aWMgREVGSU5FX1NQSU5MT0NLKGRldmFwY19sb2NrKTsNCj4gPiA+DQo+ID4g
-PiBVc2VsZXNzLCBzbyByZW1vdmUgaXQuDQo+ID4NCj4gPiBXZSB1c2UgZGV2YXBjX2xvY2sgaW4g
-YmVsb3cgaXNyLCB3aGF0IGRvIHlvdSBtZWFuIHVzZWxlc3M/DQo+IA0KPiBXZSB1c2Ugc3Bpbmxv
-Y2sgYmVjYXVzZSBhIHRocmVhZCBjb250ZXh0IGFuZCBpcnEgY29udGV4dCB3b3VsZCBhY2Nlc3MN
-Cj4gdGhlIHNhbWUgcmVzb3VyY2UsIGJ1dCB3aGVyZSBpcyB0aGUgdGhyZWFkIGNvbnRleHQ/IElm
-IHRoZSB0aHJlYWQNCj4gY29udGV4dCBleGlzdCBpbiBhbm90aGVyIHBhdGNoLCBtb3ZlIHRoaXMg
-c3BpbmxvY2sgdG8gdGhhdCBwYXRjaC4NCj4gDQo+IFJlZ2FyZHMsDQo+IENodW4tS3VhbmcuDQo+
-IA0KPiA+DQo+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKg0KPiA+ID4gPiArICogZGV2YXBj
-X3Zpb2xhdGlvbl9pcnEgLSB0aGUgZGV2YXBjIEludGVycnVwdCBTZXJ2aWNlIFJvdXRpbmUgKElT
-Uikgd2lsbCBkdW1wDQo+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgdmlvbGF0aW9u
-IGluZm9ybWF0aW9uIGluY2x1ZGluZyB3aGljaCBtYXN0ZXIgdmlvbGF0ZXMNCj4gPiA+ID4gKyAq
-ICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Mgc2xhdmUuDQo+ID4gPiA+ICsgKi8NCj4gPiA+
-ID4gK3N0YXRpYyBpcnFyZXR1cm5fdCBkZXZhcGNfdmlvbGF0aW9uX2lycShpbnQgaXJxX251bWJl
-ciwNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
-dCBtdGtfZGV2YXBjX2NvbnRleHQgKmRldmFwY19jdHgpDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsg
-ICAgICAgdTMyIHNsYXZlX3R5cGVfbnVtID0gZGV2YXBjX2N0eC0+c29jLT5zbGF2ZV90eXBlX251
-bTsNCj4gPiA+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgbXRrX2RldmljZV9pbmZvICoqZGV2aWNl
-X2luZm87DQo+ID4gPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2luZm8gKnZpb19p
-bmZvOw0KPiA+ID4gPiArICAgICAgIGludCBzbGF2ZV90eXBlLCB2aW9faWR4LCBpbmRleDsNCj4g
-PiA+ID4gKyAgICAgICBjb25zdCBjaGFyICp2aW9fbWFzdGVyOw0KPiA+ID4gPiArICAgICAgIHVu
-c2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPiA+ICsgICAgICAgdTggcGVybTsNCj4gPiA+ID4gKw0K
-PiA+ID4gPiArICAgICAgIHNwaW5fbG9ja19pcnFzYXZlKCZkZXZhcGNfbG9jaywgZmxhZ3MpOw0K
-PiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgZGV2aWNlX2luZm8gPSBkZXZhcGNfY3R4LT5zb2Mt
-PmRldmljZV9pbmZvOw0KPiA+ID4gPiArICAgICAgIHZpb19pbmZvID0gZGV2YXBjX2N0eC0+c29j
-LT52aW9faW5mbzsNCj4gPiA+ID4gKyAgICAgICB2aW9faWR4ID0gLTE7DQo+ID4gPiA+ICsgICAg
-ICAgaW5kZXggPSAtMTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIC8qIFRoZXJlIGFyZSBt
-dWx0aXBsZSBERVZBUENfUEQgKi8NCj4gPiA+ID4gKyAgICAgICBmb3IgKHNsYXZlX3R5cGUgPSAw
-OyBzbGF2ZV90eXBlIDwgc2xhdmVfdHlwZV9udW07IHNsYXZlX3R5cGUrKykgew0KPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgaWYgKCFjaGVja190eXBlMl92aW9fc3RhdHVzKGRldmFwY19jdHgsIHNs
-YXZlX3R5cGUsICZ2aW9faWR4LA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICZpbmRleCkpDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGlmICghbXRrX2RldmFwY19kdW1wX3Zpb19kYmcoZGV2YXBjX2N0eCwgc2xhdmVfdHlwZSwNCj4g
-PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAmdmlvX2lkeCwgJmluZGV4KSkNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBjb250aW51ZTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgICAgICAgICAgLyogRW5z
-dXJlIHRoYXQgdmlvbGF0aW9uIGluZm8gYXJlIHdyaXR0ZW4gYmVmb3JlDQo+ID4gPiA+ICsgICAg
-ICAgICAgICAgICAgKiBmdXJ0aGVyIG9wZXJhdGlvbnMNCj4gPiA+ID4gKyAgICAgICAgICAgICAg
-ICAqLw0KPiA+ID4gPiArICAgICAgICAgICAgICAgc21wX21iKCk7DQo+ID4gPiA+ICsNCj4gPiA+
-ID4gKyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShkZXZhcGNfY3R4LCBzbGF2ZV90eXBl
-LCB2aW9faWR4LCB0cnVlKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgICAgICAgICAgY2xl
-YXJfdmlvX3N0YXR1cyhkZXZhcGNfY3R4LCBzbGF2ZV90eXBlLCB2aW9faWR4KTsNCj4gPiA+ID4g
-Kw0KPiA+ID4gPiArICAgICAgICAgICAgICAgcGVybSA9IGdldF9wZXJtaXNzaW9uKGRldmFwY19j
-dHgsIHNsYXZlX3R5cGUsIGluZGV4LA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHZpb19pbmZvLT5kb21haW5faWQpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsg
-ICAgICAgICAgICAgICB2aW9fbWFzdGVyID0gZGV2YXBjX2N0eC0+c29jLT5tYXN0ZXJfZ2V0DQo+
-ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICh2aW9faW5mby0+bWFzdGVyX2lkLA0KPiA+
-ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgdmlvX2luZm8tPnZpb19hZGRyLA0KPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgc2xhdmVfdHlwZSwNCj4gPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgIHZpb19pbmZvLT5zaGlmdF9zdGFfYml0LA0KPiA+ID4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgdmlvX2luZm8tPmRvbWFpbl9pZCk7DQo+ID4gPg0KPiA+ID4gQ2Fs
-bCBtdDY4NzNfYnVzX2lkX3RvX21hc3RlcigpIGRpcmVjdGx5Lg0KPiA+ID4NCj4gPiA+ID4gKw0K
-PiA+ID4gPiArICAgICAgICAgICAgICAgaWYgKCF2aW9fbWFzdGVyKQ0KPiA+ID4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICB2aW9fbWFzdGVyID0gIlVOS05PV05fTUFTVEVSIjsNCj4gPiA+ID4g
-Kw0KPiA+ID4gPiArICAgICAgICAgICAgICAgcHJfaW5mbyhQRlggIlZpb2xhdGlvbiAtIHNsYXZl
-X3R5cGU6MHgleCwgc3lzX2luZGV4OjB4JXgsIGN0cmxfaW5kZXg6MHgleCwgdmlvX2luZGV4OjB4
-JXhcbiIsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHNsYXZlX3R5cGUsDQo+ID4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldmljZV9pbmZvW3NsYXZlX3R5cGVdW2luZGV4
-XS5zeXNfaW5kZXgsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldmljZV9pbmZv
-W3NsYXZlX3R5cGVdW2luZGV4XS5jdHJsX2luZGV4LA0KPiA+ID4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICBkZXZpY2VfaW5mb1tzbGF2ZV90eXBlXVtpbmRleF0udmlvX2luZGV4KTsNCj4gPiA+
-ID4gKw0KPiA+ID4gPiArICAgICAgICAgICAgICAgcHJfaW5mbyhQRlggIlZpb2xhdGlvbiBNYXN0
-ZXI6ICVzXG4iLCB2aW9fbWFzdGVyKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgICAgICAg
-ICAgZGV2YXBjX3Zpb19yZWFzb24ocGVybSk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICAg
-ICAgICAgIG1hc2tfbW9kdWxlX2lycShkZXZhcGNfY3R4LCBzbGF2ZV90eXBlLCB2aW9faWR4LCBm
-YWxzZSk7DQo+ID4gPiA+ICsgICAgICAgfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgc3Bp
-bl91bmxvY2tfaXJxcmVzdG9yZSgmZGV2YXBjX2xvY2ssIGZsYWdzKTsNCj4gPiA+ID4gKyAgICAg
-ICByZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICsNCj4gPg0KPiA+IFtz
-bmlwXQ0KPiA+DQoNCg==
+This is a patch for the HPB module.
+The HPB module queries UFS for device information during initialization.
+We added the export symbol to two functions in ufshcd.c to initialize
+the HPB module.
+
+The HPB module can be loaded or built-in as needed.
+The mininum size of the memory pool used in the HPB module is implemented
+as a module parameter, so that it can be configurable by the user.
+
+To gurantee a minimum memory pool size of 4MB:
+$ insmod ufshpb.ko ufshpb_host_map_kbytes=4096
+
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ drivers/scsi/ufs/Kconfig  |   9 +
+ drivers/scsi/ufs/Makefile |   1 +
+ drivers/scsi/ufs/ufshcd.c |   2 +
+ drivers/scsi/ufs/ufshpb.c | 777 ++++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshpb.h | 162 ++++++++
+ 5 files changed, 951 insertions(+)
+ create mode 100644 drivers/scsi/ufs/ufshpb.c
+ create mode 100644 drivers/scsi/ufs/ufshpb.h
+
+diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
+index 8cd90262784d..588f75fc8c0d 100644
+--- a/drivers/scsi/ufs/Kconfig
++++ b/drivers/scsi/ufs/Kconfig
+@@ -172,3 +172,12 @@ config SCSI_UFS_EXYNOS
+ 
+ 	  Select this if you have UFS host controller on EXYNOS chipset.
+ 	  If unsure, say N.
++
++config UFSHPB
++        tristate "Support UFS Host Performance Booster"
++        depends on SCSI_UFSHCD
++	help
++          A UFS HPB Feature improves random read performance. It caches
++          L2P map of UFS to host DRAM. The driver uses HPB read command
++          by piggybacking physical page number for bypassing FTL's L2P address
++          translation.
+diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
+index 433b871badfa..aa901b92e9e7 100644
+--- a/drivers/scsi/ufs/Makefile
++++ b/drivers/scsi/ufs/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_SCSI_UFS_EXYNOS) += ufs-exynos.o
+ obj-$(CONFIG_SCSI_UFSHCD) += ufshcd-core.o
+ ufshcd-core-y				+= ufshcd.o ufs-sysfs.o ufsfeature.o
+ ufshcd-core-$(CONFIG_SCSI_UFS_BSG)	+= ufs_bsg.o
++obj-$(CONFIG_UFSHPB) += ufshpb.o
+ obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
+ obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
+ obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 082dfca8e237..2218f19fa9f4 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -2863,6 +2863,7 @@ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+ 	ufshcd_release(hba);
+ 	return err;
+ }
++EXPORT_SYMBOL(ufshcd_query_flag);
+ 
+ /**
+  * ufshcd_query_attr - API function for sending attribute requests
+@@ -3061,6 +3062,7 @@ int ufshcd_query_descriptor_retry(struct ufs_hba *hba,
+ 
+ 	return err;
+ }
++EXPORT_SYMBOL(ufshcd_query_descriptor_retry);
+ 
+ /**
+  * ufshcd_map_desc_id_to_length - map descriptor IDN to its length
+diff --git a/drivers/scsi/ufs/ufshpb.c b/drivers/scsi/ufs/ufshpb.c
+new file mode 100644
+index 000000000000..84a9af2fdc80
+--- /dev/null
++++ b/drivers/scsi/ufs/ufshpb.c
+@@ -0,0 +1,777 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Universal Flash Storage Host Performance Booster
++ *
++ * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
++ *
++ * Authors:
++ *	Yongmyung Lee <ymhungry.lee@samsung.com>
++ *	Jinyoung Choi <j-young.choi@samsung.com>
++ */
++
++#include <asm/unaligned.h>
++
++#include "ufshcd.h"
++#include "ufshpb.h"
++
++static struct ufshpb_driver ufshpb_drv;
++
++static int ufshpb_create_sysfs(struct ufs_hba *hba, struct ufshpb_lu *hpb);
++
++static inline int ufshpb_is_valid_srgn(struct ufshpb_region *rgn,
++			     struct ufshpb_subregion *srgn)
++{
++	return rgn->rgn_state != HPB_RGN_INACTIVE &&
++		srgn->srgn_state == HPB_SRGN_VALID;
++}
++
++static inline int ufshpb_get_state(struct ufshpb_lu *hpb)
++{
++	return atomic_read(&hpb->hpb_state);
++}
++
++static inline void ufshpb_set_state(struct ufshpb_lu *hpb, int state)
++{
++	atomic_set(&hpb->hpb_state, state);
++}
++
++static inline int ufshpb_lu_get_dev(struct ufshpb_lu *hpb)
++{
++	if (get_device(&hpb->hpb_lu_dev))
++		return 0;
++
++	return -ENODEV;
++}
++
++static inline int ufshpb_lu_get(struct ufshpb_lu *hpb)
++{
++	if (!hpb || (ufshpb_get_state(hpb) != HPB_PRESENT))
++		return -ENODEV;
++
++	if (ufshpb_lu_get_dev(hpb))
++		return -ENODEV;
++
++	return 0;
++}
++
++static inline void ufshpb_lu_put(struct ufshpb_lu *hpb)
++{
++	put_device(&hpb->hpb_lu_dev);
++}
++
++static void ufshpb_init_subregion_tbl(struct ufshpb_lu *hpb,
++				      struct ufshpb_region *rgn)
++{
++	int srgn_idx;
++
++	for (srgn_idx = 0; srgn_idx < rgn->srgn_cnt; srgn_idx++) {
++		struct ufshpb_subregion *srgn = rgn->srgn_tbl + srgn_idx;
++
++		srgn->rgn_idx = rgn->rgn_idx;
++		srgn->srgn_idx = srgn_idx;
++		srgn->srgn_state = HPB_SRGN_UNUSED;
++	}
++}
++
++static inline int ufshpb_alloc_subregion_tbl(struct ufshpb_lu *hpb,
++					     struct ufshpb_region *rgn,
++					     int srgn_cnt)
++{
++	rgn->srgn_tbl = kvcalloc(srgn_cnt, sizeof(struct ufshpb_subregion),
++				 GFP_KERNEL);
++	if (!rgn->srgn_tbl)
++		return -ENOMEM;
++
++	rgn->srgn_cnt = srgn_cnt;
++	return 0;
++}
++
++static void ufshpb_init_lu_parameter(struct ufs_hba *hba,
++				     struct ufshpb_lu *hpb,
++				     struct ufshpb_dev_info *hpb_dev_info,
++				     struct ufshpb_lu_info *hpb_lu_info)
++{
++	u32 entries_per_rgn;
++	u64 rgn_mem_size;
++
++
++	hpb->lu_pinned_start = hpb_lu_info->pinned_start;
++	hpb->lu_pinned_end = hpb_lu_info->num_pinned ?
++		(hpb_lu_info->pinned_start + hpb_lu_info->num_pinned - 1)
++		: PINNED_NOT_SET;
++
++	rgn_mem_size = (1ULL << hpb_dev_info->rgn_size) * HPB_RGN_SIZE_UNIT
++		/ HPB_ENTRY_BLOCK_SIZE * HPB_ENTRY_SIZE;
++	hpb->srgn_mem_size = (1ULL << hpb_dev_info->srgn_size)
++		* HPB_RGN_SIZE_UNIT / HPB_ENTRY_BLOCK_SIZE * HPB_ENTRY_SIZE;
++
++	entries_per_rgn = rgn_mem_size / HPB_ENTRY_SIZE;
++	hpb->entries_per_rgn_shift = ilog2(entries_per_rgn);
++	hpb->entries_per_rgn_mask = entries_per_rgn - 1;
++
++	hpb->entries_per_srgn = hpb->srgn_mem_size /  HPB_ENTRY_SIZE;
++	hpb->entries_per_srgn_shift = ilog2(hpb->entries_per_srgn);
++	hpb->entries_per_srgn_mask = hpb->entries_per_srgn - 1;
++
++	hpb->srgns_per_rgn = rgn_mem_size / hpb->srgn_mem_size;
++
++	hpb->rgns_per_lu = DIV_ROUND_UP(hpb_lu_info->num_blocks,
++				(rgn_mem_size / HPB_ENTRY_SIZE));
++	hpb->srgns_per_lu = DIV_ROUND_UP(hpb_lu_info->num_blocks,
++				(hpb->srgn_mem_size / HPB_ENTRY_SIZE));
++
++	hpb->pages_per_srgn = hpb->srgn_mem_size / PAGE_SIZE;
++
++	dev_info(hba->dev, "ufshpb(%d): region memory size - %llu (bytes)\n",
++		 hpb->lun, rgn_mem_size);
++	dev_info(hba->dev, "ufshpb(%d): subregion memory size - %u (bytes)\n",
++		 hpb->lun, hpb->srgn_mem_size);
++	dev_info(hba->dev, "ufshpb(%d): total blocks per lu - %d\n",
++		 hpb->lun, hpb_lu_info->num_blocks);
++	dev_info(hba->dev, "ufshpb(%d): subregions per region - %d, regions per lu - %u",
++		 hpb->lun, hpb->srgns_per_rgn, hpb->rgns_per_lu);
++}
++
++
++static int ufshpb_alloc_region_tbl(struct ufs_hba *hba, struct ufshpb_lu *hpb)
++{
++	struct ufshpb_region *rgn_table, *rgn;
++	int rgn_idx, i;
++	int ret = 0;
++
++	rgn_table = kvcalloc(hpb->rgns_per_lu, sizeof(struct ufshpb_region),
++			    GFP_KERNEL);
++	if (!rgn_table)
++		return -ENOMEM;
++
++	hpb->rgn_tbl = rgn_table;
++
++	for (rgn_idx = 0; rgn_idx < hpb->rgns_per_lu; rgn_idx++) {
++		int srgn_cnt = hpb->srgns_per_rgn;
++
++		rgn = rgn_table + rgn_idx;
++		rgn->rgn_idx = rgn_idx;
++
++		if (rgn_idx == hpb->rgns_per_lu - 1)
++			srgn_cnt = ((hpb->srgns_per_lu - 1) %
++				    hpb->srgns_per_rgn) + 1;
++
++		ret = ufshpb_alloc_subregion_tbl(hpb, rgn, srgn_cnt);
++		if (ret)
++			goto release_srgn_table;
++		ufshpb_init_subregion_tbl(hpb, rgn);
++
++		rgn->rgn_state = HPB_RGN_INACTIVE;
++	}
++
++	return 0;
++
++release_srgn_table:
++	for (i = 0; i < rgn_idx; i++) {
++		rgn = rgn_table + i;
++		if (rgn->srgn_tbl)
++			kvfree(rgn->srgn_tbl);
++	}
++	kvfree(rgn_table);
++	return ret;
++}
++
++static void ufshpb_destroy_subregion_tbl(struct ufshpb_lu *hpb,
++					 struct ufshpb_region *rgn)
++{
++	int srgn_idx;
++
++	for (srgn_idx = 0; srgn_idx < rgn->srgn_cnt; srgn_idx++) {
++		struct ufshpb_subregion *srgn;
++
++		srgn = rgn->srgn_tbl + srgn_idx;
++		srgn->srgn_state = HPB_SRGN_UNUSED;
++	}
++}
++
++static void ufshpb_destroy_region_tbl(struct ufshpb_lu *hpb)
++{
++	int rgn_idx;
++
++	for (rgn_idx = 0; rgn_idx < hpb->rgns_per_lu; rgn_idx++) {
++		struct ufshpb_region *rgn;
++
++		rgn = hpb->rgn_tbl + rgn_idx;
++		if (rgn->rgn_state != HPB_RGN_INACTIVE) {
++			rgn->rgn_state = HPB_RGN_INACTIVE;
++
++			ufshpb_destroy_subregion_tbl(hpb, rgn);
++		}
++
++		kvfree(rgn->srgn_tbl);
++	}
++
++	kvfree(hpb->rgn_tbl);
++}
++
++static int ufshpb_lu_hpb_init(struct ufs_hba *hba, struct ufshpb_lu *hpb,
++			      struct ufshpb_dev_info *hpb_dev_info)
++{
++	int ret;
++
++	spin_lock_init(&hpb->hpb_state_lock);
++
++	ret = ufshpb_alloc_region_tbl(hba, hpb);
++
++	ret = ufshpb_create_sysfs(hba, hpb);
++	if (ret)
++		goto release_rgn_table;
++
++	return 0;
++
++release_rgn_table:
++	ufshpb_destroy_region_tbl(hpb);
++	return ret;
++}
++
++static struct ufshpb_lu *ufshpb_alloc_hpb_lu(struct ufs_hba *hba, int lun,
++				     struct ufshpb_dev_info *hpb_dev_info,
++				     struct ufshpb_lu_info *hpb_lu_info)
++{
++	struct ufshpb_lu *hpb;
++	int ret;
++
++	hpb = kzalloc(sizeof(struct ufshpb_lu), GFP_KERNEL);
++	if (!hpb)
++		return NULL;
++
++	hpb->ufsf = &hba->ufsf;
++	hpb->lun = lun;
++
++	ufshpb_init_lu_parameter(hba, hpb, hpb_dev_info, hpb_lu_info);
++
++	ret = ufshpb_lu_hpb_init(hba, hpb, hpb_dev_info);
++	if (ret) {
++		dev_err(hba->dev, "hpb lu init failed. ret %d", ret);
++		goto release_hpb;
++	}
++
++	return hpb;
++release_hpb:
++	kfree(hpb);
++	return NULL;
++}
++
++static void ufshpb_lu_release(struct ufshpb_lu *hpb)
++{
++	ufshpb_destroy_region_tbl(hpb);
++
++	list_del_init(&hpb->list_hpb_lu);
++}
++
++static void ufshpb_issue_hpb_reset_query(struct ufs_hba *hba)
++{
++	int err;
++	int retries;
++
++	for (retries = 0; retries < HPB_RESET_REQ_RETRIES; retries++) {
++		err = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_SET_FLAG,
++				QUERY_FLAG_IDN_HPB_RESET, 0, NULL);
++		if (err)
++			dev_dbg(hba->dev,
++				"%s: failed with error %d, retries %d\n",
++				__func__, err, retries);
++		else
++			break;
++	}
++
++	if (err) {
++		dev_err(hba->dev,
++			"%s setting fHpbReset flag failed with error %d\n",
++			__func__, err);
++		return;
++	}
++}
++
++static void ufshpb_check_hpb_reset_query(struct ufs_hba *hba)
++{
++	int err;
++	bool flag_res = true;
++	int try = 0;
++
++	/* wait for the device to complete HPB reset query */
++	do {
++		if (++try == HPB_RESET_REQ_RETRIES)
++			break;
++
++		dev_info(hba->dev,
++			"%s start flag reset polling %d times\n",
++			__func__, try);
++
++		/* Poll fHpbReset flag to be cleared */
++		err = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,
++				QUERY_FLAG_IDN_HPB_RESET, 0, &flag_res);
++		usleep_range(1000, 1100);
++	} while (flag_res);
++
++	if (err) {
++		dev_err(hba->dev,
++			"%s reading fHpbReset flag failed with error %d\n",
++			__func__, err);
++		return;
++	}
++
++	if (flag_res) {
++		dev_err(hba->dev,
++			"%s fHpbReset was not cleared by the device\n",
++			__func__);
++	}
++}
++
++static void ufshpb_reset(struct ufs_hba *hba)
++{
++	struct ufshpb_lu *hpb;
++
++	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
++		if (ufshpb_lu_get_dev(hpb))
++			continue;
++
++		ufshpb_set_state(hpb, HPB_PRESENT);
++		ufshpb_lu_put(hpb);
++	}
++}
++
++static void ufshpb_reset_host(struct ufs_hba *hba)
++{
++	struct ufshpb_lu *hpb;
++
++	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
++		if (ufshpb_lu_get(hpb))
++			continue;
++
++		dev_info(&hpb->hpb_lu_dev, "ufshpb run reset_host");
++
++		ufshpb_set_state(hpb, HPB_RESET);
++		ufshpb_lu_put(hpb);
++	}
++}
++
++static void ufshpb_suspend(struct ufs_hba *hba)
++{
++	struct ufshpb_lu *hpb;
++
++	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
++		if (ufshpb_lu_get(hpb))
++			continue;
++
++		dev_info(&hpb->hpb_lu_dev, "ufshpb goto suspend");
++		ufshpb_set_state(hpb, HPB_SUSPEND);
++
++		ufshpb_lu_put(hpb);
++	}
++}
++
++static void ufshpb_resume(struct ufs_hba *hba)
++{
++	struct ufshpb_lu *hpb;
++
++	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
++		if (ufshpb_lu_get_dev(hpb))
++			continue;
++
++		dev_info(&hpb->hpb_lu_dev, "ufshpb resume");
++		ufshpb_set_state(hpb, HPB_PRESENT);
++		ufshpb_lu_put(hpb);
++	}
++}
++
++static void ufshpb_stat_init(struct ufshpb_lu *hpb)
++{
++	atomic_set(&hpb->stats.hit_cnt, 0);
++	atomic_set(&hpb->stats.miss_cnt, 0);
++	atomic_set(&hpb->stats.rb_noti_cnt, 0);
++	atomic_set(&hpb->stats.rb_active_cnt, 0);
++	atomic_set(&hpb->stats.rb_inactive_cnt, 0);
++	atomic_set(&hpb->stats.map_req_cnt, 0);
++}
++
++/* SYSFS functions */
++#define ufshpb_sysfs_attr_show_func(__name)				\
++static ssize_t __name##_show(struct device *dev,		\
++					 struct device_attribute *attr,	\
++					 char *buf)			\
++{									\
++	struct ufshpb_lu *hpb;						\
++	hpb = container_of(dev, struct ufshpb_lu, hpb_lu_dev);		\
++	return snprintf(buf, PAGE_SIZE, "%d\n",			\
++			atomic_read(&hpb->stats.__name));		\
++}
++
++ufshpb_sysfs_attr_show_func(hit_cnt);
++ufshpb_sysfs_attr_show_func(miss_cnt);
++ufshpb_sysfs_attr_show_func(rb_noti_cnt);
++ufshpb_sysfs_attr_show_func(rb_active_cnt);
++ufshpb_sysfs_attr_show_func(rb_inactive_cnt);
++ufshpb_sysfs_attr_show_func(map_req_cnt);
++
++static DEVICE_ATTR_RO(hit_cnt);
++static DEVICE_ATTR_RO(miss_cnt);
++static DEVICE_ATTR_RO(rb_noti_cnt);
++static DEVICE_ATTR_RO(rb_active_cnt);
++static DEVICE_ATTR_RO(rb_inactive_cnt);
++static DEVICE_ATTR_RO(map_req_cnt);
++
++static struct attribute *hpb_dev_attrs[] = {
++	&dev_attr_hit_cnt.attr,
++	&dev_attr_miss_cnt.attr,
++	&dev_attr_rb_noti_cnt.attr,
++	&dev_attr_rb_active_cnt.attr,
++	&dev_attr_rb_inactive_cnt.attr,
++	&dev_attr_map_req_cnt.attr,
++	NULL,
++};
++
++static struct attribute_group ufshpb_sysfs_group = {
++	.attrs = hpb_dev_attrs,
++};
++
++static inline void ufshpb_dev_release(struct device *dev)
++{
++	struct ufs_hba *hba;
++	struct ufsf_feature_info *ufsf;
++	struct ufshpb_lu *hpb;
++
++	hpb = container_of(dev, struct ufshpb_lu, hpb_lu_dev);
++	ufsf = hpb->ufsf;
++	hba = container_of(ufsf, struct ufs_hba, ufsf);
++
++	ufshpb_lu_release(hpb);
++	dev_info(dev, "%s: release success\n", __func__);
++	put_device(dev->parent);
++
++	kfree(hpb);
++}
++
++static int ufshpb_create_sysfs(struct ufs_hba *hba, struct ufshpb_lu *hpb)
++{
++	int ret;
++
++	device_initialize(&hpb->hpb_lu_dev);
++
++	ufshpb_stat_init(hpb);
++
++	hpb->hpb_lu_dev.parent = get_device(&hba->ufsf.hpb_dev);
++	hpb->hpb_lu_dev.release = ufshpb_dev_release;
++	dev_set_name(&hpb->hpb_lu_dev, "ufshpb_lu%d", hpb->lun);
++
++	ret = device_add(&hpb->hpb_lu_dev);
++	if (ret) {
++		dev_err(hba->dev, "ufshpb(%d) device_add failed",
++			hpb->lun);
++		return -ENODEV;
++	}
++
++	if (device_add_group(&hpb->hpb_lu_dev, &ufshpb_sysfs_group))
++		dev_err(hba->dev, "ufshpb(%d) create file error\n",
++			hpb->lun);
++
++	return 0;
++}
++
++static int ufshpb_read_desc(struct ufs_hba *hba, u8 desc_id, u8 desc_index,
++			  u8 selector, u8 *desc_buf)
++{
++	int err = 0;
++	int size;
++
++	ufshcd_map_desc_id_to_length(hba, desc_id, &size);
++
++	pm_runtime_get_sync(hba->dev);
++
++	err = ufshcd_query_descriptor_retry(hba, UPIU_QUERY_OPCODE_READ_DESC,
++					    desc_id, desc_index,
++					    selector,
++					    desc_buf, &size);
++	if (err)
++		dev_err(hba->dev, "read desc failed: %d, id %d, idx %d\n",
++			err, desc_id, desc_index);
++
++	pm_runtime_put_sync(hba->dev);
++
++	return err;
++}
++
++static int ufshpb_get_geo_info(struct ufs_hba *hba, u8 *geo_buf,
++			       struct ufshpb_dev_info *hpb_dev_info)
++{
++	int hpb_device_max_active_rgns = 0;
++	int hpb_num_lu;
++
++	hpb_num_lu = geo_buf[GEOMETRY_DESC_HPB_NUMBER_LU];
++	if (hpb_num_lu == 0) {
++		dev_err(hba->dev, "No HPB LU supported\n");
++		return -ENODEV;
++	}
++
++	hpb_dev_info->rgn_size = geo_buf[GEOMETRY_DESC_HPB_REGION_SIZE];
++	hpb_dev_info->srgn_size = geo_buf[GEOMETRY_DESC_HPB_SUBREGION_SIZE];
++	hpb_device_max_active_rgns =
++		get_unaligned_be16(geo_buf +
++			GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS);
++
++	if (hpb_dev_info->rgn_size == 0 || hpb_dev_info->srgn_size == 0 ||
++	    hpb_device_max_active_rgns == 0) {
++		dev_err(hba->dev, "No HPB supported device\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static int ufshpb_get_dev_info(struct ufs_hba *hba,
++			       struct ufshpb_dev_info *hpb_dev_info,
++			       u8 *desc_buf)
++{
++	int ret;
++	int hpb_mode, version;
++
++	ret = ufshpb_read_desc(hba, QUERY_DESC_IDN_DEVICE, 0, 0, desc_buf);
++	if (ret) {
++		dev_err(hba->dev, "%s: idn: %d query request failed\n",
++			__func__, QUERY_DESC_IDN_DEVICE);
++		return -ENODEV;
++	}
++
++	hpb_mode = get_unaligned_be16(desc_buf + DEVICE_DESC_PARAM_HPB_CONTROL);
++	if (hpb_mode == HPB_HOST_CONTROL) {
++		dev_err(hba->dev, "%s: host control mode is not supported.\n",
++			__func__);
++		return -ENODEV;
++	}
++
++	version = get_unaligned_be16(desc_buf + DEVICE_DESC_PARAM_HPB_VER);
++	if (version != HPB_SUPPORT_VERSION) {
++		dev_err(hba->dev, "%s: HPB %x version is not supported.\n",
++			__func__, version);
++		return -ENODEV;
++	}
++
++	/*
++	 * Get the number of user logical unit to check whether all
++	 * scsi_device finish initialization
++	 */
++	hpb_dev_info->num_lu = desc_buf[DEVICE_DESC_PARAM_NUM_LU];
++
++	ret = ufshpb_read_desc(hba, QUERY_DESC_IDN_GEOMETRY, 0, 0, desc_buf);
++	if (ret) {
++		dev_err(hba->dev, "%s: idn: %d query request failed\n",
++			__func__, QUERY_DESC_IDN_DEVICE);
++		return ret;
++	}
++
++	ret = ufshpb_get_geo_info(hba, desc_buf, hpb_dev_info);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int ufshpb_get_lu_info(struct ufs_hba *hba, int lun,
++				    struct ufshpb_lu_info *hpb_lu_info,
++				    u8 *desc_buf)
++{
++	u16 max_active_rgns;
++	u8 lu_enable;
++	int ret;
++
++	ret = ufshpb_read_desc(hba, QUERY_DESC_IDN_UNIT, lun, 0, desc_buf);
++	if (ret) {
++		dev_err(hba->dev,
++			"%s: idn: %d lun: %d  query request failed",
++			__func__, QUERY_DESC_IDN_UNIT, lun);
++		return ret;
++	}
++
++	lu_enable = desc_buf[UNIT_DESC_PARAM_LU_ENABLE];
++	if (lu_enable != LU_ENABLED_HPB_FUNC)
++		return -ENODEV;
++
++	max_active_rgns = get_unaligned_be16(
++			desc_buf + UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS);
++	if (!max_active_rgns) {
++		dev_err(hba->dev,
++			"lun %d wrong number of max active regions\n", lun);
++		return -ENODEV;
++	}
++
++	hpb_lu_info->num_blocks = get_unaligned_be64(
++			desc_buf + UNIT_DESC_PARAM_LOGICAL_BLK_COUNT);
++	hpb_lu_info->pinned_start = get_unaligned_be16(
++			desc_buf + UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET);
++	hpb_lu_info->num_pinned = get_unaligned_be16(
++			desc_buf + UNIT_DESC_HPB_LU_NUM_PIN_REGIONS);
++	hpb_lu_info->max_active_rgns = max_active_rgns;
++
++	return 0;
++}
++
++static void ufshpb_scan_hpb_lu(struct ufs_hba *hba,
++			       struct ufshpb_dev_info *hpb_dev_info,
++			       u8 *desc_buf)
++{
++	struct scsi_device *sdev;
++	struct ufshpb_lu *hpb;
++	int find_hpb_lu = 0;
++	int ret;
++
++	INIT_LIST_HEAD(&ufshpb_drv.lh_hpb_lu);
++
++	shost_for_each_device(sdev, hba->host) {
++		struct ufshpb_lu_info hpb_lu_info = { 0 };
++		int lun = sdev->lun;
++
++		if (lun >= hba->dev_info.max_lu_supported)
++			continue;
++
++		ret = ufshpb_get_lu_info(hba, lun, &hpb_lu_info, desc_buf);
++		if (ret)
++			continue;
++
++		hpb = ufshpb_alloc_hpb_lu(hba, lun, hpb_dev_info,
++					  &hpb_lu_info);
++		if (!hpb)
++			continue;
++
++		hpb->sdev_ufs_lu = sdev;
++		sdev->hostdata = hpb;
++
++		list_add_tail(&hpb->list_hpb_lu, &ufshpb_drv.lh_hpb_lu);
++		find_hpb_lu++;
++	}
++
++	if (!find_hpb_lu)
++		return;
++
++	ufshpb_check_hpb_reset_query(hba);
++	dev_set_drvdata(&hba->ufsf.hpb_dev, &ufshpb_drv);
++
++	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
++		dev_info(&hpb->hpb_lu_dev, "set state to present\n");
++		ufshpb_set_state(hpb, HPB_PRESENT);
++	}
++}
++
++static int ufshpb_probe(struct device *dev)
++{
++	struct ufs_hba *hba;
++	struct ufsf_feature_info *ufsf;
++	struct ufshpb_dev_info hpb_dev_info = { 0 };
++	char *desc_buf;
++	int ret;
++
++	if (dev->type != &ufshpb_dev_type)
++		return -ENODEV;
++
++	ufsf = container_of(dev, struct ufsf_feature_info, hpb_dev);
++	hba = container_of(ufsf, struct ufs_hba, ufsf);
++
++	desc_buf = kzalloc(QUERY_DESC_MAX_SIZE, GFP_KERNEL);
++	if (!desc_buf)
++		goto release_desc_buf;
++
++	ret = ufshpb_get_dev_info(hba, &hpb_dev_info, desc_buf);
++	if (ret)
++		goto release_desc_buf;
++
++	/*
++	 * Because HPB driver uses scsi_device data structure,
++	 * we should wait at this point until finishing initialization of all
++	 * scsi devices. Even if timeout occurs, HPB driver will search
++	 * the scsi_device list on struct scsi_host (shost->__host list_head)
++	 * and can find out HPB logical units in all scsi_devices
++	 */
++	wait_event_timeout(hba->ufsf.sdev_wait,
++			   (atomic_read(&hba->ufsf.slave_conf_cnt)
++				== hpb_dev_info.num_lu),
++			   SDEV_WAIT_TIMEOUT);
++
++	ufshpb_issue_hpb_reset_query(hba);
++
++	dev_dbg(hba->dev, "ufshpb: slave count %d, lu count %d\n",
++		atomic_read(&hba->ufsf.slave_conf_cnt), hpb_dev_info.num_lu);
++
++	ufshpb_scan_hpb_lu(hba, &hpb_dev_info, desc_buf);
++
++release_desc_buf:
++	kfree(desc_buf);
++	return 0;
++}
++
++static int ufshpb_remove(struct device *dev)
++{
++	struct ufshpb_lu *hpb, *n_hpb;
++	struct ufsf_feature_info *ufsf;
++	struct scsi_device *sdev;
++
++	ufsf = container_of(dev, struct ufsf_feature_info, hpb_dev);
++
++	dev_set_drvdata(&ufsf->hpb_dev, NULL);
++
++	list_for_each_entry_safe(hpb, n_hpb, &ufshpb_drv.lh_hpb_lu,
++				 list_hpb_lu) {
++		ufshpb_set_state(hpb, HPB_FAILED);
++
++		sdev = hpb->sdev_ufs_lu;
++		sdev->hostdata = NULL;
++
++		device_del(&hpb->hpb_lu_dev);
++
++		dev_info(&hpb->hpb_lu_dev, "hpb_lu_dev refcnt %d\n",
++			 kref_read(&hpb->hpb_lu_dev.kobj.kref));
++		put_device(&hpb->hpb_lu_dev);
++	}
++	dev_info(dev, "ufshpb: remove success\n");
++
++	return 0;
++}
++
++static struct ufshpb_driver ufshpb_drv = {
++	.drv = {
++		.name = "ufshpb_driver",
++		.owner = THIS_MODULE,
++		.probe = ufshpb_probe,
++		.remove = ufshpb_remove,
++		.bus = &ufsf_bus_type,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++	.ufshpb_ops = {
++		.reset = ufshpb_reset,
++		.reset_host = ufshpb_reset_host,
++		.suspend = ufshpb_suspend,
++		.resume = ufshpb_resume,
++	},
++};
++
++unsigned int ufshpb_host_map_kbytes = 1 * 1024;
++module_param(ufshpb_host_map_kbytes, uint, 0644);
++MODULE_PARM_DESC(ufshpb_host_map_kbytes,
++	 "ufshpb host mapping memory kilo-bytes for ufshpb memory-pool");
++
++static int __init ufshpb_init(void)
++{
++	int ret;
++
++	ret = driver_register(&ufshpb_drv.drv);
++	if (ret)
++		pr_err("ufshpb: driver register failed\n");
++
++	return ret;
++}
++
++static void __exit ufshpb_exit(void)
++{
++	driver_unregister(&ufshpb_drv.drv);
++}
++
++MODULE_AUTHOR("Yongmyong Lee <ymhungry.lee@samsung.com>");
++MODULE_AUTHOR("Jinyoung Choi <j-young.choi@samsung.com>");
++MODULE_DESCRIPTION("UFS Host Performance Booster Driver");
++
++module_init(ufshpb_init);
++module_exit(ufshpb_exit);
++MODULE_LICENSE("GPL");
+diff --git a/drivers/scsi/ufs/ufshpb.h b/drivers/scsi/ufs/ufshpb.h
+new file mode 100644
+index 000000000000..eaa4a3e035b1
+--- /dev/null
++++ b/drivers/scsi/ufs/ufshpb.h
+@@ -0,0 +1,162 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Universal Flash Storage Host Performance Booster
++ *
++ * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
++ *
++ * Authors:
++ *	Yongmyung Lee <ymhungry.lee@samsung.com>
++ *	Jinyoung Choi <j-young.choi@samsung.com>
++ */
++
++#ifndef _UFSHPB_H_
++#define _UFSHPB_H_
++
++/* hpb response UPIU macro */
++#define MAX_ACTIVE_NUM				2
++#define MAX_INACTIVE_NUM			2
++#define HPB_RSP_NONE				0x00
++#define HPB_RSP_REQ_REGION_UPDATE		0x01
++#define HPB_RSP_DEV_RESET			0x02
++#define DEV_DATA_SEG_LEN			0x14
++#define DEV_SENSE_SEG_LEN			0x12
++#define DEV_DES_TYPE				0x80
++#define DEV_ADDITIONAL_LEN			0x10
++
++/* hpb map & entries macro */
++#define HPB_RGN_SIZE_UNIT			512
++#define HPB_ENTRY_BLOCK_SIZE			4096
++#define HPB_ENTRY_SIZE				0x8
++#define PINNED_NOT_SET				U32_MAX
++
++/* hpb support chunk size */
++#define HPB_MULTI_CHUNK_HIGH			1
++
++/* hpb vender defined opcode */
++#define UFSHPB_READ				0xF8
++#define UFSHPB_READ_BUFFER			0xF9
++#define UFSHPB_WRITE_BUFFER			0xFA
++#define UFSHPB_READ_BUFFER_ID			0x01
++#define UFSHPB_WRITE_BUFFER_ID			0x02
++#define HPB_READ_BUFFER_CMD_LENGTH		10
++#define LU_ENABLED_HPB_FUNC			0x02
++
++#define SDEV_WAIT_TIMEOUT			(10 * HZ)
++#define MAP_REQ_TIMEOUT				(30 * HZ)
++#define HPB_RESET_REQ_RETRIES			10
++#define HPB_RESET_REQ_MSLEEP			2
++
++#define HPB_SUPPORT_VERSION			0x100
++
++enum UFSHPB_MODE {
++	HPB_HOST_CONTROL,
++	HPB_DEVICE_CONTROL,
++};
++
++enum UFSHPB_STATE {
++	HPB_PRESENT = 1,
++	HPB_SUSPEND,
++	HPB_FAILED,
++	HPB_RESET,
++};
++
++enum HPB_RGN_STATE {
++	HPB_RGN_INACTIVE,
++	HPB_RGN_ACTIVE,
++	/* pinned regions are always active */
++	HPB_RGN_PINNED,
++};
++
++enum HPB_SRGN_STATE {
++	HPB_SRGN_UNUSED,
++	HPB_SRGN_INVALID,
++	HPB_SRGN_VALID,
++	HPB_SRGN_ISSUED,
++};
++
++/**
++ * struct ufshpb_dev_info - UFSHPB device related info
++ * @num_lu: the number of user logical unit to check whether all lu finished
++ *          initialization
++ * @rgn_size: device reported HPB region size
++ * @srgn_size: device reported HPB sub-region size
++ */
++struct ufshpb_dev_info {
++	int num_lu;
++	int rgn_size;
++	int srgn_size;
++};
++
++/**
++ * struct ufshpb_lu_info - UFSHPB logical unit related info
++ * @num_blocks: the number of logical block
++ * @pinned_start: the start region number of pinned region
++ * @num_pinned: the number of pinned regions
++ * @max_active_rgns: maximum number of active regions
++ */
++struct ufshpb_lu_info {
++	int num_blocks;
++	int pinned_start;
++	int num_pinned;
++	int max_active_rgns;
++};
++
++struct ufshpb_subregion {
++	enum HPB_SRGN_STATE srgn_state;
++	int rgn_idx;
++	int srgn_idx;
++};
++
++struct ufshpb_region {
++	struct ufshpb_subregion *srgn_tbl;
++	enum HPB_RGN_STATE rgn_state;
++	int rgn_idx;
++	int srgn_cnt;
++};
++
++struct ufshpb_stats {
++	atomic_t hit_cnt;
++	atomic_t miss_cnt;
++	atomic_t rb_noti_cnt;
++	atomic_t rb_active_cnt;
++	atomic_t rb_inactive_cnt;
++	atomic_t map_req_cnt;
++};
++
++struct ufshpb_lu {
++	int lun;
++
++	struct device hpb_lu_dev;
++	struct scsi_device *sdev_ufs_lu;
++
++	struct ufshpb_region *rgn_tbl;
++
++	spinlock_t hpb_state_lock;
++	atomic_t hpb_state; /* hpb_state_lock */
++
++	/* pinned region information */
++	u32 lu_pinned_start;
++	u32 lu_pinned_end;
++
++	/* HPB related configuration */
++	u32 rgns_per_lu;
++	u32 srgns_per_lu;
++	int srgns_per_rgn;
++	u32 srgn_mem_size;
++	u32 entries_per_rgn_mask;
++	u32 entries_per_rgn_shift;
++	u32 entries_per_srgn;
++	u32 entries_per_srgn_mask;
++	u32 entries_per_srgn_shift;
++	u32 pages_per_srgn;
++
++	struct ufshpb_stats stats;
++
++	struct ufsf_feature_info *ufsf;
++	struct list_head list_hpb_lu;
++};
++
++extern struct device_type ufshpb_dev_type;
++extern struct bus_type ufsf_bus_type;
++
++#endif /* End of Header */
+-- 
+2.17.1
+
 
