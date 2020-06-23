@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F199C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC3221531
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEFF220781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944645;
-	bh=Px/RmD6PoW2/lQf1KrCMOqwHpKoKzZKXIVJCwhaDVMs=;
+	s=default; t=1592944649;
+	bh=8Xf1yytOJlVd3+phAsaxvB4fXVXo4QF7cq5hZe7TsNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKHEtRZNn1UwabG1Y0CjCHqkzKpUMuHcsNaHW3D3KEXSj/SnJZ/H600bTOy5/JM2f
-	 D8IJsYIfi8nDrSA+FBq9+Q/mROei/ILwpJ4W/sHFdupNBklIOt2kIhzFgNz7rlqgC9
-	 nnDbMiuolja/ScaI2QT0G72ovIzw1j4J+QUaLFNg=
+	b=TMuIIJJ9wPnvxuVSMiZx1xkmFF7QaunFbn6TuEPO54z1rQThxBHze7LEBvxXYWyYW
+	 bEXgNuLhtJQ4X8EhGplAkvvicoWSJTyOAVAzAntLGpvu1IvmNx3jcM82FpDQNRDWed
+	 I3us06ZbGLWTn7QTPAsnF898CvsT2ZrNa26B7Xdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391846AbgFWUhX (ORCPT
+        id S2391852AbgFWUh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60710 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:37:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388059AbgFWUhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:37:17 -0400
+        id S2391601AbgFWUhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:37:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F86520781;
-        Tue, 23 Jun 2020 20:37:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B82821527;
+        Tue, 23 Jun 2020 20:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944637;
-        bh=Px/RmD6PoW2/lQf1KrCMOqwHpKoKzZKXIVJCwhaDVMs=;
+        s=default; t=1592944634;
+        bh=8Xf1yytOJlVd3+phAsaxvB4fXVXo4QF7cq5hZe7TsNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YaE2yVokDL7aLoQosHYtAB9ZmYrPb1jeBUMZYP0cU5fliOv/JoqfH3v51T/JAkQQU
-         Q/bDZUryMKtmoKoTvBxH6u21FJXo8pSHoyhs+LVscJuWvzWGJWnrSp5On4U1UFznYL
-         +6sYO7H8lrswJnCqvS+CL69KJFijuBs2EduVUMy8=
+        b=oo3SimyY27OwCsS9guNweVVAce9uWesGoDCCohJQtifcBhE3DDP8T/vkR3bUzBodl
+         oS5IpLbMjg826y8E1yCc38JCFu+3cv3mB8/k8ocHXYVyvSOHy2zPGSw/Gk+6bNojJY
+         +ovNdqDtLjSoz2TO32FFtzj2UHNXJbvLLBXgmm3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/206] pwm: img: Call pm_runtime_put() in pm_runtime_get_sync() failed case
-Date:   Tue, 23 Jun 2020 21:56:04 +0200
-Message-Id: <20200623195318.759455722@linuxfoundation.org>
+Subject: [PATCH 4.19 035/206] powerpc/crashkernel: Take "mem=" option into account
+Date:   Tue, 23 Jun 2020 21:56:03 +0200
+Message-Id: <20200623195318.709307907@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,49 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Pingfan Liu <kernelfans@gmail.com>
 
-[ Upstream commit ca162ce98110b98e7d97b7157328d34dcfdd40a9 ]
+[ Upstream commit be5470e0c285a68dc3afdea965032f5ddc8269d7 ]
 
-Even in failed case of pm_runtime_get_sync(), the usage_count is
-incremented. In order to keep the usage_count with correct value call
-appropriate pm_runtime_put().
+'mem=" option is an easy way to put high pressure on memory during
+some test. Hence after applying the memory limit, instead of total
+mem, the actual usable memory should be considered when reserving mem
+for crashkernel. Otherwise the boot up may experience OOM issue.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+E.g. it would reserve 4G prior to the change and 512M afterward, if
+passing
+crashkernel="2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G",
+and mem=5G on a 256G machine.
+
+This issue is powerpc specific because it puts higher priority on
+fadump and kdump reservation than on "mem=". Referring the following
+code:
+    if (fadump_reserve_mem() == 0)
+            reserve_crashkernel();
+    ...
+    /* Ensure that total memory size is page-aligned. */
+    limit = ALIGN(memory_limit ?: memblock_phys_mem_size(), PAGE_SIZE);
+    memblock_enforce_memory_limit(limit);
+
+While on other arches, the effect of "mem=" takes a higher priority
+and pass through memblock_phys_mem_size() before calling
+reserve_crashkernel().
+
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1585749644-4148-1-git-send-email-kernelfans@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-img.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/machine_kexec.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
-index 815f5333bb8f9..da72b2866e88e 100644
---- a/drivers/pwm/pwm-img.c
-+++ b/drivers/pwm/pwm-img.c
-@@ -132,8 +132,10 @@ static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	duty = DIV_ROUND_UP(timebase * duty_ns, period_ns);
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+index 63f5a9311a294..094c37fb07a96 100644
+--- a/arch/powerpc/kernel/machine_kexec.c
++++ b/arch/powerpc/kernel/machine_kexec.c
+@@ -116,11 +116,12 @@ void machine_kexec(struct kimage *image)
  
- 	ret = pm_runtime_get_sync(chip->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(chip->dev);
- 		return ret;
-+	}
- 
- 	val = img_pwm_readl(pwm_chip, PWM_CTRL_CFG);
- 	val &= ~(PWM_CTRL_CFG_DIV_MASK << PWM_CTRL_CFG_DIV_SHIFT(pwm->hwpwm));
-@@ -334,8 +336,10 @@ static int img_pwm_remove(struct platform_device *pdev)
+ void __init reserve_crashkernel(void)
+ {
+-	unsigned long long crash_size, crash_base;
++	unsigned long long crash_size, crash_base, total_mem_sz;
  	int ret;
  
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(&pdev->dev);
- 		return ret;
-+	}
++	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
+ 	/* use common parsing */
+-	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
++	ret = parse_crashkernel(boot_command_line, total_mem_sz,
+ 			&crash_size, &crash_base);
+ 	if (ret == 0 && crash_size > 0) {
+ 		crashk_res.start = crash_base;
+@@ -179,6 +180,7 @@ void __init reserve_crashkernel(void)
+ 	/* Crash kernel trumps memory limit */
+ 	if (memory_limit && memory_limit <= crashk_res.end) {
+ 		memory_limit = crashk_res.end + 1;
++		total_mem_sz = memory_limit;
+ 		printk("Adjusted memory limit for crashkernel, now 0x%llx\n",
+ 		       memory_limit);
+ 	}
+@@ -187,7 +189,7 @@ void __init reserve_crashkernel(void)
+ 			"for crashkernel (System RAM: %ldMB)\n",
+ 			(unsigned long)(crash_size >> 20),
+ 			(unsigned long)(crashk_res.start >> 20),
+-			(unsigned long)(memblock_phys_mem_size() >> 20));
++			(unsigned long)(total_mem_sz >> 20));
  
- 	for (i = 0; i < pwm_chip->chip.npwm; i++) {
- 		val = img_pwm_readl(pwm_chip, PWM_CTRL_CFG);
+ 	if (!memblock_is_region_memory(crashk_res.start, crash_size) ||
+ 	    memblock_reserve(crashk_res.start, crash_size)) {
 -- 
 2.25.1
 
