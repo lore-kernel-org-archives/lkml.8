@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B245C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C648C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D649206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F2C2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944365;
-	bh=Qrr1m8gojHbUX+fhFTpH2yIQvrlfbVIgli/PbtQG+OU=;
+	s=default; t=1592944369;
+	bh=lZkl/E3sQrdOdFpk52WgVB9OrTaZ4kQBZVQ+ZRMcZ2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sbRNmH+l6HYNaI+7kmz7DZsIQkyqxFupIx92ZUcU/V/7zGWnVY8aD8k4h0Xow0Doj
-	 DaGbeNQ6tllYMEZhrAP1ELo9D0UQEvKRxd+aRqQM/LtJKyr7dT8ZNAEnF44bWyX8yF
-	 V1mc/5FA7f9Ed2pv2pzoBGfl8M12+DhDB2LvNHsE=
+	b=hLcctFSJUBsqgnoG/X0dsO8HRcUo9FJeqj0HERNsOV0pPaCVd44u2pCX50WVLxBhO
+	 q4FIwZKN4+CzV2WjNTD9hEqlSmfWu539ALCLOsi3GNquJS4NweQJJJ5GQ3x13Pz7Ns
+	 Uh425ExajvgIkau+aBMEre6MtKKyi45QCsNjCwSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391351AbgFWUcn (ORCPT
+        id S2390845AbgFWUcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:32:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391332AbgFWUcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:32:36 -0400
+        id S2391350AbgFWUco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:32:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507F220702;
-        Tue, 23 Jun 2020 20:32:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE65720702;
+        Tue, 23 Jun 2020 20:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944355;
-        bh=Qrr1m8gojHbUX+fhFTpH2yIQvrlfbVIgli/PbtQG+OU=;
+        s=default; t=1592944363;
+        bh=lZkl/E3sQrdOdFpk52WgVB9OrTaZ4kQBZVQ+ZRMcZ2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hY11oDHlecZVKj7OhHMGIM4kzzedh3736QmZuHDIvAybt4myDuth3XAKilj//UEZG
-         21xQisl1+5b288D3lNFnAhra4w8Cn1S5lseMlD6WqALVESaIztHjEYKKXx/b1QjBUW
-         3J5L1ykDESPMR4BmpH9XosriKuEaodFsKZ2IABag=
+        b=o8DLbm/Sfz7+K2U3iDPk5fMQju7AP4jpnMql+BXsXjAqaY/54GZ7CkCyTaHva1fT3
+         Di7Ljdp3H77KzFdqrtXvqEv3Ei2F1IxzwWrS0YstgqRPbthS+trLoC4D5tng1BM7sB
+         u+fcvIXqlb8Y2ZMAuq6lg2abx1hTfs70JNrmeVHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>, Jan Kara <jack@suse.cz>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 273/314] afs: Fix the mapping of the UAEOVERFLOW abort code
-Date:   Tue, 23 Jun 2020 21:57:48 +0200
-Message-Id: <20200623195352.007615514@linuxfoundation.org>
+Subject: [PATCH 5.4 276/314] block: Fix use-after-free in blkdev_get()
+Date:   Tue, 23 Jun 2020 21:57:51 +0200
+Message-Id: <20200623195352.149038453@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -59,37 +64,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Jason Yan <yanaijie@huawei.com>
 
-[ Upstream commit 4ec89596d06bd481ba827f3b409b938d63914157 ]
+[ Upstream commit 2d3a8e2deddea6c89961c422ec0c5b851e648c14 ]
 
-Abort code UAEOVERFLOW is returned when we try and set a time that's out of
-range, but it's currently mapped to EREMOTEIO by the default case.
+In blkdev_get() we call __blkdev_get() to do some internal jobs and if
+there is some errors in __blkdev_get(), the bdput() is called which
+means we have released the refcount of the bdev (actually the refcount of
+the bdev inode). This means we cannot access bdev after that point. But
+acctually bdev is still accessed in blkdev_get() after calling
+__blkdev_get(). This results in use-after-free if the refcount is the
+last one we released in __blkdev_get(). Let's take a look at the
+following scenerio:
 
-Fix UAEOVERFLOW to map instead to EOVERFLOW.
+  CPU0            CPU1                    CPU2
+blkdev_open     blkdev_open           Remove disk
+                  bd_acquire
+		  blkdev_get
+		    __blkdev_get      del_gendisk
+					bdev_unhash_inode
+  bd_acquire          bdev_get_gendisk
+    bd_forget           failed because of unhashed
+	  bdput
+	              bdput (the last one)
+		        bdev_evict_inode
 
-Found with the generic/258 xfstest.  Note that the test is wrong as it
-assumes that the filesystem will support a pre-UNIX-epoch date.
+	  	    access bdev => use after free
 
-Fixes: 1eda8bab70ca ("afs: Add support for the UAE error table")
-Signed-off-by: David Howells <dhowells@redhat.com>
+[  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
+[  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
+[  459.352347]
+[  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
+[  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[  459.354947] Call Trace:
+[  459.355337]  dump_stack+0x111/0x19e
+[  459.355879]  ? __lock_acquire+0x24c1/0x31b0
+[  459.356523]  print_address_description+0x60/0x223
+[  459.357248]  ? __lock_acquire+0x24c1/0x31b0
+[  459.357887]  kasan_report.cold+0xae/0x2d8
+[  459.358503]  __lock_acquire+0x24c1/0x31b0
+[  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
+[  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.361123]  ? finish_task_switch+0x125/0x600
+[  459.361812]  ? finish_task_switch+0xee/0x600
+[  459.362471]  ? mark_held_locks+0xf0/0xf0
+[  459.363108]  ? __schedule+0x96f/0x21d0
+[  459.363716]  lock_acquire+0x111/0x320
+[  459.364285]  ? blkdev_get+0xce/0xbe0
+[  459.364846]  ? blkdev_get+0xce/0xbe0
+[  459.365390]  __mutex_lock+0xf9/0x12a0
+[  459.365948]  ? blkdev_get+0xce/0xbe0
+[  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
+[  459.367130]  ? blkdev_get+0xce/0xbe0
+[  459.367678]  ? destroy_inode+0xbc/0x110
+[  459.368261]  ? mutex_trylock+0x1a0/0x1a0
+[  459.368867]  ? __blkdev_get+0x3e6/0x1280
+[  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
+[  459.370114]  ? blkdev_get+0xce/0xbe0
+[  459.370656]  blkdev_get+0xce/0xbe0
+[  459.371178]  ? find_held_lock+0x2c/0x110
+[  459.371774]  ? __blkdev_get+0x1280/0x1280
+[  459.372383]  ? lock_downgrade+0x680/0x680
+[  459.373002]  ? lock_acquire+0x111/0x320
+[  459.373587]  ? bd_acquire+0x21/0x2c0
+[  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.374780]  blkdev_open+0x202/0x290
+[  459.375325]  do_dentry_open+0x49e/0x1050
+[  459.375924]  ? blkdev_get_by_dev+0x70/0x70
+[  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
+[  459.377192]  ? inode_permission+0xbe/0x3a0
+[  459.377818]  path_openat+0x148c/0x3f50
+[  459.378392]  ? kmem_cache_alloc+0xd5/0x280
+[  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.379802]  ? path_lookupat.isra.0+0x900/0x900
+[  459.380489]  ? __lock_is_held+0xad/0x140
+[  459.381093]  do_filp_open+0x1a1/0x280
+[  459.381654]  ? may_open_dev+0xf0/0xf0
+[  459.382214]  ? find_held_lock+0x2c/0x110
+[  459.382816]  ? lock_downgrade+0x680/0x680
+[  459.383425]  ? __lock_is_held+0xad/0x140
+[  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.384668]  ? _raw_spin_unlock+0x1f/0x30
+[  459.385280]  ? __alloc_fd+0x448/0x560
+[  459.385841]  do_sys_open+0x3c3/0x500
+[  459.386386]  ? filp_open+0x70/0x70
+[  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
+[  459.388342]  ? do_syscall_64+0x1a/0x520
+[  459.388930]  do_syscall_64+0xc3/0x520
+[  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.390248] RIP: 0033:0x416211
+[  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
+04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
+   05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
+      01
+[  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+[  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
+[  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
+[  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
+[  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
+[  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
+[  459.400168]
+[  459.400430] Allocated by task 20132:
+[  459.401038]  kasan_kmalloc+0xbf/0xe0
+[  459.401652]  kmem_cache_alloc+0xd5/0x280
+[  459.402330]  bdev_alloc_inode+0x18/0x40
+[  459.402970]  alloc_inode+0x5f/0x180
+[  459.403510]  iget5_locked+0x57/0xd0
+[  459.404095]  bdget+0x94/0x4e0
+[  459.404607]  bd_acquire+0xfa/0x2c0
+[  459.405113]  blkdev_open+0x110/0x290
+[  459.405702]  do_dentry_open+0x49e/0x1050
+[  459.406340]  path_openat+0x148c/0x3f50
+[  459.406926]  do_filp_open+0x1a1/0x280
+[  459.407471]  do_sys_open+0x3c3/0x500
+[  459.408010]  do_syscall_64+0xc3/0x520
+[  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.409415]
+[  459.409679] Freed by task 1262:
+[  459.410212]  __kasan_slab_free+0x129/0x170
+[  459.410919]  kmem_cache_free+0xb2/0x2a0
+[  459.411564]  rcu_process_callbacks+0xbb2/0x2320
+[  459.412318]  __do_softirq+0x225/0x8ac
+
+Fix this by delaying bdput() to the end of blkdev_get() which means we
+have finished accessing bdev.
+
+Fixes: 77ea887e433a ("implement in-kernel gendisk events handling")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/misc.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/block_dev.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/afs/misc.c b/fs/afs/misc.c
-index 52b19e9c15351..5334f1bd2bca7 100644
---- a/fs/afs/misc.c
-+++ b/fs/afs/misc.c
-@@ -83,6 +83,7 @@ int afs_abort_to_error(u32 abort_code)
- 	case UAENOLCK:			return -ENOLCK;
- 	case UAENOTEMPTY:		return -ENOTEMPTY;
- 	case UAELOOP:			return -ELOOP;
-+	case UAEOVERFLOW:		return -EOVERFLOW;
- 	case UAENOMEDIUM:		return -ENOMEDIUM;
- 	case UAEDQUOT:			return -EDQUOT;
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 34644ce4b5025..2dc9c73a4cb29 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1546,10 +1546,8 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	 */
+ 	if (!for_part) {
+ 		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
+-		if (ret != 0) {
+-			bdput(bdev);
++		if (ret != 0)
+ 			return ret;
+-		}
+ 	}
  
+  restart:
+@@ -1618,8 +1616,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 				goto out_clear;
+ 			BUG_ON(for_part);
+ 			ret = __blkdev_get(whole, mode, 1);
+-			if (ret)
++			if (ret) {
++				bdput(whole);
+ 				goto out_clear;
++			}
+ 			bdev->bd_contains = whole;
+ 			bdev->bd_part = disk_get_part(disk, partno);
+ 			if (!(disk->flags & GENHD_FL_UP) ||
+@@ -1669,7 +1669,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	disk_unblock_events(disk);
+ 	put_disk_and_module(disk);
+  out:
+-	bdput(bdev);
+ 
+ 	return ret;
+ }
+@@ -1736,6 +1735,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
+ 		bdput(whole);
+ 	}
+ 
++	if (res)
++		bdput(bdev);
++
+ 	return res;
+ }
+ EXPORT_SYMBOL(blkdev_get);
 -- 
 2.25.1
 
