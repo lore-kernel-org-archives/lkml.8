@@ -2,124 +2,136 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E02C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D5BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D740320702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945972;
-	bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1PHErm+wyr6iKct9LzLey7sg5mpX4K7wV1Z9RaUHuUSQGFAWbUJgSMC3i8OAbaL5+
-	 d4TOevUPiEUMAO4YOMkPltzhsPJqTbTSnTMgwkHWzLF9MhTYcE+pX+d1h1YtuebUW9
-	 FdHR7b9c+nCpqrKBgGi+vQMBTwKG7VMW7scw9wEM=
+	by mail.kernel.org (Postfix) with ESMTP id 0992020702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iyeMTBPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393107AbgFWU7a (ORCPT
+        id S2393116AbgFWU7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:59:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403816AbgFWUk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF0E020702;
-        Tue, 23 Jun 2020 20:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944858;
-        bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXwdwyZPFu0QzQlZ+EmgR/zCafL0QcevBzyZ8/iZraOgSNCVs4ON6x6DI491Y/5RS
-         5ybGNXiyHeaDd6nusw5vl4b44+3sGUwgLYdNPoAEz4I8uNHyvkou1kv7oz0raDRzel
-         oyjfmqh91NSXolsRMWjOxnbBIlW8fZNjmqkmGeBg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 152/206] selftests/net: in timestamping, strncpy needs to preserve null byte
-Date:   Tue, 23 Jun 2020 21:58:00 +0200
-Message-Id: <20200623195324.468011841@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 16:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391418AbgFWU7e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:59:34 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FF9C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:59:34 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 18so3454003otv.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:59:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MMK5qVAbSt1rK51R9btGsARYaJbNedHeaCPVNS4QMh0=;
+        b=iyeMTBPEtKOQUdZksy9A2LphrJXXdLKwANILu0UWPQPF+YBcKyR676TocMuovRULka
+         S6GfGaka/7SOVuzQGvTVhj8e7ZKf/i0r7sQPog6f8FYszAIQ5NLlZVyTk6RBdnF6+uic
+         4CU4tjvcwG4yY1Wzzkd7ehtkqi/21o2D1nwqBxVTjLkpCYbqbQYQDSIL3TIhNeh6ydrr
+         eHgPcbAZqrYjSPraev/Ip7rwuOU2xeMs96G2jiDEWSV/prNfIeZeolWMgDUon7tczct7
+         hEG74eT2y8VoOTFVPso5xd7Kcuh3TBEw9OyvUzd98MAueq7T27CRQmbDu8+VQGaxOxer
+         Ub8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MMK5qVAbSt1rK51R9btGsARYaJbNedHeaCPVNS4QMh0=;
+        b=Q0X+doqSZORyrXmjXBKasMWzTRAnPgins9xFtIJoay7j3SO2wU8bAcY9AXX1DhL51N
+         6NPafwkW/m9WRgWRKSsh2TMLEXuqHe52mQDkk2E5m489qPHLHvkxl2iw5BprAtvaI8TM
+         MvBEDIjbDw0ebo/YP/BLxixjDOGF45y7mvLnHTQeTEH3eoVz/Y8PjNto3dqsiQsz5ooN
+         ahMV36fcXH5xRNls61v0MIKynTU0h4ux2Vh5fcl9zqXJVM/doZH75LjYzhJMJ3A0P9I9
+         zGTPViBtM8xSclDYDjZgZKWqfNaDMe6gdluBGEHOYDRMzoVL65vgLy1B/5iGs6EnN9AH
+         Os1w==
+X-Gm-Message-State: AOAM533J1K5qiAIWQnWxQqnJKKtTvV4nrN59SmkZfzPbhgEMyenWO2sa
+        YfFM8OmyhYgeazPemLjwIZOZb9eAU/UpLlhT29oTDQ==
+X-Google-Smtp-Source: ABdhPJyHuNZxBjdsvKwLfr+iff/2GdI2ai1mugVC+vZAzM5Srohzqfwls5UvX5BiAG+czjXrWmLupnGITM07tg6B1O8=
+X-Received: by 2002:a4a:e702:: with SMTP id y2mr10264640oou.36.1592945973716;
+ Tue, 23 Jun 2020 13:59:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cf7c83d0b58aa4912b465392ce8e40a974f250bb.camel@posk.io>
+ <20200623132507.GA875@aaronlu-desktop> <d29a2ba031ecd96f785a602e703d97e24980ef15.camel@posk.io>
+ <20200623194529.GA71413@gmail.com>
+In-Reply-To: <20200623194529.GA71413@gmail.com>
+From:   Peter Oskolkov <posk@google.com>
+Date:   Tue, 23 Jun 2020 13:59:22 -0700
+Message-ID: <CAPNVh5eNJfe6yBhXeOikdBRyjKJc_p3PJRzK4kX0rRGUswZa0A@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3 v2] futex: introduce FUTEX_SWAP operation
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     Peter Oskolkov <posk@posk.io>, Aaron Lu <aaron.lwe@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Andrei Vagin <avagin@google.com>,
+        "pjt@google.com" <pjt@google.com>, Ben Segall <bsegall@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+On Tue, Jun 23, 2020 at 12:45 PM Andrei Vagin <avagin@gmail.com> wrote:
+>
+> On Tue, Jun 23, 2020 at 11:30:30AM -0700, Peter Oskolkov wrote:
+> ...
+> > > >  /**
+> > > > +static int futex_swap(u32 __user *uaddr, unsigned int flags, u32
+> > > > val,
+> > > > +               ktime_t *abs_time, u32 __user *uaddr2)
+> > > > +{
+> > > > + u32 bitset = FUTEX_BITSET_MATCH_ANY;
+> > > > + struct task_struct *next = NULL;
+> > > > + DEFINE_WAKE_Q(wake_q);
+> > > > + int ret;
+> > > > +
+> > > > + ret = prepare_wake_q(uaddr2, flags, 1, bitset, &wake_q);
+> > > > + if (!wake_q_empty(&wake_q)) {
+> > > > +         /* Pull the first wakee out of the queue to swap into.
+> > > > */
+> > > > +         next = container_of(wake_q.first, struct task_struct,
+> > > > wake_q);
+> > > > +         wake_q.first = wake_q.first->next;
+> > > > +         next->wake_q.next = NULL;
+> > > > +         /*
+> > > > +          * Note that wake_up_q does not touch wake_q.last, so
+> > > > we
+> > > > +          * do not bother with it here.
+> > > > +          */
+> > > > +         wake_up_q(&wake_q);
+> > >
+> > > wake_up_q() doesn't seem to serve any purpose in that the above
+> > > assignment of wake_q.first shall make it an empty queue now?
+> > > Also, I don't see a need to touch wake_q.first either so I think we
+> > > can
+> > > get rid of wake_q altogether here.
+> >
+> > The futex at uaddr2 may have more than one waiter, so we cannot assume
+> > that wake_q will be empty when we remove the first element.
+>
+> The third argument of prepare_wake_q is nr_wake which is one in this
+> case, so we can be sure that wake_q will be empty, can't we?
 
-[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
+Right, sorry. In an early draft it was possible to wake more than one waiter,
+and the code carried over from then/there in this form. I'll remove wake_up_q()
+if/when the API will be deemed acceptable by the maintainers.
 
-If user passed an interface option longer than 15 characters, then
-device.ifr_name and hwtstamp.ifr_name became non-null-terminated
-strings. The compiler warned about this:
-
-timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
-destination size [-Wstringop-truncation]
-  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-
-Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
-index 5cdfd743447b7..900ed4b478996 100644
---- a/tools/testing/selftests/networking/timestamping/timestamping.c
-+++ b/tools/testing/selftests/networking/timestamping/timestamping.c
-@@ -332,10 +332,16 @@ int main(int argc, char **argv)
- 	int val;
- 	socklen_t len;
- 	struct timeval next;
-+	size_t if_len;
- 
- 	if (argc < 2)
- 		usage(0);
- 	interface = argv[1];
-+	if_len = strlen(interface);
-+	if (if_len >= IFNAMSIZ) {
-+		printf("interface name exceeds IFNAMSIZ\n");
-+		exit(1);
-+	}
- 
- 	for (i = 2; i < argc; i++) {
- 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
-@@ -369,12 +375,12 @@ int main(int argc, char **argv)
- 		bail("socket");
- 
- 	memset(&device, 0, sizeof(device));
--	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-+	memcpy(device.ifr_name, interface, if_len + 1);
- 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
- 		bail("getting interface IP address");
- 
- 	memset(&hwtstamp, 0, sizeof(hwtstamp));
--	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
-+	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
- 	hwtstamp.ifr_data = (void *)&hwconfig;
- 	memset(&hwconfig, 0, sizeof(hwconfig));
- 	hwconfig.tx_type =
--- 
-2.25.1
-
-
-
+>
+> >
+> > >
+> > > > + }
+> > > > + if (ret < 0)
+> > > > +         return ret;
+> > > > +
+> > > > + return futex_wait(uaddr, flags, val, abs_time, bitset, next);
+> > > > +}
+> > >
