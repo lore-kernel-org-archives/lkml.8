@@ -2,189 +2,405 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37716C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF1320767
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:25:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592900701;
-	bh=hlJ9LORbnEGGoe61FJRAAwA6gCTDCRI6rwTib7m7SFU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Wktiv4ka4U50JPQg3UR9pUWxoNuDqoWxL9RY06U+AtW/QhCk8fHOwTeV5RAe/FW5F
-	 qoSB+WQbZ5qVrb+c08dK2T4+US+MpQF7cpj6xvWh8Mi61AKkVNulqvkpXJG69vPt1/
-	 ajhbJybgpbznfrV8IMhy+xqQp1sFxibI6WASx2qU=
+	by mail.kernel.org (Postfix) with ESMTP id E4F492072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:25:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kKOABJKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731732AbgFWIY7 (ORCPT
+        id S1731768AbgFWIZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731567AbgFWIY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:24:59 -0400
-Received: from coco.lan (unknown [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43FEE2072E;
-        Tue, 23 Jun 2020 08:24:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592900698;
-        bh=hlJ9LORbnEGGoe61FJRAAwA6gCTDCRI6rwTib7m7SFU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JPNdRhZBYg7QeDl5hOx4AJ7HAdJPHLP3k/shl92PI6pXgDw+Kncj4Cv0dqYcK/7/Y
-         EhEvrtC3isHRy3poyej0xQyl3LSpY/jIZlZ4FgEp7SQV0KiFQwRwClDMR+4ZGoxMRU
-         rcmEsa4hJtnTG/dpgAPMqgquFDNRgjCgWbFrEozw=
-Date:   Tue, 23 Jun 2020 10:24:54 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 18/22] docs: trace: ring-buffer-design.txt: convert to
- ReST format
-Message-ID: <20200623102454.4ca57b61@coco.lan>
-In-Reply-To: <20200619164114.00379740@oasis.local.home>
-References: <cover.1592203650.git.mchehab+huawei@kernel.org>
-        <c11ee0be2bf63626887d7cd38e7572b31e2a2ce2.1592203650.git.mchehab+huawei@kernel.org>
-        <20200619141329.3867e57e@lwn.net>
-        <20200619164114.00379740@oasis.local.home>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 23 Jun 2020 04:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731630AbgFWIZs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:25:48 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52C1C061795
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 01:25:46 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id j18so2120667wmi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 01:25:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EindUy1KykqPVILpEGr4jUAyu70krV4jHpQOVk2rR6s=;
+        b=kKOABJKf3seoFcZ0yOWEfPGnDQox0mqQS6CtpM1W9PiPyGAD1BR465kldIhb0x0cJH
+         P4mJFPRw3ox9NCNS5vXL+rDFR8N9xoaYNd09+vyDMR/5zSPYyJfJB57kzKDkEhMjJL/3
+         FcYu3DPfNqsV/Aa/hSWydlRFa1oZCD9zKEwcBRt80EK/LqSBMaAqqWSVb4k/CwGgGpi7
+         zvEVOEysCBnThEVcVAzKQhHk8zq+pYqV2/GW2ZoQHbDjKUz64l6TlGN+XUWvhjUrMuud
+         qPXrebyFTiZeN33v+8azfHc2z0iKj0tFjzfPcHAUjTXVYA8NIl7spw9m1Vc0PSyRtgri
+         ZlKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=EindUy1KykqPVILpEGr4jUAyu70krV4jHpQOVk2rR6s=;
+        b=CgjOjhQ86kiZN9g4cGw9LyKTxWkZSxsj367gZbCEmayHPPVmOGPd0Ae7mYWkxK1xS3
+         mhPbf60lkOQw2EOtT4W+lsZVtHKpvbcRh3eC1f4h64d94tFIyEo9oTjNADlETBaeu+9+
+         n6UCGCJl5vk7ldzCQZBn2iJBMyZN5CVIuVXjQl+wpy37g6AQ/4JyEZl9xYVdCV3j8rpJ
+         REM4jDTUnD2aoyEF3M8SeDcm0TSkyvR2c+uy85fECIfyjNUgiA3loUFRhuLKABsPXGm0
+         3DwnvOmfppsmZxW4oAvyJHdww7yzxMNw53RrS1V7fb+0HGV5cCwxQt04p4LSbQLnc8gf
+         baWw==
+X-Gm-Message-State: AOAM531uIwhYltzdDNP95L/94Ee99nzVn4LzHuak00FyXvA9HpKFbVp/
+        d9GpCUQrM0GdUZFVfX56nMQUOQ==
+X-Google-Smtp-Source: ABdhPJzGLlSGLKY3Ns6BF27wm9aj33E4Evq0EuonKQlU/zri6AT/MtIq0tcYwXfoKdgJh2Qa6uG/ig==
+X-Received: by 2002:a1c:2e47:: with SMTP id u68mr23532842wmu.45.1592900743832;
+        Tue, 23 Jun 2020 01:25:43 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:89ac:d9e8:f44c:b137? ([2a01:e35:2ec0:82b0:89ac:d9e8:f44c:b137])
+        by smtp.gmail.com with ESMTPSA id b19sm2819786wmj.0.2020.06.23.01.25.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 01:25:43 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] thermal: add support for the MCU controlled FAN on
+ Khadas boards
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, lee.jones@linaro.org
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com,
+        Amit Kucheria <amit.kucheria@linaro.org>
+References: <20200618133818.15857-1-narmstrong@baylibre.com>
+ <20200618133818.15857-2-narmstrong@baylibre.com>
+ <53aa62a3-1d8e-bc91-1a2b-88c766276beb@linaro.org>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <5f7154f6-c527-6665-4f7b-affd3cd62b70@baylibre.com>
+Date:   Tue, 23 Jun 2020 10:25:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <53aa62a3-1d8e-bc91-1a2b-88c766276beb@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 19 Jun 2020 16:41:14 -0400
-Steven Rostedt <rostedt@goodmis.org> escreveu:
+Hi Daniel,
 
-> On Fri, 19 Jun 2020 14:13:29 -0600
-> Jonathan Corbet <corbet@lwn.net> wrote:
+On 22/06/2020 21:46, Daniel Lezcano wrote:
+> On 18/06/2020 15:38, Neil Armstrong wrote:
+>> The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
+>> on-board microcontroller.
+>>
+>> This implements the FAN control as thermal devices and as cell of the Khadas
+>> MCU MFD driver.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> ---
+>> Hi Lee,
+>>
+>> Could you apply this patch via the MFD tree since it depends on
+>> the linux/mfd/khadas-mcu.h header ?
+>>
+>> This patch is unchanged from the v3 serie.
+>>
+>> Thanks,
+>> Neil
+>>
+>>  drivers/thermal/Kconfig          |  11 ++
+>>  drivers/thermal/Makefile         |   1 +
+>>  drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
+>>  3 files changed, 186 insertions(+)
+>>  create mode 100644 drivers/thermal/khadas_mcu_fan.c
+>>
+>> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+>> index 3eb2348e5242..0125561488c9 100644
+>> --- a/drivers/thermal/Kconfig
+>> +++ b/drivers/thermal/Kconfig
+>> @@ -500,4 +500,15 @@ config SPRD_THERMAL
+>>  	help
+>>  	  Support for the Spreadtrum thermal sensor driver in the Linux thermal
+>>  	  framework.
+>> +
+>> +config KHADAS_MCU_FAN_THERMAL
+>> +	tristate "Khadas MCU controller FAN cooling support"
+>> +	depends on OF || COMPILE_TEST
+>> +	depends on MFD_KHADAS_MCU
+>> +	select MFD_CORE
+>> +	select REGMAP
+>> +	help
+>> +	  If you say yes here you get support for the FAN controlled
+>> +	  by the Microcontroller found on the Khadas VIM boards.
+>> +
+>>  endif
+>> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+>> index 0c8b84a09b9a..4b6aabaa7e31 100644
+>> --- a/drivers/thermal/Makefile
+>> +++ b/drivers/thermal/Makefile
+>> @@ -61,3 +61,4 @@ obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
+>>  obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
+>>  obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
+>>  obj-$(CONFIG_SPRD_THERMAL)	+= sprd_thermal.o
+>> +obj-$(CONFIG_KHADAS_MCU_FAN_THERMAL)	+= khadas_mcu_fan.o
+>> diff --git a/drivers/thermal/khadas_mcu_fan.c b/drivers/thermal/khadas_mcu_fan.c
+>> new file mode 100644
+>> index 000000000000..6995b443cad4
+>> --- /dev/null
+>> +++ b/drivers/thermal/khadas_mcu_fan.c
+>> @@ -0,0 +1,174 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * Khadas MCU Controlled FAN driver
+>> + *
+>> + * Copyright (C) 2020 BayLibre SAS
+>> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/mfd/khadas-mcu.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/sysfs.h>
+>> +#include <linux/thermal.h>
+>> +
+>> +#define MAX_LEVEL 3
+>> +
+>> +struct khadas_mcu_fan_ctx {
+>> +	struct khadas_mcu *mcu;
+>> +	unsigned int level;
+>> +	struct thermal_cooling_device *cdev;
+>> +};
+>> +
+>> +static int khadas_mcu_fan_set_level(struct khadas_mcu_fan_ctx *ctx,
+>> +				    unsigned int level)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = regmap_write(ctx->mcu->regmap, KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
+>> +			   level);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ctx->level = level;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int khadas_mcu_fan_get_max_state(struct thermal_cooling_device *cdev,
+>> +					unsigned long *state)
+>> +{
+>> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+>> +
+>> +	if (!ctx)
+>> +		return -EINVAL;
 > 
-> > On Mon, 15 Jun 2020 08:50:23 +0200
-> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > 
-> > [CC += Steve]  
+> It is pointless to check 'ctx' is NULL, that was done at probe time.
 > 
-> Thanks.
+>> +	*state = MAX_LEVEL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int khadas_mcu_fan_get_cur_state(struct thermal_cooling_device *cdev,
+>> +					unsigned long *state)
+>> +{
+>> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+>> +
+>> +	if (!ctx)
+>> +		return -EINVAL;
 > 
-> >   
-> > > - Just like some media documents, this file is dual licensed
-> > >   with GPL and GFDL. As right now the GFDL SPDX definition is
-> > >   bogus (as it doesn't tell anything about invariant parts),
-> > >   let's not use SPDX here. Let's use, instead, the same test
-> > >   as we have on media.    
-> > 
-> > The dual-licensing really can't be expressed with an SPDX tag?  Because...  
+> Ditto
 > 
-> A SPDX dual license should be possible, as it's used for GPL and BSD in
-> several locations.
+>> +	*state = ctx->level;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int
+>> +khadas_mcu_fan_set_cur_state(struct thermal_cooling_device *cdev,
+>> +			     unsigned long state)
+>> +{
+>> +	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+>> +
+>> +	if (!ctx || (state > MAX_LEVEL))
+>> +		return -EINVAL;
+> 
+> Ditto
 
-Until one week ago, this was not possible, because SPDX headers
-were broken for GFDL:
-
-	https://github.com/spdx/license-list-XML/issues/686
-	https://github.com/spdx/license-list-XML/issues/970
-
-There are 2 types of GFDL licenses:
-	- a Free license where the entire document allows
-	  reviewing/changing;
-	- a non-free variant, were some parts of the document
-	  have a non-free license, where only the author can
-	  change (called invariant parts).
-
-Basically, some distro policies don't allow shipping documents
-under the non-free version of GFDL.
-
-The SPDX spec (up to version 3.9) doesn't allow differentiating
-between them.
-
--
-
-There's now an upstream patch (at SPDX) to be merged on the upcoming
-versin 3.10 that will allow us to finally get rid of those:
-
-	https://github.com/spdx/license-list-XML/pull/1048/commits/f695d2ac65230d0f4161ba58fff2f9d87bb5a053#diff-b948674e5c5cf6341e44e76b2565e80c
-
-The GFDL-1.2 with no invariant sections is defined as:
-
-	<SPDXLicenseCollection xmlns="http://www.spdx.org/license">
-	  <license licenseId="GFDL-1.2-only-no-invariants" isOsiApproved="false"
-	  name="GNU Free Documentation License v1.2 only - no invariants">
-	    <crossRefs>
-	      <crossRef>https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt</crossRef>
-	    </crossRefs>
-	    <standardLicenseHeader>
-	      Copyright (c) <alt name="copyright" match=".+">YEAR YOUR NAME</alt>.
-	      Permission is granted to copy, distribute and/or modify this
-	      document under the terms of the GNU Free Documentation License,
-	      Version 1.2; with no Invariant Sections, no Front-Cover Texts,
-	      and no Back-Cover Texts. A copy of the license is included
-	      in the section entitled "GNU Free Documentation License".
-	    </standardLicenseHeader>
-	    <notes>
-	      This license was released November 2002. The identifier 
-	      GFDL-1.2-only-no-invariants should only be used when there are 
-	      no Invariant Sections, Front-Cover Texts or Back-Cover Texts. 
-	      See GFDL-1.2-only and GFDL-1.2-only-invariants for alternatives.
-	    </notes>
+Will remove these.
 
 > 
-> > 
-> > [...]
-> >   
-> > > +.. This file is dual-licensed: you can use it either under the terms
-> > > +.. of the GPL 2.0 or the GFDL 1.2+ license, at your option. Note that this  
+>> +	if (state == ctx->level)
+>> +		return 0;
+>> +
+>> +	return khadas_mcu_fan_set_level(ctx, state);
+>> +}
+>> +
+>> +static const struct thermal_cooling_device_ops khadas_mcu_fan_cooling_ops = {
+>> +	.get_max_state = khadas_mcu_fan_get_max_state,
+>> +	.get_cur_state = khadas_mcu_fan_get_cur_state,
+>> +	.set_cur_state = khadas_mcu_fan_set_cur_state,
+>> +};
+>> +
+>> +static int khadas_mcu_fan_probe(struct platform_device *pdev)
+>> +{
+>> +	struct khadas_mcu *mcu = dev_get_drvdata(pdev->dev.parent);
+>> +	struct thermal_cooling_device *cdev;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct khadas_mcu_fan_ctx *ctx;
+>> +	int ret;
+>> +
+>> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+>> +	if (!ctx)
+>> +		return -ENOMEM;
+>> +	ctx->mcu = mcu;
+>> +	platform_set_drvdata(pdev, ctx);
+>> +
+>> +	cdev = devm_thermal_of_cooling_device_register(dev->parent,
+>> +			dev->parent->of_node, "khadas-mcu-fan", ctx,
+>> +			&khadas_mcu_fan_cooling_ops);
+>> +	if (IS_ERR(cdev)) {
+>> +		ret = PTR_ERR(cdev);
+>> +		dev_err(dev,
+>> +				"Failed to register khadas-mcu-fan as cooling device: %d\n",
+>> +				ret);
+>> +		return ret;
+>> +	}
+>> +	ctx->cdev = cdev;
+>> +	thermal_cdev_update(cdev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int khadas_mcu_fan_disable(struct device *dev)
+>> +{
+>> +	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
+>> +	unsigned int level_save = ctx->level;
+>> +	int ret;
+>> +
+>> +	ret = khadas_mcu_fan_set_level(ctx, 0);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ctx->level = level_save;
 > 
-> And I never said GFDL 1.2+
+> Nitpicking : move the save section to suspend.
 
-Ah, right. I'll fix it.
+OK, but moving this makes khadas_mcu_fan_disable() useless.
 
 > 
->  Copyright 2009 Red Hat Inc.                                                                                                                                                                  
-> -   Author:   Steven Rostedt <srostedt@redhat.com>                                                                                                                                            
-> -  License:   The GNU Free Documentation License, Version 1.2                                                                                                                                 
-> -               (dual licensed under the GPL v2)                                                                                                                                              
-> -Reviewers:   Mathieu Desnoyers, Huang Ying, Hidetoshi Seto,
+>> +	return 0;
+>> +}
+>> +
+>> +static void khadas_mcu_fan_shutdown(struct platform_device *pdev)
+>> +{
+>> +	khadas_mcu_fan_disable(&pdev->dev);
+>> +}
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int khadas_mcu_fan_suspend(struct device *dev)
+>> +{
+>> +	return khadas_mcu_fan_disable(dev);
+>> +}
+>> +
+>> +static int khadas_mcu_fan_resume(struct device *dev)
+>> +{
+>> +	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
+>> +
+>> +	return khadas_mcu_fan_set_level(ctx, ctx->level);
 > 
-> There is no "+" sign here.
-> 
-> 
-> > > +.. dual licensing only applies to this file, and not this project as a
-> > > +.. whole.
-> > > +..
-> > > +.. a) This file is free software; you can redistribute it and/or
-> > > +..    modify it under the terms of the GNU General Public License as
-> > > +..    published by the Free Software Foundation version 2 of
-> > > +..    the License.
-> > > +..
-> > > +..    This file is distributed in the hope that it will be useful,
-> > > +..    but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > +..    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > > +..    GNU General Public License for more details.
-> > > +..
-> > > +.. Or, alternatively,
-> > > +..
-> > > +.. b) Permission is granted to copy, distribute and/or modify this
-> > > +..    document under the terms of the GNU Free Documentation License,
-> > > +..    Version 1.1 or any later version published by the Free Software
-> > > +..    Foundation, with no Invariant Sections, no Front-Cover Texts
-> > > +..    and no Back-Cover Texts. A copy of the license is available at
-> > > +..    https://www.gnu.org/licenses/old-licenses/fdl-1.2.html
-> > > +..
-> > > +.. TODO: replace it to GPL-2.0 OR GFDL-1.2-or-later WITH no-invariant-sections    
-> 
->   "GPL-2.0 OR GFDL-1.2"
+> Out of curiosity, did you check the fan is not continuously spinning
+> after a resume when the suspend happened during a mitigation phase?
 
-It should actually be:
+No, but I took the logic from the hmwmon pwm-fan driver.
 
-	"GPL-2.0 OR GFDL-1.2-only-no-invariants"
+Not sure this is critical here.
 
-Thanks,
-Mauro
+Neil
+
+> 
+>> +}
+>> +#endif
+>> +
+>> +static SIMPLE_DEV_PM_OPS(khadas_mcu_fan_pm, khadas_mcu_fan_suspend,
+>> +			 khadas_mcu_fan_resume);
+>> +
+>> +static const struct platform_device_id khadas_mcu_fan_id_table[] = {
+>> +	{ .name = "khadas-mcu-fan-ctrl", },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(platform, khadas_mcu_fan_id_table);
+>> +
+>> +static struct platform_driver khadas_mcu_fan_driver = {
+>> +	.probe		= khadas_mcu_fan_probe,
+>> +	.shutdown	= khadas_mcu_fan_shutdown,
+>> +	.driver	= {
+>> +		.name		= "khadas-mcu-fan-ctrl",
+>> +		.pm		= &khadas_mcu_fan_pm,
+>> +	},
+>> +	.id_table	= khadas_mcu_fan_id_table,
+>> +};
+>> +
+>> +module_platform_driver(khadas_mcu_fan_driver);
+>> +
+>> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
+>> +MODULE_DESCRIPTION("Khadas MCU FAN driver");
+>> +MODULE_LICENSE("GPL");
+>>
+> 
+> 
+
