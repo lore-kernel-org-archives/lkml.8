@@ -2,204 +2,128 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B31C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F83C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE56B20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847CC20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EEtuDPY1"
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="O84lAlQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733291AbgFWSoK (ORCPT
+        id S1733307AbgFWSoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:44:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37474 "EHLO
+        Tue, 23 Jun 2020 14:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733165AbgFWSoJ (ORCPT
+        with ESMTP id S1733165AbgFWSoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:44:09 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E9CC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:44:09 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k6so9476882pll.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:44:09 -0700 (PDT)
+        Tue, 23 Jun 2020 14:44:24 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BD2C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:44:24 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id m21so17118844eds.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:44:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tVAIyD3Q99J/GMICmIeAkqQ2ozy/kJogio/DjqwTxd4=;
-        b=EEtuDPY1GbikBTAidPmbruDGK25MoKvifRm2YmKNSvVSMvFkFGfcPTszizFx2ZO3Uc
-         VNDcm8tXj7W4BZ67+zXiWFMUJeQMWwX7CJ+SmVkQwAhpSmSqz6RooI3VNHZvSI22AX4q
-         GhueAACCOt8kapWjNle+aPk73Tv67szjODnpgYlgly1k0XkWlFEdJ9aQe3UQcXyAYIQh
-         7VkjMTQXs7Cq3aiwm6zuFGGWz71MaoIv056BfM1iILj/PYWhcssB1XpQB4SaQ0PCgmKd
-         pZUCqmFogFjudphRkRaHEekSJo8uPDk6HpzBuBQexLeH10hIbWEbGvUBi0Fd7ag2gRP3
-         CX8Q==
+        bh=YHRfY/482pH60fZPQJikxqae/P0Z6lDDbQXNlIRp7tc=;
+        b=O84lAlQtan6g3BHHHf7sIEL60Tt8VsrCeEVE8CQeBdNfZtWiEkIBf5EnEBTSnOIYhV
+         EPdW4t8kcLvZ9LhfuTnNxdMsJ721WftZAm2YfItBlw7ZCfjOPOaCPgEhEUNc/LV9MpMT
+         UfTabuopH1KekbGurNoL/s3jNY+zFWjIe+weZsQUyV611kaMJC6SyKOGCy0LGyPBBocU
+         I6eEwuTw3L5JxgW9yX5wsfKT5IEMwvCDD1gcvJX0Dzz/DeyHX3FjI/lPlo2zl6EOxPbC
+         oaCdMzn5EhGGffrjqZGBaLeDIrHSd1fkpJvfsTmFDUL3W1alvsulTjb0gLAndKmgvLhD
+         JFYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tVAIyD3Q99J/GMICmIeAkqQ2ozy/kJogio/DjqwTxd4=;
-        b=kHnnQzCCLg68QDuPvLcC8QUt5FSvwWSCE8IcGtau2sGwGZs0I8XvzUNtKT6e8Ie/X/
-         vFNjdEJP1v2uG2Ag2GYsJkW/NrMviqcLMkqvJLaLP9Bva/Bmd+Ar7GY+fCoP/Fv+1QBh
-         4M86CXX+6A0Tt2lTDSRe0JwG825JP1Fi5O9FmJSxumpW0K+qi0rZsDocWrJoJ/lhKipo
-         uIpti7OQi2JlYDvoMfKWP9IyB0daJTvT3yDaifa0YqNIH5tF8P0uuCT2uFiz5R4J/5T6
-         3D/Zj7g9OiB7Ol2qexsQ0w7Fu+BaRcPGlz1W/qhRQIHm5xPlecJs8n2uugc7l1MvV+Vv
-         PxTg==
-X-Gm-Message-State: AOAM530L0Y7x02HprALrd9ya/LcvDk0rGhUg2gNtURcTvsccKzbshLJn
-        F5nmk9zjqQ5exzJPVHQnyv67Pja9bOHmKv+2u32QaQ==
-X-Google-Smtp-Source: ABdhPJxkTZ8OklVq6XLVRvsgjCCRCx7YdX1c5S+WBmUv2yWaRyLG3XJ1oou4wB7ZHPrctcGYyTcpwJZg9kPeBehN0TY=
-X-Received: by 2002:a17:90b:949:: with SMTP id dw9mr25483894pjb.101.1592937848930;
- Tue, 23 Jun 2020 11:44:08 -0700 (PDT)
+        bh=YHRfY/482pH60fZPQJikxqae/P0Z6lDDbQXNlIRp7tc=;
+        b=WIcMRcv0gKZ3zpS/35yKi61bCk1mt4SZp3H/Tz/VfrnVo5iNvO9amU14eCg5ez5VlA
+         LBVid9yCLq6aOZO1TsD63nUnKyyHV08ywc5I6zWzFckWUPUjM0A+J+OgLuvjZ5g+uxG+
+         mFsu3vjcBwsTZca4uFBNlEwL4/Ky3RQRQPh2OAu63HoOYxjMBf1vaK654tcfM/AVzW7M
+         TTvUo8RY8UgTpnj5fleH2pBByKwfoNxOdVxXtD9G7W5UYDbtmMaDFEFVOC6n3VetEWsc
+         J9eYJkIYhIwwKEarlVqWIHQn8fPFXg2p8Fq07jchip0iFPogbpQTxsUmxnk/OBe/pbGu
+         chkQ==
+X-Gm-Message-State: AOAM533FRlbTjKk1mk3yXMr1wjUbGK7eWbgRaa16TyUM6ezKgWMqg8bw
+        QZCkYzWdWILAoxUo8pTarurKhiahux0U1C2JSzmufCuh
+X-Google-Smtp-Source: ABdhPJyPUIlDVH1n7pGFYZ5aO9aLZJphcDUMccOXmcIiaLZUxDvA5Dpv5o3A65C6wRy4Z9PcnkaV9feKOmD03dYG9P4=
+X-Received: by 2002:a05:6402:1247:: with SMTP id l7mr22177355edw.61.1592937862811;
+ Tue, 23 Jun 2020 11:44:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200623025628.18467-1-sedat.dilek@gmail.com>
-In-Reply-To: <20200623025628.18467-1-sedat.dilek@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 23 Jun 2020 11:43:58 -0700
-Message-ID: <CAKwvOdmR10E2uzKnq2Jt0DSw9+3uvjSfqidxppCoYmhNZPLx5Q@mail.gmail.com>
-Subject: Re: [PATCH 5.7 v2] x86/crypto: aesni: Fix build with LLVM_IAS=1
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Craig Topper <craig.topper@intel.com>,
-        Craig Topper <craig.topper@gmail.com>
+References: <20200622015227.24134-1-yunfei.dong@mediatek.com>
+In-Reply-To: <20200622015227.24134-1-yunfei.dong@mediatek.com>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Tue, 23 Jun 2020 15:43:47 -0300
+Message-ID: <CAAEAJfBtuZUn-LxiwCZ75rwT_oEuM-_QEXCH4-vFhV6X+8=4SA@mail.gmail.com>
+Subject: Re: [PATCH v2, 0/2] This patchset add Read-only(Ro) request for
+ capture queue
+To:     Yunfei Dong <yunfei.dong@mediatek.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Tomasz Figa <tfiga@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 7:56 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> When building with LLVM_IAS=1 means using Clang's Integrated Assembly (IAS)
-> from LLVM/Clang >= v10.0.1-rc1+ instead of GNU/as from GNU/binutils
-> I see the following breakage in Debian/testing AMD64:
->
-> <instantiation>:15:74: error: too many positional arguments
->  PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
->                                                                          ^
->  arch/x86/crypto/aesni-intel_asm.S:1598:2: note: while in macro instantiation
->  GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
->  ^
-> <instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
->  GHASH_4_ENCRYPT_4_PARALLEL_dec %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
->  ^
-> arch/x86/crypto/aesni-intel_asm.S:1599:2: note: while in macro instantiation
->  GCM_ENC_DEC dec
->  ^
-> <instantiation>:15:74: error: too many positional arguments
->  PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
->                                                                          ^
-> arch/x86/crypto/aesni-intel_asm.S:1686:2: note: while in macro instantiation
->  GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
->  ^
-> <instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
->  GHASH_4_ENCRYPT_4_PARALLEL_enc %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
->  ^
-> arch/x86/crypto/aesni-intel_asm.S:1687:2: note: while in macro instantiation
->  GCM_ENC_DEC enc
->
-> Craig Topper suggested me in ClangBuiltLinux issue #1050:
->
-> > I think the "too many positional arguments" is because the parser isn't able
-> > to handle the trailing commas.
-> >
-> > The "unknown use of instruction mnemonic" is because the macro was named
-> > GHASH_4_ENCRYPT_4_PARALLEL_DEC but its being instantiated with
-> > GHASH_4_ENCRYPT_4_PARALLEL_dec I guess gas ignores case on the
-> > macro instantiation, but llvm doesn't.
->
-> First, I removed the trailing comma in the PRECOMPUTE line.
->
-> Second, I substituted:
-> 1. GHASH_4_ENCRYPT_4_PARALLEL_DEC -> GHASH_4_ENCRYPT_4_PARALLEL_dec
-> 2. GHASH_4_ENCRYPT_4_PARALLEL_ENC -> GHASH_4_ENCRYPT_4_PARALLEL_enc
->
-> With these changes I was able to build with LLVM_IAS=1 and boot on bare metal.
->
-> I confirmed that this works with Linux-kernel v5.7.5 final.
->
-> NOTE: This patch is on top of Linux v5.7 final.
+Hi Yunfei,
 
-Thanks for the note, still applies cleanly on top of linux-next today for me.
+Thanks for the patch.
 
+On Sun, 21 Jun 2020 at 22:55, Yunfei Dong <yunfei.dong@mediatek.com> wrote:
 >
-> Thanks to Craig and especially Nick for double-checking and his comments.
+> User driver need to get HDR10+ information for each capture buffer;
+> For some encoder cases, user driver need to get encoded message for
+> each frame. So add support read-only(Ro) request for capture queue.
 >
-> Suggested-by: Craig Topper <craig.topper@intel.com>
-> Suggested-by: Craig Topper <craig.topper@gmail.com>
-> Suggested-by: Nick Desaulniers ndesaulniers@google.com
-
-^ oh, may have missed <> around email addr.
-
-> Cc: "ClangBuiltLinux" <clang-built-linux@googlegroups.com>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1050
-> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-Following the same testing methodology from V1
-(https://lore.kernel.org/patchwork/comment/1456822/) I verified for
-GCC+GAS this is no functional change.
-
-$ wget https://lore.kernel.org/patchwork/patch/1261340/mbox/ -O sedat_v3.patch
-$ git am sedat_v3.patch
-$ make -j71 arch/x86/crypto/aesni-intel_asm.o
-$ llvm-objdump -dr arch/x86/crypto/aesni-intel_asm.o > postpatch_v3.txt
-$ diff -u <(cat prepatch.txt | tr -s ' ' | cut -d '    ' -f 2-) <(cat
-postpatch_v3.txt| tr -s ' ' | cut -d '   ' -f 2-) | less
-(no output)
-
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-> ---
->  arch/x86/crypto/aesni-intel_asm.S | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Ro request mean that user driver just can get ext ctrls, set ext ctrls
+> is not not allowed. Ro Request also can be used in output queue.
 >
-> diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
-> index cad6e1bfa7d5..c216de287742 100644
-> --- a/arch/x86/crypto/aesni-intel_asm.S
-> +++ b/arch/x86/crypto/aesni-intel_asm.S
-> @@ -266,7 +266,7 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
->         PSHUFB_XMM %xmm2, %xmm0
->         movdqu %xmm0, CurCount(%arg2) # ctx_data.current_counter = iv
+> There is not upstream driver to use this feature at now, but we are
+> developing internal driver to use it. If it is ready, we will try to
+> upstream vdec/venc driver based on this feature.
 >
-> -       PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-> +       PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7
->         movdqu HashKey(%arg2), %xmm13
->
->         CALC_AAD_HASH %xmm13, \AAD, \AADLEN, %xmm0, %xmm1, %xmm2, %xmm3, \
-> @@ -978,7 +978,7 @@ _initial_blocks_done\@:
->  * arg1, %arg3, %arg4 are used as pointers only, not modified
->  * %r11 is the data offset value
->  */
-> -.macro GHASH_4_ENCRYPT_4_PARALLEL_ENC TMP1 TMP2 TMP3 TMP4 TMP5 \
-> +.macro GHASH_4_ENCRYPT_4_PARALLEL_enc TMP1 TMP2 TMP3 TMP4 TMP5 \
->  TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
->
->         movdqa    \XMM1, \XMM5
-> @@ -1186,7 +1186,7 @@ aes_loop_par_enc_done\@:
->  * arg1, %arg3, %arg4 are used as pointers only, not modified
->  * %r11 is the data offset value
->  */
-> -.macro GHASH_4_ENCRYPT_4_PARALLEL_DEC TMP1 TMP2 TMP3 TMP4 TMP5 \
-> +.macro GHASH_4_ENCRYPT_4_PARALLEL_dec TMP1 TMP2 TMP3 TMP4 TMP5 \
->  TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
->
->         movdqa    \XMM1, \XMM5
-> --
 
--- 
+An upstream driver using the feature would be important, but it would
+be nice to also have: an open-source userspace application,
+and a proper explanation in the stateless decoder interface specification.
+
 Thanks,
-~Nick Desaulniers
+Ezequiel
+
+> Change compared to v1:
+> -change commit message of patch 01/02
+> -change commit message of patch 02/02
+>
+> Yunfei Dong (2):
+>   media: v4l UAPI: add V4L2_BUF_CAP_SUPPORTS_RO_REQUESTS
+>   media: v4l: Add Ro request api for capture queue
+>
+>  .../media/v4l/vidioc-reqbufs.rst              |   4 +
+>  .../media/common/videobuf2/videobuf2-v4l2.c   |   7 ++
+>  drivers/media/mc/mc-request.c                 |  10 +-
+>  drivers/media/v4l2-core/v4l2-ctrls.c          | 107 +++++++++++++++---
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |  22 ++++
+>  drivers/media/v4l2-core/v4l2-mem2mem.c        |  19 ++--
+>  include/media/v4l2-ctrls.h                    |  22 +++-
+>  include/media/v4l2-fh.h                       |   2 +
+>  include/media/videobuf2-core.h                |   2 +
+>  include/uapi/linux/videodev2.h                |   1 +
+>  10 files changed, 158 insertions(+), 38 deletions(-)
+>
