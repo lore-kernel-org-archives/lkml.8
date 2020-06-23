@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05814C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEF0F2083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50D120780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592871780;
-	bh=ScFiFOeg4wutJUeONEdB3g/vj6kgdvyBYrim7fkHdkg=;
+	s=default; t=1592871785;
+	bh=iCKOvbCRfqkVczFsIKppK3kQNn2OlK2C2edwVd11wls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JjdU2Ef01Yj64yOQvDVhre4fiWIzT6K5fZHyqAnYbNKmuxDy6bCxJc6Jum3pSSmPz
-	 RB651Q3B0pLRo3nDDBmDIid709DWFVX1RZTYjfsPGNMugPhHx9kWAVrVIwdv19qiXa
-	 Y4rDF6BAOzSxO1yNEknsn7Fk1t2uMCkMo79Aza/k=
+	b=RZlYU9hpI+lPzOq4F6lOw2fNnvlaI8ozunWtsKUSWbrEKFDulFvb49ClcCBeWtBy4
+	 T/VgbkAHUZXe7vAlxJH4z3QBw8HgaitwwQxFAlBWxNjFpFZLO4IedS4dAeECKErfhZ
+	 MCSUYxHQb2zBhb1o/BTGYCPfcOAQn1aAPGGfVvBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731757AbgFWAW4 (ORCPT
+        id S1731776AbgFWAXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:22:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48132 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731533AbgFWAVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731524AbgFWAVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:21:52 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A0C20888;
+        by mail.kernel.org (Postfix) with ESMTPSA id 72DEC20809;
         Tue, 23 Jun 2020 00:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592871711;
-        bh=ScFiFOeg4wutJUeONEdB3g/vj6kgdvyBYrim7fkHdkg=;
+        bh=iCKOvbCRfqkVczFsIKppK3kQNn2OlK2C2edwVd11wls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pbhDz2xqOOd90aeR/wpemEW9o39zIOk7ijmiFK4X0GlmwVKMv/R0atkEG8DBpreww
-         vB8Kxq0FgJ2lx3jrZmooTVFytZOWq+VNTPVtQVEVCrZtu13+Ckq689+wBfkZvGiiKK
-         5nh7nfH0ZUYUflF1S7BcJZ+zRN29BGMRmxLr4tzk=
+        b=UvTK9Bf9uANAh8kx4Yr3cThD+XvHhN/0pYIXS4WbTn+/tQwioQ9QGt3uYYBhuAM1T
+         CdIFEcYSQQjoTuyRgCgA1NA8H9k3KvDhaBTfpaKrlWUyj+dbg9YbwjWOLvW2ht9+W7
+         KRHMQh3tflCZPfTQCTJuGCn3feKVV6T5zSFWMU88=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Frederic Weisbecker <frederic@kernel.org>, stable@kernel.org,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 13/26] tick/nohz: Narrow down noise while setting current task's tick dependency
-Date:   Mon, 22 Jun 2020 17:21:34 -0700
-Message-Id: <20200623002147.25750-13-paulmck@kernel.org>
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 11/26] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
+Date:   Mon, 22 Jun 2020 17:21:32 -0700
+Message-Id: <20200623002147.25750-11-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002128.GA25456@paulmck-ThinkPad-P72>
 References: <20200623002128.GA25456@paulmck-ThinkPad-P72>
@@ -60,78 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Setting a tick dependency on any task, including the case where a task
-sets that dependency on itself, triggers an IPI to all CPUs.  That is
-of course suboptimal but it had previously not been an issue because it
-was only used by POSIX CPU timers on nohz_full, which apparently never
-occurs in latency-sensitive workloads in production.  (Or users of such
-systems are suffering in silence on the one hand or venting their ire
-on the wrong people on the other.)
+Very large I/Os can cause the following RCU CPU stall warning:
 
-But RCU now sets a task tick dependency on the current task in order
-to fix stall issues that can occur during RCU callback processing.
-Thus, RCU callback processing triggers frequent system-wide IPIs from
-nohz_full CPUs.  This is quite counter-productive, after all, avoiding
-IPIs is what nohz_full is supposed to be all about.
+RIP: 0010:rb_prev+0x8/0x50
+Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
+89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
+RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
+RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
+RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
+RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
+R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
+R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
+ __lookup_extent_mapping+0xa0/0x110
+ try_release_extent_mapping+0xdc/0x220
+ btrfs_releasepage+0x45/0x70
+ shrink_page_list+0xa39/0xb30
+ shrink_inactive_list+0x18f/0x3b0
+ shrink_lruvec+0x38e/0x6b0
+ shrink_node+0x14d/0x690
+ do_try_to_free_pages+0xc6/0x3e0
+ try_to_free_mem_cgroup_pages+0xe6/0x1e0
+ reclaim_high.constprop.73+0x87/0xc0
+ mem_cgroup_handle_over_high+0x66/0x150
+ exit_to_usermode_loop+0x82/0xd0
+ do_syscall_64+0xd4/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This commit therefore optimizes tasks' self-setting of a task tick
-dependency by using tick_nohz_full_kick() to avoid the system-wide IPI.
-Instead, only the execution of the one task is disturbed, which is
-acceptable given that this disturbance is well down into the noise
-compared to the degree to which the RCU callback processing itself
-disturbs execution.
+On a PREEMPT=n kernel, the try_release_extent_mapping() function's
+"while" loop might run for a very long time on a large I/O.  This commit
+therefore adds a cond_resched() to this loop, providing RCU any needed
+quiescent states.
 
-Fixes: 6a949b7af82d (rcu: Force on tick when invoking lots of callbacks)
-Reported-by: Matt Fleming <matt@codeblueprint.co.uk>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: stable@kernel.org
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/time/tick-sched.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ fs/btrfs/extent_io.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 3e2dc9b..f0199a4 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -351,16 +351,24 @@ void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
- EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 68c9605..7042395 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4515,6 +4515,8 @@ int try_release_extent_mapping(struct page *page, gfp_t mask)
  
- /*
-- * Set a per-task tick dependency. Posix CPU timers need this in order to elapse
-- * per task timers.
-+ * Set a per-task tick dependency. RCU need this. Also posix CPU timers
-+ * in order to elapse per task timers.
-  */
- void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
- {
--	/*
--	 * We could optimize this with just kicking the target running the task
--	 * if that noise matters for nohz full users.
--	 */
--	tick_nohz_dep_set_all(&tsk->tick_dep_mask, bit);
-+	if (!atomic_fetch_or(BIT(bit), &tsk->tick_dep_mask)) {
-+		if (tsk == current) {
-+			preempt_disable();
-+			tick_nohz_full_kick();
-+			preempt_enable();
-+		} else {
-+			/*
-+			 * Some future tick_nohz_full_kick_task()
-+			 * should optimize this.
-+			 */
-+			tick_nohz_full_kick_all();
-+		}
-+	}
- }
- EXPORT_SYMBOL_GPL(tick_nohz_dep_set_task);
- 
+ 			/* once for us */
+ 			free_extent_map(em);
++
++			cond_resched(); /* Allow large-extent preemption. */
+ 		}
+ 	}
+ 	return try_release_extent_state(tree, page, mask);
 -- 
 2.9.5
 
