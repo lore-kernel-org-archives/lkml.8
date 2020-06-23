@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C86C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57347C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD54E206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD6620DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942848;
-	bh=X5ktFJ+870ztA+q6ttQZcLSPA2kkELTxjLUBASEF5aw=;
+	s=default; t=1592942854;
+	bh=kieshNiK2KrhBVzWgfcFix7J1eLM6mLChxPGjbdxttE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLD0t87lX3EAUD5yWuji/5RFxEzDRXhjLYA/t1RQ79VHAZdyiaHk1ucLPdte9Z4f+
-	 Cvq1pYURaJKNRswSEQwmMoebRbX44qmc+5Hs9f62JXpz4wLZrLjIpQBYk0uakUV11n
-	 eicds14WCC8xpuTPDZ8RBMwH3SMjy/heYcPckipY=
+	b=lSDC75YZ/KNgC00RCQETIK4VrCQlY64YqwjZU+yAWk5xKzL39eKcibCfo7dAL0w0B
+	 zMso3knV+Z1E8IwVae8EIxqL7WenBGOF4VULCkdrJ3iDyLewCqBaDWO3bgd4HelErj
+	 wtv5GJp2GQdj/kmV22YDNZAoq+i6Itq5Wgjv+zx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388602AbgFWUH1 (ORCPT
+        id S2388619AbgFWUHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47838 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:07:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388083AbgFWUHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:07:19 -0400
+        id S2387620AbgFWUHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 115C72064B;
-        Tue, 23 Jun 2020 20:07:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AAEB2064B;
+        Tue, 23 Jun 2020 20:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942839;
-        bh=X5ktFJ+870ztA+q6ttQZcLSPA2kkELTxjLUBASEF5aw=;
+        s=default; t=1592942844;
+        bh=kieshNiK2KrhBVzWgfcFix7J1eLM6mLChxPGjbdxttE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lPCTMzvbufH6kFGXDsmJ/vsUCJMptH1Ovf3tCRbL+dU3Iu6+bnyPW4aAAkaRt1qKX
-         PYob/GhK4H4zxGEzPa0qUpq7qSi139qYv/KidHqLs8C7RKB/Kq0mFvHCR0qbcrmfmC
-         vy/j/qwhOrDc2pV4i4LrbMbkQGsEdit2XBMqixIU=
+        b=XXIoZTqVJP7O+MSYJ+I1T8nPjRV8lpJl/lLQoJYdIf9FWY5BNLM19Tr36iqKrDIRG
+         58z3mQlbkt3hj3hxRmepfZPh8sFZMvWJQGRMOUC0bJuwt3+MZEDjhGuoo5Xw5cPjuD
+         V2VWPHh/Lmrk/dXHLAnG9Ow9iBjszjAlXSTy2Ee8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 155/477] arm64: dts: meson-g12b-ugoos-am6: fix board compatible
-Date:   Tue, 23 Jun 2020 21:52:32 +0200
-Message-Id: <20200623195414.928054316@linuxfoundation.org>
+Subject: [PATCH 5.7 157/477] ASoC: SOF: Update correct LED status at the first time usage of update_mute_led()
+Date:   Tue, 23 Jun 2020 21:52:34 +0200
+Message-Id: <20200623195415.020307515@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,36 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 5c28dcbb3a1be167c07784b5f710ec602a57bea2 ]
+[ Upstream commit 49c22696348d6e7c8a2ecfd7e60fddfe188ded82 ]
 
-Add missing amlogic,s922x in the board compatible list.
+At the first time update_mute_led() gets called, if channels are already
+muted, the temp value equals to led_value as 0, skipping the following
+LED setting.
 
-It fixes:
-meson-g12b-ugoos-am6.dt.yaml: /: compatible: ['ugoos,am6', 'amlogic,g12b'] is not valid under any of the given schemas
+So set led_value to -1 as an uninitialized state, to update the correct
+LED status at first time usage.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/20200326165958.19274-4-narmstrong@baylibre.com
+Fixes: 5d43001ae436 ("ASoC: SOF: acpi led support for switch controls")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Acked-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200430091139.7003-1-kai.heng.feng@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/control.c   | 4 ++--
+ sound/soc/sof/sof-audio.h | 2 +-
+ sound/soc/sof/topology.c  | 2 ++
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-index 06c5430eb92d1..fdaacfd96b97f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-@@ -14,7 +14,7 @@
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
+index dfc412e2d9565..6d63768d42aa1 100644
+--- a/sound/soc/sof/control.c
++++ b/sound/soc/sof/control.c
+@@ -19,8 +19,8 @@ static void update_mute_led(struct snd_sof_control *scontrol,
+ 			    struct snd_kcontrol *kcontrol,
+ 			    struct snd_ctl_elem_value *ucontrol)
+ {
+-	unsigned int temp = 0;
+-	unsigned int mask;
++	int temp = 0;
++	int mask;
+ 	int i;
  
- / {
--	compatible = "ugoos,am6", "amlogic,g12b";
-+	compatible = "ugoos,am6", "amlogic,s922x", "amlogic,g12b";
- 	model = "Ugoos AM6";
+ 	mask = 1U << snd_ctl_get_ioffidx(kcontrol, &ucontrol->id);
+diff --git a/sound/soc/sof/sof-audio.h b/sound/soc/sof/sof-audio.h
+index bf65f31af8582..875a5fc132970 100644
+--- a/sound/soc/sof/sof-audio.h
++++ b/sound/soc/sof/sof-audio.h
+@@ -56,7 +56,7 @@ struct snd_sof_pcm {
+ struct snd_sof_led_control {
+ 	unsigned int use_led;
+ 	unsigned int direction;
+-	unsigned int led_value;
++	int led_value;
+ };
  
- 	aliases {
+ /* ALSA SOF Kcontrol device */
+diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
+index fe8ba3e05e08b..ab2b69de1d4d7 100644
+--- a/sound/soc/sof/topology.c
++++ b/sound/soc/sof/topology.c
+@@ -1203,6 +1203,8 @@ static int sof_control_load(struct snd_soc_component *scomp, int index,
+ 		return ret;
+ 	}
+ 
++	scontrol->led_ctl.led_value = -1;
++
+ 	dobj->private = scontrol;
+ 	list_add(&scontrol->list, &sdev->kcontrol_list);
+ 	return ret;
 -- 
 2.25.1
 
