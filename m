@@ -2,143 +2,142 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B76F52078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948818;
-	bh=V07DFFFHmsC4ycN2bVuaQwk1nrZSd3p0f3VIdFl+lGc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ikgLrJv4R7HB1btis4BN/lJEegkO5XnVGqgdn4Qrk8kgLw2fe3wp9+MDjRYx+hH9j
-	 C0BVjzsDlziXWCnJMxr/Yx2l76Yg1WeCfShe6aXiEbXczg711w/Zpgd23PEOPLfsVg
-	 VdUNRyxgQG2mJ2TAgoHEGq6Nq+M7MWAxHpZSdejQ=
+	by mail.kernel.org (Postfix) with ESMTP id 612442078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:48:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEpjg0qA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388226AbgFWVq5 (ORCPT
+        id S2387817AbgFWVsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:46:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387682AbgFWUBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:01:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25F782082F;
-        Tue, 23 Jun 2020 20:01:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942501;
-        bh=V07DFFFHmsC4ycN2bVuaQwk1nrZSd3p0f3VIdFl+lGc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jDer11hStzFD9M/D/QEOuoA5JJGLme4gK79DYfR7uiWBZJSylg5rndCw2bL/ok5FA
-         hoirc03I5nESsI1pydtLmUsC/P5Kz4yn0y5BOlqDA5bjDWhkZm7XiEZ86MxYO/p4GJ
-         2MySYvgYgDJ9n67vduArGqSL+dhfRwLmlHGe1Dzw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 023/477] arm64: dts: meson: fixup SCP sram nodes
-Date:   Tue, 23 Jun 2020 21:50:20 +0200
-Message-Id: <20200623195408.706385047@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 17:48:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387455AbgFWVsu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:48:50 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F40FDC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:48:49 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id ga4so252846ejb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gLCkBZXPIIeY1g45tslFWO+PD0hc5lFZOqXooZUlWH8=;
+        b=PEpjg0qAPuLDlm5VvuUC6vrEb+6MoF8l1ACkYkcY2HqZwuoRNJMD27wb3HnDkODjtD
+         7kFpHy0BcQB2/OzA0cK5kmQTwI7kcUCl0JmvygO04JK875rulDjnePGKwoj5JnrZnKb+
+         ZjBmoLLWlGIZk7e19y2EEYvnIAHeQytiV1c+mF86BQpgvi5Zof6n4b3a3XpWN1YujICF
+         TxQIIVKpvF/ldA5iEaPNRYG2kc84ZaWkO30cR9AOQ6GJcJ18KVDxU/sG006d4RdkMT2n
+         hxkuTMg9n5Xe+jCG6LDOJrK7mqgBbra0811UUw7LXPpYU1ESywqo+8/7QWdTOi9s07wT
+         5RJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gLCkBZXPIIeY1g45tslFWO+PD0hc5lFZOqXooZUlWH8=;
+        b=tPzx4ks+zhTutBe/khrEl0q+C3ysy/INopNYNQXyjEcEGIKhq84EFKNzUP7ZeOZdhe
+         6oa98hf+rSW39afcAcaEqWmjY93iZZvcOYLvhY6jhgGcTmJfeo0IIVK6sYOJqXYZDNf/
+         MFkJ/+2ZdQlMgiaBofRcFnDnWuQ285fZpRtEX2Z/vMqxHgAPwPkW/vEtccWtmSnRmjz4
+         WxMioGr6Y9OSeklgVrG7TSVeWJDkkCf9k9umc57dTSnwkQWbq+nxMJ7ETp8Jb5dH+xjd
+         mthkNLG1ItJQuMFdSnfKonAAtCT9ZIrgV0f8Cviv/vhsXPVW1vJEysPeMNwC4xXvLsea
+         PEZA==
+X-Gm-Message-State: AOAM530tdn6mE12ztLjnpXGM//OC0aBcgWMMJ3B0hZ3k+E8WiDKOLbOq
+        bDdfEdCegTx05oFL5xjAD/g=
+X-Google-Smtp-Source: ABdhPJw15qKPA9jiRqrXuvtFIf8OYknB0rJ/6/dEZugcibFXL/7u/an+N7nb53QagI73h87/pd0zIA==
+X-Received: by 2002:a17:906:4989:: with SMTP id p9mr23153743eju.417.1592948928712;
+        Tue, 23 Jun 2020 14:48:48 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id j16sm15428301edp.35.2020.06.23.14.48.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jun 2020 14:48:47 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 21:48:47 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, david@redhat.com
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200623214847.fggchont44kgmvs6@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <20200623151828.GA31426@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623151828.GA31426@dhcp22.suse.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+On Tue, Jun 23, 2020 at 05:18:28PM +0200, Michal Hocko wrote:
+>On Tue 23-06-20 17:42:58, Wei Yang wrote:
+>> For early sections, we assumes its memmap will never be partially
+>> removed. But current behavior breaks this.
+>> 
+>> Let's correct it.
+>> 
+>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>
+>Can a user trigger this or is this a theoretical bug?
+>
 
-[ Upstream commit 9ecded10b4b6af238da0c86197b0418912e7513e ]
+I don't expect to have a non-section aligned system, so this is a theoretical
+bug to me.
 
-The GX and AXG SCP sram nodes were using invalid compatible and
-node names for the sram entries.
+>> ---
+>>  mm/sparse.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/mm/sparse.c b/mm/sparse.c
+>> index b2b9a3e34696..1a0069f492f5 100644
+>> --- a/mm/sparse.c
+>> +++ b/mm/sparse.c
+>> @@ -825,10 +825,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>>  		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
+>>  	}
+>>  
+>> -	if (section_is_early && memmap)
+>> -		free_map_bootmem(memmap);
+>> -	else
+>> +	if (!section_is_early)
+>
+>This begs a comment.
+>
 
-Fixup the sram entries node names, and use proper compatible for them.
+Like:
 
-It notably fixes:
-sram@c8000000: 'scp-shmem@0', 'scp-shmem@200' do not match any of the regexes: '^([a-z]*-)?sram(-section)?@[a-f0-9]+$', 'pinctrl-[0-9]+'
+    /* Only depopulate sub-section memmap for non early section. */
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/20200326165958.19274-3-narmstrong@baylibre.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi |  6 +++---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 10 +++++-----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+Looks good to you?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index aace3d32a3df2..8e6281c685fad 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -1735,18 +1735,18 @@
- 		};
- 
- 		sram: sram@fffc0000 {
--			compatible = "amlogic,meson-axg-sram", "mmio-sram";
-+			compatible = "mmio-sram";
- 			reg = <0x0 0xfffc0000 0x0 0x20000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xfffc0000 0x20000>;
- 
--			cpu_scp_lpri: scp-shmem@13000 {
-+			cpu_scp_lpri: scp-sram@13000 {
- 				compatible = "amlogic,meson-axg-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
--			cpu_scp_hpri: scp-shmem@13400 {
-+			cpu_scp_hpri: scp-sram@13400 {
- 				compatible = "amlogic,meson-axg-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 03f79fe045b7f..e2bb68ec85025 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -398,20 +398,20 @@
- 		};
- 
- 		sram: sram@c8000000 {
--			compatible = "amlogic,meson-gx-sram", "amlogic,meson-gxbb-sram", "mmio-sram";
-+			compatible = "mmio-sram";
- 			reg = <0x0 0xc8000000 0x0 0x14000>;
- 
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xc8000000 0x14000>;
- 
--			cpu_scp_lpri: scp-shmem@0 {
--				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
-+			cpu_scp_lpri: scp-sram@0 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
--			cpu_scp_hpri: scp-shmem@200 {
--				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
-+			cpu_scp_hpri: scp-sram@200 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
- 		};
+>>  		depopulate_section_memmap(pfn, nr_pages, altmap);
+>> +	else if (memmap)
+>> +		free_map_bootmem(memmap);
+>>  
+>>  	if (empty)
+>>  		ms->section_mem_map = (unsigned long)NULL;
+>> -- 
+>> 2.20.1 (Apple Git-117)
+>> 
+>
+>-- 
+>Michal Hocko
+>SUSE Labs
+
 -- 
-2.25.1
-
-
-
+Wei Yang
+Help you, Help me
