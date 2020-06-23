@@ -2,101 +2,141 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0F420738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:16:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KQ5kqT5U"
+	by mail.kernel.org (Postfix) with ESMTP id EBD9D20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592871693;
+	bh=iX6NQF4MW+6RZ8g2rca1Xu6wtzcfoz4qRxSdPz0uTFM=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=CqUNZ2Ddo30crrqq8ANYaW9xA+7mJdPPWIAkt6Jz9ISFWJJc/FetrRmWEvXSf69iZ
+	 pQGxBryVWfyQGEpAihrX6sljKiVPtD7ra6z+EEkxWfr1IqYbYdQ8wdlvWr3BhuxjaP
+	 JXEMCc4LitKwa9z6S1PEu4TmVN+VAcoq9hg1Lbqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgFWAQP (ORCPT
+        id S1731342AbgFWAVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:16:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28039 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731515AbgFWAPz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:15:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592871354;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J7HNJTlk13FVbVYXxMgg61ehL9LTKqH1Bt/QRg8bcjI=;
-        b=KQ5kqT5UVdMNAv2QOUktglJ48NsOuZ+m2j110c7DD/fWebcWmbdUSnIg5TTYlCLF1bPC7x
-        3nxZ9YZxgebt+K5mb0nZFp2FSuDa+K1LBdbMLug0ZNCfNW+/saCSndX9LLTfYC4bYbSrJB
-        e5MAJTJyHaPaOLE6okyAmfEOwQvNL54=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-FI_f-5zINEKjNPw_lWEEwg-1; Mon, 22 Jun 2020 20:15:50 -0400
-X-MC-Unique: FI_f-5zINEKjNPw_lWEEwg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 22 Jun 2020 20:21:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730421AbgFWAVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:21:30 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB0B9805EE1;
-        Tue, 23 Jun 2020 00:15:49 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D1A260BEC;
-        Tue, 23 Jun 2020 00:15:49 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 2/6] selftests: breakpoints: fix computation of test plan
-Date:   Mon, 22 Jun 2020 20:15:43 -0400
-Message-Id: <20200623001547.22255-3-pbonzini@redhat.com>
-In-Reply-To: <20200623001547.22255-1-pbonzini@redhat.com>
-References: <20200623001547.22255-1-pbonzini@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B730C20702;
+        Tue, 23 Jun 2020 00:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592871688;
+        bh=iX6NQF4MW+6RZ8g2rca1Xu6wtzcfoz4qRxSdPz0uTFM=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=NJOSd1S5iE1b/7I5b5uUuJBgFvt+J/9IHrm8JjXxyNFgcmOgjf1TksP3kPpm8mcf2
+         oITYZCsGh3y0WANDyZDn7DUqrelJVDJdWG7oMT34zf7xply2V4DQ7TqU3/Yf9OojdW
+         ScI3TT7wmDmwb+A3PbUHKFlY6hcP6TIEFmtOfUf8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9BB9C352306A; Mon, 22 Jun 2020 17:21:28 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 17:21:28 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/26] Miscellaneous fixes for v5.9
+Message-ID: <20200623002128.GA25456@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The computation of the test plan uses the available_cpus bitset
-before calling sched_getaffinity to fill it in.  The resulting
-plan is bogus, fix it.
+Hello!
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- .../selftests/breakpoints/step_after_suspend_test.c       | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+This series provides miscellaneous fixes:
 
-diff --git a/tools/testing/selftests/breakpoints/step_after_suspend_test.c b/tools/testing/selftests/breakpoints/step_after_suspend_test.c
-index b3ead29c6089..983ee6182e25 100644
---- a/tools/testing/selftests/breakpoints/step_after_suspend_test.c
-+++ b/tools/testing/selftests/breakpoints/step_after_suspend_test.c
-@@ -183,6 +183,10 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
-+	err = sched_getaffinity(0, sizeof(available_cpus), &available_cpus);
-+	if (err < 0)
-+		ksft_exit_fail_msg("sched_getaffinity() failed\n");
-+
- 	for (cpu = 0; cpu < CPU_SETSIZE; cpu++) {
- 		if (!CPU_ISSET(cpu, &available_cpus))
- 			continue;
-@@ -193,10 +197,6 @@ int main(int argc, char **argv)
- 	if (do_suspend)
- 		suspend();
- 
--	err = sched_getaffinity(0, sizeof(available_cpus), &available_cpus);
--	if (err < 0)
--		ksft_exit_fail_msg("sched_getaffinity() failed\n");
--
- 	for (cpu = 0; cpu < CPU_SETSIZE; cpu++) {
- 		bool test_success;
- 
--- 
-2.26.2
+1.	Initialize and destroy rcu_synchronize only when necessary,
+	courtesy of Wei Yang.
 
+2.	mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls.
 
+3.	Simplify the calculation of rcu_state.ncpus, courtesy of Wei Yang.
+
+4.	Add callbacks-invoked counters.
+
+5.	Add comment documenting rcu_callback_map's purpose.
+
+6.	events: rcu: Change description of rcu_dyntick trace event,
+	courtesy of Madhuparna Bhowmik.
+
+7.	Grace-period-kthread related sleeps to idle priority.
+
+8.	Priority-boost-related sleeps to idle priority.
+
+9.	No-CBs-related sleeps to idle priority.
+
+10.	Expedited grace-period sleeps to idle priority.
+
+11.	fs/btrfs: Add cond_resched() for try_release_extent_mapping()
+	stalls.
+
+12.	Update comment from rsp->rcu_gp_seq to rsp->gp_seq, courtesy
+	of Lihao Liang.
+
+13.	tick/nohz: Narrow down noise while setting current task's tick
+	dependency, courtesy of Frederic Weisbecker.
+
+14.	Fix some kernel-doc warnings, courtesy of Mauro Carvalho Chehab.
+
+15.	Remove initialized but unused rnp from check_slow_task().
+
+16.	Mark rcu_nmi_enter() call to rcu_cleanup_after_idle() noinstr.
+
+17.	Complain only once about RCU in extended quiescent state.
+
+18.	Replace 1 with true, courtesy of Jules Irenge.
+
+19.	Stop shrinker loop, courtesy of Peter Enderborg.
+
+20.	gp_max is protected by root rcu_node's lock, courtesy of Wei Yang.
+
+21.	grplo/grphi just records CPU number, courtesy of Wei Yang.
+
+22.	grpnum just records group number, courtesy of Wei Yang.
+
+23.	kernel/rcu/tree.c: Fix kernel-doc warnings, courtesy of Randy
+	Dunlap.
+
+24.	Fix some kernel-doc warnings, courtesy of Mauro Carvalho Chehab.
+
+25.	Remove KCSAN stubs.
+
+26.	Remove KCSAN stubs from update.c.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ fs/btrfs/extent_io.c       |    2 ++
+ include/linux/rculist.h    |    2 +-
+ include/trace/events/rcu.h |   11 ++++++-----
+ kernel/locking/lockdep.c   |    4 +---
+ kernel/rcu/tree.c          |   39 +++++++++++++--------------------------
+ kernel/rcu/tree.h          |   15 ++++++++-------
+ kernel/rcu/tree_exp.h      |    2 +-
+ kernel/rcu/tree_plugin.h   |    4 ++--
+ kernel/rcu/tree_stall.h    |    5 +++--
+ kernel/rcu/update.c        |   28 +++++++++-------------------
+ kernel/time/tick-sched.c   |   22 +++++++++++++++-------
+ mm/mmap.c                  |    1 +
+ 12 files changed, 62 insertions(+), 73 deletions(-)
