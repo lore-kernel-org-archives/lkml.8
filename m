@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E921C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5DE2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBFE2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943904;
-	bh=M+Hx6rSiNbR4a3xFsGvT9QT0Xa+GHzVE9EdR3txncOI=;
+	s=default; t=1592943908;
+	bh=IggdwPrKJgKSf2XHqFk4mLCLH7gRmrm2RvKkfmimOlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DtjWr5Gb3V7twNkZ1YxbFgCnfLwNcoD4HbokIu5nojn9inUo3nt6At1T+iYEYJEUl
-	 f8fXWQ1RT/aFs5zn1rFdA8Ys/PA2hKD0ZyuFiibmO7XqR24FUTex/K5Fg7y/fY6sUa
-	 bZqjn3pMBmFQOqQNhvjhbEWrzqOVN4i6P9K3z+tY=
+	b=qwzCDwqRf8s3RQSzDByaOZ9QqRAgwRxdUSVLTxKlNTsOSxTzIrZ/vjJAI86+OxIcc
+	 H+3NGhSNWaItPy0UkOCgus+XqosT9wYCbtqsEklq+fhO6ydxiCPoFZtL8dNNoLiz2P
+	 PwSt7LacqZSbCNNn8FDvc366WMCTRx6ZiwXm1AwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390537AbgFWUZC (ORCPT
+        id S2390542AbgFWUZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43624 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390503AbgFWUYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:52 -0400
+        id S2387665AbgFWUZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:25:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 519C420723;
-        Tue, 23 Jun 2020 20:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A651D20723;
+        Tue, 23 Jun 2020 20:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943891;
-        bh=M+Hx6rSiNbR4a3xFsGvT9QT0Xa+GHzVE9EdR3txncOI=;
+        s=default; t=1592943902;
+        bh=IggdwPrKJgKSf2XHqFk4mLCLH7gRmrm2RvKkfmimOlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYDnydhiots8YpTShDJzxmyNCxuDpD+NK0mhVe40X/aOxpkD6Bwwm4c6/7ITOq+wX
-         9wE65SqvSXEyJGoHys8iL32fwsHEJYxd35U48mL/VDpT2jfme3LxA8oK6HpTnyKQvq
-         6LyI8y36c4WjEt1fjcfUgBryBZ3h1Hb4S1o7chto=
+        b=idj3FI3YQEYBnXlYV2tSrwwwmxIdeQTltD2krO81/nxC4tbPQIxGF4dEEvKQfL509
+         pqmpGKCSPD3HcIYrA9UTlWFxW6911+CrmGR1Kogb7te+WMcZVvu9GujF6XsD4CnJq7
+         mOh3iSnYeSvGOkpT+k6Sn04iAxNTzJceqdtQbZD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 064/314] RDMA/core: Fix several reference count leaks.
-Date:   Tue, 23 Jun 2020 21:54:19 +0200
-Message-Id: <20200623195341.884099507@linuxfoundation.org>
+Subject: [PATCH 5.4 065/314] cifs: set up next DFS target before generic_ip_connect()
+Date:   Tue, 23 Jun 2020 21:54:20 +0200
+Message-Id: <20200623195341.934366058@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,61 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Paulo Alcantara <pc@cjr.nz>
 
-[ Upstream commit 0b8e125e213204508e1b3c4bdfe69713280b7abd ]
+[ Upstream commit aaa3aef34d3ab9499a5c7633823429f7a24e6dff ]
 
-kobject_init_and_add() takes reference even when it fails.  If this
-function returns an error, kobject_put() must be called to properly clean
-up the memory associated with the object. Previous
-commit b8eb718348b8 ("net-sysfs: Fix reference count leak in
-rx|netdev_queue_add_kobject") fixed a similar problem.
+If we mount a very specific DFS link
 
-Link: https://lore.kernel.org/r/20200528030231.9082-1-wu000273@umn.edu
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+    \\FS0.FOO.COM\dfs\link -> \FS0\share1, \FS1\share2
+
+where its target list contains NB names ("FS0" & "FS1") rather than
+FQDN ones ("FS0.FOO.COM" & "FS1.FOO.COM"), we end up connecting to
+\FOO\share1 but server->hostname will have "FOO.COM".  The reason is
+because both "FS0" and "FS0.FOO.COM" resolve to same IP address and
+they share same TCP server connection, but "FS0.FOO.COM" was the first
+hostname set -- which is OK.
+
+However, if the echo thread timeouts and we still have a good
+connection to "FS0", in cifs_reconnect()
+
+    rc = generic_ip_connect(server) -> success
+    if (rc) {
+            ...
+            reconn_inval_dfs_target(server, cifs_sb, &tgt_list,
+	                            &tgt_it);
+            ...
+     }
+     ...
+
+it successfully reconnects to "FS0" server but does not set up next
+DFS target - which should be the same target server "\FS0\share1" -
+and server->hostname remains set to "FS0.FOO.COM" rather than "FS0",
+as reconn_inval_dfs_target() would have it set to "FS0" if called
+earlier.
+
+Finally, in __smb2_reconnect(), the reconnect of tcons would fail
+because tcon->ses->server->hostname (FS0.FOO.COM) does not match DFS
+target's hostname (FS0).
+
+Fix that by calling reconn_inval_dfs_target() before
+generic_ip_connect() so server->hostname will get updated correctly
+prior to reconnecting its tcons in __smb2_reconnect().
+
+With "cifs: handle hostnames that resolve to same ip in failover"
+patch
+
+    - The above problem would not occur.
+    - We could save an DNS query to find out that they both resolve to
+      the same ip address.
+
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/sysfs.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/cifs/connect.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
-index 7a50cedcef1f6..091cca9d88ed7 100644
---- a/drivers/infiniband/core/sysfs.c
-+++ b/drivers/infiniband/core/sysfs.c
-@@ -1060,8 +1060,7 @@ static int add_port(struct ib_core_device *coredev, int port_num)
- 				   coredev->ports_kobj,
- 				   "%d", port_num);
- 	if (ret) {
--		kfree(p);
--		return ret;
-+		goto err_put;
- 	}
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 721b2560caa74..947c4aad5d6a4 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -614,26 +614,26 @@ cifs_reconnect(struct TCP_Server_Info *server)
+ 		try_to_freeze();
  
- 	p->gid_attr_group = kzalloc(sizeof(*p->gid_attr_group), GFP_KERNEL);
-@@ -1074,8 +1073,7 @@ static int add_port(struct ib_core_device *coredev, int port_num)
- 	ret = kobject_init_and_add(&p->gid_attr_group->kobj, &gid_attr_type,
- 				   &p->kobj, "gid_attrs");
- 	if (ret) {
--		kfree(p->gid_attr_group);
--		goto err_put;
-+		goto err_put_gid_attrs;
- 	}
- 
- 	if (device->ops.process_mad && is_full_dev) {
-@@ -1406,8 +1404,10 @@ int ib_port_register_module_stat(struct ib_device *device, u8 port_num,
- 
- 		ret = kobject_init_and_add(kobj, ktype, &port->kobj, "%s",
- 					   name);
--		if (ret)
-+		if (ret) {
-+			kobject_put(kobj);
- 			return ret;
+ 		mutex_lock(&server->srv_mutex);
++#ifdef CONFIG_CIFS_DFS_UPCALL
+ 		/*
+ 		 * Set up next DFS target server (if any) for reconnect. If DFS
+ 		 * feature is disabled, then we will retry last server we
+ 		 * connected to before.
+ 		 */
++		reconn_inval_dfs_target(server, cifs_sb, &tgt_list, &tgt_it);
++#endif
++		rc = reconn_set_ipaddr(server);
++		if (rc) {
++			cifs_dbg(FYI, "%s: failed to resolve hostname: %d\n",
++				 __func__, rc);
 +		}
- 	}
- 
- 	return 0;
++
+ 		if (cifs_rdma_enabled(server))
+ 			rc = smbd_reconnect(server);
+ 		else
+ 			rc = generic_ip_connect(server);
+ 		if (rc) {
+ 			cifs_dbg(FYI, "reconnect error %d\n", rc);
+-#ifdef CONFIG_CIFS_DFS_UPCALL
+-			reconn_inval_dfs_target(server, cifs_sb, &tgt_list,
+-						&tgt_it);
+-#endif
+-			rc = reconn_set_ipaddr(server);
+-			if (rc) {
+-				cifs_dbg(FYI, "%s: failed to resolve hostname: %d\n",
+-					 __func__, rc);
+-			}
+ 			mutex_unlock(&server->srv_mutex);
+ 			msleep(3000);
+ 		} else {
 -- 
 2.25.1
 
