@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE02C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A070C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4542073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299432080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943477;
-	bh=bV7BUloC7jlCvLKAtRiDjl5NFTDVv4DSEHmeddckrc4=;
+	s=default; t=1592943481;
+	bh=tWflFMXlPV/4i3zVv13EFFvXyfx9GgbxDS6WuLXF5YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qgC0gMiTeljaGv2uFo77+Vf8KVJOYP+vHWj4uvKhn2GHItlYWhYv6pOZNn/pdWgSl
-	 A+1gUJr5yxaTJ6hJnXl3jOvUfs2ID1+YUN6yBg5Zq1WKgYChUuWKgwDzcSSmO5lun2
-	 W+wLTren/tekm+6PXBlKkeROX8UjRxwU9Xvr4dcI=
+	b=XxfXVfHv5hlszZ3Cg1P80tCIVDPOtEpIY2oeESc7Y8V76CdWFeqw+G7/fN0aOcqZz
+	 j/TgX8FWsvRLH9kOG676kj+qaC3pqzcj1vZJ8oRtkAShHFKCr4mCsXn9rdFNhHWIqr
+	 2+vw4waIBKC+rosgnETrSmqHjsM/H7CVJ+oBmAag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389611AbgFWUR4 (ORCPT
+        id S2388871AbgFWUR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:17:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34268 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:17:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389595AbgFWURt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:49 -0400
+        id S2389608AbgFWURz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 317B020E65;
-        Tue, 23 Jun 2020 20:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1B822064B;
+        Tue, 23 Jun 2020 20:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943469;
-        bh=bV7BUloC7jlCvLKAtRiDjl5NFTDVv4DSEHmeddckrc4=;
+        s=default; t=1592943475;
+        bh=tWflFMXlPV/4i3zVv13EFFvXyfx9GgbxDS6WuLXF5YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PKgKdmuQurJvB+aZ9EErYNe31J+XvTaTbXKoSwx5Dcl8qn7QxA5oPUfly9HgE9gBA
-         sCKm+OlDqN8TqxBw2TyHLxXjsYAW/5KClf741E1h6/HPnfHrzkXSiErVoXXYK2LxxL
-         Ai0YT6ZRbXfn392HDQozb6t1HYNZDpWp4puRYf1A=
+        b=gmftUoK1nrEi9/NZbcGb/j+KUfb8SDPc+Pqsbg6vaQuG+8cfzBWSYitcyxVAHASO/
+         te1XkmjcNuKF+hdgOUIwSLDugQPhCzIJbZ46NyTeR5hBTtLVLHUabyZzcoBfepOnYn
+         lGKzaFq11fey6/N7hODJIzOCAeXFO7D7AO10LlNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        stable@vger.kernel.org, Alex Elder <elder@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 374/477] xdp: Fix xsk_generic_xmit errno
-Date:   Tue, 23 Jun 2020 21:56:11 +0200
-Message-Id: <20200623195425.208617243@linuxfoundation.org>
+Subject: [PATCH 5.7 376/477] net: ipa: program upper nibbles of sequencer type
+Date:   Tue, 23 Jun 2020 21:56:13 +0200
+Message-Id: <20200623195425.303413691@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,40 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Alex Elder <elder@linaro.org>
 
-[ Upstream commit aa2cad0600ed2ca6a0ab39948d4db1666b6c962b ]
+[ Upstream commit 636edeaad5577b6023f0de2b98a010d1cea73607 ]
 
-Propagate sock_alloc_send_skb error code, not set it to
-EAGAIN unconditionally, when fail to allocate skb, which
-might cause that user space unnecessary loops.
+The upper two nibbles of the sequencer type were not used for
+SDM845, and were assumed to be 0.  But for SC7180 they are used, and
+so they must be programmed by ipa_endpoint_init_seq().  Fix this bug.
 
-Fixes: 35fcde7f8deb ("xsk: support for Tx")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Link: https://lore.kernel.org/bpf/1591852266-24017-1-git-send-email-lirongqing@baidu.com
+IPA_SEQ_PKT_PROCESS_NO_DEC_NO_UCP_DMAP doesn't have a descriptive
+comment, so add one.
+
+Signed-off-by: Alex Elder <elder@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ipa/ipa_endpoint.c | 6 ++++--
+ drivers/net/ipa/ipa_reg.h      | 2 ++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index c350108aa38de..a4676107fad05 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -397,10 +397,8 @@ static int xsk_generic_xmit(struct sock *sk)
+diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+index a21534f1462fa..1d823ac0f6d61 100644
+--- a/drivers/net/ipa/ipa_endpoint.c
++++ b/drivers/net/ipa/ipa_endpoint.c
+@@ -669,10 +669,12 @@ static void ipa_endpoint_init_seq(struct ipa_endpoint *endpoint)
+ 	u32 seq_type = endpoint->seq_type;
+ 	u32 val = 0;
  
- 		len = desc.len;
- 		skb = sock_alloc_send_skb(sk, len, 1, &err);
--		if (unlikely(!skb)) {
--			err = -EAGAIN;
-+		if (unlikely(!skb))
- 			goto out;
--		}
++	/* Sequencer type is made up of four nibbles */
+ 	val |= u32_encode_bits(seq_type & 0xf, HPS_SEQ_TYPE_FMASK);
+ 	val |= u32_encode_bits((seq_type >> 4) & 0xf, DPS_SEQ_TYPE_FMASK);
+-	/* HPS_REP_SEQ_TYPE is 0 */
+-	/* DPS_REP_SEQ_TYPE is 0 */
++	/* The second two apply to replicated packets */
++	val |= u32_encode_bits((seq_type >> 8) & 0xf, HPS_REP_SEQ_TYPE_FMASK);
++	val |= u32_encode_bits((seq_type >> 12) & 0xf, DPS_REP_SEQ_TYPE_FMASK);
  
- 		skb_put(skb, len);
- 		addr = desc.addr;
+ 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+ }
+diff --git a/drivers/net/ipa/ipa_reg.h b/drivers/net/ipa/ipa_reg.h
+index 3b8106aa277a0..0a688d8c1d7cf 100644
+--- a/drivers/net/ipa/ipa_reg.h
++++ b/drivers/net/ipa/ipa_reg.h
+@@ -455,6 +455,8 @@ enum ipa_mode {
+  *	second packet processing pass + no decipher + microcontroller
+  * @IPA_SEQ_DMA_DEC:		DMA + cipher/decipher
+  * @IPA_SEQ_DMA_COMP_DECOMP:	DMA + compression/decompression
++ * @IPA_SEQ_PKT_PROCESS_NO_DEC_NO_UCP_DMAP:
++ *	packet processing + no decipher + no uCP + HPS REP DMA parser
+  * @IPA_SEQ_INVALID:		invalid sequencer type
+  *
+  * The values defined here are broken into 4-bit nibbles that are written
 -- 
 2.25.1
 
