@@ -2,124 +2,94 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF2A20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592873515;
-	bh=rusCGE8VmxnUeat7eeB/4yD2dk/dl69rmXmSB9V0l58=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=SAeplyr8aSwAlkC1PBjL2syqZMRau8gGlrBvO8lJ/5CJ2HK/MVkqC+UG4pSaafvVL
-	 5EBnl0cBqvwLH2R19cwxc2OIlD99dDO6Qz37ryVL8XsDXlRVJXvHQDZLNRwzRMPrpQ
-	 sazaN+3XEEg03s+lwGeb2iwalkgg6i37xAxEpAR4=
+	by mail.kernel.org (Postfix) with ESMTP id 0FE1420706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbgFWAvx (ORCPT
+        id S1732363AbgFWAwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731785AbgFWAvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:51:53 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AF7420720;
-        Tue, 23 Jun 2020 00:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592873512;
-        bh=rusCGE8VmxnUeat7eeB/4yD2dk/dl69rmXmSB9V0l58=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=KpCZaNEaC/y9sKYJjL8Vd9XvGMEB4HioKQj1Q8Gx4wBMqJGO38lif+tI1tZt4j818
-         FxRguVQzczzS/cp8/ziJbqzjcbOJTu5aNSuy9fbALM7gPeaq9FIo9vrTGt1skW5DA6
-         nFvht92Y/Ax0/QgY4QJLqokkX1s1FKnq2yLX+V84=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 743B8352306A; Mon, 22 Jun 2020 17:51:52 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 17:51:52 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com
-Subject: [PATCH memory-model 0/14] LKMM updates for v5.9
-Message-ID: <20200623005152.GA27459@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Mon, 22 Jun 2020 20:52:23 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:35737 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731750AbgFWAwX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:52:23 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 45CB65AF5E4;
+        Tue, 23 Jun 2020 10:52:18 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jnXAg-0001Y7-9C; Tue, 23 Jun 2020 10:52:18 +1000
+Date:   Tue, 23 Jun 2020 10:52:18 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Bypass filesystems for reading cached pages
+Message-ID: <20200623005218.GF2040@dread.disaster.area>
+References: <20200619155036.GZ8681@bombadil.infradead.org>
+ <20200622003215.GC2040@dread.disaster.area>
+ <CAHc6FU4b_z+vhjVPmaU46VhqoD+Y7jLN3=BRDZPrS2v=_pVpfw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHc6FU4b_z+vhjVPmaU46VhqoD+Y7jLN3=BRDZPrS2v=_pVpfw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
+        a=8G3SpTuCT5XHdoEvo0oA:9 a=P48SZZe_48vTZzb1:21 a=B4xsomyZ1zPHdLA9:21
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Mon, Jun 22, 2020 at 04:35:05PM +0200, Andreas Gruenbacher wrote:
+> On Mon, Jun 22, 2020 at 2:32 AM Dave Chinner <david@fromorbit.com> wrote:
+> > On Fri, Jun 19, 2020 at 08:50:36AM -0700, Matthew Wilcox wrote:
+> > >
+> > > This patch lifts the IOCB_CACHED idea expressed by Andreas to the VFS.
+> > > The advantage of this patch is that we can avoid taking any filesystem
+> > > lock, as long as the pages being accessed are in the cache (and we don't
+> > > need to readahead any pages into the cache).  We also avoid an indirect
+> > > function call in these cases.
+> >
+> > What does this micro-optimisation actually gain us except for more
+> > complexity in the IO path?
+> >
+> > i.e. if a filesystem lock has such massive overhead that it slows
+> > down the cached readahead path in production workloads, then that's
+> > something the filesystem needs to address, not unconditionally
+> > bypass the filesystem before the IO gets anywhere near it.
+> 
+> I'm fine with not moving that functionality into the VFS. The problem
+> I have in gfs2 is that taking glocks is really expensive. Part of that
+> overhead is accidental, but we definitely won't be able to fix it in
+> the short term. So something like the IOCB_CACHED flag that prevents
+> generic_file_read_iter from issuing readahead I/O would save the day
+> for us. Does that idea stand a chance?
 
-This series contains updates to the Linux-kernel memory model:
+I have no problem with a "NOREADAHEAD" flag being passed to
+generic_file_read_iter(). It's not a "already cached" flag though,
+it's a "don't start any IO" directive, just like the NOWAIT flag is
+a "don't block on locks or IO in progress" directive and not an
+"already cached" flag. Readahead is something we should be doing,
+unless a filesystem has a very good reason not to, such as the gfs2
+locking case here...
 
-1.	tools/memory-model: Add recent references.
+Cheers,
 
-2.	tools/memory-model: Fix "conflict" definition, courtesy of
-	Marco Elver.
-
-3.	Documentation: LKMM: Add litmus test for RCU GP guarantee where
-	updater frees object, courtesy of Joel Fernandes.
-
-4.	Documentation: LKMM: Add litmus test for RCU GP guarantee where
-	reader stores, courtesy of Joel Fernandes.
-
-5.	MAINTAINERS: Update maintainers for new Documentation/litmus-tests,
-	courtesy of Joel Fernandes.
-
-6.	tools/memory-model: Add an exception for limitations on _unless()
-	family, courtesy of Boqun Feng.
-
-7.	Documentation/litmus-tests: Introduce atomic directory, courtesy of
-	Boqun Feng.
-
-8.	Documentation/litmus-tests/atomic: Add a test for atomic_set()
-	courtesy of Boqun Feng.
-
-9.	Documentation/litmus-tests/atomic: Add a test for
-	smp_mb__after_atomic(), courtesy of Boqun Feng.
-
-10.	tools/memory-model: Fix reference to litmus test in recipes.txt
-	courtesy of Akira Yokosawa.
-
-11.	Documentation/litmus-tests: Merge atomic's README into top-level
-	one, courtesy of Akira Yokosawa.
-
-12.	Documentation/litmus-tests: Cite an RCU litmus test, courtesy of
-	Joel Fernandes.
-
-13.	tools/memory-model/README: Expand dependency of klitmus7, courtesy
-	of Akira Yokosawa.
-
-14.	fix references for DMA*.txt files, courtesy of Mauro Carvalho Chehab.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- /Documentation/litmus-tests/atomic/README                                                       |   16 -
- b/Documentation/atomic_t.txt                                                                    |   24 +-
- b/Documentation/litmus-tests/README                                                             |   34 ++++
- b/Documentation/litmus-tests/atomic/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus |   32 +++
- b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus             |   24 ++
- b/Documentation/litmus-tests/atomic/README                                                      |   16 +
- b/Documentation/litmus-tests/rcu/RCU+sync+free.litmus                                           |   42 +++++
- b/Documentation/litmus-tests/rcu/RCU+sync+read.litmus                                           |   37 ++++
- b/Documentation/memory-barriers.txt                                                             |    6 
- b/MAINTAINERS                                                                                   |    2 
- b/tools/memory-model/Documentation/explanation.txt                                              |   83 +++++-----
- b/tools/memory-model/Documentation/recipes.txt                                                  |    2 
- b/tools/memory-model/Documentation/references.txt                                               |   21 ++
- b/tools/memory-model/README                                                                     |   40 ++++
- 14 files changed, 302 insertions(+), 77 deletions(-)
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
