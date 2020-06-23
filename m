@@ -2,112 +2,137 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73CEB20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QWQq5RDG"
+	by mail.kernel.org (Postfix) with ESMTP id 75A3C20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbgFWWwV (ORCPT
+        id S2387796AbgFWWzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:52:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387586AbgFWWwT (ORCPT
+        Tue, 23 Jun 2020 18:55:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9512 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387606AbgFWWzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:52:19 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA87C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 15:30:02 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l6so82221qkc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 15:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=eaPZgevT2CpnMUUM+GmJp3ep826/Vu8USLaTW1XXGMw=;
-        b=QWQq5RDGTnwX3WnqevkbBWkazZh8odQfl932pZ3UbY0dCGQegngCVgx95WkZVr6BnO
-         65ZIHrqmao0uN6GenF/4y4CW/OcmRkJXPzNKvRDmcXb7ZC7erhMA93XdDlwZ6l3vBF1f
-         GxHnbtJycGks7s5BOlmqFZKUgWd+grPqJxni7VbGgMA8zUApStYLutkeT0rlrIBOHI08
-         3Cql55Igvie4tl+36H8VyJCyQqgV0RR76/eI9IGW+so79IAWGhwE2UWaR81yETHij9Y+
-         SmTPqigtUan78yqLcCU63BGCxEuDALLbhJ89gWLbCtwqVG4DBdoucn263Wyo8rE2fDql
-         8TgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=eaPZgevT2CpnMUUM+GmJp3ep826/Vu8USLaTW1XXGMw=;
-        b=YxD/G9XXwYlCs8xVnxMAHx1OeTXUd8Aqf8l3WCZLmIGE6g8s6CTHpdcLVH+Cem+c0d
-         wKwOiXLvQvQUUHQ1R8n2Sp7zLJqaE0OGeEFnHkaod/7ZKa4G6tcrYGzNKEZ1f1jImYJA
-         BQkJbfSqEPICyhoKVbaH6Wy61x1+ELYSEPI5TCEyhVi+E14/Wr4Y4ZdR8+Yzwj+ew+Xy
-         AcMEx/5pUsWaus793TOsAXDLmfoQ7bUA+6Y2KYRCXw6oerjhSkdJvoIK4agXUIsm+2W1
-         rg8QnJD6rqgrkO6OCR0QqiRO+JSWYsGj29tvXwCmREWzP7xuNu3f5z2cD1SjCRxqtZK7
-         sbZQ==
-X-Gm-Message-State: AOAM532/WNB6xGOaCMp7bQVqT6Mn+6L8y9hbsZP9X4WNNRl4Q/OqWJpv
-        rsUbxMJhoETpP/WTb+qORvcvSg==
-X-Google-Smtp-Source: ABdhPJwk15aS1BWBT2iEbMasfTOJdZ8L9kYNLCwIeSkqEjFH3YWtkSFhBbq1XdpbSIFrixrWCXSxpg==
-X-Received: by 2002:a37:5ac1:: with SMTP id o184mr6623255qkb.498.1592951401983;
-        Tue, 23 Jun 2020 15:30:01 -0700 (PDT)
-Received: from ?IPv6:2600:1000:b118:1dc0:18a:ef24:8000:54d8? ([2600:1000:b118:1dc0:18a:ef24:8000:54d8])
-        by smtp.gmail.com with ESMTPSA id 207sm1764428qki.134.2020.06.23.15.30.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 15:30:01 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm: Track mmu notifiers in fs_reclaim_acquire/release
-Date:   Tue, 23 Jun 2020 18:29:58 -0400
-Message-Id: <CBC5DC63-241C-4291-8686-21CF758AC91B@lca.pw>
-References: <CAKMK7uH90-k12KMHE0pWN6G_aCTr=YNhQsqoaAJC5FHygnf96g@mail.gmail.com>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        =?utf-8?Q?Thomas_Hellstr=C3=B6m?= <thomas_os@shipmail.org>,
+        Tue, 23 Jun 2020 18:55:44 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NMXSu6118547;
+        Tue, 23 Jun 2020 18:55:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31un4jhuet-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 18:55:34 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05NMXXqt119045;
+        Tue, 23 Jun 2020 18:55:34 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31un4jhueh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 18:55:33 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NMk2CA004349;
+        Tue, 23 Jun 2020 22:55:32 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 31uttt81gp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 22:55:32 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NMtWVw51511560
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 22:55:32 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4EF7428058;
+        Tue, 23 Jun 2020 22:55:32 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41C882805C;
+        Tue, 23 Jun 2020 22:55:30 +0000 (GMT)
+Received: from [9.211.67.55] (unknown [9.211.67.55])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Jun 2020 22:55:30 +0000 (GMT)
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ian Kent <raven@themaw.net>, Tejun Heo <tj@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        linux-xfs@vger.kernel.org
-In-Reply-To: <CAKMK7uH90-k12KMHE0pWN6G_aCTr=YNhQsqoaAJC5FHygnf96g@mail.gmail.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-X-Mailer: iPhone Mail (17F80)
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+ <20200619153833.GA5749@mtj.thefacebook.com>
+ <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
+ <20200619222356.GA13061@mtj.duckdns.org>
+ <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
+ <20200622174845.GB13061@mtj.duckdns.org> <20200622180306.GA1917323@kroah.com>
+ <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
+ <20200623060236.GA3818201@kroah.com>
+ <74fb24d0-2b61-27f8-c44e-abd159e57469@linux.vnet.ibm.com>
+ <20200623114558.GA1963415@kroah.com>
+From:   Rick Lindsley <ricklind@linux.vnet.ibm.com>
+Message-ID: <4d6ec768-0481-2b2e-c54e-bd0a5618d6df@linux.vnet.ibm.com>
+Date:   Tue, 23 Jun 2020 15:55:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200623114558.GA1963415@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_14:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ phishscore=0 adultscore=0 spamscore=0 clxscore=1015 mlxscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006120000 definitions=main-2006230148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/23/20 4:45 AM, Greg Kroah-Hartman wrote:
 
+> Sure, but "help, I'm abusing your code interface, so fix your code
+> interface and not my caller code" really isn't the best mantra :)
 
-> On Jun 23, 2020, at 6:13 PM, Daniel Vetter <daniel@ffwll.ch> wrote:
->=20
-> Ok I tested this. I can't use your script to repro because
-> - I don't have a setup with xfs, and the splat points at an issue in xfs
-> - reproducing lockdep splats in shrinker callbacks is always a bit tricky
+Well, those are your words, not mine.  What we're saying is, "we've 
+identified an interface that doesn't scale in this situation, but we 
+have a way to make it scale to all known configurations."
 
-What=E2=80=99s xfs setup are you talking about? This is simple xfs rootfs an=
-d then trigger swapping. Nothing tricky here as it hit on multiple machines w=
-ithin a few seconds on linux-next.
+ > I am offended as a number of years ago this same user of kernfs/sysfs
+ > did a lot of work to reduce the number of contentions in kernfs for
+ > this same reason.  After that work was done, "all was good".  Now
+ > this comes along again, blaming kernfs/sysfs, not the caller.
 
-> Summary: Everything is working as expected, there's no change in the
-> lockdep annotations.
-> I really think the problem is that either your testcase doesn't hit
-> the issue reliably enough, or that you're not actually testing the
-> same kernels and there's some other changes (xfs most likely, but
-> really it could be anywhere) which is causing this regression. I'm
-> rather convinced now after this test that it's not my stuff.
+Ok. I don't know about the history, but I can tell you "blame" is not 
+the word I'd use.  As hardware changes, Linux also changes, and over "a 
+number of years" it's not surprising to me if basic assumptions changed 
+again and led us back to a place we've been before.  That's not an 
+indictment.  It just IS.
 
-Well, the memory pressure workloads have been running for years on daily lin=
-ux-next builds and never saw this one happened once. Also, the reverting is O=
-NLY to revert your patch on the top of linux-next will stop the splat, so th=
-ere is no not testing the same kernel at all.=
+ > Memory is only going to get bigger over time, you might want to fix it
+ > this way and then run away.  But we have to maintain this for the next
+ > 20+ years, and you are not solving the root-problem here.  It will
+ > come back again, right?
+
+If hardware vendors insist on dealing with small blocks of memory in 
+large aggregates, then yes it could.  You'll have to trust that I am 
+also in discussion with hardware architects about how that is a very bad 
+architecture and it's time to change decades and think bigger.  Separate 
+audience, equally contentious discussion.  But the bottom line is, it's 
+out there already and can't be walked back.
+
+Your response here seems to center on "kernfs was never designed for 
+that."  If so, we're in agreement.   We're suggesting a way it can be 
+extended to be more robust, with no (apparent) side effects.  I'd like 
+to discuss the merits of the patch itself.
+
+Rick
