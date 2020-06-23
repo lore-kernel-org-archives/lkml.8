@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40055C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C7E20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688BF20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947707;
-	bh=HUrMZuKIgDAI9hf9Xw9LBlkd+lwvmJAtNNHF1cksi4k=;
+	s=default; t=1592947717;
+	bh=8q2BVQ569YUgjhgWNQHA08WYzxbk3RZbLMf2mQ2Coz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQp7NPKbxC+ELwxBmmZUh4PCcHMQbXig/hFDmPm3y8ZA8dFh6fqEsRTbBvI3T8D0z
-	 0Vm3g9CEuLtKDz4U8A5DreeAGjPgBrfh0DVnZS8xtYSsYhNwPhkajVB1BvYKn/cG37
-	 1Z2f1excvO3FmM5B0EzWHx4VXdfZ+26hLIJbi2KQ=
+	b=AVC8h8WU4pqMWGbf4iRELR5IhxYzg4tPGpG1ZKH+5SbhsbCx+2Syk0pXGJbgb7pzN
+	 29Z441G/fiR9a5XGIg7Fk523aDRbyakRvB6qXFDSvRppD2sb3WlLarBuQZsuq4ZX/x
+	 dkJlHhwA6KBAw3zkFlRDVVjEU4n0Cfue6j5/EVpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392083AbgFWV2V (ORCPT
+        id S2390921AbgFWV2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:28:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59364 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:28:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389373AbgFWUQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:04 -0400
+        id S2387968AbgFWUPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:15:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15B572073E;
-        Tue, 23 Jun 2020 20:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 989F420702;
+        Tue, 23 Jun 2020 20:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943364;
-        bh=HUrMZuKIgDAI9hf9Xw9LBlkd+lwvmJAtNNHF1cksi4k=;
+        s=default; t=1592943349;
+        bh=8q2BVQ569YUgjhgWNQHA08WYzxbk3RZbLMf2mQ2Coz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ls8y08I0VWsPZF1R4NeBvMjkx2yxKe9+NkKlSrxSy/oO6AjpC6eZtRExnMrPLO1zR
-         TtunK1SilbsafDrZBUi8/MRRH5pUSXttjElIRxYs8dP2QR1QfvxxDiIM4Uc8XQe3fl
-         UhpJZJ65V3VFLcFUGMjDhygddhTFfK48EIvSal6A=
+        b=U52C0HGQaVtmJp+nZdxGLlfVlx07X/CMEUcxO7l22C44qEZnQSGEiYN5VtEqPvEs+
+         taUkGfiw9TGfGKajC1NcecON92WgRAAp5n/y9mBpQm1CMYa1f+ClVqT0nrU2Qq7X5B
+         kJClHW+zzVQkO3fSiSNWuryWU/wM73FCfaYh3GgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 363/477] libbpf: Handle GCC noreturn-turned-volatile quirk
-Date:   Tue, 23 Jun 2020 21:56:00 +0200
-Message-Id: <20200623195424.690230263@linuxfoundation.org>
+Subject: [PATCH 5.7 357/477] ASoC: Intel: bytcr_rt5640: Add quirk for Toshiba Encore WT10-A tablet
+Date:   Tue, 23 Jun 2020 21:55:54 +0200
+Message-Id: <20200623195424.415792954@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,106 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 32022fd97ed34f6812802bf1288db27c313576f4 ]
+[ Upstream commit 199a5e8fda54ab3c8c6f6bf980c004e97ebf5ccb ]
 
-Handle a GCC quirk of emitting extra volatile modifier in DWARF (and
-subsequently preserved in BTF by pahole) for function pointers marked as
-__attribute__((noreturn)). This was the way to mark such functions before GCC
-2.5 added noreturn attribute. Drop such func_proto modifiers, similarly to how
-it's done for array (also to handle GCC quirk/bug).
+The Toshiba Encore WT10-A tablet almost fully works with the default
+settings for Bay Trail CR devices. The only issue is that it uses a
+digital mic. connected the the DMIC1 input instead of an analog mic.
 
-Such volatile attribute is emitted by GCC only, so existing selftests can't
-express such test. Simple repro is like this (compiled with GCC + BTF
-generated by pahole):
+Add a quirk for this model using the default settings with the input-map
+replaced with BYT_RT5640_DMIC1_MAP.
 
-  struct my_struct {
-      void __attribute__((noreturn)) (*fn)(int);
-  };
-  struct my_struct a;
-
-Without this fix, output will be:
-
-struct my_struct {
-    voidvolatile  (*fn)(int);
-};
-
-With the fix:
-
-struct my_struct {
-    void (*fn)(int);
-};
-
-Fixes: 351131b51c7a ("libbpf: add btf_dump API for BTF-to-C conversion")
-Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Link: https://lore.kernel.org/bpf/20200610052335.2862559-1-andriin@fb.com
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200608204634.93407-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/btf_dump.c | 33 ++++++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-index 0c28ee82834b7..653dbbe2e3663 100644
---- a/tools/lib/bpf/btf_dump.c
-+++ b/tools/lib/bpf/btf_dump.c
-@@ -1137,6 +1137,20 @@ static void btf_dump_emit_mods(struct btf_dump *d, struct id_stack *decl_stack)
- 	}
- }
- 
-+static void btf_dump_drop_mods(struct btf_dump *d, struct id_stack *decl_stack)
-+{
-+	const struct btf_type *t;
-+	__u32 id;
-+
-+	while (decl_stack->cnt) {
-+		id = decl_stack->ids[decl_stack->cnt - 1];
-+		t = btf__type_by_id(d->btf, id);
-+		if (!btf_is_mod(t))
-+			return;
-+		decl_stack->cnt--;
-+	}
-+}
-+
- static void btf_dump_emit_name(const struct btf_dump *d,
- 			       const char *name, bool last_was_ptr)
- {
-@@ -1235,14 +1249,7 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
- 			 * a const/volatile modifier for array, so we are
- 			 * going to silently skip them here.
- 			 */
--			while (decls->cnt) {
--				next_id = decls->ids[decls->cnt - 1];
--				next_t = btf__type_by_id(d->btf, next_id);
--				if (btf_is_mod(next_t))
--					decls->cnt--;
--				else
--					break;
--			}
-+			btf_dump_drop_mods(d, decls);
- 
- 			if (decls->cnt == 0) {
- 				btf_dump_emit_name(d, fname, last_was_ptr);
-@@ -1270,7 +1277,15 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
- 			__u16 vlen = btf_vlen(t);
- 			int i;
- 
--			btf_dump_emit_mods(d, decls);
-+			/*
-+			 * GCC emits extra volatile qualifier for
-+			 * __attribute__((noreturn)) function pointers. Clang
-+			 * doesn't do it. It's a GCC quirk for backwards
-+			 * compatibility with code written for GCC <2.5. So,
-+			 * similarly to extra qualifiers for array, just drop
-+			 * them, instead of handling them.
-+			 */
-+			btf_dump_drop_mods(d, decls);
- 			if (decls->cnt) {
- 				btf_dump_printf(d, " (");
- 				btf_dump_emit_type_chain(d, decls, fname, lvl);
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index fbfd53874b477..5c1a5e2aff6f5 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -754,6 +754,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_JD_NOT_INV |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{	/* Toshiba Encore WT10-A */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "TOSHIBA WT10-A-103"),
++		},
++		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
++					BYT_RT5640_JD_SRC_JD1_IN4P |
++					BYT_RT5640_OVCD_TH_2000UA |
++					BYT_RT5640_OVCD_SF_0P75 |
++					BYT_RT5640_SSP0_AIF2 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{	/* Catch-all for generic Insyde tablets, must be last */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
 -- 
 2.25.1
 
