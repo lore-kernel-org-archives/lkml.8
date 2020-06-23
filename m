@@ -2,82 +2,217 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAC9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A16C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419C220720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6134520720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:27:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bh/pq5ka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731925AbgFWBWt (ORCPT
+        id S1731872AbgFWB1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:22:49 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:35673 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731765AbgFWBWt (ORCPT
+        Mon, 22 Jun 2020 21:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731572AbgFWB1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:22:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U0SetIO_1592875365;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0SetIO_1592875365)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 23 Jun 2020 09:22:46 +0800
-Date:   Tue, 23 Jun 2020 09:22:45 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 3/3] mm/shuffle: remove dynamic reconfiguration
-Message-ID: <20200623012245.GA99806@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200619125923.22602-1-david@redhat.com>
- <20200619125923.22602-4-david@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619125923.22602-4-david@redhat.com>
+        Mon, 22 Jun 2020 21:27:17 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 593E4C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:27:16 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z7so9211376ybz.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=UOuwZGpgzJVvH8pfpeZ0keyZ//465N3FyB2wMRomwb4=;
+        b=bh/pq5kaM7FeIrZzypeLaSXBK8XSC14fuFLe/P1qXyWg+kQu1XaweHivg01izyhyNv
+         KUEJxy18Swjm/dSQUSLHPF9Ynx3QLuDv5s583y4DNnPzqokVzRDZKlw1vn6WiUmgXXc0
+         2fNIUm3lp/PBoOcdzuZ40pvye6m70igqfwh5dTnW1v1iXpi4NXZbQkAxsvnHidnt4kge
+         KsGge2QOVw/LfGXppAqseniFpv3LNhDaXew+vz+y5aSShHGcpqjJ2HUCYMYWXaqSFauh
+         j8IsRzTJWkjmu7AJcGBM4JVRlbOUgpL1/SgMksiHkfieb7sBFdnkSEYf2aJYmg4Htwo1
+         5Iog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=UOuwZGpgzJVvH8pfpeZ0keyZ//465N3FyB2wMRomwb4=;
+        b=h/QErQdbazrY9dws6FlRtXXRFuQNXm0TltUZgpkUJaKLBUUJ0y21HbqKEYp6pYOR+S
+         bq1nGzW/HO+tHM5mfIVpoK/h1suzn6z4dtaApj6qaKHmsYUm9+SVnogNhe0yKB2KkcI/
+         4uIZXJWXXfHOFYYNfYdBuHUHEe/PBnhkIDcImRgAZGWpcCh5yWTAJREq/Y0nCosLVQzu
+         3y9GmBPVJCzJbxnOuYQhBrWcHoRwOvNpy+o9giOGYixT2w+zqVmmbUv8bHmxrEYbKzyr
+         SN1oQTiHOClAPoWOe15ZptdV4poaT9D4ASmmxRaXU1XeyTyYYS0a4sseWw2CJoV2kDfQ
+         qafg==
+X-Gm-Message-State: AOAM531bWBIaqFMfET/bmP/Kk0vKC1St81lDaNh3sw9datx8hBQFZHzk
+        SHIrE8kvTptH28qw3NpNKFeowaLi2XXEHns=
+X-Google-Smtp-Source: ABdhPJy7qcpSVpegKx4QAc5kw2vXm64fXjkxcVFY9F2PveOYLJCjOmFJR5k3dfbz5KVZc3jVoAnglPgHZolq4+g=
+X-Received: by 2002:a25:2488:: with SMTP id k130mr31280767ybk.241.1592875635446;
+ Mon, 22 Jun 2020 18:27:15 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 18:18:02 -0700
+Message-Id: <20200623011803.91232-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+Subject: [PATCH v2] arm64/module: Optimize module load time by optimizing PLT counting
+From:   Saravana Kannan <saravanak@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 02:59:22PM +0200, David Hildenbrand wrote:
->Commit e900a918b098 ("mm: shuffle initial free memory to improve
->memory-side-cache utilization") promised "autodetection of a
->memory-side-cache (to be added in a follow-on patch)" over a year ago.
->
->The original series included patches [1], however, they were dropped
->during review [2] to be followed-up later.
->
->Due to lack of platforms that publish an HMAT, autodetection is currently
->not implemented. However, manual activation is actively used [3]. Let's
->simplify for now and re-add when really (ever?) needed.
->
->[1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com
->[2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com
->[3] https://lkml.kernel.org/r/CAPcyv4irwGUU2x+c6b4L=KbB1dnasNKaaZd6oSpYjL9kfsnROQ@mail.gmail.com
->
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Johannes Weiner <hannes@cmpxchg.org>
->Cc: Michal Hocko <mhocko@suse.com>
->Cc: Minchan Kim <minchan@kernel.org>
->Cc: Huang Ying <ying.huang@intel.com>
->Cc: Wei Yang <richard.weiyang@gmail.com>
->Cc: Mel Gorman <mgorman@techsingularity.net>
->Cc: Dan Williams <dan.j.williams@intel.com>
->Signed-off-by: David Hildenbrand <david@redhat.com>
+When loading a module, module_frob_arch_sections() tries to figure out
+the number of PLTs that'll be needed to handle all the RELAs. While
+doing this, it tries to dedupe PLT allocations for multiple
+R_AARCH64_CALL26 relocations to the same symbol. It does the same for
+R_AARCH64_JUMP26 relocations.
 
-Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+To make checks for duplicates easier/faster, it sorts the relocation
+list by type, symbol and addend. That way, to check for a duplicate
+relocation, it just needs to compare with the previous entry.
 
+However, sorting the entire relocation array is unnecessary and
+expensive (O(n log n)) because there are a lot of other relocation types
+that don't need deduping or can't be deduped.
+
+So this commit partitions the array into entries that need deduping and
+those that don't. And then sorts just the part that needs deduping. And
+when CONFIG_RANDOMIZE_BASE is disabled, the sorting is skipped entirely
+because PLTs are not allocated for R_AARCH64_CALL26 and R_AARCH64_JUMP26
+if it's disabled.
+
+This gives significant reduction in module load time for modules with
+large number of relocations with no measurable impact on modules with a
+small number of relocations. In my test setup with CONFIG_RANDOMIZE_BASE
+enabled, these were the results for a few downstream modules:
+
+Module		Size (MB)
+wlan		14
+video codec	3.8
+drm		1.8
+IPA		2.5
+audio		1.2
+gpu		1.8
+
+Without this patch:
+Module		Number of entries sorted	Module load time (ms)
+wlan		243739				283
+video codec	74029				138
+drm		53837				67
+IPA		42800				90
+audio		21326				27
+gpu		20967				32
+
+Total time to load all these module: 637 ms
+
+With this patch:
+Module		Number of entries sorted	Module load time (ms)
+wlan		22454				61
+video codec	10150				47
+drm		13014				40
+IPA		8097				63
+audio		4606				16
+gpu		6527				20
+
+Total time to load all these modules: 247
+
+Time saved during boot for just these 6 modules: 390 ms
+
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+
+v1 -> v2:
+- Provided more details in the commit text
+- Pulled in Will's comments on the coding style
+- Pulled in Ard's suggestion about skipping jumps with the same section
+  index (parts of Will's suggested code)
+
+ arch/arm64/kernel/module-plts.c | 46 ++++++++++++++++++++++++++++++---
+ 1 file changed, 43 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
+index 65b08a74aec6..0ce3a28e3347 100644
+--- a/arch/arm64/kernel/module-plts.c
++++ b/arch/arm64/kernel/module-plts.c
+@@ -253,6 +253,40 @@ static unsigned int count_plts(Elf64_Sym *syms, Elf64_Rela *rela, int num,
+ 	return ret;
+ }
+ 
++static bool branch_rela_needs_plt(Elf64_Sym *syms, Elf64_Rela *rela,
++				  Elf64_Word dstidx)
++{
++
++	Elf64_Sym *s = syms + ELF64_R_SYM(rela->r_info);
++
++	if (s->st_shndx == dstidx)
++		return false;
++
++	return ELF64_R_TYPE(rela->r_info) == R_AARCH64_JUMP26 ||
++	       ELF64_R_TYPE(rela->r_info) == R_AARCH64_CALL26;
++}
++
++/* Group branch PLT relas at the front end of the array. */
++static int partition_branch_plt_relas(Elf64_Sym *syms, Elf64_Rela *rela,
++				      int numrels, Elf64_Word dstidx)
++{
++	int i = 0, j = numrels - 1;
++
++	if (!IS_ENABLED(CONFIG_RANDOMIZE_BASE))
++		return 0;
++
++	while (i < j) {
++		if (branch_rela_needs_plt(syms, &rela[i], dstidx))
++			i++;
++		else if (branch_rela_needs_plt(syms, &rela[j], dstidx))
++			swap(rela[i], rela[j]);
++		else
++			j--;
++	}
++
++	return i;
++}
++
+ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 			      char *secstrings, struct module *mod)
+ {
+@@ -290,7 +324,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 
+ 	for (i = 0; i < ehdr->e_shnum; i++) {
+ 		Elf64_Rela *rels = (void *)ehdr + sechdrs[i].sh_offset;
+-		int numrels = sechdrs[i].sh_size / sizeof(Elf64_Rela);
++		int nents, numrels = sechdrs[i].sh_size / sizeof(Elf64_Rela);
+ 		Elf64_Shdr *dstsec = sechdrs + sechdrs[i].sh_info;
+ 
+ 		if (sechdrs[i].sh_type != SHT_RELA)
+@@ -300,8 +334,14 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 		if (!(dstsec->sh_flags & SHF_EXECINSTR))
+ 			continue;
+ 
+-		/* sort by type, symbol index and addend */
+-		sort(rels, numrels, sizeof(Elf64_Rela), cmp_rela, NULL);
++		/*
++		 * sort branch relocations requiring a PLT by type, symbol index
++		 * and addend
++		 */
++		nents = partition_branch_plt_relas(syms, rels, numrels,
++						   sechdrs[i].sh_info);
++		if (nents)
++			sort(rels, nents, sizeof(Elf64_Rela), cmp_rela, NULL);
+ 
+ 		if (!str_has_prefix(secstrings + dstsec->sh_name, ".init"))
+ 			core_plts += count_plts(syms, rels, numrels,
 -- 
-Wei Yang
-Help you, Help me
+2.27.0.111.gc72c7da667-goog
+
