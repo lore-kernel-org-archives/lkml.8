@@ -2,171 +2,258 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F763C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC64C206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4348F206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nkYPLtAH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHH/n4Wq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731338AbgFWCWX (ORCPT
+        id S1731439AbgFWCXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:22:23 -0400
-Received: from mail-eopbgr10073.outbound.protection.outlook.com ([40.107.1.73]:36576
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730882AbgFWCWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:22:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BkuTa1XnY+6TZq8kHVTVxwu6ej1FTyat3L/pTIkx8utrdba3W3lDLGvCsC8ikEK+GEe/uo7pYLqj3FJ8QUCH0+WSwxtVxT0xKGBTqM4FCjkyjM7JD28CCAJic1lY5jNUXdYOj8QKtHALWyKNvilS5GoSMYFghe9MTB8ff28ZZcJ8OAKkrWM47wgqfZiJLstCft9NY4fJ82RhOaNTdJ9f5YQrLyzTEZH7UKdI2ppkAMx7Gg2ehMWfnJiva1VmeIjNhWid2plBmgdwP4m+xE+qUOO9ZWQ3wNq5u2S+Ioe653na9H1QesxFHP1xhBSIWicSjxkBGM9VVrVuw9/Q74sNzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I/5q2jSTv20iJsx3jzTZe+84r6ui5PGJOw38UBJulo4=;
- b=ZF5xbQgw8tDKNCPfMxO2a8uPdDXgGyuzutC5WmsMQa5snbAIBBVGiIUecyN19XCic5KgNo6rNrKD7VP7BLE06ehMYNTF2j9CVWA8qCMQqPZuPG5bxbrha64dxy/XATiRkxsitPQW5dI2le4vSVu5GJNbBVZzcZDEnOPQnwjsCj0hE6hQWUziPRVBgjJ9TbnlaWEZe9416NEVbZ1aftfqwZGT3Wq5ZCsjs3hs4VLTjqMymk2yfmf1FN9CdAsQXWqCD5xo12etVMLdhjyu9GpPK6K+Lj9ilTEdDiJ98zm39Ro0kspACleWdn/gYxMerwGlWXrCxXgbEKeKT0QEHZtzdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I/5q2jSTv20iJsx3jzTZe+84r6ui5PGJOw38UBJulo4=;
- b=nkYPLtAHOywY2z8zR0azOrSr9YG2JHHR0Tv+bUSzP5nFIptjn4q6AKcxG7gHCbchzZRojcxHGzKKrIr/mmpkbNvQX5VAVr/zJI8Hv22ltqSYQQCRKSJc0OnZHoocmYBVS/GjoM+gR5WS9iz/rFsp+wGS8eEi+0zoLF5ziRz05Ms=
-Received: from AM6PR04MB5413.eurprd04.prod.outlook.com (2603:10a6:20b:96::28)
- by AM6PR04MB4886.eurprd04.prod.outlook.com (2603:10a6:20b:6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Tue, 23 Jun
- 2020 02:22:19 +0000
-Received: from AM6PR04MB5413.eurprd04.prod.outlook.com
- ([fe80::18e:f4c7:5a46:90e3]) by AM6PR04MB5413.eurprd04.prod.outlook.com
- ([fe80::18e:f4c7:5a46:90e3%5]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 02:22:18 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "kbuild@lists.01.org" <kbuild@lists.01.org>
-CC:     "lkp@intel.com" <lkp@intel.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: RE: [kbuild] drivers/usb/gadget/udc/fsl_udc_core.c:1055
- fsl_ep_fifo_status() error: we previously assumed '_ep->desc' could be null
- (see line 1055)
-Thread-Topic: [kbuild] drivers/usb/gadget/udc/fsl_udc_core.c:1055
- fsl_ep_fifo_status() error: we previously assumed '_ep->desc' could be null
- (see line 1055)
-Thread-Index: AQHWSMHg173I/CwxlUSjT6yCmaAgyajldNlA
-Date:   Tue, 23 Jun 2020 02:22:18 +0000
-Message-ID: <AM6PR04MB54138B87957CFB06EC9DF351F1940@AM6PR04MB5413.eurprd04.prod.outlook.com>
-References: <20200622182023.GX4282@kadam>
-In-Reply-To: <20200622182023.GX4282@kadam>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [148.153.126.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5298aca8-683a-4620-04d2-08d8171c40f8
-x-ms-traffictypediagnostic: AM6PR04MB4886:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4886499EE9EA2E09DDD7F859F1940@AM6PR04MB4886.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 04433051BF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WMoY/Kz0LNGIEVvDzVzKtLV+W4lmKxGiaXA7ldeXKPlObuW1hkHmNZyUmOAOUy0d4uKCdTkolLTiltA4idei+66grgK5WY3nfHD9vSSjQrvMhvvIBbYzwOAdweBoQY8xDj24FJsQUTCQidlwtPS3UpP8Zi6PEMC99/RQM4g8ZzxJtYag7I3SrOPxctLJzUn0xkyzwupgsBO5C+lPjYSJDzV8613V5YQMGAilnV3w11QRQJsVUfS0zogMU+eCZJtYOVXsy2RVFzNRXbReIUMoEJlrqtYabkSwHp7K1r+7+eTy/Cv99MCo9DfMr5OcTI+FmwrvV8TZysNAU1/CdcLpZw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5413.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(136003)(376002)(346002)(26005)(55016002)(71200400001)(9686003)(52536014)(66946007)(2906002)(76116006)(64756008)(66556008)(66446008)(66476007)(4001150100001)(5660300002)(6506007)(53546011)(8936002)(83380400001)(478600001)(7696005)(186003)(4326008)(33656002)(8676002)(316002)(54906003)(110136005)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: EelZf+s+ZpZgToF8n6J71oraXanKbYNECPCc5aoQrzGDalAYf9YVIQMlq+DXv1h/sMuidbhib7ZyhG77BmpC7xsmdZtcrGG9f3nrS2j4hx50Tv6wGpFdSsnfvCLh4z3wPKcFxdqLlTT1r/Zhbz76xNWdM9wvu9V5ZlMZb14sq/u1jNilmspRAr530pdF7PaEaFcy2CpKcYtBCLm1rQ3X3uK/zCRxJKSD860QB1iB0LPdH7/tXYHfug/QtLLOo7fQKF4XefP04kRb2IXgEeG9IKUC73CTtTvUOmy6/NpuhjYsRkpa8xjhpIc4gUSlHcqU/V5tta7pOepWCtE/ysvNFjHe4oPmfv/b4Z/rgg3MGZt6DMbvKXWLDdT6Hnm3g8OPrHGQjq0UAx7MZiEdGBF032za31bp4+TDtt62+Rs6xlb4hWiNUxyk+Gd1t+yY3qnJnZIarEQoR4eInfJAs5zfchRHVQOx4Ixg/1DnkYNsM02ZB0Hf8j91chHu9lXiKpg3
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 22 Jun 2020 22:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730766AbgFWCXI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 22:23:08 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0DE3C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:23:06 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id e11so8271047qkm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :organization:user-agent:mime-version:content-transfer-encoding;
+        bh=6zL7pHAEzMEG/c09VqjrAQyA7FSL2PXyExlQIJ6f9QE=;
+        b=hHH/n4Wqz4Ik3r4/K77lSSSSQlTfW2cRQbY/9pxkS1SA3OSaJhiAF0Xz4UEcINlwhq
+         t5Vi3fQtfno+5dU6NWHG1lnaJbYD9aZtG6+prhschGLjETvp9rSP7X2AcGEETyeCdnTT
+         cY45QYJ/ohLz76+e2+XXtQugt3VkRVf9ZNJ2Nczia4XnNV9Cdivv5AaU84illzLR4tQr
+         MTO2ylOXVuoD4q95rPssEBn3daaHmsVQqWpva5BLFqtiok9NncCZGt8DD5/3xEF6B4mu
+         YJpjMAZ01aGp54dx/aRu1DwFw4m2u7QaWaBkPwpoZHGgGnvErjL0D2oeqoayLuJcVeq0
+         fI7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=6zL7pHAEzMEG/c09VqjrAQyA7FSL2PXyExlQIJ6f9QE=;
+        b=Y3P37sLFvRmVjjJIkkYP+tIpWEnsFf7utsmpm2WGKzSEw5pSXndv9m5LKh1m61vzVw
+         himjXrTKPUh6i818BDOYE93F90tvQBJFxE7cumlKZhWwb9/ACXd3DIJLmRUCCW1WymyJ
+         v2yl6X2v10FEVxjinrjU0mwNORhItBncVBMmJYuSG/7YvYaHajbM1bceMoa3Pxjlk+2k
+         7B0iZIcTJhpUgDec9aCJ/Po7TdQU+x2zyylz4+uharCOqxvcL+JE3KZznUWDlI3x7Xb8
+         mkZYS/NVviFyJLTGEWTbLiT4XxuO4H9InF4lngKglUehUltwyTPJRYJ5XKPsZlZp+XZC
+         kZfw==
+X-Gm-Message-State: AOAM532cA8SAtgE0Khw47dt5FuQKzKzRjyop6Fz0y4baHmmuSbkCUgHI
+        ljfeGQnrlQ+WO1B8tPEmCsw=
+X-Google-Smtp-Source: ABdhPJyiG7xYSaNSc7EOcWxbon3GIxU74JYJWYppFrKiKZaGztsf206E68h72ctJGP3+BzalrPdMlQ==
+X-Received: by 2002:a37:668d:: with SMTP id a135mr17765301qkc.131.1592878985865;
+        Mon, 22 Jun 2020 19:23:05 -0700 (PDT)
+Received: from LeoBras (177-131-65-187.dynamic.desktop.com.br. [177.131.65.187])
+        by smtp.gmail.com with ESMTPSA id 23sm1879040qkl.52.2020.06.22.19.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 19:23:05 -0700 (PDT)
+Message-ID: <75e1ece8d8e59322fdc70a32cc3888ce45ffbd56.camel@gmail.com>
+Subject: Re: [PATCH 3/4] powerpc/pseries/iommu: Move window-removing part of
+ remove_ddw into remove_dma_window
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Oliver <oohall@gmail.com>
+Date:   Mon, 22 Jun 2020 23:22:50 -0300
+In-Reply-To: <887bf30e-ae9e-b0cb-0388-dc555692ff0a@ozlabs.ru>
+References: <20200619050619.266888-1-leobras.c@gmail.com>
+         <20200619050619.266888-4-leobras.c@gmail.com>
+         <51201582-efe5-85df-7e65-a998e91ab63f@ozlabs.ru>
+         <ccf7b591f2bf61ba4705699b2e2b050c3cf48d99.camel@gmail.com>
+         <887bf30e-ae9e-b0cb-0388-dc555692ff0a@ozlabs.ru>
+Organization: IBM
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5298aca8-683a-4620-04d2-08d8171c40f8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2020 02:22:18.8075
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7wh1/IyLkAiSrzPaCPq8xQVwuN6xI/alAKUC2CKKgHI81SsVaibWetW6DGsssMKNcdEwva/FwdpbBgbMqG/vWg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4886
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan
+On Tue, 2020-06-23 at 11:12 +1000, Alexey Kardashevskiy wrote:
+> 
+> On 23/06/2020 04:59, Leonardo Bras wrote:
+> > Hello Alexey, thanks for the feedback!
+> > 
+> > On Mon, 2020-06-22 at 20:02 +1000, Alexey Kardashevskiy wrote:
+> > > On 19/06/2020 15:06, Leonardo Bras wrote:
+> > > > Move the window-removing part of remove_ddw into a new function
+> > > > (remove_dma_window), so it can be used to remove other DMA windows.
+> > > > 
+> > > > It's useful for removing DMA windows that don't create DIRECT64_PROPNAME
+> > > > property, like the default DMA window from the device, which uses
+> > > > "ibm,dma-window".
+> > > > 
+> > > > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+> > > > ---
+> > > >  arch/powerpc/platforms/pseries/iommu.c | 53 +++++++++++++++-----------
+> > > >  1 file changed, 31 insertions(+), 22 deletions(-)
+> > > > 
+> > > > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+> > > > index 5e1fbc176a37..de633f6ae093 100644
+> > > > --- a/arch/powerpc/platforms/pseries/iommu.c
+> > > > +++ b/arch/powerpc/platforms/pseries/iommu.c
+> > > > @@ -767,25 +767,14 @@ static int __init disable_ddw_setup(char *str)
+> > > >  
+> > > >  early_param("disable_ddw", disable_ddw_setup);
+> > > >  
+> > > > -static void remove_ddw(struct device_node *np, bool remove_prop)
+> > > > +static void remove_dma_window(struct device_node *pdn, u32 *ddw_avail,
+> > > 
+> > > You do not need the entire ddw_avail here, pass just the token you need.
+> > 
+> > Well, I just emulated the behavior of create_ddw() and query_ddw() as
+> > both just pass the array instead of the token, even though they only
+> > use a single token. 
+> 
+> True, there is a pattern.
+> 
+> > I think it's to make the rest of the code independent of the design of
+> > the "ibm,ddw-applicable" array, and if it changes, only local changes
+> > on the functions will be needed.
+> 
+> The helper removes a window, if you are going to call other operations
+> in remove_dma_window(), then you'll have to change its name ;)
 
-On Tuesday, June 23, 2020 2:20 AM, Dan Carpenter wrote:
+Not only doing new stuff, it can change the order for some reason (as
+the order of the output of query), and it would need not change the
+caller.
 
-<snip>
+> 
+> 
+> > > Also, despite this particular file, the "pdn" name is usually used for
+> > > struct pci_dn (not device_node), let's keep it that way.
+> > 
+> > Sure, I got confused for some time about this, as we have:
+> > static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn).
+> > but on *_ddw() we have "struct pci_dn *pdn".
+> 
+> True again, not the cleanest style here.
+> 
+> 
+> > I will also add a patch that renames those 'struct device_node *pdn' to
+> > something like 'struct device_node *parent_dn'.
+> 
+> I would not go that far, we (well, Oliver) are getting rid of many
+> occurrences of pci_dn and Oliver may have a stronger opinion here.
+> 
+> 
+> > > > +			      struct property *win)
+> > > >  {
+> > > >  	struct dynamic_dma_window_prop *dwp;
+> > > > -	struct property *win64;
+> > > > -	u32 ddw_avail[3];
+> > > >  	u64 liobn;
+> > > > -	int ret = 0;
+> > > > -
+> > > > -	ret = of_property_read_u32_array(np, "ibm,ddw-applicable",
+> > > > -					 &ddw_avail[0], 3);
+> > > > -
+> > > > -	win64 = of_find_property(np, DIRECT64_PROPNAME, NULL);
+> > > > -	if (!win64)
+> > > > -		return;
+> > > > -
+> > > > -	if (ret || win64->length < sizeof(*dwp))
+> > > > -		goto delprop;
+> > > > +	int ret;
+> > > >  
+> > > > -	dwp = win64->value;
+> > > > +	dwp = win->value;
+> > > >  	liobn = (u64)be32_to_cpu(dwp->liobn);
+> > > >  
+> > > >  	/* clear the whole window, note the arg is in kernel pages */
+> > > > @@ -793,24 +782,44 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
+> > > >  		1ULL << (be32_to_cpu(dwp->window_shift) - PAGE_SHIFT), dwp);
+> > > >  	if (ret)
+> > > >  		pr_warn("%pOF failed to clear tces in window.\n",
+> > > > -			np);
+> > > > +			pdn);
+> > > >  	else
+> > > >  		pr_debug("%pOF successfully cleared tces in window.\n",
+> > > > -			 np);
+> > > > +			 pdn);
+> > > >  
+> > > >  	ret = rtas_call(ddw_avail[2], 1, 1, NULL, liobn);
+> > > >  	if (ret)
+> > > >  		pr_warn("%pOF: failed to remove direct window: rtas returned "
+> > > >  			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
+> > > > -			np, ret, ddw_avail[2], liobn);
+> > > > +			pdn, ret, ddw_avail[2], liobn);
+> > > >  	else
+> > > >  		pr_debug("%pOF: successfully removed direct window: rtas returned "
+> > > >  			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
+> > > > -			np, ret, ddw_avail[2], liobn);
+> > > > +			pdn, ret, ddw_avail[2], liobn);
+> > > > +}
+> > > > +
+> > > > +static void remove_ddw(struct device_node *np, bool remove_prop)
+> > > > +{
+> > > > +	struct property *win;
+> > > > +	u32 ddw_avail[3];
+> > > > +	int ret = 0;
+> > > > +
+> > > > +	ret = of_property_read_u32_array(np, "ibm,ddw-applicable",
+> > > > +					 &ddw_avail[0], 3);
+> > > > +	if (ret)
+> > > > +		return;
+> > > > +
+> > > > +	win = of_find_property(np, DIRECT64_PROPNAME, NULL);
+> > > > +	if (!win)
+> > > > +		return;
+> > > > +
+> > > > +	if (win->length >= sizeof(struct dynamic_dma_window_prop))
+> > > 
+> > > Any good reason not to make it "=="? Is there something optional or we
+> > > expect extension (which may not grow from the end but may add cells in
+> > > between). Thanks,
+> > 
+> > Well, it comes from the old behavior of remove_ddw():
+> > -	if (ret || win64->length < sizeof(*dwp))
+> > -		goto delprop;
+> > As I reversed the logic from 'if (test) go out' to 'if (!test) do
+> > stuff', I also reversed (a < b) to !(a < b) => (a >= b).
+> > 
+> > I have no problem changing that to '==', but it will produce a
+> > different behavior than before. 
+> 
+> I missed than, never mind then.
+> 
+> 
+> > > 
+> > > > +		remove_dma_window(np, ddw_avail, win);
+> > > > +
+> > > > +	if (!remove_prop)
+> > > > +		return;
+> > > >  
+> > > > -delprop:
+> > > > -	if (remove_prop)
+> > > > -		ret = of_remove_property(np, win64);
+> > > > +	ret = of_remove_property(np, win);
+> > > >  	if (ret)
+> > > >  		pr_warn("%pOF: failed to remove direct window property: %d\n",
+> > > >  			np, ret);
+> > > > 
+> > 
+> > Best regards,
+> > Leonardo
+> > 
 
->=20
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->=20
-> New smatch warnings:
-> drivers/usb/gadget/udc/fsl_udc_core.c:1055 fsl_ep_fifo_status() error: we
-> previously assumed '_ep->desc' could be null (see line 1055)
->=20
-
-<snip>
-
->=20
-> 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> 2011-04-18  1047  static int fsl_ep_fifo_status(struct usb_ep *_ep)
-> 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> 2011-04-18  1048  {
-> 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> 2011-04-18  1049  	struct fsl_ep *ep;
-> 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> 2011-04-18  1050  	struct fsl_udc *udc;
-> 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> 2011-04-18  1051  	int size =3D 0;
-> 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> 2011-04-18  1052  	u32 bitmask;
-> 6414e94c203d92 drivers/usb/gadget/fsl_udc_core.c     Li Yang
-> 2011-11-23  1053  	struct ep_queue_head *qh;
-> 2ea6698d7b9266 drivers/usb/gadget/fsl_udc_core.c     Anatolij Gustschin
-> 2011-04-18  1054
-> 75eaa498c99eeb drivers/usb/gadget/udc/fsl_udc_core.c Nikhil Badola
-> 2019-10-21 @1055  	if (!_ep || _ep->desc || !(_ep->desc->bEndpointAddress=
-&0xF))
->                                          ^^^^^^^^^ Reversed NULL test.  T=
-his will always return -ENODEV.  (Or possibly crash.  But I suspect it alwa=
-ys returns -ENODEV instead of crashing).
-
-So the kernel test reports warning in case of '_ep->desc is null', right?=20
-
-My understanding is that this judgement would return -ENODEV when
-executing '... || _ep-desc ||..' and never execute '_ep->desc->bEndpointAdd=
-ress' part,
-so crash would not happen, am I right?
-
-> The container_of() macro doesn't dereference anything, btw.  It just does
-> pointer math.  I think it would be cleaner to use ep_index() like the ori=
-ginal
-> code did.  In other words, perhaps it would look best written like this:
-
-Yes, I agree using ep_index() would be easier for reading, just feel a litt=
-le bit
-uncomfortable to mix checking on _ep and it's container (ep) in the same li=
-ne.
-
-> 	ep =3D container_of(_ep, struct fsl_ep, ep);
-> 	if (!_ep || !_ep->desc || ep_index(ep) =3D=3D 0)
->=20
->=20
-
-BTW, Nikhil Badola has left NXP (Freesale), so his email address is invalid=
- now.
-
-Thanks & Regards,
-Ran
