@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2898C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42369C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80F2820738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7622072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947148;
-	bh=M86fOLiCQkK9k6YYz0e5I3FGzgfHy4XRhEqm5QpA51c=;
+	s=default; t=1592947154;
+	bh=y4JIm9O8t1NffQaSICuLZzFDupMR1MBAVaXk2WFlsqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UbUerWj7Z/sK4u5v6n9pZV8RpJgAVPz29VtmdnOZATZ0lTaTYYMwru8beXY78Rsg2
-	 32+WIbZu1ISrwC2shqFojBxRUQnCtBHFQOwJa+94i5nQkHtMUHbkb6RCoXEHOKt4a0
-	 lbd4iDRyXkiAMDF2M8fGHeucxXDWzg7JiVIsjS2Q=
+	b=r72Tu40Vn50hCa4CjqEdNFxoBqMl2xhD7V3orae4OigimUdga/Nzqdh9mK2MSOOsx
+	 IeRwKABRmpKCJTegb7zi9721UHd8wBG5pt5rgmZwcD1pjv8+irdktU/A5uygan+daV
+	 2E0SSjkRStoc5ZSNAa59g4ptkLwKMznOcEdcudys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393470AbgFWVTG (ORCPT
+        id S2389462AbgFWUZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:19:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44324 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390004AbgFWUZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:25:22 -0400
+        id S2390544AbgFWUZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:25:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C50EB2064B;
-        Tue, 23 Jun 2020 20:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 913B720723;
+        Tue, 23 Jun 2020 20:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943922;
-        bh=M86fOLiCQkK9k6YYz0e5I3FGzgfHy4XRhEqm5QpA51c=;
+        s=default; t=1592943907;
+        bh=y4JIm9O8t1NffQaSICuLZzFDupMR1MBAVaXk2WFlsqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q/5sb38dIN4mFnikJ2EFpNmnHLZyYT6kG2Ryqlp6q00FGybvPO7cew9UYeQDAOaeI
-         VIjPQjvxmDGl3fgen/aresLv2z79JCoXN16Tvv9Avmg8kBCuoroNZ8QOr5KGdZy4LA
-         hrRiqZjkjYrCd185s+xkLuYqknY2XoCXf4DTxFNg=
+        b=soAE7k4d9OlhgWyTrSWgsq4I2q7/qreWi7o8z3YP5HtJ7dJiRNmVgGEo4OsCAxmey
+         oy6Zfkymk2O+jeZSIetdzrAgEiT2a5FEdYbMGa0S+FCAuz7CLYCJsv6nmxrkhtTRic
+         cJXKPCdfk8b5LClk6mwda2EaSoBTENbXaW+tLFg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 104/314] slimbus: ngd: get drvdata from correct device
-Date:   Tue, 23 Jun 2020 21:54:59 +0200
-Message-Id: <20200623195343.812290910@linuxfoundation.org>
+Subject: [PATCH 5.4 067/314] powerpc/crashkernel: Take "mem=" option into account
+Date:   Tue, 23 Jun 2020 21:54:22 +0200
+Message-Id: <20200623195342.040864298@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,48 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Pingfan Liu <kernelfans@gmail.com>
 
-[ Upstream commit b58c663059b484f7ff547d076a34cf6d7a302e56 ]
+[ Upstream commit be5470e0c285a68dc3afdea965032f5ddc8269d7 ]
 
-Get drvdata directly from parent instead of ngd dev, as ngd
-dev can probe defer and previously set drvdata will become null.
+'mem=" option is an easy way to put high pressure on memory during
+some test. Hence after applying the memory limit, instead of total
+mem, the actual usable memory should be considered when reserving mem
+for crashkernel. Otherwise the boot up may experience OOM issue.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200417093618.7929-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+E.g. it would reserve 4G prior to the change and 512M afterward, if
+passing
+crashkernel="2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G",
+and mem=5G on a 256G machine.
+
+This issue is powerpc specific because it puts higher priority on
+fadump and kdump reservation than on "mem=". Referring the following
+code:
+    if (fadump_reserve_mem() == 0)
+            reserve_crashkernel();
+    ...
+    /* Ensure that total memory size is page-aligned. */
+    limit = ALIGN(memory_limit ?: memblock_phys_mem_size(), PAGE_SIZE);
+    memblock_enforce_memory_limit(limit);
+
+While on other arches, the effect of "mem=" takes a higher priority
+and pass through memblock_phys_mem_size() before calling
+reserve_crashkernel().
+
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1585749644-4148-1-git-send-email-kernelfans@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/slimbus/qcom-ngd-ctrl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/machine_kexec.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-index 29fbab55c3b38..01a17d84b6064 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -1354,7 +1354,6 @@ static int of_qcom_slim_ngd_register(struct device *parent,
- 		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
- 		ngd->pdev->dev.of_node = node;
- 		ctrl->ngd = ngd;
--		platform_set_drvdata(ngd->pdev, ctrl);
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+index c4ed328a7b963..7a1c11a7cba5a 100644
+--- a/arch/powerpc/kernel/machine_kexec.c
++++ b/arch/powerpc/kernel/machine_kexec.c
+@@ -114,11 +114,12 @@ void machine_kexec(struct kimage *image)
  
- 		platform_device_add(ngd->pdev);
- 		ngd->base = ctrl->base + ngd->id * data->offset +
-@@ -1369,12 +1368,13 @@ static int of_qcom_slim_ngd_register(struct device *parent,
- 
- static int qcom_slim_ngd_probe(struct platform_device *pdev)
+ void __init reserve_crashkernel(void)
  {
--	struct qcom_slim_ngd_ctrl *ctrl = platform_get_drvdata(pdev);
- 	struct device *dev = &pdev->dev;
-+	struct qcom_slim_ngd_ctrl *ctrl = dev_get_drvdata(dev->parent);
+-	unsigned long long crash_size, crash_base;
++	unsigned long long crash_size, crash_base, total_mem_sz;
  	int ret;
  
- 	ctrl->ctrl.dev = dev;
++	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
+ 	/* use common parsing */
+-	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
++	ret = parse_crashkernel(boot_command_line, total_mem_sz,
+ 			&crash_size, &crash_base);
+ 	if (ret == 0 && crash_size > 0) {
+ 		crashk_res.start = crash_base;
+@@ -177,6 +178,7 @@ void __init reserve_crashkernel(void)
+ 	/* Crash kernel trumps memory limit */
+ 	if (memory_limit && memory_limit <= crashk_res.end) {
+ 		memory_limit = crashk_res.end + 1;
++		total_mem_sz = memory_limit;
+ 		printk("Adjusted memory limit for crashkernel, now 0x%llx\n",
+ 		       memory_limit);
+ 	}
+@@ -185,7 +187,7 @@ void __init reserve_crashkernel(void)
+ 			"for crashkernel (System RAM: %ldMB)\n",
+ 			(unsigned long)(crash_size >> 20),
+ 			(unsigned long)(crashk_res.start >> 20),
+-			(unsigned long)(memblock_phys_mem_size() >> 20));
++			(unsigned long)(total_mem_sz >> 20));
  
-+	platform_set_drvdata(pdev, ctrl);
- 	pm_runtime_use_autosuspend(dev);
- 	pm_runtime_set_autosuspend_delay(dev, QCOM_SLIM_NGD_AUTOSUSPEND);
- 	pm_runtime_set_suspended(dev);
+ 	if (!memblock_is_region_memory(crashk_res.start, crash_size) ||
+ 	    memblock_reserve(crashk_res.start, crash_size)) {
 -- 
 2.25.1
 
