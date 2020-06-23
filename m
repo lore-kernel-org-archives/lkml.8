@@ -2,132 +2,108 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6FBC207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947665;
-	bh=J1y0PlpjtGbI1bMorl5yk/bck39RF0IYqy2Pt3TZCPE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCxtdqk9RLo/FEzHYcx6pnVo0xMcig8fssf1u7CzSaOL3Ik9ila90kNsPYmE3pkCM
-	 3YYEEik1Ny/SgCQivMdi5mq/hsUTCaW1TWEIWdsvnMbUV9IQe0SS+nVTNOs8AqncTf
-	 ASD57VNafLW0S4RXv6nz7wz+HISou/7Zxalo1Rlg=
+	by mail.kernel.org (Postfix) with ESMTP id ED70D20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BD8BvuUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390366AbgFWV1n (ORCPT
+        id S2392500AbgFWV1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:27:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389427AbgFWUQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13AC12064B;
-        Tue, 23 Jun 2020 20:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943396;
-        bh=J1y0PlpjtGbI1bMorl5yk/bck39RF0IYqy2Pt3TZCPE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I520ViryXwk46aQLFiYrkXN/S0x0BsTD57Zg482kZ6cHj93mrTuwlgiWRQ3Z1G46C
-         ulIAFrsC25JABdqMDmcOmh6xFSENGLkYqIqhbTAHUyixievyRDSfFZWaY7v/QM1ONz
-         vImMuloGgmxVO6VGo2W10qsFxtjYljB2iP6aNZ+A=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YiFei Zhu <zhuyifei@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 368/477] net/filter: Permit reading NET in load_bytes_relative when MAC not set
-Date:   Tue, 23 Jun 2020 21:56:05 +0200
-Message-Id: <20200623195424.924919665@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 17:27:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388976AbgFWV1o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:27:44 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE33C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:27:44 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id h185so14495pfg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4QwoBjXxFI8dB+I08ZRqPOWzeMhxoaAlX8z2Pyczloc=;
+        b=BD8BvuUIwxYjkB05U50Nu0xKmYs7qgFwtfM0T3hu8ZZKixFL9uPEJ68Q55BgYVvw/f
+         QmyhXEJ3+ihuaQKDkpAinbhKPLu4AGfOCn0YlCRQksPV/3UuRO2lb3mmPfutZy/ak8Fd
+         mSicVaxLe8+63UED5Vr9GptFvjmoU4AKAncdIVfoMO9LEWfIJerWd77ubteWfh0yiYAR
+         ilVCsIMXLjNuBktgb7qcpqBc4qWI9s/H+ikfADl9t4N6B/yVs70cm5ERaLq/OEEhs4I9
+         3yTuWCURr1mIs7XrP6DXEnfZ2stkaHzYO6z+CQiRsNfoJHtVjjl5QyM4uXmWlk5D10Lb
+         KyYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4QwoBjXxFI8dB+I08ZRqPOWzeMhxoaAlX8z2Pyczloc=;
+        b=mhQEKgc0iYhstCpVNXChhRX9Ipg+iwjcim7L7Gt1j4Rjl0UjONxPWwUKleac2Ur0BD
+         AozY6TuRf9/JNMIaBr5Y0HykcJsufJIAo0+HzyJjRa+ekciYFRkuBodPIWitIVMquaK1
+         KfI4YZvCryDx5oFuKslzG6+4BdKZj209CcnMtcyBowTLhqVABU/XyLz7Kej5TVXSn7tY
+         37Kfe4fMvDsYVS/ZVaFIarJMnjGtlbcAIa+PD8AOgKCJVnZ8mmNUhCO/pq/QFcC1aUAE
+         vvdTEnEicOlZWgN6LjFYo/31G0dhGkEiu250QaAVmYBI+HFz2Pz9hFKNTQDp3B7IcVVW
+         PRKQ==
+X-Gm-Message-State: AOAM530Kq4HngitmNQzCO09BqzN004A0H/PZ1EjC6AN3MGoKqwuY3kcF
+        otjnnkiToyo/s9rfHWqrGcXP2xBtichNxGmWeUEYiw==
+X-Google-Smtp-Source: ABdhPJyDsoil1tNZymqblaiq/Gpm3jD949DXL5kBrQN6nbUeVPWa2cQPXlLN3ezdoZLR3zf+AR8vBePxUoPyKosL1Oc=
+X-Received: by 2002:aa7:979b:: with SMTP id o27mr25288704pfp.284.1592947663618;
+ Tue, 23 Jun 2020 14:27:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <202006201644.0TU5y2nU%lkp@intel.com>
+In-Reply-To: <202006201644.0TU5y2nU%lkp@intel.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 23 Jun 2020 14:27:32 -0700
+Message-ID: <CAFd5g44jTP9qtYE1knkRzwTWATKfZREWDrTn=T_WwZEGkNSemw@mail.gmail.com>
+Subject: Re: xilinx_axienet_main.c:undefined reference to `devm_ioremap_resource'
+To:     kernel test robot <lkp@intel.com>, radheys@xilinx.com,
+        michals@xilinx.com
+Cc:     kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YiFei Zhu <zhuyifei1999@gmail.com>
+On Sat, Jun 20, 2020 at 1:59 AM kernel test robot <lkp@intel.com> wrote:
+>
+> Hi Brendan,
+>
+> It's probably a bug fix that unveils the link errors.
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   4333a9b0b67bb4e8bcd91bdd80da80b0ec151162
+> commit: 1af73a25e6e7d9f2f1e2a14259cc9ffce6d8f6d4 staging: exfat: fix multiple definition error of `rename_file'
+> date:   6 months ago
+> config: um-allyesconfig (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> reproduce (this is a W=1 build):
+>         git checkout 1af73a25e6e7d9f2f1e2a14259cc9ffce6d8f6d4
+>         # save the attached .config to linux build tree
+>         make W=1 ARCH=um
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    /usr/bin/ld: drivers/net/ethernet/xilinx/xilinx_axienet_main.o: in function `axienet_probe':
+> >> xilinx_axienet_main.c:(.text+0x1aa6): undefined reference to `devm_ioremap_resource'
+> >> /usr/bin/ld: xilinx_axienet_main.c:(.text+0x1d06): undefined reference to `devm_ioremap_resource'
+>    /usr/bin/ld: xilinx_axienet_main.c:(.text+0x2001): undefined reference to `devm_ioremap_resource'
+>    collect2: error: ld returned 1 exit status
 
-[ Upstream commit 0f5d82f187e1beda3fe7295dfc500af266a5bd80 ]
+I posted a fix for this months ago:
 
-Added a check in the switch case on start_header that checks for
-the existence of the header, and in the case that MAC is not set
-and the caller requests for MAC, -EFAULT. If the caller requests
-for NET then MAC's existence is completely ignored.
+https://patchwork.ozlabs.org/project/linux-um/patch/20191211192742.95699-4-brendanhiggins@google.com/
 
-There is no function to check NET header's existence and as far
-as cgroup_skb/egress is concerned it should always be set.
-
-Removed for ptr >= the start of header, considering offset is
-bounded unsigned and should always be true. len <= end - mac is
-redundant to ptr + len <= end.
-
-Fixes: 3eee1f75f2b9 ("bpf: fix bpf_skb_load_bytes_relative pkt length check")
-Signed-off-by: YiFei Zhu <zhuyifei@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Stanislav Fomichev <sdf@google.com>
-Link: https://lore.kernel.org/bpf/76bb820ddb6a95f59a772ecbd8c8a336f646b362.1591812755.git.zhuyifei@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/core/filter.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 11b97c31bca58..9512a9772d691 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -1766,25 +1766,27 @@ BPF_CALL_5(bpf_skb_load_bytes_relative, const struct sk_buff *, skb,
- 	   u32, offset, void *, to, u32, len, u32, start_header)
- {
- 	u8 *end = skb_tail_pointer(skb);
--	u8 *net = skb_network_header(skb);
--	u8 *mac = skb_mac_header(skb);
--	u8 *ptr;
-+	u8 *start, *ptr;
- 
--	if (unlikely(offset > 0xffff || len > (end - mac)))
-+	if (unlikely(offset > 0xffff))
- 		goto err_clear;
- 
- 	switch (start_header) {
- 	case BPF_HDR_START_MAC:
--		ptr = mac + offset;
-+		if (unlikely(!skb_mac_header_was_set(skb)))
-+			goto err_clear;
-+		start = skb_mac_header(skb);
- 		break;
- 	case BPF_HDR_START_NET:
--		ptr = net + offset;
-+		start = skb_network_header(skb);
- 		break;
- 	default:
- 		goto err_clear;
- 	}
- 
--	if (likely(ptr >= mac && ptr + len <= end)) {
-+	ptr = start + offset;
-+
-+	if (likely(ptr + len <= end)) {
- 		memcpy(to, ptr, len);
- 		return 0;
- 	}
--- 
-2.25.1
-
-
-
+I thought it got picked up by the maintainer.
