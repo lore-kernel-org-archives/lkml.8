@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 534BF20FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCF620DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942642;
-	bh=2MC5q5RSqVKgcx5B9gE5+mDpo3ta5TgsrmT7263qL1A=;
+	s=default; t=1592942647;
+	bh=Bs0COtO5gmH1Bc35AawVjNfAUDBxD++YQHvvR3z5HDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fcQQvEQ6ESsmBIKmHC/FqkHdmBvcjillDbGixwOfbI2nYHhBAN2DH3J2Yzzn/fcF5
-	 Q78puoMMXNNIId7GFj7UbYuxCpVE2M09HYoSnnzqDujw/R5pZyOPwYkr+UfoA1z/ll
-	 woCJgM0OmKHnX4j5HP3WKxYGRGIJk/codJKKbZyU=
+	b=K+AYHSQQHjtIDZmC+2ILFzGcutUW0JrEMaC9cZbeaEV9DNwJBQbFzUGmbYQmCF6mN
+	 UCJm63NppXMU7cyM7FRoZN4jjaVuKWfasclsl26P4JBJndBxwAOS+VuaGt/ISPI/BT
+	 cKnM6QW0zL1F9Pc67wepmIkOETNwcdaRSbh36zj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388143AbgFWUEB (ORCPT
+        id S2387631AbgFWUEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42054 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388134AbgFWUD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:58 -0400
+        id S2388140AbgFWUEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:04:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52DDE20FC3;
-        Tue, 23 Jun 2020 20:03:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA5CC2080C;
+        Tue, 23 Jun 2020 20:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942637;
-        bh=2MC5q5RSqVKgcx5B9gE5+mDpo3ta5TgsrmT7263qL1A=;
+        s=default; t=1592942640;
+        bh=Bs0COtO5gmH1Bc35AawVjNfAUDBxD++YQHvvR3z5HDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uod8DlG2ZDepmaVZ0uF/QkN4tc4xqoF9Ur/RmGNWN6EMPObqlVPgO77dmp3+ExBsr
-         Vquiy5wEgbRYfL6yDSxSumVYFXLrxhLAkDAuQ1kor/98gaYxYyEAXoqaV24AZJbqmS
-         vmESyNSIugtcK8J8LMUDJZAzie2UdLRVF+mIElsM=
+        b=rDm8sOv5BQELzPDJGVp/Q2C4Q8XWRRkJdU1VWdLX1eiiwkMkX62w9YwdJ2ArbLca3
+         ugVWdiJygjRyqHVnNMaVnmeCm6OCyVhBRGyoMpm8crim5eyuOdVIvnuR2uIM7SYv2x
+         onYWSqIjDg19E5LSJdia48gTg11FAsVvklQXQ9Gc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alain Volmat <avolmat@me.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 077/477] clk: clk-flexgen: fix clock-critical handling
-Date:   Tue, 23 Jun 2020 21:51:14 +0200
-Message-Id: <20200623195411.261073802@linuxfoundation.org>
+Subject: [PATCH 5.7 078/477] IB/mlx5: Fix DEVX support for MLX5_CMD_OP_INIT2INIT_QP command
+Date:   Tue, 23 Jun 2020 21:51:15 +0200
+Message-Id: <20200623195411.299829736@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,35 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Volmat <avolmat@me.com>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit a403bbab1a73d798728d76931cab3ff0399b9560 ]
+[ Upstream commit d246a3061528be6d852156d25c02ea69d6db7e65 ]
 
-Fixes an issue leading to having all clocks following a critical
-clocks marked as well as criticals.
+The commit citied in the Fixes line wasn't complete and solved
+only part of the problems. Update the mlx5_ib to properly support
+MLX5_CMD_OP_INIT2INIT_QP command in the DEVX, that is required when
+modify the QP tx_port_affinity.
 
-Fixes: fa6415affe20 ("clk: st: clk-flexgen: Detect critical clocks")
-Signed-off-by: Alain Volmat <avolmat@me.com>
-Link: https://lkml.kernel.org/r/20200322140740.3970-1-avolmat@me.com
-Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 819f7427bafd ("RDMA/mlx5: Add init2init as a modify command")
+Link: https://lore.kernel.org/r/20200527135703.482501-1-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/st/clk-flexgen.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/mlx5/devx.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
-index 4413b6e04a8ec..55873d4b76032 100644
---- a/drivers/clk/st/clk-flexgen.c
-+++ b/drivers/clk/st/clk-flexgen.c
-@@ -375,6 +375,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
- 			break;
- 		}
- 
-+		flex_flags &= ~CLK_IS_CRITICAL;
- 		of_clk_detect_critical(np, i, &flex_flags);
- 
- 		/*
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index d0742823ab497..ed10e2f32aab0 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -494,6 +494,10 @@ static u64 devx_get_obj_id(const void *in)
+ 		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
+ 					MLX5_GET(rst2init_qp_in, in, qpn));
+ 		break;
++	case MLX5_CMD_OP_INIT2INIT_QP:
++		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
++					MLX5_GET(init2init_qp_in, in, qpn));
++		break;
+ 	case MLX5_CMD_OP_INIT2RTR_QP:
+ 		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
+ 					MLX5_GET(init2rtr_qp_in, in, qpn));
 -- 
 2.25.1
 
