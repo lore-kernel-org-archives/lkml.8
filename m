@@ -2,55 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9326AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48974C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAA220774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A14820706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933856;
-	bh=Jo8In8pOuQGqnMtj6T+n6gTtyibSKsc+LNmmeZu4R8w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sTM4OiDqLxj+HOOVZUec06xz3P1fYE7XJZU3ntG6kqDC1FrJY6slZXKcBt1UqU7a3
-	 D3WiR+cbvHxwVjikVnLmkTQrwMOF1m3BqbHMLF/L189KewsmxtnUsphe4tM9+hygmx
-	 RjGwa2xeqOyvlDIdyRBRVIE3Lz5y/AjcVIBmddcc=
+	s=default; t=1592933861;
+	bh=cyEEX7langD+kxupY1vGoQ4pXWIJ4cY38zwZzOrtK4k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=USRmFtuYUzAzHP8RosaNklN2WqG6yjCpxOaqFG8aCFfNdGAzNzVBGq+fHpN5WvBdX
+	 J1ZWPYzSLGF4qK9QOeEY9P62Ht+WIZg0wZvVblR5TlgLuQADQLGg/S1JXe2UM1CH/5
+	 8b9dyfRuRgh5qSeEr5BKaho/ix7JvCnCp8bMcsMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387800AbgFWRhd (ORCPT
+        id S2387809AbgFWRhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387755AbgFWRhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:37:12 -0400
+        id S2387746AbgFWRhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:37:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30A4C20780;
-        Tue, 23 Jun 2020 17:37:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F197420780;
+        Tue, 23 Jun 2020 17:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933831;
-        bh=Jo8In8pOuQGqnMtj6T+n6gTtyibSKsc+LNmmeZu4R8w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYkm+q69Z7Wv1Nc4csw9Tyz7nxpsi2YjJRqOLeXYtUeRO7Ft7XjMPRIws+XMKDcpQ
-         zKUAmPVmX52eVRcpEl8nWxrj1V4nFMFsF9XYZRsliGH/1+7524g9kW2Mn3HTcUbCP5
-         /4byd994eKel0hLvrt+u93rC8JbzaI3UWzQdxnis=
+        s=default; t=1592933828;
+        bh=cyEEX7langD+kxupY1vGoQ4pXWIJ4cY38zwZzOrtK4k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rHy4CDM2zj1f2XJg1wvKlJSQw+SYbLgDY6Iqn/LKBShpufQIP9RQ0Xdst++eUVVu+
+         3nEtMHMP/tA1rTLnTfyOPmuMgi2+pF6FSsV+YYBy6wd6XqUm0y6vZFiSqNyM98mbPZ
+         ekWk1ijOmXQ3by6qo4vf7Mp6Ty7XiE1pO2SX0h5k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 3/3] blktrace: break out of blktrace setup on concurrent calls
-Date:   Tue, 23 Jun 2020 13:37:06 -0400
-Message-Id: <20200623173706.1356340-3-sashal@kernel.org>
+Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 1/3] net: alx: fix race condition in alx_remove
+Date:   Tue, 23 Jun 2020 13:37:04 -0400
+Message-Id: <20200623173706.1356340-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623173706.1356340-1-sashal@kernel.org>
-References: <20200623173706.1356340-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,91 +57,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Zekun Shen <bruceshenzk@gmail.com>
 
-[ Upstream commit 1b0b283648163dae2a214ca28ed5a99f62a77319 ]
+[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
 
-We use one blktrace per request_queue, that means one per the entire
-disk.  So we cannot run one blktrace on say /dev/vda and then /dev/vda1,
-or just two calls on /dev/vda.
+There is a race condition exist during termination. The path is
+alx_stop and then alx_remove. An alx_schedule_link_check could be called
+before alx_stop by interrupt handler and invoke alx_link_check later.
+Alx_stop frees the napis, and alx_remove cancels any pending works.
+If any of the work is scheduled before termination and invoked before
+alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
 
-We check for concurrent setup only at the very end of the blktrace setup though.
+This patch fix the race condition by moving cancel_work_sync functions
+before alx_free_napis inside alx_stop. Because interrupt handler can call
+alx_schedule_link_check again, alx_free_irq is moved before
+cancel_work_sync calls too.
 
-If we try to run two concurrent blktraces on the same block device the
-second one will fail, and the first one seems to go on. However when
-one tries to kill the first one one will see things like this:
-
-The kernel will show these:
-
-```
-debugfs: File 'dropped' in directory 'nvme1n1' already present!
-debugfs: File 'msg' in directory 'nvme1n1' already present!
-debugfs: File 'trace0' in directory 'nvme1n1' already present!
-``
-
-And userspace just sees this error message for the second call:
-
-```
-blktrace /dev/nvme1n1
-BLKTRACESETUP(2) /dev/nvme1n1 failed: 5/Input/output error
-```
-
-The first userspace process #1 will also claim that the files
-were taken underneath their nose as well. The files are taken
-away form the first process given that when the second blktrace
-fails, it will follow up with a BLKTRACESTOP and BLKTRACETEARDOWN.
-This means that even if go-happy process #1 is waiting for blktrace
-data, we *have* been asked to take teardown the blktrace.
-
-This can easily be reproduced with break-blktrace [0] run_0005.sh test.
-
-Just break out early if we know we're already going to fail, this will
-prevent trying to create the files all over again, which we know still
-exist.
-
-[0] https://github.com/mcgrof/break-blktrace
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 6737564680193..8ac3663e0012d 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -15,6 +15,9 @@
-  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  *
-  */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/blkdev.h>
- #include <linux/blktrace_api.h>
-@@ -481,6 +484,16 @@ int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	 */
- 	strreplace(buts->name, '/', '_');
+diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
+index df54475d163bf..43bcc19c90680 100644
+--- a/drivers/net/ethernet/atheros/alx/main.c
++++ b/drivers/net/ethernet/atheros/alx/main.c
+@@ -872,8 +872,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
  
-+	/*
-+	 * bdev can be NULL, as with scsi-generic, this is a helpful as
-+	 * we can be.
-+	 */
-+	if (q->blk_trace) {
-+		pr_warn("Concurrent blktraces are not allowed on %s\n",
-+			buts->name);
-+		return -EBUSY;
-+	}
+ static void __alx_stop(struct alx_priv *alx)
+ {
+-	alx_halt(alx);
+ 	alx_free_irq(alx);
 +
- 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
- 	if (!bt)
- 		return -ENOMEM;
++	cancel_work_sync(&alx->link_check_wk);
++	cancel_work_sync(&alx->reset_wk);
++
++	alx_halt(alx);
+ 	alx_free_rings(alx);
+ }
+ 
+@@ -1406,9 +1410,6 @@ static void alx_remove(struct pci_dev *pdev)
+ 	struct alx_priv *alx = pci_get_drvdata(pdev);
+ 	struct alx_hw *hw = &alx->hw;
+ 
+-	cancel_work_sync(&alx->link_check_wk);
+-	cancel_work_sync(&alx->reset_wk);
+-
+ 	/* restore permanent mac address */
+ 	alx_set_macaddr(hw, hw->perm_addr);
+ 
 -- 
 2.25.1
 
