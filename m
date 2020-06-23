@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A36CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE08DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD9C20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9517920781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933989;
-	bh=xqkF8A5JWMCQtBX+thYMhVn4tOe+GI5s+rGwJFyFgrc=;
+	s=default; t=1592933990;
+	bh=vaRQ/p5DNeZC+XH89icaFwbOk5udiG7bKnUDIJl5TrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HAQ+HR1DxWbYB+2LdOZKfm6vZ9otcpOB4mHPRILEapUNvh+7mrrAjkXCT1wRnk37A
-	 H5rUuR0Sz6QPqJR8vJLZDTTqU9UtCRVg0715hs77i3/TKBAM84mP87coo+iKxVPz9D
-	 MvjI0S3lUOjYWeBgFZmftvF5vjVebhE2rlT93K5A=
+	b=cRYzON2iy7xqFhBmSjMmSJ8GckTr2pfqxeyGeHk0lrIglg/cebQxLzE+voiRXNfEi
+	 LasvXtVb+uG+xNecS1PizJYA7M1N2vW7loaavsMeLKRyKELalp8vdPEATodl6eEH2i
+	 8wdKW3w0X3T/yEcc1ICdpWHDCZlZqp9/hsWi4jSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387897AbgFWRjr (ORCPT
+        id S2387550AbgFWRgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33496 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:36:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387552AbgFWRgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:22 -0400
+        id S2387508AbgFWRgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3019A20774;
-        Tue, 23 Jun 2020 17:36:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B1EE20780;
+        Tue, 23 Jun 2020 17:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933782;
-        bh=xqkF8A5JWMCQtBX+thYMhVn4tOe+GI5s+rGwJFyFgrc=;
+        s=default; t=1592933773;
+        bh=vaRQ/p5DNeZC+XH89icaFwbOk5udiG7bKnUDIJl5TrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HMn5a6FEGOTtQ6UVgtONRoqKj48A+yMqEeaeoV7wngbuaTR/iSqxQFFGv3uCgz+UM
-         mkcknAvLhbW9nNNxLD7IIq3QFR3R6/t968iyASW8E/9gzK5pcIaTTKtKOm+Kca5RE1
-         uA93ESc34Loz8gvz0hzWX0fvIGxVy9CVI2P69VBk=
+        b=RbRrlqRRhW2c7JIBlHGj6dammYzN7z9huxLj9lp5XQeT9zTgLpTa3aEGCe9FR5zNU
+         mKYWQ5Voz3jW8EA66dKTzqQYj2F57Zd3IJtyZflGgcg52F54AxKOtKZUGpV9LAIemW
+         BdUml4k8H2/0XbXVhb6lL0ZWf7wcVAePVRF64fCg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
-        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 18/24] arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
-Date:   Tue, 23 Jun 2020 13:35:53 -0400
-Message-Id: <20200623173559.1355728-18-sashal@kernel.org>
+Cc:     Sven Auhagen <sven.auhagen@voleatech.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 11/24] mvpp2: ethtool rxtx stats fix
+Date:   Tue, 23 Jun 2020 13:35:46 -0400
+Message-Id: <20200623173559.1355728-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
 References: <20200623173559.1355728-1-sashal@kernel.org>
@@ -59,53 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Sven Auhagen <sven.auhagen@voleatech.de>
 
-[ Upstream commit e575fb9e76c8e33440fb859572a8b7d430f053d6 ]
+[ Upstream commit cc970925feb9a38c2f0d34305518e00a3084ce85 ]
 
-When I squashed the 'allnoconfig' compiler warning about the
-set_sve_default_vl() function being defined but not used in commit
-1e570f512cbd ("arm64/sve: Eliminate data races on sve_default_vl"), I
-accidentally broke the build for configs where ARM64_SVE is enabled, but
-SYSCTL is not.
+The ethtool rx and tx queue statistics are reporting wrong values.
+Fix reading out the correct ones.
 
-Fix this by only compiling the SVE sysctl support if both CONFIG_SVE=y
-and CONFIG_SYSCTL=y.
-
-Cc: Dave Martin <Dave.Martin@arm.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200616131808.GA1040@lca.pw
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/fpsimd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index d8895251a2aac..338e0966d3ca2 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -349,7 +349,7 @@ static unsigned int find_supported_vector_length(unsigned int vl)
- 	return sve_vl_from_vq(__bit_to_vq(bit));
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 373b8c8328501..ae40880f216bc 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1541,7 +1541,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
+ 	for (q = 0; q < port->ntxqs; q++)
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++)
+ 			*pstats++ += mvpp2_read_index(port->priv,
+-						      MVPP22_CTRS_TX_CTR(port->id, i),
++						      MVPP22_CTRS_TX_CTR(port->id, q),
+ 						      mvpp2_ethtool_txq_regs[i].offset);
+ 
+ 	/* Rxqs are numbered from 0 from the user standpoint, but not from the
+@@ -1550,7 +1550,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
+ 	for (q = 0; q < port->nrxqs; q++)
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++)
+ 			*pstats++ += mvpp2_read_index(port->priv,
+-						      port->first_rxq + i,
++						      port->first_rxq + q,
+ 						      mvpp2_ethtool_rxq_regs[i].offset);
  }
  
--#ifdef CONFIG_SYSCTL
-+#if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
- 
- static int sve_proc_do_default_vl(struct ctl_table *table, int write,
- 				  void __user *buffer, size_t *lenp,
-@@ -395,9 +395,9 @@ static int __init sve_sysctl_init(void)
- 	return 0;
- }
- 
--#else /* ! CONFIG_SYSCTL */
-+#else /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
- static int __init sve_sysctl_init(void) { return 0; }
--#endif /* ! CONFIG_SYSCTL */
-+#endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
- 
- #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
- 	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
 -- 
 2.25.1
 
