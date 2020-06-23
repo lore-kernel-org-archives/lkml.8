@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC24C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBC3820888
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E53F20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948447;
-	bh=s+4gzFFMMtKgWlqR3/VWmZuUw8gzZHkEdvH/rRAugQ8=;
+	s=default; t=1592948452;
+	bh=Or7bgk3QY/n+v+HTyTA+PnHw8GsmRBL3MiCX0UeA+aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ept/xwRm9m1qMOCHRq3RBV08ILWnQFx+59vfjMwNBc5wUUBewkB0XLiTlFlPptvY3
-	 o17chI4vb4yhzeG6xtARBj1AcGEa01rsrL6WhR2bNoppyJHtJOYKSaKXdUZk7AzukY
-	 c6+T59yIyEyAIH9kI8wpHFFe9e/qYBMRCKkrt7sM=
+	b=X+73cVyD3smsR59eFLYP/n+j/umdoYCcKbLTOkNornnuT+nBV7ugyV1NtxCLfhEsO
+	 BXdLEVq3ylnXPB8hJs275pF8CxEu4jgqwQpTWk3dncGwcbnl2t5dpnkuxT4dzj3AT5
+	 puzEEDhCR8ncAMROXs0Xz0qWZuYQ11tephFEElQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388499AbgFWUGi (ORCPT
+        id S2389443AbgFWVkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:40:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388476AbgFWUG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:29 -0400
+        id S2388494AbgFWUGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:06:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 188CA206C3;
-        Tue, 23 Jun 2020 20:06:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADBED2078A;
+        Tue, 23 Jun 2020 20:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942788;
-        bh=s+4gzFFMMtKgWlqR3/VWmZuUw8gzZHkEdvH/rRAugQ8=;
+        s=default; t=1592942796;
+        bh=Or7bgk3QY/n+v+HTyTA+PnHw8GsmRBL3MiCX0UeA+aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=agPLKTLwctxw6k+QKJYqAhZCsHB7kaD0dGsI70N1nngeDoy2yzf1AAShM6XSPJ6EH
-         GHNri52IaoIwJdsPsPkPxnfx4YMFsvmwBRvN3Qg6wuDdnEA0EsM8Q20hGHShuU95R5
-         x+FjCMevut8Q643ov+wS32xGk3bgEjUe7G6cX4vI=
+        b=tbDA+z35j3zt4XfApDS6RmcGWZIcaf8hNkzxSdDna/QYmUHVzdQgc1ywCaKItcCi7
+         +RvW01tern/pzNMt+16Foep0fAmX+tYb5Bax8q/jDh2GvIPd83Uqh0xKcU2Kh4M2UD
+         KwtE7nd85eYRHra3BBM5ADkgR1jxtXEaQlPPMtb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Arlott <simon@octiron.net>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 105/477] scsi: sr: Fix sr_probe() missing deallocate of device minor
-Date:   Tue, 23 Jun 2020 21:51:42 +0200
-Message-Id: <20200623195412.556728769@linuxfoundation.org>
+Subject: [PATCH 5.7 108/477] media: v4l2-ctrls: Unset correct HEVC loop filter flag
+Date:   Tue, 23 Jun 2020 21:51:45 +0200
+Message-Id: <20200623195412.699364756@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,45 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Arlott <simon@octiron.net>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
+[ Upstream commit 88441917dc6cd995cb993df603e264f5b88be50c ]
 
-If the cdrom fails to be registered then the device minor should be
-deallocated.
+Wrong loop filter flag is unset when tiles enabled flag is not set,
+this cause HEVC decoding issues with Rockchip Video Decoder.
 
-Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
-Signed-off-by: Simon Arlott <simon@octiron.net>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix this by unsetting the loop filter across tiles enabled flag instead of
+the pps loop filter across slices enabled flag when tiles are disabled.
+
+Fixes: 256fa3920874 ("media: v4l: Add definitions for HEVC stateless decoding")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sr.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 8d062d4f3ce0b..1e13c6a0f0caf 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -797,7 +797,7 @@ static int sr_probe(struct device *dev)
- 	cd->cdi.disk = disk;
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 452edd06d67d7..99fd377f9b81a 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -1825,7 +1825,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+ 			       sizeof(p_hevc_pps->row_height_minus1));
  
- 	if (register_cdrom(&cd->cdi))
--		goto fail_put;
-+		goto fail_minor;
+ 			p_hevc_pps->flags &=
+-				~V4L2_HEVC_PPS_FLAG_PPS_LOOP_FILTER_ACROSS_SLICES_ENABLED;
++				~V4L2_HEVC_PPS_FLAG_LOOP_FILTER_ACROSS_TILES_ENABLED;
+ 		}
  
- 	/*
- 	 * Initialize block layer runtime PM stuffs before the
-@@ -815,6 +815,10 @@ static int sr_probe(struct device *dev)
- 
- 	return 0;
- 
-+fail_minor:
-+	spin_lock(&sr_index_lock);
-+	clear_bit(minor, sr_index_bits);
-+	spin_unlock(&sr_index_lock);
- fail_put:
- 	put_disk(disk);
- 	mutex_destroy(&cd->lock);
+ 		if (p_hevc_pps->flags &
 -- 
 2.25.1
 
