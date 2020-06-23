@@ -2,137 +2,122 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A3C20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751A620874
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioJAkhMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387796AbgFWWzp (ORCPT
+        id S2387891AbgFWW5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:55:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9512 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387606AbgFWWzo (ORCPT
+        Tue, 23 Jun 2020 18:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387606AbgFWW5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:55:44 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NMXSu6118547;
-        Tue, 23 Jun 2020 18:55:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31un4jhuet-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 18:55:34 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05NMXXqt119045;
-        Tue, 23 Jun 2020 18:55:34 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31un4jhueh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 18:55:33 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NMk2CA004349;
-        Tue, 23 Jun 2020 22:55:32 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01wdc.us.ibm.com with ESMTP id 31uttt81gp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 22:55:32 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NMtWVw51511560
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 22:55:32 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4EF7428058;
-        Tue, 23 Jun 2020 22:55:32 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41C882805C;
-        Tue, 23 Jun 2020 22:55:30 +0000 (GMT)
-Received: from [9.211.67.55] (unknown [9.211.67.55])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jun 2020 22:55:30 +0000 (GMT)
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ian Kent <raven@themaw.net>, Tejun Heo <tj@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
- <20200622174845.GB13061@mtj.duckdns.org> <20200622180306.GA1917323@kroah.com>
- <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
- <20200623060236.GA3818201@kroah.com>
- <74fb24d0-2b61-27f8-c44e-abd159e57469@linux.vnet.ibm.com>
- <20200623114558.GA1963415@kroah.com>
-From:   Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Message-ID: <4d6ec768-0481-2b2e-c54e-bd0a5618d6df@linux.vnet.ibm.com>
-Date:   Tue, 23 Jun 2020 15:55:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 18:57:32 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A6CC061573;
+        Tue, 23 Jun 2020 15:57:32 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id b15so29506edy.7;
+        Tue, 23 Jun 2020 15:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JyaST442g4jgVoNwB5FBRI2rFKCQGveZheORu1G0/FU=;
+        b=ioJAkhMsktmUa11lXkCStq+y/AVVW4lFT1gfC83aLREGmYEwEs0S9oQQTQKPu9xUhV
+         LzuIE7WbfFvF3CX03YcnxECAluMmM3DaK6Jim0sWVZFz2vADTyTo5EI0dnr8FyPu9TH8
+         cP7rx9Lt+Ki+600SUS/ttReMLQzLTWCRa/Nuz4PkXfKm00LkTEqVao+Asf3pj03HIN/R
+         wqzaXS+ZzXy0Bmrk7gDa68TlBRhXesxPbmj5GCpfPa1exk1PzYivaic2H2XjqKDJ1kxN
+         OTEZGC/EB2v7YwsWVYKX4e+I+1Q6CS/+cT3XJP9t3sAPq51BLK0+oR/SVfshzXDOdmMq
+         SEyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JyaST442g4jgVoNwB5FBRI2rFKCQGveZheORu1G0/FU=;
+        b=WT29vQ1Cq3Ftr5iTBgMNCos9K4ozOsD4afbpxIAfL/pbLgpjhYlo7rOf2+P8dSmz9L
+         R8eXAVAmTBpt3rm9ePAUdDrs247VURZmVuw2OC/bTQIO2Ow1DtS/X1i/Xrt3cHxbGBy6
+         9BDH32yb1U1mlF4UpuK54HK9h+EKp42T4RkJC0ih71VNY6iv9QBP3uJmDZcd/IVtGtEr
+         jR9h6Gta68z08ZOzNbdc7aEBZlCsJxcUbBbM8pCdW8urOjzUYJLHd2QTEpSv8XSxJSQi
+         25Lp6tXXzr9A4dJuNxGpWDq5SEeSugxLRty0awm+Z5dUA6MP0RF1f8DJS6hRmhkbfvyl
+         8UkQ==
+X-Gm-Message-State: AOAM533CnvpnSdEVzOlVP+jA6362rUJ4v2+jTMNsMsNmOWJSDll2mexU
+        Rh+WRgLy3ezvmnIu9MvWuu8=
+X-Google-Smtp-Source: ABdhPJxkEM2iIPabqqWzv0T6tp8OrSBJeVTMWnNbvC03qu3DhO/Rb7O5MGRyUuAyKcxbCuNkXa77pw==
+X-Received: by 2002:a05:6402:a42:: with SMTP id bt2mr23544981edb.42.1592953050426;
+        Tue, 23 Jun 2020 15:57:30 -0700 (PDT)
+Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id js3sm14230604ejb.65.2020.06.23.15.57.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 15:57:29 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 00:57:23 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     paulmck@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        stern@rowland.harvard.edu, will@kernel.org, peterz@infradead.org,
+        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
+Subject: Re: [PATCH 1/2] tools/memory-model/README: Mention herdtools7 7.56
+ in compatibility table
+Message-ID: <20200623225723.GA418699@andrea>
+References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
+ <20200623005231.27712-13-paulmck@kernel.org>
+ <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
+ <20200623155419.GI9247@paulmck-ThinkPad-P72>
+ <b3433b44-29af-4ef4-d047-b0b0d51a9fbd@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200623114558.GA1963415@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_14:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 impostorscore=0
- phishscore=0 adultscore=0 spamscore=0 clxscore=1015 mlxscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006120000 definitions=main-2006230148
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b3433b44-29af-4ef4-d047-b0b0d51a9fbd@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/20 4:45 AM, Greg Kroah-Hartman wrote:
+On Wed, Jun 24, 2020 at 07:06:02AM +0900, Akira Yokosawa wrote:
+> From 89f96cba0db5643b1d22a0fe740f4c5cac788b29 Mon Sep 17 00:00:00 2001
+> From: Akira Yokosawa <akiyks@gmail.com>
+> Date: Wed, 24 Jun 2020 06:56:43 +0900
+> Subject: [PATCH 1/2] tools/memory-model/README: Mention herdtools7 7.56 in compatibility table
+> 
+> herdtools7 7.56 is going to be released in the week of 22 Jun 2020.
+> Mention the exact version in the compatibility table.
+> 
+> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
 
-> Sure, but "help, I'm abusing your code interface, so fix your code
-> interface and not my caller code" really isn't the best mantra :)
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
 
-Well, those are your words, not mine.  What we're saying is, "we've 
-identified an interface that doesn't scale in this situation, but we 
-have a way to make it scale to all known configurations."
+  Andrea
 
- > I am offended as a number of years ago this same user of kernfs/sysfs
- > did a lot of work to reduce the number of contentions in kernfs for
- > this same reason.  After that work was done, "all was good".  Now
- > this comes along again, blaming kernfs/sysfs, not the caller.
 
-Ok. I don't know about the history, but I can tell you "blame" is not 
-the word I'd use.  As hardware changes, Linux also changes, and over "a 
-number of years" it's not surprising to me if basic assumptions changed 
-again and led us back to a place we've been before.  That's not an 
-indictment.  It just IS.
-
- > Memory is only going to get bigger over time, you might want to fix it
- > this way and then run away.  But we have to maintain this for the next
- > 20+ years, and you are not solving the root-problem here.  It will
- > come back again, right?
-
-If hardware vendors insist on dealing with small blocks of memory in 
-large aggregates, then yes it could.  You'll have to trust that I am 
-also in discussion with hardware architects about how that is a very bad 
-architecture and it's time to change decades and think bigger.  Separate 
-audience, equally contentious discussion.  But the bottom line is, it's 
-out there already and can't be walked back.
-
-Your response here seems to center on "kernfs was never designed for 
-that."  If so, we're in agreement.   We're suggesting a way it can be 
-extended to be more robust, with no (apparent) side effects.  I'd like 
-to discuss the merits of the patch itself.
-
-Rick
+> ---
+>  tools/memory-model/README | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/memory-model/README b/tools/memory-model/README
+> index 90af203c3cf1..ecb7385376bf 100644
+> --- a/tools/memory-model/README
+> +++ b/tools/memory-model/README
+> @@ -54,7 +54,7 @@ klitmus7 Compatibility Table
+>  	     -- 4.18  7.48 --
+>  	4.15 -- 4.19  7.49 --
+>  	4.20 -- 5.5   7.54 --
+> -	5.6  --       HEAD
+> +	5.6  --       7.56 --
+>  	============  ==========
+>  
+>  
+> -- 
+> 2.17.1
+> 
+> 
