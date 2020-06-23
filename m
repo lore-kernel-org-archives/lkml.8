@@ -2,157 +2,128 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B10C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D86C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A9D20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC25420771
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:41:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="q/Wwwp8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbgFWJkn (ORCPT
+        id S1732041AbgFWJlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:40:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:47334 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731786AbgFWJkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:40:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9776C1F1;
-        Tue, 23 Jun 2020 02:40:42 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.20.203])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D1203F6CF;
-        Tue, 23 Jun 2020 02:40:39 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 10:40:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] arm64: entry: Enable random_kstack_offset support
-Message-ID: <20200623094036.GD6374@C02TD0UTHF1T.local>
-References: <20200622193146.2985288-1-keescook@chromium.org>
- <20200622193146.2985288-6-keescook@chromium.org>
+        Tue, 23 Jun 2020 05:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732026AbgFWJlW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:41:22 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C4DC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:41:22 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i25so22946885iog.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=eYT530/2mRtpAyh0DpDIsFqdUu0RZKvGKhfFQ+olAzg=;
+        b=q/Wwwp8A1BT//ycShNsM7XqmB3bG24wQBAirlMbmZaCGJ14WlIrYk1hUeGFPFvFYh9
+         18AuWxnLJ1U1xdH/pGBPRjrPFyfPQg7q+9IucqCmFfeBCfeps7rxI2SW2DoKIfLUr5up
+         QiSEWrkcSOyboUd9lJ8T7gHRuzsG0YMSv8qg4VHWp/kK/35QhddY4oGB6G4nqgWMrCZh
+         syPjBA05FOD90Sz9u5udUM+MDkSo1wLudZ9Ufcpzj9Ht4F4P+CCs4YMhBoTiJJpc3hEZ
+         C3x7fLzfiu+6I1zCZCYLoB7ldYctRJTYQSe0hOhS8cOtdYjiuOJfUpqpndg4fwtYgwqc
+         4scA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=eYT530/2mRtpAyh0DpDIsFqdUu0RZKvGKhfFQ+olAzg=;
+        b=V4sODiZnn6rtx9ftdZPQEz3LS4vq7TESqWdX7Hv3bVdzHx7sVS92oRCRLrYc6Ih2yz
+         ijB/QrBMmkP1jhVkz0kH9laye3uced3dv0UGoWBO6E8GbQDLLSFcfR3uMRx9b/vUuXRd
+         zRdhK4DawFyd8ETUbUOwvBcIPOI3KD6f8o9F4CFZ3ru9elgoV73NI41Eb1sJ1QMGCGqF
+         aHW+3j4XWbPHTiYz1Yhb9j8ZwDV/F6IVedu9qHVm3qxMgsDDF+jHm1cSnBUgg2iAyxGV
+         P4j5o5ylrYsNUAvrAYDVg3W87yQAG1eOrFCr3LzGviW+EUC/lKbAdBjpJ4SfMHS3jEah
+         WeVw==
+X-Gm-Message-State: AOAM531ePXf5lDsLi86IgK30K6TlMoB02wRra0IKpiDYuityUsmcH9km
+        NTzkEYUi6QFcGS9AY0nK2gnS1NUVIt2YY0431zLb3g==
+X-Google-Smtp-Source: ABdhPJx3IjaiDsJ/En/rPYv6gBlyL3k6lTKfuVMMpv+FRtlkN7ZNw3o69BET+TAsLrzyXAm77vQTkunODede1IEEHSw=
+X-Received: by 2002:a02:cdc4:: with SMTP id m4mr22844233jap.57.1592905281814;
+ Tue, 23 Jun 2020 02:41:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622193146.2985288-6-keescook@chromium.org>
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-15-brgl@bgdev.pl>
+ <20200622132921.GI1551@shell.armlinux.org.uk>
+In-Reply-To: <20200622132921.GI1551@shell.armlinux.org.uk>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 23 Jun 2020 11:41:11 +0200
+Message-ID: <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
+Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 12:31:46PM -0700, Kees Cook wrote:
-> Allow for a randomized stack offset on a per-syscall basis, with roughly
-> 5 bits of entropy.
-> 
-> In order to avoid unconditional stack canaries on syscall entry, also
-> downgrade from -fstack-protector-strong to -fstack-protector to avoid
-> triggering checks due to alloca(). Examining the resulting syscall.o,
-> sees no changes in canary coverage (none before, none now).
+pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
+<linux@armlinux.org.uk> napisa=C5=82(a):
+>
 
-Is there any way we can do this on invoke_syscall() specifically with an
-attribute? That'd help to keep all the concerns local in the file, and
-means that we wouldn't potentially lose protection for other functions
-that get added in future.
+[snip!]
 
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/arm64/Kconfig          |  1 +
->  arch/arm64/kernel/Makefile  |  5 +++++
->  arch/arm64/kernel/syscall.c | 10 ++++++++++
->  3 files changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index a4a094bedcb2..2902e5316e1a 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -135,6 +135,7 @@ config ARM64
->  	select HAVE_ARCH_MMAP_RND_BITS
->  	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
->  	select HAVE_ARCH_PREL32_RELOCATIONS
-> +	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->  	select HAVE_ARCH_SECCOMP_FILTER
->  	select HAVE_ARCH_STACKLEAK
->  	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
-> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-> index 151f28521f1e..39fc23d3770b 100644
-> --- a/arch/arm64/kernel/Makefile
-> +++ b/arch/arm64/kernel/Makefile
-> @@ -11,6 +11,11 @@ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
->  CFLAGS_REMOVE_insn.o = $(CC_FLAGS_FTRACE)
->  CFLAGS_REMOVE_return_address.o = $(CC_FLAGS_FTRACE)
->  
-> +# Downgrade to -fstack-protector to avoid triggering unneeded stack canary
-> +# checks due to randomize_kstack_offset.
-> +CFLAGS_REMOVE_syscall.o += -fstack-protector-strong
-> +CFLAGS_syscall.o	+= $(subst -fstack-protector-strong,-fstack-protector,$(filter -fstack-protector-strong,$(KBUILD_CFLAGS)))
-> +
->  # Object file lists.
->  obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
->  			   entry-common.o entry-fpsimd.o process.o ptrace.o	\
-> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> index 5f5b868292f5..00d3c84db9cd 100644
-> --- a/arch/arm64/kernel/syscall.c
-> +++ b/arch/arm64/kernel/syscall.c
-> @@ -5,6 +5,7 @@
->  #include <linux/errno.h>
->  #include <linux/nospec.h>
->  #include <linux/ptrace.h>
-> +#include <linux/randomize_kstack.h>
->  #include <linux/syscalls.h>
->  
->  #include <asm/daifflags.h>
-> @@ -42,6 +43,8 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
->  {
->  	long ret;
->  
-> +	add_random_kstack_offset();
-> +
->  	if (scno < sc_nr) {
->  		syscall_fn_t syscall_fn;
->  		syscall_fn = syscall_table[array_index_nospec(scno, sc_nr)];
-> @@ -51,6 +54,13 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
->  	}
->  
->  	regs->regs[0] = ret;
-> +
-> +	/*
-> +	 * Since the compiler chooses a 4 bit alignment for the stack,
-> +	 * let's save one additional bit (9 total), which gets us up
-> +	 * near 5 bits of entropy.
-> +	 */
+>
+> This is likely to cause issues for some PHY drivers.  Note that we have
+> some PHY drivers which register a temperature sensor in the probe
+> function, which means they can be accessed independently of the lifetime
+> of the PHY bound to the network driver (which may only be while the
+> network device is "up".)  We certainly do not want hwmon failing just
+> because the network device is down.
+>
+> That's kind of worked around for the reset stuff, because there are two
+> layers to that: the mdio device layer reset support which knows nothing
+> of the PHY binding state to the network driver, and the phylib reset
+> support, but it is not nice.
+>
 
-To explain the alignment requirement a bit better, how about:
+Regulators are reference counted so if the hwmon driver enables it
+using mdio_device_power_on() it will stay on even after the PHY driver
+calls phy_device_power_off(), right? Am I missing something?
 
-	/*
-	 * The AAPCS mandates a 16-byte (i.e. 4-bit) aligned SP at
-	 * function boundaries. We want at least 5 bits of entropy so we
-	 * must randomize at least SP[8:4].
-	 */
-
-> +	choose_random_kstack_offset(get_random_int() & 0x1FF);
-
-Do we have a rationale for randomizing bits SP[3:0]? If not, we might
-get better code gen with a 0x1F0 mask, since the compiler won't need to
-round down the SP.
-
-If we have a rationale that's fine, but we should spell it out more
-explicitly in the comment. Even if that's just "randomizing SP[3:0]
-isn't harmful, so we randomize those too".
-
-Thanks,
-Mark.
+Bart
