@@ -5,26 +5,26 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92301C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB366C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7684220776
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5ABF20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732870AbgFWOfO (ORCPT
+        id S1732950AbgFWOfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:35:14 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:55857 "EHLO
+        Tue, 23 Jun 2020 10:35:25 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:42651 "EHLO
         relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732738AbgFWOfK (ORCPT
+        with ESMTP id S1732860AbgFWOfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:35:10 -0400
+        Tue, 23 Jun 2020 10:35:19 -0400
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 49D9810000E;
-        Tue, 23 Jun 2020 14:35:05 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 44280100003;
+        Tue, 23 Jun 2020 14:35:17 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, richardcochran@gmail.com,
@@ -32,9 +32,9 @@ To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
         foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next v4 2/8] net: phy: mscc: fix copyright and author information in MACsec
-Date:   Tue, 23 Jun 2020 16:30:08 +0200
-Message-Id: <20200623143014.47864-3-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v4 7/8] dt-bindings: net: phy: vsc8531: document the load/save GPIO
+Date:   Tue, 23 Jun 2020 16:30:13 +0200
+Message-Id: <20200623143014.47864-8-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200623143014.47864-1-antoine.tenart@bootlin.com>
 References: <20200623143014.47864-1-antoine.tenart@bootlin.com>
@@ -45,76 +45,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All headers in the MSCC PHY driver have been copied and pasted from the
-original mscc.c file. However the information is not necessarily
-correct, as in the MACsec support. Fix this.
+A new optional property can be used to reference the load/save GPIO,
+used for PTP hardware clock (PHC) operations. This patch documents it in
+the binding documentation.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/mscc/mscc_fc_buffer.h | 2 +-
- drivers/net/phy/mscc/mscc_mac.h       | 2 +-
- drivers/net/phy/mscc/mscc_macsec.c    | 6 +++---
- drivers/net/phy/mscc/mscc_macsec.h    | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/phy/mscc/mscc_fc_buffer.h b/drivers/net/phy/mscc/mscc_fc_buffer.h
-index 3803e826c37d..399e803395a5 100644
---- a/drivers/net/phy/mscc/mscc_fc_buffer.h
-+++ b/drivers/net/phy/mscc/mscc_fc_buffer.h
-@@ -2,7 +2,7 @@
- /*
-  * Driver for Microsemi VSC85xx PHYs
-  *
-- * Copyright (C) 2019 Microsemi Corporation
-+ * Copyright (C) 2020 Microsemi Corporation
-  */
+diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+index 5ff37c68c941..87a27d775d48 100644
+--- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
++++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+@@ -31,6 +31,8 @@ Optional properties:
+ 			  VSC8531_LINK_100_ACTIVITY (2),
+ 			  VSC8531_LINK_ACTIVITY (0) and
+ 			  VSC8531_DUPLEX_COLLISION (8).
++- load-save-gpios	: GPIO used for the load/save operation of the PTP
++			  hardware clock (PHC).
  
- #ifndef _MSCC_PHY_FC_BUFFER_H_
-diff --git a/drivers/net/phy/mscc/mscc_mac.h b/drivers/net/phy/mscc/mscc_mac.h
-index 59b6837c60b3..8dd38dc6edbf 100644
---- a/drivers/net/phy/mscc/mscc_mac.h
-+++ b/drivers/net/phy/mscc/mscc_mac.h
-@@ -2,7 +2,7 @@
- /*
-  * Driver for Microsemi VSC85xx PHYs
-  *
-- * Copyright (c) 2017 Microsemi Corporation
-+ * Copyright (c) 2020 Microsemi Corporation
-  */
  
- #ifndef _MSCC_PHY_LINE_MAC_H_
-diff --git a/drivers/net/phy/mscc/mscc_macsec.c b/drivers/net/phy/mscc/mscc_macsec.c
-index b4d3dc4068e2..c0eeb62cb940 100644
---- a/drivers/net/phy/mscc/mscc_macsec.c
-+++ b/drivers/net/phy/mscc/mscc_macsec.c
-@@ -1,10 +1,10 @@
- // SPDX-License-Identifier: (GPL-2.0 OR MIT)
- /*
-- * Driver for Microsemi VSC85xx PHYs
-+ * Driver for Microsemi VSC85xx PHYs - MACsec support
-  *
-- * Author: Nagaraju Lakkaraju
-+ * Author: Antoine Tenart
-  * License: Dual MIT/GPL
-- * Copyright (c) 2016 Microsemi Corporation
-+ * Copyright (c) 2020 Microsemi Corporation
-  */
- 
- #include <linux/phy.h>
-diff --git a/drivers/net/phy/mscc/mscc_macsec.h b/drivers/net/phy/mscc/mscc_macsec.h
-index d751f2946b79..9c6d25e36de2 100644
---- a/drivers/net/phy/mscc/mscc_macsec.h
-+++ b/drivers/net/phy/mscc/mscc_macsec.h
-@@ -2,7 +2,7 @@
- /*
-  * Driver for Microsemi VSC85xx PHYs
-  *
-- * Copyright (c) 2018 Microsemi Corporation
-+ * Copyright (c) 2020 Microsemi Corporation
-  */
- 
- #ifndef _MSCC_PHY_MACSEC_H_
+ Table: 1 - Edge rate change
+@@ -67,4 +69,5 @@ Example:
+                 vsc8531,edge-slowdown	= <7>;
+                 vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
+                 vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
++		load-save-gpios		= <&gpio 10 GPIO_ACTIVE_HIGH>;
+         };
 -- 
 2.26.2
 
