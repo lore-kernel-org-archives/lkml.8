@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B725BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6017BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 850E021556
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3446B20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944632;
-	bh=PrCNUgQ/SXgMeIdcoc5Sk0/EeTIz7pOsb/IZl/fh8g4=;
+	s=default; t=1592944636;
+	bh=7xgA9ze/zsUKRfyPT4EJSgtT2Y02WZQzj7wwPDlc/mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wdngfYYckhY8IL70/pJE2Zs13hS5k8eNVF6ZgJJhQGvqRKT+q7SLAoV4ZDDSjNtRG
-	 GwPmJ6E/mvYhSHafjxHs3BqH/3+2/l/C5vU0FkWNXdWchgS4PrMgJqqrgLUsFzTBgy
-	 8A0kJoofW2tqQNC25PZBmKHi6RBH7Uo49Dfcr48o=
+	b=Wj7pKGJS0+t03Oy3Xmbqpedt/erMIKLPhXth2/3cXbCBWBEw6adkKiqNzWEUtsLJC
+	 QY+S9WSzG6gUGJEMebeSESYyURfzdmvErR3PTAWJXJJQnzP1xd2F3kFjJ8YTqh8N+4
+	 4vBYEtUQgL6ww9HQkdoCSqwNNyaP3/V2Pilr5P2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390363AbgFWUhJ (ORCPT
+        id S2391600AbgFWUhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391264AbgFWUg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:36:59 -0400
+        id S2388059AbgFWUhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:37:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E577321527;
-        Tue, 23 Jun 2020 20:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECC7B21527;
+        Tue, 23 Jun 2020 20:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944619;
-        bh=PrCNUgQ/SXgMeIdcoc5Sk0/EeTIz7pOsb/IZl/fh8g4=;
+        s=default; t=1592944624;
+        bh=7xgA9ze/zsUKRfyPT4EJSgtT2Y02WZQzj7wwPDlc/mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j/kdxM1rLmmVPnp2wqKmt+i+Gj6W25a3CLYwj9HpYCuvQb08p9iI0fh6sFKSem1mm
-         Od/UC/qPMDmekcdJRKhylWrna6JiQknp+x0KEY6P/NJt2ovW9wFx+wdnX0SQWiMm8A
-         IBAZUDAyuZ+p0Te6Z5mGjb4/+XakIZkAta5EyZqk=
+        b=WC6Mbtz6OczLx8kJlVMf0mYvT0R6YE1EM+04eo+sYbXMgA8I03WoyoU3DY/GsG9u6
+         yjF1OOKiOFYNX5VC3IBTpFrUF9UiMQvAGMvbWEZBBjO3cKMHxsFhMi+k92FS50or9C
+         myFR4SFz1ayuCrl6H3bHP6QOpYGjqPtLdlphQqjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/206] staging: gasket: Fix mapping refcnt leak when register/store fails
-Date:   Tue, 23 Jun 2020 21:56:26 +0200
-Message-Id: <20200623195319.825470787@linuxfoundation.org>
+        stable@vger.kernel.org, Alain Volmat <avolmat@me.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 031/206] clk: clk-flexgen: fix clock-critical handling
+Date:   Tue, 23 Jun 2020 21:55:59 +0200
+Message-Id: <20200623195318.514766758@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,46 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Alain Volmat <avolmat@me.com>
 
-[ Upstream commit e3436ce60cf5f5eaedda2b8c622f69feb97595e2 ]
+[ Upstream commit a403bbab1a73d798728d76931cab3ff0399b9560 ]
 
-gasket_sysfs_register_store() invokes get_mapping(), which returns a
-reference of the specified gasket_sysfs_mapping object to "mapping" with
-increased refcnt.
+Fixes an issue leading to having all clocks following a critical
+clocks marked as well as criticals.
 
-When gasket_sysfs_register_store() returns, local variable "mapping"
-becomes invalid, so the refcount should be decreased to keep refcount
-balanced.
-
-The reference counting issue happens in one exception handling path of
-gasket_sysfs_register_store(). When gasket_dev is NULL, the function
-forgets to decrease the refcnt increased by get_mapping(), causing a
-refcnt leak.
-
-Fix this issue by calling put_mapping() when gasket_dev is NULL.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Link: https://lore.kernel.org/r/1587618941-13718-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: fa6415affe20 ("clk: st: clk-flexgen: Detect critical clocks")
+Signed-off-by: Alain Volmat <avolmat@me.com>
+Link: https://lkml.kernel.org/r/20200322140740.3970-1-avolmat@me.com
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/gasket/gasket_sysfs.c | 1 +
+ drivers/clk/st/clk-flexgen.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/gasket/gasket_sysfs.c b/drivers/staging/gasket/gasket_sysfs.c
-index 9c982f1c0881d..5986c67bc7ec3 100644
---- a/drivers/staging/gasket/gasket_sysfs.c
-+++ b/drivers/staging/gasket/gasket_sysfs.c
-@@ -377,6 +377,7 @@ ssize_t gasket_sysfs_register_store(struct device *device,
- 	gasket_dev = mapping->gasket_dev;
- 	if (!gasket_dev) {
- 		dev_err(device, "Device driver may have been removed\n");
-+		put_mapping(mapping);
- 		return 0;
- 	}
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index 918ba3164da94..cd856210db58c 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -373,6 +373,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 			break;
+ 		}
  
++		flex_flags &= ~CLK_IS_CRITICAL;
+ 		of_clk_detect_critical(np, i, &flex_flags);
+ 
+ 		/*
 -- 
 2.25.1
 
