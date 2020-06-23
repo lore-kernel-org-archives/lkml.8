@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8965FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24042C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BD72137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0EA42145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943235;
-	bh=a4LDfRtPIpYSvbxZeEpnaHT28+A9kx75ACWkZT9Qg7c=;
+	s=default; t=1592943240;
+	bh=v5hAGQBR3Z47eYCc7rV9jqnpUlqIw0f7hV3iflVxzkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y95dzxGB8tc/vi/IZeJJXAaBlMCndOQkwlgV7h+Er9zihQkMsM1Q18BoZEEeBdxJS
-	 UOpaviTiHLJW7ZS7AMn5YMK8S8jmdRP5YysCMXb30cqmwIndm03VnTzGF3NE9mvIia
-	 zZEpUAxc9g8QHhuaHfohaLtUWJuDbRkjthzb0zGg=
+	b=H/yfDDY2TP2/5Y0U52NWNqV0zkPpcqHhZcjIlyb56Z+VT46c62xZvFHpljcGlxt5F
+	 tT6jOb6/FfTo21SOnuIyJC0bI7q+P5y5TKZj94LoYJYNKqIGyq9tGdsi4twf6A+5Yl
+	 VFeY1ERJG0qL41bDRl/QqfqoP89MpiXUInw5UOD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389138AbgFWUNx (ORCPT
+        id S2389141AbgFWUN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:13:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56070 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388699AbgFWUNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:50 -0400
+        id S2389128AbgFWUNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 900EF206C3;
-        Tue, 23 Jun 2020 20:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A60520707;
+        Tue, 23 Jun 2020 20:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943230;
-        bh=a4LDfRtPIpYSvbxZeEpnaHT28+A9kx75ACWkZT9Qg7c=;
+        s=default; t=1592943227;
+        bh=v5hAGQBR3Z47eYCc7rV9jqnpUlqIw0f7hV3iflVxzkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZgWOooBL+8Qn6vasgHj82GCwAaizElL3E9BuEABbVmYAMuUCdVBu2D0y8WSKT/D8t
-         hulMAbAQNXwCK2KI5m0+tNjd9T+u0M1MaTgXst47ZroOE/WThSMxKWJCMyp2PLgi2O
-         Gc4DF+cRL7ni9ZUlDdn0OSsgw5jL3SpHLUkjAC7A=
+        b=oqJwqfJrcylXtwwCBrX7yz6cX6heMjbItto2l0G1zVc6QMaqhcQbW4FiduwA6r2Gt
+         aLrY7lA3w7X+Q5PrH38fiHueUnPw8I44ua0LdlVX3fKJX7qoBF3PDfjt4mThiVVxUE
+         t7RfN+wGEmaIY+vuMy+eW/KwDzny2AVXMSKfaJFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 311/477] gfs2: Allow lock_nolock mount to specify jid=X
-Date:   Tue, 23 Jun 2020 21:55:08 +0200
-Message-Id: <20200623195422.238455615@linuxfoundation.org>
+Subject: [PATCH 5.7 310/477] pwm: imx27: Fix rounding behavior
+Date:   Tue, 23 Jun 2020 21:55:07 +0200
+Message-Id: <20200623195422.189586454@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,44 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
+[ Upstream commit aef1a3799b5cb3ba4841f6034497b179646ccc70 ]
 
-Before this patch, a simple typo accidentally added \n to the jid=
-string for lock_nolock mounts. This made it impossible to mount a
-gfs2 file system with a journal other than journal0. Thus:
+To not trigger the warnings provided by CONFIG_PWM_DEBUG
 
-mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
+ - use up-rounding in .get_state()
+ - don't divide by the result of a division
+ - don't use the rounded counter value for the period length to calculate
+   the counter value for the duty cycle
 
-Resulted in:
-mount: wrong fs type, bad option, bad superblock on <device>
-
-In most cases this is not a problem. However, for debugging and
-testing purposes we sometimes want to test the integrity of other
-journals. This patch removes the unnecessary \n and thus allows
-lock_nolock users to specify an alternate journal.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/ops_fstype.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-imx27.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index e2b69ffcc6a84..094f5fe7c0090 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -880,7 +880,7 @@ fail:
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index a6e40d4c485f3..732a6f3701e8e 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -150,13 +150,12 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
+ 
+ 	prescaler = MX3_PWMCR_PRESCALER_GET(val);
+ 	pwm_clk = clk_get_rate(imx->clk_per);
+-	pwm_clk = DIV_ROUND_CLOSEST_ULL(pwm_clk, prescaler);
+ 	val = readl(imx->mmio_base + MX3_PWMPR);
+ 	period = val >= MX3_PWMPR_MAX ? MX3_PWMPR_MAX : val;
+ 
+ 	/* PWMOUT (Hz) = PWMCLK / (PWMPR + 2) */
+-	tmp = NSEC_PER_SEC * (u64)(period + 2);
+-	state->period = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
++	tmp = NSEC_PER_SEC * (u64)(period + 2) * prescaler;
++	state->period = DIV_ROUND_UP_ULL(tmp, pwm_clk);
+ 
+ 	/*
+ 	 * PWMSAR can be read only if PWM is enabled. If the PWM is disabled,
+@@ -167,8 +166,8 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
+ 	else
+ 		val = imx->duty_cycle;
+ 
+-	tmp = NSEC_PER_SEC * (u64)(val);
+-	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
++	tmp = NSEC_PER_SEC * (u64)(val) * prescaler;
++	state->duty_cycle = DIV_ROUND_UP_ULL(tmp, pwm_clk);
+ 
+ 	pwm_imx27_clk_disable_unprepare(imx);
  }
+@@ -220,22 +219,23 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
+ 	struct pwm_state cstate;
+ 	unsigned long long c;
++	unsigned long long clkrate;
+ 	int ret;
+ 	u32 cr;
  
- static const match_table_t nolock_tokens = {
--	{ Opt_jid, "jid=%d\n", },
-+	{ Opt_jid, "jid=%d", },
- 	{ Opt_err, NULL },
- };
+ 	pwm_get_state(pwm, &cstate);
  
+-	c = clk_get_rate(imx->clk_per);
+-	c *= state->period;
++	clkrate = clk_get_rate(imx->clk_per);
++	c = clkrate * state->period;
+ 
+-	do_div(c, 1000000000);
++	do_div(c, NSEC_PER_SEC);
+ 	period_cycles = c;
+ 
+ 	prescale = period_cycles / 0x10000 + 1;
+ 
+ 	period_cycles /= prescale;
+-	c = (unsigned long long)period_cycles * state->duty_cycle;
+-	do_div(c, state->period);
++	c = clkrate * state->duty_cycle;
++	do_div(c, NSEC_PER_SEC * prescale);
+ 	duty_cycles = c;
+ 
+ 	/*
 -- 
 2.25.1
 
