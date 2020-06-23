@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F14C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9456621532
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A839B2100A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944607;
-	bh=4mw6tCTGUvdW5K8+6xvz+CccS3vA60GTC/4lTa/HDhw=;
+	s=default; t=1592944613;
+	bh=vGt7AF+/hIfsL8AABc3CuyN2D9nmvbV+UsIAcW70fzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WVdbfiJfovurKHd6CPgvLDR91AQbtAInY5xCddGT4X/IKcBlyOUdHeWZURzIDmNdT
-	 sRUvq026tV5eRrdubqy8E+IN6C5g0aGP+aqSgBJulgF8oa8+Kt8cUq+ScATSiOAo+9
-	 yLow0d7R591BxGNmHeoxWz8rowpO85Bn5Tby+WV4=
+	b=dmtvYRoEFRwnu6AN199rS9y5SfV0SKMmODloqzk8yqbijj4wvdYTkGRC1QmaOrZDX
+	 FoOP+73RpE3LTgrilT4LoR41RBK82/jmxmISAePfyzCyoxKeXjc665/ENWNwpYNjbK
+	 DBHPFU/iSnHLrC0r9zxUMrj7TeVV2fNeS3vK3j00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391808AbgFWUgp (ORCPT
+        id S2391824AbgFWUgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:36:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:36:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391792AbgFWUgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:36:36 -0400
+        id S2391805AbgFWUgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:36:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A618520781;
-        Tue, 23 Jun 2020 20:36:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2581120781;
+        Tue, 23 Jun 2020 20:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944596;
-        bh=4mw6tCTGUvdW5K8+6xvz+CccS3vA60GTC/4lTa/HDhw=;
+        s=default; t=1592944603;
+        bh=vGt7AF+/hIfsL8AABc3CuyN2D9nmvbV+UsIAcW70fzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0P5vOFyUGlyF/0MDCiXyw4eVZaL8O9n2l6X3x6DBS9jzT+HAdS7SzhhImtfVQMzmO
-         bzx+vHl5E6aVNe6X8N7GsWjtVATi6gFdn2oGBJdY7ubLTENalJxhxNxdSp83nnysW8
-         WiWyjzLxP5go4LjcDDDFaKNyV2Q6E6Rlnx/QkBgA=
+        b=wK+ljnPxuQz/z/ZeeVShZr1GLG1gT3PoLb9F/nci7KvNj/CkLT3Ho5LOouQYML16u
+         5aWvz824Ml9HFYsV40TWU1UsCrVhNf/5+jlnCAkNlC+XxyP1nmtpY3oFQHUVbA/VWK
+         Tk79qEBRxybbzwBxdE3juegkg4nHB2SGSPrenBmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 050/206] arm64: dts: mt8173: fix unit name warnings
-Date:   Tue, 23 Jun 2020 21:56:18 +0200
-Message-Id: <20200623195319.440364767@linuxfoundation.org>
+Subject: [PATCH 4.19 053/206] gpio: dwapb: Append MODULE_ALIAS for platform driver
+Date:   Tue, 23 Jun 2020 21:56:21 +0200
+Message-Id: <20200623195319.586423550@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,127 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 72b29215aced394d01ca25e432963b619daa0098 ]
+[ Upstream commit c58220cba2e03618659fa7d5dfae31f5ad4ae9d0 ]
 
-Fixing several unit name warnings:
+The commit 3d2613c4289f
+  ("GPIO: gpio-dwapb: Enable platform driver binding to MFD driver")
+introduced a use of the platform driver but missed to add the following line
+to it:
+  MODULE_ALIAS("platform:gpio-dwapb");
 
-Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
-Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
-Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+Add this to get driver loaded automatically if platform device is registered.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Link: https://lore.kernel.org/r/20200210063523.133333-4-hsinyi@chromium.org
-[mb: drop fixes for '_' in property name]
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Fixes: 3d2613c4289f ("GPIO: gpio-dwapb: Enable platform driver binding to MFD driver")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Link: https://lore.kernel.org/r/20200415141534.31240-2-andriy.shevchenko@linux.intel.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index abd2f15a544b2..bd9fc50ac1540 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -223,21 +223,21 @@
- 		cpu_on	      = <0x84000003>;
- 	};
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 68db0033d1586..2a56efced7988 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -51,7 +51,9 @@
+ #define GPIO_EXT_PORTC		0x58
+ #define GPIO_EXT_PORTD		0x5c
  
--	clk26m: oscillator@0 {
-+	clk26m: oscillator0 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <26000000>;
- 		clock-output-names = "clk26m";
- 	};
++#define DWAPB_DRIVER_NAME	"gpio-dwapb"
+ #define DWAPB_MAX_PORTS		4
++
+ #define GPIO_EXT_PORT_STRIDE	0x04 /* register stride 32 bits */
+ #define GPIO_SWPORT_DR_STRIDE	0x0c /* register stride 3*32 bits */
+ #define GPIO_SWPORT_DDR_STRIDE	0x0c /* register stride 3*32 bits */
+@@ -400,7 +402,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		return;
  
--	clk32k: oscillator@1 {
-+	clk32k: oscillator1 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <32000>;
- 		clock-output-names = "clk32k";
- 	};
+ 	err = irq_alloc_domain_generic_chips(gpio->domain, ngpio, 2,
+-					     "gpio-dwapb", handle_level_irq,
++					     DWAPB_DRIVER_NAME, handle_level_irq,
+ 					     IRQ_NOREQUEST, 0,
+ 					     IRQ_GC_INIT_NESTED_LOCK);
+ 	if (err) {
+@@ -457,7 +459,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		 */
+ 		err = devm_request_irq(gpio->dev, pp->irq[0],
+ 				       dwapb_irq_handler_mfd,
+-				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
++				       IRQF_SHARED, DWAPB_DRIVER_NAME, gpio);
+ 		if (err) {
+ 			dev_err(gpio->dev, "error requesting IRQ\n");
+ 			irq_domain_remove(gpio->domain);
+@@ -849,7 +851,7 @@ static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
  
--	cpum_ck: oscillator@2 {
-+	cpum_ck: oscillator2 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
-@@ -253,19 +253,19 @@
- 			sustainable-power = <1500>; /* milliwatts */
- 
- 			trips {
--				threshold: trip-point@0 {
-+				threshold: trip-point0 {
- 					temperature = <68000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				target: trip-point@1 {
-+				target: trip-point1 {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit: cpu_crit@0 {
-+				cpu_crit: cpu_crit0 {
- 					temperature = <115000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -273,12 +273,12 @@
- 			};
- 
- 			cooling-maps {
--				map@0 {
-+				map0 {
- 					trip = <&target>;
- 					cooling-device = <&cpu0 0 0>;
- 					contribution = <3072>;
- 				};
--				map@1 {
-+				map1 {
- 					trip = <&target>;
- 					cooling-device = <&cpu2 0 0>;
- 					contribution = <1024>;
-@@ -291,7 +291,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
--		vpu_dma_reserved: vpu_dma_mem_region {
-+		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
- 			compatible = "shared-dma-pool";
- 			reg = <0 0xb7000000 0 0x500000>;
- 			alignment = <0x1000>;
-@@ -343,7 +343,7 @@
- 			reg = <0 0x10005000 0 0x1000>;
- 		};
- 
--		pio: pinctrl@10005000 {
-+		pio: pinctrl@1000b000 {
- 			compatible = "mediatek,mt8173-pinctrl";
- 			reg = <0 0x1000b000 0 0x1000>;
- 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
-@@ -541,7 +541,7 @@
- 			status = "disabled";
- 		};
- 
--		gic: interrupt-controller@10220000 {
-+		gic: interrupt-controller@10221000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
+ static struct platform_driver dwapb_gpio_driver = {
+ 	.driver		= {
+-		.name	= "gpio-dwapb",
++		.name	= DWAPB_DRIVER_NAME,
+ 		.pm	= &dwapb_gpio_pm_ops,
+ 		.of_match_table = of_match_ptr(dwapb_of_match),
+ 		.acpi_match_table = ACPI_PTR(dwapb_acpi_match),
+@@ -863,3 +865,4 @@ module_platform_driver(dwapb_gpio_driver);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Jamie Iles");
+ MODULE_DESCRIPTION("Synopsys DesignWare APB GPIO driver");
++MODULE_ALIAS("platform:" DWAPB_DRIVER_NAME);
 -- 
 2.25.1
 
