@@ -2,153 +2,172 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86466C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C276AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFA4206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cAB5DngA"
+	by mail.kernel.org (Postfix) with ESMTP id ADF7720774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732981AbgFWRdo (ORCPT
+        id S1733085AbgFWRfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732408AbgFWRdo (ORCPT
+        Tue, 23 Jun 2020 13:35:14 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:11850 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732408AbgFWRfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:33:44 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE47C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:33:43 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f3so109403pgr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:33:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iraOuU2nAS/k+2VyIidfWI20LZhSMu95WvSW+PLhzDA=;
-        b=cAB5DngApas7biJNLKGUGeIVB7awS3HBWEggJGEguHU4d9COs9mhzD/TPXeAJZIpi3
-         rFzfPGPaBMtuYwXVbd1pSCnw2zGHnykBm8p1mo/6Z6DcsMlKOsLv4+Ukw1oGI2aFKeEK
-         CblL4eBdtq6+Wdo2dto3J4/Csc352cOBivSYnXXIhi5Yik7Tq3f/AanhBl2cq3ymzcjF
-         xx5ofMdjrpAUEq0Ci29EVUd0X+51lwLux3bczfcjoOTdCzCxA6owTOUVBDK7rQhlc1Lm
-         pdNkVYIjiiFJfv64p3drFJTwDitN8JOEjZmxj//s5ILV3rZz0IuZHj2JN2h/3j62vVKN
-         5Wtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iraOuU2nAS/k+2VyIidfWI20LZhSMu95WvSW+PLhzDA=;
-        b=BgFg/2nxs+YcojimcVpAHNUcllwtOg0NLapTkWSh3/VsrEum21GRrO/ZS8bvlp8PiE
-         ZOKy7ZmqPT510Q7RoNxvs5ZY79gctGVh8Mq4Hdt6NAtiRbO1Sul+3q7AIzwDBGT0XACX
-         fEK5/zWO1sqV3TGTJ4JObMzDFGz/Nk//2QJnEK8c4EZqkVsKCb3Nokp5nMUE7Dl7LIsn
-         lLnkuUETm/fUDAwfRibfVoKpUnO43aKbB57mdxt5htf70AGLc8lMceVbKwn3YeXwtTyr
-         aRfvHMAahMasVm8BWIcYmDDwB0/w4JlCJhUdofTcfEylz0Gcq1WKGuoePN/0h9Ol4RVZ
-         eoKQ==
-X-Gm-Message-State: AOAM530buUBQlmqTJQ8YHuDqFVfOVSK8TC6MYSXf/Iddjx9Q4MGIVlG5
-        YykM6mlBOSNudNzTUasGSCfvRw==
-X-Google-Smtp-Source: ABdhPJzYi7yrFd/vQE+EQoy+GKEp0n7xf+yKWXxRg7RK5IvG7FEYUrnoZ+VnxgncruH7e+Po2uxXKQ==
-X-Received: by 2002:a62:8454:: with SMTP id k81mr25620819pfd.140.1592933623092;
-        Tue, 23 Jun 2020 10:33:43 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id ng12sm3193013pjb.15.2020.06.23.10.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 10:33:42 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 11:33:40 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] coresight: tmc: Fix TMC mode read in
- tmc_read_unprepare_etb()
-Message-ID: <20200623173340.GB1843779@xps15>
-References: <20200616045441.27483-1-saiprakash.ranjan@codeaurora.org>
+        Tue, 23 Jun 2020 13:35:14 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NHOqaD009632;
+        Tue, 23 Jun 2020 13:35:12 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 31uk23gr7q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 13:35:12 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05NHZABW002025
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 23 Jun 2020 13:35:11 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 23 Jun
+ 2020 10:35:09 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 23 Jun 2020 10:35:09 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05NHYxMV017521;
+        Tue, 23 Jun 2020 13:35:07 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v4 6/7] hwmon: pmbus: adm1266: debugfs for blackbox info
+Date:   Tue, 23 Jun 2020 20:36:58 +0300
+Message-ID: <20200623173659.41358-7-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200623173659.41358-1-alexandru.tachici@analog.com>
+References: <20200623173659.41358-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616045441.27483-1-saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006120000 definitions=main-2006230123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:24:41AM +0530, Sai Prakash Ranjan wrote:
-> Reading TMC mode register without proper coresight power
-> management can lead to exceptions like the one in the call
-> trace below in tmc_read_unprepare_etb() when the trace data
-> is read after the sink is disabled. So fix this by having
-> a check for coresight sysfs mode before reading TMC mode
-> management register in tmc_read_unprepare_etb() similar to
-> tmc_read_prepare_etb().
-> 
->   SError Interrupt on CPU6, code 0xbe000411 -- SError
->   pstate: 80400089 (Nzcv daIf +PAN -UAO)
->   pc : tmc_read_unprepare_etb+0x74/0x108
->   lr : tmc_read_unprepare_etb+0x54/0x108
->   sp : ffffff80d9507c30
->   x29: ffffff80d9507c30 x28: ffffff80b3569a0c
->   x27: 0000000000000000 x26: 00000000000a0001
->   x25: ffffff80cbae9550 x24: 0000000000000010
->   x23: ffffffd07296b0f0 x22: ffffffd0109ee028
->   x21: 0000000000000000 x20: ffffff80d19e70e0
->   x19: ffffff80d19e7080 x18: 0000000000000000
->   x17: 0000000000000000 x16: 0000000000000000
->   x15: 0000000000000000 x14: 0000000000000000
->   x13: 0000000000000000 x12: 0000000000000000
->   x11: 0000000000000000 x10: dfffffd000000001
->   x9 : 0000000000000000 x8 : 0000000000000002
->   x7 : ffffffd071d0fe78 x6 : 0000000000000000
->   x5 : 0000000000000080 x4 : 0000000000000001
->   x3 : ffffffd071d0fe98 x2 : 0000000000000000
->   x1 : 0000000000000004 x0 : 0000000000000001
->   Kernel panic - not syncing: Asynchronous SError Interrupt
-> 
-> Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
-> Reported-by: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  drivers/hwtracing/coresight/coresight-tmc-etf.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
->
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-And this one too.
+Add a debugfs file to print information in the
+BLACKBOX_INFORMATION register. Contains information
+about the number of stored records, logic index and id
+of the latest record.
+
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/hwmon/pmbus/adm1266.c | 56 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 55 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+index b9e92ab1e39a..ea2dc481094b 100644
+--- a/drivers/hwmon/pmbus/adm1266.c
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -60,6 +60,7 @@ struct adm1266_data {
+ 	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
+ 	struct i2c_client *client;
+ 	struct mutex ioctl_mutex; /* lock ioctl access */
++	struct dentry *debugfs_dir;
+ 	struct nvmem_config nvmem_config;
+ 	struct nvmem_device *nvmem;
+ 	u8 *dev_mem;
+@@ -406,6 +407,28 @@ static const struct proc_ops adm1266_proc_ops = {
+ 	.proc_ioctl	= adm1266_ioctl,
+ };
  
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> index 36cce2bfb744..6375504ba8b0 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> @@ -639,15 +639,14 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
->  
->  	spin_lock_irqsave(&drvdata->spinlock, flags);
->  
-> -	/* There is no point in reading a TMC in HW FIFO mode */
-> -	mode = readl_relaxed(drvdata->base + TMC_MODE);
-> -	if (mode != TMC_MODE_CIRCULAR_BUFFER) {
-> -		spin_unlock_irqrestore(&drvdata->spinlock, flags);
-> -		return -EINVAL;
-> -	}
-> -
->  	/* Re-enable the TMC if need be */
->  	if (drvdata->mode == CS_MODE_SYSFS) {
-> +		/* There is no point in reading a TMC in HW FIFO mode */
-> +		mode = readl_relaxed(drvdata->base + TMC_MODE);
-> +		if (mode != TMC_MODE_CIRCULAR_BUFFER) {
-> +			spin_unlock_irqrestore(&drvdata->spinlock, flags);
-> +			return -EINVAL;
-> +		}
->  		/*
->  		 * The trace run will continue with the same allocated trace
->  		 * buffer. As such zero-out the buffer so that we don't end
-> 
-> base-commit: 3d439a6c349778f129de19595db564a8366c3634
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
++static int adm1266_blackbox_information_read(struct seq_file *s, void *pdata)
++{
++	struct device *dev = s->private;
++	struct i2c_client *client = to_i2c_client(dev);
++	u8 read_buf[5];
++	unsigned int latest_id;
++	int ret;
++
++	ret = i2c_smbus_read_block_data(client, ADM1266_BLACKBOX_INFO,
++					read_buf);
++	if (ret < 0)
++		return ret;
++
++	seq_puts(s, "BLACKBOX_INFORMATION:\n");
++	latest_id = read_buf[0] + (read_buf[1] << 8);
++	seq_printf(s, "Black box ID: %u\n", latest_id);
++	seq_printf(s, "Logic index: %u\n", read_buf[2]);
++	seq_printf(s, "Record count: %u\n", read_buf[3]);
++
++	return 0;
++}
++
+ static int adm1266_init_procfs(struct adm1266_data *data)
+ {
+ 	struct proc_dir_entry *proc_dir;
+@@ -423,6 +446,29 @@ static int adm1266_init_procfs(struct adm1266_data *data)
+ 	return 0;
+ }
+ 
++static int adm1266_init_debugfs(struct adm1266_data *data)
++{
++	struct dentry *entry;
++	struct dentry *root;
++
++	root = pmbus_get_debugfs_dir(data->client);
++	if (!root)
++		return -ENOENT;
++
++	data->debugfs_dir = debugfs_create_dir(data->client->name, root);
++	if (!data->debugfs_dir)
++		return -ENOENT;
++
++	entry = debugfs_create_devm_seqfile(&data->client->dev,
++					    "blackbox_information",
++					    data->debugfs_dir,
++					    adm1266_blackbox_information_read);
++	if (!entry)
++		return -ENOENT;
++
++	return 0;
++}
++
+ static int adm1266_nvmem_read_blackbox(struct adm1266_data *data, u8 *buf)
+ {
+ 	u8 read_buf[5];
+@@ -571,7 +617,15 @@ static int adm1266_probe(struct i2c_client *client,
+ 	for (i = 0; i < info->pages; i++)
+ 		info->func[i] = funcs;
+ 
+-	return pmbus_do_probe(client, id, info);
++	ret = pmbus_do_probe(client, id, info);
++	if (ret)
++		return ret;
++
++	ret = adm1266_init_debugfs(data);
++	if (ret)
++		dev_warn(&client->dev, "Failed to register debugfs: %d\n", ret);
++
++	return 0;
+ }
+ 
+ static const struct of_device_id adm1266_of_match[] = {
+-- 
+2.20.1
+
