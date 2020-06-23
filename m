@@ -2,185 +2,155 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE85C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1498C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBB332072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592917148;
-	bh=32rHaQckfr7uBuVXlnKsxL7O2Uy1aQ74r6JTVhlFq04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PS5mNERek9XB2IkvmsrdpjqVxdVJxAWCCeV+hR4RuYYGfyb9JEn2AHT2x3SJZsssC
-	 Wq8ewz2AcfyQ27Fbzsp5GEBCsN7uTGsaxtlBmADzUywMkZT93C4/pOgM0T6xUGzkpH
-	 9r8OIis2BePQHDP9hoMhdkLMURQfAlf7dwucbwJc=
+	by mail.kernel.org (Postfix) with ESMTP id 889C720771
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="31GeagmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732603AbgFWM7H (ORCPT
+        id S1732618AbgFWNBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:59:07 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55560 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729504AbgFWM7G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:59:06 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g75so2878243wme.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 05:59:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pm8CgrHRnlUwqSe0XRvv7lrEFSzaymKtDcX81Pqa84E=;
-        b=KyZwlOxgejV6D3y4VxnHTwvfEisqUs1/ekE8ARvQqa5l9IvmJgcSsjItcMkouwGmbb
-         ExbxsvLxwz/Gym3C50Uxm4LTHe/PEDN2k5u7JDwGwhZhUEdCcdfC4ob2annzNvztPMdz
-         R5xHNkgpxUNtSb3V5EondTqpniI1sRWI6jePKo4oDlugq+BMWLlYVg64h9YiUcrA0ReA
-         OPDChCL1uiFWNdr6i8fDuA1m+Si7U1/J/mtI4kT5lxFpUV8d/2jBGxk+zQ6EN0GynjKg
-         a6LAzV4fNzl5TJUjW1qbdduS7ojB2Bc6sOfrleo64X0ydvj4tmRltB8w/bs9MeANRWSF
-         tKPQ==
-X-Gm-Message-State: AOAM532ZSA8LbgiuHJJEnLCjDcm8kOVsDShnoDNdmgHmv5pxT+kHHgJ5
-        z9ujaeXDmYKG9phA57R09d4=
-X-Google-Smtp-Source: ABdhPJycsdkBT/Nlh8wfjUmgRJGThzMz5C1RHjGAXAfGhN7xTmeHRxqNMmtdByamsgCriX9oQxXvsg==
-X-Received: by 2002:a7b:c38c:: with SMTP id s12mr6737992wmj.136.1592917144346;
-        Tue, 23 Jun 2020 05:59:04 -0700 (PDT)
-Received: from localhost (ip-37-188-173-135.eurotel.cz. [37.188.173.135])
-        by smtp.gmail.com with ESMTPSA id j41sm23512411wre.12.2020.06.23.05.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 05:59:03 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 14:59:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v1 1/2] mm: drop vm_total_pages
-Message-ID: <20200623125902.GY31426@dhcp22.suse.cz>
-References: <20200619132410.23859-1-david@redhat.com>
- <20200619132410.23859-2-david@redhat.com>
+        Tue, 23 Jun 2020 09:01:20 -0400
+Received: from mail-mw2nam12on2044.outbound.protection.outlook.com ([40.107.244.44]:6117
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729504AbgFWNBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:01:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DtfBjoFc7VDJtmtS3wctK7rXS0QPeOCRYyS6kitelh0C1EmLcr6NMMt60eIhE8FUbmI54p7UQov1R4euIzMu8EfGP0uJ42hSfh3aaNskCsweVzY+3JVkAtXQaLdxxTKrBR6ZCpBjVTEzksnUvfwXEqUr/S2AvS0oGaOitvD1+Mqm+1vLmzmgeHTCPpoSVxLtqurZd2TkWUCm48ckUchqFJxt3yofD+sezt/xmEbYyw0Wv/exlfng/6vpJ4HJjS3wkE264HGZ4D9MIbZAgwsm9/w0bZIo0qOYJUaWgEKSR8Q6LF9U09hCH+V0GZtkB3VUZMG7eVgTlHSqe2emwIsOYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vzJL7hxvodkNwKTbGI3eQhM3hzchSpznYsMqyGRUXiM=;
+ b=SsAvgz6SQTXTbcBox4WA1NNFCvmm9jhz7U6yCUcrEO0VEcy1W/EEHWShbw+EXW6VCe2OqHwqT8OjQFOVT74vhoO4O4sqHPJScY6+zucY8bEy/kLBHYRXlQveWYo7P9czeLpkqGGH+uV+Tkzgq2ruVh+9RqhCV2wFyC1hIiizXzIFs5kFHeo4NEas1tc6UCZDtjDAKGuXQwfEy05MgFoAnuehVVlwUr8Ah/ltxYNqYDjZYhn6w6qLCALsj8WuB0tR25hpunKEnBfsN0WW//lvatiGphVrTnz+/p4/tEe4sWNRsLyvt7ERBtbHCgS0sxB6fxkoktEIVvmFjifQahCNHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vzJL7hxvodkNwKTbGI3eQhM3hzchSpznYsMqyGRUXiM=;
+ b=31GeagmPSbuKooBSbMX5dUaTSTMlupC+hjpaj7PeYPUJx1+zdo2FGTkbN0ZspYx4AESM3q48GfgzTR1/3xgT44AlmZ1sVeAr4hGP0f2PvAI0NTUHXHX0yAMFb9pEwBRNdktPJ54bk6Wafn8F8G2RNGuZIQTK740wyrTAWscFFwI=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2685.namprd12.prod.outlook.com (2603:10b6:805:67::33)
+ by SN1PR12MB2541.namprd12.prod.outlook.com (2603:10b6:802:24::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Tue, 23 Jun
+ 2020 13:01:15 +0000
+Received: from SN6PR12MB2685.namprd12.prod.outlook.com
+ ([fe80::7864:3a08:ffa8:9123]) by SN6PR12MB2685.namprd12.prod.outlook.com
+ ([fe80::7864:3a08:ffa8:9123%7]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
+ 13:01:15 +0000
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To:     Smita.KoralahalliChannabasappa@amd.com, Yazen.Ghannam@amd.com
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Wei Huang <wei.huang2@amd.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/mce, edac/mce_amd: Print PPIN in machine check records
+Date:   Tue, 23 Jun 2020 08:00:59 -0500
+Message-Id: <20200623130059.8870-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: DM6PR11CA0060.namprd11.prod.outlook.com
+ (2603:10b6:5:14c::37) To SN6PR12MB2685.namprd12.prod.outlook.com
+ (2603:10b6:805:67::33)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619132410.23859-2-david@redhat.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ethanolx024ehost.amd.com (165.204.78.1) by DM6PR11CA0060.namprd11.prod.outlook.com (2603:10b6:5:14c::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Tue, 23 Jun 2020 13:01:14 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.78.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9f514c41-8bc4-40da-45b2-08d81775835e
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2541:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB254165AED80F7CE47C32504690940@SN1PR12MB2541.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
+X-Forefront-PRVS: 04433051BF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uUXrzEBu4C1wbdTnanCr7cauRINXFMOgZQeecGR9fw0X6lPxQYAZW/pBizRF+8Y/69VicsvboNfxC5VNlVEAPnEVcuHg9Gdsp3UabIjWS+/Zlyhi3H+lewi/WwziGs9n7tuUwjTzG3HDInDuPLEjOiHUHUBcwzLtJZ0i6MyU46gZqLbrQZNpV31E7p6/5ozjhDiXgLU6t+qCPOqzKf2gjgxfrx38eSv/aFCC+xAMxQMSej6U0JGXAP/nnuwK1HfD3EW5fo+NJI+WmPUl9jAvgvm6So+a5iXaAtbyPGwkTN/y7ZQ9AUNygygI+p5IFrrz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(956004)(2616005)(36756003)(478600001)(1076003)(6636002)(86362001)(8676002)(83380400001)(8936002)(7416002)(6486002)(26005)(2906002)(16526019)(5660300002)(6666004)(66946007)(66476007)(7696005)(66556008)(54906003)(4326008)(316002)(186003)(52116002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: FDxhsRId7Ihr7i/Jt9D36jhsz1MDP38bwCNod+If8J82DFr5sGuRKyYUDEqtIVwScTWmHmwK+gNf2OXXvnxRLzSKVy0XHU1yd3C1dyHgFIqPfbCcBnLqMtci54jXWVqTfJ3+5p3xkZT5BlDnvk+cndTQKk1BgxoXmzooN6P5e3rwsC/l//RYMh2ZLDrDcD4ndDnvAyGXLlhqxzGsqaDqVaY5wiBLSqChe1VBpPREy+VSN5Gj2SFKLDsD70PLlDSN0x5SmFCNQn3YhumxKoDL5JRBKaylm8BuelMzBxZ8lIMer/TsyK0tTAxymA3HVLdmOez08NvyPClY3WlcajZQPkrCQntZ60ZF8d6sTXJsrCiwC0ZPOaCNJbo3fvenxWr0Cs2zr84sX3Cl3CEV12eOdjQ8Qfb8Y596eYta5WeZJt0mnd4/r2bANbB1Bg2P4c1T88W1lfcDMmndYgMMSCm/inwehNgP9obcIsbo71dPgmw=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f514c41-8bc4-40da-45b2-08d81775835e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 13:01:15.7657
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g93lPBm7CZK11OT7k91twfHcuuytab2PDj6EYkSadTpz1mhZFELLkc9QdmDpMuE/2+mm2Sv1atZMUhD0NO/vqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2541
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 19-06-20 15:24:09, David Hildenbrand wrote:
-> The global variable "vm_total_pages" is a relict from older days. There
-> is only a single user that reads the variable - build_all_zonelists() -
-> and the first thing it does is updating it. Use a local variable in
-> build_all_zonelists() instead and drop the local variable.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+For AMD processors that support Protected Processor Identification
+Number (PPIN), the PPIN information is included in machine check records.
+If present, print it along with other decoded MCA information.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Robert Richter <rrichter@marvell.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Wei Huang <wei.huang2@amd.com>
+Cc: x86@kernel.org
+Cc: linux-edac@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/x86/kernel/cpu/mce/core.c | 2 ++
+ drivers/edac/mce_amd.c         | 3 +++
+ 2 files changed, 5 insertions(+)
 
-> ---
->  include/linux/swap.h | 1 -
->  mm/memory_hotplug.c  | 3 ---
->  mm/page-writeback.c  | 6 ++----
->  mm/page_alloc.c      | 2 ++
->  mm/vmscan.c          | 5 -----
->  5 files changed, 4 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 4c5974bb9ba94..124261acd5d0a 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -371,7 +371,6 @@ extern unsigned long mem_cgroup_shrink_node(struct mem_cgroup *mem,
->  extern unsigned long shrink_all_memory(unsigned long nr_pages);
->  extern int vm_swappiness;
->  extern int remove_mapping(struct address_space *mapping, struct page *page);
-> -extern unsigned long vm_total_pages;
->  
->  extern unsigned long reclaim_pages(struct list_head *page_list);
->  #ifdef CONFIG_NUMA
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 9b34e03e730a4..d682781cce48d 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -835,8 +835,6 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
->  	kswapd_run(nid);
->  	kcompactd_run(nid);
->  
-> -	vm_total_pages = nr_free_pagecache_pages();
-> -
->  	writeback_set_ratelimit();
->  
->  	memory_notify(MEM_ONLINE, &arg);
-> @@ -1586,7 +1584,6 @@ static int __ref __offline_pages(unsigned long start_pfn,
->  		kcompactd_stop(node);
->  	}
->  
-> -	vm_total_pages = nr_free_pagecache_pages();
->  	writeback_set_ratelimit();
->  
->  	memory_notify(MEM_OFFLINE, &arg);
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index 28b3e7a675657..4e4ddd67b71e5 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -2076,13 +2076,11 @@ static int page_writeback_cpu_online(unsigned int cpu)
->   * Called early on to tune the page writeback dirty limits.
->   *
->   * We used to scale dirty pages according to how total memory
-> - * related to pages that could be allocated for buffers (by
-> - * comparing nr_free_buffer_pages() to vm_total_pages.
-> + * related to pages that could be allocated for buffers.
->   *
->   * However, that was when we used "dirty_ratio" to scale with
->   * all memory, and we don't do that any more. "dirty_ratio"
-> - * is now applied to total non-HIGHPAGE memory (by subtracting
-> - * totalhigh_pages from vm_total_pages), and as such we can't
-> + * is now applied to total non-HIGHPAGE memory, and as such we can't
->   * get into the old insane situation any more where we had
->   * large amounts of dirty pages compared to a small amount of
->   * non-HIGHMEM memory.
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 0c435b2ed665c..7b0dde69748c1 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5903,6 +5903,8 @@ build_all_zonelists_init(void)
->   */
->  void __ref build_all_zonelists(pg_data_t *pgdat)
->  {
-> +	unsigned long vm_total_pages;
-> +
->  	if (system_state == SYSTEM_BOOTING) {
->  		build_all_zonelists_init();
->  	} else {
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index b6d84326bdf2d..0010859747df2 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -170,11 +170,6 @@ struct scan_control {
->   * From 0 .. 200.  Higher means more swappy.
->   */
->  int vm_swappiness = 60;
-> -/*
-> - * The total number of pages which are beyond the high watermark within all
-> - * zones.
-> - */
-> -unsigned long vm_total_pages;
->  
->  static void set_task_reclaim_state(struct task_struct *task,
->  				   struct reclaim_state *rs)
-> -- 
-> 2.26.2
-
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index ce9120c4f740..0865349502d5 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -244,6 +244,8 @@ static void __print_mce(struct mce *m)
+ 		pr_cont("ADDR %llx ", m->addr);
+ 	if (m->misc)
+ 		pr_cont("MISC %llx ", m->misc);
++	if (m->ppin)
++		pr_cont("PPIN %llx ", m->ppin);
+ 
+ 	if (mce_flags.smca) {
+ 		if (m->synd)
+diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
+index 2b5401db56ad..325aedf46ff2 100644
+--- a/drivers/edac/mce_amd.c
++++ b/drivers/edac/mce_amd.c
+@@ -1094,6 +1094,9 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
+ 	if (m->status & MCI_STATUS_ADDRV)
+ 		pr_emerg(HW_ERR "Error Addr: 0x%016llx\n", m->addr);
+ 
++	if (m->ppin)
++		pr_emerg(HW_ERR "PPIN: 0x%016llx\n", m->ppin);
++
+ 	if (boot_cpu_has(X86_FEATURE_SMCA)) {
+ 		pr_emerg(HW_ERR "IPID: 0x%016llx", m->ipid);
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
