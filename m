@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70404C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC2D2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326AF20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946427;
-	bh=LpdBqfnHy9Us/Raz3M4gjLPdYu6w6ISBSDI2DIDW4Lc=;
+	s=default; t=1592946431;
+	bh=zxQyyLtD996EZcvH5NyTe9/WJiecHNn8RzhHOeffVXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I7SI186NxnIuaAGyz5ERKkk4tCpaBkQuFZHvnAF4Klnz+XaYOh2yCQQIN5wNkssl3
-	 +tJy6y1QGcyFzw2K3xOxC+qmpvJdJhUvEySjSQlxpqmOFUOQdu1G9v9Xsn5zmOKX96
-	 OSgw1n+armxsheBcidTO1WX4h3BdwAOEwnAu40HM=
+	b=Mn7QsHaRdrD1rMwYKmtivp6rO5/5Av50TfcRWhbVjYcV1HQU/9dXZ56BN8y5snsvS
+	 6msG2FByKW4fA+H3Otg+4MLDpu8d1VMsARVNgLb88kopZm4avAE9+xyS9PYbak+k02
+	 dyGKfzuhJCm11qFLSKfs5pruc+4zvkYQUXB9UfXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391686AbgFWUfb (ORCPT
+        id S2393208AbgFWVHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:35:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391670AbgFWUfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:35:21 -0400
+        id S2387904AbgFWUfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:35:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63DA52080C;
-        Tue, 23 Jun 2020 20:35:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F462080C;
+        Tue, 23 Jun 2020 20:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944521;
-        bh=LpdBqfnHy9Us/Raz3M4gjLPdYu6w6ISBSDI2DIDW4Lc=;
+        s=default; t=1592944532;
+        bh=zxQyyLtD996EZcvH5NyTe9/WJiecHNn8RzhHOeffVXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RxyNKOVTSSfl77aArEx3FBprilnEL5PN9buHyFX0UEh8AC9q8jmTedOgSlXsAN80S
-         /B78JclOgSwk3XQzRdmj1NsFHrlN8ps2zEHDgXooXPwNAwkglcGoWuc4a3Cpr44yo1
-         42meP75AP1xIM5GYwvgeFciQ2i9FgUOlPhhAqm7s=
+        b=UHMcf1ywXasgwrwKD1rZJDxgoHUo1oMZK1ESbpQm0HDW313A7k5t/7HQlbt3dJMyq
+         1aZEVmMXm3FrQ6RXv44swzo7/gupxuyqew/JQJM5Fp4t0h3oFhzUzcbXUZ0jqhGwiO
+         xORz1Z/lS3LbaTuvtEsRA1vlUzNaWD/OBfkk3a68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 022/206] dm mpath: switch paths in dm_blk_ioctl() code path
-Date:   Tue, 23 Jun 2020 21:55:50 +0200
-Message-Id: <20200623195318.068661931@linuxfoundation.org>
+Subject: [PATCH 4.19 026/206] RDMA/mlx5: Add init2init as a modify command
+Date:   Tue, 23 Jun 2020 21:55:54 +0200
+Message-Id: <20200623195318.265184999@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,47 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Aharon Landau <aharonl@mellanox.com>
 
-[ Upstream commit 2361ae595352dec015d14292f1b539242d8446d6 ]
+[ Upstream commit 819f7427bafd494ef7ca4942ec6322db20722d7b ]
 
-SCSI LUN passthrough code such as qemu's "scsi-block" device model
-pass every IO to the host via SG_IO ioctls. Currently, dm-multipath
-calls choose_pgpath() only in the block IO code path, not in the ioctl
-code path (unless current_pgpath is NULL). This has the effect that no
-path switching and thus no load balancing is done for SCSI-passthrough
-IO, unless the active path fails.
+Missing INIT2INIT entry in the list of modify commands caused DEVX
+applications to be unable to modify_qp for this transition state. Add the
+MLX5_CMD_OP_INIT2INIT_QP opcode to the list of allowed DEVX opcodes.
 
-Fix this by using the same logic in multipath_prepare_ioctl() as in
-multipath_clone_and_map().
-
-Note: The allegedly best path selection algorithm, service-time,
-still wouldn't work perfectly, because the io size of the current
-request is always set to 0. Changing that for the IO passthrough
-case would require the ioctl cmd and arg to be passed to dm's
-prepare_ioctl() method.
-
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: e662e14d801b ("IB/mlx5: Add DEVX support for modify and query commands")
+Link: https://lore.kernel.org/r/20200513095550.211345-1-leon@kernel.org
+Signed-off-by: Aharon Landau <aharonl@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-mpath.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/devx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
-index 207ca0ad0b59d..c1ad84f3414cd 100644
---- a/drivers/md/dm-mpath.c
-+++ b/drivers/md/dm-mpath.c
-@@ -1868,7 +1868,7 @@ static int multipath_prepare_ioctl(struct dm_target *ti,
- 	int r;
- 
- 	current_pgpath = READ_ONCE(m->current_pgpath);
--	if (!current_pgpath)
-+	if (!current_pgpath || !test_bit(MPATHF_QUEUE_IO, &m->flags))
- 		current_pgpath = choose_pgpath(m, 0);
- 
- 	if (current_pgpath) {
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index 02f36ab72ad42..4c90a007e09db 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -328,6 +328,7 @@ static bool devx_is_obj_modify_cmd(const void *in)
+ 	case MLX5_CMD_OP_SET_L2_TABLE_ENTRY:
+ 	case MLX5_CMD_OP_RST2INIT_QP:
+ 	case MLX5_CMD_OP_INIT2RTR_QP:
++	case MLX5_CMD_OP_INIT2INIT_QP:
+ 	case MLX5_CMD_OP_RTR2RTS_QP:
+ 	case MLX5_CMD_OP_RTS2RTS_QP:
+ 	case MLX5_CMD_OP_SQERR2RTS_QP:
 -- 
 2.25.1
 
