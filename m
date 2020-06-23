@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E622078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C502720E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942725;
-	bh=JMvlUhCjrGlUQV8cZmG5Jqmr1/kiIi4DV2YpJduhak4=;
+	s=default; t=1592942728;
+	bh=bwz6D8FBQD9hPc5U0y0YPLANP4AYBqfGkOSytfzbCVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jsY0ogudjpDgtsPIXSrbBzhNsAE5LmRUlER7FLq87qJjy01ZXcAqWg4LX1Ajciz+X
-	 7srObcPUjvZ8gxq5PzcMKGYGBDDUfQMR1FWo0m3AO/DXuu8vtcX7TTGIiLFyF/0jhe
-	 v/LwIF7+r4jCb5HX+1T2QTCgkjnOHtQse6BowA/I=
+	b=RlaFc96C4RsxjWD+9CuTy73v4EfzKeuwveNJOSfDfMQ2PtQHgbc6kag8hJQMsnz1y
+	 1rwKC5RioAZwfP8/lcs+0jMJIbbMQNphb56RPKw+BoNGvcYz2rbhTQ2QRnYIY8ELKd
+	 9L80sE/WfOaX8Tb+gSezGzgJXCNPS7Om7jIRyCdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388352AbgFWUFX (ORCPT
+        id S2388357AbgFWUF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:05:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388341AbgFWUFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:05:19 -0400
+        id S2388333AbgFWUFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:05:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52B8C206C3;
-        Tue, 23 Jun 2020 20:05:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD31620DD4;
+        Tue, 23 Jun 2020 20:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942718;
-        bh=JMvlUhCjrGlUQV8cZmG5Jqmr1/kiIi4DV2YpJduhak4=;
+        s=default; t=1592942716;
+        bh=bwz6D8FBQD9hPc5U0y0YPLANP4AYBqfGkOSytfzbCVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e0UsKnSBvq4zPn39NDUOAQYDXiFsFfFa8cAuLLB6hP4p2ARUUTRgyGAFGUcHBneSx
-         vltCN+WWz73Hg+HrkHUYev2Zv3kGxyphAmrbgVPh7svUQASTRSwVpIgOE+S0/f5Ueh
-         yE3iYmehPRK6B6H64LDU8Du0aT0WA6/uUq9F8FNg=
+        b=WokMzvlkfGt6c8KKdsqNBhAGo9iAgsyjFsTbFglqGwg14Lm7Km38z1cPxQGnrvKdU
+         MFksEvLOohv+pSBHxmaw0FPUhzrMyhoJbjhvSPjCD8to3A7YU4p4O0O8uSmh77UTIu
+         vxq0QWppT2FoyHQXdruk7+K0Il79pERaZ6iH/v/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 101/477] xfs: Add the missed xfs_perag_put() for xfs_ifree_cluster()
-Date:   Tue, 23 Jun 2020 21:51:38 +0200
-Message-Id: <20200623195412.362739481@linuxfoundation.org>
+Subject: [PATCH 5.7 066/477] m68k/PCI: Fix a memory leak in an error handling path
+Date:   Tue, 23 Jun 2020 21:51:03 +0200
+Message-Id: <20200623195410.740318987@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,39 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 8cc0072469723459dc6bd7beff81b2b3149f4cf4 ]
+[ Upstream commit c3f4ec050f56eeab7c1f290321f9b762c95bd332 ]
 
-xfs_ifree_cluster() calls xfs_perag_get() at the beginning, but forgets to
-call xfs_perag_put() in one failed path.
-Add the missed function call to fix it.
+If 'ioremap' fails, we must free 'bridge', as done in other error handling
+path bellow.
 
-Fixes: ce92464c180b ("xfs: make xfs_trans_get_buf return an error code")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 19cc4c843f40 ("m68k/PCI: Replace pci_fixup_irqs() call with host bridge IRQ mapping hooks")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_inode.c | 4 +++-
+ arch/m68k/coldfire/pci.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index d1772786af29d..8845faa8161a9 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -2639,8 +2639,10 @@ xfs_ifree_cluster(
- 		error = xfs_trans_get_buf(tp, mp->m_ddev_targp, blkno,
- 				mp->m_bsize * igeo->blocks_per_cluster,
- 				XBF_UNMAPPED, &bp);
--		if (error)
-+		if (error) {
-+			xfs_perag_put(pag);
- 			return error;
-+		}
+diff --git a/arch/m68k/coldfire/pci.c b/arch/m68k/coldfire/pci.c
+index 62b0eb6cf69a3..84eab0f5e00af 100644
+--- a/arch/m68k/coldfire/pci.c
++++ b/arch/m68k/coldfire/pci.c
+@@ -216,8 +216,10 @@ static int __init mcf_pci_init(void)
  
- 		/*
- 		 * This buffer may not have been correctly initialised as we
+ 	/* Keep a virtual mapping to IO/config space active */
+ 	iospace = (unsigned long) ioremap(PCI_IO_PA, PCI_IO_SIZE);
+-	if (iospace == 0)
++	if (iospace == 0) {
++		pci_free_host_bridge(bridge);
+ 		return -ENODEV;
++	}
+ 	pr_info("Coldfire: PCI IO/config window mapped to 0x%x\n",
+ 		(u32) iospace);
+ 
 -- 
 2.25.1
 
