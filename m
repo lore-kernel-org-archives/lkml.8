@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A35EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 527412053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113C1208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872249;
-	bh=3pYFhXqKTFY2pMPdZv3LeLmznqsHYNsP2sxRiFF0Q6M=;
+	s=default; t=1592872252;
+	bh=A0kI0wgoQ5BHwgm1QZZGGbhuj1grYtYeE5ffgxbMsBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kNbjSddkhhXzZrXYFHazZvGfvwPRd9Ur7T93ozBVQ4tdEgGbKWqmGRSXigHCVkj+E
-	 15R8CuKir+X1T85/Yc2DPnU4jbz0pzoOnZ8rBwRDyLbBYnMW1KLnQ7pErzLmo4yAtW
-	 ZR2wMp+IcHMBG5j5WcfNQb/sZsgpovVAFu/x1riI=
+	b=BfAfu2G7oast19FUAfnlAOT7bHIbrbRgUK7Xfo6yw26Yt/0zLEOPxZTBSW4lWewyZ
+	 /thU3d6mGtOQYMmkwxyZd4pdOj+0kBMleZzL2bNl5oxbqxCYgsf8s9AaAl96U+tquY
+	 6qu8cMJZEJ3+gHbp5RXhKVTJIalN8o/2oc56q0FE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbgFWAaq (ORCPT
+        id S1731836AbgFWAau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55220 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731728AbgFWAaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731720AbgFWAaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:30:21 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D1BC20B80;
-        Tue, 23 Jun 2020 00:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D87DB208C9;
+        Tue, 23 Jun 2020 00:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592872221;
-        bh=3pYFhXqKTFY2pMPdZv3LeLmznqsHYNsP2sxRiFF0Q6M=;
+        bh=A0kI0wgoQ5BHwgm1QZZGGbhuj1grYtYeE5ffgxbMsBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ja5ENAKSF+kr1G//xlSSSKWQv6w5XMG5IuFcNHVBv+Iiv+52YS85CZEmo4TnGRiGz
-         PLfvOCxgFJh9/I+9ubqnGf69UDy/tO2qZ4IDtRUMo0fWis10OzRBMthHYwDEkpwdey
-         42m8YoWDA9Kz0XChENbB/2AhGpy7V1G1Ys97MBsU=
+        b=u1fpf9hiqfN08S5A50Hpz51JFfRFT9lR2NVGpa6vT24Fq37ADcG5c0euycCN39phD
+         rWgIR0mr51IZHBwFA+2b9pbiEYb5JS00zA16javDfGhqAfkDzcbsQG6vtw/s5DTW92
+         mjL7c7c/O1dXUucSjUL6fh89bpfqcutFmGRx3WAw=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 30/30] refscale: Change --torture type from refperf to refscale
-Date:   Mon, 22 Jun 2020 17:30:13 -0700
-Message-Id: <20200623003013.26252-30-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 28/30] refperf: Rename RCU_REF_PERF_TEST to RCU_REF_SCALE_TEST
+Date:   Mon, 22 Jun 2020 17:30:11 -0700
+Message-Id: <20200623003013.26252-28-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002941.GA26089@paulmck-ThinkPad-P72>
 References: <20200623002941.GA26089@paulmck-ThinkPad-P72>
@@ -61,121 +61,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit renames the rcutorture config/refperf to config/refscale to
-further avoid conflation with the Linux kernel's perf feature.
+The old Kconfig option name is all too easy to conflate with the
+unrelated "perf" feature, so this commit renames RCU_REF_PERF_TEST to
+RCU_REF_SCALE_TEST.
 
 Reported-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- .../bin/{kvm-recheck-refperf.sh => kvm-recheck-refscale.sh}       | 8 ++++----
- tools/testing/selftests/rcutorture/bin/kvm.sh                     | 8 ++++----
- tools/testing/selftests/rcutorture/bin/parse-console.sh           | 4 ++--
- .../selftests/rcutorture/configs/{refperf => refscale}/CFLIST     | 0
- .../selftests/rcutorture/configs/{refperf => refscale}/CFcommon   | 0
- .../selftests/rcutorture/configs/{refperf => refscale}/NOPREEMPT  | 0
- .../selftests/rcutorture/configs/{refperf => refscale}/PREEMPT    | 0
- .../rcutorture/configs/{refperf => refscale}/ver_functions.sh     | 0
- 8 files changed, 10 insertions(+), 10 deletions(-)
- rename tools/testing/selftests/rcutorture/bin/{kvm-recheck-refperf.sh => kvm-recheck-refscale.sh} (87%)
- rename tools/testing/selftests/rcutorture/configs/{refperf => refscale}/CFLIST (100%)
- rename tools/testing/selftests/rcutorture/configs/{refperf => refscale}/CFcommon (100%)
- rename tools/testing/selftests/rcutorture/configs/{refperf => refscale}/NOPREEMPT (100%)
- rename tools/testing/selftests/rcutorture/configs/{refperf => refscale}/PREEMPT (100%)
- rename tools/testing/selftests/rcutorture/configs/{refperf => refscale}/ver_functions.sh (100%)
+ kernel/rcu/Kconfig.debug                                    | 4 ++--
+ kernel/rcu/Makefile                                         | 2 +-
+ kernel/rcu/refperf.c                                        | 6 +++---
+ tools/testing/selftests/rcutorture/configs/refperf/CFcommon | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck-refperf.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck-refscale.sh
-similarity index 87%
-rename from tools/testing/selftests/rcutorture/bin/kvm-recheck-refperf.sh
-rename to tools/testing/selftests/rcutorture/bin/kvm-recheck-refscale.sh
-index 0e29cfd..35a463d 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-recheck-refperf.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck-refscale.sh
-@@ -1,9 +1,9 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0+
- #
--# Analyze a given results directory for refperf performance measurements.
-+# Analyze a given results directory for refscale performance measurements.
- #
--# Usage: kvm-recheck-refperf.sh resdir
-+# Usage: kvm-recheck-refscale.sh resdir
- #
- # Copyright (C) IBM Corporation, 2016
- #
-@@ -51,7 +51,7 @@ END {
- 	print configfile " results:";
- 	newNR = asort(readertimes);
- 	if (newNR <= 0) {
--		print "No refperf records found???"
-+		print "No refscale records found???"
- 		exit;
- 	}
- 	medianidx = int(newNR / 2);
-@@ -67,5 +67,5 @@ END {
- 	print "Minimum reader duration: " readertimes[1];
- 	print "Median reader duration: " medianvalue;
- 	print "Maximum reader duration: " readertimes[newNR];
--	print "Computed from refperf printk output.";
-+	print "Computed from refscale printk output.";
- }'
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
-index 48b6a72..ce05db3 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
-@@ -180,14 +180,14 @@ do
- 		shift
- 		;;
- 	--torture)
--		checkarg --torture "(suite name)" "$#" "$2" '^\(lock\|rcu\|rcuperf\|refperf\)$' '^--'
-+		checkarg --torture "(suite name)" "$#" "$2" '^\(lock\|rcu\|rcuperf\|refscale\)$' '^--'
- 		TORTURE_SUITE=$2
- 		shift
--		if test "$TORTURE_SUITE" = rcuperf || test "$TORTURE_SUITE" = refperf
-+		if test "$TORTURE_SUITE" = rcuperf || test "$TORTURE_SUITE" = refscale
- 		then
--			# If you really want jitter for refperf or
-+			# If you really want jitter for refscale or
- 			# rcuperf, specify it after specifying the rcuperf
--			# or the refperf.  (But why jitter in these cases?)
-+			# or the refscale.  (But why jitter in these cases?)
- 			jitter=0
- 		fi
- 		;;
-diff --git a/tools/testing/selftests/rcutorture/bin/parse-console.sh b/tools/testing/selftests/rcutorture/bin/parse-console.sh
-index 85af11d..8cb908f 100755
---- a/tools/testing/selftests/rcutorture/bin/parse-console.sh
-+++ b/tools/testing/selftests/rcutorture/bin/parse-console.sh
-@@ -33,8 +33,8 @@ then
- fi
- cat /dev/null > $file.diags
+diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
+index 858765b..3cf6132 100644
+--- a/kernel/rcu/Kconfig.debug
++++ b/kernel/rcu/Kconfig.debug
+@@ -61,8 +61,8 @@ config RCU_TORTURE_TEST
+ 	  Say M if you want the RCU torture tests to build as a module.
+ 	  Say N if you are unsure.
  
--# Check for proper termination, except for rcuperf and refperf.
--if test "$TORTURE_SUITE" != rcuperf && test "$TORTURE_SUITE" != refperf
-+# Check for proper termination, except for rcuperf and refscale.
-+if test "$TORTURE_SUITE" != rcuperf && test "$TORTURE_SUITE" != refscale
- then
- 	# check for abject failure
+-config RCU_REF_PERF_TEST
+-	tristate "Performance tests for read-side synchronization (RCU and others)"
++config RCU_REF_SCALE_TEST
++	tristate "Scalability tests for read-side synchronization (RCU and others)"
+ 	depends on DEBUG_KERNEL
+ 	select TORTURE_TEST
+ 	select SRCU
+diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
+index ba7d826..45d562d 100644
+--- a/kernel/rcu/Makefile
++++ b/kernel/rcu/Makefile
+@@ -12,7 +12,7 @@ obj-$(CONFIG_TREE_SRCU) += srcutree.o
+ obj-$(CONFIG_TINY_SRCU) += srcutiny.o
+ obj-$(CONFIG_RCU_TORTURE_TEST) += rcutorture.o
+ obj-$(CONFIG_RCU_PERF_TEST) += rcuperf.o
+-obj-$(CONFIG_RCU_REF_PERF_TEST) += refperf.o
++obj-$(CONFIG_RCU_REF_SCALE_TEST) += refperf.o
+ obj-$(CONFIG_TREE_RCU) += tree.o
+ obj-$(CONFIG_TINY_RCU) += tiny.o
+ obj-$(CONFIG_RCU_NEED_SEGCBLIST) += rcu_segcblist.o
+diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
+index 2bfdcdc..7c98057 100644
+--- a/kernel/rcu/refperf.c
++++ b/kernel/rcu/refperf.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ //
+-// Performance test comparing RCU vs other mechanisms
++// Scalability test comparing RCU vs other mechanisms
+ // for acquiring references on objects.
+ //
+ // Copyright (C) Google, 2020.
+@@ -59,7 +59,7 @@ MODULE_PARM_DESC(perf_type, "Type of test (rcu, srcu, refcnt, rwsem, rwlock.");
+ torture_param(int, verbose, 0, "Enable verbose debugging printk()s");
  
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/CFLIST b/tools/testing/selftests/rcutorture/configs/refscale/CFLIST
-similarity index 100%
-rename from tools/testing/selftests/rcutorture/configs/refperf/CFLIST
-rename to tools/testing/selftests/rcutorture/configs/refscale/CFLIST
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/CFcommon b/tools/testing/selftests/rcutorture/configs/refscale/CFcommon
-similarity index 100%
-rename from tools/testing/selftests/rcutorture/configs/refperf/CFcommon
-rename to tools/testing/selftests/rcutorture/configs/refscale/CFcommon
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/NOPREEMPT b/tools/testing/selftests/rcutorture/configs/refscale/NOPREEMPT
-similarity index 100%
-rename from tools/testing/selftests/rcutorture/configs/refperf/NOPREEMPT
-rename to tools/testing/selftests/rcutorture/configs/refscale/NOPREEMPT
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/PREEMPT b/tools/testing/selftests/rcutorture/configs/refscale/PREEMPT
-similarity index 100%
-rename from tools/testing/selftests/rcutorture/configs/refperf/PREEMPT
-rename to tools/testing/selftests/rcutorture/configs/refscale/PREEMPT
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/ver_functions.sh b/tools/testing/selftests/rcutorture/configs/refscale/ver_functions.sh
-similarity index 100%
-rename from tools/testing/selftests/rcutorture/configs/refperf/ver_functions.sh
-rename to tools/testing/selftests/rcutorture/configs/refscale/ver_functions.sh
+ // Wait until there are multiple CPUs before starting test.
+-torture_param(int, holdoff, IS_BUILTIN(CONFIG_RCU_REF_PERF_TEST) ? 10 : 0,
++torture_param(int, holdoff, IS_BUILTIN(CONFIG_RCU_REF_SCALE_TEST) ? 10 : 0,
+ 	      "Holdoff time before test start (s)");
+ // Number of loops per experiment, all readers execute operations concurrently.
+ torture_param(long, loops, 10000, "Number of loops per experiment.");
+@@ -656,7 +656,7 @@ ref_perf_init(void)
+ 		for (i = 0; i < ARRAY_SIZE(perf_ops); i++)
+ 			pr_cont(" %s", perf_ops[i]->name);
+ 		pr_cont("\n");
+-		WARN_ON(!IS_MODULE(CONFIG_RCU_REF_PERF_TEST));
++		WARN_ON(!IS_MODULE(CONFIG_RCU_REF_SCALE_TEST));
+ 		firsterr = -EINVAL;
+ 		cur_ops = NULL;
+ 		goto unwind;
+diff --git a/tools/testing/selftests/rcutorture/configs/refperf/CFcommon b/tools/testing/selftests/rcutorture/configs/refperf/CFcommon
+index 8ba5ba2..a98b58b 100644
+--- a/tools/testing/selftests/rcutorture/configs/refperf/CFcommon
++++ b/tools/testing/selftests/rcutorture/configs/refperf/CFcommon
+@@ -1,2 +1,2 @@
+-CONFIG_RCU_REF_PERF_TEST=y
++CONFIG_RCU_REF_SCALE_TEST=y
+ CONFIG_PRINTK_TIME=y
 -- 
 2.9.5
 
