@@ -2,89 +2,164 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E207C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3802C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4A5207D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:10:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbI6c2kE"
+	by mail.kernel.org (Postfix) with ESMTP id B5152207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592939482;
+	bh=lL6Vi58BV4Hq79xacbX1vg5CvC657OXabhE4EjlEbBM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=F3ohGh3OQUEuE2Wur2vgwbi20VmpgJd24gSeHkEXY46ONDPzB7OCLYrWIv21aKd1F
+	 DefQMb3caDb+2v+N1GyJ/bxgY3EEyKqvMAfwbVZ6Ar8N1OLK40JF44fM+JWmpzvGmw
+	 kpC5846NkalznkSAWO0e7OoXgHFA0HUTP3MQaM28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387460AbgFWTK0 (ORCPT
+        id S2387472AbgFWTLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733273AbgFWTKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:10:24 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60147C061573;
-        Tue, 23 Jun 2020 12:10:24 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s9so4473385ljm.11;
-        Tue, 23 Jun 2020 12:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dHQMA4UMIloAnkWnBe4zD/F3dI97qrJrNziC5PnX2g0=;
-        b=IbI6c2kEofavva6TOZDrMhgWUH2XEThq7tbgwyc7v9vi4A8C7HZTveNFs1qkIDK65W
-         fhFFL6pbXEV3yIKsDJzrKIeNgCeFfgUv4kcjTsnfOoqvELxfTHm3kReFYH8X0AhWOqXq
-         vqOP0OjgHGwvEtRTtbZKEYb19j4JTUgBChXEHbHqW5PHOo6WohYo9xKz4cCtgnSjBHJo
-         X7uSdaI87B8Dk7bUF3SGyy/AbWEGFA7nvJ1U6YFprtNu14xA+woyEUT0dRi8qznXkpjG
-         jZno2JJzq2w+lRT0hqlTid6IKG/aZ5GoaGsNClri5axFwK+8xZ/FzYeuaDrSDDS9Dnyr
-         8wqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dHQMA4UMIloAnkWnBe4zD/F3dI97qrJrNziC5PnX2g0=;
-        b=TF/JEek1FEdd5NT6FdbxqZebC7XB1sdJb5natu/u3+WZzPh546kJhLUO0B7zGGZFSW
-         PlihNjkkBW+9JOpDUvhofCngPwBqFo04IDcKGkHhiaRggmy9gOKRMloC4kHl3bVQntWA
-         q09rjBN2wwjnIhyCDpmp0G3mSZyIv5pECGjreq8aBLTkMQlyKZX7f6T+DYEWd36GwcCv
-         BioIRLvHbPzfrPnY02kxn3ICpxzwdjogPO3ZqKuMdwSxugaxIIQyrMzfxjTddOiI20uq
-         PhrC21n5iTYRBjgzfKzRgvD+FkluN/Vl+bI94ht2H8CI87fLBJqeT72rkODK+tNj0B4Z
-         Edzw==
-X-Gm-Message-State: AOAM531UTBsj6QKovAlm6X9TIts957BdVrVXjeDJ8oyq+DgHYlRD29t3
-        /BW2gImhdDeSL7A+rN6bgwSIK5CImD75uwXt7nM=
-X-Google-Smtp-Source: ABdhPJwHhGkjJFBEPVdJgcvEqW+deafijsmk2UkonQ5shGuWfJwZI2ZPPhkNKshZpF9anGEQE95M9C8PJfns10JcSj4=
-X-Received: by 2002:a2e:800c:: with SMTP id j12mr11123439ljg.218.1592939422627;
- Tue, 23 Jun 2020 12:10:22 -0700 (PDT)
+        Tue, 23 Jun 2020 15:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733248AbgFWTLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 15:11:21 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9280207D0;
+        Tue, 23 Jun 2020 19:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592939479;
+        bh=lL6Vi58BV4Hq79xacbX1vg5CvC657OXabhE4EjlEbBM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=HYjCaelFMaI3bvz3sjtMpxzywJoqfAGkX/bx3T+OWPjnlRUBJgJbCUSwH/x8TmQqt
+         QCDdWQe18BkDbkRYhZuYeFxKxB6nyyAJdLEtJnyZt8rpY8fEpr550EDsrmqK4ybzBD
+         +WmV38dbMjQMF0bSZ3OmgzZeQ2ZzUeOrh/rGYSoM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1592937087-8885-1-git-send-email-tharvey@gateworks.com> <1592939214-13637-1-git-send-email-tharvey@gateworks.com>
-In-Reply-To: <1592939214-13637-1-git-send-email-tharvey@gateworks.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 23 Jun 2020 16:10:10 -0300
-Message-ID: <CAOMZO5Bh92_qpS8VjaYxiHs6rcYBLrgnwJX8ftHshMQgm70-dg@mail.gmail.com>
-Subject: Re: [PATCH v3] ARM: dts: imx6qdl-gw551x: fix audio SSI
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200620144639.335093-2-konradybcio@gmail.com>
+References: <20200620144639.335093-1-konradybcio@gmail.com> <20200620144639.335093-2-konradybcio@gmail.com>
+Subject: Re: [PATCH 01/21] clk: qcom: smd: Add support for MSM8992/4 rpm clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl
+Date:   Tue, 23 Jun 2020 12:11:19 -0700
+Message-ID: <159293947912.62212.6644513418045609359@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 4:07 PM Tim Harvey <tharvey@gateworks.com> wrote:
->
-> The audio codec on the GW551x routes to ssi1
->
-> Cc: stable@vger.kernel.org
-> Fixes: 3117e851cef1 ("ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x")
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Quoting Konrad Dybcio (2020-06-20 07:46:17)
+> Add rpm smd clocks, PMIC and bus clocks which are required on MSM8992,
+> MSM8994 (and APQ variants) for clients to vote on.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+We really should move the bus clks to be in the interconnect framework.
+
+>=20
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Doc=
+umentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> index 90a1349bc713..f864ea69a590 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> @@ -17,6 +17,8 @@ Required properties :
+>                         "qcom,rpmcc-msm8976", "qcom,rpmcc"
+>                         "qcom,rpmcc-apq8064", "qcom,rpmcc"
+>                         "qcom,rpmcc-ipq806x", "qcom,rpmcc"
+> +                        "qcom,rpmcc-msm8992", "qcom,rpmcc"
+> +                        "qcom,rpmcc-msm8994", "qcom,rpmcc"
+
+Indentation is off.
+
+>                         "qcom,rpmcc-msm8996", "qcom,rpmcc"
+>                         "qcom,rpmcc-msm8998", "qcom,rpmcc"
+>                         "qcom,rpmcc-qcs404", "qcom,rpmcc"
+> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rp=
+m.c
+> index 52f63ad787ba..429517340148 100644
+> --- a/drivers/clk/qcom/clk-smd-rpm.c
+> +++ b/drivers/clk/qcom/clk-smd-rpm.c
+> @@ -574,6 +574,176 @@ static const struct rpm_smd_clk_desc rpm_clk_msm897=
+6 =3D {
+>         .num_clks =3D ARRAY_SIZE(msm8976_clks),
+>  };
+[...]
+> +       [RPM_SMD_RF_CLK1_A_PIN] =3D &msm8994_rf_clk1_a_pin,
+> +       [RPM_SMD_RF_CLK2_PIN] =3D &msm8994_rf_clk2_pin,
+> +       [RPM_SMD_RF_CLK2_A_PIN] =3D &msm8994_rf_clk2_a_pin,
+> +       [RPM_SMD_CE1_CLK] =3D &msm8994_ce1_clk,
+> +       [RPM_SMD_CE1_A_CLK] =3D &msm8994_ce1_a_clk,
+> +       [RPM_SMD_CE2_CLK] =3D &msm8994_ce2_clk,
+> +       [RPM_SMD_CE2_A_CLK] =3D &msm8994_ce2_a_clk,
+> +       [RPM_SMD_CE3_CLK] =3D &msm8994_ce3_clk,
+> +       [RPM_SMD_CE3_A_CLK] =3D &msm8994_ce3_a_clk,
+> +};
+> +
+> +static const struct rpm_smd_clk_desc rpm_clk_msm8994 =3D {
+> +       .clks =3D msm8994_clks,
+> +       .num_clks =3D ARRAY_SIZE(msm8994_clks),
+> +};
+> +
+> +
+
+Please drop the extra newline.
+
+>  /* msm8996 */
+>  DEFINE_CLK_SMD_RPM(msm8996, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK=
+, 0);
+>  DEFINE_CLK_SMD_RPM(msm8996, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, =
+1);
+> @@ -770,6 +940,8 @@ static const struct of_device_id rpm_smd_clk_match_ta=
+ble[] =3D {
+>         { .compatible =3D "qcom,rpmcc-msm8916", .data =3D &rpm_clk_msm891=
+6 },
+>         { .compatible =3D "qcom,rpmcc-msm8974", .data =3D &rpm_clk_msm897=
+4 },
+>         { .compatible =3D "qcom,rpmcc-msm8976", .data =3D &rpm_clk_msm897=
+6 },
+> +       { .compatible =3D "qcom,rpmcc-msm8992", .data =3D &rpm_clk_msm899=
+2 },
+> +       { .compatible =3D "qcom,rpmcc-msm8994", .data =3D &rpm_clk_msm899=
+4 },
+>         { .compatible =3D "qcom,rpmcc-msm8996", .data =3D &rpm_clk_msm899=
+6 },
+>         { .compatible =3D "qcom,rpmcc-msm8998", .data =3D &rpm_clk_msm899=
+8 },
+>         { .compatible =3D "qcom,rpmcc-qcs404",  .data =3D &rpm_clk_qcs404=
+  },
+> diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings=
+/clock/qcom,rpmcc.h
+> index ae74c43c485d..9cbf17027afd 100644
+> --- a/include/dt-bindings/clock/qcom,rpmcc.h
+> +++ b/include/dt-bindings/clock/qcom,rpmcc.h
+> @@ -133,5 +133,9 @@
+>  #define RPM_SMD_RF_CLK3_A                      87
+>  #define RPM_SMD_RF_CLK3_PIN                    88
+>  #define RPM_SMD_RF_CLK3_A_PIN                  89
+> +#define RPM_SMD_CE2_CLK             90
+> +#define RPM_SMD_CE2_A_CLK               91
+> +#define RPM_SMD_CE3_CLK             92
+> +#define RPM_SMD_CE3_A_CLK           93
+> =20
+
+This is wrecked by other patches you've sent. Please resend just this
+patch to clk maintainers with these two things fixed.
