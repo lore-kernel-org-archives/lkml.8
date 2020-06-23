@@ -2,90 +2,117 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68124C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1725D2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4178120720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qEFYfbQz"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AnagMKzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731842AbgFWBTI (ORCPT
+        id S1731860AbgFWBTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:19:08 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41018 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731797AbgFWBTI (ORCPT
+        Mon, 22 Jun 2020 21:19:43 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:55052 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731667AbgFWBTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:19:08 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05N1J14g035835;
-        Mon, 22 Jun 2020 20:19:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592875141;
-        bh=WevWNQY8HlxM1Yek3NFPCVCxXsm01sjtKnnbriNny9Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qEFYfbQze0Ixjs6oX01mlrpxxDN0Oi15gVe+EJ8Nb5CbaYV0cHmzOSoUfVr030YuF
-         PMtwfFOLSiJnY1ny7u3Qvrl713BDR8z1vEQS85qIcm26rrbaWfoCLaKx1RzrTRKVPL
-         8IxWcUey8t1YCvAPjt0Kla3iPue3HLsdMKW2MjQQ=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05N1J1QF105462;
-        Mon, 22 Jun 2020 20:19:01 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Jun 2020 20:19:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 22 Jun 2020 20:19:01 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05N1J0cY114760;
-        Mon, 22 Jun 2020 20:19:00 -0500
-Subject: Re: [PATCH net-next v9 2/5] net: phy: Add a helper to return the
- index for of the internal delay
-To:     David Miller <davem@davemloft.net>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200619161813.2716-1-dmurphy@ti.com>
- <20200619161813.2716-3-dmurphy@ti.com>
- <20200622.154047.909380525276436349.davem@davemloft.net>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <43e0247e-a62a-b34e-016f-c2e540591df2@ti.com>
-Date:   Mon, 22 Jun 2020 20:19:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 22 Jun 2020 21:19:42 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1C361327;
+        Tue, 23 Jun 2020 03:19:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1592875180;
+        bh=A1BPBP7IBhvl06oo1JVRf8zGahYeO6mzOQ68hxqYL4U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AnagMKzrYkDtq6thkbxOVWtLV7eZh5FUbo8aY4leF4Z9ZmKdur1cCWCcBeubE591X
+         x+VYQwOnk9B04PTlgxtbrU3NbAQntb7L/LGNbhr23EP5y7Mt0L70qxrqKAGpfdBKNC
+         lAwhsag/fbjrQnRaPcty8A/vV7/y5mhrFHCrtxu8=
+Date:   Tue, 23 Jun 2020 04:19:15 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 1/2] media: omap3isp: Remove cacheflush.h
+Message-ID: <20200623011915.GP5852@pendragon.ideasonboard.com>
+References: <20200622234740.72825-1-natechancellor@gmail.com>
+ <20200622234740.72825-2-natechancellor@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622.154047.909380525276436349.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200622234740.72825-2-natechancellor@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David
+Hi Nathan,
 
-On 6/22/20 5:40 PM, David Miller wrote:
-> From: Dan Murphy <dmurphy@ti.com>
-> Date: Fri, 19 Jun 2020 11:18:10 -0500
->
->> +s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
->> +			   const int *delay_values, int size, bool is_rx)
->> +{
->> +	int i;
->> +	s32 delay;
-> Please use reverse christmas tree ordering for local variables.
+Thank you for the patch.
 
-OK.
+On Mon, Jun 22, 2020 at 04:47:39PM -0700, Nathan Chancellor wrote:
+> After mm.h was removed from the asm-generic version of cacheflush.h,
+> s390 allyesconfig shows several warnings of the following nature:
+> 
+> In file included from ./arch/s390/include/generated/asm/cacheflush.h:1,
+>                  from drivers/media/platform/omap3isp/isp.c:42:
+> ./include/asm-generic/cacheflush.h:16:42: warning: 'struct mm_struct'
+> declared inside parameter list will not be visible outside of this
+> definition or declaration
+> 
+> As Geert and Laurent point out, this driver does not need this header in
+> the two files that include it. Remove it so there are no warnings.
+> 
+> Fixes: e0cf615d725c ("asm-generic: don't include <linux/mm.h> in cacheflush.h")
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Dan
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
+> ---
+>  drivers/media/platform/omap3isp/isp.c      | 2 --
+>  drivers/media/platform/omap3isp/ispvideo.c | 1 -
+>  2 files changed, 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+> index a4ee6b86663e..b91e472ee764 100644
+> --- a/drivers/media/platform/omap3isp/isp.c
+> +++ b/drivers/media/platform/omap3isp/isp.c
+> @@ -39,8 +39,6 @@
+>   *	Troy Laramy <t-laramy@ti.com>
+>   */
+>  
+> -#include <asm/cacheflush.h>
+> -
+>  #include <linux/clk.h>
+>  #include <linux/clkdev.h>
+>  #include <linux/delay.h>
+> diff --git a/drivers/media/platform/omap3isp/ispvideo.c b/drivers/media/platform/omap3isp/ispvideo.c
+> index 10c214bd0903..1ac9aef70dff 100644
+> --- a/drivers/media/platform/omap3isp/ispvideo.c
+> +++ b/drivers/media/platform/omap3isp/ispvideo.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/sched.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+> -#include <asm/cacheflush.h>
+>  
+>  #include <media/v4l2-dev.h>
+>  #include <media/v4l2-ioctl.h>
+> 
+> base-commit: 27f11fea33608cbd321a97cbecfa2ef97dcc1821
+
+-- 
+Regards,
+
+Laurent Pinchart
