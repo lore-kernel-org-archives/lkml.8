@@ -2,226 +2,112 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0ABE2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CEB20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvFA4Qkq"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QWQq5RDG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389408AbgFWWti (ORCPT
+        id S2388030AbgFWWwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46946 "EHLO
+        Tue, 23 Jun 2020 18:52:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388735AbgFWWs0 (ORCPT
+        with ESMTP id S2387586AbgFWWwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:48:26 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3775AC061795;
-        Tue, 23 Jun 2020 15:48:26 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so264602wrm.4;
-        Tue, 23 Jun 2020 15:48:26 -0700 (PDT)
+        Tue, 23 Jun 2020 18:52:19 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA87C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 15:30:02 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l6so82221qkc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 15:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l20ghDaBITcWUJdBjFantj3la1r6idQ6rjpXrXpW8d0=;
-        b=RvFA4QkqTNG0dxdYdv6lQRlfayAkQ8HyDjjrl/3ISJuwAYmKaudQL5JQWApkekFh/N
-         BZ1mXfGbcY3HjYOP8NsYDUnamfoE/A0T8lBWNlVsIIf4zFbzbU6zayYZCzEt+5Qfpy49
-         Elal8nPLSKcMnrnD35LxMv4WpdLf2zNe16fDiD+GzjSvS0lhNVrWOfgjeL7ae5rQdgXL
-         TavZOtXUk8unm9EXxZSlRxpUVi76RF7qFzVlHZ76VocXIj0KcF2JS1C7hvuCqSYrfrcd
-         aExtPXQJCkmLu9MU2BFRqfyNuJOUaProlMsbt1lO5Xqa8OT/wz8keNOHTzF0kKk+WzT/
-         CWhg==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=eaPZgevT2CpnMUUM+GmJp3ep826/Vu8USLaTW1XXGMw=;
+        b=QWQq5RDGTnwX3WnqevkbBWkazZh8odQfl932pZ3UbY0dCGQegngCVgx95WkZVr6BnO
+         65ZIHrqmao0uN6GenF/4y4CW/OcmRkJXPzNKvRDmcXb7ZC7erhMA93XdDlwZ6l3vBF1f
+         GxHnbtJycGks7s5BOlmqFZKUgWd+grPqJxni7VbGgMA8zUApStYLutkeT0rlrIBOHI08
+         3Cql55Igvie4tl+36H8VyJCyQqgV0RR76/eI9IGW+so79IAWGhwE2UWaR81yETHij9Y+
+         SmTPqigtUan78yqLcCU63BGCxEuDALLbhJ89gWLbCtwqVG4DBdoucn263Wyo8rE2fDql
+         8TgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l20ghDaBITcWUJdBjFantj3la1r6idQ6rjpXrXpW8d0=;
-        b=J9bV9BQFRYXM7GHhx/cRPd1rBAkZyzMlf1743PeU9TX204C5MBd3yNKhrOEz5VS0cq
-         86bQe7f3abBaFdcPTJddvYnzt9hMHitZ1eGuUu+bcIy4VJCqQHM9y44b+AKwfHWJ0lFT
-         mSghHO0ZlunOjPhrXBf1TgssMUKQW3MuxR3IT5yhN7EQrqOuY1xbHnb4znRMjcJm4lyW
-         DcZdAul3fvbRAE6/KsrzZQB+LkbVM1AgvocJIWbL2IHzWXwC8XtGfHETdtRBjsSaWA8K
-         HZpUi+IuPAYPCrm7ATbyfDUkeZKpRlnErhXqlGgsnaAepQkEOxsgCFIiV/QZnWxACYUz
-         epQw==
-X-Gm-Message-State: AOAM531Bde80YQx3btIDnv5agaTD+n4muThxJHmjk6RYZndQtpfbnsT3
-        of0wDReL+lbjCJALVwFXVEs=
-X-Google-Smtp-Source: ABdhPJySH3tmQbbmZq5YUNPFZUGN1wGTVYZXEp4zoRr4SmpAXJD1aXVMQQeB/UzGRvYv2TnkUWiUpQ==
-X-Received: by 2002:adf:828b:: with SMTP id 11mr29481518wrc.58.1592952504987;
-        Tue, 23 Jun 2020 15:48:24 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id g144sm5671179wme.2.2020.06.23.15.48.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 15:48:24 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/12] arm64: dts: qcom: msm8994: Add a proper CPU map
-Date:   Wed, 24 Jun 2020 00:48:02 +0200
-Message-Id: <20200623224813.297077-4-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623224813.297077-1-konradybcio@gmail.com>
-References: <20200623224813.297077-1-konradybcio@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=eaPZgevT2CpnMUUM+GmJp3ep826/Vu8USLaTW1XXGMw=;
+        b=YxD/G9XXwYlCs8xVnxMAHx1OeTXUd8Aqf8l3WCZLmIGE6g8s6CTHpdcLVH+Cem+c0d
+         wKwOiXLvQvQUUHQ1R8n2Sp7zLJqaE0OGeEFnHkaod/7ZKa4G6tcrYGzNKEZ1f1jImYJA
+         BQkJbfSqEPICyhoKVbaH6Wy61x1+ELYSEPI5TCEyhVi+E14/Wr4Y4ZdR8+Yzwj+ew+Xy
+         AcMEx/5pUsWaus793TOsAXDLmfoQ7bUA+6Y2KYRCXw6oerjhSkdJvoIK4agXUIsm+2W1
+         rg8QnJD6rqgrkO6OCR0QqiRO+JSWYsGj29tvXwCmREWzP7xuNu3f5z2cD1SjCRxqtZK7
+         sbZQ==
+X-Gm-Message-State: AOAM532/WNB6xGOaCMp7bQVqT6Mn+6L8y9hbsZP9X4WNNRl4Q/OqWJpv
+        rsUbxMJhoETpP/WTb+qORvcvSg==
+X-Google-Smtp-Source: ABdhPJwk15aS1BWBT2iEbMasfTOJdZ8L9kYNLCwIeSkqEjFH3YWtkSFhBbq1XdpbSIFrixrWCXSxpg==
+X-Received: by 2002:a37:5ac1:: with SMTP id o184mr6623255qkb.498.1592951401983;
+        Tue, 23 Jun 2020 15:30:01 -0700 (PDT)
+Received: from ?IPv6:2600:1000:b118:1dc0:18a:ef24:8000:54d8? ([2600:1000:b118:1dc0:18a:ef24:8000:54d8])
+        by smtp.gmail.com with ESMTPSA id 207sm1764428qki.134.2020.06.23.15.30.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 15:30:01 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm: Track mmu notifiers in fs_reclaim_acquire/release
+Date:   Tue, 23 Jun 2020 18:29:58 -0400
+Message-Id: <CBC5DC63-241C-4291-8686-21CF758AC91B@lca.pw>
+References: <CAKMK7uH90-k12KMHE0pWN6G_aCTr=YNhQsqoaAJC5FHygnf96g@mail.gmail.com>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        =?utf-8?Q?Thomas_Hellstr=C3=B6m?= <thomas_os@shipmail.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-xfs@vger.kernel.org
+In-Reply-To: <CAKMK7uH90-k12KMHE0pWN6G_aCTr=YNhQsqoaAJC5FHygnf96g@mail.gmail.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a proper CPU map to enable the use of all 8 cores.
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8994.dtsi | 112 +++++++++++++++++++++++---
- 1 file changed, 102 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-index 23e50c30669b..e7f4b06eb12c 100644
---- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-@@ -28,24 +28,116 @@ sleep_clk: sleep_clk {
- 	};
- 
- 	cpus {
--		#address-cells = <1>;
-+		#address-cells = <2>;
- 		#size-cells = <0>;
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+			L2_0: l2-cache {
-+				compatible = "cache";
-+				cache-level = <2>;
-+			};
-+		};
-+
-+		CPU1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU4: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_1>;
-+			L2_1: l2-cache {
-+				compatible = "cache";
-+				cache-level = <2>;
-+			};
-+		};
-+
-+		CPU5: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_1>;
-+		};
-+
-+		CPU6: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_1>;
-+		};
-+
-+		CPU7: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_1>;
-+		};
-+
- 		cpu-map {
- 			cluster0 {
- 				core0 {
- 					cpu = <&CPU0>;
- 				};
-+
-+				core1 {
-+					cpu = <&CPU1>;
-+				};
-+
-+				core2 {
-+					cpu = <&CPU2>;
-+				};
-+
-+				core3 {
-+					cpu = <&CPU3>;
-+				};
- 			};
--		};
- 
--		CPU0: cpu@0 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a53";
--			reg = <0x0>;
--			next-level-cache = <&L2_0>;
--			L2_0: l2-cache {
--			      compatible = "cache";
--			      cache-level = <2>;
-+			cluster1 {
-+				core0 {
-+					cpu = <&CPU4>;
-+				};
-+
-+				core1 {
-+					cpu = <&CPU5>;
-+				};
-+
-+				core2 {
-+					cpu = <&CPU6>;
-+				};
-+
-+				core3 {
-+					cpu = <&CPU7>;
-+				};
- 			};
- 		};
- 	};
--- 
-2.27.0
+> On Jun 23, 2020, at 6:13 PM, Daniel Vetter <daniel@ffwll.ch> wrote:
+>=20
+> Ok I tested this. I can't use your script to repro because
+> - I don't have a setup with xfs, and the splat points at an issue in xfs
+> - reproducing lockdep splats in shrinker callbacks is always a bit tricky
 
+What=E2=80=99s xfs setup are you talking about? This is simple xfs rootfs an=
+d then trigger swapping. Nothing tricky here as it hit on multiple machines w=
+ithin a few seconds on linux-next.
+
+> Summary: Everything is working as expected, there's no change in the
+> lockdep annotations.
+> I really think the problem is that either your testcase doesn't hit
+> the issue reliably enough, or that you're not actually testing the
+> same kernels and there's some other changes (xfs most likely, but
+> really it could be anywhere) which is causing this regression. I'm
+> rather convinced now after this test that it's not my stuff.
+
+Well, the memory pressure workloads have been running for years on daily lin=
+ux-next builds and never saw this one happened once. Also, the reverting is O=
+NLY to revert your patch on the top of linux-next will stop the splat, so th=
+ere is no not testing the same kernel at all.=
