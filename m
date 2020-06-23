@@ -2,287 +2,114 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E618C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F999C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F9F20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7995720738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731862AbgFWIs3 (ORCPT
+        id S1732043AbgFWItU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:48:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731722AbgFWIs3 (ORCPT
+        Tue, 23 Jun 2020 04:49:20 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40762 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731775AbgFWItT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:48:29 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11C3C061573;
-        Tue, 23 Jun 2020 01:48:28 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jnebR-0005RM-FZ; Tue, 23 Jun 2020 10:48:25 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2CC9C1C0475;
-        Tue, 23 Jun 2020 10:48:25 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 08:48:24 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/core: Fix ttwu() race
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200622125649.GC576871@hirez.programming.kicks-ass.net>
-References: <20200622125649.GC576871@hirez.programming.kicks-ass.net>
+        Tue, 23 Jun 2020 04:49:19 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t25so18183221oij.7;
+        Tue, 23 Jun 2020 01:49:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KYYkTy+n5vlKKt6FVVpIMkxXIMyGrQIro4YFJXSFp/Q=;
+        b=Z49XcmnkJkCrXdxkwm0MB1QNxW2yEqKzNkNDq6y+FQyWJRqPBgQGJ49auccg2qeWKp
+         6jV32/Rnz2DqXY1q/cRcsvFEcSZ1OOQEkhFLfi/99EAUykfXP/SVTaWJsz8XoxO7a0kX
+         lEnRhd7I9LqG1miK831CZJKtywoCJBMgmw0B7D088LYHFBRdCFEThh/Lvdoug87UeDqs
+         tQn7PxtlYQce/jndNXC8xkGqkqWsKfmBEnSls9pBDcMzz4jRW1q7k4daOK+ryZuMc23B
+         5YI4L7KYJ0Ffoy5YZ0bFaYs8lWa+Ima76HAwrOTNGi3H3tS4kSHXOz/GFkXRXaDvaIFP
+         L3Uw==
+X-Gm-Message-State: AOAM5311R4Cvjv7XN7bJLmCSXU6DYgEuWShQCzbAKYN8xeKGjuo6u4sO
+        Li0UN164yoaPDa7/ySttL/z8n/61WvaGvjGu3nVvwQ==
+X-Google-Smtp-Source: ABdhPJyZuQJULxx3zeAGfh1M7qa212mqMA6kl+nmL+q8rj5M2TP5jMtfN8t8iYl5v54dJMOwofhHC5BjrzV1nV2gUFY=
+X-Received: by 2002:a54:4006:: with SMTP id x6mr14938101oie.148.1592902158608;
+ Tue, 23 Jun 2020 01:49:18 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159290210497.16989.17069256458706387554.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200212101651.9010-1-geert+renesas@glider.be>
+ <CAEbi=3fMRq++Eot+BEtCedeyhM65kTc+nS7=inCTR8MkT5srww@mail.gmail.com> <CAMuHMdU+VLpg5Yezo2Ea9v2vmvbA=nEcKObBgZYwjSV10OkY=A@mail.gmail.com>
+In-Reply-To: <CAMuHMdU+VLpg5Yezo2Ea9v2vmvbA=nEcKObBgZYwjSV10OkY=A@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 23 Jun 2020 10:49:07 +0200
+Message-ID: <CAMuHMdWaRw+61y4Ykk4niagPOtY3dL28fhtB=3jdR16ZODGgfg@mail.gmail.com>
+Subject: Re: [PATCH] nds32: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+To:     Greentime Hu <green.hu@gmail.com>
+Cc:     Nick Hu <nickhu@andestech.com>, Vincent Chen <deanbo422@gmail.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+Hi Greentime,
 
-Commit-ID:     964ed98b075263faabe416eeebac99a9bef3f06c
-Gitweb:        https://git.kernel.org/tip/964ed98b075263faabe416eeebac99a9bef3f06c
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 22 Jun 2020 12:01:23 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 23 Jun 2020 10:42:39 +02:00
+On Wed, Feb 12, 2020 at 1:25 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, Feb 12, 2020 at 11:52 AM Greentime Hu <green.hu@gmail.com> wrote:
+> > Geert Uytterhoeven <geert+renesas@glider.be> 於 2020年2月12日 週三 下午6:16寫道：
+> > > The Andes platform code is not a clock provider, and just needs to call
+> > > of_clk_init().
+> > >
+> > > Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > ---
+> > >  arch/nds32/kernel/time.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/nds32/kernel/time.c b/arch/nds32/kernel/time.c
+> > > index ac9d78ce3a818926..574a3d0a853980a9 100644
+> > > --- a/arch/nds32/kernel/time.c
+> > > +++ b/arch/nds32/kernel/time.c
+> > > @@ -2,7 +2,7 @@
+> > >  // Copyright (C) 2005-2017 Andes Technology Corporation
+> > >
+> > >  #include <linux/clocksource.h>
+> > > -#include <linux/clk-provider.h>
+> > > +#include <linux/of_clk.h>
+> > >
+> > >  void __init time_init(void)
+> > >  {
+> >
+> > Thank you, Geert.
+> >
+> > Let me know if you like to put in your tree or nds32's.
+> > Acked-by: Greentime Hu <green.hu@gmail.com>
+>
+> Please take it in the nds32 tree.
+> Thanks!
 
-sched/core: Fix ttwu() race
+And so you did. But it disappeared after June 12, when the nds32 tree
+was reset to v5.7, losing the following 2 commits:
 
-Paul reported rcutorture occasionally hitting a NULL deref:
+de9a5650b611014c52b1ad994f63253593d8eddf nds32: Replace
+<linux/clk-provider.h> by <linux/of_clk.h>
+d785c5a324cd8812720a409dc85050558281a567 nds32: configs: Cleanup
+CONFIG_CROSS_COMPILE
 
-  sched_ttwu_pending()
-    ttwu_do_wakeup()
-      check_preempt_curr() := check_preempt_wakeup()
-        find_matching_se()
-          is_same_group()
-            if (se->cfs_rq == pse->cfs_rq) <-- *BOOM*
+Gr{oetje,eeting}s,
 
-Debugging showed that this only appears to happen when we take the new
-code-path from commit:
+                        Geert
 
-  2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-and only when @cpu == smp_processor_id(). Something which should not
-be possible, because p->on_cpu can only be true for remote tasks.
-Similarly, without the new code-path from commit:
-
-  c6e7bd7afaeb ("sched/core: Optimize ttwu() spinning on p->on_cpu")
-
-this would've unconditionally hit:
-
-  smp_cond_load_acquire(&p->on_cpu, !VAL);
-
-and if: 'cpu == smp_processor_id() && p->on_cpu' is possible, this
-would result in an instant live-lock (with IRQs disabled), something
-that hasn't been reported.
-
-The NULL deref can be explained however if the task_cpu(p) load at the
-beginning of try_to_wake_up() returns an old value, and this old value
-happens to be smp_processor_id(). Further assume that the p->on_cpu
-load accurately returns 1, it really is still running, just not here.
-
-Then, when we enqueue the task locally, we can crash in exactly the
-observed manner because p->se.cfs_rq != rq->cfs_rq, because p's cfs_rq
-is from the wrong CPU, therefore we'll iterate into the non-existant
-parents and NULL deref.
-
-The closest semi-plausible scenario I've managed to contrive is
-somewhat elaborate (then again, actual reproduction takes many CPU
-hours of rcutorture, so it can't be anything obvious):
-
-					X->cpu = 1
-					rq(1)->curr = X
-
-	CPU0				CPU1				CPU2
-
-					// switch away from X
-					LOCK rq(1)->lock
-					smp_mb__after_spinlock
-					dequeue_task(X)
-					  X->on_rq = 9
-					switch_to(Z)
-					  X->on_cpu = 0
-					UNLOCK rq(1)->lock
-
-									// migrate X to cpu 0
-									LOCK rq(1)->lock
-									dequeue_task(X)
-									set_task_cpu(X, 0)
-									  X->cpu = 0
-									UNLOCK rq(1)->lock
-
-									LOCK rq(0)->lock
-									enqueue_task(X)
-									  X->on_rq = 1
-									UNLOCK rq(0)->lock
-
-	// switch to X
-	LOCK rq(0)->lock
-	smp_mb__after_spinlock
-	switch_to(X)
-	  X->on_cpu = 1
-	UNLOCK rq(0)->lock
-
-	// X goes sleep
-	X->state = TASK_UNINTERRUPTIBLE
-	smp_mb();			// wake X
-					ttwu()
-					  LOCK X->pi_lock
-					  smp_mb__after_spinlock
-
-					  if (p->state)
-
-					  cpu = X->cpu; // =? 1
-
-					  smp_rmb()
-
-	// X calls schedule()
-	LOCK rq(0)->lock
-	smp_mb__after_spinlock
-	dequeue_task(X)
-	  X->on_rq = 0
-
-					  if (p->on_rq)
-
-					  smp_rmb();
-
-					  if (p->on_cpu && ttwu_queue_wakelist(..)) [*]
-
-					  smp_cond_load_acquire(&p->on_cpu, !VAL)
-
-					  cpu = select_task_rq(X, X->wake_cpu, ...)
-					  if (X->cpu != cpu)
-	switch_to(Y)
-	  X->on_cpu = 0
-	UNLOCK rq(0)->lock
-
-However I'm having trouble convincing myself that's actually possible
-on x86_64 -- after all, every LOCK implies an smp_mb() there, so if ttwu
-observes ->state != RUNNING, it must also observe ->cpu != 1.
-
-(Most of the previous ttwu() races were found on very large PowerPC)
-
-Nevertheless, this fully explains the observed failure case.
-
-Fix it by ordering the task_cpu(p) load after the p->on_cpu load,
-which is easy since nothing actually uses @cpu before this.
-
-Fixes: c6e7bd7afaeb ("sched/core: Optimize ttwu() spinning on p->on_cpu")
-Reported-by: Paul E. McKenney <paulmck@kernel.org>
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200622125649.GC576871@hirez.programming.kicks-ass.net
----
- kernel/sched/core.c | 33 ++++++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index c1ba2e5..60791b9 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2293,8 +2293,15 @@ void sched_ttwu_pending(void *arg)
- 	rq_lock_irqsave(rq, &rf);
- 	update_rq_clock(rq);
- 
--	llist_for_each_entry_safe(p, t, llist, wake_entry)
-+	llist_for_each_entry_safe(p, t, llist, wake_entry) {
-+		if (WARN_ON_ONCE(p->on_cpu))
-+			smp_cond_load_acquire(&p->on_cpu, !VAL);
-+
-+		if (WARN_ON_ONCE(task_cpu(p) != cpu_of(rq)))
-+			set_task_cpu(p, cpu_of(rq));
-+
- 		ttwu_do_activate(rq, p, p->sched_remote_wakeup ? WF_MIGRATED : 0, &rf);
-+	}
- 
- 	rq_unlock_irqrestore(rq, &rf);
- }
-@@ -2378,6 +2385,9 @@ static inline bool ttwu_queue_cond(int cpu, int wake_flags)
- static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
- {
- 	if (sched_feat(TTWU_QUEUE) && ttwu_queue_cond(cpu, wake_flags)) {
-+		if (WARN_ON_ONCE(cpu == smp_processor_id()))
-+			return false;
-+
- 		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
- 		__ttwu_queue_wakelist(p, cpu, wake_flags);
- 		return true;
-@@ -2528,7 +2538,6 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 			goto out;
- 
- 		success = 1;
--		cpu = task_cpu(p);
- 		trace_sched_waking(p);
- 		p->state = TASK_RUNNING;
- 		trace_sched_wakeup(p);
-@@ -2550,7 +2559,6 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 
- 	/* We're going to change ->state: */
- 	success = 1;
--	cpu = task_cpu(p);
- 
- 	/*
- 	 * Ensure we load p->on_rq _after_ p->state, otherwise it would
-@@ -2614,8 +2622,21 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	 * which potentially sends an IPI instead of spinning on p->on_cpu to
- 	 * let the waker make forward progress. This is safe because IRQs are
- 	 * disabled and the IPI will deliver after on_cpu is cleared.
-+	 *
-+	 * Ensure we load task_cpu(p) after p->on_cpu:
-+	 *
-+	 * set_task_cpu(p, cpu);
-+	 *   STORE p->cpu = @cpu
-+	 * __schedule() (switch to task 'p')
-+	 *   LOCK rq->lock
-+	 *   smp_mb__after_spin_lock()		smp_cond_load_acquire(&p->on_cpu)
-+	 *   STORE p->on_cpu = 1		LOAD p->cpu
-+	 *
-+	 * to ensure we observe the correct CPU on which the task is currently
-+	 * scheduling.
- 	 */
--	if (READ_ONCE(p->on_cpu) && ttwu_queue_wakelist(p, cpu, wake_flags | WF_ON_RQ))
-+	if (smp_load_acquire(&p->on_cpu) &&
-+	    ttwu_queue_wakelist(p, task_cpu(p), wake_flags | WF_ON_RQ))
- 		goto unlock;
- 
- 	/*
-@@ -2635,6 +2656,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 		psi_ttwu_dequeue(p);
- 		set_task_cpu(p, cpu);
- 	}
-+#else
-+	cpu = task_cpu(p);
- #endif /* CONFIG_SMP */
- 
- 	ttwu_queue(p, cpu, wake_flags);
-@@ -2642,7 +2665,7 @@ unlock:
- 	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
- out:
- 	if (success)
--		ttwu_stat(p, cpu, wake_flags);
-+		ttwu_stat(p, task_cpu(p), wake_flags);
- 	preempt_enable();
- 
- 	return success;
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
