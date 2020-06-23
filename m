@@ -2,139 +2,182 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C256EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19173C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC4420780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F882076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9C/YB9x"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AgZt1w4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732970AbgFWQQT (ORCPT
+        id S1732592AbgFWQRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
+        Tue, 23 Jun 2020 12:17:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729562AbgFWQQP (ORCPT
+        with ESMTP id S1729562AbgFWQRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:16:15 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0954C061573;
-        Tue, 23 Jun 2020 09:16:14 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id l63so2061316oih.13;
-        Tue, 23 Jun 2020 09:16:14 -0700 (PDT)
+        Tue, 23 Jun 2020 12:17:47 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBC0C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:17:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l11so21190806wru.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:17:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C6zRBd638da/3Puon0/mPbz+ZaserpAdoN60zWcOdLI=;
-        b=q9C/YB9xTNbi+bUSIqxvhX2J9LG6GOkMQDm2VwP8GJuPHssugJJEnTrXF14R/INoZm
-         iQ3QQg0wqJoIaDQyOOD1zmAkdyvzdQOTkpEqUo1eToIrWFs218PHZY70QZpcx+QrFdMK
-         jAtWK64XxxLGBW3F3rH1BvCX5JgmKQHoHxZyIOSX0oMlLlrJNn6nEtv5BZj+Cbp2560/
-         zlaRxu3as1JLgaOJ+na3a+VHQ2XrYJk6y9bdNMIwF4Ix5TAm0p1uZCHFpGD5xwxXIS6v
-         ykFuyNpN+nJpjTNyGim8dGKr9squI6WXic/xGGxLACODlOQop6inLVWvexoI711WdhwQ
-         PmvQ==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=mtC3PJGWDMIcehgxPBpR+PLKV5Q1ssV6CDNH3+eOQLw=;
+        b=AgZt1w4gGD2RpEAMlnkEkOstZUnDRyAAjz/EQMmp6yPl3Lis6UbhheQUte9x7A3Sl8
+         INAAavAqBXoG8u813E9qRNezIwY3TA/qTfYzBEtibXtlJot3xHssjhseNF9Iko9zdxlZ
+         gSBzxiH+ouRSdrfa366RTmwgZ2QRhz5Frxqn4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C6zRBd638da/3Puon0/mPbz+ZaserpAdoN60zWcOdLI=;
-        b=Rz/7gBS48BPOcrbwwtDNugeM3F7x8GM08u67sp57Ig/wA3qwk8nRq1gRZ44ErE4zGp
-         USaW7P1rG9jvKPwpYBG6/yXWWgGd3SeEu0peASB6T66jsCEiOhSv4u0VsJdN03l1bBjb
-         Y6Q6HBB+X1lAv0ycKBZrHZvOo2kpUTdGUqCeIgRloyL67smcJsAbIKIAaHs9B1PvWYZh
-         HxE5UvHBwv5FmkTMeEC6JNIQEdlOyTBI8w3t4lm01Uy+FX6O9q3sfAct8c9wphV8TEKk
-         AJ8OxEmdEnGRgggrXjUoGv732tBDHCs24HMI40Vb/NvPKidV8NF1Fp9HFnp11KxinfPL
-         +qpg==
-X-Gm-Message-State: AOAM532G/FZsBk0EElqrUlvCGmPmB2rjdA4AHhJNjTJS1W9iFEc8bo1e
-        Zu98ttM6Qx7G/AFC/nnQTuCUosX0BToVWGoPmLzm4fCluTw=
-X-Google-Smtp-Source: ABdhPJzPGRoNQwYV7prpiLP4l6woYoYftSSNf32Kxl7WYaM4Qub1H/LpMosSXlZwcAOlEq6NpTl/ZwSS1zQ0t3F6Uy0=
-X-Received: by 2002:a05:6808:4b:: with SMTP id v11mr16344641oic.31.1592928973611;
- Tue, 23 Jun 2020 09:16:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=mtC3PJGWDMIcehgxPBpR+PLKV5Q1ssV6CDNH3+eOQLw=;
+        b=BxkmvMW1+e76fwxIFzPdt2EqyUe42VmYhrAc12z4LiZQUjGTwSVqLOxnFyOOhwYV6r
+         0dNdAdYHuWeY/kToOPvS3EyHMYfKjFqIoUxjJoAFGGOQIVKLqWhNhF7hW2SyNVaosQcu
+         9gmX/28DC7Fr+hac938bDo6YNDrtepQmrHL8STnhgaq86q1ieLG5ENO4EX/Yn4E0DtDp
+         l3eVsRvQpM2SgMwpI5ckoRZXYw1OiHxqmg04a+plYnjmUj/B97CCtnsTr7PN4GGgWRar
+         RxDg8XnQu1n22DZoL/PSY1KX2JIR6HNR5koc+Gk+VyngqQO+7CGEvxwMBORsjpgWqZt/
+         gASA==
+X-Gm-Message-State: AOAM5338PLBoHT4WZVa1FO0cDa1rrKuwP5CgRbV3oBy+VvacyaO87hhN
+        sF38xx115qJ0WQTB93/RJWYnaA==
+X-Google-Smtp-Source: ABdhPJyWm7Jfm7MiyZs5D80QWQxf/J5hWl6QhbRvpHGCjtbEL/+fbiu5ejjrpoum+qf6AjPPBpCveg==
+X-Received: by 2002:adf:e38d:: with SMTP id e13mr5383859wrm.304.1592929064445;
+        Tue, 23 Jun 2020 09:17:44 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id y19sm4146273wmi.6.2020.06.23.09.17.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 09:17:43 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 18:17:41 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC v5 01/10] drm/vblank: Register drmm cleanup action once per
+ drm_vblank_crtc
+Message-ID: <20200623161741.GN20149@phenom.ffwll.local>
+Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200622200730.120716-1-lyude@redhat.com>
+ <20200622200730.120716-2-lyude@redhat.com>
 MIME-Version: 1.0
-References: <xmqqzh9mu4my.fsf@gitster.c.googlers.com> <CABPp-BF+xvzroi5QU8zPp-7KoSS16v1CsM43vWx1WO5NjyU0BQ@mail.gmail.com>
-In-Reply-To: <CABPp-BF+xvzroi5QU8zPp-7KoSS16v1CsM43vWx1WO5NjyU0BQ@mail.gmail.com>
-From:   Elijah Newren <newren@gmail.com>
-Date:   Tue, 23 Jun 2020 09:16:02 -0700
-Message-ID: <CABPp-BFo=SRkMezdD_FvM92-bgdeBzfExpjtjYiEvg0UM1rWQQ@mail.gmail.com>
-Subject: [ANNOUNCE] git-filter-repo v2.27.1
-To:     Git Mailing List <git@vger.kernel.org>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        git-packagers@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200622200730.120716-2-lyude@redhat.com>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jun 22, 2020 at 04:07:21PM -0400, Lyude Paul wrote:
+> Since we'll be allocating resources for kthread_create_worker() in the
+> next commit (which could fail and require us to clean up the mess),
+> let's simplify the cleanup process a bit by registering a
+> drm_vblank_init_release() action for each drm_vblank_crtc so they're
+> still cleaned up if we fail to initialize one of them.
+> 
+> Changes since v3:
+> * Use drmm_add_action_or_reset() - Daniel Vetter
+> 
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: nouveau@lists.freedesktop.org
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  drivers/gpu/drm/drm_vblank.c | 23 ++++++++++-------------
+>  1 file changed, 10 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+> index 85e5f2db16085..ce5c1e1d29963 100644
+> --- a/drivers/gpu/drm/drm_vblank.c
+> +++ b/drivers/gpu/drm/drm_vblank.c
+> @@ -492,16 +492,12 @@ static void vblank_disable_fn(struct timer_list *t)
+>  
+>  static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
+>  {
+> -	unsigned int pipe;
+> -
+> -	for (pipe = 0; pipe < dev->num_crtcs; pipe++) {
+> -		struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+> +	struct drm_vblank_crtc *vblank = ptr;
+>  
+> -		drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
+> -			    drm_core_check_feature(dev, DRIVER_MODESET));
+> +	drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
+> +		    drm_core_check_feature(dev, DRIVER_MODESET));
+>  
+> -		del_timer_sync(&vblank->disable_timer);
+> -	}
+> +	del_timer_sync(&vblank->disable_timer);
+>  }
+>  
+>  /**
+> @@ -511,7 +507,7 @@ static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
+>   *
+>   * This function initializes vblank support for @num_crtcs display pipelines.
+>   * Cleanup is handled automatically through a cleanup function added with
+> - * drmm_add_action().
+> + * drmm_add_action_or_reset().
+>   *
+>   * Returns:
+>   * Zero on success or a negative error code on failure.
+> @@ -530,10 +526,6 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
+>  
+>  	dev->num_crtcs = num_crtcs;
+>  
+> -	ret = drmm_add_action(dev, drm_vblank_init_release, NULL);
+> -	if (ret)
+> -		return ret;
+> -
+>  	for (i = 0; i < num_crtcs; i++) {
+>  		struct drm_vblank_crtc *vblank = &dev->vblank[i];
+>  
+> @@ -542,6 +534,11 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
+>  		init_waitqueue_head(&vblank->queue);
+>  		timer_setup(&vblank->disable_timer, vblank_disable_fn, 0);
+>  		seqlock_init(&vblank->seqlock);
+> +
+> +		ret = drmm_add_action_or_reset(dev, drm_vblank_init_release,
+> +					       vblank);
+> +		if (ret)
+> +			return ret;
+>  	}
+>  
+>  	return 0;
 
-On Mon, Jun 1, 2020 at 10:08 AM Elijah Newren <newren@gmail.com> wrote:
->
-> The latest release of git-filter-repo, v2.27.0, is also now available.
-> It is comprised of 26 non-merge commits since v2.26.0, including two
-> changes from new contributors.
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-I missed sending out this email earlier, but v2.27.1 of
-git-filter-repo was released a week and a half ago.  v2.27.0
-accidentally broke the most prominent example in the README.md file;
-v2.27.1 fixes that bug /and/ makes sure that example is actually in
-the testsuite to prevent a repeat.
+> -- 
+> 2.26.2
+> 
 
-The public repo of filter-repo is at
-
-    https://github.com/newren/git-filter-repo
-
-The tarballs can be found at:
-
-    https://github.com/newren/git-filter-repo/releases
-
-git-filter-repo can also be installed via a variety of package managers
-across Windows, Mac OS, or Linux (and maybe others)[1].
-
-[1] https://github.com/newren/git-filter-repo/blob/master/INSTALL.md
-
-----------------------------------------------------------------
-
-git-filter-repo 2.27.1 Release Notes
-====================================
-
-(Note: Additional information is available for many release notes at
-    https://github.com/newren/git-filter-repo/issues/<NUMBER>)
-
-* Fixes:
-  * fix "extract subdirectory for merging into a monorepo" example (#110)
-  * add tests to make sure we don't break that example again
-  * avoid applying --replace-text to binary files
-
-* Documentation:
-  * simplify manual installation using git's --man-path and --html-path (#107)
-  * make discovery of code formatting and linting examples easier (#99)
-  * many wording clarifications
-
-* contrib scripts:
-  * avoid applying --replace-text to binary files in bfg-ish
-  * new simple barebones example
-  * default replacement text is now a variable to allow overriding
-
-Changes since v2.27.0 are as follows:
-
-Elijah Newren (13):
-      converting-from-bfg-repo-cleaner.md: add a small clarification
-      converting-from-filter-branch.md: add a small clarification
-      filter-repo: avoid applying --replace-text to binary files
-      filter-repo: make default replacement text a variable
-      contrib: new simple no-op-example
-      contrib, docs: make discovery of code formatting and linting easier
-      Contributing.md: add a small clarification about line coverage
-      contrib: avoid applying --replace-text to binary files in bfg-ish
-      git-filter-repo.txt: briefly explain steps for pushing to original url
-      Revert "filter-repo: fix ugly bug with mixing path filtering and renaming"
-      filter-repo: clarify interactions between path filtering and path renaming
-      git-filter-repo.txt: discourage use of random clone flags
-      INSTALL.md: simplify manual installation instructions
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
