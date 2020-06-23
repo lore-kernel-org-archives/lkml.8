@@ -2,52 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFF3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F06C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7EB20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8764920774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933930;
-	bh=dWkrqx4ALWCKfq6upMG6IxKwpwdIUe2rOcIVwVBikrc=;
+	s=default; t=1592933933;
+	bh=b0j2mIs3XUjOXxVpOjvPT/hMw0I3XoANlSSZiHVK85k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C1qhQHNfdxhujmMhCloaquBC0Tdj2Ys7+013/YsQHKDsMXDJLR+jcvMpukErhExd3
-	 5JYaJd0cQvpnhc4xW3hA4abXoIKX1oPCcq858C6+rEulLUTuMz1h0cYsvBh30sHpCz
-	 Cpp7t0yQCa5xqPzRm5cXaJrr6kLcfuacYmZC1SkE=
+	b=Tu/S5hSfN8LoJQhVbjnNbX+FiaNF7iR9QnAQcbSvo1BwEMKd+gE0XQC9xeeVixBPe
+	 nhsJYlw6suDONhakT3cRmDRhbcWq/Tly8nS/gefg06FW+DY1h/I289RnnNT11xDibX
+	 3yIGtg9ykn8MuLrdCRzlwJcvSz13ZounHvGzCMxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387635AbgFWRgn (ORCPT
+        id S1733225AbgFWRiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:36:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33964 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387600AbgFWRgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:36 -0400
+        id S2387633AbgFWRgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 096F32078A;
-        Tue, 23 Jun 2020 17:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1316020774;
+        Tue, 23 Jun 2020 17:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933795;
-        bh=dWkrqx4ALWCKfq6upMG6IxKwpwdIUe2rOcIVwVBikrc=;
+        s=default; t=1592933802;
+        bh=b0j2mIs3XUjOXxVpOjvPT/hMw0I3XoANlSSZiHVK85k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xVZqCkG799x86voPid7vEj1gngAZSkPrF/zw783P2pxEprVN1ujbvub7wAlbr6rLS
-         wo/G7HbeRVDEUG4wQFCPpizBO0WtIL38pQs54vPUzKnDhMz+bacDl+YhIrQ0OJk7M2
-         OxXE9gP+5y0cX2MGVO3cbwbzTc8Ji+ynVwiQPrDA=
+        b=rKnTkg5epqKvcad1MjEwcbrTzVPexh8EKS7am6TYCyNwz25NBWS3nzX/2nddRPsqs
+         OsdSxH9mewSe3rY6+PIjcVgV6xkMcUpI29/I8l68IEirk6wy9+TAlHy9OMLw2QXLlv
+         A7tm4mNS2BlbXy6Xu6ma4pdWooy47i0TjUe7B+HI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 04/15] riscv/atomic: Fix sign extension for RV64I
-Date:   Tue, 23 Jun 2020 13:36:19 -0400
-Message-Id: <20200623173630.1355971-4-sashal@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/15] s390/ptrace: fix setting syscall number
+Date:   Tue, 23 Jun 2020 13:36:25 -0400
+Message-Id: <20200623173630.1355971-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173630.1355971-1-sashal@kernel.org>
 References: <20200623173630.1355971-1-sashal@kernel.org>
@@ -60,65 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit 6c58f25e6938c073198af8b1e1832f83f8f0df33 ]
+[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
 
-The argument passed to cmpxchg is not guaranteed to be sign
-extended, but lr.w sign extends on RV64I. This makes cmpxchg
-fail on clang built kernels when __old is negative.
+When strace wants to update the syscall number, it sets GPR2
+to the desired number and updates the GPR via PTRACE_SETREGSET.
+It doesn't update regs->int_code which would cause the old syscall
+executed on syscall restart. As we cannot change the ptrace ABI and
+don't have a field for the interruption code, check whether the tracee
+is in a syscall and the last instruction was svc. In that case assume
+that the tracer wants to update the syscall number and copy the GPR2
+value to regs->int_code.
 
-To fix this, we just cast __old to long which sign extends on
-RV64I. With this fix, clang built RISC-V kernels now boot.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/867
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/cmpxchg.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index c12833f7b6bd1..42978aac99d53 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -187,7 +187,7 @@
- 			"	bnez %1, 0b\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -232,7 +232,7 @@
- 			RISCV_ACQUIRE_BARRIER				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -278,7 +278,7 @@
- 			"	bnez %1, 0b\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
-@@ -324,7 +324,7 @@
- 			"	fence rw, rw\n"				\
- 			"1:\n"						\
- 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
--			: "rJ" (__old), "rJ" (__new)			\
-+			: "rJ" ((long)__old), "rJ" (__new)		\
- 			: "memory");					\
- 		break;							\
- 	case 8:								\
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index cd3df5514552c..65fefbf61e1ca 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -325,6 +325,25 @@ static inline void __poke_user_per(struct task_struct *child,
+ 		child->thread.per_user.end = data;
+ }
+ 
++static void fixup_int_code(struct task_struct *child, addr_t data)
++{
++	struct pt_regs *regs = task_pt_regs(child);
++	int ilc = regs->int_code >> 16;
++	u16 insn;
++
++	if (ilc > 6)
++		return;
++
++	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
++			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
++		return;
++
++	/* double check that tracee stopped on svc instruction */
++	if ((insn >> 8) != 0xa)
++		return;
++
++	regs->int_code = 0x20000 | (data & 0xffff);
++}
+ /*
+  * Write a word to the user area of a process at location addr. This
+  * operation does have an additional problem compared to peek_user.
+@@ -336,7 +355,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 	struct user *dummy = NULL;
+ 	addr_t offset;
+ 
++
+ 	if (addr < (addr_t) &dummy->regs.acrs) {
++		struct pt_regs *regs = task_pt_regs(child);
+ 		/*
+ 		 * psw and gprs are stored on the stack
+ 		 */
+@@ -354,7 +375,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 				/* Invalid addressing mode bits */
+ 				return -EINVAL;
+ 		}
+-		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
++
++		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++			addr == offsetof(struct user, regs.gprs[2]))
++			fixup_int_code(child, data);
++		*(addr_t *)((addr_t) &regs->psw + addr) = data;
+ 
+ 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
+ 		/*
+@@ -720,6 +745,10 @@ static int __poke_user_compat(struct task_struct *child,
+ 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
+ 				(__u64)(tmp & PSW32_ADDR_AMODE);
+ 		} else {
++
++			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++				addr == offsetof(struct compat_user, regs.gprs[2]))
++				fixup_int_code(child, data);
+ 			/* gpr 0-15 */
+ 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
+ 		}
 -- 
 2.25.1
 
