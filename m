@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAACC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE86E207F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810B62080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387500AbgFWS3R (ORCPT
+        id S2387509AbgFWS3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
+        Tue, 23 Jun 2020 14:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733291AbgFWS3P (ORCPT
+        with ESMTP id S1733291AbgFWS3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:29:15 -0400
+        Tue, 23 Jun 2020 14:29:19 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1923C061573;
-        Tue, 23 Jun 2020 11:29:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1EFC061573;
+        Tue, 23 Jun 2020 11:29:19 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id 0DF512A37E7
+        with ESMTPSA id 7B36E2A3847
 From:   Ezequiel Garcia <ezequiel@collabora.com>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
@@ -39,9 +39,9 @@ Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
         Maxime Ripard <mripard@kernel.org>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [RFC 4/7] media: uapi: h264: increase size of fields
-Date:   Tue, 23 Jun 2020 15:28:06 -0300
-Message-Id: <20200623182809.1375-5-ezequiel@collabora.com>
+Subject: [RFC 5/7] media: uapi: h264: pad v4l2_ctrl_h264_pps to 64-bit
+Date:   Tue, 23 Jun 2020 15:28:07 -0300
+Message-Id: <20200623182809.1375-6-ezequiel@collabora.com>
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200623182809.1375-1-ezequiel@collabora.com>
 References: <20200623182809.1375-1-ezequiel@collabora.com>
@@ -52,118 +52,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Slice header syntax element 'first_mb_in_slice' can point
-to the last macroblock, currently the field can only reference
-65536 macroblocks which is insufficient for 8K videos.
+The struct does not contain 64-bit types, and therefore
+doesn't suffer from compatibility issues.
 
-DPB entry PicNum maximum value is 2*MaxFrameNum for interlaced
-content (field_pic_flag=1).
-
-Therefore, increase 'first_mb_in_slice' and 'pic_num'.
-
-The v4l2_h264_dpb_entry struct needs to be padded to avoid a hole,
-which will be useful to allow future uAPI extensions.
-
-Note that v4l2_ctrl_h264_slice_params struct will be modified
-in a follow-up commit, and so we defer its 64-bit padding.
+However, having it aligned to 64-bits is cleaner and
+has the advantage of allowing future extensions.
 
 Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 ---
- .../userspace-api/media/v4l/ext-ctrls-codec.rst          | 7 +++++--
- drivers/media/v4l2-core/v4l2-ctrls.c                     | 9 +++++++++
- include/media/h264-ctrls.h                               | 6 ++++--
- include/media/v4l2-h264.h                                | 2 +-
- 4 files changed, 19 insertions(+), 5 deletions(-)
+ Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 +++
+ drivers/media/v4l2-core/v4l2-ctrls.c                      | 5 +++++
+ include/media/h264-ctrls.h                                | 1 +
+ 3 files changed, 9 insertions(+)
 
 diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index 0808a36777b6..e3b5a28fb965 100644
+index e3b5a28fb965..2c682f81aaad 100644
 --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
 +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -1772,7 +1772,7 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-     * - __u32
-       - ``header_bit_size``
-       -
--    * - __u16
-+    * - __u32
-       - ``first_mb_in_slice``
-       -
-     * - __u8
-@@ -2046,7 +2046,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+@@ -1662,6 +1662,9 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
      * - __u16
-       - ``frame_num``
-       -
--    * - __u16
-+    * - __u8
-+      - ``reserved[6]``
-+      - Applications and drivers must set this to zero.
+       - ``flags``
+       - See :ref:`Picture Parameter Set Flags <h264_pps_flags>`
 +    * - __u32
-       - ``pic_num``
-       -
-     * - __s32
++      - ``reserved``
++      - Applications and drivers must set this to zero.
+ 
+ .. _h264_pps_flags:
+ 
 diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 6abd023f10c7..a751c14f9c22 100644
+index a751c14f9c22..003333b6c7f7 100644
 --- a/drivers/media/v4l2-core/v4l2-ctrls.c
 +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1734,6 +1734,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
- 	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
+@@ -1735,6 +1735,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
-+	struct v4l2_ctrl_h264_decode_params *p_h264_dec_params;
+ 	struct v4l2_ctrl_h264_decode_params *p_h264_dec_params;
++	struct v4l2_ctrl_h264_pps *p_h264_pps;
  	struct v4l2_ctrl_hevc_sps *p_hevc_sps;
  	struct v4l2_ctrl_hevc_pps *p_hevc_pps;
  	struct v4l2_ctrl_hevc_slice_params *p_hevc_slice_params;
-@@ -1808,6 +1809,14 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
- 		}
- 		break;
- 	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-+		p_h264_dec_params = p;
-+
-+		for (i = 0; i < V4L2_H264_NUM_DPB_ENTRIES; i++) {
-+			struct v4l2_h264_dpb_entry *dpb_entry =
-+				&p_h264_dec_params->dpb[i];
-+
-+			zero_reserved(*dpb_entry);
-+		}
+@@ -1792,7 +1793,11 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
  		break;
  
- 	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+ 	case V4L2_CTRL_TYPE_H264_SPS:
++		break;
+ 	case V4L2_CTRL_TYPE_H264_PPS:
++		p_h264_pps = p;
++		zero_reserved(*p_h264_pps);
++		break;
+ 	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+ 		break;
+ 	case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
 diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-index c6cbf178c1c9..a938d16b901c 100644
+index a938d16b901c..4119dc4486f3 100644
 --- a/include/media/h264-ctrls.h
 +++ b/include/media/h264-ctrls.h
-@@ -161,7 +161,8 @@ struct v4l2_ctrl_h264_slice_params {
- 	/* Offset in bits to slice_data() from the beginning of this slice. */
- 	__u32 header_bit_size;
+@@ -111,6 +111,7 @@ struct v4l2_ctrl_h264_pps {
+ 	__s8 chroma_qp_index_offset;
+ 	__s8 second_chroma_qp_index_offset;
+ 	__u16 flags;
++	__u32 reserved;
+ };
  
--	__u16 first_mb_in_slice;
-+	__u32 first_mb_in_slice;
-+
- 	__u8 slice_type;
- 	__u8 pic_parameter_set_id;
- 	__u8 colour_plane_id;
-@@ -208,7 +209,8 @@ struct v4l2_ctrl_h264_slice_params {
- struct v4l2_h264_dpb_entry {
- 	__u64 reference_ts;
- 	__u16 frame_num;
--	__u16 pic_num;
-+	__u8 reserved[6];
-+	__u32 pic_num;
- 	/* Note that field is indicated by v4l2_buffer.field */
- 	__s32 top_field_order_cnt;
- 	__s32 bottom_field_order_cnt;
-diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
-index bc9ebb560ccf..1a5f26fc2a9a 100644
---- a/include/media/v4l2-h264.h
-+++ b/include/media/v4l2-h264.h
-@@ -33,7 +33,7 @@ struct v4l2_h264_reflist_builder {
- 	struct {
- 		s32 pic_order_count;
- 		int frame_num;
--		u16 pic_num;
-+		u32 pic_num;
- 		u16 longterm : 1;
- 	} refs[V4L2_H264_NUM_DPB_ENTRIES];
- 	s32 cur_pic_order_count;
+ struct v4l2_ctrl_h264_scaling_matrix {
 -- 
 2.26.0.rc2
 
