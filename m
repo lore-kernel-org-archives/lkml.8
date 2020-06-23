@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70D4208A9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA08B2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:48:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vdu3LynR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljMRR2zA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388895AbgFWWso (ORCPT
+        id S2389042AbgFWWsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46972 "EHLO
+        Tue, 23 Jun 2020 18:48:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388806AbgFWWse (ORCPT
+        with ESMTP id S2388806AbgFWWsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:48:34 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914E3C061796;
-        Tue, 23 Jun 2020 15:48:34 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g75so352324wme.5;
-        Tue, 23 Jun 2020 15:48:34 -0700 (PDT)
+        Tue, 23 Jun 2020 18:48:46 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4948C061795;
+        Tue, 23 Jun 2020 15:48:45 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g21so424180wmg.0;
+        Tue, 23 Jun 2020 15:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6ZeWSgHa0mxwXsK/LO1CPNj7HNd9ZLAV4Wg1yjgbjbM=;
-        b=Vdu3LynR3Fn0cNEwwsmPb2T5tZm3RX5EfJgAeZbKtUTiQEJgPm+82RM0RjJ96wGwSO
-         q1fuhPxDABu8z/R26X1H3EPZWA/7kNtMM+4eMiiJBgxVb7Wt38r1+Vqf0Wec/nLGT0aj
-         QZcrSOFiNvXh1ddpQDgfCRH7/uxg6mGYqLCF3zuJfgZfW7qyDBnmI+4SRiXsy0hk92sB
-         kDlq8o4Ayasd7ycOF0/dLoRRV20VddaH2qCnIBr8FkEVCXpXXbvDdjZuDMnkyQZsSfg9
-         xMbC3ao5Y+0fyRyvBxjp3WiQtdgmwE7+IZLiD/ukGa1lkDdUwydZe2aUvBzezkT96XR9
-         3dyw==
+        bh=4YzpTtuQd8igcmEb94rslBu/tpG/FsBo/caSislaGaQ=;
+        b=ljMRR2zAT5bki6xwhOGzyGih/88e9uZhIr5rjLQ0ImujfRGpwsg8WbLIUOrI0AaIUy
+         0LJenVT0dbIxWdv7jzXxTVSJRd4YVFsTTcwKeoPH8dbQVNEL2+5OY1U8NTEUYMpdLhb5
+         UJktKzRrW+pJh2DNj1IT3K/XXymj02wxlID5AhFUqRIyFxqm/3nOgPY9RU24kkZa5HC9
+         KGy7puklT019cqMoKEc/+OmGNf6xfiyH60yFeMP85HDzHNiwggkhOr4UotWKacHuOWyy
+         TYCzOOQJJybxHNbEGbPvWl6wKupTeTe2o7oLd5BwfDFr2i7/+bBCuZP8JfcCk7PBYURX
+         790g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6ZeWSgHa0mxwXsK/LO1CPNj7HNd9ZLAV4Wg1yjgbjbM=;
-        b=YMn1r5Z9FxtdiHxdVzpcIFzkWkwV1EjmKiKIwnABiRtYbnrZIIrFu/kzNNT7N7QTjJ
-         Gel4cDcbRPTNzPe2Nu4c0AOIXYs2K83su+/S/3+VfVKiJeLu9DXtXff9+zWGJZ+0AFxd
-         FcRp1RP3UqqzfWaoJLKagsdn4EqdaxbTBT6N7Hs0xcWqYFe726pwy1EfLfFXWA/55IPI
-         zN/JFlOciIoFFeTZ+2E72kTAlSzc6PdIs1kI3/Ygvi3dyb6rkgQbtVwkdxHz8bLbUo7G
-         Zz8kQsaNwS+5Ahygq0hoAMoFuoCe6ZzvnZxZXJuv0VTd7b6YANnU/4OU4Uuy+/NkbU6O
-         3XuA==
-X-Gm-Message-State: AOAM533Ct6o5cZzhiJyM/eqSiK/xABJK0BfKpdq9q8Qo1KYBUF6DywGY
-        Tt5vLzCj04exg1mFoFhHFFs=
-X-Google-Smtp-Source: ABdhPJxo+GFsN4ILeQa4HMVKKl98MYgYO30vjn/GMb7KY4tRDgpmfbAXwTc6XeV4eEeiBLdQ7gKfGg==
-X-Received: by 2002:a1c:ed17:: with SMTP id l23mr27897964wmh.73.1592952513350;
-        Tue, 23 Jun 2020 15:48:33 -0700 (PDT)
+        bh=4YzpTtuQd8igcmEb94rslBu/tpG/FsBo/caSislaGaQ=;
+        b=Eq4VMOmB/zqAdAsEHAetXpmhe6swuHDBfE9KpkZxwdMwmOaumQkXjac7SFGtYpblmh
+         vMBhnN8bGq9RGRkFY4pQ/1nzUYuXueWOP+dyJg8jDz2gi/xi2qe7orfxWB2PNKTWAt4U
+         nS4FI/UCRaaEwjDxI2zilLTX+R+CHYjfMsOpP8bsKpeW13DLeVRWKMPPtIW549QohFHa
+         Jhsidm53UTB+1ckxp0O1EW13Thj8uzY7+pjZPqzxJZwS8YfSMU26Liqw15M/IuJbZ5PC
+         vQrNYDXbb6xMcklu86lOQlqyarWBaso1dAJBMtkoh8HhgzyN7jM7FCgWyZN2KqbC2HLc
+         OZ4g==
+X-Gm-Message-State: AOAM532PGcNSj+SrP7zQ5BGew5NW7z9Imu6H0U03WfS8OvcK9TXW1S+A
+        m0zT1SSMmnJ1hfEtwEKptws=
+X-Google-Smtp-Source: ABdhPJxkkA2PF3LfDKai0ks0Y6V5z4FRRkDy4QNo3xBjRp8NJvoEZ7mIXCMbyG27Cd5awP/M0WyTQQ==
+X-Received: by 2002:a1c:dcc2:: with SMTP id t185mr27817665wmg.91.1592952524492;
+        Tue, 23 Jun 2020 15:48:44 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id g144sm5671179wme.2.2020.06.23.15.48.32
+        by smtp.googlemail.com with ESMTPSA id g144sm5671179wme.2.2020.06.23.15.48.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 15:48:33 -0700 (PDT)
+        Tue, 23 Jun 2020 15:48:44 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/12] arm64: dts: qcom: msm8994: Add SCM node
-Date:   Wed, 24 Jun 2020 00:48:05 +0200
-Message-Id: <20200623224813.297077-7-konradybcio@gmail.com>
+Subject: [PATCH v2 10/12] arm64: dts: qcom: angler: Add qcom,msm-id and pmic-id
+Date:   Wed, 24 Jun 2020 00:48:09 +0200
+Message-Id: <20200623224813.297077-11-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623224813.297077-1-konradybcio@gmail.com>
 References: <20200623224813.297077-1-konradybcio@gmail.com>
@@ -84,28 +84,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add properties required for the bootloader to select
+the correct bootloader blob. They have been removed from
+the SoC device tree as they should be set on a per-device
+basis.
+
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8994.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-index f989530ffa90..838ffc0d9c16 100644
---- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-@@ -142,6 +142,12 @@ core3 {
- 		};
- 	};
+diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+index a5f9a6ab512c..baa55643b40f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
++++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+@@ -11,6 +11,8 @@ / {
+ 	model = "Huawei Nexus 6P";
+ 	compatible = "huawei,angler", "qcom,msm8994";
+ 	/* required for bootloader to select correct board */
++	qcom,msm-id = <207 0x20000>;
++	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
+ 	qcom,board-id = <8026 0>;
  
-+	firmware {
-+		scm {
-+			compatible = "qcom,scm-msm8992";
-+		};
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		/* We expect the bootloader to fill in the reg */
+ 	aliases {
 -- 
 2.27.0
 
