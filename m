@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48429C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2104A206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1932082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944020;
-	bh=DV9HBnnggnuXJR8WVIySzNUQiSadqv442HEQBtx5BcU=;
+	s=default; t=1592944022;
+	bh=hojepft5tBOLl+Q/bWXTc0+4zKjTMyiuD0LlVZCL+Kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tAhObzatly4Hn7pB1wLlI/EO2l0kg18NXIoIJ9SVEuXFY9CN3tuCNBlbeDcyf6WdG
-	 gmFQFbMI2KbnEiZMMPMh9TD4HS5Aj3CJyY5QXvzS43mFVmHqeL6rsgERfV/nhvfOhV
-	 pT1O0t0MMzcLF5rJISwNvrZlIerx9gPDRY6Rpkn4=
+	b=xxArH/gP6qA0MP4kWo2hwzDA4K1X42L4MKoOJkBLscT+UN9cnfAfxaZHR8dzD0zkE
+	 V0nJV2kREDxhQS5gTZ1cL1iDSgbcmUGOemID18h+6q1Pl8Unl+Qy+JWt5LC2EVfq07
+	 7DXLtemAep5ByBnCr+39k80YiYDgh8sN5DP6Hbgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389521AbgFWU06 (ORCPT
+        id S2390512AbgFWU1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46172 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389512AbgFWU0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:26:52 -0400
+        id S2390720AbgFWU0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:26:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4683206C3;
-        Tue, 23 Jun 2020 20:26:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43570206EB;
+        Tue, 23 Jun 2020 20:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944012;
-        bh=DV9HBnnggnuXJR8WVIySzNUQiSadqv442HEQBtx5BcU=;
+        s=default; t=1592944014;
+        bh=hojepft5tBOLl+Q/bWXTc0+4zKjTMyiuD0LlVZCL+Kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qBoZtrgElz0yUOWQO8liXLMt+p8eV6Xjt5Ukee6Ml15kUi4MdsDKWKXPcMXyaq1Nm
-         3SFq1wuMmBXc3IbtFsmSxgNSUfoUquXjXKylQqyytfqvsQ4kbWFssH7EgB2VxYIyi9
-         auOUVwlf/wZnArjf0luc3CfKZYjd4LV9qDAcVfcU=
+        b=UFMPgBs1sQfS4VBG7digDic2+QkbmcW3X1fvPXG32o4iX1yr9OLuA9rG+1TWCsRB2
+         duG3DEBPba79nrm05+RNfWa1UBgM/ojLqWB1SfAZgqnfoauJAeAM5W1/FjJqkLkx2Z
+         7HDrck6Ike+GRO97oBaYW33cTaQu62McgJchjR5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 139/314] PCI: Fix pci_register_host_bridge() device_register() error handling
-Date:   Tue, 23 Jun 2020 21:55:34 +0200
-Message-Id: <20200623195345.491600428@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 140/314] powerpc/64: Dont initialise init_task->thread.regs
+Date:   Tue, 23 Jun 2020 21:55:35 +0200
+Message-Id: <20200623195345.539602841@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,41 +61,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 1b54ae8327a4d630111c8d88ba7906483ec6010b ]
+[ Upstream commit 7ffa8b7dc11752827329e4e84a574ea6aaf24716 ]
 
-If device_register() has an error, we should bail out of
-pci_register_host_bridge() rather than continuing on.
+Aneesh increased the size of struct pt_regs by 16 bytes and started
+seeing this WARN_ON:
 
-Fixes: 37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface")
-Link: https://lore.kernel.org/r/20200513223859.11295-1-robh@kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+  smp: Bringing up secondary CPUs ...
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at arch/powerpc/kernel/process.c:455 giveup_all+0xb4/0x110
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc2-gcc-8.2.0-1.g8f6a41f-default+ #318
+  NIP:  c00000000001a2b4 LR: c00000000001a29c CTR: c0000000031d0000
+  REGS: c0000000026d3980 TRAP: 0700   Not tainted  (5.7.0-rc2-gcc-8.2.0-1.g8f6a41f-default+)
+  MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 48048224  XER: 00000000
+  CFAR: c000000000019cc8 IRQMASK: 1
+  GPR00: c00000000001a264 c0000000026d3c20 c0000000026d7200 800000000280b033
+  GPR04: 0000000000000001 0000000000000000 0000000000000077 30206d7372203164
+  GPR08: 0000000000002000 0000000002002000 800000000280b033 3230303030303030
+  GPR12: 0000000000008800 c0000000031d0000 0000000000800050 0000000002000066
+  GPR16: 000000000309a1a0 000000000309a4b0 000000000309a2d8 000000000309a890
+  GPR20: 00000000030d0098 c00000000264da40 00000000fd620000 c0000000ff798080
+  GPR24: c00000000264edf0 c0000001007469f0 00000000fd620000 c0000000020e5e90
+  GPR28: c00000000264edf0 c00000000264d200 000000001db60000 c00000000264d200
+  NIP [c00000000001a2b4] giveup_all+0xb4/0x110
+  LR [c00000000001a29c] giveup_all+0x9c/0x110
+  Call Trace:
+  [c0000000026d3c20] [c00000000001a264] giveup_all+0x64/0x110 (unreliable)
+  [c0000000026d3c90] [c00000000001ae34] __switch_to+0x104/0x480
+  [c0000000026d3cf0] [c000000000e0b8a0] __schedule+0x320/0x970
+  [c0000000026d3dd0] [c000000000e0c518] schedule_idle+0x38/0x70
+  [c0000000026d3df0] [c00000000019c7c8] do_idle+0x248/0x3f0
+  [c0000000026d3e70] [c00000000019cbb8] cpu_startup_entry+0x38/0x40
+  [c0000000026d3ea0] [c000000000011bb0] rest_init+0xe0/0xf8
+  [c0000000026d3ed0] [c000000002004820] start_kernel+0x990/0x9e0
+  [c0000000026d3f90] [c00000000000c49c] start_here_common+0x1c/0x400
+
+Which was unexpected. The warning is checking the thread.regs->msr
+value of the task we are switching from:
+
+  usermsr = tsk->thread.regs->msr;
+  ...
+  WARN_ON((usermsr & MSR_VSX) && !((usermsr & MSR_FP) && (usermsr & MSR_VEC)));
+
+ie. if MSR_VSX is set then both of MSR_FP and MSR_VEC are also set.
+
+Dumping tsk->thread.regs->msr we see that it's: 0x1db60000
+
+Which is not a normal looking MSR, in fact the only valid bit is
+MSR_VSX, all the other bits are reserved in the current definition of
+the MSR.
+
+We can see from the oops that it was swapper/0 that we were switching
+from when we hit the warning, ie. init_task. So its thread.regs points
+to the base (high addresses) in init_stack.
+
+Dumping the content of init_task->thread.regs, with the members of
+pt_regs annotated (the 16 bytes larger version), we see:
+
+  0000000000000000 c000000002780080    gpr[0]     gpr[1]
+  0000000000000000 c000000002666008    gpr[2]     gpr[3]
+  c0000000026d3ed0 0000000000000078    gpr[4]     gpr[5]
+  c000000000011b68 c000000002780080    gpr[6]     gpr[7]
+  0000000000000000 0000000000000000    gpr[8]     gpr[9]
+  c0000000026d3f90 0000800000002200    gpr[10]    gpr[11]
+  c000000002004820 c0000000026d7200    gpr[12]    gpr[13]
+  000000001db60000 c0000000010aabe8    gpr[14]    gpr[15]
+  c0000000010aabe8 c0000000010aabe8    gpr[16]    gpr[17]
+  c00000000294d598 0000000000000000    gpr[18]    gpr[19]
+  0000000000000000 0000000000001ff8    gpr[20]    gpr[21]
+  0000000000000000 c00000000206d608    gpr[22]    gpr[23]
+  c00000000278e0cc 0000000000000000    gpr[24]    gpr[25]
+  000000002fff0000 c000000000000000    gpr[26]    gpr[27]
+  0000000002000000 0000000000000028    gpr[28]    gpr[29]
+  000000001db60000 0000000004750000    gpr[30]    gpr[31]
+  0000000002000000 000000001db60000    nip        msr
+  0000000000000000 0000000000000000    orig_r3    ctr
+  c00000000000c49c 0000000000000000    link       xer
+  0000000000000000 0000000000000000    ccr        softe
+  0000000000000000 0000000000000000    trap       dar
+  0000000000000000 0000000000000000    dsisr      result
+  0000000000000000 0000000000000000    ppr        kuap
+  0000000000000000 0000000000000000    pad[2]     pad[3]
+
+This looks suspiciously like stack frames, not a pt_regs. If we look
+closely we can see return addresses from the stack trace above,
+c000000002004820 (start_kernel) and c00000000000c49c (start_here_common).
+
+init_task->thread.regs is setup at build time in processor.h:
+
+  #define INIT_THREAD  { \
+  	.ksp = INIT_SP, \
+  	.regs = (struct pt_regs *)INIT_SP - 1, /* XXX bogus, I think */ \
+
+The early boot code where we setup the initial stack is:
+
+  LOAD_REG_ADDR(r3,init_thread_union)
+
+  /* set up a stack pointer */
+  LOAD_REG_IMMEDIATE(r1,THREAD_SIZE)
+  add	r1,r3,r1
+  li	r0,0
+  stdu	r0,-STACK_FRAME_OVERHEAD(r1)
+
+Which creates a stack frame of size 112 bytes (STACK_FRAME_OVERHEAD).
+Which is far too small to contain a pt_regs.
+
+So the result is init_task->thread.regs is pointing at some stack
+frames on the init stack, not at a pt_regs.
+
+We have gotten away with this for so long because with pt_regs at its
+current size the MSR happens to point into the first frame, at a
+location that is not written to by the early asm. With the 16 byte
+expansion the MSR falls into the second frame, which is used by the
+compiler, and collides with a saved register that tends to be
+non-zero.
+
+As far as I can see this has been wrong since the original merge of
+64-bit ppc support, back in 2002.
+
+Conceptually swapper should have no regs, it never entered from
+userspace, and in fact that's what we do on 32-bit. It's also
+presumably what the "bogus" comment is referring to.
+
+So I think the right fix is to just not-initialise regs at all. I'm
+slightly worried this will break some code that isn't prepared for a
+NULL regs, but we'll have to see.
+
+Remove the comment in head_64.S which refers to us setting up the
+regs (even though we never did), and is otherwise not really accurate
+any more.
+
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200428123130.73078-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/probe.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/processor.h | 1 -
+ arch/powerpc/kernel/head_64.S        | 9 +--------
+ 2 files changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 83d909abc61d1..8fa13486f2f15 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -867,9 +867,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 		goto free;
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index a9993e7a443bc..64b998db9d3e9 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -291,7 +291,6 @@ struct thread_struct {
+ #else
+ #define INIT_THREAD  { \
+ 	.ksp = INIT_SP, \
+-	.regs = (struct pt_regs *)INIT_SP - 1, /* XXX bogus, I think */ \
+ 	.addr_limit = KERNEL_DS, \
+ 	.fpexc_mode = 0, \
+ 	.fscr = FSCR_TAR | FSCR_EBB \
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index ad79fddb974de..780f527eabd2c 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -945,15 +945,8 @@ start_here_multiplatform:
+ 	std	r0,0(r4)
+ #endif
  
- 	err = device_register(&bridge->dev);
--	if (err)
-+	if (err) {
- 		put_device(&bridge->dev);
+-	/* The following gets the stack set up with the regs */
+-	/* pointing to the real addr of the kernel stack.  This is   */
+-	/* all done to support the C function call below which sets  */
+-	/* up the htab.  This is done because we have relocated the  */
+-	/* kernel but are still running in real mode. */
 -
-+		goto free;
-+	}
- 	bus->bridge = get_device(&bridge->dev);
- 	device_enable_async_suspend(bus->bridge);
- 	pci_set_bus_of_node(bus);
+-	LOAD_REG_ADDR(r3,init_thread_union)
+-
+ 	/* set up a stack pointer */
++	LOAD_REG_ADDR(r3,init_thread_union)
+ 	LOAD_REG_IMMEDIATE(r1,THREAD_SIZE)
+ 	add	r1,r3,r1
+ 	li	r0,0
 -- 
 2.25.1
 
