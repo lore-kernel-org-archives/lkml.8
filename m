@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17472C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8005FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBA9F2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD3D20DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942609;
-	bh=dRaVsz9tJX9n0AtQS7ehfhgzM9qmQ1Tqodmrvki3EKQ=;
+	s=default; t=1592942613;
+	bh=ehPQWl894sbgTNmzS/SIs0Z6pQg1mVWU2x14we6GvyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ma7mH0uZfp+pTccudhBJ+/m4balFdmVdtJGtstIuVRCa0udHYB7/26jO1mKuiIAH9
-	 YlmFNDTLVJNKQOBYKGm0md241Tf4jrBE0TTz4xe+xsDnmjvdMAOsxwKtX/ACC4L8iV
-	 I9B5wot1llev9Pc7ze+kTW99lFNXnpAvHivNqyTw=
+	b=Kmhyho7SVOD4EzVHHKURUpGHnhuh6CihMfjv4UM8865jQfJuBzcUnoHwNZpJAhEmW
+	 0kugqZu13BvaJVLhiu5HjJ6ohKm8rsfFd6h+iN04o9tPsolM5SNbUXS7qTvYuK3S+h
+	 OoZ0jeGEDOB76YkByNKqsjexHHcR1feayBOghOzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388039AbgFWUD0 (ORCPT
+        id S2388049AbgFWUDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41026 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388027AbgFWUDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:22 -0400
+        id S2388032AbgFWUDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A13972078A;
-        Tue, 23 Jun 2020 20:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6A82078A;
+        Tue, 23 Jun 2020 20:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942602;
-        bh=dRaVsz9tJX9n0AtQS7ehfhgzM9qmQ1Tqodmrvki3EKQ=;
+        s=default; t=1592942604;
+        bh=ehPQWl894sbgTNmzS/SIs0Z6pQg1mVWU2x14we6GvyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xftk3+crkymQmhBsh6xaxCoARMgqox8YDq/CswUuGOOZWf91TwR65wHBMdjTzY1MC
-         ljgfAXbdGcOweTKn6qkISbu3TB+bIIGvT9PNun3hij++ML+kWH3UiPQx/QQMg0xB3p
-         Gc14w7n+G38UMLKMVUt26u8nTXIEouzuNo2EN5DU=
+        b=1zk2S3qfn6H2fYiWR3s5ezLn4hNfuQ7GY+byZj1BLszRwM8WgLRfO3/BXxG2zey+Y
+         RnfF+LnYlBU4bTfyuYlX3pojoIGU04V1udvRC+zz5A6cdayi/OkB6sRZ1/ZrFPmC87
+         3KXS7lWce1FiJfFm2YBrdoUqgYA77cAYYZXEFBX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 062/477] RDMA/mlx5: Add init2init as a modify command
-Date:   Tue, 23 Jun 2020 21:50:59 +0200
-Message-Id: <20200623195410.547456588@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 036/477] i2c: pxa: clear all master action bits in i2c_pxa_stop_message()
+Date:   Tue, 23 Jun 2020 21:50:33 +0200
+Message-Id: <20200623195409.307067673@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,37 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aharon Landau <aharonl@mellanox.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 819f7427bafd494ef7ca4942ec6322db20722d7b ]
+[ Upstream commit e81c979f4e071d516aa27cf5a0c3939da00dc1ca ]
 
-Missing INIT2INIT entry in the list of modify commands caused DEVX
-applications to be unable to modify_qp for this transition state. Add the
-MLX5_CMD_OP_INIT2INIT_QP opcode to the list of allowed DEVX opcodes.
+If we timeout during a message transfer, the control register may
+contain bits that cause an action to be set. Read-modify-writing the
+register leaving these bits set may trigger the hardware to attempt
+one of these actions unintentionally.
 
-Fixes: e662e14d801b ("IB/mlx5: Add DEVX support for modify and query commands")
-Link: https://lore.kernel.org/r/20200513095550.211345-1-leon@kernel.org
-Signed-off-by: Aharon Landau <aharonl@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Always clear these bits when cleaning up after a message or after
+a timeout.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/devx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-pxa.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
-index 46e1ab771f106..d0742823ab497 100644
---- a/drivers/infiniband/hw/mlx5/devx.c
-+++ b/drivers/infiniband/hw/mlx5/devx.c
-@@ -819,6 +819,7 @@ static bool devx_is_obj_modify_cmd(const void *in)
- 	case MLX5_CMD_OP_SET_L2_TABLE_ENTRY:
- 	case MLX5_CMD_OP_RST2INIT_QP:
- 	case MLX5_CMD_OP_INIT2RTR_QP:
-+	case MLX5_CMD_OP_INIT2INIT_QP:
- 	case MLX5_CMD_OP_RTR2RTS_QP:
- 	case MLX5_CMD_OP_RTS2RTS_QP:
- 	case MLX5_CMD_OP_SQERR2RTS_QP:
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 466e4f681d7a4..30a6e07212a42 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -747,11 +747,9 @@ static inline void i2c_pxa_stop_message(struct pxa_i2c *i2c)
+ {
+ 	u32 icr;
+ 
+-	/*
+-	 * Clear the STOP and ACK flags
+-	 */
++	/* Clear the START, STOP, ACK, TB and MA flags */
+ 	icr = readl(_ICR(i2c));
+-	icr &= ~(ICR_STOP | ICR_ACKNAK);
++	icr &= ~(ICR_START | ICR_STOP | ICR_ACKNAK | ICR_TB | ICR_MA);
+ 	writel(icr, _ICR(i2c));
+ }
+ 
 -- 
 2.25.1
 
