@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E5A2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C9220702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943959;
-	bh=7tn3+LkNzV8RzkZITVnbZCfoVAFQL/OCfYXaY1Yzibc=;
+	s=default; t=1592943962;
+	bh=z/cgP0g4i+HM84nfFPLzItHc2FCwdQJIeKFhlM0bRTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c17wATKiw8EmJbaUKuSjXJ1R2IbFWjHurpMd9+V0RV1Cl4ISW6fHuu2umjSWUvuwv
-	 Rpja9hmSavrWKWtUqQ/V8ue80GPmO/wH+e0lNJRvZLikPhA0Fp+0hD8Ri4NTvpZMMg
-	 7SUkbugrqUxoUPqGJfjLwwjmQZyMtM6aqpNsIJsU=
+	b=KljKrfzT/fKyzMEG2wLfgI35mXV/LwmQ0PRFNWPrgXdqcLZuRgG55PelsxBwAwyb1
+	 Pred5maFAUG0GiFJ7G3odYavwe/dJs/+2ZP0c/xf/mK4YZ+gJlEHP475pMDFR9Dpnt
+	 xt4PrxlL9GhCRP7y+xgxK4KEduAzk1lOo2Y3F2tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389228AbgFWUZ5 (ORCPT
+        id S2390349AbgFWU0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390584AbgFWUZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:25:48 -0400
+        id S2390593AbgFWUZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:25:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4974320702;
-        Tue, 23 Jun 2020 20:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80E52206EB;
+        Tue, 23 Jun 2020 20:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943947;
-        bh=7tn3+LkNzV8RzkZITVnbZCfoVAFQL/OCfYXaY1Yzibc=;
+        s=default; t=1592943953;
+        bh=z/cgP0g4i+HM84nfFPLzItHc2FCwdQJIeKFhlM0bRTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1ryKc6Vcw6FaVxDReokF1bCq5jCLaE2RhDODaEF4WESF5DfLdXBFIm+P25fnL4ny
-         I63QWJy5qQ+4xr5e3Rf5CvezNyZy3308BfRt00Igw9ayuAIQ/U0OUlsOLrj0AbT852
-         onsb0eRqd7OwrXeV4n2Cp3YcRvxPlUwnYHlRE4yQ=
+        b=eFSsZ5+TkwcD1pKKnRgdGJsBEmYjqtJjh5VgQnCKQ/+RRZOp4r3rmZ4YfNSSzCEFR
+         cQFrNZMxz5iG1MFqyIkvxGH9pDBt+OdA85qYPjPIZ4mVyGMAyYksg7BWYirol2oesK
+         HhayX9Ff/9WicN66+/2DBuKLKlKzd230Cf9gffBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 096/314] firmware: qcom_scm: fix bogous abuse of dma-direct internals
-Date:   Tue, 23 Jun 2020 21:54:51 +0200
-Message-Id: <20200623195343.436160469@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 115/314] usb: dwc3: gadget: Properly handle failed kick_transfer
+Date:   Tue, 23 Jun 2020 21:55:10 +0200
+Message-Id: <20200623195344.355331408@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,70 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 459b1f86f1cba7de813fbc335df476c111feec22 ]
+[ Upstream commit 8d99087c2db863c5fa3a4a1f3cb82b3a493705ca ]
 
-As far as the device is concerned the dma address is the physical
-address.  There is no need to convert it to a physical address,
-especially not using dma-direct internals that are not available
-to drivers and which will interact badly with IOMMUs.  Last but not
-least the commit introducing it claimed to just fix a type issue,
-but actually changed behavior.
+If dwc3 fails to issue START_TRANSFER/UPDATE_TRANSFER command, then we
+should properly end an active transfer and give back all the started
+requests. However if it's for an isoc endpoint, the failure maybe due to
+bus-expiry status. In this case, don't give back the requests and wait
+for the next retry.
 
-Fixes: 6e37ccf78a532 ("firmware: qcom_scm: Use proper types for dma mappings")
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20200414123136.441454-1-hch@lst.de
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/qcom_scm.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/usb/dwc3/gadget.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 4802ab170fe51..b9fdc20b4eb9b 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -9,7 +9,6 @@
- #include <linux/init.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
--#include <linux/dma-direct.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -441,8 +440,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	struct qcom_scm_mem_map_info *mem_to_map;
- 	phys_addr_t mem_to_map_phys;
- 	phys_addr_t dest_phys;
--	phys_addr_t ptr_phys;
--	dma_addr_t ptr_dma;
-+	dma_addr_t ptr_phys;
- 	size_t mem_to_map_sz;
- 	size_t dest_sz;
- 	size_t src_sz;
-@@ -459,10 +457,9 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
- 			ALIGN(dest_sz, SZ_64);
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 05180a09e70d4..17340864a5408 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1217,6 +1217,8 @@ static void dwc3_prepare_trbs(struct dwc3_ep *dep)
+ 	}
+ }
  
--	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
-+	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
--	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
++static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep);
++
+ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
+ {
+ 	struct dwc3_gadget_ep_cmd_params params;
+@@ -1256,14 +1258,20 @@ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
  
- 	/* Fill source vmid detail */
- 	src = ptr;
-@@ -490,7 +487,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
+ 	if (ret < 0) {
+-		/*
+-		 * FIXME we need to iterate over the list of requests
+-		 * here and stop, unmap, free and del each of the linked
+-		 * requests instead of what we do now.
+-		 */
+-		if (req->trb)
+-			memset(req->trb, 0, sizeof(struct dwc3_trb));
+-		dwc3_gadget_del_and_unmap_request(dep, req, ret);
++		struct dwc3_request *tmp;
++
++		if (ret == -EAGAIN)
++			return ret;
++
++		dwc3_stop_active_transfer(dep, true, true);
++
++		list_for_each_entry_safe(req, tmp, &dep->started_list, list)
++			dwc3_gadget_move_cancelled_request(req);
++
++		/* If ep isn't started, then there's no end transfer pending */
++		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING))
++			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
++
+ 		return ret;
+ 	}
  
- 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
- 				    ptr_phys, src_sz, dest_phys, dest_sz);
--	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
-+	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_phys);
- 	if (ret) {
- 		dev_err(__scm->dev,
- 			"Assign memory protection call failed %d\n", ret);
 -- 
 2.25.1
 
