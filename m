@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A61C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE222053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E043207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872262;
-	bh=gXkXDAf7PeNCQXChyIU/OUiTHm+cWnF84swFkMcUlMs=;
+	s=default; t=1592872268;
+	bh=02ER3ClrOYLxdVzXGnlH4+yezOa0TX9/pgbCrbD/jCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cDiXpaUJHMoHa3z+O73GlK/VXc08gSnSEuMYL9rVp2mFTad/iSD6Lami+kRBZ0Uhf
-	 4XH931j/aRk/ZKoMgS+fjrIpKz+VNoflGjK3sBlo3Zy30JjHFgZgUNKRGQ6Y0dTUQm
-	 Wh26rggmM2hJitKx52QOlckHO8kEwb8badZV2sOQ=
+	b=Q8uqNw4oRIW/i+gbmmcTAFdDIjKA9ORXHetyavqV5hjNzvroCMoA69XKoFYgn2QaG
+	 G9C3wDz3TkVyh1Fe+hOd8b2CUy0tPcS/S+qiKQg2ueKbHmWCi67KbvHIwYPWklSG2E
+	 VQ5ccOi3QUZVq5Slju3mC9PpTc9iJN8I+AsyXVRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731732AbgFWAaV (ORCPT
+        id S1731867AbgFWAbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:30:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55174 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731621AbgFWAaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:30:17 -0400
+        id S1731703AbgFWAaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:30:21 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6BFC20786;
-        Tue, 23 Jun 2020 00:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 106A720FC3;
+        Tue, 23 Jun 2020 00:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872216;
-        bh=gXkXDAf7PeNCQXChyIU/OUiTHm+cWnF84swFkMcUlMs=;
+        s=default; t=1592872220;
+        bh=02ER3ClrOYLxdVzXGnlH4+yezOa0TX9/pgbCrbD/jCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uXZnBCZqexarRbbWxuxb/1ryQ/YA+ZVAHS5/zPWyoWr61Qa+mkYb/06dfCTBSacWX
-         M6le4rteDgmK59vmFvRKDRyO45aDMB3NAniVrfWpVHrtWEQFUinvAx8shRoYiSWm3h
-         lk8znmcuPEK8GvrxaY+03Nj6s/dg1VEPg1RT/Luw=
+        b=eTXdU3C5uT5e4MqNRNbUb5SLCem2fklZGc6o58EyYlNSRu7hI9vnSLBVeuNmMA02Z
+         Qn9lG3xSIoBmJofju93GYtqpaws+UxW1Feoyc8ZjslUj5uFfNguFne7YcOHmiIDOFI
+         Es7qwIG4r1rINwk1OwY5Pj1VO4N8+vY9rC+oy3g8=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 04/30] torture: Add refperf to the rcutorture scripting
-Date:   Mon, 22 Jun 2020 17:29:47 -0700
-Message-Id: <20200623003013.26252-4-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 24/30] refperf: Change readdelay module parameter to nanoseconds
+Date:   Mon, 22 Jun 2020 17:30:07 -0700
+Message-Id: <20200623003013.26252-24-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002941.GA26089@paulmck-ThinkPad-P72>
 References: <20200623002941.GA26089@paulmck-ThinkPad-P72>
@@ -61,225 +61,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit updates the rcutorture scripting to include the new refperf
-torture-test module.
+The current units of microseconds are too coarse, so this commit
+changes the units to nanoseconds.  However, ndelay is used only for the
+nanoseconds with udelay being used for whole microseconds.  For example,
+setting refperf.readdelay=1500 results in a udelay(1) followed by an
+ndelay(500).
 
-Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Suggested-by: Akira Yokosawa <akiyks@gmail.com>
+[ paulmck: Abstracted delay per Akira feedback and move from 80 to 100 lines. ]
+[ paulmck: Fix names as suggested by kbuild test robot. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- .../rcutorture/bin/kvm-recheck-refperf.sh          | 67 ++++++++++++++++++++++
- tools/testing/selftests/rcutorture/bin/kvm.sh      |  9 +--
- .../selftests/rcutorture/bin/parse-console.sh      |  4 +-
- .../selftests/rcutorture/configs/refperf/CFLIST    |  2 +
- .../selftests/rcutorture/configs/refperf/CFcommon  |  2 +
- .../selftests/rcutorture/configs/refperf/NOPREEMPT | 18 ++++++
- .../selftests/rcutorture/configs/refperf/PREEMPT   | 18 ++++++
- .../rcutorture/configs/refperf/ver_functions.sh    | 16 ++++++
- 8 files changed, 130 insertions(+), 6 deletions(-)
- create mode 100755 tools/testing/selftests/rcutorture/bin/kvm-recheck-refperf.sh
- create mode 100644 tools/testing/selftests/rcutorture/configs/refperf/CFLIST
- create mode 100644 tools/testing/selftests/rcutorture/configs/refperf/CFcommon
- create mode 100644 tools/testing/selftests/rcutorture/configs/refperf/NOPREEMPT
- create mode 100644 tools/testing/selftests/rcutorture/configs/refperf/PREEMPT
- create mode 100644 tools/testing/selftests/rcutorture/configs/refperf/ver_functions.sh
+ kernel/rcu/refperf.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck-refperf.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck-refperf.sh
-new file mode 100755
-index 0000000..6fc06cd
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck-refperf.sh
-@@ -0,0 +1,67 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Analyze a given results directory for refperf performance measurements.
-+#
-+# Usage: kvm-recheck-refperf.sh resdir
-+#
-+# Copyright (C) IBM Corporation, 2016
-+#
-+# Authors: Paul E. McKenney <paulmck@linux.ibm.com>
-+
-+i="$1"
-+if test -d "$i" -a -r "$i"
-+then
-+	:
-+else
-+	echo Unreadable results directory: $i
-+	exit 1
-+fi
-+PATH=`pwd`/tools/testing/selftests/rcutorture/bin:$PATH; export PATH
-+. functions.sh
-+
-+configfile=`echo $i | sed -e 's/^.*\///'`
-+
-+sed -e 's/^\[[^]]*]//' < $i/console.log | tr -d '\015' |
-+awk -v configfile="$configfile" '
-+/^[ 	]*Threads	Time\(ns\) *$/ {
-+	if (dataphase + 0 == 0) {
-+		dataphase = 1;
-+		# print configfile, $0;
-+	}
-+	next;
-+}
-+
-+/[^ 	]*[0-9][0-9]*	[0-9][0-9]*\.[0-9][0-9]*$/ {
-+	if (dataphase == 1) {
-+		# print $0;
-+		readertimes[++n] = $2;
-+		sum += $2;
-+	}
-+	next;
-+}
-+
+diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
+index 80d4490..49fffb9 100644
+--- a/kernel/rcu/refperf.c
++++ b/kernel/rcu/refperf.c
+@@ -66,8 +66,8 @@ torture_param(long, loops, 10000, "Number of loops per experiment.");
+ torture_param(int, nreaders, -1, "Number of readers, -1 for 75% of CPUs.");
+ // Number of runs.
+ torture_param(int, nruns, 30, "Number of experiments to run.");
+-// Reader delay in microseconds, 0 for no delay.
+-torture_param(int, readdelay, 0, "Read-side delay in microseconds.");
++// Reader delay in nanoseconds, 0 for no delay.
++torture_param(int, readdelay, 0, "Read-side delay in nanoseconds.");
+ 
+ #ifdef MODULE
+ # define REFPERF_SHUTDOWN 0
+@@ -111,12 +111,20 @@ struct ref_perf_ops {
+ 	void (*init)(void);
+ 	void (*cleanup)(void);
+ 	void (*readsection)(const int nloops);
+-	void (*delaysection)(const int nloops, const int ndelay);
++	void (*delaysection)(const int nloops, const int udl, const int ndl);
+ 	const char *name;
+ };
+ 
+ static struct ref_perf_ops *cur_ops;
+ 
++static void un_delay(const int udl, const int ndl)
 +{
-+	if (dataphase == 1)
-+		dataphase == 2;
-+	next;
++	if (udl)
++		udelay(udl);
++	if (ndl)
++		ndelay(ndl);
 +}
 +
-+END {
-+	print configfile " results:";
-+	newNR = asort(readertimes);
-+	if (newNR <= 0) {
-+		print "No refperf records found???"
-+		exit;
-+	}
-+	medianidx = int(newNR / 2);
-+	if (newNR == medianidx * 2)
-+		medianvalue = (readertimes[medianidx - 1] + readertimes[medianidx]) / 2;
-+	else
-+		medianvalue = readertimes[medianidx];
-+	print "Average reader duration: " sum / newNR " nanoseconds";
-+	print "Minimum reader duration: " readertimes[1];
-+	print "Median reader duration: " medianvalue;
-+	print "Maximum reader duration: " readertimes[newNR];
-+	print "Computed from refperf printk output.";
-+}'
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
-index c279cf9..48b6a72 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
-@@ -180,13 +180,14 @@ do
- 		shift
- 		;;
- 	--torture)
--		checkarg --torture "(suite name)" "$#" "$2" '^\(lock\|rcu\|rcuperf\)$' '^--'
-+		checkarg --torture "(suite name)" "$#" "$2" '^\(lock\|rcu\|rcuperf\|refperf\)$' '^--'
- 		TORTURE_SUITE=$2
- 		shift
--		if test "$TORTURE_SUITE" = rcuperf
-+		if test "$TORTURE_SUITE" = rcuperf || test "$TORTURE_SUITE" = refperf
- 		then
--			# If you really want jitter for rcuperf, specify
--			# it after specifying rcuperf.  (But why?)
-+			# If you really want jitter for refperf or
-+			# rcuperf, specify it after specifying the rcuperf
-+			# or the refperf.  (But why jitter in these cases?)
- 			jitter=0
- 		fi
- 		;;
-diff --git a/tools/testing/selftests/rcutorture/bin/parse-console.sh b/tools/testing/selftests/rcutorture/bin/parse-console.sh
-index 4bf62d7..85af11d 100755
---- a/tools/testing/selftests/rcutorture/bin/parse-console.sh
-+++ b/tools/testing/selftests/rcutorture/bin/parse-console.sh
-@@ -33,8 +33,8 @@ then
- fi
- cat /dev/null > $file.diags
+ static void ref_rcu_read_section(const int nloops)
+ {
+ 	int i;
+@@ -127,13 +135,13 @@ static void ref_rcu_read_section(const int nloops)
+ 	}
+ }
  
--# Check for proper termination, except that rcuperf runs don't indicate this.
--if test "$TORTURE_SUITE" != rcuperf
-+# Check for proper termination, except for rcuperf and refperf.
-+if test "$TORTURE_SUITE" != rcuperf && test "$TORTURE_SUITE" != refperf
- then
- 	# check for abject failure
+-static void ref_rcu_delay_section(const int nloops, const int ndelay)
++static void ref_rcu_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
  
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/CFLIST b/tools/testing/selftests/rcutorture/configs/refperf/CFLIST
-new file mode 100644
-index 0000000..4d62eb4
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/configs/refperf/CFLIST
-@@ -0,0 +1,2 @@
-+NOPREEMPT
-+PREEMPT
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/CFcommon b/tools/testing/selftests/rcutorture/configs/refperf/CFcommon
-new file mode 100644
-index 0000000..8ba5ba2
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/configs/refperf/CFcommon
-@@ -0,0 +1,2 @@
-+CONFIG_RCU_REF_PERF_TEST=y
-+CONFIG_PRINTK_TIME=y
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/NOPREEMPT b/tools/testing/selftests/rcutorture/configs/refperf/NOPREEMPT
-new file mode 100644
-index 0000000..1cd25b7
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/configs/refperf/NOPREEMPT
-@@ -0,0 +1,18 @@
-+CONFIG_SMP=y
-+CONFIG_PREEMPT_NONE=y
-+CONFIG_PREEMPT_VOLUNTARY=n
-+CONFIG_PREEMPT=n
-+#CHECK#CONFIG_PREEMPT_RCU=n
-+CONFIG_HZ_PERIODIC=n
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_NO_HZ_FULL=n
-+CONFIG_RCU_FAST_NO_HZ=n
-+CONFIG_HOTPLUG_CPU=n
-+CONFIG_SUSPEND=n
-+CONFIG_HIBERNATION=n
-+CONFIG_RCU_NOCB_CPU=n
-+CONFIG_DEBUG_LOCK_ALLOC=n
-+CONFIG_PROVE_LOCKING=n
-+CONFIG_RCU_BOOST=n
-+CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
-+CONFIG_RCU_EXPERT=y
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/PREEMPT b/tools/testing/selftests/rcutorture/configs/refperf/PREEMPT
-new file mode 100644
-index 0000000..d10bc69
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/configs/refperf/PREEMPT
-@@ -0,0 +1,18 @@
-+CONFIG_SMP=y
-+CONFIG_PREEMPT_NONE=n
-+CONFIG_PREEMPT_VOLUNTARY=n
-+CONFIG_PREEMPT=y
-+#CHECK#CONFIG_PREEMPT_RCU=y
-+CONFIG_HZ_PERIODIC=n
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_NO_HZ_FULL=n
-+CONFIG_RCU_FAST_NO_HZ=n
-+CONFIG_HOTPLUG_CPU=n
-+CONFIG_SUSPEND=n
-+CONFIG_HIBERNATION=n
-+CONFIG_RCU_NOCB_CPU=n
-+CONFIG_DEBUG_LOCK_ALLOC=n
-+CONFIG_PROVE_LOCKING=n
-+CONFIG_RCU_BOOST=n
-+CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
-+CONFIG_RCU_EXPERT=y
-diff --git a/tools/testing/selftests/rcutorture/configs/refperf/ver_functions.sh b/tools/testing/selftests/rcutorture/configs/refperf/ver_functions.sh
-new file mode 100644
-index 0000000..489f05d
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/configs/refperf/ver_functions.sh
-@@ -0,0 +1,16 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Torture-suite-dependent shell functions for the rest of the scripts.
-+#
-+# Copyright (C) IBM Corporation, 2015
-+#
-+# Authors: Paul E. McKenney <paulmck@linux.ibm.com>
-+
-+# per_version_boot_params bootparam-string config-file seconds
-+#
-+# Adds per-version torture-module parameters to kernels supporting them.
-+per_version_boot_params () {
-+	echo $1 refperf.shutdown=1 \
-+		refperf.verbose=1
-+}
+ 	for (i = nloops; i >= 0; i--) {
+ 		rcu_read_lock();
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		rcu_read_unlock();
+ 	}
+ }
+@@ -165,14 +173,14 @@ static void srcu_ref_perf_read_section(const int nloops)
+ 	}
+ }
+ 
+-static void srcu_ref_perf_delay_section(const int nloops, const int ndelay)
++static void srcu_ref_perf_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 	int idx;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		idx = srcu_read_lock(srcu_ctlp);
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		srcu_read_unlock(srcu_ctlp, idx);
+ 	}
+ }
+@@ -197,13 +205,13 @@ static void ref_refcnt_section(const int nloops)
+ 	}
+ }
+ 
+-static void ref_refcnt_delay_section(const int nloops, const int ndelay)
++static void ref_refcnt_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		atomic_inc(&refcnt);
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		atomic_dec(&refcnt);
+ 	}
+ }
+@@ -233,13 +241,13 @@ static void ref_rwlock_section(const int nloops)
+ 	}
+ }
+ 
+-static void ref_rwlock_delay_section(const int nloops, const int ndelay)
++static void ref_rwlock_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		read_lock(&test_rwlock);
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		read_unlock(&test_rwlock);
+ 	}
+ }
+@@ -269,13 +277,13 @@ static void ref_rwsem_section(const int nloops)
+ 	}
+ }
+ 
+-static void ref_rwsem_delay_section(const int nloops, const int ndelay)
++static void ref_rwsem_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		down_read(&test_rwsem);
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		up_read(&test_rwsem);
+ 	}
+ }
+@@ -292,7 +300,7 @@ static void rcu_perf_one_reader(void)
+ 	if (readdelay <= 0)
+ 		cur_ops->readsection(loops);
+ 	else
+-		cur_ops->delaysection(loops, readdelay);
++		cur_ops->delaysection(loops, readdelay / 1000, readdelay % 1000);
+ }
+ 
+ // Reader kthread.  Repeatedly does empty RCU read-side
 -- 
 2.9.5
 
