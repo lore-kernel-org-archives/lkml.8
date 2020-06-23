@@ -2,71 +2,71 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E604C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78364C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78D1620776
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C88620723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="M48Rb4hr"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PbXCQb0I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732723AbgFWN3C (ORCPT
+        id S1732734AbgFWN3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
+        Tue, 23 Jun 2020 09:29:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732637AbgFWN3A (ORCPT
+        with ESMTP id S1732726AbgFWN3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:29:00 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83000C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:29:00 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s10so9892283pgm.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:29:00 -0700 (PDT)
+        Tue, 23 Jun 2020 09:29:02 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A048FC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:29:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d8so9116499plo.12
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=irmIqYd5MZLaWssj9MvOx+JHzybak5z12LXnlT9AlWo=;
-        b=M48Rb4hrziEI7WgqkUsqc6SKOyd1Ob5LSCZAoIKnm77J/IHpx4qkkdsHeiO2zNAa5W
-         1oQrsTz8m2DjAppo5SeqEPzW5XTZnQ3HR4HAvMGH4u5j1jiMhaoesljf1Ecr25kW6Jkt
-         OzwCPlADfseQ7oLTkYl9S6d/yv/iBamrG9EdzQwLGE0exbMyo+Ljq/Ml09NEuMB7VOPN
-         sirRdxy1tpCQlpbbXgTTUuG6LfQuy5SM0sq1CrZKZW1ciVODFyK1pyugfrV5/z0to+MR
-         V5jk/bG7clj7VL+pnBJ8KItoGc5whl4gCBMPVs9ivu9st5/ZbIuZ0cvCQT4UZFeqzD5a
-         83Dg==
+        bh=APwDQH63ewaL2qHEi/Ing1YzxCpzIwvDW/C7xU97WY0=;
+        b=PbXCQb0I5NcMaqeL2wj0y+gCoXWzoQHXd5NZSSIuOH0eAn5wdg+jYg3UH3rhFQPF0h
+         AYzbC/q/fW5p6ikeJfsfrX/s+2FxNa3eLz0LsulX1zz7jNFi2uyKRGSXvLNvPmwsu5xL
+         vskx139Bd95c7NkshprgseAjPT/4Bm/NMqafph1Boy9sryODU1rSRNI/U34xS/8N5rTA
+         6gfFI5brWV24f+8IZnehVpqBZP1jHPEeAkJS05LtvDB8PGKhy1MTy2/+ZpeAzkazITpU
+         HrlYvOAnGrYpIKvb0B5BCF9oy4BPyimIDpB9ozsu+oQc27pEYPxhO1Kte81+XKfdsGjT
+         TjOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=irmIqYd5MZLaWssj9MvOx+JHzybak5z12LXnlT9AlWo=;
-        b=c/7Ik+v1G3HF/+lhVIxDweE0YeLh4Ewl9OwJqLvBuhsud5qAFZZJpjJVOpCG79iCcV
-         mYBsjOm6Mqj2SAFPs24Xc2zivqkYY07EwvyMuwKBgPzUfwkKXXlK2mAsfA/61PMBDaE1
-         2uUs+0P8mxOa3Xal1AmT0gO/k6lM17RWXuE1yGDhyEzFF4HYRJkjLAge7SVGhPIg0l4B
-         06nw+6JzvIs+mX7ul8G664Os4iIxqHLI25N2yg5kI+RJKTQtOqaKydGVsnRwtdWR9Bq7
-         +yAjqyh9a+r2k9Nrz+hyI5WRsnDt6vj1YQas+TzSvQVrEoNOTLY4vIF+YG+ztf1RPEr5
-         SIlw==
-X-Gm-Message-State: AOAM532Bt2XKcOQG12DIdNH+8HYUD+MszbG3Y5BNTBx+FkNwGALF4cPK
-        fFqfwjMyN9SphxU9a1XlP6qRig==
-X-Google-Smtp-Source: ABdhPJxiIkX+1xeumMyIlkiRdFjn2jJbSHGwdeEuM9eZBEuaJcrvqk13mprVIVBatct1dcHpq20eZA==
-X-Received: by 2002:a63:924c:: with SMTP id s12mr17479462pgn.431.1592918940069;
-        Tue, 23 Jun 2020 06:29:00 -0700 (PDT)
+        bh=APwDQH63ewaL2qHEi/Ing1YzxCpzIwvDW/C7xU97WY0=;
+        b=QxcpzERNULDcMMKZY+h80BJ43vyZHzouoY3wci/RHTYZVIKiajNepaMV/hC0LLoPZd
+         Btv4gyh4BWhSUm2yHWTL8a9mpcLGTn/oBY9lFI77bNQ8Ya0qMft5t4klQHzDadqK0hXj
+         ooGqMAoRVK6u/a3yscX/lozjqrFrxFlXrwkBDYJa3e1g8ZkjptPCB0kkRFNZp9g+CdP0
+         Q1fSs/jhl96b+dOJ/uK37B4Gp5S3paltYAQI+dlIjZlO13PBi4vKwtyWjDO+kFnnbtMa
+         DfBAevPFtDuCXMLX8PDTXOfO/zlZYouDpB8m9oLDgckXf5TS1dZeWY5YvECqd3jWLKuR
+         2ojQ==
+X-Gm-Message-State: AOAM532pqFldrHKgznauaFigGilpAzVea+qfOc//zc0u/JaZeq+xDcBm
+        WDKsel5SHCYCx0LVQoNRIL5Jlg==
+X-Google-Smtp-Source: ABdhPJxpJPQHwBmh6Gu1YsWwEwlOOyqv34ySw/8ydXrPOqO/c52QijaV/el6WAIe1YmnTDfmfIBvPA==
+X-Received: by 2002:a17:902:854c:: with SMTP id d12mr73433plo.343.1592918942115;
+        Tue, 23 Jun 2020 06:29:02 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id z19sm1670602pjn.55.2020.06.23.06.28.58
+        by smtp.gmail.com with ESMTPSA id z19sm1670602pjn.55.2020.06.23.06.29.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 06:28:59 -0700 (PDT)
+        Tue, 23 Jun 2020 06:29:01 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
         palmer@dabbelt.com, paul.walmsley@sifive.com,
         guoren@linux.alibaba.com
-Subject: [PATCH 1/2] riscv: Support irq_work via self IPIs
-Date:   Tue, 23 Jun 2020 21:28:51 +0800
-Message-Id: <3c4a03ac99118bc6648d06f62c2f46b877bc8c72.1592918110.git.greentime.hu@sifive.com>
+Subject: [PATCH 2/2] riscv: Enable context tracking
+Date:   Tue, 23 Jun 2020 21:28:52 +0800
+Message-Id: <7a571e93cc12f8f57b77b2d33b214c3359013874.1592918110.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1592918110.git.greentime.hu@sifive.com>
 References: <cover.1592918110.git.greentime.hu@sifive.com>
@@ -77,86 +77,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support for arch_irq_work_raise() and arch_irq_work_has_interrupt() was
-missing from riscv (a prerequisite for FULL_NOHZ).
+This patch implements and enables context tracking for riscv (which is a
+prerequisite for CONFIG_NO_HZ_FULL support)
+
+It adds checking for previous state in the entry that all excepttions and
+interrupts goes to and calls context_tracking_user_exit() if it comes from
+user space. It also calls context_tracking_user_enter() if it will return
+to user space before restore_all.
+
+This patch is tested with the dynticks-testing testcase in
+qemu-system-riscv64 virt machine and Unleashed board.
+git://git.kernel.org/pub/scm/linux/kernel/git/frederic/dynticks-testing.git
+
+We can see the log here. The tick got mostly stopped during the execution
+of the user loop.
+
+                        _-----=> irqs-off
+                       / _----=> need-resched
+                      | / _---=> hardirq/softirq
+                      || / _--=> preempt-depth
+                      ||| /     delay
+     TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+        | |       |   ||||       |         |
+   <idle>-0     [001] d..2   604.183512: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=taskset next_pid=273 next_prio=120
+user_loop-273   [001] d.h1   604.184788: hrtimer_expire_entry: hrtimer=000000002eda5fab function=tick_sched_timer now=604176096300
+user_loop-273   [001] d.s2   604.184897: workqueue_queue_work: work struct=00000000383402c2 function=vmstat_update workqueue=00000000f36d35d4 req_cpu=1 cpu=1
+user_loop-273   [001] dns2   604.185039: tick_stop: success=0 dependency=SCHED
+user_loop-273   [001] dn.1   604.185103: tick_stop: success=0 dependency=SCHED
+user_loop-273   [001] d..2   604.185154: sched_switch: prev_comm=taskset prev_pid=273 prev_prio=120 prev_state=R+ ==> next_comm=kworker/1:1 next_pid=46 next_prio=120
+    <...>-46    [001] ....   604.185194: workqueue_execute_start: work struct 00000000383402c2: function vmstat_update
+    <...>-46    [001] d..2   604.185266: sched_switch: prev_comm=kworker/1:1 prev_pid=46 prev_prio=120 prev_state=I ==> next_comm=taskset next_pid=273 next_prio=120
+user_loop-273   [001] d.h1   604.188812: hrtimer_expire_entry: hrtimer=000000002eda5fab function=tick_sched_timer now=604180133400
+user_loop-273   [001] d..1   604.189050: tick_stop: success=1 dependency=NONE
+user_loop-273   [001] d..2   614.251386: sched_switch: prev_comm=user_loop prev_pid=273 prev_prio=120 prev_state=X ==> next_comm=swapper/1 next_pid=0 next_prio=120
+   <idle>-0     [001] d..2   614.315391: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=taskset next_pid=276 next_prio=120
 
 Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
 ---
- arch/riscv/include/asm/irq_work.h | 10 ++++++++++
- arch/riscv/kernel/smp.c           | 15 +++++++++++++++
- 2 files changed, 25 insertions(+)
- create mode 100644 arch/riscv/include/asm/irq_work.h
+ arch/riscv/Kconfig        |  1 +
+ arch/riscv/kernel/entry.S | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/arch/riscv/include/asm/irq_work.h b/arch/riscv/include/asm/irq_work.h
-new file mode 100644
-index 000000000000..eb9f3d9b15ed
---- /dev/null
-+++ b/arch/riscv/include/asm/irq_work.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_RISCV_IRQ_WORK_H
-+#define _ASM_RISCV_IRQ_WORK_H
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 128192e14ff2..17520e11815b 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -52,6 +52,7 @@ config RISCV
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_TRACEHOOK
+ 	select HAVE_ASM_MODVERSIONS
++	select HAVE_CONTEXT_TRACKING
+ 	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_DMA_CONTIGUOUS if MMU
+ 	select HAVE_EBPF_JIT if MMU
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index cae7e6d4c7ef..6ed579fc1073 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -97,6 +97,14 @@ _save_context:
+ 	la gp, __global_pointer$
+ .option pop
+ 
++#ifdef CONFIG_CONTEXT_TRACKING
++	/* If previous state is in user mode, call context_tracking_user_exit. */
++	andi a0, s1, SR_SPP
++	bnez a0, skip_context_tracking
++	call context_tracking_user_exit
 +
-+static inline bool arch_irq_work_has_interrupt(void)
-+{
-+	return true;
-+}
-+
-+#endif /* _ASM_RISCV_IRQ_WORK_H */
-diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-index b1d4f452f843..554b0fb47060 100644
---- a/arch/riscv/kernel/smp.c
-+++ b/arch/riscv/kernel/smp.c
-@@ -16,6 +16,7 @@
- #include <linux/sched.h>
- #include <linux/seq_file.h>
- #include <linux/delay.h>
-+#include <linux/irq_work.h>
++skip_context_tracking:
++#endif
+ 	la ra, ret_from_exception
+ 	/*
+ 	 * MSB of cause differentiates between
+@@ -137,6 +145,17 @@ _save_context:
+ 	tail do_trap_unknown
  
- #include <asm/clint.h>
- #include <asm/sbi.h>
-@@ -26,6 +27,7 @@ enum ipi_message_type {
- 	IPI_RESCHEDULE,
- 	IPI_CALL_FUNC,
- 	IPI_CPU_STOP,
-+	IPI_IRQ_WORK,
- 	IPI_MAX
- };
+ handle_syscall:
++#ifdef CONFIG_CONTEXT_TRACKING
++	/* Recover a0 - a7 for system calls */
++	REG_L x10, PT_A0(sp)
++	REG_L x11, PT_A1(sp)
++	REG_L x12, PT_A2(sp)
++	REG_L x13, PT_A3(sp)
++	REG_L x14, PT_A4(sp)
++	REG_L x15, PT_A5(sp)
++	REG_L x16, PT_A6(sp)
++	REG_L x17, PT_A7(sp)
++#endif
+ 	 /* save the initial A0 value (needed in signal handlers) */
+ 	REG_S a0, PT_ORIG_A0(sp)
+ 	/*
+@@ -205,6 +224,10 @@ resume_userspace:
+ 	andi s1, s0, _TIF_WORK_MASK
+ 	bnez s1, work_pending
  
-@@ -123,6 +125,13 @@ static inline void clear_ipi(void)
- 		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
- }
- 
-+#ifdef CONFIG_IRQ_WORK
-+void arch_irq_work_raise(void)
-+{
-+	send_ipi_single(smp_processor_id(), IPI_IRQ_WORK);
-+}
++#ifdef CONFIG_CONTEXT_TRACKING
++	call context_tracking_user_enter
 +#endif
 +
- void handle_IPI(struct pt_regs *regs)
- {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
-@@ -158,6 +167,11 @@ void handle_IPI(struct pt_regs *regs)
- 			ipi_stop();
- 		}
- 
-+		if (ops & (1 << IPI_IRQ_WORK)) {
-+			stats[IPI_IRQ_WORK]++;
-+			irq_work_run();
-+		}
-+
- 		BUG_ON((ops >> IPI_MAX) != 0);
- 
- 		/* Order data access and bit testing. */
-@@ -173,6 +187,7 @@ static const char * const ipi_names[] = {
- 	[IPI_RESCHEDULE]	= "Rescheduling interrupts",
- 	[IPI_CALL_FUNC]		= "Function call interrupts",
- 	[IPI_CPU_STOP]		= "CPU stop interrupts",
-+	[IPI_IRQ_WORK]		= "IRQ work interrupts",
- };
- 
- void show_ipi_stats(struct seq_file *p, int prec)
+ 	/* Save unwound kernel stack pointer in thread_info */
+ 	addi s0, sp, PT_SIZE_ON_STACK
+ 	REG_S s0, TASK_TI_KERNEL_SP(tp)
 -- 
 2.27.0
 
