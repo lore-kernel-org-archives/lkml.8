@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD67C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4698FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26CCA20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EAC20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947724;
-	bh=kq2ULEX6H5wMp9VqbZdFwfAYyJ+x9S0r49SgMS134z0=;
+	s=default; t=1592947726;
+	bh=jv9TmoNHZvbkTcvTMR+B0Yh6jQzHQ9JleDRbuqKRw9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oAnNWG+AB+ORaBApQPmWxJIurkwPEAaXpkqGVTU5zSDQMo3NMQu23YLJ+rYSs411Q
-	 g/Hp6jsh2ccff4bsO/KeDuZr9YUiLGYuPortNxrRXnf5d30W5EhVmBRP/BdnMhdLfL
-	 Ql1NW68Bww+tpYhz1ZRfCQuVamQ93tDOXBlh9lL8=
+	b=MuRvJQPy5MlHxoVrizjSiNd6HKDsR1HTmqPYYV9g44Gma/3yU5fwF3iaTpLKJ56F3
+	 OXc3b06IyO8S7IF77wSuOYrHPjKvIJNo/S3EyJRPbCj8IgqlEO3dt4LK2DjI5siQbP
+	 Gk4EVUp3naYMC0snGTc1wa5u6aNDmnZ6wAMR6gnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393577AbgFWV2m (ORCPT
+        id S2393570AbgFWV2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:28:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58850 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389345AbgFWUPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:15:44 -0400
+        id S2388152AbgFWUPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:15:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2CAB20E65;
-        Tue, 23 Jun 2020 20:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 281D32064B;
+        Tue, 23 Jun 2020 20:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943344;
-        bh=kq2ULEX6H5wMp9VqbZdFwfAYyJ+x9S0r49SgMS134z0=;
+        s=default; t=1592943346;
+        bh=jv9TmoNHZvbkTcvTMR+B0Yh6jQzHQ9JleDRbuqKRw9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIKHQAjacWQ1umEXoMFB4vhgzLkM0JGuf2yIaUqBQ322bxK5/x3gzLMnY1Z1z/vJm
-         hBQVKdAiAOScXiRmTu3OZWvXJlPjMASbrGyMg7we/DeHA0ZiEz5U73QOvosoOvF91L
-         WUBZIoHCA/l1vxy068h7w43zucbuSO1D7YBMkulA=
+        b=MeHkc1oIOrKpXTGj7wUDSO7M4pbfzXClYZm2iGBIDMdjRZSBEIS9OLf+ohW3eGE8E
+         L3ygKZE2Jf92AmuGq8LxxD4qCTWrUiznAQfC4pSOu0BJ0SnTNQ3Z9SfxPwS9Plu8Ex
+         VeLKisFDr3rmEvZjJaRfR+kPYYq/zdZWJWU7mk6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        stable@vger.kernel.org,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
         Daniel Baluta <daniel.baluta@gmail.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 355/477] ASoC: core: only convert non DPCM link to DPCM link
-Date:   Tue, 23 Jun 2020 21:55:52 +0200
-Message-Id: <20200623195424.323497365@linuxfoundation.org>
+Subject: [PATCH 5.7 356/477] ASoC: SOF: nocodec: conditionally set dpcm_capture/dpcm_playback flags
+Date:   Tue, 23 Jun 2020 21:55:53 +0200
+Message-Id: <20200623195424.367102295@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -64,70 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 607fa205a7e4dfad28b8a67ab1c985756ddbccb0 ]
+[ Upstream commit ba4e5abc6c4e173af7c941c03c067263b686665d ]
 
-Additional checks for valid DAIs expose a corner case, where existing
-BE dailinks get modified, e.g. HDMI links are tagged with
-dpcm_capture=1 even if the DAIs are for playback.
+With additional checks on dailinks, we see errors such as
 
-This patch makes those changes conditional and flags configuration
-issues when a BE dailink is has no_pcm=0 but dpcm_playback or
-dpcm_capture=1 (which makes no sense).
+[ 3.000418] sof-nocodec sof-nocodec: CPU DAI DMIC01 Pin for rtd
+NoCodec-6 does not support playback
 
-As discussed on the alsa-devel mailing list, there are redundant flags
-for dpcm_playback, dpcm_capture, playback_only, capture_only. This
-will have to be cleaned-up in a future update. For now only correct
-and flag problematic configurations.
+It's not clear why we set the dpcm_playback and dpcm_capture flags
+unconditionally, add a check on number of channels for each direction
+to avoid invalid configurations.
 
-Fixes: 218fe9b7ec7f3 ("ASoC: soc-core: Set dpcm_playback / dpcm_capture")
-Suggested-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Fixes: 8017b8fd37bf5e ('ASoC: SOF: Add Nocodec machine driver support')
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
 Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
 Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://lore.kernel.org/r/20200608194415.4663-3-pierre-louis.bossart@linux.intel.com
+Link: https://lore.kernel.org/r/20200608194415.4663-5-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ sound/soc/sof/nocodec.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 843b8b1c89d41..e5433e8fcf19e 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1720,9 +1720,25 @@ match:
- 			dai_link->platforms->name = component->name;
+diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
+index 2233146386ccf..71cf5f9db79d0 100644
+--- a/sound/soc/sof/nocodec.c
++++ b/sound/soc/sof/nocodec.c
+@@ -52,8 +52,10 @@ static int sof_nocodec_bes_setup(struct device *dev,
+ 		links[i].platforms->name = dev_name(dev);
+ 		links[i].codecs->dai_name = "snd-soc-dummy-dai";
+ 		links[i].codecs->name = "snd-soc-dummy";
+-		links[i].dpcm_playback = 1;
+-		links[i].dpcm_capture = 1;
++		if (ops->drv[i].playback.channels_min)
++			links[i].dpcm_playback = 1;
++		if (ops->drv[i].capture.channels_min)
++			links[i].dpcm_capture = 1;
+ 	}
  
- 			/* convert non BE into BE */
--			dai_link->no_pcm = 1;
--			dai_link->dpcm_playback = 1;
--			dai_link->dpcm_capture = 1;
-+			if (!dai_link->no_pcm) {
-+				dai_link->no_pcm = 1;
-+
-+				if (dai_link->dpcm_playback)
-+					dev_warn(card->dev,
-+						 "invalid configuration, dailink %s has flags no_pcm=0 and dpcm_playback=1\n",
-+						 dai_link->name);
-+				if (dai_link->dpcm_capture)
-+					dev_warn(card->dev,
-+						 "invalid configuration, dailink %s has flags no_pcm=0 and dpcm_capture=1\n",
-+						 dai_link->name);
-+
-+				/* convert normal link into DPCM one */
-+				if (!(dai_link->dpcm_playback ||
-+				      dai_link->dpcm_capture)) {
-+					dai_link->dpcm_playback = !dai_link->capture_only;
-+					dai_link->dpcm_capture = !dai_link->playback_only;
-+				}
-+			}
- 
- 			/* override any BE fixups */
- 			dai_link->be_hw_params_fixup =
+ 	card->dai_link = links;
 -- 
 2.25.1
 
