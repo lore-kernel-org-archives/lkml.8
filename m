@@ -4,111 +4,277 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1644DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4EC42078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02A02078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Du2IZQVw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DyxplA2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732532AbgFWQmi (ORCPT
+        id S1732959AbgFWQmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:42:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46928 "EHLO
+        Tue, 23 Jun 2020 12:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732174AbgFWQmi (ORCPT
+        with ESMTP id S1732923AbgFWQmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:42:38 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2597DC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:42:38 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id z26so9882890qto.15
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:42:38 -0700 (PDT)
+        Tue, 23 Jun 2020 12:42:44 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6968C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:42:42 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id t32so1464589qth.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=zl+PzJjccgQ/z2IEdEeYMiws9NGR4cJmTEy3MFLmC3o=;
-        b=Du2IZQVww527r+DkfvLwjzL1rLzDjXpQwn91wkmvUrKnk31COi3wf75uaCGRrhnnGT
-         cZtT9QEs5+WAsDy2Ws+B4BBRNf8YRXN+wx28A81PgSW5nfRRKHGEunysMDByIjthTpU1
-         EaG+wzyDLq6vv8QEQnsq9NFMy+Ermx4r6wlkGoIVUpdvXVYM35WHVewJAvwnDJayvvIJ
-         LNC+uYqFb6WOk68KVwUZMOQ47eUWbRT7EAHJLRpH8tFbqnw9UwX9DGe3NzzMS8hv6L01
-         SxMsXa5G4ntXvJFJlJn6ilR1MO/d8wM/CtsQIbsORt7+rG13EysINazUWFLS/0Y592H1
-         hRRQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=EYMTqcYPNSd1+dm5Nyu6dJjrXx/FGaIaL0ZjwplPIjQ=;
+        b=DyxplA2Cgjtr45kDeFCptHg1Qf0Sg76CvzdvQ6KAbg5YBNa4V11HEgZDqgW0Ppv6Yb
+         zzU1cxMT/3p2Dn3R3zPMWpYBDF3zzPRyQOz7f78kzeuUwnZrdD7yYXfw1WRjWVhBcPD6
+         s+L5Pk/e+tj/QBXqqMlM2LUGnrliz0WDjlUOhJeVtfMkVgy+t4j6u7KpoipSxQzOAqKM
+         SCdnP40EoROcurdIVdqQHArMDKvuQJ/D27gVglHgMmJISWlSPsAI1U3dJm0yT5Fd5h+t
+         3tp51cA8P4EGnlOpsf6ZY0niMuWVbmNLjHoEI39Bol5lvK8nD4TKblIHTW081ifgMWcm
+         2jvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=zl+PzJjccgQ/z2IEdEeYMiws9NGR4cJmTEy3MFLmC3o=;
-        b=sXeD4NfzRnLAygcyg9j+UOD6g0JUvnLxltslfeR4XAxeET198gFsOpwfdXVvoNkKO+
-         2sx52ftUGgvKzmd58GegZR/zw8BVAUfM1lW1pgZg7OGufUPBQlHVjQgz2jyQdTKRO675
-         eMevJiCXO/kSKc2EEWsi+1t7RrkrRxwVH+kiFQR1BFJKOKRLtcqQ7WfAIi+WVYKjdwjd
-         8D15mhlRY47JBf45m/jxrMwLJNAfF+t4fdEteILpErSRrlrXpT4ooN7+2/USqGa98CXS
-         vOZPRs95251Qx8x+Tl+05Sk4+DZoivWD7Kzzpwshsad8C7dmFly3QkAuOPN7Dyh61z7H
-         Ru/g==
-X-Gm-Message-State: AOAM533ynRqfptepVblsVZ6+BKGLOD8ttjhldrTcV4PgvRwx8/+Kjf8b
-        qE1PlLgZZoJ7C431cvszyfXERzf3cmK9
-X-Google-Smtp-Source: ABdhPJwQGXprOfL8jqRrhCa93rf7sj1+uuw00sukDTOJcaV6twqdQ/5psZBymPf6HUwvw6+AZPA8V/mGl64c
-X-Received: by 2002:a0c:bd12:: with SMTP id m18mr16597999qvg.178.1592930557012;
- Tue, 23 Jun 2020 09:42:37 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 09:42:31 -0700
-Message-Id: <20200623164232.175846-1-brianvv@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=EYMTqcYPNSd1+dm5Nyu6dJjrXx/FGaIaL0ZjwplPIjQ=;
+        b=AINWhhgbaaMN/KZquADOVsSNQ+Rh16g41snJxlj0P5YcgAc50nsNjE/eiu2ACJp+CQ
+         JepHxFyBZcSYJ3mf8s2ek7azqdiaD06lBG/2EZh9KMvvFz2e6nXsk8gxqLIvttlJCbGz
+         l0K1/Q18JvkpgtEAGOCQqX8ipDpTXOyL52NKEl5c8E/nQf9SQlXzjF8tJ4OaVhmByqNk
+         IhQiB2nqZFL1hl/LjFexw4fCXQfBnR09+ne2Lj4sfjGhwRPgnzCOIuKYsUiGw3J/0D1W
+         ZZxgRmlAFWReTUkhL6x4HNfCBK0FKwgfA7Qo3MBmwhyE/zTV8dMrqEj2FAfCnB4iIrDJ
+         1n+A==
+X-Gm-Message-State: AOAM532ITBSVRCB84VjLNcYXp092czxkI47GBmrfuFf0AXl6a/h/ObPc
+        rZ0BLOWMxvjmBCxZ8zwMwVzBXV3hfBdg
+X-Google-Smtp-Source: ABdhPJwI0rz7XctpWpoJomIHLMbmlSHtKgRHge1DQRZjTH9SqlsVyP/eofzBm03RD4CgVx0ozYRERDM6Kl/W
+X-Received: by 2002:ad4:56ac:: with SMTP id bd12mr27566713qvb.139.1592930561924;
+ Tue, 23 Jun 2020 09:42:41 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 09:42:32 -0700
+In-Reply-To: <20200623164232.175846-1-brianvv@google.com>
+Message-Id: <20200623164232.175846-2-brianvv@google.com>
 Mime-Version: 1.0
+References: <20200623164232.175846-1-brianvv@google.com>
 X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH v2 net-next 1/2] indirect_call_wrapper: extend indirect
- wrapper to support up to 4 calls
+Subject: [PATCH v2 net-next 2/2] ipv6: fib6: avoid indirect calls from fib6_rule_lookup
 From:   Brian Vazquez <brianvv@google.com>
 To:     Brian Vazquez <brianvv.kernel@gmail.com>,
         Brian Vazquez <brianvv@google.com>,
         Eric Dumazet <edumazet@google.com>,
         "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Luigi Rizzo <lrizzo@google.com>,
+        Paolo Abeni <pabeni@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are many places where 2 annotations are not enough. This patch
-adds INDIRECT_CALL_3 and INDIRECT_CALL_4 to cover such cases.
+It was reported that a considerable amount of cycles were spent on the
+expensive indirect calls on fib6_rule_lookup. This patch introduces an
+inline helper called pol_route_func that uses the indirect_call_wrappers
+to avoid the indirect calls.
 
+This patch saves around 50ns per call.
+
+Performance was measured on the receiver by checking the amount of
+syncookies that server was able to generate under a synflood load.
+
+Traffic was generated using trafgen[1] which was pushing around 1Mpps on
+a single queue. Receiver was using only one rx queue which help to
+create a bottle neck and make the experiment rx-bounded.
+
+These are the syncookies generated over 10s from the different runs:
+
+Whithout the patch:
+TcpExtSyncookiesSent            3553749            0.0
+TcpExtSyncookiesSent            3550895            0.0
+TcpExtSyncookiesSent            3553845            0.0
+TcpExtSyncookiesSent            3541050            0.0
+TcpExtSyncookiesSent            3539921            0.0
+TcpExtSyncookiesSent            3557659            0.0
+TcpExtSyncookiesSent            3526812            0.0
+TcpExtSyncookiesSent            3536121            0.0
+TcpExtSyncookiesSent            3529963            0.0
+TcpExtSyncookiesSent            3536319            0.0
+
+With the patch:
+TcpExtSyncookiesSent            3611786            0.0
+TcpExtSyncookiesSent            3596682            0.0
+TcpExtSyncookiesSent            3606878            0.0
+TcpExtSyncookiesSent            3599564            0.0
+TcpExtSyncookiesSent            3601304            0.0
+TcpExtSyncookiesSent            3609249            0.0
+TcpExtSyncookiesSent            3617437            0.0
+TcpExtSyncookiesSent            3608765            0.0
+TcpExtSyncookiesSent            3620205            0.0
+TcpExtSyncookiesSent            3601895            0.0
+
+Without the patch the average is 354263 pkt/s or 2822 ns/pkt and with
+the patch the average is 360738 pkt/s or 2772 ns/pkt which gives an
+estimate of 50 ns per packet.
+
+[1] http://netsniff-ng.org/
+
+Changelog since v1:
+ - Change ordering in the ICW (Paolo Abeni)
+
+Cc: Luigi Rizzo <lrizzo@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Reported-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Brian Vazquez <brianvv@google.com>
 ---
- include/linux/indirect_call_wrapper.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ include/net/ip6_fib.h | 36 ++++++++++++++++++++++++++++++++++++
+ net/ipv6/fib6_rules.c |  9 ++++++---
+ net/ipv6/ip6_fib.c    |  3 ++-
+ net/ipv6/route.c      |  8 ++++----
+ 4 files changed, 48 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/indirect_call_wrapper.h b/include/linux/indirect_call_wrapper.h
-index 00d7e8e919c6..54c02c84906a 100644
---- a/include/linux/indirect_call_wrapper.h
-+++ b/include/linux/indirect_call_wrapper.h
-@@ -23,6 +23,16 @@
- 		likely(f == f2) ? f2(__VA_ARGS__) :			\
- 				  INDIRECT_CALL_1(f, f1, __VA_ARGS__);	\
- 	})
-+#define INDIRECT_CALL_3(f, f3, f2, f1, ...)					\
-+	({									\
-+		likely(f == f3) ? f3(__VA_ARGS__) :				\
-+				  INDIRECT_CALL_2(f, f2, f1, __VA_ARGS__);	\
-+	})
-+#define INDIRECT_CALL_4(f, f4, f3, f2, f1, ...)					\
-+	({									\
-+		likely(f == f4) ? f4(__VA_ARGS__) :				\
-+				  INDIRECT_CALL_3(f, f3, f2, f1, __VA_ARGS__);	\
-+	})
+diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
+index 3f615a29766e..cc8356fd927f 100644
+--- a/include/net/ip6_fib.h
++++ b/include/net/ip6_fib.h
+@@ -19,6 +19,7 @@
+ #include <net/netlink.h>
+ #include <net/inetpeer.h>
+ #include <net/fib_notifier.h>
++#include <linux/indirect_call_wrapper.h>
  
- #define INDIRECT_CALLABLE_DECLARE(f)	f
- #define INDIRECT_CALLABLE_SCOPE
-@@ -30,6 +40,8 @@
- #else
- #define INDIRECT_CALL_1(f, f1, ...) f(__VA_ARGS__)
- #define INDIRECT_CALL_2(f, f2, f1, ...) f(__VA_ARGS__)
-+#define INDIRECT_CALL_3(f, f3, f2, f1, ...) f(__VA_ARGS__)
-+#define INDIRECT_CALL_4(f, f4, f3, f2, f1, ...) f(__VA_ARGS__)
- #define INDIRECT_CALLABLE_DECLARE(f)
- #define INDIRECT_CALLABLE_SCOPE		static
+ #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+ #define FIB6_TABLE_HASHSZ 256
+@@ -552,6 +553,41 @@ struct bpf_iter__ipv6_route {
+ };
  #endif
+ 
++INDIRECT_CALLABLE_DECLARE(struct rt6_info *ip6_pol_route_output(struct net *net,
++					     struct fib6_table *table,
++					     struct flowi6 *fl6,
++					     const struct sk_buff *skb,
++					     int flags));
++INDIRECT_CALLABLE_DECLARE(struct rt6_info *ip6_pol_route_input(struct net *net,
++					     struct fib6_table *table,
++					     struct flowi6 *fl6,
++					     const struct sk_buff *skb,
++					     int flags));
++INDIRECT_CALLABLE_DECLARE(struct rt6_info *__ip6_route_redirect(struct net *net,
++					     struct fib6_table *table,
++					     struct flowi6 *fl6,
++					     const struct sk_buff *skb,
++					     int flags));
++INDIRECT_CALLABLE_DECLARE(struct rt6_info *ip6_pol_route_lookup(struct net *net,
++					     struct fib6_table *table,
++					     struct flowi6 *fl6,
++					     const struct sk_buff *skb,
++					     int flags));
++static inline struct rt6_info *pol_lookup_func(pol_lookup_t lookup,
++						struct net *net,
++						struct fib6_table *table,
++						struct flowi6 *fl6,
++						const struct sk_buff *skb,
++						int flags)
++{
++	return INDIRECT_CALL_4(lookup,
++			       ip6_pol_route_output,
++			       ip6_pol_route_input,
++			       ip6_pol_route_lookup,
++			       __ip6_route_redirect,
++			       net, table, fl6, skb, flags);
++}
++
+ #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+ static inline bool fib6_has_custom_rules(const struct net *net)
+ {
+diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
+index fafe556d21e0..6053ef851555 100644
+--- a/net/ipv6/fib6_rules.c
++++ b/net/ipv6/fib6_rules.c
+@@ -111,11 +111,13 @@ struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
+ 	} else {
+ 		struct rt6_info *rt;
+ 
+-		rt = lookup(net, net->ipv6.fib6_local_tbl, fl6, skb, flags);
++		rt = pol_lookup_func(lookup,
++			     net, net->ipv6.fib6_local_tbl, fl6, skb, flags);
+ 		if (rt != net->ipv6.ip6_null_entry && rt->dst.error != -EAGAIN)
+ 			return &rt->dst;
+ 		ip6_rt_put_flags(rt, flags);
+-		rt = lookup(net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
++		rt = pol_lookup_func(lookup,
++			     net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
+ 		if (rt->dst.error != -EAGAIN)
+ 			return &rt->dst;
+ 		ip6_rt_put_flags(rt, flags);
+@@ -226,7 +228,8 @@ static int __fib6_rule_action(struct fib_rule *rule, struct flowi *flp,
+ 		goto out;
+ 	}
+ 
+-	rt = lookup(net, table, flp6, arg->lookup_data, flags);
++	rt = pol_lookup_func(lookup,
++			     net, table, flp6, arg->lookup_data, flags);
+ 	if (rt != net->ipv6.ip6_null_entry) {
+ 		err = fib6_rule_saddr(net, rule, flags, flp6,
+ 				      ip6_dst_idev(&rt->dst)->dev);
+diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
+index 49ee89bbcba0..25a90f3f705c 100644
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -314,7 +314,8 @@ struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
+ {
+ 	struct rt6_info *rt;
+ 
+-	rt = lookup(net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
++	rt = pol_lookup_func(lookup,
++			net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
+ 	if (rt->dst.error == -EAGAIN) {
+ 		ip6_rt_put_flags(rt, flags);
+ 		rt = net->ipv6.ip6_null_entry;
+diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+index 82cbb46a2a4f..5852039ca9cf 100644
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -1207,7 +1207,7 @@ static struct rt6_info *ip6_create_rt_rcu(const struct fib6_result *res)
+ 	return nrt;
+ }
+ 
+-static struct rt6_info *ip6_pol_route_lookup(struct net *net,
++INDIRECT_CALLABLE_SCOPE struct rt6_info *ip6_pol_route_lookup(struct net *net,
+ 					     struct fib6_table *table,
+ 					     struct flowi6 *fl6,
+ 					     const struct sk_buff *skb,
+@@ -2274,7 +2274,7 @@ struct rt6_info *ip6_pol_route(struct net *net, struct fib6_table *table,
+ }
+ EXPORT_SYMBOL_GPL(ip6_pol_route);
+ 
+-static struct rt6_info *ip6_pol_route_input(struct net *net,
++INDIRECT_CALLABLE_SCOPE struct rt6_info *ip6_pol_route_input(struct net *net,
+ 					    struct fib6_table *table,
+ 					    struct flowi6 *fl6,
+ 					    const struct sk_buff *skb,
+@@ -2465,7 +2465,7 @@ void ip6_route_input(struct sk_buff *skb)
+ 						      &fl6, skb, flags));
+ }
+ 
+-static struct rt6_info *ip6_pol_route_output(struct net *net,
++INDIRECT_CALLABLE_SCOPE struct rt6_info *ip6_pol_route_output(struct net *net,
+ 					     struct fib6_table *table,
+ 					     struct flowi6 *fl6,
+ 					     const struct sk_buff *skb,
+@@ -2912,7 +2912,7 @@ struct ip6rd_flowi {
+ 	struct in6_addr gateway;
+ };
+ 
+-static struct rt6_info *__ip6_route_redirect(struct net *net,
++INDIRECT_CALLABLE_SCOPE struct rt6_info *__ip6_route_redirect(struct net *net,
+ 					     struct fib6_table *table,
+ 					     struct flowi6 *fl6,
+ 					     const struct sk_buff *skb,
 -- 
 2.27.0.111.gc72c7da667-goog
 
