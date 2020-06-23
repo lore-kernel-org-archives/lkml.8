@@ -2,56 +2,55 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAA0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D263320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D997120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946554;
-	bh=4UAPmVhI7Yg5vv2YBav4NutQEvI7ancXbl5399gKWjU=;
+	s=default; t=1592946557;
+	bh=uAYbPVwswo7qjSRoPvdY9qbZvoBnXvTSjRYcJUn/bUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wVyyAvCmCxjIe9AWVbKfAJXOkYMYuDK03yB0DhEB9XKwRAfI+w3ryj9LhkEId2tL4
-	 v6S1Zo5u1g36X3V3pOFXdWxbfde/5VASQrVUUQhleSHl4kHLe/pDcR5SWH3Bqex9QS
-	 LW7CXQtRreRXnKDTWa48lP2dKjE5MogDNH8KwhL0=
+	b=ecMfBnmQhxnJXCKEjeYbSUqk4YR7tyNZOLjIjZlqZOfrpxsA6J2wOdKBU0rOaO8VX
+	 FadPlrJYBQ2rlT7BZpc7iR8yfC2163UjWefdC+neiMyT3Bhdpu9p6k7PBst6pi8M70
+	 Qr/9CrCGQZ1b7j6yv2R3zxwCqYoqew8l3McgBuLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390608AbgFWVJM (ORCPT
+        id S2391524AbgFWUeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56290 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:34:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391526AbgFWUeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:23 -0400
+        id S2391492AbgFWUeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CD0B2098B;
-        Tue, 23 Jun 2020 20:34:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 429E72098B;
+        Tue, 23 Jun 2020 20:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944462;
-        bh=4UAPmVhI7Yg5vv2YBav4NutQEvI7ancXbl5399gKWjU=;
+        s=default; t=1592944449;
+        bh=uAYbPVwswo7qjSRoPvdY9qbZvoBnXvTSjRYcJUn/bUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M85GLd6IO+0+HKnvRy1nkVtACFmB6noyYc8+xgvmIXpocP/mWb2dR3j7+eQbbVra0
-         XC7Cc3DQ0jbUF9jRJKzh5uPlUJgGY+/pDsyH5sPJV5V7arc/hEiYoIp6ZR/N/c6FVx
-         AKiHHGLS5uTJQ9lSYw8RuQoarbECmxuNsJKhIKX4=
+        b=I300iysZDFFD3V7DFGb0jyuAFgs3AHpfhHDi9PFjNTc0uWVIXQ1gysVpA0kajpYX0
+         OLrIC4Aa9Hq3eSuS9YHVIIF+uQw4JG6zkAq4dEJ1G/uhnd5gyde0tph7FjrD/HbB3B
+         GbwbuuF8AvIrNJB/4NmfH7WUMal3jV7GzIR8PPvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.4 314/314] net: core: device_rename: Use rwsem instead of a seqcount
-Date:   Tue, 23 Jun 2020 21:58:29 +0200
-Message-Id: <20200623195353.980476509@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stable@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 5.4 310/314] e1000e: Do not wake up the system via WOL if device wakeup is disabled
+Date:   Tue, 23 Jun 2020 21:58:25 +0200
+Message-Id: <20200623195353.786820458@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -64,160 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmed S. Darwish <a.darwish@linutronix.de>
+From: Chen Yu <yu.c.chen@intel.com>
 
-[ Upstream commit 11d6011c2cf29f7c8181ebde6c8bc0c4d83adcd7 ]
+commit 6bf6be1127f7e6d4bf39f84d56854e944d045d74 upstream.
 
-Sequence counters write paths are critical sections that must never be
-preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
+Currently the system will be woken up via WOL(Wake On LAN) even if the
+device wakeup ability has been disabled via sysfs:
+ cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
+ disabled
 
-Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
-netdev name retrieval.") handled a deadlock, observed with
-CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
-infinitely spinning: it got scheduled after the seqcount write side
-blocked inside its own critical section.
+The system should not be woken up if the user has explicitly
+disabled the wake up ability for this device.
 
-To fix that deadlock, among other issues, the commit added a
-cond_resched() inside the read side section. While this will get the
-non-preemptible kernel eventually unstuck, the seqcount reader is fully
-exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
+This patch clears the WOL ability of this network device if the
+user has disabled the wake up ability in sysfs.
 
-The fix is also still broken: if the seqcount reader belongs to a
-real-time scheduling policy, it can spin forever and the kernel will
-livelock.
+Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver")
+Reported-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Disabling preemption over the seqcount write side critical section will
-not work: inside it are a number of GFP_KERNEL allocations and mutex
-locking through the drivers/base/ :: device_rename() call chain.
-
->From all the above, replace the seqcount with a rwsem.
-
-Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
-Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
-Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
-Cc: <stable@vger.kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com> [ v1 missing up_read() on error exit ]
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com> [ v1 missing up_read() on error exit ]
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 40 ++++++++++++++++++----------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index b127f022d8bd9..204d87e7c9b19 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -79,6 +79,7 @@
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
- #include <linux/mutex.h>
-+#include <linux/rwsem.h>
- #include <linux/string.h>
- #include <linux/mm.h>
- #include <linux/socket.h>
-@@ -194,7 +195,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
- static unsigned int napi_gen_id = NR_CPUS;
- static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -6345,11 +6345,17 @@ static int __e1000_shutdown(struct pci_d
+ 	struct net_device *netdev = pci_get_drvdata(pdev);
+ 	struct e1000_adapter *adapter = netdev_priv(netdev);
+ 	struct e1000_hw *hw = &adapter->hw;
+-	u32 ctrl, ctrl_ext, rctl, status;
+-	/* Runtime suspend should only enable wakeup for link changes */
+-	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
++	u32 ctrl, ctrl_ext, rctl, status, wufc;
+ 	int retval = 0;
  
--static seqcount_t devnet_rename_seq;
-+static DECLARE_RWSEM(devnet_rename_sem);
- 
- static inline void dev_base_seq_inc(struct net *net)
- {
-@@ -816,33 +817,28 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
-  *	@net: network namespace
-  *	@name: a pointer to the buffer where the name will be stored.
-  *	@ifindex: the ifindex of the interface to get the name from.
-- *
-- *	The use of raw_seqcount_begin() and cond_resched() before
-- *	retrying is required as we want to give the writers a chance
-- *	to complete when CONFIG_PREEMPTION is not set.
-  */
- int netdev_get_name(struct net *net, char *name, int ifindex)
- {
- 	struct net_device *dev;
--	unsigned int seq;
-+	int ret;
- 
--retry:
--	seq = raw_seqcount_begin(&devnet_rename_seq);
-+	down_read(&devnet_rename_sem);
- 	rcu_read_lock();
++	/* Runtime suspend should only enable wakeup for link changes */
++	if (runtime)
++		wufc = E1000_WUFC_LNKC;
++	else if (device_may_wakeup(&pdev->dev))
++		wufc = adapter->wol;
++	else
++		wufc = 0;
 +
- 	dev = dev_get_by_index_rcu(net, ifindex);
- 	if (!dev) {
--		rcu_read_unlock();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto out;
- 	}
- 
- 	strcpy(name, dev->name);
--	rcu_read_unlock();
--	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
--		cond_resched();
--		goto retry;
--	}
- 
--	return 0;
-+	ret = 0;
-+out:
-+	rcu_read_unlock();
-+	up_read(&devnet_rename_sem);
-+	return ret;
- }
- 
- /**
-@@ -1115,10 +1111,10 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
- 		return -EBUSY;
- 
--	write_seqcount_begin(&devnet_rename_seq);
-+	down_write(&devnet_rename_sem);
- 
- 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return 0;
- 	}
- 
-@@ -1126,7 +1122,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 
- 	err = dev_get_valid_name(net, dev, newname);
- 	if (err < 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return err;
- 	}
- 
-@@ -1141,11 +1137,11 @@ rollback:
- 	if (ret) {
- 		memcpy(dev->name, oldname, IFNAMSIZ);
- 		dev->name_assign_type = old_assign_type;
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return ret;
- 	}
- 
--	write_seqcount_end(&devnet_rename_seq);
-+	up_write(&devnet_rename_sem);
- 
- 	netdev_adjacent_rename_links(dev, oldname);
- 
-@@ -1166,7 +1162,7 @@ rollback:
- 		/* err >= 0 after dev_alloc_name() or stores the first errno */
- 		if (err >= 0) {
- 			err = ret;
--			write_seqcount_begin(&devnet_rename_seq);
-+			down_write(&devnet_rename_sem);
- 			memcpy(dev->name, oldname, IFNAMSIZ);
- 			memcpy(oldname, newname, IFNAMSIZ);
- 			dev->name_assign_type = old_assign_type;
--- 
-2.25.1
-
+ 	status = er32(STATUS);
+ 	if (status & E1000_STATUS_LU)
+ 		wufc &= ~E1000_WUFC_LNKC;
+@@ -6406,7 +6412,7 @@ static int __e1000_shutdown(struct pci_d
+ 	if (adapter->hw.phy.type == e1000_phy_igp_3) {
+ 		e1000e_igp3_phy_powerdown_workaround_ich8lan(&adapter->hw);
+ 	} else if (hw->mac.type >= e1000_pch_lpt) {
+-		if (!(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
++		if (wufc && !(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
+ 			/* ULP does not support wake from unicast, multicast
+ 			 * or broadcast.
+ 			 */
 
 
