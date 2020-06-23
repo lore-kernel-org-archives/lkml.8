@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9A8206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9683020706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942496;
-	bh=NPhdMSexgXVr2CMyXgOIkLzPcvA1wkS4We3dSQZTImo=;
+	s=default; t=1592942503;
+	bh=+Xs/HUlxg1DyVqM6VD+587PpPAcfdfjAHJ3jTcdWD3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=luqkrEgiwxC+CtP6EwIAejku7F1H3eQ32CiSeIKVo+xv1x1Z+lmrxAkKPf3xhZvSG
-	 sWgqrd7I0JhW5vTqwM346bGApWehDpAzlFCHO2nXDKDak+LazhRev+8qZc2DaW2eQj
-	 GIIgkkUjCUrVXFqjDOQIeqSqkzvU9q/0uPSp1qt0=
+	b=Hze8CDzc2AQcjCrwZST+6JOR98xzW+ADiZYZqrrDR4dmUzEDnTncQJBjxVZdiuHnd
+	 ivL/QmX3zsXYWpnmPU/41H9OwfUBpuDA6we5w4OWxhCw+Vc4kG1Zj3ohRkqFO8+yv3
+	 Or9IAcSOlN8D7V5N0lF1OdOqDe6lQuIjqMVbUvtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbgFWUBe (ORCPT
+        id S2387675AbgFWUBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38104 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:01:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387659AbgFWUBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:01:30 -0400
+        id S2387668AbgFWUBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:01:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86CBB20E65;
-        Tue, 23 Jun 2020 20:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB643206C3;
+        Tue, 23 Jun 2020 20:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942489;
-        bh=NPhdMSexgXVr2CMyXgOIkLzPcvA1wkS4We3dSQZTImo=;
+        s=default; t=1592942494;
+        bh=+Xs/HUlxg1DyVqM6VD+587PpPAcfdfjAHJ3jTcdWD3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tOZSEcX4KXrUSc4B1QdbIl+EOT0kDbAejqdZfsJNLDZFDf65KH7nRLzjiHf83r+tU
-         fEfeq2/E7QFjEnACEJFCpAJJzW3mX0yn2rBTZXyJRRHHHwlXdEzVnygLjZLC6Q/nge
-         U/Zuiiyt2U8cbyMwRnPX0o90qY/kKjVzmQmrvcKY=
+        b=mXC2PPo4sf1m60ExFqbguCUKzmL608ccs1Uc5qJRFnIs4nsKR8AJMeKwoXsWnUAui
+         e29Vf1GbTY9bAEBC+Y9jzFK+P5YuhJOa1DVu9JDS8cNpHGKSJ+mHwC/7+wruPQ+gPR
+         e9vtsaMdalwuVoENxKzAku5hfX0EIHYgk2OsS09o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 019/477] ASoC: codecs: wm97xx: fix ac97 dependency
-Date:   Tue, 23 Jun 2020 21:50:16 +0200
-Message-Id: <20200623195408.514096798@linuxfoundation.org>
+Subject: [PATCH 5.7 020/477] arm64: dts: meson-gxbb-kii-pro: fix board compatible
+Date:   Tue, 23 Jun 2020 21:50:17 +0200
+Message-Id: <20200623195408.562273004@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,63 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit ee2cbe06935bfa58f1fe07dc2a2283945f4b97dc ]
+[ Upstream commit d120b5f98031eefc22164ae8c6ea3711e7a04c19 ]
 
-A recent build fix got the dependency slightly wrong, breaking
-builds with CONFIG_AC97_BUS_NEW:
+Remove the uneeded "amlogic,p201", "amlogic,s905" in the board compatible list.
 
-WARNING: unmet direct dependencies detected for SND_SOC_WM9713
-  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_AC97_BUS [=n]
-  Selected by [m]:
-  - SND_SOC_ZYLONITE [=m] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_PXA2XX_SOC [=m] && MACH_ZYLONITE [=y] && AC97_BUS [=n]=n
+It fixes:
+meson-gxbb-kii-pro.dt.yaml: /: compatible: ['videostrong,kii-pro', 'amlogic,p201', 'amlogic,s905', 'amlogic,meson-gxbb'] is not valid under any of the given schemas
 
-WARNING: unmet direct dependencies detected for SND_SOC_WM9712
-  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_AC97_BUS [=n]
-  Selected by [m]:
-  - SND_PXA2XX_SOC_EM_X270 [=m] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_PXA2XX_SOC [=m] && (MACH_EM_X270 [=n] || MACH_EXEDA [=n] || MACH_CM_X300 [=y]) && AC97_BUS [=n]=n
-
-Change the dependency to allow either version of the AC97 library
-code.
-
-Fixes: 5a309875787d ("ASoC: Fix SND_SOC_ALL_CODECS imply ac97 fallout")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200428212721.2877627-1-arnd@arndb.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200326165958.19274-5-narmstrong@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index e60e0b6a689cd..8cdc68c141dc2 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -1620,19 +1620,19 @@ config SND_SOC_WM9090
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+index 6c9cc45fb417e..e8394a8269ee1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+@@ -11,7 +11,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/leds/common.h>
+ / {
+-	compatible = "videostrong,kii-pro", "amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
++	compatible = "videostrong,kii-pro", "amlogic,meson-gxbb";
+ 	model = "Videostrong KII Pro";
  
- config SND_SOC_WM9705
- 	tristate
--	depends on SND_SOC_AC97_BUS
-+	depends on SND_SOC_AC97_BUS || AC97_BUS_NEW
- 	select REGMAP_AC97
- 	select AC97_BUS_COMPAT if AC97_BUS_NEW
- 
- config SND_SOC_WM9712
- 	tristate
--	depends on SND_SOC_AC97_BUS
-+	depends on SND_SOC_AC97_BUS || AC97_BUS_NEW
- 	select REGMAP_AC97
- 	select AC97_BUS_COMPAT if AC97_BUS_NEW
- 
- config SND_SOC_WM9713
- 	tristate
--	depends on SND_SOC_AC97_BUS
-+	depends on SND_SOC_AC97_BUS || AC97_BUS_NEW
- 	select REGMAP_AC97
- 	select AC97_BUS_COMPAT if AC97_BUS_NEW
- 
+ 	leds {
 -- 
 2.25.1
 
