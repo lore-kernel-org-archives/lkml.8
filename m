@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1703C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2EE20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B555420774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732985AbgFWQ4V (ORCPT
+        id S1733055AbgFWQ40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:56:21 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:36165 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732416AbgFWQ4T (ORCPT
+        Tue, 23 Jun 2020 12:56:26 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:48165 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732576AbgFWQ4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:56:19 -0400
-Received: by mail-io1-f72.google.com with SMTP id g17so6744360iob.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:56:18 -0700 (PDT)
+        Tue, 23 Jun 2020 12:56:21 -0400
+Received: by mail-il1-f197.google.com with SMTP id o4so14923862ilc.15
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:56:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ROU0lx5jL4suhlbFQVzskyt8m5jF4lI6Zi/ObrujOXE=;
-        b=gqSelUMqPngNXlqAcfD33zKDs0OP/2P/K04KnYOXli3CtX5bKOLWgFUrqyfV8sOw0D
-         VewX0Gt1E8sx+2omtMvR1crqljNdt7ErZix7oWxKnp/PbXksqM8Gt4X8Wby2yffwFqAK
-         3D6JZgWUA95HL8Qw8tclSCzz/pY3RfquAaVJRIDlUKpxTParPND/ygMhXTOlSrg8XxCR
-         t/maTQyPKSBFAdxbAwnXVsiJdCFO2ppkmDx4u1gVNy714a4RtBPJLht7cDK7bqark+04
-         PGIj8f7FlzpaWdIH5OlwTDhdGmAPBVPwBfPhItM1QsutYitX4oTvcIt/Jr1Ut6w+nFPp
-         l/dQ==
-X-Gm-Message-State: AOAM532TjMTfmfVMX5hJm91KMHsPgloBfOt+d2MB0oo/M5TzIZx2Grwq
-        0u1hxaygfBTv5nXkMxQSGndMqXIUR/YVZMAW9qHA/ehnqL/Z
-X-Google-Smtp-Source: ABdhPJy0mXObbN07j+2xhO4/4c/cJ+P4vMTRDDOu/lmXTaPquN5P+yd4PnYAVvBO9vyZnpsOY6+lAIAfRx09DBDrLtsdLrjAXI8W
+        bh=JshClNTAlS3z2QGUcLPz9c4kM4qXO8CMuBvsuSHGHcM=;
+        b=IbdfZpjxjEbGZkWU2erKzNuDTiYCEiZ5FEnFgFzZIPkqRWswg+4WbWt4OvVkx8nKrf
+         E/6eocNb8M3lDwDgDai6IkLFB1pNNmNYUmu1LpDt30OXA2nYiCqx1enXBzqHv8B8DgIA
+         UzSOuzUc/ab0qYrZUGRbzQiwQuMw9U7F1Dtd4ucXPmpOiT5ewvJKG2tqrSZz6w7oKhve
+         RxhJ58fDnTR3xEQgB+ra58A8XZdnn8FZJANsIuEDccl8p5L3Xe2FYmypl7Nkz3lErZdE
+         GcnB7M0GF0z3CxzOH7qDG5+zfH48au8V9Iaq5jVdlbikn928OkUhnXvnUoBHHdR/jSOF
+         mgMQ==
+X-Gm-Message-State: AOAM530CIebzjz5Q6Apd7RqNJ44yMLH45wN4K46LmDZh/IECCa7Phvry
+        SV0oClLTPfoSrRyJCbHaomS5f9xSRZSWyaF8lBN8xsaFNiyV
+X-Google-Smtp-Source: ABdhPJzr23dc+NwpOLI07qgaM1Kky9DbwM87Tvp7h3jgisjlayHd4sQ5bE0KEGmtw1rDUaTS5g8r8gKb9YGLCb6Hets7766dYliI
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:128c:: with SMTP id y12mr19351210ilq.45.1592931378517;
- Tue, 23 Jun 2020 09:56:18 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 09:56:18 -0700
+X-Received: by 2002:a92:aa92:: with SMTP id p18mr5067484ill.199.1592931379091;
+ Tue, 23 Jun 2020 09:56:19 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 09:56:19 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f7e03b05a8c33c97@google.com>
-Subject: KASAN: vmalloc-out-of-bounds Read in nl8NUM_dump_wpan_phy
-From:   syzbot <syzbot+736bcbcb11b60d0c0792@syzkaller.appspotmail.com>
-To:     alex.aring@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org, stefan@datenfreihafen.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000009e7b05a8c33d11@google.com>
+Subject: KASAN: vmalloc-out-of-bounds Read in tipc_nl_node_dump_monitor_peer
+From:   syzbot <syzbot+80cad1e3cb4c41cde6ff@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,25 +58,25 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    b835a71e usbnet: smsc95xx: Fix use-after-free after removal
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=12e7fa19100000
+HEAD commit:    4e15507f libbpf: Forward-declare bpf_stats_type for system..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=1227a0ad100000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
-dashboard link: https://syzkaller.appspot.com/bug?extid=736bcbcb11b60d0c0792
+dashboard link: https://syzkaller.appspot.com/bug?extid=80cad1e3cb4c41cde6ff
 compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106b4909100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a1bf8d100000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=155fef15100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127acae9100000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+736bcbcb11b60d0c0792@syzkaller.appspotmail.com
+Reported-by: syzbot+80cad1e3cb4c41cde6ff@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KASAN: vmalloc-out-of-bounds in nla_get_u32 include/net/netlink.h:1541 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in nl802154_dump_wpan_phy_parse net/ieee802154/nl802154.c:563 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in nl802154_dump_wpan_phy+0x98e/0x9c0 net/ieee802154/nl802154.c:593
-Read of size 4 at addr ffffc90005ea1018 by task syz-executor118/6820
+BUG: KASAN: vmalloc-out-of-bounds in nla_len include/net/netlink.h:1135 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in tipc_nl_node_dump_monitor_peer+0x4da/0x590 net/tipc/node.c:2788
+Read of size 2 at addr ffffc90004959024 by task syz-executor857/7189
 
-CPU: 1 PID: 6820 Comm: syz-executor118 Not tainted 5.8.0-rc1-syzkaller #0
+CPU: 1 PID: 7189 Comm: syz-executor857 Not tainted 5.8.0-rc1-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
@@ -84,9 +84,9 @@ Call Trace:
  print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
  __kasan_report mm/kasan/report.c:513 [inline]
  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- nla_get_u32 include/net/netlink.h:1541 [inline]
- nl802154_dump_wpan_phy_parse net/ieee802154/nl802154.c:563 [inline]
- nl802154_dump_wpan_phy+0x98e/0x9c0 net/ieee802154/nl802154.c:593
+ nla_len include/net/netlink.h:1135 [inline]
+ nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
+ tipc_nl_node_dump_monitor_peer+0x4da/0x590 net/tipc/node.c:2788
  genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
  netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
  __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
@@ -105,23 +105,23 @@ Call Trace:
  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x441319
+RIP: 0033:0x446859
 Code: Bad RIP value.
-RSP: 002b:00007fff95574ae8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441319
+RSP: 002b:00007f102ce25d98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000446859
 RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 00000000006cb018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402090
-R13: 0000000000402120 R14: 0000000000000000 R15: 0000000000000000
+RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
+R13: 4002001060fc2413 R14: 0d94638c64805ad2 R15: 0f05002d0000022e
 
 
 Memory state around the buggy address:
- ffffc90005ea0f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
- ffffc90005ea0f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->ffffc90005ea1000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-                            ^
- ffffc90005ea1080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
- ffffc90005ea1100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90004958f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90004958f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+>ffffc90004959000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                               ^
+ ffffc90004959080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90004959100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
 ==================================================================
 
 
