@@ -1,192 +1,160 @@
-Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ACEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACB0020727
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5FB92075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:02:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="k+JgZuET"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jOiz5xhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731342AbgFVX7s (ORCPT
+        id S1731396AbgFWACg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:59:48 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:41949 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731175AbgFVX7s (ORCPT
+        Mon, 22 Jun 2020 20:02:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730774AbgFWACf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:59:48 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200622235945epoutp0457e51f9835ed392d2b132afc2c3195fa~bAy0SpBWa2094420944epoutp04Q
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:59:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200622235945epoutp0457e51f9835ed392d2b132afc2c3195fa~bAy0SpBWa2094420944epoutp04Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592870385;
-        bh=YExroDqc6XzESFm8WunT73Vwegt7O2NMI3eTkUs4C38=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=k+JgZuETmQ9o+0EMIw4bTkiG5QYFyXbfSMNJn21ke5BDVOf6AzWIPpL9n71mzHEo4
-         Qov3tNO4QxhxI6dbqRlWHrW4RrajJ3i9Fv7JkSxVeYnkvXe7UDBlVFD02H/291Fhdx
-         ni5p0bw4NEpyyUwNB++hfu5lrv1R9ShSuBwfU2S8=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200622235944epcas1p1d7b823d4a1887b71eccd67af654f27fe~bAyzmnqUJ1886118861epcas1p11;
-        Mon, 22 Jun 2020 23:59:44 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 49rRGl41M6zMqYkk; Mon, 22 Jun
-        2020 23:59:43 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        73.54.28581.FE541FE5; Tue, 23 Jun 2020 08:59:43 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200622235942epcas1p3cda4faa2bf5ad932189cbe1a87b0b0fd~bAyyBP-sU2815928159epcas1p38;
-        Mon, 22 Jun 2020 23:59:42 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200622235942epsmtrp13d82fa0db9948bc0dac8fdbe90844315~bAyyAg5232670726707epsmtrp1d;
-        Mon, 22 Jun 2020 23:59:42 +0000 (GMT)
-X-AuditID: b6c32a38-2e3ff70000006fa5-fa-5ef145efa0c5
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        10.F1.08303.EE541FE5; Tue, 23 Jun 2020 08:59:42 +0900 (KST)
-Received: from [10.253.105.155] (unknown [10.253.105.155]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200622235942epsmtip16d13b33e18f9c69da82d677090e641a9~bAyxdYJnb0379503795epsmtip1G;
-        Mon, 22 Jun 2020 23:59:42 +0000 (GMT)
-Subject: Re: New mode DM-Verity error handling
-To:     Milan Broz <gmazyland@gmail.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sami Tolvanen <samitolvanen@google.com>
-Cc:     dm-devel@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, agk@redhat.com, corbet@lwn.net
-From:   JeongHyeon Lee <jhs2.lee@samsung.com>
-Message-ID: <250156a6-a2d6-dbfd-daa3-be9c36f0cf36@samsung.com>
-Date:   Tue, 23 Jun 2020 08:53:32 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Mon, 22 Jun 2020 20:02:35 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39565C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:02:34 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id d27so14128638qtg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fL1wENgZCNwSv3s/JTNbtGHYfJcNOvZphPgobRgCX+0=;
+        b=jOiz5xhY4H9RrA31ewUoMb6lWoSEJluMNJ4pFLIyuL2C/PAw2cU4NhHZPSbOtneWmY
+         ozUMm9lxePnw9yOjxx4YXvXCK3kITgyY6VI+mhuSl9fkmcyIppyhy/Jz6vVv/4LKzuRn
+         Gb8qhMwxyR4RKm7f3IBCU6P9IiqbHgwNX0yoHpJ3PAkHDvus22DcgqWtCXRMKvuPd80+
+         GtMIE29iM9uSkrK/mkJM41mZz+r3jtg9ekirUsyx5erxi/e/W0HuUH+SRS8iBijVSbYY
+         gVUrM+bjvjO7k15tkl2NlzpoPMdsvYPWVTdqh0sfLGGUDdoylYfcONvUD2B6N+OO84GZ
+         lj3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fL1wENgZCNwSv3s/JTNbtGHYfJcNOvZphPgobRgCX+0=;
+        b=nLGqIomqBShQ0kO7uj+ybyHI8gXgvkDymYBuYVXDkE8yK0qJktB1ppa9KoUaKDOIdl
+         5Iu0mvQ7lr0dIwQfj6jJdNDc2HRqFAyJZUfiA/qG5oEMUc/3XECiifok1UIpwbx6OJkH
+         kxOqwFCq7SIP1iozr5eoe7B5N/E2oTrL7HwM+BRUnJZsMBHv0z0Nn9JpgevoRoishqjK
+         oGeZ4Pod1Ucr6oEaMhLovOEPIpjSzbZW8lApCPMAqwfp8UkcAOncAwKyGvuazi41PzED
+         o4iBtBXer75TBrDUId6oDn+fjqdRrM3G6lQPDp7ELpo9VZxy4CfY7opBvBncVH8NXeaw
+         ZeeQ==
+X-Gm-Message-State: AOAM531myBiA7AqNGRvWg0PineMbpbYaXd5SFBTtZDKUnmkKtnymvXVQ
+        S6C+xMAz5CxrQvQqKtRbHdIA3g==
+X-Google-Smtp-Source: ABdhPJyCyWWM03fNzzwWcrkorPAde8ZwkJyT1NwEy7u+QyW/bvUE+EE8dkCWV5n1HdRyI+PQxXYPRQ==
+X-Received: by 2002:ac8:70da:: with SMTP id g26mr17916678qtp.333.1592870553204;
+        Mon, 22 Jun 2020 17:02:33 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id d186sm6145604qkb.110.2020.06.22.17.02.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 17:02:32 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jnWOV-00CHMM-GL; Mon, 22 Jun 2020 21:02:31 -0300
+Date:   Mon, 22 Jun 2020 21:02:31 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Felix Kuehling <felix.kuehling@amd.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200623000231.GW6578@ziepe.ca>
+References: <20200619151551.GP6578@ziepe.ca>
+ <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
+ <20200619172308.GQ6578@ziepe.ca>
+ <20200619180935.GA10009@redhat.com>
+ <20200619181849.GR6578@ziepe.ca>
+ <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
+ <20200619195538.GT6578@ziepe.ca>
+ <20200619203147.GC13117@redhat.com>
+ <20200622114617.GU6578@ziepe.ca>
+ <20200622201540.GB9708@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <b7eaf4a7-6692-ffdf-2bbc-b622f93ef601@gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmnu57149xBr1P5SzWnzrGbPHkQDuj
-        xd53s1ktju2fxW6xsG0Ji8XlXXPYLJaueMtq0bbxK6MDh8fOWXfZPRZsKvVY3DeZ1eP9vqts
-        Hp83yQWwRuXYZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl
-        5gCdoqRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMDQo0CtOzC0uzUvXS87PtTI0
-        MDAyBapMyMmYdnEha8EW/op1K3gbGKfwdDFyckgImEhce/+TsYuRi0NIYAejxL/bd5ghnE+M
-        El+ezYbKfGaUuH96KhtMy4dXz5kgErsYJQ6uOwPlvGeU+Ll6EwtIlbCAnsTHzq+sILaIQJHE
-        tAVNYHFmILv381uwOJuAtsTtlk3sIDavgJ3E338XmUBsFgFVid27l4LViwpESNw/toEVokZQ
-        4uTMJ2BxTgFbiY3rjjJBzJSX2P52DjOELS5x68l8sIMkBHo5JDZNmMUCcbaLxIT+U6wQtrDE
-        q+Nb2CFsKYmX/W1QdrnElabLjBB2jcSEC91Q9cYS81sWAi3gAFqgKbF+lz5EWFFi5++5jBB7
-        +STefe1hBSmREOCV6GgTgihRkljx7xrUBRISGw53QwPRQ2Jp63TWCYyKs5B8NgvJN7OQfDML
-        YfECRpZVjGKpBcW56anFhgUmyJG9iRGcTLUsdjDOfftB7xAjEwfjIUYJDmYlEd7XAe/ihHhT
-        EiurUovy44tKc1KLDzGaAsN6IrOUaHI+MJ3nlcQbmhoZGxtbmJiZm5kaK4nznrS6ECckkJ5Y
-        kpqdmlqQWgTTx8TBKdXAxCouFXBE41fyuvWJXNlmamvSz7/05lghwtP/J/mP/pE1hdP2lCw+
-        bbZ1Xr9XiMyUuVbBgg1+/6dKqc6+6TKhoqbf9ZdqoPCGkt95s930jm+Y0jOrOcr4v4ToX801
-        bKbufvYfHd8Yfz99+INWVvDz3X2LDv/Ln2tc8s/Vp0lUNee8Ea/axCMMHU2Lurnla7wcrQWE
-        JkyMvfqTs7zhx4mFhzRmG9Zk1y+UenvAluH/R/7okF5dyd/amy8fv7lWnXNLKSev7rcW5ZvS
-        3S/Kfn2/uuLlarVtZlslHzf/3aS55WTVwlrBkPn3o+vOya2Sijfc9NmcYwZfeM3p+NtmzHtk
-        kv0ueKzVSAn7MtPQ08xSiaU4I9FQi7moOBEAtqQW3C8EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsWy7bCSnO47149xBktmGFqsP3WM2eLJgXZG
-        i73vZrNaHNs/i91iYdsSFovLu+awWSxd8ZbVom3jV0YHDo+ds+6yeyzYVOqxuG8yq8f7fVfZ
-        PD5vkgtgjeKySUnNySxLLdK3S+DKmHZxIWvBFv6KdSt4Gxin8HQxcnJICJhIfHj1nKmLkYtD
-        SGAHo8TL9p1MEAkJiQ2b1rJ3MXIA2cIShw8XQ9S8ZZS4unovO0iNsICexMfOr6wgtohAkcS7
-        BQ/AbGYge+ftk1BDtzFJTGyYzwKSYBPQlrjdsgmsmVfATuLvv4tgy1gEVCV2714KViMqECFx
-        5v0KFogaQYmTM5+A2ZwCthIb1x1lglhgJjFv80NmCFteYvvbOVC2uMStJ/OZJjAKzULSPgtJ
-        yywkLbOQtCxgZFnFKJlaUJybnltsWGCUl1quV5yYW1yal66XnJ+7iREcPVpaOxj3rPqgd4iR
-        iYPxEKMEB7OSCO/rgHdxQrwpiZVVqUX58UWlOanFhxilOViUxHm/zloYJySQnliSmp2aWpBa
-        BJNl4uCUamCSZ/lyeI3ItBfuVxRWSWzKj3ZplDt7NIht6UaVnSkNjV+jH3u91N9lYt9u+O3W
-        3hdrVynffuzzfIv8ta0X9j16+y28Kz79/bo1TRxbVuQ8tFqvf+yir6Hp94KWstPZkcWxO2y/
-        MTNefRdy8WdUWYXsesa2vPMms1MvcbIrtfrKXlj4ek3oldvcqjOTtq0W9+dRELZJD1ZMPvO7
-        1+x1rudJP20u/uKP575qLzTxNb+gI3vj0I+Vn65WqB68q1xjFWk7W3pa288HM2L4c7ovZU2y
-        /LIy4qzhjLSs3dq7FwVIG30x921pnqRzjONiZFHJJl62w6yOHYsjqjY0b54b2Zd42TWdb33z
-        /eQf0rb3612UWIozEg21mIuKEwGDjIQCDQMAAA==
-X-CMS-MailID: 20200622235942epcas1p3cda4faa2bf5ad932189cbe1a87b0b0fd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200618070250epcas1p409eb2ddd19ecc5d55c219ac3dc884f25
-References: <CGME20200618070250epcas1p409eb2ddd19ecc5d55c219ac3dc884f25@epcas1p4.samsung.com>
-        <98eac3fc-c399-625d-5730-29853b3a0771@samsung.com>
-        <20200618154444.GB18007@redhat.com> <20200618165006.GA103290@google.com>
-        <20200618170952.GA18057@redhat.com>
-        <b7eaf4a7-6692-ffdf-2bbc-b622f93ef601@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622201540.GB9708@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Milan Broz.
+On Mon, Jun 22, 2020 at 04:15:40PM -0400, Jerome Glisse wrote:
+> On Mon, Jun 22, 2020 at 08:46:17AM -0300, Jason Gunthorpe wrote:
+> > On Fri, Jun 19, 2020 at 04:31:47PM -0400, Jerome Glisse wrote:
+> > > Not doable as page refcount can change for things unrelated to GUP, with
+> > > John changes we can identify GUP and we could potentialy copy GUPed page
+> > > instead of COW but this can potentialy slow down fork() and i am not sure
+> > > how acceptable this would be. Also this does not solve GUP against page
+> > > that are already in fork tree ie page P0 is in process A which forks,
+> > > we now have page P0 in process A and B. Now we have process A which forks
+> > > again and we have page P0 in A, B, and C. Here B and C are two branches
+> > > with root in A. B and/or C can keep forking and grow the fork tree.
+> > 
+> > For a long time now RDMA has broken COW pages when creating user DMA
+> > regions.
+> > 
+> > The problem has been that fork re-COW's regions that had their COW
+> > broken.
+> > 
+> > So, if you break the COW upon mapping and prevent fork (and others)
+> > from copying DMA pinned then you'd cover the cases.
+> 
+> I am not sure we want to prevent COW for pinned GUP pages, this would
+> change current semantic and potentialy break/slow down existing apps.
 
-Thank for your reply.
+Isn't that basically exactly what 17839856fd588 does? It looks like it
+uses the same approach RDMA does by sticking FOLL_WRITE even though it
+is a read action.
 
+After that change the reamining bug is that fork can re-establish a
+COW./
 
-I didn't understand well, could you explain it in more detail?
+> Anyway i think we focus too much on fork/COW, it is just an unfixable
+> broken corner cases, mmu notifier allows you to avoid it. Forcing real
+> copy on fork would likely be seen as regression by most people.
 
-For what reason isn't panic better?
+If you don't copy the there are data corruption bugs though. Real apps
+probably don't hit a problem here as they are not forking while GUP's
+are active (RDMA excluded, which does do this)
 
-Is it because there is a place to use other device-mapper?
+I think that implementing page pinning by blocking mmu notifiers for
+the duration of the pin is a particularly good idea either, that
+actually seems a lot worse than just having the pin in the first
+place.
 
-Or other things? I just wonder. I would like to hear various 
-explanations and information.
+Particularly if it is only being done to avoid corner case bugs that
+already afflict other GUP cases :(
 
+> > What do you mean 'GUP fast is still succeptible to this' ?
+> 
+> Not all GUP fast path are updated (intentionaly) __get_user_pages_fast()
 
-I just wanted user to use what they wanted through the options(flags).
+Sure, that is is the 'raw' accessor
 
-Yes, If adding a new feature, modify user-space to support.
-
-
-Oh, I'm sorry :(
-
-If when i suggested new patch, i will send you a patch that increased 
-minor version.
-
-Thank you for all your detailed information.
-
-
-Thanks.
-
-JeongHyeon Lee
-
-
-
-On 22/06/2020 16:58, Milan Broz wrote:
-> On 18/06/2020 19:09, Mike Snitzer wrote:
->> On Thu, Jun 18 2020 at 12:50pm -0400,
->> Sami Tolvanen <samitolvanen@google.com> wrote:
->>
->>> On Thu, Jun 18, 2020 at 11:44:45AM -0400, Mike Snitzer wrote:
->>>> I do not accept that panicing the system because of verity failure is
->>>> reasonable.
->>>>
->>>> In fact, even rebooting (via DM_VERITY_MODE_RESTART) looks very wrong.
->>>>
->>>> The device should be put in a failed state and left for admin recovery.
->>> That's exactly how the restart mode works on some Android devices. The
->>> bootloader sees the verification error and puts the device in recovery
->>> mode. Using the restart mode on systems without firmware support won't
->>> make sense, obviously.
->> OK, so I need further justification from Samsung why they are asking for
->> this panic mode.
-> I think when we have reboot already, panic is not much better :-)
->
-> Just please note that dm-verity is used not only in Android world (with own tooling)
-> but in normal Linux distributions, and I need to modify userspace (veritysetup) to support
-> and recognize this flag.
->
-> Please *always* increase minor dm-verity target version when adding a new feature
-> - we can then provide some better hint if it is not supported.
->
-> Thanks,
-> Milan
->
->
+Jason
