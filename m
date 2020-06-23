@@ -2,278 +2,165 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52184C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70BEF206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336542076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sZdu1WhQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YkuJYpxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgFWAqk (ORCPT
+        id S1732312AbgFWArc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40130 "EHLO
+        Mon, 22 Jun 2020 20:47:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731920AbgFWAqU (ORCPT
+        with ESMTP id S1731716AbgFWArc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:46:20 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B70C061797
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:45:28 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b4so17338399qkn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:45:28 -0700 (PDT)
+        Mon, 22 Jun 2020 20:47:32 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D764C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:47:32 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so1213471ljm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:47:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=U5u5cQtMfW2cY2gSCcV6gUwhOVtzA52lPIPVAy1oiys=;
-        b=sZdu1WhQqVwDW+IbO6JNJgAoa3N768tGjh9bCNKMujlDBwqoDnLme9XPx/jwLJyBan
-         vQVFmVzg9Zvep72uCoVWq3Uy5M3ACF8vVWo4SmZ+k0QZ2D7jJdbJZ3zBK8W+PKWht91q
-         V1tPooX5Q50F4NjdPj3K9lY4gYaq9Rpzu6oViPky1FawQ5WRabPgDsYM4qM4yzPwM2zA
-         wZU8bdjlksD4v0Lh1AJileKGdGBkJtE+Vjoq9M3Gmr7g4gqMFavYjzzzV6dUqrG5kqIM
-         vXFK1hry2LbS9CJQebgM0hI/A/xS4m3MgiF74TWA8wusPBnvENGznqxuoPzCP03r/fIm
-         dHDA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wtdbOX5oThYTDJM/yZ7loxNE7l9NJR90MLvrHTPjroE=;
+        b=YkuJYpxXvdEL7yoEauC9MJGL4fib0h9/hPyEoQNua/x651UUThCLvRj/xjLWmZU6UO
+         YGPqNogOE8kx2yYabzpI88Lu955G6M0TmqFCJA0/Wl9BM870ahCsHhy4Ay2jWsvHxXPB
+         MTDDLu5EniwwcBR4EvOhPuD/cRvMfy/EsS/avB8xiZHBWD6oI6JoZWSQP2DFX5hTuTXa
+         1ek7r8D77SmBHJ0rrl7FN9hWh874kcm4hBaC/maBiGUwlfLbGsQ3TqGTWRJtGw/jh/ik
+         e04xUD5/povonUgqdwOL3arsqgMcTuITn93KR0jhV5JvYXIMmMygkFo9qhWslpOSKXjk
+         1LEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=U5u5cQtMfW2cY2gSCcV6gUwhOVtzA52lPIPVAy1oiys=;
-        b=jb4iMkzrG8lzkzBpZvpTFy9WhXE0Pd/N09QjEQC3mJmVIx1JBLnupMshng6bt0AKo1
-         1RZ8vChTbu+l3fKOABXbGJux8joAbpabbL0whgqSM3chx26/mRUYOzLOY8OpoGW5Iww0
-         GNQeCFEtBFOgpv+Gq51ZIXMPCYgIWAnqK7AuCmWAmVyZsREd21gvu5TFGquuoXrE/ipD
-         YsppdhD+tRhNV9OAuZdDcVr9Q5mSDYpwaeHf7+hMdlD4TTGaDIbKP3RBGu2CsY7/6qld
-         lHi4QdfixM6J/M2cgqpHGz9b3mCCY/WCaC34fZ2SAzGiQxLJl+ML132W4LjlZb2bMyqm
-         hk4w==
-X-Gm-Message-State: AOAM533NyU+P9vOF/dHIunMbL/tv4X1lAbqpdaUBLHt7OxGxu6aXzlkp
-        yR9WTtk0jBJHqUl7ZEegDw6JECAL
-X-Google-Smtp-Source: ABdhPJyuCI7reyD1jdfvBnEhiieQ0mKVveGrfTeFQrFISXc4nPWHXrX93HOKxj6LW5KagCMnWKl6Sw==
-X-Received: by 2002:a05:620a:52a:: with SMTP id h10mr18033907qkh.185.1592873127773;
-        Mon, 22 Jun 2020 17:45:27 -0700 (PDT)
-Received: from localhost.localdomain ([72.53.229.195])
-        by smtp.gmail.com with ESMTPSA id r2sm9493715qtn.27.2020.06.22.17.45.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 17:45:27 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wtdbOX5oThYTDJM/yZ7loxNE7l9NJR90MLvrHTPjroE=;
+        b=TxiXB5geK0HxNQ4twzP+fT6tEq0N4/2qBdzcKKAPbMnyudbbRAt1dK1NzmwvAvl6nl
+         e3AXFsMqmP1pCMNHm4HyCqV4XsEqAn27xQEcA4LKlyS8bPrRP5xagPB3Y+f7jcWWQza4
+         MrjQigCrkC3XQG83TtnGhlkpNO3ogRvxFv7xTN+7sU+00ziAGaVa4KqnLeqFO/vjPLoH
+         q4aAoveR+YLr8aYhBNUwknV4hTkaOnx5KGTyL2eboKxogJLQVMxzbujDEcC8ACPbslWy
+         ENFsVhIycwsMivGd9BwnLm3d7yHZ3kT3DIUVqrcMKLrwky9LTaB0FPAqbUmRMDjBsy04
+         JCag==
+X-Gm-Message-State: AOAM533YX6mnK2cYZ3qDylViOLUayB1LtefflyBpYVIE3xawe7eGliBX
+        M97rOtgYzKt/OGqkxyYEuXew12SEE18pNqeDMsEgXw==
+X-Google-Smtp-Source: ABdhPJwd98jM9BRU2cXbE2BpTTuTTR91cyjV/GkqiL/DYfU/k2t4CLNN4nFu2jsYOQL7F3pAft5IhpPF7OzVZchP6R4=
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr10003481ljp.347.1592873250358;
+ Mon, 22 Jun 2020 17:47:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200623002128.GA25456@paulmck-ThinkPad-P72> <20200623002147.25750-2-paulmck@kernel.org>
+In-Reply-To: <20200623002147.25750-2-paulmck@kernel.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 22 Jun 2020 17:47:19 -0700
+Message-ID: <CALvZod4yjC5dDsVHLLhW405pBeMLCcq1b6FYq77ZAxUOtsNCFQ@mail.gmail.com>
+Subject: Re: [PATCH tip/core/rcu 02/26] mm/mmap.c: Add cond_resched() for
+ exit_mmap() CPU stalls
+To:     paulmck@kernel.org, David Rientjes <rientjes@google.com>
+Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Ingo Molnar <mingo@kernel.org>, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        josh@joshtriplett.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         David Howells <dhowells@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Janos Farkas <chexum+dev@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v1 2/2] romfs: address performance regression since v3.10
-Date:   Mon, 22 Jun 2020 20:45:20 -0400
-Message-Id: <20200623004520.26520-3-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200623004520.26520-1-TheSven73@gmail.com>
-References: <20200623004520.26520-1-TheSven73@gmail.com>
+        Eric Dumazet <edumazet@google.com>, fweisbec@gmail.com,
+        oleg@redhat.com, Joel Fernandes <joel@joelfernandes.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Problem
--------
-romfs sequential read performance has regressed very badly since
-v3.10. Currently, reading a large file inside a romfs image is
-up to 12x slower compared to reading the romfs image directly.
+On Mon, Jun 22, 2020 at 5:22 PM <paulmck@kernel.org> wrote:
+>
+> From: "Paul E. McKenney" <paulmck@kernel.org>
+>
+> A large process running on a heavily loaded system can encounter the
+> following RCU CPU stall warning:
+>
+>   rcu: INFO: rcu_sched self-detected stall on CPU
+>   rcu: \x093-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
+>   \x09(t=21013 jiffies g=1005461 q=132576)
+>   NMI backtrace for cpu 3
+>   CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
+>   Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
+>   Call Trace:
+>    <IRQ>
+>    dump_stack+0x46/0x60
+>    nmi_cpu_backtrace.cold.3+0x13/0x50
+>    ? lapic_can_unplug_cpu.cold.27+0x34/0x34
+>    nmi_trigger_cpumask_backtrace+0xba/0xca
+>    rcu_dump_cpu_stacks+0x99/0xc7
+>    rcu_sched_clock_irq.cold.87+0x1aa/0x397
+>    ? tick_sched_do_timer+0x60/0x60
+>    update_process_times+0x28/0x60
+>    tick_sched_timer+0x37/0x70
+>    __hrtimer_run_queues+0xfe/0x270
+>    hrtimer_interrupt+0xf4/0x210
+>    smp_apic_timer_interrupt+0x5e/0x120
+>    apic_timer_interrupt+0xf/0x20
+>    </IRQ>
+>   RIP: 0010:kmem_cache_free+0x223/0x300
+>   Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
+>   RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+>   RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
+>   RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
+>   RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
+>   R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
+>   R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
+>    ? remove_vma+0x4f/0x60
+>    remove_vma+0x4f/0x60
+>    exit_mmap+0xd6/0x160
+>    mmput+0x4a/0x110
+>    do_exit+0x278/0xae0
+>    ? syscall_trace_enter+0x1d3/0x2b0
+>    ? handle_mm_fault+0xaa/0x1c0
+>    do_group_exit+0x3a/0xa0
+>    __x64_sys_exit_group+0x14/0x20
+>    do_syscall_64+0x42/0x100
+>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
+> for a very long time given a large process.  This commit therefore adds
+> a cond_resched() to this loop, providing RCU any needed quiescent states.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: <linux-mm@kvack.org>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-Benchmarks:
-- use a romfs image which contains a single 250M file
-- calculate the md5sum of the romfs image directly (test 1)
-  $ time md5sum image.romfs
-- loop-mount the romfs image, and calc the md5sum of the file
-  inside it (test 2)
-  $ mount -o loop,ro image.romfs /mnt/romfs
-  $ time md5sum /mnt/romfs/file
-- drop caches in between
-  $ echo 3 > /proc/sys/vm/drop_caches
+We have exactly the same change in our internal kernel since 2018. We
+mostly observed the need_resched warnings on the processes mapping the
+hugetlbfs.
 
-imx6 (arm cortex a9) on emmc, running v5.7.2:
-(test 1)  5 seconds
-(test 2) 60 seconds (12x slower)
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-Intel i7-3630QM on Samsung SSD 850 EVO (EMT02B6Q),
-    running Ubuntu with v4.15.0-106-generic:
-(test 1) 1.3 seconds
-(test 2) 3.3 seconds (2.5x slower)
-
-To show that a regression has occurred since v3.10:
-
-imx6 on emmc, running v3.10.17:
-(test 1) 16 seconds
-(test 2) 18 seconds
-
-Proposed Solution
------------------
-Increase the blocksize from 1K to PAGE_SIZE. This brings the
-sequential read performance close to where it was on v3.10:
-
-imx6 on emmc, running v5.7.2:
-(test 2 1K blocksize) 60 seconds
-(test 2 4K blocksize) 22 seconds
-
-Intel on Ubuntu running v4.15:
-(test 2 1K blocksize) 3.3 seconds
-(test 2 4K blocksize) 1.9 seconds
-
-There is a risk that this may increase latency on random-
-access workloads. But the test below suggests that this
-is not a concern:
-
-Benchmark:
-- use a 630M romfs image consisting of 9600 files
-- loop-mount the romfs image
-  $ mount -o loop,ro image.romfs /mnt/romfs
-- drop all caches
-- list all files in the filesystem (test 3)
-  $ time find /mnt/romfs > /dev/null
-
-imx6 on emmc, running v5.7.2:
-(test 3 1K blocksize) 9.5 seconds
-(test 3 4K blocksize) 9   seconds
-
-Intel on Ubuntu, running v4.15:
-(test 3 1K blocksize) 1.4 seconds
-(test 3 4K blocksize) 1.2 seconds
-
-Practical Solution
-------------------
-Introduce a mount-option called 'largeblocks'. If present,
-increase the blocksize for much better sequential performance.
-
-Note that the Linux block layer can only support n-K blocks if
-the underlying block device length is also aligned to n-K. This
-may not always be the case. Therefore, the driver will pick the
-largest blocksize which the underlying block device can support.
-
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: Janos Farkas <chexum+dev@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-To: linux-kernel@vger.kernel.org
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- fs/romfs/super.c | 62 ++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 57 insertions(+), 5 deletions(-)
-
-diff --git a/fs/romfs/super.c b/fs/romfs/super.c
-index 6fecdea791f1..93565aeaa43c 100644
---- a/fs/romfs/super.c
-+++ b/fs/romfs/super.c
-@@ -65,7 +65,7 @@
- #include <linux/slab.h>
- #include <linux/init.h>
- #include <linux/blkdev.h>
--#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include <linux/mount.h>
- #include <linux/namei.h>
- #include <linux/statfs.h>
-@@ -460,6 +460,54 @@ static __u32 romfs_checksum(const void *data, int size)
- 	return sum;
- }
- 
-+enum romfs_param {
-+	Opt_largeblocks,
-+};
-+
-+static const struct fs_parameter_spec romfs_fs_parameters[] = {
-+	fsparam_flag("largeblocks", Opt_largeblocks),
-+	{}
-+};
-+
-+/*
-+ * Parse a single mount parameter.
-+ */
-+static int romfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+	struct fs_parse_result result;
-+	int opt;
-+
-+	opt = fs_parse(fc, romfs_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
-+
-+	switch (opt) {
-+	case Opt_largeblocks:
-+		fc->fs_private = (void *) 1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * pick the largest blocksize which the underlying block device
-+ * is a multiple of. Or fall back to legacy (ROMBSIZE).
-+ */
-+static int romfs_largest_blocksize(struct super_block *sb)
-+{
-+	loff_t device_sz = i_size_read(sb->s_bdev->bd_inode);
-+	int blksz;
-+
-+	for (blksz = PAGE_SIZE; blksz > ROMBSIZE; blksz >>= 1)
-+		if ((device_sz % blksz) == 0)
-+			break;
-+
-+	return blksz;
-+}
-+
- /*
-  * fill in the superblock
-  */
-@@ -467,17 +515,19 @@ static int romfs_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct romfs_super_block *rsb;
- 	struct inode *root;
--	unsigned long pos, img_size;
-+	unsigned long pos, img_size, dev_blocksize;
- 	const char *storage;
- 	size_t len;
- 	int ret;
- 
- #ifdef CONFIG_BLOCK
-+	dev_blocksize = fc->fs_private ? romfs_largest_blocksize(sb) :
-+					 ROMBSIZE;
- 	if (!sb->s_mtd) {
--		sb_set_blocksize(sb, ROMBSIZE);
-+		sb_set_blocksize(sb, dev_blocksize);
- 	} else {
--		sb->s_blocksize = ROMBSIZE;
--		sb->s_blocksize_bits = blksize_bits(ROMBSIZE);
-+		sb->s_blocksize = dev_blocksize;
-+		sb->s_blocksize_bits = blksize_bits(dev_blocksize);
- 	}
- #endif
- 
-@@ -573,6 +623,7 @@ static int romfs_get_tree(struct fs_context *fc)
- static const struct fs_context_operations romfs_context_ops = {
- 	.get_tree	= romfs_get_tree,
- 	.reconfigure	= romfs_reconfigure,
-+	.parse_param	= romfs_parse_param,
- };
- 
- /*
-@@ -607,6 +658,7 @@ static struct file_system_type romfs_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "romfs",
- 	.init_fs_context = romfs_init_fs_context,
-+	.parameters	= romfs_fs_parameters,
- 	.kill_sb	= romfs_kill_sb,
- 	.fs_flags	= FS_REQUIRES_DEV,
- };
--- 
-2.17.1
-
+> ---
+>  mm/mmap.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 59a4682..972f839 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -3159,6 +3159,7 @@ void exit_mmap(struct mm_struct *mm)
+>                 if (vma->vm_flags & VM_ACCOUNT)
+>                         nr_accounted += vma_pages(vma);
+>                 vma = remove_vma(vma);
+> +               cond_resched();
+>         }
+>         vm_unacct_memory(nr_accounted);
+>  }
+> --
+> 2.9.5
+>
