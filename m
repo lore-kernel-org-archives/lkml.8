@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61378C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88827C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3067B2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6354C20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947206;
-	bh=x52YH5A12U1s0BZMnkC2ea7ZFIj87Gj1lcrGA1eHNlg=;
+	s=default; t=1592947212;
+	bh=TtD3ILuGuKCGxDNy2HlXXJ0aABPdLJ+td5SzO4EVlvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knr2sRosRDiNN/BWua1z7QfSWOsHfNK+9La0Kg5sI4FIET7BJCJOVVpfBmzH0moO+
-	 C/GhsG/wXv8O5oLZDTK8x+Bdbaj7e7FkyGNxKJtDI+CjMC0UBdcxQyZn4L+VxBtEhc
-	 4Stb1hNCKy4+Be0TaBW+0vqpJAS2TD64L5HInlCc=
+	b=uzyY3af9NqVOYhCy3DDqCKbFNkPtwUXs3ZZfiIGCYqjlhQIdHokbN2u/lvGhThOgB
+	 zsRI3atUOeuZtjBvQYfyRPaK3XFFDuGa/w52Aw/D3t1w5/LMk1iBSuSWMTiXS/yBXc
+	 nRYFx+mEOHd54RdvXW+fq6SXeR2nTnVo5SsHPtas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391770AbgFWVUE (ORCPT
+        id S2390933AbgFWVUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:20:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:20:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390348AbgFWUXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:23:54 -0400
+        id S2390338AbgFWUXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:23:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AD702064B;
-        Tue, 23 Jun 2020 20:23:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEF52070E;
+        Tue, 23 Jun 2020 20:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943834;
-        bh=x52YH5A12U1s0BZMnkC2ea7ZFIj87Gj1lcrGA1eHNlg=;
+        s=default; t=1592943824;
+        bh=TtD3ILuGuKCGxDNy2HlXXJ0aABPdLJ+td5SzO4EVlvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBJIAfLTHDYVbYzjVh22Jd9mSFZNTurfv/Ii+rscWNuMYpO/RCeLHSG/4u9fmSR65
-         GAkKHPvSrthGcyTCfGWlSEWylWFWWVeqWO+2Z7BO1NbNunTgN0Hs1faRXdydzLO7aM
-         Gigoek1r+KU6xEVs67p7BEhW3lQDTHUIHZsRJ/G8=
+        b=15WJ30WxCDYyxGbA54wu71k9l+KR5GUQKIIIL4QhwOFXnazAFcCDaNPDVSXB5tUQi
+         y2u+Cd5tcMzqzn+UFY/yknjKFyfugqhF4kWC1jl5GXAiEmbKNvTP7wCGAh4s14oS0i
+         1y02AsJM0SShfvA4JjYrmMnctHUknr1uXoeKZWLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/314] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
-Date:   Tue, 23 Jun 2020 21:54:17 +0200
-Message-Id: <20200623195341.783878353@linuxfoundation.org>
+Subject: [PATCH 5.4 035/314] arm64: dts: armada-3720-turris-mox: forbid SDR104 on SDIO for FCC purposes
+Date:   Tue, 23 Jun 2020 21:53:50 +0200
+Message-Id: <20200623195340.483662169@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,42 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Marek Behún <marek.behun@nic.cz>
 
-[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
+[ Upstream commit 7a2c36b039d2343cc29fec6102da839477b8dc60 ]
 
-nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
-refcount of the "c->cn_xprt".
+Use sdhci-caps-mask to forbid SDR104 mode on the SDIO capable SDHCI
+controller. Without this the device cannot pass electromagnetic
+interference certifications.
 
-The reference counting issue happens in one exception handling path of
-nfsd4_process_cb_update(). When setup callback client failed, the
-function forgets to decrease the refcnt increased by svc_xprt_get(),
-causing a refcnt leak.
-
-Fix this issue by calling svc_xprt_put() when setup callback client
-failed.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 7109d817db2e ("arm64: dts: marvell: add DTS for Turris Mox")
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4callback.c | 2 ++
+ arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index afca3287184b9..efe55d101b0ed 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1230,6 +1230,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
- 	err = setup_callback_client(clp, &conn, ses);
- 	if (err) {
- 		nfsd4_mark_cb_down(clp, err);
-+		if (c)
-+			svc_xprt_put(c->cn_xprt);
- 		return;
- 	}
- }
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+index 5f350cc71a2fd..01f66056d7d51 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+@@ -171,6 +171,8 @@
+ 	marvell,pad-type = "sd";
+ 	vqmmc-supply = <&vsdio_reg>;
+ 	mmc-pwrseq = <&sdhci1_pwrseq>;
++	/* forbid SDR104 for FCC purposes */
++	sdhci-caps-mask = <0x2 0x0>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.25.1
 
