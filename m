@@ -2,255 +2,97 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4E8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E37C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31DE020771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F0B20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oR2GDEnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgFWFMl (ORCPT
+        id S1730263AbgFWFNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 01:12:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:8579 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbgFWFMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 01:12:39 -0400
-IronPort-SDR: XmhRzz8+TSgV2F7siaLj04i0VxG1JKRU4ZMSsxEZVnOH5sSuFJ/IXQG4IVPCvf16yxv62JgKC4
- Z1Ijqlityzyg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="132378788"
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="132378788"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 22:12:38 -0700
-IronPort-SDR: /GR5SaCIvXV+LEaMY3PmkvvZujnIu1VD9y1RZcWXbSaWhvem7rDc3sIfZNFNyNsoOecxbZJUE1
- 6v/lvRS/MpxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="311165676"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.255.228.38])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Jun 2020 22:12:37 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, lenb@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 2/2] cpufreq: intel_pstate: Allow raw energy performance preference value
-Date:   Mon, 22 Jun 2020 22:12:33 -0700
-Message-Id: <20200623051233.1419218-2-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200623051233.1419218-1-srinivas.pandruvada@linux.intel.com>
-References: <20200623051233.1419218-1-srinivas.pandruvada@linux.intel.com>
+        Tue, 23 Jun 2020 01:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgFWFNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 01:13:42 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C59C061573;
+        Mon, 22 Jun 2020 22:13:41 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 80so5912403qko.7;
+        Mon, 22 Jun 2020 22:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HzTUjRPxhEgtJpZSkWjXg3y2ucQ0p12YsNY/BwVBYp8=;
+        b=oR2GDEnSD0fMlAe6QCKGq9+ZOBwBnkUaO1r3hNEMhjduhOKPmy8xoHwjiyNbSjZmvP
+         CMqWcHjO4NrhlMdMkGyJHcpPtEQwTj2BOZI/3X6VAj/ZFIb4QVOQfu2Tpkorn2X5y2xG
+         LHjhjwXDXLg4qBt0Wd854NyA4TOykkz66EJM2nxGY2FITG9d0Gtgbd7oy9PNjy8Fm/j5
+         YZ7iMfbRd6ZAekr2EfqQwSd3Gss8TPZxQvxk/dEaVQ4zQlh0XwVQTssfD4gFxpNobhHF
+         mkc9igDjsksoulDMPZ0H6Nell9/4jqilOR4kZu2WSJvmQKxBHQwRnIZgZgvMIqDttiPg
+         /pbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HzTUjRPxhEgtJpZSkWjXg3y2ucQ0p12YsNY/BwVBYp8=;
+        b=nmRXGpXo7ccgOwSEgAFeUYzuwsAamR+dfp3DPTehygKZLHk/jaYfOXBT29ryRE/y7V
+         xgGzwHCJbckHWWQJhwwbDs3Qen90eWfJ8HrnSTsv7D/oSjoTOxCiV6ED17zVf8x5+mdE
+         emLgCMSd6RiKyZ1m1eJ2oj0ZlKJi/Z+tV8/NymSHOwJDcHv+0WCGsYxL6fRbc/PyNF/h
+         C1zqXsSIOM/H87/RnxzlYdmxyptFIfpx9bAqx4AhVDnKOQICQ1jY3cQ4vyEZ4aJUNl3d
+         pZ04HyKHVWo3uIlvMttJGJHdPXKDdkmOwkCbCCi6LDLDmmHWE77HaP2PLYwFGCpmkuay
+         8u3Q==
+X-Gm-Message-State: AOAM5332Z8MhQdRd+xsma/QXZm/a8jAICxOic4PNy15R0hcLrUYrE2+T
+        EZ6jtYzasTa55kUcXBtZxAD49MmvgAqLncdp4uM=
+X-Google-Smtp-Source: ABdhPJzfa5toLWKvS3pXevR0nV8DyiuB56n4keWG8hRyMYBxy22MfXqDg/6UUlR/H6iUSAMG13i3ttR0pbnoWaYmW+I=
+X-Received: by 2002:a37:6190:: with SMTP id v138mr16646545qkb.121.1592889221195;
+ Mon, 22 Jun 2020 22:13:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <3eab889e-75b6-6287-a668-a2eaa509834c@web.de>
+In-Reply-To: <3eab889e-75b6-6287-a668-a2eaa509834c@web.de>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Tue, 23 Jun 2020 13:13:30 +0800
+Message-ID: <CAA+D8ANyeND269US_e3VZg-pOVJ6Beu54C2SL19h6y+ut03OYg@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_mqs: Fix unchecked return value for clk_prepare_enable
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>, Takashi Iwai <tiwai@suse.com>,
+        kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently using attribute "energy_performance_preference", user space can
-write one of the four per-defined preference string. These preference
-strings gets mapped to a hard-coded Energy-Performance Preference (EPP) or
-Energy-Performance Bias (EPB) knob.
+On Tue, Jun 23, 2020 at 12:08 AM Markus Elfring <Markus.Elfring@web.de> wrote:
+>
+> > Fix unchecked return value for clk_prepare_enable.
+> >
+> > And because clk_prepare_enable and clk_disable_unprepare should
+> > check input clock parameter is NULL or not, then we don't need
+> > to check it before calling the function.
+>
+> I propose to split the adjustment of two function implementations
+> into separate update steps for a small patch series.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=625d3449788f85569096780592549d0340e9c0c7#n138
+>
+> I suggest to improve the change descriptions accordingly.
 
-These four values supposed to cover broad spectrum of use cases, but they
-are not uniformly distributed in the range. There are number of cases,
-where this is not enough. For example:
+ok, will update the patches in v2.
 
-Suppose user wants more performance when connected to AC. Instead of using
-default "balance performance", the "performance" setting can be used. This
-changes EPP value from 0x80 to 0x00. But setting EPP to 0, results in
-electrical and thermal issues on some platforms. This results in CPU to do
-aggressive throttling, which causes drop in performance. But some value
-between 0x80 and 0x00 results in better performance. But that value can't
-be fixed as the power curve is not linear. In some cases just changing EPP
-from 0x80 to 0x75 is enough to get significant performance gain.
-
-Similarly on battery EPP 0x80 can be very aggressive in power consumption.
-But picking up the next choice "balance power" results in too much loss
-of performance, which cause bad user experience in use case like "Google
-Hangout". It was observed that some value between these two EPP is
-optimal.
-
-This change allows fine grain EPP tuning for platform like Chromebooks.
-Here based on the product and use cases, different EPP values can be set.
-This change is similar to the change done for:
-/sys/devices/system/cpu/cpu*/power/energy_perf_bias
-where user has choice to write a predefined string or raw value.
-
-The change itself is trivial. When user preference doesn't match
-predefined string preferences and value is an unsigned integer and in
-range, use that value for EPP/EPB.
-
-Suggested-by: Len Brown <lenb@kernel.org>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- Documentation/admin-guide/pm/intel_pstate.rst |  4 +-
- drivers/cpufreq/intel_pstate.c                | 63 ++++++++++++++++---
- 2 files changed, 56 insertions(+), 11 deletions(-)
-
-diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-guide/pm/intel_pstate.rst
-index 939bfdc53f4f..1f4ef187f8a5 100644
---- a/Documentation/admin-guide/pm/intel_pstate.rst
-+++ b/Documentation/admin-guide/pm/intel_pstate.rst
-@@ -561,7 +561,9 @@ somewhere between the two extremes:
- Strings written to the ``energy_performance_preference`` attribute are
- internally translated to integer values written to the processor's
- Energy-Performance Preference (EPP) knob (if supported) or its
--Energy-Performance Bias (EPB) knob.
-+Energy-Performance Bias (EPB) knob. It is also possible to write a positive
-+integer value between 0 to 255 for EPP or 0 to 15 for EPB. Writing Invalid
-+value results in error.
- 
- [Note that tasks may by migrated from one CPU to another by the scheduler's
- load-balancing algorithm and if different energy vs performance hints are
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 1cf6d06f2314..251813b7060b 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -602,11 +602,12 @@ static const unsigned int epp_values[] = {
- 	HWP_EPP_POWERSAVE
- };
- 
--static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data)
-+static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data, int *raw_epp)
- {
- 	s16 epp;
- 	int index = -EINVAL;
- 
-+	*raw_epp = 0;
- 	epp = intel_pstate_get_epp(cpu_data, 0);
- 	if (epp < 0)
- 		return epp;
-@@ -614,12 +615,14 @@ static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data)
- 	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
- 		if (epp == HWP_EPP_PERFORMANCE)
- 			return 1;
--		if (epp <= HWP_EPP_BALANCE_PERFORMANCE)
-+		if (epp == HWP_EPP_BALANCE_PERFORMANCE)
- 			return 2;
--		if (epp <= HWP_EPP_BALANCE_POWERSAVE)
-+		if (epp == HWP_EPP_BALANCE_POWERSAVE)
- 			return 3;
--		else
-+		if (epp == HWP_EPP_POWERSAVE)
- 			return 4;
-+		*raw_epp = epp;
-+		return 0;
- 	} else if (boot_cpu_has(X86_FEATURE_EPB)) {
- 		/*
- 		 * Range:
-@@ -631,6 +634,13 @@ static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data)
- 		 * value which can be set. Here only using top two bits
- 		 * effectively.
- 		 */
-+
-+		if (epp & 0x03) {
-+			/* Raw value was set in EPB */
-+			*raw_epp = epp;
-+			return 0;
-+		}
-+
- 		index = (epp >> 2) + 1;
- 	}
- 
-@@ -638,7 +648,8 @@ static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data)
- }
- 
- static int intel_pstate_set_energy_pref_index(struct cpudata *cpu_data,
--					      int pref_index)
-+					      int pref_index, bool use_raw,
-+					      u32 raw_epp)
- {
- 	int epp = -EINVAL;
- 	int ret;
-@@ -657,12 +668,31 @@ static int intel_pstate_set_energy_pref_index(struct cpudata *cpu_data,
- 
- 		value &= ~GENMASK_ULL(31, 24);
- 
-+		if (use_raw) {
-+			if (raw_epp > 255) {
-+				ret = -EINVAL;
-+				goto return_pref;
-+			}
-+			value |= (u64)raw_epp << 24;
-+			ret = wrmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, value);
-+			goto return_pref;
-+		}
-+
- 		if (epp == -EINVAL)
- 			epp = epp_values[pref_index - 1];
- 
- 		value |= (u64)epp << 24;
- 		ret = wrmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, value);
- 	} else {
-+		if (use_raw) {
-+			if (raw_epp > 0x0f) {
-+				ret = -EINVAL;
-+				goto return_pref;
-+			}
-+			ret = intel_pstate_set_epb(cpu_data->cpu, epp);
-+			goto return_pref;
-+		}
-+
- 		if (epp == -EINVAL)
- 			epp = (pref_index - 1) << 2;
- 		ret = intel_pstate_set_epb(cpu_data->cpu, epp);
-@@ -694,6 +724,8 @@ static ssize_t store_energy_performance_preference(
- {
- 	struct cpudata *cpu_data = all_cpu_data[policy->cpu];
- 	char str_preference[21];
-+	bool raw = false;
-+	u32 epp;
- 	int ret;
- 
- 	ret = sscanf(buf, "%20s", str_preference);
-@@ -701,10 +733,18 @@ static ssize_t store_energy_performance_preference(
- 		return -EINVAL;
- 
- 	ret = match_string(energy_perf_strings, -1, str_preference);
--	if (ret < 0)
-+	if (ret < 0) {
-+		ret = kstrtouint(buf, 10, &epp);
-+		if (ret)
-+			return ret;
-+
-+		raw = true;
-+	}
-+
-+	ret = intel_pstate_set_energy_pref_index(cpu_data, ret, raw, epp);
-+	if (ret)
- 		return ret;
- 
--	intel_pstate_set_energy_pref_index(cpu_data, ret);
- 	return count;
- }
- 
-@@ -712,13 +752,16 @@ static ssize_t show_energy_performance_preference(
- 				struct cpufreq_policy *policy, char *buf)
- {
- 	struct cpudata *cpu_data = all_cpu_data[policy->cpu];
--	int preference;
-+	int preference, raw_epp;
- 
--	preference = intel_pstate_get_energy_pref_index(cpu_data);
-+	preference = intel_pstate_get_energy_pref_index(cpu_data, &raw_epp);
- 	if (preference < 0)
- 		return preference;
- 
--	return  sprintf(buf, "%s\n", energy_perf_strings[preference]);
-+	if (raw_epp)
-+		return  sprintf(buf, "%d\n", raw_epp);
-+	else
-+		return  sprintf(buf, "%s\n", energy_perf_strings[preference]);
- }
- 
- cpufreq_freq_attr_rw(energy_performance_preference);
--- 
-2.25.4
-
+best regards
+wang shengjiu
