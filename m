@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3301C20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52CA20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946276;
-	bh=FH1Dcw5Wq2cpP9b9ZjB+7wg00CxQ4WqhkoJEEmdu6Zc=;
+	s=default; t=1592946284;
+	bh=DRFsV92GDkJasMMkP1EiCsfu8ldMUDEVDgx+9jRJSq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sthXiTeWdOSy2QIzbCauw9vc2zOik3jOxH6Y2RHIkwHItpmy715DNcj2BDeCbmAdZ
-	 Yyn3btOerKhe95wwHP1Aoi4+Tw5IHc+3hqnrhMTUrHqwgqCQLaCkROL9d0vAwDJMiw
-	 ojHeZkrxbreI2ro5d9SX0++Jj6BkrkLnDuIxBiIE=
+	b=R4G747fUYhgcj8+g5UlQ8mN7JSmq6nqqEdyyzh3iik5Tx13ObeBIW1ppdmTxlUHhe
+	 BCAS1q6YTntFKc+nMcMXgE9Xm6h7OfgNbzCyJLTX0VFkirJPnJl3kZPXESc12iD7w/
+	 AcxgHdtrgY/m3SOIATopPR8Zdw1Yfg5UIggOobMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392263AbgFWVEe (ORCPT
+        id S2393015AbgFWVEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33258 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:04:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388289AbgFWUhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:37:55 -0400
+        id S2391549AbgFWUhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:37:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41DC521582;
-        Tue, 23 Jun 2020 20:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95B542080C;
+        Tue, 23 Jun 2020 20:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944675;
-        bh=FH1Dcw5Wq2cpP9b9ZjB+7wg00CxQ4WqhkoJEEmdu6Zc=;
+        s=default; t=1592944673;
+        bh=DRFsV92GDkJasMMkP1EiCsfu8ldMUDEVDgx+9jRJSq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cRXx6goyel29eOfqZY3GCWZqPmf5Txs83PdM32euiunS6DnAlIcv99ruDGggfWcuZ
-         DQ+0ej4EQM3fz7yvmJJbxLh+mv4vWkr9hMu3g07SLwk7ktf4BxidPY7BOGzSItRZEm
-         UG251P7xuwSdLYST299j+zPCT8Ww997TSr0AV8nI=
+        b=GUpd8rwkvthF+p3IAcoKpkmQzUX2zBddqQdnBIfbndXD6C6e5s5Zc4E32zKk/L4Be
+         /cJNujD4By2A7shPZgAmCboYb7GY1MxaJLrujJF47CblJzKU+ReFp9wd2pV70Fo285
+         GHklqxTeJ+YXJ637jEm/FpwDTb+4oqc1uE9Socx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        clang-built-linux@googlegroups.com, Arnd Bergmann <arnd@arndb.de>,
+        David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 081/206] clk: ti: composite: fix memory leak
-Date:   Tue, 23 Jun 2020 21:56:49 +0200
-Message-Id: <20200623195320.924648305@linuxfoundation.org>
+Subject: [PATCH 4.19 080/206] dlm: remove BUG() before panic()
+Date:   Tue, 23 Jun 2020 21:56:48 +0200
+Message-Id: <20200623195320.884128005@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -62,36 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit c7c1cbbc9217ebb5601b88d138d4a5358548de9d ]
+[ Upstream commit fe204591cc9480347af7d2d6029b24a62e449486 ]
 
-The parent_names is never released for a component clock definition,
-causing some memory leak. Fix by releasing it once it is no longer
-needed.
+Building a kernel with clang sometimes fails with an objtool error in dlm:
 
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Link: https://lkml.kernel.org/r/20200429131341.4697-2-t-kristo@ti.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+fs/dlm/lock.o: warning: objtool: revert_lock_pc()+0xbd: can't find jump dest instruction at .text+0xd7fc
+
+The problem is that BUG() never returns and the compiler knows
+that anything after it is unreachable, however the panic still
+emits some code that does not get fully eliminated.
+
+Having both BUG() and panic() is really pointless as the BUG()
+kills the current process and the subsequent panic() never hits.
+In most cases, we probably don't really want either and should
+replace the DLM_ASSERT() statements with WARN_ON(), as has
+been done for some of them.
+
+Remove the BUG() here so the user at least sees the panic message
+and we can reliably build randconfig kernels.
+
+Fixes: e7fd41792fc0 ("[DLM] The core of the DLM for GFS2/CLVM")
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/composite.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/dlm/dlm_internal.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
-index 030e8b2c10500..c6478d0b996b2 100644
---- a/drivers/clk/ti/composite.c
-+++ b/drivers/clk/ti/composite.c
-@@ -196,6 +196,7 @@ cleanup:
- 		if (!cclk->comp_clks[i])
- 			continue;
- 		list_del(&cclk->comp_clks[i]->link);
-+		kfree(cclk->comp_clks[i]->parent_names);
- 		kfree(cclk->comp_clks[i]);
- 	}
- 
+diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+index 748e8d59e6111..cb287df13a7aa 100644
+--- a/fs/dlm/dlm_internal.h
++++ b/fs/dlm/dlm_internal.h
+@@ -99,7 +99,6 @@ do { \
+                __LINE__, __FILE__, #x, jiffies); \
+     {do} \
+     printk("\n"); \
+-    BUG(); \
+     panic("DLM:  Record message above and reboot.\n"); \
+   } \
+ }
 -- 
 2.25.1
 
