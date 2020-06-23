@@ -2,165 +2,117 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B42CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E359BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 015A42077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC99F20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945715;
-	bh=CBYptz/mW0JMY6jpOr323vU/Q/LCIMNfHGgbrx6jlrY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=oqfVnqRsBI+qB0eWPU2AYDVYjrY6aJIESCwlOoLhWWDkJ15nYA7wFiW81CW+6jpDp
-	 +aYtghfYC3L5HGQ49MdgV4yp/BYMVvPNI9PG6/Vj1rmiUHxFVIy3vEyc0gkfcx2/Mb
-	 ZWQP3tisqeUXbAtlRk081yVpO4jiBYR5OnCQVQMI=
+	s=default; t=1592945726;
+	bh=UZAS9JmDAz7kGwfXP+WflYdOOxq7xdo2yFVAB6HGzOE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dz5aMyaulvD32OXwGFJFEdZqfTKrt19WyjYfG4kiOpAa71QGv8wUXY4nJC9yNPUD7
+	 YzGajxUA6o0LZiRswePWM2Q0KLkayuyE9gsZ+18vuxSgp2Xig2ey50ZKOZRWfoaUtD
+	 UUNI7+Wtq24ptHngQ1Bz6KvzFA6l5hQQLQzJacNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393199AbgFWUzN (ORCPT
+        id S2392441AbgFWUzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54998 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:55:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393193AbgFWUzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:55:09 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S2392715AbgFWUpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:45:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC39C20724;
-        Tue, 23 Jun 2020 20:55:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB7CB21BE5;
+        Tue, 23 Jun 2020 20:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945708;
-        bh=CBYptz/mW0JMY6jpOr323vU/Q/LCIMNfHGgbrx6jlrY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=e0Xek1PPTiAKsOXiD1nxqbAeEEvFHXB5M9adObdaTmJxFnY6CT9IwHNIf678qadYd
-         Py6QXEos/NGxeTXuxxwkCQOIW/xxp/DU8TgiTByzGvrcfFZF4xQ5pnH+T/J65CS4zV
-         MaJduBQskOwMnb1DPt4/tg4+KYgK0sRjUoJrK764=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B10D53522657; Tue, 23 Jun 2020 13:55:08 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 13:55:08 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, linux-mm@kvack.org
-Subject: Re: [PATCH tip/core/rcu 02/26] mm/mmap.c: Add cond_resched() for
- exit_mmap() CPU stalls
-Message-ID: <20200623205508.GS9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200623002128.GA25456@paulmck-ThinkPad-P72>
- <20200623002147.25750-2-paulmck@kernel.org>
- <20200623193431.GA68372@google.com>
+        s=default; t=1592945105;
+        bh=UZAS9JmDAz7kGwfXP+WflYdOOxq7xdo2yFVAB6HGzOE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fvpa7NygYG5M18+a5BVJQ4BtDGDnn74X4kf9p0p4ISOf08DhrbxidD1ZDVPYlEXNo
+         eIs9NXoV/fs+7NyA3Jjg9Oi7Lpr2v7DJ19RHzyEzSxlx+SDDG+tZQmbS8mx5hpUXLR
+         NGWCWJNw9zfncNGXbLPNsewBG7Kaqu+y2S4eJdLg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 042/136] thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR
+Date:   Tue, 23 Jun 2020 21:58:18 +0200
+Message-Id: <20200623195305.762445318@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
+References: <20200623195303.601828702@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623193431.GA68372@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 03:34:31PM -0400, Joel Fernandes wrote:
-> On Mon, Jun 22, 2020 at 05:21:23PM -0700, paulmck@kernel.org wrote:
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > 
-> > A large process running on a heavily loaded system can encounter the
-> > following RCU CPU stall warning:
-> > 
-> >   rcu: INFO: rcu_sched self-detected stall on CPU
-> >   rcu: \x093-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
-> >   \x09(t=21013 jiffies g=1005461 q=132576)
-> >   NMI backtrace for cpu 3
-> >   CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
-> >   Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
-> >   Call Trace:
-> >    <IRQ>
-> >    dump_stack+0x46/0x60
-> >    nmi_cpu_backtrace.cold.3+0x13/0x50
-> >    ? lapic_can_unplug_cpu.cold.27+0x34/0x34
-> >    nmi_trigger_cpumask_backtrace+0xba/0xca
-> >    rcu_dump_cpu_stacks+0x99/0xc7
-> >    rcu_sched_clock_irq.cold.87+0x1aa/0x397
-> >    ? tick_sched_do_timer+0x60/0x60
-> >    update_process_times+0x28/0x60
-> >    tick_sched_timer+0x37/0x70
-> >    __hrtimer_run_queues+0xfe/0x270
-> >    hrtimer_interrupt+0xf4/0x210
-> >    smp_apic_timer_interrupt+0x5e/0x120
-> >    apic_timer_interrupt+0xf/0x20
-> >    </IRQ>
-> >   RIP: 0010:kmem_cache_free+0x223/0x300
-> >   Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
-> >   RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-> >   RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
-> >   RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
-> >   RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
-> >   R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
-> >   R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
-> >    ? remove_vma+0x4f/0x60
-> >    remove_vma+0x4f/0x60
-> >    exit_mmap+0xd6/0x160
-> >    mmput+0x4a/0x110
-> >    do_exit+0x278/0xae0
-> >    ? syscall_trace_enter+0x1d3/0x2b0
-> >    ? handle_mm_fault+0xaa/0x1c0
-> >    do_group_exit+0x3a/0xa0
-> >    __x64_sys_exit_group+0x14/0x20
-> >    do_syscall_64+0x42/0x100
-> >    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
-> > for a very long time given a large process.  This commit therefore adds
-> > a cond_resched() to this loop, providing RCU any needed quiescent states.
-> > 
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: <linux-mm@kvack.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  mm/mmap.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index 59a4682..972f839 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -3159,6 +3159,7 @@ void exit_mmap(struct mm_struct *mm)
-> >  		if (vma->vm_flags & VM_ACCOUNT)
-> >  			nr_accounted += vma_pages(vma);
-> >  		vma = remove_vma(vma);
-> > +		cond_resched();
-> 
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-Thank you!  I will apply this on my next rebase.
+[ Upstream commit 7440f518dad9d861d76c64956641eeddd3586f75 ]
 
-> Just for my understanding, cond_resched_tasks_rcu_qs() may not help here
-> because preemption is not disabled right? Still I see no harm in using it
-> here either as it may give a slight speed up for tasks-RCU.
+On error the function ti_bandgap_get_sensor_data() returns the error
+code in ERR_PTR() but we only checked if the return value is NULL or
+not. And, so we can dereference an error code inside ERR_PTR.
+While at it, convert a check to IS_ERR_OR_NULL.
 
-The RCU-tasks stall-warning interval is ten minutes, and I have not yet
-seen evidence that we are getting close to that.  If we do, then yes,
-a cond_resched_tasks_rcu_qs() might be in this code's future.  But it
-does add overhead, so we need to see the evidence first.
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200424161944.6044-1-sudipm.mukherjee@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-							Thanx, Paul
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index c211a8e4a2105..fa98c398d70f3 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -183,7 +183,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+-	if (!data || IS_ERR(data))
++	if (!IS_ERR_OR_NULL(data))
+ 		data = ti_thermal_build_data(bgp, id);
+ 
+ 	if (!data)
+@@ -210,7 +210,7 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+-	if (data && data->ti_thermal) {
++	if (!IS_ERR_OR_NULL(data) && data->ti_thermal) {
+ 		if (data->our_zone)
+ 			thermal_zone_device_unregister(data->ti_thermal);
+ 	}
+@@ -276,7 +276,7 @@ int ti_thermal_unregister_cpu_cooling(struct ti_bandgap *bgp, int id)
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+-	if (data) {
++	if (!IS_ERR_OR_NULL(data)) {
+ 		cpufreq_cooling_unregister(data->cool_dev);
+ 		cpufreq_cpu_put(data->policy);
+ 	}
+-- 
+2.25.1
 
-> thanks,
-> 
->  - Joel
-> 
-> >  	}
-> >  	vm_unacct_memory(nr_accounted);
-> >  }
-> > -- 
-> > 2.9.5
-> > 
+
+
