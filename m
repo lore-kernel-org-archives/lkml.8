@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A09C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C09C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6AEA206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54A52078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942810;
-	bh=9YmC30CBs5fIMIMnajxNVucl7OFNhF85IfK4dlpZ0J0=;
+	s=default; t=1592942816;
+	bh=i363s9QRyTKTSVSOlnPSLPjzoa/9HJSEe3IN1zyhEaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eGnvWlRgyle41GGagQYkPfE6jTCKGddGwoP/EFYP+8MWfn13NDJg5/maQrcOTiJnF
-	 o2pcTwXGx+3qvc5uSpYJuVBfMFnPwBJfVicFSUAYmZ0wJ5oBA2Wx15Hxi4WENLVMto
-	 EnHJne0T4CIquYuWoMMd0FRRmWeWfH5rw1A0nVq4=
+	b=PQ5Fc4al3EuKgvtnX/usKFXliMMfYD+zWOttiFdlY3Bj4nPuCzdLpzYSS16IpjuJz
+	 MBGXDUvcj7AJvvfzIYUviVoj6bFQ+V1MA5irvN8lvG6r1qev+tGr19OjpnfG3kUey3
+	 mwxHhTFcfDQ9AR2S2D0APWqf+YGwYO3GdIXzBrAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388526AbgFWUGt (ORCPT
+        id S2388543AbgFWUGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:06:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46942 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388515AbgFWUGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:44 -0400
+        id S2388529AbgFWUGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:06:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6D520FC3;
-        Tue, 23 Jun 2020 20:06:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B909D2064B;
+        Tue, 23 Jun 2020 20:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942803;
-        bh=9YmC30CBs5fIMIMnajxNVucl7OFNhF85IfK4dlpZ0J0=;
+        s=default; t=1592942811;
+        bh=i363s9QRyTKTSVSOlnPSLPjzoa/9HJSEe3IN1zyhEaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTQNNnbFhELgRy4RkGUPJWFzTztnkdPKAa+tPg8V+j3Qkr3CvOZ9J+u3XB44pAvpW
-         p0weUWHkaeK5VDUqpngqDlMH0VQ8fLusskemVhGucnp/GIx+nGnUcYD4Vsa2aTM2xs
-         BDP/ZDmfK0uUaldrnTKZI0ukjstii4nGeE8pxHTk=
+        b=y8ZGFir0YT5iAALoJsYpuyViTCh8Pw8OK/OszLgq4p79wUKbMhV3hY5coNr2o3M8I
+         64bPwZRq+RRoMwvz6jewGIv/nE8LX3WqQbPszSD4CC4khgAw6PigcZtXC8bv4QYkZ3
+         S7XCLlaYVVc0iBGYhesdre5yNqscvGP0ULWz+KfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 134/477] staging: gasket: Fix mapping refcnt leak when register/store fails
-Date:   Tue, 23 Jun 2020 21:52:11 +0200
-Message-Id: <20200623195413.941134911@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 145/477] gpio: mlxbf2: fix return value check in mlxbf2_gpio_get_lock_res()
+Date:   Tue, 23 Jun 2020 21:52:22 +0200
+Message-Id: <20200623195414.452886129@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,46 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit e3436ce60cf5f5eaedda2b8c622f69feb97595e2 ]
+[ Upstream commit 66d8ad67aab3bc6f55e7de81565cd0d4875bd851 ]
 
-gasket_sysfs_register_store() invokes get_mapping(), which returns a
-reference of the specified gasket_sysfs_mapping object to "mapping" with
-increased refcnt.
+In case of error, the function devm_ioremap() returns NULL pointer not
+ERR_PTR(). The IS_ERR() test in the return value check should be
+replaced with NULL test.
 
-When gasket_sysfs_register_store() returns, local variable "mapping"
-becomes invalid, so the refcount should be decreased to keep refcount
-balanced.
-
-The reference counting issue happens in one exception handling path of
-gasket_sysfs_register_store(). When gasket_dev is NULL, the function
-forgets to decrease the refcnt increased by get_mapping(), causing a
-refcnt leak.
-
-Fix this issue by calling put_mapping() when gasket_dev is NULL.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Link: https://lore.kernel.org/r/1587618941-13718-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Link: https://lore.kernel.org/r/20200427110829.154785-1-weiyongjun1@huawei.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/gasket/gasket_sysfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-mlxbf2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/gasket/gasket_sysfs.c b/drivers/staging/gasket/gasket_sysfs.c
-index ad852ea1d4a92..af26bc9f184a5 100644
---- a/drivers/staging/gasket/gasket_sysfs.c
-+++ b/drivers/staging/gasket/gasket_sysfs.c
-@@ -373,6 +373,7 @@ ssize_t gasket_sysfs_register_store(struct device *device,
- 	gasket_dev = mapping->gasket_dev;
- 	if (!gasket_dev) {
- 		dev_err(device, "Device driver may have been removed\n");
-+		put_mapping(mapping);
- 		return 0;
+diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
+index da570e63589d0..cc0dd8593a4ba 100644
+--- a/drivers/gpio/gpio-mlxbf2.c
++++ b/drivers/gpio/gpio-mlxbf2.c
+@@ -110,8 +110,8 @@ static int mlxbf2_gpio_get_lock_res(struct platform_device *pdev)
  	}
  
+ 	yu_arm_gpio_lock_param.io = devm_ioremap(dev, res->start, size);
+-	if (IS_ERR(yu_arm_gpio_lock_param.io))
+-		ret = PTR_ERR(yu_arm_gpio_lock_param.io);
++	if (!yu_arm_gpio_lock_param.io)
++		ret = -ENOMEM;
+ 
+ exit:
+ 	mutex_unlock(yu_arm_gpio_lock_param.lock);
 -- 
 2.25.1
 
