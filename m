@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10FB32070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C07720780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943725;
-	bh=L81CTMAMKJfNBfViabYix7rP+KfnO+1KZz9C2FuNPG8=;
+	s=default; t=1592943735;
+	bh=G7i77aO64Vn/HuKmSBMIphAENT2GJ98ArI3jrKSoYhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=flLgawWoS6TC/8oRAE34QWcpyronUkuozrNpffuUukpPJGkuskb/c7rQjwFWVbKeb
-	 7E1daRX9wgKJgkbKkoHy7mJTsLT2Ydtw9orEXHgIUiVBZ2HLPHW34yWeDqjNrYt3uV
-	 tRU4vCgK2C11hVRoUvCX7VABsW3GZtBhOf1uVSQ4=
+	b=Vn9CADbyI90ROzqT0vv0baKqaVAwdOLbDSv6bfAozeGUgRhcOM9d5/8zaVWM5ypyT
+	 cxdVFieVcZoeYvWnA+WzBvsqRChF3Q2rAnbqE7t/2U/+o6ODyx73408tDqOwBYZQHN
+	 WgRlGHfoIHO/ptQib1exuJYGG12hq7X2AnyQgscw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389829AbgFWUWC (ORCPT
+        id S2390148AbgFWUWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:22:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39802 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:22:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390111AbgFWUV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:21:59 -0400
+        id S2390126AbgFWUWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:22:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9B752082F;
-        Tue, 23 Jun 2020 20:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF2A62064B;
+        Tue, 23 Jun 2020 20:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943719;
-        bh=L81CTMAMKJfNBfViabYix7rP+KfnO+1KZz9C2FuNPG8=;
+        s=default; t=1592943729;
+        bh=G7i77aO64Vn/HuKmSBMIphAENT2GJ98ArI3jrKSoYhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DJ+4SiHT9GC/rv6WUKNmpF3JxQPdfdJ41uRaLLgtYEE+EKdwFjU3k3UmW++gO+oiu
-         BuXyWyJG32JGByeatX6NCiGnp/wB/wJBUnkL1C+XPC5i4mDY23S6cpQ67Qe7U7f1rZ
-         JHnecXCwEtpV+HgRVCuv+BUz85EwCE1MLORvfhi4=
+        b=XZawG/Dz5M9huVfhr5aM/HPxB8dlDCLA964UUeRZ+Vt4/0lnNLO5ZLfeX4TOyCVMs
+         URztqDaaji6Vk2FUJ0KBgfDJUZrnKtSueQkYFFiNwJ6eioqBMYXWC/8qtah0VGnapA
+         /OJO87G75NDxSrvw6cYlm6Uf/b5AUUYNFkHEng6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, erhard_f@mailbox.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 023/314] powerpc/kasan: Fix stack overflow by increasing THREAD_SHIFT
-Date:   Tue, 23 Jun 2020 21:53:38 +0200
-Message-Id: <20200623195339.904396127@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 027/314] i2c: pxa: clear all master action bits in i2c_pxa_stop_message()
+Date:   Tue, 23 Jun 2020 21:53:42 +0200
+Message-Id: <20200623195340.103938497@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,38 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit edbadaf0671072298e506074128b64e003c5812c ]
+[ Upstream commit e81c979f4e071d516aa27cf5a0c3939da00dc1ca ]
 
-When CONFIG_KASAN is selected, the stack usage is increased.
+If we timeout during a message transfer, the control register may
+contain bits that cause an action to be set. Read-modify-writing the
+register leaving these bits set may trigger the hardware to attempt
+one of these actions unintentionally.
 
-In the same way as x86 and arm64 architectures, increase
-THREAD_SHIFT when CONFIG_KASAN is selected.
+Always clear these bits when cleaning up after a message or after
+a timeout.
 
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-Reported-by: <erhard_f@mailbox.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207129
-Link: https://lore.kernel.org/r/2c50f3b1c9bbaa4217c9a98f3044bd2a36c46a4f.1586361277.git.christophe.leroy@c-s.fr
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-pxa.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 44431dc06982f..ad620637cbd11 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -747,6 +747,7 @@ config THREAD_SHIFT
- 	range 13 15
- 	default "15" if PPC_256K_PAGES
- 	default "14" if PPC64
-+	default "14" if KASAN
- 	default "13"
- 	help
- 	  Used to define the stack size. The default is almost always what you
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 2c3c3d6935c0f..c9cbc9894bacf 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -706,11 +706,9 @@ static inline void i2c_pxa_stop_message(struct pxa_i2c *i2c)
+ {
+ 	u32 icr;
+ 
+-	/*
+-	 * Clear the STOP and ACK flags
+-	 */
++	/* Clear the START, STOP, ACK, TB and MA flags */
+ 	icr = readl(_ICR(i2c));
+-	icr &= ~(ICR_STOP | ICR_ACKNAK);
++	icr &= ~(ICR_START | ICR_STOP | ICR_ACKNAK | ICR_TB | ICR_MA);
+ 	writel(icr, _ICR(i2c));
+ }
+ 
 -- 
 2.25.1
 
