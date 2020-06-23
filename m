@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F54C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A74B021531
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82598207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872686;
-	bh=G8x8XPcxZs85lPYsBAKK4gjW3vPHBeMjy9sfMokT/vU=;
+	s=default; t=1592872691;
+	bh=zJqCMZ7Nvc8+rI2tctx6dZY0axoJnmJdlEQSqbhmTpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PZNYHXnhD3getV3x/qe4r79O2lV6jHT4Kyowk6tvTuGlm3h8H4baXKRHz5Se3P0CF
-	 OdMmECZyKOVx+RjeHckLfpAdbzxXPoHbRrhJng+GY/mI1asvZSevzg11acx56BFTMe
-	 5DO7AHBHz0A0ZUuSSGNCoRlcg14Lx6yhN398iTp0=
+	b=Y5W/k5OFFNw8HIw52/fQj4o8uH0TnHOlsa31wzTHacRvxeeDnqmw7LtdSyQUvSAuw
+	 Yf67dQU6y87tSIGI/NP/7X8LQa8WflJl1crAC9JBWKPhQBt8IOJkceviNjxvXSuR2h
+	 z130Zt0PMqR+3DgVV1a+pMHGnJbdVAK3/F85XPkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732190AbgFWAiF (ORCPT
+        id S1731740AbgFWAiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:38:05 -0400
+        Mon, 22 Jun 2020 20:38:09 -0400
 Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732035AbgFWAhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:37:55 -0400
+        id S1732146AbgFWAh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:37:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C292208A7;
-        Tue, 23 Jun 2020 00:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59C7F20C56;
+        Tue, 23 Jun 2020 00:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872675;
-        bh=G8x8XPcxZs85lPYsBAKK4gjW3vPHBeMjy9sfMokT/vU=;
+        s=default; t=1592872676;
+        bh=zJqCMZ7Nvc8+rI2tctx6dZY0axoJnmJdlEQSqbhmTpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3/xMKgiP4EpmTAH1AC2PhRM6tXgjGwaFp/g8Sw+iHTnyys0HFGBwZVFyu70mASJY
-         4jzschj1n26DBe4TQMTYKR2IajPHodEn5/WA3IevHagrYcJyMJ4gGZszpNzOAMFfHO
-         uvGpVpHZFw0bR2M1WkOLDUdNH45PDmXjdvRvGmN4=
+        b=ahFOjxIfCLHtG7RDM3lzKLWpWoMpPD4uY6gj6/l95/hTibep0p+fomaprQ2IdyqOh
+         Vv/oxdxXYACg2IQR4023AlL9dn06wVmHVV89BFwPYLmOxKWVVxPtmrp3gCoTtIr0EF
+         Vg68NpV3SSIiMGmn73jSww10dSp5pjELS3v/LGOs=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 08/23] torture: Remove whitespace from identify_qemu_vcpus output
-Date:   Mon, 22 Jun 2020 17:37:37 -0700
-Message-Id: <20200623003752.26872-8-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 12/23] torture: Add a stop-run capability
+Date:   Mon, 22 Jun 2020 17:37:41 -0700
+Message-Id: <20200623003752.26872-12-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623003731.GA26717@paulmck-ThinkPad-P72>
 References: <20200623003731.GA26717@paulmck-ThinkPad-P72>
@@ -61,29 +61,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The identify_qemu_vcpus bash function can return numbers including
-whitespace characters, which can be a bit annoying in some bash
-dollar-sign substitutions.  This commit therefore strips all spaces and
-tabs from the value that identify_qemu_vcpus outputs.
+When bisecting RCU issues, it is often the case that the first error in
+an unsuccessful run will happen quickly, but that a successful run must
+go on for some time in order to obtain a sufficiently low false-negative
+error rate.  In many cases, a bisection requires multiple concurrent
+runs, in which case the first failure in any run indicates failure,
+pure and simple.  In such cases, it would speed things up greatly if
+the first failure terminated all runs.
+
+This commit therefore adds scripting that checks for a file named "STOP"
+in the top-level results directory, terminating the run when it appears.
+Note that in-progress builds will continue until completion, but future
+builds and all runs will be cut short.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/functions.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/rcutorture/bin/jitter.sh         |  6 ++++++
+ tools/testing/selftests/rcutorture/bin/kvm-build.sh      |  6 ++++++
+ tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 13 +++++++++++--
+ tools/testing/selftests/rcutorture/bin/kvm.sh            |  2 ++
+ 4 files changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/functions.sh b/tools/testing/selftests/rcutorture/bin/functions.sh
-index 436b154..51f3464 100644
---- a/tools/testing/selftests/rcutorture/bin/functions.sh
-+++ b/tools/testing/selftests/rcutorture/bin/functions.sh
-@@ -231,7 +231,7 @@ identify_qemu_args () {
- # Returns the number of virtual CPUs available to the aggregate of the
- # guest OSes.
- identify_qemu_vcpus () {
--	lscpu | grep '^CPU(s):' | sed -e 's/CPU(s)://'
-+	lscpu | grep '^CPU(s):' | sed -e 's/CPU(s)://' -e 's/[ 	]*//g'
- }
+diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
+index 30cb5b2..188b864 100755
+--- a/tools/testing/selftests/rcutorture/bin/jitter.sh
++++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
+@@ -46,6 +46,12 @@ do
+ 		exit 0;
+ 	fi
  
- # print_bug
++	# Check for stop request.
++	if test -f "$TORTURE_STOPFILE"
++	then
++		exit 1;
++	fi
++
+ 	# Set affinity to randomly selected online CPU
+ 	if cpus=`grep 1 /sys/devices/system/cpu/*/online 2>&1 |
+ 		 sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//'`
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm-build.sh b/tools/testing/selftests/rcutorture/bin/kvm-build.sh
+index 18d6518..115e182 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm-build.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm-build.sh
+@@ -9,6 +9,12 @@
+ #
+ # Authors: Paul E. McKenney <paulmck@linux.ibm.com>
+ 
++if test -f "$TORTURE_STOPFILE"
++then
++	echo "kvm-build.sh early exit due to run STOP request"
++	exit 1
++fi
++
+ config_template=${1}
+ if test -z "$config_template" -o ! -f "$config_template" -o ! -r "$config_template"
+ then
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+index 064dd73..5ec095d 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+@@ -182,7 +182,7 @@ do
+ 	kruntime=`gawk 'BEGIN { print systime() - '"$kstarttime"' }' < /dev/null`
+ 	if test -z "$qemu_pid" || kill -0 "$qemu_pid" > /dev/null 2>&1
+ 	then
+-		if test $kruntime -ge $seconds
++		if test $kruntime -ge $seconds -o -f "$TORTURE_STOPFILE"
+ 		then
+ 			break;
+ 		fi
+@@ -211,10 +211,19 @@ then
+ fi
+ if test $commandcompleted -eq 0 -a -n "$qemu_pid"
+ then
+-	echo Grace period for qemu job at pid $qemu_pid
++	if ! test -f "$TORTURE_STOPFILE"
++	then
++		echo Grace period for qemu job at pid $qemu_pid
++	fi
+ 	oldline="`tail $resdir/console.log`"
+ 	while :
+ 	do
++		if test -f "$TORTURE_STOPFILE"
++		then
++			echo "PID $qemu_pid killed due to run STOP request" >> $resdir/Warnings 2>&1
++			kill -KILL $qemu_pid
++			break
++		fi
+ 		kruntime=`gawk 'BEGIN { print systime() - '"$kstarttime"' }' < /dev/null`
+ 		if kill -0 $qemu_pid > /dev/null 2>&1
+ 		then
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
+index 7dbce7a..3578c85 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
+@@ -337,6 +337,8 @@ then
+ 	mkdir -p "$resdir" || :
+ fi
+ mkdir $resdir/$ds
++TORTURE_RESDIR="$resdir/$ds"; export TORTURE_RESDIR
++TORTURE_STOPFILE="$resdir/$ds/STOP"; export TORTURE_STOPFILE
+ echo Results directory: $resdir/$ds
+ echo $scriptname $args
+ touch $resdir/$ds/log
 -- 
 2.9.5
 
