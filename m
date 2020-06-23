@@ -2,220 +2,159 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A324C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43376C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3932073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1943E2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="CcowViHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732799AbgFWOc7 (ORCPT
+        id S1732827AbgFWOdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:32:59 -0400
-Received: from mga02.intel.com ([134.134.136.20]:55089 "EHLO mga02.intel.com"
+        Tue, 23 Jun 2020 10:33:46 -0400
+Received: from mout.web.de ([212.227.15.4]:40327 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732730AbgFWOc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:32:58 -0400
-IronPort-SDR: XlvIVJFRxEVcsDqphPxg7BIfqKu+OtOymrNXraMqEWG962vtcSKxdeTn4zHP7GydxI29ghMlw3
- Gi/I1oT9ezpQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="132488527"
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="132488527"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 07:32:57 -0700
-IronPort-SDR: XGxWnCjKu/7n+SsNBino2LCkS4z7BxUSo1KDZv9hAE+NQ+SJ0nHyc2evAPgwZaCHSMBplIcI56
- T08ex4XTHmDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="384863507"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 23 Jun 2020 07:32:52 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 23 Jun 2020 17:32:52 +0300
-Date:   Tue, 23 Jun 2020 17:32:52 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@dell.com>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] thunderbolt: Add support for separating the flush
- to SPI and authenticate
-Message-ID: <20200623143252.GD2795@lahna.fi.intel.com>
-References: <20200622185758.28145-1-mario.limonciello@dell.com>
- <20200622185758.28145-2-mario.limonciello@dell.com>
+        id S1732787AbgFWOdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 10:33:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592922795;
+        bh=hrY3LYJ3KP9mwNlTNc/oJIx7Dv88TgGejXv9JDcCUtg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=CcowViHhUmLuWtuM/j47S+y863tsEp82xg05GIiqhbrzh81amXowV7Qo0K2PSIJFD
+         rP6s4dEQ6tBM/NcmbBtHBXp1robTO5wUgtfCAXOKK3j3x/bJZHCTBmhhqtCxQCe3cX
+         4+19xcXWCgF1j1upXctTwAXWgTHUPVMNLUpeqw7M=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.105.198]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lmu5s-1jDZl12a4a-00h8lv; Tue, 23
+ Jun 2020 16:33:15 +0200
+Subject: Re: ARM: imx6: add missing put_device() call in imx6q_suspend_init()
+To:     Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
+Cc:     Yu Kuai <yukuai3@huawei.com>, Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Yi Zhang <yi.zhang@huawei.com>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <cf810c93-297c-c02c-9bba-8c3d097b8e31@web.de>
+ <2ab2cc9f-c720-75ca-e20c-0e4236ff45fd@huawei.com>
+ <1542979d-f7f6-bcf1-53c3-22b7c076ddc7@web.de> <20200623073220.GV30139@dragon>
+ <5300cb30-2243-9bfe-125c-96e720cd1f29@web.de> <20200623110222.GX30139@dragon>
+ <9f429c51-0fa9-16dc-4d62-d456551c5376@web.de> <20200623120919.GE30139@dragon>
+ <66038b6c-6691-eda2-af15-f315270d4bee@web.de>
+ <CAJBJ56J9NfYPxnqtLfbeCHkRy2-xPEUJq7r3RvM8yi434AQF2Q@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9f29c495-3b1d-8de2-89e2-b6e42caad2e3@web.de>
+Date:   Tue, 23 Jun 2020 16:33:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622185758.28145-2-mario.limonciello@dell.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAJBJ56J9NfYPxnqtLfbeCHkRy2-xPEUJq7r3RvM8yi434AQF2Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AczLcBfwOHwmcgwEyakVUzhcadmZx+hKYTggXh9qMpItpJEg9Hc
+ rlprgVXDHgz0BS2QZ53s7BGDu2QbK10PZkCoxw6GPFTRE6l+ae8jlK3Q8pkQrOwNeGYvZeS
+ i1rokjDxu8rzbe840PG62nkSBYXzQijQDCzWessGixGVgjXRlcjjnxlC9hUkIrCXQbpCdwy
+ Ny7cqDFAklx/kFQLlw7hQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+VXnT1aoD2o=:CMxpheZAD/bu8UtWKd8jRy
+ mLbbN0N4UHPXY0cOFFcRvWD4TK4exeY02K4+Dz8Umlv+npM5oetBTYjwuipggn11TyOfiGF6y
+ O4voz6BCyUxLzIwzA9dIbGq51lSIa2/oHK1Ik1YZxvAiRtOdA2j7Qf5MPXSH1zU7PtBJLIQqq
+ LzRNfifo4UTSSnLcn1gr7vo85rAKF+FNKOfUKQaStkOCpyc4sakTRyPh1pnoS28mXbVynPXJ0
+ 53ZS2N9ojwkHTDF5nY5veZDNMXtlvbZbCwWWm4MnY4pMMOOC1DPoJCNr+E4w2PtQBhxTefTGT
+ 5VjlfM5xvFJ12sb64tOw1yhtNTc3aMoH93scUYJZDTRgLGMRFJuW+fcX+nUAGf1ZjQI5lBHzn
+ 5EPW3182rM82l2N0i+EWtZ4ojD9PELlWpDc/6I/LqmiDMsScRJwatdkrZorbGxzZ5VHr0jKLv
+ gQAqMHT3I7K54RXkLo48DnyPZqvdqEYEOrqv5NEHZXevn/FgDgEdb7F8wlfpXeQh99vdQ7+zl
+ 2wBwD8tn/0lOsyuCFcAWHTFSvdG8Sh3NeUZl1AtgQY8zhX1ksdGVy53/zTGLrayDRPpY/gPIz
+ BQGjl9ultJW3+SY5jfFMwByvvMwxxnhTYqyS8FoPBM2OPEQ4Id7s1SpXEjP+675DShoar1bgE
+ YCofElFSR3tf1TfpeAs+t3Z61jFNaoXHzCozimPGgmyrqXE1vSLp22UuirViR7OJJQpOKoSkF
+ iyR71QMnGpBbTVxuU3JOxVXXs1uSozmNuzEqnEk9Izen3FvxyZPBe2zrYvTcF7tRN2mWsHaWs
+ tVsFWuVVldp2vBPWOsbQQvy5JPCNd8T1zXGC8BgWeHjJd2mn2MlYorRMeP3vSEweb6bubK08E
+ C+HLE2WTkap7K80XGfr1fMWmSO9z7qi/HzDWtsmgbNmPGQ6HsTkCzf4DJYMafSF3h4sWF/F5x
+ fqTVl+BOyz8G/Y7lRhYWPPe4mf/2ZTUM/06GPAbj41/zhd9Z8UalIBksdM/49uHNQyBGGu7+W
+ C0JaJEgvk7/nGMGO8FS2o84duk5+891if7IsSGZo8hPMUyY9A/DOUnjYSgc8LH2HpIx3SKKTh
+ 3AbL6cmEfIWfttsHQjGR1rxu8erkJgRew2/jB2K1glTKQLJX6RaF6UwbodPdS89uArP79hsCy
+ jlSPbiyWnhyyrsd89Bbh5EFnvUWdMwfcJdqLegM5xInf2UwmF3HopghmhWl7/GJAv5NqFS1Kt
+ jP94oBTzcynAwdWql
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 01:57:57PM -0500, Mario Limonciello wrote:
-> This allows userspace to have a shorter period of time that the device
-> is unusable and to call it at a more convenient time.
-> 
-> For example flushing the image may happen while the user is using the
-> machine and authenticating/rebooting may happen while logging out.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> ---
->  .../ABI/testing/sysfs-bus-thunderbolt         | 11 ++++-
->  drivers/thunderbolt/nvm.c                     |  1 +
->  drivers/thunderbolt/switch.c                  | 42 ++++++++++++-------
->  drivers/thunderbolt/tb.h                      |  2 +
->  4 files changed, 39 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> index bd504ed323e8..7d0500b4d58a 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> +++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> @@ -178,11 +178,18 @@ KernelVersion:	4.13
->  Contact:	thunderbolt-software@lists.01.org
->  Description:	When new NVM image is written to the non-active NVM
->  		area (through non_activeX NVMem device), the
-> -		authentication procedure is started by writing 1 to
-> -		this file. If everything goes well, the device is
-> +		authentication procedure is started by writing to
-> +		this file.
-> +		If everything goes well, the device is
->  		restarted with the new NVM firmware. If the image
->  		verification fails an error code is returned instead.
->  
-> +		This file will accept writing values "1" or "2"
-> +		- Writing "1" will flush the image to the storage
-> +		area and authenticate the image in one action.
-> +		- Writing "2" will run some basic validation on the image
-> +		and flush it to the storage area.
-> +
->  		When read holds status of the last authentication
->  		operation if an error occurred during the process. This
->  		is directly the status value from the DMA configuration
-> diff --git a/drivers/thunderbolt/nvm.c b/drivers/thunderbolt/nvm.c
-> index 4c6aa06ab3d5..29de6d95c6e7 100644
-> --- a/drivers/thunderbolt/nvm.c
-> +++ b/drivers/thunderbolt/nvm.c
-> @@ -100,6 +100,7 @@ int tb_nvm_write_buf(struct tb_nvm *nvm, unsigned int offset, void *val,
->  			return -ENOMEM;
->  	}
->  
-> +	nvm->flushed = false;
+>>>>>>>>>> ARM: imx6: Add missing put_device() call in imx6q_suspend_init(=
+)
+>>>>>>>>>> https://lore.kernel.org/linux-arm-kernel/5acd7308-f6e1-4b1e-c74=
+4-bb2e5fdca1be@web.de/
+>>>>>>>>>> https://lore.kernel.org/patchwork/patch/1151158/
+>>>>>>>>>> https://lkml.org/lkml/2019/11/9/125
+=E2=80=A6
+>> Are you going to compare the published patches any further?
+>>
+>>
+>>>> Does the change approach by Yu Kuai supersede it?
+>>
+>> Which patch variant will be integrated finally?
+>
+> Just picked up Yu Kuai's patch.
 
-This means every write invalidates the "flushed" state, right?
+Did you adjust any details?
+https://lkml.org/lkml/2020/6/23/542
+https://lore.kernel.org/patchwork/comment/1457270/
 
->  	nvm->buf_data_size = offset + bytes;
->  	memcpy(nvm->buf + offset, val, bytes);
->  	return 0;
-> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-> index 817c66c7adcf..bbfbfebeee7f 100644
-> --- a/drivers/thunderbolt/switch.c
-> +++ b/drivers/thunderbolt/switch.c
-> @@ -26,6 +26,11 @@ struct nvm_auth_status {
->  	u32 status;
->  };
->  
-> +enum nvm_write_ops {
-> +	WRITE_AND_AUTHENTICATE = 1,
-> +	WRITE_ONLY = 2,
-> +};
-> +
->  /*
->   * Hold NVM authentication failure status per switch This information
->   * needs to stay around even when the switch gets power cycled so we
-> @@ -155,8 +160,12 @@ static int nvm_validate_and_write(struct tb_switch *sw)
->  	}
->  
->  	if (tb_switch_is_usb4(sw))
-> -		return usb4_switch_nvm_write(sw, 0, buf, image_size);
-> -	return dma_port_flash_write(sw->dma_port, 0, buf, image_size);
-> +		ret = usb4_switch_nvm_write(sw, 0, buf, image_size);
-> +	else
-> +		ret = dma_port_flash_write(sw->dma_port, 0, buf, image_size);
-> +	if (!ret)
-> +		sw->nvm->flushed = true;
-> +	return ret;
->  }
->  
->  static int nvm_authenticate_host_dma_port(struct tb_switch *sw)
-> @@ -1488,7 +1497,7 @@ static ssize_t nvm_authenticate_store(struct device *dev,
->  	struct device_attribute *attr, const char *buf, size_t count)
->  {
->  	struct tb_switch *sw = tb_to_switch(dev);
-> -	bool val;
-> +	int val;
->  	int ret;
->  
->  	pm_runtime_get_sync(&sw->dev);
-> @@ -1504,25 +1513,28 @@ static ssize_t nvm_authenticate_store(struct device *dev,
->  		goto exit_unlock;
->  	}
->  
-> -	ret = kstrtobool(buf, &val);
-> +	ret = kstrtoint(buf, 10, &val);
->  	if (ret)
->  		goto exit_unlock;
->  
->  	/* Always clear the authentication status */
->  	nvm_clear_auth_status(sw);
->  
-> -	if (val) {
-> -		if (!sw->nvm->buf) {
-> -			ret = -EINVAL;
-> -			goto exit_unlock;
-> -		}
-> -
-> -		ret = nvm_validate_and_write(sw);
-> -		if (ret)
-> -			goto exit_unlock;
-> +	if (val > 0) {
-> +		if (!sw->nvm->flushed) {
-> +			if (!sw->nvm->buf) {
-> +				ret = -EINVAL;
-> +				goto exit_unlock;
-> +			}
->  
-> -		sw->nvm->authenticating = true;
-> -		ret = nvm_authenticate(sw);
-> +			ret = nvm_validate_and_write(sw);
-> +			if (ret || val == WRITE_ONLY)
-> +				goto exit_unlock;
-> +		}
-> +		if (val == WRITE_AND_AUTHENTICATE) {
-> +			sw->nvm->authenticating = true;
-> +			ret = nvm_authenticate(sw);
-> +		}
->  	}
->  
->  exit_unlock:
-> diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-> index 736d1589c31e..43a8ca2eb3d8 100644
-> --- a/drivers/thunderbolt/tb.h
-> +++ b/drivers/thunderbolt/tb.h
-> @@ -42,6 +42,7 @@
->   *
->   * The user of this structure needs to handle serialization of possible
->   * concurrent access.
-> + * @flushed: The image has been flushed to the storage area
+With which delay will a corresponding commit be published?
+https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/log/arc=
+h/arm/mach-imx/pm-imx6.c
 
-This should go below the @authenticating description.
-
->   */
->  struct tb_nvm {
->  	struct device *dev;
-> @@ -53,6 +54,7 @@ struct tb_nvm {
->  	void *buf;
->  	size_t buf_data_size;
->  	bool authenticating;
-> +	bool flushed;
->  };
->  
->  #define TB_SWITCH_KEY_SIZE		32
-> -- 
-> 2.25.1
+Regards,
+Markus
