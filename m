@@ -2,70 +2,94 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D36C32073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592899780;
-	bh=RmyJ82t4G4pZWa40AMFtfjcgoaWtdCWYC96UkmoiQjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZJ7LaEXKoJ9Zt4rlXgJvsXOXFsARUX4C9LHfmI0ZYdB67agbVC/FQvN8e3ojNGZ5C
-	 eCW7HkN5nCaYCBLxP9tSHluWO0wtPxwPrgPgjT8aQyZiMUhEAb002bSbNnriquP4xT
-	 9K4Ocibc9agiknvBbYKF6+jcOELVjyNL0aNeyV1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2AA942072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731775AbgFWIJj (ORCPT
+        id S1731649AbgFWINT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731158AbgFWIJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:09:39 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20CE420716;
-        Tue, 23 Jun 2020 08:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592899779;
-        bh=RmyJ82t4G4pZWa40AMFtfjcgoaWtdCWYC96UkmoiQjs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UljooBB81yM7ijLuOhpq3XMwNdRJGOOOSzAr+ei4jw7Qd1B6TcgZxEd0AhviZ1X0R
-         dqMrO44V/YcTy+/3HWUhE3rC5NQXjr9eqvgKpg5V7/dXIuVzZ9AS2speRMzYgxXmFq
-         xTJXZKO5YX/Xlm3S/XrtXScFAEs20htPNFPNCihM=
-Date:   Tue, 23 Jun 2020 13:39:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/6] arm64: dts: qcom: Enable SM8250 remoteprocs
-Message-ID: <20200623080933.GQ2324254@vkoul-mobl>
-References: <20200622222747.717306-1-bjorn.andersson@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622222747.717306-1-bjorn.andersson@linaro.org>
+        Tue, 23 Jun 2020 04:13:19 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:33466 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731158AbgFWINT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:13:19 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2uVufFeEK1IAA--.8S2;
+        Tue, 23 Jun 2020 16:13:10 +0800 (CST)
+From:   Kaige Li <likaige@loongson.cn>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH RESEND] net/cisco: Fix a sleep-in-atomic-context bug in enic_init_affinity_hint()
+Date:   Tue, 23 Jun 2020 16:13:09 +0800
+Message-Id: <1592899989-22049-1-git-send-email-likaige@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxj2uVufFeEK1IAA--.8S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4DurW5Aw47Wr1UAFykuFg_yoW8GF1xpa
+        y8t3y8Zws5Jw1DZa1kK3Z7G3y5ua43u34qkF47A39YqrZ5XFWkJr9rtF43Zr1jqrWUGF1a
+        q3W2yr47WFn8Aa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r43
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
+        WxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUj3CztUUUU
+        U==
+X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-06-20, 15:27, Bjorn Andersson wrote:
-> With the driver code in place, add the necessary dts nodes to enable three of
-> the remoteprocs found on Qualcomm SM8250 and finally enable the missing
-> QCOM_IPCC driver in defconfig.
+The kernel module may sleep with holding a spinlock.
 
-All look great to me:
+The function call paths (from bottom to top) are:
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+[FUNC] zalloc_cpumask_var(GFP_KERNEL)
+drivers/net/ethernet/cisco/enic/enic_main.c, 125: zalloc_cpumask_var in enic_init_affinity_hint
+drivers/net/ethernet/cisco/enic/enic_main.c, 1918: enic_init_affinity_hint in enic_open
+drivers/net/ethernet/cisco/enic/enic_main.c, 2348: enic_open in enic_reset
+drivers/net/ethernet/cisco/enic/enic_main.c, 2341: spin_lock in enic_reset
 
+To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
+
+Signed-off-by: Kaige Li <likaige@loongson.cn>
+---
+
++cc netdev@vger.kernel.org
+
+ drivers/net/ethernet/cisco/enic/enic_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
+index cd5fe4f..ee62065 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -122,7 +122,7 @@ static void enic_init_affinity_hint(struct enic *enic)
+ 		     !cpumask_empty(enic->msix[i].affinity_mask)))
+ 			continue;
+ 		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
+-				       GFP_KERNEL))
++				       GFP_ATOMIC))
+ 			cpumask_set_cpu(cpumask_local_spread(i, numa_node),
+ 					enic->msix[i].affinity_mask);
+ 	}
 -- 
-~Vinod
+2.1.0
+
