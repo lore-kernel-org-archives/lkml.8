@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B953C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23A2520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D8B20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945593;
-	bh=iUhx2mCEszatdkL0B/6D09sYtm+d5NmvFLb6a1swACw=;
+	s=default; t=1592945595;
+	bh=n//SLMJu7Up4JR3PkWv7N4jc0/XL3Id7mT0hrDjIJSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KML7Wvbastwhk79jOF02OLtY5fgS+5tZdWuPAnxAHylgNVFX2XJ861TcYfCdpVP3F
-	 +yK9WKSNp5xjP+7J5MJvnSx+JC+a172gDkcwrM5OSRGgQwGkYrwvh9f1DQFlSidZvR
-	 X55wICSB1SDhQp2FmsXHD9zOhjbmZh2ieXcxw+DE=
+	b=Ex+Dq8TcGE8u14oIPRHsPYdzJkWP/Lsi3FfHTbuYO8ci4p0QzILdrZpYrZ9yLjfAH
+	 roTbgP07gIBgdhWCKVf2KYt3YiIUMfQpGHt3il76bcQYaRdTXCEenlgAGdDC7TI7Pb
+	 TlQx+eOstnDXfsSI3zCIv+tZxGd6u9k3E+b4q9SM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403976AbgFWUxL (ORCPT
+        id S2403983AbgFWUxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45354 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392904AbgFWUrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:47:04 -0400
+        id S2392901AbgFWUq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:46:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B01D21548;
-        Tue, 23 Jun 2020 20:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC78C214DB;
+        Tue, 23 Jun 2020 20:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945224;
-        bh=iUhx2mCEszatdkL0B/6D09sYtm+d5NmvFLb6a1swACw=;
+        s=default; t=1592945219;
+        bh=n//SLMJu7Up4JR3PkWv7N4jc0/XL3Id7mT0hrDjIJSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xom7Y3XWLc8z/B6RhGvmf34SN6SiIuxpogJY6hjAPwFkB94xHuw5HMoOAQWHRmfBz
-         gRMnzEN/IK81vC2W6RzPSRKs3M68KSx735kp6s6qs/5USc69EJppyBVMJBIhjVc5GC
-         bHeqa0sdvnBm4MmJNYGBM//MlMoaVuKSHpKU+JC4=
+        b=DL54jfaqsUcXgdCW/xd1nm+FtYdelZ4RMAYxZNb2v31RMV1KZvM5HvY6VKqMyG7og
+         +mSmHG0YYt9tyRmAyKC5WoasIt/HkeIGlL1Ut3T0EUv0U6kgYCw2Y5ocmFyVWwQ8Vs
+         jbu2eeTM/Y5k05Upo+kpK/lQw8wonbuui5JhFEfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
-        Qiushi Wu <wu000273@umn.edu>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 087/136] scsi: iscsi: Fix reference count leak in iscsi_boot_create_kobj
-Date:   Tue, 23 Jun 2020 21:59:03 +0200
-Message-Id: <20200623195308.060268014@linuxfoundation.org>
+Subject: [PATCH 4.14 085/136] openrisc: Fix issue with argument clobbering for clone/fork
+Date:   Tue, 23 Jun 2020 21:59:01 +0200
+Message-Id: <20200623195307.968710030@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -61,36 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Stafford Horne <shorne@gmail.com>
 
-[ Upstream commit 0267ffce562c8bbf9b57ebe0e38445ad04972890 ]
+[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
 
-kobject_init_and_add() takes reference even when it fails. If this
-function returns an error, kobject_put() must be called to properly
-clean up the memory associated with the object.
+Working on the OpenRISC glibc port I found that sometimes clone was
+working strange.  That the tls data argument sent in r7 was always
+wrong.  Further investigation revealed that the arguments were getting
+clobbered in the entry code.  This patch removes the code that writes to
+the argument registers.  This was likely due to some old code hanging
+around.
 
-Link: https://lore.kernel.org/r/20200528201353.14849-1-wu000273@umn.edu
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This patch fixes this up for clone and fork.  This fork clobber is
+harmless but also useless so remove.
+
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/iscsi_boot_sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/openrisc/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/iscsi_boot_sysfs.c b/drivers/scsi/iscsi_boot_sysfs.c
-index d453667612f88..15d64f96e623c 100644
---- a/drivers/scsi/iscsi_boot_sysfs.c
-+++ b/drivers/scsi/iscsi_boot_sysfs.c
-@@ -360,7 +360,7 @@ iscsi_boot_create_kobj(struct iscsi_boot_kset *boot_kset,
- 	boot_kobj->kobj.kset = boot_kset->kset;
- 	if (kobject_init_and_add(&boot_kobj->kobj, &iscsi_boot_ktype,
- 				 NULL, name, index)) {
--		kfree(boot_kobj);
-+		kobject_put(&boot_kobj->kobj);
- 		return NULL;
- 	}
- 	boot_kobj->data = data;
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index 1107d34e45bf1..0fdfa7142f4b3 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -1102,13 +1102,13 @@ ENTRY(__sys_clone)
+ 	l.movhi	r29,hi(sys_clone)
+ 	l.ori	r29,r29,lo(sys_clone)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r7,r1,0
++	 l.nop
+ 
+ ENTRY(__sys_fork)
+ 	l.movhi	r29,hi(sys_fork)
+ 	l.ori	r29,r29,lo(sys_fork)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r3,r1,0
++	 l.nop
+ 
+ ENTRY(sys_rt_sigreturn)
+ 	l.jal	_sys_rt_sigreturn
 -- 
 2.25.1
 
