@@ -2,51 +2,54 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33272C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC552078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACAB20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933780;
-	bh=Ek0ULgVy39jBD8SSkFxugE25V40WPVHosBEnKWbkujI=;
+	s=default; t=1592933785;
+	bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypYdbphAeqsLqK6mq5NAYIqOZpGUwY4IxNcc69eZIBEWcaHHqBwvRqJNm5NVC81yb
-	 K1q53O6oQN32uHYkzzFBb6KDII4e1GdiQhFvDXZGbp0wLiG43Qz6Z6B5ovzO6abv88
-	 Pm5WL+4Mu9nkpV+MVD1/SQ+XhMO+Xr+tYadTaso8=
+	b=GTfKyVvpwkNDxCQoLRqxQmAnYq5ipJWOF0+daDekkKjraJh1HCv6YmsLT0k1G5dOO
+	 ZH7AUhpzu9K9yBSM5KevUcwRTodk6YI7DcdQLk4gay8IgQQ7WpAqAF0NznpuuhbN2a
+	 jFPoqQVXZngE+U8N7xNqQ8RJA9AXC8Gks97EZNiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387538AbgFWRgT (ORCPT
+        id S2387563AbgFWRgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33124 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:36:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387494AbgFWRgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:11 -0400
+        id S2387494AbgFWRgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CBA7207D0;
-        Tue, 23 Jun 2020 17:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5476320780;
+        Tue, 23 Jun 2020 17:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933770;
-        bh=Ek0ULgVy39jBD8SSkFxugE25V40WPVHosBEnKWbkujI=;
+        s=default; t=1592933779;
+        bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BESqwDwCp+OcAN5fOS4tl1YtgtT2B8FDNKq+FpOPaSK2s75D6aDe3uVrLsrtIgKUs
-         UmTWRENHQDUb6UQWiMYycHGErPr/PS0ZB0vVXhmvZEN0/Lk8NftBnVXT0FP6Afo8a1
-         yChghWW2uOKl/Qpd8W/GaaJm/fqbE4iQdAh+oHVE=
+        b=ucA1AhgL8bgZ5hoaW7wgKHYNFCegZXXWgLFPjqPsoSrS45CuFGN4xu2weadnJU/AJ
+         rHJONheF4Z6c9uRvyzEOO1xONLfPo5NZ+CncX0GRHEdvu9gLstnzDmRqYH9OXfXl5C
+         P6R5hDaNuxOCawaIRqpIFkMAla05TKoNSjefkijY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/24] test_objagg: Fix potential memory leak in error handling
-Date:   Tue, 23 Jun 2020 13:35:44 -0400
-Message-Id: <20200623173559.1355728-9-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 16/24] s390/vdso: Use $(LD) instead of $(CC) to link vDSO
+Date:   Tue, 23 Jun 2020 13:35:51 -0400
+Message-Id: <20200623173559.1355728-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
 References: <20200623173559.1355728-1-sashal@kernel.org>
@@ -59,38 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit a6379f0ad6375a707e915518ecd5c2270afcd395 ]
+[ Upstream commit 2b2a25845d534ac6d55086e35c033961fdd83a26 ]
 
-In case of failure of check_expect_hints_stats(), the resources
-allocated by objagg_hints_get should be freed. The patch fixes
-this issue.
+Currently, the VDSO is being linked through $(CC). This does not match
+how the rest of the kernel links objects, which is through the $(LD)
+variable.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When clang is built in a default configuration, it first attempts to use
+the target triple's default linker, which is just ld. However, the user
+can override this through the CLANG_DEFAULT_LINKER cmake define so that
+clang uses another linker by default, such as LLVM's own linker, ld.lld.
+This can be useful to get more optimized links across various different
+projects.
+
+However, this is problematic for the s390 vDSO because ld.lld does not
+have any s390 emulatiom support:
+
+https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
+
+Thus, if a user is using a toolchain with ld.lld as the default, they
+will see an error, even if they have specified ld.bfd through the LD
+make variable:
+
+$ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
+                       LD=s390x-linux-gnu-ld \
+                       defconfig arch/s390/kernel/vdso64/
+ld.lld: error: unknown emulation: elf64_s390
+clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
+
+Normally, '-fuse-ld=bfd' could be used to get around this; however, this
+can be fragile, depending on paths and variable naming. The cleaner
+solution for the kernel is to take advantage of the fact that $(LD) can
+be invoked directly, which bypasses the heuristics of $(CC) and respects
+the user's choice. Similar changes have been done for ARM, ARM64, and
+MIPS.
+
+Link: https://lkml.kernel.org/r/20200602192523.32758-1-natechancellor@gmail.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/1041
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+[heiko.carstens@de.ibm.com: add --build-id flag]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_objagg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/kernel/vdso64/Makefile | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/lib/test_objagg.c b/lib/test_objagg.c
-index 72c1abfa154dc..da137939a4100 100644
---- a/lib/test_objagg.c
-+++ b/lib/test_objagg.c
-@@ -979,10 +979,10 @@ static int test_hints_case(const struct hints_case *hints_case)
- err_world2_obj_get:
- 	for (i--; i >= 0; i--)
- 		world_obj_put(&world2, objagg, hints_case->key_ids[i]);
--	objagg_hints_put(hints);
--	objagg_destroy(objagg2);
- 	i = hints_case->key_ids_count;
-+	objagg_destroy(objagg2);
- err_check_expect_hints_stats:
-+	objagg_hints_put(hints);
- err_hints_get:
- err_check_expect_stats:
- err_world_obj_get:
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index bec19e7e6e1cf..4a66a1cb919b1 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -18,8 +18,8 @@ KBUILD_AFLAGS_64 += -m64 -s
+ 
+ KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
+-KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+-		    -Wl,--hash-style=both
++ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
++	     --hash-style=both --build-id -T
+ 
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+ $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
+@@ -37,8 +37,8 @@ KASAN_SANITIZE := n
+ $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+ 
+ # link rule for the .so file, .lds has to be first
+-$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) FORCE
+-	$(call if_changed,vdso64ld)
++$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
++	$(call if_changed,ld)
+ 
+ # strip rule for the .so file
+ $(obj)/%.so: OBJCOPYFLAGS := -S
+@@ -50,8 +50,6 @@ $(obj-vdso64): %.o: %.S FORCE
+ 	$(call if_changed_dep,vdso64as)
+ 
+ # actual build commands
+-quiet_cmd_vdso64ld = VDSO64L $@
+-      cmd_vdso64ld = $(CC) $(c_flags) -Wl,-T $(filter %.lds %.o,$^) -o $@
+ quiet_cmd_vdso64as = VDSO64A $@
+       cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
+ 
 -- 
 2.25.1
 
