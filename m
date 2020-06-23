@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0146FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9240D2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DE92064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944189;
-	bh=0PBbNoMLgT/OjPeh5DapmIdaNhEuA8/SPN2ldUn2pTo=;
+	s=default; t=1592944193;
+	bh=nYC6zV5cB3CqsqUoi8Se6DDAWTT7b6VGwCCfLbThw9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sdu5WgcdXiFpOwkMUS5vb8I81ukLvbR3nq/U6gmLM37VXN9RGqYAS66YFhffnUla7
-	 fXdEyrwiuxrh0OjgeyoLohbngpwqZY3QNiyZvVU6oikpl6doWAK/54lnxKAUn+BPs0
-	 97AX7wkQO3pmkQLefus2e1D5dnBbJ/y6eYoIhkB4=
+	b=Uq/fFhyeo6rPM+ZNgS8kVPWPdDKlC849JCaflXxH5wH+nejeu0jK9YWcHQ/C6wEPs
+	 EuqSgWZ/6iZayJ6/Rip+GUPtpwh2TFwFu2yUKq8OoOiGGiN/oOE17jH0Nb98bsqU8I
+	 jKskfZb+FEue8q+ZkPhi/ZGExi8i4JSF9DbLPv4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391024AbgFWU3s (ORCPT
+        id S2391040AbgFWU3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:29:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49680 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:29:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391002AbgFWU3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:29:36 -0400
+        id S2391009AbgFWU3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB91B206C3;
-        Tue, 23 Jun 2020 20:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 800C02064B;
+        Tue, 23 Jun 2020 20:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944176;
-        bh=0PBbNoMLgT/OjPeh5DapmIdaNhEuA8/SPN2ldUn2pTo=;
+        s=default; t=1592944179;
+        bh=nYC6zV5cB3CqsqUoi8Se6DDAWTT7b6VGwCCfLbThw9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0FbmZVfbouu+tHvTidLWoUCHDn6W9hMzkBlB8YvX4etHJLa0NVKguohks0mc2+ARU
-         AlUP5Wjq60CZRRCaWV0AWuORDC/aphx1AeoUtdGQN64UA7r/GXHqbIdv8H7zkRbxmJ
-         JXtaUXk+11ToamAa2kK7kw0vMO89US5y1xRlXK4Y=
+        b=xB0lZqfRrd7ukt9Ufz8Cd4/mBQjc05e50pSMm9ra1221DZy3Zi1IOVSrqMi6eZ28m
+         36+9W/qfjgz/1CwH7wsyZNCNIWUz+n1bEo6gkMVvRLIzxBupqrgGPuv7cjD6e8FZV1
+         w+eS7Cv7r/2Ib6LaqIxrWXA8IwNGh9KArABUQnY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org,
-        John Hubbard <jhubbard@nvidia.com>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 195/314] misc: xilinx-sdfec: improve get_user_pages_fast() error handling
-Date:   Tue, 23 Jun 2020 21:56:30 +0200
-Message-Id: <20200623195348.226110468@linuxfoundation.org>
+Subject: [PATCH 5.4 204/314] vfio/mdev: Fix reference count leak in add_mdev_supported_type
+Date:   Tue, 23 Jun 2020 21:56:39 +0200
+Message-Id: <20200623195348.653071300@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -64,95 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 57343d51613227373759f5b0f2eede257fd4b82e ]
+[ Upstream commit aa8ba13cae3134b8ef1c1b6879f66372531da738 ]
 
-This fixes the case of get_user_pages_fast() returning a -errno.
-The result needs to be stored in a signed integer. And for safe
-signed/unsigned comparisons, it's best to keep everything signed.
-And get_user_pages_fast() also expects a signed value for number
-of pages to pin.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Thus,
+replace kfree() by kobject_put() to fix this issue. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-Therefore, change most relevant variables, from u32 to int. Leave
-"n" unsigned, for convenience in checking for overflow. And provide
-a WARN_ON_ONCE() and early return, if overflow occurs.
-
-Also, as long as we're tidying up: rename the page array from page,
-to pages, in order to match the conventions used in most other call
-sites.
-
-Fixes: 20ec628e8007e ("misc: xilinx_sdfec: Add ability to configure LDPC")
-Cc: Derek Kiernan <derek.kiernan@xilinx.com>
-Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Link: https://lore.kernel.org/r/20200527012628.1100649-2-jhubbard@nvidia.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/xilinx_sdfec.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ drivers/vfio/mdev/mdev_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 48ba7e02bed72..d4c14b617201e 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -602,10 +602,10 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
- 			      const u32 depth)
- {
- 	u32 reg = 0;
--	u32 res;
--	u32 n, i;
-+	int res, i, nr_pages;
-+	u32 n;
- 	u32 *addr = NULL;
--	struct page *page[MAX_NUM_PAGES];
-+	struct page *pages[MAX_NUM_PAGES];
- 
- 	/*
- 	 * Writes that go beyond the length of
-@@ -622,15 +622,22 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
- 	if ((len * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE)
- 		n += 1;
- 
--	res = get_user_pages_fast((unsigned long)src_ptr, n, 0, page);
--	if (res < n) {
--		for (i = 0; i < res; i++)
--			put_page(page[i]);
-+	if (WARN_ON_ONCE(n > INT_MAX))
-+		return -EINVAL;
-+
-+	nr_pages = n;
-+
-+	res = get_user_pages_fast((unsigned long)src_ptr, nr_pages, 0, pages);
-+	if (res < nr_pages) {
-+		if (res > 0) {
-+			for (i = 0; i < res; i++)
-+				put_page(pages[i]);
-+		}
- 		return -EINVAL;
+diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+index 7570c7602ab40..f32c582611eb6 100644
+--- a/drivers/vfio/mdev/mdev_sysfs.c
++++ b/drivers/vfio/mdev/mdev_sysfs.c
+@@ -110,7 +110,7 @@ static struct mdev_type *add_mdev_supported_type(struct mdev_parent *parent,
+ 				   "%s-%s", dev_driver_string(parent->dev),
+ 				   group->name);
+ 	if (ret) {
+-		kfree(type);
++		kobject_put(&type->kobj);
+ 		return ERR_PTR(ret);
  	}
  
--	for (i = 0; i < n; i++) {
--		addr = kmap(page[i]);
-+	for (i = 0; i < nr_pages; i++) {
-+		addr = kmap(pages[i]);
- 		do {
- 			xsdfec_regwrite(xsdfec,
- 					base_addr + ((offset + reg) *
-@@ -639,7 +646,7 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
- 			reg++;
- 		} while ((reg < len) &&
- 			 ((reg * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE));
--		put_page(page[i]);
-+		put_page(pages[i]);
- 	}
- 	return reg;
- }
 -- 
 2.25.1
 
