@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2403DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCECC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA9A32078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E662064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943770;
-	bh=nuG4agFF5FN6Puy7el4y3Wt2Mg2W723vSmWFTVBwvks=;
+	s=default; t=1592943777;
+	bh=w6ZOsNqSph3+zxkDGVwNoJmA44m+dH/qiJLveJ0AUaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BwW3Nut/zoDtfmw0VtI31ssZ3kE8GOea9Cgn9je767qy2TTDh55JtB/kaOGFtRsyG
-	 l1FgwEDkRbRoO7u9Mw/GeNm866e5cG7lzauOi+JVklIDdRf2sT3FYcMXSlaemoylXP
-	 0js3dMhd+UA8ysJHHkUYelfJC7tHmpM6Q1wU7yXs=
+	b=IYApDyefPqave0GMRzuoUBPH3ySZjPaViBtqKObYadPc42Cb/jDxMzaldykRnRX7Y
+	 m2blI8O8M286Go+au4OdzN9XP1TzylicHKBi7TiOzTMnl9eWHU3oU+qm+lO4h3rAH5
+	 fYjgHomrUmMr38yvLgMZJzuzshxWaVRAehGrTnP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390218AbgFWUWs (ORCPT
+        id S2390227AbgFWUWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390192AbgFWUWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:22:37 -0400
+        id S2390196AbgFWUWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:22:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3766A2064B;
-        Tue, 23 Jun 2020 20:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A2FD2073E;
+        Tue, 23 Jun 2020 20:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943756;
-        bh=nuG4agFF5FN6Puy7el4y3Wt2Mg2W723vSmWFTVBwvks=;
+        s=default; t=1592943759;
+        bh=w6ZOsNqSph3+zxkDGVwNoJmA44m+dH/qiJLveJ0AUaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R8aHQikb9fkbKd/0bV/Vf8fQdGUyNoy4Jceep/EWBVUp5vFV/BX6AEAHmFKuhuWUF
-         3I7Ptqfn+fMaYZSeguiEljFjWVHr2UEGhQ9wqQUU65aXuVHqyFjknm7A7jhuOxK4z5
-         8N0S3h1YngnNukE7vy2HcsK9YY/hKIiFFesqw9tI=
+        b=FcG83IibNnNkM9YTOOem0KFENxf0s0Y04ZgzLiCZ8i+GwmI7/g5bxU3l4uCOREJ7x
+         syMZxGhrszLwfDzcxzvMJnqssdux5XBCYTgn5BBqx0mv9ALQqHEWEAhcki4VNBYihJ
+         mtj/eYrwFwBpLJIJVumIYKx3VGEhU/+aG6QO/NRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 039/314] clk: renesas: cpg-mssr: Fix STBCR suspend/resume handling
-Date:   Tue, 23 Jun 2020 21:53:54 +0200
-Message-Id: <20200623195340.674764011@linuxfoundation.org>
+Subject: [PATCH 5.4 040/314] ASoC: SOF: Do nothing when DSP PM callbacks are not set
+Date:   Tue, 23 Jun 2020 21:53:55 +0200
+Message-Id: <20200623195340.722635988@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,58 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-[ Upstream commit ace342097768e35fd41934285604fa97da1e235a ]
+[ Upstream commit c26fde3b15ed41f5f452f1da727795f787833287 ]
 
-On SoCs with Standby Control Registers (STBCRs) instead of Module Stop
-Control Registers (MSTPCRs), the suspend handler saves the wrong
-registers, and the resume handler prints the wrong register in an error
-message.
+This provides a better separation between runtime and PM sleep
+callbacks.
 
-Fortunately this cannot happen yet, as the suspend/resume code is used
-on PSCI systems only, and systems with STBCRs (RZ/A1 and RZ/A2) do not
-use PSCI.  Still, it is better to fix this, to avoid this becoming a
-problem in the future.
+Only do nothing if given runtime flag is set and calback is not set.
 
-Distinguish between STBCRs and MSTPCRs where needed.  Replace the
-useless printing of the virtual register address in the resume error
-message by printing the register index.
+With the current implementation, if PM sleep callback is set but runtime
+callback is not set then at runtime resume we reload the firmware even
+if we do not support runtime resume callback.
 
-Fixes: fde35c9c7db5732c ("clk: renesas: cpg-mssr: Add R7S9210 support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20200507074713.30113-1-geert+renesas@glider.be
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Link: https://lore.kernel.org/r/20200515135958.17511-2-kai.vehmanen@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/renesas-cpg-mssr.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ sound/soc/sof/pm.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index 132cc96895e3a..6f9612c169afe 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -800,7 +800,8 @@ static int cpg_mssr_suspend_noirq(struct device *dev)
- 	/* Save module registers with bits under our control */
- 	for (reg = 0; reg < ARRAY_SIZE(priv->smstpcr_saved); reg++) {
- 		if (priv->smstpcr_saved[reg].mask)
--			priv->smstpcr_saved[reg].val =
-+			priv->smstpcr_saved[reg].val = priv->stbyctrl ?
-+				readb(priv->base + STBCR(reg)) :
- 				readl(priv->base + SMSTPCR(reg));
- 	}
+diff --git a/sound/soc/sof/pm.c b/sound/soc/sof/pm.c
+index 195af259e78e3..128680b09c20b 100644
+--- a/sound/soc/sof/pm.c
++++ b/sound/soc/sof/pm.c
+@@ -266,7 +266,10 @@ static int sof_resume(struct device *dev, bool runtime_resume)
+ 	int ret;
  
-@@ -860,8 +861,9 @@ static int cpg_mssr_resume_noirq(struct device *dev)
- 		}
+ 	/* do nothing if dsp resume callbacks are not set */
+-	if (!sof_ops(sdev)->resume || !sof_ops(sdev)->runtime_resume)
++	if (!runtime_resume && !sof_ops(sdev)->resume)
++		return 0;
++
++	if (runtime_resume && !sof_ops(sdev)->runtime_resume)
+ 		return 0;
  
- 		if (!i)
--			dev_warn(dev, "Failed to enable SMSTP %p[0x%x]\n",
--				 priv->base + SMSTPCR(reg), oldval & mask);
-+			dev_warn(dev, "Failed to enable %s%u[0x%x]\n",
-+				 priv->stbyctrl ? "STB" : "SMSTP", reg,
-+				 oldval & mask);
- 	}
+ 	/* DSP was never successfully started, nothing to resume */
+@@ -346,7 +349,10 @@ static int sof_suspend(struct device *dev, bool runtime_suspend)
+ 	int ret;
  
- 	return 0;
+ 	/* do nothing if dsp suspend callback is not set */
+-	if (!sof_ops(sdev)->suspend)
++	if (!runtime_suspend && !sof_ops(sdev)->suspend)
++		return 0;
++
++	if (runtime_suspend && !sof_ops(sdev)->runtime_suspend)
+ 		return 0;
+ 
+ 	if (sdev->fw_state != SOF_FW_BOOT_COMPLETE)
 -- 
 2.25.1
 
