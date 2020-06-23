@@ -2,53 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1183C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA840206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC639206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944152;
-	bh=giVs8lzCvKSJtFFHoU4pzvCNBJJN2SkZUT7eSNvlx/w=;
+	s=default; t=1592944155;
+	bh=jmvRr5VE/7svdxfMGpur8aOFx0Tgio38UxgeRewNTzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7pKae9fvsnji+44RoVZPEz+ELxsM3dGaeRsZhx8J+7Iz5qiZR8Q1LvqaGCg6bCrq
-	 5ZsYE2/7zG6NubO2xf4IqKaHTpywT0MqMYvj6Atvj+BGZDusNHsI/Ak/XvMi2jnwmG
-	 kLYeCxpNHJ5Fje4WXMWmqkQ3hNhWz0/0do43TlIg=
+	b=zUR47Ng73wYGJfdfbcdobscL8ZereSLV5a2AzFVB7utI3KYFo0/78tcWDnOBUgVH2
+	 6y2Czn691cKF9zQ0pdLyiZFDdNNEI1S+VMjpj+kWHNCNktjOFHauKvEgpU4Z4lciwR
+	 KPUXi1M8Au/kiogCEJTlt43M7zAVXKG/rl07v+Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390952AbgFWU3J (ORCPT
+        id S2390962AbgFWU3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48984 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390221AbgFWU3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:29:03 -0400
+        id S2390950AbgFWU3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9247206C3;
-        Tue, 23 Jun 2020 20:29:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 026A82064B;
+        Tue, 23 Jun 2020 20:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944143;
-        bh=giVs8lzCvKSJtFFHoU4pzvCNBJJN2SkZUT7eSNvlx/w=;
+        s=default; t=1592944148;
+        bh=jmvRr5VE/7svdxfMGpur8aOFx0Tgio38UxgeRewNTzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvU9rxoeriom1K877hg+GU0ulPQ9+SEN9v1Fw36S7HlpxrKnwwNfSVDQUMAvVr2Fz
-         VH8NJxRU+jJORM+0saDRzK5T1tU7iIge81QhdBoC9StUy6PIB1krE0P8h35i4ORutI
-         /mV/mu0r3ScMp+4eNAqaYaU+uuuFztcXG4yopZyg=
+        b=ETtiHWKJSs+D0nP6LgjWd2tfxTgDNw2guXjvatrNTKjQ/DjLPfsP6W/kI49LTQwLU
+         hycUMHCdA2K1D/zx5GrDlitJCzNqqZkYTd5ZVz7XVnvh9tUoQC994O3CeIlNZ+TT1O
+         1PCwnfXX/L/olN3iffy/bvjNqRjlgSywfEIPomWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 189/314] clk: bcm2835: Fix return type of bcm2835_register_gate
-Date:   Tue, 23 Jun 2020 21:56:24 +0200
-Message-Id: <20200623195347.933432071@linuxfoundation.org>
+Subject: [PATCH 5.4 164/314] fuse: fix copy_file_range cache issues
+Date:   Tue, 23 Jun 2020 21:55:59 +0200
+Message-Id: <20200623195346.695517678@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,57 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit f376c43bec4f8ee8d1ba5c5c4cfbd6e84fb279cb ]
+[ Upstream commit 2c4656dfd994538176db30ce09c02cc0dfc361ae ]
 
-bcm2835_register_gate is used as a callback for the clk_register member
-of bcm2835_clk_desc, which expects a struct clk_hw * return type but
-bcm2835_register_gate returns a struct clk *.
+a) Dirty cache needs to be written back not just in the writeback_cache
+case, since the dirty pages may come from memory maps.
 
-This discrepancy is hidden by the fact that bcm2835_register_gate is
-cast to the typedef bcm2835_clk_register by the _REGISTER macro. This
-turns out to be a control flow integrity violation, which is how this
-was noticed.
+b) The fuse_writeback_range() helper takes an inclusive interval, so the
+end position needs to be pos+len-1 instead of pos+len.
 
-Change the return type of bcm2835_register_gate to be struct clk_hw *
-and use clk_hw_register_gate to do so. This should be a non-functional
-change as clk_register_gate calls clk_hw_register_gate anyways but this
-is needed to avoid issues with further changes.
-
-Fixes: b19f009d4510 ("clk: bcm2835: Migrate to clk_hw based registration and OF APIs")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1028
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://lkml.kernel.org/r/20200516080806.1459784-1-natechancellor@gmail.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 88bc7d5097a1 ("fuse: add support for copy_file_range()")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/fuse/file.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 802e488fd3c3d..6e5d635f030f4 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1448,13 +1448,13 @@ static struct clk_hw *bcm2835_register_clock(struct bcm2835_cprman *cprman,
- 	return &clock->hw;
- }
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 713d55a61890e..e730e3d8ad996 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -3280,13 +3280,11 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+ 		return -EXDEV;
  
--static struct clk *bcm2835_register_gate(struct bcm2835_cprman *cprman,
-+static struct clk_hw *bcm2835_register_gate(struct bcm2835_cprman *cprman,
- 					 const struct bcm2835_gate_data *data)
- {
--	return clk_register_gate(cprman->dev, data->name, data->parent,
--				 CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
--				 cprman->regs + data->ctl_reg,
--				 CM_GATE_BIT, 0, &cprman->regs_lock);
-+	return clk_hw_register_gate(cprman->dev, data->name, data->parent,
-+				    CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
-+				    cprman->regs + data->ctl_reg,
-+				    CM_GATE_BIT, 0, &cprman->regs_lock);
- }
+-	if (fc->writeback_cache) {
+-		inode_lock(inode_in);
+-		err = fuse_writeback_range(inode_in, pos_in, pos_in + len);
+-		inode_unlock(inode_in);
+-		if (err)
+-			return err;
+-	}
++	inode_lock(inode_in);
++	err = fuse_writeback_range(inode_in, pos_in, pos_in + len - 1);
++	inode_unlock(inode_in);
++	if (err)
++		return err;
  
- typedef struct clk_hw *(*bcm2835_clk_register)(struct bcm2835_cprman *cprman,
+ 	inode_lock(inode_out);
+ 
+@@ -3294,11 +3292,9 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	if (err)
+ 		goto out;
+ 
+-	if (fc->writeback_cache) {
+-		err = fuse_writeback_range(inode_out, pos_out, pos_out + len);
+-		if (err)
+-			goto out;
+-	}
++	err = fuse_writeback_range(inode_out, pos_out, pos_out + len - 1);
++	if (err)
++		goto out;
+ 
+ 	if (is_unstable)
+ 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi_out->state);
 -- 
 2.25.1
 
