@@ -2,165 +2,77 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52184C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 336542076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YkuJYpxX"
+	by mail.kernel.org (Postfix) with ESMTP id A66CF206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732312AbgFWArc (ORCPT
+        id S1732326AbgFWAsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731716AbgFWArc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:47:32 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D764C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:47:32 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s9so1213471ljm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:47:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wtdbOX5oThYTDJM/yZ7loxNE7l9NJR90MLvrHTPjroE=;
-        b=YkuJYpxXvdEL7yoEauC9MJGL4fib0h9/hPyEoQNua/x651UUThCLvRj/xjLWmZU6UO
-         YGPqNogOE8kx2yYabzpI88Lu955G6M0TmqFCJA0/Wl9BM870ahCsHhy4Ay2jWsvHxXPB
-         MTDDLu5EniwwcBR4EvOhPuD/cRvMfy/EsS/avB8xiZHBWD6oI6JoZWSQP2DFX5hTuTXa
-         1ek7r8D77SmBHJ0rrl7FN9hWh874kcm4hBaC/maBiGUwlfLbGsQ3TqGTWRJtGw/jh/ik
-         e04xUD5/povonUgqdwOL3arsqgMcTuITn93KR0jhV5JvYXIMmMygkFo9qhWslpOSKXjk
-         1LEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wtdbOX5oThYTDJM/yZ7loxNE7l9NJR90MLvrHTPjroE=;
-        b=TxiXB5geK0HxNQ4twzP+fT6tEq0N4/2qBdzcKKAPbMnyudbbRAt1dK1NzmwvAvl6nl
-         e3AXFsMqmP1pCMNHm4HyCqV4XsEqAn27xQEcA4LKlyS8bPrRP5xagPB3Y+f7jcWWQza4
-         MrjQigCrkC3XQG83TtnGhlkpNO3ogRvxFv7xTN+7sU+00ziAGaVa4KqnLeqFO/vjPLoH
-         q4aAoveR+YLr8aYhBNUwknV4hTkaOnx5KGTyL2eboKxogJLQVMxzbujDEcC8ACPbslWy
-         ENFsVhIycwsMivGd9BwnLm3d7yHZ3kT3DIUVqrcMKLrwky9LTaB0FPAqbUmRMDjBsy04
-         JCag==
-X-Gm-Message-State: AOAM533YX6mnK2cYZ3qDylViOLUayB1LtefflyBpYVIE3xawe7eGliBX
-        M97rOtgYzKt/OGqkxyYEuXew12SEE18pNqeDMsEgXw==
-X-Google-Smtp-Source: ABdhPJwd98jM9BRU2cXbE2BpTTuTTR91cyjV/GkqiL/DYfU/k2t4CLNN4nFu2jsYOQL7F3pAft5IhpPF7OzVZchP6R4=
-X-Received: by 2002:a2e:a58a:: with SMTP id m10mr10003481ljp.347.1592873250358;
- Mon, 22 Jun 2020 17:47:30 -0700 (PDT)
+        Mon, 22 Jun 2020 20:48:21 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23082 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731716AbgFWAsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:48:20 -0400
+IronPort-SDR: xcbKq55JFyPn2Z7U8E0/rcd0GOQD0Xsbhoi4YsCsgHD2bacIy/rS/HLrgQ1x+50DWvtB12BkXd
+ Z7cZV+iHuG+w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="145420202"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="145420202"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 17:48:19 -0700
+IronPort-SDR: 9jEEJuxfpBhX37hxIAiIqJr7MzUGTlfXJVnvnstDhgdyY8D03DaTh7iAXHM34LgVacTLSlUS2/
+ c/icCE4uxyQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="275173913"
+Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
+  by orsmga003.jf.intel.com with ESMTP; 22 Jun 2020 17:48:14 -0700
+Date:   Tue, 23 Jun 2020 03:48:13 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     stefanb@linux.ibm.com, mpe@ellerman.id.au, peterhuewe@gmx.de,
+        jgg@ziepe.ca, nayna@linux.ibm.com, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2] tpm: ibmvtpm: Wait for ready buffer before probing for
+ TPM2 attributes
+Message-ID: <20200623004813.GB28795@linux.intel.com>
+References: <20200619033040.121412-1-david@gibson.dropbear.id.au>
 MIME-Version: 1.0
-References: <20200623002128.GA25456@paulmck-ThinkPad-P72> <20200623002147.25750-2-paulmck@kernel.org>
-In-Reply-To: <20200623002147.25750-2-paulmck@kernel.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 22 Jun 2020 17:47:19 -0700
-Message-ID: <CALvZod4yjC5dDsVHLLhW405pBeMLCcq1b6FYq77ZAxUOtsNCFQ@mail.gmail.com>
-Subject: Re: [PATCH tip/core/rcu 02/26] mm/mmap.c: Add cond_resched() for
- exit_mmap() CPU stalls
-To:     paulmck@kernel.org, David Rientjes <rientjes@google.com>
-Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Ingo Molnar <mingo@kernel.org>, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        josh@joshtriplett.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>, fweisbec@gmail.com,
-        oleg@redhat.com, Joel Fernandes <joel@joelfernandes.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619033040.121412-1-david@gibson.dropbear.id.au>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 5:22 PM <paulmck@kernel.org> wrote:
->
-> From: "Paul E. McKenney" <paulmck@kernel.org>
->
-> A large process running on a heavily loaded system can encounter the
-> following RCU CPU stall warning:
->
->   rcu: INFO: rcu_sched self-detected stall on CPU
->   rcu: \x093-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
->   \x09(t=21013 jiffies g=1005461 q=132576)
->   NMI backtrace for cpu 3
->   CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
->   Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
->   Call Trace:
->    <IRQ>
->    dump_stack+0x46/0x60
->    nmi_cpu_backtrace.cold.3+0x13/0x50
->    ? lapic_can_unplug_cpu.cold.27+0x34/0x34
->    nmi_trigger_cpumask_backtrace+0xba/0xca
->    rcu_dump_cpu_stacks+0x99/0xc7
->    rcu_sched_clock_irq.cold.87+0x1aa/0x397
->    ? tick_sched_do_timer+0x60/0x60
->    update_process_times+0x28/0x60
->    tick_sched_timer+0x37/0x70
->    __hrtimer_run_queues+0xfe/0x270
->    hrtimer_interrupt+0xf4/0x210
->    smp_apic_timer_interrupt+0x5e/0x120
->    apic_timer_interrupt+0xf/0x20
->    </IRQ>
->   RIP: 0010:kmem_cache_free+0x223/0x300
->   Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
->   RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
->   RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
->   RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
->   RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
->   R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
->   R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
->    ? remove_vma+0x4f/0x60
->    remove_vma+0x4f/0x60
->    exit_mmap+0xd6/0x160
->    mmput+0x4a/0x110
->    do_exit+0x278/0xae0
->    ? syscall_trace_enter+0x1d3/0x2b0
->    ? handle_mm_fault+0xaa/0x1c0
->    do_group_exit+0x3a/0xa0
->    __x64_sys_exit_group+0x14/0x20
->    do_syscall_64+0x42/0x100
->    entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
-> for a very long time given a large process.  This commit therefore adds
-> a cond_resched() to this loop, providing RCU any needed quiescent states.
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: <linux-mm@kvack.org>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+On Fri, Jun 19, 2020 at 01:30:40PM +1000, David Gibson wrote:
+> The tpm2_get_cc_attrs_tbl() call will result in TPM commands being issued,
+> which will need the use of the internal command/response buffer.  But,
+> we're issuing this *before* we've waited to make sure that buffer is
+> allocated.
+> 
+> This can result in intermittent failures to probe if the hypervisor / TPM
+> implementation doesn't respond quickly enough.  I find it fails almost
+> every time with an 8 vcpu guest under KVM with software emulated TPM.
+> 
+> To fix it, just move the tpm2_get_cc_attrs_tlb() call after the
+> existing code to wait for initialization, which will ensure the buffer
+> is allocated.
+> 
+> Fixes: 18b3670d79ae9 ("tpm: ibmvtpm: Add support for TPM2")
+> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
 
-We have exactly the same change in our internal kernel since 2018. We
-mostly observed the need_resched warnings on the processes mapping the
-hugetlbfs.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-
-> ---
->  mm/mmap.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 59a4682..972f839 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -3159,6 +3159,7 @@ void exit_mmap(struct mm_struct *mm)
->                 if (vma->vm_flags & VM_ACCOUNT)
->                         nr_accounted += vma_pages(vma);
->                 vma = remove_vma(vma);
-> +               cond_resched();
->         }
->         vm_unacct_memory(nr_accounted);
->  }
-> --
-> 2.9.5
->
+/Jarkko
