@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59418C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB42C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9A121531
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7F321531
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944782;
-	bh=gq5ObQNE4e1Wgot0BPPIi7/5Q016PqRJyq9xK54erqw=;
+	s=default; t=1592944790;
+	bh=7HRnQUlSIzXrXc23vfe19xkfrnz/fgB5igccBfMgwb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pUyE1Fbo66dBUAX97tQ8s4YYplsFzcITHGTz0BWoWY0TgWQOZ8NFMWzd+cczp9CnB
-	 zy2h6y3/m/1QTC0qbonUvkFkyfbOxSBTZaWRoXIctQRy3uZDOwHxAzVFf2vCs/ro/y
-	 6FPi7ugKcCsYmXUmDOoTrngRX/Bq0A0Zt3RWYZjw=
+	b=eFE/3fJHNYnuNo0Q5j7S4VFe7x+vjw2ZcsTU6x4vKQyyThESsRB/3myYpDnC7UVlS
+	 tovjyeXDbsZFkh17luzcQGMBgZ6zXTcltGA/pLBaXaVcPfoYpnQHSO/G7gMD3GOZsv
+	 tLnTM7rRgQBXHKXt/UPWosu7ryu5P2FQzKoOy8rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392070AbgFWUjj (ORCPT
+        id S2392101AbgFWUjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:39:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35214 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392053AbgFWUjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:39:31 -0400
+        id S2390650AbgFWUjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:39:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAFE621531;
-        Tue, 23 Jun 2020 20:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE08215A4;
+        Tue, 23 Jun 2020 20:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944771;
-        bh=gq5ObQNE4e1Wgot0BPPIi7/5Q016PqRJyq9xK54erqw=;
+        s=default; t=1592944781;
+        bh=7HRnQUlSIzXrXc23vfe19xkfrnz/fgB5igccBfMgwb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dB2PXhkRNbCU8Fbc82wXCC95woEMCVxc9Hbiq9EF4Pa9Cd5VKR4rM9cTOHWvG5vHm
-         yVzJqr+Ky8TlgJAJJB6syFnfj6MCsjGOgbFOoS6igcezC2T115I+R0t+YGSQ8Ij9D1
-         Dbhxg3hm8ItaK0FrmLen407U9UveaB1dWZNIjKEw=
+        b=iXhuTlawiVYOdLAloMKHoc63+37R1SEX6Gm1dq0/cQmnFnDSmEuIX3eISMUtVWe8/
+         NFtvMm5wWK8c37wIeQ968wuREBXEWhbme4D+ck2ZNFBwWpvcT8hqqXUXLvWi0MDMZI
+         CiL804sNF5qhDkUZKsb2gVMtXxyD7FvvE04b6HzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, huhai <huhai@tj.kylinos.cn>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 118/206] clk: sprd: return correct type of value for _sprd_pll_recalc_rate
-Date:   Tue, 23 Jun 2020 21:57:26 +0200
-Message-Id: <20200623195322.751174636@linuxfoundation.org>
+Subject: [PATCH 4.19 122/206] powerpc/4xx: Dont unmap NULL mbase
+Date:   Tue, 23 Jun 2020 21:57:30 +0200
+Message-Id: <20200623195322.967122328@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+From: huhai <huhai@tj.kylinos.cn>
 
-[ Upstream commit c2f30986d418f26abefc2eec90ebf06716c970d2 ]
+[ Upstream commit bcec081ecc940fc38730b29c743bbee661164161 ]
 
-The function _sprd_pll_recalc_rate() defines return value to unsigned
-long, but it would return a negative value when malloc fail, changing
-to return its parent_rate makes more sense, since if the callback
-.recalc_rate() is not set, the framework returns the parent_rate as
-well.
-
-Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Link: https://lkml.kernel.org/r/20200519030036.1785-2-zhang.lyra@gmail.com
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: huhai <huhai@tj.kylinos.cn>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200521072648.1254699-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sprd/pll.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/4xx/pci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
-index 640270f51aa56..eb8862752c2b2 100644
---- a/drivers/clk/sprd/pll.c
-+++ b/drivers/clk/sprd/pll.c
-@@ -105,7 +105,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
+diff --git a/arch/powerpc/platforms/4xx/pci.c b/arch/powerpc/platforms/4xx/pci.c
+index 5aca523551aed..2f237027fdccf 100644
+--- a/arch/powerpc/platforms/4xx/pci.c
++++ b/arch/powerpc/platforms/4xx/pci.c
+@@ -1242,7 +1242,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	if (mbase == NULL) {
+ 		printk(KERN_ERR "%pOF: Can't map internal config space !",
+ 			port->node);
+-		goto done;
++		return;
+ 	}
  
- 	cfg = kcalloc(regs_num, sizeof(*cfg), GFP_KERNEL);
- 	if (!cfg)
--		return -ENOMEM;
-+		return parent_rate;
+ 	while (attempt && (0 == (in_le32(mbase + PECFG_460SX_DLLSTA)
+@@ -1252,9 +1252,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	}
+ 	if (attempt)
+ 		port->link = 1;
+-done:
+ 	iounmap(mbase);
+-
+ }
  
- 	for (i = 0; i < regs_num; i++)
- 		cfg[i] = sprd_pll_read(pll, i);
+ static struct ppc4xx_pciex_hwops ppc460sx_pcie_hwops __initdata = {
 -- 
 2.25.1
 
