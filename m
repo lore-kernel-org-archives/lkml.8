@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB54C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56CAC20E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18B42078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942933;
-	bh=wt8kCI+s3aG4RgorKuXJxYc5Qcqx8+vsgRzxzHPuuQg=;
+	s=default; t=1592942953;
+	bh=3aoChUl2UDZ0+bckNEqzvaEEiD5ZmCZpEvLq7LeN2lQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAuVBObbUfjwFol06oY9crwU/lkjVvhl5IF/0aCbAd3nXmKOZ8wsGHtkWKKVlDWPZ
-	 iXBC+PqQjKVI5oZkmob49mMofzIoN4q8i/hqYY7Dxk6wzak5CMg90ig3ov2fGlJzET
-	 s/FN8ezIlpN4Ate9eZ0apMQrxl6E6slxojiI50IA=
+	b=G6KUJ7fqYm8l5pjDc9yzu4f69BuLT1purLn9SQ0uD4DvpIcJvyEvYTBOOfIebugO/
+	 rQckvn4LAVBIitOLSvgQE6glpi/1aYbBlFoE1gtBoevHQxjqgLcazcR8kmy4QqiyKO
+	 0OgampKp7roOMwaP902B6zBHzI6tVrQRQ8HrA3wY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388277AbgFWUIw (ORCPT
+        id S2388331AbgFWUJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:08:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387911AbgFWUIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:15 -0400
+        id S2387960AbgFWUIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E55E7206C3;
-        Tue, 23 Jun 2020 20:08:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DA902064B;
+        Tue, 23 Jun 2020 20:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942895;
-        bh=wt8kCI+s3aG4RgorKuXJxYc5Qcqx8+vsgRzxzHPuuQg=;
+        s=default; t=1592942903;
+        bh=3aoChUl2UDZ0+bckNEqzvaEEiD5ZmCZpEvLq7LeN2lQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NTfMTZC026Svbk0rsLzTh5xOWWabuUYCkWcNBRknjmdeTnzlZOa1rFPZ/rPVkCGGM
-         zmmbo+dl3R2VKLsp/im91t/lkEMOU5ZxKNi3oZSfrMBIo3+L/oItn6vPmt+LLiP45U
-         4W+6KwWbFJBrYYeSnVHjUzRBadcDyBaAtzgX9vLg=
+        b=iH3rxNdiNiQtn32j8r57yU8vpaFggpj++EL8J82XG/Y0sPAsXKA6MSH8F9umqTvUS
+         6mX2k9s4Pd4+uWgbECE1CC8tmDDRUAwQ8GfEPa6cx9iFn8jMZ0BOVtQ3LvIMcDGf79
+         DgDJZAXeGXD/qi0EJG3RwFtryom49AeM8hOXcfL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Heidelberg <david@ixit.cz>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 178/477] power: supply: smb347-charger: IRQSTAT_D is volatile
-Date:   Tue, 23 Jun 2020 21:52:55 +0200
-Message-Id: <20200623195415.996140686@linuxfoundation.org>
+Subject: [PATCH 5.7 181/477] remoteproc/mediatek: fix invalid use of sizeof in scp_ipi_init()
+Date:   Tue, 23 Jun 2020 21:52:58 +0200
+Message-Id: <20200623195416.141650809@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,36 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
+[ Upstream commit 8096f80a5c09b716be207eb042c4e40d6cdefbd2 ]
 
-Fix failure when USB cable is connected:
-smb347 2-006a: reading IRQSTAT_D failed
+sizeof() when applied to a pointer typed expression gives the
+size of the pointer, not that of the pointed data.
 
-Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
-
-Tested-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: 63c13d61eafe ("remoteproc/mediatek: add SCP support for mt8183")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Link: https://lore.kernel.org/r/20200509084237.36293-1-weiyongjun1@huawei.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/smb347-charger.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/remoteproc/mtk_scp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
-index c1d124b8be0c2..d102921b3ab2b 100644
---- a/drivers/power/supply/smb347-charger.c
-+++ b/drivers/power/supply/smb347-charger.c
-@@ -1138,6 +1138,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
- 	switch (reg) {
- 	case IRQSTAT_A:
- 	case IRQSTAT_C:
-+	case IRQSTAT_D:
- 	case IRQSTAT_E:
- 	case IRQSTAT_F:
- 	case STAT_A:
+diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
+index 2bead57c9cf9b..ac13e7b046a60 100644
+--- a/drivers/remoteproc/mtk_scp.c
++++ b/drivers/remoteproc/mtk_scp.c
+@@ -132,8 +132,8 @@ static int scp_ipi_init(struct mtk_scp *scp)
+ 		(struct mtk_share_obj __iomem *)(scp->sram_base + recv_offset);
+ 	scp->send_buf =
+ 		(struct mtk_share_obj __iomem *)(scp->sram_base + send_offset);
+-	memset_io(scp->recv_buf, 0, sizeof(scp->recv_buf));
+-	memset_io(scp->send_buf, 0, sizeof(scp->send_buf));
++	memset_io(scp->recv_buf, 0, sizeof(*scp->recv_buf));
++	memset_io(scp->send_buf, 0, sizeof(*scp->send_buf));
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
