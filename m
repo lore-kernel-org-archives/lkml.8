@@ -2,178 +2,123 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73805C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEC9F20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E6620826
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733009AbgFWPg4 (ORCPT
+        id S1733059AbgFWPhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733019AbgFWPgv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:36:51 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7708C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:36:50 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jnkyd-0001RE-Rv; Tue, 23 Jun 2020 17:36:47 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jnkyd-000675-7i; Tue, 23 Jun 2020 17:36:47 +0200
-Date:   Tue, 23 Jun 2020 17:36:47 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 1/2] net: ethernet: mvneta: Fix Serdes configuration for
- SoCs without comphy
-Message-ID: <20200623153647.GF11869@pengutronix.de>
-References: <20200616083140.8498-1-s.hauer@pengutronix.de>
- <20200622235340.GQ1551@shell.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622235340.GQ1551@shell.armlinux.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:36:02 up 124 days, 23:06, 121 users,  load average: 0.22, 0.26,
- 0.27
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 23 Jun 2020 11:37:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:27325 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733016AbgFWPgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 11:36:50 -0400
+IronPort-SDR: /0Db1l110fmjMGVFGPn2mzsUas/qUvJqy76rII9/vprmq7Ylwj+qjWzXEnEa4vtpCnYFqaCi0K
+ 3SJQyOB/TPjA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="124367622"
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="124367622"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 08:36:47 -0700
+IronPort-SDR: FDabU8trmgNRQeplHAzCK2/4ZKTPyJ+wywngMYDo/DPQBWpRg4eG2gYCwuDr7DtGbo1spUHw9G
+ klzULad/JzQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="452262650"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 08:36:47 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH 7/7] iommu/vt-d: Disable multiple GPASID-dev bind
+Date:   Tue, 23 Jun 2020 08:43:16 -0700
+Message-Id: <1592926996-47914-8-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 12:53:40AM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Jun 16, 2020 at 10:31:39AM +0200, Sascha Hauer wrote:
-> > The MVNETA_SERDES_CFG register is only available on older SoCs like the
-> > Armada XP. On newer SoCs like the Armada 38x the fields are moved to
-> > comphy. This patch moves the writes to this register next to the comphy
-> > initialization, so that depending on the SoC either comphy or
-> > MVNETA_SERDES_CFG is configured.
-> > With this we no longer write to the MVNETA_SERDES_CFG on SoCs where it
-> > doesn't exist.
-> > 
-> > Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > ---
-> >  drivers/net/ethernet/marvell/mvneta.c | 80 +++++++++++++++------------
-> >  1 file changed, 44 insertions(+), 36 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> > index 51889770958d8..9933eb4577d43 100644
-> > --- a/drivers/net/ethernet/marvell/mvneta.c
-> > +++ b/drivers/net/ethernet/marvell/mvneta.c
-> > @@ -106,6 +106,7 @@
-> >  #define      MVNETA_TX_IN_PRGRS                  BIT(1)
-> >  #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
-> >  #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
-> > +/* Only exists on Armada XP and Armada 370 */
-> >  #define MVNETA_SERDES_CFG			 0x24A0
-> >  #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
-> >  #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-> > @@ -3514,26 +3515,55 @@ static int mvneta_setup_txqs(struct mvneta_port *pp)
-> >  	return 0;
-> >  }
-> >  
-> > -static int mvneta_comphy_init(struct mvneta_port *pp)
-> > +static int mvneta_comphy_init(struct mvneta_port *pp, phy_interface_t interface)
-> >  {
-> >  	int ret;
-> >  
-> > -	if (!pp->comphy)
-> > -		return 0;
-> > -
-> > -	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
-> > -			       pp->phy_interface);
-> > +	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET, interface);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> >  	return phy_power_on(pp->comphy);
-> >  }
-> >  
-> > +static int mvneta_config_interface(struct mvneta_port *pp,
-> > +				   phy_interface_t interface)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (pp->comphy) {
-> > +		if (interface == PHY_INTERFACE_MODE_SGMII ||
-> > +		    interface == PHY_INTERFACE_MODE_1000BASEX ||
-> > +		    interface == PHY_INTERFACE_MODE_2500BASEX) {
-> > +			ret = mvneta_comphy_init(pp, interface);
-> > +		}
-> > +	} else {
-> > +		switch (interface) {
-> > +		case PHY_INTERFACE_MODE_QSGMII:
-> > +			mvreg_write(pp, MVNETA_SERDES_CFG,
-> > +				    MVNETA_QSGMII_SERDES_PROTO);
-> > +			break;
-> > +
-> > +		case PHY_INTERFACE_MODE_SGMII:
-> > +		case PHY_INTERFACE_MODE_1000BASEX:
-> > +			mvreg_write(pp, MVNETA_SERDES_CFG,
-> > +				    MVNETA_SGMII_SERDES_PROTO);
-> > +			break;
-> > +		default:
-> > +			return -EINVAL;
-> 
-> I've just noticed that you made changes to the patch I sent, such as
-> adding this default case that errors out, and by doing so, you have
-> caused a regression by causing a WARN_ON() splat.
-> 
-> It was not accidental that my patch had "break;" here instead of an
-> error return, and I left the interface mode checking in
-> mvneta_port_power_up() that you also removed.
-> 
-> mvneta supports RGMII, and since RGMII doesn't use the serdes, there
-> is no need to write to MVNETA_SGMII_SERDES_PROTO, and so we want to
-> ignore those, not return -EINVAL.
-> 
-> Since the interface type was already validated both by phylink when
-> the interface is brought up, and also by the driver at probe time
-> through mvneta_port_power_up(), which performs early validation of
-> the mode given in DT this was not a problem... there is no need to
-> consider anything but the RGMII case in the "default" case here.
-> 
-> So, please fix this... at minimum fixing this switch() statement not
-> to error out in the RGMII cases.  However, I think actually following
-> what was in my patch (which was there for good reason) rather than
-> randomly changing it would have been better.
-> 
-> This will have made the kernel on the SolidRun Clearfog platform
-> trigger the WARN_ON()s for the dedicated gigabit port, which uses
-> RGMII, and doesn't have a comphy specified in DT... and having
-> waited for the compile to finish and the resulting kernel to boot...
+For the unlikely use case where multiple aux domains from the same pdev
+are attached to a single guest and then bound to a single process
+(thus same PASID) within that guest, we cannot easily support this case
+by refcounting the number of users. As there is only one SL page table
+per PASID while we have multiple aux domains thus multiple SL page tables
+for the same PASID.
 
-I'll send a fixup shortly
+Extra unbinding guest PASID can happen due to race between normal and
+exception cases. Termination of one aux domain may affect others unless
+we actively track and switch aux domains to ensure the validity of SL
+page tables and TLB states in the shared PASID entry.
 
-Sascha
+Support for sharing second level PGDs across domains can reduce the
+complexity but this is not available due to the limitations on VFIO
+container architecture. We can revisit this decision once sharing PGDs
+are available.
 
+Overall, the complexity and potential glitch do not warrant this unlikely
+use case thereby removed by this patch.
+
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+---
+ drivers/iommu/intel/svm.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+index 6c87c807a0ab..d386853121a2 100644
+--- a/drivers/iommu/intel/svm.c
++++ b/drivers/iommu/intel/svm.c
+@@ -277,20 +277,16 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+ 			goto out;
+ 		}
+ 
++		/*
++		 * Do not allow multiple bindings of the same device-PASID since
++		 * there is only one SL page tables per PASID. We may revisit
++		 * once sharing PGD across domains are supported.
++		 */
+ 		for_each_svm_dev(sdev, svm, dev) {
+-			/*
+-			 * For devices with aux domains, we should allow
+-			 * multiple bind calls with the same PASID and pdev.
+-			 */
+-			if (iommu_dev_feature_enabled(dev,
+-						      IOMMU_DEV_FEAT_AUX)) {
+-				sdev->users++;
+-			} else {
+-				dev_warn_ratelimited(dev,
+-						     "Already bound with PASID %u\n",
+-						     svm->pasid);
+-				ret = -EBUSY;
+-			}
++			dev_warn_ratelimited(dev,
++					     "Already bound with PASID %u\n",
++					     svm->pasid);
++			ret = -EBUSY;
+ 			goto out;
+ 		}
+ 	} else {
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.7.4
+
