@@ -5,54 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014B1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E65C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC3B021473
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2925720EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943182;
-	bh=75URLWrKoj8bojP9/8NTyGJPnWckOiOCh8srZEAl0vU=;
+	s=default; t=1592943185;
+	bh=RJeIzjjzNjK+t2+/mTFLzYJoBsrs2FAfJAJ/2/fKr0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kyjQCQCiH7bAfq/8heHZXzGYGx5pAFuWY/1og/TWYyrLDHm9bXw5HAOt8eA/cFvhO
-	 EFn2hep82mdJjCr7I7o6CKxhJUnr1g9a3AQG/ySKM3Nc7Wg5ci1E1jPNgFsN6nChqG
-	 Jdnb/1wnt43tq2ONZGHORCzW9sTcYtD6ZCdD4YsI=
+	b=gQZ91Mjp2OceTllBMtt0g/+1Zs3HbOujD++y1KqxP5OYUvA9Fl8KPhevyfEc4rY/T
+	 IU3qvIaovWV1tcOWfl4TkGULG9597q4g1xfPlB9tda3H8h4Ust+srVVaKCJd9sYkdk
+	 nO+6fTrZEryWMHhC18ncoqgIKphispWy1wj9DebI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389037AbgFWUNB (ORCPT
+        id S2389043AbgFWUND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:13:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54742 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:13:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388649AbgFWUMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:12:55 -0400
+        id S2388669AbgFWUM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:12:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0B3420707;
-        Tue, 23 Jun 2020 20:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5214A206C3;
+        Tue, 23 Jun 2020 20:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943174;
-        bh=75URLWrKoj8bojP9/8NTyGJPnWckOiOCh8srZEAl0vU=;
+        s=default; t=1592943176;
+        bh=RJeIzjjzNjK+t2+/mTFLzYJoBsrs2FAfJAJ/2/fKr0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOay8YnlyXHVcgULlkSh3RgLXsxsK0sl+lMIV3JJr3HFuM6oX/kmlOQKEydRBgexR
-         vJiJIvDaGG8HKc+8g3gWf88QIQvyCJqqoF9Imnxtulcx30jPWwnNwGTZp4Y5Ou46Mu
-         1nr7svaq8tJq5JQCxP3PCm4NkTV9FFtdYktU37h0=
+        b=G+ZcWfNqnaN3R3HSMLGXKwY6cuHNEy/rWWoEjsGBiHDhW6rVLRMZvGXo5eHyNJA/Q
+         xXTncfRgr1gTVfyb/QuWzq3wbfj0nZLLlZqIQQSVGQy/SrJKrzPAsK6Ccg/yctdRFL
+         lsVOzlpbnngCCYft5RYN4fuBrEUuvB0eUXnWAfKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 288/477] /dev/mem: Revoke mappings when a driver claims the region
-Date:   Tue, 23 Jun 2020 21:54:45 +0200
-Message-Id: <20200623195421.183411479@linuxfoundation.org>
+Subject: [PATCH 5.7 289/477] ASoC: dapm: Move dai_link widgets to runtime to fix use after free
+Date:   Tue, 23 Jun 2020 21:54:46 +0200
+Message-Id: <20200623195421.228412918@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -65,261 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit 3234ac664a870e6ea69ae3a57d824cd7edbeacc5 ]
+[ Upstream commit f4aa5e214eeaf7f1c7f157526a5aa29784cb6a1f ]
 
-Close the hole of holding a mapping over kernel driver takeover event of
-a given address range.
+The newly added CODEC to CODEC DAI link widget pointers in
+snd_soc_dai_link are better placed in snd_soc_pcm_runtime.
+snd_soc_dai_link is really intended for static configuration of
+the DAI, and the runtime for dynamic data.  The snd_soc_dai_link
+structures are not destroyed if the card is unbound. The widgets
+are cleared up on unbind, however if the card is rebound as the
+snd_soc_dai_link structures are reused these pointers will be left at
+their old values, causing access to freed memory.
 
-Commit 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-introduced CONFIG_IO_STRICT_DEVMEM with the goal of protecting the
-kernel against scenarios where a /dev/mem user tramples memory that a
-kernel driver owns. However, this protection only prevents *new* read(),
-write() and mmap() requests. Established mappings prior to the driver
-calling request_mem_region() are left alone.
-
-Especially with persistent memory, and the core kernel metadata that is
-stored there, there are plentiful scenarios for a /dev/mem user to
-violate the expectations of the driver and cause amplified damage.
-
-Teach request_mem_region() to find and shoot down active /dev/mem
-mappings that it believes it has successfully claimed for the exclusive
-use of the driver. Effectively a driver call to request_mem_region()
-becomes a hole-punch on the /dev/mem device.
-
-The typical usage of unmap_mapping_range() is part of
-truncate_pagecache() to punch a hole in a file, but in this case the
-implementation is only doing the "first half" of a hole punch. Namely it
-is just evacuating current established mappings of the "hole", and it
-relies on the fact that /dev/mem establishes mappings in terms of
-absolute physical address offsets. Once existing mmap users are
-invalidated they can attempt to re-establish the mapping, or attempt to
-continue issuing read(2) / write(2) to the invalidated extent, but they
-will then be subject to the CONFIG_IO_STRICT_DEVMEM checking that can
-block those subsequent accesses.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Fixes: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/159009507306.847224.8502634072429766747.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 595571cca4de ("ASoC: dapm: Fix regression introducing multiple copies of DAI widgets")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200526161930.30759-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/mem.c         | 101 ++++++++++++++++++++++++++++++++++++-
- include/linux/ioport.h     |   6 +++
- include/uapi/linux/magic.h |   1 +
- kernel/resource.c          |   5 ++
- 4 files changed, 111 insertions(+), 2 deletions(-)
+ include/sound/soc.h  |  6 +++---
+ sound/soc/soc-dapm.c | 12 ++++++------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 43dd0891ca1ed..31cae88a730ba 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -31,11 +31,15 @@
- #include <linux/uio.h>
- #include <linux/uaccess.h>
- #include <linux/security.h>
-+#include <linux/pseudo_fs.h>
-+#include <uapi/linux/magic.h>
-+#include <linux/mount.h>
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index e0371e70242d5..8e480efeda2a5 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -790,9 +790,6 @@ struct snd_soc_dai_link {
+ 	const struct snd_soc_pcm_stream *params;
+ 	unsigned int num_params;
  
- #ifdef CONFIG_IA64
- # include <linux/efi.h>
- #endif
+-	struct snd_soc_dapm_widget *playback_widget;
+-	struct snd_soc_dapm_widget *capture_widget;
+-
+ 	unsigned int dai_fmt;           /* format to set on init */
  
-+#define DEVMEM_MINOR	1
- #define DEVPORT_MINOR	4
+ 	enum snd_soc_dpcm_trigger trigger[2]; /* trigger type for DPCM */
+@@ -1156,6 +1153,9 @@ struct snd_soc_pcm_runtime {
+ 	struct snd_soc_dai **cpu_dais;
+ 	unsigned int num_cpus;
  
- static inline unsigned long size_inside_page(unsigned long start,
-@@ -805,12 +809,64 @@ static loff_t memory_lseek(struct file *file, loff_t offset, int orig)
- 	return ret;
- }
++	struct snd_soc_dapm_widget *playback_widget;
++	struct snd_soc_dapm_widget *capture_widget;
++
+ 	struct delayed_work delayed_work;
+ 	void (*close_delayed_work_func)(struct snd_soc_pcm_runtime *rtd);
+ #ifdef CONFIG_DEBUG_FS
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index e2632841b321a..c0aa64ff8e328 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -4340,16 +4340,16 @@ static void dapm_connect_dai_pair(struct snd_soc_card *card,
+ 	codec = codec_dai->playback_widget;
  
-+static struct inode *devmem_inode;
-+
-+#ifdef CONFIG_IO_STRICT_DEVMEM
-+void revoke_devmem(struct resource *res)
-+{
-+	struct inode *inode = READ_ONCE(devmem_inode);
-+
-+	/*
-+	 * Check that the initialization has completed. Losing the race
-+	 * is ok because it means drivers are claiming resources before
-+	 * the fs_initcall level of init and prevent /dev/mem from
-+	 * establishing mappings.
-+	 */
-+	if (!inode)
-+		return;
-+
-+	/*
-+	 * The expectation is that the driver has successfully marked
-+	 * the resource busy by this point, so devmem_is_allowed()
-+	 * should start returning false, however for performance this
-+	 * does not iterate the entire resource range.
-+	 */
-+	if (devmem_is_allowed(PHYS_PFN(res->start)) &&
-+	    devmem_is_allowed(PHYS_PFN(res->end))) {
-+		/*
-+		 * *cringe* iomem=relaxed says "go ahead, what's the
-+		 * worst that can happen?"
-+		 */
-+		return;
-+	}
-+
-+	unmap_mapping_range(inode->i_mapping, res->start, resource_size(res), 1);
-+}
-+#endif
-+
- static int open_port(struct inode *inode, struct file *filp)
- {
-+	int rc;
-+
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
+ 	if (playback_cpu && codec) {
+-		if (dai_link->params && !dai_link->playback_widget) {
++		if (dai_link->params && !rtd->playback_widget) {
+ 			substream = streams[SNDRV_PCM_STREAM_PLAYBACK].substream;
+ 			dai = snd_soc_dapm_new_dai(card, substream, "playback");
+ 			if (IS_ERR(dai))
+ 				goto capture;
+-			dai_link->playback_widget = dai;
++			rtd->playback_widget = dai;
+ 		}
  
--	return security_locked_down(LOCKDOWN_DEV_MEM);
-+	rc = security_locked_down(LOCKDOWN_DEV_MEM);
-+	if (rc)
-+		return rc;
-+
-+	if (iminor(inode) != DEVMEM_MINOR)
-+		return 0;
-+
-+	/*
-+	 * Use a unified address space to have a single point to manage
-+	 * revocations when drivers want to take over a /dev/mem mapped
-+	 * range.
-+	 */
-+	inode->i_mapping = devmem_inode->i_mapping;
-+	filp->f_mapping = inode->i_mapping;
-+
-+	return 0;
- }
- 
- #define zero_lseek	null_lseek
-@@ -885,7 +941,7 @@ static const struct memdev {
- 	fmode_t fmode;
- } devlist[] = {
- #ifdef CONFIG_DEVMEM
--	 [1] = { "mem", 0, &mem_fops, FMODE_UNSIGNED_OFFSET },
-+	 [DEVMEM_MINOR] = { "mem", 0, &mem_fops, FMODE_UNSIGNED_OFFSET },
- #endif
- #ifdef CONFIG_DEVKMEM
- 	 [2] = { "kmem", 0, &kmem_fops, FMODE_UNSIGNED_OFFSET },
-@@ -939,6 +995,45 @@ static char *mem_devnode(struct device *dev, umode_t *mode)
- 
- static struct class *mem_class;
- 
-+static int devmem_fs_init_fs_context(struct fs_context *fc)
-+{
-+	return init_pseudo(fc, DEVMEM_MAGIC) ? 0 : -ENOMEM;
-+}
-+
-+static struct file_system_type devmem_fs_type = {
-+	.name		= "devmem",
-+	.owner		= THIS_MODULE,
-+	.init_fs_context = devmem_fs_init_fs_context,
-+	.kill_sb	= kill_anon_super,
-+};
-+
-+static int devmem_init_inode(void)
-+{
-+	static struct vfsmount *devmem_vfs_mount;
-+	static int devmem_fs_cnt;
-+	struct inode *inode;
-+	int rc;
-+
-+	rc = simple_pin_fs(&devmem_fs_type, &devmem_vfs_mount, &devmem_fs_cnt);
-+	if (rc < 0) {
-+		pr_err("Cannot mount /dev/mem pseudo filesystem: %d\n", rc);
-+		return rc;
-+	}
-+
-+	inode = alloc_anon_inode(devmem_vfs_mount->mnt_sb);
-+	if (IS_ERR(inode)) {
-+		rc = PTR_ERR(inode);
-+		pr_err("Cannot allocate inode for /dev/mem: %d\n", rc);
-+		simple_release_fs(&devmem_vfs_mount, &devmem_fs_cnt);
-+		return rc;
-+	}
-+
-+	/* publish /dev/mem initialized */
-+	WRITE_ONCE(devmem_inode, inode);
-+
-+	return 0;
-+}
-+
- static int __init chr_dev_init(void)
- {
- 	int minor;
-@@ -960,6 +1055,8 @@ static int __init chr_dev_init(void)
- 		 */
- 		if ((minor == DEVPORT_MINOR) && !arch_has_dev_port())
- 			continue;
-+		if ((minor == DEVMEM_MINOR) && devmem_init_inode() != 0)
-+			continue;
- 
- 		device_create(mem_class, NULL, MKDEV(MEM_MAJOR, minor),
- 			      NULL, devlist[minor].name);
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index a9b9170b5dd22..6c3eca90cbc43 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -301,5 +301,11 @@ struct resource *devm_request_free_mem_region(struct device *dev,
- struct resource *request_free_mem_region(struct resource *base,
- 		unsigned long size, const char *name);
- 
-+#ifdef CONFIG_IO_STRICT_DEVMEM
-+void revoke_devmem(struct resource *res);
-+#else
-+static inline void revoke_devmem(struct resource *res) { };
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- #endif	/* _LINUX_IOPORT_H */
-diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-index d78064007b179..f3956fc11de68 100644
---- a/include/uapi/linux/magic.h
-+++ b/include/uapi/linux/magic.h
-@@ -94,6 +94,7 @@
- #define BALLOON_KVM_MAGIC	0x13661366
- #define ZSMALLOC_MAGIC		0x58295829
- #define DMA_BUF_MAGIC		0x444d4142	/* "DMAB" */
-+#define DEVMEM_MAGIC		0x454d444d	/* "DMEM" */
- #define Z3FOLD_MAGIC		0x33
- #define PPC_CMM_MAGIC		0xc7571590
- 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 76036a41143b9..841737bbda9e5 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1126,6 +1126,7 @@ struct resource * __request_region(struct resource *parent,
- {
- 	DECLARE_WAITQUEUE(wait, current);
- 	struct resource *res = alloc_resource(GFP_KERNEL);
-+	struct resource *orig_parent = parent;
- 
- 	if (!res)
- 		return NULL;
-@@ -1176,6 +1177,10 @@ struct resource * __request_region(struct resource *parent,
- 		break;
+ 		dapm_connect_dai_routes(&card->dapm, cpu_dai, playback_cpu,
+-					dai_link->playback_widget,
++					rtd->playback_widget,
+ 					codec_dai, codec);
  	}
- 	write_unlock(&resource_lock);
-+
-+	if (res && orig_parent == &iomem_resource)
-+		revoke_devmem(res);
-+
- 	return res;
+ 
+@@ -4358,16 +4358,16 @@ capture:
+ 	codec = codec_dai->capture_widget;
+ 
+ 	if (codec && capture_cpu) {
+-		if (dai_link->params && !dai_link->capture_widget) {
++		if (dai_link->params && !rtd->capture_widget) {
+ 			substream = streams[SNDRV_PCM_STREAM_CAPTURE].substream;
+ 			dai = snd_soc_dapm_new_dai(card, substream, "capture");
+ 			if (IS_ERR(dai))
+ 				return;
+-			dai_link->capture_widget = dai;
++			rtd->capture_widget = dai;
+ 		}
+ 
+ 		dapm_connect_dai_routes(&card->dapm, codec_dai, codec,
+-					dai_link->capture_widget,
++					rtd->capture_widget,
+ 					cpu_dai, capture_cpu);
+ 	}
  }
- EXPORT_SYMBOL(__request_region);
 -- 
 2.25.1
 
