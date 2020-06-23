@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62609C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8E020786
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E39F2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947625;
-	bh=sCCwyRLCF5aRjLCzuvDL6L0KBqXgD83So6ptPp8A6Lo=;
+	s=default; t=1592947628;
+	bh=7t6CfnVzOeadJbe0Kdv99c49zQUwFDZsr9J9sUyQwFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cG3ozxJgS1Mwu27BU6vtPp6qnrWx1Zciur52yqYHULrJXUeBoTGOPGVrSH//W1G39
-	 ZPgoMgQ38ij0DDhVUmVFKIBa8DfJlbWL6PWTfQ8aOh9cBkspwwKRjyLN1FeaTz1Dwt
-	 LwBFVrosIc9vgUeoPOnWnV3+NxbsXzQg6yhdxsnc=
+	b=gjkQ5VHq+S2tBwncqaLunfunee5Zhlotcyr/qgjqzygx5sqEfRvEZnflPrG298ppk
+	 Q5ruV0cGaS45OHQGIn3m3ThcEWN6dpGuaEzDGkD+gof5Z+MPJmgVcugt+9L/VpRycX
+	 I8dxHqF6VlGWxJPO8fuuqT8GLWlAapgaO7DC5U9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388961AbgFWURV (ORCPT
+        id S2389532AbgFWURT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:17:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:17:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388879AbgFWURP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:15 -0400
+        id S2387797AbgFWURM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B9D021473;
-        Tue, 23 Jun 2020 20:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B059920E65;
+        Tue, 23 Jun 2020 20:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943434;
-        bh=sCCwyRLCF5aRjLCzuvDL6L0KBqXgD83So6ptPp8A6Lo=;
+        s=default; t=1592943432;
+        bh=7t6CfnVzOeadJbe0Kdv99c49zQUwFDZsr9J9sUyQwFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LmSff8n79JDkZkAOAyeQnRqonNS2rXRjdsq4xOXyg1mj8n8NNt9j+ZnUHdT906o1k
-         lT2HW3r2K/VxNtPZ1UI0tJGt9p6v/I5QTLN6QoneSVGW3dULukoPEERT9KSZwosfdu
-         P7U7cHJYMfpj90u21gIj1pcLhr9mscKJYj4b8Prc=
+        b=wxiZVt2X2oxtsiWGVgxx36A8+9VwEeYOYlntFHQuYsxre/rjsMH/A6LT7BXRJSSwE
+         TRL1oRfUaeRaGwmf/JNuiPCTIpCKIKH3K9b2Lrh0ulzim5DXc5t7rguXDEcLytdW4Q
+         gW7L4iXprG7Muz7Hqmc66pnRGPFi5YT0yf4MhREA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 390/477] crypto: marvell/octeontx - Fix a potential NULL dereference
-Date:   Tue, 23 Jun 2020 21:56:27 +0200
-Message-Id: <20200623195425.968545850@linuxfoundation.org>
+Subject: [PATCH 5.7 389/477] crypto: hisilicon - Cap block size at 2^31
+Date:   Tue, 23 Jun 2020 21:56:26 +0200
+Message-Id: <20200623195425.918956155@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,66 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 1f5b07f5dd1748a6f9363fb1a76d599c74af8231 ]
+[ Upstream commit c61e5644c69775ae9d54b86018fca238aca64a9b ]
 
-Smatch reports that:
+The function hisi_acc_create_sg_pool may allocate a block of
+memory of size PAGE_SIZE * 2^(MAX_ORDER - 1).  This value may
+exceed 2^31 on ia64, which would overflow the u32.
 
-    drivers/crypto/marvell/octeontx/otx_cptvf_algs.c:132 otx_cpt_aead_callback()
-    warn: variable dereferenced before check 'cpt_info' (see line 121)
+This patch caps it at 2^31.
 
-This function is called from process_pending_queue() as:
-
-drivers/crypto/marvell/octeontx/otx_cptvf_reqmgr.c
-   599                  /*
-   600                   * Call callback after current pending entry has been
-   601                   * processed, we don't do it if the callback pointer is
-   602                   * invalid.
-   603                   */
-   604                  if (callback)
-   605                          callback(res_code, areq, cpt_info);
-
-It does appear to me that "cpt_info" can be NULL so this could lead to
-a NULL dereference.
-
-Fixes: 10b4f09491bf ("crypto: marvell - add the Virtual Function driver for CPT")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: d8ac7b85236b ("crypto: hisilicon - fix large sgl memory...")
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/marvell/octeontx/otx_cptvf_algs.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/crypto/hisilicon/sgl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c b/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
-index 06202bcffb33f..a370c99ecf4c9 100644
---- a/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
-+++ b/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
-@@ -118,6 +118,9 @@ static void otx_cpt_aead_callback(int status, void *arg1, void *arg2)
- 	struct otx_cpt_req_info *cpt_req;
- 	struct pci_dev *pdev;
+diff --git a/drivers/crypto/hisilicon/sgl.c b/drivers/crypto/hisilicon/sgl.c
+index 0e8c7e324fb46..725a739800b0a 100644
+--- a/drivers/crypto/hisilicon/sgl.c
++++ b/drivers/crypto/hisilicon/sgl.c
+@@ -66,7 +66,8 @@ struct hisi_acc_sgl_pool *hisi_acc_create_sgl_pool(struct device *dev,
  
-+	if (!cpt_info)
-+		goto complete;
-+
- 	cpt_req = cpt_info->req;
- 	if (!status) {
- 		/*
-@@ -129,10 +132,10 @@ static void otx_cpt_aead_callback(int status, void *arg1, void *arg2)
- 		    !cpt_req->is_enc)
- 			status = validate_hmac_cipher_null(cpt_req);
- 	}
--	if (cpt_info) {
--		pdev = cpt_info->pdev;
--		do_request_cleanup(pdev, cpt_info);
--	}
-+	pdev = cpt_info->pdev;
-+	do_request_cleanup(pdev, cpt_info);
-+
-+complete:
- 	if (areq)
- 		areq->complete(areq, status);
- }
+ 	sgl_size = sizeof(struct acc_hw_sge) * sge_nr +
+ 		   sizeof(struct hisi_acc_hw_sgl);
+-	block_size = PAGE_SIZE * (1 << (MAX_ORDER - 1));
++	block_size = 1 << (PAGE_SHIFT + MAX_ORDER <= 32 ?
++			   PAGE_SHIFT + MAX_ORDER - 1 : 31);
+ 	sgl_num_per_block = block_size / sgl_size;
+ 	block_num = count / sgl_num_per_block;
+ 	remain_sgl = count % sgl_num_per_block;
 -- 
 2.25.1
 
