@@ -2,159 +2,142 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD6CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5FB92075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61EF02076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:05:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jOiz5xhY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZnR5cxj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbgFWACg (ORCPT
+        id S1731285AbgFWAFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:02:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33494 "EHLO
+        Mon, 22 Jun 2020 20:05:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730774AbgFWACf (ORCPT
+        with ESMTP id S1730227AbgFWAFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:02:35 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39565C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:02:34 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id d27so14128638qtg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:02:34 -0700 (PDT)
+        Mon, 22 Jun 2020 20:05:14 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592CBC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:05:13 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id u17so14167931qtq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=fL1wENgZCNwSv3s/JTNbtGHYfJcNOvZphPgobRgCX+0=;
-        b=jOiz5xhY4H9RrA31ewUoMb6lWoSEJluMNJ4pFLIyuL2C/PAw2cU4NhHZPSbOtneWmY
-         ozUMm9lxePnw9yOjxx4YXvXCK3kITgyY6VI+mhuSl9fkmcyIppyhy/Jz6vVv/4LKzuRn
-         Gb8qhMwxyR4RKm7f3IBCU6P9IiqbHgwNX0yoHpJ3PAkHDvus22DcgqWtCXRMKvuPd80+
-         GtMIE29iM9uSkrK/mkJM41mZz+r3jtg9ekirUsyx5erxi/e/W0HuUH+SRS8iBijVSbYY
-         gVUrM+bjvjO7k15tkl2NlzpoPMdsvYPWVTdqh0sfLGGUDdoylYfcONvUD2B6N+OO84GZ
-         lj3Q==
+        bh=ci1H/D9yRBKgCOs8CwvIjI+cliPNnLJY+ZZdvthmHrE=;
+        b=bZnR5cxj0yVhupPYbVTZrUAGY9nNkIrFLLNIPmuoAvUQ4OHK1sHDJWoL2/SJRkwpMI
+         m7Prz2r4QOf6lv5YTO11dfUPOF7IdsLIzGE0bbPrwh0Jqu3SwX4PVrjDyEqr2hhiOwnd
+         8ZhWv03Dhkn/QmOUGiO+wbhlnkTVoyz0ypeJQhxVs+38DxTgnv8VKRIqiXcRvjAjFL2B
+         PY3M7tpF+3Cje3f8ltlW1ZoL/ABW7ca3n/B+EM/ouagHylGpp4Fnj9zLrVUfXu2HmB2c
+         rMGukrOiBhktkdYYOtt74ENxCSvvGBtzzC/JD9jGDjulPVNC8e2L3Rw63kb/ditJ9R4B
+         48CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fL1wENgZCNwSv3s/JTNbtGHYfJcNOvZphPgobRgCX+0=;
-        b=nLGqIomqBShQ0kO7uj+ybyHI8gXgvkDymYBuYVXDkE8yK0qJktB1ppa9KoUaKDOIdl
-         5Iu0mvQ7lr0dIwQfj6jJdNDc2HRqFAyJZUfiA/qG5oEMUc/3XECiifok1UIpwbx6OJkH
-         kxOqwFCq7SIP1iozr5eoe7B5N/E2oTrL7HwM+BRUnJZsMBHv0z0Nn9JpgevoRoishqjK
-         oGeZ4Pod1Ucr6oEaMhLovOEPIpjSzbZW8lApCPMAqwfp8UkcAOncAwKyGvuazi41PzED
-         o4iBtBXer75TBrDUId6oDn+fjqdRrM3G6lQPDp7ELpo9VZxy4CfY7opBvBncVH8NXeaw
-         ZeeQ==
-X-Gm-Message-State: AOAM531myBiA7AqNGRvWg0PineMbpbYaXd5SFBTtZDKUnmkKtnymvXVQ
-        S6C+xMAz5CxrQvQqKtRbHdIA3g==
-X-Google-Smtp-Source: ABdhPJyCyWWM03fNzzwWcrkorPAde8ZwkJyT1NwEy7u+QyW/bvUE+EE8dkCWV5n1HdRyI+PQxXYPRQ==
-X-Received: by 2002:ac8:70da:: with SMTP id g26mr17916678qtp.333.1592870553204;
-        Mon, 22 Jun 2020 17:02:33 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id d186sm6145604qkb.110.2020.06.22.17.02.32
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ci1H/D9yRBKgCOs8CwvIjI+cliPNnLJY+ZZdvthmHrE=;
+        b=GuXurFBbvig8TUYyZPJThtQX2KyHUX+dL8Mjcdevh8HTyCUiOWXfSlwRQZKGqx40Ht
+         cRiU+sApvWMYHpI/dEaIGl6srWU6wusz6VfXVlO8H2vGTQpAsd0jhJUUvdMuMxaXcN6U
+         Ygw6mqa+95OWm/UpuB5VexFxANU7T+/zEGsTF3IB8/opgSejUKm9Xp0Lf9mX+10RfdW4
+         9mgou6fyBojI8eWXIodUTkRtJeoh4NuU7MYqW+xVi2w33xe8w9k4dgo5OJ11R/O0UIt+
+         I1SlomNb0lUJ0RnAvfklsiA+0Pr46oU63ZEV6ptApaDpx/bkId9QKIpmEAveq8/k+AAd
+         9QKw==
+X-Gm-Message-State: AOAM532cdLE87N9Fh/ZHw4Ty7nYPaB+/P+UbqV0GuchclhCzp0vrnpz0
+        XApd2XayW47snLUUmsFSMDw=
+X-Google-Smtp-Source: ABdhPJxYjTLo2qfOd0wWwuZ+o+bwZ1DSHNPGSAzwRuX6m2CVu0k46bPOAgySdkGRIdv61Zccfg9lPw==
+X-Received: by 2002:ac8:6602:: with SMTP id c2mr11641275qtp.243.1592870712468;
+        Mon, 22 Jun 2020 17:05:12 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p80sm3965934qke.19.2020.06.22.17.05.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 17:02:32 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jnWOV-00CHMM-GL; Mon, 22 Jun 2020 21:02:31 -0300
-Date:   Mon, 22 Jun 2020 21:02:31 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Felix Kuehling <felix.kuehling@amd.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
-        <thomas_os@shipmail.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200623000231.GW6578@ziepe.ca>
-References: <20200619151551.GP6578@ziepe.ca>
- <CAKMK7uEvkshAM6KUYZu8_OCpF4+1Y_SM7cQ9nJWpagfke8s8LA@mail.gmail.com>
- <20200619172308.GQ6578@ziepe.ca>
- <20200619180935.GA10009@redhat.com>
- <20200619181849.GR6578@ziepe.ca>
- <56008d64-772d-5757-6136-f20591ef71d2@amd.com>
- <20200619195538.GT6578@ziepe.ca>
- <20200619203147.GC13117@redhat.com>
- <20200622114617.GU6578@ziepe.ca>
- <20200622201540.GB9708@redhat.com>
+        Mon, 22 Jun 2020 17:05:11 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 22 Jun 2020 20:05:10 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jann Horn <jannh@google.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
+ each syscall
+Message-ID: <20200623000510.GA3542245@rani.riverdale.lan>
+References: <20200622193146.2985288-1-keescook@chromium.org>
+ <20200622193146.2985288-4-keescook@chromium.org>
+ <20200622225615.GA3511702@rani.riverdale.lan>
+ <202006221604.871B13DE3@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200622201540.GB9708@redhat.com>
+In-Reply-To: <202006221604.871B13DE3@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 04:15:40PM -0400, Jerome Glisse wrote:
-> On Mon, Jun 22, 2020 at 08:46:17AM -0300, Jason Gunthorpe wrote:
-> > On Fri, Jun 19, 2020 at 04:31:47PM -0400, Jerome Glisse wrote:
-> > > Not doable as page refcount can change for things unrelated to GUP, with
-> > > John changes we can identify GUP and we could potentialy copy GUPed page
-> > > instead of COW but this can potentialy slow down fork() and i am not sure
-> > > how acceptable this would be. Also this does not solve GUP against page
-> > > that are already in fork tree ie page P0 is in process A which forks,
-> > > we now have page P0 in process A and B. Now we have process A which forks
-> > > again and we have page P0 in A, B, and C. Here B and C are two branches
-> > > with root in A. B and/or C can keep forking and grow the fork tree.
+On Mon, Jun 22, 2020 at 04:07:11PM -0700, Kees Cook wrote:
+> On Mon, Jun 22, 2020 at 06:56:15PM -0400, Arvind Sankar wrote:
+> > On Mon, Jun 22, 2020 at 12:31:44PM -0700, Kees Cook wrote:
+> > > +
+> > > +#define add_random_kstack_offset() do {					\
+> > > +	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+> > > +				&randomize_kstack_offset)) {		\
+> > > +		u32 offset = this_cpu_read(kstack_offset);		\
+> > > +		u8 *ptr = __builtin_alloca(offset & 0x3FF);		\
+> > > +		asm volatile("" : "=m"(*ptr));				\
+> > > +	}								\
+> > > +} while (0)
 > > 
-> > For a long time now RDMA has broken COW pages when creating user DMA
-> > regions.
+> > This feels a little fragile. ptr doesn't escape the block, so the
+> > compiler is free to restore the stack immediately after this block. In
+> > fact, given that all you've said is that the asm modifies *ptr, but
+> > nothing uses that output, the compiler could eliminate the whole thing,
+> > no?
 > > 
-> > The problem has been that fork re-COW's regions that had their COW
-> > broken.
+> > https://godbolt.org/z/HT43F5
 > > 
-> > So, if you break the COW upon mapping and prevent fork (and others)
-> > from copying DMA pinned then you'd cover the cases.
+> > gcc restores the stack immediately, if no function calls come after it.
+> > 
+> > clang completely eliminates the code if no function calls come after.
 > 
-> I am not sure we want to prevent COW for pinned GUP pages, this would
-> change current semantic and potentialy break/slow down existing apps.
+> nothing uses the stack in your example. And adding a barrier (which is
+> what the "=m" is, doesn't change it.
 
-Isn't that basically exactly what 17839856fd588 does? It looks like it
-uses the same approach RDMA does by sticking FOLL_WRITE even though it
-is a read action.
+Yeah, I realized that that was what's going on. And clang isn't actually
+DCE'ing it, it's taking advantage of the red zone since my alloca was
+small enough.
 
-After that change the reamining bug is that fork can re-establish a
-COW./
+But I still don't see anything _stopping_ the compiler from optimizing
+this better in the future. The "=m" is not a barrier: it just informs
+the compiler that the asm produces an output value in *ptr (and no other
+outputs). If nothing can consume that output, it doesn't stop the
+compiler from freeing the allocation immediately after the asm instead
+of at the end of the function.
 
-> Anyway i think we focus too much on fork/COW, it is just an unfixable
-> broken corner cases, mmu notifier allows you to avoid it. Forcing real
-> copy on fork would likely be seen as regression by most people.
+I'm talking about something like
+	asm volatile("" : : "r" (ptr) : "memory");
+which tells the compiler that the asm may change memory arbitrarily.
 
-If you don't copy the there are data corruption bugs though. Real apps
-probably don't hit a problem here as they are not forking while GUP's
-are active (RDMA excluded, which does do this)
-
-I think that implementing page pinning by blocking mmu notifiers for
-the duration of the pin is a particularly good idea either, that
-actually seems a lot worse than just having the pin in the first
-place.
-
-Particularly if it is only being done to avoid corner case bugs that
-already afflict other GUP cases :(
-
-> > What do you mean 'GUP fast is still succeptible to this' ?
-> 
-> Not all GUP fast path are updated (intentionaly) __get_user_pages_fast()
-
-Sure, that is is the 'raw' accessor
-
-Jason
+Here, we don't use it really as a barrier, but to tell the compiler that
+the asm may have stashed the value of ptr somewhere in memory, so it's
+not free to reuse the space that it pointed to until the function
+returns (unless it can prove that nothing accesses memory, not just that
+nothing accesses ptr).
