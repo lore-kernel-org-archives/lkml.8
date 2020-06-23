@@ -2,130 +2,102 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F144C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 483DE2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948468;
-	bh=lmLHg0cGesE3FgSe7bSUX6bN99oLY+825ZeXT/FLT/Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0D5JUetJiNFgu+H9nB4JWhAQDzY4y/qjnClTkhYcdRUZdWIFqTeam5picsb/kGTb
-	 qC14ijeV1kMALQz/h8AAYS7LlkgFYw3vr2JOaws9Almc/INsmPgAOLkbvN1fE2Khe2
-	 A7+qSG4giHcnUX2IurCNJ0eqIz0cypxRUrXvGkj0=
+	by mail.kernel.org (Postfix) with ESMTP id 37FB02078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDzyiZJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393861AbgFWVlF (ORCPT
+        id S2393963AbgFWVlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388457AbgFWUGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E7F82064B;
-        Tue, 23 Jun 2020 20:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942780;
-        bh=lmLHg0cGesE3FgSe7bSUX6bN99oLY+825ZeXT/FLT/Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bQ1+om0psmO0/6ksc4GxYxXXQSWngI8nbdmsF/BmSrDNKkgBXed2+QOnqtYLLfSfT
-         6Ad4crKMJ6lAqKL7TZPg9uzL1vI4mB3TnBJTEF5Muru9XoR/rW+ji01TVqJ/4VysPY
-         EAXFkIun4KK+XqfNI0frxhS/jGa8LgvA/fVYZstk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 131/477] firmware: qcom_scm: fix bogous abuse of dma-direct internals
-Date:   Tue, 23 Jun 2020 21:52:08 +0200
-Message-Id: <20200623195413.798055671@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 17:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388457AbgFWVlG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:41:06 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE12C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:41:06 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id h15so107862wrq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=md3WRq3geqJdLGPOhsJGIsEQs0nCW0GjeQLNIB2+260=;
+        b=EDzyiZJvtCxMv+eDdYCMUvn8C/dN+/dOmev0o842aiMgBm6n5ofpm2xArfPfHY/hwK
+         RUxb1M2dfHYMQcLNaq3VVgiwl32wI5Fw2T/BQHQ5LxgeqhjbxjElSNtePs03KKVaRRfa
+         Ru8ynNignHOlZUHiEr2oZl83BCN8Td67IdjMHUQw2ybs62SPFx/X4x6zckSe0bHudMBX
+         1or47UBvL5IcXnaESTfwo+OM8PwDdHwxZu88fSMISrR9+s1vqhwiLC1h5VnNgJK6Y3l4
+         2fzNuhwER1WS88ulI8VWHFJ3BAflixyuRHdnOGYMvVsh0R4XDdu13CRwYi6493L97ryA
+         6i0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=md3WRq3geqJdLGPOhsJGIsEQs0nCW0GjeQLNIB2+260=;
+        b=MM6Ga55yIkc/WD4PASXLuNn3ukHGI0AK4g6CXR8+GoMGmeB7mw/bk2YM+RPPQiiKPe
+         lXw5NcfTvynrZ6GU9/8z8P+tfXgLa/ebnJpbB5jYY61pc/0OknMwzKWoIda//HKHf/MF
+         OGid/Tk53aK5E7c8b3yYYbhSB+d15zBOsjKWBYAp4mmTbFmVguRUVn8hSS8tKFbvHFHK
+         zkNHWb2yE0lB/IFHt+NpV7NOzFkAKS6jrHtB00SRDGrfsk17kxpxnxlUYRJJ/LzIRZMb
+         yQcxXZdeOePKO//7grwHsgI4hKUVmxEFrY0AJ1LzPQlweakk9CJAfy4enlKEqlhCKJ/p
+         SbnQ==
+X-Gm-Message-State: AOAM53016WRxMUXgfpqh4H27NoixavrGnJUH97jUX72Zm8mEJ+3Y9yAZ
+        VEgatPO4+Nepi2bd4LJSBA==
+X-Google-Smtp-Source: ABdhPJznv+RV68KZFbn8Afvx05E3kwhi1vnwFncc+m8HUFuX/FF+Db3CpJwGe47cL299GaisUun/oA==
+X-Received: by 2002:adf:f711:: with SMTP id r17mr27909588wrp.409.1592948465540;
+        Tue, 23 Jun 2020 14:41:05 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.253.162])
+        by smtp.gmail.com with ESMTPSA id u9sm5458017wme.16.2020.06.23.14.41.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 14:41:05 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 00:41:03 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Christian Kujau <lists@nerdbynature.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: process '/usr/bin/rsync' started with executable stack
+Message-ID: <20200623214103.GA42474@localhost.localdomain>
+References: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
+ <202006231131.AD0A7F5F@keescook>
+ <alpine.DEB.2.22.1.446.2006231430280.3892@trent.utfs.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.1.446.2006231430280.3892@trent.utfs.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+On Tue, Jun 23, 2020 at 02:33:50PM -0700, Christian Kujau wrote:
+> On Tue, 23 Jun 2020, Kees Cook wrote:
+> > > $ checksec --format=json --extended --file=`which rsync` | jq
+> > > {
+> > >   "/usr/bin/rsync": {
+> > >     "relro": "full",
+> > >     "canary": "yes",
+> > >     "nx": "no",
+> > ^^^^^^^^^^^^^^^^^^
+> > 
+> > It is, indeed, marked executable, it seems. What distro is this?
+> 
+> Arch Linux (x86-64) with 5.6.5.a-1-hardened[0], running in a Xen DomU.
 
-[ Upstream commit 459b1f86f1cba7de813fbc335df476c111feec22 ]
+Congratulations!
 
-As far as the device is concerned the dma address is the physical
-address.  There is no need to convert it to a physical address,
-especially not using dma-direct internals that are not available
-to drivers and which will interact badly with IOMMUs.  Last but not
-least the commit introducing it claimed to just fix a type issue,
-but actually changed behavior.
+https://www.archlinux.org/packages/extra/x86_64/rsync/
 
-Fixes: 6e37ccf78a532 ("firmware: qcom_scm: Use proper types for dma mappings")
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20200414123136.441454-1-hch@lst.de
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/firmware/qcom_scm.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 059bb0fbae9e5..4701487573f7b 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -6,7 +6,6 @@
- #include <linux/init.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
--#include <linux/dma-direct.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -806,8 +805,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	struct qcom_scm_mem_map_info *mem_to_map;
- 	phys_addr_t mem_to_map_phys;
- 	phys_addr_t dest_phys;
--	phys_addr_t ptr_phys;
--	dma_addr_t ptr_dma;
-+	dma_addr_t ptr_phys;
- 	size_t mem_to_map_sz;
- 	size_t dest_sz;
- 	size_t src_sz;
-@@ -824,10 +822,9 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
- 			ALIGN(dest_sz, SZ_64);
- 
--	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
-+	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
--	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
- 
- 	/* Fill source vmid detail */
- 	src = ptr;
-@@ -855,7 +852,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 
- 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
- 				    ptr_phys, src_sz, dest_phys, dest_sz);
--	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
-+	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_phys);
- 	if (ret) {
- 		dev_err(__scm->dev,
- 			"Assign memory protection call failed %d\n", ret);
--- 
-2.25.1
-
-
-
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RWE    0x10
