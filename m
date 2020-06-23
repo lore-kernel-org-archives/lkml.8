@@ -2,111 +2,61 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F367CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5389CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C61E320707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948072;
-	bh=DBn9ZbzhT1k8vrqt6RxEW8AJGIFpCqoDSa6vCS+riM0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oe7qbeHNQwN/NywtOtlEguQg/lB7iZrtjcaGGXbru6ly02rT++gFCwVU0/BoKIL6q
-	 Io4h1eXI6YHgKDaGrE5y/KXhr/d0lsh21peRXKFPPo5Q6/eNwPH1FTmVoDmW0U0B2C
-	 F9Q6hw6vQCJRSfNCGlR54qMHfWkrExb6NEC18CFI=
+	by mail.kernel.org (Postfix) with ESMTP id 3ABF920707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388852AbgFWUK4 (ORCPT
+        id S2393741AbgFWVee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388344AbgFWUK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:10:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2844D20DD4;
-        Tue, 23 Jun 2020 20:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943024;
-        bh=DBn9ZbzhT1k8vrqt6RxEW8AJGIFpCqoDSa6vCS+riM0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rysmKAJizkZB3bjo1ipwbGipMF1giCxv5iddbwENRPm5UNeHxqF8fO/sC3fygaMk4
-         w5G7nw8okjct1YPiQk15Zk46IHqJFkxI7ztCHyroSy5teRCZb+vW2/OKLf6PYze3Sk
-         akQlGRhpMoGv/5Fv2sjNQoZVKm3pJYZcPPLt3PW8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 229/477] ASoC: Intel: bytcr_rt5640: Add quirk for Toshiba Encore WT8-A tablet
-Date:   Tue, 23 Jun 2020 21:53:46 +0200
-Message-Id: <20200623195418.405626427@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 23 Jun 2020 17:34:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387680AbgFWVeb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:34:31 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7827C061573;
+        Tue, 23 Jun 2020 14:34:31 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5149D129428A8;
+        Tue, 23 Jun 2020 14:34:31 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 14:34:30 -0700 (PDT)
+Message-Id: <20200623.143430.794983681368540702.davem@davemloft.net>
+To:     Jisheng.Zhang@synaptics.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] net: phy: export phy_disable_interrupts()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200623154104.3ba15b4d@xhacker.debian>
+References: <20200623154031.736123a6@xhacker.debian>
+        <20200623154104.3ba15b4d@xhacker.debian>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Jun 2020 14:34:31 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Date: Tue, 23 Jun 2020 15:41:04 +0800
 
-[ Upstream commit 0e0e10fde0e9808d1991268f5dca69fb36c025f7 ]
+> +EXPORT_SYMBOL_GPL(phy_disable_interrupts);
 
-The Toshiba Encore WT8-A tablet almost fully works with the default
-settings for non-CR Bay Trail devices. The only problem is that its
-jack-detect switch is not inverted (it is active high instead of
-the normal active low).
+phy.o and phy_device.o are always linked together, therefore you don't
+need a module symbol export.
 
-Add a quirk for this model using the default settings +
-BYT_RT5640_JD_NOT_INV.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200518072416.5348-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index 08f4ae964b02a..fbfd53874b477 100644
---- a/sound/soc/intel/boards/bytcr_rt5640.c
-+++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -742,6 +742,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
- 					BYT_RT5640_SSP0_AIF1 |
- 					BYT_RT5640_MCLK_EN),
- 	},
-+	{	/* Toshiba Encore WT8-A */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "TOSHIBA WT8-A"),
-+		},
-+		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
-+					BYT_RT5640_JD_SRC_JD2_IN4N |
-+					BYT_RT5640_OVCD_TH_2000UA |
-+					BYT_RT5640_OVCD_SF_0P75 |
-+					BYT_RT5640_JD_NOT_INV |
-+					BYT_RT5640_MCLK_EN),
-+	},
- 	{	/* Catch-all for generic Insyde tablets, must be last */
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
--- 
-2.25.1
-
-
-
+If you plan to use it later in a device, submit the symbol export
+with the driver change that uses it.
