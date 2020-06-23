@@ -2,55 +2,56 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C79DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3602085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0726B21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944445;
-	bh=XwauqFNRoODA/WZXCoHKKjOuoIsjFMp1p3aBUa8Ss2o=;
+	s=default; t=1592944448;
+	bh=Ciqu/rlqehBtA7qIB5psFoxsNKKg8C99s+mKMZmV3fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bbc28gI6In6eXK3J3yFwLNKx48ZWz6gDxl8/pwbhW2IBRqWQrAXibPpMXKY4mebeQ
-	 QwzkDMq19dnIwnG+Ceuu4u93DbbhOHTZ0fOhkPECB5+MdSuCA3tHnWt+i3y/QoZQW1
-	 p5umq/ioSPk6FlYrxp6GZs9JgLgEoOv30Lf0YJFA=
+	b=r8bGRM1KOIMQw2D35/cpN5puWcBwDPrNJCzeZYx4SdiklHi6QBf6y9uOByrV6/Zbi
+	 p2GCreBb5L/S5AP+Q4sJOrsjkGH9dfX4HJoQp5cotWPUOsErI2OnnT303d8lM4YHNG
+	 +g0Kzs29BoIJR8kmwMyOEQ64/UIsb1aY6hCPoEHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389148AbgFWUeD (ORCPT
+        id S2391491AbgFWUeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:34:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387641AbgFWUdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:51 -0400
+        id S2391463AbgFWUdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6059320836;
-        Tue, 23 Jun 2020 20:33:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE9D22085B;
+        Tue, 23 Jun 2020 20:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944431;
-        bh=XwauqFNRoODA/WZXCoHKKjOuoIsjFMp1p3aBUa8Ss2o=;
+        s=default; t=1592944434;
+        bh=Ciqu/rlqehBtA7qIB5psFoxsNKKg8C99s+mKMZmV3fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7F01gtIngVthzuYlq3kijI+xvbz0XtpmHWHh+4HK0gSZd+Z/WCL8Tzkj6o/gPEX+
-         5mGuFD58xzcTgmGB833G5feEBI23mxh0haspPrSrjkyNTVfvN6zlrN+S8SL/1wr6f6
-         hM0qvrNYCEWyXVmbbo5tPQ4I2pGxnOFAz1OBj+/Q=
+        b=irb9ZntR6f3p7emFFCExg4JFCfiQeQEnfoMd9LpHORXBoMeJ3y9wMonLN4+mP2Zkl
+         CiLjLiCdxI2+bd6mxOBLtW9Kz/t+DiTk+cg2h3JSSt0nRoDEXHq1at411kcdz/8/c5
+         Ws300Iv5QvgYUFT7vRt7mE+M2YHRO5LrGVcoxFPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Daniel Rosenberg <drosen@google.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
-        Eric Biggers <ebiggers@google.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 295/314] f2fs: avoid utf8_strncasecmp() with unstable name
-Date:   Tue, 23 Jun 2020 21:58:10 +0200
-Message-Id: <20200623195353.041110423@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Michael Chiu <Michael.Chiu@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Subject: [PATCH 5.4 304/314] Revert "drm/amd/display: disable dcn20 abm feature for bring up"
+Date:   Tue, 23 Jun 2020 21:58:19 +0200
+Message-Id: <20200623195353.497652206@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -63,66 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit fc3bb095ab02b9e7d89a069ade2cead15c64c504 ]
+commit 14ed1c908a7a623cc0cbf0203f8201d1b7d31d16 upstream.
 
-If the dentry name passed to ->d_compare() fits in dentry::d_iname, then
-it may be concurrently modified by a rename.  This can cause undefined
-behavior (possibly out-of-bounds memory accesses or crashes) in
-utf8_strncasecmp(), since fs/unicode/ isn't written to handle strings
-that may be concurrently modified.
+This reverts commit 96cb7cf13d8530099c256c053648ad576588c387.
 
-Fix this by first copying the filename to a stack buffer if needed.
-This way we get a stable snapshot of the filename.
+This change was used for DCN2 bringup and is no longer desired.
+In fact it breaks backlight on DCN2 systems.
 
-Fixes: 2c2eb7a300cd ("f2fs: Support case-insensitive file name lookups")
-Cc: <stable@vger.kernel.org> # v5.4+
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Daniel Rosenberg <drosen@google.com>
-Cc: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Alexander Monakov <amonakov@ispras.ru>
+Cc: Hersen Wu <hersenxs.wu@amd.com>
+Cc: Anthony Koo <Anthony.Koo@amd.com>
+Cc: Michael Chiu <Michael.Chiu@amd.com>
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reported-and-tested-by: Alexander Monakov <amonakov@ispras.ru>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/dir.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index 594c9ad774d23..e9af46dc06f72 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -1063,11 +1063,27 @@ static int f2fs_d_compare(const struct dentry *dentry, unsigned int len,
- 	const struct inode *dir = READ_ONCE(parent->d_inode);
- 	const struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
- 	struct qstr entry = QSTR_INIT(str, len);
-+	char strbuf[DNAME_INLINE_LEN];
- 	int res;
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -929,7 +929,7 @@ static int dm_late_init(void *handle)
+ 	unsigned int linear_lut[16];
+ 	int i;
+ 	struct dmcu *dmcu = adev->dm.dc->res_pool->dmcu;
+-	bool ret = false;
++	bool ret;
  
- 	if (!dir || !IS_CASEFOLDED(dir))
- 		goto fallback;
+ 	for (i = 0; i < 16; i++)
+ 		linear_lut[i] = 0xFFFF * i / 15;
+@@ -945,13 +945,10 @@ static int dm_late_init(void *handle)
+ 	 */
+ 	params.min_abm_backlight = 0x28F;
  
-+	/*
-+	 * If the dentry name is stored in-line, then it may be concurrently
-+	 * modified by a rename.  If this happens, the VFS will eventually retry
-+	 * the lookup, so it doesn't matter what ->d_compare() returns.
-+	 * However, it's unsafe to call utf8_strncasecmp() with an unstable
-+	 * string.  Therefore, we have to copy the name into a temporary buffer.
-+	 */
-+	if (len <= DNAME_INLINE_LEN - 1) {
-+		memcpy(strbuf, str, len);
-+		strbuf[len] = 0;
-+		entry.name = strbuf;
-+		/* prevent compiler from optimizing out the temporary buffer */
-+		barrier();
-+	}
+-	/* todo will enable for navi10 */
+-	if (adev->asic_type <= CHIP_RAVEN) {
+-		ret = dmcu_load_iram(dmcu, params);
+-
+-		if (!ret)
+-			return -EINVAL;
+-	}
++	ret = dmcu_load_iram(dmcu, params);
 +
- 	res = utf8_strncasecmp(sbi->s_encoding, name, &entry);
- 	if (res >= 0)
- 		return res;
--- 
-2.25.1
-
++	if (!ret)
++		return -EINVAL;
+ 
+ 	return detect_mst_link_for_all_connectors(adev->ddev);
+ }
 
 
