@@ -2,67 +2,97 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A19DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0967A20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D4E2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592934009;
+	bh=JQCWNfOt0DHc1emiaikqQlj/f/EBGVEXcXNGQXArUyw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CSDJIZAsOkXaIObIZenXCjDUMtBwJ5SeIzX2I+fWY0/QDtNL5SzJfO1R1lGuPYIph
+	 wAOvLy2HcbiknNq5y4eblxtK1zB0YjIHMPAzasMa1AxWRpxl1Lqg94WQfUB4GRn+Oc
+	 6sb/yXFcAnjLWlJVo6gw3GJv7D6wCkvcAtNGf1FA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387636AbgFWRkB (ORCPT
+        id S2387729AbgFWRkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:40:01 -0400
-Received: from mail-pj1-f47.google.com ([209.85.216.47]:51130 "EHLO
-        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387564AbgFWRj6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:39:58 -0400
-Received: by mail-pj1-f47.google.com with SMTP id jz3so1786436pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:39:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=LHpHDH2BJksLP+jVFyWOvoHv2TwTTN8u7YtsUCr6dRFypiwHg//jToVZBYRIlRAfEk
-         gJXm2PW+dZxkQPG96/WRQaDlKvgR8paWZHLINAKkfmxv17b2kMeuLS7O1qIKwnVls0+e
-         gOglO65g8TqtPSvWp8yAy1RW7ph43XS02UbhiLlm9ZXKDOJYxFkNqGGpdBFPDulS3snQ
-         rtGt+VGVnHxLO33gvupMyek6tHFxhFlJphOzhixhZVfUuwGsvWisVWSbvwyC7RD1skz6
-         rufgrJtSFrgysd0p11DrdxyOaR72Pfi1KrnhFdvO4mjNRuSQ10xM8ZMg9bSthjfS1NwU
-         o1cg==
-X-Gm-Message-State: AOAM531aVmEOeB4BNbeW30EJjogZsukd90N/8rL4FANClSsYuABvVNCA
-        iyuwV8drf8HkSdpLPiSK2XumCwTq
-X-Google-Smtp-Source: ABdhPJy5yNa9YCh5UqfALz8PSpQpHx/uLWc0fOou3IMn1j8a8eVkY6oZe4ui356rmDdzLOrCbq0HBQ==
-X-Received: by 2002:a17:90b:1a86:: with SMTP id ng6mr9447871pjb.88.1592933996847;
-        Tue, 23 Jun 2020 10:39:56 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:acd7:a900:b9f:8b8b? ([2601:647:4802:9070:acd7:a900:b9f:8b8b])
-        by smtp.gmail.com with ESMTPSA id b24sm17087560pfo.112.2020.06.23.10.39.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 10:39:56 -0700 (PDT)
-Subject: Re: [PATCH 3/3] nvme: Use USEC_PER_SEC instead of magic numbers
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de
-Cc:     baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1592916850.git.baolin.wang@linux.alibaba.com>
- <a64d35465b8d91ab11f37d814ac10003da7804b8.1592916850.git.baolin.wang@linux.alibaba.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <c2b796ae-a00e-7368-e60d-1fea473cbee9@grimberg.me>
-Date:   Tue, 23 Jun 2020 10:39:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 13:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387530AbgFWRgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:16 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B454D207E8;
+        Tue, 23 Jun 2020 17:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592933775;
+        bh=JQCWNfOt0DHc1emiaikqQlj/f/EBGVEXcXNGQXArUyw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tCXyHwcMgGwr6qBHAEUUlWBHGyuzvSWYoKetF00raGsezvKEP152OyQjSmyo3yFJY
+         mFB7bK5jcEPIA2fxOacdINK+U2nnZe9TIM4ZUngBYllcSJmHWzp2LoO2o9Twyh4i6g
+         Xw+H0lEnXZ+ZHKT72UZM8wfSV8jorTAELr6alsTg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 13/24] pinctrl: tegra: Use noirq suspend/resume callbacks
+Date:   Tue, 23 Jun 2020 13:35:48 -0400
+Message-Id: <20200623173559.1355728-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
+References: <20200623173559.1355728-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a64d35465b8d91ab11f37d814ac10003da7804b8.1592916850.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+From: Vidya Sagar <vidyas@nvidia.com>
+
+[ Upstream commit 782b6b69847f34dda330530493ea62b7de3fd06a ]
+
+Use noirq suspend/resume callbacks as other drivers which implement
+noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
+configure the signals used by their respective devices in the noirq phase.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200604174935.26560-1-vidyas@nvidia.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index e9a7cbb9aa336..01bcef2c01bcf 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -685,8 +685,8 @@ static int tegra_pinctrl_resume(struct device *dev)
+ }
+ 
+ const struct dev_pm_ops tegra_pinctrl_pm = {
+-	.suspend = &tegra_pinctrl_suspend,
+-	.resume = &tegra_pinctrl_resume
++	.suspend_noirq = &tegra_pinctrl_suspend,
++	.resume_noirq = &tegra_pinctrl_resume
+ };
+ 
+ static bool gpio_node_has_range(const char *compatible)
+-- 
+2.25.1
+
