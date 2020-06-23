@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4033EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD09EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B47206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D32D206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948231;
-	bh=oBazYu09aB3tqGIxo5bEWHnnBU3hUjJG3fpmeQrJgQ4=;
+	s=default; t=1592948237;
+	bh=WeGvs3GV1kUhvXPyuoJ5QLSqTBl7j/Dpft+cOBtvAB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hrQXkwLgF38FINSM/7U/uAb9UdNrW0BBYS3/HHwnSwh/+mceMCeznffYt9QHB036R
-	 fKGW75M6dCaid/tZYHmu8XaChJ0G4i2AV/qWeSehYuInkSFk/rkMe1yaX8r1FT//zY
-	 gF9DWpc/1s5wENt7sPevCiAKQU5Jn9HX+Dm+bsYI=
+	b=TLDypmUZXx4Q5JOIj/2NAMauNIGANZm93GKc9XyUu+fAel0VNDYC6g/nOfQFf1/pb
+	 +No4oD8i5XGJO3mkmbkhUuFPYDECvQZt6eR04DNBhx55pjLOAscCY6uUcEmZpiYGTJ
+	 BN8dlBqLSrhBzOArERQYQGcH4rBGBA04UW2CzLMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389217AbgFWVhJ (ORCPT
+        id S2393887AbgFWVhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50312 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388375AbgFWUJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:16 -0400
+        id S2387709AbgFWUJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A8042078A;
-        Tue, 23 Jun 2020 20:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F92C206C3;
+        Tue, 23 Jun 2020 20:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942955;
-        bh=oBazYu09aB3tqGIxo5bEWHnnBU3hUjJG3fpmeQrJgQ4=;
+        s=default; t=1592942953;
+        bh=WeGvs3GV1kUhvXPyuoJ5QLSqTBl7j/Dpft+cOBtvAB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBypUGIP8NvxB9b5T59t7N/eEdLw1/VvtLbdNKYU2gEslqgX+EP5GN7XJFNcupMM8
-         MGqYqMDKHoDbBmnYfLnAaLtQnnQorq1KgjC/3Gmcd6Bgkddui+U3Mg7W72SeO4qsZ1
-         NEkXSB2+xs8OS0eJ5toL33BqqvErpBvJTxqB5CKk=
+        b=KFirUG31VIrJZSH3bzdacyChReFkK+uBvzzhrsm5HmBcBDibZL6r73YUPljBy9XDj
+         mTcgq5ye1bswOi/C8AWXULgJwqqO0i1GLcfEZvZ2sKJTQpatTVNpevNXW/58vjixyX
+         vrqM9Cdo2UVEIGjT6K/gFYGdV/NN8IzMzHeQYAFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 171/477] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
-Date:   Tue, 23 Jun 2020 21:52:48 +0200
-Message-Id: <20200623195415.669195436@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Foss <robert.foss@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 199/477] arm64: dts: qcom: c630: Add WiFi node
+Date:   Tue, 23 Jun 2020 21:53:16 +0200
+Message-Id: <20200623195416.992536122@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,52 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
+[ Upstream commit 3fb298d0b2f2a1d47d53806d4ddf8f4ae83353cc ]
 
-The IRQ log output is supposed to appear on a single line.  However,
-commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
-on error") resulted in it being printed one-entry-per-line, which is
-excessively long.
+Specify regulators and enable the &wifi node. The firmware uses the 8
+bit version of the host capability message, so specify this quirk.
 
-Fixing this is not a trivial matter; using pr_cont() doesn't work as
-the previous dev_dbg() may not have been compiled in, or may be
-dynamic.
-
-Since the rest of this function output is at error level, and is also
-debug output, promote this to error level as well to avoid this
-problem.
-
-Reduce the number of always zero prefix digits to save screen real-
-estate.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Reviewed-by: Robert Foss <robert.foss@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20191018055841.3729591-1-bjorn.andersson@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 30a6e07212a42..f537a37ac1d52 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -311,11 +311,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
- 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
- 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
- 		readl(_ISR(i2c)));
--	dev_dbg(dev, "log: ");
-+	dev_err(dev, "log:");
- 	for (i = 0; i < i2c->irqlogidx; i++)
--		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
--
--	pr_debug("\n");
-+		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
-+	pr_cont("\n");
- }
- 
- #else /* ifdef DEBUG */
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+index 51a670ad15b24..4b9860a2c8ebd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
++++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+@@ -577,3 +577,14 @@
+ 		};
+ 	};
+ };
++
++&wifi {
++	status = "okay";
++
++	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
++	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
++	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
++	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
++
++	qcom,snoc-host-cap-8bit-quirk;
++};
 -- 
 2.25.1
 
