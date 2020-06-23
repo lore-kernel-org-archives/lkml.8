@@ -2,143 +2,164 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C034AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A97620723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EF22070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuAFCMQ2"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="Ncz6GPbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732737AbgFWOHN (ORCPT
+        id S1732771AbgFWOHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:07:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732674AbgFWOHN (ORCPT
+        Tue, 23 Jun 2020 10:07:46 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:49684 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732698AbgFWOHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:07:13 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11DA6C061573;
-        Tue, 23 Jun 2020 07:07:13 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d12so3185273ply.1;
-        Tue, 23 Jun 2020 07:07:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cttTzLCbCwpPg7ZMsejcbzGgViOl4PIxIz/Vo6n6yx8=;
-        b=EuAFCMQ2IYPM4zt/5UM3gO/o0wbS3vB78wogrigM17bZXuhr7nDHnuDrsUkkVCSJI0
-         KINJG+io/pgFAvybGQ5Bm4yrjCjDi1nVvYTiqEmoheG9wNFEDjZseJivoXgqY+8vSogg
-         RA9vrnSWi0+F8zYHR6dRGykUgnqHxEaNklvupYkm4crnYNSQ9SKK7m19C+z8QrnCb6PO
-         AnxMZnNUD8Guenmp4tSEPhuP0F9aB1mCVRnGX699Ep7bohjP9NmAcGQIcvj743rA1cVk
-         BHALYs0va2SMbRPmaY0DaG8TeGv28XfRRkp28JeK5NaTpXIns8Wdi24XY4XmlQJ1XCEo
-         L+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cttTzLCbCwpPg7ZMsejcbzGgViOl4PIxIz/Vo6n6yx8=;
-        b=Na8LToEZ6bf6RBXDqsGEyTY/+gvyE7y3cuP2Z3XlmGiDy+nDFqG5qa68Vk8/FxZBkj
-         +m54h9HNHocF18X0ekWLc2Hs8ULPw+6ZF+aLJer8qG1W+oEcUOhQsED0G1pT4WfDcsCj
-         6Fo/hLCNowoCVG5HZPPiRylWiGjhkkXE+rMjdTwFpxHX/Ynfq9vuqwX12ZWiUA12hDE5
-         TbMo/cVrbLDAMjH7qM2OFchhluV+zQ+LTCw+GD+p3LT98g0CNGbrWzCPUI7tm5+xO63S
-         zu9jpa1H9cNN4PhgXu8Jp6NXIFWwrFVyFcIY0Rgigwkk/SQIXP2EP33PCggFnkEC799H
-         IkJg==
-X-Gm-Message-State: AOAM530ssFf6uKtnI2qCeuOf6RR9B9/QmzK9OB7Pkgu79C3eAz0nN5cA
-        3SDsfF5zz6DMrnq/F6934qL19QO8
-X-Google-Smtp-Source: ABdhPJxVTbxY5KpaXYKS85YawQwpDMsPr7j/LysIzR4sGztdbV4yNnW1jHt0dWbN0eIRFNJdkWUmig==
-X-Received: by 2002:a17:902:ac8f:: with SMTP id h15mr15563105plr.238.1592921232496;
-        Tue, 23 Jun 2020 07:07:12 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n8sm14688537pgi.18.2020.06.23.07.07.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jun 2020 07:07:11 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 07:07:11 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-Cc:     miltonm@us.ibm.com, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: Re: [PATCH v6] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
-Message-ID: <20200623140711.GA208792@roeck-us.net>
-References: <20200622153727.GA9347@cnn>
+        Tue, 23 Jun 2020 10:07:45 -0400
+X-Greylist: delayed 1351 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Jun 2020 10:07:45 EDT
+Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
+        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NDbK4H011866;
+        Tue, 23 Jun 2020 14:43:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=jan2016.eng;
+ bh=VAlZ9T7k1ajEt0jZVlyc2Uc0FxRs9kP3mpORv6qIfbk=;
+ b=Ncz6GPbXzeMEkE7nwAQ8WuzgERexiBK4CTD/DUy2NRDmyu4q+bvjFayhuTs+6pwuhisl
+ xfO1zBP8+BmA2VfbyB0IazCaplBq1QdzuAb4DIenNvup97u80ffsdxzneWW9VFVSF5cx
+ FaWKXdoxcE7aG68AFQCL2U2OXSjTtSoAxrYCPchv1lHLI9eY7/zlvUIjvbc0gjzMEY4M
+ snhIeXliwuwQ6QIA6QZ06VR+PDoHePndcDoUDZZc+A/omjNzDzO7oQ3BOTCZTmfWbTKZ
+ H0sg2dugPNYSa5OpEUWc/MX+P+WG8jFuEKP6uYYgWHBxzS4bisXKkBvcy5ijs/uyJi0V BQ== 
+Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61] (may be forged))
+        by mx0a-00190b01.pphosted.com with ESMTP id 31s9qg6bb3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 14:43:08 +0100
+Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
+        by prod-mail-ppoint6.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 05NDZEE1032373;
+        Tue, 23 Jun 2020 09:43:07 -0400
+Received: from email.msg.corp.akamai.com ([172.27.123.31])
+        by prod-mail-ppoint6.akamai.com with ESMTP id 31sdswuxbd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 09:43:06 -0400
+Received: from USMA1EX-CAS1.msg.corp.akamai.com (172.27.123.30) by
+ usma1ex-dag3mb4.msg.corp.akamai.com (172.27.123.56) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Tue, 23 Jun 2020 09:43:05 -0400
+Received: from bos-lpii8.145bw.corp.akamai.com (172.28.3.11) by
+ USMA1EX-CAS1.msg.corp.akamai.com (172.27.123.30) with Microsoft SMTP Server
+ id 15.0.1497.2 via Frontend Transport; Tue, 23 Jun 2020 09:43:05 -0400
+Received: by bos-lpii8.145bw.corp.akamai.com (Postfix, from userid 42339)
+        id A0A8E17F650; Tue, 23 Jun 2020 09:43:05 -0400 (EDT)
+From:   Michael Zhivich <mzhivich@akamai.com>
+To:     <jonas.bonn@netrounds.com>
+CC:     <davem@davemloft.net>, <john.fastabend@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <pabeni@redhat.com>, <johunt@akamai.com>, <mzhivich@akamai.com>
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc 
+Date:   Tue, 23 Jun 2020 09:42:59 -0400
+Message-ID: <20200623134259.8197-1-mzhivich@akamai.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622153727.GA9347@cnn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 adultscore=0
+ suspectscore=3 mlxlogscore=999 phishscore=0 spamscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006230108
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 suspectscore=3
+ phishscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
+ cotscore=-2147483648 priorityscore=1501 mlxscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006230108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 09:07:27PM +0530, Manikandan Elumalai wrote:
-> The adm1278 temp attribute need it for openbmc platform .
-> This feature not enabled by default, so PMON_CONFIG needs to enable it.
+> From: Jonas Bonn <jonas.bonn@netrounds.com>
+> To: Paolo Abeni <pabeni@redhat.com>,
+> 	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+> 	LKML <linux-kernel@vger.kernel.org>,
+> 	"David S . Miller" <davem@davemloft.net>,
+> 	John Fastabend <john.fastabend@gmail.com>
+> Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+> Date: Fri, 11 Oct 2019 02:39:48 +0200
+> Message-ID: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com> (raw)
+> In-Reply-To: <95c5a697932e19ebd6577b5dac4d7052fe8c4255.camel@redhat.com>
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+> Hi Paolo,
+> 
+> On 09/10/2019 21:14, Paolo Abeni wrote:
+> > Something alike the following code - completely untested - can possibly
+> > address the issue, but it's a bit rough and I would prefer not adding
+> > additonal complexity to the lockless qdiscs, can you please have a spin
+> > a it?
+> 
+> We've tested a couple of variants of this patch today, but unfortunately 
+> it doesn't fix the problem of packets getting stuck in the queue.
+> 
+> A couple of comments:
+> 
+> i) On 5.4, there is the BYPASS path that also needs the same treatment 
+> as it's essentially replicating the behavour of qdisc_run, just without 
+> the queue/dequeue steps
+> 
+> ii)  We are working a lot with the 4.19 kernel so I backported to the 
+> patch to this version and tested there.  Here the solution would seem to 
+> be more robust as the BYPASS path does not exist.
+> 
+> Unfortunately, in both cases we continue to see the issue of the "last 
+> packet" getting stuck in the queue.
+> 
+> /Jonas
 
-Applied.
+Hello Jonas, Paolo,
+
+We have observed the same problem with pfifo_fast qdisc when sending periodic small
+packets on a TCP flow with multiple simultaneous connections on a 4.19.75
+kernel.  We've been able to catch it in action using perf probes (see trace
+below).  For qdisc = 0xffff900d7c247c00, skb = 0xffff900b72c334f0,
+it takes 200270us to traverse the networking stack on a system that's not otherwise busy.
+qdisc only resumes processing when another enqueued packet comes in,
+so the packet could have been stuck indefinitely.
+
+   proc-19902 19902 [032] 580644.045480: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0xffff900bfc294af0 band=2 atomic_qlen=0
+   proc-19902 19902 [032] 580644.045480:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=2
+   proc-19927 19927 [014] 580644.045480:      probe:tcp_transmit_skb2: (ffffffff9b6dc4e5) skb=0xffff900b72c334f0 sk=0xffff900d62958040 source=0x4b4e dest=0x9abe
+   proc-19902 19902 [032] 580644.045480: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0x0 band=3 atomic_qlen=0
+   proc-19927 19927 [014] 580644.045481:      probe:ip_finish_output2: (ffffffff9b6bc650) net=0xffffffff9c107c80 sk=0xffff900d62958040 skb=0xffff900b72c334f0 __func__=0x0
+   proc-19902 19902 [032] 580644.045481:        probe:sch_direct_xmit: (ffffffff9b69e570) skb=0xffff900bfc294af0 q=0xffff900d7c247c00 dev=0xffff900d6a140000 txq=0xffff900d6a181180 root_lock=0x0 validate=1 ret=-1 again=155
+   proc-19927 19927 [014] 580644.045481:            net:net_dev_queue: dev=eth0 skbaddr=0xffff900b72c334f0 len=115
+   proc-19902 19902 [032] 580644.045482:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=1
+   proc-19927 19927 [014] 580644.045483:     probe:pfifo_fast_enqueue: (ffffffff9b69d9f0) skb=0xffff900b72c334f0 qdisc=0xffff900d7c247c00 to_free=18446622925407304000
+   proc-19902 19902 [032] 580644.045483: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0x0 band=3 atomic_qlen=0
+   proc-19927 19927 [014] 580644.045483: probe:pfifo_fast_enqueue_end: (ffffffff9b69da9f) skb=0xffff900b72c334f0 qdisc=0xffff900d7c247c00 to_free=0xffff91d0f67ab940 atomic_qlen=1
+   proc-19902 19902 [032] 580644.045484:          probe:__qdisc_run_2: (ffffffff9b69ea5a) q=0xffff900d7c247c00 packets=1
+   proc-19927 19927 [014] 580644.245745:     probe:pfifo_fast_enqueue: (ffffffff9b69d9f0) skb=0xffff900d98fdf6f0 qdisc=0xffff900d7c247c00 to_free=18446622925407304000
+   proc-19927 19927 [014] 580644.245745: probe:pfifo_fast_enqueue_end: (ffffffff9b69da9f) skb=0xffff900d98fdf6f0 qdisc=0xffff900d7c247c00 to_free=0xffff91d0f67ab940 atomic_qlen=2
+   proc-19927 19927 [014] 580644.245746:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=0
+   proc-19927 19927 [014] 580644.245746: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0xffff900b72c334f0 band=2 atomic_qlen=1
+   proc-19927 19927 [014] 580644.245747:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=2
+   proc-19927 19927 [014] 580644.245747: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0xffff900d98fdf6f0 band=2 atomic_qlen=0
+   proc-19927 19927 [014] 580644.245748:     probe:pfifo_fast_dequeue: (ffffffff9b69d8c0) qdisc=0xffff900d7c247c00 skb=0xffffffff9b69d8c0 band=2
+   proc-19927 19927 [014] 580644.245748: probe:pfifo_fast_dequeue_end: (ffffffff9b69d99d) qdisc=0xffff900d7c247c00 skb=0x0 band=3 atomic_qlen=0
+   proc-19927 19927 [014] 580644.245749:          qdisc:qdisc_dequeue: dequeue ifindex=5 qdisc handle=0x0 parent=0xF txq_state=0x0 packets=2 skbaddr=0xffff900b72c334f0
+   proc-19927 19927 [014] 580644.245749:        probe:sch_direct_xmit: (ffffffff9b69e570) skb=0xffff900b72c334f0 q=0xffff900d7c247c00 dev=0xffff900d6a140000 txq=0xffff900d6a181180 root_lock=0x0 validate=1 ret=-1 again=155
+   proc-19927 19927 [014] 580644.245750:       net:net_dev_start_xmit: dev=eth0 queue_mapping=14 skbaddr=0xffff900b72c334f0 vlan_tagged=0 vlan_proto=0x0000 vlan_tci=0x0000 protocol=0x0800 ip_summed=3 len=115 data_len=0 network_offset=14 transport_offset_valid=1 transport_offset=34 tx_flags=0 gso_size=0 gso_segs=1 gso_type=0x1
+
+I was wondering if you had any more luck in finding a solution or workaround for this problem
+(that is, aside from switching to a different qdisc)?
 
 Thanks,
-Guenter
-
-> ---
-> v5 -> v6: 
-> add Reported-by in commit log
-> align commit and change log as per guidelines.
-> v4 -> v5: 
-> align commit and change log. 
-> v3 -> v4: 
-> kernel test robot CI warning
-> v2 -> v3: 
-> fix invalid signed-off.
-> removed checkpath warnings.
-> write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
-> v1 -> v2: 
-> add Signed-off-by.
-> removed ADM1278_TEMP1_EN check.
-> 
->  drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-> index 5caa37fb..d4e1925 100644
-> --- a/drivers/hwmon/pmbus/adm1275.c
-> +++ b/drivers/hwmon/pmbus/adm1275.c
-> @@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
->  		tindex = 3;
->  
->  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
-> -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-> +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
->  
-> -		/* Enable VOUT if not enabled (it is disabled by default) */
-> -		if (!(config & ADM1278_VOUT_EN)) {
-> -			config |= ADM1278_VOUT_EN;
-> +		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
-> +		if ((config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) != (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) {
-> +			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
->  			ret = i2c_smbus_write_byte_data(client,
->  							ADM1275_PMON_CONFIG,
->  							config);
-> @@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
->  			}
->  		}
->  
-> -		if (config & ADM1278_TEMP1_EN)
-> -			info->func[0] |=
-> -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
->  		if (config & ADM1278_VIN_EN)
->  			info->func[0] |= PMBUS_HAVE_VIN;
->  		break;
+~ Michael
