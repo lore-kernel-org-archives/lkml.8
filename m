@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B965C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00B122064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6ED9206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944139;
-	bh=4nSZAdh0C+LyUZmGaYK7ICPBjH/eBkel2iGSn91HaAc=;
+	s=default; t=1592944144;
+	bh=i3jueepplDkNuk9wE4egerL1INGsMUlzWA2rMOMR2J0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqlFBdU/KaRWNtulVd3kHDYs2FlE+4lvQQQ8xHjw63+OwEQmoM/F6chcg5c3/FBA6
-	 fT6nVvaY2kDsdlLSTeYfCvRmnJPt5LDpkaxp8GBwn/mRIwfMyHf/TDfYzUMWK17rs7
-	 e80Q/Quy7sCHIsuGRuHmHUGO60bz1c1ZjDCGak0Q=
+	b=tQN1olpioVkIV3FAywimROl2T+T05azNmbq3qhGqzvuxhNaPm6saqzRK95wCu6O1M
+	 fibDtpz501sOF57iDja5GgDBvDv0hwKfXK4MhjMwTmg+bO+N1vb/xIVBe1TlNuJloW
+	 EONXjV1jebq0T4loI1l4atL8xN5YdAzX/dvapUhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390931AbgFWU25 (ORCPT
+        id S2389396AbgFWU3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48746 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390919AbgFWU2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:28:50 -0400
+        id S2390461AbgFWU24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:28:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ED67206C3;
-        Tue, 23 Jun 2020 20:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 331D3206C3;
+        Tue, 23 Jun 2020 20:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944130;
-        bh=4nSZAdh0C+LyUZmGaYK7ICPBjH/eBkel2iGSn91HaAc=;
+        s=default; t=1592944135;
+        bh=i3jueepplDkNuk9wE4egerL1INGsMUlzWA2rMOMR2J0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r94067isYtuK0BXrVGTwGt11gIKm02uBypLrC7OnBpOabcOTropw0+huiyMQ3QEdB
-         3r1YrgfXGnVVw8ViEpdA1fq+ykGdhmsw77lrtCL5+Yr7Kh85RPj8ZHaBM6RTFKLcRF
-         KLzD2YZq1mihfiuVciFSHp0g2vSNC3xoowAmFd7U=
+        b=MHOnciaO2F1Os8xgH1bt3frlqdvdQUGt+g82k8+x8pA8tcI5zDfhX6tSrhap0TvIt
+         Gv1dxF0H1YJ+H3Bgs5pkpr4mVY8W4WiMFaojobPfNlT+ZyJXi1U21ypSQYGTO4xwyo
+         Fp8pGGpxxla0CA4ZHFormbFXK0aB3Vssl+7dNT4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 184/314] mfd: stmfx: Fix stmfx_irq_init error path
-Date:   Tue, 23 Jun 2020 21:56:19 +0200
-Message-Id: <20200623195347.668219081@linuxfoundation.org>
+Subject: [PATCH 5.4 186/314] powerpc/32s: Dont warn when mapping RO data ROX.
+Date:   Tue, 23 Jun 2020 21:56:21 +0200
+Message-Id: <20200623195347.776815416@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,47 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit 60c2c4bcb9202acad4cc26af20b44b6bd7874f7b ]
+[ Upstream commit 4b19f96a81bceaf0bcf44d79c0855c61158065ec ]
 
-In case the interrupt signal can't be configured, IRQ domain needs to be
-removed.
+Mapping RO data as ROX is not an issue since that data
+cannot be modified to introduce an exploit.
 
-Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+PPC64 accepts to have RO data mapped ROX, as a trade off
+between kernel size and strictness of protection.
+
+On PPC32, kernel size is even more critical as amount of
+memory is usually small.
+
+Depending on the number of available IBATs, the last IBATs
+might overflow the end of text. Only warn if it crosses
+the end of RO data.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/6499f8eeb2a36330e5c9fc1cee9a79374875bd54.1589866984.git.christophe.leroy@csgroup.eu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/stmfx.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/book3s32/mmu.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
-index fde6541e347c8..1977fe95f876c 100644
---- a/drivers/mfd/stmfx.c
-+++ b/drivers/mfd/stmfx.c
-@@ -287,14 +287,19 @@ static int stmfx_irq_init(struct i2c_client *client)
+diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
+index 84d5fab94f8f8..1424a120710e4 100644
+--- a/arch/powerpc/mm/book3s32/mmu.c
++++ b/arch/powerpc/mm/book3s32/mmu.c
+@@ -187,6 +187,7 @@ void mmu_mark_initmem_nx(void)
+ 	int i;
+ 	unsigned long base = (unsigned long)_stext - PAGE_OFFSET;
+ 	unsigned long top = (unsigned long)_etext - PAGE_OFFSET;
++	unsigned long border = (unsigned long)__init_begin - PAGE_OFFSET;
+ 	unsigned long size;
  
- 	ret = regmap_write(stmfx->map, STMFX_REG_IRQ_OUT_PIN, irqoutpin);
- 	if (ret)
--		return ret;
-+		goto irq_exit;
- 
- 	ret = devm_request_threaded_irq(stmfx->dev, client->irq,
- 					NULL, stmfx_irq_handler,
- 					irqtrigger | IRQF_ONESHOT,
- 					"stmfx", stmfx);
- 	if (ret)
--		stmfx_irq_exit(client);
-+		goto irq_exit;
-+
-+	return 0;
-+
-+irq_exit:
-+	stmfx_irq_exit(client);
- 
- 	return ret;
- }
+ 	if (IS_ENABLED(CONFIG_PPC_BOOK3S_601))
+@@ -201,9 +202,10 @@ void mmu_mark_initmem_nx(void)
+ 		size = block_size(base, top);
+ 		size = max(size, 128UL << 10);
+ 		if ((top - base) > size) {
+-			if (strict_kernel_rwx_enabled())
+-				pr_warn("Kernel _etext not properly aligned\n");
+ 			size <<= 1;
++			if (strict_kernel_rwx_enabled() && base + size > border)
++				pr_warn("Some RW data is getting mapped X. "
++					"Adjust CONFIG_DATA_SHIFT to avoid that.\n");
+ 		}
+ 		setibat(i++, PAGE_OFFSET + base, base, size, PAGE_KERNEL_TEXT);
+ 		base += size;
 -- 
 2.25.1
 
