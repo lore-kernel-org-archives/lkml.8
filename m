@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15138C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C96C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E42112072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7607B2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948331;
-	bh=CaUoCBxYI9U26p0mgol98Ovh0DIucD7EMkmPGdlCuew=;
+	s=default; t=1592948334;
+	bh=9IyFQ1LxdVrwBZSwUEShij5X2ILrV9XEJsqS8gNrNjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rynRuIqjmtJopkh4Iv/5w/muJzoYUyssRWLSQoWjZlpcDlrRQhbQr2OLa7rRiRL6o
-	 qGub8GqQcJ9jL81jkud+J7P9UxUqV7rbR/c9ntqKGQKJ384MluGH9xH92S47p7fePd
-	 lPQrTtRcGZNiZxOpQroroavWzJgh47Fj4oETrrNI=
+	b=K+g8pOyo+dLMAAGDLLaVlANXCaTy2oOQS38AXYy7PHYBkrgLkaRnlyvR8hMCYRZNi
+	 OSQOh+oXeyjgk1R+idbfg0rmMB6tGgknJe/CJpsM7a1hdK0qGV7YVMzqPfKKTfK76k
+	 IgzRyz+A4Q8K4ugJ1F0vtUrkDVo4gKeSxyj2gRAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388638AbgFWUHi (ORCPT
+        id S2391263AbgFWViw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48100 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388609AbgFWUH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:07:29 -0400
+        id S2387862AbgFWUHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D09272064B;
-        Tue, 23 Jun 2020 20:07:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8FF02064B;
+        Tue, 23 Jun 2020 20:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942849;
-        bh=CaUoCBxYI9U26p0mgol98Ovh0DIucD7EMkmPGdlCuew=;
+        s=default; t=1592942862;
+        bh=9IyFQ1LxdVrwBZSwUEShij5X2ILrV9XEJsqS8gNrNjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FktQ+Gy+t4yH+DLqk+PRR7DJcgd49mn/wtEFGixWmjj5HjhsR4vwbIneGoDo6kCdT
-         1lPjARMiS5f/upWHzyMJcwpUrTpP7QdJCHuHskJ8enYZ0oO5s1JGeZvjqaS3S+ownF
-         uyPc35LXZG+4hdr0ljbGd/AC4oFWktGBGgGMVnlM=
+        b=iW5BYNsHP9+PEBJIpi6boq/XGOhmjvhrtcpQQJBiWZo2417SQa5uKB6JfCQpDREPg
+         WsaZ9xKW498CUwv/sJxH8SubaLq6R3y22pmH74V8wZjeyr8crROxzfzlsVpKnqX5YG
+         NooegOHpjUoSSMIcneovmd3Q2m6qT5Gu5EbnF7hw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 159/477] ASoC: max98373: reorder max98373_reset() in resume
-Date:   Tue, 23 Jun 2020 21:52:36 +0200
-Message-Id: <20200623195415.116201913@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 163/477] HID: intel-ish-hid: avoid bogus uninitialized-variable warning
+Date:   Tue, 23 Jun 2020 21:52:40 +0200
+Message-Id: <20200623195415.292043791@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,54 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Zhi <yong.zhi@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 1a446873d7dd3a450f685928ce7f1907bde4583d ]
+[ Upstream commit 0b66fb3e6b7a53688f8e20945ac78cd3d832c65f ]
 
-During S3 test, the following error was observed:
+Older compilers like gcc-4.8 don't see that the variable is
+initialized when it is used:
 
-[ 726.174237] i2c_designware i2c_designware.0: platform_pm_resume+0x0/0x3d returned 0 after 0 usecs
-[ 726.184187] max98373 i2c-MX98373:00: calling max98373_resume+0x0/0x30 [snd_soc_max98373] @ 12698, parent: i2c-11
-[ 726.195589] max98373 i2c-MX98373:00: Reset command failed. (ret:-16)
+In file included from include/linux/compiler_types.h:68:0,
+                 from <command-line>:0:
+drivers/hid/intel-ish-hid/ishtp-fw-loader.c: In function 'load_fw_from_host':
+include/linux/compiler-gcc.h:75:45: warning: 'fw_info.ldr_capability.max_dma_buf_size' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
+                                             ^
+drivers/hid/intel-ish-hid/ishtp-fw-loader.c:770:22: note: 'fw_info.ldr_capability.max_dma_buf_size' was declared here
+  struct shim_fw_info fw_info;
+                      ^
 
-When calling regmap_update_bits(), since map->reg_update_bits is NULL,
-_regmap_read() is entered with the following logic:
+Make sure to initialize it before returning an error from ish_query_loader_prop().
 
-	if (!map->cache_bypass) {
-		ret = regcache_read(map, reg, val);
-		if (ret == 0)
-			return 0;
-	}
-
-	if (map->cache_only)
-		return -EBUSY;
-
-regcache_read() hits -EINVAL because MAX98373_R2000_SW_RESET is volatile,
-as map->cache_only is set by codec suspend, thus -EBUSY is returned.
-Fix by moving max98373_reset() after cache_only set to false in max98373_resume().
-
-Signed-off-by: Yong Zhi <yong.zhi@intel.com>
-Link: https://lore.kernel.org/r/1588376661-29799-1-git-send-email-yong.zhi@intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 91b228107da3 ("HID: intel-ish-hid: ISH firmware loader client driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/max98373.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/max98373.c b/sound/soc/codecs/max98373.c
-index cae1def8902dd..96718e3a1ad0e 100644
---- a/sound/soc/codecs/max98373.c
-+++ b/sound/soc/codecs/max98373.c
-@@ -850,8 +850,8 @@ static int max98373_resume(struct device *dev)
- {
- 	struct max98373_priv *max98373 = dev_get_drvdata(dev);
+diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+index aa2dbed30fc36..6cf59fd26ad78 100644
+--- a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
++++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+@@ -480,6 +480,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
+ 			    sizeof(ldr_xfer_query_resp));
+ 	if (rv < 0) {
+ 		client_data->flag_retry = true;
++		*fw_info = (struct shim_fw_info){};
+ 		return rv;
+ 	}
  
--	max98373_reset(max98373, dev);
- 	regcache_cache_only(max98373->regmap, false);
-+	max98373_reset(max98373, dev);
- 	regcache_sync(max98373->regmap);
- 	return 0;
- }
+@@ -489,6 +490,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
+ 			"data size %d is not equal to size of loader_xfer_query_response %zu\n",
+ 			rv, sizeof(struct loader_xfer_query_response));
+ 		client_data->flag_retry = true;
++		*fw_info = (struct shim_fw_info){};
+ 		return -EMSGSIZE;
+ 	}
+ 
 -- 
 2.25.1
 
