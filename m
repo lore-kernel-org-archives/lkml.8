@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6685F2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2B9206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943970;
-	bh=/CPyaLLZRU4Fh2P4fIpFjAZgAOMq5TubLnUNK5hB58U=;
+	s=default; t=1592943976;
+	bh=LqXoPAKS6pHMH0wXYUQDjax07COwK/Y2Q/NCHGyioSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k8bPqjFmVYsGiz+/jC35sC4wmWOMpYEpWQAUcuZPEYJswv2ZuEenxe4yPGYM3pMtD
-	 Q8ckSMyP7fY+JOfTSiGp//GT5y3u/ayZEoTrBfujgnBYbWHNr1EzDHOqd18szbd/dA
-	 Gja8bUfR0JDgxBNLthVdrX+On6/pLIxGxQB6ad0Q=
+	b=fPQ04ilIWIVWIcUdXIxqRz9f2hEYwgt9Z5r+JMfmddI1mHn16HZf7D9TXtq2RZcch
+	 FPcMKv8r5hxzAHlcR4BtlmheelvgrtFdACHk21UwqU6ji0Tc3bRA29L7vng93CBUj1
+	 UzPHkvcbb0HVv6uOHmQCpSfCvyaabyw9dzTSA9Uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388087AbgFWU0H (ORCPT
+        id S2390625AbgFWU0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45014 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390074AbgFWUZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:25:58 -0400
+        id S2389707AbgFWU0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:26:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F002206EB;
-        Tue, 23 Jun 2020 20:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0FFE206EB;
+        Tue, 23 Jun 2020 20:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943958;
-        bh=/CPyaLLZRU4Fh2P4fIpFjAZgAOMq5TubLnUNK5hB58U=;
+        s=default; t=1592943961;
+        bh=LqXoPAKS6pHMH0wXYUQDjax07COwK/Y2Q/NCHGyioSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CL+1tRdlyQyD0Z4CpDUJ0jkmwuLdWrBoKnhcynjpHHM4IxISg2n21By4W2DDDfY4s
-         ZAPjFLDUjjwF0//vJlJaF0qCCtfHZhHjrNJTiupuQVxGYuK5du1bRZZKOi6L60oSqZ
-         kzpQakqfeyurrFTRmdhWrxY+Hy2++HkE77CosGbQ=
+        b=p0SpgXGZKI2gt+vKmLneM6XY078p0MErQVKwhyDn6YK/ewqHt8nDI9I8bVH4lLBLw
+         DLl2WesLYZuCf5Gd9wp0IFcbRtAEpFkNCDkKReDZBOoyFs3tg8kendaNVXE7Nviue4
+         VmaQOxco1TrzE6mI5o56mSFyo0wNvhJbJ/DA9zgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matej Dujava <mdujava@kocurkovo.cz>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 117/314] staging: sm750fb: add missing case while setting FB_VISUAL
-Date:   Tue, 23 Jun 2020 21:55:12 +0200
-Message-Id: <20200623195344.451445398@linuxfoundation.org>
+Subject: [PATCH 5.4 118/314] PCI: v3-semi: Fix a memory leak in v3_pci_probe() error handling paths
+Date:   Tue, 23 Jun 2020 21:55:13 +0200
+Message-Id: <20200623195344.499092884@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -59,34 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matej Dujava <mdujava@kocurkovo.cz>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
+[ Upstream commit bca718988b9008d0d5f504e2d318178fc84958c1 ]
 
-Switch statement does not contain all cases: 8, 16, 24, 32.
-This patch will add missing one (24)
+If we fails somewhere in 'v3_pci_probe()', we need to free 'host'.
 
-Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
-Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
-Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Use the managed version of 'pci_alloc_host_bridge()' to do that easily.
+The use of managed resources is already widely used in this driver.
+
+Link: https://lore.kernel.org/r/20200418081637.1585-1-christophe.jaillet@wanadoo.fr
+Fixes: 68a15eb7bd0c ("PCI: v3-semi: Add V3 Semiconductor PCI host driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/sm750fb/sm750.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/pci-v3-semi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 59568d18ce230..5b72aa81d94c1 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -898,6 +898,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
- 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
- 		break;
- 	case 16:
-+	case 24:
- 	case 32:
- 		fix->visual = FB_VISUAL_TRUECOLOR;
- 		break;
+diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+index d219404bad92b..9a86bb7448acf 100644
+--- a/drivers/pci/controller/pci-v3-semi.c
++++ b/drivers/pci/controller/pci-v3-semi.c
+@@ -743,7 +743,7 @@ static int v3_pci_probe(struct platform_device *pdev)
+ 	int ret;
+ 	LIST_HEAD(res);
+ 
+-	host = pci_alloc_host_bridge(sizeof(*v3));
++	host = devm_pci_alloc_host_bridge(dev, sizeof(*v3));
+ 	if (!host)
+ 		return -ENOMEM;
+ 
 -- 
 2.25.1
 
