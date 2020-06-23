@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7219C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D2120706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E8E20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946727;
-	bh=zPDNeBECLrh3RvUqPj3lAFT9v3gO2ihq874csq4WAT4=;
+	s=default; t=1592946730;
+	bh=rkZX3bav+4P9uCkgZwp0mQI+mbLg2e7iIaI1BqER1kU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YpTeTGtieFOXmS2ePFE/sXieSX3neemjQAuFadwqZlehXlXDXMEAfpNTpCN/Qjm8p
-	 Anz70U+cHLz/sesG5qNWwsapw3q3WkLS9JZAsBwM5hP3zq4S3l1ZyZJTW0kgWIJBfx
-	 EvIiOGXyZBpQ+vCbdfRVt5x/Jty/1cBWO6KG+oOs=
+	b=dThgKly1t2sG7ittUZZeAE9cQVuDtpDaZCZytou+KU+zQET5O8u3A7kiXqmDDCukL
+	 DrNe3Z5CQn5Fxuv6GlqKRRNzz1rO4cH1VhISTwAnSp/maoohDos5v8FNptP+g7nP7i
+	 VYXWc8mm4yluy14laIkmwEY6lJkrT1DldcQhwIi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393294AbgFWVMG (ORCPT
+        id S2404127AbgFWVMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:12:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390388AbgFWUcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:32:00 -0400
+        id S2390995AbgFWUb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:31:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E56DD20723;
-        Tue, 23 Jun 2020 20:31:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 607A9206C3;
+        Tue, 23 Jun 2020 20:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944320;
-        bh=zPDNeBECLrh3RvUqPj3lAFT9v3gO2ihq874csq4WAT4=;
+        s=default; t=1592944317;
+        bh=rkZX3bav+4P9uCkgZwp0mQI+mbLg2e7iIaI1BqER1kU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D029vqQeR6AQWzHDESLZaHNhDR6vHqQur/q5JY9Vyeqliml42iX+JqxDodwWO/7U6
-         16ZJozLyhim1EPXaKNMZCrTLdO8JUiSUY12Faspczk0jcc88hZntUdygTyfZp+bXLC
-         YjPhfwp8w4JhfAqhd+QnllRbJmFyeZuNtqRJ3kmw=
+        b=oBGWxG/HMDzKvrTYEwO0Zvsu3NH+BO/lJ5+F4nMOEquqIXa4+qsu5hvm+aEeYna3D
+         1M5a0uwN9D3kn6a0dl8407A7Z36dCls+mvkOV3CXwrqh+2v/E+K0eAGAY43mi2HnPa
+         u7TCapiWe6zmGjSzLQ5bTUIYez2e1aFYkdUlx3SE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>,
-        Arindam Nath <arindam.nath@amd.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 231/314] ntb_tool: pass correct struct device to dma_alloc_coherent
-Date:   Tue, 23 Jun 2020 21:57:06 +0200
-Message-Id: <20200623195349.972967250@linuxfoundation.org>
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 257/314] xdp: Fix xsk_generic_xmit errno
+Date:   Tue, 23 Jun 2020 21:57:32 +0200
+Message-Id: <20200623195351.232441183@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,59 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 433efe720674efd9fdbcef78be75793393cf05db ]
+[ Upstream commit aa2cad0600ed2ca6a0ab39948d4db1666b6c962b ]
 
-Currently, ntb->dev is passed to dma_alloc_coherent
-and dma_free_coherent calls. The returned dma_addr_t
-is the CPU physical address. This works fine as long
-as IOMMU is disabled. But when IOMMU is enabled, we
-need to make sure that IOVA is returned for dma_addr_t.
-So the correct way to achieve this is by changing the
-first parameter of dma_alloc_coherent() as ntb->pdev->dev
-instead.
+Propagate sock_alloc_send_skb error code, not set it to
+EAGAIN unconditionally, when fail to allocate skb, which
+might cause that user space unnecessary loops.
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: 35fcde7f8deb ("xsk: support for Tx")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Link: https://lore.kernel.org/bpf/1591852266-24017-1-git-send-email-lirongqing@baidu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_tool.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/xdp/xsk.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
-index d592c0ffbd198..025747c1568ea 100644
---- a/drivers/ntb/test/ntb_tool.c
-+++ b/drivers/ntb/test/ntb_tool.c
-@@ -590,7 +590,7 @@ static int tool_setup_mw(struct tool_ctx *tc, int pidx, int widx,
- 	inmw->size = min_t(resource_size_t, req_size, size);
- 	inmw->size = round_up(inmw->size, addr_align);
- 	inmw->size = round_up(inmw->size, size_align);
--	inmw->mm_base = dma_alloc_coherent(&tc->ntb->dev, inmw->size,
-+	inmw->mm_base = dma_alloc_coherent(&tc->ntb->pdev->dev, inmw->size,
- 					   &inmw->dma_base, GFP_KERNEL);
- 	if (!inmw->mm_base)
- 		return -ENOMEM;
-@@ -612,7 +612,7 @@ static int tool_setup_mw(struct tool_ctx *tc, int pidx, int widx,
- 	return 0;
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index 7181a30666b4a..f9eb5efb237c7 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -362,10 +362,8 @@ static int xsk_generic_xmit(struct sock *sk)
  
- err_free_dma:
--	dma_free_coherent(&tc->ntb->dev, inmw->size, inmw->mm_base,
-+	dma_free_coherent(&tc->ntb->pdev->dev, inmw->size, inmw->mm_base,
- 			  inmw->dma_base);
- 	inmw->mm_base = NULL;
- 	inmw->dma_base = 0;
-@@ -629,7 +629,7 @@ static void tool_free_mw(struct tool_ctx *tc, int pidx, int widx)
+ 		len = desc.len;
+ 		skb = sock_alloc_send_skb(sk, len, 1, &err);
+-		if (unlikely(!skb)) {
+-			err = -EAGAIN;
++		if (unlikely(!skb))
+ 			goto out;
+-		}
  
- 	if (inmw->mm_base != NULL) {
- 		ntb_mw_clear_trans(tc->ntb, pidx, widx);
--		dma_free_coherent(&tc->ntb->dev, inmw->size,
-+		dma_free_coherent(&tc->ntb->pdev->dev, inmw->size,
- 				  inmw->mm_base, inmw->dma_base);
- 	}
- 
+ 		skb_put(skb, len);
+ 		addr = desc.addr;
 -- 
 2.25.1
 
