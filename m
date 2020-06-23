@@ -2,178 +2,178 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF79C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 981C1207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A01F207F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TTs+NYTU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tcvScFJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733254AbgFWSxO (ORCPT
+        id S2387416AbgFWSyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:53:14 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57397 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733218AbgFWSxN (ORCPT
+        Tue, 23 Jun 2020 14:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733170AbgFWSyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:53:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592938392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3nSi1zETIGlAkjRMSn7k5XllL026D0zQEnDLfZ6KCh4=;
-        b=TTs+NYTU+pSV1yjm27iuob+MJKty/p6kKHZN4P4SAx0jjaSQ+8ED3G0k37BeYUdWfaap8z
-        EY/tx+QDj0OAGhSSnb1NTlwq2OOlsWn5Uuza++TLemQZ5yEqXOXGf1nFv2KrP92yrk6ckh
-        MnT6ioBqFaM6f8/D8jZKchx7ubGx0Ew=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-nhT-KQwFMOaBe6CR_NjNkQ-1; Tue, 23 Jun 2020 14:53:04 -0400
-X-MC-Unique: nhT-KQwFMOaBe6CR_NjNkQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C6528031CB;
-        Tue, 23 Jun 2020 18:53:02 +0000 (UTC)
-Received: from localhost (ovpn-116-11.gru2.redhat.com [10.97.116.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B559060CD3;
-        Tue, 23 Jun 2020 18:53:01 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 15:53:00 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Maurizio Drocco <maurizio.drocco@ibm.com>
-Cc:     zohar@linux.ibm.com, Silviu.Vlasceanu@huawei.com,
-        dmitry.kasatkin@gmail.com, jejb@linux.ibm.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, mdrocco@linux.vnet.ibm.com,
-        roberto.sassu@huawei.com, serge@hallyn.com
-Subject: Re: [PATCH v4] ima: extend boot_aggregate with kernel measurements
-Message-ID: <20200623185300.GD4983@glitch>
-References: <1592920990.5437.15.camel@linux.ibm.com>
- <20200623155732.105-1-maurizio.drocco@ibm.com>
+        Tue, 23 Jun 2020 14:54:50 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3180C061573;
+        Tue, 23 Jun 2020 11:54:50 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id l6so20523886ilo.2;
+        Tue, 23 Jun 2020 11:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W+8l06X4v9gDesMKnj8QO14cib7Ri6lEvDT8pbY4bDE=;
+        b=tcvScFJ6m0D4zDDKq165YUpT0xMfmPaDf5AmmuKf3wPR0kBk9FcWQNQx38dILo+S3v
+         K1v5+HxrCH/sIFty9Uu/GlaPR++zM42hMMq6EZ0YyaCOxW0GbjILdQjBZJb4w5SYef4p
+         Mdu8lKRdwa6KdY6qHjze9kJQLzzswZ+2hO2SAUBX4DRZXrDe/CHpMo6vB+PQLUATrZhY
+         F5yXjhSxJV/A+UdkX94O32TIZDgz1towwucCBZE7iToLxV1Reto8Xgdp8rKMed5sdFzb
+         fa4E8IDQhGbaIikunt+uIc97LZje+ez0T0NRP4ceSTyX1OinRbt++ZTqnPiY3nEDf74l
+         iztQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=W+8l06X4v9gDesMKnj8QO14cib7Ri6lEvDT8pbY4bDE=;
+        b=UmyRJbMjA1/szq7vgscHandw4XQ0OzWzGDzklpoUC7xj/jwL8k2P2tgiF2Ey1uRnVW
+         WcceJz3ElomU5DnvxAzw+0IZWR557xDFpOsRTnflyFvaTgTznpQVO595WLi0L7l6GFl/
+         z9h1z126KPNQfabdcQElUVZorTJ223W8j0GXVddz2CKcILGKfbJ/CtsR/cIHEGFTP8P8
+         rAuAkcSYSo8uo766t/EQF2gDOXYVzSIDlReXku0IufC9EJbmCaUQ2MZj00FLXGCx1jH2
+         Sxm4+P++iDiz++XZ0QLDa+T/OVEyFNF5BP/1S/gHkP6bMljMCJ9obR1KcwZ7NNrDxzqb
+         kujg==
+X-Gm-Message-State: AOAM532feSMSn1DHpNlorLh+MPYtHCAmz1cqkmaKU++jpwY+5AEdM/qn
+        UPvI31ez9jyVnhNc/lsOSxw=
+X-Google-Smtp-Source: ABdhPJxjDd9xmoat9dkBRXPnhpX5tUNcGRGmdI81Cb9bxt8rtBgoONpvKlKP2vgq4jYiN0xrY1YAWg==
+X-Received: by 2002:a05:6e02:11a5:: with SMTP id 5mr25486428ilj.108.1592938490049;
+        Tue, 23 Jun 2020 11:54:50 -0700 (PDT)
+Received: from [10.67.50.75] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id g1sm3628644ilk.51.2020.06.23.11.54.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 11:54:49 -0700 (PDT)
+Subject: Re: [PATCH 01/15] net: phy: arrange headers in mdio_bus.c
+ alphabetically
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-2-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <a009d8da-97cf-0e43-f3ba-f0cee88245e6@gmail.com>
+Date:   Tue, 23 Jun 2020 11:54:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200623155732.105-1-maurizio.drocco@ibm.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8w3uRX/HFJGApMzv"
-Content-Disposition: inline
+In-Reply-To: <20200622093744.13685-2-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---8w3uRX/HFJGApMzv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 6/22/20 2:37 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Keeping the headers in alphabetical order is better for readability and
+> allows to easily see if given header is already included.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On Tue, Jun 23, 2020 at 11:57:32AM -0400, Maurizio Drocco wrote:
-> Registers 8-9 are used to store measurements of the kernel and its
-> command line (e.g., grub2 bootloader with tpm module enabled). IMA
-> should include them in the boot aggregate. Registers 8-9 should be
-> only included in non-SHA1 digests to avoid ambiguity.
->=20
-> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
-> ---
-> Changelog:
-> v4:
-> - Reworded comments: PCRs 8 & 9 are always included in non-sha1 digests
-> v3:
-> - Limit including PCRs 8 & 9 to non-sha1 hashes
-> v2:
-> - Minor comment improvements
-> v1:
-> - Include non zero PCRs 8 & 9 in the boot_aggregate
->=20
->  security/integrity/ima/ima.h        |  2 +-
->  security/integrity/ima/ima_crypto.c | 15 ++++++++++++++-
->  2 files changed, 15 insertions(+), 2 deletions(-)
->=20
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index df93ac258e01..9d94080bdad8 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -30,7 +30,7 @@
-> =20
->  enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
->  =09=09     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
-> -enum tpm_pcrs { TPM_PCR0 =3D 0, TPM_PCR8 =3D 8 };
-> +enum tpm_pcrs { TPM_PCR0 =3D 0, TPM_PCR8 =3D 8, TPM_PCR10 =3D 10 };
-> =20
->  /* digest size for IMA, fits SHA1 or MD5 */
->  #define IMA_DIGEST_SIZE=09=09SHA1_DIGEST_SIZE
-> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima=
-/ima_crypto.c
-> index 220b14920c37..011c3c76af86 100644
-> --- a/security/integrity/ima/ima_crypto.c
-> +++ b/security/integrity/ima/ima_crypto.c
-> @@ -823,13 +823,26 @@ static int ima_calc_boot_aggregate_tfm(char *digest=
-, u16 alg_id,
->  =09if (rc !=3D 0)
->  =09=09return rc;
-> =20
-> -=09/* cumulative sha1 over tpm registers 0-7 */
-> +=09/* cumulative digest over TPM registers 0-7 */
->  =09for (i =3D TPM_PCR0; i < TPM_PCR8; i++) {
->  =09=09ima_pcrread(i, &d);
->  =09=09/* now accumulate with current aggregate */
->  =09=09rc =3D crypto_shash_update(shash, d.digest,
->  =09=09=09=09=09 crypto_shash_digestsize(tfm));
->  =09}
-> +=09/*
-> +=09 * Extend cumulative digest over TPM registers 8-9, which contain
-> +=09 * measurement for the kernel command line (reg. 8) and image (reg. 9=
-)
-> +=09 * in a typical PCR allocation. Registers 8-9 are only included in
-> +=09 * non-SHA1 boot_aggregate digests to avoid ambiguity.
-> +=09 */
-> +=09if (alg_id !=3D TPM_ALG_SHA1) {
-> +=09=09for (i =3D TPM_PCR8; i < TPM_PCR10; i++) {
-> +=09=09=09ima_pcrread(i, &d);
-> +=09=09=09rc =3D crypto_shash_update(shash, d.digest,
-> +=09=09=09=09=09=09crypto_shash_digestsize(tfm));
-> +=09=09}
-> +=09}
->  =09if (!rc)
->  =09=09crypto_shash_final(shash, digest);
->  =09return rc;
-> --=20
-> 2.17.1
->=20
-
-Reviewed-by: Bruno Meneguele <bmeneg@redhat.com>
-
-I've tested this patch with both TPM 1.2 and TPM 2.0 + ima-evm-utils
-support patch. Everything seems fine.
-
-Thanks.
-
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
-
---8w3uRX/HFJGApMzv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7yT4wACgkQYdRkFR+R
-okN1EAgApl7aO6m1nHUaan+Iu9VccMELoK4mnHb3gCgwKZc16uXp1p+fxxwvIViJ
-honMESymPNb6656OK5VYAAA7x9EXQIdd6vZDSpcFVy+0RMxBPxlPR3JGciQSWsnu
-YqJcum3u2MPaRv0xmqrz7pCuHJ5fFVju5ouaS8oHrdpB9q3LsTgqL2L6mBd4qBoD
-9PG68MQOTEUoArQ+IIXTn4lBFGPHl4wM/my5lsO6zAZ7MPmqtoJQwwWbb3Qr/DUn
-IivKJlivRrnGkVFI4m6fcBYRshyVHmFii2RjVPUVrMdNpq3Je6CA8bdLxvQ6tw6m
-Kjs+LH+RbK6w2wJ3L7CW8ZgxPG+tmQ==
-=9sj9
------END PGP SIGNATURE-----
-
---8w3uRX/HFJGApMzv--
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
