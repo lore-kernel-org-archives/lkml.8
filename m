@@ -2,155 +2,109 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1498C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE50C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 889C720771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:01:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="31GeagmP"
+	by mail.kernel.org (Postfix) with ESMTP id 26EB920774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732618AbgFWNBU (ORCPT
+        id S1732622AbgFWNCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:01:20 -0400
-Received: from mail-mw2nam12on2044.outbound.protection.outlook.com ([40.107.244.44]:6117
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729504AbgFWNBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:01:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DtfBjoFc7VDJtmtS3wctK7rXS0QPeOCRYyS6kitelh0C1EmLcr6NMMt60eIhE8FUbmI54p7UQov1R4euIzMu8EfGP0uJ42hSfh3aaNskCsweVzY+3JVkAtXQaLdxxTKrBR6ZCpBjVTEzksnUvfwXEqUr/S2AvS0oGaOitvD1+Mqm+1vLmzmgeHTCPpoSVxLtqurZd2TkWUCm48ckUchqFJxt3yofD+sezt/xmEbYyw0Wv/exlfng/6vpJ4HJjS3wkE264HGZ4D9MIbZAgwsm9/w0bZIo0qOYJUaWgEKSR8Q6LF9U09hCH+V0GZtkB3VUZMG7eVgTlHSqe2emwIsOYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vzJL7hxvodkNwKTbGI3eQhM3hzchSpznYsMqyGRUXiM=;
- b=SsAvgz6SQTXTbcBox4WA1NNFCvmm9jhz7U6yCUcrEO0VEcy1W/EEHWShbw+EXW6VCe2OqHwqT8OjQFOVT74vhoO4O4sqHPJScY6+zucY8bEy/kLBHYRXlQveWYo7P9czeLpkqGGH+uV+Tkzgq2ruVh+9RqhCV2wFyC1hIiizXzIFs5kFHeo4NEas1tc6UCZDtjDAKGuXQwfEy05MgFoAnuehVVlwUr8Ah/ltxYNqYDjZYhn6w6qLCALsj8WuB0tR25hpunKEnBfsN0WW//lvatiGphVrTnz+/p4/tEe4sWNRsLyvt7ERBtbHCgS0sxB6fxkoktEIVvmFjifQahCNHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vzJL7hxvodkNwKTbGI3eQhM3hzchSpznYsMqyGRUXiM=;
- b=31GeagmPSbuKooBSbMX5dUaTSTMlupC+hjpaj7PeYPUJx1+zdo2FGTkbN0ZspYx4AESM3q48GfgzTR1/3xgT44AlmZ1sVeAr4hGP0f2PvAI0NTUHXHX0yAMFb9pEwBRNdktPJ54bk6Wafn8F8G2RNGuZIQTK740wyrTAWscFFwI=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2685.namprd12.prod.outlook.com (2603:10b6:805:67::33)
- by SN1PR12MB2541.namprd12.prod.outlook.com (2603:10b6:802:24::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Tue, 23 Jun
- 2020 13:01:15 +0000
-Received: from SN6PR12MB2685.namprd12.prod.outlook.com
- ([fe80::7864:3a08:ffa8:9123]) by SN6PR12MB2685.namprd12.prod.outlook.com
- ([fe80::7864:3a08:ffa8:9123%7]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 13:01:15 +0000
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To:     Smita.KoralahalliChannabasappa@amd.com, Yazen.Ghannam@amd.com
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Wei Huang <wei.huang2@amd.com>, x86@kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/mce, edac/mce_amd: Print PPIN in machine check records
-Date:   Tue, 23 Jun 2020 08:00:59 -0500
-Message-Id: <20200623130059.8870-1-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: DM6PR11CA0060.namprd11.prod.outlook.com
- (2603:10b6:5:14c::37) To SN6PR12MB2685.namprd12.prod.outlook.com
- (2603:10b6:805:67::33)
+        Tue, 23 Jun 2020 09:02:13 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:60600 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729504AbgFWNCN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:02:13 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U0W2oo1_1592917329;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0W2oo1_1592917329)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 23 Jun 2020 21:02:10 +0800
+Date:   Tue, 23 Jun 2020 21:02:09 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200623130209.GA8347@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <414b4cbf-02f5-0e90-df92-c0889e9ad65b@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ethanolx024ehost.amd.com (165.204.78.1) by DM6PR11CA0060.namprd11.prod.outlook.com (2603:10b6:5:14c::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Tue, 23 Jun 2020 13:01:14 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.78.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9f514c41-8bc4-40da-45b2-08d81775835e
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2541:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB254165AED80F7CE47C32504690940@SN1PR12MB2541.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
-X-Forefront-PRVS: 04433051BF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uUXrzEBu4C1wbdTnanCr7cauRINXFMOgZQeecGR9fw0X6lPxQYAZW/pBizRF+8Y/69VicsvboNfxC5VNlVEAPnEVcuHg9Gdsp3UabIjWS+/Zlyhi3H+lewi/WwziGs9n7tuUwjTzG3HDInDuPLEjOiHUHUBcwzLtJZ0i6MyU46gZqLbrQZNpV31E7p6/5ozjhDiXgLU6t+qCPOqzKf2gjgxfrx38eSv/aFCC+xAMxQMSej6U0JGXAP/nnuwK1HfD3EW5fo+NJI+WmPUl9jAvgvm6So+a5iXaAtbyPGwkTN/y7ZQ9AUNygygI+p5IFrrz
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(956004)(2616005)(36756003)(478600001)(1076003)(6636002)(86362001)(8676002)(83380400001)(8936002)(7416002)(6486002)(26005)(2906002)(16526019)(5660300002)(6666004)(66946007)(66476007)(7696005)(66556008)(54906003)(4326008)(316002)(186003)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: FDxhsRId7Ihr7i/Jt9D36jhsz1MDP38bwCNod+If8J82DFr5sGuRKyYUDEqtIVwScTWmHmwK+gNf2OXXvnxRLzSKVy0XHU1yd3C1dyHgFIqPfbCcBnLqMtci54jXWVqTfJ3+5p3xkZT5BlDnvk+cndTQKk1BgxoXmzooN6P5e3rwsC/l//RYMh2ZLDrDcD4ndDnvAyGXLlhqxzGsqaDqVaY5wiBLSqChe1VBpPREy+VSN5Gj2SFKLDsD70PLlDSN0x5SmFCNQn3YhumxKoDL5JRBKaylm8BuelMzBxZ8lIMer/TsyK0tTAxymA3HVLdmOez08NvyPClY3WlcajZQPkrCQntZ60ZF8d6sTXJsrCiwC0ZPOaCNJbo3fvenxWr0Cs2zr84sX3Cl3CEV12eOdjQ8Qfb8Y596eYta5WeZJt0mnd4/r2bANbB1Bg2P4c1T88W1lfcDMmndYgMMSCm/inwehNgP9obcIsbo71dPgmw=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f514c41-8bc4-40da-45b2-08d81775835e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 13:01:15.7657
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g93lPBm7CZK11OT7k91twfHcuuytab2PDj6EYkSadTpz1mhZFELLkc9QdmDpMuE/2+mm2Sv1atZMUhD0NO/vqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2541
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <414b4cbf-02f5-0e90-df92-c0889e9ad65b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For AMD processors that support Protected Processor Identification
-Number (PPIN), the PPIN information is included in machine check records.
-If present, print it along with other decoded MCA information.
+On Tue, Jun 23, 2020 at 02:44:02PM +0200, David Hildenbrand wrote:
+>On 23.06.20 11:42, Wei Yang wrote:
+>> For early sections, we assumes its memmap will never be partially
+>> removed. But current behavior breaks this.
+>> 
+>> Let's correct it.
+>> 
+>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>> ---
+>>  mm/sparse.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/mm/sparse.c b/mm/sparse.c
+>> index b2b9a3e34696..1a0069f492f5 100644
+>> --- a/mm/sparse.c
+>> +++ b/mm/sparse.c
+>> @@ -825,10 +825,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>>  		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
+>>  	}
+>>  
+>> -	if (section_is_early && memmap)
+>> -		free_map_bootmem(memmap);
+>> -	else
+>> +	if (!section_is_early)
+>>  		depopulate_section_memmap(pfn, nr_pages, altmap);
+>> +	else if (memmap)
+>> +		free_map_bootmem(memmap);
+>>  
+>>  	if (empty)
+>>  		ms->section_mem_map = (unsigned long)NULL;
+>> 
+>
+>Agreed, that's what pfn_valid() and section_activate() expect.
+>
+>"If we hot-add memory into such a section then we do not need to
+>populate the memmap and can simply reuse what is already there." - this
+>is the case when hot-adding sub-sections into partially populated early
+>sections, and has to be the case when re-hot-adding after hot-removing.
+>
+>Acked-by: David Hildenbrand <david@redhat.com>
+>
+>
+>I am also not convinced that the complicated sparse_decode_mem_map()
+>handling in that function is required - ms->section_mem_map &
+>SECTION_MAP_MASK is sufficient for this use case of removing the memmap
+>of a full early section once empty.
+>
 
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: Wei Huang <wei.huang2@amd.com>
-Cc: x86@kernel.org
-Cc: linux-edac@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/x86/kernel/cpu/mce/core.c | 2 ++
- drivers/edac/mce_amd.c         | 3 +++
- 2 files changed, 5 insertions(+)
+You mean remove this line?
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index ce9120c4f740..0865349502d5 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -244,6 +244,8 @@ static void __print_mce(struct mce *m)
- 		pr_cont("ADDR %llx ", m->addr);
- 	if (m->misc)
- 		pr_cont("MISC %llx ", m->misc);
-+	if (m->ppin)
-+		pr_cont("PPIN %llx ", m->ppin);
- 
- 	if (mce_flags.smca) {
- 		if (m->synd)
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index 2b5401db56ad..325aedf46ff2 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -1094,6 +1094,9 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
- 	if (m->status & MCI_STATUS_ADDRV)
- 		pr_emerg(HW_ERR "Error Addr: 0x%016llx\n", m->addr);
- 
-+	if (m->ppin)
-+		pr_emerg(HW_ERR "PPIN: 0x%016llx\n", m->ppin);
-+
- 	if (boot_cpu_has(X86_FEATURE_SMCA)) {
- 		pr_emerg(HW_ERR "IPID: 0x%016llx", m->ipid);
- 
+    	memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+
+Then what to passed to free_map_bootmem() ?
+
+>-- 
+>Thanks,
+>
+>David / dhildenb
+
 -- 
-2.17.1
-
+Wei Yang
+Help you, Help me
