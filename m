@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09996C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0342078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A311F21924
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944905;
-	bh=x2wbzz4CLa6clGyCMHuTUZGSWVbameuz+cruEF/5Ah0=;
+	s=default; t=1592944910;
+	bh=TMiyGgn59z1wPXiit7wOGB9KEZd/5dwFmdSTrlJu4DE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wAnt0MtuA/NDEyC0gHQ4yFVg72li+UCQ6Zjb+z+xYTjiAR5rVwi5FfiSBSLY8ApHF
-	 SrmzQeOpqJF6qjoVDT1JZ2xvZYqHtxXEb1wxIBnKV+/OJayC3ZJit70pi1u9diA/YR
-	 OklmORtqP8+t7Ly5U2QYH0ToJDiukAU/9AJrYnzQ=
+	b=mK/NaON/D17pVwTVgXiAYEQIpRsc0gwAOIw8vwxmlM0s+BOWlxDP8GS/yFcAXfQYu
+	 7McxmkXsRMipRcDVmwWE10mae2kMjkUAKHhd22TItKLhjKeyx2Tk+y5USlfyyG9Riw
+	 WcI5s5YKnbLb7u3NNh41VcGOmjqPS74/tXpo0yZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390186AbgFWUln (ORCPT
+        id S2403872AbgFWUlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:41:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392342AbgFWUle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:34 -0400
+        id S2391913AbgFWUlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91DEA2053B;
-        Tue, 23 Jun 2020 20:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B7D52053B;
+        Tue, 23 Jun 2020 20:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944895;
-        bh=x2wbzz4CLa6clGyCMHuTUZGSWVbameuz+cruEF/5Ah0=;
+        s=default; t=1592944897;
+        bh=TMiyGgn59z1wPXiit7wOGB9KEZd/5dwFmdSTrlJu4DE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lsbeF4LzRf3wc8Po4FpQf2Qk/rz3Kz8A4cALhzbibUXlBeUgrLrDyuI3x+Dhges8B
-         tae3WZqXNhlKnejVs9AI4Tfy/SvX59+ZjODkjqCt+CfbhbcbqfUXktGnBe4yIoar28
-         cYuHCP8SAEp2LyYUVJ8kdHAai6ujj8EyjZmIpxEc=
+        b=EPoHpwyYYB8MCJCvWF6kM4Fn9vZMDC0jm6GXwvN7DYnRHCioPBG45NnLhLRMom419
+         M2un7XuGaGdOnPr2drqiVLaYr8pfyIOyr51R8WKEqa0eZLNjIWvVRNx1XXrFUD0Owb
+         DYKmh4lLvVXSIo+OZrZ1h4cAzgg3I8LX/pu/4Atg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, YiFei Zhu <zhuyifei@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stanislav Fomichev <sdf@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 126/206] rxrpc: Adjust /proc/net/rxrpc/calls to display call->debug_id not user_ID
-Date:   Tue, 23 Jun 2020 21:57:34 +0200
-Message-Id: <20200623195323.166323850@linuxfoundation.org>
+Subject: [PATCH 4.19 160/206] net/filter: Permit reading NET in load_bytes_relative when MAC not set
+Date:   Tue, 23 Jun 2020 21:58:08 +0200
+Message-Id: <20200623195324.870879506@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,51 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: YiFei Zhu <zhuyifei1999@gmail.com>
 
-[ Upstream commit 32f71aa497cfb23d37149c2ef16ad71fce2e45e2 ]
+[ Upstream commit 0f5d82f187e1beda3fe7295dfc500af266a5bd80 ]
 
-The user ID value isn't actually much use - and leaks a kernel pointer or a
-userspace value - so replace it with the call debug ID, which appears in trace
-points.
+Added a check in the switch case on start_header that checks for
+the existence of the header, and in the case that MAC is not set
+and the caller requests for MAC, -EFAULT. If the caller requests
+for NET then MAC's existence is completely ignored.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+There is no function to check NET header's existence and as far
+as cgroup_skb/egress is concerned it should always be set.
+
+Removed for ptr >= the start of header, considering offset is
+bounded unsigned and should always be true. len <= end - mac is
+redundant to ptr + len <= end.
+
+Fixes: 3eee1f75f2b9 ("bpf: fix bpf_skb_load_bytes_relative pkt length check")
+Signed-off-by: YiFei Zhu <zhuyifei@google.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Stanislav Fomichev <sdf@google.com>
+Link: https://lore.kernel.org/bpf/76bb820ddb6a95f59a772ecbd8c8a336f646b362.1591812755.git.zhuyifei@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/proc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/core/filter.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/net/rxrpc/proc.c b/net/rxrpc/proc.c
-index 9805e3b85c361..81a765dd8c9be 100644
---- a/net/rxrpc/proc.c
-+++ b/net/rxrpc/proc.c
-@@ -72,7 +72,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
- 			 "Proto Local                                          "
- 			 " Remote                                         "
- 			 " SvID ConnID   CallID   End Use State    Abort   "
--			 " UserID           TxSeq    TW RxSeq    RW RxSerial RxTimo\n");
-+			 " DebugId  TxSeq    TW RxSeq    RW RxSerial RxTimo\n");
- 		return 0;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 40b3af05c883c..b5521b60a2d4f 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -1730,25 +1730,27 @@ BPF_CALL_5(bpf_skb_load_bytes_relative, const struct sk_buff *, skb,
+ 	   u32, offset, void *, to, u32, len, u32, start_header)
+ {
+ 	u8 *end = skb_tail_pointer(skb);
+-	u8 *net = skb_network_header(skb);
+-	u8 *mac = skb_mac_header(skb);
+-	u8 *ptr;
++	u8 *start, *ptr;
+ 
+-	if (unlikely(offset > 0xffff || len > (end - mac)))
++	if (unlikely(offset > 0xffff))
+ 		goto err_clear;
+ 
+ 	switch (start_header) {
+ 	case BPF_HDR_START_MAC:
+-		ptr = mac + offset;
++		if (unlikely(!skb_mac_header_was_set(skb)))
++			goto err_clear;
++		start = skb_mac_header(skb);
+ 		break;
+ 	case BPF_HDR_START_NET:
+-		ptr = net + offset;
++		start = skb_network_header(skb);
+ 		break;
+ 	default:
+ 		goto err_clear;
  	}
  
-@@ -104,7 +104,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
- 	rx_hard_ack = READ_ONCE(call->rx_hard_ack);
- 	seq_printf(seq,
- 		   "UDP   %-47.47s %-47.47s %4x %08x %08x %s %3u"
--		   " %-8.8s %08x %lx %08x %02x %08x %02x %08x %06lx\n",
-+		   " %-8.8s %08x %08x %08x %02x %08x %02x %08x %06lx\n",
- 		   lbuff,
- 		   rbuff,
- 		   call->service_id,
-@@ -114,7 +114,7 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
- 		   atomic_read(&call->usage),
- 		   rxrpc_call_states[call->state],
- 		   call->abort_code,
--		   call->user_call_ID,
-+		   call->debug_id,
- 		   tx_hard_ack, READ_ONCE(call->tx_top) - tx_hard_ack,
- 		   rx_hard_ack, READ_ONCE(call->rx_top) - rx_hard_ack,
- 		   call->rx_serial,
+-	if (likely(ptr >= mac && ptr + len <= end)) {
++	ptr = start + offset;
++
++	if (likely(ptr + len <= end)) {
+ 		memcpy(to, ptr, len);
+ 		return 0;
+ 	}
 -- 
 2.25.1
 
