@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE68C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F80CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76EF20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762D920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946467;
-	bh=QH+neuwgJTaNsiAoFnlGmSL3MuUoC4K7tqTFYVtZokE=;
+	s=default; t=1592946474;
+	bh=uXUqcb3/5OyWB5KqDbr0UKr9O1qqmmzkYoU7K1W9SoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ei8CIirPZl9Y1/yme8QpbTDh00mFZxL8MKHmECPpA8MwwDM7y3hppKl6oL/K/DJvw
-	 Og7UQ4ETvkMAQW72GJ3zTgVqMPskMGTfskDkoNtM7Sxf9pt+xVLcmfxYTEs+icOl41
-	 OmFx14zHyl5IHXYtKOQpa0O662RYMkZbG5AgHqJ4=
+	b=ayYfoMqyVURZsNgBFLOPZ397dSOQEhSVZ+TbgaJp1RjziQvw+hnJARhFDOexQVaWI
+	 fnoeg1agD9fvqz2wV/5vGjgqEYUJ88APwwPmzo/bZ3dVYwy5ga5p5eLt65qNA2UmwX
+	 9IQUyHWiUL9rD+sujeSgc1LLGD5eW8tqt4FUG+K0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403795AbgFWUfH (ORCPT
+        id S2391651AbgFWVHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:35:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57170 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:07:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391639AbgFWUe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:59 -0400
+        id S2391652AbgFWUfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:35:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80B98206C3;
-        Tue, 23 Jun 2020 20:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F2AB2080C;
+        Tue, 23 Jun 2020 20:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944499;
-        bh=QH+neuwgJTaNsiAoFnlGmSL3MuUoC4K7tqTFYVtZokE=;
+        s=default; t=1592944503;
+        bh=uXUqcb3/5OyWB5KqDbr0UKr9O1qqmmzkYoU7K1W9SoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ph/ropRxMqEFR9r3qkeot2Wrt3nqbQRzxsCNP5hdwW70QAHRHkdXqq86UAiN77Yzc
-         Fdxq8p4dFgOWQGRR9bLQJObrfKb63tl5KDfDPnsS85qew7Ao//afjaKuB/yF3buvgt
-         X7dGn568UNnkd/igB5G/RQ1g7cw8x3C1LU1UyzQk=
+        b=lM+8vDiHX6LiQxhEnZS1bVG/qVE+tWNZI0mw6zuiKSee+WHOX/KN6DRqYl+HxeaAR
+         UOlybzVaWggad4ra0IwCzN16GVpsKTffkEzF6aP0oXjZ1GhUq07KVkiw0BX7Fm80/O
+         Uet8XzKRmYZLSuOITafxkB1vfg05J14zvKl6lVWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Andreas Klinger <ak@it-klinger.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/206] PCI: Allow pci_resize_resource() for devices on root bus
-Date:   Tue, 23 Jun 2020 21:55:42 +0200
-Message-Id: <20200623195317.663954863@linuxfoundation.org>
+Subject: [PATCH 4.19 016/206] iio: bmp280: fix compensation of humidity
+Date:   Tue, 23 Jun 2020 21:55:44 +0200
+Message-Id: <20200623195317.761245881@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,51 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Andreas Klinger <ak@it-klinger.de>
 
-[ Upstream commit d09ddd8190fbdc07696bf34b548ae15aa1816714 ]
+[ Upstream commit dee2dabc0e4115b80945fe2c91603e634f4b4686 ]
 
-When resizing a BAR, pci_reassign_bridge_resources() is invoked to bring
-the bridge windows of parent bridges in line with the new BAR assignment.
+Limit the output of humidity compensation to the range between 0 and 100
+percent.
 
-This assumes the device whose BAR is being resized lives on a subordinate
-bus, but this is not necessarily the case. A device may live on the root
-bus, in which case dev->bus->self is NULL, and passing a NULL pci_dev
-pointer to pci_reassign_bridge_resources() will cause it to crash.
+Depending on the calibration parameters of the individual sensor it
+happens, that a humidity above 100 percent or below 0 percent is
+calculated, which don't make sense in terms of relative humidity.
 
-So let's make the call to pci_reassign_bridge_resources() conditional on
-whether dev->bus->self is non-NULL in the first place.
+Add a clamp to the compensation formula as described in the datasheet of
+the sensor in chapter 4.2.3.
 
-Fixes: 8bb705e3e79d84e7 ("PCI: Add pci_resize_resource() for resizing BARs")
-Link: https://lore.kernel.org/r/20200421162256.26887-1-ardb@kernel.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
+Although this clamp is documented, it was never in the driver of the
+kernel.
+
+It depends on the circumstances (calibration parameters, temperature,
+humidity) if one can see a value above 100 percent without the clamp.
+The writer of this patch was working with this type of sensor without
+noting this error. So it seems to be a rare event when this bug occures.
+
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/setup-res.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/iio/pressure/bmp280-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index d8ca40a976934..d21fa04fa44d2 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -439,10 +439,11 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index d47922a1d0f37..074f6f865008c 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -261,6 +261,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
+ 		+ (s32)2097152) * calib->H2 + 8192) >> 14);
+ 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
  
- 	/* Check if the new config works by trying to assign everything. */
--	ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
--	if (ret)
--		goto error_resize;
--
-+	if (dev->bus->self) {
-+		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
-+		if (ret)
-+			goto error_resize;
-+	}
- 	return 0;
++	var = clamp_val(var, 0, 419430400);
++
+ 	return var >> 12;
+ };
  
- error_resize:
 -- 
 2.25.1
 
