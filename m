@@ -2,136 +2,261 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B089AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F168C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A942070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxseotXc"
+	by mail.kernel.org (Postfix) with ESMTP id 3E77C20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592945922;
+	bh=Y5ymKiozLDx8xZN9NrgkWKqnCoErh0rxWEbwdG5uAz8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DzrNZq0dzs2XNSbWRLsYasjgyV8YgHyGLSAtWukgIlLsH2liZKJoDzcJtN3APK9we
+	 0kFmEblp0+wWGw09ynLsQPAHVlxKzas5pnaWQsFkLb7QIUNuITSLLXXkli+8h3trhK
+	 g9smqEtKF+HujLCXI7CagSQQgpW80zUQB9rbd2eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392370AbgFWU6b (ORCPT
+        id S2392704AbgFWU6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403922AbgFWU61 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:58:27 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B6B1C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:58:27 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so9636993plb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5A6ggZJSYhmKqxXi023++ALz1/yxx4OWOUKivzMyp6s=;
-        b=DxseotXcNXTsPoLCoiUOchZ8vWlYjgGlc5pJin8Funwm38e58S6Vs6ThS0VnHsLy3Y
-         G0+5J+bDcwdJalGvujwkKECF8YwFaH/FF7FhtDjsOxRFZHQQ7a41EdMkoLkY3Q/D1yMF
-         7R28udbe5Dmic+dlNUyg5g4kf7ON9BKKw2sag4zZAK8GzzcK/muIUpTEpZEKr3NAqVTi
-         SLpDICS+0pte5QbdVXgDNuZhB7dW+ReGJfUDg0Jw1w1mMwLbOlRbTCcq07F2rtqXLtko
-         4FwF5xJqsJgpaSs0VDlgA65QSo2M1Tk1RVRgylpEpJIy2KezrwhmMN8lfsdpQqRn0+4X
-         hv1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5A6ggZJSYhmKqxXi023++ALz1/yxx4OWOUKivzMyp6s=;
-        b=YAXyoAsB1s9r3RXOp4uIxqQmNnfYurXE1ka3zX6ZyroE23BJeyYeiFzMmP8Ehy+Op1
-         D/S/l3rWlujO+mzCfT7Ja9AID4aj4gQBvXbE1gWa0bzhvlP3YKXbXQyhV9DHxa5fvaBD
-         4NRYrFQ7luKqmiIAAvrDA65Gq2dRt4oeTpDbGxivbl4H8jRp3yEo7CIknIUzx4pdyeh3
-         Mwo09FG5m5Lx/VQ/vKSXo4QK4HTFIPKR/zumH82yx6PvVuj9wZrZvGvDltySO+7sMKRC
-         e7i5dIxF47wuw9x8MDZFoyEoq7TxBFsRkMCVvut1KIoyigIM7UJoafrT3eV+U6xolhnT
-         MK+w==
-X-Gm-Message-State: AOAM530+YD3sLtGmkXROzKohLm6Ecu8RHlr14sVH2ky8p+tlICHwDpYn
-        inZP72W+G/94b1nrgyAbo0VvdZHqJa1x5tkhNmH5Sg==
-X-Google-Smtp-Source: ABdhPJwgNQt/BzJGgIgW1Z6IWYFFQo4/opMM9ra7kx2PUquYyLheC2bO97mcDzSHs3i/leVIx9Lzg4MfUrXy2lkHeRw=
-X-Received: by 2002:a17:90a:21ef:: with SMTP id q102mr3895pjc.101.1592945906532;
- Tue, 23 Jun 2020 13:58:26 -0700 (PDT)
+        Tue, 23 Jun 2020 16:58:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392334AbgFWUlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2438C2078A;
+        Tue, 23 Jun 2020 20:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592944902;
+        bh=Y5ymKiozLDx8xZN9NrgkWKqnCoErh0rxWEbwdG5uAz8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CI3wY2PoRsqcMePv/WEcgtIsgV3qJmhBtOPT9u2TQprhgR/Iwqzozl7wnDqG5T/VX
+         +4FauHOysCIJfZzf1SGgoUAdQPhT2CfDV8/CGTYlwfuObh1/Sg2buhBoGYv0VZG8tJ
+         mN765JsO55oSL8avbiiesbzJrR0DIE7U5npyx7XM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>, Jan Kara <jack@suse.cz>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 170/206] block: Fix use-after-free in blkdev_get()
+Date:   Tue, 23 Jun 2020 21:58:18 +0200
+Message-Id: <20200623195325.379762725@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
+References: <20200623195316.864547658@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200622190149.GL32200@zn.tnic> <B4D00859-000A-4F8C-8CFB-45B9BBCCA16D@amacapital.net>
- <20200623102831.GB32590@zn.tnic> <CALCETrXfaEr9OGc5EDpxnhRZxFk5YZBBNVH-N32Eg8V8diwqXg@mail.gmail.com>
- <20200623184726.GI32590@zn.tnic> <CAKwvOdnt+8RR=1JPjDNaVY8T1K7wmqFjSGM7XNUUGRb=t1hiWQ@mail.gmail.com>
- <20200623191336.GK32590@zn.tnic>
-In-Reply-To: <20200623191336.GK32590@zn.tnic>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 23 Jun 2020 13:58:15 -0700
-Message-ID: <CAKwvOdkTYqpphqr2cvL2pDuK33aYzxXsLDQ6+_PSUk6qxUuQ7A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] selftests/fpu: Add an FPU selftest
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        jpa@kernelbug.mail.kapsi.fi, Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 12:13 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Jun 23, 2020 at 12:07:13PM -0700, Nick Desaulniers wrote:
-> > You already have a conditional below for CC_IS_GCC; just add an else
-> > and unconditionally add -msse2.  You *should* use -msse2 for GCC 7.1+
-> > IMO.
->
-> Why if one can write it more compact with cc-option?
->
-> FPU_CFLAGS += $(call cc-option,-msse2,)
+From: Jason Yan <yanaijie@huawei.com>
 
-This will always be true though, right? For both compilers.  So why
-test for it via cc-option when you can just do:
+[ Upstream commit 2d3a8e2deddea6c89961c422ec0c5b851e648c14 ]
 
-FPU_CFLAGS += -msse2
+In blkdev_get() we call __blkdev_get() to do some internal jobs and if
+there is some errors in __blkdev_get(), the bdput() is called which
+means we have released the refcount of the bdev (actually the refcount of
+the bdev inode). This means we cannot access bdev after that point. But
+acctually bdev is still accessed in blkdev_get() after calling
+__blkdev_get(). This results in use-after-free if the refcount is the
+last one we released in __blkdev_get(). Let's take a look at the
+following scenerio:
 
-Though we might only want -msse2 if CC_IS_CLAG...I don't remember now
-if GCC will select SSE instructions that require 16B operands at
--msse2, which will be problematic for the -mpreferred-stack-boundary=4
-case.
+  CPU0            CPU1                    CPU2
+blkdev_open     blkdev_open           Remove disk
+                  bd_acquire
+		  blkdev_get
+		    __blkdev_get      del_gendisk
+					bdev_unhash_inode
+  bd_acquire          bdev_get_gendisk
+    bd_forget           failed because of unhashed
+	  bdput
+	              bdput (the last one)
+		        bdev_evict_inode
 
-My point was more so about avoiding needless cc-option checks when
-they're tautological.
+	  	    access bdev => use after free
 
-> > I recommend a version check for GCC < 7.1, or simply disabling the
-> > self test if the version of GCC used is older than 7.1.
->
-> See Andy's suggestion upthread.
+[  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
+[  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
+[  459.352347]
+[  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
+[  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[  459.354947] Call Trace:
+[  459.355337]  dump_stack+0x111/0x19e
+[  459.355879]  ? __lock_acquire+0x24c1/0x31b0
+[  459.356523]  print_address_description+0x60/0x223
+[  459.357248]  ? __lock_acquire+0x24c1/0x31b0
+[  459.357887]  kasan_report.cold+0xae/0x2d8
+[  459.358503]  __lock_acquire+0x24c1/0x31b0
+[  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
+[  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.361123]  ? finish_task_switch+0x125/0x600
+[  459.361812]  ? finish_task_switch+0xee/0x600
+[  459.362471]  ? mark_held_locks+0xf0/0xf0
+[  459.363108]  ? __schedule+0x96f/0x21d0
+[  459.363716]  lock_acquire+0x111/0x320
+[  459.364285]  ? blkdev_get+0xce/0xbe0
+[  459.364846]  ? blkdev_get+0xce/0xbe0
+[  459.365390]  __mutex_lock+0xf9/0x12a0
+[  459.365948]  ? blkdev_get+0xce/0xbe0
+[  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
+[  459.367130]  ? blkdev_get+0xce/0xbe0
+[  459.367678]  ? destroy_inode+0xbc/0x110
+[  459.368261]  ? mutex_trylock+0x1a0/0x1a0
+[  459.368867]  ? __blkdev_get+0x3e6/0x1280
+[  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
+[  459.370114]  ? blkdev_get+0xce/0xbe0
+[  459.370656]  blkdev_get+0xce/0xbe0
+[  459.371178]  ? find_held_lock+0x2c/0x110
+[  459.371774]  ? __blkdev_get+0x1280/0x1280
+[  459.372383]  ? lock_downgrade+0x680/0x680
+[  459.373002]  ? lock_acquire+0x111/0x320
+[  459.373587]  ? bd_acquire+0x21/0x2c0
+[  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.374780]  blkdev_open+0x202/0x290
+[  459.375325]  do_dentry_open+0x49e/0x1050
+[  459.375924]  ? blkdev_get_by_dev+0x70/0x70
+[  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
+[  459.377192]  ? inode_permission+0xbe/0x3a0
+[  459.377818]  path_openat+0x148c/0x3f50
+[  459.378392]  ? kmem_cache_alloc+0xd5/0x280
+[  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.379802]  ? path_lookupat.isra.0+0x900/0x900
+[  459.380489]  ? __lock_is_held+0xad/0x140
+[  459.381093]  do_filp_open+0x1a1/0x280
+[  459.381654]  ? may_open_dev+0xf0/0xf0
+[  459.382214]  ? find_held_lock+0x2c/0x110
+[  459.382816]  ? lock_downgrade+0x680/0x680
+[  459.383425]  ? __lock_is_held+0xad/0x140
+[  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.384668]  ? _raw_spin_unlock+0x1f/0x30
+[  459.385280]  ? __alloc_fd+0x448/0x560
+[  459.385841]  do_sys_open+0x3c3/0x500
+[  459.386386]  ? filp_open+0x70/0x70
+[  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
+[  459.388342]  ? do_syscall_64+0x1a/0x520
+[  459.388930]  do_syscall_64+0xc3/0x520
+[  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.390248] RIP: 0033:0x416211
+[  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
+04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
+   05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
+      01
+[  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+[  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
+[  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
+[  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
+[  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
+[  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
+[  459.400168]
+[  459.400430] Allocated by task 20132:
+[  459.401038]  kasan_kmalloc+0xbf/0xe0
+[  459.401652]  kmem_cache_alloc+0xd5/0x280
+[  459.402330]  bdev_alloc_inode+0x18/0x40
+[  459.402970]  alloc_inode+0x5f/0x180
+[  459.403510]  iget5_locked+0x57/0xd0
+[  459.404095]  bdget+0x94/0x4e0
+[  459.404607]  bd_acquire+0xfa/0x2c0
+[  459.405113]  blkdev_open+0x110/0x290
+[  459.405702]  do_dentry_open+0x49e/0x1050
+[  459.406340]  path_openat+0x148c/0x3f50
+[  459.406926]  do_filp_open+0x1a1/0x280
+[  459.407471]  do_sys_open+0x3c3/0x500
+[  459.408010]  do_syscall_64+0xc3/0x520
+[  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.409415]
+[  459.409679] Freed by task 1262:
+[  459.410212]  __kasan_slab_free+0x129/0x170
+[  459.410919]  kmem_cache_free+0xb2/0x2a0
+[  459.411564]  rcu_process_callbacks+0xbb2/0x2320
+[  459.412318]  __do_softirq+0x225/0x8ac
 
-Thread for other travelers:
-https://lore.kernel.org/lkml/CALCETrXXzt8WZMs3dsReCJ5wdF3zhxFmUtGnmdCgV7_exFUKKQ@mail.gmail.com/
+Fix this by delaying bdput() to the end of blkdev_get() which means we
+have finished accessing bdev.
 
-When Andy says "consider dropping the problematic GCC version" I
-wonder if it was meant *just for this selftest* as I suggested, or
-outright (which is untenable IMO, as it's a large jump to GCC 7.1+).
+Fixes: 77ea887e433a ("implement in-kernel gendisk events handling")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/block_dev.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-> And I agree too that using cc-option is better than simply tying it to a
-> compiler version.
-
-I agree that will differentiate better than a version check; but it's
-still dangerous IMO to mix and match stack alignments.
-
-> Who knows what compiler has what backported. In such
-> cases a version number means nothing.
-
-I'm not sure I agree, but I'll take feature detection any day over
-version detection.
-
->
-> > ^ looks familiar ;)
->
-> It has been pasted around the kernel, I came to realize today. :-)
-
-Guilty, your honor. :P
-
-Maybe the feature test should be copy+pasta'd to those other places in
-the kernel, rather than the version check?
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index c158bad9a0752..8ac8f7469354b 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1463,10 +1463,8 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	 */
+ 	if (!for_part) {
+ 		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
+-		if (ret != 0) {
+-			bdput(bdev);
++		if (ret != 0)
+ 			return ret;
+-		}
+ 	}
+ 
+  restart:
+@@ -1535,8 +1533,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 				goto out_clear;
+ 			BUG_ON(for_part);
+ 			ret = __blkdev_get(whole, mode, 1);
+-			if (ret)
++			if (ret) {
++				bdput(whole);
+ 				goto out_clear;
++			}
+ 			bdev->bd_contains = whole;
+ 			bdev->bd_part = disk_get_part(disk, partno);
+ 			if (!(disk->flags & GENHD_FL_UP) ||
+@@ -1586,7 +1586,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	disk_unblock_events(disk);
+ 	put_disk_and_module(disk);
+  out:
+-	bdput(bdev);
+ 
+ 	return ret;
+ }
+@@ -1672,6 +1671,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
+ 		bdput(whole);
+ 	}
+ 
++	if (res)
++		bdput(bdev);
++
+ 	return res;
+ }
+ EXPORT_SYMBOL(blkdev_get);
 -- 
-Thanks,
-~Nick Desaulniers
+2.25.1
+
+
+
