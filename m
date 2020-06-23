@@ -2,118 +2,141 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73361C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1020DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 435C0206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC916206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pCU7BT0t"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hLPpC7r7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732244AbgFWKJT (ORCPT
+        id S1732202AbgFWKK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728265AbgFWKJT (ORCPT
+        Tue, 23 Jun 2020 06:10:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42368 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732005AbgFWKK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:09:19 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C34AC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:09:19 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id c194so18375023oig.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:09:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rU2hdhGD7fNtW6Y+12AGojPtiGkpRBwEsJIOODw6oSk=;
-        b=pCU7BT0tDtwCvaiAm4xPhpb1ZoO7AvlAMIiGWxQqFb9kiDu3fiYmT+Y1yteEWeSc8M
-         N1dfj19zTPci8X2KQTYhNOI719d7om5Q3LDRcDayt/Or/0DdPiNQ/Yu2eFHh7B9bQAk/
-         yhZILXAelpJfhCF34X76NuMC0NO+V2pFFftCrfwqJ/DNjQ7EzfIAYp21TpEW3BncSE2u
-         ADuFCObQQiM6P0oROGxUywcr1Xmu6rKUJ6P/+pTuhSyUWRhVizBeUVr3R7/6w9hGV40t
-         t/q9hOcDfwTdpaOkVqoy+jWDDyPuLd1gcisny5nVn5726xXHQfo6b6FjfE1K4dSGIqJ/
-         7rUw==
+        Tue, 23 Jun 2020 06:10:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592907055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e9EXuJsowvJmInT502RC222CM0yXwh7m1JZTr0Jb8Os=;
+        b=hLPpC7r7Ou1VcKAFREj0gshb1JOw4GsBBJy6tEqeZHt9w0PFJEfnpYH+yf0TijbZd5P7kk
+        dtRdJyWXvMOTwdJ96KRWllWH+oZCpzRg+WbuB/7uL11RD+1aX9ufOey2bvxTtfK5A38R7T
+        3Zw+HeL2WtaLdIAMFW8wLDZBFIuUapQ=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-507-CxvkpNFoN0qiCGAEXQW3Aw-1; Tue, 23 Jun 2020 06:10:54 -0400
+X-MC-Unique: CxvkpNFoN0qiCGAEXQW3Aw-1
+Received: by mail-pg1-f199.google.com with SMTP id z187so12371710pgd.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:10:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rU2hdhGD7fNtW6Y+12AGojPtiGkpRBwEsJIOODw6oSk=;
-        b=DC1JqkdHcYo4GblBpDEEDLOHFjJrv3OPa9SUeih0xjOiNi8aK5Pi6/8fjKE5l4peSt
-         PF3zAQsGltiEG8FI8961RRnj77AmXFVUjLFLCFu3pWU6RWA2ohemxr588ljZxTMPSd8c
-         OrrJK57H0XQjOgzRBH1lsDREnbtnQ9HlWqV/ae4D+MjW0NMEogJiZcK0GFbTNHL1iiAj
-         uagRhmmUE3VhxwIhIvaO1/YTwk46tnRcUObZbe26eV7JN78GMzdkJNgjI1Pbsc7LWFTp
-         vGDebOZBXr+0IML6l+KaM0KCnJhR+UMCzr4jzjIzUp4PeEHrxwAdH75D0RterxKQRXuh
-         MIJw==
-X-Gm-Message-State: AOAM533uv/6Jb1YsU4G379vLYE24K9Rk2Bc+3NsnKNboqRg+NbPy2HqV
-        xGHiypPbtIMnGZ3v5mX1jhfNfDCTY/8xZG62Mw5c2g==
-X-Google-Smtp-Source: ABdhPJyLbqT3YNW3hb8nC+z6sAupP/viLWv3tDVCgY+urTIUfRq5q9195OLwSA9zcAZDtENjTwGGr82qLFRD3gKojPU=
-X-Received: by 2002:aca:530e:: with SMTP id h14mr15692305oib.172.1592906958117;
- Tue, 23 Jun 2020 03:09:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e9EXuJsowvJmInT502RC222CM0yXwh7m1JZTr0Jb8Os=;
+        b=GojlHqrx7YE/2rD4IQXaHBfXHEXE8gA+Ios0eFJHUWxSbP7NjMiVcqXyGkqYyFzXIt
+         FdWml1hstrSQfJZeBwgTdZ5lpm87g79Jg0E4lhp7U69LdmzVsUgEFl5zGfA9wlCsRz0r
+         39LX9zJQQqSUVQ4feKEwU3Uxkpn4mrhiTZEoqmo+UjvzZSjiZ+Ik2E48i29A+sA1tj8M
+         nDbRpd4/tvE29vNPprGqa/yZgLvRNio1Nd5C97cKxqE2FMHbVa6mdhHUELy/BMOrPXoP
+         qqyCTJv7UGpdQjH+gflXsBTOuR5vdkSjynEa3udCHEXCP87I+UHSSzd+FfNhkw/nMsb5
+         gcGQ==
+X-Gm-Message-State: AOAM530X5aZfhrBe/kj4ayJ5Q9ayjufSyQN1qgpuRNNK+gh8OOexkNYk
+        1t/Kf46OCFCvtQha9AdfpYw5RM1sMR77kfqwVrIkmLg+TPqYCsLO9/JQgMwkK13XYs9pR5Je6z/
+        tFa5O9WMjV0tsjLwxzQqi9GG8
+X-Received: by 2002:a62:770d:: with SMTP id s13mr25169547pfc.266.1592907053186;
+        Tue, 23 Jun 2020 03:10:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxQFKTi0ccL8LbWY/VaTogGAZDzQ0HbmqM514Wc7oh3AlVmEBSQtv3qgquVhbyxVh0UM60UuQ==
+X-Received: by 2002:a62:770d:: with SMTP id s13mr25169528pfc.266.1592907052957;
+        Tue, 23 Jun 2020 03:10:52 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id a17sm1977991pjh.31.2020.06.23.03.10.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 03:10:52 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 18:10:42 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH] xattr: fix EOPNOTSUPP if fs and security xattrs disabled
+Message-ID: <20200623101042.GB1523@xiangao.remote.csb>
+References: <20200527044037.30414-1-hsiangkao@redhat.com>
 MIME-Version: 1.0
-References: <000000000000c25ce105a8a8fcd9@google.com> <20200622094923.GP576888@hirez.programming.kicks-ass.net>
- <20200623124413.08b2bd65@canb.auug.org.au> <20200623093230.GD4781@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200623093230.GD4781@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 23 Jun 2020 12:09:06 +0200
-Message-ID: <CANpmjNOeN=m5i-kEn-no5d3zUdAKv=gLidEENtgQCo5umNTSjw@mail.gmail.com>
-Subject: Re: linux-next build error (9)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        syzbot <syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>, joro@8bytes.org,
-        kvm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        sean.j.christopherson@intel.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, vkuznets@redhat.com,
-        wanpengli@tencent.com, "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527044037.30414-1-hsiangkao@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 at 11:32, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Jun 23, 2020 at 12:44:13PM +1000, Stephen Rothwell wrote:
-> > Hi Peter,
-> >
-> > On Mon, 22 Jun 2020 11:49:23 +0200 Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > > Hurmph, I though that was cured in GCC >= 8. Marco?
-> >
-> > So what causes this? Because we got a couple of these in our s390 builds last night as well.
->
-> This is KASAN's __no_sanitize_address function attribute. Some GCC
-> versions are utterly wrecked when that function attribute is combined
-> with inlining. It wants to have matching attributes for the function
-> being inlined and function it is inlined into -- hence the function
-> attribute mismatch.
->
-> > kernel/locking/lockdep.c:805:1: error: inlining failed in call to always_inline 'look_up_lock_class': function attribute mismatch
-> > include/linux/debug_locks.h:15:28: error: inlining failed in call to always_inline '__debug_locks_off': function attribute mismatch
-> >
-> > s390-linux-gcc (GCC) 8.1.0 / GNU ld (GNU Binutils) 2.30
->
-> *groan*... So supposedly it was supposed to work on GCC-8 and later, see
-> commit 7b861a53e46b6. But now it turns out there's some later versions
-> that fail too.
->
-> I suppose the next quest is finding a s390 compiler version that works
-> and then bumping the version test in the aforementioned commit.
+Friendly ping...
 
- I'm trying to figure out by inspecting GCC changelogs which version
-and which arch is actually good.
+On Wed, May 27, 2020 at 12:40:37PM +0800, Gao Xiang wrote:
+> commit f549d6c18c0e ("[PATCH] Generic VFS fallback for security xattrs")
+> introduces a behavior change of listxattr path therefore listxattr(2)
+> won't report EOPNOTSUPP correctly if fs and security xattrs disabled.
+> However it was clearly recorded in manpage all the time.
+> 
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Stephen Smalley <sds@tycho.nsa.gov>
+> Cc: Chengguang Xu <cgxu519@mykernel.net>
+> Cc: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+> ---
+> 
+> Noticed when reviewing Chengguang's patch for erofs [1] (together
+> with ext2, f2fs). I'm not sure if it's the best approach but it
+> seems that security_inode_listsecurity() has other users and it
+> mainly focus on reporting these security xattrs...
+> 
+> [1] https://lore.kernel.org/r/20200526090343.22794-1-cgxu519@mykernel.net
+> 
+> Thanks,
+> Gao Xiang
+> 
+>  fs/xattr.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/xattr.c b/fs/xattr.c
+> index 91608d9bfc6a..f339a67db521 100644
+> --- a/fs/xattr.c
+> +++ b/fs/xattr.c
+> @@ -352,13 +352,15 @@ vfs_listxattr(struct dentry *dentry, char *list, size_t size)
+>  	error = security_inode_listxattr(dentry);
+>  	if (error)
+>  		return error;
+> -	if (inode->i_op->listxattr && (inode->i_opflags & IOP_XATTR)) {
+> -		error = inode->i_op->listxattr(dentry, list, size);
+> -	} else {
+> -		error = security_inode_listsecurity(inode, list, size);
+> -		if (size && error > size)
+> -			error = -ERANGE;
+> -	}
+> +
+> +	if (inode->i_op->listxattr && (inode->i_opflags & IOP_XATTR))
+> +		return inode->i_op->listxattr(dentry, list, size);
+> +
+> +	if (!IS_ENABLED(CONFIG_SECURITY))
+> +		return -EOPNOTSUPP;
+> +	error = security_inode_listsecurity(inode, list, size);
+> +	if (size && error > size)
+> +		error = -ERANGE;
+>  	return error;
+>  }
+>  EXPORT_SYMBOL_GPL(vfs_listxattr);
+> -- 
+> 2.24.0
+> 
 
-Thanks,
--- Marco
