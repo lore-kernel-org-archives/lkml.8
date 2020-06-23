@@ -2,84 +2,127 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1800D20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31B5207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731950AbgFWImd (ORCPT
+        id S1731798AbgFWIpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:42:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41706 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731691AbgFWImc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:42:32 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jneVh-0003DY-GX; Tue, 23 Jun 2020 08:42:29 +0000
-Date:   Tue, 23 Jun 2020 10:42:28 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        arnd@arndb.de, guoren@kernel.org, linux-csky@vger.kernel.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH 02/17] sparc64: enable HAVE_COPY_THREAD_TLS
-Message-ID: <20200623084228.jpufvn5mn3lhjc36@wittgenstein>
-References: <20200622234326.906346-1-christian.brauner@ubuntu.com>
- <20200622234326.906346-3-christian.brauner@ubuntu.com>
- <20200622.203516.1857672250009821997.davem@davemloft.net>
+        Tue, 23 Jun 2020 04:45:31 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42741 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731588AbgFWIpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:45:30 -0400
+IronPort-SDR: GBo/kBgTB4KhwbFXBHRD0J9cl5Q2DDgEgbYaVZnvaqMv6My96o/5L8OwTnHS/TX01j2o9K9F/F
+ vRUSqMkjd7Wg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="228674653"
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="228674653"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 01:45:30 -0700
+IronPort-SDR: eDIb8TiiJF6ylNoRV1gTyyGexGGNwkieKamY6fam3VdeanmyOCGUf3bdnwyJq4xXeOfmmJfrNU
+ p8d6TbGGLX2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="264734391"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jun 2020 01:45:28 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jneYc-00FKOk-Ub; Tue, 23 Jun 2020 11:45:30 +0300
+Date:   Tue, 23 Jun 2020 11:45:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: designware: Fix functionality in !CONFIG_ACPI case
+Message-ID: <20200623084530.GO2428291@smile.fi.intel.com>
+References: <20200623025144.34246-1-john.stultz@linaro.org>
+ <d6c317ee-4f97-9c57-6b04-1eabd814b6ce@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622.203516.1857672250009821997.davem@davemloft.net>
+In-Reply-To: <d6c317ee-4f97-9c57-6b04-1eabd814b6ce@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:35:16PM -0700, David Miller wrote:
-> From: Christian Brauner <christian.brauner@ubuntu.com>
-> Date: Tue, 23 Jun 2020 01:43:11 +0200
+On Tue, Jun 23, 2020 at 10:59:40AM +0300, Jarkko Nikula wrote:
+> Hi
 > 
-> > diff --git a/arch/sparc/kernel/syscalls.S b/arch/sparc/kernel/syscalls.S
-> > index db42b4fb3708..192f3a28a2b7 100644
-> > --- a/arch/sparc/kernel/syscalls.S
-> > +++ b/arch/sparc/kernel/syscalls.S
-> > @@ -86,19 +86,22 @@ sys32_rt_sigreturn:
-> >  	 * during system calls...
-> >  	 */
-> >  	.align	32
-> > -sys_vfork: /* Under Linux, vfork and fork are just special cases of clone. */
-> > -	sethi	%hi(0x4000 | 0x0100 | SIGCHLD), %o0
-> > -	or	%o0, %lo(0x4000 | 0x0100 | SIGCHLD), %o0
-> > -	ba,pt	%xcc, sys_clone
-> > +sys_vfork:
-> > +	flushw
-> > +	ba,pt	%xcc, sparc_vfork
-> > +	add	%sp, PTREGS_OFF, %o0
+> On 6/23/20 5:51 AM, John Stultz wrote:
+> > On the HiKey board, where CONFIG_ACPI is not set, we started
+> > to see a graphics regression where the adv7511 HDMI bridge driver
+> > wasn't probing. This was due to the i2c bus failing to start up.
+> > 
+> > I bisected the problem down to commit f9288fcc5c615 ("i2c:
+> > designware: Move ACPI parts into common module") and after
+> > looking at it a bit, I realized that change moved some
+> > initialization into i2c_dw_acpi_adjust_bus_speed(). However,
+> > i2c_dw_acpi_adjust_bus_speed() is only functional if CONFIG_ACPI
+> > is set.
+> > 
+> > This patch pulls i2c_dw_acpi_adjust_bus_speed() out of the
+> > ifdef CONFIG_ACPI conditional, and gets the board working again.
+> > 
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> > Cc: Wolfram Sang <wsa@kernel.org>
+> > Cc: linux-i2c@vger.kernel.org
+> > Fixes: f9288fcc5c615 ("i2c: designware: Move ACPI parts into common module")
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> >   drivers/i2c/busses/i2c-designware-common.c | 4 ++--
+> >   drivers/i2c/busses/i2c-designware-core.h   | 3 +--
+> >   2 files changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-designware-common.c b/drivers/i2c/busses/i2c-designware-common.c
+> > index e3a8640db7da..33de185e15f2 100644
+> > --- a/drivers/i2c/busses/i2c-designware-common.c
+> > +++ b/drivers/i2c/busses/i2c-designware-common.c
+> > @@ -286,6 +286,8 @@ int i2c_dw_acpi_configure(struct device *device)
+> >   }
+> >   EXPORT_SYMBOL_GPL(i2c_dw_acpi_configure);
+> > +#endif	/* CONFIG_ACPI */
+> > +
 > 
-> Please indent branch delay slot instructions with one extra space, as
-> was done in the code you are changing.
+> I think the regression is in these lines below that were moved from probe to
+> i2c_dw_acpi_adjust_bus_speed() and cause that neither "cloock-frequency"
+> device property or I2C_MAX_FAST_MODE_FREQ affect the bus speed when
+> CONFIG_ACPI is not set.
 > 
-> > +	ba,pt	%xcc, sparc_fork
-> > +	add	%sp, PTREGS_OFF, %o0
+> +       /*
+> +        * Find bus speed from the "clock-frequency" device property, ACPI
+> +        * or by using fast mode if neither is set.
+> +        */
+> +       if (acpi_speed && t->bus_freq_hz)
+> +               t->bus_freq_hz = min(t->bus_freq_hz, acpi_speed);
+> +       else if (acpi_speed || t->bus_freq_hz)
+> +               t->bus_freq_hz = max(t->bus_freq_hz, acpi_speed);
+> +       else
+> +               t->bus_freq_hz = I2C_MAX_FAST_MODE_FREQ;
 > 
-> Likewise.
-> 
-> > +	ba,pt	%xcc, sparc_clone
-> > +	add	%sp, PTREGS_OFF, %o0
-> 
-> Likewise.
+> Andy: what you think should the i2c_dw_acpi_adjust_bus_speed() fixed to
+> return adjusted speed or zero if not found (also for !CONFIG_ACPI) and move
+> above lines back to probe? It looks more clear to me that way and should fix
+> the regression I think.
 
-Fixed, thanks for taking a look again! This somehow slipped past me when
-applying. 
+I have split it to two functions and renamed accordingly. Will send patch soon,
+after some testing.
 
-Christian
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
