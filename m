@@ -2,134 +2,129 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E090EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6C712098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEYH/6mg"
+	by mail.kernel.org (Postfix) with ESMTP id 5CEA7207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbgFWTpe (ORCPT
+        id S2387485AbgFWTpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733236AbgFWTpd (ORCPT
+        Tue, 23 Jun 2020 15:45:39 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:41458 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387448AbgFWTpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:45:33 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD95C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:45:32 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d4so35320pgk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a8zj1fuShwqowO3Wq+CdKkZzc+/xfslY1sGu/hpora8=;
-        b=uEYH/6mg+aXLTRy+8y08DQPhyvQv5FbBjYDESBfb7SWp9kAXLu8qLQxnYBl05eYVLx
-         dJm3DnxAgk7ewTRR29JeLsZxVvzkWEj5NGmIuHUcfp2LxYafb7Ku4i5GA43q6jWk3TAw
-         4KpXANV7PupjzcXf+SBX0zhodfp+FX0xYZFlls+MG9KzYmK938dODcqLPfMbL67dBjbT
-         KmIdJx4vv09EFGwqClpyOW6t3IS9ud191X9VT3aMywPr6YzOck3sLN5PMAefw+di0B0W
-         CdmcDiOt7J4C2ef5V84R7Xo3IPa8FOW3e/8SeWGCGt2/XEY4blvIm3kywZ6cDEhY9j90
-         fvRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a8zj1fuShwqowO3Wq+CdKkZzc+/xfslY1sGu/hpora8=;
-        b=ph4VmTNVuhKoQRiZTvz6xjd4lcrgvl95x7Gk/XTPMRI7z2zpqOmwvr+UakUJWk9Ai8
-         LbhvsdPaku8jYE37sKSN0h64PsfY9npZML0boNsVJdxl4Odmp69b+lveS/5Hj1oecl+g
-         l81glFWRiaoEmrgfDmulx/ZLTVO7eethGaEHRn4rNF5Bgb2Oz+Z9pvFRFNfDyfRVNDLq
-         B10IoYH0EX5OsXGGwBmIbsTWiREAaCepx1YysjvXG6RQFy0njebqTv5gEVZIKQuBRY+2
-         ItIr9yva4q9V4PG8SROptVU0lHcU9S7fpx413alltjK3D13N2qQvmYPf+udVa8bqPtm8
-         fE3w==
-X-Gm-Message-State: AOAM532M1YIgIwvfWt2fT/6CnuCizLBpDez98pofzwKfiVGGoMW16rLn
-        9wcCzUWsfqs6eKtT2V/o10I=
-X-Google-Smtp-Source: ABdhPJw+vaMWXj7tKULwm6c2gqug19cIRYX+JuuJNa7Rg3J8a2dc6aaGmQT7WoxC7T0KCgtEw0EE3w==
-X-Received: by 2002:a63:5461:: with SMTP id e33mr18025430pgm.56.1592941531706;
-        Tue, 23 Jun 2020 12:45:31 -0700 (PDT)
-Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
-        by smtp.gmail.com with ESMTPSA id g19sm17668046pfo.209.2020.06.23.12.45.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 12:45:31 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 12:45:29 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Peter Oskolkov <posk@posk.io>
-Cc:     Aaron Lu <aaron.lwe@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Oskolkov <posk@google.com>, avagin@google.com,
-        "pjt@google.com" <pjt@google.com>, Ben Segall <bsegall@google.com>
-Subject: Re: [RFC PATCH 1/3 v2] futex: introduce FUTEX_SWAP operation
-Message-ID: <20200623194529.GA71413@gmail.com>
-References: <cf7c83d0b58aa4912b465392ce8e40a974f250bb.camel@posk.io>
- <20200623132507.GA875@aaronlu-desktop>
- <d29a2ba031ecd96f785a602e703d97e24980ef15.camel@posk.io>
+        Tue, 23 Jun 2020 15:45:35 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 3951D1C0C0A; Tue, 23 Jun 2020 21:45:34 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 21:45:33 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>, marcel@holtmann.org,
+        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
+Subject: next-20200623: oops in btusb_disconnect() at boot on thinkpad x60
+Message-ID: <20200623194533.GA3815@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
 Content-Disposition: inline
-In-Reply-To: <d29a2ba031ecd96f785a602e703d97e24980ef15.camel@posk.io>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:30:30AM -0700, Peter Oskolkov wrote:
-...
-> > >  /**
-> > > +static int futex_swap(u32 __user *uaddr, unsigned int flags, u32
-> > > val,
-> > > +		      ktime_t *abs_time, u32 __user *uaddr2)
-> > > +{
-> > > +	u32 bitset = FUTEX_BITSET_MATCH_ANY;
-> > > +	struct task_struct *next = NULL;
-> > > +	DEFINE_WAKE_Q(wake_q);
-> > > +	int ret;
-> > > +
-> > > +	ret = prepare_wake_q(uaddr2, flags, 1, bitset, &wake_q);
-> > > +	if (!wake_q_empty(&wake_q)) {
-> > > +		/* Pull the first wakee out of the queue to swap into.
-> > > */
-> > > +		next = container_of(wake_q.first, struct task_struct,
-> > > wake_q);
-> > > +		wake_q.first = wake_q.first->next;
-> > > +		next->wake_q.next = NULL;
-> > > +		/*
-> > > +		 * Note that wake_up_q does not touch wake_q.last, so
-> > > we
-> > > +		 * do not bother with it here.
-> > > +		 */
-> > > +		wake_up_q(&wake_q);
-> > 
-> > wake_up_q() doesn't seem to serve any purpose in that the above
-> > assignment of wake_q.first shall make it an empty queue now?
-> > Also, I don't see a need to touch wake_q.first either so I think we
-> > can
-> > get rid of wake_q altogether here.
-> 
-> The futex at uaddr2 may have more than one waiter, so we cannot assume
-> that wake_q will be empty when we remove the first element.
 
-The third argument of prepare_wake_q is nr_wake which is one in this
-case, so we can be sure that wake_q will be empty, can't we?
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > 
-> > > +	}
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> > > +	return futex_wait(uaddr, flags, val, abs_time, bitset, next);
-> > > +}
-> > 
+Hi!
+
+I'm getting this at boot:
+
+[    7.984584] *pdpt =3D 0000000033a31001 *pde =3D 0000000000000000
+[    7.984584] Oops: 0000 [#1] PREEMPT SMP PTI
+[    7.984584] CPU: 1 PID: 2532 Comm: systemd-udevd Not tainted
+5.8.0-rc2-next-20200623+ #126
+[    7.998580] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW
+(2.19 ) 03/31/2011
+[    8.000592] EIP: __queue_work+0x139/0x320
+[    8.000592] Code: 90 83 7d f0 08 0f 84 b6 00 00 00 8b 45 ec 8b 9f
+04 01 00 00 03 1c 85 40 63 1f c5 89 f0 e8 df f8 ff ff 85 c0 0f 85 4f
+ff ff ff <8b> 03 e9 50 ff ff ff 89 45 e4 e8 48 0a cb 00 8b 4d e8 8b 45
+e4 8b
+[    8.007883] EAX: 00000000 EBX: 00000000 ECX: 47d88848 EDX: 03ffffff
+[    8.007883] ESI: f4a348bc EDI: f492a600 EBP: f3b1dd0c ESP: f3b1dcf0
+[    8.019981] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS:
+00010046
+[    8.023156] CR0: 80050033 CR2: 00000000 CR3: 33b1e000 CR4: 000006b0
+[    8.028892] Call Trace:
+[    8.034199]  queue_work_on+0x1d/0x30
+[    8.034199]  hci_adv_monitors_clear+0x5c/0x80
+[    8.042158]  hci_unregister_dev+0x161/0x2f0
+[    8.042158]  ? usb_disable_endpoint+0x94/0xa0
+[    8.042158]  btusb_disconnect+0x4b/0x120
+[    8.057018]  usb_unbind_interface+0x64/0x230
+[    8.057018]  device_release_driver_internal+0xc1/0x180
+[    8.065196]  device_release_driver+0xc/0x10
+[    8.068040]  bus_remove_device+0xa8/0x110
+[    8.071767]  device_del+0x126/0x370
+[    8.071767]  ? usb_remove_ep_devs+0x15/0x20
+[    8.079199]  ? remove_intf_ep_devs+0x30/0x50
+[    8.081371]  usb_disable_device+0x8e/0x240
+[    8.087478]  usb_set_configuration+0x47c/0x800
+[    8.087478]  usb_deauthorize_device+0x36/0x50
+[    8.092662]  authorized_store+0x5d/0x70
+[    8.096608]  ? authorized_default_store+0x60/0x60
+[    8.096608]  dev_attr_store+0x13/0x20
+[    8.096608]  ? component_bind_all.cold+0x52/0x52
+[    8.106151]  sysfs_kf_write+0x2f/0x50
+[    8.106151]  ? sysfs_file_ops+0x50/0x50
+[    8.106151]  kernfs_fop_write+0x105/0x1a0
+[    8.106151]  ? kernfs_fop_open+0x3c0/0x3c0
+[    8.106151]  __vfs_write+0x2b/0x1e0
+[    8.106151]  ? lock_acquire+0x3f/0x70
+[    8.106151]  ? vfs_write+0x12a/0x180
+[    8.106151]  ? __sb_start_write+0xd6/0x180
+[    8.106151]  ? vfs_write+0x12a/0x180
+[    8.106151]  vfs_write+0xa1/0x180
+[    8.106151]  ksys_write+0x5c/0xd0
+[    8.106151]  __ia32_sys_write+0x10/0x20
+[    8.106151]  do_syscall_32_irqs_on+0x3a/0xf0
+[    8.106151]  do_int80_syscall_32+0x9/0x20
+[    8.106151]  entry_INT80_32+0x116/0x116
+[    8.106151] EIP: 0xb7f45092
+[    8.106151] Code: Bad RIP value.
+[    8.146079] EAX: ffffffda EBX: 00000007 ECX: 004fb760 EDX: 00000001
+[    8.146079] ESI: 004fb760 EDI: 00000001 EBP: 004c79f0 ESP: bfabc48c
+[    8.146079] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS:
+00000246
+[    8.150364] Modules linked in:
+[    8.150364] CR2: 0000000000000000
+[    8.150364] ---[ end trace 468d097aaf220284 ]---
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7yW90ACgkQMOfwapXb+vJKfACgvIg/DW8c0YKzE2LmYNbQTIgc
+W1sAniTMBfN+5Umby7GRG2wYmp85JyoG
+=6eSe
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
