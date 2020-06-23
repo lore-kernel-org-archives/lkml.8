@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B146620738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8009120786
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947251;
-	bh=ZlApbjXxU37MYPbywtIA5qOjp2wk5ss4fkRX5GoBLOc=;
+	s=default; t=1592947257;
+	bh=1PbRWmGMinHUZyUR9NBL0xCnyx6n79VyKXrbRD7ogmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bm4J/XnvuVEr+O9ywBpfiOJ3rAWQT5QEV6cTl5oNvynpd2JLZ3/MKmMlSmKikOGzh
-	 vRtDJNJ9JFtXkHUsCGDnOFdvKcmFwSJy2AFLYx66sWUCuHW6VneVMfdF3ZC1fwivu8
-	 E1ORAl+Y008TI2rojbFNStR1AYgFrFPsHFF+TAYw=
+	b=qTFKCfTuyXAiU6b5uCwIhJIFoPj/Lo0WfmtC6snr0waUC6lt2OkE22O4CCBfIBWcC
+	 C4q8XtRE4ghhxi3zMNKnUmnJZwx98mEAZb6oQpk2DNEnXxyn2a9bjsG6Oq3VSCyJyZ
+	 182k29AhxdxG1AIw9Uxwld1rdO1x2JfJVmy5gOFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390970AbgFWVUu (ORCPT
+        id S2393300AbgFWVUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:20:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390425AbgFWUY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:29 -0400
+        id S2390403AbgFWUYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306E62064B;
-        Tue, 23 Jun 2020 20:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7FB82064B;
+        Tue, 23 Jun 2020 20:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943868;
-        bh=ZlApbjXxU37MYPbywtIA5qOjp2wk5ss4fkRX5GoBLOc=;
+        s=default; t=1592943858;
+        bh=1PbRWmGMinHUZyUR9NBL0xCnyx6n79VyKXrbRD7ogmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZEJx+7VV4wUHaIVLoQdnW+P3NG1zMAmnpHSr4X2ea4roi2JCXgchZTfZ9nqzHR5J
-         kPy1/zpxVz26fNbx93RdOKYobiEySE/X27e1yK2tElnqjlmYEPcyhZICoSNVFmlA4z
-         E5POIB3Wagl7OcNbDSC2MAYednADtcR5CxvHPodM=
+        b=l07uVGWcaT73amC9P8zTzwr52m9srxwHEvi3nQBA/bCW4orpgel0d1n+yWH1cc+XR
+         YLr44sTWu3Sjx5Db0RVwXrXcc4RV5PS1ja9Z/d8SVvHm+Un7mbASTqZy/x6r7trzUI
+         dKxTI3WOex8gWLFx+QnonF1RoYyx/c/MZTSIz6Gk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        John Johansen <john.johansen@canonical.com>,
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 082/314] apparmor: fix nnp subset test for unconfined
-Date:   Tue, 23 Jun 2020 21:54:37 +0200
-Message-Id: <20200623195342.780940895@linuxfoundation.org>
+Subject: [PATCH 5.4 079/314] bpf, sockhash: Fix memory leak when unlinking sockets in sock_hash_free
+Date:   Tue, 23 Jun 2020 21:54:34 +0200
+Message-Id: <20200623195342.624502452@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,123 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Johansen <john.johansen@canonical.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-[ Upstream commit 3ed4aaa94fc07db3cd0c91be95e3e1b9782a2710 ]
+[ Upstream commit 33a7c831565c43a7ee2f38c7df4c4a40e1dfdfed ]
 
-The subset test is not taking into account the unconfined exception
-which will cause profile transitions in the stacked confinement
-case to fail when no_new_privs is applied.
+When sockhash gets destroyed while sockets are still linked to it, we will
+walk the bucket lists and delete the links. However, we are not freeing the
+list elements after processing them, leaking the memory.
 
-This fixes a regression introduced in the fix for
-https://bugs.launchpad.net/bugs/1839037
+The leak can be triggered by close()'ing a sockhash map when it still
+contains sockets, and observed with kmemleak:
 
-BugLink: https://bugs.launchpad.net/bugs/1844186
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+  unreferenced object 0xffff888116e86f00 (size 64):
+    comm "race_sock_unlin", pid 223, jiffies 4294731063 (age 217.404s)
+    hex dump (first 32 bytes):
+      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+      81 de e8 41 00 00 00 00 c0 69 2f 15 81 88 ff ff  ...A.....i/.....
+    backtrace:
+      [<00000000dd089ebb>] sock_hash_update_common+0x4ca/0x760
+      [<00000000b8219bd5>] sock_hash_update_elem+0x1d2/0x200
+      [<000000005e2c23de>] __do_sys_bpf+0x2046/0x2990
+      [<00000000d0084618>] do_syscall_64+0xad/0x9a0
+      [<000000000d96f263>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Fix it by freeing the list element when we're done with it.
+
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200607205229.2389672-2-jakub@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/domain.c        |  9 +++++----
- security/apparmor/include/label.h |  1 +
- security/apparmor/label.c         | 33 +++++++++++++++++++++++++++++++
- 3 files changed, 39 insertions(+), 4 deletions(-)
+ net/core/sock_map.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
-index 5dedc0173b024..1a33f490e6670 100644
---- a/security/apparmor/domain.c
-+++ b/security/apparmor/domain.c
-@@ -935,7 +935,8 @@ int apparmor_bprm_set_creds(struct linux_binprm *bprm)
- 	 * aways results in a further reduction of permissions.
- 	 */
- 	if ((bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS) &&
--	    !unconfined(label) && !aa_label_is_subset(new, ctx->nnp)) {
-+	    !unconfined(label) &&
-+	    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
- 		error = -EPERM;
- 		info = "no new privs";
- 		goto audit;
-@@ -1213,7 +1214,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
- 		 * reduce restrictions.
- 		 */
- 		if (task_no_new_privs(current) && !unconfined(label) &&
--		    !aa_label_is_subset(new, ctx->nnp)) {
-+		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
- 			/* not an apparmor denial per se, so don't log it */
- 			AA_DEBUG("no_new_privs - change_hat denied");
- 			error = -EPERM;
-@@ -1234,7 +1235,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
- 		 * reduce restrictions.
- 		 */
- 		if (task_no_new_privs(current) && !unconfined(label) &&
--		    !aa_label_is_subset(previous, ctx->nnp)) {
-+		    !aa_label_is_unconfined_subset(previous, ctx->nnp)) {
- 			/* not an apparmor denial per se, so don't log it */
- 			AA_DEBUG("no_new_privs - change_hat denied");
- 			error = -EPERM;
-@@ -1429,7 +1430,7 @@ check:
- 		 * reduce restrictions.
- 		 */
- 		if (task_no_new_privs(current) && !unconfined(label) &&
--		    !aa_label_is_subset(new, ctx->nnp)) {
-+		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
- 			/* not an apparmor denial per se, so don't log it */
- 			AA_DEBUG("no_new_privs - change_hat denied");
- 			error = -EPERM;
-diff --git a/security/apparmor/include/label.h b/security/apparmor/include/label.h
-index 47942c4ba7ca7..255764ab06e2f 100644
---- a/security/apparmor/include/label.h
-+++ b/security/apparmor/include/label.h
-@@ -281,6 +281,7 @@ bool aa_label_init(struct aa_label *label, int size, gfp_t gfp);
- struct aa_label *aa_label_alloc(int size, struct aa_proxy *proxy, gfp_t gfp);
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 8291568b707fc..ba65c608c2282 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -879,6 +879,7 @@ static void sock_hash_free(struct bpf_map *map)
+ 			sock_map_unref(elem->sk, elem);
+ 			rcu_read_unlock();
+ 			release_sock(elem->sk);
++			sock_hash_free_elem(htab, elem);
+ 		}
+ 	}
  
- bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub);
-+bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub);
- struct aa_profile *__aa_label_next_not_in_set(struct label_it *I,
- 					     struct aa_label *set,
- 					     struct aa_label *sub);
-diff --git a/security/apparmor/label.c b/security/apparmor/label.c
-index 6c3acae701efd..5f324d63ceaa3 100644
---- a/security/apparmor/label.c
-+++ b/security/apparmor/label.c
-@@ -550,6 +550,39 @@ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub)
- 	return __aa_label_next_not_in_set(&i, set, sub) == NULL;
- }
- 
-+/**
-+ * aa_label_is_unconfined_subset - test if @sub is a subset of @set
-+ * @set: label to test against
-+ * @sub: label to test if is subset of @set
-+ *
-+ * This checks for subset but taking into account unconfined. IF
-+ * @sub contains an unconfined profile that does not have a matching
-+ * unconfined in @set then this will not cause the test to fail.
-+ * Conversely we don't care about an unconfined in @set that is not in
-+ * @sub
-+ *
-+ * Returns: true if @sub is special_subset of @set
-+ *     else false
-+ */
-+bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub)
-+{
-+	struct label_it i = { };
-+	struct aa_profile *p;
-+
-+	AA_BUG(!set);
-+	AA_BUG(!sub);
-+
-+	if (sub == set)
-+		return true;
-+
-+	do {
-+		p = __aa_label_next_not_in_set(&i, set, sub);
-+		if (p && !profile_unconfined(p))
-+			break;
-+	} while (p);
-+
-+	return p == NULL;
-+}
- 
- 
- /**
 -- 
 2.25.1
 
