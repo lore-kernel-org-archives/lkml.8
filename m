@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E353AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F144C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B3020888
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483DE2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948464;
-	bh=YQzDgZMPbzczhG4i5DdTEFSE2uOTgTBDkfVfUpFdBcI=;
+	s=default; t=1592948468;
+	bh=lmLHg0cGesE3FgSe7bSUX6bN99oLY+825ZeXT/FLT/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kvzM1sC1WC6CmbNWJtcdfMlM8mpBYUrhLKt9QgsQLBSKPcJGvi/45vJc69wyo9/cC
-	 gj6W+T/zYMdkoJiPomK/4/Ui/HU1aL9YrYAW6PJNsYZNEqfaIEajspylZeTnoSw6eM
-	 ze5NW71PR2TjF3VP+33k9kGV87Tlw5xoXvh1tPXQ=
+	b=R0D5JUetJiNFgu+H9nB4JWhAQDzY4y/qjnClTkhYcdRUZdWIFqTeam5picsb/kGTb
+	 qC14ijeV1kMALQz/h8AAYS7LlkgFYw3vr2JOaws9Almc/INsmPgAOLkbvN1fE2Khe2
+	 A7+qSG4giHcnUX2IurCNJ0eqIz0cypxRUrXvGkj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388458AbgFWUGV (ORCPT
+        id S2393861AbgFWVlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46064 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388434AbgFWUGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:08 -0400
+        id S2388457AbgFWUGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:06:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F7182064B;
-        Tue, 23 Jun 2020 20:06:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E7F82064B;
+        Tue, 23 Jun 2020 20:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942767;
-        bh=YQzDgZMPbzczhG4i5DdTEFSE2uOTgTBDkfVfUpFdBcI=;
+        s=default; t=1592942780;
+        bh=lmLHg0cGesE3FgSe7bSUX6bN99oLY+825ZeXT/FLT/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUov1h1vSPMG5sBt2T2Rux2DR9TmU3g3yc5WhojFIxPsgDY4058T7UDsJ9FGTpT2l
-         3gqwv+PMWkPDRYrXf9NBKRGkDJSJ0FJYae/H/5VQa8KzSZptYxDs0klERw47ZPfxGB
-         GdGzbDAuPVKFqFoDsatZDLsso5ELuLAubW6LyLeU=
+        b=bQ1+om0psmO0/6ksc4GxYxXXQSWngI8nbdmsF/BmSrDNKkgBXed2+QOnqtYLLfSfT
+         6Ad4crKMJ6lAqKL7TZPg9uzL1vI4mB3TnBJTEF5Muru9XoR/rW+ji01TVqJ/4VysPY
+         EAXFkIun4KK+XqfNI0frxhS/jGa8LgvA/fVYZstk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 127/477] pinctrl: rza1: Fix wrong array assignment of rza1l_swio_entries
-Date:   Tue, 23 Jun 2020 21:52:04 +0200
-Message-Id: <20200623195413.610762143@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 131/477] firmware: qcom_scm: fix bogous abuse of dma-direct internals
+Date:   Tue, 23 Jun 2020 21:52:08 +0200
+Message-Id: <20200623195413.798055671@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,43 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 4b4e8e93eccc2abc4209fe226ec89e7fbe9f3c61 ]
+[ Upstream commit 459b1f86f1cba7de813fbc335df476c111feec22 ]
 
-The rza1l_swio_entries referred to the wrong array rza1h_swio_pins,
-which was intended to be rza1l_swio_pins. So let's fix it.
+As far as the device is concerned the dma address is the physical
+address.  There is no need to convert it to a physical address,
+especially not using dma-direct internals that are not available
+to drivers and which will interact badly with IOMMUs.  Last but not
+least the commit introducing it claimed to just fix a type issue,
+but actually changed behavior.
 
-This is detected by the following gcc warning:
-
-drivers/pinctrl/pinctrl-rza1.c:401:35: warning: ‘rza1l_swio_pins’
-defined but not used [-Wunused-const-variable=]
- static const struct rza1_swio_pin rza1l_swio_pins[] = {
-                                   ^~~~~~~~~~~~~~~
-
-Fixes: 039bc58e73b77723 ("pinctrl: rza1: Add support for RZ/A1L")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Link: https://lore.kernel.org/r/20200417111604.19143-1-yanaijie@huawei.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 6e37ccf78a532 ("firmware: qcom_scm: Use proper types for dma mappings")
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20200414123136.441454-1-hch@lst.de
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rza1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/qcom_scm.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-index da2d8365c690e..ff4a7fb518bb3 100644
---- a/drivers/pinctrl/pinctrl-rza1.c
-+++ b/drivers/pinctrl/pinctrl-rza1.c
-@@ -418,7 +418,7 @@ static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
- };
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 059bb0fbae9e5..4701487573f7b 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -6,7 +6,6 @@
+ #include <linux/init.h>
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
+-#include <linux/dma-direct.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+@@ -806,8 +805,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	struct qcom_scm_mem_map_info *mem_to_map;
+ 	phys_addr_t mem_to_map_phys;
+ 	phys_addr_t dest_phys;
+-	phys_addr_t ptr_phys;
+-	dma_addr_t ptr_dma;
++	dma_addr_t ptr_phys;
+ 	size_t mem_to_map_sz;
+ 	size_t dest_sz;
+ 	size_t src_sz;
+@@ -824,10 +822,9 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
+ 			ALIGN(dest_sz, SZ_64);
  
- static const struct rza1_swio_entry rza1l_swio_entries[] = {
--	[0] = { ARRAY_SIZE(rza1h_swio_pins), rza1h_swio_pins },
-+	[0] = { ARRAY_SIZE(rza1l_swio_pins), rza1l_swio_pins },
- };
+-	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
++	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
+ 	if (!ptr)
+ 		return -ENOMEM;
+-	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
  
- /* RZ/A1L (r7s72102x) pinmux flags table */
+ 	/* Fill source vmid detail */
+ 	src = ptr;
+@@ -855,7 +852,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 
+ 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
+ 				    ptr_phys, src_sz, dest_phys, dest_sz);
+-	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
++	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_phys);
+ 	if (ret) {
+ 		dev_err(__scm->dev,
+ 			"Assign memory protection call failed %d\n", ret);
 -- 
 2.25.1
 
