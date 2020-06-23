@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05898C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2E7321473
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E61A2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943424;
-	bh=GUTD5yk7Qpbx+rnv/WXVP0Uer1021qxyNmVETtm6AxU=;
+	s=default; t=1592943428;
+	bh=cvw7AuHuLeoxtZ9XGO2H7QnE1hFtaPcEgksmMXgPXlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZiHjcdKtlptY3Q8cRXcg1jDTs0A6jvD8cK+qvnwb18Pt1gBoA2rNBhUQbMYZwow2Y
-	 q5D4DKsyituxnHPVhxaD1QIvv8tQZ3lLJAI/ffw3NI4NjyHn8leJ34qDMPhbRe4h6L
-	 smSjCqFTlO7SOdxhuRRrxtd0K3V9lbqkgVMdaQ/A=
+	b=Tw1Y8f+oIAVZ5UoH6hg0AtqazdMOdgV10qASiUAh76MPIQv2g98H9f3gUJDqRiWWv
+	 +bJix3nd+1I2imvyKjDZhtqIor48dRxQwh9Xc+ELLmMJHnWa5uw55hHdk9ARLCblQy
+	 VuFNV+FbJ37gkJIGufef4nYHX4cp0iwIfnGFwDCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389491AbgFWURD (ORCPT
+        id S2388726AbgFWURG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60800 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388879AbgFWUQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:55 -0400
+        id S2389487AbgFWURC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D9522064B;
-        Tue, 23 Jun 2020 20:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50C6C2064B;
+        Tue, 23 Jun 2020 20:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943414;
-        bh=GUTD5yk7Qpbx+rnv/WXVP0Uer1021qxyNmVETtm6AxU=;
+        s=default; t=1592943422;
+        bh=cvw7AuHuLeoxtZ9XGO2H7QnE1hFtaPcEgksmMXgPXlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTpa4VO2WkqS4l7b1jwe79buLks+/+M0/XPji44tnzOOhXTOPjT7R7ioKsFlWAdiR
-         JN8qVbm/iQmtxKszrUYLokTrg4+kRy0VLmWSHBtFMgxP6ZDGJTuD6Yu/IojD75YZqM
-         0NW+KR0CNUpmsFCWkyYDvCkqg5sOxHfam7qLVtRY=
+        b=QRZOIU9VYCZgb8XJxbL6WP/dpQQypno67fpkWFz3D1n03Nm4y1RYH1L80d6E2Pq1v
+         +wVXGNami62z0Quww6fddRM4i1UnB+DRTCwLjFdyPMj3lDCY7m+3zmb/8ELfJfskqK
+         GxKErTIrTY2HKVbnZ3R5SwqRMGTzzV7Hkr5Vv42A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Gaurav Singh <gaurav1086@gmail.com>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 383/477] perf report: Fix NULL pointer dereference in hists__fprintf_nr_sample_events()
-Date:   Tue, 23 Jun 2020 21:56:20 +0200
-Message-Id: <20200623195425.631083056@linuxfoundation.org>
+Subject: [PATCH 5.7 386/477] perf parse-events: Fix an incompatible pointer
+Date:   Tue, 23 Jun 2020 21:56:23 +0200
+Message-Id: <20200623195425.773210031@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -66,43 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Singh <gaurav1086@gmail.com>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 11b6e5482e178055ec1f2444b55f2518713809d1 ]
+[ Upstream commit c2412fae3f01725615b0de472095a9e16ed30ca9 ]
 
-The 'evname' variable can be NULL, as it is checked a few lines back,
-check it before using.
+Arrays are pointer types and don't need their address taking.
 
-Fixes: 9e207ddfa207 ("perf report: Show call graph from reference events")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 8255718f4bed (perf pmu: Expand PMU events by prefix match)
+Signed-off-by: Ian Rogers <irogers@google.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20200609053610.206588-1-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-report.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/util/parse-events.y | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 26d8fc27e427e..fc7855262162d 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -476,8 +476,7 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
- 	if (rep->time_str)
- 		ret += fprintf(fp, " (time slices: %s)", rep->time_str);
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 94f8bcd835826..9a41247c602ba 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -348,7 +348,7 @@ PE_PMU_EVENT_PRE '-' PE_PMU_EVENT_SUF sep_dc
+ 	struct list_head *list;
+ 	char pmu_name[128];
  
--	if (symbol_conf.show_ref_callgraph &&
--	    strstr(evname, "call-graph=no")) {
-+	if (symbol_conf.show_ref_callgraph && evname && strstr(evname, "call-graph=no")) {
- 		ret += fprintf(fp, ", show reference callgraph");
- 	}
- 
+-	snprintf(&pmu_name, 128, "%s-%s", $1, $3);
++	snprintf(pmu_name, sizeof(pmu_name), "%s-%s", $1, $3);
+ 	free($1);
+ 	free($3);
+ 	if (parse_events_multi_pmu_add(_parse_state, pmu_name, &list) < 0)
 -- 
 2.25.1
 
