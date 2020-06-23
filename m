@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB60C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D21C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A65BC20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA1720706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946767;
-	bh=2r7uTYuQVHNV87dOGG+pMpiOz1mjBgWFbqNJKi/EFeQ=;
+	s=default; t=1592946772;
+	bh=Qfg61+DghFr5+2ESybLHRKHDHYvGzAuFLIkZ6bl/Bgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Erkc4pxpAFxk0WbzOHxkHL8qw290vVFmEsczv9ccEVWVdOJLdLezr0ET/8ToVe99v
-	 GQEhPujgJ0H8Y0GlTFuNoM+ylE5irWbQdWLOZouWOZiy9ujnJeqwxdCwEj09tBrATn
-	 qA/Ktyn/G9Y1gqzmGt2LP2syb2Ep6+bsIOPWcpYs=
+	b=0Y4OtfQco0Y3Mbb9/jBRuFBgBHVeXoTBY239obUZyf/P8sXR1CP/NjvGsLVfhI8jF
+	 SO4rAYXm5RlUfCFPbwjyPzwncUbZzAxa/CFvukck8h8u1B47XoSXbZ3iDvBt6XqoUb
+	 E/16hN6+gnEUGAMo6IOae2WFMNw29zfgakEBof9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404226AbgFWVMq (ORCPT
+        id S2391063AbgFWUbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:12:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51580 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391193AbgFWUbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:31:09 -0400
+        id S2391176AbgFWUax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:30:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B524D20702;
-        Tue, 23 Jun 2020 20:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 753B72070E;
+        Tue, 23 Jun 2020 20:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944269;
-        bh=2r7uTYuQVHNV87dOGG+pMpiOz1mjBgWFbqNJKi/EFeQ=;
+        s=default; t=1592944253;
+        bh=Qfg61+DghFr5+2ESybLHRKHDHYvGzAuFLIkZ6bl/Bgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UcaGhclBBerpPcgQYXyD3gmMACE6wK5hcw2aJE637R/FBTfp+jKsJTH9GdV/hURB6
-         1J/ALnNqU41vQcmDbzCxi+tn6gw1F7k8vbK+dqs8YCMqNlSKTArFbDe7VdVXLtFTFc
-         5dV8IHMN5U97mq4gh733L30tE5vrhBbGNnRFPtu4=
+        b=AXqA6s3Ho3V+uq8oA+xb5pif15rtC3F5eZpIOEbPHoWMxjHeDi7kUB3nxmj5g5PQA
+         VeoI8pACJPGYjAkYbGkaR19AQhMnNpI4v2sznMxuQYz5eHbY7Ose58IzpaqXtHdvJI
+         yOMPbAml3E5R3EsTov+LwF2Qfcq7Q3WOKfzKw3kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        stable@vger.kernel.org, huhai <huhai@tj.kylinos.cn>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 239/314] drivers/perf: hisi: Fix wrong value for all counters enable
-Date:   Tue, 23 Jun 2020 21:57:14 +0200
-Message-Id: <20200623195350.356456258@linuxfoundation.org>
+Subject: [PATCH 5.4 201/314] powerpc/4xx: Dont unmap NULL mbase
+Date:   Tue, 23 Jun 2020 21:56:36 +0200
+Message-Id: <20200623195348.512078536@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: huhai <huhai@tj.kylinos.cn>
 
-[ Upstream commit 961abd78adcb4c72c343fcd9f9dc5e2ebbe9b448 ]
+[ Upstream commit bcec081ecc940fc38730b29c743bbee661164161 ]
 
-In L3C uncore PMU drivers, bit16 is used to control all counters enable &
-disable. Wrong value is given in the driver and its default value is 1'b1,
-it can work because each PMU counter has its own control bits too.
-Let's fix the wrong value.
-
-Fixes: 2940bc433370 ("perf: hisi: Add support for HiSilicon SoC L3C PMU driver")
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Link: https://lore.kernel.org/r/1591350221-32275-1-git-send-email-zhangshaokun@hisilicon.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: huhai <huhai@tj.kylinos.cn>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200521072648.1254699-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/4xx/pci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index 078b8dc572503..c5b0950c2a7a9 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -35,7 +35,7 @@
- /* L3C has 8-counters */
- #define L3C_NR_COUNTERS		0x8
+diff --git a/arch/powerpc/platforms/4xx/pci.c b/arch/powerpc/platforms/4xx/pci.c
+index e6e2adcc7b64c..c13d64c3b0194 100644
+--- a/arch/powerpc/platforms/4xx/pci.c
++++ b/arch/powerpc/platforms/4xx/pci.c
+@@ -1242,7 +1242,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	if (mbase == NULL) {
+ 		printk(KERN_ERR "%pOF: Can't map internal config space !",
+ 			port->node);
+-		goto done;
++		return;
+ 	}
  
--#define L3C_PERF_CTRL_EN	0x20000
-+#define L3C_PERF_CTRL_EN	0x10000
- #define L3C_EVTYPE_NONE		0xff
+ 	while (attempt && (0 == (in_le32(mbase + PECFG_460SX_DLLSTA)
+@@ -1252,9 +1252,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	}
+ 	if (attempt)
+ 		port->link = 1;
+-done:
+ 	iounmap(mbase);
+-
+ }
  
- /*
+ static struct ppc4xx_pciex_hwops ppc460sx_pcie_hwops __initdata = {
 -- 
 2.25.1
 
