@@ -2,129 +2,107 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEA7207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795CF207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387485AbgFWTpj (ORCPT
+        id S2387493AbgFWTrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:45:39 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:41458 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387448AbgFWTpf (ORCPT
+        Tue, 23 Jun 2020 15:47:15 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:42187 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733302AbgFWTrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:45:35 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3951D1C0C0A; Tue, 23 Jun 2020 21:45:34 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 21:45:33 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, marcel@holtmann.org,
-        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
-Subject: next-20200623: oops in btusb_disconnect() at boot on thinkpad x60
-Message-ID: <20200623194533.GA3815@amd>
+        Tue, 23 Jun 2020 15:47:14 -0400
+Received: by mail-il1-f197.google.com with SMTP id d3so8581856ilq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:47:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=KCtwlgZ+RKZk2rijKadVPUxLfAiSocZDUn+/oj8K6OM=;
+        b=s9mDx1qFX/C6Mm402LL5Z6iH0A+OhIXTC382TBmGwOTLk7XDAslnpydIQvBEDadXYF
+         EzUjTVM+vSP7mBnWl63EGTdIfdwXwBJkk/MwetxMVf4r86i869h8pu3KAo2e8AQhbnOW
+         AFviL4daTei8CY9+munVG7i8OBmBWXlUURZfHCGQJpgLfEXrceMBOM8H5d3iDNK1mojS
+         ZiAh7/Pbj8qwbF3vCd6wz8En72pry4qoZf7W/Z182zexoMKz0ZAz7rBvYReh0zx8dny4
+         9vxdkE1KbdiGv1/wqUUChtcMRG7mRRDSEFCQ3cbg2qBxUGIt667iKZpbO+RtKTRMY9qn
+         JC7g==
+X-Gm-Message-State: AOAM530bZuXtNLGLihuCwZSvk3l3WHCqkUE35B1A9C7BJiRUNHl4MYmG
+        ngsKUZtpLx1hPfPgJO6MhQlwrmh+bfLpeHPcbmNgnTSOEv2o
+X-Google-Smtp-Source: ABdhPJxWbF/JdduAtICGRLIrD7B2M74O58yKMzgV1pFof1zqa1ZQrLCp5Xyp58BB+mzyuCSmcZA4j3aEPLRx4Sl8c5fDsij5hO4W
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Received: by 2002:a92:c643:: with SMTP id 3mr25846387ill.229.1592941634164;
+ Tue, 23 Jun 2020 12:47:14 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 12:47:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000040aa7e05a8c5a02c@google.com>
+Subject: KASAN: slab-out-of-bounds Write in snd_usb_mixer_notify_id
+From:   syzbot <syzbot+fb14314433463ad51625@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---ZGiS0Q5IWpPtfppv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot found the following crash on:
 
-Hi!
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a0b46e100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=fb14314433463ad51625
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11bb9d35100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1309c569100000
 
-I'm getting this at boot:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fb14314433463ad51625@syzkaller.appspotmail.com
 
-[    7.984584] *pdpt =3D 0000000033a31001 *pde =3D 0000000000000000
-[    7.984584] Oops: 0000 [#1] PREEMPT SMP PTI
-[    7.984584] CPU: 1 PID: 2532 Comm: systemd-udevd Not tainted
-5.8.0-rc2-next-20200623+ #126
-[    7.998580] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW
-(2.19 ) 03/31/2011
-[    8.000592] EIP: __queue_work+0x139/0x320
-[    8.000592] Code: 90 83 7d f0 08 0f 84 b6 00 00 00 8b 45 ec 8b 9f
-04 01 00 00 03 1c 85 40 63 1f c5 89 f0 e8 df f8 ff ff 85 c0 0f 85 4f
-ff ff ff <8b> 03 e9 50 ff ff ff 89 45 e4 e8 48 0a cb 00 8b 4d e8 8b 45
-e4 8b
-[    8.007883] EAX: 00000000 EBX: 00000000 ECX: 47d88848 EDX: 03ffffff
-[    8.007883] ESI: f4a348bc EDI: f492a600 EBP: f3b1dd0c ESP: f3b1dcf0
-[    8.019981] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS:
-00010046
-[    8.023156] CR0: 80050033 CR2: 00000000 CR3: 33b1e000 CR4: 000006b0
-[    8.028892] Call Trace:
-[    8.034199]  queue_work_on+0x1d/0x30
-[    8.034199]  hci_adv_monitors_clear+0x5c/0x80
-[    8.042158]  hci_unregister_dev+0x161/0x2f0
-[    8.042158]  ? usb_disable_endpoint+0x94/0xa0
-[    8.042158]  btusb_disconnect+0x4b/0x120
-[    8.057018]  usb_unbind_interface+0x64/0x230
-[    8.057018]  device_release_driver_internal+0xc1/0x180
-[    8.065196]  device_release_driver+0xc/0x10
-[    8.068040]  bus_remove_device+0xa8/0x110
-[    8.071767]  device_del+0x126/0x370
-[    8.071767]  ? usb_remove_ep_devs+0x15/0x20
-[    8.079199]  ? remove_intf_ep_devs+0x30/0x50
-[    8.081371]  usb_disable_device+0x8e/0x240
-[    8.087478]  usb_set_configuration+0x47c/0x800
-[    8.087478]  usb_deauthorize_device+0x36/0x50
-[    8.092662]  authorized_store+0x5d/0x70
-[    8.096608]  ? authorized_default_store+0x60/0x60
-[    8.096608]  dev_attr_store+0x13/0x20
-[    8.096608]  ? component_bind_all.cold+0x52/0x52
-[    8.106151]  sysfs_kf_write+0x2f/0x50
-[    8.106151]  ? sysfs_file_ops+0x50/0x50
-[    8.106151]  kernfs_fop_write+0x105/0x1a0
-[    8.106151]  ? kernfs_fop_open+0x3c0/0x3c0
-[    8.106151]  __vfs_write+0x2b/0x1e0
-[    8.106151]  ? lock_acquire+0x3f/0x70
-[    8.106151]  ? vfs_write+0x12a/0x180
-[    8.106151]  ? __sb_start_write+0xd6/0x180
-[    8.106151]  ? vfs_write+0x12a/0x180
-[    8.106151]  vfs_write+0xa1/0x180
-[    8.106151]  ksys_write+0x5c/0xd0
-[    8.106151]  __ia32_sys_write+0x10/0x20
-[    8.106151]  do_syscall_32_irqs_on+0x3a/0xf0
-[    8.106151]  do_int80_syscall_32+0x9/0x20
-[    8.106151]  entry_INT80_32+0x116/0x116
-[    8.106151] EIP: 0xb7f45092
-[    8.106151] Code: Bad RIP value.
-[    8.146079] EAX: ffffffda EBX: 00000007 ECX: 004fb760 EDX: 00000001
-[    8.146079] ESI: 004fb760 EDI: 00000001 EBP: 004c79f0 ESP: bfabc48c
-[    8.146079] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS:
-00000246
-[    8.150364] Modules linked in:
-[    8.150364] CR2: 0000000000000000
-[    8.150364] ---[ end trace 468d097aaf220284 ]---
+==================================================================
+BUG: KASAN: slab-out-of-bounds in snd_usb_mixer_notify_id+0x219/0x2a0 sound/usb/mixer.c:3240
+Write of size 4 at addr ffff888095d78ce0 by task swapper/1/0
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ snd_usb_mixer_notify_id+0x219/0x2a0 sound/usb/mixer.c:3240
+ snd_usb_mixer_interrupt+0x416/0x980 sound/usb/mixer.c:3379
+ __usb_hcd_giveback_urb+0x2af/0x4b0 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+ __skb_queue_head_init include/linux/skbuff.h:1854 [inline]
+ skbpoolfree drivers/block/aoe/aoedev.c:435 [inline]
+ freedev drivers/block/aoe/aoedev.c:290 [inline]
+ dummy_timer+0x1243/0x2fe1 drivers/block/aoe/aoedev.c:366
+ call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x623/0x1600 kernel/time/timer.c:1786
 
---ZGiS0Q5IWpPtfppv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-iEYEARECAAYFAl7yW90ACgkQMOfwapXb+vJKfACgvIg/DW8c0YKzE2LmYNbQTIgc
-W1sAniTMBfN+5Umby7GRG2wYmp85JyoG
-=6eSe
------END PGP SIGNATURE-----
-
---ZGiS0Q5IWpPtfppv--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
