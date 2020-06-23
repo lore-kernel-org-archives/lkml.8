@@ -2,124 +2,100 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8429DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE55C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B8820724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="mlsaLnX2"
+	by mail.kernel.org (Postfix) with ESMTP id 3FD3620724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732876AbgFWNx6 (ORCPT
+        id S1732886AbgFWNyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:53:58 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:16786 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732839AbgFWNxx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:53:53 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NDjF1e024287;
-        Tue, 23 Jun 2020 06:53:52 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=iVD95T4xNQcfYDJCC94cFP8qzLDBa4oYxpm8YvPU2tk=;
- b=mlsaLnX2BaWYxggR74V2tVdi1B28D8eo/1WyN9CHCR1buFaCEVV9HHvEIlJeaD6M/pso
- 44rTWaNMDVFtECi7d3DlXSFlzPuIu/oUEtbzkP1aX2OSSVQuxCP6qfGpcYxqesG7RGFx
- jMEygClE1Ow5vInI54GGO9xg2Ri4Z7aUl1k5uvF4ws3FnYPogL4rTeBucFnV7YZZQBV8
- rOs3w/7jrchndQc6FPSwUiyODkod/neM+ek2XXMYneZRwtnjtnEt6+rqvNwpq6az3tzj
- S42zjUyw1cgIQ75qUVfd0JTW8XZy/yqheKOD6BPrQoKVzFv/4lXbywR80pGlvAgyEiz3 sQ== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 31ujw9r10g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 06:53:52 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Jun
- 2020 06:53:51 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 23 Jun 2020 06:53:51 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.39.36])
-        by maili.marvell.com (Postfix) with ESMTP id 039BF3F703F;
-        Tue, 23 Jun 2020 06:53:47 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "Denis Bolotin" <denis.bolotin@marvell.com>,
-        Tomer Tayar <tomer.tayar@marvell.com>,
-        Alexander Lobakin <alobakin@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net 9/9] net: qed: fix "maybe uninitialized" warning
-Date:   Tue, 23 Jun 2020 16:51:37 +0300
-Message-ID: <20200623135136.3185-10-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623135136.3185-1-alobakin@marvell.com>
-References: <20200623135136.3185-1-alobakin@marvell.com>
+        Tue, 23 Jun 2020 09:54:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39418 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732877AbgFWNyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:54:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 99282AD66;
+        Tue, 23 Jun 2020 13:53:58 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 2395FDA79B; Tue, 23 Jun 2020 15:53:47 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.8-rc3
+Date:   Tue, 23 Jun 2020 15:53:45 +0200
+Message-Id: <cover.1592918083.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Variable 'abs_ppfid' in qed_dev.c:qed_llh_add_mac_filter() always gets
-printed, but is initialized only under 'ref_cnt == 1' condition. This
-results in:
+Hi,
 
-In file included from ./include/linux/kernel.h:15:0,
-                 from ./include/asm-generic/bug.h:19,
-                 from ./arch/x86/include/asm/bug.h:86,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/io.h:11,
-                 from drivers/net/ethernet/qlogic/qed/qed_dev.c:35:
-drivers/net/ethernet/qlogic/qed/qed_dev.c: In function 'qed_llh_add_mac_filter':
-./include/linux/printk.h:358:2: warning: 'abs_ppfid' may be used uninitialized
-in this function [-Wmaybe-uninitialized]
-  printk(KERN_NOTICE pr_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~
-drivers/net/ethernet/qlogic/qed/qed_dev.c:983:17: note: 'abs_ppfid' was declared
-here
-  u8 filter_idx, abs_ppfid;
-                 ^~~~~~~~~
+a number of fixes, located in two areas, one performance fix and one
+fixup for better integration with another patchset.
 
-...under W=1+.
+Please pull, thanks.
 
-Fix this by initializing it with zero.
+- bug fixes in nowait aio:
+  - fix snapshot creation hang after nowait-aio was used
+  - fix failure to write to prealloc extent past EOF
+  - don't block when extent range is locked
 
-Fixes: 79284adeb99e ("qed: Add llh ppfid interface and 100g support for offload protocols")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
----
- drivers/net/ethernet/qlogic/qed/qed_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- block group fixes:
+  - relocation failure when scrub runs in parallel
+  - refcount fix when removing fails
+  - fix race between removal and creation
+  - space accounting fixes
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index b41ada668948..3aa51374e727 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -980,7 +980,7 @@ int qed_llh_add_mac_filter(struct qed_dev *cdev,
- 	struct qed_hwfn *p_hwfn = QED_LEADING_HWFN(cdev);
- 	struct qed_ptt *p_ptt = qed_ptt_acquire(p_hwfn);
- 	union qed_llh_filter filter = {};
--	u8 filter_idx, abs_ppfid;
-+	u8 filter_idx, abs_ppfid = 0;
- 	u32 high, low, ref_cnt;
- 	int rc = 0;
- 
--- 
-2.25.1
+- reinstante fast path check for log tree at unlink time, fixes
+  performance drop up to 30% in REAIM
 
+- kzfree/kfree fixup to ease treewide patchset renaming kzfree
+
+----------------------------------------------------------------
+The following changes since commit 55e20bd12a56e06c38b953177bb162cbbaa96004:
+
+  Revert "btrfs: switch to iomap_dio_rw() for dio" (2020-06-14 01:19:02 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.8-rc2-tag
+
+for you to fetch changes up to b091f7fede97cc64f7aaad3eeb37965aebee3082:
+
+  btrfs: use kfree() in btrfs_ioctl_get_subvol_info() (2020-06-16 19:24:03 +0200)
+
+----------------------------------------------------------------
+Filipe Manana (9):
+      btrfs: fix a block group ref counter leak after failure to remove block group
+      btrfs: fix race between block group removal and block group creation
+      btrfs: fix data block group relocation failure due to concurrent scrub
+      btrfs: fix bytes_may_use underflow when running balance and scrub in parallel
+      btrfs: check if a log root exists before locking the log_mutex on unlink
+      btrfs: fix hang on snapshot creation after RWF_NOWAIT write
+      btrfs: fix failure of RWF_NOWAIT write into prealloc extent beyond eof
+      btrfs: fix RWF_NOWAIT write not failling when we need to cow
+      btrfs: fix RWF_NOWAIT writes blocking on extent locks and waiting for IO
+
+Waiman Long (1):
+      btrfs: use kfree() in btrfs_ioctl_get_subvol_info()
+
+ fs/btrfs/block-group.c | 44 +++++++++++++++++++++++++++-----------------
+ fs/btrfs/ctree.h       |  2 ++
+ fs/btrfs/file.c        | 46 +++++++++++++++++++++++++++++++++++++---------
+ fs/btrfs/inode.c       | 39 ++++++++++++++++++++++++++++++---------
+ fs/btrfs/ioctl.c       |  2 +-
+ fs/btrfs/tree-log.c    |  5 +++++
+ 6 files changed, 102 insertions(+), 36 deletions(-)
