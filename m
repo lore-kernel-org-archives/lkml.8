@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C888CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7358820724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A446020771
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:01:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CFl1GHAD"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UMoNsIfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731306AbgFWHBk (ORCPT
+        id S1731368AbgFWHBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:01:40 -0400
-Received: from mail-eopbgr40058.outbound.protection.outlook.com ([40.107.4.58]:13065
+        Tue, 23 Jun 2020 03:01:48 -0400
+Received: from mail-eopbgr40051.outbound.protection.outlook.com ([40.107.4.51]:51875
         "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731169AbgFWHBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:01:36 -0400
+        id S1731291AbgFWHBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:01:41 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AYUbvexroIfP25D3RfIcn+mNAELzjJwb6O5p4iPadJl8DzOk7DhXbjxkOOzuCqR//P2upQhzkZtRzWUn8taCQf3QWtQdHP1tp9L6uta6rqKO5INNWo+uaZqiLJyHNH4OY19O8O6e/9rcv7KgJJRN9zAmEI5253PQ9Kw7sp7ShYW2x7/L+FPxxWxVjf7SVeT5ASTIEe59ybo+xr+gYR1q0lyWM51koOkvYY9sfwdUYDmvz/MoUkxjmS1RvogIkhLzHd/UEmuOk1zhjAZ4/mzqHUbbFLxBMzLhY7Xor+ltetaS8JO2DSX8+3/gvGVDYTfYJPlGlqlH0P8IbjDKZ/+DHw==
+ b=S6jq3+poc0mqf4bEPJjjhf/rxh1RzO10XM5lIDmYfYumbZ4zlzmg+/jT7cSBCB75/+elNpKRvXwcX8zTGkeUmm2pthiJGfEQVrZxZv1CDRmRRz42/8qF6sUH4SMCpSdS/ferG1SNn3yGR8/FoEbuW4IT+4sLbklItlSk6gwOtbWxNNnJhW8/D+MNNTo/mhYIy9UHoI+WtF/ompu5SdaS4KQuLvn2uKqRXCt+ItgS1+HCJ8F6R8VHq1G7+x3ZfSFCQLyz4S37bjqxrXO811vWmz1PSegbPqCHYpDmhklTKgYrXpKHxwkXZr0h82tdxz7yVvVnD4jkqdUvLT0yENB5KQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p5HldMRvGSzj1kyooQ5o8KzxbNGGC0dAW4b2If/BQCI=;
- b=mS4SQdN7LVKjqfFkiJkKdLY/gTtTprCr66JJirHTtsITi1rs513QdORbvmUcmkdV5xeiCHmGc38tL0w2EzMTOJR2iRJH8fLI3+5YcgK6LNVdOx9mXvLX+QvQUpbkdX2jsHHAydmuyeYQLYSKWjv3c8ZPQf6z3BHXor9v2MkkUJn9c9ErQD3+iASC+a2XQkjYVbUtwmt11TuoPh8pX2WwM+4/ppKtOVKtM8mwVXR9JNzb3qUa2Pgjhq+98mdP5pGFPlHVr4Mpkbh1USJDTzsrEGW8+Mpuy6iVfZW/GYQnllC9vmqKpMJJPgrE0s56EaBhtsbpN725IyUSU+Q/cn4t8A==
+ bh=plwsE2zvLIv5H/Qw5zSaoUNW8nDdo6afveRiPlhn41g=;
+ b=HeHyvMYZPc7PNEQtfskEYMP8KBtWBa2BaHS5o3T1QDDQ9ZxGmz4akicCAJCWMMBWpF/zN0XfiXuQcu1fC8jR8q8C1I8hJJdUrgd3h5vEBP6bkcSHxVz1GmCz7a7wZmWmms3HCPyKOtNwYPCzzky+eupUqcQiedN2g5kOKatVZ0c8itGs7cX5Ze0agNTdoN3DdTtLaRVkge8hpOJYfK2Zmae2j1NUYl1RJXv4no/j3Dh33/tAeU1oNY0f4rbEHT0ldCRAm13H6trCevomVNYWFb4LyiNgqkO7GNAPeHiGGZ69O4pYQXroEFw9qAaaCTidf79N6KydYlAPkB79CH+I9A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p5HldMRvGSzj1kyooQ5o8KzxbNGGC0dAW4b2If/BQCI=;
- b=CFl1GHADRpN7VZi7Vxr+Q0GTJpWYz5oVPwwS58p3+HrWMlD2quOewES9nWkszhbOQBlgC6DKeCnOJ2G7P5N3WtINh6lavcf9JcSJmfiZOEjAdUacmkBQiB90/uxVhd0GfuJ/x1M/wgKRabElvr3EYSM9RQ7ZSzq+ftbq2vjE79o=
+ bh=plwsE2zvLIv5H/Qw5zSaoUNW8nDdo6afveRiPlhn41g=;
+ b=UMoNsIfJo8hAU8TvBekSTCFudm5yh95Oucktis/IDBnRIbqmS0H8Sn0pwAIgFef7+u/Ghb49yxxXDTYF8o0q+73WksQqxVuXA2kpZaCVKapgkThGOqWavPxh1NV231V5TmDsjMtn6cB5B96oT7jXMlzVn6lwJJvdTogsch84Acc=
 Authentication-Results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
 Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
  by DB6PR0402MB2711.eurprd04.prod.outlook.com (2603:10a6:4:96::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Tue, 23 Jun
- 2020 07:01:33 +0000
+ 2020 07:01:37 +0000
 Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
  ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
  ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 07:01:33 +0000
+ 07:01:37 +0000
 From:   peng.fan@nxp.com
 To:     shawnguo@kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de,
         aisheng.dong@nxp.com
@@ -55,9 +55,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
         l.stach@pengutronix.de, devicetree@vger.kernel.org,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 2/3] arm64: dts: imx8qxp: add i2c aliases
-Date:   Tue, 23 Jun 2020 14:49:53 +0800
-Message-Id: <1592894994-30015-3-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH V2 3/3] arm64: dts: imx8qxp: Add ethernet alias
+Date:   Tue, 23 Jun 2020 14:49:54 +0800
+Message-Id: <1592894994-30015-4-git-send-email-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592894994-30015-1-git-send-email-peng.fan@nxp.com>
 References: <1592894994-30015-1-git-send-email-peng.fan@nxp.com>
@@ -67,30 +67,30 @@ X-ClientProxiedBy: SG2PR01CA0101.apcprd01.prod.exchangelabs.com
  (2603:10a6:4:a1::14)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.67) by SG2PR01CA0101.apcprd01.prod.exchangelabs.com (2603:1096:3:15::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.22 via Frontend Transport; Tue, 23 Jun 2020 07:01:29 +0000
+Received: from localhost.localdomain (119.31.174.67) by SG2PR01CA0101.apcprd01.prod.exchangelabs.com (2603:1096:3:15::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.22 via Frontend Transport; Tue, 23 Jun 2020 07:01:33 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.67]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ed2e94a7-310a-4aed-b48d-08d8174342f9
+X-MS-Office365-Filtering-Correlation-Id: 9bc63ee1-fd1f-474b-0020-08d81743455d
 X-MS-TrafficTypeDiagnostic: DB6PR0402MB2711:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB27117C00DD2653640FAEF22488940@DB6PR0402MB2711.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:546;
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB2711C672C120219F3D168B5A88940@DB6PR0402MB2711.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
 X-Forefront-PRVS: 04433051BF
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8p4pKZ3MxyN6zBStwGR6JZ6qmWLmjgSINpzPXccr6F3jq0gE+lfWepOZww+VbrQHmEjIfyczniBpwD4p4AFI5Ve4eQacxc3NZK6f2SDKTSrvHAly4YheBoyq97SHYMMT25fhRyinZtk3vgDg74KsSPmCzGcOGewgzpuLY0IvapdmPxviL2fMHG0fhCqvplU2oP7p3TiJkVXf6laMOdsO+iQIdGHHbxfqaKUFDhmR73PhRTmmIZIbkP+vF6Gq4XMqtvA66sySjIPPsmM4kSluOn4fUpEyj89cLATLgpysKexLYoB9MJ0MqD+P7PQo43QbMZmIdr8pkdP2WgVR/isyLI3ezcERH0asfSyRC2ayUtFg1ZgTKT3sY8qdB98/wMyKBBhm/g/VBe6t0yZK0vABddfTHD0sN1JxvGy7WLct1uo=
+X-Microsoft-Antispam-Message-Info: 46L8m9soL1kGyzvTOwk99dNKWFDkmvGIygC+E9e/pV+HKZgoONiFGtOSrLEziMQgG8q4QPHTw9XibTj6aegOtPBC4y/Toh6qjqZrPoFdtZqbXxMOJ8f1nB6fiBCqthta6RbMNFR7pKSvzMtZMKlbJY3W419tqnbtEQYSAb/I7LiDWUarAUoSfN4uTAAI9KOD9YvqkmreDHc+FK67V7OETyjOhiCaQTzKJwf4BmiIj5sQ0IhxbFlKjv7ad9B8qdCwGLk2Cv6tJOgxunRI5mY2Jxq7vo8J2q7SzrK5OPVUX4j2qg56hsfNYdkikAGb8cWDpA1qk6WVQgGunQjmsuwuw4woudz2vlLUwoLTGMnAJS72Y4KgNW5avEAiaCECV/XH5j/BLSthy/7DfyUFY2G22WJN6aEcEbRLh/3Qf4XjMfw=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(26005)(4744005)(478600001)(6486002)(6666004)(5660300002)(2906002)(186003)(316002)(8936002)(16526019)(66476007)(66556008)(956004)(2616005)(4326008)(66946007)(8676002)(52116002)(86362001)(36756003)(6506007)(6512007)(69590400007)(9686003)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: fleqBRuNmnqkzF3blWPzSbIYZeO285L1Djs38O9AP0LWacVB2s3lsWzCIslGS+nfTyMfA4NdHcnuRE2FdgjueUNWiWlNFMrpEnDhdYZ1M601d900ouclbTJtZS+KXLfE/jGMQonZDJ0ypKqcBxLv7b/54ntaTdSNG/Tf34abiD2mJtpopuTVGia5G8srFUC/LsSYZaU6g2lxNK2j6NKsUOQUSEJoc0o0rc2ih03D89IbfA5JJkfZpaj7VsUpj5sEJYQfQHKxuZrvWN0c23hw1WMPcxPrfT7uljnajDNcdRKwbP2mCHVq0C3witbUqRFJ4eAnlXQOcGeV9LHIxLBwC1KC8Ds1a6rfsuZ2ZLBPbSGcXBNzhFUA95zrfdRrU70+n6/ihnbwFy8l3JCmZ04Y0bfN0o6Mn1uFDYPReK8nM7DOm08yebyJACUKTUkZIv8bxOzLvQsdNcRAbEhdXjjCHI1SqNLN3fU+m7SR3cD88MKa7az9tG+0aGw4Ugt3qcmF
+X-MS-Exchange-AntiSpam-MessageData: nZIaYu/b8x2BFYRshytMm0rcqKYhO5WUeswVMqRco10MdlnEp5FpJClPs0yYIqJUA/UJMfUZxufxjM6uiSOVoLpOknajK+dus6Uv+THw6P76CLiDLPKav149ykCV2VrKopBdFGN5ZBY2rx1IMLS+mqOgOshYdyNiJkHiGHgOcWwp0A2s4gFQ02p/hyzsSwk+8sMc+rPY9Dx7igO7VYfMhtaOAZVz8wNCWD9zx3f6bLPW18hPqWrG7vyj36BDMO+4Sj9NV36diNux2rRyCqYb1KyNSL5c/Vc6pM3b8eqLsu6gHg7tmHLpH3giNP5YgLWmP0UoOrCOanL3grIzylOARAGVvJjlrc4OjM2TS6nGfyHRelPXe2qKXTN/TOKpdzetTb327WmFSU0KeML5dYmFNPMocu5bQHuKqxbT/SXBNZcupQ85nQSFCNFAulAGKbLEP0Xp6lkdpPI4RHOGpqhoEq8XVYa21FvQSDbBzth0dlg+D/K0YDdIhm84R9NIH0bn
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed2e94a7-310a-4aed-b48d-08d8174342f9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 07:01:33.0282
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bc63ee1-fd1f-474b-0020-08d81743455d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 07:01:37.0314
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Eis//YVsxgn/bEFGpW+IyTMmxiwUjxkHL+wIyjmmGgmw5OAdN/UJ4r/UYyjHAtBh9Md+o/ulWjbQ7Jm1y17/mQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: OdkqQ3E8PET5wKuVyZXmcl9UR/z8pja7qCk4waaxipj7veoELHtol7vNGcYYlmlM3JtMFsbHlCOC46SeZm3oTg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2711
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -99,28 +99,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-The devices could be enumerated properly with aliases.
+Add ethernet alias, so bootloader code can use this to find the
+primary ethernet device, and set the MAC address.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 33363c127478..3b2fada99c09 100644
+index 3b2fada99c09..e46faac1fe71 100644
 --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -27,6 +27,10 @@
- 		gpio5 = &lsio_gpio5;
- 		gpio6 = &lsio_gpio6;
- 		gpio7 = &lsio_gpio7;
-+		i2c0 = &adma_i2c0;
-+		i2c1 = &adma_i2c1;
-+		i2c2 = &adma_i2c2;
-+		i2c3 = &adma_i2c3;
- 		mmc0 = &usdhc1;
- 		mmc1 = &usdhc2;
- 		mmc2 = &usdhc3;
+@@ -19,6 +19,8 @@
+ 	#size-cells = <2>;
+ 
+ 	aliases {
++		ethernet0 = &fec1;
++		ethernet1 = &fec2;
+ 		gpio0 = &lsio_gpio0;
+ 		gpio1 = &lsio_gpio1;
+ 		gpio2 = &lsio_gpio2;
 -- 
 2.16.4
 
