@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBEAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C886C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F394620767
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2E920767
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944960;
-	bh=oLM9mZZYs/YSKFC3NB04AuXd89VQrWwoajHorXVHtNs=;
+	s=default; t=1592944964;
+	bh=gh7RpAJRcF/sRToPeU4ABUwmSyg1KQq2V94mmWi2za0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kG27OI1pKHXwiX/PPjXDZchlsvkjBvUq2mr1CpineuPTF0luh4OFBJ1chSDWBNJOR
-	 ql5OcO/Z24K5Kut2P5X1v4Eq9XcQanRjDx/GpOLyXvrzS+JFaKMwBYM0TUO+qOAgJJ
-	 UYVYcE6WK/xRXIpdqsppkWDuLOmJdQUeHt8OPL4s=
+	b=YF/+7cbj4Xg9JD1Cm+gRRsHoDVbhq/SdQLCZbU+w8pEsp5CPjtXlFG7LD0mjKn/ut
+	 k4QAJg0NwV5MFWkFdOgjEEObWgVQR7b7aB0a/sfU76VVo9z/5F+UQrIH3DAaYCxnWG
+	 ppbXAhE881vU4ZWG8XYGVnH+OUExIWYqqhZ5j8z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403880AbgFWUmh (ORCPT
+        id S2390509AbgFWUmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:42:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39124 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:42:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391802AbgFWUmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:31 -0400
+        id S2392429AbgFWUme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791B02053B;
-        Tue, 23 Jun 2020 20:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C9282070E;
+        Tue, 23 Jun 2020 20:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944952;
-        bh=oLM9mZZYs/YSKFC3NB04AuXd89VQrWwoajHorXVHtNs=;
+        s=default; t=1592944954;
+        bh=gh7RpAJRcF/sRToPeU4ABUwmSyg1KQq2V94mmWi2za0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sDmYGpjTUi2i9Luio9uTRIUKxBgF0tDWf7ER/3BWRSO0nTlLzHFuoSvY4vGUZ7q79
-         VMHiJMuNqTxRjatK8HWtV5WaV7RV75LgZoXhAscjUrmH/KjQbiPTZvMQU8+uYXGdd9
-         uZtJVde6mnQfC8Xv0fpc+0Z+pofrMubaCBgQfH0E=
+        b=BoVobA1gku1zIAlFUQzwhFcDmucQk9qMH34HeFQiHeGbWsqeIY+kOLb5msMgqNReo
+         5qADwau4A/VhJ10ConYhpp6oqXlbEkISMjQ0kc2rUitNWOLBoJGaCmwAQlUaI3huZX
+         dbBydJAufWGJzF+kNP/p0PjOgj8H4ORUsq7gI+lk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Oliver Neukum <oneukum@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 188/206] mtd: rawnand: orion: Fix the probe error path
-Date:   Tue, 23 Jun 2020 21:58:36 +0200
-Message-Id: <20200623195326.279247950@linuxfoundation.org>
+Subject: [PATCH 4.19 162/206] usb/xhci-plat: Set PM runtime as active on resume
+Date:   Tue, 23 Jun 2020 21:58:10 +0200
+Message-Id: <20200623195324.971022523@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,42 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit be238fbf78e4c7c586dac235ab967d3e565a4d1a ]
+[ Upstream commit 79112cc3c29f4a8c73a21428fbcbcb0afb005e3e ]
 
-nand_release() is supposed be called after MTD device registration.
-Here, only nand_scan() happened, so use nand_cleanup() instead.
+Follow suit of ohci-platform.c and perform pm_runtime_set_active() on
+resume.
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates by far the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible. However, pointing this commit as the
-culprit for backporting purposes makes sense even if this commit is not
-introducing any bug.
+ohci-platform.c had a warning reported due to the missing
+pm_runtime_set_active() [1].
 
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-34-miquel.raynal@bootlin.com
+[1] https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
+
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Tony Prisk <linux@prisktech.co.nz>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mathias Nyman <mathias.nyman@intel.com>
+CC: Oliver Neukum <oneukum@suse.de>
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-usb@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20200518154931.6144-2-qais.yousef@arm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/orion_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-plat.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/orion_nand.c b/drivers/mtd/nand/raw/orion_nand.c
-index 5c58d91ffaee6..caffebab6c9b1 100644
---- a/drivers/mtd/nand/raw/orion_nand.c
-+++ b/drivers/mtd/nand/raw/orion_nand.c
-@@ -181,7 +181,7 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 	mtd->name = "orion_nand";
- 	ret = mtd_device_register(mtd, board->parts, board->nr_parts);
- 	if (ret) {
--		nand_release(nc);
-+		nand_cleanup(nc);
- 		goto no_dev;
- 	}
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index adc437ca83b88..65972c186c641 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -408,7 +408,15 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
  
+-	return xhci_resume(xhci, 0);
++	ret = xhci_resume(xhci, 0);
++	if (ret)
++		return ret;
++
++	pm_runtime_disable(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
++	return 0;
+ }
+ 
+ static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
 -- 
 2.25.1
 
