@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0F42098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23EF21548
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945328;
-	bh=cPN+RtTQ5NReqDF7QV1AKtUFaUc7tKMi9tQFZPpd0IQ=;
+	s=default; t=1592945332;
+	bh=UEJvs1cLruhzQaC1R2JJ/mebARuLg6W56m+2KUqd530=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MHSPYEktgfP66tykhblLjmfLnmS/xG+g7j3dL6cTPWDBiBjSLFslOyKsr+nBtNBPi
-	 6wK2NtmUTJLBFk+oIFt5GchrKjzgtSEgzAjF6LDlGShLhm+AQ0KPwassed/8Xkkpyn
-	 hrvn/V5EKDT+vmboIu8VSP6fj0MYGyEepAKNGLlU=
+	b=Bg/B3jMfg2yPugE5XgK53vMqMDkyFNxPSBDr4FzAgZSksPA9u/BsE+iAZZFRCV6Rm
+	 4J8Bdu0ys6A5dEV7Xx+5ciyE9xRrQgAWJ5KV0WsPh0W2vIZsXYpVmFge+wJQ+CI8pN
+	 A3L4jKPqlXIGXlLdx5SIPeCOx2D23QRPX04Bht1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404108AbgFWUsq (ORCPT
+        id S2404117AbgFWUsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:48:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47808 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392953AbgFWUsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:48:41 -0400
+        id S2392185AbgFWUsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:48:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83BA2098B;
-        Tue, 23 Jun 2020 20:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C7312098B;
+        Tue, 23 Jun 2020 20:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945321;
-        bh=cPN+RtTQ5NReqDF7QV1AKtUFaUc7tKMi9tQFZPpd0IQ=;
+        s=default; t=1592945324;
+        bh=UEJvs1cLruhzQaC1R2JJ/mebARuLg6W56m+2KUqd530=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AFEi+SSO4Bo0fpFJNIYcu6wXSrUGOdEdAFKQwx8n39POqYbDzG8o4dS53AAj51VKe
-         7lXDD/zBwDJV2ew+tmAYFYKt1O41DN+vGiz49tEmJjEABswyGspMKQ9VgzTgMbzzAo
-         EqnL+/qpXn4QXw0eYuW/zDKLPnmPrCqVneuFpQzk=
+        b=I7zn8UtV4C1JQIGS83evkpocez4vKCA3U9RjKXrplUPqQ54pi367/s2ib6lEzw5B0
+         zIPXH4cjTqIDQ8f4g3SEOgHVtrhNoK7odsWLUc2Z8eoOPgFm3mwGIE+wrt0GzO4ObF
+         o+YMxUH099K+4hxyUC3KzaIugg/UpmIvoXaPQGRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 125/136] mtd: rawnand: oxnas: Fix the probe error path
-Date:   Tue, 23 Jun 2020 21:59:41 +0200
-Message-Id: <20200623195310.093687882@linuxfoundation.org>
+Subject: [PATCH 4.14 126/136] mtd: rawnand: socrates: Fix the probe error path
+Date:   Tue, 23 Jun 2020 21:59:42 +0200
+Message-Id: <20200623195310.142124689@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -61,49 +61,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 154298e2a3f6c9ce1d76cdb48d89fd5b107ea1a3 ]
+[ Upstream commit 9c6c2e5cc77119ce0dacb4f9feedb73ce0354421 ]
 
 nand_release() is supposed be called after MTD device registration.
 Here, only nand_scan() happened, so use nand_cleanup() instead.
 
-While at it, be consistent and move the function call in the error
-path thanks to a goto statement.
+There is no real Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if this commit is not
+introducing any bug.
 
-Fixes: 668592492409 ("mtd: nand: Add OX820 NAND Support")
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-37-miquel.raynal@bootlin.com
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-51-miquel.raynal@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/oxnas_nand.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/mtd/nand/socrates_nand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
-index 7f0ba28f8a007..350d4226b436a 100644
---- a/drivers/mtd/nand/oxnas_nand.c
-+++ b/drivers/mtd/nand/oxnas_nand.c
-@@ -147,10 +147,8 @@ static int oxnas_nand_probe(struct platform_device *pdev)
- 			goto err_release_child;
+diff --git a/drivers/mtd/nand/socrates_nand.c b/drivers/mtd/nand/socrates_nand.c
+index f960f18ea3e24..8d4f0cd7197d3 100644
+--- a/drivers/mtd/nand/socrates_nand.c
++++ b/drivers/mtd/nand/socrates_nand.c
+@@ -195,7 +195,7 @@ static int socrates_nand_probe(struct platform_device *ofdev)
+ 	if (!res)
+ 		return res;
  
- 		err = mtd_device_register(mtd, NULL, 0);
--		if (err) {
--			nand_release(chip);
--			goto err_release_child;
--		}
-+		if (err)
-+			goto err_cleanup_nand;
+-	nand_release(nand_chip);
++	nand_cleanup(nand_chip);
  
- 		oxnas->chips[nchips] = chip;
- 		++nchips;
-@@ -166,6 +164,8 @@ static int oxnas_nand_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+err_cleanup_nand:
-+	nand_cleanup(chip);
- err_release_child:
- 	of_node_put(nand_np);
- err_clk_unprepare:
+ out:
+ 	iounmap(host->io_base);
 -- 
 2.25.1
 
