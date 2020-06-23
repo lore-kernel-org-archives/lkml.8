@@ -2,132 +2,59 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F986C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A8D20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:11:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O87y6dWV"
+	by mail.kernel.org (Postfix) with ESMTP id 29ED020724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389334AbgFWWLN (ORCPT
+        id S2389903AbgFWWLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        Tue, 23 Jun 2020 18:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387840AbgFWWLM (ORCPT
+        with ESMTP id S2387840AbgFWWL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:11:12 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51599C061573;
-        Tue, 23 Jun 2020 15:11:12 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id d27so149875qtg.4;
-        Tue, 23 Jun 2020 15:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=yz11ciyHBUyfQdsgqu8iMb/6aua6PZ+Q9S5NKvvlTbE=;
-        b=O87y6dWV1bPYh1LE87O3QzQm66UbzFCYARgqz4cN6sph6Vg91tcBeNs+4gYKKSSYYR
-         H/NrDtgVRafpykjTWfnNK1y8ZaeqdAvXeHl2v3dUPUWHv6HX0JAOWKZHOk9xvYdeU7cb
-         ieuOr7x/flNBFqW3hGpbDphUPM1RQMHQ67kYxUSNhghEVqGyR6WMphmfa3GclfRDBVFe
-         fwIqnuzlK0XWoLBWHd9i4G1PP94+HljznwWJvdVyzZA25rrZjzZULUvQRbZFhR4U6pz8
-         BCY9PhjP7eNzFSosL+Y0m03Qzq+Sy1+OGAfn4jneoU7HtkONsI0wJPw7lqC4mRrayrkY
-         Vd7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yz11ciyHBUyfQdsgqu8iMb/6aua6PZ+Q9S5NKvvlTbE=;
-        b=cRIZ9HR33yxPGNziGhhaAynFX4/jdh7BvM+KpF1zqQFl46yGFtV2nLTT4apk5r/k1D
-         AD8srfWcsDar46rfxpRB+nUQIbhCDG+gKy6r78jTsN9pXNnfNS2yqAZ6dsXDOuk2AfVZ
-         gOCAmYnI0SbXD+Gjxx7y2L/8NXg3MpH/uLbhm4IL3Of+bCzCO/qa3WWRNM6aXXMQ8xFp
-         XP7xkZwT891rAbkgUeBj/PRIcSXDVXnev2R7vUE3nYxRKlJAOk991+hLHjrqSqSQzVCk
-         45VK7ORXF3Myl8xYyDdfC0fzZPTB467pw/aMRWrIsSG1NZ366nzo/HiPkvXe/AWaEJLb
-         Igng==
-X-Gm-Message-State: AOAM531GUwybVYWrQrx1NSbigULJTmlNN7yVRFF+FtUygmr+e3Sw7BUZ
-        ikkiIvps9P3Iw402ia2Zbo8=
-X-Google-Smtp-Source: ABdhPJzXR2d0Y1jwkxVKARZz1HePUifurRj2yiAIpH9ks1hX2QFgQTL8nJ3mmI6wKmlJ08KCbN6FUg==
-X-Received: by 2002:aed:33c5:: with SMTP id v63mr23901443qtd.104.1592950271349;
-        Tue, 23 Jun 2020 15:11:11 -0700 (PDT)
-Received: from buszk-y710.fios-router.home (pool-108-54-206-188.nycmny.fios.verizon.net. [108.54.206.188])
-        by smtp.googlemail.com with ESMTPSA id b53sm1866464qtc.65.2020.06.23.15.11.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 15:11:10 -0700 (PDT)
-From:   Zekun Shen <bruceshenzk@gmail.com>
-Cc:     security@kernel.org, Zekun Shen <bruceshenzk@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ath10k: fix OOB: __ath10k_htt_rx_ring_fill_n
-Date:   Tue, 23 Jun 2020 18:11:05 -0400
-Message-Id: <20200623221105.3486-1-bruceshenzk@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 23 Jun 2020 18:11:29 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B94BC061573;
+        Tue, 23 Jun 2020 15:11:29 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EF9E61294AFAD;
+        Tue, 23 Jun 2020 15:11:28 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 15:11:28 -0700 (PDT)
+Message-Id: <20200623.151128.1218842710769786609.davem@davemloft.net>
+To:     brianvv@google.com
+Cc:     brianvv.kernel@gmail.com, edumazet@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 net-next 1/2] indirect_call_wrapper: extend indirect
+ wrapper to support up to 4 calls
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200623164232.175846-1-brianvv@google.com>
+References: <20200623164232.175846-1-brianvv@google.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Jun 2020 15:11:29 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The idx in __ath10k_htt_rx_ring_fill_n function lives in
-consistent dma region writable by the device. Malfunctional
-or malicious device could manipulate such idx to have a OOB
-write. Either by
-    htt->rx_ring.netbufs_ring[idx] = skb;
-or by
-    ath10k_htt_set_paddrs_ring(htt, paddr, idx);
+From: Brian Vazquez <brianvv@google.com>
+Date: Tue, 23 Jun 2020 09:42:31 -0700
 
-The idx can also be negative as it's signed, giving a large
-memory space to write to.
+> There are many places where 2 annotations are not enough. This patch
+> adds INDIRECT_CALL_3 and INDIRECT_CALL_4 to cover such cases.
+> 
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
 
-It's possibly exploitable by corruptting a legit pointer with
-a skb pointer. And then fill skb with payload as rougue object.
-
-Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
----
-Part of the log here. Sometimes it appears as UAF when writing 
-to a freed memory by chance.
-
- [   15.594376] BUG: unable to handle page fault for address: ffff887f5c1804f0
- [   15.595483] #PF: supervisor write access in kernel mode
- [   15.596250] #PF: error_code(0x0002) - not-present page
- [   15.597013] PGD 0 P4D 0
- [   15.597395] Oops: 0002 [#1] SMP KASAN PTI
- [   15.597967] CPU: 0 PID: 82 Comm: kworker/u2:2 Not tainted 5.6.0 #69
- [   15.598843] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
- BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
- [   15.600438] Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
- [   15.601389] RIP: 0010:__ath10k_htt_rx_ring_fill_n 
- (linux/drivers/net/wireless/ath/ath10k/htt_rx.c:173) ath10k_core
-
- drivers/net/wireless/ath/ath10k/htt_rx.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
-index d787cbead..4e411b33a 100644
---- a/drivers/net/wireless/ath/ath10k/htt_rx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
-@@ -142,6 +142,14 @@ static int __ath10k_htt_rx_ring_fill_n(struct ath10k_htt *htt, int num)
- 	BUILD_BUG_ON(HTT_RX_RING_FILL_LEVEL >= HTT_RX_RING_SIZE / 2);
- 
- 	idx = __le32_to_cpu(*htt->rx_ring.alloc_idx.vaddr);
-+
-+	if (idx < 0 || idx >= htt->rx_ring.size) {
-+		ath10k_err(htt->ar, "idx OOB, firmware malfunctioning?\n");
-+		idx &= htt->rx_ring.size_mask;
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
-+
- 	while (num > 0) {
- 		skb = dev_alloc_skb(HTT_RX_BUF_SIZE + HTT_RX_DESC_ALIGN);
- 		if (!skb) {
--- 
-2.17.1
-
+Applied.
