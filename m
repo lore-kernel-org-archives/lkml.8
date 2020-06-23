@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8FBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80D8B20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB0A20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945595;
-	bh=n//SLMJu7Up4JR3PkWv7N4jc0/XL3Id7mT0hrDjIJSI=;
+	s=default; t=1592945602;
+	bh=zs1Fsnj+WxD8z7ioOPR4f0U8x/ABY56oKNjP/7rKsb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ex+Dq8TcGE8u14oIPRHsPYdzJkWP/Lsi3FfHTbuYO8ci4p0QzILdrZpYrZ9yLjfAH
-	 roTbgP07gIBgdhWCKVf2KYt3YiIUMfQpGHt3il76bcQYaRdTXCEenlgAGdDC7TI7Pb
-	 TlQx+eOstnDXfsSI3zCIv+tZxGd6u9k3E+b4q9SM=
+	b=xI8Rm69fAoiYY2NO9wtfzIeFCly+wM1W/q8fH9uA9XEjZ9vqh9qBOnzxsLUjAL51q
+	 xoblWceSYHfgwwX8gT7kfp67pL5SAWXxorl+1+jq9f4RkkB8Y6L6jLEDlqZ5UDYoBx
+	 DrBCPbBISTVnClyjlzK0yAPhOkrq9MECEEyTj674=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403983AbgFWUxN (ORCPT
+        id S2392878AbgFWUqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392901AbgFWUq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:46:58 -0400
+        id S2392857AbgFWUqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC78C214DB;
-        Tue, 23 Jun 2020 20:46:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A89F021548;
+        Tue, 23 Jun 2020 20:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945219;
-        bh=n//SLMJu7Up4JR3PkWv7N4jc0/XL3Id7mT0hrDjIJSI=;
+        s=default; t=1592945201;
+        bh=zs1Fsnj+WxD8z7ioOPR4f0U8x/ABY56oKNjP/7rKsb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DL54jfaqsUcXgdCW/xd1nm+FtYdelZ4RMAYxZNb2v31RMV1KZvM5HvY6VKqMyG7og
-         +mSmHG0YYt9tyRmAyKC5WoasIt/HkeIGlL1Ut3T0EUv0U6kgYCw2Y5ocmFyVWwQ8Vs
-         jbu2eeTM/Y5k05Upo+kpK/lQw8wonbuui5JhFEfU=
+        b=P2bhknq3AaDzHzfFFdbodNKP/gZX8SA0Pf/lAwWfnHE6oWdJ1Ro9cqUnVYVMiK+iw
+         IfiOKNv1RcKfrBfBo1oO4mA7VdVC6hWkrJmvUXwGO3IFBdBbGaIIidHpUn1k4Hzg9B
+         OEfb4/zbOpolIV1KWiMhs72zj3k9yRrWaAFFvzTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        stable@vger.kernel.org, Fedor Tokarev <ftokarev@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/136] openrisc: Fix issue with argument clobbering for clone/fork
-Date:   Tue, 23 Jun 2020 21:59:01 +0200
-Message-Id: <20200623195307.968710030@linuxfoundation.org>
+Subject: [PATCH 4.14 079/136] net: sunrpc: Fix off-by-one issues in rpc_ntop6
+Date:   Tue, 23 Jun 2020 21:58:55 +0200
+Message-Id: <20200623195307.681534637@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -59,46 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stafford Horne <shorne@gmail.com>
+From: Fedor Tokarev <ftokarev@gmail.com>
 
-[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
+[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
 
-Working on the OpenRISC glibc port I found that sometimes clone was
-working strange.  That the tls data argument sent in r7 was always
-wrong.  Further investigation revealed that the arguments were getting
-clobbered in the entry code.  This patch removes the code that writes to
-the argument registers.  This was likely due to some old code hanging
-around.
+Fix off-by-one issues in 'rpc_ntop6':
+ - 'snprintf' returns the number of characters which would have been
+   written if enough space had been available, excluding the terminating
+   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
+   last character was dropped.
+ - 'strcat' adds a terminating null byte to the string, thus if len ==
+   buflen, the null byte is written past the end of the buffer.
 
-This patch fixes this up for clone and fork.  This fork clobber is
-harmless but also useless so remove.
-
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/openrisc/kernel/entry.S | 4 ++--
+ net/sunrpc/addr.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
-index 1107d34e45bf1..0fdfa7142f4b3 100644
---- a/arch/openrisc/kernel/entry.S
-+++ b/arch/openrisc/kernel/entry.S
-@@ -1102,13 +1102,13 @@ ENTRY(__sys_clone)
- 	l.movhi	r29,hi(sys_clone)
- 	l.ori	r29,r29,lo(sys_clone)
- 	l.j	_fork_save_extra_regs_and_call
--	 l.addi	r7,r1,0
-+	 l.nop
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 2e0a6f92e563d..8391c27855501 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -81,11 +81,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
  
- ENTRY(__sys_fork)
- 	l.movhi	r29,hi(sys_fork)
- 	l.ori	r29,r29,lo(sys_fork)
- 	l.j	_fork_save_extra_regs_and_call
--	 l.addi	r3,r1,0
-+	 l.nop
+ 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
+ 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
+-	if (unlikely((size_t)rc > sizeof(scopebuf)))
++	if (unlikely((size_t)rc >= sizeof(scopebuf)))
+ 		return 0;
  
- ENTRY(sys_rt_sigreturn)
- 	l.jal	_sys_rt_sigreturn
+ 	len += rc;
+-	if (unlikely(len > buflen))
++	if (unlikely(len >= buflen))
+ 		return 0;
+ 
+ 	strcat(buf, scopebuf);
 -- 
 2.25.1
 
