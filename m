@@ -2,118 +2,82 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA23FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B54C720675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7HHrTI9"
+	by mail.kernel.org (Postfix) with ESMTP id 419C220720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731916AbgFWBVn (ORCPT
+        id S1731925AbgFWBWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731898AbgFWBVm (ORCPT
+        Mon, 22 Jun 2020 21:22:49 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:35673 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731765AbgFWBWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:21:42 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE86EC061573;
-        Mon, 22 Jun 2020 18:21:41 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id n24so21453730lji.10;
-        Mon, 22 Jun 2020 18:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=F+RvqEz6PG/X+CuXMBwrvKY9rrg/o+DXQrz2YG0godc=;
-        b=G7HHrTI9fPnjkyBjlhBAlYh3R/lTyai5eZRt1sIWWTU3Y2h+ozMOd94I+5aC4yiLVu
-         zK2wfAj7UkBfFXGwpqVyuw1Huy/AsrQCFd1dpZaY1dzuZvHnWl46lfVsNy2yJufcP9cp
-         37lzbzNkq6NtIpnBDpFW2FNN+IA9hrxg9pjL+uLeb1/SEOoH3SXpBUfdbKAfVZx84bhn
-         eCpi1VNCvkl82CfIzU6j2q8I8yesPLW0fb6vehW73JLckcRLGI7V/+c7wMXkrmho1wWP
-         r3xER19+4wKPEkl0B+iYLsSpkSXG+22GGx5mJsnGerWmWg+17n32PlkfDmMm/D5ihYwN
-         9v8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F+RvqEz6PG/X+CuXMBwrvKY9rrg/o+DXQrz2YG0godc=;
-        b=XX+RJhtrzFdDeJ/ScWyB+Oh1cWieY5NNN24KU549qwSfSa+BxwVsCgxKO8oK+9ozPe
-         Xxj5dpdK9MicVNZQU1lN3E2SQLSYKb5uAu66G9t+mQxjs0EKWPNFXKcbf+Nigzz/VyWG
-         /DBFgaFHIbU0OqdNVdFSw7ZKAYgyvclxLx3Myiw/i8hTXJcChGyrZQ/21PhsfOav7VuX
-         Semz/UBwl6FGhIU+HhLlZA4zRDQ00FsQKTapzmMwHaORg0e1Hv+YoQYlTmMkW2piOdwp
-         rybxOGdCERS7xXj1z8w6/69iVryJYzs+gdwZqCzJcHH5Bu4FLBCT96taU6l6eXXEhtIQ
-         a7Fg==
-X-Gm-Message-State: AOAM531qYEsP1XNa86+LeustqjDQteC5U+JOb34LCqQ6qBXQ9qVJ2dhC
-        K2yVo0IueC0Bncs5EabpRDGlv2JGWdU=
-X-Google-Smtp-Source: ABdhPJxEkZKfCXZNxGovVdsdLGGCiUn3lOCAIEVP6qJZiadlOHDLrbw/GdTXxmtsOEmPZLmWvLagAQ==
-X-Received: by 2002:a2e:910c:: with SMTP id m12mr10356326ljg.332.1592875299285;
-        Mon, 22 Jun 2020 18:21:39 -0700 (PDT)
-Received: from [192.168.10.34] ([178.150.133.249])
-        by smtp.gmail.com with ESMTPSA id l16sm3795745lfg.2.2020.06.22.18.21.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 18:21:38 -0700 (PDT)
-Subject: Re: [PATCH] isofs: fix High Sierra dirent flag accesses
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Egor Chelak <egor.chelak@gmail.com>
-References: <20200621040817.3388-1-egor.chelak@gmail.com>
- <20200622212245.GC21350@casper.infradead.org>
-From:   Egor Chelak <egor.chelak@gmail.com>
-Message-ID: <71f6cef7-f392-e1ba-1e79-2b767d2cff15@gmail.com>
-Date:   Tue, 23 Jun 2020 04:21:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 22 Jun 2020 21:22:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U0SetIO_1592875365;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0SetIO_1592875365)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 23 Jun 2020 09:22:46 +0800
+Date:   Tue, 23 Jun 2020 09:22:45 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Huang Ying <ying.huang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 3/3] mm/shuffle: remove dynamic reconfiguration
+Message-ID: <20200623012245.GA99806@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200619125923.22602-1-david@redhat.com>
+ <20200619125923.22602-4-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622212245.GC21350@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619125923.22602-4-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/2020 12:22 AM, Matthew Wilcox wrote:
-> It's been about 22 years since I contributed the patch which added
-> support for the Acorn extensions ;-)  But I'm pretty sure that it's not
-> possible to have an Acorn CD-ROM that is also an HSF CD-ROM.  That is,
-> all Acorn formatted CD-ROMs are ISO-9660 compatible.  So I think this
-> chunk of the patch is not required.
+On Fri, Jun 19, 2020 at 02:59:22PM +0200, David Hildenbrand wrote:
+>Commit e900a918b098 ("mm: shuffle initial free memory to improve
+>memory-side-cache utilization") promised "autodetection of a
+>memory-side-cache (to be added in a follow-on patch)" over a year ago.
+>
+>The original series included patches [1], however, they were dropped
+>during review [2] to be followed-up later.
+>
+>Due to lack of platforms that publish an HMAT, autodetection is currently
+>not implemented. However, manual activation is actively used [3]. Let's
+>simplify for now and re-add when really (ever?) needed.
+>
+>[1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com
+>[2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com
+>[3] https://lkml.kernel.org/r/CAPcyv4irwGUU2x+c6b4L=KbB1dnasNKaaZd6oSpYjL9kfsnROQ@mail.gmail.com
+>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Johannes Weiner <hannes@cmpxchg.org>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: Minchan Kim <minchan@kernel.org>
+>Cc: Huang Ying <ying.huang@intel.com>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Cc: Mel Gorman <mgorman@techsingularity.net>
+>Cc: Dan Williams <dan.j.williams@intel.com>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
 
-I couldn't find any info on Acorn extensions online, so I wasn't sure if
-they were mutually exclusive or not, and fixed it there too, just to be
-safe. Still, even though it won't be needed in practice, I think it's
-better to access the flags in the same way everywhere. Having the same
-field accessed differently in different places raises the question "why
-it's done differently here?". If we go that way, at the very least there
-should be an explanatory comment saying HSF+Acorn is an impossible
-combination, and perhaps some logic to prevent HSF discs from mounting
-with -o map=acorn. Just leaving it be doesn't seem like a clean
-solution.
+Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 
-On 6/23/2020 12:31 AM, Matthew Wilcox wrote:
-> Also, ew.  Why on earth do we do 'de->flags[-sbi->s_high_sierra]'?
-> I'm surprised we don't have any tools that warn about references outside
-> an array.  I would do this as ...
-> 
-> static inline u8 de_flags(struct isofs_sb_info *sbi,
-> 		struct iso_directory_record *de)
-> {
-> 	if (sbi->s_high_sierra)
-> 		return de->date[6];
-> 	return de->flags;
-> }
-I would do something like that, but for this patch I'm just trying to do
-a simple bugfix. The isofs code definitely needs a clean up, and perhaps
-I'll do it in a future patch. I haven't submitted a patch before, so I
-want to start with something simple and uncontroversial, while I learn
-the process. :-)
+-- 
+Wei Yang
+Help you, Help me
