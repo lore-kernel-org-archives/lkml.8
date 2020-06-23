@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C84C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA89320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AE720656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945994;
-	bh=9NE9nisQ1DquUP0EnbAPzo4ORKVh7iHb3MsORRTQgNE=;
+	s=default; t=1592946005;
+	bh=zPDNeBECLrh3RvUqPj3lAFT9v3gO2ihq874csq4WAT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xs7/HuIUGnN4uJ3U2pRwYsS1d/BkWcFNRqjTXqUiro9fClitmC9NoXVOsxneJ9CRV
-	 G0eOQUojxRAxWszd7KxboQJKiHjOdhuFharNAJp55k2J5xwSjj7iwVW4Mza7zykmZN
-	 aZJrZljKlqKs2XTe8+7o8eqRXhKrbg2g9uyJxHsg=
+	b=T67o4n9uYQWZYUjx8qTqO/KJK2v4H+ld+ruVkZ1LTlUNrCNKAMbl/Y6SI016KeZ0o
+	 OYi2wq+TGCmkymQ3kNS5lUl5WyMS/tyr+UBQegugkY8sb9ml9D6Lg/2DoJd2I/2+jF
+	 Ds9L2l7H8phcw3BKP4/419LLG82AvDAIBv3u45E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392541AbgFWU7w (ORCPT
+        id S2392259AbgFWUki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:59:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36860 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:40:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392261AbgFWUkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:43 -0400
+        id S2392245AbgFWUke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:40:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38DE72053B;
-        Tue, 23 Jun 2020 20:40:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 514C42053B;
+        Tue, 23 Jun 2020 20:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944842;
-        bh=9NE9nisQ1DquUP0EnbAPzo4ORKVh7iHb3MsORRTQgNE=;
+        s=default; t=1592944834;
+        bh=zPDNeBECLrh3RvUqPj3lAFT9v3gO2ihq874csq4WAT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dypZ+vxqQdSlzRaUvb5vYawXg5kGkviYTHJPilmyThZDF5XooopyQmgI82GuxzXnh
-         p9wirDCvNEsPTjqXeH7fpjGKRdH7K/lDV+tt8IFwwolbo2DcZXbXo18RyYpEozk/Vr
-         66SE1ITr84dylIyi3rcVsGwaOJxap0kKRG+3PJDA=
+        b=OqVZx48h7SunZ1w9+p91FTI0xQuCvVksSQ+Hxh/WmOvjEKh2MKuk3H3Cr0LR0bsbK
+         SQU2xY0nEnqeppRv5QMzGkMwby+Y4h/ahwu9kMI6XAWwAp4T/EAoPd0WLAs3Aj9d/B
+         vmfA8Ua+4kauxS7uI1i/MW//UjZ3jrFFe5G4VF/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
+        stable@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>,
+        Arindam Nath <arindam.nath@amd.com>,
         Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 146/206] NTB: Revert the change to use the NTB device dev for DMA allocations
-Date:   Tue, 23 Jun 2020 21:57:54 +0200
-Message-Id: <20200623195324.171222781@linuxfoundation.org>
+Subject: [PATCH 4.19 144/206] ntb_tool: pass correct struct device to dma_alloc_coherent
+Date:   Tue, 23 Jun 2020 21:57:52 +0200
+Message-Id: <20200623195324.064908726@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,42 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-[ Upstream commit 40da7d9a93c8941737ef4a1208d32c13ce017fe1 ]
+[ Upstream commit 433efe720674efd9fdbcef78be75793393cf05db ]
 
-Commit 417cf39cfea9 ("NTB: Set dma mask and dma coherent mask to NTB
-devices") started using the NTB device for DMA allocations which was
-turns out was wrong. If the IOMMU is enabled, such alloctanions will
-always fail with messages such as:
+Currently, ntb->dev is passed to dma_alloc_coherent
+and dma_free_coherent calls. The returned dma_addr_t
+is the CPU physical address. This works fine as long
+as IOMMU is disabled. But when IOMMU is enabled, we
+need to make sure that IOVA is returned for dma_addr_t.
+So the correct way to achieve this is by changing the
+first parameter of dma_alloc_coherent() as ntb->pdev->dev
+instead.
 
-  DMAR: Allocating domain for 0000:02:00.1 failed
-
-This is because the IOMMU has not setup the device for such use.
-
-Change the tools back to using the PCI device for allocations seeing
-it doesn't make sense to add an IOMMU group for the non-physical NTB
-device. Also remove the code that sets the DMA mask as it no longer
-makes sense to do this.
-
-Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
+Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+Signed-off-by: Arindam Nath <arindam.nath@amd.com>
 Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/ntb.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/ntb/test/ntb_tool.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ntb/ntb.c b/drivers/ntb/ntb.c
-index c9a0912b175fa..f8f75a504a581 100644
---- a/drivers/ntb/ntb.c
-+++ b/drivers/ntb/ntb.c
-@@ -311,4 +311,3 @@ static void __exit ntb_driver_exit(void)
- 	bus_unregister(&ntb_bus);
- }
- module_exit(ntb_driver_exit);
--
+diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
+index d592c0ffbd198..025747c1568ea 100644
+--- a/drivers/ntb/test/ntb_tool.c
++++ b/drivers/ntb/test/ntb_tool.c
+@@ -590,7 +590,7 @@ static int tool_setup_mw(struct tool_ctx *tc, int pidx, int widx,
+ 	inmw->size = min_t(resource_size_t, req_size, size);
+ 	inmw->size = round_up(inmw->size, addr_align);
+ 	inmw->size = round_up(inmw->size, size_align);
+-	inmw->mm_base = dma_alloc_coherent(&tc->ntb->dev, inmw->size,
++	inmw->mm_base = dma_alloc_coherent(&tc->ntb->pdev->dev, inmw->size,
+ 					   &inmw->dma_base, GFP_KERNEL);
+ 	if (!inmw->mm_base)
+ 		return -ENOMEM;
+@@ -612,7 +612,7 @@ static int tool_setup_mw(struct tool_ctx *tc, int pidx, int widx,
+ 	return 0;
+ 
+ err_free_dma:
+-	dma_free_coherent(&tc->ntb->dev, inmw->size, inmw->mm_base,
++	dma_free_coherent(&tc->ntb->pdev->dev, inmw->size, inmw->mm_base,
+ 			  inmw->dma_base);
+ 	inmw->mm_base = NULL;
+ 	inmw->dma_base = 0;
+@@ -629,7 +629,7 @@ static void tool_free_mw(struct tool_ctx *tc, int pidx, int widx)
+ 
+ 	if (inmw->mm_base != NULL) {
+ 		ntb_mw_clear_trans(tc->ntb, pidx, widx);
+-		dma_free_coherent(&tc->ntb->dev, inmw->size,
++		dma_free_coherent(&tc->ntb->pdev->dev, inmw->size,
+ 				  inmw->mm_base, inmw->dma_base);
+ 	}
+ 
 -- 
 2.25.1
 
