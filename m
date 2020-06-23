@@ -7,44 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A93BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E2E206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00092078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733164AbgFWRYr (ORCPT
+        id S1733012AbgFWRYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:24:47 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61940 "EHLO mga11.intel.com"
+        Tue, 23 Jun 2020 13:24:55 -0400
+Received: from mga03.intel.com ([134.134.136.65]:17059 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733146AbgFWRYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:24:43 -0400
-IronPort-SDR: YBsuKuWcgSbw/0Rd/oxW8g4E38jeuWJyj5YE7LM3BgTb2IvAhsBuZFouYLb/AU3b30ydIFbLK3
- MzOl/gDvZpEg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="142391509"
+        id S1733141AbgFWRYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:24:53 -0400
+IronPort-SDR: atGShV3gLwt+VS5uizCHYfdSzzIxi+V91PC0IBkJVTqj9/vO7GrXIS0tFoMAhth6errmU7cgDa
+ dfalbZnKojxw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="144170844"
 X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="142391509"
+   d="scan'208";a="144170844"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 10:24:42 -0700
-IronPort-SDR: PaPYECkHgeUaHkq7lCdP3ZCwMEDmqppl050a2yO2NE/0anFX160pq3w5j+HZVq7ZsApUZPE8Oq
- /vsOK4Gq1YYw==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 10:24:53 -0700
+IronPort-SDR: /JsqC+xOr9qVvIOgw4zV7dRWJkIH9XcHNCAU30RaXLM4P/9F4El+phmSfebDGSbCXB2Bc5w+VF
+ bc5torReNOjA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="423080114"
+   d="scan'208";a="423080171"
 Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.213.182.184])
-  by orsmga004.jf.intel.com with ESMTP; 23 Jun 2020 10:24:40 -0700
+  by orsmga004.jf.intel.com with ESMTP; 23 Jun 2020 10:24:50 -0700
 From:   Kristen Carlson Accardi <kristen@linux.intel.com>
 To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        Kristen Carlson Accardi <kristen@linux.intel.com>
-Subject: [PATCH v3 07/10] x86/boot/compressed: change definition of STATIC
-Date:   Tue, 23 Jun 2020 10:23:24 -0700
-Message-Id: <20200623172327.5701-8-kristen@linux.intel.com>
+        bp@alien8.de
+Cc:     arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v3 09/10] kallsyms: Hide layout
+Date:   Tue, 23 Jun 2020 10:23:26 -0700
+Message-Id: <20200623172327.5701-10-kristen@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200623172327.5701-1-kristen@linux.intel.com>
 References: <20200623172327.5701-1-kristen@linux.intel.com>
@@ -55,74 +57,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for changes to the upcoming fgkaslr commit, change misc.c
-to not define STATIC as static, but instead set STATIC to "". This allows
-memptr to become accessible to multiple files.
+This patch makes /proc/kallsyms display alphabetically by symbol
+name rather than sorted by address in order to hide the newly
+randomized address layout.
 
 Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Tested-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/boot/compressed/kaslr.c | 4 ----
- arch/x86/boot/compressed/misc.c  | 7 ++++---
- arch/x86/boot/compressed/misc.h  | 6 ++++++
- 3 files changed, 10 insertions(+), 7 deletions(-)
+ kernel/kallsyms.c | 128 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 128 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index d7408af55738..6f596bd5b6e5 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -39,10 +39,6 @@
- #include <generated/utsrelease.h>
- #include <asm/efi.h>
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 16c8c605f4b0..df2b20e1b7f2 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -25,6 +25,7 @@
+ #include <linux/filter.h>
+ #include <linux/ftrace.h>
+ #include <linux/compiler.h>
++#include <linux/list_sort.h>
  
--/* Macros used by the included decompressor code below. */
--#define STATIC
--#include <linux/decompress/mm.h>
--
- #ifdef CONFIG_X86_5LEVEL
- unsigned int __pgtable_l5_enabled;
- unsigned int pgdir_shift __ro_after_init = 39;
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 9652d5c2afda..a55a4ec48422 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -26,9 +26,6 @@
-  * it is not safe to place pointers in static structures.
-  */
- 
--/* Macros used by the included decompressor code below. */
--#define STATIC		static
--
  /*
-  * Use normal definitions of mem*() from string.c. There are already
-  * included header files which expect a definition of memset() and by
-@@ -49,6 +46,10 @@ struct boot_params *boot_params;
+  * These will be re-linked against their real values
+@@ -446,6 +447,11 @@ struct kallsym_iter {
+ 	int show_value;
+ };
  
- memptr free_mem_ptr;
- memptr free_mem_end_ptr;
-+#ifdef CONFIG_FG_KASLR
-+unsigned long malloc_ptr;
-+int malloc_count;
-+#endif
- 
- static char *vidmem;
- static int vidport;
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 726e264410ff..d2ec7c745cfa 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -39,6 +39,12 @@
- /* misc.c */
- extern memptr free_mem_ptr;
- extern memptr free_mem_end_ptr;
-+#define STATIC
-+#ifdef CONFIG_FG_KASLR
-+#define STATIC_RW_DATA extern
-+#endif
-+#include <linux/decompress/mm.h>
++struct kallsyms_iter_list {
++	struct kallsym_iter iter;
++	struct list_head next;
++};
 +
- extern struct boot_params *boot_params;
- void __putstr(const char *s);
- void __puthex(unsigned long value);
+ int __weak arch_get_kallsym(unsigned int symnum, unsigned long *value,
+ 			    char *type, char *name)
+ {
+@@ -660,6 +666,127 @@ int kallsyms_show_value(void)
+ 	}
+ }
+ 
++static int sorted_show(struct seq_file *m, void *p)
++{
++	struct list_head *list = m->private;
++	struct kallsyms_iter_list *iter;
++	int rc;
++
++	if (list_empty(list))
++		return 0;
++
++	iter = list_first_entry(list, struct kallsyms_iter_list, next);
++
++	m->private = iter;
++	rc = s_show(m, p);
++	m->private = list;
++
++	list_del(&iter->next);
++	kfree(iter);
++
++	return rc;
++}
++
++static void *sorted_start(struct seq_file *m, loff_t *pos)
++{
++	return m->private;
++}
++
++static void *sorted_next(struct seq_file *m, void *p, loff_t *pos)
++{
++	struct list_head *list = m->private;
++
++	(*pos)++;
++
++	if (list_empty(list))
++		return NULL;
++
++	return p;
++}
++
++static const struct seq_operations kallsyms_sorted_op = {
++	.start = sorted_start,
++	.next = sorted_next,
++	.stop = s_stop,
++	.show = sorted_show
++};
++
++static int kallsyms_list_cmp(void *priv, struct list_head *a,
++			     struct list_head *b)
++{
++	struct kallsyms_iter_list *iter_a, *iter_b;
++
++	iter_a = list_entry(a, struct kallsyms_iter_list, next);
++	iter_b = list_entry(b, struct kallsyms_iter_list, next);
++
++	return strcmp(iter_a->iter.name, iter_b->iter.name);
++}
++
++int get_all_symbol_name(void *data, const char *name, struct module *mod,
++			unsigned long addr)
++{
++	unsigned long sym_pos;
++	struct kallsyms_iter_list *node, *last;
++	struct list_head *head = (struct list_head *)data;
++
++	node = kmalloc(sizeof(*node), GFP_KERNEL);
++	if (!node)
++		return -ENOMEM;
++
++	if (list_empty(head)) {
++		sym_pos = 0;
++		memset(node, 0, sizeof(*node));
++		reset_iter(&node->iter, 0);
++		node->iter.show_value = kallsyms_show_value();
++	} else {
++		last = list_first_entry(head, struct kallsyms_iter_list, next);
++		memcpy(node, last, sizeof(*node));
++		sym_pos = last->iter.pos;
++	}
++
++	INIT_LIST_HEAD(&node->next);
++	list_add(&node->next, head);
++
++	/*
++	 * update_iter returns false when at end of file
++	 * which in this case we don't care about and can
++	 * safely ignore. update_iter() will increment
++	 * the value of iter->pos, for ksymbol_core.
++	 */
++	if (sym_pos >= kallsyms_num_syms)
++		sym_pos++;
++
++	(void)update_iter(&node->iter, sym_pos);
++
++	return 0;
++}
++
++#if defined(CONFIG_FG_KASLR)
++/*
++ * When fine grained kaslr is enabled, we need to
++ * print out the symbols sorted by name rather than by
++ * by address, because this reveals the randomization order.
++ */
++static int kallsyms_open(struct inode *inode, struct file *file)
++{
++	int ret;
++	struct list_head *list;
++
++	list = __seq_open_private(file, &kallsyms_sorted_op, sizeof(*list));
++	if (!list)
++		return -ENOMEM;
++
++	INIT_LIST_HEAD(list);
++
++	ret = kallsyms_on_each_symbol(get_all_symbol_name, list);
++	if (ret != 0)
++		return ret;
++
++	list_sort(NULL, list, kallsyms_list_cmp);
++
++	return 0;
++}
++#else
+ static int kallsyms_open(struct inode *inode, struct file *file)
+ {
+ 	/*
+@@ -676,6 +803,7 @@ static int kallsyms_open(struct inode *inode, struct file *file)
+ 	iter->show_value = kallsyms_show_value();
+ 	return 0;
+ }
++#endif /* CONFIG_FG_KASLR */
+ 
+ #ifdef	CONFIG_KGDB_KDB
+ const char *kdb_walk_kallsyms(loff_t *pos)
 -- 
 2.20.1
 
