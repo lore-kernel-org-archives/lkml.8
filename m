@@ -2,143 +2,148 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5407CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0483F206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="U17lT7CY"
+	by mail.kernel.org (Postfix) with ESMTP id 3A066206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbgFWJq1 (ORCPT
+        id S1732233AbgFWJrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731976AbgFWJq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:46:27 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B069C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:46:27 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id f18so18226298qkh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:46:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=iKggRcdI7sNyyhDISy98npbymMoyRZSfT0QAAU3f0vQ=;
-        b=U17lT7CYSTuj99Giu1FBaV/h/RoCGn6W4PdXk6wPMyfnVLBaDjbbmbHfzEZiY7S4Vi
-         tnDzK+DKhIloPX6fpBJtIgaKmAcLfydO+MMim0fJuCA4BncKQxsg9Y+V14P1st5bRZXP
-         SHgrm+X4d72dYIhkZI1ZX5NSsaD7WNqCgKp5bQ34+ZjA8jHjmdT5pA4i9DRLtRL89VcE
-         dKrF4MGW180DAVJv3UTu9ezZ2Nrsa3PnypMstE9T7+fHxA7hW8VmhIDjBFdGXfoadKj6
-         /ITX/9TP3LTwlhbdBFb4EFZm5WM88wT7UDfA8AaqyGNCTR2dKJwF8lmUZs5xYIDLU35P
-         si0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iKggRcdI7sNyyhDISy98npbymMoyRZSfT0QAAU3f0vQ=;
-        b=e5Hg9RsxRk/vSm0aaL9l4hBpNiMuUQDfVxihGdh/OoEwLWr26Yn10aWljRzrya6PlN
-         BaD3n7jlKUJ6CKUHubu3h9czSf/tu/yIl2JUwgQvfS4OcEXlskEPxk9DTr1Fo6EX8NCD
-         sbtVxFochMtxEVALWLjrKSfOtv+GbzReRzPX9urYK/nzjIQDsvGdCPeU0KM+21AjqFVK
-         IMxc/ML93uccrkBEN8Qt8LoWELe6seYu34edsyh/gPUmyBoyQfkjqy7+YlDqAwT5tBvh
-         TIG0AkpqoQ2qDq924JG3599gHSPPvgayp1xkyCq+5WmZNpnWW+ZEOQimUuYBw0rzPIck
-         HvKQ==
-X-Gm-Message-State: AOAM530fI0vGbht0vVDsHYGCQddivaBjvU3igr7eo3LFprLeEZpJryUd
-        QHwkqFeMaqtcJ2IZG0Ztf2Q/ahliEJ+S3ccW10P8Tg==
-X-Google-Smtp-Source: ABdhPJwyWdHZ4XdUvdS8ekiHqvBAN7BrvA8GjUgSArJnwIzAA7OWpuKEoaMTjixO0yB7ajA2SNSzKSwztsSa0ZQ4yK8=
-X-Received: by 2002:a37:aac4:: with SMTP id t187mr17690729qke.263.1592905586254;
- Tue, 23 Jun 2020 02:46:26 -0700 (PDT)
+        Tue, 23 Jun 2020 05:47:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:48086 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731921AbgFWJq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:46:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E0921F1;
+        Tue, 23 Jun 2020 02:46:59 -0700 (PDT)
+Received: from [192.168.0.110] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C9993F6CF;
+        Tue, 23 Jun 2020 02:46:56 -0700 (PDT)
+Subject: Re: [PATCH v5 4/7] arm64: perf: Defer irq_work to IPI_IRQ_WORK
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        maz@kernel.org, will@kernel.org, catalin.marinas@arm.com,
+        Julien Thierry <julien.thierry@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+References: <20200617113851.607706-1-alexandru.elisei@arm.com>
+ <20200617113851.607706-5-alexandru.elisei@arm.com>
+ <20200622141918.GF88608@C02TD0UTHF1T.local>
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+Message-ID: <c044fbd2-238b-2309-f08d-56f20e845fc1@arm.com>
+Date:   Tue, 23 Jun 2020 10:47:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-15-brgl@bgdev.pl>
- <20200622132921.GI1551@shell.armlinux.org.uk> <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
- <20200623094252.GS1551@shell.armlinux.org.uk>
-In-Reply-To: <20200623094252.GS1551@shell.armlinux.org.uk>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 23 Jun 2020 11:46:15 +0200
-Message-ID: <CAMpxmJVP9db-4-AA4e1JkEfrajvJ4s0T6zo5+oFzpJHRBcuSsg@mail.gmail.com>
-Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200622141918.GF88608@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 23 cze 2020 o 11:43 Russell King - ARM Linux admin
-<linux@armlinux.org.uk> napisa=C5=82(a):
->
-> On Tue, Jun 23, 2020 at 11:41:11AM +0200, Bartosz Golaszewski wrote:
-> > pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> napisa=C5=82(a):
-> > >
-> >
-> > [snip!]
-> >
-> > >
-> > > This is likely to cause issues for some PHY drivers.  Note that we ha=
-ve
-> > > some PHY drivers which register a temperature sensor in the probe
-> > > function, which means they can be accessed independently of the lifet=
-ime
-> > > of the PHY bound to the network driver (which may only be while the
-> > > network device is "up".)  We certainly do not want hwmon failing just
-> > > because the network device is down.
-> > >
-> > > That's kind of worked around for the reset stuff, because there are t=
-wo
-> > > layers to that: the mdio device layer reset support which knows nothi=
-ng
-> > > of the PHY binding state to the network driver, and the phylib reset
-> > > support, but it is not nice.
-> > >
-> >
-> > Regulators are reference counted so if the hwmon driver enables it
-> > using mdio_device_power_on() it will stay on even after the PHY driver
-> > calls phy_device_power_off(), right? Am I missing something?
->
-> If that is true, you will need to audit the PHY drivers to add that.
->
+Hi Mark,
 
-This change doesn't have any effect on devices which don't have a
-regulator assigned in DT though. The one I'm adding in the last patch
-is the first to use this.
+On 6/22/20 3:19 PM, Mark Rutland wrote:
+> On Wed, Jun 17, 2020 at 12:38:48PM +0100, Alexandru Elisei wrote:
+>> From: Julien Thierry <julien.thierry@arm.com>
+>>
+>> perf_event_overflow() can queue an irq_work on the current PE, which is
+>> executed via an IPI. Move the processing of the irq_work from the PMU IRQ
+>> handler to the IPI handler, which gets executed immediately afterwards.
+>>
+>> This also makes the IRQ handler NMI safe, because it removes the call to
+>> irq_work_run().
+> It wasn't entirely clear to me what the situation was today, and why
+> this was sound. How about the following to spell that out more
+> explicitly:
+>
+> | When handling events armv8pmu_handle_irq() calls
+> | perf_event_overflow(), and subsequently calls irq_work_run() to handle
+> | any work queued by perf_event_overflow(). As perf_event_overflow()
+> | raises IPI_IRQ_WORK when queing the work, this isn't strictly
+> | necessary and the work could be handled as part of the IPI_IRQ_WORK
+> | handler.
+> |
+> | In the common case the IPI handler will run immediately after the PMU
+> | IRQ handler, and where the PE is heavily loaded with interrupts other
+> | handlers may run first, widening the window where some counters are
+> | disabled.
+> |
+> | In practice this window is unlikely to be a significant issue, and
+> | removing the call to irq_work_run() would make the PMU IRQ handler NMI
+> | safe in addition to making it simpler, so let's do that.
+>
+> Thanks,
+> Mark.
 
-Bart
+That is much better than my commit message, I will definitely update it with your
+suggestion.
+
+Thanks,
+Alex
+>
+>> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Jiri Olsa <jolsa@redhat.com>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+>> [Reworded commit]
+>> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>> ---
+>>  arch/arm64/kernel/perf_event.c | 14 +++++---------
+>>  1 file changed, 5 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+>> index a6195022be7d..cf1d92030790 100644
+>> --- a/arch/arm64/kernel/perf_event.c
+>> +++ b/arch/arm64/kernel/perf_event.c
+>> @@ -750,20 +750,16 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>>  		if (!armpmu_event_set_period(event))
+>>  			continue;
+>>  
+>> +		/*
+>> +		 * Perf event overflow will queue the processing of the event as
+>> +		 * an irq_work which will be taken care of in the handling of
+>> +		 * IPI_IRQ_WORK.
+>> +		 */
+>>  		if (perf_event_overflow(event, &data, regs))
+>>  			cpu_pmu->disable(event);
+>>  	}
+>>  	armv8pmu_start(cpu_pmu);
+>>  
+>> -	/*
+>> -	 * Handle the pending perf events.
+>> -	 *
+>> -	 * Note: this call *must* be run with interrupts disabled. For
+>> -	 * platforms that can have the PMU interrupts raised as an NMI, this
+>> -	 * will not work.
+>> -	 */
+>> -	irq_work_run();
+>> -
+>>  	return IRQ_HANDLED;
+>>  }
+>>  
+>> -- 
+>> 2.27.0
+>>
