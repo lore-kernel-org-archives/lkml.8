@@ -2,54 +2,54 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A249C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470C32073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313832073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="XX38OhQt"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Yvdfst3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbgFWHmy (ORCPT
+        id S1731605AbgFWHnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:42:54 -0400
-Received: from mail-co1nam11on2070.outbound.protection.outlook.com ([40.107.220.70]:46719
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Tue, 23 Jun 2020 03:43:02 -0400
+Received: from mail-dm6nam11on2041.outbound.protection.outlook.com ([40.107.223.41]:61473
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731202AbgFWHmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:42:54 -0400
+        id S1731202AbgFWHnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:43:00 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LxOGSvxi3yM480haBJKKpQF3IsZMLh/b+ktKDqrcTxroBv7U+9Q+FqnnXkSmN/w9AmX9pVbBSsjg41a/2IArr08h6h7A/VsmLBZIBqo/A8YFfzRxJn4UimbcWpbfjhy2OH+pG3PjkHGSL1ZTJZ7IsCV8Rl5QCVmWD7fRnP/GStA6TpRA0+LIY/G0mENBVxFxmk8DH2F6NrGwueiOysBpNDR881dpAEluWuN6VKU/F+OAHlRjpSZklyk0/sE1ye1eP8aUO6RO4Cu/JyFCWTRZdM9WJ+aIck717rrorGhwLPGPaFfwd+Ux1F3e+sfOYxr8P+V4bKfhsoqj4RHcjqFS3Q==
+ b=niTRV8NdELmARNbfDdv/xdbSB0BIR/kZV+X+nIo+YWlq9MzuLfF7E0L1fRHrjNNUxrvq4T7zBTLwddtPeV0EEWqp2Z1alyAWnfm5seLuUu/Pt0str+eAWt0RcGU6aaMk+MuSTRTJGLi+eaZdLyWw5KEk4uB0wpsDa1tN4pZ6i+zeql/ffhntI0ElrDp9kAXgGn3hszA09L6l454FYnBojvg91u5JlyLfa6Kq7+pd/dmzuiMnfVgCfgmpZcAa8tWLiy00piaMcBfIlYum7OPEgEWGcabqYP2MK3M9TVNnsALargX0fR5cvl2iMUA8cJKxudrmgUIK3b4LmtjeBWmHNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2jsUm8FmdOgJ5yqiPkE96nVksapvuMuO0NI/a0XLaKo=;
- b=BGxcCwLtL/aEin/oxQR+K5GvBJBmW0U57pYSQmz5xuw7tdcZVoWHT4cbiZEVU9QU1tuXYWqQnTO4NQjt23UFbiTEyW0zFRd/Wfgg3sZuXl+qguJbDxJKBd/q7YfA4+UUILJWcupN5XBOef78QbDyFktjLVzhTjtq5GWff86oRVGqptxXjoe4Vd/w+r9MtwaOl8oubpRMR/zALYFx6yRgNx5u4VfwuB3la38F+CPH8SN6nHzR0Q1yGMYvzg84zs+MOP6ie1CR6+AKwhTqw1Zi/v63gVLJqjyJXyznzQJCHFmFj+ACkXexLvD0tEXoH2qwt8NWNVYUJUIzMMAAyOGH2w==
+ bh=E+6Aut4x5USxjqZpIM1tSTqyH+zSJWndUMIYTKAYafM=;
+ b=HuCfXNLEQipBDUGjKJPPh2mNraGIy0OO7O5D+OaqeHOvsiMxQQ0A7uhZUn3810GerD+3su9zfciG/HU/ACBJl1ScuCQguNoim5ne1xnLKKC7+u202W7a2NEUg9k5GKqQBCtr+j2hPYhb1tg6ky+g9xmbp9sNaSWApubzRrssC/Xf8bEILibwTrzKIgaHsAwP3R9k4glEuSyexR/eeqWVyJwrCEIaAFkkC4NBVfQ5jEelptESvUN3zBCLosu63pV6D/OXkImPbTlkadzEDAdmfzOQVFh5yzO5GG6NuM1KkzF+uUqk3jgRyCkS8tQYPFQQ4AspscAWz618PG6YRoWMJg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=synaptics.com; dmarc=pass action=none
  header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2jsUm8FmdOgJ5yqiPkE96nVksapvuMuO0NI/a0XLaKo=;
- b=XX38OhQty7RIQXcBLAhzpuVi9Y4/kOpbdNFS+Imfvo5FiH5nWbCuKJnQI6Jp/c1v1WT0l80JrKPj6gKMYgno1NUA0Hl4jwbFxxQDkYMuWYIUq8BxtSZ3FrMkblWaHHt2c2sPxnHHoDVCG4SGNzg9rjOsxv2qHj0YKogxvVRY7dE=
+ bh=E+6Aut4x5USxjqZpIM1tSTqyH+zSJWndUMIYTKAYafM=;
+ b=Yvdfst3Q0c78WY/5sXW84PCpFLXGYi9XTZMI+aausMiqArs3r6AXnStra9BO5Hunpm8O9AvE3HI8fgYhvtr4kOkvl1F5TyIydgSE+bySkip1tpaQRidsuLtX0zK+sfpI6iJ6IPc+D2idVGrUV6PqDmDrvcgFYPKC+YQjW3EEN5w=
 Authentication-Results: lunn.ch; dkim=none (message not signed)
  header.d=none;lunn.ch; dmarc=none action=none header.from=synaptics.com;
 Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BY5PR03MB4949.namprd03.prod.outlook.com (2603:10b6:a03:1e8::15) with
+ by BY5PR03MB5141.namprd03.prod.outlook.com (2603:10b6:a03:1e9::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Tue, 23 Jun
- 2020 07:42:50 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Tue, 23 Jun
+ 2020 07:42:56 +0000
 Received: from BYAPR03MB3573.namprd03.prod.outlook.com
  ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
  ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 07:42:50 +0000
-Date:   Tue, 23 Jun 2020 15:41:37 +0800
+ 07:42:56 +0000
+Date:   Tue, 23 Jun 2020 15:40:31 +0800
 From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -58,11 +58,9 @@ To:     Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] net: phy: call phy_disable_interrupts() in
+Subject: [PATCH v2 0/2] net: phy: call phy_disable_interrupts() in
  phy_init_hw()
-Message-ID: <20200623154137.728d8ae8@xhacker.debian>
-In-Reply-To: <20200623154031.736123a6@xhacker.debian>
-References: <20200623154031.736123a6@xhacker.debian>
+Message-ID: <20200623154031.736123a6@xhacker.debian>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -71,67 +69,63 @@ X-ClientProxiedBy: TYAPR01CA0205.jpnprd01.prod.outlook.com
  (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0205.jpnprd01.prod.outlook.com (2603:1096:404:29::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Tue, 23 Jun 2020 07:42:46 +0000
+Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0205.jpnprd01.prod.outlook.com (2603:1096:404:29::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Tue, 23 Jun 2020 07:42:53 +0000
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 X-Originating-IP: [124.74.246.114]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8a7fc19f-44b3-49ea-4be8-08d81749077f
-X-MS-TrafficTypeDiagnostic: BY5PR03MB4949:
-X-Microsoft-Antispam-PRVS: <BY5PR03MB4949DE035B3DA44C84B16F11ED940@BY5PR03MB4949.namprd03.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 4fc45758-a606-4078-1be8-08d817490b28
+X-MS-TrafficTypeDiagnostic: BY5PR03MB5141:
+X-Microsoft-Antispam-PRVS: <BY5PR03MB51414D8E4FC430A31C2D3677ED940@BY5PR03MB5141.namprd03.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-Forefront-PRVS: 04433051BF
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: N3zR+xwJbb7h2UEbKrg8f7Nktnsz6jcRDXH0o5fqw2VVoCrmq0zXEhdnw9wFcdIg666M3lSicNrTkGYvn1ahb9iNvxPwSiSy5edEitEDGy2uA6pJ5Ahthor1gANOZu+WxVeNso2Xszy7l5cJ61i5sjcWYYcwTA0d57FKbLK/LjMVI5Yu9jLLaw+j3xlYhbZvdm134zqf8uihuIq1NNZH2zmuThSnD3WDXHoJDbo7j8YxGUxwHoV3ck9E4jW8F2RXExe+gD0MOkj9JZWj7ibLVnfkjIhnpizdAtRS8ZgDwVyodavNMe9bTYDO1WMp46qg
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(366004)(136003)(346002)(39860400002)(9686003)(316002)(66946007)(956004)(478600001)(26005)(83380400001)(6506007)(52116002)(6666004)(8936002)(4326008)(5660300002)(7696005)(86362001)(8676002)(16526019)(186003)(66476007)(66556008)(1076003)(55016002)(110136005)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: JsYzPgWcI8r/nHSF1n3UFq+KgrxS2fxVDm6f0ezmn78KYo39xG2xfZ1+qSU2WTX7EEyRFmKqocauWiEuKGpPKo2EF2D5EC4vjBq8H7K7IzOgFnyhPy4wyhDTB8q9kqiplyw4+9KWhTk0TYud0+0r0C8ehgQkOCJRxkB7kBP7/ADDjRM/YrRvgj8sUeU/y4A3pglvv412xQTdL0oKQKJ8sbNXg9KgyV9IJ9d+0aBD4HtArtHbWUBqUO/8vR4qgILEvpiCKTC4TNnXAMUm2Ca3mLAtyMUYmzSWfj1AoPpCwhdw926t5TUydzyY+iT5vNdqgs7qCZDi1T51Ec0TrRXc9yWPQGDXSBy6mPPDEUryx1o9egdGfStlhZVhzNzTyQLhZn0Yc8paGvEqUZANHyugteXC9I/OCdX/UAjTsLXf3oPcHU2/ZkO/m7Ao7AUvYh4A6XPlHTWLww/+BcbrFD8Nhk9iboRmsNUHcmcc1k0kbdCVRYpPYkOr0vNX1oDrjSru
+X-Microsoft-Antispam-Message-Info: oDxL2+NDkGAY9BzzpPqarjTGXjq0Mk8f6QDg+IyaWRUztSZsed8nIeIS80vjUujQyBwAErgkDlJcEI+fuKXzh6sixBOzn/HBPz72Ebdc9PzVis4y/PTFpxb4RJI12JTbGb75CNCA0sGfvkZavtSbzZ13ahjsnzqauv0Q1HyS86FcRlTpuShZADQNuR0aDFLFlK6pECB5WNxUaE9qeULfiaBoPBhmwI0UM5ZvDc2APlTstKva/MwR4iwM6hUOuIEQ31TaGpYP9SRTs3KiJFvuCZsBZtXMm7BdVyZwpjCUFDFB7EWsJ2owf3cuX7k+Ea5t
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(366004)(136003)(396003)(39860400002)(83380400001)(66476007)(66556008)(5660300002)(8676002)(55016002)(86362001)(6506007)(66946007)(9686003)(7696005)(52116002)(8936002)(316002)(2906002)(110136005)(478600001)(26005)(1076003)(186003)(4326008)(6666004)(16526019)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: P1P1UHVcPp5dAV4FYAgppYKidSkUFERV3WauaU8eFVupEVKONQj2O85gTrFn71mG8tvx0dx3Zfa1YWRx7XIKRVLMQZZiauyAhzRuTphgzG9qRNlbPX9syk9EyBoWS5kPFPincP19QngcyzXUgkDL58XarMkknYRTdW9vrQAYaJbY8yzqqfHIlP3sMR0DURAvOnRJMck+NPMELtGEcWiKPjG+2oYuQo+4DWT8opIyi4H8FC077S5pwKTNancsm1+Gh/8v1WzEbK4OtCw0n3yxL6OMbLnFxfAGp/cp/CMCK0Ema/mET2WGbggrVdcYrm8/KjBJd6U3wSFgYNxFlzwu+78QemDwZKlTD27NNC3YroKUqy1Qd9YrNc+XQJakjvefStzb91eHkTaxAW/T3KfmPNwy6ufrNmW1DISU9FKzqYWoDMcfDsCtInR9Yz1uQo9fRQCTj4iLMn8AZxnkNmKnJwqnvKEoMGUpcPBk70LxVSo2sjTUUciiH25SgchBtZAi
 X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a7fc19f-44b3-49ea-4be8-08d81749077f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 07:42:50.4416
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4fc45758-a606-4078-1be8-08d817490b28
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 07:42:56.2952
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K4UL3f5DUx8eXQXJEdtdcsM5DMpMm0YkAcxv9/xwBmCjE+rvW+I8zzKugWNz0oYlaOEwWANT5n99RYYZu/mH7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB4949
+X-MS-Exchange-CrossTenant-UserPrincipalName: QrJvVCzE0wUYUQvqWYRJwk8QR9XZHii832S+HHEyBEv0EaWfaiAngkGMIp4yWMEHtryulVarQC3o9rhQyXr0BA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call phy_disable_interrupts() in phy_init_hw() to "have a defined init
+We face an issue with rtl8211f, a pin is shared between INTB and PMEB,
+and the PHY Register Accessible Interrupt is enabled by default, so
+the INTB/PMEB pin is always active in polling mode case.
+
+As Heiner pointed out "I was thinking about calling
+phy_disable_interrupts() in phy_init_hw(), to have a defined init
 state as we don't know in which state the PHY is if the PHY driver is
 loaded. We shouldn't assume that it's the chip power-on defaults, BIOS
 or boot loader could have changed this. Or in case of dual-boot
-systems the other OS could leave the PHY in whatever state." as pointed
-out by Heiner.
+systems the other OS could leave the PHY in whatever state."
 
-Suggested-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
+patch1 exports phy_disable_interrupts() so that it could be used in
+phy_init_hw() to have a defined init state.
+
+patch2 calls phy_disable_interrupts() in phy_init_hw() to have a
+defined init state.
+
+Since v1:
+  - EXPORT the correct symbol
+
+Jisheng Zhang (2):
+  net: phy: export phy_disable_interrupts()
+  net: phy: call phy_disable_interrupts() in phy_init_hw()
+
+ drivers/net/phy/phy.c        | 3 ++-
  drivers/net/phy/phy_device.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/linux/phy.h          | 1 +
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 04946de74fa0..f17d397ba689 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1090,10 +1090,13 @@ int phy_init_hw(struct phy_device *phydev)
- 	if (ret < 0)
- 		return ret;
- 
--	if (phydev->drv->config_init)
-+	if (phydev->drv->config_init) {
- 		ret = phydev->drv->config_init(phydev);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
--	return ret;
-+	return phy_disable_interrupts(phydev);
- }
- EXPORT_SYMBOL(phy_init_hw);
- 
 -- 
 2.27.0
 
