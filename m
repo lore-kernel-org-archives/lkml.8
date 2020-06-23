@@ -2,212 +2,174 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7915FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D39C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52FCB20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C6E20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vwDdPU+4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FV+cU0Fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732994AbgFWPaQ (ORCPT
+        id S1733003AbgFWPap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:30:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35718 "EHLO
+        Tue, 23 Jun 2020 11:30:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732974AbgFWPaP (ORCPT
+        with ESMTP id S1732821AbgFWPap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:30:15 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7649BC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:30:14 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i3so23944626ljg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:30:14 -0700 (PDT)
+        Tue, 23 Jun 2020 11:30:45 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25468C061573;
+        Tue, 23 Jun 2020 08:30:45 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id b5so10004286pgm.8;
+        Tue, 23 Jun 2020 08:30:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PqiVaw4jPZjubgC0DDl3A4Ud4fHqWecWUNTmHcI7wYY=;
-        b=vwDdPU+4V/Jx8jj9smtJimFMCc+ZOTd7pnL8N1BZ9MnqEhrJ+Irm8zQNShJvIiiwAk
-         +QkqKxAFa1Fvv5xfyEwYmh3RExQJs+utDDpimk8cEUmjz85gDab5zvnMBa6iaViYEaM7
-         sUwGOJKbscWhH2OVdyHVgvclyNNAuknqNP9CF6xcEty3RtWUdTqijXt2OYhaetQfyIkl
-         rI+XYhgMLyfFhro1zF5/ohzy+RyqoyTzf0YjB+/l0SDx+jb3SseTDTM+8SFV2P0qZ936
-         Tu+73A6r8fC4hPBQ/syVbXjydP6M9anvWDb9mcXa+8JMQ0GaZ1uqWeVdEW5TqkzgkSn9
-         mBKw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U8SXlxHG0Q6oN1qgWSeTQEtfQ8leT+LbxGiKZqDaphM=;
+        b=FV+cU0FnpyvJ21DF7CNvu8URn27BUCpCmo2BaQ49099YqKeQL/1vRgYsRyPPEAnepl
+         tLa3YqsmsrsCvVyDPa2HRA84sokHZtxs0cm0J8Xbg/bTQqrq7S13186hIG2MvVUnQI81
+         DusZxmjDhkO7g+oD1+Yv6VsuzEie+3gIKXfbTB3FVC5o8DnVvF6cPzFpk5Zf42+8/ZmX
+         R3ofh9mZuObtIIcSdFjmaOZjMZzw5miC1OmDAb4p+CuSvH4ga1MSZnDccnL9QbSoFbZT
+         Zal/DXznDkzJU7Ef8+pClXl7lxWlWfQpUNNzrNXcBbz53UIOQvqDEhbi2fY08PdI6q+y
+         xYVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PqiVaw4jPZjubgC0DDl3A4Ud4fHqWecWUNTmHcI7wYY=;
-        b=IurvUACJzabVo1TjcHiwyCDr+ea1GJ+fK4SMfKZy2wy3zf1svhMj4um5ND3Q9An8p1
-         IJcGmPLxvV1dDIr3AYuH5rf7TYetPZeHRXvxt6auL7wu/VVALKMu4VA2SYKg2NUCn5Uo
-         jRttZ3dn0T2M3MMosZgXW/Rtid23z/cIhSfpc+SbOZk5IDuyStkOI58bPiqO15TrRCab
-         qb5t4Z4m+uLa9nI0UQrmq4oLZXZRtQD+1I8p69I2/bjFue5LmWmf4QoYeKb181OLWluH
-         JbabTPbFGoFoBwSUw4F7tiXLxQmiWkYGS/7IR5UuSfdqK95y8VZpzmYRJb69uae0b1h2
-         n1qg==
-X-Gm-Message-State: AOAM532sUrK4RKtWtK5TzEK+jnBV4B3oCMB13k80S5TaZn/Y07aX7Jgh
-        PeL9etLRAPOldbjPuHFgBH8TtEFKijcaK2kjenVz3EZPa2F0IA==
-X-Google-Smtp-Source: ABdhPJwHuGnHF3srvzs44T4PM1YgndBxneWCi01kR9Fc5pSBEwosEz8LXCzqUBO8iJnCeYTpPAkS8RGGDwm0EOODi6k=
-X-Received: by 2002:a05:651c:318:: with SMTP id a24mr11022427ljp.55.1592926212549;
- Tue, 23 Jun 2020 08:30:12 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U8SXlxHG0Q6oN1qgWSeTQEtfQ8leT+LbxGiKZqDaphM=;
+        b=gK4cihIo12/fca+iKfBWqjS6BidbPl5ug82J9B2aORM+5VloQeQOpTD0b7xl7FoM0z
+         AfhP2878A37SZ54eHPp1GLlkJepvq2c7j44WcKYz80UGZZN48KwerecTtDaVopA79+IO
+         X56a8B1QNI+jO75aKV3zVcJ/LXLYn9Bt8vbg7DmHYnc2kfK5/vr0LjwHlvddViZiANim
+         ISutUiHVkX50ucfM0lGOgQ5IYszk5MmleuJ43gl4+rVLKJG9WcaIraEaVbH5hKulfY99
+         ddcuvo070SFx9ZSGU8VytPbMrecKkjN4JdszH1BKm8HOsmrbuvB6nmGVQPFvReXe71kO
+         0Ohw==
+X-Gm-Message-State: AOAM532ZO0K4f4MEwbNJpdXu49QLCMgSqF1F8mBzZDgL150R8VGJCPUi
+        Fn4cScXyI2sw6LZ5EZSnLw==
+X-Google-Smtp-Source: ABdhPJwydvU2PMUOL2Vy5NXMGuqyAs5q5DfziRbXUm8TcLxtPMKaIHZ7LGgQ1xckcoFqvJT3WmRGfA==
+X-Received: by 2002:a63:ec05:: with SMTP id j5mr18069122pgh.109.1592926244197;
+        Tue, 23 Jun 2020 08:30:44 -0700 (PDT)
+Received: from madhuparna-HP-Notebook ([2402:3a80:ceb:846:8098:13b7:478d:bfe2])
+        by smtp.gmail.com with ESMTPSA id 3sm7750071pfv.156.2020.06.23.08.30.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jun 2020 08:30:43 -0700 (PDT)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Tue, 23 Jun 2020 21:00:36 +0530
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, madhuparnabhowmik10@gmail.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, tglx@linutronix.de,
+        bp@alien8.de, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paulmck@kernel.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] kvm: Fix false positive RCU usage warning
+Message-ID: <20200623153036.GB9914@madhuparna-HP-Notebook>
+References: <20200516082227.22194-1-madhuparnabhowmik10@gmail.com>
+ <9fff3c6b-1978-c647-16f7-563a1cdf62ff@redhat.com>
+ <20200623150236.GD9005@google.com>
 MIME-Version: 1.0
-References: <20200618010805.600873-1-sashal@kernel.org> <20200618010805.600873-319-sashal@kernel.org>
-In-Reply-To: <20200618010805.600873-319-sashal@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 23 Jun 2020 21:00:01 +0530
-Message-ID: <CA+G9fYski0D9pPXmWr6CorrKATZkQLz_k1w_5bVmO-dU+_ROTQ@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.7 319/388] ovl: verify permissions in ovl_path_open()
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        linux-unionfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623150236.GD9005@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 at 08:03, Sasha Levin <sashal@kernel.org> wrote:
+On Tue, Jun 23, 2020 at 11:02:36AM -0400, Joel Fernandes wrote:
+> On Tue, Jun 23, 2020 at 09:39:53AM +0200, Paolo Bonzini wrote:
+> > On 16/05/20 10:22, madhuparnabhowmik10@gmail.com wrote:
+> > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > 
+> > > Fix the following false positive warnings:
+> > > 
+> > > [ 9403.765413][T61744] =============================
+> > > [ 9403.786541][T61744] WARNING: suspicious RCU usage
+> > > [ 9403.807865][T61744] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
+> > > [ 9403.838945][T61744] -----------------------------
+> > > [ 9403.860099][T61744] arch/x86/kvm/mmu/page_track.c:257 RCU-list traversed in non-reader section!!
+> > > 
+> > > and
+> > > 
+> > > [ 9405.859252][T61751] =============================
+> > > [ 9405.859258][T61751] WARNING: suspicious RCU usage
+> > > [ 9405.880867][T61755] -----------------------------
+> > > [ 9405.911936][T61751] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
+> > > [ 9405.911942][T61751] -----------------------------
+> > > [ 9405.911950][T61751] arch/x86/kvm/mmu/page_track.c:232 RCU-list traversed in non-reader section!!
+> > > 
+> > > Since srcu read lock is held, these are false positive warnings.
+> > > Therefore, pass condition srcu_read_lock_held() to
+> > > list_for_each_entry_rcu().
+> > > 
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > ---
+> > > v2:
+> > > -Rebase v5.7-rc5
+> > > 
+> > >  arch/x86/kvm/mmu/page_track.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
+> > > index ddc1ec3bdacd..1ad79c7aa05b 100644
+> > > --- a/arch/x86/kvm/mmu/page_track.c
+> > > +++ b/arch/x86/kvm/mmu/page_track.c
+> > > @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
+> > >  		return;
+> > >  
+> > >  	idx = srcu_read_lock(&head->track_srcu);
+> > > -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
+> > > +	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
+> > > +				srcu_read_lock_held(&head->track_srcu))
+> > >  		if (n->track_write)
+> > >  			n->track_write(vcpu, gpa, new, bytes, n);
+> > >  	srcu_read_unlock(&head->track_srcu, idx);
+> > > @@ -254,7 +255,8 @@ void kvm_page_track_flush_slot(struct kvm *kvm, struct kvm_memory_slot *slot)
+> > >  		return;
+> > >  
+> > >  	idx = srcu_read_lock(&head->track_srcu);
+> > > -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
+> > > +	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
+> > > +				srcu_read_lock_held(&head->track_srcu))
+> > >  		if (n->track_flush_slot)
+> > >  			n->track_flush_slot(kvm, slot, n);
+> > >  	srcu_read_unlock(&head->track_srcu, idx);
+> > > 
+> > 
+> > Hi, sorry for the delay in reviewing this patch.  I would like to ask
+> > Paul about it.
+> > 
+> > While you're correctly fixing a false positive, hlist_for_each_entry_rcu
+> > would have a false _negative_ if you called it under
+> > rcu_read_lock/unlock and the data structure was protected by SRCU.  This
+> > is why for example srcu_dereference is used instead of
+> > rcu_dereference_check, and why srcu_dereference uses
+> > __rcu_dereference_check (with the two underscores) instead of
+> > rcu_dereference_check.  Using rcu_dereference_check would add an "||
+> > rcu_read_lock_held()" to the condition which is wrong.
+> > 
+> > I think instead you should add hlist_for_each_srcu and
+> > hlist_for_each_entry_srcu macro to include/linux/rculist.h.
+> > 
+> > There is no need for equivalents of hlist_for_each_entry_continue_rcu
+> > and hlist_for_each_entry_from_rcu, because they use rcu_dereference_raw.
+> >  However, it's not documented why they do so.
+> 
+> You are right, this patch is wrong, we need a new SRCU list macro to do the
+> right thing which would also get rid of the last list argument.
 >
-> From: Miklos Szeredi <mszeredi@redhat.com>
->
-> [ Upstream commit 56230d956739b9cb1cbde439d76227d77979a04d ]
->
-> Check permission before opening a real file.
->
-> ovl_path_open() is used by readdir and copy-up routines.
->
-> ovl_permission() theoretically already checked copy up permissions, but it
-> doesn't hurt to re-do these checks during the actual copy-up.
->
-> For directory reading ovl_permission() only checks access to topmost
-> underlying layer.  Readdir on a merged directory accesses layers below the
-> topmost one as well.  Permission wasn't checked for these layers.
->
-> Note: modifying ovl_permission() to perform this check would be far more
-> complex and hence more bug prone.  The result is less precise permissions
-> returned in access(2).  If this turns out to be an issue, we can revisit
-> this bug.
->
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/overlayfs/util.c | 27 ++++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-> index 36b60788ee47..a0878039332a 100644
-> --- a/fs/overlayfs/util.c
-> +++ b/fs/overlayfs/util.c
-> @@ -459,7 +459,32 @@ bool ovl_is_whiteout(struct dentry *dentry)
->
->  struct file *ovl_path_open(struct path *path, int flags)
->  {
-> -       return dentry_open(path, flags | O_NOATIME, current_cred());
-> +       struct inode *inode = d_inode(path->dentry);
-> +       int err, acc_mode;
-> +
-> +       if (flags & ~(O_ACCMODE | O_LARGEFILE))
-> +               BUG();
+Can we really get rid of the last argument? We would need the
+srcu_struct right for checking?
 
-This BUG: triggered on stable-rc 5.7, 5.4, 4.19 and 4.14 on arm64 architecture.
-
-steps to reproduce:
-          - cd /opt/ltp
-          - ./runltp -s execveat03
-
-[  564.915016] ------------[ cut here ]------------
-[  564.919654] kernel BUG at fs/overlayfs/util.c:466!
-[  564.924458] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[  564.929954] Modules linked in: overlay rfkill tda998x cec
-drm_kms_helper drm crct10dif_ce fuse
-[  564.938617] CPU: 1 PID: 15054 Comm: execveat03 Not tainted
-5.7.6-rc1-00793-gccc085714c08 #1
-[  564.946987] Hardware name: ARM Juno development board (r2) (DT)
-[  564.952921] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  564.957786] pc : ovl_path_open+0xd0/0xd8 [overlay]
-[  564.962642] lr : ovl_path_open+0x30/0xd8 [overlay]
-[  564.967443] sp : ffff00090a65f740
-[  564.970763] x29: ffff00090a65f740 x28: 0000000000000000
-[  564.976091] x27: ffff00090a65f950 x26: ffffa000097506c0
-[  564.981419] x25: ffff00090388f000 x24: ffff000912b39a28
-[  564.986746] x23: ffff00090a65f950 x22: ffff00090b45e580
-[  564.992072] x21: ffff00090a65f950 x20: ffff0008dddbcb10
-[  564.997398] x19: 0000000000004000 x18: 0000000000000000
-[  565.002723] x17: 0000000000000000 x16: 0000000000000000
-[  565.008048] x15: 0000000000000000 x14: ffffa000103c0898
-[  565.013374] x13: ffffa00010382fec x12: ffff80011bd530dc
-[  565.018700] x11: 1fffe0011bd530db x10: ffff80011bd530db
-[  565.024026] x9 : dfffa00000000000 x8 : ffff0008dea986d8
-[  565.029351] x7 : 0000000000000001 x6 : 00000000f1f1f1f1
-[  565.034677] x5 : 00000000f3000000 x4 : dfffa00000000000
-[  565.040003] x3 : ffffa0000973f950 x2 : 0000000000000007
-[  565.045328] x1 : 0000000000004000 x0 : ffff00090f79c930
-[  565.050653] Call trace:
-[  565.053162]  ovl_path_open+0xd0/0xd8 [overlay]
-[  565.057670]  ovl_check_d_type_supported+0x9c/0x180 [overlay]
-[  565.063396]  ovl_get_workdir.isra.0+0x238/0x5e0 [overlay]
-[  565.068861]  ovl_fill_super+0x800/0x1a48 [overlay]
-[  565.073673]  mount_nodev+0x50/0xc0
-[  565.077135]  ovl_mount+0x1c/0x28 [overlay]
-[  565.081245]  legacy_get_tree+0x74/0xc0
-[  565.085005]  vfs_get_tree+0x4c/0x160
-[  565.088589]  do_mount+0x700/0xb90
-[  565.091913]  __arm64_sys_mount+0xc0/0x110
-[  565.095938]  el0_svc_common.constprop.0+0xa4/0x1e0
-[  565.100742]  do_el0_svc+0x38/0xa0
-[  565.104068]  el0_sync_handler+0x11c/0x190
-[  565.108087]  el0_sync+0x158/0x180
-[  565.111419] Code: a8c37bfd d50323bf d65f03c0 d4210000 (d4210000)
-[  565.117529] ---[ end trace 357a3872beec6c53 ]---
-[  565.122157] note: execveat03[15054] exited with preempt_count 1
-[  565.129476] ------------[ cut here ]------------
-[  565.134122] WARNING: CPU: 1 PID: 0 at kernel/rcu/tree.c:569
-rcu_idle_enter+0xd0/0xd8
-[  565.141879] Modules linked in: overlay rfkill tda998x cec
-drm_kms_helper drm crct10dif_ce fuse
-[  565.150539] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G      D
-  5.7.6-rc1-00793-gccc085714c08 #1
-[  565.159866] Hardware name: ARM Juno development board (r2) (DT)
-[  565.165799] pstate: 200003c5 (nzCv DAIF -PAN -UAO)
-[  565.170603] pc : rcu_idle_enter+0xd0/0xd8
-[  565.174623] lr : rcu_idle_enter+0x34/0xd8
-[  565.178639] sp : ffff000935577ea0
-[  565.181958] x29: ffff000935577ea0 x28: 0000000000000000
-[  565.187285] x27: ffff000912d83000 x26: ffffa0001359e2c0
- [  565.192611] x25: ffff000935552b80 x24: 1fffe00126aaefe6
-[  565.198098] x23: ffffa000125abff8 x22: ffffa0001359e298
-[  565.203424] x21: ffff000936606fd0 x20: ffffa000125b5f00
-[  565.208909] x19: ffff000936606f00 x18: 0000000000000000
-Broadcast message from systemd-jo[  565.214234] x17: 0000000000000000
-x16: 0000000000000000
-urnald@juno (Mon 2020-06-22 19:5[  565.222417] x15: 0000000000000000
-x14: ffffa000103c1370
-9:27 UTC):
-[  565.230517] x13: ffffa000103c0898 x12: ffff800126cc0d8c
-[  565.236959] x11: 1fffe00126cc0d8b x10: ffff800126cc0d8b
-[  565.242285] x9 : dfffa00000000000 x8 : ffff000936606c5b
-[  565.247683] x7 : 0000000000000001 x6 : ffff000936606c58
-[  565.253009] x5 : 00007ffed933f275 x4 : dfffa00000000000
-[  565.258493] x3 : ffffa000101d48e4 x2 : 0000000000000007
-kernel[300]: [  564.924458] Inter[  565.263819] x1 : 4000000000000002
-x0 : 4000000000000000
-nal error: Oops - BUG: 0 [#1] PR[  565.272001] Call trace:
-EEMPT SMP
-[  565.277235]  rcu_idle_enter+0xd0/0xd8
-[  565.281938]  do_idle+0x288/0x328
-[  565.285176]  cpu_startup_entry+0x28/0x48
-[  565.289182]  secondary_start_kernel+0x248/0x2b0
-[  565.293721] ---[ end trace 357a3872beec6c54 ]---
-
-https://lkft.validation.linaro.org/scheduler/job/1515478#L3876
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
