@@ -2,51 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5882AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B85C920702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3655F20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945487;
-	bh=4aEGyMYEfri+pLZx0jnJQFReQiTzdeXOtg57hBlCeFc=;
+	s=default; t=1592945497;
+	bh=9JfGyIO+8KFIailyOcCU39lQSbxxXvYSoDyUkehv/Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ARg3ZKW6d2dLJRSdNAteOtpJnz1G42O+NokiH8ScWcxxwwLI5awSOYGjClRpvZxS3
-	 SgFYM2gwyi3SYc7fx/4dmVTtHfdeZnvmkoIlqCBZn0l9javI2ouAxHND4rvcAXuWYj
-	 w97fiTvO3rNI679JS6MXN2ps13q7w7P2k0q81pog=
+	b=2EE24H9cqD5HCqhy/DnpzaD+w1Zvb42ehk9ZTokAcXojaml4qKMMlawrf0eo2lfgv
+	 hPzs5THPLjRx4zbqdVYg6AiKT21FQ5tElxlsC680tHBkc0uAhBKRHlLxow46b7IGHg
+	 q3PiskK8VtLQzNqSd9g6GAhhh3rMNS6ssh9ALjYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392544AbgFWUvZ (ORCPT
+        id S2393009AbgFWUvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46964 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392922AbgFWUsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:48:05 -0400
+        id S2404089AbgFWUsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:48:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D9D72158C;
-        Tue, 23 Jun 2020 20:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45CAD20781;
+        Tue, 23 Jun 2020 20:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945285;
-        bh=4aEGyMYEfri+pLZx0jnJQFReQiTzdeXOtg57hBlCeFc=;
+        s=default; t=1592945280;
+        bh=9JfGyIO+8KFIailyOcCU39lQSbxxXvYSoDyUkehv/Jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KIU31ICo4/siLDHpuorivFCCx1gw2vlyERNNW8pWI+PQchxwHCdDeeDujd6Qw0CNs
-         djWuEkbD7gsgyY6VzTBKyzAzJLtzariFNQ2zSbaUXqVdoa5TOFZtYHHgwoiGKIZhys
-         N1UvX5BECClkNqMSqx0Ot+2SkDovO452yMyi8BdQ=
+        b=AkXO041nlBTL3ILop9qQyawz4kiAnK3B3BFOwqx34FOoofUdORDBlv69lS5NFlLVJ
+         XKsI9Gv4+kRFPm9WevQjSidW1rpVUhYLAyvizCDECey1eJA40NmM7e/6x5D8OeLQdb
+         x2ABOrNDbaaMD48Kr0mECQYvfkjz07xtmf4RLwVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Sean Paul <sean@poorly.run>
-Subject: [PATCH 4.14 112/136] drm/dp_mst: Reformat drm_dp_check_act_status() a bit
-Date:   Tue, 23 Jun 2020 21:59:28 +0200
-Message-Id: <20200623195309.306288097@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 110/136] libata: Use per port sync for detach
+Date:   Tue, 23 Jun 2020 21:59:26 +0200
+Message-Id: <20200623195309.208905092@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -59,72 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit a5cb5fa6c3a5c2cf492db667b8670ee7b044b79f upstream.
+[ Upstream commit b5292111de9bb70cba3489075970889765302136 ]
 
-Just add a bit more line wrapping, get rid of some extraneous
-whitespace, remove an unneeded goto label, and move around some variable
-declarations. No functional changes here.
+Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
+detach") may cause system freeze during suspend.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-[this isn't a fix, but it's needed for the fix that comes after this]
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Cc: Sean Paul <sean@poorly.run>
-Cc: <stable@vger.kernel.org> # v3.17+
-Reviewed-by: Sean Paul <sean@poorly.run>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200406221253.1307209-3-lyude@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Using async_synchronize_full() in PM callbacks is wrong, since async
+callbacks that are already scheduled may wait for not-yet-scheduled
+callbacks, causes a circular dependency.
 
+Instead of using big hammer like async_synchronize_full(), use async
+cookie to make sure port probe are synced, without affecting other
+scheduled PM callbacks.
+
+Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
+Suggested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: John Garry <john.garry@huawei.com>
+BugLink: https://bugs.launchpad.net/bugs/1867983
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |   22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ drivers/ata/libata-core.c | 11 +++++------
+ include/linux/libata.h    |  3 +++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2760,33 +2760,31 @@ fail:
-  */
- int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
- {
-+	int count = 0, ret;
- 	u8 status;
--	int ret;
--	int count = 0;
- 
- 	do {
--		ret = drm_dp_dpcd_readb(mgr->aux, DP_PAYLOAD_TABLE_UPDATE_STATUS, &status);
--
-+		ret = drm_dp_dpcd_readb(mgr->aux,
-+					DP_PAYLOAD_TABLE_UPDATE_STATUS,
-+					&status);
- 		if (ret < 0) {
--			DRM_DEBUG_KMS("failed to read payload table status %d\n", ret);
--			goto fail;
-+			DRM_DEBUG_KMS("failed to read payload table status %d\n",
-+				      ret);
-+			return ret;
- 		}
- 
- 		if (status & DP_PAYLOAD_ACT_HANDLED)
- 			break;
- 		count++;
- 		udelay(100);
--
- 	} while (count < 30);
- 
- 	if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
--		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n", status, count);
--		ret = -EINVAL;
--		goto fail;
-+		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n",
-+			      status, count);
-+		return -EINVAL;
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 33eb5e342a7a9..a3a65f5490c02 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -57,7 +57,6 @@
+ #include <linux/workqueue.h>
+ #include <linux/scatterlist.h>
+ #include <linux/io.h>
+-#include <linux/async.h>
+ #include <linux/log2.h>
+ #include <linux/slab.h>
+ #include <linux/glob.h>
+@@ -6536,7 +6535,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
+ 	/* perform each probe asynchronously */
+ 	for (i = 0; i < host->n_ports; i++) {
+ 		struct ata_port *ap = host->ports[i];
+-		async_schedule(async_port_probe, ap);
++		ap->cookie = async_schedule(async_port_probe, ap);
  	}
- 	return 0;
--fail:
--	return ret;
- }
- EXPORT_SYMBOL(drm_dp_check_act_status);
  
+ 	return 0;
+@@ -6676,11 +6675,11 @@ void ata_host_detach(struct ata_host *host)
+ {
+ 	int i;
+ 
+-	/* Ensure ata_port probe has completed */
+-	async_synchronize_full();
+-
+-	for (i = 0; i < host->n_ports; i++)
++	for (i = 0; i < host->n_ports; i++) {
++		/* Ensure ata_port probe has completed */
++		async_synchronize_cookie(host->ports[i]->cookie + 1);
+ 		ata_port_detach(host->ports[i]);
++	}
+ 
+ 	/* the host is dead now, dissociate ACPI */
+ 	ata_acpi_dissociate(host);
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index 93838d98e3f38..5c9a44e3a0278 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -38,6 +38,7 @@
+ #include <linux/acpi.h>
+ #include <linux/cdrom.h>
+ #include <linux/sched.h>
++#include <linux/async.h>
+ 
+ /*
+  * Define if arch has non-standard setup.  This is a _PCI_ standard
+@@ -884,6 +885,8 @@ struct ata_port {
+ 	struct timer_list	fastdrain_timer;
+ 	unsigned long		fastdrain_cnt;
+ 
++	async_cookie_t		cookie;
++
+ 	int			em_message_type;
+ 	void			*private_data;
+ 
+-- 
+2.25.1
+
 
 
