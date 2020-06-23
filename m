@@ -2,54 +2,55 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF72C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D58220702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A77120656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945815;
-	bh=hCGzX3Xu/Hpancbw3z3g4E5LxuqQw193GktQeyXp204=;
+	s=default; t=1592945824;
+	bh=I6VnDk4BoSmtkRXVnFLIIrNS4DEqu4Z8iF3KWD9auXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/f3rtOjf/6m1t6lu3uphJQdmnFw4qWAdIA7kzsiIChY1p8YB+AEBjHB/JGxo6HMU
-	 buRrYzhW2dyRrfD3NVNPRK/rUVT4CVoFxxY3Vd1IyuHVJrRvW+J97H1b/ZbX/+FPz/
-	 4gCkbhccl4uTN+zUAzknwNJHVM25OZJk6I4SKTXc=
+	b=F+7XjhVwQMe378JPdGQ4AQXDXrjN4Quaoh9J0mL8RBCbo2+ie3dTgRQoI6OIBrZLf
+	 lBpBdIlcCYbxkAcT/QthhLEMMA+RsjZbzYVJYdmlwF33BQ7zcZm17IqkFGNmj/4+KL
+	 cAxHYPd34zgqSHtK7R2ZWpCql/hKIKniG1CUOXG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392509AbgFWU4x (ORCPT
+        id S2393084AbgFWU5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40180 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:57:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392510AbgFWUnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:43:20 -0400
+        id S2392484AbgFWUnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:43:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78E9F2070E;
-        Tue, 23 Jun 2020 20:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D44822070E;
+        Tue, 23 Jun 2020 20:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945001;
-        bh=hCGzX3Xu/Hpancbw3z3g4E5LxuqQw193GktQeyXp204=;
+        s=default; t=1592944990;
+        bh=I6VnDk4BoSmtkRXVnFLIIrNS4DEqu4Z8iF3KWD9auXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dA+GQvqAUzzp3d4VCN1KOC3cNq9yzJiRRDDLVypZmoK7TipFaUXiYxGIO1cETtLQ8
-         ZlKtFWd64joda25VocVhtiIC/qpJGxYKzQuYpZs05u/ZQgd9qIbeeKXAURHZ1nPofI
-         hf4IWSYcgzFK5EChmq6pvjhFNRGXVNKbHv+iXycw=
+        b=x1jk6kyFp/sfIVqV0wBAE4q3QQ5H6ZuAM85kofodYzJZWLcpUdqdXcV6lqbLJ8dKH
+         rM8YUKDrKRXzC7oRrt7nxafUv2TsXQONfxil0oh7mcGo8Az78InSKuCTwCle8N/BYf
+         zJwM0nStPb3ATdTP45ZHa5/coN7pOnKx3+2OW89Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.19 195/206] s390: fix syscall_get_error for compat processes
-Date:   Tue, 23 Jun 2020 21:58:43 +0200
-Message-Id: <20200623195326.629457027@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 204/206] sched/rt, net: Use CONFIG_PREEMPTION.patch
+Date:   Tue, 23 Jun 2020 21:58:52 +0200
+Message-Id: <20200623195327.077871462@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -62,56 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry V. Levin <ldv@altlinux.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit b3583fca5fb654af2cfc1c08259abb9728272538 upstream.
+[ Upstream commit 2da2b32fd9346009e9acdb68c570ca8d3966aba7 ]
 
-If both the tracer and the tracee are compat processes, and gprs[2]
-is assigned a value by __poke_user_compat, then the higher 32 bits
-of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
-syscall_get_error() always returns 0.
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
 
-Fix the implementation by sign-extending the value for compat processes
-the same way as x86 implementation does.
+Update the comment to use CONFIG_PREEMPTION.
 
-The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
-PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
-
-This change fixes strace syscall tampering on s390.
-
-Link: https://lkml.kernel.org/r/20200602180051.GA2427@altlinux.org
-Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
-Cc: Elvira Khabirova <lineprinter@altlinux.org>
-Cc: stable@vger.kernel.org # v2.6.28+
-Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: David S. Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: netdev@vger.kernel.org
+Link: https://lore.kernel.org/r/20191015191821.11479-22-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/syscall.h |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/include/asm/syscall.h
-+++ b/arch/s390/include/asm/syscall.h
-@@ -38,7 +38,17 @@ static inline void syscall_rollback(stru
- static inline long syscall_get_error(struct task_struct *task,
- 				     struct pt_regs *regs)
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 50498a75c04bf..8db77e09387b8 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -902,7 +902,7 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
+  *
+  *	The use of raw_seqcount_begin() and cond_resched() before
+  *	retrying is required as we want to give the writers a chance
+- *	to complete when CONFIG_PREEMPT is not set.
++ *	to complete when CONFIG_PREEMPTION is not set.
+  */
+ int netdev_get_name(struct net *net, char *name, int ifindex)
  {
--	return IS_ERR_VALUE(regs->gprs[2]) ? regs->gprs[2] : 0;
-+	unsigned long error = regs->gprs[2];
-+#ifdef CONFIG_COMPAT
-+	if (test_tsk_thread_flag(task, TIF_31BIT)) {
-+		/*
-+		 * Sign-extend the value so (int)-EFOO becomes (long)-EFOO
-+		 * and will match correctly in comparisons.
-+		 */
-+		error = (long)(int)error;
-+	}
-+#endif
-+	return IS_ERR_VALUE(error) ? error : 0;
- }
- 
- static inline long syscall_get_return_value(struct task_struct *task,
+-- 
+2.25.1
+
 
 
