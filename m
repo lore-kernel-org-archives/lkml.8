@@ -2,187 +2,595 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB90C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B18B220738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D180720781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592913554;
+	bh=FT0QzzFFGJ9tEoxtGC4wo7XjLg69hYh6uKADv8tmVCw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zbIpt8oRG+7ZvZwBB/KdHWEsz20X3G6Fq/cxPH9wyq4IejOcAhvB4F+jAgswJLCto
+	 3h2KtUgar44gq47440mz9Cxuyokuz274eHefGPbFmEbKp/dc3+jqeQt1kVJwbej9tB
+	 KjRIcXV77laI8+SfaRYOlAiM6e/brLn2/uqbVSb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732639AbgFWL67 (ORCPT
+        id S1732642AbgFWL7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:58:59 -0400
-Received: from mga05.intel.com ([192.55.52.43]:58474 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732527AbgFWL62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:58:28 -0400
-IronPort-SDR: tqdGzSN4x9sCI0yup7rqEkzSOjTUwLGGy5Mm/0bA0iPjabKp7gUYG+936uWmILZFLQdUdY1hvK
- ueWkGvvIaotg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="228710077"
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="228710077"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 04:58:28 -0700
-IronPort-SDR: s78wnkn+VxwlYV3SKItfIWz3h3BnNDeC9GXiVcgPn9rsECjv3/j6pcIctfSQ3q0y6uwuZHOaC5
- o4qGW6E1e8sQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="285745544"
-Received: from lxy-dell.sh.intel.com ([10.239.159.21])
-  by orsmga007.jf.intel.com with ESMTP; 23 Jun 2020 04:58:25 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 3/7] KVM: X86: Introduce kvm_check_cpuid()
-Date:   Tue, 23 Jun 2020 19:58:12 +0800
-Message-Id: <20200623115816.24132-4-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200623115816.24132-1-xiaoyao.li@intel.com>
-References: <20200623115816.24132-1-xiaoyao.li@intel.com>
+        Tue, 23 Jun 2020 07:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732512AbgFWL7K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:59:10 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24675C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 04:59:09 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id c21so11496935lfb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 04:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+qvbJ/23N9j4K3vLnwlrFQmLcUG91GwK9obTWUkY7YQ=;
+        b=DmC6X7VU0cinS+4h5qQVNOT1gX2OhCtpUkAz3gupwhoTYggaYsS0LiJCiScZK1gGym
+         aKjPClndyAqa4B352L/CHjKebiAzh/52UQR5WzN60aZ4drpkHF0EFS4/Lws1q4obO3Jx
+         7ov/Dt422zYPKZyAWMySX43PUTlZegxC2c27M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+qvbJ/23N9j4K3vLnwlrFQmLcUG91GwK9obTWUkY7YQ=;
+        b=hUUKIVjrpQW4MPJXZ38Gd939Om7/wtIFM4dFZf8XW8WRJaMER/tUPLZ4i2PcwvRGWg
+         t6hNKZBewPBmkHv8nhdHzxMjdZ/7jdMEoHZDFfh2zocVIRrCzcMewjYR2nJdLnmW4J+m
+         1mm5BpI40p6iQTawA9FOoEipmlecfJUHfDnhl1bHsNb/HXtBlVS9d3AaXW7lTgFh/jqa
+         kV4XtJDWTtZOfPmHhF7MpQrmoxbvzAhiOm9vT4yaVBJK3Bndpr8Ly/jqOd2ny0A4wllM
+         kR/81uLonGwjsMcxoaQ+icTXdDRGi4O+61VdPbfZKx1Ny0geppyVln1BoK7gLehhZJEM
+         rFLg==
+X-Gm-Message-State: AOAM532CKvbAHOVbBx/LtTSvqrxYpXIcVG1ATCF2bNnGW51hzSncRmCb
+        XB4RdvVtow1n929WC25FxdoT1ogvoI4ApNzTEb9W0Q==
+X-Google-Smtp-Source: ABdhPJxIl+AG9Lxtdnkw1jQ1aq0Cp0ZHm1wyIkC4EMVG1CKVrTxWvBj+acG376T9gI9PFK0fxJ0nu3rXJxP0+Fbxxl4=
+X-Received: by 2002:a19:c64e:: with SMTP id w75mr12506701lff.64.1592913547275;
+ Tue, 23 Jun 2020 04:59:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1592905407.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cover.1592905407.git.mchehab+huawei@kernel.org>
+From:   Kate Stewart <kstewart@linuxfoundation.org>
+Date:   Tue, 23 Jun 2020 06:58:55 -0500
+Message-ID: <CAG_66ZRjeX0AERQ0g_d0u=quhrhKHzXRu__m46trqzLLt=8XDA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] Convert the remaining text files to ReST and add
+ SPDX for GFDL
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Yong Zhi <yong.zhi@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tian Shu Qiu <tian.shu.qiu@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-spdx@vger.kernel.org, linux-mm@kvack.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kvm_check_cpuid() to validate if userspace provides legal cpuid
-settings and call it before KVM updates CPUID.
+On Tue, Jun 23, 2020 at 4:53 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> The main goal of this series is to finish the ReST conversion. After this
+> series, we have just those files still in plain old format:
+>
+>         - Documentation/RCU/RTFP.txt
+>         - Documentation/atomic_bitops.txt
+>         - Documentation/memory-barriers.txt
+>         - Documentation/atomic_t.txt
+>         - Documentation/filesystems/dax.txt
+>         - Documentation/filesystems/path-lookup.txt
+>         - Documentation/virt/kvm/devices/README
+>
+> PS.: I'm using a script to remove false-positives and ignore non-converted
+> translated files.
+>
+> It is worth to mention that this fseries contain licenses for the two
+> GFDL licenses used within the Kernel: GFDL-1.1+ and GFDL-1.2.
+>
+> Those licenses are the result of long discussions with the SPDX legal
+> team, and are part of this commit, to be added for the future
+> SPDX 3.10 version:
+>         https://github.com/spdx/license-list-XML/pull/1048/commits/f695d2ac65230d0f4161ba58fff2f9d87bb5a053
+>
+> Mauro Carvalho Chehab (9):
+>   docs: dt: convert booting-without-of.txt to ReST format
+>   LICENSES: add GFDL licenses
+>   media: docs: use SPDX GFDL-1.1-or-later-no-invariants
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
-Is the check of virutal address width really necessary?
-KVM doesn't check other bits at all. I guess the policy is that KVM allows
-illegal CPUID settings as long as it doesn't break host kernel. Userspace
-takes the consequences itself if it sets bogus CPUID settings that breaks
-its guest.
-But why vaddr_bits is special? It seems illegal vaddr_bits won't break host
-kernel.
----
- arch/x86/kvm/cpuid.c | 54 ++++++++++++++++++++++++++++----------------
- arch/x86/kvm/cpuid.h |  2 +-
- 2 files changed, 35 insertions(+), 21 deletions(-)
+The identifier "GFDL-1.1-or-later-no-invariants" isn't following expected
+construction (or-later and -only at the end) and the pull request is
+still under
+discussion on the SPDX license list, so please hold off on applying this
+until the correct identifier is figured out there.
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 0164dac95ef5..67e5c68fdb45 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -54,7 +54,26 @@ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
- 
- #define F feature_bit
- 
--int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-+static int kvm_check_cpuid(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_cpuid_entry2 *best;
-+
-+	/*
-+	 * The existing code assumes virtual address is 48-bit or 57-bit in the
-+	 * canonical address checks; exit if it is ever changed.
-+	 */
-+	best = kvm_find_cpuid_entry(vcpu, 0x80000008, 0);
-+	if (best) {
-+		int vaddr_bits = (best->eax & 0xff00) >> 8;
-+
-+		if (vaddr_bits != 48 && vaddr_bits != 57 && vaddr_bits != 0)
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+void kvm_update_cpuid(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_cpuid_entry2 *best;
- 	struct kvm_lapic *apic = vcpu->arch.apic;
-@@ -96,18 +115,6 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
- 		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
- 
--	/*
--	 * The existing code assumes virtual address is 48-bit or 57-bit in the
--	 * canonical address checks; exit if it is ever changed.
--	 */
--	best = kvm_find_cpuid_entry(vcpu, 0x80000008, 0);
--	if (best) {
--		int vaddr_bits = (best->eax & 0xff00) >> 8;
--
--		if (vaddr_bits != 48 && vaddr_bits != 57 && vaddr_bits != 0)
--			return -EINVAL;
--	}
--
- 	best = kvm_find_cpuid_entry(vcpu, KVM_CPUID_FEATURES, 0);
- 	if (kvm_hlt_in_guest(vcpu->kvm) && best &&
- 		(best->eax & (1 << KVM_FEATURE_PV_UNHALT)))
-@@ -127,7 +134,6 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 	kvm_mmu_reset_context(vcpu);
- 
- 	kvm_pmu_refresh(vcpu);
--	return 0;
- }
- 
- static int is_efer_nx(void)
-@@ -202,12 +208,16 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
- 		vcpu->arch.cpuid_entries[i].padding[2] = 0;
- 	}
- 	vcpu->arch.cpuid_nent = cpuid->nent;
-+	r = kvm_check_cpuid(vcpu);
-+	if (r) {
-+		vcpu->arch.cpuid_nent = 0;
-+		goto out;
-+	}
-+
- 	cpuid_fix_nx_cap(vcpu);
- 	kvm_apic_set_version(vcpu);
- 	kvm_x86_ops.cpuid_update(vcpu);
--	r = kvm_update_cpuid(vcpu);
--	if (r)
--		vcpu->arch.cpuid_nent = 0;
-+	kvm_update_cpuid(vcpu);
- 
- 	kvfree(cpuid_entries);
- out:
-@@ -228,11 +238,15 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
- 			   cpuid->nent * sizeof(struct kvm_cpuid_entry2)))
- 		goto out;
- 	vcpu->arch.cpuid_nent = cpuid->nent;
-+	r = kvm_check_cpuid(vcpu);
-+	if (r) {
-+		vcpu->arch.cpuid_nent = 0;
-+		goto out;
-+	}
-+
- 	kvm_apic_set_version(vcpu);
- 	kvm_x86_ops.cpuid_update(vcpu);
--	r = kvm_update_cpuid(vcpu);
--	if (r)
--		vcpu->arch.cpuid_nent = 0;
-+	kvm_update_cpuid(vcpu);
- out:
- 	return r;
- }
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 05434cd9342f..f136de1debad 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -9,7 +9,7 @@
- extern u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
- void kvm_set_cpu_caps(void);
- 
--int kvm_update_cpuid(struct kvm_vcpu *vcpu);
-+void kvm_update_cpuid(struct kvm_vcpu *vcpu);
- struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
- 					      u32 function, u32 index);
- int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
--- 
-2.18.2
-
+>   docs: trace: ring-buffer-design.txt: convert to ReST format
+>   docs: move nommu-mmap.txt to admin-guide and rename to ReST
+>   docs: move mailbox.txt to driver-api and rename it
+>   docs: move other kAPI documents to core-api
+>   docs: Add remaining Documentation/*.txt at staging/index.rst
+>   docs: staging: use small font for literal includes
+>
+>  Documentation/admin-guide/mm/index.rst        |   1 +
+>  .../mm/nommu-mmap.rst}                        |   0
+>  Documentation/admin-guide/sysctl/vm.rst       |   2 +-
+>  Documentation/arm/booting.rst                 |   2 +-
+>  .../bus-virt-phys-mapping.rst}                |   0
+>  Documentation/core-api/index.rst              |   3 +
+>  .../this_cpu_ops.rst}                         |   0
+>  .../unaligned-memory-access.rst               |   0
+>  ...-without-of.txt => booting-without-of.rst} | 298 ++++---
+>  Documentation/devicetree/index.rst            |   1 +
+>  Documentation/driver-api/index.rst            |   1 +
+>  .../{mailbox.txt => driver-api/mailbox.rst}   |   0
+>  Documentation/gpu/drm-mm.rst                  |   2 +-
+>  Documentation/staging/index.rst               |  24 +
+>  Documentation/trace/index.rst                 |   1 +
+>  ...ffer-design.txt => ring-buffer-design.rst} | 778 +++++++++---------
+>  Documentation/translations/zh_CN/arm/Booting  |   2 +-
+>  .../userspace-api/media/cec/cec-api.rst       |   9 +-
+>  .../media/cec/cec-func-close.rst              |   9 +-
+>  .../media/cec/cec-func-ioctl.rst              |   9 +-
+>  .../userspace-api/media/cec/cec-func-open.rst |   9 +-
+>  .../userspace-api/media/cec/cec-func-poll.rst |   9 +-
+>  .../userspace-api/media/cec/cec-funcs.rst     |   9 +-
+>  .../userspace-api/media/cec/cec-header.rst    |   9 +-
+>  .../userspace-api/media/cec/cec-intro.rst     |   9 +-
+>  .../media/cec/cec-ioc-adap-g-caps.rst         |   9 +-
+>  .../media/cec/cec-ioc-adap-g-log-addrs.rst    |   9 +-
+>  .../media/cec/cec-ioc-adap-g-phys-addr.rst    |   9 +-
+>  .../media/cec/cec-ioc-dqevent.rst             |   9 +-
+>  .../media/cec/cec-ioc-g-mode.rst              |   9 +-
+>  .../media/cec/cec-ioc-receive.rst             |   9 +-
+>  .../media/cec/cec-pin-error-inj.rst           |   9 +-
+>  .../dvb/audio-bilingual-channel-select.rst    |   9 +-
+>  .../media/dvb/audio-channel-select.rst        |   9 +-
+>  .../media/dvb/audio-clear-buffer.rst          |   9 +-
+>  .../media/dvb/audio-continue.rst              |   9 +-
+>  .../userspace-api/media/dvb/audio-fclose.rst  |   9 +-
+>  .../userspace-api/media/dvb/audio-fopen.rst   |   9 +-
+>  .../userspace-api/media/dvb/audio-fwrite.rst  |   9 +-
+>  .../media/dvb/audio-get-capabilities.rst      |   9 +-
+>  .../media/dvb/audio-get-status.rst            |   9 +-
+>  .../userspace-api/media/dvb/audio-pause.rst   |   9 +-
+>  .../userspace-api/media/dvb/audio-play.rst    |   9 +-
+>  .../media/dvb/audio-select-source.rst         |   9 +-
+>  .../media/dvb/audio-set-av-sync.rst           |   9 +-
+>  .../media/dvb/audio-set-bypass-mode.rst       |   9 +-
+>  .../userspace-api/media/dvb/audio-set-id.rst  |   9 +-
+>  .../media/dvb/audio-set-mixer.rst             |   9 +-
+>  .../media/dvb/audio-set-mute.rst              |   9 +-
+>  .../media/dvb/audio-set-streamtype.rst        |   9 +-
+>  .../userspace-api/media/dvb/audio-stop.rst    |   9 +-
+>  .../userspace-api/media/dvb/audio.rst         |   9 +-
+>  .../media/dvb/audio_data_types.rst            |   9 +-
+>  .../media/dvb/audio_function_calls.rst        |   9 +-
+>  .../userspace-api/media/dvb/ca-fclose.rst     |   9 +-
+>  .../userspace-api/media/dvb/ca-fopen.rst      |   9 +-
+>  .../userspace-api/media/dvb/ca-get-cap.rst    |   9 +-
+>  .../media/dvb/ca-get-descr-info.rst           |   9 +-
+>  .../userspace-api/media/dvb/ca-get-msg.rst    |   9 +-
+>  .../media/dvb/ca-get-slot-info.rst            |   9 +-
+>  .../userspace-api/media/dvb/ca-reset.rst      |   9 +-
+>  .../userspace-api/media/dvb/ca-send-msg.rst   |   9 +-
+>  .../userspace-api/media/dvb/ca-set-descr.rst  |   9 +-
+>  Documentation/userspace-api/media/dvb/ca.rst  |   9 +-
+>  .../userspace-api/media/dvb/ca_data_types.rst |   9 +-
+>  .../media/dvb/ca_function_calls.rst           |   9 +-
+>  .../userspace-api/media/dvb/demux.rst         |   9 +-
+>  .../userspace-api/media/dvb/dmx-add-pid.rst   |   9 +-
+>  .../userspace-api/media/dvb/dmx-expbuf.rst    |   9 +-
+>  .../userspace-api/media/dvb/dmx-fclose.rst    |   9 +-
+>  .../userspace-api/media/dvb/dmx-fopen.rst     |   9 +-
+>  .../userspace-api/media/dvb/dmx-fread.rst     |   9 +-
+>  .../userspace-api/media/dvb/dmx-fwrite.rst    |   9 +-
+>  .../media/dvb/dmx-get-pes-pids.rst            |   9 +-
+>  .../userspace-api/media/dvb/dmx-get-stc.rst   |   9 +-
+>  .../userspace-api/media/dvb/dmx-mmap.rst      |   9 +-
+>  .../userspace-api/media/dvb/dmx-munmap.rst    |   9 +-
+>  .../userspace-api/media/dvb/dmx-qbuf.rst      |   9 +-
+>  .../userspace-api/media/dvb/dmx-querybuf.rst  |   9 +-
+>  .../media/dvb/dmx-remove-pid.rst              |   9 +-
+>  .../userspace-api/media/dvb/dmx-reqbufs.rst   |   9 +-
+>  .../media/dvb/dmx-set-buffer-size.rst         |   9 +-
+>  .../media/dvb/dmx-set-filter.rst              |   9 +-
+>  .../media/dvb/dmx-set-pes-filter.rst          |   9 +-
+>  .../userspace-api/media/dvb/dmx-start.rst     |   9 +-
+>  .../userspace-api/media/dvb/dmx-stop.rst      |   9 +-
+>  .../userspace-api/media/dvb/dmx_fcalls.rst    |   9 +-
+>  .../userspace-api/media/dvb/dmx_types.rst     |   9 +-
+>  .../media/dvb/dvb-fe-read-status.rst          |   9 +-
+>  .../media/dvb/dvb-frontend-event.rst          |   9 +-
+>  .../media/dvb/dvb-frontend-parameters.rst     |   9 +-
+>  .../userspace-api/media/dvb/dvbapi.rst        |   9 +-
+>  .../userspace-api/media/dvb/dvbproperty.rst   |   9 +-
+>  .../userspace-api/media/dvb/examples.rst      |   9 +-
+>  .../media/dvb/fe-bandwidth-t.rst              |   9 +-
+>  .../media/dvb/fe-diseqc-recv-slave-reply.rst  |   9 +-
+>  .../media/dvb/fe-diseqc-reset-overload.rst    |   9 +-
+>  .../media/dvb/fe-diseqc-send-burst.rst        |   9 +-
+>  .../media/dvb/fe-diseqc-send-master-cmd.rst   |   9 +-
+>  .../dvb/fe-dishnetwork-send-legacy-cmd.rst    |   9 +-
+>  .../media/dvb/fe-enable-high-lnb-voltage.rst  |   9 +-
+>  .../userspace-api/media/dvb/fe-get-event.rst  |   9 +-
+>  .../media/dvb/fe-get-frontend.rst             |   9 +-
+>  .../userspace-api/media/dvb/fe-get-info.rst   |   9 +-
+>  .../media/dvb/fe-get-property.rst             |   9 +-
+>  .../userspace-api/media/dvb/fe-read-ber.rst   |   9 +-
+>  .../media/dvb/fe-read-signal-strength.rst     |   9 +-
+>  .../userspace-api/media/dvb/fe-read-snr.rst   |   9 +-
+>  .../media/dvb/fe-read-status.rst              |   9 +-
+>  .../media/dvb/fe-read-uncorrected-blocks.rst  |   9 +-
+>  .../media/dvb/fe-set-frontend-tune-mode.rst   |   9 +-
+>  .../media/dvb/fe-set-frontend.rst             |   9 +-
+>  .../userspace-api/media/dvb/fe-set-tone.rst   |   9 +-
+>  .../media/dvb/fe-set-voltage.rst              |   9 +-
+>  .../userspace-api/media/dvb/fe-type-t.rst     |   9 +-
+>  .../media/dvb/fe_property_parameters.rst      |   9 +-
+>  .../media/dvb/frontend-header.rst             |   9 +-
+>  .../dvb/frontend-property-cable-systems.rst   |   9 +-
+>  .../frontend-property-satellite-systems.rst   |   9 +-
+>  .../frontend-property-terrestrial-systems.rst |   9 +-
+>  .../media/dvb/frontend-stat-properties.rst    |   9 +-
+>  .../userspace-api/media/dvb/frontend.rst      |   9 +-
+>  .../media/dvb/frontend_f_close.rst            |   9 +-
+>  .../media/dvb/frontend_f_open.rst             |   9 +-
+>  .../media/dvb/frontend_fcalls.rst             |   9 +-
+>  .../media/dvb/frontend_legacy_api.rst         |   9 +-
+>  .../media/dvb/frontend_legacy_dvbv3_api.rst   |   9 +-
+>  .../userspace-api/media/dvb/headers.rst       |   9 +-
+>  .../userspace-api/media/dvb/intro.rst         |   9 +-
+>  .../media/dvb/legacy_dvb_apis.rst             |   9 +-
+>  .../userspace-api/media/dvb/net-add-if.rst    |   9 +-
+>  .../userspace-api/media/dvb/net-get-if.rst    |   9 +-
+>  .../userspace-api/media/dvb/net-remove-if.rst |   9 +-
+>  .../userspace-api/media/dvb/net-types.rst     |   9 +-
+>  Documentation/userspace-api/media/dvb/net.rst |   9 +-
+>  .../media/dvb/query-dvb-frontend-info.rst     |   9 +-
+>  .../media/dvb/video-clear-buffer.rst          |   9 +-
+>  .../userspace-api/media/dvb/video-command.rst |   9 +-
+>  .../media/dvb/video-continue.rst              |   9 +-
+>  .../media/dvb/video-fast-forward.rst          |   9 +-
+>  .../userspace-api/media/dvb/video-fclose.rst  |   9 +-
+>  .../userspace-api/media/dvb/video-fopen.rst   |   9 +-
+>  .../userspace-api/media/dvb/video-freeze.rst  |   9 +-
+>  .../userspace-api/media/dvb/video-fwrite.rst  |   9 +-
+>  .../media/dvb/video-get-capabilities.rst      |   9 +-
+>  .../media/dvb/video-get-event.rst             |   9 +-
+>  .../media/dvb/video-get-frame-count.rst       |   9 +-
+>  .../userspace-api/media/dvb/video-get-pts.rst |   9 +-
+>  .../media/dvb/video-get-size.rst              |   9 +-
+>  .../media/dvb/video-get-status.rst            |   9 +-
+>  .../userspace-api/media/dvb/video-play.rst    |   9 +-
+>  .../media/dvb/video-select-source.rst         |   9 +-
+>  .../media/dvb/video-set-blank.rst             |   9 +-
+>  .../media/dvb/video-set-display-format.rst    |   9 +-
+>  .../media/dvb/video-set-format.rst            |   9 +-
+>  .../media/dvb/video-set-streamtype.rst        |   9 +-
+>  .../media/dvb/video-slowmotion.rst            |   9 +-
+>  .../media/dvb/video-stillpicture.rst          |   9 +-
+>  .../userspace-api/media/dvb/video-stop.rst    |   9 +-
+>  .../media/dvb/video-try-command.rst           |   9 +-
+>  .../userspace-api/media/dvb/video.rst         |   9 +-
+>  .../media/dvb/video_function_calls.rst        |   9 +-
+>  .../userspace-api/media/dvb/video_types.rst   |   9 +-
+>  .../userspace-api/media/fdl-appendix.rst      |   9 +-
+>  .../userspace-api/media/gen-errors.rst        |   9 +-
+>  .../media/mediactl/media-controller-intro.rst |   9 +-
+>  .../media/mediactl/media-controller-model.rst |   9 +-
+>  .../media/mediactl/media-controller.rst       |   9 +-
+>  .../media/mediactl/media-func-close.rst       |   9 +-
+>  .../media/mediactl/media-func-ioctl.rst       |   9 +-
+>  .../media/mediactl/media-func-open.rst        |   9 +-
+>  .../media/mediactl/media-funcs.rst            |   9 +-
+>  .../media/mediactl/media-header.rst           |   9 +-
+>  .../media/mediactl/media-ioc-device-info.rst  |   9 +-
+>  .../mediactl/media-ioc-enum-entities.rst      |   9 +-
+>  .../media/mediactl/media-ioc-enum-links.rst   |   9 +-
+>  .../media/mediactl/media-ioc-g-topology.rst   |   9 +-
+>  .../mediactl/media-ioc-request-alloc.rst      |  26 +-
+>  .../media/mediactl/media-ioc-setup-link.rst   |   9 +-
+>  .../mediactl/media-request-ioc-queue.rst      |  26 +-
+>  .../mediactl/media-request-ioc-reinit.rst     |  26 +-
+>  .../media/mediactl/media-types.rst            |   9 +-
+>  .../media/mediactl/request-api.rst            |  26 +-
+>  .../media/mediactl/request-func-close.rst     |  26 +-
+>  .../media/mediactl/request-func-ioctl.rst     |  26 +-
+>  .../media/mediactl/request-func-poll.rst      |  26 +-
+>  .../userspace-api/media/rc/keytable.c.rst     |   9 +-
+>  .../userspace-api/media/rc/lirc-dev-intro.rst |   9 +-
+>  .../userspace-api/media/rc/lirc-dev.rst       |   9 +-
+>  .../userspace-api/media/rc/lirc-func.rst      |   9 +-
+>  .../media/rc/lirc-get-features.rst            |   9 +-
+>  .../media/rc/lirc-get-rec-mode.rst            |   9 +-
+>  .../media/rc/lirc-get-rec-resolution.rst      |   9 +-
+>  .../media/rc/lirc-get-send-mode.rst           |   9 +-
+>  .../media/rc/lirc-get-timeout.rst             |   9 +-
+>  .../userspace-api/media/rc/lirc-header.rst    |   9 +-
+>  .../userspace-api/media/rc/lirc-read.rst      |   9 +-
+>  .../rc/lirc-set-measure-carrier-mode.rst      |   9 +-
+>  .../media/rc/lirc-set-rec-carrier-range.rst   |   9 +-
+>  .../media/rc/lirc-set-rec-carrier.rst         |   9 +-
+>  .../media/rc/lirc-set-rec-timeout-reports.rst |   9 +-
+>  .../media/rc/lirc-set-rec-timeout.rst         |   9 +-
+>  .../media/rc/lirc-set-send-carrier.rst        |   9 +-
+>  .../media/rc/lirc-set-send-duty-cycle.rst     |   9 +-
+>  .../media/rc/lirc-set-transmitter-mask.rst    |   9 +-
+>  .../media/rc/lirc-set-wideband-receiver.rst   |   9 +-
+>  .../userspace-api/media/rc/lirc-write.rst     |   9 +-
+>  .../userspace-api/media/rc/rc-intro.rst       |   9 +-
+>  .../userspace-api/media/rc/rc-protos.rst      |   4 +-
+>  .../userspace-api/media/rc/rc-sysfs-nodes.rst |   9 +-
+>  .../media/rc/rc-table-change.rst              |   9 +-
+>  .../userspace-api/media/rc/rc-tables.rst      |   9 +-
+>  .../media/rc/remote_controllers.rst           |   9 +-
+>  .../userspace-api/media/v4l/app-pri.rst       |   9 +-
+>  .../userspace-api/media/v4l/async.rst         |   9 +-
+>  .../userspace-api/media/v4l/audio.rst         |   9 +-
+>  .../userspace-api/media/v4l/biblio.rst        |   9 +-
+>  .../userspace-api/media/v4l/buffer.rst        |   9 +-
+>  .../media/v4l/capture-example.rst             |   9 +-
+>  .../userspace-api/media/v4l/capture.c.rst     |   9 +-
+>  .../media/v4l/colorspaces-defs.rst            |   9 +-
+>  .../media/v4l/colorspaces-details.rst         |   9 +-
+>  .../userspace-api/media/v4l/colorspaces.rst   |   9 +-
+>  .../userspace-api/media/v4l/common-defs.rst   |   9 +-
+>  .../userspace-api/media/v4l/common.rst        |   9 +-
+>  .../userspace-api/media/v4l/compat.rst        |   9 +-
+>  .../userspace-api/media/v4l/control.rst       |   9 +-
+>  .../userspace-api/media/v4l/crop.rst          |   9 +-
+>  .../userspace-api/media/v4l/depth-formats.rst |   9 +-
+>  .../userspace-api/media/v4l/dev-capture.rst   |   9 +-
+>  .../userspace-api/media/v4l/dev-event.rst     |   9 +-
+>  .../userspace-api/media/v4l/dev-mem2mem.rst   |   9 +-
+>  .../userspace-api/media/v4l/dev-meta.rst      |   9 +-
+>  .../userspace-api/media/v4l/dev-osd.rst       |   9 +-
+>  .../userspace-api/media/v4l/dev-output.rst    |   9 +-
+>  .../userspace-api/media/v4l/dev-overlay.rst   |   9 +-
+>  .../userspace-api/media/v4l/dev-radio.rst     |   9 +-
+>  .../userspace-api/media/v4l/dev-raw-vbi.rst   |   9 +-
+>  .../userspace-api/media/v4l/dev-rds.rst       |   9 +-
+>  .../userspace-api/media/v4l/dev-sdr.rst       |   9 +-
+>  .../media/v4l/dev-sliced-vbi.rst              |   9 +-
+>  .../userspace-api/media/v4l/dev-subdev.rst    |   9 +-
+>  .../userspace-api/media/v4l/dev-touch.rst     |   9 +-
+>  .../userspace-api/media/v4l/devices.rst       |   9 +-
+>  .../userspace-api/media/v4l/diff-v4l.rst      |   9 +-
+>  .../userspace-api/media/v4l/dmabuf.rst        |   9 +-
+>  .../userspace-api/media/v4l/dv-timings.rst    |   9 +-
+>  .../media/v4l/ext-ctrls-camera.rst            |   9 +-
+>  .../media/v4l/ext-ctrls-codec.rst             |   9 +-
+>  .../media/v4l/ext-ctrls-detect.rst            |   9 +-
+>  .../userspace-api/media/v4l/ext-ctrls-dv.rst  |   9 +-
+>  .../media/v4l/ext-ctrls-flash.rst             |   9 +-
+>  .../media/v4l/ext-ctrls-fm-rx.rst             |   9 +-
+>  .../media/v4l/ext-ctrls-fm-tx.rst             |   9 +-
+>  .../media/v4l/ext-ctrls-image-process.rst     |   9 +-
+>  .../media/v4l/ext-ctrls-image-source.rst      |   9 +-
+>  .../media/v4l/ext-ctrls-jpeg.rst              |   9 +-
+>  .../media/v4l/ext-ctrls-rf-tuner.rst          |   9 +-
+>  .../media/v4l/extended-controls.rst           |   9 +-
+>  .../userspace-api/media/v4l/field-order.rst   |   9 +-
+>  .../userspace-api/media/v4l/format.rst        |   9 +-
+>  .../userspace-api/media/v4l/func-close.rst    |   9 +-
+>  .../userspace-api/media/v4l/func-ioctl.rst    |   9 +-
+>  .../userspace-api/media/v4l/func-mmap.rst     |   9 +-
+>  .../userspace-api/media/v4l/func-munmap.rst   |   9 +-
+>  .../userspace-api/media/v4l/func-open.rst     |   9 +-
+>  .../userspace-api/media/v4l/func-poll.rst     |   9 +-
+>  .../userspace-api/media/v4l/func-read.rst     |   9 +-
+>  .../userspace-api/media/v4l/func-select.rst   |   9 +-
+>  .../userspace-api/media/v4l/func-write.rst    |   9 +-
+>  .../userspace-api/media/v4l/hist-v4l2.rst     |   9 +-
+>  .../userspace-api/media/v4l/hsv-formats.rst   |   9 +-
+>  Documentation/userspace-api/media/v4l/io.rst  |   9 +-
+>  .../media/v4l/libv4l-introduction.rst         |   9 +-
+>  .../userspace-api/media/v4l/libv4l.rst        |   9 +-
+>  .../userspace-api/media/v4l/meta-formats.rst  |   9 +-
+>  .../userspace-api/media/v4l/mmap.rst          |   9 +-
+>  .../userspace-api/media/v4l/open.rst          |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-bayer.rst  |   9 +-
+>  .../media/v4l/pixfmt-compressed.rst           |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-grey.rst   |   9 +-
+>  .../media/v4l/pixfmt-indexed.rst              |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-intro.rst  |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-inzi.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-m420.rst   |   9 +-
+>  .../media/v4l/pixfmt-meta-d4xx.rst            |   9 +-
+>  .../media/v4l/pixfmt-meta-intel-ipu3.rst      |  25 +-
+>  .../media/v4l/pixfmt-meta-uvc.rst             |   9 +-
+>  .../media/v4l/pixfmt-meta-vivid.rst           |  26 +-
+>  .../media/v4l/pixfmt-meta-vsp1-hgo.rst        |   9 +-
+>  .../media/v4l/pixfmt-meta-vsp1-hgt.rst        |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-nv12.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-nv12m.rst  |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-nv12mt.rst |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-nv16.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-nv16m.rst  |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-nv24.rst   |   9 +-
+>  .../media/v4l/pixfmt-packed-hsv.rst           |   9 +-
+>  .../media/v4l/pixfmt-packed-yuv.rst           |   9 +-
+>  .../media/v4l/pixfmt-reserved.rst             |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-rgb.rst    |   9 +-
+>  .../media/v4l/pixfmt-sdr-cs08.rst             |   9 +-
+>  .../media/v4l/pixfmt-sdr-cs14le.rst           |   9 +-
+>  .../media/v4l/pixfmt-sdr-cu08.rst             |   9 +-
+>  .../media/v4l/pixfmt-sdr-cu16le.rst           |   9 +-
+>  .../media/v4l/pixfmt-sdr-pcu16be.rst          |   9 +-
+>  .../media/v4l/pixfmt-sdr-pcu18be.rst          |   9 +-
+>  .../media/v4l/pixfmt-sdr-pcu20be.rst          |   9 +-
+>  .../media/v4l/pixfmt-sdr-ru12le.rst           |   9 +-
+>  .../media/v4l/pixfmt-srggb10-ipu3.rst         |   9 +-
+>  .../media/v4l/pixfmt-srggb10.rst              |   9 +-
+>  .../media/v4l/pixfmt-srggb10alaw8.rst         |   9 +-
+>  .../media/v4l/pixfmt-srggb10dpcm8.rst         |   9 +-
+>  .../media/v4l/pixfmt-srggb10p.rst             |   9 +-
+>  .../media/v4l/pixfmt-srggb12.rst              |   9 +-
+>  .../media/v4l/pixfmt-srggb12p.rst             |   9 +-
+>  .../media/v4l/pixfmt-srggb14.rst              |   9 +-
+>  .../media/v4l/pixfmt-srggb14p.rst             |   9 +-
+>  .../media/v4l/pixfmt-srggb16.rst              |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-srggb8.rst |   9 +-
+>  .../media/v4l/pixfmt-tch-td08.rst             |   9 +-
+>  .../media/v4l/pixfmt-tch-td16.rst             |   9 +-
+>  .../media/v4l/pixfmt-tch-tu08.rst             |   9 +-
+>  .../media/v4l/pixfmt-tch-tu16.rst             |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-uv8.rst    |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-uyvy.rst   |   9 +-
+>  .../media/v4l/pixfmt-v4l2-mplane.rst          |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-v4l2.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-vyuy.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y10.rst    |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y10b.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y10p.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y12.rst    |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y12i.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y14.rst    |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y16-be.rst |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y16.rst    |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y41p.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-y8i.rst    |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-yuv410.rst |   9 +-
+>  .../media/v4l/pixfmt-yuv411p.rst              |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-yuv420.rst |   9 +-
+>  .../media/v4l/pixfmt-yuv420m.rst              |   9 +-
+>  .../media/v4l/pixfmt-yuv422m.rst              |   9 +-
+>  .../media/v4l/pixfmt-yuv422p.rst              |   9 +-
+>  .../media/v4l/pixfmt-yuv444m.rst              |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-yuyv.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-yvyu.rst   |   9 +-
+>  .../userspace-api/media/v4l/pixfmt-z16.rst    |   9 +-
+>  .../userspace-api/media/v4l/pixfmt.rst        |   9 +-
+>  .../userspace-api/media/v4l/planar-apis.rst   |   9 +-
+>  .../userspace-api/media/v4l/querycap.rst      |   9 +-
+>  Documentation/userspace-api/media/v4l/rw.rst  |   9 +-
+>  .../userspace-api/media/v4l/sdr-formats.rst   |   9 +-
+>  .../media/v4l/selection-api-configuration.rst |   9 +-
+>  .../media/v4l/selection-api-examples.rst      |   9 +-
+>  .../media/v4l/selection-api-intro.rst         |   9 +-
+>  .../media/v4l/selection-api-targets.rst       |   9 +-
+>  .../media/v4l/selection-api-vs-crop-api.rst   |   9 +-
+>  .../userspace-api/media/v4l/selection-api.rst |   9 +-
+>  .../media/v4l/selections-common.rst           |   9 +-
+>  .../userspace-api/media/v4l/standard.rst      |   9 +-
+>  .../userspace-api/media/v4l/streaming-par.rst |   9 +-
+>  .../media/v4l/subdev-formats.rst              |   9 +-
+>  .../userspace-api/media/v4l/tch-formats.rst   |   9 +-
+>  .../userspace-api/media/v4l/tuner.rst         |   9 +-
+>  .../userspace-api/media/v4l/user-func.rst     |   9 +-
+>  .../userspace-api/media/v4l/userp.rst         |   9 +-
+>  .../media/v4l/v4l2-selection-flags.rst        |   9 +-
+>  .../media/v4l/v4l2-selection-targets.rst      |   9 +-
+>  .../userspace-api/media/v4l/v4l2.rst          |   9 +-
+>  .../media/v4l/v4l2grab-example.rst            |   9 +-
+>  .../userspace-api/media/v4l/v4l2grab.c.rst    |   9 +-
+>  .../userspace-api/media/v4l/video.rst         |   9 +-
+>  .../userspace-api/media/v4l/videodev.rst      |   9 +-
+>  .../media/v4l/vidioc-create-bufs.rst          |   9 +-
+>  .../media/v4l/vidioc-cropcap.rst              |   9 +-
+>  .../media/v4l/vidioc-dbg-g-chip-info.rst      |   9 +-
+>  .../media/v4l/vidioc-dbg-g-register.rst       |   9 +-
+>  .../media/v4l/vidioc-decoder-cmd.rst          |   9 +-
+>  .../media/v4l/vidioc-dqevent.rst              |   9 +-
+>  .../media/v4l/vidioc-dv-timings-cap.rst       |   9 +-
+>  .../media/v4l/vidioc-encoder-cmd.rst          |   9 +-
+>  .../media/v4l/vidioc-enum-dv-timings.rst      |   9 +-
+>  .../media/v4l/vidioc-enum-fmt.rst             |   9 +-
+>  .../media/v4l/vidioc-enum-frameintervals.rst  |   9 +-
+>  .../media/v4l/vidioc-enum-framesizes.rst      |   9 +-
+>  .../media/v4l/vidioc-enum-freq-bands.rst      |   9 +-
+>  .../media/v4l/vidioc-enumaudio.rst            |   9 +-
+>  .../media/v4l/vidioc-enumaudioout.rst         |   9 +-
+>  .../media/v4l/vidioc-enuminput.rst            |   9 +-
+>  .../media/v4l/vidioc-enumoutput.rst           |   9 +-
+>  .../media/v4l/vidioc-enumstd.rst              |   9 +-
+>  .../userspace-api/media/v4l/vidioc-expbuf.rst |   9 +-
+>  .../media/v4l/vidioc-g-audio.rst              |   9 +-
+>  .../media/v4l/vidioc-g-audioout.rst           |   9 +-
+>  .../userspace-api/media/v4l/vidioc-g-crop.rst |   9 +-
+>  .../userspace-api/media/v4l/vidioc-g-ctrl.rst |   9 +-
+>  .../media/v4l/vidioc-g-dv-timings.rst         |   9 +-
+>  .../userspace-api/media/v4l/vidioc-g-edid.rst |   9 +-
+>  .../media/v4l/vidioc-g-enc-index.rst          |   9 +-
+>  .../media/v4l/vidioc-g-ext-ctrls.rst          |   9 +-
+>  .../userspace-api/media/v4l/vidioc-g-fbuf.rst |   9 +-
+>  .../userspace-api/media/v4l/vidioc-g-fmt.rst  |   9 +-
+>  .../media/v4l/vidioc-g-frequency.rst          |   9 +-
+>  .../media/v4l/vidioc-g-input.rst              |   9 +-
+>  .../media/v4l/vidioc-g-jpegcomp.rst           |   9 +-
+>  .../media/v4l/vidioc-g-modulator.rst          |   9 +-
+>  .../media/v4l/vidioc-g-output.rst             |   9 +-
+>  .../userspace-api/media/v4l/vidioc-g-parm.rst |   9 +-
+>  .../media/v4l/vidioc-g-priority.rst           |   9 +-
+>  .../media/v4l/vidioc-g-selection.rst          |   9 +-
+>  .../media/v4l/vidioc-g-sliced-vbi-cap.rst     |   9 +-
+>  .../userspace-api/media/v4l/vidioc-g-std.rst  |   9 +-
+>  .../media/v4l/vidioc-g-tuner.rst              |   9 +-
+>  .../media/v4l/vidioc-log-status.rst           |   9 +-
+>  .../media/v4l/vidioc-overlay.rst              |   9 +-
+>  .../media/v4l/vidioc-prepare-buf.rst          |   9 +-
+>  .../userspace-api/media/v4l/vidioc-qbuf.rst   |   9 +-
+>  .../media/v4l/vidioc-query-dv-timings.rst     |   9 +-
+>  .../media/v4l/vidioc-querybuf.rst             |   9 +-
+>  .../media/v4l/vidioc-querycap.rst             |   9 +-
+>  .../media/v4l/vidioc-queryctrl.rst            |   9 +-
+>  .../media/v4l/vidioc-querystd.rst             |   9 +-
+>  .../media/v4l/vidioc-reqbufs.rst              |   9 +-
+>  .../media/v4l/vidioc-s-hw-freq-seek.rst       |   9 +-
+>  .../media/v4l/vidioc-streamon.rst             |   9 +-
+>  .../v4l/vidioc-subdev-enum-frame-interval.rst |   9 +-
+>  .../v4l/vidioc-subdev-enum-frame-size.rst     |   9 +-
+>  .../v4l/vidioc-subdev-enum-mbus-code.rst      |   9 +-
+>  .../media/v4l/vidioc-subdev-g-crop.rst        |   9 +-
+>  .../media/v4l/vidioc-subdev-g-fmt.rst         |   9 +-
+>  .../v4l/vidioc-subdev-g-frame-interval.rst    |   9 +-
+>  .../media/v4l/vidioc-subdev-g-selection.rst   |   9 +-
+>  .../media/v4l/vidioc-subdev-querycap.rst      |   9 +-
+>  .../media/v4l/vidioc-subscribe-event.rst      |   9 +-
+>  .../userspace-api/media/v4l/yuv-formats.rst   |   9 +-
+>  LICENSES/deprecated/GFDL-1.1+                 | 366 ++++++++
+>  LICENSES/deprecated/GFDL-1.2                  | 408 +++++++++
+>  arch/Kconfig                                  |   2 +-
+>  init/Kconfig                                  |   2 +-
+>  mm/Kconfig                                    |   2 +-
+>  mm/nommu.c                                    |   2 +-
+>  443 files changed, 1801 insertions(+), 4023 deletions(-)
+>  rename Documentation/{nommu-mmap.txt => admin-guide/mm/nommu-mmap.rst} (100%)
+>  rename Documentation/{bus-virt-phys-mapping.txt => core-api/bus-virt-phys-mapping.rst} (100%)
+>  rename Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst} (100%)
+>  rename Documentation/{process => core-api}/unaligned-memory-access.rst (100%)
+>  rename Documentation/devicetree/{booting-without-of.txt => booting-without-of.rst} (90%)
+>  rename Documentation/{mailbox.txt => driver-api/mailbox.rst} (100%)
+>  rename Documentation/trace/{ring-buffer-design.txt => ring-buffer-design.rst} (57%)
+>  create mode 100644 LICENSES/deprecated/GFDL-1.1+
+>  create mode 100644 LICENSES/deprecated/GFDL-1.2
+>
+> --
+> 2.26.2
+>
+>
