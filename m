@@ -2,167 +2,299 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE42C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23325C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8197206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB41C20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:36:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnvdwoHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731875AbgFWIfd (ORCPT
+        id S1731798AbgFWIgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:35:33 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33318 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731567AbgFWIfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:35:31 -0400
-IronPort-SDR: 6iQP/UTYKWsWsUAckOwjhIfQBLMdbUxiagy/RPo8Wz8jOC3d8s/vtzcr8eMOsdnyIBiOb8XgM3
- XvHgsQu+CjCA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="123671419"
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="123671419"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 01:35:30 -0700
-IronPort-SDR: rFRootrZkIH0vya6Z3UizkgS5DSC2GOJujVhlZnezKonup3YqFAvhQsL6cQmp4YqA6g64LQREL
- UBLBL2HBcaXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="310388231"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga008.jf.intel.com with ESMTP; 23 Jun 2020 01:35:28 -0700
-Subject: Re: [PATCH 2/2] xhci: Poll for U0 after disabling USB2 LPM
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200520101811.2623-1-kai.heng.feng@canonical.com>
- <20200520101811.2623-2-kai.heng.feng@canonical.com>
- <6c3ac2e5-73e9-6e4f-2940-63403821631f@linux.intel.com>
- <8327233C-5DE8-43F8-9208-5FF888629047@canonical.com>
- <9FC0BA5C-4D00-4D33-B040-AA5584A8E9A6@canonical.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <cd4d36eb-f953-e79f-f497-cba6fd5552d0@linux.intel.com>
-Date:   Tue, 23 Jun 2020 11:38:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 23 Jun 2020 04:36:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731567AbgFWIgr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:36:47 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E34B2C061573;
+        Tue, 23 Jun 2020 01:36:46 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l12so20736479ejn.10;
+        Tue, 23 Jun 2020 01:36:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tCkxmZXZV/eyODmdSeVONBl/q1+N9efm5UtdLsYtJP4=;
+        b=NnvdwoHcyxLJJcfVjcCLbA0S7HobmcCx2tZHRQiBLUpurcGVZwsh9cVfDLMDFRoYPO
+         ZxK4yj382K2nmJlgx9tLpTCPNmZJRoxgBBEuaqaNOjN0P0uho6V1JUZqoHZW9odVbpRO
+         RbP4gchi9KqlnNI68ld56gvPqcHi2r2/AoLvokIHSmGNYv/VL+CRm+fuFVHtBEf5q0lB
+         A5dowZimBpBxXtHyFw7ws+AtlhxbuQ4kveLx/tyQnW+y5cMJDrmraCIZH7NMUoUATs5K
+         1aaCSA1nVfPPxgG871oyy07f2gaZmgYMLnFaD3z21fk8ucnNpopE+n7o8fn/5aQmbedQ
+         aMIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tCkxmZXZV/eyODmdSeVONBl/q1+N9efm5UtdLsYtJP4=;
+        b=izMdgWd4Ts2QH2eoOvBLi8FC7TrsoheKE6qVm31bz54UHlnVjT7qz7TC/WOpZ6i5Z6
+         WVLCCYCCWjYZelkiY0LZ70gvjWrN3BvocmGGUa06o6l6yBXRi4sN5F6q50SPqu1vFgK+
+         0OqyxzAOHcYOyVtTuOLefzIfZX0wgv1N3e+2J9++Czed3StjX93VpQgzn9E5hthTRxch
+         B9BhQeQJysZ5JxNFlnmrY6xewOJ3KqMOJiTFtAG5R3Ect6qQapjJfv7wb5ECfmMLYOyO
+         gSt4kpUqW6yqfTZqHSiwSTwTROgHupDKWRYKXX2qEcfqDdnVoSYoAd1GqOmldm8sT6YT
+         UGug==
+X-Gm-Message-State: AOAM530iaskduEnzdMmFMMi9wFzV0AZpQ/pDdFDGSHXWLWrr3JQBXhBS
+        4AEi1qzfHywiM+mWUT0e3C0=
+X-Google-Smtp-Source: ABdhPJz53FA+UCKcfl1GaH7jbkbLk5oygevgxleyHGSM7PkNphCrHa20Vwg450DfpoOgMhD3nH8t3A==
+X-Received: by 2002:a17:906:455:: with SMTP id e21mr8427290eja.550.1592901405582;
+        Tue, 23 Jun 2020 01:36:45 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id m26sm3022529ejn.122.2020.06.23.01.36.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 01:36:44 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 10:36:43 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     snikam@nvidia.com, mperttunen@nvidia.com, bhuntsman@nvidia.com,
+        will@kernel.org, joro@8bytes.org, linux-kernel@vger.kernel.org,
+        praithatha@nvidia.com, talho@nvidia.com,
+        iommu@lists.linux-foundation.org, nicolinc@nvidia.com,
+        linux-tegra@vger.kernel.org, yhsu@nvidia.com, treding@nvidia.com,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        bbiswas@nvidia.com
+Subject: Re: [PATCH v6 3/4] iommu/arm-smmu: Add global/context fault
+ implementation hooks
+Message-ID: <20200623083643.GB4098287@ulmo>
+References: <20200604234414.21912-1-vdumpa@nvidia.com>
+ <20200604234414.21912-4-vdumpa@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <9FC0BA5C-4D00-4D33-B040-AA5584A8E9A6@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+Content-Disposition: inline
+In-Reply-To: <20200604234414.21912-4-vdumpa@nvidia.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.6.2020 17.19, Kai-Heng Feng wrote:
-> Hi Mathias,
-> 
->> On Jun 9, 2020, at 18:15, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->>
->>
->>
->>> On Jun 8, 2020, at 19:21, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
->>>
->>> On 20.5.2020 13.18, Kai-Heng Feng wrote:
->>>> USB2 devices with LPM enabled may interrupt the system suspend:
->>>> [  932.510475] usb 1-7: usb suspend, wakeup 0
->>>> [  932.510549] hub 1-0:1.0: hub_suspend
->>>> [  932.510581] usb usb1: bus suspend, wakeup 0
->>>> [  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
->>>> [  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
->>>> ..
->>>> [  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
->>>
->>> 400e03 = Connected, Enabled, U0 with port ink state change flag (PLC) set.
->>>
->>>> ..
->>>> [  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
->>>> [  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
->>>> [  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
->>>>
->>>> During system suspend, USB core will let HC suspends the device if it
->>>> doesn't have remote wakeup enabled and doesn't have any children.
->>>> However, from the log above we can see that the usb 1-7 doesn't get bus
->>>> suspended due to not in U0. After a while the port finished U2 -> U0
->>>> transition, interrupts the suspend process.
->>>
->>> In USB2 HW link PM the PLC flag should not be set in U2Exit -> U0 transitions.
->>> Only case we should see a port change event is U2Entry -> U0 due to STALL or
->>> error/timeout. (see xhci 4.23.5.1.1.1)
->>>
->>>>
->>>> The observation is that after disabling LPM, port doesn't transit to U0
->>>> immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
->>>> maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
->>>> the affected device is advertised as 400us, which is still not enough
->>>> based on my testing result.
->>>>
->>>> So let's use the maximum permitted latency, 10000, to poll for U0
->>>> status to solve the issue.
->>>
->>> I don't recall all details, but it could be that disabling LPM before suspend
->>> is unnecessary. 
->>> At least xhci should be able to set a port to U3 from U1 and U2 (see xhci 4.15.1)
->>> so that is one change that could be done to xhci_bus_suspend()
->>
->> Yes, put the device to U3 directly does the trick.
-> 
-> As discussed, will you pick this series over the v2?
-> Or is there anything I should improve for this one?
-> 
-> Kai-Heng
 
-Added this to queueI
+--ZoaI/ZTpAVc4A5k6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
--Mathias
+On Thu, Jun 04, 2020 at 04:44:13PM -0700, Krishna Reddy wrote:
+> Add global/context fault hooks to allow NVIDIA SMMU implementation
+> handle faults across multiple SMMUs.
+>=20
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>  drivers/iommu/arm-smmu-nvidia.c | 100 ++++++++++++++++++++++++++++++++
+>  drivers/iommu/arm-smmu.c        |  11 +++-
+>  drivers/iommu/arm-smmu.h        |   3 +
+>  3 files changed, 112 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvi=
+dia.c
+> index dafc293a45217..5999b6a770992 100644
+> --- a/drivers/iommu/arm-smmu-nvidia.c
+> +++ b/drivers/iommu/arm-smmu-nvidia.c
+> @@ -117,6 +117,104 @@ static int nsmmu_reset(struct arm_smmu_device *smmu)
+>  	return 0;
+>  }
+> =20
+> +static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+> +{
+> +	return container_of(dom, struct arm_smmu_domain, domain);
+> +}
+> +
+> +static irqreturn_t nsmmu_global_fault_inst(int irq,
+> +					       struct arm_smmu_device *smmu,
+> +					       int inst)
+> +{
+> +	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
+> +
+> +	gfsr =3D readl_relaxed(nsmmu_page(smmu, inst, 0) + ARM_SMMU_GR0_sGFSR);
+> +	gfsynr0 =3D readl_relaxed(nsmmu_page(smmu, inst, 0) +
+> +				ARM_SMMU_GR0_sGFSYNR0);
+> +	gfsynr1 =3D readl_relaxed(nsmmu_page(smmu, inst, 0) +
+> +				ARM_SMMU_GR0_sGFSYNR1);
+> +	gfsynr2 =3D readl_relaxed(nsmmu_page(smmu, inst, 0) +
+> +				ARM_SMMU_GR0_sGFSYNR2);
+> +
+> +	if (!gfsr)
+> +		return IRQ_NONE;
+> +
+> +	dev_err_ratelimited(smmu->dev,
+> +		"Unexpected global fault, this could be serious\n");
+> +	dev_err_ratelimited(smmu->dev,
+> +		"\tGFSR 0x%08x, GFSYNR0 0x%08x, GFSYNR1 0x%08x, GFSYNR2 0x%08x\n",
+> +		gfsr, gfsynr0, gfsynr1, gfsynr2);
+> +
+> +	writel_relaxed(gfsr, nsmmu_page(smmu, inst, 0) + ARM_SMMU_GR0_sGFSR);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t nsmmu_global_fault(int irq, void *dev)
+> +{
+> +	int inst;
+> +	irqreturn_t irq_ret =3D IRQ_NONE;
+> +	struct arm_smmu_device *smmu =3D dev;
+> +
+> +	for (inst =3D 0; inst < to_nvidia_smmu(smmu)->num_inst; inst++) {
+> +		irq_ret =3D nsmmu_global_fault_inst(irq, smmu, inst);
+> +		if (irq_ret =3D=3D IRQ_HANDLED)
+> +			return irq_ret;
+> +	}
+> +
+> +	return irq_ret;
+> +}
+> +
+> +static irqreturn_t nsmmu_context_fault_bank(int irq,
+> +					    struct arm_smmu_device *smmu,
+> +					    int idx, int inst)
+> +{
+> +	u32 fsr, fsynr, cbfrsynra;
+> +	unsigned long iova;
+> +
+> +	fsr =3D arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
+> +	if (!(fsr & ARM_SMMU_FSR_FAULT))
+> +		return IRQ_NONE;
+> +
+> +	fsynr =3D readl_relaxed(nsmmu_page(smmu, inst, smmu->numpage + idx) +
+> +			      ARM_SMMU_CB_FSYNR0);
+> +	iova =3D readq_relaxed(nsmmu_page(smmu, inst, smmu->numpage + idx) +
+> +			     ARM_SMMU_CB_FAR);
+> +	cbfrsynra =3D readl_relaxed(nsmmu_page(smmu, inst, 1) +
+> +				  ARM_SMMU_GR1_CBFRSYNRA(idx));
+> +
+> +	dev_err_ratelimited(smmu->dev,
+> +	"Unhandled context fault: fsr=3D0x%x, iova=3D0x%08lx, fsynr=3D0x%x, cbf=
+rsynra=3D0x%x, cb=3D%d\n",
+> +			    fsr, iova, fsynr, cbfrsynra, idx);
+> +
+> +	writel_relaxed(fsr, nsmmu_page(smmu, inst, smmu->numpage + idx) +
+> +			    ARM_SMMU_CB_FSR);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t nsmmu_context_fault(int irq, void *dev)
+> +{
+> +	int inst, idx;
+> +	irqreturn_t irq_ret =3D IRQ_NONE;
+> +	struct iommu_domain *domain =3D dev;
+> +	struct arm_smmu_domain *smmu_domain =3D to_smmu_domain(domain);
+> +	struct arm_smmu_device *smmu =3D smmu_domain->smmu;
+> +
+> +	for (inst =3D 0; inst < to_nvidia_smmu(smmu)->num_inst; inst++) {
+> +		/* Interrupt line shared between all context faults.
+> +		 * Check for faults across all contexts.
+> +		 */
+> +		for (idx =3D 0; idx < smmu->num_context_banks; idx++) {
+> +			irq_ret =3D nsmmu_context_fault_bank(irq, smmu,
+> +							   idx, inst);
+> +
+> +			if (irq_ret =3D=3D IRQ_HANDLED)
+> +				return irq_ret;
+> +		}
+> +	}
+> +
+> +	return irq_ret;
+> +}
+> +
+>  static const struct arm_smmu_impl nvidia_smmu_impl =3D {
+>  	.read_reg =3D nsmmu_read_reg,
+>  	.write_reg =3D nsmmu_write_reg,
+> @@ -124,6 +222,8 @@ static const struct arm_smmu_impl nvidia_smmu_impl =
+=3D {
+>  	.write_reg64 =3D nsmmu_write_reg64,
+>  	.reset =3D nsmmu_reset,
+>  	.tlb_sync =3D nsmmu_tlb_sync,
+> +	.global_fault =3D nsmmu_global_fault,
+> +	.context_fault =3D nsmmu_context_fault,
+>  };
+> =20
+>  struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *sm=
+mu)
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 243bc4cb2705b..d720e1e191176 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -673,6 +673,7 @@ static int arm_smmu_init_domain_context(struct iommu_=
+domain *domain,
+>  	enum io_pgtable_fmt fmt;
+>  	struct arm_smmu_domain *smmu_domain =3D to_smmu_domain(domain);
+>  	struct arm_smmu_cfg *cfg =3D &smmu_domain->cfg;
+> +	irqreturn_t (*context_fault)(int irq, void *dev);
+> =20
+>  	mutex_lock(&smmu_domain->init_mutex);
+>  	if (smmu_domain->smmu)
+> @@ -835,7 +836,9 @@ static int arm_smmu_init_domain_context(struct iommu_=
+domain *domain,
+>  	 * handler seeing a half-initialised domain state.
+>  	 */
+>  	irq =3D smmu->irqs[smmu->num_global_irqs + cfg->irptndx];
+> -	ret =3D devm_request_irq(smmu->dev, irq, arm_smmu_context_fault,
+> +	context_fault =3D (smmu->impl && smmu->impl->context_fault) ?
+> +			 smmu->impl->context_fault : arm_smmu_context_fault;
+
+A simpler way might have been to assign arm_smmu_context_fault to all
+implementations. That way we wouldn't have to perform this check here
+and instead just always using smmu->impl->context_fault.
+
+> +	ret =3D devm_request_irq(smmu->dev, irq, context_fault,
+>  			       IRQF_SHARED, "arm-smmu-context-fault", domain);
+>  	if (ret < 0) {
+>  		dev_err(smmu->dev, "failed to request context IRQ %d (%u)\n",
+> @@ -2107,6 +2110,7 @@ static int arm_smmu_device_probe(struct platform_de=
+vice *pdev)
+>  	struct arm_smmu_device *smmu;
+>  	struct device *dev =3D &pdev->dev;
+>  	int num_irqs, i, err;
+> +	irqreturn_t (*global_fault)(int irq, void *dev);
+> =20
+>  	smmu =3D devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
+>  	if (!smmu) {
+> @@ -2193,9 +2197,12 @@ static int arm_smmu_device_probe(struct platform_d=
+evice *pdev)
+>  		smmu->num_context_irqs =3D smmu->num_context_banks;
+>  	}
+> =20
+> +	global_fault =3D (smmu->impl && smmu->impl->global_fault) ?
+> +			smmu->impl->global_fault : arm_smmu_global_fault;
+> +
+
+Same as above.
+
+Thierry
+
+--ZoaI/ZTpAVc4A5k6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7xvxoACgkQ3SOs138+
+s6GqYBAAoTf7KJPieWVcbFJf7WZ37Spi4ElW5TCTmB8w+7Ta0O+QvYzjA6sgPAVH
+eRvzY8htDuI8uKWAu4cimQHsyl/oYAXTtEUK15DJVHY9h+VGxtj1hibG+xF2mHMP
+5C3ILKj3aG0eHzC4ZuBHjLWerXQca5kIL0RinVwoycUpuofZ89B+Za2S3IfzECoI
+HKRB5t5Ewlj2Zj7wbdEzk3ZE55DnN/+ccHlsunrbfdtgqOy9r/tJzXRh0es6fq9E
+LvGVgBxEyqWZHqlLgNL/CtJ20N1l/TX35ykmBDAgLlWociDGn192g81igC6/7lm8
+3uYQtopzIUyT4BVhJWZafi07qbkQLTa3mFEkfAly525CLAEmoCflS0DfwNKXXW5n
+pzxfG61PJwOuEwWoPNmiVixMa4D7akYEk+/XHVxLQ/y/sD4xgWY6atec8SNmMHWj
+jTBjqVz/ErxmRXJLpFb42SVdOvo8dDxSypjmiqyAT+MaqhQfRNhRjl/9R1Vz445M
+gaogqT8/MNliChyUUBegQsLjvJl6EmeCZnDXWkP5LwCRVML0Nbi9f7uGbtEAt6lP
+ImxHKoBo5BQlRjsorsMCWt/KC4w35cxI/SoOSclTJO/T1/nGs0ja2WUUDgU+M8Q7
+7PSOGYFJqtG6/lhnqTXl15SvfmUIYrAUxMy1yKbZP1xmOoLPn+c=
+=iggw
+-----END PGP SIGNATURE-----
+
+--ZoaI/ZTpAVc4A5k6--
