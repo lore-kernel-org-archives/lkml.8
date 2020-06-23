@@ -6,109 +6,90 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B17C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB290C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A21BA2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFEE2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="B+xXS5EB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dXCLzDdC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QtmHx3lk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387420AbgFWTNi (ORCPT
+        id S1733236AbgFWTNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:13:38 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:35071 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733236AbgFWTNh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:13:37 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.west.internal (Postfix) with ESMTP id C4289906;
-        Tue, 23 Jun 2020 15:13:35 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 23 Jun 2020 15:13:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=7WMvAPN1ErXgthiWUva+PTQ5T73
-        /EhOOW6dGIyc3zc0=; b=B+xXS5EBQWZ76VL502N0Tw1rr59TAS+8Pq1CRN/ND1g
-        9mi/Bj3aIMd9/8Z0lXlIW13VHlyNycJXaI+NnLZgeAPZ1dtuK+FL9rAasVMz5yzj
-        b3UDgAoF1CfpbwJa1kTLjuSmrN2mKF4aJhTvLtg4LONgwbz5MwRM74ZWGh3YBNE0
-        oEomJNl1PnVg3e1jouf9fcYDMOiONa8F3GJ2UsEQRzq8TYJvV64vP+fEviCCOwoV
-        Goe3ONO0sURn5YPfJdlW/quT7f31cXx75HAxqTk6Uz0KyVx5nlMfGXUX1IZfhKHC
-        Hz8uQ2hey7urtJcHOhT/CeX81xdemir2Qm6N6mkuOqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7WMvAP
-        N1ErXgthiWUva+PTQ5T73/EhOOW6dGIyc3zc0=; b=dXCLzDdCuwNGc5oLIfOe5L
-        wTIxnmKazr6VdstsTaz3hwOkHGeSMwlx2q3oknJL/FU7LcsrYnK4yy1OmNW/LESh
-        4n9N8vOKP/DIUVa48fgeFVm6Hoj57yAJruueXw6Mdazc79XtPFoXEyPaJh8B9mWM
-        kS1EN/wdxPQYsSCWc7lC+j3HN9VBqMqn1dl0nKUhj+QvWbbVQ45MlATPwK1B2ixj
-        ETVWDshVsgLRGKGNlwSfs5NrhzlK3D+mtoiZh7CLyZjtSnMIcbwBBmoEc0GN2vdj
-        RSyVPh91Pe6AC5alHDvLdEECasb1vmKqnhxOr2CHjiHaKYhM9XnXsdgXlnq5OtaQ
-        ==
-X-ME-Sender: <xms:XlTyXk-P6sWMr2Vi07X27DG6YL52VZnVlmT_fZ5wtczUclsPFZs2Ow>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekhedguddtjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuhe
-    ejgfffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeek
-    fedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:XlTyXssaaugpPbLXOIRp270vhFlvbqRa8cz2rWuRJXoPz9G6NYl9PQ>
-    <xmx:XlTyXqAixP3WzEqLYjaZXMWcZi_uCoI1eUN7pV2lkxqzqm59jRvlcQ>
-    <xmx:XlTyXkfqATS3k_-vThGx3EGgS6FZwaRiZzTfd3PiD66Vgdkh52J78g>
-    <xmx:X1TyXqGrtznON9bqGqlBXzR_2sIOg8ycDEX1jqn43Wv7SI4mvRRE0zk6ax4>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 20A203280063;
-        Tue, 23 Jun 2020 15:13:34 -0400 (EDT)
-Date:   Tue, 23 Jun 2020 21:13:34 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Krufky <mkrufky@linuxtv.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
-        Jaedon Shin <jaedon.shin@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
-        Satendra Singh Thakur <satendra.t@samsung.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH stable 4.9 00/21] Unbreak 32-bit DVB applications on
- 64-bit kernels
-Message-ID: <20200623191334.GA279616@kroah.com>
-References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
+        Tue, 23 Jun 2020 15:13:42 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33336 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387410AbgFWTNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 15:13:40 -0400
+Received: from zn.tnic (p200300ec2f0d4700041724098f895483.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:4700:417:2409:8f89:5483])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 513CC1EC0390;
+        Tue, 23 Jun 2020 21:13:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592939619;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/I5adJWVlizMAa4fiImCIi1s26c5ZZwkiuFsdR3mo+4=;
+        b=QtmHx3lkSwCJidAclfNs5jLHgXjkUt15HmMPt7F3u/BzvYFk5tUoyeXiBQ1W25tUaGEb95
+        y/XFoLOUWkYQ3v3S9uXIfs0iwCDSyCWO22MAdB3d+gOgFjwSMcuXzIlFGr14qit6/0h0ts
+        b9A/hM76dazcGYo4CM8tXvHziRCyLXo=
+Date:   Tue, 23 Jun 2020 21:13:36 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        jpa@kernelbug.mail.kapsi.fi, Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] selftests/fpu: Add an FPU selftest
+Message-ID: <20200623191336.GK32590@zn.tnic>
+References: <20200622190149.GL32200@zn.tnic>
+ <B4D00859-000A-4F8C-8CFB-45B9BBCCA16D@amacapital.net>
+ <20200623102831.GB32590@zn.tnic>
+ <CALCETrXfaEr9OGc5EDpxnhRZxFk5YZBBNVH-N32Eg8V8diwqXg@mail.gmail.com>
+ <20200623184726.GI32590@zn.tnic>
+ <CAKwvOdnt+8RR=1JPjDNaVY8T1K7wmqFjSGM7XNUUGRb=t1hiWQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200605162518.28099-1-florian.fainelli@broadcom.com>
+In-Reply-To: <CAKwvOdnt+8RR=1JPjDNaVY8T1K7wmqFjSGM7XNUUGRb=t1hiWQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 09:24:57AM -0700, Florian Fainelli wrote:
-> Hi all,
-> 
-> This long patch series was motivated by backporting Jaedon's changes
-> which add a proper ioctl compatibility layer for 32-bit applications
-> running on 64-bit kernels. We have a number of Android TV-based products
-> currently running on the 4.9 kernel and this was broken for them.
-> 
-> Thanks to Robert McConnell for identifying and providing the patches in
-> their initial format.
-> 
-> In order for Jaedon's patches to apply cleanly a number of changes were
-> applied to support those changes. If you deem the patch series too big
-> please let me know.
+On Tue, Jun 23, 2020 at 12:07:13PM -0700, Nick Desaulniers wrote:
+> You already have a conditional below for CC_IS_GCC; just add an else
+> and unconditionally add -msse2.  You *should* use -msse2 for GCC 7.1+
+> IMO.
 
-Now queued up,t hanks.
+Why if one can write it more compact with cc-option?
 
-greg k-h
+FPU_CFLAGS += $(call cc-option,-msse2,)
+
+> Note that Clang has -mstack-alignment=8 whereas GCC has
+> -mpreferred-stack-boundary=3.  (Clang is a value in bytes, GCC is 2^X
+> bytes)
+
+Sure, the stack boundary setting is GCC only.
+
+> I recommend a version check for GCC < 7.1, or simply disabling the
+> self test if the version of GCC used is older than 7.1.
+
+See Andy's suggestion upthread.
+
+And I agree too that using cc-option is better than simply tying it to a
+compiler version. Who knows what compiler has what backported. In such
+cases a version number means nothing.
+
+> ^ looks familiar ;)
+
+It has been pasted around the kernel, I came to realize today. :-)
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
