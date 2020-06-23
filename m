@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45213C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B752078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198C62078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948557;
-	bh=HQ2t6d3gCpOIFKAiS50mdeCP8+8IYXLjiZjOMSW8mA4=;
+	s=default; t=1592948566;
+	bh=MUfnL6/sr/TawQi32RX12iNttQvk7p08cXinlCl/o7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UXEjVpkdwwGMNEo82Qn/IrEaD4DRfG/pspWvv5Wd8TW4Ph1nBbxdXOSSXkf+7R9bO
-	 N7U7Q28g1YX5tv3Y9qFPeAoE3uRPvpevfWd0aIumWWXUhtQDod6Qqv1aIkl2DBzJYM
-	 B88aWNoZRscgZ24qxGf9hK+I3+LNLEik2XraSzZs=
+	b=ckvHDuw/Kk6tMIO0h+y3ja5G7evcifa8dHiAmM+9HfUacmdT6dUHeOlh+UDmlW5IU
+	 7ZVvokyoi582J/8aPh/GsQHoDJUqG/IMMYNo+IahPzJouZ6gR2aR9/VHd+ZbOeLRfU
+	 0UYqkzedZjXAP823X2zwvBb9bkjMUpNPZ3dhOaAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393591AbgFWVmf (ORCPT
+        id S2388234AbgFWVmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:42:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388250AbgFWUEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:44 -0400
+        id S2388233AbgFWUEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:04:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2C4C206C3;
-        Tue, 23 Jun 2020 20:04:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C81F206C3;
+        Tue, 23 Jun 2020 20:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942683;
-        bh=HQ2t6d3gCpOIFKAiS50mdeCP8+8IYXLjiZjOMSW8mA4=;
+        s=default; t=1592942675;
+        bh=MUfnL6/sr/TawQi32RX12iNttQvk7p08cXinlCl/o7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dhOTi0bNi57PX4uAlOi/OWyS04anb813IW3fGgAOw+XuOlAmPPMlA2YdAiunMo7ao
-         2J+CSdCEBgJrxpV1A7cHpljLT+gnUuQnpWSylgTNmGZFDyKz6uiJAfFG2KeXqBWUv8
-         a+Q2CJfapCOI/Mr0e/MDqV8cwVCbg/Eoekg2EO2A=
+        b=yvFOFXPxKFLDj4ka0CJ0pdYOjLUSxv1xN2ldFdi5523pdyaUpgNuKCe0swe/DGFir
+         5ZZJOrI/0+yDnJMdM2QsP4i+cGxQuNuHQkBtxn9iSlPdHl6sdg5ipk8KSE36RIJ/k4
+         V80ZEFsmSt6ONplVr66DWDXwNDcWjsrgcecAabmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 094/477] NTB: ntb_pingpong: Choose doorbells based on port number
-Date:   Tue, 23 Jun 2020 21:51:31 +0200
-Message-Id: <20200623195412.049779050@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 091/477] yam: fix possible memory leak in yam_init_driver
+Date:   Tue, 23 Jun 2020 21:51:28 +0200
+Message-Id: <20200623195411.908988598@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,69 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit ca93c45755da98302c93abdd788fc09113baf9e0 ]
+[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
 
-This commit fixes pingpong support for existing drivers that do not
-implement ntb_default_port_number() and ntb_default_peer_port_number().
-This is required for hardware (like the crosslink topology of
-switchtec) which cannot assign reasonable port numbers to each port due
-to its perfect symmetry.
+If register_netdev(dev) fails, free_netdev(dev) needs
+to be called, otherwise a memory leak will occur.
 
-Instead of picking the doorbell to use based on the the index of the
-peer, we use the peer's port number. This is a bit clearer and easier
-to understand.
-
-Fixes: c7aeb0afdcc2 ("NTB: ntb_pp: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_pingpong.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/net/hamradio/yam.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/ntb/test/ntb_pingpong.c b/drivers/ntb/test/ntb_pingpong.c
-index 04dd46647db36..2164e8492772d 100644
---- a/drivers/ntb/test/ntb_pingpong.c
-+++ b/drivers/ntb/test/ntb_pingpong.c
-@@ -121,15 +121,14 @@ static int pp_find_next_peer(struct pp_ctx *pp)
- 	link = ntb_link_is_up(pp->ntb, NULL, NULL);
- 
- 	/* Find next available peer */
--	if (link & pp->nmask) {
-+	if (link & pp->nmask)
- 		pidx = __ffs64(link & pp->nmask);
--		out_db = BIT_ULL(pidx + 1);
--	} else if (link & pp->pmask) {
-+	else if (link & pp->pmask)
- 		pidx = __ffs64(link & pp->pmask);
--		out_db = BIT_ULL(pidx);
--	} else {
-+	else
- 		return -ENODEV;
--	}
-+
-+	out_db = BIT_ULL(ntb_peer_port_number(pp->ntb, pidx));
- 
- 	spin_lock(&pp->lock);
- 	pp->out_pidx = pidx;
-@@ -303,7 +302,7 @@ static void pp_init_flds(struct pp_ctx *pp)
- 			break;
- 	}
- 
--	pp->in_db = BIT_ULL(pidx);
-+	pp->in_db = BIT_ULL(lport);
- 	pp->pmask = GENMASK_ULL(pidx, 0) >> 1;
- 	pp->nmask = GENMASK_ULL(pcnt - 1, pidx);
- 
-@@ -432,4 +431,3 @@ static void __exit pp_exit(void)
- 	debugfs_remove_recursive(pp_dbgfs_topdir);
- }
- module_exit(pp_exit);
--
+diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
+index 71cdef9fb56bc..5ab53e9942f30 100644
+--- a/drivers/net/hamradio/yam.c
++++ b/drivers/net/hamradio/yam.c
+@@ -1133,6 +1133,7 @@ static int __init yam_init_driver(void)
+ 		err = register_netdev(dev);
+ 		if (err) {
+ 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
++			free_netdev(dev);
+ 			goto error;
+ 		}
+ 		yam_devs[i] = dev;
 -- 
 2.25.1
 
