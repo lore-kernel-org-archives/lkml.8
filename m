@@ -2,134 +2,104 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B178FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAD232072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB3D2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AENfaNVE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tz4wtzJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387465AbgFWScs (ORCPT
+        id S1733294AbgFWSeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35710 "EHLO
+        Tue, 23 Jun 2020 14:34:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733102AbgFWScr (ORCPT
+        with ESMTP id S1733149AbgFWSet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:32:47 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2EDC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:32:47 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g17so289240plq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:32:47 -0700 (PDT)
+        Tue, 23 Jun 2020 14:34:49 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7A8C061573;
+        Tue, 23 Jun 2020 11:34:49 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g1so17127771edv.6;
+        Tue, 23 Jun 2020 11:34:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zM9UJPmqH/uivaDuT+boW9jaBhqjP7MlOqWA/nUW2MY=;
-        b=AENfaNVEdXr6w72rhyrdTL92lkyid8j6xhmJvbaCRkkHMG4QPB3bQq4xfUY/nk/anr
-         UdAcmEUJDpXWI3sgCow99B1wadOUIbh9mS9fNzEYwnAvq8zMt00iIOwEtiUgR15swyi8
-         NP0C4RRE0Mt1BNbSZOiDpAxCi/owmZYLr38nQ=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n1T35J+HW/tfUciSMhCodCWFYqAaiFCQ5lEz9exQc/o=;
+        b=Tz4wtzJyPad5gy/IG2huil3XWoC4trTDH3+djIUF3u7v/4p/SjuUx+r/eYHwG9y8jd
+         nk5i/IcG6i09Svx0gslTFU6+uZleU99hIi5QCVx+oSEqkoxfnNJbMcK0xZue9Vo3T6a1
+         gxxXhLBXgoXWe23MRaAKzJTnsQKT/IAGiH0lmQZ1O9igePrxYt/j6p17WLpPYMiOfcDY
+         NOJGpdKZ9TYjFy8tzG3HPottQ3/h1xyLws2qMfEcLEvfXFnWOTLivm7isJ0zKvhUG+G4
+         cLVxTeiheNchYJcjJc5JnHmeJ3IGnuP3bB66TNZutt2n2pnGlcsVEucag+efFl5jFEZB
+         oHjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zM9UJPmqH/uivaDuT+boW9jaBhqjP7MlOqWA/nUW2MY=;
-        b=Pgi91ZvG9n1M9Bq+TnChccackELGzl200PDIddoxjnXXOcu/9I7PtMZgLxpQGsnB6w
-         Zs6ZuYB5X7dDb7gywIaFURSdx2Hg8Hn/g2sO+or5efBfzpqhE80YlEjBINBqVg9fKsaf
-         7yN4+FLjF5lEh5x54XDiLqgrF/+Zt8rRYWrfGJXrIuW0V/ZQN5nasSHJw/1qw1f0pNMG
-         sz+LIlNzL1yn8V1DPu4PzlILLkqDx/nENZLzzkRtJaMCi716A6W1VquEQlYzRsH8gXTz
-         kg+Q5ygjyyKvplKrLhsLFCd1DJ4DvpJnd757WM4UE5vwI3iNn1+H/L0pFJIhG4WsE55c
-         lKfg==
-X-Gm-Message-State: AOAM531+bqvMKKDnFQl/D8AeS+MoMwlTs3MkS9pnTBCL/ZVPUUXZnCxO
-        V1QRXn1CWrhyFXqUHEjvexQsASZO5Fc=
-X-Google-Smtp-Source: ABdhPJwFoB/YxOk0T5aBZrS21QE4Ipj9CPW5ymqQpNkMl7IDi1V8efyNWyYzYc1WaOkTPZ5g9OQghA==
-X-Received: by 2002:a17:90b:234f:: with SMTP id ms15mr546488pjb.7.1592937166889;
-        Tue, 23 Jun 2020 11:32:46 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v9sm17578308pfe.198.2020.06.23.11.32.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n1T35J+HW/tfUciSMhCodCWFYqAaiFCQ5lEz9exQc/o=;
+        b=EB6hDhyEfTiOsw4IbzKENf63EQq1tRE3BR7WGB5AhLad4y1eP3CaBuRrAQUX7Bavim
+         aGGCM05Ztdo1WkDPeUoDCoj6Ws/fSV+XAxjmxIkf2Brw6Ark0uGnGbg4Hb259lkImUYJ
+         WU4zVupQlkDW1XqtAqe4/bGenz2HCS7M6KWDZdOcCrjL1hkOFsU5r4WAhFP8ZN2Di1Sd
+         w30nrPIdKL57NFKwgKsR4nM+GO4soZfONlpcovVB6erFS+YZyvznS4K+oJHDw0CuzVu/
+         pCPs6M3a3dMsUkK+82YRPUQHJKj0bfwcIClOIaa+H5DcAdSwCbsnL9c6I/1HMYRGpTMj
+         d0HA==
+X-Gm-Message-State: AOAM533DepYh5o/vja5dvNgWRv2oft2GhTYX4Q3qiQtslYvojTyCn+7w
+        xe4PEGYwV/LaETnsehVpCrytpyv8OOs=
+X-Google-Smtp-Source: ABdhPJz4BjlhlNpvHxHxx5ypE7pv9WMsb5v1cQUv3j3XfPneaGq69WI+XsdYygOC7WX+OlWM9d/kEw==
+X-Received: by 2002:aa7:c41a:: with SMTP id j26mr23493827edq.13.1592937287680;
+        Tue, 23 Jun 2020 11:34:47 -0700 (PDT)
+Received: from localhost.localdomain (93-103-18-160.static.t-2.net. [93.103.18.160])
+        by smtp.gmail.com with ESMTPSA id y26sm15341379edv.91.2020.06.23.11.34.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 11:32:46 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 11:32:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Kujau <lists@nerdbynature.de>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: process '/usr/bin/rsync' started with executable stack
-Message-ID: <202006231131.AD0A7F5F@keescook>
-References: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
+        Tue, 23 Jun 2020 11:34:47 -0700 (PDT)
+From:   Uros Bizjak <ubizjak@gmail.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Uros Bizjak <ubizjak@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH] KVM: x86: Use VMCALL and VMMCALL mnemonics in kvm_para.h
+Date:   Tue, 23 Jun 2020 20:34:39 +0200
+Message-Id: <20200623183439.5526-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:39:26AM -0700, Christian Kujau wrote:
-> Hi,
-> 
-> exactly this[0] happened today, on a 5.6.5 kernel:
-> 
->   process '/usr/bin/rsync' started with executable stack
-> 
-> But I can't reproduce this message, and rsync (v3.2.0, not exactly 
-> abandonware) runs several times a day, so to repeat Andrew's questions[0] 
-> from last year:
-> 
->   > What are poor users supposed to do if this message comes out? 
->   > Hopefully google the message and end up at this thread.  What do you
->   > want to tell them?
-> 
-> Also, the PID is missing from that message. I had some long running rsync 
-> processes running earlier, maybe the RWE status would have been visible in 
-> /proc/$PID/map, or somewhere else maybe?
-> 
-> Please advise? :-)
-> 
-> Thanks,
-> Christian.
-> 
-> [0] https://lore.kernel.org/patchwork/patch/1164047/#1362722
-> 
-> 
-> $ checksec --format=json --extended --file=`which rsync` | jq
-> {
->   "/usr/bin/rsync": {
->     "relro": "full",
->     "canary": "yes",
->     "nx": "no",
-^^^^^^^^^^^^^^^^^^
+Current minimum required version of binutils is 2.23,
+which supports VMCALL and VMMCALL instruction mnemonics.
 
-It is, indeed, marked executable, it seems. What distro is this?
+Replace the byte-wise specification of VMCALL and
+VMMCALL with these proper mnemonics.
 
--Kees
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+CC: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/include/asm/kvm_para.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->     "pie": "yes",
->     "clangcfi": "no",
->     "safestack": "no",
->     "rpath": "no",
->     "runpath": "no",
->     "symbols": "no",
->     "fortify_source": "yes",
->     "fortified": "10",
->     "fortify-able": "19"
->   }
-> }
-> 
-> -- 
-> BOFH excuse #244:
-> 
-> Your cat tried to eat the mouse.
-
+diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+index 49d3a9edb06f..01317493807e 100644
+--- a/arch/x86/include/asm/kvm_para.h
++++ b/arch/x86/include/asm/kvm_para.h
+@@ -18,7 +18,7 @@ static inline bool kvm_check_and_clear_guest_paused(void)
+ #endif /* CONFIG_KVM_GUEST */
+ 
+ #define KVM_HYPERCALL \
+-        ALTERNATIVE(".byte 0x0f,0x01,0xc1", ".byte 0x0f,0x01,0xd9", X86_FEATURE_VMMCALL)
++        ALTERNATIVE("vmcall", "vmmcall", X86_FEATURE_VMMCALL)
+ 
+ /* For KVM hypercalls, a three-byte sequence of either the vmcall or the vmmcall
+  * instruction.  The hypervisor may replace it with something else but only the
 -- 
-Kees Cook
+2.26.2
+
