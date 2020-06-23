@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FB12082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F40B20FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942529;
-	bh=jppDhtFpMQG5S2oXy6qFfHAOUk3pE5ywoqQQNRTuD/8=;
+	s=default; t=1592942533;
+	bh=jkSbYXyGog1baCPe3iUFynA3x9tdbQqs8Pbsgh/8wdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rk48cMUFvmUg0UXaBglu+VPAVRlpJ3YYcKxzTSFAhaew+9y7XH2I2FYe895Lc5HKv
-	 zLg/ALTuDc/V4J8suR1No6qDJbOtx2zMNy5Ks+73KaZOKWKXNs7wiP+h1+FrZel0Mg
-	 v5JTQ+xhAFnXqmgyLTwizddHiFg+wmagEkU7KQ0M=
+	b=DuMEx7howKoHPTJnSr2xzevd8fNhliCcrPe22Rz8+WDGKrDVGr3H2jDo3SRJqzC6e
+	 thf9G8Xh8pcMokIvt7k++M1uPDj45BdGbO+7ECJc3YaterjgytcbZUxcrQRJ5nY1Xw
+	 F57T8lw6YemGkf/ZPg13iDGT6eDvCnRgVonj7TCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387780AbgFWUCI (ORCPT
+        id S2387760AbgFWUCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39130 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387750AbgFWUCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:02:05 -0400
+        id S2387734AbgFWUB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:01:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 237102078A;
-        Tue, 23 Jun 2020 20:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0BBD2078A;
+        Tue, 23 Jun 2020 20:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942524;
-        bh=jppDhtFpMQG5S2oXy6qFfHAOUk3pE5ywoqQQNRTuD/8=;
+        s=default; t=1592942517;
+        bh=jkSbYXyGog1baCPe3iUFynA3x9tdbQqs8Pbsgh/8wdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gSVA2W+DYdEvenewGLT5mf50eUBUq3q4okTK8mY+SeeW+gZf4uGqcrkiNgW7foPZV
-         +6ftDrK06c05Cj559rLuED9QCn+SjwJ+CAiwl4/cgUC01sk0u101dSnqbUIvHG+NJW
-         PhX+pRnw0f31Ly5eMd48JQcH4Ru32hM4vWAluVy0=
+        b=YV0pT4WbVPpOLC3VekRmZOPEswoJzN7vArQ4wo2fWJRG6hX2nWvyNnNfkZ8KHzebf
+         3DNVfYdqJsRTZ4BdZqTF20DTsNEKpLXm77MxEZzkH3C5mKS7Ww+MCV2zL++p9XRExI
+         9D+a6MhfEHZT5YkhT9fWr3pibX3+XWTB4u2/ZyX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, erhard_f@mailbox.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 031/477] powerpc/kasan: Fix stack overflow by increasing THREAD_SHIFT
-Date:   Tue, 23 Jun 2020 21:50:28 +0200
-Message-Id: <20200623195409.069059360@linuxfoundation.org>
+Subject: [PATCH 5.7 029/477] Input: edt-ft5x06 - fix get_default register write access
+Date:   Tue, 23 Jun 2020 21:50:26 +0200
+Message-Id: <20200623195408.973100883@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,38 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-[ Upstream commit edbadaf0671072298e506074128b64e003c5812c ]
+[ Upstream commit 255cdaf73412de13608fb776101402dca68bed2b ]
 
-When CONFIG_KASAN is selected, the stack usage is increased.
+Since commit b6eba86030bf ("Input: edt-ft5x06 - add offset support for
+ev-ft5726") offset-x and offset-y is supported. Devices using those
+offset parameters don't support the offset parameter so we need to add
+the NO_REGISTER check for edt_ft5x06_ts_get_defaults().
 
-In the same way as x86 and arm64 architectures, increase
-THREAD_SHIFT when CONFIG_KASAN is selected.
-
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-Reported-by: <erhard_f@mailbox.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207129
-Link: https://lore.kernel.org/r/2c50f3b1c9bbaa4217c9a98f3044bd2a36c46a4f.1586361277.git.christophe.leroy@c-s.fr
+Fixes: b6eba86030bf ("Input: edt-ft5x06 - add offset support for ev-ft5726")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Link: https://lore.kernel.org/r/20200227112819.16754-2-m.felsch@pengutronix.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/touchscreen/edt-ft5x06.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 62aca9efbbbed..310957b988e31 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -773,6 +773,7 @@ config THREAD_SHIFT
- 	range 13 15
- 	default "15" if PPC_256K_PAGES
- 	default "14" if PPC64
-+	default "14" if KASAN
- 	default "13"
- 	help
- 	  Used to define the stack size. The default is almost always what you
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index d2587724c52ad..9b8450794a8a2 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -938,19 +938,25 @@ static void edt_ft5x06_ts_get_defaults(struct device *dev,
+ 
+ 	error = device_property_read_u32(dev, "offset", &val);
+ 	if (!error) {
+-		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset, val);
++		if (reg_addr->reg_offset != NO_REGISTER)
++			edt_ft5x06_register_write(tsdata,
++						  reg_addr->reg_offset, val);
+ 		tsdata->offset = val;
+ 	}
+ 
+ 	error = device_property_read_u32(dev, "offset-x", &val);
+ 	if (!error) {
+-		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset_x, val);
++		if (reg_addr->reg_offset_x != NO_REGISTER)
++			edt_ft5x06_register_write(tsdata,
++						  reg_addr->reg_offset_x, val);
+ 		tsdata->offset_x = val;
+ 	}
+ 
+ 	error = device_property_read_u32(dev, "offset-y", &val);
+ 	if (!error) {
+-		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset_y, val);
++		if (reg_addr->reg_offset_y != NO_REGISTER)
++			edt_ft5x06_register_write(tsdata,
++						  reg_addr->reg_offset_y, val);
+ 		tsdata->offset_y = val;
+ 	}
+ }
 -- 
 2.25.1
 
