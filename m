@@ -2,151 +2,136 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE740C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B089AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A692078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945908;
-	bh=NTchpH2N+tGRFwKBbV6cT0k1eAGQYth7qLi69ZJvrag=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xz2dTQvwxRv6nWoxdBp9/RyBgQng0AGOM2xRoWaWtxwivZQztfC+1p3/gm1AUN9ld
-	 1tZACEdCHXJLQWJF/9PFHacOcO4ddiixAOB8WPbaoYJsM8ga9DVpIMgWyY/rwuE6Vw
-	 CJ5xHtLEz3AjT/Z5FKip328Av647+qJJD/d//fi0=
+	by mail.kernel.org (Postfix) with ESMTP id 81A942070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxseotXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391905AbgFWUlv (ORCPT
+        id S2392370AbgFWU6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403871AbgFWUls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3276721919;
-        Tue, 23 Jun 2020 20:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944907;
-        bh=NTchpH2N+tGRFwKBbV6cT0k1eAGQYth7qLi69ZJvrag=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rdvYCEabYmLAiBwXUHnM5gyOjNGYdqi3YkByH1H9O6xiDwRR8SZrTdPskul0zJmcd
-         CiRIZ2mb9MbrvS6DSqLOOGoj+EwFJ4H54nFK2UYpx9PbcRo3JDNhx/Lq/V0cE3tLbD
-         gm5vK7NVoGulZSdwoDA8KRSYehlVgXUW1xL3dUSU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 172/206] libata: Use per port sync for detach
-Date:   Tue, 23 Jun 2020 21:58:20 +0200
-Message-Id: <20200623195325.488939770@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 16:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403922AbgFWU61 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:58:27 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B6B1C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:58:27 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh7so9636993plb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5A6ggZJSYhmKqxXi023++ALz1/yxx4OWOUKivzMyp6s=;
+        b=DxseotXcNXTsPoLCoiUOchZ8vWlYjgGlc5pJin8Funwm38e58S6Vs6ThS0VnHsLy3Y
+         G0+5J+bDcwdJalGvujwkKECF8YwFaH/FF7FhtDjsOxRFZHQQ7a41EdMkoLkY3Q/D1yMF
+         7R28udbe5Dmic+dlNUyg5g4kf7ON9BKKw2sag4zZAK8GzzcK/muIUpTEpZEKr3NAqVTi
+         SLpDICS+0pte5QbdVXgDNuZhB7dW+ReGJfUDg0Jw1w1mMwLbOlRbTCcq07F2rtqXLtko
+         4FwF5xJqsJgpaSs0VDlgA65QSo2M1Tk1RVRgylpEpJIy2KezrwhmMN8lfsdpQqRn0+4X
+         hv1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5A6ggZJSYhmKqxXi023++ALz1/yxx4OWOUKivzMyp6s=;
+        b=YAXyoAsB1s9r3RXOp4uIxqQmNnfYurXE1ka3zX6ZyroE23BJeyYeiFzMmP8Ehy+Op1
+         D/S/l3rWlujO+mzCfT7Ja9AID4aj4gQBvXbE1gWa0bzhvlP3YKXbXQyhV9DHxa5fvaBD
+         4NRYrFQ7luKqmiIAAvrDA65Gq2dRt4oeTpDbGxivbl4H8jRp3yEo7CIknIUzx4pdyeh3
+         Mwo09FG5m5Lx/VQ/vKSXo4QK4HTFIPKR/zumH82yx6PvVuj9wZrZvGvDltySO+7sMKRC
+         e7i5dIxF47wuw9x8MDZFoyEoq7TxBFsRkMCVvut1KIoyigIM7UJoafrT3eV+U6xolhnT
+         MK+w==
+X-Gm-Message-State: AOAM530+YD3sLtGmkXROzKohLm6Ecu8RHlr14sVH2ky8p+tlICHwDpYn
+        inZP72W+G/94b1nrgyAbo0VvdZHqJa1x5tkhNmH5Sg==
+X-Google-Smtp-Source: ABdhPJwgNQt/BzJGgIgW1Z6IWYFFQo4/opMM9ra7kx2PUquYyLheC2bO97mcDzSHs3i/leVIx9Lzg4MfUrXy2lkHeRw=
+X-Received: by 2002:a17:90a:21ef:: with SMTP id q102mr3895pjc.101.1592945906532;
+ Tue, 23 Jun 2020 13:58:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200622190149.GL32200@zn.tnic> <B4D00859-000A-4F8C-8CFB-45B9BBCCA16D@amacapital.net>
+ <20200623102831.GB32590@zn.tnic> <CALCETrXfaEr9OGc5EDpxnhRZxFk5YZBBNVH-N32Eg8V8diwqXg@mail.gmail.com>
+ <20200623184726.GI32590@zn.tnic> <CAKwvOdnt+8RR=1JPjDNaVY8T1K7wmqFjSGM7XNUUGRb=t1hiWQ@mail.gmail.com>
+ <20200623191336.GK32590@zn.tnic>
+In-Reply-To: <20200623191336.GK32590@zn.tnic>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 23 Jun 2020 13:58:15 -0700
+Message-ID: <CAKwvOdkTYqpphqr2cvL2pDuK33aYzxXsLDQ6+_PSUk6qxUuQ7A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] selftests/fpu: Add an FPU selftest
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        jpa@kernelbug.mail.kapsi.fi, Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+On Tue, Jun 23, 2020 at 12:13 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Tue, Jun 23, 2020 at 12:07:13PM -0700, Nick Desaulniers wrote:
+> > You already have a conditional below for CC_IS_GCC; just add an else
+> > and unconditionally add -msse2.  You *should* use -msse2 for GCC 7.1+
+> > IMO.
+>
+> Why if one can write it more compact with cc-option?
+>
+> FPU_CFLAGS += $(call cc-option,-msse2,)
 
-[ Upstream commit b5292111de9bb70cba3489075970889765302136 ]
+This will always be true though, right? For both compilers.  So why
+test for it via cc-option when you can just do:
 
-Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
-detach") may cause system freeze during suspend.
+FPU_CFLAGS += -msse2
 
-Using async_synchronize_full() in PM callbacks is wrong, since async
-callbacks that are already scheduled may wait for not-yet-scheduled
-callbacks, causes a circular dependency.
+Though we might only want -msse2 if CC_IS_CLAG...I don't remember now
+if GCC will select SSE instructions that require 16B operands at
+-msse2, which will be problematic for the -mpreferred-stack-boundary=4
+case.
 
-Instead of using big hammer like async_synchronize_full(), use async
-cookie to make sure port probe are synced, without affecting other
-scheduled PM callbacks.
+My point was more so about avoiding needless cc-option checks when
+they're tautological.
 
-Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
-Suggested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: John Garry <john.garry@huawei.com>
-BugLink: https://bugs.launchpad.net/bugs/1867983
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ata/libata-core.c | 11 +++++------
- include/linux/libata.h    |  3 +++
- 2 files changed, 8 insertions(+), 6 deletions(-)
+> > I recommend a version check for GCC < 7.1, or simply disabling the
+> > self test if the version of GCC used is older than 7.1.
+>
+> See Andy's suggestion upthread.
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 75d582ca917ff..6b372fa583822 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -57,7 +57,6 @@
- #include <linux/workqueue.h>
- #include <linux/scatterlist.h>
- #include <linux/io.h>
--#include <linux/async.h>
- #include <linux/log2.h>
- #include <linux/slab.h>
- #include <linux/glob.h>
-@@ -6610,7 +6609,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
- 	/* perform each probe asynchronously */
- 	for (i = 0; i < host->n_ports; i++) {
- 		struct ata_port *ap = host->ports[i];
--		async_schedule(async_port_probe, ap);
-+		ap->cookie = async_schedule(async_port_probe, ap);
- 	}
- 
- 	return 0;
-@@ -6750,11 +6749,11 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
- 
--	/* Ensure ata_port probe has completed */
--	async_synchronize_full();
--
--	for (i = 0; i < host->n_ports; i++)
-+	for (i = 0; i < host->n_ports; i++) {
-+		/* Ensure ata_port probe has completed */
-+		async_synchronize_cookie(host->ports[i]->cookie + 1);
- 		ata_port_detach(host->ports[i]);
-+	}
- 
- 	/* the host is dead now, dissociate ACPI */
- 	ata_acpi_dissociate(host);
-diff --git a/include/linux/libata.h b/include/linux/libata.h
-index 75a916d7ab2a4..ed1453c15041d 100644
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -38,6 +38,7 @@
- #include <linux/acpi.h>
- #include <linux/cdrom.h>
- #include <linux/sched.h>
-+#include <linux/async.h>
- 
- /*
-  * Define if arch has non-standard setup.  This is a _PCI_ standard
-@@ -887,6 +888,8 @@ struct ata_port {
- 	struct timer_list	fastdrain_timer;
- 	unsigned long		fastdrain_cnt;
- 
-+	async_cookie_t		cookie;
-+
- 	int			em_message_type;
- 	void			*private_data;
- 
+Thread for other travelers:
+https://lore.kernel.org/lkml/CALCETrXXzt8WZMs3dsReCJ5wdF3zhxFmUtGnmdCgV7_exFUKKQ@mail.gmail.com/
+
+When Andy says "consider dropping the problematic GCC version" I
+wonder if it was meant *just for this selftest* as I suggested, or
+outright (which is untenable IMO, as it's a large jump to GCC 7.1+).
+
+> And I agree too that using cc-option is better than simply tying it to a
+> compiler version.
+
+I agree that will differentiate better than a version check; but it's
+still dangerous IMO to mix and match stack alignments.
+
+> Who knows what compiler has what backported. In such
+> cases a version number means nothing.
+
+I'm not sure I agree, but I'll take feature detection any day over
+version detection.
+
+>
+> > ^ looks familiar ;)
+>
+> It has been pasted around the kernel, I came to realize today. :-)
+
+Guilty, your honor. :P
+
+Maybe the feature test should be copy+pasta'd to those other places in
+the kernel, rather than the version check?
 -- 
-2.25.1
-
-
-
+Thanks,
+~Nick Desaulniers
