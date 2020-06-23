@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D72C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C162C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C690721531
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6567F20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944930;
-	bh=5G6QCiSLWqOGR4zy8AvkLNISOCXLbxImzAtZx8OvqCo=;
+	s=default; t=1592944935;
+	bh=bg9t9LBb3H6fmrsW58dWEosnln0PN3B+gkhrqthon38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3lX4Z8mQwsbj76fU6mO8KdbXRmJpjSAt4DluFaplNjS59zOpN+nGWog3H0u/bdA+
-	 R9VwGofflIYRp9NkVsQOvQsNhQtn6kQFLZfenApQlevqh0aesG1PpqENOWHqNk4BRj
-	 PBCiApRJknO7RqA02/9hK1Qrh94oOzMbjnLa7F+g=
+	b=HoEMKR8TBOFxiUKsXZcNUAvfZ3S/SxSl1APdj34qGA4tYmtYY1H48y+4KqsK0Vz+1
+	 IV/TG+BIF812b47XPys1P2Eq32YOMEWTJRrBiBOmM1IMpjycIP7ogQU3A4fL70WAkx
+	 MsjNAQlAN3oQi4txxIBI9ZaH0CBXJdEz225cDhRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392176AbgFWUmI (ORCPT
+        id S2392396AbgFWUmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38616 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391490AbgFWUmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:05 -0400
+        id S2392389AbgFWUmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EBD92053B;
-        Tue, 23 Jun 2020 20:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC44F2070E;
+        Tue, 23 Jun 2020 20:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944925;
-        bh=5G6QCiSLWqOGR4zy8AvkLNISOCXLbxImzAtZx8OvqCo=;
+        s=default; t=1592944928;
+        bh=bg9t9LBb3H6fmrsW58dWEosnln0PN3B+gkhrqthon38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vNr9Y6mqDyzfYP2JD6/RQRJZGIFw4n1vX4Fs9lgLOF+ns9gRT9/LLLu9PdM2/wJ01
-         LdJ2+XkFTwU1zheZqF2GK7aToHKdp2hRbHj5bK3ifO3xwupK2M9Xz+35xnINI49+d6
-         Q1l2JHKXJwDrWa1SVZGQzQyp5lQrGAZihcLRaPEQ=
+        b=kWMipSZNLBxTJZkE4mNShcZjIgVjRFxQvXGFOhVxXBfCAYj60LY9L8g6EpJ/NJ3wp
+         CGJ8UX+sZE4riretZB+UA7VAb2dRPqrBFWeN3R6oN9iAlGkUtk3LSSZq/O3KCV6b6/
+         lYf7GTGFIZ2tK6DNC3RolZR0I9HOHCU5A/N1jW84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 161/206] xdp: Fix xsk_generic_xmit errno
-Date:   Tue, 23 Jun 2020 21:58:09 +0200
-Message-Id: <20200623195324.917781007@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        syzbot+bca9799bf129256190da@syzkaller.appspotmail.com,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 179/206] ext4: avoid race conditions when remounting with options that change dax
+Date:   Tue, 23 Jun 2020 21:58:27 +0200
+Message-Id: <20200623195325.844975209@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,40 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit aa2cad0600ed2ca6a0ab39948d4db1666b6c962b ]
+[ Upstream commit 829b37b8cddb1db75c1b7905505b90e593b15db1 ]
 
-Propagate sock_alloc_send_skb error code, not set it to
-EAGAIN unconditionally, when fail to allocate skb, which
-might cause that user space unnecessary loops.
+Trying to change dax mount options when remounting could allow mount
+options to be enabled for a small amount of time, and then the mount
+option change would be reverted.
 
-Fixes: 35fcde7f8deb ("xsk: support for Tx")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Link: https://lore.kernel.org/bpf/1591852266-24017-1-git-send-email-lirongqing@baidu.com
+In the case of "mount -o remount,dax", this can cause a race where
+files would temporarily treated as DAX --- and then not.
+
+Cc: stable@kernel.org
+Reported-by: syzbot+bca9799bf129256190da@syzkaller.appspotmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/ext4/super.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 72caa4fb13f47..9ff2ab63e6392 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -233,10 +233,8 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
- 
- 		len = desc.len;
- 		skb = sock_alloc_send_skb(sk, len, 1, &err);
--		if (unlikely(!skb)) {
--			err = -EAGAIN;
-+		if (unlikely(!skb))
- 			goto out;
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index affccf55294e9..1428dab2afff8 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -1989,6 +1989,16 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+ #endif
+ 	} else if (token == Opt_dax) {
+ #ifdef CONFIG_FS_DAX
++		if (is_remount && test_opt(sb, DAX)) {
++			ext4_msg(sb, KERN_ERR, "can't mount with "
++				"both data=journal and dax");
++			return -1;
++		}
++		if (is_remount && !(sbi->s_mount_opt & EXT4_MOUNT_DAX)) {
++			ext4_msg(sb, KERN_ERR, "can't change "
++					"dax mount option while remounting");
++			return -1;
++		}
+ 		ext4_msg(sb, KERN_WARNING,
+ 		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+ 			sbi->s_mount_opt |= m->mount_opt;
+@@ -5274,12 +5284,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 			err = -EINVAL;
+ 			goto restore_opts;
+ 		}
+-		if (test_opt(sb, DAX)) {
+-			ext4_msg(sb, KERN_ERR, "can't mount with "
+-				 "both data=journal and dax");
+-			err = -EINVAL;
+-			goto restore_opts;
 -		}
+ 	} else if (test_opt(sb, DATA_FLAGS) == EXT4_MOUNT_ORDERED_DATA) {
+ 		if (test_opt(sb, JOURNAL_ASYNC_COMMIT)) {
+ 			ext4_msg(sb, KERN_ERR, "can't mount with "
+@@ -5295,12 +5299,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 		goto restore_opts;
+ 	}
  
- 		skb_put(skb, len);
- 		addr = desc.addr;
+-	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX) {
+-		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+-			"dax flag with busy inodes while remounting");
+-		sbi->s_mount_opt ^= EXT4_MOUNT_DAX;
+-	}
+-
+ 	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
+ 		ext4_abort(sb, "Abort forced by user");
+ 
 -- 
 2.25.1
 
