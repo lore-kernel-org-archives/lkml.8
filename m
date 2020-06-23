@@ -2,82 +2,128 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D61C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A26C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 749EE2078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592935272;
-	bh=+jfly5Ngdrj48jWGMhf0AWiq7rzl82cAMECyjRrpm7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S9hEIzzA46q4jrPV39Rj6Q7HIitsoL8g1toRD++u9YlqwKjkYKZiGlIoOVjl+rkut
-	 4Fe04c93/FDHTBVLC1WahX8xsON7jt8a7F8EZT547czG5wtJAvB3sDOrBplfZVPsg/
-	 rqtmHxjCnlm2v8rZTLRCZMaVPLPYoGFIcRITBul4=
+	by mail.kernel.org (Postfix) with ESMTP id 2CAE12078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733124AbgFWSBL (ORCPT
+        id S1733167AbgFWSBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732973AbgFWSBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:01:10 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD85020781;
-        Tue, 23 Jun 2020 18:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592935270;
-        bh=+jfly5Ngdrj48jWGMhf0AWiq7rzl82cAMECyjRrpm7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GbrtIjQNnqzJ0vx63NM4QAOL+qYwxJVWynHFyEuShC/rZ+ieqmI4ZTS75fDGdb522
-         TSBwCa5HDHkz//wbdzXSovuFgwf3Og/v++jtLNIqgzJ87H5HU4joqKN9gOFIZUpgAv
-         +Lw3pblMKbDwl3D/v6iJM9ScJ5O1x+ccF+ch82Qg=
-Date:   Tue, 23 Jun 2020 11:01:08 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Baolin Wang <baolin.wang@linux.alibaba.com>, axboe@fb.com,
-        hch@lst.de, baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] nvme: Add Arbitration Burst support
-Message-ID: <20200623180108.GA1291100@dhcp-10-100-145-180.wdl.wdc.com>
-References: <cover.1592916850.git.baolin.wang@linux.alibaba.com>
- <bf3f47ba50f72d0b775ca4bd098f183056d964ba.1592916850.git.baolin.wang@linux.alibaba.com>
- <20200623144014.GB1288900@dhcp-10-100-145-180.wdl.wdc.com>
- <38482b1b-b1c7-bb41-b086-6ce00f6a9d1d@grimberg.me>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38482b1b-b1c7-bb41-b086-6ce00f6a9d1d@grimberg.me>
+        Tue, 23 Jun 2020 14:01:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63472 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732913AbgFWSBd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 14:01:33 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NHWsNg056507;
+        Tue, 23 Jun 2020 14:01:32 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ukmde089-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 14:01:31 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NHi8Nv012717;
+        Tue, 23 Jun 2020 18:01:30 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma03wdc.us.ibm.com with ESMTP id 31uk4fsdvh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 18:01:30 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NI1U8C61473234
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 18:01:30 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E730D13605E;
+        Tue, 23 Jun 2020 18:01:29 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8FCC913604F;
+        Tue, 23 Jun 2020 18:01:28 +0000 (GMT)
+Received: from DESKTOP-AV6EVPG.localdomain (unknown [9.160.30.158])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Jun 2020 18:01:28 +0000 (GMT)
+From:   Maurizio Drocco <maurizio.drocco@ibm.com>
+To:     zohar@linux.ibm.com
+Cc:     Silviu.Vlasceanu@huawei.com, dmitry.kasatkin@gmail.com,
+        jejb@linux.ibm.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, maurizio.drocco@ibm.com,
+        mdrocco@linux.vnet.ibm.com, roberto.sassu@huawei.com,
+        serge@hallyn.com
+Subject: [PATCH v2] ima_evm_utils: extended calc_bootaggr to PCRs 8 - 9
+Date:   Tue, 23 Jun 2020 14:01:22 -0400
+Message-Id: <20200623180122.209-1-maurizio.drocco@ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <1592856871.4987.21.camel@linux.ibm.com>
+References: <1592856871.4987.21.camel@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ spamscore=0 mlxlogscore=897 clxscore=1015 priorityscore=1501
+ suspectscore=1 phishscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006120000 definitions=main-2006230123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:39:01AM -0700, Sagi Grimberg wrote:
-> 
-> > >  From the NVMe spec, "In order to make efficient use of the non-volatile
-> > > memory, it is often advantageous to execute multiple commands from a
-> > > Submission Queue in parallel. For Submission Queues that are using
-> > > weighted round robin with urgent priority class or round robin
-> > > arbitration, host software may configure an Arbitration Burst setting".
-> > > Thus add Arbitration Burst setting support.
-> > 
-> > But if the user changed it to something else that better matches how
-> > they want to use queues, the driver is just going to undo that setting
-> > on the next reset.
-> 
-> Where do we do priority class arbitration? no one sets it
+From: Maurizio <maurizio.drocco@ibm.com>
 
-Not the priority class, we don't use WRR in this driver. The RR
-arbitration can be set from user space and saved across controller
-resets, like:
+If PCRs 8 - 9 are set (i.e. not all-zeros), cal_bootaggr should include
+them into the digest.
 
-  # nvme set-feature -f 1 -v 3 --save
+Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+---
+Changelog:
+v2:
+- Always include PCRs 8 & 9 to non-sha1 hashes
+v1:
+- Include non-zero PCRs 8 & 9 to boot aggregates 
 
-This patch would undo the saved feature value.
+ src/evmctl.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/src/evmctl.c b/src/evmctl.c
+index 1d065ce..46b7092 100644
+--- a/src/evmctl.c
++++ b/src/evmctl.c
+@@ -1930,6 +1930,16 @@ static void calc_bootaggr(struct tpm_bank_info *bank)
+ 		}
+ 	}
+ 
++	if (strcmp(bank->algo_name, "sha1") != 0) {
++		for (i = 8; i < 10; i++) {
++			err = EVP_DigestUpdate(pctx, bank->pcr[i], bank->digest_size);
++			if (!err) {
++				log_err("EVP_DigestUpdate() failed\n");
++				return;
++			}
++		}
++	}
++
+ 	err = EVP_DigestFinal(pctx, bank->digest, &mdlen);
+ 	if (!err) {
+ 		log_err("EVP_DigestFinal() failed\n");
+@@ -1972,8 +1982,9 @@ static int append_bootaggr(char *bootaggr, struct tpm_bank_info *tpm_banks)
+ /*
+  * The IMA measurement list boot_aggregate is the link between the preboot
+  * event log and the IMA measurement list.  Read and calculate all the
+- * possible per TPM bank boot_aggregate digests based on the existing
+- * PCRs 0 - 7 to validate against the IMA boot_aggregate record.
++ * possible per TPM bank boot_aggregate digests based on the existing PCRs
++ * 0 - 9 to validate against the IMA boot_aggregate record. If the digest
++ * algorithm is SHA1, only PCRs 0 - 7 are considered to avoid ambiguity.
+  */
+ static int cmd_ima_bootaggr(struct command *cmd)
+ {
+-- 
+2.17.1
+
