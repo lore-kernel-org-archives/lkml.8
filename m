@@ -2,176 +2,175 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB753C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C95420724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDD820888
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Nu1h5FTQ"
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="koEyrONJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388257AbgFWWSX (ORCPT
+        id S2388789AbgFWWSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42234 "EHLO
+        Tue, 23 Jun 2020 18:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387609AbgFWWSW (ORCPT
+        with ESMTP id S2387609AbgFWWSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:18:22 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116D4C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 15:18:22 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id y10so375698eje.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 15:18:21 -0700 (PDT)
+        Tue, 23 Jun 2020 18:18:36 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B57C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 15:18:34 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o8so307929wmh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 15:18:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qKzAj5vVSTGG+lmqntyPCD1KCCZpZOcUyhdIG2BFn0o=;
-        b=Nu1h5FTQR7nfTEVl8HRFO0G4X+KLhCz9KWSJ9qfZeKqvxEUEoRza7yKuL3RCqQe2UT
-         LHUIcfwsi/SI+zUbxIcrbMsmSAfDTtq8HK02DuQhf2pNvIpdAfH6hxW8X11yASfhziR/
-         3DEHq8y/VXwOfU65qP/pMKIovd8hiWr4BPKtK2tCF8pbGq8pQ9DepmoZ2hHqNnQxkWnF
-         KLo14lwQg/Up+ScK0b5CQsZ83Zp+qg+setx4L/lPNFFwsL+2ldxVNvmNlL1yhfMgPe9x
-         j9+9q4uBSMVAgjnKjUBkvL1MzQE7s4Rac1crinxmF6450keElPqwlRWs75Ypy/pQc/Ut
-         Cisg==
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EDoDzgwzXvn64FM+iS8jSPBiWeuVTBlMDJ+h6gF0/y4=;
+        b=koEyrONJcEQIC2wAovjNrJWAovupzZdarkutAOOx5yvhbte5+hQYIe7v1KJq5XaHSS
+         keNxlHwwopHOl7l9QVqdqvfFIsboZ1pkilBayyAL+sBkomcL9Ocu6AW9LoenF4Q9eSL4
+         ol3vA5hYPTjO2wJlyum/CqeypM7MXhT2Xb4c6gptcLQOp+92fp+GvcvoMJHaq9s3zMcg
+         E+O7kzrUuuKkI6vhco6b0kB4xOxGnzSruDDMPssp18ZGZYhp6+ixgQM4EaBXQC6WVvPO
+         n+QyT4mPAuGT6TpvUx07gRo4hsxf3HECBY/pVmslsC4ZHKAMrzkQ6H2sGH1MCgmHOvG/
+         MZqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qKzAj5vVSTGG+lmqntyPCD1KCCZpZOcUyhdIG2BFn0o=;
-        b=AXYVFGS/xsso9H1RZt7c6nObOB+53i6BKSqPvBGW7PwMVU/On6I1s98oK92GdOG0uZ
-         13Eu5g9XJ/LoX6SGJvvtk8fenAKIxneue7IovMDGm5THvAeVe96wfM5MQS4HpJcZQ2lj
-         +iPJVN3dHR7C6KhWAezg8IItmLqdyqqaki5QJp7YkmN1BbzffuNxrMO90k3TkY7zkwpA
-         PzWzOhPzAmGM0XDAqEMplJaqG/zNhrraq9dQR1oBowDPOjT8AiknEBbtEqrSsTeTZC18
-         8cuLl4FDlsiZkr3oz5JXgq17Z9ql/WZrP7YQG7owhfH/b5+Tctqg9JRHIKcuZSz3HL0S
-         7ThA==
-X-Gm-Message-State: AOAM532yQp3PWnPJO2LVyIkVHDGim5Z4CkA2uRwxnduF6L2JCEztG+pp
-        fjL07w6AGffvIzg4FEV+B+8oAPkJoMTrg3mwlOSrgg==
-X-Google-Smtp-Source: ABdhPJwp8p0x5w/MAR9g9ZdE/7poFPIkrBvB0bYc9yWtOursXvzRpQkVd+QjErbQ+HmOoQ5AujQOUwP4vvzBqq6ZFiw=
-X-Received: by 2002:a17:906:6d56:: with SMTP id a22mr16811990ejt.440.1592950700787;
- Tue, 23 Jun 2020 15:18:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EDoDzgwzXvn64FM+iS8jSPBiWeuVTBlMDJ+h6gF0/y4=;
+        b=Sdv/YAPAcjA//WJf2q9Qw2R+onomI0CSdSUjL2U0GuRfAE2R0ED6OyQefJyCEUep0q
+         M4NfF6CMM9w1fEkORUJHeTl1d0NPMujJ3cZjQNAtM1O5FQ8bAX/vVhKUeAlx7QqI6QgR
+         AgH+9ySN+52JxcXg6vstR4lya8se0M0RXTXPRHpPoWV3ZmQswwLjYo0MeCAkJ94fbMDw
+         4b9jdNvWuC08h2IGHhrWcY5CregMzlUa7N/bnm0amXt5DI/zXanTRiCD/mTdurILnjjt
+         tjpjmrTwALbXjBfaOZjvHQe6JDDGw/wbGMONgJGjQPxbTlR/Yl8lSmnJA22FINo5rRQF
+         2auQ==
+X-Gm-Message-State: AOAM530VwU7t05Jez6A5wHA5Z17Gg4fMrpy+TTzzQ575qv2wpVaIeOVg
+        ZD4vUo2/90oBKqmbMmxDkh5ErQ==
+X-Google-Smtp-Source: ABdhPJxOc2v1KQEqaQT3MSTid5w9xUAIsfu2wgXdTNOkCyxCjfaz+0FvAQttUAo7kDfAVdPiQod14g==
+X-Received: by 2002:a1c:bb43:: with SMTP id l64mr25082188wmf.151.1592950713399;
+        Tue, 23 Jun 2020 15:18:33 -0700 (PDT)
+Received: from localhost.localdomain ([194.53.184.63])
+        by smtp.gmail.com with ESMTPSA id x7sm24822120wrr.72.2020.06.23.15.18.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 15:18:32 -0700 (PDT)
+From:   Quentin Monnet <quentin@isovalent.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Quentin Monnet <quentin@isovalent.com>
+Subject: [PATCH v3] checkpatch: fix CONST_STRUCT when const_structs.checkpatch is missing
+Date:   Tue, 23 Jun 2020 23:18:22 +0100
+Message-Id: <20200623221822.3727-1-quentin@isovalent.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200619125923.22602-1-david@redhat.com> <20200619125923.22602-4-david@redhat.com>
- <CAPcyv4hvwHDa=1suuuEFX5mmpOm12kv-Axbd8G7bp9iaA+FWAA@mail.gmail.com> <7a5f9ea1-7405-7058-af60-eea0bc165e79@redhat.com>
-In-Reply-To: <7a5f9ea1-7405-7058-af60-eea0bc165e79@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 23 Jun 2020 15:18:09 -0700
-Message-ID: <CAPcyv4jOgyc03hbOGMbQcSDTrpLjHbV+bKtbaqVqxWqBt-ezoQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] mm/shuffle: remove dynamic reconfiguration
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 12:33 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 20.06.20 03:49, Dan Williams wrote:
-> > On Fri, Jun 19, 2020 at 5:59 AM David Hildenbrand <david@redhat.com> wrote:
-> >>
-> >> Commit e900a918b098 ("mm: shuffle initial free memory to improve
-> >> memory-side-cache utilization") promised "autodetection of a
-> >> memory-side-cache (to be added in a follow-on patch)" over a year ago.
-> >>
-> >> The original series included patches [1], however, they were dropped
-> >> during review [2] to be followed-up later.
-> >>
-> >> Due to lack of platforms that publish an HMAT, autodetection is currently
-> >> not implemented. However, manual activation is actively used [3]. Let's
-> >> simplify for now and re-add when really (ever?) needed.
-> >>
-> >> [1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com
-> >> [2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com
-> >> [3] https://lkml.kernel.org/r/CAPcyv4irwGUU2x+c6b4L=KbB1dnasNKaaZd6oSpYjL9kfsnROQ@mail.gmail.com
-> >>
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> >> Cc: Michal Hocko <mhocko@suse.com>
-> >> Cc: Minchan Kim <minchan@kernel.org>
-> >> Cc: Huang Ying <ying.huang@intel.com>
-> >> Cc: Wei Yang <richard.weiyang@gmail.com>
-> >> Cc: Mel Gorman <mgorman@techsingularity.net>
-> >> Cc: Dan Williams <dan.j.williams@intel.com>
-> >> Signed-off-by: David Hildenbrand <david@redhat.com>
-> >> ---
-> >>  mm/shuffle.c | 28 ++--------------------------
-> >>  mm/shuffle.h | 17 -----------------
-> >>  2 files changed, 2 insertions(+), 43 deletions(-)
-> >>
-> >> diff --git a/mm/shuffle.c b/mm/shuffle.c
-> >> index dd13ab851b3ee..9b5cd4b004b0f 100644
-> >> --- a/mm/shuffle.c
-> >> +++ b/mm/shuffle.c
-> >> @@ -10,33 +10,11 @@
-> >>  #include "shuffle.h"
-> >>
-> >>  DEFINE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
-> >> -static unsigned long shuffle_state __ro_after_init;
-> >> -
-> >> -/*
-> >> - * Depending on the architecture, module parameter parsing may run
-> >> - * before, or after the cache detection. SHUFFLE_FORCE_DISABLE prevents,
-> >> - * or reverts the enabling of the shuffle implementation. SHUFFLE_ENABLE
-> >> - * attempts to turn on the implementation, but aborts if it finds
-> >> - * SHUFFLE_FORCE_DISABLE already set.
-> >> - */
-> >> -__meminit void page_alloc_shuffle(enum mm_shuffle_ctl ctl)
-> >> -{
-> >> -       if (ctl == SHUFFLE_FORCE_DISABLE)
-> >> -               set_bit(SHUFFLE_FORCE_DISABLE, &shuffle_state);
-> >> -
-> >> -       if (test_bit(SHUFFLE_FORCE_DISABLE, &shuffle_state)) {
-> >> -               if (test_and_clear_bit(SHUFFLE_ENABLE, &shuffle_state))
-> >> -                       static_branch_disable(&page_alloc_shuffle_key);
-> >> -       } else if (ctl == SHUFFLE_ENABLE
-> >> -                       && !test_and_set_bit(SHUFFLE_ENABLE, &shuffle_state))
-> >> -               static_branch_enable(&page_alloc_shuffle_key);
-> >> -}
-> >>
-> >>  static bool shuffle_param;
-> >>  static int shuffle_show(char *buffer, const struct kernel_param *kp)
-> >>  {
-> >> -       return sprintf(buffer, "%c\n", test_bit(SHUFFLE_ENABLE, &shuffle_state)
-> >> -                       ? 'Y' : 'N');
-> >> +       return sprintf(buffer, "%c\n", shuffle_param ? 'Y' : 'N');
-> >>  }
-> >>
-> >>  static __meminit int shuffle_store(const char *val,
-> >> @@ -47,9 +25,7 @@ static __meminit int shuffle_store(const char *val,
-> >>         if (rc < 0)
-> >>                 return rc;
-> >>         if (shuffle_param)
-> >> -               page_alloc_shuffle(SHUFFLE_ENABLE);
-> >> -       else
-> >> -               page_alloc_shuffle(SHUFFLE_FORCE_DISABLE);
-> >> +               static_branch_enable(&page_alloc_shuffle_key);
-> >>         return 0;
-> >>  }
-> >
-> > Let's do proper input validation here and require 1 / 'true' to enable
-> > shuffling and not also allow 0 to be an 'enable' value.
->
-> I don't think that's currently done?
->
-> param_set_bool(val, kp) will only default val==NULL to 'true'. Passing 0
-> will properly be handled by strtobool(). Or am I missing something?
->
+Checkpatch reports warnings when some specific structs are not declared
+as const in the code. The list of structs to consider was initially
+defined in the checkpatch.pl script itself, but it was later moved to an
+external file (scripts/const_structs.checkpatch), in commit bf1fa1dae68e
+("checkpatch: externalize the structs that should be const"). This
+introduced two minor issues:
 
-No, I misread the patch and thought the conditional was being removed.
+- When file scripts/const_structs.checkpatch is not present (for
+  example, if checkpatch is run outside of the kernel directory with the
+  "--no-tree" option), a warning is printed to stderr to tell the user
+  that "No structs that should be const will be found". This is fair,
+  but the warning is printed unconditionally, even if the option
+  "--ignore CONST_STRUCT" is passed. In the latter case, we explicitly
+  ask checkpatch to skip this check, so no warning should be printed.
 
-All good now.
+- When scripts/const_structs.checkpatch is missing, or even when trying
+  to silence the warning by adding an empty file, $const_structs is set
+  to "", and the regex used for finding structs that should be const,
+  "$line =~ /\bstruct\s+($const_structs)\b(?!\s*\{)/)", matches all
+  structs found in the code, thus reporting a number of false positives.
+
+Let's fix the first item by skipping scripts/const_structs.checkpatch
+processing if "CONST_STRUCT" checks are ignored, and the second one by
+skipping the test if $const_structs is not defined. Since we modify the
+read_words() function a little bit, update the checks for
+$typedefsfile/$typeOtherTypedefs as well.
+
+Signed-off-by: Quentin Monnet <quentin@isovalent.com>
+---
+v3:
+- Remove comparison to empty string in read_words() and update checks on
+  $typedefsfile/$typeOtherTypedefs in a similar way.
+v2:
+- Check if $const_structs is defined instead of non-empty.
+- Remove "Fixes" tag.
+---
+ scripts/checkpatch.pl | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index db9d94f90431..3804f88c3e15 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -62,7 +62,7 @@ my $spelling_file = "$D/spelling.txt";
+ my $codespell = 0;
+ my $codespellfile = "/usr/share/codespell/dictionary.txt";
+ my $conststructsfile = "$D/const_structs.checkpatch";
+-my $typedefsfile = "";
++my $typedefsfile;
+ my $color = "auto";
+ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANCE
+ # git output parsing needs US English output, so first set backtick child process LANGUAGE
+@@ -770,7 +770,7 @@ sub read_words {
+ 				next;
+ 			}
+ 
+-			$$wordsRef .= '|' if ($$wordsRef ne "");
++			$$wordsRef .= '|' if (defined $$wordsRef);
+ 			$$wordsRef .= $line;
+ 		}
+ 		close($file);
+@@ -780,16 +780,18 @@ sub read_words {
+ 	return 0;
+ }
+ 
+-my $const_structs = "";
+-read_words(\$const_structs, $conststructsfile)
+-    or warn "No structs that should be const will be found - file '$conststructsfile': $!\n";
++my $const_structs;
++if (show_type("CONST_STRUCT")) {
++	read_words(\$const_structs, $conststructsfile)
++	    or warn "No structs that should be const will be found - file '$conststructsfile': $!\n";
++}
+ 
+-my $typeOtherTypedefs = "";
+-if (length($typedefsfile)) {
++if (defined($typedefsfile)) {
++	my $typeOtherTypedefs;
+ 	read_words(\$typeOtherTypedefs, $typedefsfile)
+ 	    or warn "No additional types will be considered - file '$typedefsfile': $!\n";
++	$typeTypedefs .= '|' . $typeOtherTypedefs if (defined $typeOtherTypedefs);
+ }
+-$typeTypedefs .= '|' . $typeOtherTypedefs if ($typeOtherTypedefs ne "");
+ 
+ sub build_types {
+ 	my $mods = "(?x:  \n" . join("|\n  ", (@modifierList, @modifierListFile)) . "\n)";
+@@ -6656,7 +6658,8 @@ sub process {
+ 
+ # check for various structs that are normally const (ops, kgdb, device_tree)
+ # and avoid what seem like struct definitions 'struct foo {'
+-		if ($line !~ /\bconst\b/ &&
++		if (defined($const_structs) &&
++		    $line !~ /\bconst\b/ &&
+ 		    $line =~ /\bstruct\s+($const_structs)\b(?!\s*\{)/) {
+ 			WARN("CONST_STRUCT",
+ 			     "struct $1 should normally be const\n" . $herecurr);
+-- 
+2.20.1
+
