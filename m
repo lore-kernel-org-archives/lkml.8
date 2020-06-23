@@ -2,112 +2,147 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC909C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8768EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97E62070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5840D20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="LwF6LgBL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aYj0nDqL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r3M0SxSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732731AbgFWNov (ORCPT
+        id S1732691AbgFWNrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:44:51 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:53717 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732689AbgFWNou (ORCPT
+        Tue, 23 Jun 2020 09:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732658AbgFWNrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:44:50 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 3AF2A9D9;
-        Tue, 23 Jun 2020 09:44:48 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 23 Jun 2020 09:44:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=O
-        0g8wXDhwaGH3wxJIDz/XxJs/BJnWAIK7T3LcqUUYKI=; b=LwF6LgBLm/H54i4bs
-        dTm6x54o7AV9PmvS799JVOsUUj/jDz5jgfUhEon/VKaiOhJ45jyzb7ysGmYhQifi
-        KnCy+ilEbWV7JYA4wQH4EZ0wqTH/jgURP/ji6Inf2qxxeqWqPSAjKQJjw8lQFh15
-        3Xq3W6F5nAXmtNEPsRxyPGBrG4ImmPx9rS9ywI/IME7sfEvV5xUl+rYd0rraEHhV
-        T4z/KL7VleSP+aIiCb9GUK/5+KtAvAdRmrg+Rx0dqbw+qRz643ZyCFG3pWEAWoW2
-        Zr7JiO7KJ7+7rhy9EOyJNhv+ieEdsUKDsBL7B4FOgZRMKOY4hixZMB5SgENm7lae
-        q1+qQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=O0g8wXDhwaGH3wxJIDz/XxJs/BJnWAIK7T3LcqUUY
-        KI=; b=aYj0nDqL3IMLwvTDMgHK7kpquV6TSZk2izgJcAuo2I2h4+rTiOSYgX1Dp
-        7f7KjPVrB2d1h0aIwe1tNFQ8NzjNCU8nPbd6cJWytmh1XxBVHUUPiDOvor3Os+TD
-        iv+jotApenT6d6KjvnbxyNn88aMrqcPrOck0pfJqceD8MueyfWOaHMDsv+HnT/WQ
-        n4rKSkV4fXK1Ts4UTyNefURCxUBpCifiPhmV2/JoVcSlWV4kaKRSZZVDJuNMgtq8
-        DpdEFFfOBqz0oma6V10ax1hIU7LS/JKP+SJDeoe9DQLXoxTojCeXioOtxB2w6Wrh
-        0PgkyOyFw04OqioCMRneQGV64J+qw==
-X-ME-Sender: <xms:TQfyXgoWPKtkyOMzdHBQU4SkM1vZnLRvyEp7LiLsuAw9EfXoGrMIIA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekhedggedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtjeenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpefhueeggfdvieegjeeigeffudeuhfeuveeuieelgfffleelgedtiefgvdev
-    ieevvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeike
-    drjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    mhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:TQfyXmp6kCnuarhDOFpKWBBiEDJCr6uq49ulhBBMIoLZxmMd5Zcvag>
-    <xmx:TQfyXlOzlz03GXkqCaoNFco4gwSPwQbXMKgd1Hhq5QcSpvh5gFMqIQ>
-    <xmx:TQfyXn5YGxSGoB_t0V0RPe5VDKph15fK0iJjW3HvPq1ELRhQ7iXMog>
-    <xmx:TwfyXnxxY0VIQfOKgYz-x0i5FYX_3WeZpJYYyWq7qFp7wOwcx4YPay1a4AU>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B3A7E3280063;
-        Tue, 23 Jun 2020 09:44:44 -0400 (EDT)
-Date:   Tue, 23 Jun 2020 15:44:42 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        Aditya Pakki <pakki001@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, linux-kernel@vger.kernel.org,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] crypto: sun8i-ce - Fix runtime PM imbalance in
- sun8i_ce_cipher_init
-Message-ID: <20200623134442.wj4i3r3dlp6rtpaq@gilmour.lan>
-References: <265c3a75-f8ce-fb34-d559-39e58a4dfb4f@web.de>
+        Tue, 23 Jun 2020 09:47:00 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98C07C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:47:00 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x62so12025550qtd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yB7mBYOb5pHmRDyADOswCcoM+Wao7KTnBuR1N0wTjcI=;
+        b=r3M0SxSQyPOiFsM6AdXBkzfLEs0ccEX18X/VK2sm+iGNVloEXppIt21C4F2MZzwn7J
+         Q4y4dfqn36aZt0P5k7RBV8CcmPHacaOttgozh0h8rsivQWB5SBBxlJH/GRjBsQdWgzWm
+         ieswkemih+o7RJ2R9TNfVB1VxiBfGv5kLAHQ1OkXAps/j8pqE2dfBYoUAgw4zm/kH2G+
+         YajKfaNjM1h8JWGxm43c393ZFVL/MExnBiP2++QrD+tnHKthwzOB6l2MNGwF29PWKtwW
+         fdUVrXiLowep1hUjoykGwAKJ3rAM2Y8OgXlosAq/j/N0vHaAo0V0L17r/8kt9V8H2J36
+         7ixA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=yB7mBYOb5pHmRDyADOswCcoM+Wao7KTnBuR1N0wTjcI=;
+        b=mmR2ydL5SYWdr++cWja7BblUrtLGBQGTDrhb2ewtqbAPf2hBG2kFZK0agYnLwE57um
+         zO8bgpG5I4B9N+WZN5B/pFCBQX00rN1r2WzTfo7p7/dp/QZNoV9h7xzlXL+A5EAnzJ48
+         POMInPRcNyeG07IStTy/uH9H/ku7yDtHVBlT/AocXIUtPBb5jU+obq3w0k90VeoVkMNN
+         B5c1WC4xgN5RgXc4A2kTRWbJJYziZlO+8M5liRHLzoFj6ArZSCzZ/ox4Q/rABiNDwbNN
+         oWA+Ns8STulxy6lJUl/XspCWTAtUAoZctYPZqc3iYe/XQ3tgJiBKdWM2uDIMEeWr7P4G
+         u0RQ==
+X-Gm-Message-State: AOAM530Gz136ldnNtIi6eIhmaGq5OmnaL52SJ8Q8Gj2cIBbaYR6rGDBG
+        v7iiuYP2Zb28HZGlfjltswg=
+X-Google-Smtp-Source: ABdhPJzE3SVlL/lDweknKn10aGqC2G3tm9SJivoOuqHOvgHrqy8VOjOJLe7+dKq85lzF81Ji1OXKJA==
+X-Received: by 2002:ac8:4d44:: with SMTP id x4mr1288201qtv.34.1592920019691;
+        Tue, 23 Jun 2020 06:46:59 -0700 (PDT)
+Received: from localhost.localdomain (209-6-208-110.s8556.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.208.110])
+        by smtp.gmail.com with ESMTPSA id o6sm600754qtd.59.2020.06.23.06.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 06:46:58 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 09:46:56 -0400
+From:   Konrad Rzeszutek Wilk <konrad@darnok.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Peter Jones <pjones@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ibft: Replace zero-length array with flexible-array
+Message-ID: <20200623134656.GB5499@localhost.localdomain>
+References: <20200507185544.GA14695@embeddedor>
+ <20200521183235.GA29907@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <265c3a75-f8ce-fb34-d559-39e58a4dfb4f@web.de>
+In-Reply-To: <20200521183235.GA29907@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 07:50:08PM +0200, Markus Elfring wrote:
-> > Fix this by =E2=80=A6
->=20
-> Please replace the beginning of this sentence with the tag =E2=80=9CFixes=
-=E2=80=9D.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/process/submitting-patches.rst?id=3D625d3449788f85569096780592=
-549d0340e9c0c7#n183
+On Thu, May 21, 2020 at 01:32:35PM -0500, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping: who can take this?
 
-No, not really. The comment you (partially) quoted explains how the
-issue is fixed, your suggestion explains what commit introduced the fix
-in the first place. They are both beneficial, but there's strictly no
-reason to remove the former for the latter.
+It is in the tree. Let me send out a git pull to Linus in a week or two.
 
-Maxime
+Thanks!
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> On Thu, May 07, 2020 at 01:55:44PM -0500, Gustavo A. R. Silva wrote:
+> > The current codebase makes use of the zero-length array language
+> > extension to the C90 standard, but the preferred mechanism to declare
+> > variable-length types such as these ones is a flexible array member[1][2],
+> > introduced in C99:
+> > 
+> > struct foo {
+> >         int stuff;
+> >         struct boo array[];
+> > };
+> > 
+> > By making use of the mechanism above, we will get a compiler warning
+> > in case the flexible array does not occur last in the structure, which
+> > will help us prevent some kind of undefined behavior bugs from being
+> > inadvertently introduced[3] to the codebase from now on.
+> > 
+> > Also, notice that, dynamic memory allocations won't be affected by
+> > this change:
+> > 
+> > "Flexible array members have incomplete type, and so the sizeof operator
+> > may not be applied. As a quirk of the original implementation of
+> > zero-length arrays, sizeof evaluates to zero."[1]
+> > 
+> > sizeof(flexible-array-member) triggers a warning because flexible array
+> > members have incomplete type[1]. There are some instances of code in
+> > which the sizeof operator is being incorrectly/erroneously applied to
+> > zero-length arrays and the result is zero. Such instances may be hiding
+> > some bugs. So, this work (flexible-array member conversions) will also
+> > help to get completely rid of those sorts of issues.
+> > 
+> > This issue was found with the help of Coccinelle.
+> > 
+> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > [2] https://github.com/KSPP/linux/issues/21
+> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >  drivers/firmware/iscsi_ibft.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+> > index 96758b71a8db..7127a04bca19 100644
+> > --- a/drivers/firmware/iscsi_ibft.c
+> > +++ b/drivers/firmware/iscsi_ibft.c
+> > @@ -104,7 +104,7 @@ struct ibft_control {
+> >  	u16 tgt0_off;
+> >  	u16 nic1_off;
+> >  	u16 tgt1_off;
+> > -	u16 expansion[0];
+> > +	u16 expansion[];
+> >  } __attribute__((__packed__));
+> >  
+> >  struct ibft_initiator {
+> > 
