@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B45BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA773C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD3A20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0F220702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945577;
-	bh=tB9HClPapjm2N8It0LFNU0Er/q0BNIUsiI8D6yFKrBE=;
+	s=default; t=1592945579;
+	bh=8MP+yUbfzIAUWflXaZ1RhpaOEhTpWa47P/ZhgkUfhRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhE7TrcLhEYc4bc1nsF0QOary6modg6+jt5eRnPa888uAg3KOQsDBGusdPb42XJCk
-	 GARR5foQk0rj37mkeMtdVxmb96sBnmuRKjjeUavujIxWCP7aJxxv4vunjCsHQ1vtqr
-	 14clLdg7nXdnoeItZiriVn2zoVx9ezcfUljmum+k=
+	b=zaP7ax+nRG77Kr5k54sGTY7S6KpWaBjEqtU6kbF+Q04Pqk2ZdGIAH1Vwlq6A/J7wV
+	 PZIPP66Tsae6l6ISDkniu5ohWljXXtG2JA0qW+by5kZaSbOpDuBmFUNWL1rnvV/Y6q
+	 mulYU1NaLsrlQhq9CRMeS7UblbHY5Yr5uymHOd2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392657AbgFWUwz (ORCPT
+        id S2404021AbgFWUrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:52:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404039AbgFWUrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:47:12 -0400
+        id S2403993AbgFWUoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE0BF214DB;
-        Tue, 23 Jun 2020 20:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070C7218AC;
+        Tue, 23 Jun 2020 20:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945232;
-        bh=tB9HClPapjm2N8It0LFNU0Er/q0BNIUsiI8D6yFKrBE=;
+        s=default; t=1592945077;
+        bh=8MP+yUbfzIAUWflXaZ1RhpaOEhTpWa47P/ZhgkUfhRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UY/d5v+Ho99bKNujIG7oWFz9dWgZGoGBDiWoCrrPSg/7+5He86YP3jRgO5GFwfA2j
-         XAol+KsA8cJ7RIgpMew860fD9TuUU2LNJdnOXPxcanGdW9NpBVL9zKaYe8ivbtbBd9
-         Yl4vdJU7WiLn6P2y1iYNefm9hyM2X1MTxs8PElmw=
+        b=X918vuhG0Ja/vdl7CWw//Wn8U/AV2WM+1LYPEKgzFpbXS7rEYCe2QaRn7yOu/XX4p
+         lnOOZZkOvPda8rgD0tGftuaE9JY9IsalSRA0E8rLYL32L14Dq115cz/KGwSVYypuYe
+         vLSzGPJLZx1koJJAjx9WpB5fPaaMJx94Pk+XdMRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 090/136] pinctrl: freescale: imx: Fix an error handling path in imx_pinctrl_probe()
-Date:   Tue, 23 Jun 2020 21:59:06 +0200
-Message-Id: <20200623195308.195412749@linuxfoundation.org>
+Subject: [PATCH 4.14 003/136] power: supply: bq24257_charger: Replace depends on REGMAP_I2C with select
+Date:   Tue, 23 Jun 2020 21:57:39 +0200
+Message-Id: <20200623195303.785910695@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -62,71 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 11d8da5cabf7c6c3263ba2cd9c00260395867048 ]
+[ Upstream commit 87c3d579c8ed0eaea6b1567d529a8daa85a2bc6c ]
 
-'pinctrl_unregister()' should not be called to undo
-'devm_pinctrl_register_and_init()', it is already handled by the framework.
+regmap is a library function that gets selected by drivers that need
+it. No driver modules should depend on it. Depending on REGMAP_I2C makes
+this driver only build if another driver already selected REGMAP_I2C,
+as the symbol can't be selected through the menu kernel configuration.
 
-This simplifies the error handling paths of the probe function.
-The 'imx_free_resources()' can be removed as well.
-
-Fixes: a51c158bf0f7 ("pinctrl: imx: use radix trees for groups and functions")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Link: https://lore.kernel.org/r/20200530204955.588962-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 2219a935963e ("power_supply: Add TI BQ24257 charger driver")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ drivers/power/supply/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 17f2c5a505b25..ec0119e1e7810 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -661,16 +661,6 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
- 	return 0;
- }
- 
--/*
-- * imx_free_resources() - free memory used by this driver
-- * @info: info driver instance
-- */
--static void imx_free_resources(struct imx_pinctrl *ipctl)
--{
--	if (ipctl->pctl)
--		pinctrl_unregister(ipctl->pctl);
--}
--
- int imx_pinctrl_probe(struct platform_device *pdev,
- 		      struct imx_pinctrl_soc_info *info)
- {
-@@ -761,21 +751,16 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 					     &ipctl->pctl);
- 	if (ret) {
- 		dev_err(&pdev->dev, "could not register IMX pinctrl driver\n");
--		goto free;
-+		return ret;
- 	}
- 
- 	ret = imx_pinctrl_probe_dt(pdev, ipctl);
- 	if (ret) {
- 		dev_err(&pdev->dev, "fail to probe dt properties\n");
--		goto free;
-+		return ret;
- 	}
- 
- 	dev_info(&pdev->dev, "initialized IMX pinctrl driver\n");
- 
- 	return pinctrl_enable(ipctl->pctl);
--
--free:
--	imx_free_resources(ipctl);
--
--	return ret;
- }
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 5ab90c1f3f7c4..24163cf8612c5 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -530,7 +530,7 @@ config CHARGER_BQ24257
+ 	tristate "TI BQ24250/24251/24257 battery charger driver"
+ 	depends on I2C
+ 	depends on GPIOLIB || COMPILE_TEST
+-	depends on REGMAP_I2C
++	select REGMAP_I2C
+ 	help
+ 	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 battery
+ 	  chargers.
 -- 
 2.25.1
 
