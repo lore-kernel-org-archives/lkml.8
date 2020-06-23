@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBABFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF98D2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE073204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733118AbgFWQpa (ORCPT
+        id S1733130AbgFWQpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:45:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39112 "EHLO mx2.suse.de"
+        Tue, 23 Jun 2020 12:45:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39240 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733083AbgFWQpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:45:23 -0400
+        id S1733086AbgFWQpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:45:24 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C9213B13E;
-        Tue, 23 Jun 2020 16:45:21 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 624E6B03C;
+        Tue, 23 Jun 2020 16:45:22 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     gregkh@linuxfoundation.org
 Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
@@ -31,9 +31,9 @@ Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 25/50] staging: vchiq: Introduce vchiq_validate_params()
-Date:   Tue, 23 Jun 2020 18:42:11 +0200
-Message-Id: <20200623164235.29566-26-nsaenzjulienne@suse.de>
+Subject: [PATCH 26/50] staging: vchiq: Move message queue into struct vchiq_service
+Date:   Tue, 23 Jun 2020 18:42:12 +0200
+Message-Id: <20200623164235.29566-27-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
 References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
@@ -44,71 +44,311 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When adding a new service validate the configuration parameters
-provided, and remove unnecessary checks in vchi, now that we have
-validated service's config.
+This has historically been handled by vchi, but there is no reason why
+this couldn't be handled directly in vchiq.
+
+The patch tries to avoid altering any behavior, with the exception of
+the msg_queue size, which is now fixed to VCHIQ_MAX_SLOTS (it was set to
+VCHIQ_MAX_SLOTS / 2). This is done to match vchiq's user_service message
+queue, which could be merged with this one in the future.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../interface/vchiq_arm/vchiq_core.c              | 15 +++++++++++++++
- .../interface/vchiq_arm/vchiq_shim.c              |  4 ----
- 2 files changed, 15 insertions(+), 4 deletions(-)
+ drivers/staging/vc04_services/Makefile        |  1 -
+ .../interface/vchiq_arm/vchiq_core.c          | 46 ++++++++++++
+ .../interface/vchiq_arm/vchiq_core.h          |  6 ++
+ .../interface/vchiq_arm/vchiq_if.h            |  2 +
+ .../interface/vchiq_arm/vchiq_shim.c          | 24 ++----
+ .../interface/vchiq_arm/vchiq_util.c          | 73 -------------------
+ .../interface/vchiq_arm/vchiq_util.h          | 22 ------
+ 7 files changed, 61 insertions(+), 113 deletions(-)
+ delete mode 100644 drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
 
+diff --git a/drivers/staging/vc04_services/Makefile b/drivers/staging/vc04_services/Makefile
+index d37f21d1a219..922990919c40 100644
+--- a/drivers/staging/vc04_services/Makefile
++++ b/drivers/staging/vc04_services/Makefile
+@@ -7,7 +7,6 @@ vchiq-objs := \
+    interface/vchiq_arm/vchiq_2835_arm.o \
+    interface/vchiq_arm/vchiq_debugfs.o \
+    interface/vchiq_arm/vchiq_shim.o \
+-   interface/vchiq_arm/vchiq_util.o \
+    interface/vchiq_arm/vchiq_connected.o \
+ 
+ obj-$(CONFIG_SND_BCM2835)		+= bcm2835-audio/
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index ae9183db44ee..46b09b7154f8 100644
+index 46b09b7154f8..0e9680904e68 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -2265,6 +2265,16 @@ vchiq_init_state(struct vchiq_state *state, struct vchiq_slot_zero *slot_zero)
+@@ -2265,6 +2265,47 @@ vchiq_init_state(struct vchiq_state *state, struct vchiq_slot_zero *slot_zero)
  	return VCHIQ_ERROR;
  }
  
-+static int vchiq_validate_params(const struct vchiq_service_params *params)
++void vchiq_msg_queue_push(unsigned handle, struct vchiq_header *header)
 +{
-+	if (!params->callback || !params->fourcc) {
-+		vchiq_loud_error("Can't add service, invalid params\n");
-+		return -EINVAL;
++	struct vchiq_service *service = find_service_by_handle(handle);
++	int pos;
++
++	while (service->msg_queue_write == service->msg_queue_read +
++		VCHIQ_MAX_SLOTS) {
++		if (wait_for_completion_interruptible(&service->msg_queue_pop))
++			flush_signals(current);
 +	}
 +
-+	return 0;
-+}
++	pos = service->msg_queue_write++ & (VCHIQ_MAX_SLOTS - 1);
++	service->msg_queue[pos] = header;
 +
- /* Called from application thread when a client or server service is created. */
- struct vchiq_service *
- vchiq_add_service_internal(struct vchiq_state *state,
-@@ -2275,8 +2285,13 @@ vchiq_add_service_internal(struct vchiq_state *state,
- 	struct vchiq_service *service;
- 	struct vchiq_service __rcu **pservice = NULL;
- 	struct vchiq_service_quota *service_quota;
-+	int ret;
- 	int i;
- 
-+	ret = vchiq_validate_params(params);
-+	if (ret)
++	complete(&service->msg_queue_push);
++}
++EXPORT_SYMBOL(vchiq_msg_queue_push);
++
++struct vchiq_header *vchiq_msg_hold(unsigned handle)
++{
++	struct vchiq_service *service = find_service_by_handle(handle);
++	struct vchiq_header *header;
++	int pos;
++
++	if (service->msg_queue_write == service->msg_queue_read)
 +		return NULL;
 +
- 	service = kmalloc(sizeof(*service), GFP_KERNEL);
- 	if (!service)
- 		return service;
++	while (service->msg_queue_write == service->msg_queue_read) {
++		if (wait_for_completion_interruptible(&service->msg_queue_push))
++			flush_signals(current);
++	}
++
++	pos = service->msg_queue_read++ & (VCHIQ_MAX_SLOTS - 1);
++	header = service->msg_queue[pos];
++
++	complete(&service->msg_queue_pop);
++
++	return header;
++}
++EXPORT_SYMBOL(vchiq_msg_hold);
++
+ static int vchiq_validate_params(const struct vchiq_service_params *params)
+ {
+ 	if (!params->callback || !params->fourcc) {
+@@ -2319,12 +2360,17 @@ vchiq_add_service_internal(struct vchiq_state *state,
+ 	service->state         = state;
+ 	service->instance      = instance;
+ 	service->service_use_count = 0;
++	service->msg_queue_read = 0;
++	service->msg_queue_write = 0;
+ 	init_bulk_queue(&service->bulk_tx);
+ 	init_bulk_queue(&service->bulk_rx);
+ 	init_completion(&service->remove_event);
+ 	init_completion(&service->bulk_remove_event);
++	init_completion(&service->msg_queue_pop);
++	init_completion(&service->msg_queue_push);
+ 	mutex_init(&service->bulk_mutex);
+ 	memset(&service->stats, 0, sizeof(service->stats));
++	memset(&service->msg_queue, 0, sizeof(service->msg_queue));
+ 
+ 	/* Although it is perfectly possible to use a spinlock
+ 	** to protect the creation of services, it is overkill as it
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
+index 1fe6cd8b86c0..b97b661bea1c 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
+@@ -297,6 +297,12 @@ struct vchiq_service {
+ 		uint64_t bulk_tx_bytes;
+ 		uint64_t bulk_rx_bytes;
+ 	} stats;
++
++	int msg_queue_read;
++	int msg_queue_write;
++	struct completion msg_queue_pop;
++	struct completion msg_queue_push;
++	struct vchiq_header *msg_queue[VCHIQ_MAX_SLOTS];
+ };
+ 
+ /* The quota information is outside struct vchiq_service so that it can
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
+index b62fd6d6f1ac..8fd51d885a18 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
+@@ -136,5 +136,7 @@ extern enum vchiq_status vchiq_dump_phys_mem(unsigned int service,
+ 
+ extern enum vchiq_status vchiq_get_peer_version(unsigned int handle,
+       short *peer_version);
++extern void vchiq_msg_queue_push(unsigned handle, struct vchiq_header *header);
++extern struct vchiq_header *vchiq_msg_hold(unsigned handle);
+ 
+ #endif /* VCHIQ_IF_H */
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-index e09c595d6f9d..dcf8776834b1 100644
+index dcf8776834b1..85d79d0033bf 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-@@ -271,15 +271,11 @@ static enum vchiq_status shim_callback(enum vchiq_reason reason,
- 	struct vchi_service *service =
+@@ -13,8 +13,6 @@
+ struct vchi_service {
+ 	unsigned int handle;
+ 
+-	struct vchiu_queue queue;
+-
+ 	vchi_callback callback;
+ 	void *callback_param;
+ };
+@@ -172,10 +170,9 @@ int32_t vchi_msg_hold(struct vchi_service *service, void **data,
+ {
+ 	struct vchiq_header *header;
+ 
+-	if (vchiu_queue_is_empty(&service->queue))
+-		return -1;
+-
+-	header = vchiu_queue_pop(&service->queue);
++	header = vchiq_msg_hold(service->handle);
++	if (!header)
++		return -ENOENT;
+ 
+ 	*data = header->data;
+ 	*msg_size = header->size;
+@@ -272,7 +269,7 @@ static enum vchiq_status shim_callback(enum vchiq_reason reason,
  		(struct vchi_service *)VCHIQ_GET_SERVICE_USERDATA(handle);
  
--	if (!service->callback)
--		goto release;
--
  	if (reason == VCHIQ_MESSAGE_AVAILABLE)
- 		vchiu_queue_push(&service->queue, header);
+-		vchiu_queue_push(&service->queue, header);
++		vchiq_msg_queue_push(service->handle, header);
  
  	service->callback(service->callback_param, reason, bulk_user);
  
--release:
- 	return VCHIQ_SUCCESS;
+@@ -285,13 +282,8 @@ static struct vchi_service *service_alloc(struct vchiq_instance *instance,
+ 	struct vchi_service *service = kzalloc(sizeof(struct vchi_service), GFP_KERNEL);
+ 
+ 	if (service) {
+-		if (!vchiu_queue_init(&service->queue, 64)) {
+-			service->callback = setup->callback;
+-			service->callback_param = setup->callback_param;
+-		} else {
+-			kfree(service);
+-			service = NULL;
+-		}
++		service->callback = setup->callback;
++		service->callback_param = setup->callback_param;
+ 	}
+ 
+ 	return service;
+@@ -299,10 +291,8 @@ static struct vchi_service *service_alloc(struct vchiq_instance *instance,
+ 
+ static void service_free(struct vchi_service *service)
+ {
+-	if (service) {
+-		vchiu_queue_delete(&service->queue);
++	if (service)
+ 		kfree(service);
+-	}
  }
  
+ int32_t vchi_service_open(struct vchiq_instance *instance,
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
+deleted file mode 100644
+index c1c81f9ab9e6..000000000000
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
++++ /dev/null
+@@ -1,73 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+-/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
+-
+-#include "vchiq_util.h"
+-
+-static inline int is_pow2(int i)
+-{
+-	return i && !(i & (i - 1));
+-}
+-
+-int vchiu_queue_init(struct vchiu_queue *queue, int size)
+-{
+-	WARN_ON(!is_pow2(size));
+-
+-	queue->size = size;
+-	queue->read = 0;
+-	queue->write = 0;
+-	queue->initialized = 1;
+-
+-	init_completion(&queue->pop);
+-	init_completion(&queue->push);
+-
+-	queue->storage = kcalloc(size, sizeof(struct vchiq_header *),
+-				 GFP_KERNEL);
+-	if (!queue->storage) {
+-		vchiu_queue_delete(queue);
+-		return -ENOMEM;
+-	}
+-	return 0;
+-}
+-
+-void vchiu_queue_delete(struct vchiu_queue *queue)
+-{
+-	kfree(queue->storage);
+-}
+-
+-int vchiu_queue_is_empty(struct vchiu_queue *queue)
+-{
+-	return queue->read == queue->write;
+-}
+-
+-void vchiu_queue_push(struct vchiu_queue *queue, struct vchiq_header *header)
+-{
+-	if (!queue->initialized)
+-		return;
+-
+-	while (queue->write == queue->read + queue->size) {
+-		if (wait_for_completion_interruptible(&queue->pop))
+-			flush_signals(current);
+-	}
+-
+-	queue->storage[queue->write & (queue->size - 1)] = header;
+-	queue->write++;
+-
+-	complete(&queue->push);
+-}
+-
+-struct vchiq_header *vchiu_queue_pop(struct vchiu_queue *queue)
+-{
+-	struct vchiq_header *header;
+-
+-	while (queue->write == queue->read) {
+-		if (wait_for_completion_interruptible(&queue->push))
+-			flush_signals(current);
+-	}
+-
+-	header = queue->storage[queue->read & (queue->size - 1)];
+-	queue->read++;
+-
+-	complete(&queue->pop);
+-
+-	return header;
+-}
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.h
+index 1c90a8da1a92..dcf081079c39 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.h
+@@ -24,26 +24,4 @@
+ 
+ #include "vchiq_if.h"
+ 
+-struct vchiu_queue {
+-	int size;
+-	int read;
+-	int write;
+-	int initialized;
+-
+-	struct completion pop;
+-	struct completion push;
+-
+-	struct vchiq_header **storage;
+-};
+-
+-extern int  vchiu_queue_init(struct vchiu_queue *queue, int size);
+-extern void vchiu_queue_delete(struct vchiu_queue *queue);
+-
+-extern int vchiu_queue_is_empty(struct vchiu_queue *queue);
+-
+-extern void vchiu_queue_push(struct vchiu_queue *queue,
+-			     struct vchiq_header *header);
+-
+-extern struct vchiq_header *vchiu_queue_pop(struct vchiu_queue *queue);
+-
+ #endif
 -- 
 2.27.0
 
