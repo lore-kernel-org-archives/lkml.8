@@ -2,364 +2,119 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D892C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13689C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2103720738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16D520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tzOayo1v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nrQC4w3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732476AbgFWLfo (ORCPT
+        id S1732529AbgFWLgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:35:44 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:11505 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732459AbgFWLeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:34:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592912051; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ojMpDcyOcmVyb93+ClmEb0KwpIVbseVdym/zizyhRtA=; b=tzOayo1v5iL3txCg5t1w+hqNGwCIilhQHWvHRf9e1NyHRLOKzpa62eJ0bOcKs4BMofokrXF0
- wKMtcaCHcBCELjjoNS44+TW+UGhka3Qupr5nvS8uUTgN2J4ktD+NR5VKYqhVC0SDK/PoEDNS
- fTJzS1PKU2YaEKLUDvisUrJvP3I=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5ef1e8b2f3deea03f338b80e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 11:34:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 201B8C433CA; Tue, 23 Jun 2020 11:34:10 +0000 (UTC)
-Received: from [192.168.1.102] (unknown [183.83.143.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8258C433C6;
-        Tue, 23 Jun 2020 11:34:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B8258C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-Subject: Re: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
-To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Cc:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <a83e7f0d-4e54-9848-4b58-e1acdbe06735@codeaurora.org>
- <14063C7AD467DE4B82DEDB5C278E866301154BAE9E@FMSMSX108.amr.corp.intel.com>
- <97f2313e-a690-b5ab-567d-6887384debf5@codeaurora.org>
- <14063C7AD467DE4B82DEDB5C278E866301154C1A5E@FMSMSX108.amr.corp.intel.com>
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Message-ID: <16cc8de2-9f91-c64a-2f36-759ceb7cf23d@codeaurora.org>
-Date:   Tue, 23 Jun 2020 17:04:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 23 Jun 2020 07:36:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732443AbgFWLev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:34:51 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D51DC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 04:34:50 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a127so9948045pfa.12
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 04:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PkzrLJ8GQCeqvePUouDtyFlaPA55kJZCSe1ntjETQw4=;
+        b=nrQC4w3A1v0pfWioLgCVpCk7IFobcxPOzAB8rnpV50jIQn7WEYPuG+Ct2b/lsLccAO
+         Y/E+65Y+oCT70dsfdryHawG0zTIt8CImRu2p66n82EbutffVH0/JqEmQzSdepymPXtPV
+         /SiHFMfPcmRr2dtvpUI7eUUK2J2eooXYFcNeAbpCaqwV2ttevXk6fuDzVAKAaUsnYkEg
+         EokKiBopklKMnv9ml+h441QAOmfdnQr/EG5JQPFucdzCilPPY10ZaS6tQJQt0Y+9Ql3q
+         F2eWGmR0rumqwqA22JI+JQngr3Nd8+rzLXW9TS/CcuE3ipWdT5jXxjaC83v2i9DE7KP8
+         KMvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PkzrLJ8GQCeqvePUouDtyFlaPA55kJZCSe1ntjETQw4=;
+        b=r3wW3z+agCmsPqnXWYs89OrWew1gmt5YG98JDeU7OQLzO7NPrgRIlyZATiRQ4nwC96
+         dVY8x3oty+04WnB7NVigs23PAAEdbd1/sJCTS7HLALfxpro5Fr/RFN0dZptYoW96I50/
+         RMNFzXL4srPRDLSoUQFcfErUd+FuqCf91ZHyfzrzzjqA+A+FQjEQl+IdqJ/eXmHisrgX
+         mx0ylnYiXadux7UNbZioVme02a3qenpQrOVFlAXb/teeYbALH4YZ1OP8Qbz3B+1lp542
+         yUMMAwrx56zWXRUv9H53gGnESVgiaSoAenybXWfx6nl3wOW+1AWqqb64BJrtLd7xbLRU
+         vzbQ==
+X-Gm-Message-State: AOAM532b773uzZJFIdDOnVbBvJFcDbZGoe3gZhZcMEaBDyqjuXx3Gobc
+        /AJJ39rH6sRSV6WPnfLJGe7k
+X-Google-Smtp-Source: ABdhPJzoDy3xwrO38WKLoUceaihufyrOPObFSwULxYG51nVgdbmuMFL70euQsI1xMUNsz6xO5O7k5g==
+X-Received: by 2002:a62:7e8d:: with SMTP id z135mr23497708pfc.251.1592912088852;
+        Tue, 23 Jun 2020 04:34:48 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:609d:7d26:e4ff:f0b0:edd6:2484])
+        by smtp.gmail.com with ESMTPSA id m9sm16636166pfo.200.2020.06.23.04.34.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jun 2020 04:34:48 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 17:04:40 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8250-mtp: Drop PM8150 ldo11
+Message-ID: <20200623113440.GB13669@Mani-XPS-13-9360>
+References: <20200622222747.717306-1-bjorn.andersson@linaro.org>
+ <20200622222747.717306-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <14063C7AD467DE4B82DEDB5C278E866301154C1A5E@FMSMSX108.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622222747.717306-2-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Mike for the inputs.
+On Mon, Jun 22, 2020 at 03:27:42PM -0700, Bjorn Andersson wrote:
+> PM8150 ldo11 on the MTP is wired to VDD_SSC_CX and controlled in levels,
+> rather than as a regulator. As such it's available from the rpmhpd as
+> the SM8250_LCX power domain.
+> 
+> Fixes: ec13d5c23a33 ("arm64: dts: qcom: sm8250-mtp: Add pm8150, pm8150l and pm8009")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-On 6/22/2020 5:10 PM, Ruhl, Michael J wrote:
->> -----Original Message-----
->> From: charante=codeaurora.org@mg.codeaurora.org
->> <charante=codeaurora.org@mg.codeaurora.org> On Behalf Of Charan Teja
->> Kalla
->> Sent: Monday, June 22, 2020 5:26 AM
->> To: Ruhl, Michael J <michael.j.ruhl@intel.com>; Sumit Semwal
->> <sumit.semwal@linaro.org>; David.Laight@ACULAB.COM; open list:DMA
->> BUFFER SHARING FRAMEWORK <linux-media@vger.kernel.org>; DRI mailing
->> list <dri-devel@lists.freedesktop.org>
->> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>; LKML <linux-
->> kernel@vger.kernel.org>
->> Subject: Re: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
->>
->> Hello Mike,
->>
->> On 6/19/2020 7:11 PM, Ruhl, Michael J wrote:
->>>> -----Original Message-----
->>>> From: charante=codeaurora.org@mg.codeaurora.org
->>>> <charante=codeaurora.org@mg.codeaurora.org> On Behalf Of Charan
->> Teja
->>>> Kalla
->>>> Sent: Friday, June 19, 2020 7:57 AM
->>>> To: Sumit Semwal <sumit.semwal@linaro.org>; Ruhl, Michael J
->>>> <michael.j.ruhl@intel.com>; David.Laight@ACULAB.COM; open list:DMA
->>>> BUFFER SHARING FRAMEWORK <linux-media@vger.kernel.org>; DRI
->> mailing
->>>> list <dri-devel@lists.freedesktop.org>
->>>> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>; LKML <linux-
->>>> kernel@vger.kernel.org>
->>>> Subject: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
->>>>
->>>> There exists a sleep-while-atomic bug while accessing the dmabuf->name
->>>> under mutex in the dmabuffs_dname(). This is caused from the SELinux
->>>> permissions checks on a process where it tries to validate the inherited
->>>> files from fork() by traversing them through iterate_fd() (which
->>>> traverse files under spin_lock) and call
->>>> match_file(security/selinux/hooks.c) where the permission checks
->> happen.
->>>> This audit information is logged using dump_common_audit_data() where
->> it
->>>> calls d_path() to get the file path name. If the file check happen on
->>>> the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex to
->>>> access dmabuf->name. The flow will be like below:
->>>> flush_unauthorized_files()
->>>>  iterate_fd()
->>>>    spin_lock() --> Start of the atomic section.
->>>>      match_file()
->>>>        file_has_perm()
->>>>          avc_has_perm()
->>>>            avc_audit()
->>>>              slow_avc_audit()
->>>> 	        common_lsm_audit()
->>>> 		  dump_common_audit_data()
->>>> 		    audit_log_d_path()
->>>> 		      d_path()
->>>>                        dmabuffs_dname()
->>>>                          mutex_lock()--> Sleep while atomic.
->>>>
->>>> Call trace captured (on 4.19 kernels) is below:
->>>> ___might_sleep+0x204/0x208
->>>> __might_sleep+0x50/0x88
->>>> __mutex_lock_common+0x5c/0x1068
->>>> __mutex_lock_common+0x5c/0x1068
->>>> mutex_lock_nested+0x40/0x50
->>>> dmabuffs_dname+0xa0/0x170
->>>> d_path+0x84/0x290
->>>> audit_log_d_path+0x74/0x130
->>>> common_lsm_audit+0x334/0x6e8
->>>> slow_avc_audit+0xb8/0xf8
->>>> avc_has_perm+0x154/0x218
->>>> file_has_perm+0x70/0x180
->>>> match_file+0x60/0x78
->>>> iterate_fd+0x128/0x168
->>>> selinux_bprm_committing_creds+0x178/0x248
->>>> security_bprm_committing_creds+0x30/0x48
->>>> install_exec_creds+0x1c/0x68
->>>> load_elf_binary+0x3a4/0x14e0
->>>> search_binary_handler+0xb0/0x1e0
->>>>
->>>> So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
->>>>
->>>> Cc: <stable@vger.kernel.org> [5.3+]
->>>> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
->>>> ---
->>>>
->>>> Changes in V2: Addressed review comments from Ruhl, Michael J
->>>>
->>>> Changes in V1: https://lore.kernel.org/patchwork/patch/1255055/
->>>>
->>>> drivers/dma-buf/dma-buf.c | 11 +++++++----
->>>> include/linux/dma-buf.h   |  1 +
->>>> 2 files changed, 8 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
->>>> index 01ce125..d81d298 100644
->>>> --- a/drivers/dma-buf/dma-buf.c
->>>> +++ b/drivers/dma-buf/dma-buf.c
->>>> @@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry
->> *dentry,
->>>> char *buffer, int buflen)
->>>> 	size_t ret = 0;
->>>>
->>>> 	dmabuf = dentry->d_fsdata;
->>>> -	dma_resv_lock(dmabuf->resv, NULL);
->>>> +	spin_lock(&dmabuf->name_lock);
->>>> 	if (dmabuf->name)
->>>> 		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
->>>> -	dma_resv_unlock(dmabuf->resv);
->>>> +	spin_unlock(&dmabuf->name_lock);
->>>>
->>>> 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
->>>> 			     dentry->d_name.name, ret > 0 ? name : "");
->>>> @@ -341,8 +341,10 @@ static long dma_buf_set_name(struct dma_buf
->>>> *dmabuf, const char __user *buf)
->>>> 		kfree(name);
->>>> 		goto out_unlock;
->>>> 	}
->>>> +	spin_lock(&dmabuf->name_lock);
->>>> 	kfree(dmabuf->name);
->>>> 	dmabuf->name = name;
->>>> +	spin_unlock(&dmabuf->name_lock);
->>>
->>> While this code path is ok, I would have separated the protection of the
->>> attachment list and the name manipulation.
->>>
->>> dma_resv_lock(resv)
->>> if (!list_empty(attachment)
->>> 	ret = -EBUSY
->>> dma_resv_unlock(resv)
->>>
->>> if (ret) {
->>> 	kfree(name)
->>> 	return ret;
->>> }
->>
->> Is it that the name should be visible before importer attaches to the
->> dmabuf,(using dma_buf_attach()), thus _buf_set_name() is under the
->> _resv_lock() as well?
-> 
-> That is the name that was being freed in the error path of the lock block.
-> Alternatively:
-> 
-> dma_resv_lock(resv)
-> if (!list_empty(attachment) {
->  	ret = -EBUSY
-> 	kfree(name)
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-We can free this buffer even outside of the lock with out any issues.
-This is just a user passed name copied into local buffer yet to assign
-to dmabuf->name.
+Thanks,
+Mani
 
-> }
-> dma_resv_unlock(resv)
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 7 -------
+>  1 file changed, 7 deletions(-)
 > 
-> if (ret)
->  	return ret;
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> index 2fc9e7ff0060..63d259931c4d 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> @@ -140,13 +140,6 @@ vreg_l10a_1p8: ldo10 {
+>  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  
+> -		vreg_l11a_0p75: ldo11 {
+> -			regulator-name = "vreg_l11a_0p75";
+> -			regulator-min-microvolt = <800000>;
+> -			regulator-max-microvolt = <800000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> -		};
+> -
+>  		vreg_l12a_1p8: ldo12 {
+>  			regulator-name = "vreg_l12a_1p8";
+>  			regulator-min-microvolt = <1800000>;
+> -- 
+> 2.26.2
 > 
-> I was limiting what was happening in the lock block.
-> 
-> You have two distinct locks, that protect two distinct items:
-> 
-> dmabuf->attachment
-> dmabuf->name
-> 
-> Nesting the locking is ok, but if the code ever changes
-> you can get that nesting wrong, so:
-
-Your suggestion below looks clean, but what I am still not sure is that
-is there any condition like "there should be no attachments to the
-exported dmabuf before assigning the name" -- If yes, then _resv_lock
-and name_lock should be nested while assigning the name which otherwise
-breaks under below scenario:
-
-P1					P2
-
-buf_set_name() called and
-no attachments to this dmabuf
-yet.
-				attaches to the exported dmabuf by P1.
-
-				Say it tries to get the name with the
-				assumption that name is already set.
-Now it tries to
-change the name under
-just name_lock
-
-In the above case P2 didn't get any name of the exported dmabuf despite
-name is set.
-
-
-If not, then I can give V3 with the suggested changes..			
-
-> 
-> 	long ret = 0;
-> 
-> 	if (IS_ERR(name))
-> 		return PTR_ERR(name);
-> 
-> 	dma_resv_lock(dmabuf->resv, NULL);
-> 	if (!list_empty(&dmabuf->attachments)) {
-> 		ret = -EBUSY;
-> 		kfree(name);
-> 	}
-> 	dma_resv_unlock(dmabuf->resv);
-> 	if (ret)
-> 		return ret;
-> 
-> 	spinlock(dmabuf->name_lock)
-> 	kfree(dmabuf->name);
-> 	dmabuf->name = name;
-> 	spinunlock(dmabuf->name_lock)
-> 
-> 	return 0;
-> }
-> 
-> M
-> 
->>
->>>
->>> spinlock(nam_lock)
->>> ...
->>>
->>> Nesting locks  that don't need to be nested always makes me nervous
->>> for future use that misses the lock/unlock pattern.
->>>
->>> However, this looks reasonable.
->>>
->>> With this current code, or if you update to the above pattern:
->>>
->>> Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
->>
->> Thanks for the ACK.
->>>
->>> Mike
->>>
->>>
->>>> out_unlock:
->>>> 	dma_resv_unlock(dmabuf->resv);
->>>> @@ -405,10 +407,10 @@ static void dma_buf_show_fdinfo(struct seq_file
->>>> *m, struct file *file)
->>>> 	/* Don't count the temporary reference taken inside procfs seq_show
->>>> */
->>>> 	seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
->>>> 	seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
->>>> -	dma_resv_lock(dmabuf->resv, NULL);
->>>> +	spin_lock(&dmabuf->name_lock);
->>>> 	if (dmabuf->name)
->>>> 		seq_printf(m, "name:\t%s\n", dmabuf->name);
->>>> -	dma_resv_unlock(dmabuf->resv);
->>>> +	spin_unlock(&dmabuf->name_lock);
->>>> }
->>>>
->>>> static const struct file_operations dma_buf_fops = {
->>>> @@ -546,6 +548,7 @@ struct dma_buf *dma_buf_export(const struct
->>>> dma_buf_export_info *exp_info)
->>>> 	dmabuf->size = exp_info->size;
->>>> 	dmabuf->exp_name = exp_info->exp_name;
->>>> 	dmabuf->owner = exp_info->owner;
->>>> +	spin_lock_init(&dmabuf->name_lock);
->>>> 	init_waitqueue_head(&dmabuf->poll);
->>>> 	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
->>>> 	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
->>>> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
->>>> index ab0c156..93108fd 100644
->>>> --- a/include/linux/dma-buf.h
->>>> +++ b/include/linux/dma-buf.h
->>>> @@ -311,6 +311,7 @@ struct dma_buf {
->>>> 	void *vmap_ptr;
->>>> 	const char *exp_name;
->>>> 	const char *name;
->>>> +	spinlock_t name_lock;
->>>> 	struct module *owner;
->>>> 	struct list_head list_node;
->>>> 	void *priv;
->>>> --
->>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->>>> Forum, a Linux Foundation Collaborative Project
->>
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->> Forum, a Linux Foundation Collaborative Project
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation Collaborative Project
