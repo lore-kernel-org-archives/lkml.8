@@ -2,182 +2,196 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AE5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB44D20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946401;
-	bh=VIgcKFJfZUxNL2vbTVk81GcTZ32sCX90KI6LnC7d7OA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eURHUJP0bLrj06xJId4QAm2tASEweJD0MdTeNOBygT5XGBU4OtESlNtCIOMb2o4f/
-	 vrsVHd/wI8et1vJXwl4S0MpVBmRrn26gNrw7Ar9QjVURUpWarmvEGijGlsYbaXjGva
-	 HK7MP0luIWe2Eyz6QaKVdN4W5YEWNCYFZ5rnQ30w=
+	by mail.kernel.org (Postfix) with ESMTP id 31CB120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:06:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j78DWRbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391721AbgFWVGk (ORCPT
+        id S2393214AbgFWVGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 23 Jun 2020 17:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390515AbgFWVGk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 17:06:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391191AbgFWUfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:35:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0CD92080C;
-        Tue, 23 Jun 2020 20:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944548;
-        bh=VIgcKFJfZUxNL2vbTVk81GcTZ32sCX90KI6LnC7d7OA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4nqnCQqZ1SWxWQm+5PTDOSte70qnAIrBkJ9f3udYTqdZhJp8xFM7XNDcZCPJ/lyN
-         WThSbR4KH+BSJsStsurzGbNJw69mnJlDgwoWo0DxMF9YKCWXPnJf4wOl6sL3vCQqjO
-         sYJhDc241OU8M48nWLCKpOIftaELAC5gZRjNQin4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 008/206] backlight: lp855x: Ensure regulators are disabled on probe failure
-Date:   Tue, 23 Jun 2020 21:55:36 +0200
-Message-Id: <20200623195317.350184050@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 809F2C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:06:40 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id q17so3481767pfu.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZBL2aRcchnq3anZZCmM/n3YdrJxQ1yPcC64pjaJoEnQ=;
+        b=j78DWRbTC/yWle9y06TBfnGl82zH2z/FQhgsLF1sXV2iIZzR7abFb6067YGEgre2UJ
+         Fba921ZmQN/ZNbV1/1hATIvk6Ge9XhEKu43z3J44AJsIsMH9tfsCDMYWF7qlXlNADA8a
+         52MSYeNt6i+ongIcgGx4MqoEnibhEDCwUkg3o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZBL2aRcchnq3anZZCmM/n3YdrJxQ1yPcC64pjaJoEnQ=;
+        b=hf1h1RCLyPwnNlY5Dir0D++ysPjSAevArXjMN+jJfAaynDrO31Hj1KATeY6OxUmVkb
+         HeEnTwTmhkrl3xl8XG6fkDodSWNsjY86iGwv8hZDmRaHn6CHeuzNLDbPMqFO1rH/GQOe
+         oamKQDePqTVB2jLqf5kslSyiuAowILhq2Mvkt1Q7coQADtm1pZIb6cmgeYasYWxcFBY/
+         R9UFr977/kZj8yqDKaV/BgSVFgrKld3COHvOqNQHpW2g/+0FwUlvM1+SVkxh/q7v7iGP
+         ZsuAWtnokbfqxBMWoga8hDRxfgzqO3A13SJ8CuoV/zjTlRhN8p1yxahq5CX01WcNWbKU
+         GNIw==
+X-Gm-Message-State: AOAM533Iu+/JqkQFiCxGJbatsOecVLc+ni+070/njj44azq0HEGtSIYE
+        8uakrVZTUW/g+X8d6F8Qjvw9Dg==
+X-Google-Smtp-Source: ABdhPJx3Vnft3VkW+IN3ZfC4PaZbxkxZHWmBGNutKlw1+vohd+J2dRi8SVvFwd+LojipRVgS91GF3g==
+X-Received: by 2002:a63:9347:: with SMTP id w7mr18414729pgm.409.1592946399794;
+        Tue, 23 Jun 2020 14:06:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g17sm3167286pju.11.2020.06.23.14.06.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 14:06:39 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 14:06:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] arm64/build: Warn on orphan section placement
+Message-ID: <202006231208.F3DA600E18@keescook>
+References: <20200622205815.2988115-1-keescook@chromium.org>
+ <20200622205815.2988115-3-keescook@chromium.org>
+ <20200623145218.GC4336@willie-the-truck>
+ <CAMj1kXEPe10EY1uE1vberVMXv9sx4ZRHgmssOypYm5ya5G9KoA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXEPe10EY1uE1vberVMXv9sx4ZRHgmssOypYm5ya5G9KoA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+On Tue, Jun 23, 2020 at 04:59:39PM +0200, Ard Biesheuvel wrote:
+> On Tue, 23 Jun 2020 at 16:52, Will Deacon <will@kernel.org> wrote:
+> >
+> > On Mon, Jun 22, 2020 at 01:58:15PM -0700, Kees Cook wrote:
+> > > We don't want to depend on the linker's orphan section placement
+> > > heuristics as these can vary between linkers, and may change between
+> > > versions. All sections need to be explicitly named in the linker
+> > > script.
+> > >
+> > > Explicitly include debug sections when they're present. Add .eh_frame*
+> > > to discard as it seems that these are still generated even though
+> > > -fno-asynchronous-unwind-tables is being specified. Add .plt and
+> > > .data.rel.ro to discards as they are not actually used. Add .got.plt
+> > > to the image as it does appear to be mapped near .data. Finally enable
+> > > orphan section warnings.
+> >
+> > Can you elaborate a bit on what .got.plt is being used for, please? I
+> > wonder if there's an interaction with an erratum workaround in the linker
+> > or something.
+> >
+> 
+> .got.plt is not used at all, but it has three magic entries at the
+> start that the dynamic linker uses for lazy dispatch, so it turns up
+> as a non-empty section of 0x18 bytes.
 
-[ Upstream commit d8207c155a7c6015eb7f43739baa7dfb1fa638af ]
+Is there a way to suppress the generation? I haven't found a way, so I'd
+left it as-is.
 
-If probing the LP885x backlight fails after the regulators have been
-enabled, then the following warning is seen when releasing the
-regulators ...
+> We should be able to discard it afaict, but given that it does not
+> actually take up any space, it doesn't really matter either way.
 
- WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
- Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
- CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
- Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+I will add it to the discards then.
 
- ...
+> > > diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> > > index a0d94d063fa8..3e628983445a 100644
+> > > --- a/arch/arm64/Makefile
+> > > +++ b/arch/arm64/Makefile
+> > > @@ -29,6 +29,10 @@ LDFLAGS_vmlinux    += --fix-cortex-a53-843419
+> > >    endif
+> > >  endif
+> > >
+> > > +# We never want expected sections to be placed heuristically by the
+> > > +# linker. All sections should be explicitly named in the linker script.
+> > > +LDFLAGS_vmlinux += --orphan-handling=warn
+> > > +
+> > >  ifeq ($(CONFIG_ARM64_USE_LSE_ATOMICS), y)
+> > >    ifneq ($(CONFIG_ARM64_LSE_ATOMICS), y)
+> > >  $(warning LSE atomics not supported by binutils)
+> > > diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+> > > index 5427f502c3a6..c9ecb3b2007d 100644
+> > > --- a/arch/arm64/kernel/vmlinux.lds.S
+> > > +++ b/arch/arm64/kernel/vmlinux.lds.S
+> > > @@ -94,7 +94,8 @@ SECTIONS
+> > >       /DISCARD/ : {
+> > >               *(.interp .dynamic)
+> > >               *(.dynsym .dynstr .hash .gnu.hash)
+> > > -             *(.eh_frame)
+> > > +             *(.plt) *(.data.rel.ro)
+> > > +             *(.eh_frame) *(.init.eh_frame)
+> >
+> > Do we need to include .eh_frame_hdr here too?
+> 
+> It would be better to build with -fno-unwind-tables, in which case
+> these sections should not even exist.
 
- Call trace:
-  _regulator_put.part.28+0x158/0x160
-  regulator_put+0x34/0x50
-  devm_regulator_release+0x10/0x18
-  release_nodes+0x12c/0x230
-  devres_release_all+0x34/0x50
-  really_probe+0x1c0/0x370
-  driver_probe_device+0x58/0x100
-  device_driver_attach+0x6c/0x78
-  __driver_attach+0xb0/0xf0
-  bus_for_each_dev+0x68/0xc8
-  driver_attach+0x20/0x28
-  bus_add_driver+0x160/0x1f0
-  driver_register+0x60/0x110
-  i2c_register_driver+0x40/0x80
-  lp855x_driver_init+0x20/0x1000 [lp855x_bl]
-  do_one_initcall+0x58/0x1a0
-  do_init_module+0x54/0x1d0
-  load_module+0x1d80/0x21c8
-  __do_sys_finit_module+0xe8/0x100
-  __arm64_sys_finit_module+0x18/0x20
-  el0_svc_common.constprop.3+0xb0/0x168
-  do_el0_svc+0x20/0x98
-  el0_sync_handler+0xf4/0x1b0
-  el0_sync+0x140/0x180
+Nothing seems to help with the .eh_frame issue
+(even with -fno-asynchronous-unwind-tables and -fno-unwind-tables):
 
-Fix this by ensuring that the regulators are disabled, if enabled, on
-probe failure.
+$ aarch64-linux-gnu-gcc -Wp,-MMD,arch/arm64/kernel/.smccc-call.o.d \
+  -nostdinc -isystem /usr/lib/gcc-cross/aarch64-linux-gnu/9/include \
+  -I./arch/arm64/include -I./arch/arm64/include/generated  -I./include \
+  -I./arch/arm64/include/uapi -I./arch/arm64/include/generated/uapi \
+  -I./include/uapi -I./include/generated/uapi -include \
+  ./include/linux/kconfig.h -D__KERNEL__ -mlittle-endian \
+  -DCC_USING_PATCHABLE_FUNCTION_ENTRY -DKASAN_SHADOW_SCALE_SHIFT=3 \
+  -D__ASSEMBLY__ -fno-PIE -mabi=lp64 -fno-asynchronous-unwind-tables \
+  -fno-unwind-tables -DKASAN_SHADOW_SCALE_SHIFT=3 -Wa,-gdwarf-2 -c -o \
+  arch/arm64/kernel/smccc-call.o arch/arm64/kernel/smccc-call.S
 
-Finally, ensure that the vddio regulator is disabled in the driver
-remove handler.
+$ readelf -S arch/arm64/kernel/smccc-call.o | grep eh_frame
+  [17] .eh_frame         PROGBITS         0000000000000000  000001f0
+  [18] .rela.eh_frame    RELA             0000000000000000  00000618
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/video/backlight/lp855x_bl.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+> > >       }
+> > >
+> > >       . = KIMAGE_VADDR + TEXT_OFFSET;
+> > > @@ -209,6 +210,7 @@ SECTIONS
+> > >       _data = .;
+> > >       _sdata = .;
+> > >       RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_ALIGN)
+> > > +     .got.plt : ALIGN(8) { *(.got.plt) }
+> > >
+> > >       /*
+> > >        * Data written with the MMU off but read with the MMU on requires
+> > > @@ -244,6 +246,7 @@ SECTIONS
+> > >       _end = .;
+> > >
+> > >       STABS_DEBUG
+> > > +     DWARF_DEBUG
+> >
+> > I know you didn't add it, but do we _really_ care about stabs debug? Who
+> > generates that for arm64?
 
-diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
-index 73612485ed07e..bd43d8cff389c 100644
---- a/drivers/video/backlight/lp855x_bl.c
-+++ b/drivers/video/backlight/lp855x_bl.c
-@@ -460,7 +460,7 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 		ret = regulator_enable(lp->enable);
- 		if (ret < 0) {
- 			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
--			return ret;
-+			goto disable_supply;
- 		}
- 
- 		/*
-@@ -475,24 +475,34 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 	ret = lp855x_configure(lp);
- 	if (ret) {
- 		dev_err(lp->dev, "device config err: %d", ret);
--		return ret;
-+		goto disable_vddio;
- 	}
- 
- 	ret = lp855x_backlight_register(lp);
- 	if (ret) {
- 		dev_err(lp->dev,
- 			"failed to register backlight. err: %d\n", ret);
--		return ret;
-+		goto disable_vddio;
- 	}
- 
- 	ret = sysfs_create_group(&lp->dev->kobj, &lp855x_attr_group);
- 	if (ret) {
- 		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
--		return ret;
-+		goto disable_vddio;
- 	}
- 
- 	backlight_update_status(lp->bl);
-+
- 	return 0;
-+
-+disable_vddio:
-+	if (lp->enable)
-+		regulator_disable(lp->enable);
-+disable_supply:
-+	if (lp->supply)
-+		regulator_disable(lp->supply);
-+
-+	return ret;
- }
- 
- static int lp855x_remove(struct i2c_client *cl)
-@@ -501,6 +511,8 @@ static int lp855x_remove(struct i2c_client *cl)
- 
- 	lp->bl->props.brightness = 0;
- 	backlight_update_status(lp->bl);
-+	if (lp->enable)
-+		regulator_disable(lp->enable);
- 	if (lp->supply)
- 		regulator_disable(lp->supply);
- 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
+It's also where .comment and the .symtab ends up living. As a result,
+I think it's correct to keep it. (If we wanted to split .stabs from
+.comment/.symtab, we could do that, but I'd kind of like to avoid it for
+this series, as it feels kind of unrelated.)
+
 -- 
-2.25.1
-
-
-
+Kees Cook
