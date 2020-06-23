@@ -2,231 +2,98 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E77C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACDE20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hVTKgZRY"
+	by mail.kernel.org (Postfix) with ESMTP id 40714207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592909784;
+	bh=GcdPSTmUcdlbjUfE2Yq4Ao5q+WO+t3w2mG4xYnD4PRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lYrQl+bF1LEhWJkiE+fL8CrY0WQNgwP79fFUE4XrhQthe+uBMqUtPByIdIOS9pP16
+	 zFV11bslS4m2w0vOktiwrhlhg/ggFmD7075NMJjIpROQshANMLPqaNa63PbCHFNJMZ
+	 kFVm12Mkc7p0Fz03hfUV8dgVM71yc1iL0+OIyjVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732400AbgFWKwJ (ORCPT
+        id S1732302AbgFWK4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732375AbgFWKwJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:52:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5060C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:52:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h5so20036879wrc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dBzPbPycPoCqD0jxPC/ZRazkaIKgNXR6qz1TtThkFUU=;
-        b=hVTKgZRYdrZf8D1hqAyqe0LNbpXqLr2qkyQuORdV5ZQF1n8hpcd2PdufDsxy2KZshW
-         f3xFNx1WZb2U5LWD+NgGoZ7RarxK1BfT88GLA/1YuWUZ3l3UTlZO4jGaPBsRqOjOc9R4
-         Gz86QuEbWGVO12QL7IcTOXHrAyOjMblCv6w1ADGv4nXP3YZwJVoeFu+dLUbQWZF5KzWn
-         e8ajLS9iSB76QXQOfuZlpGZROIkNwTDFhhRsOc/OKvkydOic3Oo/md3dFvCPS5eX6T7Z
-         4XuA5j6ku24jRQSOB5wf2TI8xKo1W911B7qq2Y4IPNu7Br70etSZO121Jms9Lll2HL0K
-         srEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dBzPbPycPoCqD0jxPC/ZRazkaIKgNXR6qz1TtThkFUU=;
-        b=SsmsbrrjjKMSbvOpku8RbOPjw/AACdS4ku9FBm0Ihuvq+Gr2+f5i7yhNu+Dzitecq1
-         pHP+bk/B/xTpZFHWicjCjeM5pD6Es0+NtCOgK79ysx7sHr36q5acbA/PZBynuAgFj3DD
-         nFRdS4ZDGkh0RL902uNLtJM042tV3dfkXOdUWQF12fvQmVX6cpc/DZa52765I+4nbiLj
-         +kWSWOX1bQ+F1v27D5nMIz8mB6SRrcl9wSkYEN89AKb7L3l5TTZBvBt/8mfI19RNXxs8
-         RzEO/Jq2Tr4o0BLQ625qPOrirZ/2bTAtNJwUgLyrLFX+QIhDSzU3fXdbbuxxuYb7N9OQ
-         9+AA==
-X-Gm-Message-State: AOAM530EjKCXRsQOyaEyjUU66Y4hb3o1owgXd91uB5dugNaw22e/DdD7
-        U0JefWfH/Xm+wIf1L2hr8x4LUQ==
-X-Google-Smtp-Source: ABdhPJxLAPHsxecFBVI1/3n+UdvZKrmvDn4Mcf8d7zg0Xtlmk9Z6ZJ4YUJm4LoASAqM0Kz5pD+MAXA==
-X-Received: by 2002:adf:dc42:: with SMTP id m2mr26010430wrj.342.1592909527428;
-        Tue, 23 Jun 2020 03:52:07 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id c66sm3471923wma.20.2020.06.23.03.52.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 03:52:06 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 11:52:04 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/7] tty: serial: Add poll_get_irq() to the polling
- interface
-Message-ID: <20200623105204.mj4eax7wq7om4jka@holly.lan>
-References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
- <1592835984-28613-3-git-send-email-sumit.garg@linaro.org>
- <20200622155624.he2vs2r3e5yzf3sl@holly.lan>
- <CAFA6WYPEbLVRSHC0QFcWusUrakmxuEjBMYJQb41htbALeTQRPg@mail.gmail.com>
+        Tue, 23 Jun 2020 06:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732205AbgFWK4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 06:56:21 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C3920738;
+        Tue, 23 Jun 2020 10:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592909781;
+        bh=GcdPSTmUcdlbjUfE2Yq4Ao5q+WO+t3w2mG4xYnD4PRg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xrLsXbjnLLak6sPIRkEdh3NPbEtXbhTVMJRlRcBWJjteeNgxv7l5thVYSTBTolaXf
+         mgIuqRb9QPC3FjxhZrwCaXVTCREVzvp5tQz2L1ZbzR3Jbp2bC3nu9o8jNIQrrKSWMN
+         gMuAIu9OxvxvgH6si1jVCJVnFQGGYxIQghXUK/QI=
+Date:   Tue, 23 Jun 2020 11:56:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V8 5/8] spi: spi-geni-qcom: Combine the clock setting code
+Message-ID: <20200623105618.GB5582@sirena.org.uk>
+References: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
+ <1592908737-7068-6-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
 Content-Disposition: inline
-In-Reply-To: <CAFA6WYPEbLVRSHC0QFcWusUrakmxuEjBMYJQb41htbALeTQRPg@mail.gmail.com>
+In-Reply-To: <1592908737-7068-6-git-send-email-akashast@codeaurora.org>
+X-Cookie: No motorized vehicles allowed.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 01:18:25PM +0530, Sumit Garg wrote:
-> On Mon, 22 Jun 2020 at 21:26, Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Mon, Jun 22, 2020 at 07:56:19PM +0530, Sumit Garg wrote:
-> > > From: Daniel Thompson <daniel.thompson@linaro.org>
-> >
-> > Sumit, to some extent this mail is me yelling at myself two years ago
-> > although, in my defence, at the time I choose not to post it because I
-> > knew it wasn't right.
-> >
-> > I'm a bit concerned to see the TODO: comment critiquing this interface
-> > being removed (from patch 3) without this patch being changed to
-> > address that comment.
-> >
-> 
-> I did consider that comment but I couldn't think of a normal scenario
-> where request_irq() should fail. And in case it fails as well, I did
-> put in "WARN_ON(res);" so that the user is notified of that particular
-> error scenario.
-> 
-> >
-> > > Add new API: poll_get_irq() to the polling interface in order for user
-> > > of polling interface to retrieve allocated IRQ corresponding to
-> > > underlying serial device.
-> > >
-> > > Although, serial interface still works in polling mode but interrupt
-> > > associated with serial device can be leveraged for special purposes like
-> > > debugger(kgdb) entry.
-> > >
-> > > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > ---
-> > >  drivers/tty/serial/serial_core.c | 18 ++++++++++++++++++
-> > >  include/linux/serial_core.h      |  1 +
-> > >  include/linux/tty_driver.h       |  1 +
-> > >  3 files changed, 20 insertions(+)
-> > >
-> > > diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> > > index 66a5e2f..1bb033c 100644
-> > > --- a/drivers/tty/serial/serial_core.c
-> > > +++ b/drivers/tty/serial/serial_core.c
-> > > @@ -2470,6 +2470,23 @@ static void uart_poll_put_char(struct tty_driver *driver, int line, char ch)
-> > >       port->ops->poll_put_char(port, ch);
-> > >       uart_port_deref(port);
-> > >  }
-> > > +
-> > > +static int uart_poll_get_irq(struct tty_driver *driver, int line)
-> > > +{
-> > > +     struct uart_driver *drv = driver->driver_state;
-> > > +     struct uart_state *state = drv->state + line;
-> > > +     struct uart_port *port;
-> > > +     int ret = -ENODEV;
-> > > +
-> > > +     port = uart_port_ref(state);
-> > > +     if (port && port->ops->poll_get_irq) {
-> > > +             ret = port->ops->poll_get_irq(port);
-> > > +             uart_port_deref(port);
-> > > +     }
-> > > +
-> > > +     return ret;
-> > > +}
-> > > +
-> > >  #endif
-> > >
-> > >  static const struct tty_operations uart_ops = {
-> > > @@ -2505,6 +2522,7 @@ static const struct tty_operations uart_ops = {
-> > >       .poll_init      = uart_poll_init,
-> > >       .poll_get_char  = uart_poll_get_char,
-> > >       .poll_put_char  = uart_poll_put_char,
-> > > +     .poll_get_irq   = uart_poll_get_irq,
-> >
-> > The TODO comments claimed this API was bogus because it doesn't permit
-> > a free and that can cause interoperation problems with the real serial
-> > driver. I'll cover some of that in a reply to patch 3 but for now.
-> >
-> > Anyhow, for this patch, what are the expected semantics for
-> > uart_poll_get_irq().
-> 
-> Currently, the expected use for this API is to enable uart RX
-> interrupts and return corresponding IRQ id.
-> 
-> Although, we can make this interface modular as follows:
-> 
-> .poll_get_irq
-> .poll_enable_rx_int
-> .poll_disable_rx_int
-> 
-> Your views?
 
-A direct reply is to ask what the purpose of poll_enable_rx_int()
-is? It appears to be making something modular without any reason to do
-so.
+--4bRzO86E/ozDv8r1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-More generally lets ask some more questions:
+On Tue, Jun 23, 2020 at 04:08:54PM +0530, Akash Asthana wrote:
+> From: Douglas Anderson <dianders@chromium.org>
+>=20
+> There is code for adjusting the clock both in setup_fifo_params()
+> (called from prepare_message()) and in setup_fifo_xfer() (called from
+> transfer_one()).  The code is the same.  Abstract it out to a shared
+> function.
 
-1. What serial hardware and/or driver state change happens when we call
-   poll_get_irq()
+Acked-by: Mark Brown <broonie@kernel.org>
 
-2. After a call to poll_get_irq() are there any new restrictions on
-   the underlying serial driver?
+--4bRzO86E/ozDv8r1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-3. Does implementing poll_get_irq() create an implied change of
-   contract to any other polling function (I think yes, because
-   poll_read_char() will now have to acknowledge an interrupt if
-   the interrupt flags are edge triggered)?
+-----BEGIN PGP SIGNATURE-----
 
-4. To what extent, if any, do we have to support disconnection of
-   kgdb_nmi?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7x39EACgkQJNaLcl1U
+h9AHegf9GdXSnZ+4rXpEBgq/XNwTZFM8JsHNOn3DtEe+NzYdU5bX+U8TOu6QfI9E
+gaa4dw8m0NgBrMbnh2lrij4efQFe6DfVlNqP6fUJ8eEtIN7g4hMoDWLyxms3v4Ra
+hILk8cOv1Vu3FURcHfrsEDyhMzHCVS6hI1Gr/ENgI5gqfvobLoOIKx88xJZI5Ixi
+TXqbrYXH0TB+/4KOFxEB33+OWX01M2+Qc9vvoP9E5Phu0LOczxwWE/CjEHokTpbH
+Q3ctSTqc5/O/ZlT5dn6EE4VJG0WeKv9VrJQ0fTxye4tJzZEK0sNYzsfWdWWdn19V
+PC1qSpXSenBMCj/dmSxo0Jcp8lR7XA==
+=boUF
+-----END PGP SIGNATURE-----
 
-5. Is the API matched with how it will be used by the layers above?
-   (top level uses a request_irq approach, low level is using a
-   let me have the irq number approach)
-
-An interesting idea to explore is using a different verb for
-poll_get_irq(). Perhaps poll_borrow_irq()? It is now much clearer that
-we are stealing the IRQ and making it unusable by the underlying serial
-driver.
-
-
-> > In particular how do they ensure correct interlocking with the real
-> > serial driver underlying it (if kgdb_nmi is active on a serial port
-> > then the underlying driver better not be active at the same time).
-> >
-> 
-> AFAIU kgdb_nmi feature, it registers a new tty driver (ttyNMI0) which
-> is expected to work alongside underlying tty driver (eg. ttyAMA0 with
-> amba-pl011). So ttyAMA0 will only become active if user-space tries to
-> interact with /dev/ttyAMA0 like:
-> 
-> # echo "Hello World!" > /dev/ttyAMA0
-> 
-> So I would like to understand the downsides of having both of them
-> active at the same time using shared IRQ (although that won't be
-> possible with NMI as that doesn't support shared mode)?
-
-It is likely that one of the interrupt handlers will become unreachable
-since the first handler to execute will clear the interrupt flags. This
-will result in anything waiting for the broken driver getting stuck and
-not reporting an error code.
-
-That isn't acceptable.
-
-
-Daniel.
+--4bRzO86E/ozDv8r1--
