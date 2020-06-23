@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1593CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF5E720774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D0B20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933741;
-	bh=bPSC0VLNGxBmVNxo7KLFiEt74Q+P9vCaQXvNwq2eCQA=;
+	s=default; t=1592933744;
+	bh=boPdYnru8phemdGqCpuKpNL84NgVCqhwYi4yrMm6mGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sPY+NJleEYolwdQ7Uuuwn6AX5bVxoNXrqHL8jC98VVTq7CVBLSQogXQ7NQ04NTJyU
-	 Vlb2Szs3ugFCCgiM4/5Er/scvdbil4wD0fWOhJYxffeZEsmNXbf2RgBbl3HNR7kCsr
-	 kiMaYN+eQN9BdDy8BEZgRWcz03QCTYEs41b9BncE=
+	b=m/fuPZAdmCX6KmBYOJchuhd0xbDks5cB/f1kwIr2bXOxfUrXcaBatf0tHVzxFQfE9
+	 6AAA7/xJL2WLyG/XxZio4uChouEvDryF71uvsM87tBwbuZqY1AGotQLN0NugT3YwOm
+	 gpiRy/HoTlen4HvBmk7Ntitcu1uT8lQ/QLe50Kw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733257AbgFWRfl (ORCPT
+        id S1733268AbgFWRfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60194 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:35:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733209AbgFWRff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:35 -0400
+        id S1733241AbgFWRfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C2C20706;
-        Tue, 23 Jun 2020 17:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A324D20774;
+        Tue, 23 Jun 2020 17:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933735;
-        bh=bPSC0VLNGxBmVNxo7KLFiEt74Q+P9vCaQXvNwq2eCQA=;
+        s=default; t=1592933738;
+        bh=boPdYnru8phemdGqCpuKpNL84NgVCqhwYi4yrMm6mGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlXOnHS7GQ1azK9gXwTlx7PN9K5XMXH3DXIyz9eERuEtDM48K40ck+hzwrMd6P705
-         gN1EPqcgHAFEIIbanNvCxSRRj/GfHFxip2JKUYOiPIJrbTo4uATX+sX+ugkk9lyS51
-         odoCutLZuZDqhhhjc0mlGX9Ni2/DUk3eZEN3TaCA=
+        b=zygpxxubmAS/JNt9Uf/0e5UgTGtZxLtsQ7frgKbHGPxTk7/ezuq6PraaYznRSTyh5
+         Ion/J8Z7EWrihXpVUflyPQph6kHYVBgNTDXtDFu3XOaYBX//b8uJvT81NOi1xnwWeK
+         rKvGklVLG4pOLFWpt4cpv0+K80kdsLwHQ37V2tM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+Cc:     Sven Auhagen <sven.auhagen@voleatech.de>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 09/28] net: alx: fix race condition in alx_remove
-Date:   Tue, 23 Jun 2020 13:35:04 -0400
-Message-Id: <20200623173523.1355411-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 12/28] mvpp2: ethtool rxtx stats fix
+Date:   Tue, 23 Jun 2020 13:35:07 -0400
+Message-Id: <20200623173523.1355411-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
 References: <20200623173523.1355411-1-sashal@kernel.org>
@@ -59,56 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zekun Shen <bruceshenzk@gmail.com>
+From: Sven Auhagen <sven.auhagen@voleatech.de>
 
-[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
+[ Upstream commit cc970925feb9a38c2f0d34305518e00a3084ce85 ]
 
-There is a race condition exist during termination. The path is
-alx_stop and then alx_remove. An alx_schedule_link_check could be called
-before alx_stop by interrupt handler and invoke alx_link_check later.
-Alx_stop frees the napis, and alx_remove cancels any pending works.
-If any of the work is scheduled before termination and invoked before
-alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
+The ethtool rx and tx queue statistics are reporting wrong values.
+Fix reading out the correct ones.
 
-This patch fix the race condition by moving cancel_work_sync functions
-before alx_free_napis inside alx_stop. Because interrupt handler can call
-alx_schedule_link_check again, alx_free_irq is moved before
-cancel_work_sync calls too.
-
-Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index b9b4edb913c13..9b7f1af5f5747 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1249,8 +1249,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 2b5dad2ec650c..5d4ec95be8691 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1544,7 +1544,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
+ 	for (q = 0; q < port->ntxqs; q++)
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++)
+ 			*pstats++ += mvpp2_read_index(port->priv,
+-						      MVPP22_CTRS_TX_CTR(port->id, i),
++						      MVPP22_CTRS_TX_CTR(port->id, q),
+ 						      mvpp2_ethtool_txq_regs[i].offset);
  
- static void __alx_stop(struct alx_priv *alx)
- {
--	alx_halt(alx);
- 	alx_free_irq(alx);
-+
-+	cancel_work_sync(&alx->link_check_wk);
-+	cancel_work_sync(&alx->reset_wk);
-+
-+	alx_halt(alx);
- 	alx_free_rings(alx);
- 	alx_free_napis(alx);
+ 	/* Rxqs are numbered from 0 from the user standpoint, but not from the
+@@ -1553,7 +1553,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
+ 	for (q = 0; q < port->nrxqs; q++)
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++)
+ 			*pstats++ += mvpp2_read_index(port->priv,
+-						      port->first_rxq + i,
++						      port->first_rxq + q,
+ 						      mvpp2_ethtool_rxq_regs[i].offset);
  }
-@@ -1855,9 +1859,6 @@ static void alx_remove(struct pci_dev *pdev)
- 	struct alx_priv *alx = pci_get_drvdata(pdev);
- 	struct alx_hw *hw = &alx->hw;
- 
--	cancel_work_sync(&alx->link_check_wk);
--	cancel_work_sync(&alx->reset_wk);
--
- 	/* restore permanent mac address */
- 	alx_set_macaddr(hw, hw->perm_addr);
  
 -- 
 2.25.1
