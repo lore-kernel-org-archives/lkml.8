@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B953C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16BC20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A2520738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945589;
-	bh=P/xQFApdL9TuihnLUerhnPMfJWlHfPpcFKHFkh6WFKw=;
+	s=default; t=1592945593;
+	bh=iUhx2mCEszatdkL0B/6D09sYtm+d5NmvFLb6a1swACw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DLLUOItA2Hebo1Q8MfKHv3rl/Stvg1GMh4Wrs+d7nOe4vynDzycVqUbZzn7e9Jsbz
-	 LO/I5uzJZFTB7Sf+BBsA2vwfZdqeFhBID3pE1Tk4pCcv9Q7rp/K3BbvGcjX52C/8rZ
-	 ftMYsFMrdLX4Lp8GRcAfQ0ca6fq7CdoRiSUuDMIw=
+	b=KML7Wvbastwhk79jOF02OLtY5fgS+5tZdWuPAnxAHylgNVFX2XJ861TcYfCdpVP3F
+	 +yK9WKSNp5xjP+7J5MJvnSx+JC+a172gDkcwrM5OSRGgQwGkYrwvh9f1DQFlSidZvR
+	 X55wICSB1SDhQp2FmsXHD9zOhjbmZh2ieXcxw+DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392869AbgFWUrF (ORCPT
+        id S2403976AbgFWUxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:47:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391022AbgFWUor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:44:47 -0400
+        id S2392904AbgFWUrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:47:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2450521941;
-        Tue, 23 Jun 2020 20:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B01D21548;
+        Tue, 23 Jun 2020 20:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945087;
-        bh=P/xQFApdL9TuihnLUerhnPMfJWlHfPpcFKHFkh6WFKw=;
+        s=default; t=1592945224;
+        bh=iUhx2mCEszatdkL0B/6D09sYtm+d5NmvFLb6a1swACw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=10khhRQDasRY7vbq5To2gXIXyraetx2ZQD8tGfc7qJSXh7YRMz4bRZgpoXcRX7Q/O
-         AkjmCpZYeLgZMSqTPU29UKD2xezOFAnZ3hPdb5vue+kyRJXHGca5wWrCbEd/GEPjI9
-         uUdvAnbee/AO8zdiBVhJ58eFSA4Tz4Op/R2tYrG8=
+        b=xom7Y3XWLc8z/B6RhGvmf34SN6SiIuxpogJY6hjAPwFkB94xHuw5HMoOAQWHRmfBz
+         gRMnzEN/IK81vC2W6RzPSRKs3M68KSx735kp6s6qs/5USc69EJppyBVMJBIhjVc5GC
+         bHeqa0sdvnBm4MmJNYGBM//MlMoaVuKSHpKU+JC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
+        Qiushi Wu <wu000273@umn.edu>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 006/136] iio: pressure: bmp280: Tolerate IRQ before registering
-Date:   Tue, 23 Jun 2020 21:57:42 +0200
-Message-Id: <20200623195303.933983517@linuxfoundation.org>
+Subject: [PATCH 4.14 087/136] scsi: iscsi: Fix reference count leak in iscsi_boot_create_kobj
+Date:   Tue, 23 Jun 2020 21:59:03 +0200
+Message-Id: <20200623195308.060268014@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -62,56 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 97b31a6f5fb95b1ec6575b78a7240baddba34384 ]
+[ Upstream commit 0267ffce562c8bbf9b57ebe0e38445ad04972890 ]
 
-With DEBUG_SHIRQ enabled we have a kernel crash
+kobject_init_and_add() takes reference even when it fails. If this
+function returns an error, kobject_put() must be called to properly
+clean up the memory associated with the object.
 
-[  116.482696] BUG: kernel NULL pointer dereference, address: 0000000000000000
-
-...
-
-[  116.606571] Call Trace:
-[  116.609023]  <IRQ>
-[  116.611047]  complete+0x34/0x50
-[  116.614206]  bmp085_eoc_irq+0x9/0x10 [bmp280]
-
-because DEBUG_SHIRQ mechanism fires an IRQ before registration and drivers
-ought to be able to handle an interrupt happening before request_irq() returns.
-
-Fixes: aae953949651 ("iio: pressure: bmp280: add support for BMP085 EOC interrupt")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://lore.kernel.org/r/20200528201353.14849-1-wu000273@umn.edu
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/pressure/bmp280-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/iscsi_boot_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index 5f625ffa2a88d..3204dff34e0ad 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -651,7 +651,7 @@ static int bmp180_measure(struct bmp280_data *data, u8 ctrl_meas)
- 	unsigned int ctrl;
- 
- 	if (data->use_eoc)
--		init_completion(&data->done);
-+		reinit_completion(&data->done);
- 
- 	ret = regmap_write(data->regmap, BMP280_REG_CTRL_MEAS, ctrl_meas);
- 	if (ret)
-@@ -907,6 +907,9 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
- 			"trying to enforce it\n");
- 		irq_trig = IRQF_TRIGGER_RISING;
+diff --git a/drivers/scsi/iscsi_boot_sysfs.c b/drivers/scsi/iscsi_boot_sysfs.c
+index d453667612f88..15d64f96e623c 100644
+--- a/drivers/scsi/iscsi_boot_sysfs.c
++++ b/drivers/scsi/iscsi_boot_sysfs.c
+@@ -360,7 +360,7 @@ iscsi_boot_create_kobj(struct iscsi_boot_kset *boot_kset,
+ 	boot_kobj->kobj.kset = boot_kset->kset;
+ 	if (kobject_init_and_add(&boot_kobj->kobj, &iscsi_boot_ktype,
+ 				 NULL, name, index)) {
+-		kfree(boot_kobj);
++		kobject_put(&boot_kobj->kobj);
+ 		return NULL;
  	}
-+
-+	init_completion(&data->done);
-+
- 	ret = devm_request_threaded_irq(dev,
- 			irq,
- 			bmp085_eoc_irq,
+ 	boot_kobj->data = data;
 -- 
 2.25.1
 
