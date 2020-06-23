@@ -2,165 +2,174 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC14C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB439C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 170F220771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592890110;
-	bh=hXx1AoyMhAAH4V2F+L7ruURvcKfaPHtYRAUW+1pvx4k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MeVv/znlefpefP+5ssEHVlDcVgBIQcJNhvKEvrQoN6ZOLWS207h+rNBq3/duiBd7L
-	 YmF99oE/5m6fWsmgAmlAZHsXx/QcGt0NK6CCU3AcPIHOMd6WSoKHkoSC2VID2fk+jt
-	 mgM3CzjJGYvP2EwJmEHDON+z0JRSjUTuWr7M6ASY=
+	by mail.kernel.org (Postfix) with ESMTP id C741F20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbgFWF22 (ORCPT
+        id S1730201AbgFWFaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 01:28:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 01:30:04 -0400
+Received: from mga17.intel.com ([192.55.52.151]:37911 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgFWF21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 01:28:27 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6592E20716;
-        Tue, 23 Jun 2020 05:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592890107;
-        bh=hXx1AoyMhAAH4V2F+L7ruURvcKfaPHtYRAUW+1pvx4k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Me1WQehU/cJKvXiO6fvSIbp3GZeSa46KS8e+Iz/R0XIc6/NN7kUn5QjG4/yWNtq/Y
-         qgnXvP8f8egr6ramEu2OiNtvbeAP5a0BS6isi4LJPytVu0xr8U7KelPcXwZdHU7lTS
-         K2oQp90JdsMj1P2xnnuEk3eqs4X4qFhnhkI36r9w=
-Date:   Tue, 23 Jun 2020 14:28:22 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Ming Lei <tom.leiming@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: kprobe: __blkdev_put probe is missed
-Message-Id: <20200623142822.371012c66baf2cc7a631e6a3@kernel.org>
-In-Reply-To: <20200623093801.db9d2ca9c3bfef61ef6a2a58@kernel.org>
-References: <20200618125438.GA191266@T590>
-        <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
-        <20200618231901.GA196099@T590>
-        <20200619141239.56f6dda0976453b790190ff7@kernel.org>
-        <20200619072859.GA205278@T590>
-        <20200619081954.3d72a252@oasis.local.home>
-        <20200619133240.GA351476@T590>
-        <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
-        <20200619232820.GE353853@T590>
-        <20200620103747.fb83f804083ef9956740acee@kernel.org>
-        <20200622002753.GC670933@T590>
-        <20200622090148.6e0f2ac9@oasis.local.home>
-        <20200623084706.e6e99e99d7da6690e7a6c199@kernel.org>
-        <20200623093801.db9d2ca9c3bfef61ef6a2a58@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1728615AbgFWFaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 01:30:03 -0400
+IronPort-SDR: cr2/zgLPg7STy74HXJ07GsHUlWGjnnHbpPq2pWZlTE2ka7Yos33KY6o/dY6vJpzCxK1oUeMudX
+ q3BZGb0u5MyQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="124232136"
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="124232136"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 22:30:01 -0700
+IronPort-SDR: ONOwmGPL4JG96d1hLbTUGRh4WKaGVZbHXjYNSzOvdgEIUEd2nJkpul5hJnZKyxvPuPRfgi4Sko
+ Qm28V9Xu2Idw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="301088514"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Jun 2020 22:29:59 -0700
+Date:   Tue, 23 Jun 2020 13:26:13 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Tom Rix <trix@redhat.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhu@redhat.com, mtosatti@redhat.com,
+        gregkh@linuxfoundation.org, jun.j.tian@intel.com, hao.wu@intel.com
+Subject: Re: [PATCH v7 0/7] Add interrupt support to FPGA DFL drivers
+Message-ID: <20200623052613.GB23037@yilunxu-OptiPlex-7050>
+References: <1592280528-6350-1-git-send-email-yilun.xu@intel.com>
+ <20200622064806.GA5101@yilunxu-OptiPlex-7050>
+ <c9a33ee6-67f2-36b8-0870-ebc038b929ce@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c9a33ee6-67f2-36b8-0870-ebc038b929ce@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 09:38:01 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> On Tue, 23 Jun 2020 08:47:06 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On Mon, Jun 22, 2020 at 05:27:20AM -0700, Tom Rix wrote:
+> In addition to reviewing, I have run these changes on the pac a10 card and while i do not have an afu using interrupts, I have exercised some of the new interfaces.
 > 
-> > On Mon, 22 Jun 2020 09:01:48 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > On Mon, 22 Jun 2020 08:27:53 +0800
-> > > Ming Lei <ming.lei@redhat.com> wrote:
-> > > 
-> > > > Can you kprobe guys improve the implementation for covering this case?
-> > > > For example, put probe on 3) in case the above situation is recognized.
-> > > 
-> > > To do so would require solving the halting problem.
-> > > 
-> > >   https://en.wikipedia.org/wiki/Halting_problem
-> > > 
-> > > Or perhaps reading the DWARF output of the compiler to determine if it
-> > > optimized the location you are looking for.
-> > 
-> > As far as I can see, gcc-9.3 doesn't generate this information :(
-> > Maybe the optimizer forgot to push the tail-call callsite information
-> > to dwarf generator when making a recursive tail-call to a loop.
-> > 
-> > > The first case is impossible to solve, the second would take a lot of
-> > > work, (are you going to fund it?)
-> > 
-> > What I can provide is "--skip-prologue" option for the perf-probe
-> > which will be similar to the "-P" option. If the compiler correctly
-> > generates the information, we can enable it automatically. But
-> > as far as I can see, it doesn't.
-> > 
-> > [OT] DWARF has its option(and GNU extension) but it seems not correctly
-> > implemented yet.
-> >  
-> > http://www.dwarfstd.org/ShowIssue.php?issue=100909.2
+> The most useful i have submitted to selftests drivers/fpga.  In the future, this would be a good place to put other fpga unit tests. 
 > 
-> Oops, sorry, I missed the following sentences.
+> The selftest patch depends on this change.
 > 
-> "Tail calls are jump-like instructions which transfer control to the start
-> of some subprogram, but the call site location address isn't visible in the
-> unwind information."
+> So you can also add
 > 
-> "Tail recursion is a call to the current function which is compiled as a
-> loop into the middle of the current function."
+> Tested-by: Tom Rix <trix@redhat.com>
+
+Yes I'll add your Tested-by tag.
+
+Thanks,
+Yilun
+
 > 
-> "The DW_TAG_call_site entries describe normal and tail calls."
+> Tom
 > 
-> This means, the gcc is correctly implemented and this __blkdev_put() case
-> is NOT covered by DT_TAG_call_site.
-> So we can not detect it from the debuginfo.
-
-Hmm, BTW, if optimization is further advanced, it is possible that
-the loop start position is not always at the beginning of the function.
-It is easy to provide --skip-prologue to perf probe but it doesn't
-ensure that works always as you expected.
-
-For example,
-
-func()
-{
-1:
-	{ /* block which doesn't executed in tail-recursion call */
-	...
-	}
-2:
-	{ /* block which always executed in tail-recursion call */
-	...
-	}
-	func()
-}
-
-In this case, it is natural that the optimizer put a jump to 2 instead
-of 1. Moreover, if the number of recursion is fixed, the optimizer
-can unroll the loop. In that case there are no jumps. 
-
-So, as Steve pointed, strictly speaking, the developer needs to understand
-what the source code was compiled into, before tracing/debuging it.
-
-For the perf-probe case, I'm now thinking it is better user to
-choose the line in the function explicitly. I wish I had another flag
-that there was a tail-recursion, then I can warn users...
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> On 6/21/20 11:48 PM, Xu Yilun wrote:
+> > Hi Moritz:
+> >
+> > Could you please help review the patchset when you have time?
+> >
+> > You have already reviewed the first 3 patches some time ago. The
+> > comments are all fixed. Hao and Redhat guys also have done several
+> > rounds of review. The patches are all Acked-by Hao, reviewed by
+> > Marcelo & Tom.
+> >
+> > There is little change to the code for several months, seems it stays
+> > ready and just need your final Ack.
+> >
+> > Actually this is the last feature for our first generation PAC A10 Card,
+> > and is important for users to have the full support.
+> >
+> > We really need your help on code review ...
+> >
+> > Many thanks!
+> > Yilun
+> >
+> > On Tue, Jun 16, 2020 at 12:08:41PM +0800, Xu Yilun wrote:
+> >> This patchset add interrupt support to FPGA DFL drivers.
+> >>
+> >> With these patches, DFL driver will parse and assign interrupt resources
+> >> for enumerated feature devices and their sub features.
+> >>
+> >> This patchset also introduces a set of APIs for user to monitor DFL
+> >> interrupts. Three sub features (DFL FME error, DFL AFU error and user
+> >> interrupt) drivers now support these APIs.
+> >>
+> >> Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+> >>           driver, and add interrupt parsing and assignment for feature
+> >>           sub devices.
+> >> Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+> >> Patch #3: DFL framework change. Add helper functions for feature sub
+> >>           device drivers to handle interrupt and notify users.
+> >> Patch #4: Add interrupt support for AFU error reporting sub feature.
+> >> Patch #5: Add interrupt support for FME global error reporting sub
+> >>           feature.
+> >> Patch #6: Add interrupt support for a new sub feature, to handle user
+> >>           interrupts implemented in AFU.
+> >> Patch #7: Documentation for DFL interrupt handling.
+> >>
+> >> Main changes from v1:
+> >>  - Early validating irq table for each feature in parse_feature_irq()
+> >>    in Patch #1.
+> >>  - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
+> >>    instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
+> >>    DFL_FPGA_FME/PORT_XXX_SET_IRQ param
+> >>
+> >> Main changes from v2:
+> >>  - put parse_feature_irqs() inside create_feature_instance().
+> >>  - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
+> >>  - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
+> >>
+> >> Main changes from v3:
+> >>  - rebased to 5.7-rc1.
+> >>  - fail the dfl enumeration when irq parsing error happens.
+> >>  - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
+> >>    drivers.
+> >>
+> >> Main changes from v4:
+> >>  - Minor fixes for Hao's comments.
+> >>
+> >> Main changes from v5:
+> >>  - Remove unnecessary type casting in Patch #1 & #3.
+> >>  - Minor fixes for Moritz's comments.
+> >>
+> >> Main changes from v6:
+> >>  - Add the header file <linux/interrupt.h> for Patch #1, to fix build
+> >>    error on ARCH=xtensa
+> >>  - Minor fixes in Patch #2 & #3.
+> >>
+> >> Xu Yilun (7):
+> >>   fpga: dfl: parse interrupt info for feature devices on enumeration
+> >>   fpga: dfl: pci: add irq info for feature devices enumeration
+> >>   fpga: dfl: introduce interrupt trigger setting API
+> >>   fpga: dfl: afu: add interrupt support for port error reporting
+> >>   fpga: dfl: fme: add interrupt support for global error reporting
+> >>   fpga: dfl: afu: add AFU interrupt support
+> >>   Documentation: fpga: dfl: add descriptions for interrupt related
+> >>     interfaces.
+> >>
+> >>  Documentation/fpga/dfl.rst    |  19 +++
+> >>  drivers/fpga/dfl-afu-error.c  |  17 +++
+> >>  drivers/fpga/dfl-afu-main.c   |  32 +++++
+> >>  drivers/fpga/dfl-fme-error.c  |  18 +++
+> >>  drivers/fpga/dfl-fme-main.c   |   6 +
+> >>  drivers/fpga/dfl-pci.c        |  76 +++++++++--
+> >>  drivers/fpga/dfl.c            | 310 ++++++++++++++++++++++++++++++++++++++++++
+> >>  drivers/fpga/dfl.h            |  57 ++++++++
+> >>  include/uapi/linux/fpga-dfl.h |  82 +++++++++++
+> >>  9 files changed, 608 insertions(+), 9 deletions(-)
+> >>
+> >> -- 
+> >> 2.7.4
