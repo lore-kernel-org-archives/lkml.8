@@ -2,111 +2,186 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF64C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5792073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592925516;
-	bh=mnwNnQI+cOX0/U6ehCl/R5q2MW2Ri9PFBeSlH2aRRSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=De5rdume2VFxzLwbvtR55qshcVXrDl0tKyNB5nHdgFuq87clU5kf3kwHmPNfFJjft
-	 iCRTKsIs6KRgcg+C5f6+ZoIG+KrNXblm5E9CnEkxiV8tyq1u2TtRvjnFfaO4FLUdMA
-	 hMVv5NLdgGWRhsOqHXrzLv1YukK0ZilsU0n9nSr8=
+	by mail.kernel.org (Postfix) with ESMTP id 655CA2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbgFWPSf (ORCPT
+        id S1732979AbgFWPTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:18:35 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41265 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732878AbgFWPSe (ORCPT
+        Tue, 23 Jun 2020 11:19:12 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40972 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732781AbgFWPTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:18:34 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so991649wrq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:18:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MvVMGC38xXiscRPFSdMMDf6uiRQWRRdbs+WbHzNkqzw=;
-        b=mvcbLclUJfFUeAvRzmTBFgM82c2Jy48h4Oc5pf7l0ZgHdDVQCaEqvu4gzjkFXTH/fO
-         nYbVfeYebeSVOL47ZYZ0/r5EwndbADztyXCKvGtFbH3ldWXiFr8klo7/pa0PUn1YY3ws
-         UmcbwqcaQFDBY0wEU7/N/y6HlSUkiLuNKZGf5pxQXagANxRLvInVDn92cyLkyjQr/SpP
-         YvYQMF3EyuDOpKqRtGO2DKkbs0UA1d6lrtH1r4xUXAONMUQkYO/5TuHxa1QX/ymd2EXO
-         MsI6OLl6k+0ebKxyLFfBRsR6otDGTbzL4BhSVupQudkEjt5jxrqadfd5nsVK7tN8sV06
-         JO3w==
-X-Gm-Message-State: AOAM530kl7oTWXSai1sUieU/hJmQfWt396/AHYHlsTqnrQv5tVADy6sa
-        U/3DkCcvUA1kjDFX4HPdwbG4FYN8
-X-Google-Smtp-Source: ABdhPJxwKDtGOosIK0mMYQ2x8HB4inuejFylH9hLUI2PE8006277yYs71YGTWvOAtJOfh+J39dpRBw==
-X-Received: by 2002:adf:fd41:: with SMTP id h1mr26516448wrs.374.1592925511338;
-        Tue, 23 Jun 2020 08:18:31 -0700 (PDT)
-Received: from localhost (ip-37-188-173-135.eurotel.cz. [37.188.173.135])
-        by smtp.gmail.com with ESMTPSA id g3sm25628896wrb.46.2020.06.23.08.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 08:18:30 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 17:18:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, david@redhat.com
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-Message-ID: <20200623151828.GA31426@dhcp22.suse.cz>
-References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+        Tue, 23 Jun 2020 11:19:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id D2BD52A0D7C
+Subject: Re: krzysztof/for-next bisection: baseline.dmesg.crit on
+ bcm2837-rpi-3-b
+To:     kernelci-results@groups.io, Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kukjin Kim <kgene@kernel.org>
+References: <5ef21053.1c69fb81.b80ec.8649@mx.google.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <17e2a135-274d-19d5-be26-58ec106cf0b5@collabora.com>
+Date:   Tue, 23 Jun 2020 16:19:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+In-Reply-To: <5ef21053.1c69fb81.b80ec.8649@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 23-06-20 17:42:58, Wei Yang wrote:
-> For early sections, we assumes its memmap will never be partially
-> removed. But current behavior breaks this.
+On 23/06/2020 15:23, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 > 
-> Let's correct it.
+> krzysztof/for-next bisection: baseline.dmesg.crit on bcm2837-rpi-3-b
 > 
-> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Summary:
+>   Start:      d6fe116541b7 Merge branch 'next/soc' into for-next
+>   Plain log:  https://storage.kernelci.org/krzysztof/for-next/v5.8-rc1-14-gd6fe116541b7/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.txt
+>   HTML log:   https://storage.kernelci.org/krzysztof/for-next/v5.8-rc1-14-gd6fe116541b7/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.html
+>   Result:     5b17a04addc2 ARM: exynos: clear L310_AUX_CTRL_FULL_LINE_ZERO in default l2c_aux_val
+> 
+> Checks:
+>   revert:     PASS
+>   verify:     PASS
+> 
+> Parameters:
+>   Tree:       krzysztof
+>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git
+>   Branch:     for-next
+>   Target:     bcm2837-rpi-3-b
+>   CPU arch:   arm64
+>   Lab:        lab-baylibre
+>   Compiler:   gcc-8
+>   Config:     defconfig+CONFIG_RANDOMIZE_BASE=y
+>   Test case:  baseline.dmesg.crit
 
-Can a user trigger this or is this a theoretical bug?
+The "crit" kernel message is:
 
-> ---
->  mm/sparse.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+[   17.566555] hwmon hwmon1: Undervoltage detected!
+
+which does not seem to have anything to do with the patch found
+by the bisection.  Also, the bcm2837-rpi-3-b uses Cortex-A53
+cores and no L2C-310 cache.
+
+This undervoltage issue is actually an intermittent issue that
+was already present before.  See next-20200616:
+
+  https://kernelci.org/test/case/id/5ee880c10e8d4cd38797bf52/
+  https://storage.kernelci.org/next/master/next-20200616/arm64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.html#L708
+
+I'll still take a closer look to be sure this is actually noise.
+The same revision built without CONFIG_RAMDOMIZE_BASE=y passed
+fine, although I don't see how this could be related:
+
+  https://kernelci.org/test/plan/id/5ef1ccb2d9df2557d597bf20/
+
+Maybe the rpi-3-b could get an undervoltage depending on the
+address where the kernel was loaded, and somehow my patch would
+make this more likely?  It sounds so far-fetched...
+
+This is so ironic - after 6 months with no false positives in
+kernelci bisections, and this rpi-3-b issue too random to ever
+cause a bisection to succeed, I get this report which landed a
+commit that I made, one week after enabling public bisection
+email reports again.  It must be trying to tell me something :)
+
+Guillaume
+
+
+> Breaking commit found:
 > 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index b2b9a3e34696..1a0069f492f5 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -825,10 +825,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
->  	}
+> -------------------------------------------------------------------------------
+> commit 5b17a04addc29201dc142c8d2c077eb7745d2e35
+> Author: Guillaume Tucker <guillaume.tucker@collabora.com>
+> Date:   Fri Jun 12 14:58:37 2020 +0100
+> 
+>     ARM: exynos: clear L310_AUX_CTRL_FULL_LINE_ZERO in default l2c_aux_val
+>     
+>     This "alert" error message can be seen on exynos4412-odroidx2:
+>     
+>         L2C: platform modifies aux control register: 0x02070000 -> 0x3e470001
+>         L2C: platform provided aux values permit register corruption.
+>     
+>     Followed by this plain error message:
+>     
+>         L2C-310: enabling full line of zeros but not enabled in Cortex-A9
+>     
+>     To fix it, don't set the L310_AUX_CTRL_FULL_LINE_ZERO flag (bit 0) in
+>     the default value of l2c_aux_val.  It may instead be enabled when
+>     applicable by the logic in l2c310_enable() if the attribute
+>     "arm,full-line-zero-disable" was set in the device tree.
+>     
+>     The initial commit that introduced this default value was in v2.6.38
+>     commit 1cf0eb799759 ("ARM: S5PV310: Add L2 cache init function in
+>     cpu.c").
+>     
+>     However, the code to set the L310_AUX_CTRL_FULL_LINE_ZERO flag and
+>     manage that feature was added much later and the default value was not
+>     updated then.  So this seems to have been a subtle oversight
+>     especially since enabling it only in the cache and not in the A9 core
+>     doesn't actually prevent the platform from running.  According to the
+>     TRM, the opposite would be a real issue, if the feature was enabled in
+>     the A9 core but not in the cache controller.
+>     
+>     Reported-by: "kernelci.org bot" <bot@kernelci.org>
+>     Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+>     Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+> index 7a8d1555db40..36c37444485a 100644
+> --- a/arch/arm/mach-exynos/exynos.c
+> +++ b/arch/arm/mach-exynos/exynos.c
+> @@ -193,7 +193,7 @@ static void __init exynos_dt_fixup(void)
+>  }
 >  
-> -	if (section_is_early && memmap)
-> -		free_map_bootmem(memmap);
-> -	else
-> +	if (!section_is_early)
-
-This begs a comment.
-
->  		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +	else if (memmap)
-> +		free_map_bootmem(memmap);
->  
->  	if (empty)
->  		ms->section_mem_map = (unsigned long)NULL;
-> -- 
-> 2.20.1 (Apple Git-117)
+>  DT_MACHINE_START(EXYNOS_DT, "Samsung Exynos (Flattened Device Tree)")
+> -	.l2c_aux_val	= 0x3c400001,
+> +	.l2c_aux_val	= 0x3c400000,
+>  	.l2c_aux_mask	= 0xc20fffff,
+>  	.smp		= smp_ops(exynos_smp_ops),
+>  	.map_io		= exynos_init_io,
+> -------------------------------------------------------------------------------
+> 
+> 
+> Git bisection log:
+> 
+> -------------------------------------------------------------------------------
+> git bisect start
+> # good: [b0953d8b7cdb39493e67cff4b20b0ebe3a2bba92] Merge branch 'next/drivers' into for-next
+> git bisect good b0953d8b7cdb39493e67cff4b20b0ebe3a2bba92
+> # bad: [d6fe116541b73a56110310c39a270c99766cd909] Merge branch 'next/soc' into for-next
+> git bisect bad d6fe116541b73a56110310c39a270c99766cd909
+> # bad: [5b17a04addc29201dc142c8d2c077eb7745d2e35] ARM: exynos: clear L310_AUX_CTRL_FULL_LINE_ZERO in default l2c_aux_val
+> git bisect bad 5b17a04addc29201dc142c8d2c077eb7745d2e35
+> # first bad commit: [5b17a04addc29201dc142c8d2c077eb7745d2e35] ARM: exynos: clear L310_AUX_CTRL_FULL_LINE_ZERO in default l2c_aux_val
+> -------------------------------------------------------------------------------
 > 
 
--- 
-Michal Hocko
-SUSE Labs
