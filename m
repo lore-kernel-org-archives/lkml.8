@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91368C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 676A420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB44D20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946400;
-	bh=IZ2DC9tA8Yg8ZWWrhtPgwsOoe95OuCpA2/9v7uwiPZE=;
+	s=default; t=1592946401;
+	bh=VIgcKFJfZUxNL2vbTVk81GcTZ32sCX90KI6LnC7d7OA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1BaweCxEXdy5Y3jdi0K2AlkzPHaqGjp3qEweXjV1Sb32IFliGc/sizxpVibQhQsj
-	 SRBs0Tj+JJ+7KgZuE/J3tcCcD+M7cpbDoiBg8zJNr9e0Uo3TghyyQ1RfmmVA+vVDB3
-	 pBWzGQplu3WzenLRxZDm6qvmoPBOhDf54LmuuTwE=
+	b=eURHUJP0bLrj06xJId4QAm2tASEweJD0MdTeNOBygT5XGBU4OtESlNtCIOMb2o4f/
+	 vrsVHd/wI8et1vJXwl4S0MpVBmRrn26gNrw7Ar9QjVURUpWarmvEGijGlsYbaXjGva
+	 HK7MP0luIWe2Eyz6QaKVdN4W5YEWNCYFZ5rnQ30w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391720AbgFWUfm (ORCPT
+        id S2391721AbgFWVGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:35:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391695AbgFWUff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:35:35 -0400
+        id S2391191AbgFWUfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:35:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BE6420836;
-        Tue, 23 Jun 2020 20:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0CD92080C;
+        Tue, 23 Jun 2020 20:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944535;
-        bh=IZ2DC9tA8Yg8ZWWrhtPgwsOoe95OuCpA2/9v7uwiPZE=;
+        s=default; t=1592944548;
+        bh=VIgcKFJfZUxNL2vbTVk81GcTZ32sCX90KI6LnC7d7OA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJ47d0lVTyYRCTc1la1EkYpIgC0L4Yhswvm/CUZPbMSaIbzNCFmt7BR3wqZ+yYkQw
-         oPHzT47ZnRHErv/Oj65rkW6M6pXRij76PF2n7bp6GMphxycJQNeiHhvYHc98S4xA0g
-         pGXAX3LIcGI43/CtG24cZaCe2aiYTXFV9qObfWcg=
+        b=m4nqnCQqZ1SWxWQm+5PTDOSte70qnAIrBkJ9f3udYTqdZhJp8xFM7XNDcZCPJ/lyN
+         WThSbR4KH+BSJsStsurzGbNJw69mnJlDgwoWo0DxMF9YKCWXPnJf4wOl6sL3vCQqjO
+         sYJhDc241OU8M48nWLCKpOIftaELAC5gZRjNQin4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 003/206] ASoC: tegra: tegra_wm8903: Support nvidia, headset property
-Date:   Tue, 23 Jun 2020 21:55:31 +0200
-Message-Id: <20200623195317.089299546@linuxfoundation.org>
+Subject: [PATCH 4.19 008/206] backlight: lp855x: Ensure regulators are disabled on probe failure
+Date:   Tue, 23 Jun 2020 21:55:36 +0200
+Message-Id: <20200623195317.350184050@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,52 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit 3ef9d5073b552d56bd6daf2af1e89b7e8d4df183 ]
+[ Upstream commit d8207c155a7c6015eb7f43739baa7dfb1fa638af ]
 
-The microphone-jack state needs to be masked in a case of a 4-pin jack
-when microphone and ground pins are shorted. Presence of nvidia,headset
-tells that WM8903 CODEC driver should mask microphone's status if short
-circuit is detected, i.e headphones are inserted.
+If probing the LP885x backlight fails after the regulators have been
+enabled, then the following warning is seen when releasing the
+regulators ...
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20200330204011.18465-3-digetx@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
+ Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
+ CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
+ Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+
+ ...
+
+ Call trace:
+  _regulator_put.part.28+0x158/0x160
+  regulator_put+0x34/0x50
+  devm_regulator_release+0x10/0x18
+  release_nodes+0x12c/0x230
+  devres_release_all+0x34/0x50
+  really_probe+0x1c0/0x370
+  driver_probe_device+0x58/0x100
+  device_driver_attach+0x6c/0x78
+  __driver_attach+0xb0/0xf0
+  bus_for_each_dev+0x68/0xc8
+  driver_attach+0x20/0x28
+  bus_add_driver+0x160/0x1f0
+  driver_register+0x60/0x110
+  i2c_register_driver+0x40/0x80
+  lp855x_driver_init+0x20/0x1000 [lp855x_bl]
+  do_one_initcall+0x58/0x1a0
+  do_init_module+0x54/0x1d0
+  load_module+0x1d80/0x21c8
+  __do_sys_finit_module+0xe8/0x100
+  __arm64_sys_finit_module+0x18/0x20
+  el0_svc_common.constprop.3+0xb0/0x168
+  do_el0_svc+0x20/0x98
+  el0_sync_handler+0xf4/0x1b0
+  el0_sync+0x140/0x180
+
+Fix this by ensuring that the regulators are disabled, if enabled, on
+probe failure.
+
+Finally, ensure that the vddio regulator is disabled in the driver
+remove handler.
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra_wm8903.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/video/backlight/lp855x_bl.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
-index 69bc9461974b5..301850df368d6 100644
---- a/sound/soc/tegra/tegra_wm8903.c
-+++ b/sound/soc/tegra/tegra_wm8903.c
-@@ -173,6 +173,7 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_component *component = codec_dai->component;
- 	struct snd_soc_card *card = rtd->card;
- 	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
-+	int shrt = 0;
+diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
+index 73612485ed07e..bd43d8cff389c 100644
+--- a/drivers/video/backlight/lp855x_bl.c
++++ b/drivers/video/backlight/lp855x_bl.c
+@@ -460,7 +460,7 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ 		ret = regulator_enable(lp->enable);
+ 		if (ret < 0) {
+ 			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
+-			return ret;
++			goto disable_supply;
+ 		}
  
- 	if (gpio_is_valid(machine->gpio_hp_det)) {
- 		tegra_wm8903_hp_jack_gpio.gpio = machine->gpio_hp_det;
-@@ -185,12 +186,15 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
- 					&tegra_wm8903_hp_jack_gpio);
+ 		/*
+@@ -475,24 +475,34 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ 	ret = lp855x_configure(lp);
+ 	if (ret) {
+ 		dev_err(lp->dev, "device config err: %d", ret);
+-		return ret;
++		goto disable_vddio;
  	}
  
-+	if (of_property_read_bool(card->dev->of_node, "nvidia,headset"))
-+		shrt = SND_JACK_MICROPHONE;
+ 	ret = lp855x_backlight_register(lp);
+ 	if (ret) {
+ 		dev_err(lp->dev,
+ 			"failed to register backlight. err: %d\n", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	ret = sysfs_create_group(&lp->dev->kobj, &lp855x_attr_group);
+ 	if (ret) {
+ 		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	backlight_update_status(lp->bl);
 +
- 	snd_soc_card_jack_new(rtd->card, "Mic Jack", SND_JACK_MICROPHONE,
- 			      &tegra_wm8903_mic_jack,
- 			      tegra_wm8903_mic_jack_pins,
- 			      ARRAY_SIZE(tegra_wm8903_mic_jack_pins));
- 	wm8903_mic_detect(component, &tegra_wm8903_mic_jack, SND_JACK_MICROPHONE,
--				0);
-+				shrt);
+ 	return 0;
++
++disable_vddio:
++	if (lp->enable)
++		regulator_disable(lp->enable);
++disable_supply:
++	if (lp->supply)
++		regulator_disable(lp->supply);
++
++	return ret;
+ }
  
- 	snd_soc_dapm_force_enable_pin(&card->dapm, "MICBIAS");
+ static int lp855x_remove(struct i2c_client *cl)
+@@ -501,6 +511,8 @@ static int lp855x_remove(struct i2c_client *cl)
  
+ 	lp->bl->props.brightness = 0;
+ 	backlight_update_status(lp->bl);
++	if (lp->enable)
++		regulator_disable(lp->enable);
+ 	if (lp->supply)
+ 		regulator_disable(lp->supply);
+ 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
 -- 
 2.25.1
 
