@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C70C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22671206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34182070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943653;
-	bh=z6ZSfJNGv0zsXQltdo2Yq48Zm5h2C1D7SrqFRVHK39s=;
+	s=default; t=1592943658;
+	bh=Iukx8MHBVWtcSwLg2WRSABdq1hB8fPEJiEsW6LJ67TM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJIbuNE+2Wffagd5Whnjk5imexkigPDuCzumwAOY8+gf8JC7M4UTlh+lp0ba1wn5g
-	 y41HkwlCVExeXo6L34H+h9MWJt0LQ6QG4iC1XTcUN8cqj4E7S09aO2QMqXX/oi4FB0
-	 8JwReesdc+dfdxc7B8QqxlT82bwcwO0Txji55ITk=
+	b=hP1yLMapEDgGBdisE36iBGn0Go0p+oW+hSTFI7LcqTcc33Dwa+ajk30my8HV0j+Br
+	 oisgsG9ek8VhKNWx8GEFzDeHUFz34oJsstEaqhnpbdhLiUW/W+WfyhF8SXrjcKpVx+
+	 7n25aAuNUYd55iRaoLyC2z/cs9oC1lPI+GmxKs/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388950AbgFWUUv (ORCPT
+        id S2389980AbgFWUU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:20:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36932 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:20:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387633AbgFWUTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:19:49 -0400
+        id S2389976AbgFWUUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:20:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9696C2080C;
-        Tue, 23 Jun 2020 20:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67C44206C3;
+        Tue, 23 Jun 2020 20:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943588;
-        bh=z6ZSfJNGv0zsXQltdo2Yq48Zm5h2C1D7SrqFRVHK39s=;
+        s=default; t=1592943649;
+        bh=Iukx8MHBVWtcSwLg2WRSABdq1hB8fPEJiEsW6LJ67TM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1XoDFwll4geY+HWkVz0LHlUII+WcVoAbgPNP1U9gib9hJwoiiG8OHFClnLYAOdvaD
-         ntOjp2HFJ9D0SNWmjaIzvKdD6KX1K57SQsP/88iRO4OJZfu8w1L2Yit7/UKCgIiyUh
-         TpHUeU0yTJVr79SubmQnM+sNwMnSizfBHQJrwVs0=
+        b=YVqajGZu1kOAdy6YTtW1vJi5y5p2RPgpLmXAp2ecYxvnLTBUiviXqpn1KhvZutwGo
+         aVzkJvsza34wPa/8V9eTg9fYYGaDctKoxczCH9N1JEvt6PMTO9kHnEHK5oJQJ856Bf
+         s5p3evnDfALFkHjxD3dyPqKwRcJk10BlyKNusuzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Bruce Chang <yu.bruce.chang@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.7 451/477] drm/i915/gt: Incrementally check for rewinding
-Date:   Tue, 23 Jun 2020 21:57:28 +0200
-Message-Id: <20200623195428.857477626@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 433/477] io_uring: acquire mm for task_work for SQPOLL
+Date:   Tue, 23 Jun 2020 21:57:10 +0200
+Message-Id: <20200623195427.997145830@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,297 +58,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 8ab3a3812aa90e488813e719308ffd807b865624 upstream.
+[ Upstream commit 9d8426a09195e2dcf2aa249de2aaadd792d491c7 ]
 
-In commit 5ba32c7be81e ("drm/i915/execlists: Always force a context
-reload when rewinding RING_TAIL"), we placed the check for rewinding a
-context on actually submitting the next request in that context. This
-was so that we only had to check once, and could do so with precision
-avoiding as many forced restores as possible. For example, to ensure
-that we can resubmit the same request a couple of times, we include a
-small wa_tail such that on the next submission, the ring->tail will
-appear to move forwards when resubmitting the same request. This is very
-common as it will happen for every lite-restore to fill the second port
-after a context switch.
+If we're unlucky with timing, we could be running task_work after
+having dropped the memory context in the sq thread. Since dropping
+the context requires a runnable task state, we cannot reliably drop
+it as part of our check-for-work loop in io_sq_thread(). Instead,
+abstract out the mm acquire for the sq thread into a helper, and call
+it from the async task work handler.
 
-However, intel_ring_direction() is limited in precision to movements of
-upto half the ring size. The consequence being that if we tried to
-unwind many requests, we could exceed half the ring and flip the sense
-of the direction, so missing a force restore. As no request can be
-greater than half the ring (i.e. 2048 bytes in the smallest case), we
-can check for rollback incrementally. As we check against the tail that
-would be submitted, we do not lose any sensitivity and allow lite
-restores for the simple case. We still need to double check upon
-submitting the context, to allow for multiple preemptions and
-resubmissions.
-
-Fixes: 5ba32c7be81e ("drm/i915/execlists: Always force a context reload when rewinding RING_TAIL")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: <stable@vger.kernel.org> # v5.4+
-Reviewed-by: Bruce Chang <yu.bruce.chang@intel.com>
-Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200609151723.12971-1-chris@chris-wilson.co.uk
-(cherry picked from commit e36ba817fa966f81fb1c8d16f3721b5a644b2fa9)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: stable@vger.kernel.org # v5.7
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/i915/gt/intel_engine_cs.c            |    4 
- drivers/gpu/drm/i915/gt/intel_lrc.c                  |   21 +++
- drivers/gpu/drm/i915/gt/intel_ring.c                 |    4 
- drivers/gpu/drm/i915/gt/selftest_mocs.c              |   18 ++-
- drivers/gpu/drm/i915/gt/selftest_ring.c              |  110 +++++++++++++++++++
- drivers/gpu/drm/i915/selftests/i915_mock_selftests.h |    1 
- 6 files changed, 154 insertions(+), 4 deletions(-)
+ fs/io_uring.c |   44 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
 
---- a/drivers/gpu/drm/i915/gt/intel_engine_cs.c
-+++ b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
-@@ -639,7 +639,7 @@ static int engine_setup_common(struct in
- struct measure_breadcrumb {
- 	struct i915_request rq;
- 	struct intel_ring ring;
--	u32 cs[1024];
-+	u32 cs[2048];
- };
- 
- static int measure_breadcrumb_dw(struct intel_context *ce)
-@@ -661,6 +661,8 @@ static int measure_breadcrumb_dw(struct
- 
- 	frame->ring.vaddr = frame->cs;
- 	frame->ring.size = sizeof(frame->cs);
-+	frame->ring.wrap =
-+		BITS_PER_TYPE(frame->ring.size) - ilog2(frame->ring.size);
- 	frame->ring.effective_size = frame->ring.size;
- 	intel_ring_update_space(&frame->ring);
- 	frame->rq.ring = &frame->ring;
---- a/drivers/gpu/drm/i915/gt/intel_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
-@@ -972,6 +972,13 @@ __unwind_incomplete_requests(struct inte
- 			list_move(&rq->sched.link, pl);
- 			set_bit(I915_FENCE_FLAG_PQUEUE, &rq->fence.flags);
- 
-+			/* Check in case we rollback so far we wrap [size/2] */
-+			if (intel_ring_direction(rq->ring,
-+						 intel_ring_wrap(rq->ring,
-+								 rq->tail),
-+						 rq->ring->tail) > 0)
-+				rq->context->lrc.desc |= CTX_DESC_FORCE_RESTORE;
-+
- 			active = rq;
- 		} else {
- 			struct intel_engine_cs *owner = rq->context->engine;
-@@ -1383,8 +1390,9 @@ static u64 execlists_update_context(stru
- 	 * HW has a tendency to ignore us rewinding the TAIL to the end of
- 	 * an earlier request.
- 	 */
-+	GEM_BUG_ON(ce->lrc_reg_state[CTX_RING_TAIL] != rq->ring->tail);
-+	prev = rq->ring->tail;
- 	tail = intel_ring_set_tail(rq->ring, rq->tail);
--	prev = ce->lrc_reg_state[CTX_RING_TAIL];
- 	if (unlikely(intel_ring_direction(rq->ring, tail, prev) <= 0))
- 		desc |= CTX_DESC_FORCE_RESTORE;
- 	ce->lrc_reg_state[CTX_RING_TAIL] = tail;
-@@ -4213,6 +4221,14 @@ static int gen12_emit_flush_render(struc
- 	return 0;
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4302,6 +4302,28 @@ static void io_async_queue_proc(struct f
+ 	__io_queue_proc(&pt->req->apoll->poll, pt, head);
  }
  
-+static void assert_request_valid(struct i915_request *rq)
++static void io_sq_thread_drop_mm(struct io_ring_ctx *ctx)
 +{
-+	struct intel_ring *ring __maybe_unused = rq->ring;
++	struct mm_struct *mm = current->mm;
 +
-+	/* Can we unwind this request without appearing to go forwards? */
-+	GEM_BUG_ON(intel_ring_direction(ring, rq->wa_tail, rq->head) <= 0);
++	if (mm) {
++		unuse_mm(mm);
++		mmput(mm);
++	}
 +}
 +
- /*
-  * Reserve space for 2 NOOPs at the end of each request to be
-  * used as a workaround for not being allowed to do lite
-@@ -4225,6 +4241,9 @@ static u32 *gen8_emit_wa_tail(struct i91
- 	*cs++ = MI_NOOP;
- 	request->wa_tail = intel_ring_offset(request, cs);
- 
-+	/* Check that entire request is less than half the ring */
-+	assert_request_valid(request);
-+
- 	return cs;
- }
- 
---- a/drivers/gpu/drm/i915/gt/intel_ring.c
-+++ b/drivers/gpu/drm/i915/gt/intel_ring.c
-@@ -315,3 +315,7 @@ int intel_ring_cacheline_align(struct i9
- 	GEM_BUG_ON(rq->ring->emit & (CACHELINE_BYTES - 1));
- 	return 0;
- }
-+
-+#if IS_ENABLED(CONFIG_DRM_I915_SELFTEST)
-+#include "selftest_ring.c"
-+#endif
---- a/drivers/gpu/drm/i915/gt/selftest_mocs.c
-+++ b/drivers/gpu/drm/i915/gt/selftest_mocs.c
-@@ -18,6 +18,20 @@ struct live_mocs {
- 	void *vaddr;
- };
- 
-+static struct intel_context *mocs_context_create(struct intel_engine_cs *engine)
++static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
++				   struct io_kiocb *req)
 +{
-+	struct intel_context *ce;
-+
-+	ce = intel_context_create(engine);
-+	if (IS_ERR(ce))
-+		return ce;
-+
-+	/* We build large requests to read the registers from the ring */
-+	ce->ring = __intel_context_ring_size(SZ_16K);
-+
-+	return ce;
-+}
-+
- static int request_add_sync(struct i915_request *rq, int err)
- {
- 	i915_request_get(rq);
-@@ -301,7 +315,7 @@ static int live_mocs_clean(void *arg)
- 	for_each_engine(engine, gt, id) {
- 		struct intel_context *ce;
- 
--		ce = intel_context_create(engine);
-+		ce = mocs_context_create(engine);
- 		if (IS_ERR(ce)) {
- 			err = PTR_ERR(ce);
- 			break;
-@@ -395,7 +409,7 @@ static int live_mocs_reset(void *arg)
- 	for_each_engine(engine, gt, id) {
- 		struct intel_context *ce;
- 
--		ce = intel_context_create(engine);
-+		ce = mocs_context_create(engine);
- 		if (IS_ERR(ce)) {
- 			err = PTR_ERR(ce);
- 			break;
---- /dev/null
-+++ b/drivers/gpu/drm/i915/gt/selftest_ring.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright © 2020 Intel Corporation
-+ */
-+
-+static struct intel_ring *mock_ring(unsigned long sz)
-+{
-+	struct intel_ring *ring;
-+
-+	ring = kzalloc(sizeof(*ring) + sz, GFP_KERNEL);
-+	if (!ring)
-+		return NULL;
-+
-+	kref_init(&ring->ref);
-+	ring->size = sz;
-+	ring->wrap = BITS_PER_TYPE(ring->size) - ilog2(sz);
-+	ring->effective_size = sz;
-+	ring->vaddr = (void *)(ring + 1);
-+	atomic_set(&ring->pin_count, 1);
-+
-+	intel_ring_update_space(ring);
-+
-+	return ring;
-+}
-+
-+static void mock_ring_free(struct intel_ring *ring)
-+{
-+	kfree(ring);
-+}
-+
-+static int check_ring_direction(struct intel_ring *ring,
-+				u32 next, u32 prev,
-+				int expected)
-+{
-+	int result;
-+
-+	result = intel_ring_direction(ring, next, prev);
-+	if (result < 0)
-+		result = -1;
-+	else if (result > 0)
-+		result = 1;
-+
-+	if (result != expected) {
-+		pr_err("intel_ring_direction(%u, %u):%d != %d\n",
-+		       next, prev, result, expected);
-+		return -EINVAL;
++	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
++		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
++			return -EFAULT;
++		use_mm(ctx->sqo_mm);
 +	}
 +
 +	return 0;
 +}
 +
-+static int check_ring_step(struct intel_ring *ring, u32 x, u32 step)
-+{
-+	u32 prev = x, next = intel_ring_wrap(ring, x + step);
-+	int err = 0;
-+
-+	err |= check_ring_direction(ring, next, next,  0);
-+	err |= check_ring_direction(ring, prev, prev,  0);
-+	err |= check_ring_direction(ring, next, prev,  1);
-+	err |= check_ring_direction(ring, prev, next, -1);
-+
-+	return err;
-+}
-+
-+static int check_ring_offset(struct intel_ring *ring, u32 x, u32 step)
-+{
-+	int err = 0;
-+
-+	err |= check_ring_step(ring, x, step);
-+	err |= check_ring_step(ring, intel_ring_wrap(ring, x + 1), step);
-+	err |= check_ring_step(ring, intel_ring_wrap(ring, x - 1), step);
-+
-+	return err;
-+}
-+
-+static int igt_ring_direction(void *dummy)
-+{
-+	struct intel_ring *ring;
-+	unsigned int half = 2048;
-+	int step, err = 0;
-+
-+	ring = mock_ring(2 * half);
-+	if (!ring)
-+		return -ENOMEM;
-+
-+	GEM_BUG_ON(ring->size != 2 * half);
-+
-+	/* Precision of wrap detection is limited to ring->size / 2 */
-+	for (step = 1; step < half; step <<= 1) {
-+		err |= check_ring_offset(ring, 0, step);
-+		err |= check_ring_offset(ring, half, step);
+ static void io_async_task_func(struct callback_head *cb)
+ {
+ 	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
+@@ -4333,12 +4355,17 @@ static void io_async_task_func(struct ca
+ 	if (canceled) {
+ 		kfree(apoll);
+ 		io_cqring_ev_posted(ctx);
++end_req:
+ 		req_set_fail_links(req);
+ 		io_double_put_req(req);
+ 		return;
+ 	}
+ 
+ 	__set_current_state(TASK_RUNNING);
++	if (io_sq_thread_acquire_mm(ctx, req)) {
++		io_cqring_add_event(req, -EFAULT);
++		goto end_req;
 +	}
-+	err |= check_ring_step(ring, 0, half - 64);
-+
-+	/* And check unwrapped handling for good measure */
-+	err |= check_ring_offset(ring, 0, 2 * half + 64);
-+	err |= check_ring_offset(ring, 3 * half, 1);
-+
-+	mock_ring_free(ring);
-+	return err;
-+}
-+
-+int intel_ring_mock_selftests(void)
-+{
-+	static const struct i915_subtest tests[] = {
-+		SUBTEST(igt_ring_direction),
-+	};
-+
-+	return i915_subtests(tests, NULL);
-+}
---- a/drivers/gpu/drm/i915/selftests/i915_mock_selftests.h
-+++ b/drivers/gpu/drm/i915/selftests/i915_mock_selftests.h
-@@ -20,6 +20,7 @@ selftest(fence, i915_sw_fence_mock_selft
- selftest(scatterlist, scatterlist_mock_selftests)
- selftest(syncmap, i915_syncmap_mock_selftests)
- selftest(uncore, intel_uncore_mock_selftests)
-+selftest(ring, intel_ring_mock_selftests)
- selftest(engine, intel_engine_cs_mock_selftests)
- selftest(timelines, intel_timeline_mock_selftests)
- selftest(requests, i915_request_mock_selftests)
+ 	mutex_lock(&ctx->uring_lock);
+ 	__io_queue_sqe(req, NULL);
+ 	mutex_unlock(&ctx->uring_lock);
+@@ -5897,11 +5924,8 @@ static int io_init_req(struct io_ring_ct
+ 	if (unlikely(req->opcode >= IORING_OP_LAST))
+ 		return -EINVAL;
+ 
+-	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
+-		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
+-			return -EFAULT;
+-		use_mm(ctx->sqo_mm);
+-	}
++	if (unlikely(io_sq_thread_acquire_mm(ctx, req)))
++		return -EFAULT;
+ 
+ 	sqe_flags = READ_ONCE(sqe->flags);
+ 	/* enforce forwards compatibility on users */
+@@ -6011,16 +6035,6 @@ fail_req:
+ 	return submitted;
+ }
+ 
+-static inline void io_sq_thread_drop_mm(struct io_ring_ctx *ctx)
+-{
+-	struct mm_struct *mm = current->mm;
+-
+-	if (mm) {
+-		unuse_mm(mm);
+-		mmput(mm);
+-	}
+-}
+-
+ static int io_sq_thread(void *data)
+ {
+ 	struct io_ring_ctx *ctx = data;
 
 
