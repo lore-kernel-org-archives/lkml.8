@@ -2,135 +2,108 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63439C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4560CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3401420771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="FYSS/gEY"
+	by mail.kernel.org (Postfix) with ESMTP id 1D50D20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbgFWJnS (ORCPT
+        id S1732194AbgFWJpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:43:18 -0400
-Received: from mout.web.de ([212.227.15.4]:55107 "EHLO mout.web.de"
+        Tue, 23 Jun 2020 05:45:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45664 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731944AbgFWJnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:43:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592905359;
-        bh=xHb59Ik5mAbrqdY1zcG1yB/bqUHWlNrxdtT4MivxF94=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=FYSS/gEYpgENWyDltRdkuIpfv5bECdYKDpWA1AGzry2NJqDphTFpdw61u7dQoC03L
-         ceJvFy1ypF42JgvnlKyCbgyQl6KpNz1ufTyf+ARKkhE6zDVcy8ePDAxLghtVtuTWYw
-         5qiViykkdoC+RPqkyc51o+LtynPlcCbtZiK35kwI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.105.198]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mw9x2-1ixlBT0uG4-00s8d3; Tue, 23
- Jun 2020 11:42:39 +0200
-Subject: Re: [v4] coccinelle: misc: add array_size_dup script to detect missed
- overflow checks
-To:     Julia Lawall <julia.lawall@inria.fr>,
-        Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        "Gustavo A. R. Silva" <garsilva@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-References: <4014118b-90a6-68c5-048f-32485fa3e852@web.de>
- <alpine.DEB.2.22.394.2006230902210.2367@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <6b9a8459-3b32-8d8d-596e-203a33d2982a@web.de>
-Date:   Tue, 23 Jun 2020 11:42:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1731921AbgFWJpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:45:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 07763AE8C;
+        Tue, 23 Jun 2020 09:45:22 +0000 (UTC)
+Date:   Tue, 23 Jun 2020 11:45:19 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        Mike Stunes <mstunes@vmware.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
+        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        X86 ML <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
+ from userspace)
+Message-ID: <20200623094519.GF31822@suse.de>
+References: <20200425191032.GK21900@8bytes.org>
+ <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
+ <20200425202316.GL21900@8bytes.org>
+ <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
+ <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2006230902210.2367@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:R1rTZTwCVRzznbsMQsIQbsQdJhxnVNlX5lqnP0G5vzbwXyYYM7k
- gDXdYBz8tTwavjHaaO0lx88s9A8DMolaIyo2Wli6yXP2Y5/eZBdCRSh/p9c15BUf64Co+Ju
- NLtaHp9kC9ld7Cu2AV9tmeBiq46k2PqwIIzWQL7Rew44Gd2vTHALc56MNnLnY/RoObRLtU1
- o4WKC+X1Txh7mDwER0xxw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aHp7Q9qGsxM=:ZLSOw3ASD5UGnVYR3L85l0
- a/IcjvzbH+35VxIb1giDWq5e+uxMNlh9lT+auuKYRJ5Fx9Ev9OgTDOhIjfgfgCproyOPZlunE
- ItqinalIOUP0FMVg/dik1n/OuXb6ZF5oGC8Ws1uMCpfAGzzwWxKId/9ZCcsEFC1HYbMNqeH90
- GSGDyk7nEiVitrdT6w5pe470H3XRZRGaFJ5rnCFqCPK619RR0A819oitkcEAQEqgZ5pVuJccM
- dKPAF9QEdnW+Lpti/PTSzh4xrqRJOXbtCOkR2vghVoWRKFY2YP6kt+mS3dS+thPG27Afdcc49
- 7+uctYH7njcZ95GXB0oFIbnyUY/p7M7IqmBXgOYtyFxg5PjKv1NpF5w4+UoCawQZXwSlhb4Y8
- rvUQ5WVX9ky/MMsiv+KW+ODrFbap1yKCnXEy1/jZaLVGdtdwKcqfSDK7GzM2ljfxRInWYmT3w
- Vp0WVrYkjAAUIrJ2IZoX28CEJbX8ud0us2A1QdguNJWqczgjPQxTjBRjvr4p+w4Yry80pSMiD
- PCAkDcZHCbdVIFmS6AJYooFqjk6zPk9Ej9LokQXvS6mkxvBGHSIFO9YOzqM1AHfzo1OLFagg2
- b+q3TYjjvqh3X91PNnsnz4pWBbCzI/d1K9ZG2KIjsPYzG90TTNjNdzbAefv/kUxQQWWmuWUzQ
- dbVLz2SfIc0J29R43hRWHLEB5IDwFpG0aLgTaWdJJrLDYV//dZAXg2rbJCsrqEq7mGsesOncw
- i7rBLsajncPjk/IQt0d/hcpAkCWBS8/PfRO/CluAyjxH/sN07bHtg67R4ItIBWKzuR00AV2Aa
- d10f9svYrRK9rvGs/vFSTCU9VfIATLmILVzqZPCBCkUk04lOMGoUq4FRzTAfSi3szwnMNqhM1
- LxoUrZZpNa9lNXwzEXbouLHQInJ6N46xrTQ4P1Pl4uGtqtFDv6HSpYEuij32jco4m6Irs4Oiu
- WDjGRHZ2x6cp3s350YrYiSmKfP8JHm8xmTUR+GeKAVglsS7M2Oty7K9GyM/O2/yJdhwCaCIqR
- CgBDWqm3J5Q5Ti//V48It6AYiyFxbiIw+TLmGo/3kdNi4H6cb7GjuoQajFEIVsxMAwU1sIkvM
- q5OsJ8m/aWz4EmlcxQaUvwKFQkjsXEaTY5s1AWbBn2GrYHoKALHJ+xlOuoWoC6ZoU92MrIWJQ
- Qy7kzpAWRdQLl1KS78eNn79NgUb9ssRjWI5A4X9qfRpnysPk+wD5U2IIjF3Yax3Jq6MjzA6uQ
- XyJ6V7aRAnvdqL33e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I don't agree with any of these comments.
+Hi Andy,
 
-Would we like to clarify each of the disagreements in more detail
-for a more constructive patch review?
+On Mon, Apr 27, 2020 at 10:37:41AM -0700, Andy Lutomirski wrote:
+> 1. Use IST for #VC and deal with all the mess that entails.
+
+With the removal of IST shifting I wonder what you would suggest on how
+to best implement an NMI-safe IST handler with nesting support.
+
+My current plan is to implement an IST handler which switches itself off
+the IST stack as soon as possible, freeing it for re-use.
+
+The flow would be roughly like this upon entering the handler;
+
+	build_pt_regs();
+
+	RSP = pt_regs->sp;
+
+	if (RSP in VC_IST_stack)
+		error("unallowed nesting")
+
+	if (RSP in current_kernel_stack)
+		RSP = round_down_to_8(RSP)
+	else
+		RSP = current_top_of_stack() // non-ist kernel stack
+
+	copy_pt_regs(pt_regs, RSP);
+	switch_stack_to(RSP);
+
+To make this NMI safe, the NMI handler needs some logic too. Upon
+entering NMI, it needs to check the return RSP, and if it is in the #VC
+IST stack, it must do the above flow by itself and update the return RSP
+and RIP. It needs to take into account the case when PT_REGS is not
+fully populated on the return side.
+
+Alternativly the NMI handler could safe/restore the contents of the #VC
+IST stack or just switch to a special #VC-in-NMI IST stack.
+
+All in all it could get complicated, and imho shift_ist would have been
+simpler, but who am I anyway...
+
+Or maybe you have a better idea how to implement this, so I'd like to
+hear your opinion first before I spend too many days implementing
+something.
 
 Regards,
-Markus
+
+	Joerg
