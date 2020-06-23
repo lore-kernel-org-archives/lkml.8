@@ -2,126 +2,113 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D997120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946557;
-	bh=uAYbPVwswo7qjSRoPvdY9qbZvoBnXvTSjRYcJUn/bUM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ecMfBnmQhxnJXCKEjeYbSUqk4YR7tyNZOLjIjZlqZOfrpxsA6J2wOdKBU0rOaO8VX
-	 FadPlrJYBQ2rlT7BZpc7iR8yfC2163UjWefdC+neiMyT3Bhdpu9p6k7PBst6pi8M70
-	 Qr/9CrCGQZ1b7j6yv2R3zxwCqYoqew8l3McgBuLc=
+	by mail.kernel.org (Postfix) with ESMTP id 59DA120702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cgVqGLE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391524AbgFWUeW (ORCPT
+        id S2391795AbgFWVJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:34:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391492AbgFWUeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 429E72098B;
-        Tue, 23 Jun 2020 20:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944449;
-        bh=uAYbPVwswo7qjSRoPvdY9qbZvoBnXvTSjRYcJUn/bUM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I300iysZDFFD3V7DFGb0jyuAFgs3AHpfhHDi9PFjNTc0uWVIXQ1gysVpA0kajpYX0
-         OLrIC4Aa9Hq3eSuS9YHVIIF+uQw4JG6zkAq4dEJ1G/uhnd5gyde0tph7FjrD/HbB3B
-         GbwbuuF8AvIrNJB/4NmfH7WUMal3jV7GzIR8PPvw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stable@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 5.4 310/314] e1000e: Do not wake up the system via WOL if device wakeup is disabled
-Date:   Tue, 23 Jun 2020 21:58:25 +0200
-Message-Id: <20200623195353.786820458@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
-References: <20200623195338.770401005@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 17:09:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391521AbgFWUeV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:21 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CBC0C061573;
+        Tue, 23 Jun 2020 13:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zZ9ZwwPDMMp7BvMEq8EyOsJmlN/xF7BcziW3McexKPw=; b=cgVqGLE15DsOhKQPCCWADScd6J
+        RjV//ZuVBYwgm/bNvaMm3QXBYNmo02AYWxJkY/2WaxgRPk7rP2wszqc18skOWnf/MqurHSMUWZQAu
+        EEV1w0DUhNxOIX+qDNchE/AvrYT7BGdjTW+DgCATQM1ZpWT2NwwUPeJ/YXNtIBaxPwhP4cLwzuvRW
+        Gy+Ii7D86w2z4wmNuMjEy5DOduGQXwWdsbVQEBv5Gu7qk46hYIANV8d9AMQh14vIwefWYyvUys2xL
+        bcA9M8a+qokxiBquFfj0BbnW1Gaz89VK+nq6CMmgio7rvkbT3e1GTD2P56Y/J3TfIgxGjfUVkm2ZX
+        qJKo60Cg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnpbZ-0004Bx-GE; Tue, 23 Jun 2020 20:33:18 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1EBD3983A87; Tue, 23 Jun 2020 22:33:17 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 22:33:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
+        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200623203317.GG4496@worktop.programming.kicks-ass.net>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net>
+ <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+ <20200623163730.GA4800@hirez.programming.kicks-ass.net>
+ <20200623175957.GA106514@elver.google.com>
+ <20200623181232.GB4800@hirez.programming.kicks-ass.net>
+ <20200623202404.GE2483@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623202404.GE2483@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Yu <yu.c.chen@intel.com>
+On Tue, Jun 23, 2020 at 10:24:04PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
+> > Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
+> > anything happens.
+> 
+> OK, so the below patch doesn't seem to have any nasty recursion issues
+> here. The only 'problem' is that lockdep now sees report_lock can cause
+> deadlocks.
+> 
+> It is completely right about it too, but I don't suspect there's much we
+> can do about it, it's pretty much the standard printk() with scheduler
+> locks held report.
 
-commit 6bf6be1127f7e6d4bf39f84d56854e944d045d74 upstream.
+Just for giggles I added the below and that works fine too. Right until
+the report_lock deadlock splat of course, thereafter lockdep is
+disabled.
 
-Currently the system will be woken up via WOL(Wake On LAN) even if the
-device wakeup ability has been disabled via sysfs:
- cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
- disabled
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index ac5f8345bae9..a011cf0a1611 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -459,6 +459,8 @@ static void set_other_info_task_blocking(unsigned long *flags,
+ 	 */
+ 	int timeout = max(kcsan_udelay_task, kcsan_udelay_interrupt);
 
-The system should not be woken up if the user has explicitly
-disabled the wake up ability for this device.
-
-This patch clears the WOL ability of this network device if the
-user has disabled the wake up ability in sysfs.
-
-Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver")
-Reported-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/ethernet/intel/e1000e/netdev.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -6345,11 +6345,17 @@ static int __e1000_shutdown(struct pci_d
- 	struct net_device *netdev = pci_get_drvdata(pdev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
- 	struct e1000_hw *hw = &adapter->hw;
--	u32 ctrl, ctrl_ext, rctl, status;
--	/* Runtime suspend should only enable wakeup for link changes */
--	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
-+	u32 ctrl, ctrl_ext, rctl, status, wufc;
- 	int retval = 0;
- 
-+	/* Runtime suspend should only enable wakeup for link changes */
-+	if (runtime)
-+		wufc = E1000_WUFC_LNKC;
-+	else if (device_may_wakeup(&pdev->dev))
-+		wufc = adapter->wol;
-+	else
-+		wufc = 0;
++	lockdep_assert_held(&report_lock);
 +
- 	status = er32(STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -6406,7 +6412,7 @@ static int __e1000_shutdown(struct pci_d
- 	if (adapter->hw.phy.type == e1000_phy_igp_3) {
- 		e1000e_igp3_phy_powerdown_workaround_ich8lan(&adapter->hw);
- 	} else if (hw->mac.type >= e1000_pch_lpt) {
--		if (!(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
-+		if (wufc && !(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
- 			/* ULP does not support wake from unicast, multicast
- 			 * or broadcast.
- 			 */
+ 	other_info->task = current;
+ 	do {
+ 		if (is_running) {
+@@ -495,6 +497,8 @@ static void set_other_info_task_blocking(unsigned long *flags,
+ 		 other_info->task == current);
+ 	if (is_running)
+ 		set_current_state(TASK_RUNNING);
++
++	lockdep_assert_held(&report_lock);
+ }
 
-
+ /* Populate @other_info; requires that the provided @other_info not in use. */
