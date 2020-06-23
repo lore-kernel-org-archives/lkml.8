@@ -2,115 +2,124 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8EC3207F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592938974;
-	bh=6uTLrbtvnF4WK5NUKMTvr1YpsgO03unIgbgvT5gU56A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eLjPehQ7ohz9+PGhRu/m7MygVYvQIiK8npqJJ8gKThIk/mJKA894vpSnPzCH/iSZT
-	 42D9Hzz4YLW/xkdgAhyK9Ve7zCFxMv6fLtNyz/10Cmdls40JOWK3UWaLvFNT6YG2+b
-	 pCmWJGbcPgZvswBtnRZureDEkSy1Ch/5TGVlJerE=
+	by mail.kernel.org (Postfix) with ESMTP id 30867207D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387457AbgFWTCx (ORCPT
+        id S1733295AbgFWTFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:02:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45094 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 15:05:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30096 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733138AbgFWTCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:02:53 -0400
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA28220809;
-        Tue, 23 Jun 2020 19:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592938972;
-        bh=6uTLrbtvnF4WK5NUKMTvr1YpsgO03unIgbgvT5gU56A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=obugMCWm9igqKMDyu3UAMnYWLTikyXJrEKloLzn1lt5zrtwmX/7hkQIagcLCHO16L
-         B8mXqrIdxPY15qBgA0okQlPicXDA5DozQMyXkhM5CoxOzSOavOxAgLGSLqx1nI5pGc
-         P4+9Q+P7Wd9YFm+V82jQJGRuY1u9UdgeMh1X8Erc=
-Received: by mail-lj1-f171.google.com with SMTP id y11so24697491ljm.9;
-        Tue, 23 Jun 2020 12:02:51 -0700 (PDT)
-X-Gm-Message-State: AOAM530aEAB+vCUwo1p49w7JxGS4YLFP61AgeZOvxcrg/b1ORfTdhG5N
-        oj0CL9RtbtAH1NZtRHkU/yuP0h305FdRzkq/zew=
-X-Google-Smtp-Source: ABdhPJxY1+C/zLjQJyd2Ymj4G6d8Wzq5Bs4FqPSVJmQ9FDB2q1YXX8klB/eUrUeCS99qDdDseTgbShhP7jOWHMXFvMI=
-X-Received: by 2002:a2e:3a17:: with SMTP id h23mr11444296lja.7.1592938970213;
- Tue, 23 Jun 2020 12:02:50 -0700 (PDT)
+        id S1733138AbgFWTFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 15:05:08 -0400
+IronPort-SDR: Zj6Oc6+RSg+O8gIKqtbcRDOP/aJObN2iAV96FP32RaamC3N9/N76An69uZl/FYyyJDI+KOvhZb
+ DP0gO5aSJREw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="123874407"
+X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
+   d="scan'208";a="123874407"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 12:05:05 -0700
+IronPort-SDR: Chcib1/+wuz5WjhZ0050ny00zBjMRvXvTvNn3tklhvytgw8+sR8FvVU90+35xP2RxmCjhmwSjR
+ mKS0w4Ebbh6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
+   d="scan'208";a="287431388"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga007.jf.intel.com with ESMTP; 23 Jun 2020 12:05:04 -0700
+Date:   Tue, 23 Jun 2020 12:05:04 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, wei.huang2@amd.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Li RongQing <lirongqing@baidu.com>,
+        Chai Wen <chaiwen@baidu.com>, Jia Lina <jialina01@baidu.com>
+Subject: Re: [PATCH] KVM: X86: Emulate APERF/MPERF to report actual VCPU
+ frequency
+Message-ID: <20200623190504.GC24107@linux.intel.com>
+References: <20200623063530.81917-1-like.xu@linux.intel.com>
+ <20200623182910.GA24107@linux.intel.com>
+ <CALMp9eQPA40FWBEOiQ8T5JX2fv+uEfU_x6js8WhAguQ8TL6frA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
-In-Reply-To: <20200623164733.qbhua7b6cg2umafj@macmini.local>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 23 Jun 2020 21:02:38 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-Message-ID: <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eQPA40FWBEOiQ8T5JX2fv+uEfU_x6js8WhAguQ8TL6frA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 at 18:47, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
->
-> Hi everybody,
->
-> Is DVFS for memory bus really working on Odroid XU3/4 board?
-> Using a simple microbenchmark that is doing only memory accesses, memory DVFS
-> seems to not working properly:
->
-> The microbenchmark is doing pointer chasing by following index in an array.
-> Indices in the array are set to follow a random pattern (cutting prefetcher),
-> and forcing RAM access.
->
-> git clone https://github.com/wwilly/benchmark.git \
->   && cd benchmark \
->   && source env.sh \
->   && ./bench_build.sh \
->   && bash source/scripts/test_dvfs_mem.sh
->
-> Python 3, cmake and sudo rights are required.
->
-> Results:
-> DVFS CPU with performance governor
-> mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
-> benchmark is running.
-> - on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
-> - on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
->
-> While forcing DVFS memory bus to use performance governor,
-> mem_gov = performance at 825000000 Hz in idle,
-> - on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
-> - on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
->
-> The kernel used is the last 5.7.5 stable with default exynos_defconfig.
+On Tue, Jun 23, 2020 at 11:39:16AM -0700, Jim Mattson wrote:
+> On Tue, Jun 23, 2020 at 11:29 AM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Tue, Jun 23, 2020 at 02:35:30PM +0800, Like Xu wrote:
+> > > The aperf/mperf are used to report current CPU frequency after 7d5905dc14a
+> > > "x86 / CPU: Always show current CPU frequency in /proc/cpuinfo". But guest
+> > > kernel always reports a fixed VCPU frequency in the /proc/cpuinfo, which
+> > > may confuse users especially when turbo is enabled on the host.
+> > >
+> > > Emulate guest APERF/MPERF capability based their values on the host.
+> > >
+> > > Co-developed-by: Li RongQing <lirongqing@baidu.com>
+> > > Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> > > Reviewed-by: Chai Wen <chaiwen@baidu.com>
+> > > Reviewed-by: Jia Lina <jialina01@baidu.com>
+> > > Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> > > ---
+> >
+> > ...
+> >
+> > > @@ -8312,7 +8376,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+> > >               dm_request_for_irq_injection(vcpu) &&
+> > >               kvm_cpu_accept_dm_intr(vcpu);
+> > >       fastpath_t exit_fastpath;
+> > > -
+> > > +     u64 enter_mperf = 0, enter_aperf = 0, exit_mperf = 0, exit_aperf = 0;
+> > >       bool req_immediate_exit = false;
+> > >
+> > >       if (kvm_request_pending(vcpu)) {
+> > > @@ -8516,8 +8580,17 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+> > >               vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
+> > >       }
+> > >
+> > > +     if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap))
+> > > +             get_host_amperf(&enter_mperf, &enter_aperf);
+> > > +
+> > >       exit_fastpath = kvm_x86_ops.run(vcpu);
+> > >
+> > > +     if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap)) {
+> > > +             get_host_amperf(&exit_mperf, &exit_aperf);
+> > > +             vcpu_update_amperf(vcpu, get_amperf_delta(enter_aperf, exit_aperf),
+> > > +                     get_amperf_delta(enter_mperf, exit_mperf));
+> > > +     }
+> > > +
+> >
+> > Is there an alternative approach that doesn't require 4 RDMSRs on every VMX
+> > round trip?  That's literally more expensive than VM-Enter + VM-Exit
+> > combined.
+> >
+> > E.g. what about adding KVM_X86_DISABLE_EXITS_APERF_MPERF and exposing the
+> > MSRs for read when that capability is enabled?
+> 
+> When would you load the hardware MSRs with the guest/host values?
 
-Thanks for the report. Few thoughts:
-1. What trans_stat are saying? Except DMC driver you can also check
-all other devfreq devices (e.g. wcore) - maybe the devfreq events
-(nocp) are not properly assigned?
-2. Try running the measurement for ~1 minutes or longer. The counters
-might have some delay (which would require probably fixing but the
-point is to narrow the problem).
-3. What do you understand by "mem_gov"? Which device is it?
+Ugh, I was thinking the MSRs were read-only.
 
-Best regards,
-Krzysztof
+Doesn't this also interact with TSC scaling?
