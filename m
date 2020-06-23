@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249BA20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D3A20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944568;
-	bh=+YPoB9eHkOMFYGLz+Lv8xbqdACT5IpHWZ4XdKQJ1088=;
+	s=default; t=1592944572;
+	bh=0ITsDM3fOKZh+tWWm63frmHczA2dJQnz3x74cD9OrLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HD6fdEJBEitSjz62uQoJzzVttMA60Yh2ZoPxvi2ciJ+IAu1yrdypeDbV/veBbyWvH
-	 kJszlXrIsniVwBwzJNZlk1v1ByWacLG5QsDNc+ncob8XwGHyqVSIuUmmdMaX72k6nN
-	 PbjTCOUDZ/pa3L7eXCrk9Q5YlBUW9MRf8B8f0xI8=
+	b=girzKJSi/zZp0jGhdSlQLEIm+yH0NjHOWyAEXzkta870cadDLaY3/Q3xx9BmicOQV
+	 +mqNrFdIbvSdL98PKKSxJjk7ZXjv8t8lo8vLjhoEY4jbTuZv4OCY/L9k7uR5d900bd
+	 4YbMxJveOsUNVnrF0nJzJQB8UZK3fsTdCbfvtBNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391764AbgFWUgG (ORCPT
+        id S2391772AbgFWUgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:36:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58846 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:36:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391754AbgFWUf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:35:59 -0400
+        id S2391754AbgFWUgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:36:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCD7920836;
-        Tue, 23 Jun 2020 20:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982A820836;
+        Tue, 23 Jun 2020 20:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944559;
-        bh=+YPoB9eHkOMFYGLz+Lv8xbqdACT5IpHWZ4XdKQJ1088=;
+        s=default; t=1592944567;
+        bh=0ITsDM3fOKZh+tWWm63frmHczA2dJQnz3x74cD9OrLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KDmySFafKbt6iMN7cg/jATAB6h8r1nUP3qn4Liwjj2xQgt6Iz+z/CaEy6h+hY+Lv5
-         KbwvTe8vcyS8fuIV78EmUqLzQEAdDPTM2ZhicJ3CDa9fogP53KD2Atw0Wz4hwLWUHX
-         xmTcMen0T8o+SIUfsuTV+RX2YBPwdwlzLCBiS2tE=
+        b=N0ou2k96BJUmsfgncZfx4trlkoujKByA0kRAvI+HUxKM8z8WawaccVCDtWKw3S23m
+         sXhNwLhFKuPhR7BdGY6lei2E5ZMQ9lal4SiqzYVTQWPzeX09evRMSvmQcc9YqwrWwq
+         lm+9GjygJBvy0eHxx9CqMzP7zTdJOaUUmzOccmWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, ashimida <ashimida@linux.alibaba.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/206] yam: fix possible memory leak in yam_init_driver
-Date:   Tue, 23 Jun 2020 21:56:05 +0200
-Message-Id: <20200623195318.806435031@linuxfoundation.org>
+Subject: [PATCH 4.19 040/206] mksysmap: Fix the mismatch of .L symbols in System.map
+Date:   Tue, 23 Jun 2020 21:56:08 +0200
+Message-Id: <20200623195318.957875663@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,34 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: ashimida <ashimida@linux.alibaba.com>
 
-[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
+[ Upstream commit 72d24accf02add25e08733f0ecc93cf10fcbd88c ]
 
-If register_netdev(dev) fails, free_netdev(dev) needs
-to be called, otherwise a memory leak will occur.
+When System.map was generated, the kernel used mksysmap to
+filter the kernel symbols, but all the symbols with the
+second letter 'L' in the kernel were filtered out, not just
+the symbols starting with 'dot + L'.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For example:
+ashimida@ubuntu:~/linux$ cat System.map |grep ' .L'
+ashimida@ubuntu:~/linux$ nm -n vmlinux |grep ' .L'
+ffff0000088028e0 t bLength_show
+......
+ffff0000092e0408 b PLLP_OUTC_lock
+ffff0000092e0410 b PLLP_OUTA_lock
+
+The original intent should be to filter out all local symbols
+starting with '.L', so the dot should be escaped.
+
+Fixes: 00902e984732 ("mksysmap: Add h8300 local symbol pattern")
+Signed-off-by: ashimida <ashimida@linux.alibaba.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hamradio/yam.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/mksysmap | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
-index ba9df430fca6e..fdab498725878 100644
---- a/drivers/net/hamradio/yam.c
-+++ b/drivers/net/hamradio/yam.c
-@@ -1148,6 +1148,7 @@ static int __init yam_init_driver(void)
- 		err = register_netdev(dev);
- 		if (err) {
- 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
-+			free_netdev(dev);
- 			goto error;
- 		}
- 		yam_devs[i] = dev;
+diff --git a/scripts/mksysmap b/scripts/mksysmap
+index a35acc0d0b827..9aa23d15862a0 100755
+--- a/scripts/mksysmap
++++ b/scripts/mksysmap
+@@ -41,4 +41,4 @@
+ # so we just ignore them to let readprofile continue to work.
+ # (At least sparc64 has __crc_ in the middle).
+ 
+-$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( .L\)' > $2
++$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)' > $2
 -- 
 2.25.1
 
