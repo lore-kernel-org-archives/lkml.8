@@ -2,162 +2,113 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C486C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B17C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47C3D207F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592939497;
-	bh=rlQHqh/1EcPc9M4t4Y9qJ2pt9mUGEddxgyBOvlhwd3o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QMIvefDcPym6k+iQyVwQH8reBDt6viYiVJNYzw8ixyNKyomIlu1+UXkAsXG5T4MHb
-	 Dfv/r3xSDxWntr3WyChMSYEwJge+lQ6JnJ2P3BTJyZryTpU61elTP37kMjXeYvbK+R
-	 lPUxNA0gM2DHiK0tmdyBqJrFRSSatAjHBT5VzAFs=
+	by mail.kernel.org (Postfix) with ESMTP id A21BA2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:13:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="B+xXS5EB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dXCLzDdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387479AbgFWTLg (ORCPT
+        id S2387420AbgFWTNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:11:36 -0400
-Received: from mail-ej1-f41.google.com ([209.85.218.41]:45691 "EHLO
-        mail-ej1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733248AbgFWTLf (ORCPT
+        Tue, 23 Jun 2020 15:13:38 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:35071 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733236AbgFWTNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:11:35 -0400
-Received: by mail-ej1-f41.google.com with SMTP id a1so8698389ejg.12;
-        Tue, 23 Jun 2020 12:11:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S6qzk+OKExXb2YpLZeuh1PmKG+c4jm0lpjuoeWwXFzk=;
-        b=r9kTTD97qkKFw+q1SPYr0Wmmq3KWGMmYl1o9LsR0k5H/dgQxF1Fj/AYaVCjMl0Xfhx
-         952UvgI6M34fyLhH+gGlkFq+u/PMO6TWDqrp/3vpXe75uggWJLtNzU2smIEt1MrgPRsR
-         2LpwPNKlxLPZ1zQAgqJ/O031v3TGNxGQYDFywEUx1p4Axdgl8olSmu3knmuhr9dDI0o/
-         XfLw/tjQCoOrBNndsTlkMuVBK1NnExcM8UQxWElMLIF9UZH9+zIgsBYtzyWyiky7jBeU
-         neE0PZ46Pqg0pkxQ5aM6CtRFI09dM5dNS9Mk4QCIRoNhymZ54j1MOxuf6kULC3Wwf0RY
-         QKzQ==
-X-Gm-Message-State: AOAM533o31B/eNTpEmWZdnSOEhqe09EvV7r9zil3N8T3FHhrEPQ6FM96
-        290/5Q5+lgkg0SAxtxMMxm0=
-X-Google-Smtp-Source: ABdhPJzL8paryXZaLIV+aJhyo9RYBnt+N7daGvK76KL9xSHh8GkcyzPYHf1WG9BUOVfCwW6i7BNwCg==
-X-Received: by 2002:a17:906:4cd0:: with SMTP id q16mr13306634ejt.418.1592939492855;
-        Tue, 23 Jun 2020 12:11:32 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.235])
-        by smtp.googlemail.com with ESMTPSA id a2sm4479503ejg.76.2020.06.23.12.11.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jun 2020 12:11:31 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 21:11:29 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lukasz Luba <lukasz.luba@arm.com>
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-Message-ID: <20200623191129.GA4171@kozik-lap>
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
- <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+        Tue, 23 Jun 2020 15:13:37 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.west.internal (Postfix) with ESMTP id C4289906;
+        Tue, 23 Jun 2020 15:13:35 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 23 Jun 2020 15:13:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=7WMvAPN1ErXgthiWUva+PTQ5T73
+        /EhOOW6dGIyc3zc0=; b=B+xXS5EBQWZ76VL502N0Tw1rr59TAS+8Pq1CRN/ND1g
+        9mi/Bj3aIMd9/8Z0lXlIW13VHlyNycJXaI+NnLZgeAPZ1dtuK+FL9rAasVMz5yzj
+        b3UDgAoF1CfpbwJa1kTLjuSmrN2mKF4aJhTvLtg4LONgwbz5MwRM74ZWGh3YBNE0
+        oEomJNl1PnVg3e1jouf9fcYDMOiONa8F3GJ2UsEQRzq8TYJvV64vP+fEviCCOwoV
+        Goe3ONO0sURn5YPfJdlW/quT7f31cXx75HAxqTk6Uz0KyVx5nlMfGXUX1IZfhKHC
+        Hz8uQ2hey7urtJcHOhT/CeX81xdemir2Qm6N6mkuOqQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7WMvAP
+        N1ErXgthiWUva+PTQ5T73/EhOOW6dGIyc3zc0=; b=dXCLzDdCuwNGc5oLIfOe5L
+        wTIxnmKazr6VdstsTaz3hwOkHGeSMwlx2q3oknJL/FU7LcsrYnK4yy1OmNW/LESh
+        4n9N8vOKP/DIUVa48fgeFVm6Hoj57yAJruueXw6Mdazc79XtPFoXEyPaJh8B9mWM
+        kS1EN/wdxPQYsSCWc7lC+j3HN9VBqMqn1dl0nKUhj+QvWbbVQ45MlATPwK1B2ixj
+        ETVWDshVsgLRGKGNlwSfs5NrhzlK3D+mtoiZh7CLyZjtSnMIcbwBBmoEc0GN2vdj
+        RSyVPh91Pe6AC5alHDvLdEECasb1vmKqnhxOr2CHjiHaKYhM9XnXsdgXlnq5OtaQ
+        ==
+X-ME-Sender: <xms:XlTyXk-P6sWMr2Vi07X27DG6YL52VZnVlmT_fZ5wtczUclsPFZs2Ow>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekhedguddtjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuhe
+    ejgfffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeek
+    fedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:XlTyXssaaugpPbLXOIRp270vhFlvbqRa8cz2rWuRJXoPz9G6NYl9PQ>
+    <xmx:XlTyXqAixP3WzEqLYjaZXMWcZi_uCoI1eUN7pV2lkxqzqm59jRvlcQ>
+    <xmx:XlTyXkfqATS3k_-vThGx3EGgS6FZwaRiZzTfd3PiD66Vgdkh52J78g>
+    <xmx:X1TyXqGrtznON9bqGqlBXzR_2sIOg8ycDEX1jqn43Wv7SI4mvRRE0zk6ax4>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 20A203280063;
+        Tue, 23 Jun 2020 15:13:34 -0400 (EDT)
+Date:   Tue, 23 Jun 2020 21:13:34 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Krufky <mkrufky@linuxtv.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>,
+        Jaedon Shin <jaedon.shin@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
+        Satendra Singh Thakur <satendra.t@samsung.com>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH stable 4.9 00/21] Unbreak 32-bit DVB applications on
+ 64-bit kernels
+Message-ID: <20200623191334.GA279616@kroah.com>
+References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200605162518.28099-1-florian.fainelli@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:02:38PM +0200, Krzysztof Kozlowski wrote:
-> On Tue, 23 Jun 2020 at 18:47, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
-> >
-> > Hi everybody,
-> >
-> > Is DVFS for memory bus really working on Odroid XU3/4 board?
-> > Using a simple microbenchmark that is doing only memory accesses, memory DVFS
-> > seems to not working properly:
-> >
-> > The microbenchmark is doing pointer chasing by following index in an array.
-> > Indices in the array are set to follow a random pattern (cutting prefetcher),
-> > and forcing RAM access.
-> >
-> > git clone https://github.com/wwilly/benchmark.git \
-> >   && cd benchmark \
-> >   && source env.sh \
-> >   && ./bench_build.sh \
-> >   && bash source/scripts/test_dvfs_mem.sh
-> >
-> > Python 3, cmake and sudo rights are required.
-> >
-> > Results:
-> > DVFS CPU with performance governor
-> > mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
-> > benchmark is running.
-> > - on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
-> > - on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
-> >
-> > While forcing DVFS memory bus to use performance governor,
-> > mem_gov = performance at 825000000 Hz in idle,
-> > - on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
-> > - on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
-> >
-> > The kernel used is the last 5.7.5 stable with default exynos_defconfig.
+On Fri, Jun 05, 2020 at 09:24:57AM -0700, Florian Fainelli wrote:
+> Hi all,
 > 
-> Thanks for the report. Few thoughts:
-> 1. What trans_stat are saying? Except DMC driver you can also check
-> all other devfreq devices (e.g. wcore) - maybe the devfreq events
-> (nocp) are not properly assigned?
-> 2. Try running the measurement for ~1 minutes or longer. The counters
-> might have some delay (which would require probably fixing but the
-> point is to narrow the problem).
-> 3. What do you understand by "mem_gov"? Which device is it?
+> This long patch series was motivated by backporting Jaedon's changes
+> which add a proper ioctl compatibility layer for 32-bit applications
+> running on 64-bit kernels. We have a number of Android TV-based products
+> currently running on the 4.9 kernel and this was broken for them.
+> 
+> Thanks to Robert McConnell for identifying and providing the patches in
+> their initial format.
+> 
+> In order for Jaedon's patches to apply cleanly a number of changes were
+> applied to support those changes. If you deem the patch series too big
+> please let me know.
 
-+Cc Lukasz who was working on this.
+Now queued up,t hanks.
 
-I just run memtester and more-or-less ondemand works (at least ramps
-up):
-
-Before:
-/sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
-     From  :   To
-           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-* 165000000:         0         0         0         0         0         0         0         0   1795950
-  206000000:         1         0         0         0         0         0         0         0      4770
-  275000000:         0         1         0         0         0         0         0         0     15540
-  413000000:         0         0         1         0         0         0         0         0     20780
-  543000000:         0         0         0         1         0         0         0         1     10760
-  633000000:         0         0         0         0         2         0         0         0     10310
-  728000000:         0         0         0         0         0         0         0         0         0
-  825000000:         0         0         0         0         0         2         0         0     25920
-Total transition : 9
-
-
-$ sudo memtester 1G
-
-During memtester:
-/sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
-     From  :   To
-           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-  165000000:         0         0         0         0         0         0         0         1   1801490
-  206000000:         1         0         0         0         0         0         0         0      4770
-  275000000:         0         1         0         0         0         0         0         0     15540
-  413000000:         0         0         1         0         0         0         0         0     20780
-  543000000:         0         0         0         1         0         0         0         2     11090
-  633000000:         0         0         0         0         3         0         0         0     17210
-  728000000:         0         0         0         0         0         0         0         0         0
-* 825000000:         0         0         0         0         0         3         0         0    169020
-Total transition : 13
-
-However after killing memtester it stays at 633 MHz for very long time
-and does not slow down. This is indeed weird...
-
-Best regards,
-Krzysztof
+greg k-h
