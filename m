@@ -2,121 +2,259 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E001C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D48C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F324207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB93207F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:01:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="12ocHWdA"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="J5JANumX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733296AbgFWTBf (ORCPT
+        id S2387441AbgFWTBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733200AbgFWTBe (ORCPT
+        Tue, 23 Jun 2020 15:01:44 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:39720 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733200AbgFWTBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:01:34 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDF4C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:01:33 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id w9so6573530ilk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=fyjbQaae0NsOAvrxvCCKUMOuMj6tKFODQMatWItt/Yc=;
-        b=12ocHWdATKVhsusr9pw/ZzGbXNfGtGLgEK7lm+zqveEaASn/HtWRW2GyDQmdikfU6f
-         e18yFxs95bPGbophgL9JMyevGdF0L66cCZfwqInWflTALvAptqBlMIlcmAT9rkwzESoM
-         0yiDj2Tk1/5aRWSXk+l/IuKOYh/sSh0syTDEFs85yK7KJV0Z4JyCBZlxLwbEALH7bXwy
-         6SAlUFkaKhF60lU5GYI+5gZyRNhJIC1PcCv4+Q9Sdv2t8ofszYIOD8Ru60lcLobD290X
-         Cru1NqHkveGwCFHx+evF3MGY1lyafhaeqHwASnFOO0L6qXkzBU+xIoypXABzh6GGwL16
-         8OLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fyjbQaae0NsOAvrxvCCKUMOuMj6tKFODQMatWItt/Yc=;
-        b=Z7gd3ZhhJeadX0OEznzKAWDX6u1VSW0birHhjx6aHSPM96oaIu9/HXllBw/Ax6apl4
-         dnPzaeujTTkZ8bP1AjrG3JeQlshalnUr6d5olCY6EXQRLpwcb8aF6Bsr6feNtjn3Q2xI
-         jYHS46sLGdyQnksgbc4l/McX/6DazSEyJCk/LDxO0bJRRhXMb5PSV3P6DhOg/RipHrK3
-         +eFRerTcfE3oUMqz5MtaiSgfkpl53+BcbIIqyjkB6WEK2hsaU3yF3nZgD7bd9WTd7Nk6
-         /bso4hSYEWwLGPDYxuUWIp2ZfotYeUVvGwVukVjxzH4fHxj7U/Q1Z9KUEFh+CFp6SLAO
-         TAgA==
-X-Gm-Message-State: AOAM532hlSuyeXFsGp63rdI/+oG9ONlCL29cClzQy6fY3byFTokbEUE+
-        3rKxv/OSoALd4Jefl+H4zfqh0C5muVo=
-X-Google-Smtp-Source: ABdhPJx2qOhZ90hWWKWjZSXmgBG+jZ0cb1KjGKxfREseIBLwZFd60CYItW4YPTyH592gZ4j9aQp9kQ==
-X-Received: by 2002:a92:d789:: with SMTP id d9mr12228762iln.107.1592938892319;
-        Tue, 23 Jun 2020 12:01:32 -0700 (PDT)
-Received: from [192.168.1.56] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id t5sm10769796iov.53.2020.06.23.12.01.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 12:01:31 -0700 (PDT)
-Subject: Re: [PATCH 1/4] io_uring: fix hanging iopoll in case of -EAGAIN
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1592863245.git.asml.silence@gmail.com>
- <0301f35644823a01cbae87e440df7d58ebcf2279.1592863245.git.asml.silence@gmail.com>
- <95b720a6-926c-a208-e929-1d0203fa8701@kernel.dk>
- <e05fc48b-684d-2980-3986-47a77af403e0@kernel.dk>
- <6714cb8f-894c-9ff1-7b3a-4f86d7dbe52a@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d33e9006-b7ef-4925-ff3f-332ab655f2ae@kernel.dk>
-Date:   Tue, 23 Jun 2020 13:01:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <6714cb8f-894c-9ff1-7b3a-4f86d7dbe52a@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 23 Jun 2020 15:01:42 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NIqbqQ013947;
+        Tue, 23 Jun 2020 15:01:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=NCeo/UaIeyZylG6hualmcmvKNxv5wzhAHTyWbIfEX64=;
+ b=J5JANumXEWk0lBDNCn+DwZtJGObxWj5XFaSaw5XQ2C3RL9c54Y9U1KLjUvLpoEXDnCrG
+ NAwe8JwHsNjCLAIUvyRcmDkqwioc87TV1oPvsBXe+zTZIi3bMKx4r+CeimNWTYI8yzyk
+ h8n9WGo+qfVQPuRIMjcyjgoP4PT7e6E9H6N9jE5S4PD23ylMA+RZjCkesiBcLyy4zjX4
+ oinrj4wio98YYhkoDbmFILb8MbXBsPDaZEIIc3Nk5roTBSN2n22CO48znxQFDvVAMUfm
+ P6zEW/GStD2Wd7O4duTgzW5hlLkmr1tDsb7Dl+XYUXpFL0TZhc9sJ0XZ4/1sfx+qkHKC 3w== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 31uk4qs55p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 15:01:40 -0400
+Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NJ1IFo124027;
+        Tue, 23 Jun 2020 15:01:39 -0400
+Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
+        by mx0a-00154901.pphosted.com with ESMTP id 31up7ksdbd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 15:01:25 -0400
+X-LoopCount0: from 10.166.132.56
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="502086844"
+From:   <Mario.Limonciello@dell.com>
+To:     <Crag.Wang@dell.com>, <crag0715@gmail.com>, <sre@kernel.org>
+CC:     <mathewk@chromium.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
+ charging mode
+Thread-Topic: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
+ charging mode
+Thread-Index: AQHWSTc914n0RAe+o068prEbXUiwtqjmNwpwgAB2c4D//+BIoA==
+Date:   Tue, 23 Jun 2020 18:59:00 +0000
+Message-ID: <05bbf37785bd44ce8cc8777f107b16ff@AUSX13MPC105.AMER.DELL.COM>
+References: <20200623082016.23188-1-crag_wang@dell.com>
+ <6a804505400e4109906fadcf945edf76@AUSX13MPC105.AMER.DELL.COM>
+ <ecda5d3852af4a1a8c08e0dc07983f35@KULX13MDC113.APAC.DELL.COM>
+In-Reply-To: <ecda5d3852af4a1a8c08e0dc07983f35@KULX13MDC113.APAC.DELL.COM>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-23T13:48:06.9996956Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=f22c6ecd-fc33-4d94-beba-f01c0a6f3fa5;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_12:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 bulkscore=0 mlxscore=0 clxscore=1015 spamscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006120000 definitions=main-2006230129
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 phishscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006120000
+ definitions=main-2006230128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/20 5:57 AM, Pavel Begunkov wrote:
-> On 23/06/2020 05:18, Jens Axboe wrote:
->> On 6/22/20 8:07 PM, Jens Axboe wrote:
->>> On 6/22/20 4:16 PM, Pavel Begunkov wrote:
->>>> io_do_iopoll() won't do anything with a request unless
->>>> req->iopoll_completed is set. So io_complete_rw_iopoll() has to set
->>>> it, otherwise io_do_iopoll() will poll a file again and again even
->>>> though the request of interest was completed long ago.
->>>
->>> I need to look at this again, because with this change, I previously
->>> got various use-after-free. I haven't seen any issues with it, but
->>> I agree, from a quick look that I'm not quite sure how it's currently
->>> not causing hangs. Yet I haven't seen any, with targeted -EAGAIN
->>> testing.
-> 
-> Can io_complete_rw_iopoll() get -EAGAIN after being successfully enqueued
-> (i.e. EIOCBQUEUED)? It's reliably fails for me, because my hacked nullblk
-> _can_ (i.e. probabilistically returns BLK_STS_AGAIN from ->iopoll()).
+> -----Original Message-----
+> From: Wang, Crag <Crag_Wang@Dell.com>
+> Sent: Tuesday, June 23, 2020 10:51 AM
+> To: Limonciello, Mario; Crag Wang; Sebastian Reichel
+> Cc: mathewk@chromium.org; linux-pm@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
+> charging mode
+>=20
+> > -----Original Message-----
+> > From: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Sent: Tuesday, June 23, 2020 9:48 PM
+> > To: Crag Wang; Sebastian Reichel
+> > Cc: mathewk@chromium.org; Wang, Crag; linux-pm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long lif=
+e
+> > charging mode
+> >
+> > > -----Original Message-----
+> > > From: Crag Wang <crag0715@gmail.com>
+> > > Sent: Tuesday, June 23, 2020 3:20 AM
+> > > To: Sebastian Reichel
+> > > Cc: mathewk@chromium.org; Limonciello, Mario; Wang, Crag; linux-
+> > > pm@vger.kernel.org; linux-kernel@vger.kernel.org
+> > > Subject: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
+> > > charging mode
+> > >
+> > >
+> > > [EXTERNAL EMAIL]
+> > >
+> > > This is a long life mode for extended warranty battery, switching to =
+a
+> > > differnt mode selection is unavailable. The power charging rate is
+> > > customized so that battery at work last longer.
+> > >
+> > > Signed-off-by: Crag Wang <crag_wang@dell.com>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-class-power-wilco | 3 +++
+> > >  drivers/power/supply/power_supply_sysfs.c         | 1 +
+> > >  drivers/power/supply/wilco-charger.c              | 5 +++++
+> > >  include/linux/power_supply.h                      | 1 +
+> > >  4 files changed, 10 insertions(+)
+> > >
+> > > diff --git a/Documentation/ABI/testing/sysfs-class-power-wilco
+> > > b/Documentation/ABI/testing/sysfs-class-power-wilco
+> > > index da1d6ffe5e3c..1c91b17b6fd4 100644
+> > > --- a/Documentation/ABI/testing/sysfs-class-power-wilco
+> > > +++ b/Documentation/ABI/testing/sysfs-class-power-wilco
+> > > @@ -14,6 +14,9 @@ Description:
+> > >  			Charging begins when level drops below
+> > >  			charge_control_start_threshold, and ceases when
+> > >  			level is above charge_control_end_threshold.
+> > > +		Permanent Long Life: Last longer battery life, this mode
+> > > +			is programmed once in the factory. Switching to a
+> > > +			different mode is unavailable.
+> > >
+> > >  What:		/sys/class/power_supply/wilco-
+> > > charger/charge_control_start_threshold
+> > >  Date:		April 2019
+> > > diff --git a/drivers/power/supply/power_supply_sysfs.c
+> > > b/drivers/power/supply/power_supply_sysfs.c
+> > > index bc79560229b5..af3884015ad8 100644
+> > > --- a/drivers/power/supply/power_supply_sysfs.c
+> > > +++ b/drivers/power/supply/power_supply_sysfs.c
+> > > @@ -87,6 +87,7 @@ static const char * const
+> > > POWER_SUPPLY_CHARGE_TYPE_TEXT[] =3D {
+> > >  	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	=3D "Standard",
+> > >  	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	=3D "Adaptive",
+> > >  	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	=3D "Custom",
+> > > +	[POWER_SUPPLY_CHARGE_TYPE_LONGLIFE]	=3D "Permanent Long
+> > Life",
+> > >  };
+> > >
+> > >  static const char * const POWER_SUPPLY_HEALTH_TEXT[] =3D { diff --gi=
+t
+> > > a/drivers/power/supply/wilco-charger.c
+> > > b/drivers/power/supply/wilco-charger.c
+> > > index b3c6d7cdd731..713c3018652f 100644
+> > > --- a/drivers/power/supply/wilco-charger.c
+> > > +++ b/drivers/power/supply/wilco-charger.c
+> > > @@ -27,6 +27,7 @@ enum charge_mode {
+> > >  	CHARGE_MODE_AC =3D 3,	/* Mostly AC use, used for Trickle */
+> > >  	CHARGE_MODE_AUTO =3D 4,	/* Used for Adaptive */
+> > >  	CHARGE_MODE_CUSTOM =3D 5,	/* Used for Custom */
+> > > +	CHARGE_MODE_LONGLIFE =3D 6, /* Used for Permanent Long Life */
+> >
+> > Since this is normally only done in the factory context, can you please
+> > confirm does something need to be artificially done to block userland f=
+rom
+> > trying to set the battery charging to this mode?  Or will the EC alread=
+y
+> handle
+> > blocking it directly?
+>=20
+> This is a feature of the battery, when the EC receives this setting it wi=
+ll be
+> sent
+> to the battery and stored there. Afterwards any attempt to change this mo=
+de
+> will return a failure.
 
-Yes it can. The primary example would be a polled bio that gets split, into
-let's say 4 bio's. First one queues fine, but one of the subsequent ones
-run into request allocation failures and it gets marked as -EAGAIN.
+Sorry this still isn't clear to me.  You're saying that if EC receives long=
+life setting
+it will be able to do this in the field?  If so, then I think this patch wi=
+ll need
+to block that setting to not allow field conversions into longlife mode.
 
->> Ah I think I know what it is - if we run into:
->>
->> if (req->result == -EAGAIN)
->> 	return -EAGAIN
->>
->> in io_issue_sqe() and race with it, we'll reissue twice potentially.
->> So the above isn't quite enough, we'll need something a bit broader.
-> 
-> I see, I'll deal with it.
+>=20
+> It's even better to block mode selection in the userland if long life mod=
+e
+> already
+> in use.
 
-Thanks!
+Yes, I agree.  This sounds like a good follow up to me too.
 
--- 
-Jens Axboe
+>=20
+> >
+> > >  };
+> > >
+> > >  #define CHARGE_LOWER_LIMIT_MIN	50
+> > > @@ -48,6 +49,8 @@ static int psp_val_to_charge_mode(int psp_val)
+> > >  		return CHARGE_MODE_AUTO;
+> > >  	case POWER_SUPPLY_CHARGE_TYPE_CUSTOM:
+> > >  		return CHARGE_MODE_CUSTOM;
+> > > +	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
+> > > +		return CHARGE_MODE_LONGLIFE;
+> > >  	default:
+> > >  		return -EINVAL;
+> > >  	}
+> > > @@ -67,6 +70,8 @@ static int charge_mode_to_psp_val(enum
+> > charge_mode mode)
+> > >  		return POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE;
+> > >  	case CHARGE_MODE_CUSTOM:
+> > >  		return POWER_SUPPLY_CHARGE_TYPE_CUSTOM;
+> > > +	case CHARGE_MODE_LONGLIFE:
+> > > +		return POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
+> > >  	default:
+> > >  		return -EINVAL;
+> > >  	}
+> > > diff --git a/include/linux/power_supply.h
+> > > b/include/linux/power_supply.h index ac1345a48ad0..528a3eaa2320
+> > 100644
+> > > --- a/include/linux/power_supply.h
+> > > +++ b/include/linux/power_supply.h
+> > > @@ -48,6 +48,7 @@ enum {
+> > >  	POWER_SUPPLY_CHARGE_TYPE_STANDARD,	/* normal speed */
+> > >  	POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,	/* dynamically
+> > adjusted speed */
+> > >  	POWER_SUPPLY_CHARGE_TYPE_CUSTOM,	/* use
+> > CHARGE_CONTROL_* props */
+> > > +	POWER_SUPPLY_CHARGE_TYPE_LONGLIFE,	/* slow speed, longer
+> > life */
+> > >  };
+> > >
+> > >  enum {
+> > > --
+> > > 2.20.1
 
