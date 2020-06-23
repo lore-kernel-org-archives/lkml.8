@@ -2,53 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55759C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75127C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 350ED204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50036204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946639;
-	bh=b6bZN6i/dVx7I6/UL2y3Y9h90z9mXBITGwRBtbEcYss=;
+	s=default; t=1592946646;
+	bh=fK6PtbeWsgXIsW7xnqrqqNI2QCT/MrlaXeICgV6rKrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=geM6VrGx++9dtDyjH0HNv5ge8tdrqW7kuJUm7lQZeLDlRMS+5HmARX8NjV/75I4Nw
-	 gcpl7VdZ0cqOz3M8RCIMb5EZreR651dSdldiixeB4NS++KmG205fHaq3ieWTM/L7e4
-	 6Bh41El0G0KFC1XZ1Tty9EuBnqouGyhUrwJryD10=
+	b=LCw3spGACpAKZZfixV1pvJTr3v8jzXIBtcLEWEJg/yasAYJbaF+E1hMPJLFzpuWhT
+	 xAkd9uAe0+DcupLoolKsyFG0ZK8EH2dCLhlKb0cZI+5PhGd0LBorvD8e9+5VN82Jq9
+	 Oo2FzkwlFzni3CX96QRZdBxLRqcpw6MdRUDhuhoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388614AbgFWUdA (ORCPT
+        id S2393167AbgFWVKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:33:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53822 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:10:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388420AbgFWUcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:32:48 -0400
+        id S2391361AbgFWUc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:32:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C552064B;
-        Tue, 23 Jun 2020 20:32:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACB732064B;
+        Tue, 23 Jun 2020 20:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944368;
-        bh=b6bZN6i/dVx7I6/UL2y3Y9h90z9mXBITGwRBtbEcYss=;
+        s=default; t=1592944379;
+        bh=fK6PtbeWsgXIsW7xnqrqqNI2QCT/MrlaXeICgV6rKrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GeHHg5S4mQPHPdTKI7MWHBU8sCXyMXSHOtsvzSsbgei0Ccl2BcfMYEIkhvbWTiFxb
-         LWVSS4CzJVAw8AeLrOidpx+ryFZbteEbIDxLN0103GhdGY8O8noj8YuCRTCKw12Dle
-         7PJvgJlzKrinrjHoifDTJ9d6Zq3qUWoPrqtOxwUs=
+        b=c4gY15pv/B8Rzm+IwZSB292RveXleL3HYnleEJsY/2futF28ZW/rLY0jpK7s8+eBV
+         TXaGKjzjxQWta0Z2uOgbIFxo39/fqKDnBMe0NAfcogEIzT+Pr9A/b97nr17KI6FfBg
+         Mv0AfIg470Sp2csEVI31HqjMLaOV1hXmx+S0MaxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Luis Machado <luis.machado@linaro.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 278/314] arm64: hw_breakpoint: Dont invoke overflow handler on uaccess watchpoints
-Date:   Tue, 23 Jun 2020 21:57:53 +0200
-Message-Id: <20200623195352.242359665@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Eric Whitney <enwlinux@gmail.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.4 281/314] ext4: fix partial cluster initialization when splitting extent
+Date:   Tue, 23 Jun 2020 21:57:56 +0200
+Message-Id: <20200623195352.380927246@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,108 +60,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
 
-[ Upstream commit 24ebec25fb270100e252b19c288e21bd7d8cc7f7 ]
+commit cfb3c85a600c6aa25a2581b3c1c4db3460f14e46 upstream.
 
-Unprivileged memory accesses generated by the so-called "translated"
-instructions (e.g. STTR) at EL1 can cause EL0 watchpoints to fire
-unexpectedly if kernel debugging is enabled. In such cases, the
-hw_breakpoint logic will invoke the user overflow handler which will
-typically raise a SIGTRAP back to the current task. This is futile when
-returning back to the kernel because (a) the signal won't have been
-delivered and (b) userspace can't handle the thing anyway.
+Fix the bug when calculating the physical block number of the first
+block in the split extent.
 
-Avoid invoking the user overflow handler for watchpoints triggered by
-kernel uaccess routines, and instead single-step over the faulting
-instruction as we would if no overflow handler had been installed.
+This bug will cause xfstests shared/298 failure on ext4 with bigalloc
+enabled occasionally. Ext4 error messages indicate that previously freed
+blocks are being freed again, and the following fsck will fail due to
+the inconsistency of block bitmap and bg descriptor.
 
-(Fixes tag identifies the introduction of unprivileged memory accesses,
- which exposed this latent bug in the hw_breakpoint code)
+The following is an example case:
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Fixes: 57f4959bad0a ("arm64: kernel: Add support for User Access Override")
-Reported-by: Luis Machado <luis.machado@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+1. First, Initialize a ext4 filesystem with cluster size '16K', block size
+'4K', in which case, one cluster contains four blocks.
+
+2. Create one file (e.g., xxx.img) on this ext4 filesystem. Now the extent
+tree of this file is like:
+
+...
+36864:[0]4:220160
+36868:[0]14332:145408
+51200:[0]2:231424
+...
+
+3. Then execute PUNCH_HOLE fallocate on this file. The hole range is
+like:
+
+..
+ext4_ext_remove_space: dev 254,16 ino 12 since 49506 end 49506 depth 1
+ext4_ext_remove_space: dev 254,16 ino 12 since 49544 end 49546 depth 1
+ext4_ext_remove_space: dev 254,16 ino 12 since 49605 end 49607 depth 1
+...
+
+4. Then the extent tree of this file after punching is like
+
+...
+49507:[0]37:158047
+49547:[0]58:158087
+...
+
+5. Detailed procedure of punching hole [49544, 49546]
+
+5.1. The block address space:
+```
+lblk        ~49505  49506   49507~49543     49544~49546    49547~
+	  ---------+------+-------------+----------------+--------
+	    extent | hole |   extent	|	hole	 | extent
+	  ---------+------+-------------+----------------+--------
+pblk       ~158045  158046  158047~158083  158084~158086   158087~
+```
+
+5.2. The detailed layout of cluster 39521:
+```
+		cluster 39521
+	<------------------------------->
+
+		hole		  extent
+	<----------------------><--------
+
+lblk      49544   49545   49546   49547
+	+-------+-------+-------+-------+
+	|	|	|	|	|
+	+-------+-------+-------+-------+
+pblk     158084  1580845  158086  158087
+```
+
+5.3. The ftrace output when punching hole [49544, 49546]:
+- ext4_ext_remove_space (start 49544, end 49546)
+  - ext4_ext_rm_leaf (start 49544, end 49546, last_extent [49507(158047), 40], partial [pclu 39522 lblk 0 state 2])
+    - ext4_remove_blocks (extent [49507(158047), 40], from 49544 to 49546, partial [pclu 39522 lblk 0 state 2]
+      - ext4_free_blocks: (block 158084 count 4)
+        - ext4_mballoc_free (extent 1/6753/1)
+
+5.4. Ext4 error message in dmesg:
+EXT4-fs error (device vdb): mb_free_blocks:1457: group 1, block 158084:freeing already freed block (bit 6753); block bitmap corrupt.
+EXT4-fs error (device vdb): ext4_mb_generate_buddy:747: group 1, block bitmap and bg descriptor inconsistent: 19550 vs 19551 free clusters
+
+In this case, the whole cluster 39521 is freed mistakenly when freeing
+pblock 158084~158086 (i.e., the first three blocks of this cluster),
+although pblock 158087 (the last remaining block of this cluster) has
+not been freed yet.
+
+The root cause of this isuue is that, the pclu of the partial cluster is
+calculated mistakenly in ext4_ext_remove_space(). The correct
+partial_cluster.pclu (i.e., the cluster number of the first block in the
+next extent, that is, lblock 49597 (pblock 158086)) should be 39521 rather
+than 39522.
+
+Fixes: f4226d9ea400 ("ext4: fix partial cluster initialization")
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+Reviewed-by: Eric Whitney <enwlinux@gmail.com>
+Cc: stable@kernel.org # v3.19+
+Link: https://lore.kernel.org/r/1590121124-37096-1-git-send-email-jefflexu@linux.alibaba.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/kernel/hw_breakpoint.c | 44 ++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+ fs/ext4/extents.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 38ee1514cd9cd..b4a1607958246 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -730,6 +730,27 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
- 		return 0;
- }
- 
-+static int watchpoint_report(struct perf_event *wp, unsigned long addr,
-+			     struct pt_regs *regs)
-+{
-+	int step = is_default_overflow_handler(wp);
-+	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
-+
-+	info->trigger = addr;
-+
-+	/*
-+	 * If we triggered a user watchpoint from a uaccess routine, then
-+	 * handle the stepping ourselves since userspace really can't help
-+	 * us with this.
-+	 */
-+	if (!user_mode(regs) && info->ctrl.privilege == AARCH64_BREAKPOINT_EL0)
-+		step = 1;
-+	else
-+		perf_bp_event(wp, regs);
-+
-+	return step;
-+}
-+
- static int watchpoint_handler(unsigned long addr, unsigned int esr,
- 			      struct pt_regs *regs)
- {
-@@ -739,7 +760,6 @@ static int watchpoint_handler(unsigned long addr, unsigned int esr,
- 	u64 val;
- 	struct perf_event *wp, **slots;
- 	struct debug_info *debug_info;
--	struct arch_hw_breakpoint *info;
- 	struct arch_hw_breakpoint_ctrl ctrl;
- 
- 	slots = this_cpu_ptr(wp_on_reg);
-@@ -777,25 +797,13 @@ static int watchpoint_handler(unsigned long addr, unsigned int esr,
- 		if (dist != 0)
- 			continue;
- 
--		info = counter_arch_bp(wp);
--		info->trigger = addr;
--		perf_bp_event(wp, regs);
--
--		/* Do we need to handle the stepping? */
--		if (is_default_overflow_handler(wp))
--			step = 1;
-+		step = watchpoint_report(wp, addr, regs);
- 	}
--	if (min_dist > 0 && min_dist != -1) {
--		/* No exact match found. */
--		wp = slots[closest_match];
--		info = counter_arch_bp(wp);
--		info->trigger = addr;
--		perf_bp_event(wp, regs);
- 
--		/* Do we need to handle the stepping? */
--		if (is_default_overflow_handler(wp))
--			step = 1;
--	}
-+	/* No exact match found? */
-+	if (min_dist > 0 && min_dist != -1)
-+		step = watchpoint_report(slots[closest_match], addr, regs);
-+
- 	rcu_read_unlock();
- 
- 	if (!step)
--- 
-2.25.1
-
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -3010,7 +3010,7 @@ again:
+ 			 * in use to avoid freeing it when removing blocks.
+ 			 */
+ 			if (sbi->s_cluster_ratio > 1) {
+-				pblk = ext4_ext_pblock(ex) + end - ee_block + 2;
++				pblk = ext4_ext_pblock(ex) + end - ee_block + 1;
+ 				partial.pclu = EXT4_B2C(sbi, pblk);
+ 				partial.state = nofree;
+ 			}
 
 
