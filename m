@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02056C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C921E2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8665D2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948203;
-	bh=1H4i9incKA8JrKVHqNH+Avto6Sk4RJGCA2gTwPD6aUo=;
+	s=default; t=1592948208;
+	bh=FHSj8TZnsz1D0Yt76ksismIfOCjetZenOZ7Njffc0GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PBbMWBoTPp7p4dk+kUrr5MK2WxuB3n71bIHcpTgSHkHTA6J6BsCw+GORgy6LRRugF
-	 /eSl/BWXv3OoHLnzimrtqz9pWXK0colO8S7VVjvwXWdgn0pDNwrG+StPWUCD4ZF54Z
-	 7eFjzfyQUp1U7/KWilQqAmqfzLuje+ymlq2Sg9sA=
+	b=OECCBfmPQFu+3yRcDtNyq+AHqcZ0eKVs6awHIVwWWf0SpAXDWgI3iq6WriOgGzyny
+	 qeGI/pxUt3lAvsjXUek9AXplrzX5ERXIa6ybQenvP9vYFTHb5dcwnQ86Ouyvb/GXrz
+	 83rad3pTh5GIa++yJoOUjEmP1cM0F3cIj0NJSnY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388730AbgFWUJd (ORCPT
+        id S2393683AbgFWVgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388285AbgFWUI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:56 -0400
+        id S2388736AbgFWUJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1362920E65;
-        Tue, 23 Jun 2020 20:08:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E5C206C3;
+        Tue, 23 Jun 2020 20:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942935;
-        bh=1H4i9incKA8JrKVHqNH+Avto6Sk4RJGCA2gTwPD6aUo=;
+        s=default; t=1592942975;
+        bh=FHSj8TZnsz1D0Yt76ksismIfOCjetZenOZ7Njffc0GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k6d44NmJYzyb2cWdY1j/sjFGxGJI024xE8IsgdEUgik/TuRXV5T/3drGTYY+wX22q
-         oXrvp/wftk8ficTq/c1FPU4OcPqhFdG619U+L9heKHIn1zfEthQ3OVpLidEE83AEQl
-         GIO6GhrKxjfXhnITkFyE8EfOCQ7+5DQjAvwlk6hg=
+        b=pFLwTmCWEx15iwZdlMn7gMTDpydBwRLy6hBrkYyvCrlvvx3R5Q+Dhrl7qFP1tC24N
+         nmOYxnrAyqSPHaq7+vozj9ZxU054lGB7mgy7nCw2kOLDj19irz61quEF/r+YrTo+m1
+         VkugAZNYVI0EArVw6+2idVIxIre+t1lNPX5fnJW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Omer Shpigelman <oshpigelman@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 193/477] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
-Date:   Tue, 23 Jun 2020 21:53:10 +0200
-Message-Id: <20200623195416.711160211@linuxfoundation.org>
+Subject: [PATCH 5.7 210/477] habanalabs: increase timeout during reset
+Date:   Tue, 23 Jun 2020 21:53:27 +0200
+Message-Id: <20200623195417.506979844@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,62 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Oded Gabbay <oded.gabbay@gmail.com>
 
-[ Upstream commit d7faa8ffb6be57bf8233a4b5a636d76b83c51ce7 ]
+[ Upstream commit 7a65ee046b2238e053f6ebb610e1a082cfc49490 ]
 
-In function rockchip_dt_node_to_map, a new_map variable is
-allocated by:
+When doing training, the DL framework (e.g. tensorflow) performs hundreds
+of thousands of memory allocations and mappings. In case the driver needs
+to perform hard-reset during training, the driver kills the application and
+unmaps all those memory allocations. Unfortunately, because of that large
+amount of mappings, the driver isn't able to do that in the current timeout
+(5 seconds). Therefore, increase the timeout significantly to 30 seconds
+to avoid situation where the driver resets the device with active mappings,
+which sometime can cause a kernel bug.
 
-new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
-		       GFP_KERNEL);
+BTW, it doesn't mean we will spend all the 30 seconds because the reset
+thread checks every one second if the unmap operation is done.
 
-This uses devres and attaches new_map to the pinctrl driver.
-This cause a leak since new_map is not released when the probed
-driver is removed. Fix it by using kcalloc to allocate new_map
-and free it in `rockchip_dt_free_map`
-
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200506100903.15420-1-dafna.hirschfeld@collabora.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Omer Shpigelman <oshpigelman@habana.ai>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/misc/habanalabs/habanalabs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 0989513463393..d7869b636889e 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -508,8 +508,8 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	}
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 31ebcf9458fe1..a6dd8e6ca594c 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -23,7 +23,7 @@
  
- 	map_num += grp->npins;
--	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
--								GFP_KERNEL);
-+
-+	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
- 	if (!new_map)
- 		return -ENOMEM;
+ #define HL_MMAP_CB_MASK			(0x8000000000000000ull >> PAGE_SHIFT)
  
-@@ -519,7 +519,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	/* create mux map */
- 	parent = of_get_parent(np);
- 	if (!parent) {
--		devm_kfree(pctldev->dev, new_map);
-+		kfree(new_map);
- 		return -EINVAL;
- 	}
- 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
-@@ -546,6 +546,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- static void rockchip_dt_free_map(struct pinctrl_dev *pctldev,
- 				    struct pinctrl_map *map, unsigned num_maps)
- {
-+	kfree(map);
- }
+-#define HL_PENDING_RESET_PER_SEC	5
++#define HL_PENDING_RESET_PER_SEC	30
  
- static const struct pinctrl_ops rockchip_pctrl_ops = {
+ #define HL_DEVICE_TIMEOUT_USEC		1000000 /* 1 s */
+ 
 -- 
 2.25.1
 
