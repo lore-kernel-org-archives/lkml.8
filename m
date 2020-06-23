@@ -2,255 +2,115 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6833E207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:02:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="F8OUcVju"
+	by mail.kernel.org (Postfix) with ESMTP id A8EC3207F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592938974;
+	bh=6uTLrbtvnF4WK5NUKMTvr1YpsgO03unIgbgvT5gU56A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eLjPehQ7ohz9+PGhRu/m7MygVYvQIiK8npqJJ8gKThIk/mJKA894vpSnPzCH/iSZT
+	 42D9Hzz4YLW/xkdgAhyK9Ve7zCFxMv6fLtNyz/10Cmdls40JOWK3UWaLvFNT6YG2+b
+	 pCmWJGbcPgZvswBtnRZureDEkSy1Ch/5TGVlJerE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387448AbgFWTCj (ORCPT
+        id S2387457AbgFWTCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733218AbgFWTCi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:02:38 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EA1C061795
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:02:38 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h15so1694448wrq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XDcsteRMJEoW0C3+Kl+uWDnjv0MhfNk7S9Vrs1qi/2Y=;
-        b=F8OUcVjuokEibmMSbToMoIBILFma7edYFwClorq7HqZPPZAsjl5aBIXM5rjHh2K4Lq
-         dd+qeCoDkPHmPlGyVv6Z/wtdPrCUcn/gJSdfHe4BRGJdop50ca7laeXsmvDPZAFsD45G
-         DpFfjBVLJGiCLnCx7MoPvm6Wpk0WJAYz4Suvs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=XDcsteRMJEoW0C3+Kl+uWDnjv0MhfNk7S9Vrs1qi/2Y=;
-        b=NBaCPnFcoRf/LfOoSwHNfAxYyRhiCy19vr2T9cIQfyVZZwoHIV8NyY1cqq9oBtt7Jm
-         2GHyg0bpvX2slMeOTqR2rQJ8aogJLLfIP92isPfbECcWNbC/kkarbrI+bTfSHl0cM0xB
-         B992O5nc99JfDZciZR9eBcxkbMDcV2QzvDkjUUo8RBMxZq4dlMTF6iYefn0Igt6zeC4c
-         nmurl/T/qxFx9/P/8YfVud87hzxPi+bZIGCONOOpGfjyXYLWfjLYYoxCeA/1YJM0h/8F
-         MfQYH8fq4Z5TqdfbIIy6q6yrIfBbAaCT+dCjtoMGhbfMwF/CtI9TUH6wGLOIiZoMe2ah
-         s8sA==
-X-Gm-Message-State: AOAM533R+ULI9mnLmsDBxekpFQPeUg1JZg9cj0hZnNrGVRoW/lhhGGNW
-        uOQ0YL6tMp+vudnqmBTdOTiZzw==
-X-Google-Smtp-Source: ABdhPJynbn/cTBvNbobb+7TOV12TXtahoSjCWh3GnuIRy64vKHvTHEysZa+/3Plm+28KWqKEN1sWIw==
-X-Received: by 2002:a5d:470b:: with SMTP id y11mr18155209wrq.101.1592938956979;
-        Tue, 23 Jun 2020 12:02:36 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id l17sm4698578wmi.3.2020.06.23.12.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 12:02:35 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 21:02:33 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Felix Kuehling <felix.kuehling@amd.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200623190233.GP20149@phenom.ffwll.local>
-Mail-Followup-To: Felix Kuehling <felix.kuehling@amd.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch>
- <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
- <20200611083430.GD20149@phenom.ffwll.local>
- <20200611141515.GW6578@ziepe.ca>
- <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
- <CAKMK7uHBKrpDWu+DvtYncDK=LOdGJyMK7t6fpOaGovnYFiBUZw@mail.gmail.com>
- <99758c09-262a-e9a1-bf65-5702b35b4388@amd.com>
+        Tue, 23 Jun 2020 15:02:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733138AbgFWTCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 15:02:53 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA28220809;
+        Tue, 23 Jun 2020 19:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592938972;
+        bh=6uTLrbtvnF4WK5NUKMTvr1YpsgO03unIgbgvT5gU56A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=obugMCWm9igqKMDyu3UAMnYWLTikyXJrEKloLzn1lt5zrtwmX/7hkQIagcLCHO16L
+         B8mXqrIdxPY15qBgA0okQlPicXDA5DozQMyXkhM5CoxOzSOavOxAgLGSLqx1nI5pGc
+         P4+9Q+P7Wd9YFm+V82jQJGRuY1u9UdgeMh1X8Erc=
+Received: by mail-lj1-f171.google.com with SMTP id y11so24697491ljm.9;
+        Tue, 23 Jun 2020 12:02:51 -0700 (PDT)
+X-Gm-Message-State: AOAM530aEAB+vCUwo1p49w7JxGS4YLFP61AgeZOvxcrg/b1ORfTdhG5N
+        oj0CL9RtbtAH1NZtRHkU/yuP0h305FdRzkq/zew=
+X-Google-Smtp-Source: ABdhPJxY1+C/zLjQJyd2Ymj4G6d8Wzq5Bs4FqPSVJmQ9FDB2q1YXX8klB/eUrUeCS99qDdDseTgbShhP7jOWHMXFvMI=
+X-Received: by 2002:a2e:3a17:: with SMTP id h23mr11444296lja.7.1592938970213;
+ Tue, 23 Jun 2020 12:02:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <99758c09-262a-e9a1-bf65-5702b35b4388@amd.com>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+In-Reply-To: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 23 Jun 2020 21:02:38 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+Message-ID: <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
+To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:44:24PM -0400, Felix Kuehling wrote:
-> Am 2020-06-23 um 3:39 a.m. schrieb Daniel Vetter:
-> > On Fri, Jun 12, 2020 at 1:35 AM Felix Kuehling <felix.kuehling@amd.com> wrote:
-> >> Am 2020-06-11 um 10:15 a.m. schrieb Jason Gunthorpe:
-> >>> On Thu, Jun 11, 2020 at 10:34:30AM +0200, Daniel Vetter wrote:
-> >>>>> I still have my doubts about allowing fence waiting from within shrinkers.
-> >>>>> IMO ideally they should use a trywait approach, in order to allow memory
-> >>>>> allocation during command submission for drivers that
-> >>>>> publish fences before command submission. (Since early reservation object
-> >>>>> release requires that).
-> >>>> Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
-> >>>> with a mempool to make sure it can handle it's allocations.
-> >>>>
-> >>>>> But since drivers are already waiting from within shrinkers and I take your
-> >>>>> word for HMM requiring this,
-> >>>> Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
-> >>>> one, the shrinker one is a lot less established.
-> >>> I really question if HW that needs something like DMA fence should
-> >>> even be using mmu notifiers - the best use is HW that can fence the
-> >>> DMA directly without having to get involved with some command stream
-> >>> processing.
-> >>>
-> >>> Or at the very least it should not be a generic DMA fence but a
-> >>> narrowed completion tied only into the same GPU driver's command
-> >>> completion processing which should be able to progress without
-> >>> blocking.
-> >>>
-> >>> The intent of notifiers was never to endlessly block while vast
-> >>> amounts of SW does work.
-> >>>
-> >>> Going around and switching everything in a GPU to GFP_ATOMIC seems
-> >>> like bad idea.
-> >>>
-> >>>> I've pinged a bunch of armsoc gpu driver people and ask them how much this
-> >>>> hurts, so that we have a clear answer. On x86 I don't think we have much
-> >>>> of a choice on this, with userptr in amd and i915 and hmm work in nouveau
-> >>>> (but nouveau I think doesn't use dma_fence in there).
-> >> Soon nouveau will get company. We're working on a recoverable page fault
-> >> implementation for HMM in amdgpu where we'll need to update page tables
-> >> using the GPUs SDMA engine and wait for corresponding fences in MMU
-> >> notifiers.
-> > Can you pls cc these patches to dri-devel when they show up? Depending
-> > upon how your hw works there's and endless amount of bad things that
-> > can happen.
-> 
-> Yes, I'll do that.
-> 
-> 
-> >
-> > Also I think (again depending upon how the hw exactly works) this
-> > stuff would be a perfect example for the dma_fence annotations.
-> 
-> We have already applied your patch series to our development branch. I
-> haven't looked into what annotations we'd have to add to our new code yet.
-> 
-> 
-> >
-> > The worst case is if your hw cannot preempt while a hw page fault is
-> > pending. That means none of the dma_fence will ever signal (the amdkfd
-> > preempt ctx fences wont, and the classic fences from amdgpu might be
-> > also stall). At least when you're unlucky and the fence you're waiting
-> > on somehow (anywhere in its dependency chain really) need the engine
-> > that's currently blocked waiting for the hw page fault.
-> 
-> Our HW can preempt while handling a page fault, at least on the GPU
-> generation we're working on now. On other GPUs we haven't included in
-> our initial effort, we will not be able to preempt while a page fault is
-> in progress. This is problematic, but that's for reasons related to our
-> GPU hardware scheduler and unrelated to fences.
+On Tue, 23 Jun 2020 at 18:47, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
+>
+> Hi everybody,
+>
+> Is DVFS for memory bus really working on Odroid XU3/4 board?
+> Using a simple microbenchmark that is doing only memory accesses, memory DVFS
+> seems to not working properly:
+>
+> The microbenchmark is doing pointer chasing by following index in an array.
+> Indices in the array are set to follow a random pattern (cutting prefetcher),
+> and forcing RAM access.
+>
+> git clone https://github.com/wwilly/benchmark.git \
+>   && cd benchmark \
+>   && source env.sh \
+>   && ./bench_build.sh \
+>   && bash source/scripts/test_dvfs_mem.sh
+>
+> Python 3, cmake and sudo rights are required.
+>
+> Results:
+> DVFS CPU with performance governor
+> mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
+> benchmark is running.
+> - on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
+> - on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
+>
+> While forcing DVFS memory bus to use performance governor,
+> mem_gov = performance at 825000000 Hz in idle,
+> - on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
+> - on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
+>
+> The kernel used is the last 5.7.5 stable with default exynos_defconfig.
 
-Well the trouble is if the page fault holds up a preempt, then there's no
-way for a dma_fence to complete while your hw page fault handler is stuck
-doing whatever. That means the entire hw page fault becomes a fence
-signalling critical section, with the consequence that there's almost
-nothing you can actually do. System memory becomes GFP_ATOMIC only, and
-for vram you need to make sure that you never evict anything that might be
-in active use.
+Thanks for the report. Few thoughts:
+1. What trans_stat are saying? Except DMC driver you can also check
+all other devfreq devices (e.g. wcore) - maybe the devfreq events
+(nocp) are not properly assigned?
+2. Try running the measurement for ~1 minutes or longer. The counters
+might have some delay (which would require probably fixing but the
+point is to narrow the problem).
+3. What do you understand by "mem_gov"? Which device is it?
 
-So not enabling these platforms sounds like a very good plan to me :-)
-
-> > That in turn means anything you do in your hw page fault handler is in
-> > the critical section for dma fence signalling, which has far reaching
-> > implications.
-> 
-> I'm not sure I agree, at least for KFD. The only place where KFD uses
-> fences that depend on preemptions is eviction fences. And we can get rid
-> of those if we can preempt GPU access to specific BOs by invalidating
-> GPU PTEs. That way we don't need to preempt the GPU queues while a page
-> fault is in progress. Instead we would create more page faults.
-
-The big problem isn't pure kfd workloads, all the trouble comes in when
-you mix kfd and amdgpu workloads. kfd alone is easy, just make sure
-there's no fences to begin with, and there will be no problems.
-
-> That assumes that we can invalidate GPU PTEs without depending on
-> fences. We've discussed possible deadlocks due to memory allocations
-> needed on that code paths for IBs or page tables. We've already
-> eliminated page table allocations and reservation locks on the PTE
-> invalidation code path. And we're using a separate scheduler entity so
-> we can't get stuck behind other IBs that depend on fences. IIRC,
-> Christian also implemented a separate memory pool for IBs for this code
-> path.
-
-Yeah it's the memory allocations that kill you. Both system memory, but
-also vram. Since evicting vram might mean you end up stuck behind a
-dma_fence of a legacy context hogging that memory, and probably also means
-doing a few dma_resv_lock. All of these thing deadlock if you can't
-preempt the context with something else.
--Daniel
-
-
-> 
-> Regards,
->   Felix
-> 
-> 
-> > -Daniel
-> >
-> >> Regards,
-> >>   Felix
-> >>
-> >>
-> >>> Right, nor will RDMA ODP.
-> >>>
-> >>> Jason
-> >>> _______________________________________________
-> >>> amd-gfx mailing list
-> >>> amd-gfx@lists.freedesktop.org
-> >>> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
-> >> _______________________________________________
-> >> dri-devel mailing list
-> >> dri-devel@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >
-> >
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Best regards,
+Krzysztof
