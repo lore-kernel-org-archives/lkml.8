@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6057BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39FEA20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C1120707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948092;
-	bh=5ZAVH9SdfmQQhgo3sX7+S/z1QXYvRSBynU1C+2z0xYg=;
+	s=default; t=1592948104;
+	bh=8EYcNB6QKPKO5Qxl3rWADPdL1XSCwvSpx5M+eUYSp6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h9TfDWvtVDrm1yz9znEngb86uHNZIiJkreK7O+ufKCNhKPDS1H0wZw6vKjsPX3b6G
-	 teH0GQkBxBGAnruH93oiAM8HMDIkdqvcopRPkOXjTUHJCZwplQZ34nzCWjhwx8fJUL
-	 2LSyCFfIIdH75K1PJgU4Km4kWr1ST1XSSGNR1yiU=
+	b=o8OlVJSnihXr5kRI2cvjh01bcgv5PyuGXMzoHG90eaMXzdJx/IH6dPiFoY2D8z4D6
+	 dS1Gh9yyeY2z4jbnpVkn8r6LIUkrRHlyyOowgr4fjGJOmCXmh/FKf2ujyWVz8R7dNi
+	 cZQ11ZNSvV8APue1WqSWh8DPtfxOcpBPbwJTfG9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388830AbgFWUKp (ORCPT
+        id S2393758AbgFWVez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:34:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388757AbgFWUJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:48 -0400
+        id S2388657AbgFWUKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:10:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4277520DD4;
-        Tue, 23 Jun 2020 20:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCAF420707;
+        Tue, 23 Jun 2020 20:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942987;
-        bh=5ZAVH9SdfmQQhgo3sX7+S/z1QXYvRSBynU1C+2z0xYg=;
+        s=default; t=1592943043;
+        bh=8EYcNB6QKPKO5Qxl3rWADPdL1XSCwvSpx5M+eUYSp6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LO3mEKgmOhBA+/EDt66Z5WuHjFql5s6tJB6w0rMrkQtQtIf/Eek3DTBgxmSNuOAVv
-         BiWmnqmXjC7rIa2YM+22FfRIzYdVTcIQ5h1MWFwbSpYvUPCHto/dywEq0X3SGq/ve7
-         2tqvH/SLIt0RVOtTBYB2jdPnXUPZynjRbJh69pVE=
+        b=dnQu//sR/LaVxFlZvOQ09fW3lwwhLQ1DH/L9HpgYrCTMcZL4ylalXVH97Lm86U1N+
+         DRJoeKgOq1mfnOB49JA9SFVC4pnYEAalSTwHmVe0vDq7d/Tz4ax6QfSEG/T0PY4lJE
+         3OVnUIcTmmQT6Skv9Hg5CmLewD4fB2wxEOO3eIbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 215/477] powerpc/64s/exception: Fix machine check no-loss idle wakeup
-Date:   Tue, 23 Jun 2020 21:53:32 +0200
-Message-Id: <20200623195417.748191922@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Ebeling <penguins@bollie.de>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 206/477] ALSA: usb-audio: fixing upper volume limit for RME Babyface Pro routing crosspoints
+Date:   Tue, 23 Jun 2020 21:53:23 +0200
+Message-Id: <20200623195417.320169058@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,73 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Thomas Ebeling <penguins@bollie.de>
 
-[ Upstream commit 8a5054d8cbbe03c68dcb0957c291c942132e4101 ]
+[ Upstream commit 47b4f5f5b65680fbef7a7a9a4796b35f38a6e43e ]
 
-The architecture allows for machine check exceptions to cause idle
-wakeups which resume at the 0x200 address which has to return via
-the idle wakeup code, but the early machine check handler is run
-first.
+In my initial patch, these were set too low.
 
-The case of a no state-loss sleep is broken because the early
-handler uses non-volatile register r1 , which is needed for the wakeup
-protocol, but it is not restored.
-
-Fix this by loading r1 from the MCE exception frame before returning
-to the idle wakeup code. Also update the comment which has become
-stale since the idle rewrite in C.
-
-This crash was found and fix confirmed with a machine check injection
-test in qemu powernv model (which is not upstream in qemu yet).
-
-Fixes: 10d91611f426d ("powerpc/64s: Reimplement book3s idle code in C")
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200508043408.886394-2-npiggin@gmail.com
+Fixes: 3e8f3bd04716 ("ALSA: usb-audio: RME Babyface Pro mixer patch")
+Signed-off-by: Thomas Ebeling <penguins@bollie.de>
+Link: https://lore.kernel.org/r/20200515114556.vtspnonzvp4xp44m@bollie.ca9.eu
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ sound/usb/mixer_quirks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index ebeebab74b564..463372046169a 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1225,17 +1225,19 @@ EXC_COMMON_BEGIN(machine_check_idle_common)
- 	bl	machine_check_queue_event
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index bdff8674942ec..aad2683ff7933 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -2191,7 +2191,7 @@ static int snd_rme_controls_create(struct usb_mixer_interface *mixer)
+  * These devices exposes a couple of DSP functions via request to EP0.
+  * Switches are available via control registers, while routing is controlled
+  * by controlling the volume on each possible crossing point.
+- * Volume control is linear, from -inf (dec. 0) to +6dB (dec. 46341) with
++ * Volume control is linear, from -inf (dec. 0) to +6dB (dec. 65536) with
+  * 0dB being at dec. 32768.
+  */
+ enum {
+@@ -2220,7 +2220,7 @@ enum {
+ #define SND_BBFPRO_MIXER_VAL_MASK 0x3ffff
+ #define SND_BBFPRO_MIXER_VAL_SHIFT 9
+ #define SND_BBFPRO_MIXER_VAL_MIN 0 // -inf
+-#define SND_BBFPRO_MIXER_VAL_MAX 46341 // +6dB
++#define SND_BBFPRO_MIXER_VAL_MAX 65536 // +6dB
  
- 	/*
--	 * We have not used any non-volatile GPRs here, and as a rule
--	 * most exception code including machine check does not.
--	 * Therefore PACA_NAPSTATELOST does not need to be set. Idle
--	 * wakeup will restore volatile registers.
-+	 * GPR-loss wakeups are relatively straightforward, because the
-+	 * idle sleep code has saved all non-volatile registers on its
-+	 * own stack, and r1 in PACAR1.
- 	 *
--	 * Load the original SRR1 into r3 for pnv_powersave_wakeup_mce.
-+	 * For no-loss wakeups the r1 and lr registers used by the
-+	 * early machine check handler have to be restored first. r2 is
-+	 * the kernel TOC, so no need to restore it.
- 	 *
- 	 * Then decrement MCE nesting after finishing with the stack.
- 	 */
- 	ld	r3,_MSR(r1)
- 	ld	r4,_LINK(r1)
-+	ld	r1,GPR1(r1)
- 
- 	lhz	r11,PACA_IN_MCE(r13)
- 	subi	r11,r11,1
-@@ -1244,7 +1246,7 @@ EXC_COMMON_BEGIN(machine_check_idle_common)
- 	mtlr	r4
- 	rlwinm	r10,r3,47-31,30,31
- 	cmpwi	cr1,r10,2
--	bltlr	cr1	/* no state loss, return to idle caller */
-+	bltlr	cr1	/* no state loss, return to idle caller with r3=SRR1 */
- 	b	idle_return_gpr_loss
- #endif
- 
+ #define SND_BBFPRO_USBREQ_CTL_REG1 0x10
+ #define SND_BBFPRO_USBREQ_CTL_REG2 0x17
 -- 
 2.25.1
 
