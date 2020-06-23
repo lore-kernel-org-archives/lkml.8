@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E045C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76292083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8122078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592896158;
-	bh=bbYZkxOkNOh8W5wHFisjBS2E9wCz49v/LCMR7ImbOD4=;
+	s=default; t=1592896161;
+	bh=0UtiECJ6/lhRz1NT5gRsAalsNQvZKA/yaIYlTTswtgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGHxHz7i5ODtsrUrH6JBmVq4LDPDCr4ihluj0OSGiaAUdWTtUACyxSGkoD7yxRxf2
-	 gy5qu25hs7D7w3pLa9LS1i8S7NylUKd1DNfyS+etE12yenVkrLAQ+PWQ0QX8d68AO6
-	 JMaf4X8CSneDZt3mZh3lpmW+g/SI2KwYaN+qBMNc=
+	b=xoWSX5fjXKGkHfLYaC/keFpdI2I404UE8ERzu0tzn7tfya3adBReMWlDhdLizXMPM
+	 LR14pm8ZiHloHlrkmCiiNRUqIHTNZyw9EZP2z5uzhBUGVOE2b3JNe3QNt3shYZffmv
+	 eTp5Anmvjw95dMoth6I85G5WV/2VEpnygnTsCOUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbgFWHJR (ORCPT
+        id S1731519AbgFWHJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:09:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39742 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 03:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730781AbgFWHJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730957AbgFWHJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 03:09:15 -0400
 Received: from mail.kernel.org (unknown [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F043C206B7;
-        Tue, 23 Jun 2020 07:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DAF320771;
+        Tue, 23 Jun 2020 07:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592896155;
-        bh=bbYZkxOkNOh8W5wHFisjBS2E9wCz49v/LCMR7ImbOD4=;
+        bh=0UtiECJ6/lhRz1NT5gRsAalsNQvZKA/yaIYlTTswtgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YiI+3zGNpBrxM1Lh4QdMbTFUFH8aKePsECcWTKuYWqxI3Hq3N9lUni2cLrzSprhD6
-         it602gzeTUfh6/hN4TSAcBWn0Asym4N5aeJODK+++JKQ9poVWmyBTUsFZLjH3QZHiR
-         /HWZC5JJy3yR1sCyXhFNHosipoMqjWsFzvcVumRg=
+        b=sWwuSQKFqsxJfl4gMJqTNWFdZ2zuVmlIMsRpyi6XUKK2Cvf5tITTfElx4fYwHoy1P
+         7wR2G0zLNy+7FHEJrxSyihG4lVORiVlNCiqGzTOLvCy6VX/L1EHhlL806IX6r5T7NR
+         tT6L+YL4uAcD6pWrOPJRq6aLL7sJiXjsgXmby8Ic=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jnd3Q-003qii-VC; Tue, 23 Jun 2020 09:09:12 +0200
+        id 1jnd3R-003qiq-1N; Tue, 23 Jun 2020 09:09:13 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, linux-mm@kvack.org
-Subject: [PATCH v2 01/15] mm: vmalloc.c: remove a kernel-doc annotation from a removed parameter
-Date:   Tue, 23 Jun 2020 09:08:57 +0200
-Message-Id: <5cd93bdc2f19f94266f42fcbf88a7fd207f7127b.1592895969.git.mchehab+huawei@kernel.org>
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org
+Subject: [PATCH v2 03/15] net: netdevice.h: add a description for napi_defer_hard_irqs
+Date:   Tue, 23 Jun 2020 09:08:59 +0200
+Message-Id: <807a3840e7bc1562adefadb0535c9f47e6ab52e0.1592895969.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592895969.git.mchehab+huawei@kernel.org>
 References: <cover.1592895969.git.mchehab+huawei@kernel.org>
@@ -62,27 +62,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The prot argument was removed. Drop it als from the kernel-doc
-markup.
+Changeset 6f8b12d661d0 ("net: napi: add hard irqs deferral feature")
+added a new element at struct net_device.
 
-Fixes: 3c8ce1be43d3 ("mm: remove the prot argument from vm_map_ram")
+Add a description for it, based on what's described at the changeset
+which added such feature.
+
+Fixes: 6f8b12d661d0 ("net: napi: add hard irqs deferral feature")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- mm/vmalloc.c | 1 -
- 1 file changed, 1 deletion(-)
+ include/linux/netdevice.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 963db1037f61..c3b3f94e08da 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1809,7 +1809,6 @@ EXPORT_SYMBOL(vm_unmap_ram);
-  * @pages: an array of pointers to the pages to be mapped
-  * @count: number of pages
-  * @node: prefer to allocate data structures on this node
-- * @prot: memory protection to use. PAGE_KERNEL for regular RAM
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 39e28e11863c..027df84f0f59 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -1742,6 +1742,8 @@ enum netdev_priv_flags {
+  *	@real_num_rx_queues: 	Number of RX queues currently active in device
+  *	@xdp_prog:		XDP sockets filter program pointer
+  *	@gro_flush_timeout:	timeout for GRO layer in NAPI
++ *	@napi_defer_hard_irqs:	If not zero, provides a counter that would
++ *				allow to avoid NIC hard IRQ, on busy queues.
   *
-  * If you use this function for less than VMAP_MAX_ALLOC pages, it could be
-  * faster than vmap so it's good.  But if you mix long-life and short-life
+  *	@rx_handler:		handler for received packets
+  *	@rx_handler_data: 	XXX: need comments on this one
 -- 
 2.26.2
 
