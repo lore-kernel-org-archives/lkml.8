@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ACAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9293C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B342080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04182080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943593;
-	bh=h1PD7x36mnaDW/l1YHYv9hW4HSlW4BimCrjOOY0poIk=;
+	s=default; t=1592943595;
+	bh=psH7cci59HLuz1YQJzScwCcn+DVBDzMbDRTwUpov0P8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b3T2ZPBdW6ee61z92bZFIW+KNdJBnYncusPHWIXCC5ijhdA9XvXmKsj5HiEQGQDPy
-	 Tl3yAwTX6vmFhwdkamLAyqsgV/57RoB/GjLYjo8qs7bsBy5wOBnH6XrUtSHw+Fmi7G
-	 miyIrdKA0tTKDVvOGlz5KBMlwf9sJAB1PIlTrKy8=
+	b=ALMa3vxWX1cPpFZN01z4dH+ZEv8EnWY4BLs96ln3d+JHa0b7stjfV/dd/TWfPxc5F
+	 AoIAajkGfwGjAyctoO7DegfXUTXiSaF45FuAe49Qb0vGN5SK07HCZ6vyyE6Ca60VLy
+	 LFurY5rhp7+IMjPyg530ZJtTHhh02HXNrj9l1/f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389848AbgFWUTq (ORCPT
+        id S2389895AbgFWUTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:19:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:19:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389833AbgFWUTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:19:43 -0400
+        id S2388689AbgFWUTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:19:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618FF20EDD;
-        Tue, 23 Jun 2020 20:19:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE5920E65;
+        Tue, 23 Jun 2020 20:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943583;
-        bh=h1PD7x36mnaDW/l1YHYv9hW4HSlW4BimCrjOOY0poIk=;
+        s=default; t=1592943590;
+        bh=psH7cci59HLuz1YQJzScwCcn+DVBDzMbDRTwUpov0P8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kk6WlWL+jKs9h433YyiwTYb2fHNiMPQ75gIiIb3DnXOC3mcdce6eT10U8A/dVrXDH
-         CNItFhTGZjWA6//hjAtBmam9l/UmRTvnMyIeDgfOXmiaVeSw/Ut7AmxI3FYReDCM/B
-         YWaoSds/8jU1RbN8F7dwT8PNvqG5fmalKJuH3mtM=
+        b=qM3nYXnKjISA8Zra+kg0FG2i4CLvWz2q+vN9OzoMpOzZi/hXlfTRu6U6KWY7ehVM4
+         c8XkUsO/2t/d4X4KbEZFq34OBpwv9sEpz/+TztgaGy8Z4WqJd2+cKYni0PtyS8mF4z
+         ZqMe8r0h5RYchbIuY0Mj+gGkDB5nkuZRfKhmDaks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kunal Joshi <kunal1.joshi@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.7 449/477] drm/i915/icl+: Fix hotplug interrupt disabling after storm detection
-Date:   Tue, 23 Jun 2020 21:57:26 +0200
-Message-Id: <20200623195428.759539500@linuxfoundation.org>
+Subject: [PATCH 5.7 452/477] drm/i915/gt: Move hsw GT workarounds from init_clock_gating to workarounds
+Date:   Tue, 23 Jun 2020 21:57:29 +0200
+Message-Id: <20200623195428.906522840@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,37 +60,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit a3005c2edf7e8c3478880db1ca84028a2b6819bb upstream.
+commit ef50fa9bd17d13d0611e39e13b37bbd3e1ea50bf upstream.
 
-Atm, hotplug interrupts on TypeC ports are left enabled after detecting
-an interrupt storm, fix this.
+Rescue the GT workarounds from being buried inside init_clock_gating so
+that we remember to apply them after a GT reset, and that they are
+included in our verification that the workarounds are applied.
 
-Reported-by: Kunal Joshi <kunal1.joshi@intel.com>
-Bugzilla: https://gitlab.freedesktop.org/drm/intel/-/issues/1964
-Cc: Kunal Joshi <kunal1.joshi@intel.com>
+v2: Leave HSW_SCRATCH to set an explicit value, not or in our disable
+bit.
+
+Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/2011
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200612121731.19596-1-imre.deak@intel.com
-(cherry picked from commit 587a87b9d7e94927edcdea018565bc1939381eb1)
+Link: https://patchwork.freedesktop.org/patch/msgid/20200611093015.11370-1-chris@chris-wilson.co.uk
+(cherry picked from commit f93ec5fb563779bda4501890b1854526de58e0f1)
 Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_irq.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/i915/gt/intel_workarounds.c |   48 ++++++++++++++++++++++++++++
+ drivers/gpu/drm/i915/intel_pm.c             |   39 +---------------------
+ 2 files changed, 50 insertions(+), 37 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_irq.c
-+++ b/drivers/gpu/drm/i915/i915_irq.c
-@@ -3092,6 +3092,7 @@ static void gen11_hpd_irq_setup(struct d
+--- a/drivers/gpu/drm/i915/gt/intel_workarounds.c
++++ b/drivers/gpu/drm/i915/gt/intel_workarounds.c
+@@ -179,6 +179,12 @@ wa_write_or(struct i915_wa_list *wal, i9
+ }
  
- 	val = I915_READ(GEN11_DE_HPD_IMR);
- 	val &= ~hotplug_irqs;
-+	val |= ~enabled_irqs & hotplug_irqs;
- 	I915_WRITE(GEN11_DE_HPD_IMR, val);
- 	POSTING_READ(GEN11_DE_HPD_IMR);
+ static void
++wa_write_clr(struct i915_wa_list *wal, i915_reg_t reg, u32 clr)
++{
++	wa_write_masked_or(wal, reg, clr, 0);
++}
++
++static void
+ wa_masked_en(struct i915_wa_list *wal, i915_reg_t reg, u32 val)
+ {
+ 	wa_add(wal, reg, 0, _MASKED_BIT_ENABLE(val), val);
+@@ -698,6 +704,46 @@ int intel_engine_emit_ctx_wa(struct i915
+ }
  
+ static void
++hsw_gt_workarounds_init(struct drm_i915_private *i915, struct i915_wa_list *wal)
++{
++	/* L3 caching of data atomics doesn't work -- disable it. */
++	wa_write(wal, HSW_SCRATCH1, HSW_SCRATCH1_L3_DATA_ATOMICS_DISABLE);
++
++	wa_add(wal,
++	       HSW_ROW_CHICKEN3, 0,
++	       _MASKED_BIT_ENABLE(HSW_ROW_CHICKEN3_L3_GLOBAL_ATOMICS_DISABLE),
++		0 /* XXX does this reg exist? */);
++
++	/* WaVSRefCountFullforceMissDisable:hsw */
++	wa_write_clr(wal, GEN7_FF_THREAD_MODE, GEN7_FF_VS_REF_CNT_FFME);
++
++	wa_masked_dis(wal,
++		      CACHE_MODE_0_GEN7,
++		      /* WaDisable_RenderCache_OperationalFlush:hsw */
++		      RC_OP_FLUSH_ENABLE |
++		      /* enable HiZ Raw Stall Optimization */
++		      HIZ_RAW_STALL_OPT_DISABLE);
++
++	/* WaDisable4x2SubspanOptimization:hsw */
++	wa_masked_en(wal, CACHE_MODE_1, PIXEL_SUBSPAN_COLLECT_OPT_DISABLE);
++
++	/*
++	 * BSpec recommends 8x4 when MSAA is used,
++	 * however in practice 16x4 seems fastest.
++	 *
++	 * Note that PS/WM thread counts depend on the WIZ hashing
++	 * disable bit, which we don't touch here, but it's good
++	 * to keep in mind (see 3DSTATE_PS and 3DSTATE_WM).
++	 */
++	wa_add(wal, GEN7_GT_MODE, 0,
++	       _MASKED_FIELD(GEN6_WIZ_HASHING_MASK, GEN6_WIZ_HASHING_16x4),
++	       GEN6_WIZ_HASHING_16x4);
++
++	/* WaSampleCChickenBitEnable:hsw */
++	wa_masked_en(wal, HALF_SLICE_CHICKEN3, HSW_SAMPLE_C_PERFORMANCE);
++}
++
++static void
+ gen9_gt_workarounds_init(struct drm_i915_private *i915, struct i915_wa_list *wal)
+ {
+ 	/* WaDisableKillLogic:bxt,skl,kbl */
+@@ -974,6 +1020,8 @@ gt_init_workarounds(struct drm_i915_priv
+ 		bxt_gt_workarounds_init(i915, wal);
+ 	else if (IS_SKYLAKE(i915))
+ 		skl_gt_workarounds_init(i915, wal);
++	else if (IS_HASWELL(i915))
++		hsw_gt_workarounds_init(i915, wal);
+ 	else if (INTEL_GEN(i915) <= 8)
+ 		return;
+ 	else
+--- a/drivers/gpu/drm/i915/intel_pm.c
++++ b/drivers/gpu/drm/i915/intel_pm.c
+@@ -6992,45 +6992,10 @@ static void bdw_init_clock_gating(struct
+ 
+ static void hsw_init_clock_gating(struct drm_i915_private *dev_priv)
+ {
+-	/* L3 caching of data atomics doesn't work -- disable it. */
+-	I915_WRITE(HSW_SCRATCH1, HSW_SCRATCH1_L3_DATA_ATOMICS_DISABLE);
+-	I915_WRITE(HSW_ROW_CHICKEN3,
+-		   _MASKED_BIT_ENABLE(HSW_ROW_CHICKEN3_L3_GLOBAL_ATOMICS_DISABLE));
+-
+ 	/* This is required by WaCatErrorRejectionIssue:hsw */
+ 	I915_WRITE(GEN7_SQ_CHICKEN_MBCUNIT_CONFIG,
+-			I915_READ(GEN7_SQ_CHICKEN_MBCUNIT_CONFIG) |
+-			GEN7_SQ_CHICKEN_MBCUNIT_SQINTMOB);
+-
+-	/* WaVSRefCountFullforceMissDisable:hsw */
+-	I915_WRITE(GEN7_FF_THREAD_MODE,
+-		   I915_READ(GEN7_FF_THREAD_MODE) & ~GEN7_FF_VS_REF_CNT_FFME);
+-
+-	/* WaDisable_RenderCache_OperationalFlush:hsw */
+-	I915_WRITE(CACHE_MODE_0_GEN7, _MASKED_BIT_DISABLE(RC_OP_FLUSH_ENABLE));
+-
+-	/* enable HiZ Raw Stall Optimization */
+-	I915_WRITE(CACHE_MODE_0_GEN7,
+-		   _MASKED_BIT_DISABLE(HIZ_RAW_STALL_OPT_DISABLE));
+-
+-	/* WaDisable4x2SubspanOptimization:hsw */
+-	I915_WRITE(CACHE_MODE_1,
+-		   _MASKED_BIT_ENABLE(PIXEL_SUBSPAN_COLLECT_OPT_DISABLE));
+-
+-	/*
+-	 * BSpec recommends 8x4 when MSAA is used,
+-	 * however in practice 16x4 seems fastest.
+-	 *
+-	 * Note that PS/WM thread counts depend on the WIZ hashing
+-	 * disable bit, which we don't touch here, but it's good
+-	 * to keep in mind (see 3DSTATE_PS and 3DSTATE_WM).
+-	 */
+-	I915_WRITE(GEN7_GT_MODE,
+-		   _MASKED_FIELD(GEN6_WIZ_HASHING_MASK, GEN6_WIZ_HASHING_16x4));
+-
+-	/* WaSampleCChickenBitEnable:hsw */
+-	I915_WRITE(HALF_SLICE_CHICKEN3,
+-		   _MASKED_BIT_ENABLE(HSW_SAMPLE_C_PERFORMANCE));
++		   I915_READ(GEN7_SQ_CHICKEN_MBCUNIT_CONFIG) |
++		   GEN7_SQ_CHICKEN_MBCUNIT_SQINTMOB);
+ 
+ 	/* WaSwitchSolVfFArbitrationPriority:hsw */
+ 	I915_WRITE(GAM_ECOCHK, I915_READ(GAM_ECOCHK) | HSW_ECOCHK_ARB_PRIO_SOL);
 
 
