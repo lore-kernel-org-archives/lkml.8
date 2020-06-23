@@ -2,122 +2,98 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B29AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5021C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1546D207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966EF207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:56:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fwnsclrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387442AbgFWS4L (ORCPT
+        id S2387453AbgFWS4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:56:11 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:40565 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733170AbgFWS4J (ORCPT
+        Tue, 23 Jun 2020 14:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733188AbgFWS4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:56:09 -0400
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: HZoyfT2vf33w1z9W96Q31xxyjCAMO0xw8TBy2gZTBDmoSy1MZFeXrch2n1spl+f6E/NmTrtxwS
- k5iP7kQ8cuLxbbU/vnhwv+jjfEP+J4H7JT9PoWyzn9SMW32au21uissWCgPFMqewyZ+dmLcQmm
- xToOXokdpxYtZvL+C7DQ2JGvzLImSCiT/rWn4+gqqkVjcrBkNDR1toDJYNrOUlwscUAo3zkcWF
- YwCzwu7QTuQSrF+xGeJofhf4ROYfqp3oP8mmvifiIBd7DBn9hUnF0i5LHE+uR6dxKq+LyfjgFx
- fo8=
-X-SBRS: 2.7
-X-MesageID: 20764232
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,272,1589256000"; 
-   d="scan'208";a="20764232"
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-To:     Andy Lutomirski <luto@kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Tom Lendacky" <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Juergen Gross" <JGross@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200623094519.GF31822@suse.de>
- <20200623104559.GA4817@hirez.programming.kicks-ass.net>
- <20200623111107.GG31822@suse.de>
- <20200623111443.GC4817@hirez.programming.kicks-ass.net>
- <20200623114324.GA14101@suse.de>
- <20200623115014.GE4817@hirez.programming.kicks-ass.net>
- <20200623121237.GC14101@suse.de>
- <20200623130322.GH4817@hirez.programming.kicks-ass.net>
- <9e3f9b2a-505e-dfd7-c936-461227b4033e@citrix.com>
- <CALCETrWEUXU_BYd5ypF3XC10hSQUJ=XCVz40n3VfcWELS+roTg@mail.gmail.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <7a7c6e7c-8450-3785-035a-197be9268b70@citrix.com>
-Date:   Tue, 23 Jun 2020 19:56:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 14:56:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA68C061573;
+        Tue, 23 Jun 2020 11:56:22 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 9so24641521ljv.5;
+        Tue, 23 Jun 2020 11:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DLTbat6fieBqr/9/lL2FJCRZ8pEMlypsdp/zm9STPlI=;
+        b=Fwnsclrpa94+GqAeSwaeAmRiYo467rG+RNbAuZclgsZROzsPA+as+fnZlVd9NUJWfz
+         Ioiq6OkaTlihbsZf8bHePsQZIkPzv54IAOhUJwmQ73QT8tpqTWa8jpUvhfSl6bxwq9f5
+         fOjKqg7LlA8gjeU74wR7t6TFEjrK7qIsEkl3929JAV8p5zoSRR9SynA+h6vA8DNyritZ
+         CPBFha+YLuqjo8mrH0htk/vGC6VWOdJx1CTSlVd3zCtQujaCNbfcv4PlC6RxHfEBdEOQ
+         u600vnccDI4Q39CtJcgnN9eGQ/k9CcazytorOaDWwCj/TYIuc3Eox11Hc/Vytimu8Y7O
+         woJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DLTbat6fieBqr/9/lL2FJCRZ8pEMlypsdp/zm9STPlI=;
+        b=aH3wHsg7ena3wUrB2ILSORsy5GRj09jQF+wPS2tvWxhmZu3qBubEKahiMv5IK4PPAd
+         /Qksup9ctbkzlsymlIafKfitQ/jj+BEsRLisRfx5yLAb5M3lXsQVef2WwOJFiTpqyfXA
+         EIuwz9SK9YT1TkBQlcatXPIHqfhFNB8YkB0cSFyo9AVGNef07GLxPQIfuAd9EcdVY3/D
+         TzH/wDxvlCYzj/hP3gHKocwxdKBgSEqdcT/ITKwHXXXNTpfJwo1aGc3wi/dEb4QHagEB
+         +PG5XVDOBSPacoFx0cnlWNGpeVFMH5wXn2oYkoAyDzmbEbppvN0DnjoGRm421WJZyLnD
+         iMJA==
+X-Gm-Message-State: AOAM532Soh6ZMnm5LpQuB15Pv2j/x0kSf1N/laK3lPMtoKwh3CaZB7KM
+        X5BI+Po/vP46SpqgJAHKYGOdbi4czlcPiSXQUr4=
+X-Google-Smtp-Source: ABdhPJybZLPt6wRDoJv7GJYMUP085xQpCVI0BG6DAAMBhrMAnofg+cnlM820I/CLO/Af7ZZ4yslao77jBmjWws6gPQY=
+X-Received: by 2002:a2e:b4eb:: with SMTP id s11mr12143822ljm.452.1592938580718;
+ Tue, 23 Jun 2020 11:56:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWEUXU_BYd5ypF3XC10hSQUJ=XCVz40n3VfcWELS+roTg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+References: <1592937087-8885-1-git-send-email-tharvey@gateworks.com>
+ <CAOMZO5CbLvf_iV5K1zXZdYqgpBqrOZmTGR=NYyL+j73ojTGOnw@mail.gmail.com> <CAJ+vNU19ebj3xpOKxeHMzdMQjVdZoJCTFJ5DSYat7U4tpZTWvQ@mail.gmail.com>
+In-Reply-To: <CAJ+vNU19ebj3xpOKxeHMzdMQjVdZoJCTFJ5DSYat7U4tpZTWvQ@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 23 Jun 2020 15:56:09 -0300
+Message-ID: <CAOMZO5CENFuLmQ5rhs6EkXTTUVsOyX-NYwXABnS2ji_QpFYr+w@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2] ARM: dts: imx6qdl-gw551x: fix audio SSI
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 19:26, Andy Lutomirski wrote:
-> On Tue, Jun 23, 2020 at 8:23 AM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->> On 23/06/2020 14:03, Peter Zijlstra wrote:
->>> On Tue, Jun 23, 2020 at 02:12:37PM +0200, Joerg Roedel wrote:
->>>> On Tue, Jun 23, 2020 at 01:50:14PM +0200, Peter Zijlstra wrote:
->>>>> If SNP is the sole reason #VC needs to be IST, then I'd strongly urge
->>>>> you to only make it IST if/when you try and make SNP happen, not before.
->>>> It is not the only reason, when ES guests gain debug register support
->>>> then #VC also needs to be IST, because #DB can be promoted into #VC
->>>> then, and as #DB is IST for a reason, #VC needs to be too.
->>> Didn't I read somewhere that that is only so for Rome/Naples but not for
->>> the later chips (Milan) which have #DB pass-through?
->> I don't know about hardware timelines, but some future part can now opt
->> in to having debug registers as part of the encrypted state, and swapped
->> by VMExit, which would make debug facilities generally usable, and
->> supposedly safe to the #DB infinite loop issues, at which point the
->> hypervisor need not intercept #DB for safety reasons.
->>
->> Its worth nothing that on current parts, the hypervisor can set up debug
->> facilities on behalf of the guest (or behind its back) as the DR state
->> is unencrypted, but that attempting to intercept #DB will redirect to
->> #VC inside the guest and cause fun. (Also spare a thought for 32bit
->> kernels which have to cope with userspace singlestepping the SYSENTER
->> path with every #DB turning into #VC.)
-> What do you mean 32-bit?  64-bit kernels have exactly the same
-> problem.  At least the stack is okay, though.
+Hi Tim,
 
-:)
+On Tue, Jun 23, 2020 at 3:52 PM Tim Harvey <tharvey@gateworks.com> wrote:
 
-AMD-like CPUs disallow SYSENTER/SYSEXIT in Long Mode, and raise #UD,
-even from a compatibility mode segment.
+> Yes, it likely should as it fixes audio capture from 3117e851cef1b4e1.
+> I didn't think it would apply cleanly to stable but it looks like it
+> does.
+>
+> I cc'd stable@vger.kernel.org. Should I submit a new revision with the
+> following?
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 3117e851cef1b4e1 ("ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x")
 
-64bit kernels only have this problem on Intel-like CPUs.
+Yes, that would be better.
 
-(It is a massive shame that between everyone's attempts, there are 0
-"fast system call" instructions with sane semantics, but it is several
-decades late to fix this problem...)
-
-~Andrew
+Please note that the commit ID used in the Fixes tag should be 12-digit long.
