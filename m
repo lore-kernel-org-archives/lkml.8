@@ -2,118 +2,105 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B199C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0E52076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="PFqYvF3/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tBPnBtyF"
+	by mail.kernel.org (Postfix) with ESMTP id 5A9A82078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592931410;
+	bh=cjEiAH1obg+QZUqB4SECDeacZFOCOFzZsfaNXAFBmn0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2eQ3w1G31rmycxBnqPSGZTB3bg6C3N4+wdMzs8Io+NHkLOyDSvcsd3Coq2YGAPFUp
+	 e/TvE4BAZa5uTpcPgvZz06MR7JUFKUmXhuVqD+XGwdFV8/bidBjCbXwLLLxfh6PrgC
+	 BHkw9xcuTTN8qFHG6iBOfiI+0qCs1fdkK+buyaRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733073AbgFWQ4a (ORCPT
+        id S1733079AbgFWQ4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:56:30 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:35861 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732416AbgFWQ4W (ORCPT
+        Tue, 23 Jun 2020 12:56:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34568 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732292AbgFWQ4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:56:22 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 7F2B69DE;
-        Tue, 23 Jun 2020 12:56:20 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 23 Jun 2020 12:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=r
-        XOFys0881hoPtvQddDik70Gqk7ZL4a631nWuDDDZ1I=; b=PFqYvF3/V3fw9s6Ec
-        8T68pPe2E60vme/LzpymHABo3wbSz/2S8vgWG0lweh28Vky31d7BFDnq4FV9KeYa
-        C7Kz/ZlYO2yBy8WauJpnWACbeXq64l2Hg7lZaoT4xUyxfNRVkRuITcVVmGAVs0Tn
-        WpawogUpkpeUGeyejBKcYQ2K54T7nxHjMaHDomMsCwo48ZgzO1BvUWLl2SFj18nt
-        jnS+bedhN2GCgE2cEXO+5zfyQnzLEP+t1OeYSHGOFvCm2JbnIN2Cn7OrRkHbUCKT
-        gzP7DENEnOVsQS4VowrD7Dc0ThWZDsJlb7mYgrAsvJoGKvD0r0ncfExPXgYQxyxj
-        F2Hfw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=rXOFys0881hoPtvQddDik70Gqk7ZL4a631nWuDDDZ
-        1I=; b=tBPnBtyFsmPfvutqSmQpxLJ9ooE+78MAjXS0FF5aEPgpEakX4/TUdFgBp
-        UJhfzpjoHcerxVVobqO1FqmXpEEVHqr9ZE5nK7Sh72TUosBHZE9gsy9CqrqlDa1V
-        1jQcIqTlVxOM2878UGeFbXPlaRhTBHuAW2VeKLVUYLzX1PPTrQ3PNRQ65nZqbdHa
-        ulLfIHAM5RnJFV663hQz1Cd6Hhv5Er6diLdCc7/CmSliDXQMW/a/AvIk035hjtYG
-        WPNF2CSYj54RwA7HHS3I5MYZiGRiWOY6ozT8Cb/j6G6Jlk3uAhub7Y/WPam6Fmlo
-        0XG23Pm4yIS6KdwR2lF5bdO0EUD5w==
-X-ME-Sender: <xms:MTTyXgzhD2oLsWAO__gBdGAUmkEU9buPzYFego_AB0XV6q0ZQMQfIg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekhedgkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtjeenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpefhueeggfdvieegjeeigeffudeuhfeuveeuieelgfffleelgedtiefgvdev
-    ieevvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeike
-    drjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    mhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:MTTyXkS2-ZPryP7_3pCY0SgEKGmnEp7E6Shv1poj5LgtASWsyxM95A>
-    <xmx:MTTyXiULJFFtGvsjB4nIKOB3QHqGFPgBehWrCS5vOAwfsuiIb9dc1g>
-    <xmx:MTTyXuhoW49IbOwmvyfGT1PSRVarzdvuBcXzDMcL0XvHATi-ulFXqg>
-    <xmx:NDTyXu7UwjM8LGGqhYTjcH2uyHUIikJk-RnTCClKuAIgrS3Cdol8TzqklRg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 63CA0328005A;
-        Tue, 23 Jun 2020 12:56:17 -0400 (EDT)
-Date:   Tue, 23 Jun 2020 18:56:15 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        Aditya Pakki <pakki001@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, linux-kernel@vger.kernel.org,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] crypto: sun8i-ce - Fix runtime PM imbalance in
- sun8i_ce_cipher_init
-Message-ID: <20200623165615.i7iphakzjeu2d3fq@gilmour.lan>
-References: <265c3a75-f8ce-fb34-d559-39e58a4dfb4f@web.de>
- <20200623134442.wj4i3r3dlp6rtpaq@gilmour.lan>
- <16341716-aeb6-febc-441c-c1826da8c4d3@web.de>
+        Tue, 23 Jun 2020 12:56:47 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d12so3375945ply.1;
+        Tue, 23 Jun 2020 09:56:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JDvdZbZLgDkFFSdCv0TnjjXgUyD2AB2yEimWstVnawg=;
+        b=uKhk2r5TqBmH0iwKPP5O1OBLcS3/eEY194eSg9VcRszPOEy9mlcPIQ6W1sgWFHaMVa
+         5S3LEiLsszIzLBkqYxpBY5YEpBC5KOlrnGE0ZKS5oBkdqc1rHISk865P7VL6G+hjIOcJ
+         PRrp7zjuMf2VSEugGTJ94yJz0rZYzN0oi6PyZr6ztuOtcbB/iZ7C/eM4wPDzr8oaHNTH
+         WSphVDOxArvWXhfuK0IG5KcX6P9zHr/VCeR7c2Jdsbh7PqJHdxd4NK29ScsAhvottX8O
+         gMVL37MtOoiZuoyHLNNclCxF0W+twbsoE3O6f+HmTxO1MGxVv8I2p1pG1PHNG0kwjvn8
+         qREQ==
+X-Gm-Message-State: AOAM530D00WVK1pSyRN9N/XpGqcFekBIfHu0LTxuqiAAGSPGrTW1HAcv
+        a7HSc3c6r9PWFy6J83tpo1U=
+X-Google-Smtp-Source: ABdhPJzCFTSHbh94OELz47L0BiNYIconLJwPLhznXY2yEus6l/oUG0gykNuFRS7NKmtbjU+o5z156w==
+X-Received: by 2002:a17:902:7045:: with SMTP id h5mr24682778plt.151.1592931407230;
+        Tue, 23 Jun 2020 09:56:47 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id t22sm2801970pjy.32.2020.06.23.09.56.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 09:56:45 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 9E0F240430; Tue, 23 Jun 2020 16:56:44 +0000 (UTC)
+Date:   Tue, 23 Jun 2020 16:56:44 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        martin.petersen@oracle.com, jejb@linux.ibm.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v7 5/8] loop: be paranoid on exit and prevent new
+ additions / removals
+Message-ID: <20200623165644.GB4332@42.do-not-panic.com>
+References: <20200619204730.26124-1-mcgrof@kernel.org>
+ <20200619204730.26124-6-mcgrof@kernel.org>
+ <7e76d892-b5fd-18ec-c96e-cf4537379eba@acm.org>
+ <20200622122742.GU11244@42.do-not-panic.com>
+ <14dc9294-fa99-cad0-871b-b69f138e8ac9@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <16341716-aeb6-febc-441c-c1826da8c4d3@web.de>
+In-Reply-To: <14dc9294-fa99-cad0-871b-b69f138e8ac9@acm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 05:00:32PM +0200, Markus Elfring wrote:
-> >>> Fix this by =E2=80=A6
-> >>
-> >> Please replace the beginning of this sentence with the tag =E2=80=9CFi=
-xes=E2=80=9D.
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?id=3D625d3449788f85569096780=
-592549d0340e9c0c7#n183
-> >
-> > No, not really. The comment you (partially) quoted explains how the
-> > issue is fixed, your suggestion explains what commit introduced the fix
-> > in the first place. They are both beneficial, but there's strictly no
-> > reason to remove the former for the latter.
->=20
-> Do you care to improve this change description another bit?
+On Mon, Jun 22, 2020 at 07:16:15PM -0700, Bart Van Assche wrote:
+> On 2020-06-22 05:27, Luis Chamberlain wrote:
+> > Note: this will bring you sanity if you try to figure out *why* we still
+> > get:
+> > 
+> > [235530.144343] debugfs: Directory 'loop0' with parent 'block' already present!
+> > [235530.149477] blktrace: debugfs_dir not present for loop0 so skipping
+> > [235530.232328] debugfs: Directory 'loop0' with parent 'block' already present!
+> > [235530.238962] blktrace: debugfs_dir not present for loop0 so skipping
+> > 
+> > If you run run_0004.sh from break-blktrace [0]. Even with all my patches
+> > merged we still run into this. And so the bug lies within the block
+> > layer or on the driver. I haven't been able to find the issue yet.
+> > 
+> > [0] https://github.com/mcgrof/break-blktrace
+> 
+> Thanks Luis for having shared this information. If I can find the time I
+> will have a look into this myself.
 
-I'm not sure which change description you're talking about?
+Let's keep track of it:
 
-Maxime
+https://bugzilla.kernel.org/show_bug.cgi?id=208301
+
+  Luis
