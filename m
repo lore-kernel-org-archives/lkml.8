@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C204CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 931C820EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6525214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943102;
-	bh=R8FjzKUt+iLtGRH7GJ/8P6ElA1KiTTqRoMswO6ejsC8=;
+	s=default; t=1592943105;
+	bh=NuAnyTdf95lzlFykEHITVxL8KYiuOHKxR0zlx7ulsG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y+HwcxnaupWbYRBUXcDZfgwCSooEoOINqx9RBTw8CHcw6lYX3X7sL17K3VLGZXmXW
-	 raZmtiRWEu9jrJcoYe/e8encP4JhnjgLehFwWDDSa0733lC7UKoquKLuub32U/lZk6
-	 2Mxtqw3iUWPQI0xBJhPl5jGwcwhFPUv6F2SEUqcs=
+	b=wSoZVzVMOP3MJvosvqMTwej+49aBK5PJX1jbxvzRyq/c76+plcz9qc+eMmYG2M3hv
+	 C9VQ9ucyL+gtvEHqf72r2KEFH8H4/RQejRI+7a8tyReLz32o6v0EIPOITkGDkU+dPI
+	 Y7S9mnljSIzFp/EzVk7CmsrHqX0MyXJavQIqSLWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387710AbgFWULk (ORCPT
+        id S2388905AbgFWULo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52652 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388884AbgFWULW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:11:22 -0400
+        id S2388897AbgFWUL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:11:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 314ED206C3;
-        Tue, 23 Jun 2020 20:11:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB9C3206C3;
+        Tue, 23 Jun 2020 20:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943081;
-        bh=R8FjzKUt+iLtGRH7GJ/8P6ElA1KiTTqRoMswO6ejsC8=;
+        s=default; t=1592943087;
+        bh=NuAnyTdf95lzlFykEHITVxL8KYiuOHKxR0zlx7ulsG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cy0fMJkf6j//lrihFH/Hkhd+HiqRHzrJb/3lAs98ZO6Ptr4HRp5931pElbJr0b1Zm
-         wv05jceZY13f0EJitqEcCktNNYvO15MX6q3YALLuW58gvJJc1yyA3G5fgw9phglBHo
-         ZgQs9tWJv85K44s2Lufm3tZ2sz95yUiAMDi3fKAE=
+        b=oGcxHyXWQ6epDSGpZ/A/UVG7uhm1vbKqGVGqtFW+JL/Rt1LZEQiaxQKo0X9uLI4Qr
+         0qhFHDRrB5BIFdP80SKeWrwB1IQWxN7iTO9B09KjwgnCSkaqErSIKOLUOhzdud6T6g
+         Qtngh208pRtbH8b8XtEvK/I5DiUo6bWeA7CCtOKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 253/477] PCI: dwc: pci-dra7xx: Use devm_platform_ioremap_resource_byname()
-Date:   Tue, 23 Jun 2020 21:54:10 +0200
-Message-Id: <20200623195419.531633835@linuxfoundation.org>
+Subject: [PATCH 5.7 254/477] PCI: dwc: Fix inner MSI IRQ domain registration
+Date:   Tue, 23 Jun 2020 21:54:11 +0200
+Message-Id: <20200623195419.579441664@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,50 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit c8a119779f5609de8dcd98630f71cc7f1b2e4e8c ]
+[ Upstream commit 0414b93e78d87ecc24ae1a7e61fe97deb29fa2f4 ]
 
-platform_get_resource() may fail and return NULL, so we had better
-check its return value to avoid a NULL pointer dereference a bit later
-in the code. Fix it to use devm_platform_ioremap_resource_byname()
-instead of calling platform_get_resource_byname() and devm_ioremap().
+On a system that uses the internal DWC MSI widget, I get this
+warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
 
-Link: https://lore.kernel.org/r/20200429015027.134485-1-weiyongjun1@huawei.com
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-[lorenzo.pieralisi@arm.com: commit log]
+  debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
+
+This is due to the fact that the DWC MSI code tries to register two
+IRQ domains for the same firmware node, without telling the low
+level code how to distinguish them (by setting a bus token). This
+further confuses debugfs which tries to create corresponding
+files for each domain.
+
+Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
+the closest thing we have as to "generic MSI".
+
+Link: https://lore.kernel.org/r/20200501113921.366597-1-maz@kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-dra7xx.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 3b0e58f2de588..6184ebc9392db 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -840,7 +840,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	struct phy **phy;
- 	struct device_link **link;
- 	void __iomem *base;
--	struct resource *res;
- 	struct dw_pcie *pci;
- 	struct dra7xx_pcie *dra7xx;
- 	struct device *dev = &pdev->dev;
-@@ -877,10 +876,9 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 		return irq;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 395feb8ca0512..3c43311bb95c6 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ 		return -ENOMEM;
  	}
  
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
--	base = devm_ioremap(dev, res->start, resource_size(res));
--	if (!base)
--		return -ENOMEM;
-+	base = devm_platform_ioremap_resource_byname(pdev, "ti_conf");
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
- 
- 	phy_count = of_property_count_strings(np, "phy-names");
- 	if (phy_count < 0) {
++	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
++
+ 	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+ 						   &dw_pcie_msi_domain_info,
+ 						   pp->irq_domain);
 -- 
 2.25.1
 
