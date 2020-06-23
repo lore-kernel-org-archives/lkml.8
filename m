@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC333C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840A2206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC3820888
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948442;
-	bh=chibOaOC+8zwPMo1Dx/NxO88sknBaY7+ztfAMhFuOq8=;
+	s=default; t=1592948447;
+	bh=s+4gzFFMMtKgWlqR3/VWmZuUw8gzZHkEdvH/rRAugQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhJ62Y+QcHGOA0u8qhChmpUjg+4g8Quu+uy4Ww8OaMrgM4AkrF4MSTVGP4aBJkq1D
-	 ZqrFUQv3SjqdTaE+JT1SW9n6pTE5Ojg3K6pXEt1dtWZGze7QkGZeqReRmLzTz750Es
-	 oJIsOmswCvOjnrkPvfIQ13vjUXB01cHvyC0sFS5Q=
+	b=Ept/xwRm9m1qMOCHRq3RBV08ILWnQFx+59vfjMwNBc5wUUBewkB0XLiTlFlPptvY3
+	 o17chI4vb4yhzeG6xtARBj1AcGEa01rsrL6WhR2bNoppyJHtJOYKSaKXdUZk7AzukY
+	 c6+T59yIyEyAIH9kI8wpHFFe9e/qYBMRCKkrt7sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393971AbgFWVkl (ORCPT
+        id S2388499AbgFWUGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46886 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:06:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388496AbgFWUGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:41 -0400
+        id S2388476AbgFWUG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:06:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C0482078A;
-        Tue, 23 Jun 2020 20:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 188CA206C3;
+        Tue, 23 Jun 2020 20:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942801;
-        bh=chibOaOC+8zwPMo1Dx/NxO88sknBaY7+ztfAMhFuOq8=;
+        s=default; t=1592942788;
+        bh=s+4gzFFMMtKgWlqR3/VWmZuUw8gzZHkEdvH/rRAugQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+mrGIlhVkhiTupxh1TLtatRNqVMhm28oyoaB5d8tp6of77/Nauh/wl5Z7o0FgQWD
-         MnFWWdOWDD9AaeBtdVmFaJflq1s4C2M1k7VvRslZWemo1IGOD46zHHaEj5waruBNmg
-         aQdlXt1RAnrloXOLnhUmgtNdLIHTp4xmigRjy5Tk=
+        b=agPLKTLwctxw6k+QKJYqAhZCsHB7kaD0dGsI70N1nngeDoy2yzf1AAShM6XSPJ6EH
+         GHNri52IaoIwJdsPsPkPxnfx4YMFsvmwBRvN3Qg6wuDdnEA0EsM8Q20hGHShuU95R5
+         x+FjCMevut8Q643ov+wS32xGk3bgEjUe7G6cX4vI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Simon Arlott <simon@octiron.net>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 100/477] f2fs: handle readonly filesystem in f2fs_ioc_shutdown()
-Date:   Tue, 23 Jun 2020 21:51:37 +0200
-Message-Id: <20200623195412.324267457@linuxfoundation.org>
+Subject: [PATCH 5.7 105/477] scsi: sr: Fix sr_probe() missing deallocate of device minor
+Date:   Tue, 23 Jun 2020 21:51:42 +0200
+Message-Id: <20200623195412.556728769@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,42 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Simon Arlott <simon@octiron.net>
 
-[ Upstream commit 8626441f05dc45a2f4693ee6863d02456ce39e60 ]
+[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
 
-If mountpoint is readonly, we should allow shutdowning filesystem
-successfully, this fixes issue found by generic/599 testcase of
-xfstest.
+If the cdrom fails to be registered then the device minor should be
+deallocated.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
+Signed-off-by: Simon Arlott <simon@octiron.net>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/scsi/sr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 6ab8f621a3c5a..30b35915fa3a3 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2219,8 +2219,15 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 8d062d4f3ce0b..1e13c6a0f0caf 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -797,7 +797,7 @@ static int sr_probe(struct device *dev)
+ 	cd->cdi.disk = disk;
  
- 	if (in != F2FS_GOING_DOWN_FULLSYNC) {
- 		ret = mnt_want_write_file(filp);
--		if (ret)
-+		if (ret) {
-+			if (ret == -EROFS) {
-+				ret = 0;
-+				f2fs_stop_checkpoint(sbi, false);
-+				set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
-+				trace_f2fs_shutdown(sbi, in, ret);
-+			}
- 			return ret;
-+		}
- 	}
+ 	if (register_cdrom(&cd->cdi))
+-		goto fail_put;
++		goto fail_minor;
  
- 	switch (in) {
+ 	/*
+ 	 * Initialize block layer runtime PM stuffs before the
+@@ -815,6 +815,10 @@ static int sr_probe(struct device *dev)
+ 
+ 	return 0;
+ 
++fail_minor:
++	spin_lock(&sr_index_lock);
++	clear_bit(minor, sr_index_bits);
++	spin_unlock(&sr_index_lock);
+ fail_put:
+ 	put_disk(disk);
+ 	mutex_destroy(&cd->lock);
 -- 
 2.25.1
 
