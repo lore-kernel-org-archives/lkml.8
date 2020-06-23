@@ -2,132 +2,199 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6123720738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E20B2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fVb3U84p"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YL5Glnfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbgFWIZz (ORCPT
+        id S1731836AbgFWI01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:25:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24456 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731783AbgFWIZy (ORCPT
+        Tue, 23 Jun 2020 04:26:27 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45464 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731819AbgFWI00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:25:54 -0400
+        Tue, 23 Jun 2020 04:26:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592900752;
+        s=mimecast20190719; t=1592900784;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uatLoTht3LpxtV8y54s42CvqtAcAPf7U2lYUBgXuz/c=;
-        b=fVb3U84p2K2Yg+P/gazZWZawGmI4PlUwIxqiyU/xOwJ46x7o8PuY/6PZmCGXjFeVPFbL2d
-        kh5IEEmuSLpgzhBhboXsUUB2cXqXyU75nE1M69H3ROW2WVU22x0tocnY2gpH/Vga3wR6s6
-        DhFC3VDudS6Uh4nNWD4lM1AdnW8Hc/E=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-ytcp8kokMtmwT0Z6HcJ-Qg-1; Tue, 23 Jun 2020 04:25:50 -0400
-X-MC-Unique: ytcp8kokMtmwT0Z6HcJ-Qg-1
-Received: by mail-wr1-f70.google.com with SMTP id l3so5264191wrw.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 01:25:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=uatLoTht3LpxtV8y54s42CvqtAcAPf7U2lYUBgXuz/c=;
-        b=g1aB5aZNjzn9j4oIDZbrj9CrmcxJvRtr7dwOPnX/Gcfi/KR/u29b+fsTVuA9WNdZVq
-         sFVjrbrGrI6XqFWRmlLVle1MO8gOnDKQoOQl+r8TE5MsYgd1ydOr1V6ogyxD26fYlXg+
-         lMHypBEVQ8Q/HuUKidH9HpJ6PcyXMlrFHe+kBIdT/FI1m6FzLmK4mjKUmuK1zXDwzewI
-         YNRGnV66s8q5wNYY/mbfA14ZZKaNne8jMgo46SV6ppF2tXTtTWonidZsZrID2dRh8qFQ
-         t8cGA4vSvpvzIG64aEQwrYiRvsEPPPgOzr+qwKy1+obidipnFXzHVjLZIZ8yJrcmF+LO
-         5ddQ==
-X-Gm-Message-State: AOAM533odQrE+8AWG0iKskpUXazU3hlkD6Vk6Vwvvopnbl8B50W3oEb0
-        cbA5rL1xwreWX9SQCHVlFFDRF1Y/dFUUlt5jQMPIcZbC1k3wzvnBTqsMh3Dm/ArGdb8uPZ5q5gv
-        uxDoA6XNGurvzXBqlA7FRe82U
-X-Received: by 2002:adf:e482:: with SMTP id i2mr36534wrm.75.1592900749388;
-        Tue, 23 Jun 2020 01:25:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwc3XogzeNwsdZ7v2sDlZRwXqKbrYs2e6doW+SBbFx4Sho/d0OEnV4LbHlJbrymQKkvurtxAg==
-X-Received: by 2002:adf:e482:: with SMTP id i2mr36515wrm.75.1592900749185;
-        Tue, 23 Jun 2020 01:25:49 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id e5sm19713184wrs.33.2020.06.23.01.25.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 01:25:48 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 04:25:46 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-Message-ID: <20200623042456-mutt-send-email-mst@kernel.org>
-References: <20200611113404.17810-1-mst@redhat.com>
- <20200611113404.17810-3-mst@redhat.com>
- <0332b0cf-cf00-9216-042c-e870efa33626@redhat.com>
- <20200622115946-mutt-send-email-mst@kernel.org>
- <c56cc86d-a420-79ca-8420-e99db91980fa@redhat.com>
- <CAJaqyWc3C_Td_SpV97CuemkQH9vH+EL3sGgeWGE82E5gYxZNCA@mail.gmail.com>
+        bh=vol2UxkFhJ/UbxwdgJACR/sH9uDf5nGs+UnfGA0Nn5k=;
+        b=YL5Glnfhq6Sm6oM6cGOiFz9AhwJ/56ShGjCQ1XnONq8FM6hdRj9qPyeJdlZjPBiEAc7dKQ
+        FZqDQAzkh6l6xHj0erCqxamIo+AQ73JFkJkmloR2sWF+nJjYMxaSfMfo56Kvm+67sr2JiQ
+        bmuHpmp+SQ+e917K0aqlPIXup9FvDvY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-UQ-Js05-O9-zkkhOBcvUaA-1; Tue, 23 Jun 2020 04:26:20 -0400
+X-MC-Unique: UQ-Js05-O9-zkkhOBcvUaA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6AA418FE861;
+        Tue, 23 Jun 2020 08:26:16 +0000 (UTC)
+Received: from ovpn-114-234.ams2.redhat.com (ovpn-114-234.ams2.redhat.com [10.36.114.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B313171692;
+        Tue, 23 Jun 2020 08:26:14 +0000 (UTC)
+Message-ID: <651188bf96724d55c964fe4e3ed9e97968397eb0.camel@redhat.com>
+Subject: Re: [PATCH net-next 2/2] ipv6: fib6: avoid indirect calls from
+ fib6_rule_lookup
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux NetDev <netdev@vger.kernel.org>,
+        Luigi Rizzo <lrizzo@google.com>
+Date:   Tue, 23 Jun 2020 10:26:13 +0200
+In-Reply-To: <CAMzD94T8Sm8_8B2=3iST8P6RZOnUEAEViM4Q5FKdTh7keOpd5Q@mail.gmail.com>
+References: <20200620031419.219106-1-brianvv@google.com>
+         <20200620031419.219106-2-brianvv@google.com>
+         <daac77afd98bd9c10c4c52309067b8dfbba3fad0.camel@redhat.com>
+         <CAMzD94QUSR8T3vMAfjVf_MxCPrj_gtPYhEqNCyPqsJ1rdA=G9g@mail.gmail.com>
+         <8427633745b43a1bbd9a0b288ceb2bb6f9e977aa.camel@redhat.com>
+         <CAMzD94T8Sm8_8B2=3iST8P6RZOnUEAEViM4Q5FKdTh7keOpd5Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJaqyWc3C_Td_SpV97CuemkQH9vH+EL3sGgeWGE82E5gYxZNCA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:00:57AM +0200, Eugenio Perez Martin wrote:
-> On Tue, Jun 23, 2020 at 4:51 AM Jason Wang <jasowang@redhat.com> wrote:
-> >
-> >
-> > On 2020/6/23 上午12:00, Michael S. Tsirkin wrote:
-> > > On Wed, Jun 17, 2020 at 11:19:26AM +0800, Jason Wang wrote:
-> > >> On 2020/6/11 下午7:34, Michael S. Tsirkin wrote:
-> > >>>    static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
-> > >>>    {
-> > >>>     kfree(vq->descs);
-> > >>> @@ -394,6 +400,9 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
-> > >>>     for (i = 0; i < dev->nvqs; ++i) {
-> > >>>             vq = dev->vqs[i];
-> > >>>             vq->max_descs = dev->iov_limit;
-> > >>> +           if (vhost_vq_num_batch_descs(vq) < 0) {
-> > >>> +                   return -EINVAL;
-> > >>> +           }
-> > >> This check breaks vdpa which set iov_limit to zero. Consider iov_limit is
-> > >> meaningless to vDPA, I wonder we can skip the test when device doesn't use
-> > >> worker.
-> > >>
-> > >> Thanks
-> > > It doesn't need iovecs at all, right?
-> > >
-> > > -- MST
-> >
-> >
-> > Yes, so we may choose to bypass the iovecs as well.
-> >
-> > Thanks
-> >
+On Mon, 2020-06-22 at 12:26 -0700, Brian Vazquez wrote:
 > 
-> I think that the kmalloc_array returns ZERO_SIZE_PTR for all of them
-> in that case, so I didn't bother to skip the kmalloc_array parts.
-> Would you prefer to skip them all and let them NULL? Or have I
-> misunderstood what you mean?
 > 
-> Thanks!
+> On Mon, Jun 22, 2020 at 11:00 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> > On Mon, 2020-06-22 at 09:25 -0700, Brian Vazquez wrote:
+> > > 
+> > > Hi Paolo
+> > > On Mon, Jun 22, 2020 at 3:13 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> > > > Hi,
+> > > > 
+> > > > On Fri, 2020-06-19 at 20:14 -0700, Brian Vazquez wrote:
+> > > > > @@ -111,11 +111,13 @@ struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
+> > > > >       } else {
+> > > > >               struct rt6_info *rt;
+> > > > >  
+> > > > > -             rt = lookup(net, net->ipv6.fib6_local_tbl, fl6, skb, flags);
+> > > > > +             rt = pol_lookup_func(lookup,
+> > > > > +                          net, net->ipv6.fib6_local_tbl, fl6, skb, flags);
+> > > > >               if (rt != net->ipv6.ip6_null_entry && rt->dst.error != -EAGAIN)
+> > > > >                       return &rt->dst;
+> > > > >               ip6_rt_put_flags(rt, flags);
+> > > > > -             rt = lookup(net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
+> > > > > +             rt = pol_lookup_func(lookup,
+> > > > > +                          net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
+> > > > >               if (rt->dst.error != -EAGAIN)
+> > > > >                       return &rt->dst;
+> > > > >               ip6_rt_put_flags(rt, flags);
+> > > > 
+> > > > Have you considered instead factoring out the slice of
+> > > > fib6_rule_lookup() using indirect calls to an header file? it looks
+> > > > like here (gcc 10.1.1) it sufficent let the compiler use direct calls
+> > > > and will avoid the additional branches.
+> > > > 
+> > > 
+> > > Sorry I couldn't get your point. Could you elaborate more, please? Or provide an example?
+> > 
+> > I mean: I think we can avoid the indirect calls even without using the
+> > ICW, just moving the relevant code around - in a inline function in the
+> > header files.
+> 
+>  
+> Oh I see your point now, yeah this could work but only for the path where there's no custom_rules, right?? So we still need the ICW for the other case. 
+> 
+> > e.g. with the following code - rough, build-tested only experiment -
+> > the gcc 10.1.1 is able to use direct calls
+> > for ip6_pol_route_lookup(), ip6_pol_route_output(), etc.
+> > 
+> > Cheers,
+> > 
+> > Paolo
+> > ---
+> > diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
+> > index 3f615a29766e..c1b5ac890cd2 100644
+> > --- a/include/net/ip6_fib.h
+> > +++ b/include/net/ip6_fib.h
+> > @@ -430,9 +430,6 @@ struct fib6_entry_notifier_info {
+> > 
+> >  struct fib6_table *fib6_get_table(struct net *net, u32 id);
+> >  struct fib6_table *fib6_new_table(struct net *net, u32 id);
+> > -struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
+> > -                                  const struct sk_buff *skb,
+> > -                                  int flags, pol_lookup_t lookup);
+> > 
+> >  /* called with rcu lock held; can return error pointer
+> >   * caller needs to select path
+> > diff --git a/include/net/ip6_route.h b/include/net/ip6_route.h
+> > index 2a5277758379..fe1c2102ffe8 100644
+> > --- a/include/net/ip6_route.h
+> > +++ b/include/net/ip6_route.h
+> > @@ -336,4 +336,50 @@ u32 ip6_mtu_from_fib6(const struct fib6_result *res,
+> >  struct neighbour *ip6_neigh_lookup(const struct in6_addr *gw,
+> >                                    struct net_device *dev, struct sk_buff *skb,
+> >                                    const void *daddr);
+> > +
+> > +#ifdef CONFIG_IPV6_MULTIPLE_TABLES
+> > +struct rt6_info *__fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
+> > +                                   const struct sk_buff *skb,
+> > +                                   int flags, pol_lookup_t lookup);
+> > +static inline struct dst_entry *
+> > +fib6_rule_lookup(struct net *net, struct flowi6 *fl6, const struct sk_buff *skb,
+> > +                int flags, pol_lookup_t lookup)
+> > +{
+> > +       struct rt6_info *rt;
+> > +
+> > +       if (!net->ipv6.fib6_has_custom_rules) {
+> > +               rt = lookup(net, net->ipv6.fib6_local_tbl, fl6, skb, flags);
+> > +               if (rt != net->ipv6.ip6_null_entry && rt->dst.error != -EAGAIN)
+> > +                       return &rt->dst;
+> > +               ip6_rt_put_flags(rt, flags);
+> > +               rt = lookup(net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
+> > +               if (rt->dst.error != -EAGAIN)
+> > +                       return &rt->dst;
+> > +               ip6_rt_put_flags(rt, flags);
+> > +       } else {
+> > +               rt = __fib6_rule_lookup(net, fl6, skb, flags, lookup); 
+> 
+>  
+> When we have custom rules this function will do the following stack trace:
+> fib_rules_lookup
+> |_  fib6_rule_action
+>       |_ __fib6_rule_action
+>   So we will still need the ICW in __fib6_rule_action, right?
 
-Sorry about being unclear. I just meant that it seems cleaner
-to check for iov_limit being 0 not for worker thread.
+Indeed! I originally did not notice your patch takes care also of the
+custum rules code path.
 
--- 
-MST
+I'm ok with plain usage of ICW everywhere.
+
+Just an additional question, why this order:
+
++       return INDIRECT_CALL_4(lookup,
++                              ip6_pol_route_lookup,
++                              ip6_pol_route_output,
++                              ip6_pol_route_input,
++                              __ip6_route_redirect,
+
+?
+
+aren't *route_output and *route_input more frequent than *route_lookup?
+
+Thanks!
+
+Paolo
 
