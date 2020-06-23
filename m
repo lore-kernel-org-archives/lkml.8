@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42369C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7622072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B0A2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947154;
-	bh=y4JIm9O8t1NffQaSICuLZzFDupMR1MBAVaXk2WFlsqI=;
+	s=default; t=1592947164;
+	bh=i84dDHgzZUNvf8G0GltQnQ24evChPtlAvMVSG5dkSj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r72Tu40Vn50hCa4CjqEdNFxoBqMl2xhD7V3orae4OigimUdga/Nzqdh9mK2MSOOsx
-	 IeRwKABRmpKCJTegb7zi9721UHd8wBG5pt5rgmZwcD1pjv8+irdktU/A5uygan+daV
-	 2E0SSjkRStoc5ZSNAa59g4ptkLwKMznOcEdcudys=
+	b=xvTSZMEBx+NhE/LyyoEoyWR3qo0V/rYH8QzErakj5eIM2RJ3K2ZtJe0IPlWqW3haQ
+	 iuxxRjtpsbJ+oOS6XvdsMr3IG8StFR5aj8nCbshfvceYmSZxvGUo1y/E9J4weECDFV
+	 PrfGW/hVVtdhMH4jFVWz6tSOIqG8dDK3LJp3N0V8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389462AbgFWUZM (ORCPT
+        id S2393473AbgFWVTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:19:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390544AbgFWUZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:25:07 -0400
+        id S2390203AbgFWUY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 913B720723;
-        Tue, 23 Jun 2020 20:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97026206C3;
+        Tue, 23 Jun 2020 20:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943907;
-        bh=y4JIm9O8t1NffQaSICuLZzFDupMR1MBAVaXk2WFlsqI=;
+        s=default; t=1592943897;
+        bh=i84dDHgzZUNvf8G0GltQnQ24evChPtlAvMVSG5dkSj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=soAE7k4d9OlhgWyTrSWgsq4I2q7/qreWi7o8z3YP5HtJ7dJiRNmVgGEo4OsCAxmey
-         oy6Zfkymk2O+jeZSIetdzrAgEiT2a5FEdYbMGa0S+FCAuz7CLYCJsv6nmxrkhtTRic
-         cJXKPCdfk8b5LClk6mwda2EaSoBTENbXaW+tLFg8=
+        b=gtT2dL4fMsdGVfu3jfo6OShbDo0yJJz7DbBz33WcT68jd6fLvDO0Oeg/74+ZQeM3D
+         AxrCs6s0z8QfiROVYyB2Oq2dB/X6NSD7rKbhCFPaxkV1sQ7jcXVG8aIZKsb8YjbNas
+         3Xcb0I16atyVH+qVnXq0q7G3rAKpz8uClIPHr37Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Chad Dupuis <cdupuis@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 067/314] powerpc/crashkernel: Take "mem=" option into account
-Date:   Tue, 23 Jun 2020 21:54:22 +0200
-Message-Id: <20200623195342.040864298@linuxfoundation.org>
+Subject: [PATCH 5.4 092/314] scsi: qedf: Fix crash when MFW calls for protocol stats while function is still probing
+Date:   Tue, 23 Jun 2020 21:54:47 +0200
+Message-Id: <20200623195343.252331667@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,79 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pingfan Liu <kernelfans@gmail.com>
+From: Chad Dupuis <cdupuis@marvell.com>
 
-[ Upstream commit be5470e0c285a68dc3afdea965032f5ddc8269d7 ]
+[ Upstream commit ad40f5256095c68dc17c991eb976261d5ea2daaa ]
 
-'mem=" option is an easy way to put high pressure on memory during
-some test. Hence after applying the memory limit, instead of total
-mem, the actual usable memory should be considered when reserving mem
-for crashkernel. Otherwise the boot up may experience OOM issue.
+The MFW may make a call to qed and then to qedf for protocol statistics
+while the function is still probing.  If this happens it's possible that
+some members of the struct qedf_ctx may not be fully initialized which can
+result in a NULL pointer dereference or general protection fault.
 
-E.g. it would reserve 4G prior to the change and 512M afterward, if
-passing
-crashkernel="2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G",
-and mem=5G on a 256G machine.
+To prevent this, add a new flag call QEDF_PROBING and set it when the
+__qedf_probe() function is active. Then in the qedf_get_protocol_tlv_data()
+function we can check if the function is still probing and return
+immediantely before any uninitialized structures can be touched.
 
-This issue is powerpc specific because it puts higher priority on
-fadump and kdump reservation than on "mem=". Referring the following
-code:
-    if (fadump_reserve_mem() == 0)
-            reserve_crashkernel();
-    ...
-    /* Ensure that total memory size is page-aligned. */
-    limit = ALIGN(memory_limit ?: memblock_phys_mem_size(), PAGE_SIZE);
-    memblock_enforce_memory_limit(limit);
-
-While on other arches, the effect of "mem=" takes a higher priority
-and pass through memblock_phys_mem_size() before calling
-reserve_crashkernel().
-
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1585749644-4148-1-git-send-email-kernelfans@gmail.com
+Link: https://lore.kernel.org/r/20200416084314.18851-9-skashyap@marvell.com
+Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/machine_kexec.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/scsi/qedf/qedf.h      |  1 +
+ drivers/scsi/qedf/qedf_main.c | 35 +++++++++++++++++++++++++++++++----
+ 2 files changed, 32 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
-index c4ed328a7b963..7a1c11a7cba5a 100644
---- a/arch/powerpc/kernel/machine_kexec.c
-+++ b/arch/powerpc/kernel/machine_kexec.c
-@@ -114,11 +114,12 @@ void machine_kexec(struct kimage *image)
- 
- void __init reserve_crashkernel(void)
+diff --git a/drivers/scsi/qedf/qedf.h b/drivers/scsi/qedf/qedf.h
+index f3f399fe10c86..0da4e16fb23a6 100644
+--- a/drivers/scsi/qedf/qedf.h
++++ b/drivers/scsi/qedf/qedf.h
+@@ -355,6 +355,7 @@ struct qedf_ctx {
+ #define QEDF_GRCDUMP_CAPTURE		4
+ #define QEDF_IN_RECOVERY		5
+ #define QEDF_DBG_STOP_IO		6
++#define QEDF_PROBING			8
+ 	unsigned long flags; /* Miscellaneous state flags */
+ 	int fipvlan_retries;
+ 	u8 num_queues;
+diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
+index 59ca98f12afd5..3d0e345947c1f 100644
+--- a/drivers/scsi/qedf/qedf_main.c
++++ b/drivers/scsi/qedf/qedf_main.c
+@@ -3153,7 +3153,7 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
  {
--	unsigned long long crash_size, crash_base;
-+	unsigned long long crash_size, crash_base, total_mem_sz;
- 	int ret;
+ 	int rc = -EINVAL;
+ 	struct fc_lport *lport;
+-	struct qedf_ctx *qedf;
++	struct qedf_ctx *qedf = NULL;
+ 	struct Scsi_Host *host;
+ 	bool is_vf = false;
+ 	struct qed_ll2_params params;
+@@ -3183,6 +3183,7 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
  
-+	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
- 	/* use common parsing */
--	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-+	ret = parse_crashkernel(boot_command_line, total_mem_sz,
- 			&crash_size, &crash_base);
- 	if (ret == 0 && crash_size > 0) {
- 		crashk_res.start = crash_base;
-@@ -177,6 +178,7 @@ void __init reserve_crashkernel(void)
- 	/* Crash kernel trumps memory limit */
- 	if (memory_limit && memory_limit <= crashk_res.end) {
- 		memory_limit = crashk_res.end + 1;
-+		total_mem_sz = memory_limit;
- 		printk("Adjusted memory limit for crashkernel, now 0x%llx\n",
- 		       memory_limit);
+ 		/* Initialize qedf_ctx */
+ 		qedf = lport_priv(lport);
++		set_bit(QEDF_PROBING, &qedf->flags);
+ 		qedf->lport = lport;
+ 		qedf->ctlr.lp = lport;
+ 		qedf->pdev = pdev;
+@@ -3206,9 +3207,12 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
+ 	} else {
+ 		/* Init pointers during recovery */
+ 		qedf = pci_get_drvdata(pdev);
++		set_bit(QEDF_PROBING, &qedf->flags);
+ 		lport = qedf->lport;
  	}
-@@ -185,7 +187,7 @@ void __init reserve_crashkernel(void)
- 			"for crashkernel (System RAM: %ldMB)\n",
- 			(unsigned long)(crash_size >> 20),
- 			(unsigned long)(crashk_res.start >> 20),
--			(unsigned long)(memblock_phys_mem_size() >> 20));
-+			(unsigned long)(total_mem_sz >> 20));
  
- 	if (!memblock_is_region_memory(crashk_res.start, crash_size) ||
- 	    memblock_reserve(crashk_res.start, crash_size)) {
++	QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_DISC, "Probe started.\n");
++
+ 	host = lport->host;
+ 
+ 	/* Allocate mempool for qedf_io_work structs */
+@@ -3513,6 +3517,10 @@ static int __qedf_probe(struct pci_dev *pdev, int mode)
+ 	else
+ 		fc_fabric_login(lport);
+ 
++	QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_DISC, "Probe done.\n");
++
++	clear_bit(QEDF_PROBING, &qedf->flags);
++
+ 	/* All good */
+ 	return 0;
+ 
+@@ -3538,6 +3546,11 @@ err2:
+ err1:
+ 	scsi_host_put(lport->host);
+ err0:
++	if (qedf) {
++		QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_DISC, "Probe done.\n");
++
++		clear_bit(QEDF_PROBING, &qedf->flags);
++	}
+ 	return rc;
+ }
+ 
+@@ -3687,11 +3700,25 @@ void qedf_get_protocol_tlv_data(void *dev, void *data)
+ {
+ 	struct qedf_ctx *qedf = dev;
+ 	struct qed_mfw_tlv_fcoe *fcoe = data;
+-	struct fc_lport *lport = qedf->lport;
+-	struct Scsi_Host *host = lport->host;
+-	struct fc_host_attrs *fc_host = shost_to_fc_host(host);
++	struct fc_lport *lport;
++	struct Scsi_Host *host;
++	struct fc_host_attrs *fc_host;
+ 	struct fc_host_statistics *hst;
+ 
++	if (!qedf) {
++		QEDF_ERR(NULL, "qedf is null.\n");
++		return;
++	}
++
++	if (test_bit(QEDF_PROBING, &qedf->flags)) {
++		QEDF_ERR(&qedf->dbg_ctx, "Function is still probing.\n");
++		return;
++	}
++
++	lport = qedf->lport;
++	host = lport->host;
++	fc_host = shost_to_fc_host(host);
++
+ 	/* Force a refresh of the fc_host stats including offload stats */
+ 	hst = qedf_fc_get_host_stats(host);
+ 
 -- 
 2.25.1
 
