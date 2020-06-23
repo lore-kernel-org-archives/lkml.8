@@ -3,121 +3,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1479C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751A620874
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 799A020780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioJAkhMs"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EkIXFub/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387891AbgFWW5d (ORCPT
+        id S2387943AbgFWXAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
+        Tue, 23 Jun 2020 19:00:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387606AbgFWW5c (ORCPT
+        with ESMTP id S2387606AbgFWXAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:57:32 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A6CC061573;
-        Tue, 23 Jun 2020 15:57:32 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id b15so29506edy.7;
-        Tue, 23 Jun 2020 15:57:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JyaST442g4jgVoNwB5FBRI2rFKCQGveZheORu1G0/FU=;
-        b=ioJAkhMsktmUa11lXkCStq+y/AVVW4lFT1gfC83aLREGmYEwEs0S9oQQTQKPu9xUhV
-         LzuIE7WbfFvF3CX03YcnxECAluMmM3DaK6Jim0sWVZFz2vADTyTo5EI0dnr8FyPu9TH8
-         cP7rx9Lt+Ki+600SUS/ttReMLQzLTWCRa/Nuz4PkXfKm00LkTEqVao+Asf3pj03HIN/R
-         wqzaXS+ZzXy0Bmrk7gDa68TlBRhXesxPbmj5GCpfPa1exk1PzYivaic2H2XjqKDJ1kxN
-         OTEZGC/EB2v7YwsWVYKX4e+I+1Q6CS/+cT3XJP9t3sAPq51BLK0+oR/SVfshzXDOdmMq
-         SEyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JyaST442g4jgVoNwB5FBRI2rFKCQGveZheORu1G0/FU=;
-        b=WT29vQ1Cq3Ftr5iTBgMNCos9K4ozOsD4afbpxIAfL/pbLgpjhYlo7rOf2+P8dSmz9L
-         R8eXAVAmTBpt3rm9ePAUdDrs247VURZmVuw2OC/bTQIO2Ow1DtS/X1i/Xrt3cHxbGBy6
-         9BDH32yb1U1mlF4UpuK54HK9h+EKp42T4RkJC0ih71VNY6iv9QBP3uJmDZcd/IVtGtEr
-         jR9h6Gta68z08ZOzNbdc7aEBZlCsJxcUbBbM8pCdW8urOjzUYJLHd2QTEpSv8XSxJSQi
-         25Lp6tXXzr9A4dJuNxGpWDq5SEeSugxLRty0awm+Z5dUA6MP0RF1f8DJS6hRmhkbfvyl
-         8UkQ==
-X-Gm-Message-State: AOAM533CnvpnSdEVzOlVP+jA6362rUJ4v2+jTMNsMsNmOWJSDll2mexU
-        Rh+WRgLy3ezvmnIu9MvWuu8=
-X-Google-Smtp-Source: ABdhPJxkEM2iIPabqqWzv0T6tp8OrSBJeVTMWnNbvC03qu3DhO/Rb7O5MGRyUuAyKcxbCuNkXa77pw==
-X-Received: by 2002:a05:6402:a42:: with SMTP id bt2mr23544981edb.42.1592953050426;
-        Tue, 23 Jun 2020 15:57:30 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id js3sm14230604ejb.65.2020.06.23.15.57.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 15:57:29 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 00:57:23 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     paulmck@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        stern@rowland.harvard.edu, will@kernel.org, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
-Subject: Re: [PATCH 1/2] tools/memory-model/README: Mention herdtools7 7.56
- in compatibility table
-Message-ID: <20200623225723.GA418699@andrea>
-References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
- <20200623005231.27712-13-paulmck@kernel.org>
- <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
- <20200623155419.GI9247@paulmck-ThinkPad-P72>
- <b3433b44-29af-4ef4-d047-b0b0d51a9fbd@gmail.com>
+        Tue, 23 Jun 2020 19:00:35 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59AE2C061573;
+        Tue, 23 Jun 2020 16:00:35 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49s1vy3D5Wz9s1x;
+        Wed, 24 Jun 2020 09:00:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592953233;
+        bh=KPI3aAUIMWOgw1b5tXl9B51uLxeA81au0UgltAmeN6U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EkIXFub/WzsMZ+H1Ralc3gj/qmMIfcAtcnviBfxlxctDYfwGaiNZnImNIIO63lYY5
+         Dr1FQGblvHue0YFe8kEV6C/vmiPDk6ZhxybbP5QqsPKjAAY7VToPXAmJUHWxv//ne7
+         iyKvfBpH1KAZev3MfY6XqZLv5Us2toeZ8vZaVYLDuuaE+3LVaFjKKQ1axbEyRKO5Bn
+         SpTbpmTuK23m+NQVA6Cx6byInmz0Ovxg76eVYqEOf5hrN1UvO/LFAE9TLcYmL3SpF1
+         t8p5Cvuh6aSWAPmMdWY7mkJUUzQkK9qNMYFJZWmTV9vQAxxTr1Fj0S9CIRTv2WWtn2
+         9Mg8HrmvY4f8Q==
+Date:   Wed, 24 Jun 2020 09:00:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com>,
+        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, mingo@redhat.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+Subject: Re: linux-next build error (9)
+Message-ID: <20200624090029.5fa2dc1f@canb.auug.org.au>
+In-Reply-To: <20200623112448.GA208112@elver.google.com>
+References: <000000000000c25ce105a8a8fcd9@google.com>
+        <20200622094923.GP576888@hirez.programming.kicks-ass.net>
+        <20200623124413.08b2bd65@canb.auug.org.au>
+        <20200623093230.GD4781@hirez.programming.kicks-ass.net>
+        <20200623201730.6c085687@canb.auug.org.au>
+        <20200623112448.GA208112@elver.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3433b44-29af-4ef4-d047-b0b0d51a9fbd@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/vx20BsoZP5nc+1hY2szmS6d";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 07:06:02AM +0900, Akira Yokosawa wrote:
-> From 89f96cba0db5643b1d22a0fe740f4c5cac788b29 Mon Sep 17 00:00:00 2001
-> From: Akira Yokosawa <akiyks@gmail.com>
-> Date: Wed, 24 Jun 2020 06:56:43 +0900
-> Subject: [PATCH 1/2] tools/memory-model/README: Mention herdtools7 7.56 in compatibility table
-> 
-> herdtools7 7.56 is going to be released in the week of 22 Jun 2020.
-> Mention the exact version in the compatibility table.
-> 
-> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+--Sig_/vx20BsoZP5nc+1hY2szmS6d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Hi Marco,
 
-  Andrea
-
-
+On Tue, 23 Jun 2020 13:24:48 +0200 Marco Elver <elver@google.com> wrote:
+>
+> On Tue, Jun 23, 2020 at 08:17PM +1000, Stephen Rothwell wrote:
+> > Hi Peter,
+> >=20
+> > On Tue, 23 Jun 2020 11:32:30 +0200 Peter Zijlstra <peterz@infradead.org=
+> wrote: =20
+> > >
+> > > I suppose the next quest is finding a s390 compiler version that works
+> > > and then bumping the version test in the aforementioned commit. =20
+> >=20
+> > Not a lot of help, but my Debian cross compiler seems to work:
+> >=20
+> > $ s390x-linux-gnu-gcc --version
+> > s390x-linux-gnu-gcc (Debian 9.3.0-13) 9.3.0 =20
+>=20
+> Rummaging through changelogs led me to 8.3.0 as the first good GCC. Also
+> confirmed by building that version and compiling a file that breaks with
+> older versions. It seems the first major version to fix it was 9, but
+> backported to 8.3. This is for all architectures.
+>=20
+> Suggested patch below.
+>=20
+> Thanks,
+> -- Marco
+>=20
+> ------ >8 ------ =20
+>=20
+> From: Marco Elver <elver@google.com>
+> Date: Tue, 23 Jun 2020 12:57:42 +0200
+> Subject: [PATCH] kasan: Fix required compiler version
+>=20
+> The first working GCC version to satisfy
+> CC_HAS_WORKING_NOSANITIZE_ADDRESS is GCC 8.3.0.
+>=20
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D89124
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Marco Elver <elver@google.com>
 > ---
->  tools/memory-model/README | 2 +-
+>  lib/Kconfig.kasan | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/memory-model/README b/tools/memory-model/README
-> index 90af203c3cf1..ecb7385376bf 100644
-> --- a/tools/memory-model/README
-> +++ b/tools/memory-model/README
-> @@ -54,7 +54,7 @@ klitmus7 Compatibility Table
->  	     -- 4.18  7.48 --
->  	4.15 -- 4.19  7.49 --
->  	4.20 -- 5.5   7.54 --
-> -	5.6  --       HEAD
-> +	5.6  --       7.56 --
->  	============  ==========
->  
->  
-> -- 
-> 2.17.1
-> 
-> 
+>=20
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 7a496b885f46..19fba15e99c6 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -16,7 +16,7 @@ config CC_HAS_KASAN_SW_TAGS
+>  	def_bool $(cc-option, -fsanitize=3Dkernel-hwaddress)
+> =20
+>  config CC_HAS_WORKING_NOSANITIZE_ADDRESS
+> -	def_bool !CC_IS_GCC || GCC_VERSION >=3D 80000
+> +	def_bool !CC_IS_GCC || GCC_VERSION >=3D 80300
+> =20
+>  config KASAN
+>  	bool "KASAN: runtime memory debugger"
+> --=20
+> 2.27.0.111.gc72c7da667-goog
+>=20
+
+Thanks for tracking that down.  I will add that patch to the tip tree
+merge for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vx20BsoZP5nc+1hY2szmS6d
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7yiY0ACgkQAVBC80lX
+0Gytxwf/XSrFXKqHN67FRDF9pjKF802HQJnp4w+90WqMxbbxwr3+eodMzrTQMOBG
+5qW60CEHccXVmT3ErY7S4fqBV/4a/gUzSZIqWIuckfSBJDWM8SD3480SWTtWKTTc
+sR3Bk1jKyd+NSsA3b2gVgzWyzDKwQqFofPVZVWyNrsPq7wlOQdx/gYG0PvXXxmpo
+poRcjeAOeLL5CDAZysCTA0mwptdkiYBYZqZ0Hh8Uq9t4aVzaq/8DUCrkN6CdTh0T
+Epm0SVi+CrXDBKIskh9MLBRGimc9g7w9BnxYZlA0ek+PBDZTHfBTpY+LFvUbMbDE
+c25DPzSkr4ftsJMLqsiFHvs27ETbKA==
+=jf2S
+-----END PGP SIGNATURE-----
+
+--Sig_/vx20BsoZP5nc+1hY2szmS6d--
