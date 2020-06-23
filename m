@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A81C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C1D2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5F42080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944338;
-	bh=zTkWyjHsCzlk6fUPbldsHmhOdpUmh7DDevAIxbs34p4=;
+	s=default; t=1592944341;
+	bh=HyBWi6ZBAIlUUOfToCWd6cHLJVFRuzMfk3C+mFEBJCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMTFJMIroQi1Jqc3WX8mewEGCb4RM+0mbS+pjMxDPLoCoHk1c0hU7RC7sCjmn67y1
-	 0JH/415m7i0HqXXsui1nYMaqG0Z41w6OS0wwCjoNkg4+lWcmGu0keBud4pYKxZIbcN
-	 1Um/L9biFDDIuH3MnB+T3w9+oNObpPiFLlIEZB/4=
+	b=mEZDajMBohB9SidOjEWuq5OVMdq+geJ6mt0WoOmq5qY0PQ7mckgGgZ6aoAPxWMuLV
+	 DMnz9iaA47fUjLZf29yk2qOFvw+qgGz0c1XTNKZYz0MJ+OKAelwdRS6h/9kiV2Hrl4
+	 loowbHpLcsVDJ7tAUZU5v8F7l07KtWjV7/eJRYcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391020AbgFWUcP (ORCPT
+        id S2390662AbgFWUcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52820 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390803AbgFWUcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:32:04 -0400
+        id S2391260AbgFWUcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:32:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7532720723;
-        Tue, 23 Jun 2020 20:32:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEF412072E;
+        Tue, 23 Jun 2020 20:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944323;
-        bh=zTkWyjHsCzlk6fUPbldsHmhOdpUmh7DDevAIxbs34p4=;
+        s=default; t=1592944325;
+        bh=HyBWi6ZBAIlUUOfToCWd6cHLJVFRuzMfk3C+mFEBJCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wHrTChrPXjrqvSLcmN9/94csxXzP0+BV6lG5apb7PJ2RAIsUmg5z4SbwgYKC2VwYB
-         s/bstyGJ07tDB/5VerUeDfCKLzPPt9lQSKPRFSf5vSghE5juzyQoWNBlJt13HxA8xz
-         BOfJMXkPPzpdScaB1voLHM7fNkjEmF4W3Da94qO8=
+        b=iByxOxc2gsiVGiAFdPl5mlqMgSZuGHiYkZfuHYSzU1HEEdqwy4eWFKOc5wMSgG1ux
+         tf32MzfMPY2Px6oh4ScXLWe/1wF3h44T00RzgwjR6mLvyc6Q0VUm59Od5sL5/YxjyJ
+         H8H3Z26OUYJ0+DsumxGEhkfxWINDxDTI2qx1hHhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
-        Sergey Nemov <sergey.nemov@intel.com>,
-        Paul Greenwalt <paul.greenwalt@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Andrey Ignatov <rdna@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 258/314] iavf: fix speed reporting over virtchnl
-Date:   Tue, 23 Jun 2020 21:57:33 +0200
-Message-Id: <20200623195351.280406226@linuxfoundation.org>
+Subject: [PATCH 5.4 259/314] bpf: Fix memlock accounting for sock_hash
+Date:   Tue, 23 Jun 2020 21:57:34 +0200
+Message-Id: <20200623195351.327582508@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -63,328 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brett Creeley <brett.creeley@intel.com>
+From: Andrey Ignatov <rdna@fb.com>
 
-[ Upstream commit e0ef26fbe2b0c62f42ba7667076dc38b693b6fb8 ]
+[ Upstream commit 60e5ca8a64bad8f3e2e20a1e57846e497361c700 ]
 
-Link speeds are communicated over virtchnl using an enum
-virtchnl_link_speed. Currently, the highest link speed is 40Gbps which
-leaves us unable to reflect some speeds that an ice VF is capable of.
-This causes link speed to be misreported on the iavf driver.
+Add missed bpf_map_charge_init() in sock_hash_alloc() and
+correspondingly bpf_map_charge_finish() on ENOMEM.
 
-Allow for communicating link speeds using Mbps so that the proper speed can
-be reported for an ice VF. Moving away from the enum allows us to
-communicate future speed changes without requiring a new enum to be added.
+It was found accidentally while working on unrelated selftest that
+checks "map->memory.pages > 0" is true for all map types.
 
-In order to support communicating link speeds over virtchnl in Mbps the
-following functionality was added:
-    - Added u32 link_speed_mbps in the iavf_adapter structure.
-    - Added the macro ADV_LINK_SUPPORT(_a) to determine if the VF
-      driver supports communicating link speeds in Mbps.
-    - Added the function iavf_get_vpe_link_status() to fill the
-      correct link_status in the event_data union based on the
-      ADV_LINK_SUPPORT(_a) macro.
-    - Added the function iavf_set_adapter_link_speed_from_vpe()
-      to determine whether or not to fill the u32 link_speed_mbps or
-      enum virtchnl_link_speed link_speed field in the iavf_adapter
-      structure based on the ADV_LINK_SUPPORT(_a) macro.
-    - Do not free vf_res in iavf_init_get_resources() as vf_res will be
-      accessed in iavf_get_link_ksettings(); memset to 0 instead. This
-      memory is subsequently freed in iavf_remove().
+Before:
+	# bpftool m l
+	...
+	3692: sockhash  name m_sockhash  flags 0x0
+		key 4B  value 4B  max_entries 8  memlock 0B
 
-Fixes: 7c710869d64e ("ice: Add handlers for VF netdevice operations")
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Signed-off-by: Sergey Nemov <sergey.nemov@intel.com>
-Signed-off-by: Paul Greenwalt <paul.greenwalt@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+After:
+	# bpftool m l
+	...
+	84: sockmap  name m_sockmap  flags 0x0
+		key 4B  value 4B  max_entries 8  memlock 4096B
+
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Andrey Ignatov <rdna@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200612000857.2881453-1-rdna@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/iavf/iavf.h        | 14 +++
- .../net/ethernet/intel/iavf/iavf_ethtool.c    | 14 ++-
- drivers/net/ethernet/intel/iavf/iavf_main.c   | 25 ++++--
- .../net/ethernet/intel/iavf/iavf_virtchnl.c   | 88 ++++++++++++++++---
- 4 files changed, 120 insertions(+), 21 deletions(-)
+ net/core/sock_map.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf.h b/drivers/net/ethernet/intel/iavf/iavf.h
-index bd1b1ed323f4f..6b9117a350fac 100644
---- a/drivers/net/ethernet/intel/iavf/iavf.h
-+++ b/drivers/net/ethernet/intel/iavf/iavf.h
-@@ -87,6 +87,10 @@ struct iavf_vsi {
- #define IAVF_HLUT_ARRAY_SIZE ((IAVF_VFQF_HLUT_MAX_INDEX + 1) * 4)
- #define IAVF_MBPS_DIVISOR	125000 /* divisor to convert to Mbps */
- 
-+#define IAVF_VIRTCHNL_VF_RESOURCE_SIZE (sizeof(struct virtchnl_vf_resource) + \
-+					(IAVF_MAX_VF_VSI * \
-+					 sizeof(struct virtchnl_vsi_resource)))
-+
- /* MAX_MSIX_Q_VECTORS of these are allocated,
-  * but we only use one per queue-specific vector.
-  */
-@@ -306,6 +310,14 @@ struct iavf_adapter {
- 	bool netdev_registered;
- 	bool link_up;
- 	enum virtchnl_link_speed link_speed;
-+	/* This is only populated if the VIRTCHNL_VF_CAP_ADV_LINK_SPEED is set
-+	 * in vf_res->vf_cap_flags. Use ADV_LINK_SUPPORT macro to determine if
-+	 * this field is valid. This field should be used going forward and the
-+	 * enum virtchnl_link_speed above should be considered the legacy way of
-+	 * storing/communicating link speeds.
-+	 */
-+	u32 link_speed_mbps;
-+
- 	enum virtchnl_ops current_op;
- #define CLIENT_ALLOWED(_a) ((_a)->vf_res ? \
- 			    (_a)->vf_res->vf_cap_flags & \
-@@ -322,6 +334,8 @@ struct iavf_adapter {
- 			VIRTCHNL_VF_OFFLOAD_RSS_PF)))
- #define VLAN_ALLOWED(_a) ((_a)->vf_res->vf_cap_flags & \
- 			  VIRTCHNL_VF_OFFLOAD_VLAN)
-+#define ADV_LINK_SUPPORT(_a) ((_a)->vf_res->vf_cap_flags & \
-+			      VIRTCHNL_VF_CAP_ADV_LINK_SPEED)
- 	struct virtchnl_vf_resource *vf_res; /* incl. all VSIs */
- 	struct virtchnl_vsi_resource *vsi_res; /* our LAN VSI */
- 	struct virtchnl_version_info pf_version;
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_ethtool.c b/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
-index dad3eec8ccd86..758bef02a2a86 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
-@@ -278,7 +278,18 @@ static int iavf_get_link_ksettings(struct net_device *netdev,
- 	ethtool_link_ksettings_zero_link_mode(cmd, supported);
- 	cmd->base.autoneg = AUTONEG_DISABLE;
- 	cmd->base.port = PORT_NONE;
--	/* Set speed and duplex */
-+	cmd->base.duplex = DUPLEX_FULL;
-+
-+	if (ADV_LINK_SUPPORT(adapter)) {
-+		if (adapter->link_speed_mbps &&
-+		    adapter->link_speed_mbps < U32_MAX)
-+			cmd->base.speed = adapter->link_speed_mbps;
-+		else
-+			cmd->base.speed = SPEED_UNKNOWN;
-+
-+		return 0;
-+	}
-+
- 	switch (adapter->link_speed) {
- 	case IAVF_LINK_SPEED_40GB:
- 		cmd->base.speed = SPEED_40000;
-@@ -306,7 +317,6 @@ static int iavf_get_link_ksettings(struct net_device *netdev,
- 	default:
- 		break;
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index b22e9f1191803..6bbc118bf00e9 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -837,11 +837,15 @@ static struct bpf_map *sock_hash_alloc(union bpf_attr *attr)
+ 		err = -EINVAL;
+ 		goto free_htab;
  	}
--	cmd->base.duplex = DUPLEX_FULL;
++	err = bpf_map_charge_init(&htab->map.memory, cost);
++	if (err)
++		goto free_htab;
  
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-index 8e16be960e96b..bacc5fb7eba2c 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_main.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-@@ -1756,17 +1756,17 @@ static int iavf_init_get_resources(struct iavf_adapter *adapter)
- 	struct net_device *netdev = adapter->netdev;
- 	struct pci_dev *pdev = adapter->pdev;
- 	struct iavf_hw *hw = &adapter->hw;
--	int err = 0, bufsz;
-+	int err;
- 
- 	WARN_ON(adapter->state != __IAVF_INIT_GET_RESOURCES);
- 	/* aq msg sent, awaiting reply */
- 	if (!adapter->vf_res) {
--		bufsz = sizeof(struct virtchnl_vf_resource) +
--			(IAVF_MAX_VF_VSI *
--			sizeof(struct virtchnl_vsi_resource));
--		adapter->vf_res = kzalloc(bufsz, GFP_KERNEL);
--		if (!adapter->vf_res)
-+		adapter->vf_res = kzalloc(IAVF_VIRTCHNL_VF_RESOURCE_SIZE,
-+					  GFP_KERNEL);
-+		if (!adapter->vf_res) {
-+			err = -ENOMEM;
- 			goto err;
-+		}
+ 	htab->buckets = bpf_map_area_alloc(htab->buckets_num *
+ 					   sizeof(struct bpf_htab_bucket),
+ 					   htab->map.numa_node);
+ 	if (!htab->buckets) {
++		bpf_map_charge_finish(&htab->map.memory);
+ 		err = -ENOMEM;
+ 		goto free_htab;
  	}
- 	err = iavf_get_vf_config(adapter);
- 	if (err == IAVF_ERR_ADMIN_QUEUE_NO_WORK) {
-@@ -2036,7 +2036,7 @@ static void iavf_disable_vf(struct iavf_adapter *adapter)
- 	iavf_reset_interrupt_capability(adapter);
- 	iavf_free_queues(adapter);
- 	iavf_free_q_vectors(adapter);
--	kfree(adapter->vf_res);
-+	memset(adapter->vf_res, 0, IAVF_VIRTCHNL_VF_RESOURCE_SIZE);
- 	iavf_shutdown_adminq(&adapter->hw);
- 	adapter->netdev->flags &= ~IFF_UP;
- 	clear_bit(__IAVF_IN_CRITICAL_TASK, &adapter->crit_section);
-@@ -2487,6 +2487,16 @@ static int iavf_validate_tx_bandwidth(struct iavf_adapter *adapter,
- {
- 	int speed = 0, ret = 0;
- 
-+	if (ADV_LINK_SUPPORT(adapter)) {
-+		if (adapter->link_speed_mbps < U32_MAX) {
-+			speed = adapter->link_speed_mbps;
-+			goto validate_bw;
-+		} else {
-+			dev_err(&adapter->pdev->dev, "Unknown link speed\n");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	switch (adapter->link_speed) {
- 	case IAVF_LINK_SPEED_40GB:
- 		speed = 40000;
-@@ -2510,6 +2520,7 @@ static int iavf_validate_tx_bandwidth(struct iavf_adapter *adapter,
- 		break;
- 	}
- 
-+validate_bw:
- 	if (max_tx_rate > speed) {
- 		dev_err(&adapter->pdev->dev,
- 			"Invalid tx rate specified\n");
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-index 1ab9cb339acb4..9655318803b71 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
-@@ -139,7 +139,8 @@ int iavf_send_vf_config_msg(struct iavf_adapter *adapter)
- 	       VIRTCHNL_VF_OFFLOAD_ENCAP |
- 	       VIRTCHNL_VF_OFFLOAD_ENCAP_CSUM |
- 	       VIRTCHNL_VF_OFFLOAD_REQ_QUEUES |
--	       VIRTCHNL_VF_OFFLOAD_ADQ;
-+	       VIRTCHNL_VF_OFFLOAD_ADQ |
-+	       VIRTCHNL_VF_CAP_ADV_LINK_SPEED;
- 
- 	adapter->current_op = VIRTCHNL_OP_GET_VF_RESOURCES;
- 	adapter->aq_required &= ~IAVF_FLAG_AQ_GET_CONFIG;
-@@ -918,6 +919,8 @@ void iavf_disable_vlan_stripping(struct iavf_adapter *adapter)
- 	iavf_send_pf_msg(adapter, VIRTCHNL_OP_DISABLE_VLAN_STRIPPING, NULL, 0);
- }
- 
-+#define IAVF_MAX_SPEED_STRLEN	13
-+
- /**
-  * iavf_print_link_message - print link up or down
-  * @adapter: adapter structure
-@@ -927,37 +930,99 @@ void iavf_disable_vlan_stripping(struct iavf_adapter *adapter)
- static void iavf_print_link_message(struct iavf_adapter *adapter)
- {
- 	struct net_device *netdev = adapter->netdev;
--	char *speed = "Unknown ";
-+	int link_speed_mbps;
-+	char *speed;
- 
- 	if (!adapter->link_up) {
- 		netdev_info(netdev, "NIC Link is Down\n");
- 		return;
- 	}
- 
-+	speed = kcalloc(1, IAVF_MAX_SPEED_STRLEN, GFP_KERNEL);
-+	if (!speed)
-+		return;
-+
-+	if (ADV_LINK_SUPPORT(adapter)) {
-+		link_speed_mbps = adapter->link_speed_mbps;
-+		goto print_link_msg;
-+	}
-+
- 	switch (adapter->link_speed) {
- 	case IAVF_LINK_SPEED_40GB:
--		speed = "40 G";
-+		link_speed_mbps = SPEED_40000;
- 		break;
- 	case IAVF_LINK_SPEED_25GB:
--		speed = "25 G";
-+		link_speed_mbps = SPEED_25000;
- 		break;
- 	case IAVF_LINK_SPEED_20GB:
--		speed = "20 G";
-+		link_speed_mbps = SPEED_20000;
- 		break;
- 	case IAVF_LINK_SPEED_10GB:
--		speed = "10 G";
-+		link_speed_mbps = SPEED_10000;
- 		break;
- 	case IAVF_LINK_SPEED_1GB:
--		speed = "1000 M";
-+		link_speed_mbps = SPEED_1000;
- 		break;
- 	case IAVF_LINK_SPEED_100MB:
--		speed = "100 M";
-+		link_speed_mbps = SPEED_100;
- 		break;
- 	default:
-+		link_speed_mbps = SPEED_UNKNOWN;
- 		break;
- 	}
- 
--	netdev_info(netdev, "NIC Link is Up %sbps Full Duplex\n", speed);
-+print_link_msg:
-+	if (link_speed_mbps > SPEED_1000) {
-+		if (link_speed_mbps == SPEED_2500)
-+			snprintf(speed, IAVF_MAX_SPEED_STRLEN, "2.5 Gbps");
-+		else
-+			/* convert to Gbps inline */
-+			snprintf(speed, IAVF_MAX_SPEED_STRLEN, "%d %s",
-+				 link_speed_mbps / 1000, "Gbps");
-+	} else if (link_speed_mbps == SPEED_UNKNOWN) {
-+		snprintf(speed, IAVF_MAX_SPEED_STRLEN, "%s", "Unknown Mbps");
-+	} else {
-+		snprintf(speed, IAVF_MAX_SPEED_STRLEN, "%u %s",
-+			 link_speed_mbps, "Mbps");
-+	}
-+
-+	netdev_info(netdev, "NIC Link is Up Speed is %s Full Duplex\n", speed);
-+	kfree(speed);
-+}
-+
-+/**
-+ * iavf_get_vpe_link_status
-+ * @adapter: adapter structure
-+ * @vpe: virtchnl_pf_event structure
-+ *
-+ * Helper function for determining the link status
-+ **/
-+static bool
-+iavf_get_vpe_link_status(struct iavf_adapter *adapter,
-+			 struct virtchnl_pf_event *vpe)
-+{
-+	if (ADV_LINK_SUPPORT(adapter))
-+		return vpe->event_data.link_event_adv.link_status;
-+	else
-+		return vpe->event_data.link_event.link_status;
-+}
-+
-+/**
-+ * iavf_set_adapter_link_speed_from_vpe
-+ * @adapter: adapter structure for which we are setting the link speed
-+ * @vpe: virtchnl_pf_event structure that contains the link speed we are setting
-+ *
-+ * Helper function for setting iavf_adapter link speed
-+ **/
-+static void
-+iavf_set_adapter_link_speed_from_vpe(struct iavf_adapter *adapter,
-+				     struct virtchnl_pf_event *vpe)
-+{
-+	if (ADV_LINK_SUPPORT(adapter))
-+		adapter->link_speed_mbps =
-+			vpe->event_data.link_event_adv.link_speed;
-+	else
-+		adapter->link_speed = vpe->event_data.link_event.link_speed;
- }
- 
- /**
-@@ -1187,12 +1252,11 @@ void iavf_virtchnl_completion(struct iavf_adapter *adapter,
- 	if (v_opcode == VIRTCHNL_OP_EVENT) {
- 		struct virtchnl_pf_event *vpe =
- 			(struct virtchnl_pf_event *)msg;
--		bool link_up = vpe->event_data.link_event.link_status;
-+		bool link_up = iavf_get_vpe_link_status(adapter, vpe);
- 
- 		switch (vpe->event) {
- 		case VIRTCHNL_EVENT_LINK_CHANGE:
--			adapter->link_speed =
--				vpe->event_data.link_event.link_speed;
-+			iavf_set_adapter_link_speed_from_vpe(adapter, vpe);
- 
- 			/* we've already got the right link status, bail */
- 			if (adapter->link_up == link_up)
 -- 
 2.25.1
 
