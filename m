@@ -2,120 +2,104 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DE2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F70AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1F1F20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E24320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946005;
-	bh=Xfcd/pX48c6/DXUL+hDyuiuPAlPNiJZEoZbubgvVJ0o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVGLQrH/ZtpEbFKinJk+vtwoCbq4OOETGfBscWmjGHd2D92863UhkDo4RkhWIHhAF
-	 uuUqyqOe9EI7NLV25jumosSjqWh6W73+4n+WPD1hN3Bwo1CLl2WA8lhDxLQFGQGgpE
-	 IQJ89lmPl5QT6hVv6paXGnFFrjK47KkuaioziFh8=
+	s=default; t=1592946011;
+	bh=0+sqPYIrnIToZGbPtFiFzRGJOK0b5oISbBRphyPoK7E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=S7rubHB7rjVC3W+Qz1TtvV4c8nA2V93Rxf57l9PWpPtAqvlUJIITSzMpXbJpss+Yo
+	 oblhA/Ve0369PCQGC+LUnKo8sD5XFXVGvl1c9XnK22yZQWOlDLxFJVF+3HZn/X+noW
+	 rH7JTxpThwpuhZziG4hi6wVynrJpQoU6FDgoASNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392250AbgFWUkh (ORCPT
+        id S2392691AbgFWVAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:40:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36630 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392239AbgFWUkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2393255AbgFWVAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:00:01 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B513720675;
-        Tue, 23 Jun 2020 20:40:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04D1E20656;
+        Tue, 23 Jun 2020 21:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944832;
-        bh=Xfcd/pX48c6/DXUL+hDyuiuPAlPNiJZEoZbubgvVJ0o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z8BIavRIsJnw5XLsR4jI1F7cq8g/DIR2WTUPFyN6rQz9nqWM0ZdUPbPDl4JWwUbjD
-         zDTbOBuW7P68Nj296Tc8C8kfUBvo1mia17FmGlSwsSvJjJXu0bVIgtRZ2RS5OPUozY
-         ojGqIlBBajDCbuuLYXxGERvBRUhgkwOrvIbQsEWY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Sanjay R Mehta <sanju.mehta@amd.com>,
-        Arindam Nath <arindam.nath@amd.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 143/206] ntb_perf: pass correct struct device to dma_alloc_coherent
-Date:   Tue, 23 Jun 2020 21:57:51 +0200
-Message-Id: <20200623195324.016545437@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592946001;
+        bh=0+sqPYIrnIToZGbPtFiFzRGJOK0b5oISbBRphyPoK7E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MmUT4+E8fMaJQo2B2XWSgXXHXyf/y1I9JXYl+XOrW13XyLgGq9zJZ8+4OvL9ymc7y
+         2eVAKkCxxEgQUo0xi6yUI+IbnJtbKKgGWK3ggZXjgandMu0MzWR+hcPTZ9wGfSAvU6
+         3jnULkm/S4XKpbrgL3CvopvYxmN29iecmg2BPTnA=
+Date:   Tue, 23 Jun 2020 13:59:59 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Jonathan Lemon <jonathan.lemon@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <kernel-team@fb.com>
+Subject: Re: [PATCH] linux/log2.h: enclose macro arg in parens
+Message-ID: <20200623135959.5c4eda49@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200623170739.3151706-1-jonathan.lemon@gmail.com>
+References: <20200623170739.3151706-1-jonathan.lemon@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+On Tue, 23 Jun 2020 10:07:39 -0700 Jonathan Lemon wrote:
+> From: Jonathan Lemon <bsd@fb.com>
+>=20
+> roundup_pow_of_two uses its arg without enclosing it in parens.
+>=20
+> A call of the form:
+>=20
+>    roundup_pow_of_two(boolval ? PAGE_SIZE : frag_size)
+>=20
+> resulted in an compile warning:
+>=20
+> warning: ?: using integer constants in boolean context [-Wint-in-bool-con=
+text]
+>               PAGE_SIZE :
+> ../include/linux/log2.h:176:4: note: in definition of macro =E2=80=98roun=
+dup_pow_of_two=E2=80=99
+>    (n =3D=3D 1) ? 1 :  \
+>     ^
+> And the resulting code used '1' as the result of the operation.
 
-[ Upstream commit 98f4e140264eeb52f22ff05be6b6dd48237255ac ]
+I'd have thought that this warning is harmless, since the expression
+clearly is not a constant, interesting.
 
-Currently, ntb->dev is passed to dma_alloc_coherent
-and dma_free_coherent calls. The returned dma_addr_t
-is the CPU physical address. This works fine as long
-as IOMMU is disabled. But when IOMMU is enabled, we
-need to make sure that IOVA is returned for dma_addr_t.
-So the correct way to achieve this is by changing the
-first parameter of dma_alloc_coherent() as ntb->pdev->dev
-instead.
+> Fixes: 312a0c170945 ("[PATCH] LOG2: Alter roundup_pow_of_two() so that it=
+ can use a ilog2() on a constant")
+>=20
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ntb/test/ntb_perf.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Please no empty line between fixes and other tags.
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 80508da3c8b5c..2ee41b988c5dd 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -559,7 +559,7 @@ static void perf_free_inbuf(struct perf_peer *peer)
- 		return;
- 
- 	(void)ntb_mw_clear_trans(peer->perf->ntb, peer->pidx, peer->gidx);
--	dma_free_coherent(&peer->perf->ntb->dev, peer->inbuf_size,
-+	dma_free_coherent(&peer->perf->ntb->pdev->dev, peer->inbuf_size,
- 			  peer->inbuf, peer->inbuf_xlat);
- 	peer->inbuf = NULL;
- }
-@@ -588,8 +588,9 @@ static int perf_setup_inbuf(struct perf_peer *peer)
- 
- 	perf_free_inbuf(peer);
- 
--	peer->inbuf = dma_alloc_coherent(&perf->ntb->dev, peer->inbuf_size,
--					 &peer->inbuf_xlat, GFP_KERNEL);
-+	peer->inbuf = dma_alloc_coherent(&perf->ntb->pdev->dev,
-+					 peer->inbuf_size, &peer->inbuf_xlat,
-+					 GFP_KERNEL);
- 	if (!peer->inbuf) {
- 		dev_err(&perf->ntb->dev, "Failed to alloc inbuf of %pa\n",
- 			&peer->inbuf_size);
-@@ -1512,4 +1513,3 @@ static void __exit perf_exit(void)
- 	destroy_workqueue(perf_wq);
- }
- module_exit(perf_exit);
--
--- 
-2.25.1
-
-
+> Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+> ---
+>  include/linux/log2.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/log2.h b/include/linux/log2.h
+> index 83a4a3ca3e8a..c619ec6eff4a 100644
+> --- a/include/linux/log2.h
+> +++ b/include/linux/log2.h
+> @@ -173,7 +173,7 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
+>  #define roundup_pow_of_two(n)			\
+>  (						\
+>  	__builtin_constant_p(n) ? (		\
+> -		(n =3D=3D 1) ? 1 :			\
+> +		((n) =3D=3D 1) ? 1 :		\
+>  		(1UL << (ilog2((n) - 1) + 1))	\
+>  				   ) :		\
+>  	__roundup_pow_of_two(n)			\
 
