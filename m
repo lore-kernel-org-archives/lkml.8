@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B54C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F73C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103992064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75AB4206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944061;
-	bh=d7SLT7FFzHKVdc1SzXZ/MYc+yN1sLb/a170PwuUqgug=;
+	s=default; t=1592944065;
+	bh=Qm2d/tMU5SizH6un6knnDQpfNtVPUrE8jVQCZ+MR8WM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oo38yCXDKpIBGx7mRhP7J8L5VEoagNtTwd8gSNBQxbve1aWEeE337BA0EcaYYxfWW
-	 1EQ2+dp3fMOwA8TwkSXB8ilkKjCq+8JJfaRawmEgex2e+HNpuOj51jSqeZ/Un5YdWC
-	 6pbOT6YGRtU1hGnnvQlCvVEWJi4zZJvJ89FYcv0M=
+	b=tq8lTaVhIAG+qnn/QA0z6drMhutYpeq0Y+two+tQuJ1b3MbOnMjkvV02HvOxfWy4Z
+	 F/mNp956XohmQNs4eQlcyncQlg6xy6l9z6KyWjRXIZjUerA2i/CQ8WckioBEkBTz0h
+	 oRYCbD9XG8FI1zIsnwVAuAZC5wilMqcXckfLgsBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390782AbgFWU1i (ORCPT
+        id S2390789AbgFWU1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46980 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:27:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390060AbgFWU10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:27:26 -0400
+        id S2390771AbgFWU1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:27:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96EB32070E;
-        Tue, 23 Jun 2020 20:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EE7F20702;
+        Tue, 23 Jun 2020 20:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944046;
-        bh=d7SLT7FFzHKVdc1SzXZ/MYc+yN1sLb/a170PwuUqgug=;
+        s=default; t=1592944054;
+        bh=Qm2d/tMU5SizH6un6knnDQpfNtVPUrE8jVQCZ+MR8WM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JRb9uVcRyxiCVS7kfQ2I3G9H9UUIq3nf1o+qs3iD3zEZA0rKikuGPm+wvCjABd5+W
-         FM74nM3abcOQAYbaPyz4sDQfqC0VkuEYt1mwGNPoXfzLHOumnSEqX/HHxqiTObfKf3
-         TEwJz3qpLHz8F9GBej1VLmfgN3rGeWJ9bzdXnfL4=
+        b=jcF8RDXpA7B3xRnSIfmWcspfWLC/QodpV9jmmXbGt5Y2cqM8ccQTeADur/KRyRFMZ
+         ST7wMtGncSTYxRvICZH4HOjAjakSuFnTZLIuJDM4gJwq6Mg5SXop3TGvREOx4dcLwc
+         ZqmmUj88wcHrSISqrf69mCuVkf8H5mIvT1/km+gg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Roy Spliet <nouveau@spliet.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 151/314] powerpc/ps3: Fix kexec shutdown hang
-Date:   Tue, 23 Jun 2020 21:55:46 +0200
-Message-Id: <20200623195346.060017149@linuxfoundation.org>
+Subject: [PATCH 5.4 154/314] drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
+Date:   Tue, 23 Jun 2020 21:55:49 +0200
+Message-Id: <20200623195346.202507110@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,79 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geoff Levand <geoff@infradead.org>
+From: Roy Spliet <nouveau@spliet.org>
 
-[ Upstream commit 126554465d93b10662742128918a5fc338cda4aa ]
+[ Upstream commit e4337877c5d578722c0716f131fb774522013cf5 ]
 
-The ps3_mm_region_destroy() and ps3_mm_vas_destroy() routines
-are called very late in the shutdown via kexec's mmu_cleanup_all
-routine.  By the time mmu_cleanup_all runs it is too late to use
-udbg_printf, and calling it will cause PS3 systems to hang.
+When allocation for mdp5_kms fails, calling mdp5_destroy() leads to undefined
+behaviour, likely a nullptr exception or use-after-free troubles.
 
-Remove all debugging statements from ps3_mm_region_destroy() and
-ps3_mm_vas_destroy() and replace any error reporting with calls
-to lv1_panic.
-
-With this change builds with 'DEBUG' defined will not cause kexec
-reboots to hang, and builds with 'DEBUG' defined or not will end
-in lv1_panic if an error is encountered.
-
-Signed-off-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/7325c4af2b4c989c19d6a26b90b1fec9c0615ddf.1589049250.git.geoff@infradead.org
+Signed-off-by: Roy Spliet <nouveau@spliet.org>
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/ps3/mm.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
-index 423be34f0f5fb..f42fe4e86ce52 100644
---- a/arch/powerpc/platforms/ps3/mm.c
-+++ b/arch/powerpc/platforms/ps3/mm.c
-@@ -200,13 +200,14 @@ void ps3_mm_vas_destroy(void)
- {
- 	int result;
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+index 91cd76a2bab11..77823ccdd0f8f 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+@@ -1037,7 +1037,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
  
--	DBG("%s:%d: map.vas_id    = %llu\n", __func__, __LINE__, map.vas_id);
--
- 	if (map.vas_id) {
- 		result = lv1_select_virtual_address_space(0);
--		BUG_ON(result);
--		result = lv1_destruct_virtual_address_space(map.vas_id);
--		BUG_ON(result);
-+		result += lv1_destruct_virtual_address_space(map.vas_id);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		map.vas_id = 0;
- 	}
- }
-@@ -304,19 +305,20 @@ static void ps3_mm_region_destroy(struct mem_region *r)
- 	int result;
- 
- 	if (!r->destroy) {
--		pr_info("%s:%d: Not destroying high region: %llxh %llxh\n",
--			__func__, __LINE__, r->base, r->size);
- 		return;
- 	}
- 
--	DBG("%s:%d: r->base = %llxh\n", __func__, __LINE__, r->base);
--
- 	if (r->base) {
- 		result = lv1_release_memory(r->base);
--		BUG_ON(result);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		r->size = r->base = r->offset = 0;
- 		map.total = map.rm.size;
- 	}
-+
- 	ps3_mm_set_repository_highmem(NULL);
+ 	return 0;
+ fail:
+-	mdp5_destroy(pdev);
++	if (mdp5_kms)
++		mdp5_destroy(pdev);
+ 	return ret;
  }
  
 -- 
