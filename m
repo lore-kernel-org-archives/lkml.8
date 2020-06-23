@@ -2,124 +2,74 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC80C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30867207D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA655207D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733295AbgFWTFI (ORCPT
+        id S1733305AbgFWTHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:05:08 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30096 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733138AbgFWTFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:05:08 -0400
-IronPort-SDR: Zj6Oc6+RSg+O8gIKqtbcRDOP/aJObN2iAV96FP32RaamC3N9/N76An69uZl/FYyyJDI+KOvhZb
- DP0gO5aSJREw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="123874407"
-X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="123874407"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 12:05:05 -0700
-IronPort-SDR: Chcib1/+wuz5WjhZ0050ny00zBjMRvXvTvNn3tklhvytgw8+sR8FvVU90+35xP2RxmCjhmwSjR
- mKS0w4Ebbh6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="287431388"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga007.jf.intel.com with ESMTP; 23 Jun 2020 12:05:04 -0700
-Date:   Tue, 23 Jun 2020 12:05:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, wei.huang2@amd.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Li RongQing <lirongqing@baidu.com>,
-        Chai Wen <chaiwen@baidu.com>, Jia Lina <jialina01@baidu.com>
-Subject: Re: [PATCH] KVM: X86: Emulate APERF/MPERF to report actual VCPU
- frequency
-Message-ID: <20200623190504.GC24107@linux.intel.com>
-References: <20200623063530.81917-1-like.xu@linux.intel.com>
- <20200623182910.GA24107@linux.intel.com>
- <CALMp9eQPA40FWBEOiQ8T5JX2fv+uEfU_x6js8WhAguQ8TL6frA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eQPA40FWBEOiQ8T5JX2fv+uEfU_x6js8WhAguQ8TL6frA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 23 Jun 2020 15:07:20 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:58037 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733155AbgFWTHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 15:07:20 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jnoJO-0001H4-63; Tue, 23 Jun 2020 19:10:26 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v3] ARM: dts: imx6qdl-gw551x: fix audio SSI
+Date:   Tue, 23 Jun 2020 12:06:54 -0700
+Message-Id: <1592939214-13637-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592937087-8885-1-git-send-email-tharvey@gateworks.com>
+References: <1592937087-8885-1-git-send-email-tharvey@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:39:16AM -0700, Jim Mattson wrote:
-> On Tue, Jun 23, 2020 at 11:29 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Tue, Jun 23, 2020 at 02:35:30PM +0800, Like Xu wrote:
-> > > The aperf/mperf are used to report current CPU frequency after 7d5905dc14a
-> > > "x86 / CPU: Always show current CPU frequency in /proc/cpuinfo". But guest
-> > > kernel always reports a fixed VCPU frequency in the /proc/cpuinfo, which
-> > > may confuse users especially when turbo is enabled on the host.
-> > >
-> > > Emulate guest APERF/MPERF capability based their values on the host.
-> > >
-> > > Co-developed-by: Li RongQing <lirongqing@baidu.com>
-> > > Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> > > Reviewed-by: Chai Wen <chaiwen@baidu.com>
-> > > Reviewed-by: Jia Lina <jialina01@baidu.com>
-> > > Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> > > ---
-> >
-> > ...
-> >
-> > > @@ -8312,7 +8376,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-> > >               dm_request_for_irq_injection(vcpu) &&
-> > >               kvm_cpu_accept_dm_intr(vcpu);
-> > >       fastpath_t exit_fastpath;
-> > > -
-> > > +     u64 enter_mperf = 0, enter_aperf = 0, exit_mperf = 0, exit_aperf = 0;
-> > >       bool req_immediate_exit = false;
-> > >
-> > >       if (kvm_request_pending(vcpu)) {
-> > > @@ -8516,8 +8580,17 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-> > >               vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
-> > >       }
-> > >
-> > > +     if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap))
-> > > +             get_host_amperf(&enter_mperf, &enter_aperf);
-> > > +
-> > >       exit_fastpath = kvm_x86_ops.run(vcpu);
-> > >
-> > > +     if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap)) {
-> > > +             get_host_amperf(&exit_mperf, &exit_aperf);
-> > > +             vcpu_update_amperf(vcpu, get_amperf_delta(enter_aperf, exit_aperf),
-> > > +                     get_amperf_delta(enter_mperf, exit_mperf));
-> > > +     }
-> > > +
-> >
-> > Is there an alternative approach that doesn't require 4 RDMSRs on every VMX
-> > round trip?  That's literally more expensive than VM-Enter + VM-Exit
-> > combined.
-> >
-> > E.g. what about adding KVM_X86_DISABLE_EXITS_APERF_MPERF and exposing the
-> > MSRs for read when that capability is enabled?
-> 
-> When would you load the hardware MSRs with the guest/host values?
+The audio codec on the GW551x routes to ssi1
 
-Ugh, I was thinking the MSRs were read-only.
+Cc: stable@vger.kernel.org
+Fixes: 3117e851cef1 ("ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x")
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+v3: add fixes tag
+v2: fix typo in commit short desc
+---
+ arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Doesn't this also interact with TSC scaling?
+diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+index c38e86e..8c33510 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+@@ -110,7 +110,7 @@
+ 		simple-audio-card,frame-master = <&sound_codec>;
+ 
+ 		sound_cpu: simple-audio-card,cpu {
+-			sound-dai = <&ssi2>;
++			sound-dai = <&ssi1>;
+ 		};
+ 
+ 		sound_codec: simple-audio-card,codec {
+-- 
+2.7.4
+
