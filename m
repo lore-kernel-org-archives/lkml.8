@@ -2,97 +2,105 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0785AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAAAA2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948732;
-	bh=8S3YEdXpkcnmfREyCAK8cGhMQ1RhxM689r8xymK6pB0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o2zGNfyePldhbUnIAotJ8aVcv3t83cA6+xCjE1lemSz11T5aMW5yPKRdsrKasvGZk
-	 WFzfZLav8muLcWi4XnkuH/G0kuEY9+wxfd8r/mG1tZSDpCPEiUGAg7t6imF7hk58xf
-	 fmvbZnxCsTuxblJNHCsm3Y6SMOqhuBIbpYw/JTPk=
+	by mail.kernel.org (Postfix) with ESMTP id 2A94B2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:45:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rf6EAJMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387597AbgFWUBP (ORCPT
+        id S2387610AbgFWVpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:01:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387555AbgFWUBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:01:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E174206C3;
-        Tue, 23 Jun 2020 20:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942468;
-        bh=8S3YEdXpkcnmfREyCAK8cGhMQ1RhxM689r8xymK6pB0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nSrQ6y4E4eLbL56uXgNbLpedu/P/uBuYPj4ARCbKl2hXnTLGfLQItWNF8vtoiP80S
-         NzVcB0I4hFsrn4CwJgOzXuAyG6YsugyAdkeVcVUdUbkjGBQuc2XOQovd0xKQpcMKMK
-         6vZomRUCqVaLh41VhRBlwqFpmBhKYNAxc+rTcysk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 011/477] staging: wfx: check ssidlen and prevent an array overflow
-Date:   Tue, 23 Jun 2020 21:50:08 +0200
-Message-Id: <20200623195408.128626482@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 17:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388329AbgFWVpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:45:44 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10557C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:45:44 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id t194so279139wmt.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:45:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nqTtGFr7emsA5ETTuz1egKRqJYyb++pVmJLzqCk4LIQ=;
+        b=rf6EAJMkXyfEwYNgddcaUAF8lJkMF3/2uGkUpuzTmuco4IOzUK3YevBpfPut6GxqFC
+         aJLMYVwp1UlXaA7ztLWSVy9L2N/gcaH4tCqtpHAqggUODCvmby3NgynWkA65Hx59NYXt
+         FSe3dRfQfEbBJJ0XJtQ5tlp8XyuiFnXaX5a4nGwBZR7INlzkd4b8bsQZ4/DXZ7WbC6xI
+         PcS+VT7f424ihlMy7/ni7Mq6TrroNnfNap4s6ZRFHcbJ1uXSOCY5EJS/HjYQ4OOtY5kQ
+         drLND7wQO4yeQJunuOen++WFwZ4v0vDZXHX61NilNo5K1AFlueEfe5cgu5rxN4evTip/
+         KIHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nqTtGFr7emsA5ETTuz1egKRqJYyb++pVmJLzqCk4LIQ=;
+        b=PAXOQZ5JkDqCzEHT8tO5MlqPdtsX3V09dFrveyO0xHgFiCWL3q7YdZLKh82Jq9o3NZ
+         CCosUJXSgS+rAxBbpub7OiE0zVM6VM/P4BG3h2LeDuWO/rHD+sIdEgm2RQmkcCCWy5LI
+         Pdgc9oE39c26ABJ49Aq14mCav5URh/9tXO62Nt7IwEyj6QmsOBxt4nd1G9iZrK1YEw79
+         JkF31UmvvcduMrpPvK2T6y2xsT+9JiBTW63FeUkF+mfbbRtkqI/PcFV/nJZO/1Md0hU+
+         4o4hJAQrHULG4x6o+3XbeGUSAvfHV3OmUWf8+t0G8UxGsfhrPAoL2Gj7tyCrTfCQflq5
+         aWnw==
+X-Gm-Message-State: AOAM532beYyletBRqjkedhzQ3y6tMfT0FrvvQHAsUKtS3/w46/xImwaj
+        QfmkfkeMCVo/HjeIpJ/Gcw==
+X-Google-Smtp-Source: ABdhPJwhkIsNJyWqUCw2Q/TwDLVClOwPOg1DHTh7yp8Iv3HII60B5y8Q4ExGxKj3F8eof7gDY4RZnA==
+X-Received: by 2002:a1c:1d46:: with SMTP id d67mr27938641wmd.152.1592948742763;
+        Tue, 23 Jun 2020 14:45:42 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.253.162])
+        by smtp.gmail.com with ESMTPSA id i19sm18629571wrb.56.2020.06.23.14.45.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 14:45:42 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 00:45:40 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Christian Kujau <lists@nerdbynature.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: process '/usr/bin/rsync' started with executable stack
+Message-ID: <20200623214540.GA42941@localhost.localdomain>
+References: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
+ <202006231131.AD0A7F5F@keescook>
+ <alpine.DEB.2.22.1.446.2006231430280.3892@trent.utfs.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.1.446.2006231430280.3892@trent.utfs.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+On Tue, Jun 23, 2020 at 02:33:50PM -0700, Christian Kujau wrote:
+> On Tue, 23 Jun 2020, Kees Cook wrote:
+> > > $ checksec --format=json --extended --file=`which rsync` | jq
+> > > {
+> > >   "/usr/bin/rsync": {
+> > >     "relro": "full",
+> > >     "canary": "yes",
+> > >     "nx": "no",
+> > ^^^^^^^^^^^^^^^^^^
+> > 
+> > It is, indeed, marked executable, it seems. What distro is this?
+> 
+> Arch Linux (x86-64) with 5.6.5.a-1-hardened[0], running in a Xen DomU.
+> 
+> Christian.
+> 
+> [0] https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/linux-hardened
 
-[ Upstream commit 87f86cddda65cab8a7e3df8a00e16abeccaa0730 ]
+Fixed in testing (rsync-3.2.1-1-x86_64.pkg)
 
-We need to cap "ssidlen" to prevent a memcpy() overflow.
-
-Fixes: 40115bbc40e2 ("staging: wfx: implement the rest of mac80211 API")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/20200424104235.GA416402@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/staging/wfx/sta.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
-index 9d430346a58bb..969d7a4a7fbd9 100644
---- a/drivers/staging/wfx/sta.c
-+++ b/drivers/staging/wfx/sta.c
-@@ -520,7 +520,9 @@ static void wfx_do_join(struct wfx_vif *wvif)
- 		ssidie = ieee80211_bss_get_ie(bss, WLAN_EID_SSID);
- 	if (ssidie) {
- 		ssidlen = ssidie[1];
--		memcpy(ssid, &ssidie[2], ssidie[1]);
-+		if (ssidlen > IEEE80211_MAX_SSID_LEN)
-+			ssidlen = IEEE80211_MAX_SSID_LEN;
-+		memcpy(ssid, &ssidie[2], ssidlen);
- 	}
- 	rcu_read_unlock();
- 
--- 
-2.25.1
-
-
-
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RW     0x10
