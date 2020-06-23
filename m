@@ -2,176 +2,128 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27158C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEFDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 018EF20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B5220679
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W4imJMlV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tf+1p30e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbgFWJmr (ORCPT
+        id S1732171AbgFWJm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:42:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38604 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732023AbgFWJmq (ORCPT
+        Tue, 23 Jun 2020 05:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731935AbgFWJm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:42:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592905364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QoBwKmjOvInG9MfmBsLrqKkfpaZqKCYNSmoYTUfOHHE=;
-        b=W4imJMlVrdXnxVmceX+aEA5Vc0QjNCsiOIZ/YP4/e15mTqZa3dvrTqJ/Vi9YdJVop+Ad/F
-        X77hWs09TzvvUVpIOtWeIFvLPBA6x9X8PKtpgyta+JyChwSyGbYYYSCUFZzAvBi1yGreuh
-        xPFYNC5qVZGN9GyBGJnQ5L+aRMU6J4A=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-Wx1_qQ-AMCSa3ZFrMk9Jsw-1; Tue, 23 Jun 2020 05:42:43 -0400
-X-MC-Unique: Wx1_qQ-AMCSa3ZFrMk9Jsw-1
-Received: by mail-wr1-f71.google.com with SMTP id y13so1448886wrp.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:42:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QoBwKmjOvInG9MfmBsLrqKkfpaZqKCYNSmoYTUfOHHE=;
-        b=WPb3ykm5vc1jvP2Bidut4/6CCZQ41N8tfdx/rEVNz20dxuPM9Vu6nMVuWSsB+PkCI4
-         zDqpMkHMCZ4CtZ9WklXMEe80acpcWoVF9tlmvfnNZD1cy+orVAU1DrwkS3SZoPvo17DF
-         KrqRcaioyICbC/872OPg89SgsPS6rZtR3s8NFZffF2cFnfOi/TbLxZ1tv0r8v45xrCZn
-         GR5bsgRYYA/rOLDsJoqDWObR9cvSLejhMmbeSu8i9THxFRb+t5IToI762vuDKeLC1OWT
-         CaIjHKTOAeJYHzk4znvjRhLq1kUFWsU53YgPMQ04+PjMgNLrTVa5gd89W77iIEzrLa3B
-         HJoA==
-X-Gm-Message-State: AOAM533mskYcjfT/lzXIP9Q6inkBkWBbj1BqASHltlDvDMMeUOEVubIc
-        Eu/FD4qq341dHaNmy7eUBCBXWZC0ch2Q25C6xjoGiJZTnHk6tyYzW0QeaXPP9hr7wprqPO3QVxu
-        tu/69u8YYBpX5Q25gAANBWq4d
-X-Received: by 2002:adf:e908:: with SMTP id f8mr1064534wrm.3.1592905361581;
-        Tue, 23 Jun 2020 02:42:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwYpabjIXBcOB9eaiLhNkEzAaSPqokuBtil8iucj5gBxqX45bVu6WVMKG+2KSXPDnKUswgA9A==
-X-Received: by 2002:adf:e908:: with SMTP id f8mr1064490wrm.3.1592905361326;
-        Tue, 23 Jun 2020 02:42:41 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
-        by smtp.gmail.com with ESMTPSA id 26sm1149131wmj.25.2020.06.23.02.42.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 02:42:40 -0700 (PDT)
-Subject: Re: [PATCH v4 0/7] clean up redundant 'kvm_run' parameters
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
-        chenhuacai@gmail.com
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <fe463233-d094-fca5-b4e9-c1d97124fd69@redhat.com>
-Date:   Tue, 23 Jun 2020 11:42:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 23 Jun 2020 05:42:58 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A799C061573;
+        Tue, 23 Jun 2020 02:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XwLVMpP6cYtFVBzdSro7PxdncqYRVnLMVLk9It8eSnA=; b=tf+1p30e2HRfibZvcGIgWdm64
+        euHfgRqyIfJz7Z14X4KDLhvTmozwXi1YqbRvoVo5SQkM7ggoaV/Y99/dRdEZJaIHh1OnwrAB5srvi
+        I+Z+7oavGotEH8SpPoeiEwilvM+NIuGKNEj9LXSqjUbxmSAMmwY36mKHP1OwNJv6N0MgpyjPjnLHK
+        7id5NOZoBZntIPhqMq/OB8L+PQXSRAfl0F7MQ7v62+dbKk/6t+O8J/TRocgljM3EdK3rF0C/MZ+Ba
+        qESqMzjrtcNDj6/wB9iNZwTzSWmBf55iojTnVK+9yICH6SxlweILkm7rh3VkkSvgCobKe9Cr5ZrC9
+        nmscJw74Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59010)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jnfSA-0001aO-Th; Tue, 23 Jun 2020 10:42:54 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jnfS8-0000vV-68; Tue, 23 Jun 2020 10:42:52 +0100
+Date:   Tue, 23 Jun 2020 10:42:52 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
+Message-ID: <20200623094252.GS1551@shell.armlinux.org.uk>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-15-brgl@bgdev.pl>
+ <20200622132921.GI1551@shell.armlinux.org.uk>
+ <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/20 06:35, Tianjia Zhang wrote:
-> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> structure. For historical reasons, many kvm-related function parameters
-> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
-> patch does a unified cleanup of these remaining redundant parameters.
+On Tue, Jun 23, 2020 at 11:41:11AM +0200, Bartosz Golaszewski wrote:
+> pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> napisał(a):
+> >
 > 
-> This series of patches has completely cleaned the architecture of
-> arm64, mips, ppc, and s390 (no such redundant code on x86). Due to
-> the large number of modified codes, a separate patch is made for each
-> platform. On the ppc platform, there is also a redundant structure
-> pointer of 'kvm_run' in 'vcpu_arch', which has also been cleaned
-> separately.
+> [snip!]
+> 
+> >
+> > This is likely to cause issues for some PHY drivers.  Note that we have
+> > some PHY drivers which register a temperature sensor in the probe
+> > function, which means they can be accessed independently of the lifetime
+> > of the PHY bound to the network driver (which may only be while the
+> > network device is "up".)  We certainly do not want hwmon failing just
+> > because the network device is down.
+> >
+> > That's kind of worked around for the reset stuff, because there are two
+> > layers to that: the mdio device layer reset support which knows nothing
+> > of the PHY binding state to the network driver, and the phylib reset
+> > support, but it is not nice.
+> >
+> 
+> Regulators are reference counted so if the hwmon driver enables it
+> using mdio_device_power_on() it will stay on even after the PHY driver
+> calls phy_device_power_off(), right? Am I missing something?
 
-Tianjia, can you please refresh the patches so that each architecture
-maintainer can pick them up?  Thanks very much for this work!
+If that is true, you will need to audit the PHY drivers to add that.
 
-Paolo
-
-> 
-> ---
-> v4 change:
->   mips: fixes two errors in entry.c.
-> 
-> v3 change:
->   Keep the existing `vcpu->run` in the function body unchanged.
-> 
-> v2 change:
->   s390 retains the original variable name and minimizes modification.
-> 
-> Tianjia Zhang (7):
->   KVM: s390: clean up redundant 'kvm_run' parameters
->   KVM: arm64: clean up redundant 'kvm_run' parameters
->   KVM: PPC: Remove redundant kvm_run from vcpu_arch
->   KVM: PPC: clean up redundant 'kvm_run' parameters
->   KVM: PPC: clean up redundant kvm_run parameters in assembly
->   KVM: MIPS: clean up redundant 'kvm_run' parameters
->   KVM: MIPS: clean up redundant kvm_run parameters in assembly
-> 
->  arch/arm64/include/asm/kvm_coproc.h      |  12 +--
->  arch/arm64/include/asm/kvm_host.h        |  11 +--
->  arch/arm64/include/asm/kvm_mmu.h         |   2 +-
->  arch/arm64/kvm/handle_exit.c             |  36 +++----
->  arch/arm64/kvm/sys_regs.c                |  13 ++-
->  arch/mips/include/asm/kvm_host.h         |  32 +------
->  arch/mips/kvm/emulate.c                  |  59 ++++--------
->  arch/mips/kvm/entry.c                    |  21 ++---
->  arch/mips/kvm/mips.c                     |  14 +--
->  arch/mips/kvm/trap_emul.c                | 114 ++++++++++-------------
->  arch/mips/kvm/vz.c                       |  26 ++----
->  arch/powerpc/include/asm/kvm_book3s.h    |  16 ++--
->  arch/powerpc/include/asm/kvm_host.h      |   1 -
->  arch/powerpc/include/asm/kvm_ppc.h       |  27 +++---
->  arch/powerpc/kvm/book3s.c                |   4 +-
->  arch/powerpc/kvm/book3s.h                |   2 +-
->  arch/powerpc/kvm/book3s_64_mmu_hv.c      |  12 +--
->  arch/powerpc/kvm/book3s_64_mmu_radix.c   |   4 +-
->  arch/powerpc/kvm/book3s_emulate.c        |  10 +-
->  arch/powerpc/kvm/book3s_hv.c             |  64 ++++++-------
->  arch/powerpc/kvm/book3s_hv_nested.c      |  12 +--
->  arch/powerpc/kvm/book3s_interrupts.S     |  17 ++--
->  arch/powerpc/kvm/book3s_paired_singles.c |  72 +++++++-------
->  arch/powerpc/kvm/book3s_pr.c             |  33 ++++---
->  arch/powerpc/kvm/booke.c                 |  39 ++++----
->  arch/powerpc/kvm/booke.h                 |   8 +-
->  arch/powerpc/kvm/booke_emulate.c         |   2 +-
->  arch/powerpc/kvm/booke_interrupts.S      |   9 +-
->  arch/powerpc/kvm/bookehv_interrupts.S    |  10 +-
->  arch/powerpc/kvm/e500_emulate.c          |  15 ++-
->  arch/powerpc/kvm/emulate.c               |  10 +-
->  arch/powerpc/kvm/emulate_loadstore.c     |  32 +++----
->  arch/powerpc/kvm/powerpc.c               |  72 +++++++-------
->  arch/powerpc/kvm/trace_hv.h              |   6 +-
->  arch/s390/kvm/kvm-s390.c                 |  23 +++--
->  virt/kvm/arm/arm.c                       |   6 +-
->  virt/kvm/arm/mmio.c                      |  11 ++-
->  virt/kvm/arm/mmu.c                       |   5 +-
->  38 files changed, 392 insertions(+), 470 deletions(-)
-> 
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
