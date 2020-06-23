@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063DB20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B146620738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947246;
-	bh=BW4hUOlgDi92v/7VDicIK2kFtHix7gDg68Er10dW5JA=;
+	s=default; t=1592947251;
+	bh=ZlApbjXxU37MYPbywtIA5qOjp2wk5ss4fkRX5GoBLOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e70Mk+KfFbZ0OCc6LsIz1+DnzbwxckepALzUHP5WJN47BI3c8yyclWS8FNgUcLHPJ
-	 Y7WNEX3PmNZVD9Iwzt8P7vs4L500aVIgj+BiA9kPXPdcqsRgC1J2vojQrdXnf3mQCM
-	 S6262qtqYPRTq7PbFSmYUicG+i9T3Do9KCCubHuE=
+	b=Bm4J/XnvuVEr+O9ywBpfiOJ3rAWQT5QEV6cTl5oNvynpd2JLZ3/MKmMlSmKikOGzh
+	 vRtDJNJ9JFtXkHUsCGDnOFdvKcmFwSJy2AFLYx66sWUCuHW6VneVMfdF3ZC1fwivu8
+	 E1ORAl+Y008TI2rojbFNStR1AYgFrFPsHFF+TAYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391919AbgFWVUo (ORCPT
+        id S2390970AbgFWVUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41436 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390279AbgFWUXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:23:19 -0400
+        id S2390425AbgFWUY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3745420723;
-        Tue, 23 Jun 2020 20:23:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306E62064B;
+        Tue, 23 Jun 2020 20:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943799;
-        bh=BW4hUOlgDi92v/7VDicIK2kFtHix7gDg68Er10dW5JA=;
+        s=default; t=1592943868;
+        bh=ZlApbjXxU37MYPbywtIA5qOjp2wk5ss4fkRX5GoBLOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bqXophpCnLrLEDckTNDnwoaVSiOGHlmPiiUoQbgpNIMCdm9fXNdvROXHhMyawxUXs
-         nfHzGBJKFPTEM/Sg0sTcLEeyU3WvbJtk1ZtA7RerGu+2Mtag4/ZZq7D5TdAnMSHSg7
-         D/wFBYCb9d7ywwCFRrUVy9p1z4UcF1FwUxPdSwRY=
+        b=xZEJx+7VV4wUHaIVLoQdnW+P3NG1zMAmnpHSr4X2ea4roi2JCXgchZTfZ9nqzHR5J
+         kPy1/zpxVz26fNbx93RdOKYobiEySE/X27e1yK2tElnqjlmYEPcyhZICoSNVFmlA4z
+         E5POIB3Wagl7OcNbDSC2MAYednADtcR5CxvHPodM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        John Johansen <john.johansen@canonical.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/314] scsi: cxgb3i: Fix some leaks in init_act_open()
-Date:   Tue, 23 Jun 2020 21:54:10 +0200
-Message-Id: <20200623195341.438333798@linuxfoundation.org>
+Subject: [PATCH 5.4 082/314] apparmor: fix nnp subset test for unconfined
+Date:   Tue, 23 Jun 2020 21:54:37 +0200
+Message-Id: <20200623195342.780940895@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,71 +60,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: John Johansen <john.johansen@canonical.com>
 
-[ Upstream commit b6170a49c59c27a10efed26c5a2969403e69aaba ]
+[ Upstream commit 3ed4aaa94fc07db3cd0c91be95e3e1b9782a2710 ]
 
-There wasn't any clean up done if cxgb3_alloc_atid() failed and also the
-original code didn't release "csk->l2t".
+The subset test is not taking into account the unconfined exception
+which will cause profile transitions in the stacked confinement
+case to fail when no_new_privs is applied.
 
-Link: https://lore.kernel.org/r/20200521121221.GA247492@mwanda
-Fixes: 6f7efaabefeb ("[SCSI] cxgb3i: change cxgb3i to use libcxgbi")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This fixes a regression introduced in the fix for
+https://bugs.launchpad.net/bugs/1839037
+
+BugLink: https://bugs.launchpad.net/bugs/1844186
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/cxgbi/cxgb3i/cxgb3i.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ security/apparmor/domain.c        |  9 +++++----
+ security/apparmor/include/label.h |  1 +
+ security/apparmor/label.c         | 33 +++++++++++++++++++++++++++++++
+ 3 files changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-index 524cdbcd29aa4..ec7d01f6e2d58 100644
---- a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-+++ b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-@@ -959,6 +959,7 @@ static int init_act_open(struct cxgbi_sock *csk)
- 	struct net_device *ndev = cdev->ports[csk->port_id];
- 	struct cxgbi_hba *chba = cdev->hbas[csk->port_id];
- 	struct sk_buff *skb = NULL;
-+	int ret;
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index 5dedc0173b024..1a33f490e6670 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -935,7 +935,8 @@ int apparmor_bprm_set_creds(struct linux_binprm *bprm)
+ 	 * aways results in a further reduction of permissions.
+ 	 */
+ 	if ((bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS) &&
+-	    !unconfined(label) && !aa_label_is_subset(new, ctx->nnp)) {
++	    !unconfined(label) &&
++	    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 		error = -EPERM;
+ 		info = "no new privs";
+ 		goto audit;
+@@ -1213,7 +1214,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(new, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+@@ -1234,7 +1235,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(previous, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(previous, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+@@ -1429,7 +1430,7 @@ check:
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(new, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+diff --git a/security/apparmor/include/label.h b/security/apparmor/include/label.h
+index 47942c4ba7ca7..255764ab06e2f 100644
+--- a/security/apparmor/include/label.h
++++ b/security/apparmor/include/label.h
+@@ -281,6 +281,7 @@ bool aa_label_init(struct aa_label *label, int size, gfp_t gfp);
+ struct aa_label *aa_label_alloc(int size, struct aa_proxy *proxy, gfp_t gfp);
  
- 	log_debug(1 << CXGBI_DBG_TOE | 1 << CXGBI_DBG_SOCK,
- 		"csk 0x%p,%u,0x%lx.\n", csk, csk->state, csk->flags);
-@@ -979,16 +980,16 @@ static int init_act_open(struct cxgbi_sock *csk)
- 	csk->atid = cxgb3_alloc_atid(t3dev, &t3_client, csk);
- 	if (csk->atid < 0) {
- 		pr_err("NO atid available.\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto put_sock;
- 	}
- 	cxgbi_sock_set_flag(csk, CTPF_HAS_ATID);
- 	cxgbi_sock_get(csk);
- 
- 	skb = alloc_wr(sizeof(struct cpl_act_open_req), 0, GFP_KERNEL);
- 	if (!skb) {
--		cxgb3_free_atid(t3dev, csk->atid);
--		cxgbi_sock_put(csk);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto free_atid;
- 	}
- 	skb->sk = (struct sock *)csk;
- 	set_arp_failure_handler(skb, act_open_arp_failure);
-@@ -1010,6 +1011,15 @@ static int init_act_open(struct cxgbi_sock *csk)
- 	cxgbi_sock_set_state(csk, CTP_ACTIVE_OPEN);
- 	send_act_open_req(csk, skb, csk->l2t);
- 	return 0;
-+
-+free_atid:
-+	cxgb3_free_atid(t3dev, csk->atid);
-+put_sock:
-+	cxgbi_sock_put(csk);
-+	l2t_release(t3dev, csk->l2t);
-+	csk->l2t = NULL;
-+
-+	return ret;
+ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub);
++bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub);
+ struct aa_profile *__aa_label_next_not_in_set(struct label_it *I,
+ 					     struct aa_label *set,
+ 					     struct aa_label *sub);
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index 6c3acae701efd..5f324d63ceaa3 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -550,6 +550,39 @@ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub)
+ 	return __aa_label_next_not_in_set(&i, set, sub) == NULL;
  }
  
- cxgb3_cpl_handler_func cxgb3i_cpl_handlers[NUM_CPL_CMDS] = {
++/**
++ * aa_label_is_unconfined_subset - test if @sub is a subset of @set
++ * @set: label to test against
++ * @sub: label to test if is subset of @set
++ *
++ * This checks for subset but taking into account unconfined. IF
++ * @sub contains an unconfined profile that does not have a matching
++ * unconfined in @set then this will not cause the test to fail.
++ * Conversely we don't care about an unconfined in @set that is not in
++ * @sub
++ *
++ * Returns: true if @sub is special_subset of @set
++ *     else false
++ */
++bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub)
++{
++	struct label_it i = { };
++	struct aa_profile *p;
++
++	AA_BUG(!set);
++	AA_BUG(!sub);
++
++	if (sub == set)
++		return true;
++
++	do {
++		p = __aa_label_next_not_in_set(&i, set, sub);
++		if (p && !profile_unconfined(p))
++			break;
++	} while (p);
++
++	return p == NULL;
++}
+ 
+ 
+ /**
 -- 
 2.25.1
 
