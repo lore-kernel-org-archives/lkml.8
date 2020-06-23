@@ -2,135 +2,121 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5686FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCCC20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A5320724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731969AbgFWIsj (ORCPT
+        id S1731986AbgFWIso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:48:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731910AbgFWIsc (ORCPT
+        Tue, 23 Jun 2020 04:48:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7046 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731735AbgFWIsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:48:36 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N8XEsU052824;
         Tue, 23 Jun 2020 04:48:32 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 471DBC061755;
-        Tue, 23 Jun 2020 01:48:32 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jnebR-0005Rb-Ou; Tue, 23 Jun 2020 10:48:25 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6F9301C0244;
-        Tue, 23 Jun 2020 10:48:25 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 08:48:25 -0000
-From:   "tip-bot2 for Juri Lelli" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/core: Fix PI boosting between RT and DEADLINE tasks
-Cc:     syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
-        Juri Lelli <juri.lelli@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Daniel Wagner <dwagner@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20181119153201.GB2119@localhost.localdomain>
-References: <20181119153201.GB2119@localhost.localdomain>
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ud982nqh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 04:48:31 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05N8XeG7055496;
+        Tue, 23 Jun 2020 04:48:31 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ud982npp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 04:48:31 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05N8fdtL029890;
+        Tue, 23 Jun 2020 08:48:29 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 31sa381w8u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 08:48:29 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05N8mQG562390426
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 08:48:26 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96D684204B;
+        Tue, 23 Jun 2020 08:48:26 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25E7642041;
+        Tue, 23 Jun 2020 08:48:26 +0000 (GMT)
+Received: from osiris (unknown [9.171.83.193])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 23 Jun 2020 08:48:26 +0000 (GMT)
+Date:   Tue, 23 Jun 2020 10:48:24 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH] mm/page_alloc: silence a KASAN false positive
+Message-ID: <20200623084824.GB5665@osiris>
+References: <20200610052154.5180-1-cai@lca.pw>
+ <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
+ <20200610122600.GB954@lca.pw>
 MIME-Version: 1.0
-Message-ID: <159290210525.16989.11595870440958834087.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610122600.GB954@lca.pw>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_04:2020-06-22,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 cotscore=-2147483648 mlxlogscore=851
+ lowpriorityscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
+ bulkscore=0 adultscore=0 suspectscore=84 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006230064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+On Wed, Jun 10, 2020 at 08:26:00AM -0400, Qian Cai wrote:
+> On Wed, Jun 10, 2020 at 07:54:50AM +0200, Dmitry Vyukov wrote:
+> > On Wed, Jun 10, 2020 at 7:22 AM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > kernel_init_free_pages() will use memset() on s390 to clear all pages
+> > > from kmalloc_order() which will override KASAN redzones because a
+> > > redzone was setup from the end of the allocation size to the end of the
+> > > last page. Silence it by not reporting it there. An example of the
+> > > report is,
+> > 
+> > Interesting. The reason why we did not hit it on x86_64 is because
+> > clear_page is implemented in asm (arch/x86/lib/clear_page_64.S) and
+> > thus is not instrumented. Arm64 probably does the same. However, on
+> > s390 clear_page is defined to memset.
+> > clear_[high]page are pretty extensively used in the kernel.
+> > We can either do this, or make clear_page non instrumented on s390 as
+> > well to match the existing implicit assumption. The benefit of the
+> > current approach is that we can find some real use-after-free's and
+> > maybe out-of-bounds on clear_page. The downside is that we may need
+> > more of these annotations. Thoughts?
+> 
+> Since we had already done the same thing in poison_page(), I suppose we
+> could do the same here. Also, clear_page() has been used in many places
+> on s390, and it is not clear to me if those are all safe like this.
+> 
+> There might be more annotations required, so it probably up to s390
+> maintainers (CC'ed) if they prefer not instrumenting clear_page() like
+> other arches.
 
-Commit-ID:     93a952a81bf31bffaf21eca1b530245acce12597
-Gitweb:        https://git.kernel.org/tip/93a952a81bf31bffaf21eca1b530245acce12597
-Author:        Juri Lelli <juri.lelli@redhat.com>
-AuthorDate:    Mon, 19 Nov 2018 16:32:01 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 23 Jun 2020 10:42:39 +02:00
-
-sched/core: Fix PI boosting between RT and DEADLINE tasks
-
-syzbot reported the following warning:
-
- WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
- enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
-
-At deadline.c:628 we have:
-
- 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
- 624 {
- 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
- 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
- 627
- 628 	WARN_ON(dl_se->dl_boosted);
- 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
-        [...]
-     }
-
-Which means that setup_new_dl_entity() has been called on a task
-currently boosted. This shouldn't happen though, as setup_new_dl_entity()
-is only called when the 'dynamic' deadline of the new entity
-is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
-condition.
-
-Digging through the PI code I noticed that what above might in fact happen
-if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
-first branch of boosting conditions we check only if a pi_task 'dynamic'
-deadline is earlier than mutex holder's and in this case we set mutex
-holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
-initialized if such tasks get boosted at some point (or if they become
-DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
-to 0 and this verifies the aforementioned condition.
-
-Fix it by checking that the potential donor task is actually (even if
-temporary because in turn boosted) running at DEADLINE priority before
-using its 'dynamic' deadline value.
-
-Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
-Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Tested-by: Daniel Wagner <dwagner@suse.de>
-Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
----
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 9eeac94..c1ba2e5 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4533,7 +4533,8 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
- 	 */
- 	if (dl_prio(prio)) {
- 		if (!dl_prio(p->normal_prio) ||
--		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
-+		    (pi_task && dl_prio(pi_task->prio) &&
-+		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
- 			p->dl.dl_boosted = 1;
- 			queue_flag |= ENQUEUE_REPLENISH;
- 		} else
+Vasily will look into this and come up with a proper solution for s390.
