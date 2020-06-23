@@ -2,142 +2,193 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0232EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 612442078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEpjg0qA"
+	by mail.kernel.org (Postfix) with ESMTP id DAD9F2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387817AbgFWVsu (ORCPT
+        id S2388090AbgFWVsz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387455AbgFWVsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 17:48:50 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F40FDC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:48:49 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id ga4so252846ejb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 14:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gLCkBZXPIIeY1g45tslFWO+PD0hc5lFZOqXooZUlWH8=;
-        b=PEpjg0qAPuLDlm5VvuUC6vrEb+6MoF8l1ACkYkcY2HqZwuoRNJMD27wb3HnDkODjtD
-         7kFpHy0BcQB2/OzA0cK5kmQTwI7kcUCl0JmvygO04JK875rulDjnePGKwoj5JnrZnKb+
-         ZjBmoLLWlGIZk7e19y2EEYvnIAHeQytiV1c+mF86BQpgvi5Zof6n4b3a3XpWN1YujICF
-         TxQIIVKpvF/ldA5iEaPNRYG2kc84ZaWkO30cR9AOQ6GJcJ18KVDxU/sG006d4RdkMT2n
-         hxkuTMg9n5Xe+jCG6LDOJrK7mqgBbra0811UUw7LXPpYU1ESywqo+8/7QWdTOi9s07wT
-         5RJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gLCkBZXPIIeY1g45tslFWO+PD0hc5lFZOqXooZUlWH8=;
-        b=tPzx4ks+zhTutBe/khrEl0q+C3ysy/INopNYNQXyjEcEGIKhq84EFKNzUP7ZeOZdhe
-         6oa98hf+rSW39afcAcaEqWmjY93iZZvcOYLvhY6jhgGcTmJfeo0IIVK6sYOJqXYZDNf/
-         MFkJ/+2ZdQlMgiaBofRcFnDnWuQ285fZpRtEX2Z/vMqxHgAPwPkW/vEtccWtmSnRmjz4
-         WxMioGr6Y9OSeklgVrG7TSVeWJDkkCf9k9umc57dTSnwkQWbq+nxMJ7ETp8Jb5dH+xjd
-         mthkNLG1ItJQuMFdSnfKonAAtCT9ZIrgV0f8Cviv/vhsXPVW1vJEysPeMNwC4xXvLsea
-         PEZA==
-X-Gm-Message-State: AOAM530tdn6mE12ztLjnpXGM//OC0aBcgWMMJ3B0hZ3k+E8WiDKOLbOq
-        bDdfEdCegTx05oFL5xjAD/g=
-X-Google-Smtp-Source: ABdhPJw15qKPA9jiRqrXuvtFIf8OYknB0rJ/6/dEZugcibFXL/7u/an+N7nb53QagI73h87/pd0zIA==
-X-Received: by 2002:a17:906:4989:: with SMTP id p9mr23153743eju.417.1592948928712;
-        Tue, 23 Jun 2020 14:48:48 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id j16sm15428301edp.35.2020.06.23.14.48.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jun 2020 14:48:47 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 21:48:47 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, david@redhat.com
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-Message-ID: <20200623214847.fggchont44kgmvs6@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
- <20200623151828.GA31426@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623151828.GA31426@dhcp22.suse.cz>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Tue, 23 Jun 2020 17:48:55 -0400
+Received: from mail-n.franken.de ([193.175.24.27]:49214 "EHLO drew.franken.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387455AbgFWVsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:48:54 -0400
+Received: from [IPv6:2a02:8109:1140:c3d:89d7:47b7:d524:7e59] (unknown [IPv6:2a02:8109:1140:c3d:89d7:47b7:d524:7e59])
+        (Authenticated sender: lurchi)
+        by drew.franken.de (Postfix) with ESMTPSA id 968BC7220B819;
+        Tue, 23 Jun 2020 23:48:49 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Strange problem with SCTP+IPv6
+From:   Michael Tuexen <michael.tuexen@lurchi.franken.de>
+In-Reply-To: <20200623213102.GS2491@localhost.localdomain>
+Date:   Tue, 23 Jun 2020 23:48:48 +0200
+Cc:     Corey Minyard <minyard@acm.org>,
+        David Laight <David.Laight@aculab.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <42823598-7B01-4C62-B896-ACC4449F3AFF@lurchi.franken.de>
+References: <20200621155604.GA23135@minyard.net>
+ <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
+ <20200622165759.GA3235@minyard.net>
+ <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
+ <20200622183253.GQ2491@localhost.localdomain>
+ <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
+ <20200623161756.GE3235@minyard.net>
+ <20200623212143.GR2491@localhost.localdomain>
+ <C4F6EDBE-CCAE-4635-AD96-9C2E2582F1B3@lurchi.franken.de>
+ <20200623213102.GS2491@localhost.localdomain>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 05:18:28PM +0200, Michal Hocko wrote:
->On Tue 23-06-20 17:42:58, Wei Yang wrote:
->> For early sections, we assumes its memmap will never be partially
->> removed. But current behavior breaks this.
+> On 23. Jun 2020, at 23:31, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> wrote:
+> 
+> On Tue, Jun 23, 2020 at 11:24:59PM +0200, Michael Tuexen wrote:
+>>> On 23. Jun 2020, at 23:21, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> wrote:
+>>> 
+>>> On Tue, Jun 23, 2020 at 11:17:56AM -0500, Corey Minyard wrote:
+>>>> On Tue, Jun 23, 2020 at 01:17:28PM +0000, David Laight wrote:
+>>>>> From: Marcelo Ricardo Leitner
+>>>>>> Sent: 22 June 2020 19:33
+>>>>>> On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
+>>>>>>>> On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
+>>>>>>>> 
+>>>>>>>> On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
+>>>>>>>>> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
+>>>>>>>>>> 
+>>>>>>>>>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
+>>>>>>>>>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
+>>>>>>>>>> then I make a connection to it using ::1, the connection will drop after
+>>>>>>>>>> 2.5 seconds with an ECONNRESET error.
+>>>>>>>>>> 
+>>>>>>>>>> It only happens on SCTP, it doesn't have the issue if you connect to a
+>>>>>>>>>> full IPv6 address instead of ::1, and it doesn't happen if you don't
+>>>>>>>>>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
+>>>>>>>>>> I tried on an ARM system and x86_64.
+>>>>>>>>>> 
+>>>>>>>>>> I haven't dug into the kernel to see if I could find anything yet, but I
+>>>>>>>>>> thought I would go ahead and report it.  I am attaching a reproducer.
+>>>>>>>>>> Basically, compile the following code:
+>>>>>>>>> The code only set IPV6_V6ONLY on server side, so the client side will
+>>>>>>>>> still bind all the local ipv4 addresses (as you didn't call bind() to
+>>>>>>>>> bind any specific addresses ). Then after the connection is created,
+>>>>>>>>> the client will send HB on the v4 paths to the server. The server
+>>>>>>>>> will abort the connection, as it can't support v4.
+>>>>>>>>> 
+>>>>>>>>> So you can work around it by either:
+>>>>>>>>> 
+>>>>>>>>> - set IPV6_V6ONLY on client side.
+>>>>>>>>> 
+>>>>>>>>> or
+>>>>>>>>> 
+>>>>>>>>> - bind to the specific v6 addresses on the client side.
+>>>>>>>>> 
+>>>>>>>>> I don't see RFC said something about this.
+>>>>>>>>> So it may not be a good idea to change the current behaviour
+>>>>>>>>> to not establish the connection in this case, which may cause regression.
+>>>>>>>> 
+>>>>>>>> Ok, I understand this.  It's a little strange, but I see why it works
+>>>>>>>> this way.
+>>>>>>> I don't. I would expect it to work as I described in my email.
+>>>>>>> Could someone explain me how and why it is behaving different from
+>>>>>>> my expectation?
+>>>>>> 
+>>>>>> It looks like a bug to me. Testing with this test app here, I can see
+>>>>>> the INIT_ACK being sent with a bunch of ipv4 addresses in it and
+>>>>>> that's unexpected for a v6only socket. As is, it's the server saying
+>>>>>> "I'm available at these other addresses too, but not."
+>>>>> 
+>>>>> Does it even make sense to mix IPv4 and IPv6 addresses on the same
+>>>>> connection?
+>>>>> I don't remember ever seeing both types of address in a message,
+>>>>> but may not have looked.
+>>>> 
+>>>> That's an interesting question.  Do the RFCs say anything?  I would
+>>>> assume it was ok unless ipv6only was set.
+>>>> 
+>>>>> 
+>>>>> I also wonder whether the connection should be dropped for an error
+>>>>> response on a path that has never been validated.
+>>>> 
+>>>> That actually bothered me a bit more.  Shouldn't it stay up if any path
+>>>> is up?  That's kind of the whole point of multihoming.
+>>> 
+>>> Michael explained it on the other email. What he described is what I
+>>> observed in my tests.
+>>> 
+>>>> 
+>>>>> 
+>>>>> OTOH the whole 'multi-homing' part of SCTP sucks.
+>>>> 
+>>>> I don't think so.
+>>>> 
+>>>>> The IP addresses a server needs to bind to depend on where the
+>>>>> incoming connection will come from.
+>>>>> A local connection may be able to use a 192.168.x.x address
+>>>>> but a remote connection must not - as it may be defined locally
+>>>>> at the remote system.
+>>>>> But both connections can come into the public (routable) address.
+>>>>> We have to tell customers to explicitly configure the local IP
+>>>>> addresses - which means the application has to know what they are.
+>>>>> Fortunately these apps are pretty static - usually M3UA.
+>>>> 
+>>>> Umm, no,  If you have a private address, it better be behind a firewall,
+>>>> and the firewall should handle rewriting the packet to fix the addresses.
+>>>> 
+>>>> It doesn't appear that Linux netfilter does this.  There is a TODO in
+>>>> the code for this.  But that's how it *should* work.
+>>> 
+>>> Right, we don't support SCTP aware NAT [1].
+>>> 
+>>> 1.https://tools.ietf.org/html/draft-stewart-behave-sctpnat-04
+>> The current version is: https://tools.ietf.org/html/draft-ietf-tsvwg-natsupp-16
+> 
+> Thanks!
+> 
 >> 
->> Let's correct it.
+>> Another possibility for NAT traversal is UDP encapsulation...
+> 
+> Also not supported.. :-]
+But maybe someone wants to implement it. It is supported by FreeBSD, if you
+need a peer for testing. Or the userland stack usrsctp supports it. Then you
+do not need root privileges to run it.
+
+Best regards
+Michael
+> 
+> Best regards,
+> Marcelo
+> 
 >> 
->> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->
->Can a user trigger this or is this a theoretical bug?
->
-
-I don't expect to have a non-section aligned system, so this is a theoretical
-bug to me.
-
->> ---
->>  mm/sparse.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
+>> Best regards
+>> Michael
+>>> 
+>>> Marcelo
+>>> 
+>>>> 
+>>>> -corey
+>>>> 
+>>>>> 
+>>>>> 	David
+>>>>> 
+>>>>> -
+>>>>> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+>>>>> Registration No: 1397386 (Wales)
+>>>>> 
 >> 
->> diff --git a/mm/sparse.c b/mm/sparse.c
->> index b2b9a3e34696..1a0069f492f5 100644
->> --- a/mm/sparse.c
->> +++ b/mm/sparse.c
->> @@ -825,10 +825,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->>  		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
->>  	}
->>  
->> -	if (section_is_early && memmap)
->> -		free_map_bootmem(memmap);
->> -	else
->> +	if (!section_is_early)
->
->This begs a comment.
->
 
-Like:
-
-    /* Only depopulate sub-section memmap for non early section. */
-
-Looks good to you?
-
->>  		depopulate_section_memmap(pfn, nr_pages, altmap);
->> +	else if (memmap)
->> +		free_map_bootmem(memmap);
->>  
->>  	if (empty)
->>  		ms->section_mem_map = (unsigned long)NULL;
->> -- 
->> 2.20.1 (Apple Git-117)
->> 
->
->-- 
->Michal Hocko
->SUSE Labs
-
--- 
-Wei Yang
-Help you, Help me
