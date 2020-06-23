@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F70EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8607C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4B920702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DB72072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946896;
-	bh=+73I7vWXVrTetzQ0y7R5LJJ6FtiHa/xYfWMACVzJKdU=;
+	s=default; t=1592946906;
+	bh=L15Vj8OeudxmTag2zQVdk1b8JpwbIF3FlYGHITujZPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FmS8FlXDWXKsCe15Mt77KOMs5AT0zBbJfZHCdVIOCSGugriL30tPQ3qvaE/oifxzt
-	 9WnQSgBsyiCL4D0vDDdxC9Vwv3zERQOW1qJzMvU+VWNPYMMNtj+LO6RNInctWpuhTR
-	 98ZGnwRyg7iOGyJLYR2x2KA95UrgEiP9AnDH11io=
+	b=I/LXxyv3mMmnknm1odbfUto8s68usdRYQ7+4yDasGQf2hc5PWSc+IGr/ea6lqZQ7w
+	 9Tbq6+R7hp/ueqliKNKGlYQeZT/cPP9eC3MKzG15PFHk3S1PmIgN+oIy2dL5uMsPXo
+	 KugCUdf+Fne3TrCZxmb4U5IDQfh8OscBJqV8R2ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389085AbgFWU2t (ORCPT
+        id S2393417AbgFWVO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:28:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48502 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390879AbgFWU2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:28:41 -0400
+        id S2388823AbgFWU2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:28:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 261AF2064B;
-        Tue, 23 Jun 2020 20:28:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A43ED2064B;
+        Tue, 23 Jun 2020 20:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944120;
-        bh=+73I7vWXVrTetzQ0y7R5LJJ6FtiHa/xYfWMACVzJKdU=;
+        s=default; t=1592944128;
+        bh=L15Vj8OeudxmTag2zQVdk1b8JpwbIF3FlYGHITujZPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iNu5F2LunOUwTevaij/qdEAz+Y54M49GlivB9yBb5LJmrCAB6+6LpqtZCFKa8n/uD
-         FMl7tU6AnyA2lV7ZUNSBxVl2zOjyORVoFuxkUiZ3pY2ZevCRAj7LUOOGcuRgi4o2lZ
-         cjOuag0HGkZNCyKBUs97jZ6Km6ekNxG99IRAIwMQ=
+        b=hSFBf0Tq7Ln17EWeG8g7BWMIQOowy3QbmRTmDIiPco5uplW/pzemOLe4r8M3jp++w
+         bn0N1XRYLwAcLi4aYl7P3/v6Rt4sGsH86sqyPcRe2QhULWAunyh4dXPxRBJ6B1UjPc
+         481pRJKNPI/TQeQ5bRyVu72p3hdKZIGG4v6ScF/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 163/314] firmware: imx: scu: Fix possible memory leak in imx_scu_probe()
-Date:   Tue, 23 Jun 2020 21:55:58 +0200
-Message-Id: <20200623195346.645463110@linuxfoundation.org>
+Subject: [PATCH 5.4 183/314] mfd: stmfx: Reset chip on resume as supply was disabled
+Date:   Tue, 23 Jun 2020 21:56:18 +0200
+Message-Id: <20200623195347.619762466@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,35 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-[ Upstream commit 89f12d6509bff004852c51cb713a439a86816b24 ]
+[ Upstream commit e583649d87ec090444aa5347af0927cd6e8581ae ]
 
-'chan_name' is malloced in imx_scu_probe() and should be freed
-before leaving from the error handling cases, otherwise it will
-cause memory leak.
+STMFX supply is disabled during suspend. To avoid a too early access to
+the STMFX firmware on resume, reset the chip and wait for its firmware to
+be loaded.
 
-Fixes: edbee095fafb ("firmware: imx: add SCU firmware driver support")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/imx/imx-scu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/stmfx.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index e48d971ffb617..a3b11bc71dcb8 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -300,6 +300,7 @@ static int imx_scu_probe(struct platform_device *pdev)
- 			if (ret != -EPROBE_DEFER)
- 				dev_err(dev, "Failed to request mbox chan %s ret %d\n",
- 					chan_name, ret);
-+			kfree(chan_name);
- 			return ret;
+diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
+index 857991cb3cbb8..fde6541e347c8 100644
+--- a/drivers/mfd/stmfx.c
++++ b/drivers/mfd/stmfx.c
+@@ -501,6 +501,13 @@ static int stmfx_resume(struct device *dev)
  		}
+ 	}
  
++	/* Reset STMFX - supply has been stopped during suspend */
++	ret = stmfx_chip_reset(stmfx);
++	if (ret) {
++		dev_err(stmfx->dev, "Failed to reset chip: %d\n", ret);
++		return ret;
++	}
++
+ 	ret = regmap_raw_write(stmfx->map, STMFX_REG_SYS_CTRL,
+ 			       &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
+ 	if (ret)
 -- 
 2.25.1
 
