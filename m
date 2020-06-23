@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D055C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E110C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFAF020675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BBF20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944849;
-	bh=k2ujJbbLaLkp8RkQ81qTnaWFmJhWwsTCR9ZgosbWkAo=;
+	s=default; t=1592944851;
+	bh=bGVVlC9ySZTXb57dWt5vekeh7iEdGHprOo52CZmLZnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2O4hzz3JZLon0jJ76ru1+cQ/axKlH53aRfcJSxDYw+kBNMIiRkj9pUv6YlZmFPDHp
-	 S8jg1/S5f6MWsvgdOYJIzGGA+9/cNlGCdRTQVnSgEbgMQGp3TlxzXu4/tjwm8lRAgH
-	 tVBpyHRrZQgpMHz2iUblqkJaUX6uB4f8WlF/08E0=
+	b=nN2hjFInIVBzDCMjifau2HgfghMU61VVhytIhCpWtyDszdkNiOdvT7FCIbM6Un8GU
+	 Bzh8yJxd4iMYHfMbb3QEMGsL3IHjQxp8bgzm0LCn7rnsl8KYbIHE/eOAS6kKqoh3Pg
+	 b4yBdL2FlHSXv2TCCp/rT7PtUWbVExDFShaW11Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392280AbgFWUkr (ORCPT
+        id S2392134AbgFWUjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36812 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392262AbgFWUkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:39 -0400
+        id S2392094AbgFWUjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:39:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 759FC20675;
-        Tue, 23 Jun 2020 20:40:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA9521531;
+        Tue, 23 Jun 2020 20:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944840;
-        bh=k2ujJbbLaLkp8RkQ81qTnaWFmJhWwsTCR9ZgosbWkAo=;
+        s=default; t=1592944786;
+        bh=bGVVlC9ySZTXb57dWt5vekeh7iEdGHprOo52CZmLZnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J3fPejAdub6QHV1bZ1J/1NKvV/UPZh8e3ar5PhVR2XPiGsJIiQyZg6SMuFDt1rivb
-         RnDWi4ljpMifyFwDtjQnNIFF58ufc8CCam2fM34w0GNrc2HO5i0ycIsgqWShh37xeN
-         IGimKHtFA7ME0cSoyUmkkt9P0b/QICrAkXODdJDw=
+        b=St4Y4wAXC8pXjTVEXPvXobznVLXl3lPgIs0RP2zc/ldTz6R6AsuIrRQkP7LRUeszg
+         ZCG4FSG+tn0DG/XmY+JMRUhpSAgI5S6xDMAcrkJP+1AcMTOXa0LysBYnatUe4mg/OA
+         bHGNKLQtvyuHGud4gcuXvSwoa5arnnZDzS+TXqLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 128/206] gfs2: Allow lock_nolock mount to specify jid=X
-Date:   Tue, 23 Jun 2020 21:57:36 +0200
-Message-Id: <20200623195323.273161227@linuxfoundation.org>
+Subject: [PATCH 4.19 123/206] extcon: adc-jack: Fix an error handling path in adc_jack_probe()
+Date:   Tue, 23 Jun 2020 21:57:31 +0200
+Message-Id: <20200623195323.018175632@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,44 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
+[ Upstream commit bc84cff2c92ae5ccb2c37da73756e7174b1b430f ]
 
-Before this patch, a simple typo accidentally added \n to the jid=
-string for lock_nolock mounts. This made it impossible to mount a
-gfs2 file system with a journal other than journal0. Thus:
+In some error handling paths, a call to 'iio_channel_get()' is not balanced
+by a corresponding call to 'iio_channel_release()'.
 
-mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
 
-Resulted in:
-mount: wrong fs type, bad option, bad superblock on <device>
+This has the extra benefit to simplify the remove function.
 
-In most cases this is not a problem. However, for debugging and
-testing purposes we sometimes want to test the integrity of other
-journals. This patch removes the unnecessary \n and thus allows
-lock_nolock users to specify an alternate journal.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixes: 19939860dcae ("extcon: adc_jack: adc-jack driver to support 3.5 pi or simliar devices")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/ops_fstype.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/extcon/extcon-adc-jack.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index b041cb8ae383d..ed77b10bdfb53 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -903,7 +903,7 @@ fail:
+diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
+index 18026354c332c..b1fb38b7f270e 100644
+--- a/drivers/extcon/extcon-adc-jack.c
++++ b/drivers/extcon/extcon-adc-jack.c
+@@ -128,7 +128,7 @@ static int adc_jack_probe(struct platform_device *pdev)
+ 	for (i = 0; data->adc_conditions[i].id != EXTCON_NONE; i++);
+ 	data->num_conditions = i;
+ 
+-	data->chan = iio_channel_get(&pdev->dev, pdata->consumer_channel);
++	data->chan = devm_iio_channel_get(&pdev->dev, pdata->consumer_channel);
+ 	if (IS_ERR(data->chan))
+ 		return PTR_ERR(data->chan);
+ 
+@@ -170,7 +170,6 @@ static int adc_jack_remove(struct platform_device *pdev)
+ 
+ 	free_irq(data->irq, data);
+ 	cancel_work_sync(&data->handler.work);
+-	iio_channel_release(data->chan);
+ 
+ 	return 0;
  }
- 
- static const match_table_t nolock_tokens = {
--	{ Opt_jid, "jid=%d\n", },
-+	{ Opt_jid, "jid=%d", },
- 	{ Opt_err, NULL },
- };
- 
 -- 
 2.25.1
 
