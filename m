@@ -2,230 +2,136 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C36EF2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE4220781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592934304;
+	bh=rT4koIr7UtLX4GCIHsdvAcf7eYSMsgw4pKrRl6Cftnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IOTL0fKqVGV0D4kp7FSzR4i1YJVMJkSCAip4goj19syfB2PhxISMUck7+8dmVtmaZ
+	 IZSaa+25UjPdpDt8ODnh5sjN5z0J7PH0qR5Wf2GUPtVKtJ/mBR1GQExEM5i6z3JhZS
+	 rccdxHKhmAali/UIYXMcJIIpjLLhdWhehfyNfdoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387841AbgFWRol (ORCPT
+        id S1733299AbgFWRpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:44:41 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:31102 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733045AbgFWRfZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:25 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NHNT0G031499;
-        Tue, 23 Jun 2020 13:35:07 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 31uk3grq2h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 13:35:06 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05NHZ56m001997
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 23 Jun 2020 13:35:05 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 23 Jun
- 2020 10:35:03 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 23 Jun 2020 10:35:03 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05NHYxMQ017521;
-        Tue, 23 Jun 2020 13:35:01 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v4 1/7] hwmon: pmbus: adm1266: add support
-Date:   Tue, 23 Jun 2020 20:36:53 +0300
-Message-ID: <20200623173659.41358-2-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200623173659.41358-1-alexandru.tachici@analog.com>
-References: <20200623173659.41358-1-alexandru.tachici@analog.com>
+        Tue, 23 Jun 2020 13:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733075AbgFWRpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:45:02 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9D9220780;
+        Tue, 23 Jun 2020 17:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592934301;
+        bh=rT4koIr7UtLX4GCIHsdvAcf7eYSMsgw4pKrRl6Cftnk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l5UI7vjpirdxvGDLqNw/1mU19QdmERY4zDRkZsmsxsG7jkn0t8PYxKm9EyJfDNNX2
+         9Kf7qBWpGJnpqkRLW+9uZF0eZlwyFyuvQvy7hoFAOGQHizWjaLoEZm228bJGIQVSb6
+         8ug8T4uZ6cAHXLO4drT3YoUPzSkujvXYjcwYSfEI=
+Date:   Tue, 23 Jun 2020 18:44:56 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Jiping Ma <Jiping.Ma2@windriver.com>, zhe.he@windriver.com,
+        bruce.ashfield@gmail.com, yue.tao@windriver.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        paul.gortmaker@windriver.com, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH][V3] arm64: perf: Get the wrong PC value in REGS_ABI_32
+ mode
+Message-ID: <20200623174456.GA5087@willie-the-truck>
+References: <1589165527-188401-1-git-send-email-jiping.ma2@windriver.com>
+ <20200526102611.GA1363@C02TD0UTHF1T.local>
+ <1e57ec27-1d54-c7cd-5e5b-6c0cc47f9891@windriver.com>
+ <20200527151928.GC59947@C02TD0UTHF1T.local>
+ <cd66a2e4-c953-8b09-b775-d982bb1be47a@windriver.com>
+ <20200528075418.GB22156@willie-the-truck>
+ <20200618130332.GA53391@C02TD0UTHF1T.local>
+ <20200623171909.GC4819@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- bulkscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006120000 definitions=main-2006230123
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623171909.GC4819@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+On Tue, Jun 23, 2020 at 06:19:10PM +0100, Will Deacon wrote:
+> So, I think we should take this patch (which puts the PC where you'd expect
+> to find it for compat tasks) and then we could consider removing the current
+> lr/sp fudging as a separate patch, which we could revert if it causes a
+> problem. However, I'm not sure I want to open that up.
 
-Add pmbus probing driver for the adm1266 Cascadable
-Super Sequencer with Margin Control and Fault Recording.
-Driver is using the pmbus_core, creating sysfs files
-under hwmon for inputs: vh1->vh4 and vp1->vp13.
+Patch below...
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+Will
+
+--->8
+
+From 7452148b87ed8c82826474366dbe536fd960d3a7 Mon Sep 17 00:00:00 2001
+From: Jiping Ma <jiping.ma2@windriver.com>
+Date: Mon, 11 May 2020 10:52:07 +0800
+Subject: [PATCH] arm64: perf: Report the PC value in REGS_ABI_32 mode
+
+A 32-bit perf querying the registers of a compat task using REGS_ABI_32
+will receive zeroes from w15, when it expects to find the PC.
+
+Return the PC value for register dwarf register 15 when returning register
+values for a compat task to perf.
+
+Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+Link: https://lore.kernel.org/r/1589165527-188401-1-git-send-email-jiping.ma2@windriver.com
+[will: Shuffled code and added a comment]
+Signed-off-by: Will Deacon <will@kernel.org>
 ---
- Documentation/hwmon/adm1266.rst | 35 +++++++++++++++++++
- drivers/hwmon/pmbus/Kconfig     |  9 +++++
- drivers/hwmon/pmbus/Makefile    |  1 +
- drivers/hwmon/pmbus/adm1266.c   | 62 +++++++++++++++++++++++++++++++++
- 4 files changed, 107 insertions(+)
- create mode 100644 Documentation/hwmon/adm1266.rst
- create mode 100644 drivers/hwmon/pmbus/adm1266.c
+ arch/arm64/kernel/perf_regs.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/hwmon/adm1266.rst b/Documentation/hwmon/adm1266.rst
-new file mode 100644
-index 000000000000..65662115750c
---- /dev/null
-+++ b/Documentation/hwmon/adm1266.rst
-@@ -0,0 +1,35 @@
-+Kernel driver adm1266
-+=====================
-+
-+Supported chips:
-+  * Analog Devices ADM1266
-+    Prefix: 'adm1266'
-+    Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
-+
-+Author: Alexandru Tachici <alexandru.tachici@analog.com>
-+
-+
-+Description
-+-----------
-+
-+This driver supports hardware monitoring for Analog Devices ADM1266 sequencer.
-+
-+ADM1266 is a sequencer that features voltage readback from 17 channels via an
-+integrated 12 bit SAR ADC, accessed using a PMBus interface.
-+
-+The driver is a client driver to the core PMBus driver. Please see
-+Documentation/hwmon/pmbus for details on PMBus client drivers.
-+
-+
-+Sysfs entries
-+-------------
-+
-+The following attributes are supported. Limits are read-write, history reset
-+attributes are write-only, all other attributes are read-only.
-+
-+inX_label		"voutx"
-+inX_input		Measured voltage.
-+inX_min			Minimum Voltage.
-+inX_max			Maximum voltage.
-+inX_min_alarm		Voltage low alarm.
-+inX_max_alarm		Voltage high alarm.
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index de12a565006d..6949483aa732 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -26,6 +26,15 @@ config SENSORS_PMBUS
- 	  This driver can also be built as a module. If so, the module will
- 	  be called pmbus.
+diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
+index 0bbac612146e..952b26a05d0f 100644
+--- a/arch/arm64/kernel/perf_regs.c
++++ b/arch/arm64/kernel/perf_regs.c
+@@ -15,15 +15,25 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ 		return 0;
  
-+config SENSORS_ADM1266
-+	tristate "Analog Devices ADM1266 Sequencer"
-+	help
-+	  If you say yes here you get hardware monitoring support for Analog
-+	  Devices ADM1266 Cascadable Super Sequencer.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called adm1266.
-+
- config SENSORS_ADM1275
- 	tristate "Analog Devices ADM1275 and compatibles"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index 5feb45806123..ed38f6d6f845 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -5,6 +5,7 @@
+ 	/*
+-	 * Compat (i.e. 32 bit) mode:
+-	 * - PC has been set in the pt_regs struct in kernel_entry,
+-	 * - Handle SP and LR here.
++	 * Our handling of compat tasks (PERF_SAMPLE_REGS_ABI_32) is weird. For
++	 * a 32-bit perf inspecting a 32-bit task, then it will look at the
++	 * first 16 registers. These correspond directly to the registers saved
++	 * in our pt_regs structure, with the exception of the PC, so we copy
++	 * that down (x15 corresponds to SP_hyp in the architecture). So far, so
++	 * good. The oddity arises when a 64-bit perf looks at a 32-bit task and
++	 * asks for registers beyond PERF_REG_ARM_MAX. In this case, we return
++	 * SP_usr, LR_usr and PC in the positions where the AArch64 registers
++	 * would normally live. The initial idea was to allow a 64-bit unwinder
++	 * to unwinder a 32-bit task and, although it's not clear how well that
++	 * works in practice, we're kind of stuck with this interface now.
+ 	 */
+ 	if (compat_user_mode(regs)) {
+ 		if ((u32)idx == PERF_REG_ARM64_SP)
+ 			return regs->compat_sp;
+ 		if ((u32)idx == PERF_REG_ARM64_LR)
+ 			return regs->compat_lr;
++		if (idx == 15)
++			return regs->pc;
+ 	}
  
- obj-$(CONFIG_PMBUS)		+= pmbus_core.o
- obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
-+obj-$(CONFIG_SENSORS_ADM1266)	+= adm1266.o
- obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
- obj-$(CONFIG_SENSORS_BEL_PFE)	+= bel-pfe.o
- obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-new file mode 100644
-index 000000000000..a7ef048a9a5c
---- /dev/null
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -0,0 +1,62 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ADM1266 - Cascadable Super Sequencer with Margin
-+ * Control and Fault Recording
-+ *
-+ * Copyright 2020 Analog Devices Inc.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+
-+#include "pmbus.h"
-+
-+static int adm1266_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
-+{
-+	struct pmbus_driver_info *info;
-+	u32 funcs;
-+	int i;
-+
-+	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
-+			    GFP_KERNEL);
-+
-+	info->pages = 17;
-+	info->format[PSC_VOLTAGE_OUT] = linear;
-+	funcs = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-+	for (i = 0; i < info->pages; i++)
-+		info->func[i] = funcs;
-+
-+	return pmbus_do_probe(client, id, info);
-+}
-+
-+static const struct of_device_id adm1266_of_match[] = {
-+	{ .compatible = "adi,adm1266" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, adm1266_of_match);
-+
-+static const struct i2c_device_id adm1266_id[] = {
-+	{ "adm1266", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, adm1266_id);
-+
-+static struct i2c_driver adm1266_driver = {
-+	.driver = {
-+		   .name = "adm1266",
-+		   .of_match_table = adm1266_of_match,
-+		  },
-+	.probe = adm1266_probe,
-+	.remove = pmbus_do_remove,
-+	.id_table = adm1266_id,
-+};
-+
-+module_i2c_driver(adm1266_driver);
-+
-+MODULE_AUTHOR("Alexandru Tachici <alexandru.tachici@analog.com>");
-+MODULE_DESCRIPTION("PMBus driver for Analog Devices ADM1266");
-+MODULE_LICENSE("GPL v2");
+ 	if ((u32)idx == PERF_REG_ARM64_SP)
 -- 
-2.20.1
+2.27.0.111.gc72c7da667-goog
 
