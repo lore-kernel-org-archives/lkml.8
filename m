@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA93C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5794D206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B17206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592896207;
-	bh=sTFjDVFNxvaxYL1XIBkVBYNkDxJgnmCW7W2tRtvvhLM=;
+	s=default; t=1592896215;
+	bh=Gw7wbqH2xsyBdC3kf/3jqvxF7UQqM1IL2xDyERsgPCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tqzEfkar4owjkHpP4ItA9rZelIR0imxdtHVrCzg2R9x5KgLUKRWLASPjhURBCAm+w
-	 dzQELBSiNvUewunMTRfZemKJ07LkY438IL23qBPFeZE1Vmt5zEvwyWmQrGyUxW+fbQ
-	 bMkctRdBF/Peo3CFgXNO+EF/g4N1ouAp6X39jj2s=
+	b=xvugn/6xrOfyQ3Z8GF7fyFkpyOMYv1ucOd/77pynsPDSreTolAUsMMU8+gdRj/Qzs
+	 Wu3BuYdriWn9QoFGceRVz8c8UJFfNMukSekmnj58FRHcut2HcZuM7EVjyj/Ey1QRWR
+	 bN2tPeyysIawJEZcLskZ87hVop0Y+XbIF6kbaoZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731739AbgFWHKF (ORCPT
+        id S1731768AbgFWHKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39932 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 03:10:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731306AbgFWHJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731143AbgFWHJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 03:09:16 -0400
 Received: from mail.kernel.org (unknown [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69B58207D8;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FF802077D;
         Tue, 23 Jun 2020 07:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592896155;
-        bh=sTFjDVFNxvaxYL1XIBkVBYNkDxJgnmCW7W2tRtvvhLM=;
+        bh=Gw7wbqH2xsyBdC3kf/3jqvxF7UQqM1IL2xDyERsgPCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m++TRjfKXjCGKujF4infLuDUtr+4rY07SzmgNgJUzP0lIpre7KbvVx9a/U1bmWWsX
-         zqdDkcgPvulkmmoqmK0NhqQwz75nvw2JhXeSg22823VDBErEq9pzNCTVzCAX6afbjH
-         LzqNoOqBlBdah9HYIbo/FYSpvWpydFHL5KqUsQFQ=
+        b=ELP20hEP5skyojgUNa0qnyK4510HtscKXjQ8mbOxe+vq3STHudKBJ5FuSH7bVAbhx
+         tTz6JeiRunOUMGsPD7NysbXVX8oIw4J4eBNHYZdrWpOVXoPss9P5E2/sPxp9bkydvY
+         0A+Tx8041eAeJPb3453/Z69gB+d9ccXu+C0cS87g=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jnd3R-003qjG-8Q; Tue, 23 Jun 2020 09:09:13 +0200
+        id 1jnd3R-003qjV-C8; Tue, 23 Jun 2020 09:09:13 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 09/15] selftests/vm/keys: fix a broken reference at protection_keys.c
-Date:   Tue, 23 Jun 2020 09:09:05 +0200
-Message-Id: <cf65aa052669f55b9dc976a5c8026aef5840741d.1592895969.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 12/15] docs: driver-model: remove a duplicated markup at driver.rst
+Date:   Tue, 23 Jun 2020 09:09:08 +0200
+Message-Id: <52c65b4ebca1262f80d8939e2027358f9b476f00.1592895969.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592895969.git.mchehab+huawei@kernel.org>
 References: <cover.1592895969.git.mchehab+huawei@kernel.org>
@@ -66,39 +59,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changeset 1eecbcdca2bd ("docs: move protection-keys.rst to the core-api book")
-from Jun 7, 2019 converted protection-keys.txt file to ReST.
+The "::" markup is there twice, causing a warning:
 
-A recent change at protection_keys.c partially reverted such
-changeset, causing it to point to a non-existing file:
+    Documentation/driver-api/driver-model/driver.rst:233: WARNING: Inline emphasis start-string without end-string.
 
-	- * Tests x86 Memory Protection Keys (see Documentation/core-api/protection-keys.rst)
-	+ * Tests Memory Protection Keys (see Documentation/vm/protection-keys.txt)
-
-It sounds to me that the changeset that introduced such change
-4645e3563673 ("selftests/vm/pkeys: rename all references to pkru to a generic name")
-could also have other side effects, as it sounds that it was not
-generated against uptream code, but, instead, against a version
-older than Jun 7, 2019.
-
-Fixes: 4645e3563673 ("selftests/vm/pkeys: rename all references to pkru to a generic name")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/testing/selftests/vm/protection_keys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/driver-api/driver-model/driver.rst | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/testing/selftests/vm/protection_keys.c b/tools/testing/selftests/vm/protection_keys.c
-index fc19addcb5c8..fdbb602ecf32 100644
---- a/tools/testing/selftests/vm/protection_keys.c
-+++ b/tools/testing/selftests/vm/protection_keys.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Tests Memory Protection Keys (see Documentation/vm/protection-keys.txt)
-+ * Tests Memory Protection Keys (see Documentation/core-api/protection-keys.rst)
-  *
-  * There are examples in here of:
-  *  * how to set protection keys on memory
+diff --git a/Documentation/driver-api/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
+index 7d5040f6a3d8..06f818b1d622 100644
+--- a/Documentation/driver-api/driver-model/driver.rst
++++ b/Documentation/driver-api/driver-model/driver.rst
+@@ -228,8 +228,6 @@ over management of devices from the bootloader, the usage of sync_state() is
+ not restricted to that. Use it whenever it makes sense to take an action after
+ all the consumers of a device have probed::
+ 
+-::
+-
+ 	int 	(*remove)	(struct device *dev);
+ 
+ remove is called to unbind a driver from a device. This may be
 -- 
 2.26.2
 
