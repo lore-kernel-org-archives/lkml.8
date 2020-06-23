@@ -2,119 +2,128 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 076B920720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609CC2070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:35:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRnduxVY"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BJSylrnT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731956AbgFWBdQ (ORCPT
+        id S1731911AbgFWBfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:33:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47528 "EHLO
+        Mon, 22 Jun 2020 21:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731690AbgFWBdQ (ORCPT
+        with ESMTP id S1731765AbgFWBfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:33:16 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009FFC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:33:15 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id w9so3892935ilk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x99pYwa1dnOzvMHARyvq3wdM6wF3B15xvFgvTOgiQu8=;
-        b=hRnduxVYqOiY+fbFT+FYlxtB/hvdIuvh15lxw6gyLq9tvdyWE35P6IsXTkt3CHRKcw
-         L6d/lGdHY5APNXYzl048L4v7VjtF2KpgzRQwt0yIv70P12j/VpdfLtsTrMAK+VqH1yCI
-         QBAB2p3E7d4I/1OYHetRPqgcrRrID1POtWkCvnNwnSOnAJKfr9FyRgGdcEhEOIoZFSBW
-         /2ukft/5XB7tkhWi5R7ToB5Q54QtaZqU80QrEKbyvsTItDKkXl3HbrwryBHvcayJxZgY
-         vbSzg8VzneA0g95IcGaiZTdg8rTf3MvIJjkZcLLw/62eQlHlmei4aU9UACQOJ/aSh971
-         RfDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x99pYwa1dnOzvMHARyvq3wdM6wF3B15xvFgvTOgiQu8=;
-        b=W1md7mcZ3cvWtPIrLOpIKFsGiv5OkOmtZha4ecR6iIz4IU2qdpAt0/5w3exvghTgUz
-         LsvjWaZiJAsGBk5hF7phYeMxXxgF5o369XG4rmzTWUL4LLe5zbP0CxJeBsGlzgOnsBrz
-         VwV27J5TPkClDLUvgg9OtbycZK0mj/WbtRrZq7gcS3he2NkBeDGpq3OpIgsFQy35NpdQ
-         NC20kLvg99lyPCU4wby8CqtUta2ER11lU5qTIgevi8zAaIJ6igOqrWJflnjtwFdYxugq
-         +poQWQn8JfacqJibQmi5oi5BSY0dTmpqktFXetR7GAm6DqGcDwqvCKYNKDHqc1wVxkRs
-         c50w==
-X-Gm-Message-State: AOAM530/gObcaSUbKLV8QzevrXuNQGhlng51PYc62gOwSKb+HLC4Spnz
-        t2NYFxdRLyF9CXBnnTIcVSM9paCEDf+yYbzmJjI=
-X-Google-Smtp-Source: ABdhPJzTfCb2U1e8nQgyWrE1u/wEZVkPKLluhndGJCrScd8Q+8irkUc7rvtTbu1dXLAuNwS0lxI2YsHNSSavOLFQ4S8=
-X-Received: by 2002:a92:da0b:: with SMTP id z11mr19094462ilm.149.1592875995226;
- Mon, 22 Jun 2020 18:33:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200619050619.266888-1-leobras.c@gmail.com> <20200619050619.266888-4-leobras.c@gmail.com>
- <51201582-efe5-85df-7e65-a998e91ab63f@ozlabs.ru> <ccf7b591f2bf61ba4705699b2e2b050c3cf48d99.camel@gmail.com>
- <887bf30e-ae9e-b0cb-0388-dc555692ff0a@ozlabs.ru>
-In-Reply-To: <887bf30e-ae9e-b0cb-0388-dc555692ff0a@ozlabs.ru>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Tue, 23 Jun 2020 11:33:03 +1000
-Message-ID: <CAOSf1CEC-tYH1so5b4P7dQ7s8v1o4qy_u5CG7LKtKNnRQvC4-w@mail.gmail.com>
-Subject: Re: [PATCH 3/4] powerpc/pseries/iommu: Move window-removing part of
- remove_ddw into remove_dma_window
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     Leonardo Bras <leobras.c@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Mon, 22 Jun 2020 21:35:42 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CFCC061573;
+        Mon, 22 Jun 2020 18:35:42 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49rTPQ5Cvmz9sPF;
+        Tue, 23 Jun 2020 11:35:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592876139;
+        bh=gv/mXw/BbJZGLfHpBd4783FUndIhkUoL0uMKLMWOnn4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BJSylrnTPaBKP3LK6PNDofs1RnT+g7l1YfMYAGBd3EnjVtth5ia4iuBnm4u04bhun
+         MvcmtyRM2G07GsiYMldltLpYjiZN0/8/rIea7rbpJSqvv0fWe5BWWV4xmYiJf8P5NL
+         YIEaCVNzK8/PQEgMaJnI7nTnUBkEsYIrkRMu5U7IBxd7B9LtcTHUi1Fx7ZMU0muE6t
+         06wKEZh1GSFww8fT0WvqhSZJ+fFbt8DOCL/gFFw2+KtmbS+047vnEmb/EcpRicfXY2
+         5gks9kilXCz4o5WQApI+3+wA8xfSrD2ErsD0DwNMOuYepINzQg4nFdkchqeNG3G+ud
+         J4pu8GDsenzWA==
+Date:   Tue, 23 Jun 2020 11:35:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: linux-next: manual merge of the drm-intel tree with Linus' tree
+Message-ID: <20200623113536.427ba57a@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/SABs9GvvEkfEy8uX9Ob=Io1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:12 AM Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
->
-> On 23/06/2020 04:59, Leonardo Bras wrote:
-> >
-> >> Also, despite this particular file, the "pdn" name is usually used for
-> >> struct pci_dn (not device_node), let's keep it that way.
-> >
-> > Sure, I got confused for some time about this, as we have:
-> > static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn).
-> > but on *_ddw() we have "struct pci_dn *pdn".
->
-> True again, not the cleanest style here.
->
->
-> > I will also add a patch that renames those 'struct device_node *pdn' to
-> > something like 'struct device_node *parent_dn'.
+--Sig_/SABs9GvvEkfEy8uX9Ob=Io1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I usually go with "np" or "node". In this case I'd use "parent_np" or
-just "parent." As you said pci_dn conventionally uses pdn so that
-should be avoided if at all possible. There's some places that just
-use "dn" for device_node, but I don't think that's something we should
-encourage due to how similar it is to pdn.
+Hi all,
 
-> I would not go that far, we (well, Oliver) are getting rid of many
-> occurrences of pci_dn and Oliver may have a stronger opinion here.
+Today's linux-next merge of the drm-intel tree got a conflict in:
 
-I'm trying to remove the use of pci_dn from non-RTAS platforms which
-doesn't apply to pseries. For RTAS platforms having pci_dn sort of
-makes sense since it's used to cache data from the device_node and
-having it saves you from needing to parse and validate the DT at
-runtime since we're supposed to be relying on the FW provided settings
-in the DT. I want to get rid of it on PowerNV because it's become a
-dumping ground for random bits and pieces of platform specific data.
-It's confusing at best and IMO it duplicates a lot of what's already
-available in the per-PHB structures which the platform specific stuff
-should actually be looking at.
+  drivers/gpu/drm/i915/i915_drv.h
 
-Oliver
+between commit:
+
+  7fb81e9d8073 ("drm/i915: Use drmm_add_final_kfree")
+
+from Linus' tree and commit:
+
+  8a25c4be583d ("drm/i915/params: switch to device specific parameters")
+
+from the drm-intel tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/i915_drv.h
+index adb9bf34cf97,2697960f15a9..000000000000
+--- a/drivers/gpu/drm/i915/i915_drv.h
++++ b/drivers/gpu/drm/i915/i915_drv.h
+@@@ -826,9 -827,9 +827,12 @@@ struct i915_selftest_stash=20
+  struct drm_i915_private {
+  	struct drm_device drm;
+ =20
++ 	/* i915 device parameters */
++ 	struct i915_params params;
++=20
+ +	/* FIXME: Device release actions should all be moved to drmm_ */
+ +	bool do_release;
+ +
+  	const struct intel_device_info __info; /* Use INTEL_INFO() to access. */
+  	struct intel_runtime_info __runtime; /* Use RUNTIME_INFO() to access. */
+  	struct intel_driver_caps caps;
+
+--Sig_/SABs9GvvEkfEy8uX9Ob=Io1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7xXGgACgkQAVBC80lX
+0Gw8KQf/fWB/Dh7RSZ0e3knufDjbCy+pXUVrrSwOakMzSkHde+laUhmZQK8ckJvL
+v3sb+TPv2YlNKmY7tcSrkVnfKIaVw+scdrl0MUJHAg0qumJ3Y58CCGG7loFZNfQp
+H+4+LIQt/3/LudgUMDs4faUYdqVe7t/JNLlu7afcGACB95rZUHOuFyGp9A46Xsiv
+qowZISoffQTut1+Ry4fbVodArQRx+JlYLXXQEpVDN4z49kLYeX5/jFEeyzgM971J
+bmsai0wv8lSUNR+N2iqe2l81jZVmLINqpNfPtpfLbtbWztOGYJMsL5JqCL3DRizE
+cHcj2zjyOdmjvL4tm9IBoUFfSCbuYQ==
+=7AvC
+-----END PGP SIGNATURE-----
+
+--Sig_/SABs9GvvEkfEy8uX9Ob=Io1--
