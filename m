@@ -2,52 +2,53 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D091C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E14C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4190A2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D412080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943535;
-	bh=IVRB9q9/6/QXpG+dXxWFNhybvoHx+eg0H3V+4CyDGDo=;
+	s=default; t=1592943543;
+	bh=c2Uo1Rabt1OgrBwNWL8uOBPetEAqwed41bc3ef7uxDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=scNeZJsP5jg370mX0p1jPKmfsS2ZBEpx4NTH31dc4u2Iy2DB6K9DY0WV/I2NBBmLa
-	 9x+o/c03j99PYmjmFPEh//E71cj7WUXOOZWKlxOJAOZVrcs9xiCyTg0sa+hs/8zT+2
-	 XTDJLzdrKU9zbrwweAU5pWBIA0v+6h9Bg2C8Lgvs=
+	b=YcuNdj9CPANdpPB3IRignUjb1qok+G9AIh6v8kiuXJuhnVTwpCWb+AUxl/rZAv01t
+	 w8v0r5gechT5S3K+MlUjrcMUu1Lvd8Mr1VBaEDbWpVxY7f7AalsLnLKTsYVLx049of
+	 M2jyz8R/Mso8kP4FMpYMnNQQBYAfdDXug/hrW5TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389724AbgFWUSx (ORCPT
+        id S2389748AbgFWUTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:19:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389443AbgFWUSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:18:49 -0400
+        id S2389728AbgFWUS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:18:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E9552064B;
-        Tue, 23 Jun 2020 20:18:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E5372064B;
+        Tue, 23 Jun 2020 20:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943528;
-        bh=IVRB9q9/6/QXpG+dXxWFNhybvoHx+eg0H3V+4CyDGDo=;
+        s=default; t=1592943536;
+        bh=c2Uo1Rabt1OgrBwNWL8uOBPetEAqwed41bc3ef7uxDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=08KjDKszeWh7Uvwd7efC14pB4S2aICxIjZvLFsrM4LBMhXHy0OrdjsOLFani+Stdo
-         MJn1bh0AsWtrhAM8TdhkImGO3Xc4iwmspIe4RfafSfQN61G03+QsfManyGzq09vkZU
-         uMCIYHLTxIS5me8BaLrb6IdmX/O3WpxV32HOmgsw=
+        b=QSLDkMsrY2YvZ/Dmw6KLF2BpZBixIj7SqbG2GK27KU6toviZ+glcvGFv4/hi4dVAD
+         tehEjblczHNioy0MJj7qLfakPhtViu0jcbageNxGfge9EXlvwryEINb1uVXC7WTBu6
+         DqvOu99C6oB/FYOdzeHc4RR11DSi7HOAzVX1352Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.7 427/477] selinux: fix a double free in cond_read_node()/cond_read_list()
-Date:   Tue, 23 Jun 2020 21:57:04 +0200
-Message-Id: <20200623195427.714040921@linuxfoundation.org>
+        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 403/477] net: dsa: sja1105: fix PTP timestamping with large tc-taprio cycles
+Date:   Tue, 23 Jun 2020 21:56:40 +0200
+Message-Id: <20200623195426.580029300@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,74 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-commit aa449a7965a6172a89d48844c313708962216f1f upstream.
+[ Upstream commit c92cbaea3cc0a80807e386922f801eb6d3652c81 ]
 
-Clang static analysis reports this double free error
+It isn't actually described clearly at all in UM10944.pdf, but on TX of
+a management frame (such as PTP), this needs to happen:
 
-security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
-        kfree(node->expr.nodes);
-        ^~~~~~~~~~~~~~~~~~~~~~~
+- The destination MAC address (i.e. 01-80-c2-00-00-0e), along with the
+  desired destination port, need to be installed in one of the 4
+  management slots of the switch, over SPI.
+- The host can poll over SPI for that management slot's ENFPORT field.
+  That gets unset when the switch has matched the slot to the frame.
 
-When cond_read_node fails, it calls cond_node_destroy which frees the
-node but does not poison the entry in the node list.  So when it
-returns to its caller cond_read_list, cond_read_list deletes the
-partial list.  The latest entry in the list will be deleted twice.
+And therein lies the problem. ENFPORT does not mean that the packet has
+been transmitted. Just that it has been received over the CPU port, and
+that the mgmt slot is yet again available.
 
-So instead of freeing the node in cond_read_node, let list freeing in
-code_read_list handle the freeing the problem node along with all of the
-earlier nodes.
+This is relevant because of what we are doing in sja1105_ptp_txtstamp_skb,
+which is called right after sja1105_mgmt_xmit. We are in a hard
+real-time deadline, since the hardware only gives us 24 bits of TX
+timestamp, so we need to read the full PTP clock to reconstruct it.
+Because we're in a hurry (in an attempt to make sure that we have a full
+64-bit PTP time which is as close as possible to the actual transmission
+time of the frame, to avoid 24-bit wraparounds), first we read the PTP
+clock, then we poll for the TX timestamp to become available.
 
-Because cond_read_node no longer does any error handling, the goto's
-the error case are redundant.  Instead just return the error code.
+But of course, we don't know for sure that the frame has been
+transmitted when we read the full PTP clock. We had assumed that ENFPORT
+means it has, but the assumption is incorrect. And while in most
+real-life scenarios this has never been caught due to software delays,
+nowhere is this fact more obvious than with a tc-taprio offload, where
+PTP traffic gets a small timeslot very rarely (example: 1 packet per 10
+ms). In that case, we will be reading the PTP clock for timestamp
+reconstruction too early (before the packet has been transmitted), and
+this renders the reconstruction procedure incorrect (see the assumptions
+described in the comments found on function sja1105_tstamp_reconstruct).
+So the PTP TX timestamps will be off by 1<<24 clock ticks, or 135 ms
+(1 tick is 8 ns).
 
-Cc: stable@vger.kernel.org
-Fixes: 60abd3181db2 ("selinux: convert cond_list to array")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-[PM: subject line tweaks]
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So fix this case of premature optimization by simply reordering the
+sja1105_ptpegr_ts_poll and the sja1105_ptpclkval_read function calls. It
+turns out that in practice, the 135 ms hard deadline for PTP timestamp
+wraparound is not so hard, since even the most bandwidth-intensive PTP
+profiles, such as 802.1AS-2011, have a sync frame interval of 125 ms.
+So if we couldn't deliver a timestamp in 135 ms (which we can), we're
+toast and have much bigger problems anyway.
 
+Fixes: 47ed985e97f5 ("net: dsa: sja1105: Add logic for TX timestamping")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/ss/conditional.c |   18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_ptp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/security/selinux/ss/conditional.c
-+++ b/security/selinux/ss/conditional.c
-@@ -392,27 +392,19 @@ static int cond_read_node(struct policyd
+diff --git a/drivers/net/dsa/sja1105/sja1105_ptp.c b/drivers/net/dsa/sja1105/sja1105_ptp.c
+index bc0e47c1dbb9b..1771345964580 100644
+--- a/drivers/net/dsa/sja1105/sja1105_ptp.c
++++ b/drivers/net/dsa/sja1105/sja1105_ptp.c
+@@ -891,16 +891,16 @@ void sja1105_ptp_txtstamp_skb(struct dsa_switch *ds, int port,
  
- 		rc = next_entry(buf, fp, sizeof(u32) * 2);
- 		if (rc)
--			goto err;
-+			return rc;
+ 	mutex_lock(&ptp_data->lock);
  
- 		expr->expr_type = le32_to_cpu(buf[0]);
- 		expr->bool = le32_to_cpu(buf[1]);
- 
--		if (!expr_node_isvalid(p, expr)) {
--			rc = -EINVAL;
--			goto err;
--		}
-+		if (!expr_node_isvalid(p, expr))
-+			return -EINVAL;
+-	rc = sja1105_ptpclkval_read(priv, &ticks, NULL);
++	rc = sja1105_ptpegr_ts_poll(ds, port, &ts);
+ 	if (rc < 0) {
+-		dev_err(ds->dev, "Failed to read PTP clock: %d\n", rc);
++		dev_err(ds->dev, "timed out polling for tstamp\n");
+ 		kfree_skb(skb);
+ 		goto out;
  	}
  
- 	rc = cond_read_av_list(p, fp, &node->true_list, NULL);
- 	if (rc)
--		goto err;
--	rc = cond_read_av_list(p, fp, &node->false_list, &node->true_list);
--	if (rc)
--		goto err;
--	return 0;
--err:
--	cond_node_destroy(node);
--	return rc;
-+		return rc;
-+	return cond_read_av_list(p, fp, &node->false_list, &node->true_list);
- }
- 
- int cond_read_list(struct policydb *p, void *fp)
+-	rc = sja1105_ptpegr_ts_poll(ds, port, &ts);
++	rc = sja1105_ptpclkval_read(priv, &ticks, NULL);
+ 	if (rc < 0) {
+-		dev_err(ds->dev, "timed out polling for tstamp\n");
++		dev_err(ds->dev, "Failed to read PTP clock: %d\n", rc);
+ 		kfree_skb(skb);
+ 		goto out;
+ 	}
+-- 
+2.25.1
+
 
 
