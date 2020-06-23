@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD4232145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE472064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943344;
-	bh=rVlBOKcYiGWiKjWJfos9ZmtQNpTmNrWHeg5S5Bm7rCw=;
+	s=default; t=1592943352;
+	bh=SeSGWd2X1m6STHYPCLvNZM29tgba9bTjz7pF92Kqekc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WopvmXLCI99dTqDr618XhEX/PRQRI6ACMOgTOW/jpXs684ON+/YHsxvYEHCVcm8Ts
-	 9AkuFzIYIiYzpiUx/VKfH/fjHW5Eko/ne125U6IRjpHuUtm67ZDZxok2jPY1TdThmk
-	 rV/+jEscS4opDoO13PjrNwk3T+NMWV7jYDgypd60=
+	b=uiQBbe7G6arM/tVmUZWvHefHiTqUqCh2TqVden5rx3wUJSQm7SSvRV/FrXSBsjMzW
+	 JFIaFhUlPav3dtBLUnEQoJqBSMrPypJtRjVu+FsANRXi7uig1HpgEIdBgwsMNvelTW
+	 4u/L/3pnoK+50HKa06tGZaaQF1GghwkOXZEfe0sA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388021AbgFWUPn (ORCPT
+        id S2389077AbgFWUPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:15:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58594 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:15:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389322AbgFWUPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:15:35 -0400
+        id S2389329AbgFWUPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:15:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A25732064B;
-        Tue, 23 Jun 2020 20:15:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B53520702;
+        Tue, 23 Jun 2020 20:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943334;
-        bh=rVlBOKcYiGWiKjWJfos9ZmtQNpTmNrWHeg5S5Bm7rCw=;
+        s=default; t=1592943336;
+        bh=SeSGWd2X1m6STHYPCLvNZM29tgba9bTjz7pF92Kqekc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+mAlaKyfXKpOVBY6Q0yDtjJZ/0ruIr0oSuLsyxMppHv/VHqgfMs9573M39NFw7lG
-         OiCu9f90pTjHhkSPc88iIu5uEZ1vKz/JHaHBqie6PfE1ZISiF1aNe8jHTgy9txin0V
-         YRMcq3SsXatJDGHKhaGTDOsLRKHI4MUXjTLkXFmg=
+        b=cWNFwz/bT6B8Skuo0O+uA1dK+L37IFd9sxwlPW05PisXI1+pmduWFzajnW/0FlKVo
+         kZO2gUEQWamY1nE0K3EOFi6iTqxsTsGvW2Ed0aOdS79mgyZ6h0bLwlch7omGbvJP0V
+         F0gu71A0kNcQRsrUcdCHlai0V7mhUId8e88qnVg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 352/477] f2fs: dont return vmalloc() memory from f2fs_kmalloc()
-Date:   Tue, 23 Jun 2020 21:55:49 +0200
-Message-Id: <20200623195424.180949547@linuxfoundation.org>
+Subject: [PATCH 5.7 353/477] afs: Fix memory leak in afs_put_sysnames()
+Date:   Tue, 23 Jun 2020 21:55:50 +0200
+Message-Id: <20200623195424.228113979@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,112 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-[ Upstream commit 0b6d4ca04a86b9dababbb76e58d33c437e127b77 ]
+[ Upstream commit 2ca068be09bf8e285036603823696140026dcbe7 ]
 
-kmalloc() returns kmalloc'ed memory, and kvmalloc() returns either
-kmalloc'ed or vmalloc'ed memory.  But the f2fs wrappers, f2fs_kmalloc()
-and f2fs_kvmalloc(), both return both kinds of memory.
+Fix afs_put_sysnames() to actually free the specified afs_sysnames
+object after its reference count has been decreased to zero and
+its contents have been released.
 
-It's redundant to have two functions that do the same thing, and also
-breaking the standard naming convention is causing bugs since people
-assume it's safe to kfree() memory allocated by f2fs_kmalloc().  See
-e.g. the various allocations in fs/f2fs/compress.c.
-
-Fix this by making f2fs_kmalloc() just use kmalloc().  And to avoid
-re-introducing the allocation failures that the vmalloc fallback was
-intended to fix, convert the largest allocations to use f2fs_kvmalloc().
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 6f8880d8e681557 ("afs: Implement @sys substitution handling")
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/checkpoint.c | 4 ++--
- fs/f2fs/f2fs.h       | 8 +-------
- fs/f2fs/node.c       | 8 ++++----
- fs/f2fs/super.c      | 2 +-
- 4 files changed, 8 insertions(+), 14 deletions(-)
+ fs/afs/proc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 852890b72d6ac..448b3dc6f925a 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -889,8 +889,8 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 	int i;
- 	int err;
- 
--	sbi->ckpt = f2fs_kzalloc(sbi, array_size(blk_size, cp_blks),
--				 GFP_KERNEL);
-+	sbi->ckpt = f2fs_kvzalloc(sbi, array_size(blk_size, cp_blks),
-+				  GFP_KERNEL);
- 	if (!sbi->ckpt)
- 		return -ENOMEM;
- 	/*
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index a15e93f15b6ac..555c84953ea81 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2936,18 +2936,12 @@ static inline bool f2fs_may_extent_tree(struct inode *inode)
- static inline void *f2fs_kmalloc(struct f2fs_sb_info *sbi,
- 					size_t size, gfp_t flags)
- {
--	void *ret;
--
- 	if (time_to_inject(sbi, FAULT_KMALLOC)) {
- 		f2fs_show_injection_info(sbi, FAULT_KMALLOC);
- 		return NULL;
+diff --git a/fs/afs/proc.c b/fs/afs/proc.c
+index 468e1713bce13..6f34c84a0fd0a 100644
+--- a/fs/afs/proc.c
++++ b/fs/afs/proc.c
+@@ -563,6 +563,7 @@ void afs_put_sysnames(struct afs_sysnames *sysnames)
+ 			if (sysnames->subs[i] != afs_init_sysname &&
+ 			    sysnames->subs[i] != sysnames->blank)
+ 				kfree(sysnames->subs[i]);
++		kfree(sysnames);
  	}
- 
--	ret = kmalloc(size, flags);
--	if (ret)
--		return ret;
--
--	return kvmalloc(size, flags);
-+	return kmalloc(size, flags);
  }
  
- static inline void *f2fs_kzalloc(struct f2fs_sb_info *sbi,
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index ecbd6bd14a494..daf531e69b672 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2928,7 +2928,7 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
- 		return 0;
- 
- 	nm_i->nat_bits_blocks = F2FS_BLK_ALIGN((nat_bits_bytes << 1) + 8);
--	nm_i->nat_bits = f2fs_kzalloc(sbi,
-+	nm_i->nat_bits = f2fs_kvzalloc(sbi,
- 			nm_i->nat_bits_blocks << F2FS_BLKSIZE_BITS, GFP_KERNEL);
- 	if (!nm_i->nat_bits)
- 		return -ENOMEM;
-@@ -3061,9 +3061,9 @@ static int init_free_nid_cache(struct f2fs_sb_info *sbi)
- 	int i;
- 
- 	nm_i->free_nid_bitmap =
--		f2fs_kzalloc(sbi, array_size(sizeof(unsigned char *),
--					     nm_i->nat_blocks),
--			     GFP_KERNEL);
-+		f2fs_kvzalloc(sbi, array_size(sizeof(unsigned char *),
-+					      nm_i->nat_blocks),
-+			      GFP_KERNEL);
- 	if (!nm_i->free_nid_bitmap)
- 		return -ENOMEM;
- 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 0c88090077fc1..4696c9cb47a5f 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3039,7 +3039,7 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
- 	if (nr_sectors & (bdev_zone_sectors(bdev) - 1))
- 		FDEV(devi).nr_blkz++;
- 
--	FDEV(devi).blkz_seq = f2fs_kzalloc(sbi,
-+	FDEV(devi).blkz_seq = f2fs_kvzalloc(sbi,
- 					BITS_TO_LONGS(FDEV(devi).nr_blkz)
- 					* sizeof(unsigned long),
- 					GFP_KERNEL);
 -- 
 2.25.1
 
