@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BECBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9683020706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA7D2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942503;
-	bh=+Xs/HUlxg1DyVqM6VD+587PpPAcfdfjAHJ3jTcdWD3U=;
+	s=default; t=1592942507;
+	bh=ddnITETwiXWUKT1RC746dRpSdzdnKPzgweJFI2yCyD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hze8CDzc2AQcjCrwZST+6JOR98xzW+ADiZYZqrrDR4dmUzEDnTncQJBjxVZdiuHnd
-	 ivL/QmX3zsXYWpnmPU/41H9OwfUBpuDA6we5w4OWxhCw+Vc4kG1Zj3ohRkqFO8+yv3
-	 Or9IAcSOlN8D7V5N0lF1OdOqDe6lQuIjqMVbUvtQ=
+	b=lEipGvyIN0HXv5R3yE0vA0MxQJJXPHL7rBo5ZTeS2BlOEK4TcpUr/PGKqv3WNqKX3
+	 AHerc6hPvPU1gqaCSZ4adZTvQr02I/qEDtquqVhNIOv+aKlaXJ14HNhLvRPNWHxjKf
+	 Swwm/nd33Tp6PCxrsDt3BjsTM4I4KScm6ydEoshc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387675AbgFWUBi (ORCPT
+        id S2387693AbgFWUBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:01:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38212 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387668AbgFWUBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:01:34 -0400
+        id S2387670AbgFWUBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:01:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB643206C3;
-        Tue, 23 Jun 2020 20:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3956D206C3;
+        Tue, 23 Jun 2020 20:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942494;
-        bh=+Xs/HUlxg1DyVqM6VD+587PpPAcfdfjAHJ3jTcdWD3U=;
+        s=default; t=1592942496;
+        bh=ddnITETwiXWUKT1RC746dRpSdzdnKPzgweJFI2yCyD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXC2PPo4sf1m60ExFqbguCUKzmL608ccs1Uc5qJRFnIs4nsKR8AJMeKwoXsWnUAui
-         e29Vf1GbTY9bAEBC+Y9jzFK+P5YuhJOa1DVu9JDS8cNpHGKSJ+mHwC/7+wruPQ+gPR
-         e9vtsaMdalwuVoENxKzAku5hfX0EIHYgk2OsS09o=
+        b=e2U+pf0Ntjsn7tCEysDn1OXFGUBYTBn80/58XuFenuTwq5KvcpXHC1yPyY9RoBlSW
+         EMV8T0vpG9egKRNZdgoGghW7EzprGAbTBEDLp8eLIk3CjELzr7meCdSyIhV52zWzQy
+         EaiIWZ6ESLv0KrtJ2IA3xL6d+Q4K9tMCvgs0OHoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 020/477] arm64: dts: meson-gxbb-kii-pro: fix board compatible
-Date:   Tue, 23 Jun 2020 21:50:17 +0200
-Message-Id: <20200623195408.562273004@linuxfoundation.org>
+Subject: [PATCH 5.7 021/477] scsi: core: free sgtables in case command setup fails
+Date:   Tue, 23 Jun 2020 21:50:18 +0200
+Message-Id: <20200623195408.609631890@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,36 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-[ Upstream commit d120b5f98031eefc22164ae8c6ea3711e7a04c19 ]
+[ Upstream commit 20a66f2bf280277ab5bb22e27445153b4eb0ac88 ]
 
-Remove the uneeded "amlogic,p201", "amlogic,s905" in the board compatible list.
+In case scsi_setup_fs_cmnd() fails we're not freeing the sgtables allocated
+by scsi_init_io(), thus we leak the allocated memory.
 
-It fixes:
-meson-gxbb-kii-pro.dt.yaml: /: compatible: ['videostrong,kii-pro', 'amlogic,p201', 'amlogic,s905', 'amlogic,meson-gxbb'] is not valid under any of the given schemas
+Free the sgtables allocated by scsi_init_io() in case scsi_setup_fs_cmnd()
+fails.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/20200326165958.19274-5-narmstrong@baylibre.com
+Technically scsi_setup_scsi_cmnd() does not suffer from this problem as it
+can only fail if scsi_init_io() fails, so it does not have sgtables
+allocated. But to maintain symmetry and as a measure of defensive
+programming, free the sgtables on scsi_setup_scsi_cmnd() failure as well.
+scsi_mq_free_sgtables() has safeguards against double-freeing of memory so
+this is safe to do.
+
+While we're at it, rename scsi_mq_free_sgtables() to scsi_free_sgtables().
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205595
+Link: https://lore.kernel.org/r/20200428104605.8143-2-johannes.thumshirn@wdc.com
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/scsi_lib.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-index 6c9cc45fb417e..e8394a8269ee1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-@@ -11,7 +11,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/leds/common.h>
- / {
--	compatible = "videostrong,kii-pro", "amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
-+	compatible = "videostrong,kii-pro", "amlogic,meson-gxbb";
- 	model = "Videostrong KII Pro";
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 06c260f6cdae3..3ecdae18597d1 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -548,7 +548,7 @@ static void scsi_uninit_cmd(struct scsi_cmnd *cmd)
+ 	}
+ }
  
- 	leds {
+-static void scsi_mq_free_sgtables(struct scsi_cmnd *cmd)
++static void scsi_free_sgtables(struct scsi_cmnd *cmd)
+ {
+ 	if (cmd->sdb.table.nents)
+ 		sg_free_table_chained(&cmd->sdb.table,
+@@ -560,7 +560,7 @@ static void scsi_mq_free_sgtables(struct scsi_cmnd *cmd)
+ 
+ static void scsi_mq_uninit_cmd(struct scsi_cmnd *cmd)
+ {
+-	scsi_mq_free_sgtables(cmd);
++	scsi_free_sgtables(cmd);
+ 	scsi_uninit_cmd(cmd);
+ }
+ 
+@@ -1059,7 +1059,7 @@ blk_status_t scsi_init_io(struct scsi_cmnd *cmd)
+ 
+ 	return BLK_STS_OK;
+ out_free_sgtables:
+-	scsi_mq_free_sgtables(cmd);
++	scsi_free_sgtables(cmd);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(scsi_init_io);
+@@ -1190,6 +1190,7 @@ static blk_status_t scsi_setup_cmnd(struct scsi_device *sdev,
+ 		struct request *req)
+ {
+ 	struct scsi_cmnd *cmd = blk_mq_rq_to_pdu(req);
++	blk_status_t ret;
+ 
+ 	if (!blk_rq_bytes(req))
+ 		cmd->sc_data_direction = DMA_NONE;
+@@ -1199,9 +1200,14 @@ static blk_status_t scsi_setup_cmnd(struct scsi_device *sdev,
+ 		cmd->sc_data_direction = DMA_FROM_DEVICE;
+ 
+ 	if (blk_rq_is_scsi(req))
+-		return scsi_setup_scsi_cmnd(sdev, req);
++		ret = scsi_setup_scsi_cmnd(sdev, req);
+ 	else
+-		return scsi_setup_fs_cmnd(sdev, req);
++		ret = scsi_setup_fs_cmnd(sdev, req);
++
++	if (ret != BLK_STS_OK)
++		scsi_free_sgtables(cmd);
++
++	return ret;
+ }
+ 
+ static blk_status_t
 -- 
 2.25.1
 
