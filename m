@@ -2,259 +2,255 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D48C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2E0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB93207F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6833E207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="J5JANumX"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="F8OUcVju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387441AbgFWTBo (ORCPT
+        id S2387448AbgFWTCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:01:44 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:39720 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733200AbgFWTBm (ORCPT
+        Tue, 23 Jun 2020 15:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733218AbgFWTCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:01:42 -0400
-Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NIqbqQ013947;
-        Tue, 23 Jun 2020 15:01:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=NCeo/UaIeyZylG6hualmcmvKNxv5wzhAHTyWbIfEX64=;
- b=J5JANumXEWk0lBDNCn+DwZtJGObxWj5XFaSaw5XQ2C3RL9c54Y9U1KLjUvLpoEXDnCrG
- NAwe8JwHsNjCLAIUvyRcmDkqwioc87TV1oPvsBXe+zTZIi3bMKx4r+CeimNWTYI8yzyk
- h8n9WGo+qfVQPuRIMjcyjgoP4PT7e6E9H6N9jE5S4PD23ylMA+RZjCkesiBcLyy4zjX4
- oinrj4wio98YYhkoDbmFILb8MbXBsPDaZEIIc3Nk5roTBSN2n22CO48znxQFDvVAMUfm
- P6zEW/GStD2Wd7O4duTgzW5hlLkmr1tDsb7Dl+XYUXpFL0TZhc9sJ0XZ4/1sfx+qkHKC 3w== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 31uk4qs55p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 15:01:40 -0400
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NJ1IFo124027;
-        Tue, 23 Jun 2020 15:01:39 -0400
-Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
-        by mx0a-00154901.pphosted.com with ESMTP id 31up7ksdbd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 15:01:25 -0400
-X-LoopCount0: from 10.166.132.56
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="502086844"
-From:   <Mario.Limonciello@dell.com>
-To:     <Crag.Wang@dell.com>, <crag0715@gmail.com>, <sre@kernel.org>
-CC:     <mathewk@chromium.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
- charging mode
-Thread-Topic: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
- charging mode
-Thread-Index: AQHWSTc914n0RAe+o068prEbXUiwtqjmNwpwgAB2c4D//+BIoA==
-Date:   Tue, 23 Jun 2020 18:59:00 +0000
-Message-ID: <05bbf37785bd44ce8cc8777f107b16ff@AUSX13MPC105.AMER.DELL.COM>
-References: <20200623082016.23188-1-crag_wang@dell.com>
- <6a804505400e4109906fadcf945edf76@AUSX13MPC105.AMER.DELL.COM>
- <ecda5d3852af4a1a8c08e0dc07983f35@KULX13MDC113.APAC.DELL.COM>
-In-Reply-To: <ecda5d3852af4a1a8c08e0dc07983f35@KULX13MDC113.APAC.DELL.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-23T13:48:06.9996956Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=f22c6ecd-fc33-4d94-beba-f01c0a6f3fa5;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jun 2020 15:02:38 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EA1C061795
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:02:38 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h15so1694448wrq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=XDcsteRMJEoW0C3+Kl+uWDnjv0MhfNk7S9Vrs1qi/2Y=;
+        b=F8OUcVjuokEibmMSbToMoIBILFma7edYFwClorq7HqZPPZAsjl5aBIXM5rjHh2K4Lq
+         dd+qeCoDkPHmPlGyVv6Z/wtdPrCUcn/gJSdfHe4BRGJdop50ca7laeXsmvDPZAFsD45G
+         DpFfjBVLJGiCLnCx7MoPvm6Wpk0WJAYz4Suvs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=XDcsteRMJEoW0C3+Kl+uWDnjv0MhfNk7S9Vrs1qi/2Y=;
+        b=NBaCPnFcoRf/LfOoSwHNfAxYyRhiCy19vr2T9cIQfyVZZwoHIV8NyY1cqq9oBtt7Jm
+         2GHyg0bpvX2slMeOTqR2rQJ8aogJLLfIP92isPfbECcWNbC/kkarbrI+bTfSHl0cM0xB
+         B992O5nc99JfDZciZR9eBcxkbMDcV2QzvDkjUUo8RBMxZq4dlMTF6iYefn0Igt6zeC4c
+         nmurl/T/qxFx9/P/8YfVud87hzxPi+bZIGCONOOpGfjyXYLWfjLYYoxCeA/1YJM0h/8F
+         MfQYH8fq4Z5TqdfbIIy6q6yrIfBbAaCT+dCjtoMGhbfMwF/CtI9TUH6wGLOIiZoMe2ah
+         s8sA==
+X-Gm-Message-State: AOAM533R+ULI9mnLmsDBxekpFQPeUg1JZg9cj0hZnNrGVRoW/lhhGGNW
+        uOQ0YL6tMp+vudnqmBTdOTiZzw==
+X-Google-Smtp-Source: ABdhPJynbn/cTBvNbobb+7TOV12TXtahoSjCWh3GnuIRy64vKHvTHEysZa+/3Plm+28KWqKEN1sWIw==
+X-Received: by 2002:a5d:470b:: with SMTP id y11mr18155209wrq.101.1592938956979;
+        Tue, 23 Jun 2020 12:02:36 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id l17sm4698578wmi.3.2020.06.23.12.02.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 12:02:35 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 21:02:33 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200623190233.GP20149@phenom.ffwll.local>
+Mail-Followup-To: Felix Kuehling <felix.kuehling@amd.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca>
+ <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
+ <CAKMK7uHBKrpDWu+DvtYncDK=LOdGJyMK7t6fpOaGovnYFiBUZw@mail.gmail.com>
+ <99758c09-262a-e9a1-bf65-5702b35b4388@amd.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_12:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 bulkscore=0 mlxscore=0 clxscore=1015 spamscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006120000 definitions=main-2006230129
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 mlxscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 phishscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006120000
- definitions=main-2006230128
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <99758c09-262a-e9a1-bf65-5702b35b4388@amd.com>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Wang, Crag <Crag_Wang@Dell.com>
-> Sent: Tuesday, June 23, 2020 10:51 AM
-> To: Limonciello, Mario; Crag Wang; Sebastian Reichel
-> Cc: mathewk@chromium.org; linux-pm@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
-> charging mode
->=20
-> > -----Original Message-----
-> > From: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Sent: Tuesday, June 23, 2020 9:48 PM
-> > To: Crag Wang; Sebastian Reichel
-> > Cc: mathewk@chromium.org; Wang, Crag; linux-pm@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long lif=
-e
-> > charging mode
+On Tue, Jun 23, 2020 at 02:44:24PM -0400, Felix Kuehling wrote:
+> Am 2020-06-23 um 3:39 a.m. schrieb Daniel Vetter:
+> > On Fri, Jun 12, 2020 at 1:35 AM Felix Kuehling <felix.kuehling@amd.com> wrote:
+> >> Am 2020-06-11 um 10:15 a.m. schrieb Jason Gunthorpe:
+> >>> On Thu, Jun 11, 2020 at 10:34:30AM +0200, Daniel Vetter wrote:
+> >>>>> I still have my doubts about allowing fence waiting from within shrinkers.
+> >>>>> IMO ideally they should use a trywait approach, in order to allow memory
+> >>>>> allocation during command submission for drivers that
+> >>>>> publish fences before command submission. (Since early reservation object
+> >>>>> release requires that).
+> >>>> Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
+> >>>> with a mempool to make sure it can handle it's allocations.
+> >>>>
+> >>>>> But since drivers are already waiting from within shrinkers and I take your
+> >>>>> word for HMM requiring this,
+> >>>> Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
+> >>>> one, the shrinker one is a lot less established.
+> >>> I really question if HW that needs something like DMA fence should
+> >>> even be using mmu notifiers - the best use is HW that can fence the
+> >>> DMA directly without having to get involved with some command stream
+> >>> processing.
+> >>>
+> >>> Or at the very least it should not be a generic DMA fence but a
+> >>> narrowed completion tied only into the same GPU driver's command
+> >>> completion processing which should be able to progress without
+> >>> blocking.
+> >>>
+> >>> The intent of notifiers was never to endlessly block while vast
+> >>> amounts of SW does work.
+> >>>
+> >>> Going around and switching everything in a GPU to GFP_ATOMIC seems
+> >>> like bad idea.
+> >>>
+> >>>> I've pinged a bunch of armsoc gpu driver people and ask them how much this
+> >>>> hurts, so that we have a clear answer. On x86 I don't think we have much
+> >>>> of a choice on this, with userptr in amd and i915 and hmm work in nouveau
+> >>>> (but nouveau I think doesn't use dma_fence in there).
+> >> Soon nouveau will get company. We're working on a recoverable page fault
+> >> implementation for HMM in amdgpu where we'll need to update page tables
+> >> using the GPUs SDMA engine and wait for corresponding fences in MMU
+> >> notifiers.
+> > Can you pls cc these patches to dri-devel when they show up? Depending
+> > upon how your hw works there's and endless amount of bad things that
+> > can happen.
+> 
+> Yes, I'll do that.
+> 
+> 
 > >
-> > > -----Original Message-----
-> > > From: Crag Wang <crag0715@gmail.com>
-> > > Sent: Tuesday, June 23, 2020 3:20 AM
-> > > To: Sebastian Reichel
-> > > Cc: mathewk@chromium.org; Limonciello, Mario; Wang, Crag; linux-
-> > > pm@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > Subject: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
-> > > charging mode
-> > >
-> > >
-> > > [EXTERNAL EMAIL]
-> > >
-> > > This is a long life mode for extended warranty battery, switching to =
-a
-> > > differnt mode selection is unavailable. The power charging rate is
-> > > customized so that battery at work last longer.
-> > >
-> > > Signed-off-by: Crag Wang <crag_wang@dell.com>
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-class-power-wilco | 3 +++
-> > >  drivers/power/supply/power_supply_sysfs.c         | 1 +
-> > >  drivers/power/supply/wilco-charger.c              | 5 +++++
-> > >  include/linux/power_supply.h                      | 1 +
-> > >  4 files changed, 10 insertions(+)
-> > >
-> > > diff --git a/Documentation/ABI/testing/sysfs-class-power-wilco
-> > > b/Documentation/ABI/testing/sysfs-class-power-wilco
-> > > index da1d6ffe5e3c..1c91b17b6fd4 100644
-> > > --- a/Documentation/ABI/testing/sysfs-class-power-wilco
-> > > +++ b/Documentation/ABI/testing/sysfs-class-power-wilco
-> > > @@ -14,6 +14,9 @@ Description:
-> > >  			Charging begins when level drops below
-> > >  			charge_control_start_threshold, and ceases when
-> > >  			level is above charge_control_end_threshold.
-> > > +		Permanent Long Life: Last longer battery life, this mode
-> > > +			is programmed once in the factory. Switching to a
-> > > +			different mode is unavailable.
-> > >
-> > >  What:		/sys/class/power_supply/wilco-
-> > > charger/charge_control_start_threshold
-> > >  Date:		April 2019
-> > > diff --git a/drivers/power/supply/power_supply_sysfs.c
-> > > b/drivers/power/supply/power_supply_sysfs.c
-> > > index bc79560229b5..af3884015ad8 100644
-> > > --- a/drivers/power/supply/power_supply_sysfs.c
-> > > +++ b/drivers/power/supply/power_supply_sysfs.c
-> > > @@ -87,6 +87,7 @@ static const char * const
-> > > POWER_SUPPLY_CHARGE_TYPE_TEXT[] =3D {
-> > >  	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	=3D "Standard",
-> > >  	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	=3D "Adaptive",
-> > >  	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	=3D "Custom",
-> > > +	[POWER_SUPPLY_CHARGE_TYPE_LONGLIFE]	=3D "Permanent Long
-> > Life",
-> > >  };
-> > >
-> > >  static const char * const POWER_SUPPLY_HEALTH_TEXT[] =3D { diff --gi=
-t
-> > > a/drivers/power/supply/wilco-charger.c
-> > > b/drivers/power/supply/wilco-charger.c
-> > > index b3c6d7cdd731..713c3018652f 100644
-> > > --- a/drivers/power/supply/wilco-charger.c
-> > > +++ b/drivers/power/supply/wilco-charger.c
-> > > @@ -27,6 +27,7 @@ enum charge_mode {
-> > >  	CHARGE_MODE_AC =3D 3,	/* Mostly AC use, used for Trickle */
-> > >  	CHARGE_MODE_AUTO =3D 4,	/* Used for Adaptive */
-> > >  	CHARGE_MODE_CUSTOM =3D 5,	/* Used for Custom */
-> > > +	CHARGE_MODE_LONGLIFE =3D 6, /* Used for Permanent Long Life */
+> > Also I think (again depending upon how the hw exactly works) this
+> > stuff would be a perfect example for the dma_fence annotations.
+> 
+> We have already applied your patch series to our development branch. I
+> haven't looked into what annotations we'd have to add to our new code yet.
+> 
+> 
 > >
-> > Since this is normally only done in the factory context, can you please
-> > confirm does something need to be artificially done to block userland f=
-rom
-> > trying to set the battery charging to this mode?  Or will the EC alread=
-y
-> handle
-> > blocking it directly?
->=20
-> This is a feature of the battery, when the EC receives this setting it wi=
-ll be
-> sent
-> to the battery and stored there. Afterwards any attempt to change this mo=
-de
-> will return a failure.
+> > The worst case is if your hw cannot preempt while a hw page fault is
+> > pending. That means none of the dma_fence will ever signal (the amdkfd
+> > preempt ctx fences wont, and the classic fences from amdgpu might be
+> > also stall). At least when you're unlucky and the fence you're waiting
+> > on somehow (anywhere in its dependency chain really) need the engine
+> > that's currently blocked waiting for the hw page fault.
+> 
+> Our HW can preempt while handling a page fault, at least on the GPU
+> generation we're working on now. On other GPUs we haven't included in
+> our initial effort, we will not be able to preempt while a page fault is
+> in progress. This is problematic, but that's for reasons related to our
+> GPU hardware scheduler and unrelated to fences.
 
-Sorry this still isn't clear to me.  You're saying that if EC receives long=
-life setting
-it will be able to do this in the field?  If so, then I think this patch wi=
-ll need
-to block that setting to not allow field conversions into longlife mode.
+Well the trouble is if the page fault holds up a preempt, then there's no
+way for a dma_fence to complete while your hw page fault handler is stuck
+doing whatever. That means the entire hw page fault becomes a fence
+signalling critical section, with the consequence that there's almost
+nothing you can actually do. System memory becomes GFP_ATOMIC only, and
+for vram you need to make sure that you never evict anything that might be
+in active use.
 
->=20
-> It's even better to block mode selection in the userland if long life mod=
-e
-> already
-> in use.
+So not enabling these platforms sounds like a very good plan to me :-)
 
-Yes, I agree.  This sounds like a good follow up to me too.
+> > That in turn means anything you do in your hw page fault handler is in
+> > the critical section for dma fence signalling, which has far reaching
+> > implications.
+> 
+> I'm not sure I agree, at least for KFD. The only place where KFD uses
+> fences that depend on preemptions is eviction fences. And we can get rid
+> of those if we can preempt GPU access to specific BOs by invalidating
+> GPU PTEs. That way we don't need to preempt the GPU queues while a page
+> fault is in progress. Instead we would create more page faults.
 
->=20
+The big problem isn't pure kfd workloads, all the trouble comes in when
+you mix kfd and amdgpu workloads. kfd alone is easy, just make sure
+there's no fences to begin with, and there will be no problems.
+
+> That assumes that we can invalidate GPU PTEs without depending on
+> fences. We've discussed possible deadlocks due to memory allocations
+> needed on that code paths for IBs or page tables. We've already
+> eliminated page table allocations and reservation locks on the PTE
+> invalidation code path. And we're using a separate scheduler entity so
+> we can't get stuck behind other IBs that depend on fences. IIRC,
+> Christian also implemented a separate memory pool for IBs for this code
+> path.
+
+Yeah it's the memory allocations that kill you. Both system memory, but
+also vram. Since evicting vram might mean you end up stuck behind a
+dma_fence of a legacy context hogging that memory, and probably also means
+doing a few dma_resv_lock. All of these thing deadlock if you can't
+preempt the context with something else.
+-Daniel
+
+
+> 
+> Regards,
+>   Felix
+> 
+> 
+> > -Daniel
 > >
-> > >  };
-> > >
-> > >  #define CHARGE_LOWER_LIMIT_MIN	50
-> > > @@ -48,6 +49,8 @@ static int psp_val_to_charge_mode(int psp_val)
-> > >  		return CHARGE_MODE_AUTO;
-> > >  	case POWER_SUPPLY_CHARGE_TYPE_CUSTOM:
-> > >  		return CHARGE_MODE_CUSTOM;
-> > > +	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-> > > +		return CHARGE_MODE_LONGLIFE;
-> > >  	default:
-> > >  		return -EINVAL;
-> > >  	}
-> > > @@ -67,6 +70,8 @@ static int charge_mode_to_psp_val(enum
-> > charge_mode mode)
-> > >  		return POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE;
-> > >  	case CHARGE_MODE_CUSTOM:
-> > >  		return POWER_SUPPLY_CHARGE_TYPE_CUSTOM;
-> > > +	case CHARGE_MODE_LONGLIFE:
-> > > +		return POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
-> > >  	default:
-> > >  		return -EINVAL;
-> > >  	}
-> > > diff --git a/include/linux/power_supply.h
-> > > b/include/linux/power_supply.h index ac1345a48ad0..528a3eaa2320
-> > 100644
-> > > --- a/include/linux/power_supply.h
-> > > +++ b/include/linux/power_supply.h
-> > > @@ -48,6 +48,7 @@ enum {
-> > >  	POWER_SUPPLY_CHARGE_TYPE_STANDARD,	/* normal speed */
-> > >  	POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,	/* dynamically
-> > adjusted speed */
-> > >  	POWER_SUPPLY_CHARGE_TYPE_CUSTOM,	/* use
-> > CHARGE_CONTROL_* props */
-> > > +	POWER_SUPPLY_CHARGE_TYPE_LONGLIFE,	/* slow speed, longer
-> > life */
-> > >  };
-> > >
-> > >  enum {
-> > > --
-> > > 2.20.1
+> >> Regards,
+> >>   Felix
+> >>
+> >>
+> >>> Right, nor will RDMA ODP.
+> >>>
+> >>> Jason
+> >>> _______________________________________________
+> >>> amd-gfx mailing list
+> >>> amd-gfx@lists.freedesktop.org
+> >>> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> >> _______________________________________________
+> >> dri-devel mailing list
+> >> dri-devel@lists.freedesktop.org
+> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> >
 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
