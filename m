@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4897C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39279C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADDD420781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105FB21527
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944589;
-	bh=TDz7quR5F3qn09FfwEnfxZjI4AkGeZm/NEXZUi5KpxE=;
+	s=default; t=1592944594;
+	bh=fIBfyEzt853Mv0htINfmpJZz7B+EacMJXTw/nFqBD+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RH4vJ+4rv27tcxV64Hf6KKZxE/AHVHr1+/tuCmM0QtPkqd1GCmwNExw6EYH8hRtzT
-	 0tivyLywZWAuHihTiYcn7KYHtC0l1LvMsOagY5g/02qezjw62/tFZSEBw6Dn1Zl1GI
-	 sE0evQ3sDDwB2TfpmbETffSWzeY5JuZbBijHmscE=
+	b=fkMrqAX36iKQ5Pfz02yu2yWXonCDMrahEIMetRqhAyJU7X4VD4UVfjIXZVMhhYcup
+	 2eUCOmY2lNDtFawC8EatpVhtcH7ks+v7yczWdTl0cobTWdx6/mipEVLyfdyAYJ4x1H
+	 MmxFcdByB34rxOGnXeJFf0ELl3AEl0dqfU7J33rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391767AbgFWUg2 (ORCPT
+        id S2391782AbgFWUgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:36:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389901AbgFWUgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:36:20 -0400
+        id S2391210AbgFWUgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:36:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFC4620781;
-        Tue, 23 Jun 2020 20:36:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9176E2080C;
+        Tue, 23 Jun 2020 20:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944580;
-        bh=TDz7quR5F3qn09FfwEnfxZjI4AkGeZm/NEXZUi5KpxE=;
+        s=default; t=1592944583;
+        bh=fIBfyEzt853Mv0htINfmpJZz7B+EacMJXTw/nFqBD+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yv6ORJxjNE1GvoMKkRuNYOPK+Xk64R0GgiZN+qmRCHpl3mjTYCMrLhp0o1lIEEM1f
-         nsLrL7lGRalPRmXfH8EJx8NB9hCh2IlueTJqo2Dc5XvLXYVL11ALI1Tdl8+c2cGmip
-         /NqiK3/8G92Hu3DUXVbd2snRD2+dQfKPGx7TKcdw=
+        b=XyM545meY8GXCLodxOZCZejwxEI0GS9juKedMV9K4ivJ8w5B0iYCl2m1/ekAf3ilr
+         /3D35iCKIcQOPDsaslYXiepUqcWRuW6TNjeAlkICx7tQQuXu4h6AZvCIw8N08WdO7y
+         PdQBFt9SergzXHO6nsnBahclJElatLZXZiqs3/I0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        John Johansen <john.johansen@canonical.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/206] scsi: ibmvscsi: Dont send host info in adapter info MAD after LPM
-Date:   Tue, 23 Jun 2020 21:56:13 +0200
-Message-Id: <20200623195319.198816531@linuxfoundation.org>
+Subject: [PATCH 4.19 046/206] apparmor: fix nnp subset test for unconfined
+Date:   Tue, 23 Jun 2020 21:56:14 +0200
+Message-Id: <20200623195319.245624425@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,44 +60,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: John Johansen <john.johansen@canonical.com>
 
-[ Upstream commit 4919b33b63c8b69d8dcf2b867431d0e3b6dc6d28 ]
+[ Upstream commit 3ed4aaa94fc07db3cd0c91be95e3e1b9782a2710 ]
 
-The adapter info MAD is used to send the client info and receive the host
-info as a response. A persistent buffer is used and as such the client info
-is overwritten after the response. During the course of a normal adapter
-reset the client info is refreshed in the buffer in preparation for sending
-the adapter info MAD.
+The subset test is not taking into account the unconfined exception
+which will cause profile transitions in the stacked confinement
+case to fail when no_new_privs is applied.
 
-However, in the special case of LPM where we reenable the CRQ instead of a
-full CRQ teardown and reset we fail to refresh the client info in the
-adapter info buffer. As a result, after Live Partition Migration (LPM) we
-erroneously report the host's info as our own.
+This fixes a regression introduced in the fix for
+https://bugs.launchpad.net/bugs/1839037
 
-[mkp: typos]
-
-Link: https://lore.kernel.org/r/20200603203632.18426-1-tyreld@linux.ibm.com
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+BugLink: https://bugs.launchpad.net/bugs/1844186
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ security/apparmor/domain.c        |  9 +++++----
+ security/apparmor/include/label.h |  1 +
+ security/apparmor/label.c         | 33 +++++++++++++++++++++++++++++++
+ 3 files changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index b99ded6b9e0bb..036508a4bd5a8 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -429,6 +429,8 @@ static int ibmvscsi_reenable_crq_queue(struct crq_queue *queue,
- 	int rc = 0;
- 	struct vio_dev *vdev = to_vio_dev(hostdata->dev);
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index b9d5b3459705b..13b33490e0792 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -939,7 +939,8 @@ int apparmor_bprm_set_creds(struct linux_binprm *bprm)
+ 	 * aways results in a further reduction of permissions.
+ 	 */
+ 	if ((bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS) &&
+-	    !unconfined(label) && !aa_label_is_subset(new, ctx->nnp)) {
++	    !unconfined(label) &&
++	    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 		error = -EPERM;
+ 		info = "no new privs";
+ 		goto audit;
+@@ -1217,7 +1218,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(new, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+@@ -1238,7 +1239,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(previous, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(previous, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+@@ -1433,7 +1434,7 @@ check:
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(new, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+diff --git a/security/apparmor/include/label.h b/security/apparmor/include/label.h
+index 7ce5fe73ae7f5..cecbd3f5429c6 100644
+--- a/security/apparmor/include/label.h
++++ b/security/apparmor/include/label.h
+@@ -285,6 +285,7 @@ bool aa_label_init(struct aa_label *label, int size, gfp_t gfp);
+ struct aa_label *aa_label_alloc(int size, struct aa_proxy *proxy, gfp_t gfp);
  
-+	set_adapter_info(hostdata);
+ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub);
++bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub);
+ struct aa_profile *__aa_label_next_not_in_set(struct label_it *I,
+ 					     struct aa_label *set,
+ 					     struct aa_label *sub);
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index 6e7aa2ef8ee0f..6727e6fb69df2 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -554,6 +554,39 @@ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub)
+ 	return __aa_label_next_not_in_set(&i, set, sub) == NULL;
+ }
+ 
++/**
++ * aa_label_is_unconfined_subset - test if @sub is a subset of @set
++ * @set: label to test against
++ * @sub: label to test if is subset of @set
++ *
++ * This checks for subset but taking into account unconfined. IF
++ * @sub contains an unconfined profile that does not have a matching
++ * unconfined in @set then this will not cause the test to fail.
++ * Conversely we don't care about an unconfined in @set that is not in
++ * @sub
++ *
++ * Returns: true if @sub is special_subset of @set
++ *     else false
++ */
++bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub)
++{
++	struct label_it i = { };
++	struct aa_profile *p;
 +
- 	/* Re-enable the CRQ */
- 	do {
- 		if (rc)
++	AA_BUG(!set);
++	AA_BUG(!sub);
++
++	if (sub == set)
++		return true;
++
++	do {
++		p = __aa_label_next_not_in_set(&i, set, sub);
++		if (p && !profile_unconfined(p))
++			break;
++	} while (p);
++
++	return p == NULL;
++}
+ 
+ 
+ /**
 -- 
 2.25.1
 
