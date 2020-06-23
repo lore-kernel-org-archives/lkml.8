@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9229EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67B6A2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5760920EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942616;
-	bh=iFur/krslITuodOFdsok2QxAsRks4Xwnx4x364VXxRE=;
+	s=default; t=1592942622;
+	bh=TLbdjFUMhzetfSDO174PGf61Al1A/Iizx5K4osdqU2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lYPUvRn+wyHRvlWlyYEpGn2HCkWB7Vh8786fLMuYIfd6XEbNKj7MQHo1PXTukr02Q
-	 YzEhdlINltbcvZ9612WqioXy8zfOXyvODKm2wMUhG1iRRb4ysrPIa3aAA8fnyqFfkG
-	 vt4bLKUCDfVVx8N71ry8FlHp0Xtf/NfBKBIne6pw=
+	b=zOiC616oNAasUkzyTI9+7K4PNxCOmtO1J0yNdGsGl2SpkSthb+e0V1AeS2oqUMCRw
+	 q1+BmbZ5/9g1RDlc7H9bZC+UKdF/weJu/tHBsYi1FqlTTOwYZQzb14nhnmeKB2J0wX
+	 1fU5HPuiuS6jAyvQKKsSupbBBo7jh9f4BCig7rIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388058AbgFWUDe (ORCPT
+        id S2388079AbgFWUDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388041AbgFWUD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:28 -0400
+        id S2388041AbgFWUDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D84BC206C3;
-        Tue, 23 Jun 2020 20:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE342082F;
+        Tue, 23 Jun 2020 20:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942607;
-        bh=iFur/krslITuodOFdsok2QxAsRks4Xwnx4x364VXxRE=;
+        s=default; t=1592942615;
+        bh=TLbdjFUMhzetfSDO174PGf61Al1A/Iizx5K4osdqU2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VEX7p++VE7LUmQPM0xbAlBdwi/VW9XoxvvW9/ukKKD0/S2s0iiWIuBy/7kzWgxOg2
-         ni+Ye7Hnfnz6uRErGTk4oilH48odtEAGI4yYi16eBmXbDSGp4PWycvgBk9sDUu6Eay
-         nZWqf+sVZOrnq+hk8wDHdqUAc+Zx49y1QHCVvUeI=
+        b=qOTu1ZmOTiY+mr4mXc3eKiSPUNLmXLdjXSKHJD45YO5PpNDPC36vwG446GTeInLzD
+         VrDZtGDvQfeSWCe5p1D8f9mbs1n+BbIHjiaZsROWxyz4XXYVL31iZhcwAx6FG1bdvY
+         XPDrEmY1VqHpgpWeNGBSIkY1bjV5ASqWp+t2WMgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 063/477] scsi: hisi_sas: Do not reset phy timer to wait for stray phy up
-Date:   Tue, 23 Jun 2020 21:51:00 +0200
-Message-Id: <20200623195410.596418806@linuxfoundation.org>
+Subject: [PATCH 5.7 037/477] remoteproc: qcom_q6v5_mss: map/unmap mpss segments before/after use
+Date:   Tue, 23 Jun 2020 21:50:34 +0200
+Message-Id: <20200623195409.353845489@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,45 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit e16b9ed61e078d836a0f24a82080cf29d7539c7e ]
+[ Upstream commit be050a3429f46ecf13eb2b80f299479f8bb823fb ]
 
-We found out that after phy up, the hardware reports another oob interrupt
-but did not follow a phy up interrupt:
+The application processor accessing the mpss region when the Q6 modem is
+running will lead to an XPU violation. Fix this by un-mapping the mpss
+segments post copy during mpss authentication and coredumps.
 
-oob ready -> phy up -> DEV found -> oob read -> wait phy up -> timeout
-
-We run link reset when wait phy up timeout, and it send a normal disk into
-reset processing. So we made some circumvention action in the code, so that
-this abnormal oob interrupt will not start the timer to wait for phy up.
-
-Link: https://lore.kernel.org/r/1589552025-165012-2-git-send-email-john.garry@huawei.com
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Tested-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200415071619.6052-1-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/remoteproc/qcom_q6v5_mss.c | 31 +++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 9a6deb21fe4df..11caa4b0d7977 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -898,8 +898,11 @@ void hisi_sas_phy_oob_ready(struct hisi_hba *hisi_hba, int phy_no)
- 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
- 	struct device *dev = hisi_hba->dev;
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 5475d4f808a8e..22416e86a1742 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1156,7 +1156,13 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			goto release_firmware;
+ 		}
  
-+	dev_dbg(dev, "phy%d OOB ready\n", phy_no);
-+	if (phy->phy_attached)
-+		return;
-+
- 	if (!timer_pending(&phy->timer)) {
--		dev_dbg(dev, "phy%d OOB ready\n", phy_no);
- 		phy->timer.expires = jiffies + HISI_SAS_WAIT_PHYUP_TIMEOUT * HZ;
- 		add_timer(&phy->timer);
+-		ptr = qproc->mpss_region + offset;
++		ptr = ioremap_wc(qproc->mpss_phys + offset, phdr->p_memsz);
++		if (!ptr) {
++			dev_err(qproc->dev,
++				"unable to map memory region: %pa+%zx-%x\n",
++				&qproc->mpss_phys, offset, phdr->p_memsz);
++			goto release_firmware;
++		}
+ 
+ 		if (phdr->p_filesz && phdr->p_offset < fw->size) {
+ 			/* Firmware is large enough to be non-split */
+@@ -1165,6 +1171,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 					"failed to load segment %d from truncated file %s\n",
+ 					i, fw_name);
+ 				ret = -EINVAL;
++				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
+ 
+@@ -1175,6 +1182,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
+ 			if (ret) {
+ 				dev_err(qproc->dev, "failed to load %s\n", fw_name);
++				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
+ 
+@@ -1187,6 +1195,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			memset(ptr + phdr->p_filesz, 0,
+ 			       phdr->p_memsz - phdr->p_filesz);
+ 		}
++		iounmap(ptr);
+ 		size += phdr->p_memsz;
+ 
+ 		code_length = readl(qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
+@@ -1236,7 +1245,8 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 	int ret = 0;
+ 	struct q6v5 *qproc = rproc->priv;
+ 	unsigned long mask = BIT((unsigned long)segment->priv);
+-	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
++	int offset = segment->da - qproc->mpss_reloc;
++	void *ptr = NULL;
+ 
+ 	/* Unlock mba before copying segments */
+ 	if (!qproc->dump_mba_loaded) {
+@@ -1250,10 +1260,15 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 		}
  	}
+ 
+-	if (!ptr || ret)
+-		memset(dest, 0xff, segment->size);
+-	else
++	if (!ret)
++		ptr = ioremap_wc(qproc->mpss_phys + offset, segment->size);
++
++	if (ptr) {
+ 		memcpy(dest, ptr, segment->size);
++		iounmap(ptr);
++	} else {
++		memset(dest, 0xff, segment->size);
++	}
+ 
+ 	qproc->dump_segment_mask |= mask;
+ 
+@@ -1595,12 +1610,6 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
+ 
+ 	qproc->mpss_phys = qproc->mpss_reloc = r.start;
+ 	qproc->mpss_size = resource_size(&r);
+-	qproc->mpss_region = devm_ioremap_wc(qproc->dev, qproc->mpss_phys, qproc->mpss_size);
+-	if (!qproc->mpss_region) {
+-		dev_err(qproc->dev, "unable to map memory region: %pa+%zx\n",
+-			&r.start, qproc->mpss_size);
+-		return -EBUSY;
+-	}
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
