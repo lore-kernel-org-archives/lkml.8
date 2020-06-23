@@ -2,59 +2,58 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC10206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8E3206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592896199;
-	bh=bt2XIege4yj8u/sYLDroVzue0wsprC/fD/oatgGW5aw=;
+	s=default; t=1592896205;
+	bh=Vxe+g7VgAeLGDBDFeBZcV8njBkhKVMWKBJcJPQvJF9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UGIPmsQOJcShGh2AOmaIHDbLdqkKcu+KUNndoB+0L+5GVoZ5w1IS0Ajquqc2L3Zck
-	 qZUSfDC+jHEqJHg0ARGGnDnjSUnh4H11lshcq9Na3ng4NsfRKhmawBPTaDcjyjdg3X
-	 IGQxeZSY5n2y6wtnNYvL9bUI8DN5SA41e+XUhmKs=
+	b=GAfEo08Cwn9ijBQBZ+o5kpMFTIqmwswCsbyzdda+zeQ1PdgPojnSi0lsZVaUW1fug
+	 +0cINthakX3m2Wll606c+Rr3dmkOvSxCR+kJ9Hktbu2Ppy8fgh0lRSgIJWlycfpB6e
+	 l0hImPEz3hCnNb8VAYsEOyVfHmaZLRukAcjScbCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731662AbgFWHJx (ORCPT
+        id S1731724AbgFWHKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 03:10:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731301AbgFWHJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:09:17 -0400
+        id S1731285AbgFWHJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:09:16 -0400
 Received: from mail.kernel.org (unknown [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 798AD207F9;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D67A207DD;
         Tue, 23 Jun 2020 07:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592896155;
-        bh=bt2XIege4yj8u/sYLDroVzue0wsprC/fD/oatgGW5aw=;
+        bh=Vxe+g7VgAeLGDBDFeBZcV8njBkhKVMWKBJcJPQvJF9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PCP/O/beUcqU22Qw0CS3avZHL9bs86660ru/EiHjRGJ0g9g+mabEnj7P0BGgz2ioM
-         2qLvq9sEolXNJ+ibifTE1gcSp6bHj8DVaiy+h1TroEXk08iWv1KhouqTzcP4iK6CpN
-         RuA/fCHYmr9R+KEXTs9AWH7v7wgC8WfrWrIvJ0Mw=
+        b=o79nSGE8F1Njks2uk02gSeNB2UdeGxiZr8BqT4WssTEO9XbNQnwWCuwd1AtTIbhVD
+         NUvllqprMceqEtmwjNLgExUiNVC4fxZiJ+A8aTEbnSPmE4nP2zGNX1k0H5ZRvX7ol0
+         cWwB6q+MtjrrlA54Vt7D2QCeDcbrTP6AYt7q3Ga4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jnd3R-003qjR-Aq; Tue, 23 Jun 2020 09:09:13 +0200
+        id 1jnd3R-003qjL-9a; Tue, 23 Jun 2020 09:09:13 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
-        Haren Myneni <haren@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 11/15] docs: powerpc: fix some issues at vas-api.rst
-Date:   Tue, 23 Jun 2020 09:09:07 +0200
-Message-Id: <fc1138e563bc3a41a9e59b5dd1fe2f6a4bfad253.1592895969.git.mchehab+huawei@kernel.org>
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, linux-mm@kvack.org
+Subject: [PATCH v2 10/15] docs: hugetlbpage.rst: fix some warnings
+Date:   Tue, 23 Jun 2020 09:09:06 +0200
+Message-Id: <86b6796b1a84e18b24314ecd29318951c1479ca2.1592895969.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592895969.git.mchehab+huawei@kernel.org>
 References: <cover.1592895969.git.mchehab+huawei@kernel.org>
@@ -65,156 +64,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a few issues on this document, when built via the
-building with ``make htmldocs``:
+Some new command line parameters were added at hugetlbpage.rst.
+Adjust them in order to properly parse that part of the file,
+avoiding those warnings:
 
-    Documentation/powerpc/vas-api.rst:116: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:116: WARNING: Inline emphasis start-string without end-string.
-    Documentation/powerpc/vas-api.rst:117: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:117: WARNING: Inline emphasis start-string without end-string.
-    Documentation/powerpc/vas-api.rst:120: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:124: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:133: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:135: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:150: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:151: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:161: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:176: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:253: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:253: WARNING: Inline emphasis start-string without end-string.
-    Documentation/powerpc/vas-api.rst:259: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:261: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:266: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:267: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:270: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:271: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:273: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:274: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:277: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:278: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:280: WARNING: Unexpected indentation.
-    Documentation/powerpc/vas-api.rst:287: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/powerpc/vas-api.rst:289: WARNING: Block quote ends without a blank line; unexpected unindent.
+    Documentation/admin-guide/mm/hugetlbpage.rst:105: WARNING: Unexpected indentation.
+    Documentation/admin-guide/mm/hugetlbpage.rst:108: WARNING: Unexpected indentation.
+    Documentation/admin-guide/mm/hugetlbpage.rst:109: WARNING: Block quote ends without a blank line; unexpected unindent.
+    Documentation/admin-guide/mm/hugetlbpage.rst:112: WARNING: Block quote ends without a blank line; unexpected unindent.
+    Documentation/admin-guide/mm/hugetlbpage.rst:120: WARNING: Unexpected indentation.
+    Documentation/admin-guide/mm/hugetlbpage.rst:121: WARNING: Block quote ends without a blank line; unexpected unindent.
+    Documentation/admin-guide/mm/hugetlbpage.rst:132: WARNING: Unexpected indentation.
+    Documentation/admin-guide/mm/hugetlbpage.rst:135: WARNING: Block quote ends without a blank line; unexpected unindent.
 
-Fixes: c12e38b1d52e ("Documentation/powerpc: VAS API")
+Fixes: cd9fa28b5351 ("hugetlbfs: clean up command line processing")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/powerpc/vas-api.rst | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ Documentation/admin-guide/mm/hugetlbpage.rst | 23 +++++++++++++++-----
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/powerpc/vas-api.rst b/Documentation/powerpc/vas-api.rst
-index 1217c2f1595e..b7fdbe560010 100644
---- a/Documentation/powerpc/vas-api.rst
-+++ b/Documentation/powerpc/vas-api.rst
-@@ -87,6 +87,7 @@ Applications may chose a specific instance of the NX co-processor using
- the vas_id field in the VAS_TX_WIN_OPEN ioctl as detailed below.
+diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
+index 5026e58826e2..015a5f7d7854 100644
+--- a/Documentation/admin-guide/mm/hugetlbpage.rst
++++ b/Documentation/admin-guide/mm/hugetlbpage.rst
+@@ -101,37 +101,48 @@ be specified in bytes with optional scale suffix [kKmMgG].  The default huge
+ page size may be selected with the "default_hugepagesz=<size>" boot parameter.
  
- A userspace library libnxz is available here but still in development:
+ Hugetlb boot command line parameter semantics
+-hugepagesz - Specify a huge page size.  Used in conjunction with hugepages
 +
- 	 https://github.com/abalib/power-gzip
- 
- Applications that use inflate / deflate calls can link with libnxz
-@@ -110,6 +111,7 @@ Applications should use the VAS_TX_WIN_OPEN ioctl as follows to establish
- a connection with NX co-processor engine:
- 
- 	::
++hugepagesz
++	Specify a huge page size.  Used in conjunction with hugepages
+ 	parameter to preallocate a number of huge pages of the specified
+ 	size.  Hence, hugepagesz and hugepages are typically specified in
+-	pairs such as:
++	pairs such as::
 +
- 		struct vas_tx_win_open_attr {
- 			__u32   version;
- 			__s16   vas_id; /* specific instance of vas or -1
-@@ -119,8 +121,10 @@ a connection with NX co-processor engine:
- 			__u64   reserved2[6];
- 		};
- 
--	version: The version field must be currently set to 1.
--	vas_id: If '-1' is passed, kernel will make a best-effort attempt
-+	version:
-+		The version field must be currently set to 1.
-+	vas_id:
-+		If '-1' is passed, kernel will make a best-effort attempt
- 		to assign an optimal instance of NX for the process. To
- 		select the specific VAS instance, refer
- 		"Discovery of available VAS engines" section below.
-@@ -129,7 +133,8 @@ a connection with NX co-processor engine:
- 	and must be set to 0.
- 
- 	The attributes attr for the VAS_TX_WIN_OPEN ioctl are defined as
--	follows:
-+	follows::
+ 		hugepagesz=2M hugepages=512
 +
- 		#define VAS_MAGIC 'v'
- 		#define VAS_TX_WIN_OPEN _IOW(VAS_MAGIC, 1,
- 						struct vas_tx_win_open_attr)
-@@ -141,6 +146,8 @@ a connection with NX co-processor engine:
- 	returns -1 and sets the errno variable to indicate the error.
- 
- 	Error conditions:
+ 	hugepagesz can only be specified once on the command line for a
+ 	specific huge page size.  Valid huge page sizes are architecture
+ 	dependent.
+-hugepages - Specify the number of huge pages to preallocate.  This typically
++hugepages
++	Specify the number of huge pages to preallocate.  This typically
+ 	follows a valid hugepagesz or default_hugepagesz parameter.  However,
+ 	if hugepages is the first or only hugetlb command line parameter it
+ 	implicitly specifies the number of huge pages of default size to
+ 	allocate.  If the number of huge pages of default size is implicitly
+ 	specified, it can not be overwritten by a hugepagesz,hugepages
+ 	parameter pair for the default size.
+-	For example, on an architecture with 2M default huge page size:
 +
-+		======	================================================
- 		EINVAL	fd does not refer to a valid VAS device.
- 		EINVAL	Invalid vas ID
- 		EINVAL	version is not set with proper value
-@@ -149,6 +156,7 @@ a connection with NX co-processor engine:
- 		ENOSPC	System has too many active windows (connections)
- 			opened
- 		EINVAL	reserved fields are not set to 0.
-+		======	================================================
- 
- 	See the ioctl(2) man page for more details, error codes and
- 	restrictions.
-@@ -158,11 +166,13 @@ mmap() NX-GZIP device
- 
- The mmap() system call for a NX-GZIP device fd returns a paste_address
- that the application can use to copy/paste its CRB to the hardware engines.
++	For example, on an architecture with 2M default huge page size::
 +
- 	::
- 
- 		paste_addr = mmap(addr, size, prot, flags, fd, offset);
- 
- 	Only restrictions on mmap for a NX-GZIP device fd are:
+ 		hugepages=256 hugepagesz=2M hugepages=512
 +
- 		* size should be PAGE_SIZE
- 		* offset parameter should be 0ULL
- 
-@@ -170,10 +180,12 @@ that the application can use to copy/paste its CRB to the hardware engines.
- 	In addition to the error conditions listed on the mmap(2) man
- 	page, can also fail with one of the following error codes:
- 
-+		======	=============================================
- 		EINVAL	fd is not associated with an open window
- 			(i.e mmap() does not follow a successful call
- 			to the VAS_TX_WIN_OPEN ioctl).
- 		EINVAL	offset field is not 0ULL.
-+		======	=============================================
- 
- Discovery of available VAS engines
- ==================================
-@@ -210,7 +222,7 @@ In case if NX encounters translation error (called NX page fault) on CSB
- address or any request buffer, raises an interrupt on the CPU to handle the
- fault. Page fault can happen if an application passes invalid addresses or
- request buffers are not in memory. The operating system handles the fault by
--updating CSB with the following data:
-+updating CSB with the following data::
- 
- 	csb.flags = CSB_V;
- 	csb.cc = CSB_CC_TRANSLATION;
-@@ -223,7 +235,7 @@ the application can resend this request to NX.
- 
- If the OS can not update CSB due to invalid CSB address, sends SEGV signal
- to the process who opened the send window on which the original request was
--issued. This signal returns with the following siginfo struct:
-+issued. This signal returns with the following siginfo struct::
- 
- 	siginfo.si_signo = SIGSEGV;
- 	siginfo.si_errno = EFAULT;
-@@ -248,6 +260,7 @@ Simple example
- ==============
- 
- 	::
+ 	will result in 256 2M huge pages being allocated and a warning message
+ 	indicating that the hugepages=512 parameter is ignored.  If a hugepages
+ 	parameter is preceded by an invalid hugepagesz parameter, it will
+ 	be ignored.
+-default_hugepagesz - Specify the default huge page size.  This parameter can
++default_hugepagesz
++	pecify the default huge page size.  This parameter can
+ 	only be specified once on the command line.  default_hugepagesz can
+ 	optionally be followed by the hugepages parameter to preallocate a
+ 	specific number of huge pages of default size.  The number of default
+ 	sized huge pages to preallocate can also be implicitly specified as
+ 	mentioned in the hugepages section above.  Therefore, on an
+-	architecture with 2M default huge page size:
++	architecture with 2M default huge page size::
 +
- 		int use_nx_gzip()
- 		{
- 			int rc, fd;
+ 		hugepages=256
+ 		default_hugepagesz=2M hugepages=256
+ 		hugepages=256 default_hugepagesz=2M
++
+ 	will all result in 256 2M huge pages being allocated.  Valid default
+ 	huge page size is architecture dependent.
+ 
 -- 
 2.26.2
 
