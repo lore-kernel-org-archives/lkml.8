@@ -2,54 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8966C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D12EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6A3120781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B8620724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947801;
-	bh=cUVD8MUa7zKGUm2OVDFHUR8FBVnWGLkMd7Cf7ZGfS2E=;
+	s=default; t=1592947808;
+	bh=X1Fz7wCTOgVSWRvarBEikRrwLRPmf9rhqqpX0+S5nug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vG4RL4VyfCjtNpa4/pWrqpxFGZigmovQ/3RSpfgcjjShZVwzkDji/4OifNf83wTWq
-	 shOCcMJndS94FM8JTbSB6u3S1YeV4rnHnHhq6Q2H0SuP5+jiD5B2wkE4QVtpKX2sUb
-	 lOKkulcUaD/0yxJLxJWrCHyGZziKTFtjtWUtSzOo=
+	b=svK4QT+Yuy7mXfzBO1lbzhGmnZdb5Dr4ZznbE+5ny9Pl4bkF/thW44lWjPDvNDHJz
+	 Aq/yiOdWW1ebr+m6exHY5A4giQ/PZJLAguhRCbQItttXwud3Q9MKXi19eoWKXGNgF2
+	 0iqmpCb/Jvzh9qhBlNDg2Zu8NmaLMVpt9al8hPqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393456AbgFWVaA (ORCPT
+        id S2390110AbgFWVaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389212AbgFWUOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:37 -0400
+        id S2389183AbgFWUOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:14:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2F052078A;
-        Tue, 23 Jun 2020 20:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDBA02073E;
+        Tue, 23 Jun 2020 20:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943275;
-        bh=cUVD8MUa7zKGUm2OVDFHUR8FBVnWGLkMd7Cf7ZGfS2E=;
+        s=default; t=1592943255;
+        bh=X1Fz7wCTOgVSWRvarBEikRrwLRPmf9rhqqpX0+S5nug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tKK8D9fcmvY8C5xxvE54hRAGxZWbB2FlZ1chVkPEsjd+dTs1ckL+Ud/pU2sjzdIIF
-         QrBMZBnUvvJC1oW4Sdsjs0L0PexYJYVhgukn4EdKKqpGRfhyuyx5Po/qZFwXPyxufQ
-         KPHazCFDQYL9JqHqwTYHyCGraopqEjuB9YWuXDo4=
+        b=Lv2XQHnvbfuTftpL3jaZRiPr/nf0L4wEr1oI9GBMjFrHZAAbrc/XkVvM7s5y4lcO6
+         nJwhCrGxfwOrkDhyZKHeukE5X1otO1xWyhmSTOC3zhkmN2XDvlBjjzQ9P3PufIYdS8
+         Ds/7NXvPxuz18PdUYCfeoePnYygLVqVdH/daZH5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Ka-Cheong Poon <ka-cheong.poon@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 328/477] lib/zlib: remove outdated and incorrect pre-increment optimization
-Date:   Tue, 23 Jun 2020 21:55:25 +0200
-Message-Id: <20200623195423.039150044@linuxfoundation.org>
+Subject: [PATCH 5.7 320/477] RDMA/cm: Spurious WARNING triggered in cm_destroy_id()
+Date:   Tue, 23 Jun 2020 21:55:17 +0200
+Message-Id: <20200623195422.657923835@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,277 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Ka-Cheong Poon <ka-cheong.poon@oracle.com>
 
-[ Upstream commit acaab7335bd6f0c0b54ce3a00bd7f18222ce0f5f ]
+[ Upstream commit fba97dc7fc76b2c9a909fa0b3786d30a9899f5cf ]
 
-The zlib inflate code has an old micro-optimization based on the
-assumption that for pre-increment memory accesses, the compiler will
-generate code that fits better into the processor's pipeline than what
-would be generated for post-increment memory accesses.
+If the cm_id state is IB_CM_REP_SENT when cm_destroy_id() is called, it
+calls cm_send_rej_locked().
 
-This optimization was already removed in upstream zlib in 2016:
-https://github.com/madler/zlib/commit/9aaec95e8211
+In cm_send_rej_locked(), it calls cm_enter_timewait() and the state is
+changed to IB_CM_TIMEWAIT.
 
-This optimization causes UB according to C99, which says in section 6.5.6
-"Additive operators": "If both the pointer operand and the result point to
-elements of the same array object, or one past the last element of the
-array object, the evaluation shall not produce an overflow; otherwise, the
-behavior is undefined".
+Now back to cm_destroy_id(), it breaks from the switch statement, and the
+next call is WARN_ON(cm_id->state != IB_CM_IDLE).
 
-This UB is not only a theoretical concern, but can also cause trouble for
-future work on compiler-based sanitizers.
+This triggers a spurious warning. Instead, the code should goto retest
+after returning from cm_send_rej_locked() to move the state to IDLE.
 
-According to the zlib commit, this optimization also is not optimal
-anymore with modern compilers.
-
-Replace uses of OFF, PUP and UP_UNALIGNED with their definitions in the
-POSTINC case, and remove the macro definitions, just like in the upstream
-patch.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Link: http://lkml.kernel.org/r/20200507123112.252723-1-jannh@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 67b3c8dceac6 ("RDMA/cm: Make sure the cm_id is in the IB_CM_IDLE state in destroy")
+Link: https://lore.kernel.org/r/1591191218-9446-1-git-send-email-ka-cheong.poon@oracle.com
+Signed-off-by: Ka-Cheong Poon <ka-cheong.poon@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/zlib_inflate/inffast.c | 91 +++++++++++++++-----------------------
- 1 file changed, 35 insertions(+), 56 deletions(-)
+ drivers/infiniband/core/cm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/zlib_inflate/inffast.c b/lib/zlib_inflate/inffast.c
-index 2c13ecc5bb2c7..ed1f3df272602 100644
---- a/lib/zlib_inflate/inffast.c
-+++ b/lib/zlib_inflate/inffast.c
-@@ -10,17 +10,6 @@
- 
- #ifndef ASMINF
- 
--/* Allow machine dependent optimization for post-increment or pre-increment.
--   Based on testing to date,
--   Pre-increment preferred for:
--   - PowerPC G3 (Adler)
--   - MIPS R5000 (Randers-Pehrson)
--   Post-increment preferred for:
--   - none
--   No measurable difference:
--   - Pentium III (Anderson)
--   - M68060 (Nikl)
-- */
- union uu {
- 	unsigned short us;
- 	unsigned char b[2];
-@@ -38,16 +27,6 @@ get_unaligned16(const unsigned short *p)
- 	return mm.us;
- }
- 
--#ifdef POSTINC
--#  define OFF 0
--#  define PUP(a) *(a)++
--#  define UP_UNALIGNED(a) get_unaligned16((a)++)
--#else
--#  define OFF 1
--#  define PUP(a) *++(a)
--#  define UP_UNALIGNED(a) get_unaligned16(++(a))
--#endif
--
- /*
-    Decode literal, length, and distance codes and write out the resulting
-    literal and match bytes until either not enough input or output is
-@@ -115,9 +94,9 @@ void inflate_fast(z_streamp strm, unsigned start)
- 
-     /* copy state to local variables */
-     state = (struct inflate_state *)strm->state;
--    in = strm->next_in - OFF;
-+    in = strm->next_in;
-     last = in + (strm->avail_in - 5);
--    out = strm->next_out - OFF;
-+    out = strm->next_out;
-     beg = out - (start - strm->avail_out);
-     end = out + (strm->avail_out - 257);
- #ifdef INFLATE_STRICT
-@@ -138,9 +117,9 @@ void inflate_fast(z_streamp strm, unsigned start)
-        input data or output space */
-     do {
-         if (bits < 15) {
--            hold += (unsigned long)(PUP(in)) << bits;
-+            hold += (unsigned long)(*in++) << bits;
-             bits += 8;
--            hold += (unsigned long)(PUP(in)) << bits;
-+            hold += (unsigned long)(*in++) << bits;
-             bits += 8;
-         }
-         this = lcode[hold & lmask];
-@@ -150,14 +129,14 @@ void inflate_fast(z_streamp strm, unsigned start)
-         bits -= op;
-         op = (unsigned)(this.op);
-         if (op == 0) {                          /* literal */
--            PUP(out) = (unsigned char)(this.val);
-+            *out++ = (unsigned char)(this.val);
-         }
-         else if (op & 16) {                     /* length base */
-             len = (unsigned)(this.val);
-             op &= 15;                           /* number of extra bits */
-             if (op) {
-                 if (bits < op) {
--                    hold += (unsigned long)(PUP(in)) << bits;
-+                    hold += (unsigned long)(*in++) << bits;
-                     bits += 8;
-                 }
-                 len += (unsigned)hold & ((1U << op) - 1);
-@@ -165,9 +144,9 @@ void inflate_fast(z_streamp strm, unsigned start)
-                 bits -= op;
-             }
-             if (bits < 15) {
--                hold += (unsigned long)(PUP(in)) << bits;
-+                hold += (unsigned long)(*in++) << bits;
-                 bits += 8;
--                hold += (unsigned long)(PUP(in)) << bits;
-+                hold += (unsigned long)(*in++) << bits;
-                 bits += 8;
-             }
-             this = dcode[hold & dmask];
-@@ -180,10 +159,10 @@ void inflate_fast(z_streamp strm, unsigned start)
-                 dist = (unsigned)(this.val);
-                 op &= 15;                       /* number of extra bits */
-                 if (bits < op) {
--                    hold += (unsigned long)(PUP(in)) << bits;
-+                    hold += (unsigned long)(*in++) << bits;
-                     bits += 8;
-                     if (bits < op) {
--                        hold += (unsigned long)(PUP(in)) << bits;
-+                        hold += (unsigned long)(*in++) << bits;
-                         bits += 8;
-                     }
-                 }
-@@ -205,13 +184,13 @@ void inflate_fast(z_streamp strm, unsigned start)
-                         state->mode = BAD;
-                         break;
-                     }
--                    from = window - OFF;
-+                    from = window;
-                     if (write == 0) {           /* very common case */
-                         from += wsize - op;
-                         if (op < len) {         /* some from window */
-                             len -= op;
-                             do {
--                                PUP(out) = PUP(from);
-+                                *out++ = *from++;
-                             } while (--op);
-                             from = out - dist;  /* rest from output */
-                         }
-@@ -222,14 +201,14 @@ void inflate_fast(z_streamp strm, unsigned start)
-                         if (op < len) {         /* some from end of window */
-                             len -= op;
-                             do {
--                                PUP(out) = PUP(from);
-+                                *out++ = *from++;
-                             } while (--op);
--                            from = window - OFF;
-+                            from = window;
-                             if (write < len) {  /* some from start of window */
-                                 op = write;
-                                 len -= op;
-                                 do {
--                                    PUP(out) = PUP(from);
-+                                    *out++ = *from++;
-                                 } while (--op);
-                                 from = out - dist;      /* rest from output */
-                             }
-@@ -240,21 +219,21 @@ void inflate_fast(z_streamp strm, unsigned start)
-                         if (op < len) {         /* some from window */
-                             len -= op;
-                             do {
--                                PUP(out) = PUP(from);
-+                                *out++ = *from++;
-                             } while (--op);
-                             from = out - dist;  /* rest from output */
-                         }
-                     }
-                     while (len > 2) {
--                        PUP(out) = PUP(from);
--                        PUP(out) = PUP(from);
--                        PUP(out) = PUP(from);
-+                        *out++ = *from++;
-+                        *out++ = *from++;
-+                        *out++ = *from++;
-                         len -= 3;
-                     }
-                     if (len) {
--                        PUP(out) = PUP(from);
-+                        *out++ = *from++;
-                         if (len > 1)
--                            PUP(out) = PUP(from);
-+                            *out++ = *from++;
-                     }
-                 }
-                 else {
-@@ -264,29 +243,29 @@ void inflate_fast(z_streamp strm, unsigned start)
-                     from = out - dist;          /* copy direct from output */
- 		    /* minimum length is three */
- 		    /* Align out addr */
--		    if (!((long)(out - 1 + OFF) & 1)) {
--			PUP(out) = PUP(from);
-+		    if (!((long)(out - 1) & 1)) {
-+			*out++ = *from++;
- 			len--;
- 		    }
--		    sout = (unsigned short *)(out - OFF);
-+		    sout = (unsigned short *)(out);
- 		    if (dist > 2) {
- 			unsigned short *sfrom;
- 
--			sfrom = (unsigned short *)(from - OFF);
-+			sfrom = (unsigned short *)(from);
- 			loops = len >> 1;
- 			do
- #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
--			    PUP(sout) = PUP(sfrom);
-+			    *sout++ = *sfrom++;
- #else
--			    PUP(sout) = UP_UNALIGNED(sfrom);
-+			    *sout++ = get_unaligned16(sfrom++);
- #endif
- 			while (--loops);
--			out = (unsigned char *)sout + OFF;
--			from = (unsigned char *)sfrom + OFF;
-+			out = (unsigned char *)sout;
-+			from = (unsigned char *)sfrom;
- 		    } else { /* dist == 1 or dist == 2 */
- 			unsigned short pat16;
- 
--			pat16 = *(sout-1+OFF);
-+			pat16 = *(sout-1);
- 			if (dist == 1) {
- 				union uu mm;
- 				/* copy one char pattern to both bytes */
-@@ -296,12 +275,12 @@ void inflate_fast(z_streamp strm, unsigned start)
- 			}
- 			loops = len >> 1;
- 			do
--			    PUP(sout) = pat16;
-+			    *sout++ = pat16;
- 			while (--loops);
--			out = (unsigned char *)sout + OFF;
-+			out = (unsigned char *)sout;
- 		    }
- 		    if (len & 1)
--			PUP(out) = PUP(from);
-+			*out++ = *from++;
-                 }
-             }
-             else if ((op & 64) == 0) {          /* 2nd level distance code */
-@@ -336,8 +315,8 @@ void inflate_fast(z_streamp strm, unsigned start)
-     hold &= (1U << bits) - 1;
- 
-     /* update state and return */
--    strm->next_in = in + OFF;
--    strm->next_out = out + OFF;
-+    strm->next_in = in;
-+    strm->next_out = out;
-     strm->avail_in = (unsigned)(in < last ? 5 + (last - in) : 5 - (in - last));
-     strm->avail_out = (unsigned)(out < end ?
-                                  257 + (end - out) : 257 - (out - end));
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 17f14e0eafe4d..1c2bf18cda9f6 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1076,7 +1076,9 @@ retest:
+ 	case IB_CM_REP_SENT:
+ 	case IB_CM_MRA_REP_RCVD:
+ 		ib_cancel_mad(cm_id_priv->av.port->mad_agent, cm_id_priv->msg);
+-		/* Fall through */
++		cm_send_rej_locked(cm_id_priv, IB_CM_REJ_CONSUMER_DEFINED, NULL,
++				   0, NULL, 0);
++		goto retest;
+ 	case IB_CM_MRA_REQ_SENT:
+ 	case IB_CM_REP_RCVD:
+ 	case IB_CM_MRA_REP_SENT:
 -- 
 2.25.1
 
