@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D4D2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F155A2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944579;
-	bh=wcAgNaQvdHcK1XfFg3FwAbfYOohj7YRHevkrO1aMAD0=;
+	s=default; t=1592944582;
+	bh=9rCH/4be8Q22es6kk2mzIz6CAymmaUFw0n4wvlxUe9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LqQ4EB0z+MIIuFpI/zbNTjk0HpJoS3duDIMHRMWZq1frfrhzzPN5gEx3tIzp3EFC+
-	 o2LtD15Sq3wXJmUj0Yi2KqO3/4qj/6Dh5W8xhKBw8qLgsf2PFHb8naldqWtclQskQg
-	 vNTjbVvt0/GO9F6xfzyNnWSl6NljKjbP7MFAivVY=
+	b=hy+68gaeO5K2K/tQGqFDjmONTxWrQvSnaoUFWdl5UqVFExN3GziN10q1ny/kghNYy
+	 OVw2dzsKbffSm7EYf03gELCKJvce6WK9/7PhrR3QfVoF3jkJaTSIKZ1XMVeJOKj1Ae
+	 cBnKqnX1ZGRvDO1Z+KA7jpw7AUwIbXOhLfIMuGsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387977AbgFWUgR (ORCPT
+        id S2389859AbgFWUgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:36:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58880 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:36:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389859AbgFWUgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:36:02 -0400
+        id S2387675AbgFWUgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:36:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 951532100A;
-        Tue, 23 Jun 2020 20:36:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 128F120781;
+        Tue, 23 Jun 2020 20:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944562;
-        bh=wcAgNaQvdHcK1XfFg3FwAbfYOohj7YRHevkrO1aMAD0=;
+        s=default; t=1592944572;
+        bh=9rCH/4be8Q22es6kk2mzIz6CAymmaUFw0n4wvlxUe9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nAZPmy6uxSzbvrt4qCnpboGGPrqUCW0vvP1r219DtyzRyrJktQeRchqDqSg5ua4Tn
-         HhNMosSz/gYSmeKnkUvmOXCV/DBVyvydED5/80FWGtPT88TnhhcJy70EkSVrpORxBw
-         Qq/U3S2pAm+yqZjjH1zmfkELVOI856ZXKE5gM70c=
+        b=iLWgy2Qt2xaiWiQxd+ui4X48B5gsUl2YyAHb5F/Y0UJYfsDzzFKgsuyjiu7mykB79
+         xVxB82VlUoQ+/UbAFtYnTCJpXcNlS1R9nIGIAJ5DU3sZMtFwW9SyixfPA14b/OOJWH
+         RlvJnithOGAFl2+bBY+90woEDKlVf1J7DR/jHglE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/206] NTB: ntb_pingpong: Choose doorbells based on port number
-Date:   Tue, 23 Jun 2020 21:56:06 +0200
-Message-Id: <20200623195318.857294422@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Moyles <bmoyles@netflix.com>,
+        Mauricio Faria de Oliveira <mfo@canonical.com>,
+        John Johansen <john.johansen@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 042/206] apparmor: check/put label on apparmor_sk_clone_security()
+Date:   Tue, 23 Jun 2020 21:56:10 +0200
+Message-Id: <20200623195319.054293662@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,69 +61,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Mauricio Faria de Oliveira <mfo@canonical.com>
 
-[ Upstream commit ca93c45755da98302c93abdd788fc09113baf9e0 ]
+[ Upstream commit 3b646abc5bc6c0df649daea4c2c976bd4d47e4c8 ]
 
-This commit fixes pingpong support for existing drivers that do not
-implement ntb_default_port_number() and ntb_default_peer_port_number().
-This is required for hardware (like the crosslink topology of
-switchtec) which cannot assign reasonable port numbers to each port due
-to its perfect symmetry.
+Currently apparmor_sk_clone_security() does not check for existing
+label/peer in the 'new' struct sock; it just overwrites it, if any
+(with another reference to the label of the source sock.)
 
-Instead of picking the doorbell to use based on the the index of the
-peer, we use the peer's port number. This is a bit clearer and easier
-to understand.
+    static void apparmor_sk_clone_security(const struct sock *sk,
+                                           struct sock *newsk)
+    {
+            struct aa_sk_ctx *ctx = SK_CTX(sk);
+            struct aa_sk_ctx *new = SK_CTX(newsk);
 
-Fixes: c7aeb0afdcc2 ("NTB: ntb_pp: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+            new->label = aa_get_label(ctx->label);
+            new->peer = aa_get_label(ctx->peer);
+    }
+
+This might leak label references, which might overflow under load.
+Thus, check for and put labels, to prevent such errors.
+
+Note this is similarly done on:
+
+    static int apparmor_socket_post_create(struct socket *sock, ...)
+    ...
+            if (sock->sk) {
+                    struct aa_sk_ctx *ctx = SK_CTX(sock->sk);
+
+                    aa_put_label(ctx->label);
+                    ctx->label = aa_get_label(label);
+            }
+    ...
+
+Context:
+-------
+
+The label reference count leak is observed if apparmor_sock_graft()
+is called previously: this sets the 'ctx->label' field by getting
+a reference to the current label (later overwritten, without put.)
+
+    static void apparmor_sock_graft(struct sock *sk, ...)
+    {
+            struct aa_sk_ctx *ctx = SK_CTX(sk);
+
+            if (!ctx->label)
+                    ctx->label = aa_get_current_label();
+    }
+
+And that is the case on crypto/af_alg.c:af_alg_accept():
+
+    int af_alg_accept(struct sock *sk, struct socket *newsock, ...)
+    ...
+            struct sock *sk2;
+            ...
+            sk2 = sk_alloc(...);
+            ...
+            security_sock_graft(sk2, newsock);
+            security_sk_clone(sk, sk2);
+    ...
+
+Apparently both calls are done on their own right, especially for
+other LSMs, being introduced in 2010/2014, before apparmor socket
+mediation in 2017 (see commits [1,2,3,4]).
+
+So, it looks OK there! Let's fix the reference leak in apparmor.
+
+Test-case:
+---------
+
+Exercise that code path enough to overflow label reference count.
+
+    $ cat aa-refcnt-af_alg.c
+    #include <stdio.h>
+    #include <string.h>
+    #include <unistd.h>
+    #include <sys/socket.h>
+    #include <linux/if_alg.h>
+
+    int main() {
+            int sockfd;
+            struct sockaddr_alg sa;
+
+            /* Setup the crypto API socket */
+            sockfd = socket(AF_ALG, SOCK_SEQPACKET, 0);
+            if (sockfd < 0) {
+                    perror("socket");
+                    return 1;
+            }
+
+            memset(&sa, 0, sizeof(sa));
+            sa.salg_family = AF_ALG;
+            strcpy((char *) sa.salg_type, "rng");
+            strcpy((char *) sa.salg_name, "stdrng");
+
+            if (bind(sockfd, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
+                    perror("bind");
+                    return 1;
+            }
+
+            /* Accept a "connection" and close it; repeat. */
+            while (!close(accept(sockfd, NULL, 0)));
+
+            return 0;
+    }
+
+    $ gcc -o aa-refcnt-af_alg aa-refcnt-af_alg.c
+
+    $ ./aa-refcnt-af_alg
+    <a few hours later>
+
+    [ 9928.475953] refcount_t overflow at apparmor_sk_clone_security+0x37/0x70 in aa-refcnt-af_alg[1322], uid/euid: 1000/1000
+    ...
+    [ 9928.507443] RIP: 0010:apparmor_sk_clone_security+0x37/0x70
+    ...
+    [ 9928.514286]  security_sk_clone+0x33/0x50
+    [ 9928.514807]  af_alg_accept+0x81/0x1c0 [af_alg]
+    [ 9928.516091]  alg_accept+0x15/0x20 [af_alg]
+    [ 9928.516682]  SYSC_accept4+0xff/0x210
+    [ 9928.519609]  SyS_accept+0x10/0x20
+    [ 9928.520190]  do_syscall_64+0x73/0x130
+    [ 9928.520808]  entry_SYSCALL_64_after_hwframe+0x3d/0xa2
+
+Note that other messages may be seen, not just overflow, depending on
+the value being incremented by kref_get(); on another run:
+
+    [ 7273.182666] refcount_t: saturated; leaking memory.
+    ...
+    [ 7273.185789] refcount_t: underflow; use-after-free.
+
+Kprobes:
+-------
+
+Using kprobe events to monitor sk -> sk_security -> label -> count (kref):
+
+Original v5.7 (one reference leak every iteration)
+
+ ... (af_alg_accept+0x0/0x1c0) label=0xffff8a0f36c25eb0 label_refcnt=0x11fd2
+ ... (af_alg_release_parent+0x0/0xd0) label=0xffff8a0f36c25eb0 label_refcnt=0x11fd4
+ ... (af_alg_accept+0x0/0x1c0) label=0xffff8a0f36c25eb0 label_refcnt=0x11fd3
+ ... (af_alg_release_parent+0x0/0xd0) label=0xffff8a0f36c25eb0 label_refcnt=0x11fd5
+ ... (af_alg_accept+0x0/0x1c0) label=0xffff8a0f36c25eb0 label_refcnt=0x11fd4
+ ... (af_alg_release_parent+0x0/0xd0) label=0xffff8a0f36c25eb0 label_refcnt=0x11fd6
+
+Patched v5.7 (zero reference leak per iteration)
+
+ ... (af_alg_accept+0x0/0x1c0) label=0xffff9ff376c25eb0 label_refcnt=0x593
+ ... (af_alg_release_parent+0x0/0xd0) label=0xffff9ff376c25eb0 label_refcnt=0x594
+ ... (af_alg_accept+0x0/0x1c0) label=0xffff9ff376c25eb0 label_refcnt=0x593
+ ... (af_alg_release_parent+0x0/0xd0) label=0xffff9ff376c25eb0 label_refcnt=0x594
+ ... (af_alg_accept+0x0/0x1c0) label=0xffff9ff376c25eb0 label_refcnt=0x593
+ ... (af_alg_release_parent+0x0/0xd0) label=0xffff9ff376c25eb0 label_refcnt=0x594
+
+Commits:
+-------
+
+[1] commit 507cad355fc9 ("crypto: af_alg - Make sure sk_security is initialized on accept()ed sockets")
+[2] commit 4c63f83c2c2e ("crypto: af_alg - properly label AF_ALG socket")
+[3] commit 2acce6aa9f65 ("Networking") a.k.a ("crypto: af_alg - Avoid sock_graft call warning)
+[4] commit 56974a6fcfef ("apparmor: add base infastructure for socket mediation")
+
+Fixes: 56974a6fcfef ("apparmor: add base infastructure for socket mediation")
+Reported-by: Brian Moyles <bmoyles@netflix.com>
+Signed-off-by: Mauricio Faria de Oliveira <mfo@canonical.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_pingpong.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ security/apparmor/lsm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/ntb/test/ntb_pingpong.c b/drivers/ntb/test/ntb_pingpong.c
-index 65865e460ab87..18d00eec7b025 100644
---- a/drivers/ntb/test/ntb_pingpong.c
-+++ b/drivers/ntb/test/ntb_pingpong.c
-@@ -121,15 +121,14 @@ static int pp_find_next_peer(struct pp_ctx *pp)
- 	link = ntb_link_is_up(pp->ntb, NULL, NULL);
+diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+index 730de4638b4e2..5e32fe434140e 100644
+--- a/security/apparmor/lsm.c
++++ b/security/apparmor/lsm.c
+@@ -797,7 +797,12 @@ static void apparmor_sk_clone_security(const struct sock *sk,
+ 	struct aa_sk_ctx *ctx = SK_CTX(sk);
+ 	struct aa_sk_ctx *new = SK_CTX(newsk);
  
- 	/* Find next available peer */
--	if (link & pp->nmask) {
-+	if (link & pp->nmask)
- 		pidx = __ffs64(link & pp->nmask);
--		out_db = BIT_ULL(pidx + 1);
--	} else if (link & pp->pmask) {
-+	else if (link & pp->pmask)
- 		pidx = __ffs64(link & pp->pmask);
--		out_db = BIT_ULL(pidx);
--	} else {
-+	else
- 		return -ENODEV;
--	}
++	if (new->label)
++		aa_put_label(new->label);
+ 	new->label = aa_get_label(ctx->label);
 +
-+	out_db = BIT_ULL(ntb_peer_port_number(pp->ntb, pidx));
- 
- 	spin_lock(&pp->lock);
- 	pp->out_pidx = pidx;
-@@ -303,7 +302,7 @@ static void pp_init_flds(struct pp_ctx *pp)
- 			break;
- 	}
- 
--	pp->in_db = BIT_ULL(pidx);
-+	pp->in_db = BIT_ULL(lport);
- 	pp->pmask = GENMASK_ULL(pidx, 0) >> 1;
- 	pp->nmask = GENMASK_ULL(pcnt - 1, pidx);
- 
-@@ -435,4 +434,3 @@ static void __exit pp_exit(void)
- 	debugfs_remove_recursive(pp_dbgfs_topdir);
++	if (new->peer)
++		aa_put_label(new->peer);
+ 	new->peer = aa_get_label(ctx->peer);
  }
- module_exit(pp_exit);
--
+ 
 -- 
 2.25.1
 
