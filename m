@@ -2,151 +2,87 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19B6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB29F206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MiXGw9Dj"
+	by mail.kernel.org (Postfix) with ESMTP id A76292083E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592896158;
+	bh=bbYZkxOkNOh8W5wHFisjBS2E9wCz49v/LCMR7ImbOD4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oGHxHz7i5ODtsrUrH6JBmVq4LDPDCr4ihluj0OSGiaAUdWTtUACyxSGkoD7yxRxf2
+	 gy5qu25hs7D7w3pLa9LS1i8S7NylUKd1DNfyS+etE12yenVkrLAQ+PWQ0QX8d68AO6
+	 JMaf4X8CSneDZt3mZh3lpmW+g/SI2KwYaN+qBMNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbgFWHG5 (ORCPT
+        id S1731388AbgFWHJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:06:57 -0400
-Received: from mail-eopbgr60047.outbound.protection.outlook.com ([40.107.6.47]:35474
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730781AbgFWHG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:06:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jbm534/kLo74VPGBFisST7ZGwrs4ITFyikI4qfKq1rTOHDmvvusz05OcEUM3HRQijm8Ms8FjlelM30x0erLyOakueqC4pAJiPg0a872JTYyWlKrzJIvlu0hXTiK3KLSGUbX41a6HzKObfmP8Hb2m5mpEbAtOSNXrxYZ71mzECg43V8sOOC9yRZFBm40UnZBjijdJS1th5D+3IK2x5X8w/p/DJ+y4Z3QIwfYNWDIste2UZjvs9++zcyWVsH1yJb79GyZFB/N1ckpvahL14Y2Mmgcb83+UO2YfLqOQ9cy+cxKeFrNjgtdbgzpR6HahQw/FN1ulOebX+0hqxxIWv6O6Ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GDClRvSOW34Ay+DMRzXqBG4Owcpb+/SbEXKnH4p0tXE=;
- b=S0ZX93Jkw0Vgiku6z9buE6QegIEYbM5r2ZpdeWBQyW585bRIxDEEt5KUBdh52BoLiSQIpleNb9GfqCKurGZmp5qZaj5h/wigRam52GE2XkGKvsKZk3nctQo4wEUlzoGcAkYCU1cRnZlmtdwJav+nDCaR9e/u2wmD2M/saGq9bzyl/tSNPb7KeP1exWDzctGw3x0sb2HlqX8WaP+DS+NWjucdgqfo02mNfJCBa9VcEGK9aHnm6RMdUlG6g6mLK9A4tTX9kaKXW6b9+iIfGLCGpSsOARKde6WNAXLBGG1GjNn7X9ImFvcV7+XfpPMwYRVrv5mJUw75QSPtnUqsTJ2HUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GDClRvSOW34Ay+DMRzXqBG4Owcpb+/SbEXKnH4p0tXE=;
- b=MiXGw9Dj0mkplpoq1703VntW/ThPGL9ir22qxXNiIawpaO4g6FF27MgHmj7iY4tWTosejSJAT409V8pGRnWcU7j6Ll1E21l9wUexxRzImJwgz2u7MXb3auq2gcxMVjJgGtKfEPMJKd+Z266fesv6MQf1PdO4km9SWzCDju119SQ=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2711.eurprd04.prod.outlook.com (2603:10a6:4:96::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Tue, 23 Jun
- 2020 07:06:51 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 07:06:51 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Fabio Estevam <fabio.estevam@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 2/3] arm64: dts: imx8qxp: add i2c aliases
-Thread-Topic: [PATCH 2/3] arm64: dts: imx8qxp: add i2c aliases
-Thread-Index: AQHWN7q7FzxDRlKvSUqllYWi4vXJsajltQcAgAAz0OA=
-Date:   Tue, 23 Jun 2020 07:06:51 +0000
-Message-ID: <DB6PR0402MB2760A7116D8743792570BEE088940@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1590977180-9957-1-git-send-email-peng.fan@nxp.com>
- <1590977180-9957-3-git-send-email-peng.fan@nxp.com>
- <20200623035615.GN30139@dragon>
-In-Reply-To: <20200623035615.GN30139@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e27f3640-e854-4b7d-5b62-08d81744013c
-x-ms-traffictypediagnostic: DB6PR0402MB2711:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB2711D842204E22E271379A2988940@DB6PR0402MB2711.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:862;
-x-forefront-prvs: 04433051BF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sMCu7veLhQElnMjZCkCP9DruPjgEwfTMCNS4TgM+gYFkNAslH/zzytR6j2URidFFX0RMYmXSAbBAvcKYCuZZwVD0Y/g84NpIYxT2E6wDZViTKjvM68TN4x1JhsY0lHTveOU7d9XeEoZI3tzuKc6hIC2BA43Im1HeiTFqYI1eDuqvVjHGfWJgFFNCdeiYLwSEOdlzqcPOXgTAJyYdSg0BPQ1iZCWye88gaDGaP5iCbta+aiiUnhlfSgGcTlCXrUrWCkwjn9SqYofMsQdSpsaWfbve3UZt8wo7XwJxZoNbRSz9BNvPsBjpbiCGG5X6xH/6apQNpS5ds/gWCfpEzxZIvD/NE8myYOlNs8P9fwR2vQM73HXEK2VokgzzfIUZMpcc9SsUi0wwwXujQnkJxvH13buz2H8FRfqUcp+wvtmW0A9fn+x3DqOcDMdsfTa9XlRbWm70+YQ+JZt9G5BGjuFQbw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(76116006)(26005)(6916009)(478600001)(52536014)(5660300002)(2906002)(186003)(54906003)(33656002)(316002)(8936002)(66476007)(66556008)(64756008)(66446008)(4326008)(66946007)(44832011)(8676002)(7696005)(86362001)(83380400001)(71200400001)(55016002)(966005)(6506007)(9686003)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 3vtIbllHpOsAXkruIpXZyYV3O6IDJtTy/xSL9ehTRY168tIV0MOWzkmTm1PLdcQZ2DQiL0E3hVpnU/DzE80/bpVhUt11YMKQThujuwdH0GQ+ooVh5GVQUgJm/7rSeHLN7kHwTW8ECiZr26jmXZ74fCd/yYUlQc0jfxVPHTKywD30gAi7g/wRRR21pXfLoP+aolyT9w0sJi4woN0ZsDGtMEicv+wBSwN6hhQ4VdVhY2yLkoUgQp1mH67NG2UeoYrS0HcZSVWdkE4W9yckCaR3x7tPnZLk5mTHfr9kXCsj5tUVwvM2MkX2v7HmiA/zh23VvljsVFjXdUTy27KprskgMryKUdDlU/S1f0H0CTlMBZFRplKaiR+Cd95EwrYryct0cdkz1t78hjUqrY8u75zgni//0xjqWyTZkdof2EnMZrfoBdlFjcTP9uaW0EUH+NmV3rBsOmclNVcy3N/3RzEQuicmD76H6NfvPShGO0IGqqx1USChss4bcIMoEuU+bhds
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jun 2020 03:09:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730781AbgFWHJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:09:15 -0400
+Received: from mail.kernel.org (unknown [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F043C206B7;
+        Tue, 23 Jun 2020 07:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592896155;
+        bh=bbYZkxOkNOh8W5wHFisjBS2E9wCz49v/LCMR7ImbOD4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YiI+3zGNpBrxM1Lh4QdMbTFUFH8aKePsECcWTKuYWqxI3Hq3N9lUni2cLrzSprhD6
+         it602gzeTUfh6/hN4TSAcBWn0Asym4N5aeJODK+++JKQ9poVWmyBTUsFZLjH3QZHiR
+         /HWZC5JJy3yR1sCyXhFNHosipoMqjWsFzvcVumRg=
+Received: from mchehab by mail.kernel.org with local (Exim 4.93)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jnd3Q-003qii-VC; Tue, 23 Jun 2020 09:09:12 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, linux-mm@kvack.org
+Subject: [PATCH v2 01/15] mm: vmalloc.c: remove a kernel-doc annotation from a removed parameter
+Date:   Tue, 23 Jun 2020 09:08:57 +0200
+Message-Id: <5cd93bdc2f19f94266f42fcbf88a7fd207f7127b.1592895969.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1592895969.git.mchehab+huawei@kernel.org>
+References: <cover.1592895969.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e27f3640-e854-4b7d-5b62-08d81744013c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2020 07:06:51.7453
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ql2BLyCclsAQk45mN/3G5rBBSyc//BjJKpG5h+eUEDCQqT3peztHfaBcWRDSCstKI6kz/yk/sWXHgom6HZHicQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2711
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
+The prot argument was removed. Drop it als from the kernel-doc
+markup.
 
-> Subject: Re: [PATCH 2/3] arm64: dts: imx8qxp: add i2c aliases
->=20
-> On Mon, Jun 01, 2020 at 10:06:19AM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > The devices could be enumerated properly with aliases.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > index 33363c127478..8ce997110cd6 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -19,6 +19,10 @@
-> >  	#size-cells =3D <2>;
-> >
-> >  	aliases {
-> > +		i2c0 =3D &adma_i2c0;
-> > +		i2c1 =3D &adma_i2c1;
-> > +		i2c2 =3D &adma_i2c2;
-> > +		i2c3 =3D &adma_i2c3;
->=20
-> Had a second look.  It breaks alphabetical order.  So dropped the series.
+Fixes: 3c8ce1be43d3 ("mm: remove the prot argument from vm_map_ram")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ mm/vmalloc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-V2 has this addressed.
-https://patchwork.kernel.org/cover/11619867/
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 963db1037f61..c3b3f94e08da 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1809,7 +1809,6 @@ EXPORT_SYMBOL(vm_unmap_ram);
+  * @pages: an array of pointers to the pages to be mapped
+  * @count: number of pages
+  * @node: prefer to allocate data structures on this node
+- * @prot: memory protection to use. PAGE_KERNEL for regular RAM
+  *
+  * If you use this function for less than VMAP_MAX_ALLOC pages, it could be
+  * faster than vmap so it's good.  But if you mix long-life and short-life
+-- 
+2.26.2
 
-Thanks,
-Peng.
-
->=20
-> Shawn
->=20
-> >  		gpio0 =3D &lsio_gpio0;
-> >  		gpio1 =3D &lsio_gpio1;
-> >  		gpio2 =3D &lsio_gpio2;
-> > --
-> > 2.16.4
-> >
