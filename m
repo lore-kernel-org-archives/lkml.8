@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25052C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3E8F2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B9820675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944836;
-	bh=8C0qYZRp2nMNQzJmlTrpk8LQ/2JNVPCalkgNJ/+eiJk=;
+	s=default; t=1592944844;
+	bh=hG/hd2J4dHLGSRu02sYKuZfaGjpfA6fauxrCVBm5Y5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S218st2MF632Qdc3i0pqVhDpOLCzLGQF6mxIwvLte+8NYualEE3POXCz75DXAlZll
-	 mOhxfGRewdR9uvUkS3IR7g2fviUXuwypPg8JZtsx5AbJIm4hwz3tUAxvEbakFMrOnL
-	 rksSDqS/KwSC6pzGd5DxV6ag3cD3FpfHhJ9GYalQ=
+	b=bVih4gBb7RjNM4aPZmilaIOwfcydLshvZMpeOgMwHKOTE0XAeS6aqaSbTf+sLVYAN
+	 zFtGlFVc3ckDNNzpbQ4vIcbPVtCartDqCTvL/7bEMF8jLJ+GypsgJH/G+w59jkAtKs
+	 0dGP+c4Y9vgDTUrG1MTHwkQYRHRZEUGT/QQhAfFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392243AbgFWUkd (ORCPT
+        id S2392273AbgFWUkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:40:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392229AbgFWUka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:30 -0400
+        id S2392248AbgFWUkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:40:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F2C52053B;
-        Tue, 23 Jun 2020 20:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB8DE2053B;
+        Tue, 23 Jun 2020 20:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944829;
-        bh=8C0qYZRp2nMNQzJmlTrpk8LQ/2JNVPCalkgNJ/+eiJk=;
+        s=default; t=1592944837;
+        bh=hG/hd2J4dHLGSRu02sYKuZfaGjpfA6fauxrCVBm5Y5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dcv5kUiEAULtsShru82Ir6s5OpvoNT02Gsnguco9alLCOGGOQSLghInkYaNv6OUe2
-         cp6ZCX6aAjnLo8Ccsnf24MBcbhV6ILg8Qk+hoyxI9DD/hX5AOyW/qM9UJW0XRWtQSw
-         t2eQwxLDfkX0UA2fNUrDujbPFbQTOux/2yg0DPoY=
+        b=Oi3h1OrqkEa0BBw2JU7sdkxafPJkMqEKyU0A+fxTNsl7k1wxAohiXIKL+3bbmMm5m
+         wr4Xxat0iLmtY/mk/EtMpixaZPUKspoIMtrxLRgLHRYfuiJfQDjK7MgT/7aG2WR2Yn
+         PbIpFOQgz9tA6PkJENa5S637g0R47NtcvYnGcXJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 142/206] gfs2: fix use-after-free on transaction ail lists
-Date:   Tue, 23 Jun 2020 21:57:50 +0200
-Message-Id: <20200623195323.968867013@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 145/206] NTB: ntb_tool: reading the link file should not end in a NULL byte
+Date:   Tue, 23 Jun 2020 21:57:53 +0200
+Message-Id: <20200623195324.111692731@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,77 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
+[ Upstream commit 912e12813dd03c602e4922fc34709ec4d4380cf0 ]
 
-Before this patch, transactions could be merged into the system
-transaction by function gfs2_merge_trans(), but the transaction ail
-lists were never merged. Because the ail flushing mechanism can run
-separately, bd elements can be attached to the transaction's buffer
-list during the transaction (trans_add_meta, etc) but quickly moved
-to its ail lists. Later, in function gfs2_trans_end, the transaction
-can be freed (by gfs2_trans_end) while it still has bd elements
-queued to its ail lists, which can cause it to either lose track of
-the bd elements altogether (memory leak) or worse, reference the bd
-elements after the parent transaction has been freed.
+When running ntb_test this warning is issued:
 
-Although I've not seen any serious consequences, the problem becomes
-apparent with the previous patch's addition of:
+./ntb_test.sh: line 200: warning: command substitution: ignored null
+byte in input
 
-	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
+This is caused by the kernel returning one more byte than is necessary
+when reading the link file.
 
-to function gfs2_trans_free().
+Reduce the number of bytes read back to 2 as it was before the
+commit that regressed this.
 
-This patch adds logic into gfs2_merge_trans() to move the merged
-transaction's ail lists to the sdp transaction. This prevents the
-use-after-free. To do this properly, we need to hold the ail lock,
-so we pass sdp into the function instead of the transaction itself.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/log.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/ntb/test/ntb_tool.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index d3f0612e33471..06752db213d21 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -877,8 +877,10 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
-  * @new: New transaction to be merged
-  */
+diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
+index 025747c1568ea..311d6ab8d0160 100644
+--- a/drivers/ntb/test/ntb_tool.c
++++ b/drivers/ntb/test/ntb_tool.c
+@@ -504,7 +504,7 @@ static ssize_t tool_peer_link_read(struct file *filep, char __user *ubuf,
+ 	buf[1] = '\n';
+ 	buf[2] = '\0';
  
--static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
-+static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
- {
-+	struct gfs2_trans *old = sdp->sd_log_tr;
-+
- 	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
- 
- 	old->tr_num_buf_new	+= new->tr_num_buf_new;
-@@ -890,6 +892,11 @@ static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
- 
- 	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
- 	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
-+
-+	spin_lock(&sdp->sd_ail_lock);
-+	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
-+	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
-+	spin_unlock(&sdp->sd_ail_lock);
+-	return simple_read_from_buffer(ubuf, size, offp, buf, 3);
++	return simple_read_from_buffer(ubuf, size, offp, buf, 2);
  }
  
- static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
-@@ -901,7 +908,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
- 	gfs2_log_lock(sdp);
- 
- 	if (sdp->sd_log_tr) {
--		gfs2_merge_trans(sdp->sd_log_tr, tr);
-+		gfs2_merge_trans(sdp, tr);
- 	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
- 		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
- 		sdp->sd_log_tr = tr;
+ static TOOL_FOPS_RDWR(tool_peer_link_fops,
+@@ -1690,4 +1690,3 @@ static void __exit tool_exit(void)
+ 	debugfs_remove_recursive(tool_dbgfs_topdir);
+ }
+ module_exit(tool_exit);
+-
 -- 
 2.25.1
 
