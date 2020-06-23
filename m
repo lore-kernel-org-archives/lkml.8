@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE14C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE896206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3452078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944132;
-	bh=wpg9bdml8FAk7etp5Y5ZvWfdNNyl7h8kD5aJPOpqkjM=;
+	s=default; t=1592944136;
+	bh=Zsy+g4e5SzT1SXRcyIrX2ICpAp8suagf0Xy5icjSuG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bu+ek9TWHkWwIovI4vvfae5vALxX4qm9eLvNFLszLAcja4eR4PcuTL7pHpPeyzUOt
-	 07DpQGUYb77UASod2QVJgBOZnGhISbetb12X1i0HPbtaK59iNMv/SC318QspjTjQK/
-	 7V8bAcmNTGUrcB3OG7RG2OE2mby1OG2r8gO0Esvo=
+	b=Sef5nKVCPhiWKh2tZFrmDsXsmzFozhiQGWenWDatjM3JrldDs4nvocBd/ZSB3wX81
+	 yW0I+9dr08OtbeRkCRty888T93gi8dMkUylBB/cJblJfscE4/yF43OQvbD7HIqyG+N
+	 nllaUTeo2Ja6ji1BYAsktx82aRzb2Fx9XEU2XLtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390924AbgFWU2v (ORCPT
+        id S2390431AbgFWU2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:28:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:28:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390899AbgFWU2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:28:42 -0400
+        id S2390688AbgFWU2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:28:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9628F206C3;
-        Tue, 23 Jun 2020 20:28:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF1E2064B;
+        Tue, 23 Jun 2020 20:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944123;
-        bh=wpg9bdml8FAk7etp5Y5ZvWfdNNyl7h8kD5aJPOpqkjM=;
+        s=default; t=1592944125;
+        bh=Zsy+g4e5SzT1SXRcyIrX2ICpAp8suagf0Xy5icjSuG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZMCq1jy2rOfnMXJSa2oYC5CxRYMNLM2snu4twCjAepnsro0mWgUmLmPNUu+2+HkgG
-         B++A9TIGCCowgUdF7QADsoH982goaWx2uR/PRpmY0nsLbBQXa1eWV7FqUiIA/lI5Y3
-         t6aUkhU1PwelnJPPHkb5PEm+Ytju0Gga5fS3HPjk=
+        b=g6GGguy+PGSeOt8xWKjw1U2QqtYiKKqJkiT6P8fyXuFEzKSRyUxVKpsDe6/VzwGKR
+         Q2/mOIGoe1t+EJjQVul0rI1MDY/4bt3txOcEue+YC0XPJTMpMug5I1U1RoLLi9R4D5
+         HAf77oomGvgpO4XbEkj/hKtIH/HT/eGzYVUFnewo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 181/314] RDMA/iw_cxgb4: cleanup device debugfs entries on ULD remove
-Date:   Tue, 23 Jun 2020 21:56:16 +0200
-Message-Id: <20200623195347.521308738@linuxfoundation.org>
+Subject: [PATCH 5.4 182/314] x86/apic: Make TSC deadline timer detection message visible
+Date:   Tue, 23 Jun 2020 21:56:17 +0200
+Message-Id: <20200623195347.569101369@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,33 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Potnuri Bharat Teja <bharat@chelsio.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 49ea0c036ede81f126f1a9389d377999fdf5c5a1 ]
+[ Upstream commit de308d1815c9e8fe602a958c5c76142ff6501d75 ]
 
-Remove device specific debugfs entries immediately if LLD detaches a
-particular ULD device in case of fatal PCI errors.
+The commit
 
-Link: https://lore.kernel.org/r/20200524190814.17599-1-bharat@chelsio.com
-Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+  c84cb3735fd5 ("x86/apic: Move TSC deadline timer debug printk")
+
+removed the message which said that the deadline timer was enabled.
+It added a pr_debug() message which is issued when deadline timer
+validation succeeds.
+
+Well, issued only when CONFIG_DYNAMIC_DEBUG is enabled - otherwise
+pr_debug() calls get optimized away if DEBUG is not defined in the
+compilation unit.
+
+Therefore, make the above message pr_info() so that it is visible in
+dmesg.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200525104218.27018-1-bp@alien8.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/device.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/apic/apic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/device.c b/drivers/infiniband/hw/cxgb4/device.c
-index 599340c1f0b82..541dbcf22d0eb 100644
---- a/drivers/infiniband/hw/cxgb4/device.c
-+++ b/drivers/infiniband/hw/cxgb4/device.c
-@@ -953,6 +953,7 @@ void c4iw_dealloc(struct uld_ctx *ctx)
- static void c4iw_remove(struct uld_ctx *ctx)
- {
- 	pr_debug("c4iw_dev %p\n", ctx->dev);
-+	debugfs_remove_recursive(ctx->dev->debugfs_root);
- 	c4iw_unregister_device(ctx->dev);
- 	c4iw_dealloc(ctx);
- }
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 25b8c45467fcd..fce94c799f015 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2099,7 +2099,7 @@ void __init init_apic_mappings(void)
+ 	unsigned int new_apicid;
+ 
+ 	if (apic_validate_deadline_timer())
+-		pr_debug("TSC deadline timer available\n");
++		pr_info("TSC deadline timer available\n");
+ 
+ 	if (x2apic_mode) {
+ 		boot_cpu_physical_apicid = read_apic_id();
 -- 
 2.25.1
 
