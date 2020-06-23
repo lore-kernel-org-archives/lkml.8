@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C734BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71C1521852
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999F32084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944865;
-	bh=N3ZWL4UiTTyYZz4LzXGUi9NbMV0Ja4Bw/xleC7UnU5A=;
+	s=default; t=1592944868;
+	bh=M5b3VYofXKUdsZ3mPHAW68HmE9bw1kEkqwELp613G/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kOX3IofEP80adrMEEMweze8gEkh9Y1I1IGmPiJmay2djZmBK+LRyiesCh1nhNTecN
-	 xy2yFEai1PblYJT3OMk9DVmsKLFWGwp7hp/ttPX5Vy1mNlDNUg1LIQulhYypN0QqUS
-	 4oe0Oja0Rui5ZMQtS7aU6+pkhilP0GfMmEbfcJXU=
+	b=jf8ijfiohcgAkjWN4uHQGXk+JaVkI6eSzxTARIPgpiemyNdclxNdo5wjrcxWGmJ8R
+	 Th97Epfd+E8inJN7sTARzRcGM6ZdTzGfBWl+1UHGSLCcF+3C+csV49tHCsQZQ2axCy
+	 FvMTBge0v9g6kIBu4vLeBMAfno4wxMvbwlMLzexg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392284AbgFWUlC (ORCPT
+        id S2392170AbgFWUlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37138 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392293AbgFWUkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:52 -0400
+        id S2389939AbgFWUlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8190A20675;
-        Tue, 23 Jun 2020 20:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D17920675;
+        Tue, 23 Jun 2020 20:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944853;
-        bh=N3ZWL4UiTTyYZz4LzXGUi9NbMV0Ja4Bw/xleC7UnU5A=;
+        s=default; t=1592944861;
+        bh=M5b3VYofXKUdsZ3mPHAW68HmE9bw1kEkqwELp613G/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b8dhxV6InezACFXZuwqD5R3Wgw8Xh+E8QKZkirXwKAk2bXbNn6039EHagfsjAlXF6
-         lGbrTWJuiwnnbCUWIB7Y5GbEqDDbSyAbRjuNrukETt4DK7AXyddjRchxae2gOwBwHW
-         f8Um97qXjH/ZyiG/k2tWEfjj1tiwawVtSY+wkqMM=
+        b=uUlMW/8ZjrXyGHhAx+VwSZLAnK2skmmr0UDuwjyD2yXiDJ1hnBPiYtudz7ZYCIlNZ
+         fKysQ7tIVDzD/smp6B3WwHCTY+zqahbzVtRYb1sLO0ANvfc7d2B6APzWjGGIKiiH3b
+         MfJVLtBRRdXx185YJPsNCFuQbGITtM2aM5cEHX/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 150/206] NTB: ntb_test: Fix bug when counting remote files
-Date:   Tue, 23 Jun 2020 21:57:58 +0200
-Message-Id: <20200623195324.376329532@linuxfoundation.org>
+        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 153/206] afs: Fix memory leak in afs_put_sysnames()
+Date:   Tue, 23 Jun 2020 21:58:01 +0200
+Message-Id: <20200623195324.522836049@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,37 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-[ Upstream commit 2130c0ba69d69bb21f5c52787f2587db00d13d8a ]
+[ Upstream commit 2ca068be09bf8e285036603823696140026dcbe7 ]
 
-When remote files are counted in get_files_count, without using SSH,
-the code returns 0 because there is a colon prepended to $LOC. $VPATH
-should have been used instead of $LOC.
+Fix afs_put_sysnames() to actually free the specified afs_sysnames
+object after its reference count has been decreased to zero and
+its contents have been released.
 
-Fixes: 06bd0407d06c ("NTB: ntb_test: Update ntb_tool Scratchpad tests")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: 6f8880d8e681557 ("afs: Implement @sys substitution handling")
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ntb/ntb_test.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/proc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/ntb/ntb_test.sh b/tools/testing/selftests/ntb/ntb_test.sh
-index 08cbfbbc70291..17ca36403d04c 100755
---- a/tools/testing/selftests/ntb/ntb_test.sh
-+++ b/tools/testing/selftests/ntb/ntb_test.sh
-@@ -250,7 +250,7 @@ function get_files_count()
- 	split_remote $LOC
+diff --git a/fs/afs/proc.c b/fs/afs/proc.c
+index 9101f62707af2..e445c02dea3df 100644
+--- a/fs/afs/proc.c
++++ b/fs/afs/proc.c
+@@ -512,6 +512,7 @@ void afs_put_sysnames(struct afs_sysnames *sysnames)
+ 			if (sysnames->subs[i] != afs_init_sysname &&
+ 			    sysnames->subs[i] != sysnames->blank)
+ 				kfree(sysnames->subs[i]);
++		kfree(sysnames);
+ 	}
+ }
  
- 	if [[ "$REMOTE" == "" ]]; then
--		echo $(ls -1 "$LOC"/${NAME}* 2>/dev/null | wc -l)
-+		echo $(ls -1 "$VPATH"/${NAME}* 2>/dev/null | wc -l)
- 	else
- 		echo $(ssh "$REMOTE" "ls -1 \"$VPATH\"/${NAME}* | \
- 		       wc -l" 2> /dev/null)
 -- 
 2.25.1
 
