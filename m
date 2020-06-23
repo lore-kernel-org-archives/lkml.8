@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A070C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 299432080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A58E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943481;
-	bh=tWflFMXlPV/4i3zVv13EFFvXyfx9GgbxDS6WuLXF5YQ=;
+	s=default; t=1592943486;
+	bh=4dCn1E3y2lsNH/aZZpCpK8OpPJhFa/TNxEoJEzBdOJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XxfXVfHv5hlszZ3Cg1P80tCIVDPOtEpIY2oeESc7Y8V76CdWFeqw+G7/fN0aOcqZz
-	 j/TgX8FWsvRLH9kOG676kj+qaC3pqzcj1vZJ8oRtkAShHFKCr4mCsXn9rdFNhHWIqr
-	 2+vw4waIBKC+rosgnETrSmqHjsM/H7CVJ+oBmAag=
+	b=i8ANWRjCcYu6y8ZI9BY3QcYVRTesy+Nv03nrRcOlPn1Zs7V1dnCBV0qAUGi6z1GYy
+	 MnzfrFdLMFwZ6AE9qf+i9IdvgfeTnjrsA0wkQGIJIfrDW4u/OiInAsvzx9B9sawktu
+	 wquugTb9o4LcO8fubiWeu2pLhrYOJI1+OMbSrDnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388871AbgFWUR7 (ORCPT
+        id S2389615AbgFWUSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:17:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34450 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389608AbgFWURz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:55 -0400
+        id S2389616AbgFWUR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1B822064B;
-        Tue, 23 Jun 2020 20:17:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521F12064B;
+        Tue, 23 Jun 2020 20:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943475;
-        bh=tWflFMXlPV/4i3zVv13EFFvXyfx9GgbxDS6WuLXF5YQ=;
+        s=default; t=1592943477;
+        bh=4dCn1E3y2lsNH/aZZpCpK8OpPJhFa/TNxEoJEzBdOJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmftUoK1nrEi9/NZbcGb/j+KUfb8SDPc+Pqsbg6vaQuG+8cfzBWSYitcyxVAHASO/
-         te1XkmjcNuKF+hdgOUIwSLDugQPhCzIJbZ46NyTeR5hBTtLVLHUabyZzcoBfepOnYn
-         lGKzaFq11fey6/N7hODJIzOCAeXFO7D7AO10LlNw=
+        b=gHp54yvqZXAB9oCLJ7R1aLO2wD22BidZ7/EyHy5na4ntQGfZtRgP4lkf2938e2wMJ
+         BZ41AnCS+sxAfgrB5ysa4NiqVRebGsNjE6UPgv7HyB9UkCH6pLsBiSeMi8cgp4UkcT
+         OpKMRHmOrlQG4I4XWHVNHwYjVinMft/84ueSwX8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Elder <elder@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 376/477] net: ipa: program upper nibbles of sequencer type
-Date:   Tue, 23 Jun 2020 21:56:13 +0200
-Message-Id: <20200623195425.303413691@linuxfoundation.org>
+Subject: [PATCH 5.7 367/477] x86/mce/dev-mcelog: Fix -Wstringop-truncation warning about strncpy()
+Date:   Tue, 23 Jun 2020 21:56:04 +0200
+Message-Id: <20200623195424.879067556@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,57 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
+From: Tony Luck <tony.luck@intel.com>
 
-[ Upstream commit 636edeaad5577b6023f0de2b98a010d1cea73607 ]
+[ Upstream commit 7ccddc4613db446dc3cbb69a3763ba60ec651d13 ]
 
-The upper two nibbles of the sequencer type were not used for
-SDM845, and were assumed to be 0.  But for SC7180 they are used, and
-so they must be programmed by ipa_endpoint_init_seq().  Fix this bug.
+The kbuild test robot reported this warning:
 
-IPA_SEQ_PKT_PROCESS_NO_DEC_NO_UCP_DMAP doesn't have a descriptive
-comment, so add one.
+  arch/x86/kernel/cpu/mce/dev-mcelog.c: In function 'dev_mcelog_init_device':
+  arch/x86/kernel/cpu/mce/dev-mcelog.c:346:2: warning: 'strncpy' output \
+    truncated before terminating nul copying 12 bytes from a string of the \
+    same length [-Wstringop-truncation]
 
-Signed-off-by: Alex Elder <elder@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is accurate, but I don't care that the trailing NUL character isn't
+copied. The string being copied is just a magic number signature so that
+crash dump tools can be sure they are decoding the right blob of memory.
+
+Use memcpy() instead of strncpy().
+
+Fixes: d8ecca4043f2 ("x86/mce/dev-mcelog: Dynamically allocate space for machine check records")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200527182808.27737-1-tony.luck@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ipa/ipa_endpoint.c | 6 ++++--
- drivers/net/ipa/ipa_reg.h      | 2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/mce/dev-mcelog.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index a21534f1462fa..1d823ac0f6d61 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -669,10 +669,12 @@ static void ipa_endpoint_init_seq(struct ipa_endpoint *endpoint)
- 	u32 seq_type = endpoint->seq_type;
- 	u32 val = 0;
+diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+index d089567a9ce82..bcb379b2fd42e 100644
+--- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
++++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+@@ -343,7 +343,7 @@ static __init int dev_mcelog_init_device(void)
+ 	if (!mcelog)
+ 		return -ENOMEM;
  
-+	/* Sequencer type is made up of four nibbles */
- 	val |= u32_encode_bits(seq_type & 0xf, HPS_SEQ_TYPE_FMASK);
- 	val |= u32_encode_bits((seq_type >> 4) & 0xf, DPS_SEQ_TYPE_FMASK);
--	/* HPS_REP_SEQ_TYPE is 0 */
--	/* DPS_REP_SEQ_TYPE is 0 */
-+	/* The second two apply to replicated packets */
-+	val |= u32_encode_bits((seq_type >> 8) & 0xf, HPS_REP_SEQ_TYPE_FMASK);
-+	val |= u32_encode_bits((seq_type >> 12) & 0xf, DPS_REP_SEQ_TYPE_FMASK);
+-	strncpy(mcelog->signature, MCE_LOG_SIGNATURE, sizeof(mcelog->signature));
++	memcpy(mcelog->signature, MCE_LOG_SIGNATURE, sizeof(mcelog->signature));
+ 	mcelog->len = mce_log_len;
+ 	mcelog->recordlen = sizeof(struct mce);
  
- 	iowrite32(val, endpoint->ipa->reg_virt + offset);
- }
-diff --git a/drivers/net/ipa/ipa_reg.h b/drivers/net/ipa/ipa_reg.h
-index 3b8106aa277a0..0a688d8c1d7cf 100644
---- a/drivers/net/ipa/ipa_reg.h
-+++ b/drivers/net/ipa/ipa_reg.h
-@@ -455,6 +455,8 @@ enum ipa_mode {
-  *	second packet processing pass + no decipher + microcontroller
-  * @IPA_SEQ_DMA_DEC:		DMA + cipher/decipher
-  * @IPA_SEQ_DMA_COMP_DECOMP:	DMA + compression/decompression
-+ * @IPA_SEQ_PKT_PROCESS_NO_DEC_NO_UCP_DMAP:
-+ *	packet processing + no decipher + no uCP + HPS REP DMA parser
-  * @IPA_SEQ_INVALID:		invalid sequencer type
-  *
-  * The values defined here are broken into 4-bit nibbles that are written
 -- 
 2.25.1
 
