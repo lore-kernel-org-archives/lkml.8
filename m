@@ -2,346 +2,121 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B980C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA39C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD1D20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:31:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmFndyTd"
+	by mail.kernel.org (Postfix) with ESMTP id 1F23420656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732868AbgFWPb3 (ORCPT
+        id S1733032AbgFWPc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732921AbgFWPb2 (ORCPT
+        Tue, 23 Jun 2020 11:32:29 -0400
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:36562 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732781AbgFWPc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:31:28 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99671C061573;
-        Tue, 23 Jun 2020 08:31:27 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so3693535wml.3;
-        Tue, 23 Jun 2020 08:31:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CWmHnX0T9chfc3UjGGlt7DAuUqr82a0aUH9RfZrGEMA=;
-        b=cmFndyTdCMx96wDh1q2Pd1koV3J+Kub3O4XpaZ/OZapQSzOaj+tqcGYs0EysZ1IyjZ
-         ml7UgX7Sing9SJ9iiVNOMQj4WXraw/LmkXvwDV+xj8qrPApJ5jCnWRWtngKL4jFxXQD8
-         eKK52bqD5hwEqsedeuZBqe9jFT52Qws8QVtOYeleQpELGbRY/smJWDbhsX0yrFA6/GD9
-         NyCGasHNIJ+/FjBab6vkO2tNH4qi6F7QoO/HLveIvIrjcHZq9zlczHQ/j9y1F+MgXcth
-         ljQ9hBcdKRT9OHoVF9TrIRVdYmI0B2BftEot9B2PKDMa8c64PGZital7Tfj/xTiI28+q
-         /VPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CWmHnX0T9chfc3UjGGlt7DAuUqr82a0aUH9RfZrGEMA=;
-        b=TgG8GLp8sPIIUOgLgITEBGfBV5kUJRjlSAbNOed4zi+8ULugMDmi53oM3PWQw8soM2
-         OI5sTU8svNBOcAFMjYsSjS0/+j3wzLgp/yNzKVJLFiArYnRcSq27TCuZf0FkvxnvWYn/
-         xBLYayy5FSwFhXdsfPQAIu/CdPdEiofFMSaqXFe5cd/14X302Oqs3o1SUsBbI3gCGNe0
-         QSXaR/khelfirSL0Y462PM3vwYsa54VhAd1a7VWNwPiZ3tjKrXi+4unIDV36ZeU8QvDI
-         okTGTHeA6Gn32VQTWU8QF215XW8LS1y6qtfG5iQw0xoXva6ZF473OMUl8Xq9F8PlmNxC
-         gCtA==
-X-Gm-Message-State: AOAM532LWjkSqB1p86RmY5HqMo+XLfWSIgSLOKFY2HUVh0NEB4r8BUqz
-        pBn8S38V8e5asAnKKWaqwJbJCiqQZIuzHIdVJts=
-X-Google-Smtp-Source: ABdhPJzJgOSQv0FG0J8msyG3v9Zb4H3AVZAF9S8eJasXIwYoDLmKcCd/mSy98eD9lgyS2AvjIxfxqD5wIX3Y1vv2BVE=
-X-Received: by 2002:a1c:48:: with SMTP id 69mr25625668wma.32.1592926286284;
- Tue, 23 Jun 2020 08:31:26 -0700 (PDT)
+        Tue, 23 Jun 2020 11:32:29 -0400
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: QP9Jx3H+HhvZhhEt4ggfsozV10N6bYVBVidEhPpOSKd2Kt2OP2Y8D1tWVy640iW+66S4ExUr29
+ 3JB3pFSLJftaItQlzTtDyzPlpXNy/W/T9+L+ZFgV14wTPrvC6XS7AuiDPdi1jxIxAzVAbCfu5M
+ Wi9kMDH32VcQn1yx3GawArowkMnTUV+a0Z+YTDF9aj3mgsowvLagbbd5j5V50TxYrIF/rlg3p1
+ 7vyqf2bzbYlLiGxnmqC1s4QyuG9wzWCCA2OkMvKoLqQ9juszSl2yG5y7WK+owAQ4QX+oxC8Rpm
+ kC4=
+X-SBRS: 2.7
+X-MesageID: 20733007
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.75,271,1589256000"; 
+   d="scan'208";a="20733007"
+Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
+ from userspace)
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>
+CC:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        "Mike Stunes" <mstunes@vmware.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
+        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        X86 ML <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
+ <20200623094519.GF31822@suse.de>
+ <20200623104559.GA4817@hirez.programming.kicks-ass.net>
+ <20200623111107.GG31822@suse.de>
+ <20200623111443.GC4817@hirez.programming.kicks-ass.net>
+ <20200623114324.GA14101@suse.de>
+ <20200623115014.GE4817@hirez.programming.kicks-ass.net>
+ <20200623121237.GC14101@suse.de>
+ <20200623130322.GH4817@hirez.programming.kicks-ass.net>
+ <20200623144940.GE14101@suse.de>
+ <20200623151607.GJ4817@hirez.programming.kicks-ass.net>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <fe0af2c8-92c8-8d66-e9f3-5a50d64837e5@citrix.com>
+Date:   Tue, 23 Jun 2020 16:32:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200621155604.GA23135@minyard.net> <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
- <20200622165759.GA3235@minyard.net> <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
- <20200622183253.GQ2491@localhost.localdomain> <E5F42909-3AB4-47FE-98B7-DEFB63968696@lurchi.franken.de>
- <CADvbK_fddQiOJUVJNkJuxkzQ9V-tpk_ATBP4NpZ2rZketHEFcg@mail.gmail.com> <20200623132936.GC3235@minyard.net>
-In-Reply-To: <20200623132936.GC3235@minyard.net>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Tue, 23 Jun 2020 23:40:21 +0800
-Message-ID: <CADvbK_cmFXPcKRNcnNLx3at=yaO53E=6dvzqwvC6UoS+Q2tMJg@mail.gmail.com>
-Subject: Re: Strange problem with SCTP+IPv6
-To:     minyard@acm.org
-Cc:     Michael Tuexen <Michael.Tuexen@lurchi.franken.de>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        linux-sctp@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200623151607.GJ4817@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 9:29 PM Corey Minyard <minyard@acm.org> wrote:
->
-> On Tue, Jun 23, 2020 at 06:13:30PM +0800, Xin Long wrote:
-> > On Tue, Jun 23, 2020 at 2:34 AM Michael Tuexen
-> > <Michael.Tuexen@lurchi.franken.de> wrote:
-> > >
-> > > > On 22. Jun 2020, at 20:32, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> wrote:
-> > > >
-> > > > On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
-> > > >>> On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
-> > > >>>
-> > > >>> On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
-> > > >>>> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
-> > > >>>>>
-> > > >>>>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
-> > > >>>>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
-> > > >>>>> then I make a connection to it using ::1, the connection will drop after
-> > > >>>>> 2.5 seconds with an ECONNRESET error.
-> > > >>>>>
-> > > >>>>> It only happens on SCTP, it doesn't have the issue if you connect to a
-> > > >>>>> full IPv6 address instead of ::1, and it doesn't happen if you don't
-> > > >>>>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
-> > > >>>>> I tried on an ARM system and x86_64.
-> > > >>>>>
-> > > >>>>> I haven't dug into the kernel to see if I could find anything yet, but I
-> > > >>>>> thought I would go ahead and report it.  I am attaching a reproducer.
-> > > >>>>> Basically, compile the following code:
-> > > >>>> The code only set IPV6_V6ONLY on server side, so the client side will
-> > > >>>> still bind all the local ipv4 addresses (as you didn't call bind() to
-> > > >>>> bind any specific addresses ). Then after the connection is created,
-> > > >>>> the client will send HB on the v4 paths to the server. The server
-> > > >>>> will abort the connection, as it can't support v4.
-> > > >>>>
-> > > >>>> So you can work around it by either:
-> > > >>>>
-> > > >>>> - set IPV6_V6ONLY on client side.
-> > > >>>>
-> > > >>>> or
-> > > >>>>
-> > > >>>> - bind to the specific v6 addresses on the client side.
-> > > >>>>
-> > > >>>> I don't see RFC said something about this.
-> > > >>>> So it may not be a good idea to change the current behaviour
-> > > >>>> to not establish the connection in this case, which may cause regression.
-> > > >>>
-> > > >>> Ok, I understand this.  It's a little strange, but I see why it works
-> > > >>> this way.
-> > > >> I don't. I would expect it to work as I described in my email.
-> > > >> Could someone explain me how and why it is behaving different from
-> > > >> my expectation?
-> > > >
-> > > > It looks like a bug to me. Testing with this test app here, I can see
-> > > > the INIT_ACK being sent with a bunch of ipv4 addresses in it and
-> > > > that's unexpected for a v6only socket. As is, it's the server saying
-> > > > "I'm available at these other addresses too, but not."
-> > > I agree.
-> > Then we need a fix in sctp_bind_addrs_to_raw():
-> >
-> > @@ -238,6 +240,9 @@ union sctp_params sctp_bind_addrs_to_raw(const
-> > struct sctp_bind_addr *bp,
-> >         addrparms = retval;
-> >
-> >         list_for_each_entry(addr, &bp->address_list, list) {
-> > +               if ((PF_INET6 == sk->sk_family) && inet_v6_ipv6only(sk) &&
-> > +                   (AF_INET == addr->a.sa.sa_family))
-> > +                       continue;
->
-> This does not compile in the latest mainline.  sk is not defined.
-> Also, if you could send a normal git patch, that would be easier to
-> manage.
-sorry, that was just the code to show the idea.
+On 23/06/2020 16:16, Peter Zijlstra wrote:
+> On Tue, Jun 23, 2020 at 04:49:40PM +0200, Joerg Roedel wrote:
+>>> We're talking about the 3rd case where the only reason things 'work' is
+>>> because we'll have to panic():
+>>>
+>>>  - #MC
+>> Okay, #MC is special and can only be handled on a best-effort basis, as
+>> #MC could happen anytime, also while already executing the #MC handler.
+> I think the hardware has a MCE-mask bit somewhere. Flaky though because
+> clearing it isn't 'atomic' with IRET, so there's a 'funny' window.
 
-For the compilable one, pls see:
-https://paste.centos.org/view/49f5ff5a
+MSR_MCG_STATUS.MCIP, and yes - any #MC before that point will
+immediately Shutdown.  Any #MC between that point and IRET will clobber
+its IST stack and end up sad.
 
-Thanks.
+> It also interacts really bad with the NMI handler. If we get an #MC
+> early in the NMI, where we hard-rely on the NMI-mask being set to set-up
+> the recursion stack, then the #MC IRET will clear the NMI-mask, and
+> we're toast.
 >
-> Thanks,
->
-> -corey
->
-> >                 af = sctp_get_af_specific(addr->a.v4.sin_family);
-> >                 len = af->to_addr_param(&addr->a, &rawaddr);
-> >                 memcpy(addrparms.v, &rawaddr, len);
-> >
-> > >
-> > > Best regards
-> > > Michael
-> > > >
-> > > > Thanks,
-> > > > Marcelo
-> > > >
-> > > >>
-> > > >> Best regards
-> > > >> Michael
-> > > >>>
-> > > >>> Thanks,
-> > > >>>
-> > > >>> -corey
-> > > >>>
-> > > >>>>
-> > > >>>>>
-> > > >>>>> gcc -g -o sctptest -Wall sctptest.c
-> > > >>>>>
-> > > >>>>> and run it in one window as a server:
-> > > >>>>>
-> > > >>>>> ./sctptest a
-> > > >>>>>
-> > > >>>>> (Pass in any option to be the server) and run the following in another
-> > > >>>>> window as the client:
-> > > >>>>>
-> > > >>>>> ./sctptest
-> > > >>>>>
-> > > >>>>> It disconnects after about 2.5 seconds.  If it works, it should just sit
-> > > >>>>> there forever.
-> > > >>>>>
-> > > >>>>> -corey
-> > > >>>>>
-> > > >>>>>
-> > > >>>>> #include <stdio.h>
-> > > >>>>> #include <stdbool.h>
-> > > >>>>> #include <string.h>
-> > > >>>>> #include <unistd.h>
-> > > >>>>> #include <fcntl.h>
-> > > >>>>> #include <sys/select.h>
-> > > >>>>> #include <arpa/inet.h>
-> > > >>>>> #include <netinet/sctp.h>
-> > > >>>>> #include <sys/types.h>
-> > > >>>>> #include <sys/socket.h>
-> > > >>>>> #include <netdb.h>
-> > > >>>>>
-> > > >>>>> static int
-> > > >>>>> getaddr(const char *addr, const char *port, bool listen,
-> > > >>>>>       struct addrinfo **rai)
-> > > >>>>> {
-> > > >>>>>   struct addrinfo *ai, hints;
-> > > >>>>>
-> > > >>>>>   memset(&hints, 0, sizeof(hints));
-> > > >>>>>   hints.ai_flags = AI_ADDRCONFIG;
-> > > >>>>>   if (listen)
-> > > >>>>>       hints.ai_flags |= AI_PASSIVE;
-> > > >>>>>   hints.ai_family = AF_UNSPEC;
-> > > >>>>>   hints.ai_socktype = SOCK_STREAM;
-> > > >>>>>   hints.ai_protocol = IPPROTO_SCTP;
-> > > >>>>>   if (getaddrinfo(addr, port, &hints, &ai)) {
-> > > >>>>>       perror("getaddrinfo");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   *rai = ai;
-> > > >>>>>   return 0;
-> > > >>>>> }
-> > > >>>>>
-> > > >>>>> static int
-> > > >>>>> waitread(int s)
-> > > >>>>> {
-> > > >>>>>   char data[1];
-> > > >>>>>   ssize_t rv;
-> > > >>>>>
-> > > >>>>>   rv = read(s, data, sizeof(data));
-> > > >>>>>   if (rv == -1) {
-> > > >>>>>       perror("read");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>   printf("Read %d bytes\n", (int) rv);
-> > > >>>>>   return 0;
-> > > >>>>> }
-> > > >>>>>
-> > > >>>>> static int
-> > > >>>>> do_server(void)
-> > > >>>>> {
-> > > >>>>>   int err, ls, s, optval;
-> > > >>>>>   struct addrinfo *ai;
-> > > >>>>>
-> > > >>>>>   printf("Server\n");
-> > > >>>>>
-> > > >>>>>   err = getaddr("::", "3023", true, &ai);
-> > > >>>>>   if (err)
-> > > >>>>>       return err;
-> > > >>>>>
-> > > >>>>>   ls = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-> > > >>>>>   if (ls == -1) {
-> > > >>>>>       perror("socket");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   optval = 1;
-> > > >>>>>   if (setsockopt(ls, SOL_SOCKET, SO_REUSEADDR,
-> > > >>>>>                  (void *)&optval, sizeof(optval)) == -1) {
-> > > >>>>>       perror("setsockopt reuseaddr");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   /* Comment this out and it will work. */
-> > > >>>>>   if (setsockopt(ls, IPPROTO_IPV6, IPV6_V6ONLY, &optval,
-> > > >>>>>                  sizeof(optval)) == -1) {
-> > > >>>>>       perror("setsockopt ipv6 only");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   err = bind(ls, ai->ai_addr, ai->ai_addrlen);
-> > > >>>>>   if (err == -1) {
-> > > >>>>>       perror("bind");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   err = listen(ls, 5);
-> > > >>>>>   if (err == -1) {
-> > > >>>>>       perror("listen");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   s = accept(ls, NULL, NULL);
-> > > >>>>>   if (s == -1) {
-> > > >>>>>       perror("accept");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   close(ls);
-> > > >>>>>
-> > > >>>>>   err = waitread(s);
-> > > >>>>>   close(s);
-> > > >>>>>   return err;
-> > > >>>>> }
-> > > >>>>>
-> > > >>>>> static int
-> > > >>>>> do_client(void)
-> > > >>>>> {
-> > > >>>>>   int err, s;
-> > > >>>>>   struct addrinfo *ai;
-> > > >>>>>
-> > > >>>>>   printf("Client\n");
-> > > >>>>>
-> > > >>>>>   err = getaddr("::1", "3023", false, &ai);
-> > > >>>>>   if (err)
-> > > >>>>>       return err;
-> > > >>>>>
-> > > >>>>>   s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-> > > >>>>>   if (s == -1) {
-> > > >>>>>       perror("socket");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   err = connect(s, ai->ai_addr, ai->ai_addrlen);
-> > > >>>>>   if (err == -1) {
-> > > >>>>>       perror("connect");
-> > > >>>>>       return -1;
-> > > >>>>>   }
-> > > >>>>>
-> > > >>>>>   err = waitread(s);
-> > > >>>>>   close(s);
-> > > >>>>>   return err;
-> > > >>>>> }
-> > > >>>>>
-> > > >>>>> int
-> > > >>>>> main(int argc, char *argv[])
-> > > >>>>> {
-> > > >>>>>   int err;
-> > > >>>>>
-> > > >>>>>   if (argc > 1)
-> > > >>>>>       err = do_server();
-> > > >>>>>   else
-> > > >>>>>       err = do_client();
-> > > >>>>>   return !!err;
-> > > >>>>> }
-> > > >>>>>
-> > > >>
-> > >
+> Andy has wild and crazy ideas, but I don't think we need more crazy
+> here.
+
+Want, certainly not.  Need, maybe :-/
+>>>  - #DB with BUS LOCK DEBUG EXCEPTION
+>> If I understand the problem correctly, this can be solved by moving off
+>> the IST stack to the current task stack in the #DB handler, like I plan
+>> to do for #VC, no?
+> Hmm, probably. Would take a bit of care, but should be doable.
+
+Andy and I have spent some time considering this.
+
+Having exactly one vector move off IST and onto an in-use task-stack is
+doable, I think, so long as it can sort out self-recursion protections.
+
+Having more than one vector do this is very complicated.  You've got to
+take care to walk up the list of IST-nesting to see if any interrupted
+context is in the middle of trying to copy themselves onto the stack, so
+you don't clobber the frame they're in the middle of copying.
+
+~Andrew
