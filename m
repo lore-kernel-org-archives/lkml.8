@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F81C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A50EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85DAB20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0832820707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947899;
-	bh=zkS5E5Jh9wPyO6MweZX0CvEzTtrSALDFUfY+ccR6C1k=;
+	s=default; t=1592947906;
+	bh=ASgfV1lHJgH4N3WUQ89zDY7Hb3Futsl0SfI9sb94r/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hUnFtS7gfZxaU86dqXxRbsDHVc9MYrmyR1AgTIzP/zQz6G9AcnGK6HOt+z2FhxxRi
-	 DDT6XBRDAqg0/L3S6ViB0bEGsNTIKbQ/nOAT2Jt9umeMSBVlB66eTPBF4xTqtIQnqp
-	 8sTJT3+DCUtz0+bghPc8UVrc4A4RHo6IMX92Sxjs=
+	b=vHtQ4vIH8h5JEFPGR+iYeGcbjWbnRhWB8CC1rd8rw3IyRkQI8byV7QbGkVmswqK2c
+	 D/USOyXn0Ljb/YoamAEuNqmMNmy1zYtZ8vUlWoNXElH//6CHEYB8RkquODTvWjqlSk
+	 +JcTm2boBWQGz58KfrHMh3UCL3q94u5+Imw8NZlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393650AbgFWVbh (ORCPT
+        id S2390310AbgFWVbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54860 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:31:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389031AbgFWUM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:12:59 -0400
+        id S2389013AbgFWUMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:12:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7A97206C3;
-        Tue, 23 Jun 2020 20:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99599206C3;
+        Tue, 23 Jun 2020 20:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943179;
-        bh=zkS5E5Jh9wPyO6MweZX0CvEzTtrSALDFUfY+ccR6C1k=;
+        s=default; t=1592943172;
+        bh=ASgfV1lHJgH4N3WUQ89zDY7Hb3Futsl0SfI9sb94r/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V+CcAmNRezaMCEWB6DOQ1EpjuqQQeaccM/F/DfLFumtlejgO9qeqGdADuXNKS3UZ7
-         nqNnrHg2kHZ8nXIsj7LtXsIPB/W+dNP+8ED/Azy1VLyNtIWywh+hUaIXzIB9qDS+MN
-         yUAIfgOJF2omZkXL93+kfoKX3GDDiz4vQi//7vn0=
+        b=ArNZl1rwt1dqyU6jSgXf7UST2VOdFWMbZENigY/xoDzeJ2z3gTXTJmdY/plnKV+gi
+         h4eN6iqIIK9V2tQQUo8T+VkJTdk/ngHBFd8OMPMybJKgR9KbMleRwcoaSqqjbWbyHP
+         aDms8X2ia9A0xgdJRBZKjyYe0OXqJXK9pVgrcC3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fedor Tokarev <ftokarev@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org,
+        John Hubbard <jhubbard@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 290/477] net: sunrpc: Fix off-by-one issues in rpc_ntop6
-Date:   Tue, 23 Jun 2020 21:54:47 +0200
-Message-Id: <20200623195421.274736141@linuxfoundation.org>
+Subject: [PATCH 5.7 287/477] misc: xilinx-sdfec: improve get_user_pages_fast() error handling
+Date:   Tue, 23 Jun 2020 21:54:44 +0200
+Message-Id: <20200623195421.135774193@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,43 +64,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fedor Tokarev <ftokarev@gmail.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
+[ Upstream commit 57343d51613227373759f5b0f2eede257fd4b82e ]
 
-Fix off-by-one issues in 'rpc_ntop6':
- - 'snprintf' returns the number of characters which would have been
-   written if enough space had been available, excluding the terminating
-   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
-   last character was dropped.
- - 'strcat' adds a terminating null byte to the string, thus if len ==
-   buflen, the null byte is written past the end of the buffer.
+This fixes the case of get_user_pages_fast() returning a -errno.
+The result needs to be stored in a signed integer. And for safe
+signed/unsigned comparisons, it's best to keep everything signed.
+And get_user_pages_fast() also expects a signed value for number
+of pages to pin.
 
-Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Therefore, change most relevant variables, from u32 to int. Leave
+"n" unsigned, for convenience in checking for overflow. And provide
+a WARN_ON_ONCE() and early return, if overflow occurs.
+
+Also, as long as we're tidying up: rename the page array from page,
+to pages, in order to match the conventions used in most other call
+sites.
+
+Fixes: 20ec628e8007e ("misc: xilinx_sdfec: Add ability to configure LDPC")
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Link: https://lore.kernel.org/r/20200527012628.1100649-2-jhubbard@nvidia.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/addr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/xilinx_sdfec.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 8b4d72b1a0667..010dcb876f9d7 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -82,11 +82,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index 71bbaa56bdb5b..e2766aad9e142 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -602,10 +602,10 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
+ 			      const u32 depth)
+ {
+ 	u32 reg = 0;
+-	u32 res;
+-	u32 n, i;
++	int res, i, nr_pages;
++	u32 n;
+ 	u32 *addr = NULL;
+-	struct page *page[MAX_NUM_PAGES];
++	struct page *pages[MAX_NUM_PAGES];
  
- 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
- 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
--	if (unlikely((size_t)rc > sizeof(scopebuf)))
-+	if (unlikely((size_t)rc >= sizeof(scopebuf)))
- 		return 0;
+ 	/*
+ 	 * Writes that go beyond the length of
+@@ -622,15 +622,22 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
+ 	if ((len * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE)
+ 		n += 1;
  
- 	len += rc;
--	if (unlikely(len > buflen))
-+	if (unlikely(len >= buflen))
- 		return 0;
+-	res = get_user_pages_fast((unsigned long)src_ptr, n, 0, page);
+-	if (res < n) {
+-		for (i = 0; i < res; i++)
+-			put_page(page[i]);
++	if (WARN_ON_ONCE(n > INT_MAX))
++		return -EINVAL;
++
++	nr_pages = n;
++
++	res = get_user_pages_fast((unsigned long)src_ptr, nr_pages, 0, pages);
++	if (res < nr_pages) {
++		if (res > 0) {
++			for (i = 0; i < res; i++)
++				put_page(pages[i]);
++		}
+ 		return -EINVAL;
+ 	}
  
- 	strcat(buf, scopebuf);
+-	for (i = 0; i < n; i++) {
+-		addr = kmap(page[i]);
++	for (i = 0; i < nr_pages; i++) {
++		addr = kmap(pages[i]);
+ 		do {
+ 			xsdfec_regwrite(xsdfec,
+ 					base_addr + ((offset + reg) *
+@@ -639,7 +646,7 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
+ 			reg++;
+ 		} while ((reg < len) &&
+ 			 ((reg * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE));
+-		put_page(page[i]);
++		put_page(pages[i]);
+ 	}
+ 	return reg;
+ }
 -- 
 2.25.1
 
