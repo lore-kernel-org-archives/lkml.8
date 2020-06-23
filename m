@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F03FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A52C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A88020656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1423020702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945742;
-	bh=X2R+j2ZdNZt6t0CmdutaIa9okM3nECUW4GKc5aL0RiU=;
+	s=default; t=1592945747;
+	bh=oLIKfJGCNx2bGod8RcZC+tmCFiA6XqLaQHeOA42g2oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RWh9ugYC3LlrbIiT+rR1rgZMGf68NuBZ7zuSwLHoIDMmBzcpqp2hhN1pgdmqGj+S9
-	 /UDYsmuHouOQOBKSIKAA0T+BtZeEnaOfhJVxCMRov8lgfQpxXCQFwJSXnspQZzibWD
-	 1yXds7SBaj3twZL+yv24iNp5dmKYe2CGfZn1q0wY=
+	b=Ioo3tTCv2o0W6A60jM8hS1Z/IJZdhnYYjcb+CW+/3XVXcuA1XIBeKnMCsnSukwp5n
+	 hwP90FnnU7CSoGRQ7N4SVRH1jdnGpJM9NzLtV6buMX2ZKl2oCUAjJaJpLi80WLh3Yo
+	 D+c2lrpCLrEjolh9xJLBtT/p7KhXSdoN0VJPXNf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404113AbgFWUzi (ORCPT
+        id S2392916AbgFWUzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42194 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390354AbgFWUoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:44:55 -0400
+        id S2392578AbgFWUoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4A0A21927;
-        Tue, 23 Jun 2020 20:44:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0690D218AC;
+        Tue, 23 Jun 2020 20:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945095;
-        bh=X2R+j2ZdNZt6t0CmdutaIa9okM3nECUW4GKc5aL0RiU=;
+        s=default; t=1592945072;
+        bh=oLIKfJGCNx2bGod8RcZC+tmCFiA6XqLaQHeOA42g2oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpP45/ZJMamqxYLq+BNpT5om/edxbS+5A2DG+agKpD62Q/OOlmqGQ+6l4Ox8nw6iM
-         l2eae8J/9quGXoxLWoSParnpTVxJsl/5b3dHVO66a1m73AUpwpTaNUTPHf8DqSve8f
-         CLiyytqTZy2M3gHw/Z0hsNHJmtlEgZwXHjT4KYhU=
+        b=ymEGM3e8G3n2sbT90AcdMJYVwcWVSesHvYNFStSy1F5W6cjRVv9Mwx07Ys4L4RMje
+         4yF3Ked0aGWJJ78HxVfOxitXX31YJ1AKgSAHqvLZAxojaei9XY1ueY9MhzDuhpwdVg
+         k7b7GMUHhM72nEfWhRvuO+QdTVTFG8cQhF59kRhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 009/136] backlight: lp855x: Ensure regulators are disabled on probe failure
-Date:   Tue, 23 Jun 2020 21:57:45 +0200
-Message-Id: <20200623195304.082635317@linuxfoundation.org>
+Subject: [PATCH 4.14 028/136] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
+Date:   Tue, 23 Jun 2020 21:58:04 +0200
+Message-Id: <20200623195305.070996150@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -61,121 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit d8207c155a7c6015eb7f43739baa7dfb1fa638af ]
+[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
 
-If probing the LP885x backlight fails after the regulators have been
-enabled, then the following warning is seen when releasing the
-regulators ...
+nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
+refcount of the "c->cn_xprt".
 
- WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
- Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
- CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
- Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+The reference counting issue happens in one exception handling path of
+nfsd4_process_cb_update(). When setup callback client failed, the
+function forgets to decrease the refcnt increased by svc_xprt_get(),
+causing a refcnt leak.
 
- ...
+Fix this issue by calling svc_xprt_put() when setup callback client
+failed.
 
- Call trace:
-  _regulator_put.part.28+0x158/0x160
-  regulator_put+0x34/0x50
-  devm_regulator_release+0x10/0x18
-  release_nodes+0x12c/0x230
-  devres_release_all+0x34/0x50
-  really_probe+0x1c0/0x370
-  driver_probe_device+0x58/0x100
-  device_driver_attach+0x6c/0x78
-  __driver_attach+0xb0/0xf0
-  bus_for_each_dev+0x68/0xc8
-  driver_attach+0x20/0x28
-  bus_add_driver+0x160/0x1f0
-  driver_register+0x60/0x110
-  i2c_register_driver+0x40/0x80
-  lp855x_driver_init+0x20/0x1000 [lp855x_bl]
-  do_one_initcall+0x58/0x1a0
-  do_init_module+0x54/0x1d0
-  load_module+0x1d80/0x21c8
-  __do_sys_finit_module+0xe8/0x100
-  __arm64_sys_finit_module+0x18/0x20
-  el0_svc_common.constprop.3+0xb0/0x168
-  do_el0_svc+0x20/0x98
-  el0_sync_handler+0xf4/0x1b0
-  el0_sync+0x140/0x180
-
-Fix this by ensuring that the regulators are disabled, if enabled, on
-probe failure.
-
-Finally, ensure that the vddio regulator is disabled in the driver
-remove handler.
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lp855x_bl.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs4callback.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
-index 939f057836e19..4cdc7a3f6dc5c 100644
---- a/drivers/video/backlight/lp855x_bl.c
-+++ b/drivers/video/backlight/lp855x_bl.c
-@@ -460,7 +460,7 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 		ret = regulator_enable(lp->enable);
- 		if (ret < 0) {
- 			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
--			return ret;
-+			goto disable_supply;
- 		}
- 
- 		/*
-@@ -475,24 +475,34 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 	ret = lp855x_configure(lp);
- 	if (ret) {
- 		dev_err(lp->dev, "device config err: %d", ret);
--		return ret;
-+		goto disable_vddio;
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 80aeb19b176b2..22b784e7ef50b 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1161,6 +1161,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
+ 	err = setup_callback_client(clp, &conn, ses);
+ 	if (err) {
+ 		nfsd4_mark_cb_down(clp, err);
++		if (c)
++			svc_xprt_put(c->cn_xprt);
+ 		return;
  	}
- 
- 	ret = lp855x_backlight_register(lp);
- 	if (ret) {
- 		dev_err(lp->dev,
- 			"failed to register backlight. err: %d\n", ret);
--		return ret;
-+		goto disable_vddio;
- 	}
- 
- 	ret = sysfs_create_group(&lp->dev->kobj, &lp855x_attr_group);
- 	if (ret) {
- 		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
--		return ret;
-+		goto disable_vddio;
- 	}
- 
- 	backlight_update_status(lp->bl);
-+
- 	return 0;
-+
-+disable_vddio:
-+	if (lp->enable)
-+		regulator_disable(lp->enable);
-+disable_supply:
-+	if (lp->supply)
-+		regulator_disable(lp->supply);
-+
-+	return ret;
  }
- 
- static int lp855x_remove(struct i2c_client *cl)
-@@ -501,6 +511,8 @@ static int lp855x_remove(struct i2c_client *cl)
- 
- 	lp->bl->props.brightness = 0;
- 	backlight_update_status(lp->bl);
-+	if (lp->enable)
-+		regulator_disable(lp->enable);
- 	if (lp->supply)
- 		regulator_disable(lp->supply);
- 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
 -- 
 2.25.1
 
