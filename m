@@ -2,55 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48418C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D10E21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23241218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945059;
-	bh=nfBpttPTgdjEcAGwZzBdAE0VsG6wpa3cWqoOnuqOev0=;
+	s=default; t=1592945064;
+	bh=/FvxPPIPe+dQTXQL6FxQuEEeAiwkRfiSX57QfrrFAq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v33cf5TqI6WeeUeWPfwaKSCzQapCYPY+y8Teyzznb8WGRd6hHNlkUpIUONKitSHOp
-	 7z52t8z9Awa/tUnaUm+57bv2wn55VVqDXhlvmHSi0xEny7ig4x4whhXGezqiGRPZph
-	 QudZICNXJx7Cnd34yUkO2T9Nw3sBxIqw6fj9taeU=
+	b=g13EELXRCo/InVgpVKZTeIYflstyYCCfywXYWjYrlvVGtYJwXPpn0gF7nRUscy5oO
+	 zWxv+HqUjS7Jr3+wf2JJGzxUUjFQqWUeBp9HuDxtFl4Fhj9rLXDxMVoVkCZoC1tAs0
+	 c8Ew5iu+hUmR/axCbcGEgTJGd4ncGNFrcfpFlTaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403986AbgFWUoR (ORCPT
+        id S2392570AbgFWUoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:44:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:44:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403978AbgFWUoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:44:12 -0400
+        id S2403984AbgFWUoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22F321BE5;
-        Tue, 23 Jun 2020 20:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03E48218AC;
+        Tue, 23 Jun 2020 20:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945052;
-        bh=nfBpttPTgdjEcAGwZzBdAE0VsG6wpa3cWqoOnuqOev0=;
+        s=default; t=1592945057;
+        bh=/FvxPPIPe+dQTXQL6FxQuEEeAiwkRfiSX57QfrrFAq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yk94XXjJB7cXcPV0Qruw3PHzj4R6y3u5yrAqPtt74QxPopGbB9adgQ0StaXedCZe3
-         nxwjCn74HGy1apvEWL6niLHEdStnYmbO9D065LUEcX5I6p66CVWlqBtWdHzdPzxExe
-         LwUcoHoREoGJhGX06J9053OxvKioLVHt7JN0WNXo=
+        b=ABByXPlXZMHARrcyp1tq7Nj0bjRti3nwy7cbiy8Y1otR20y7hh2AjuNoysnq82kT2
+         3OfxfmwuYljXC3o5NxsGvj0kdZPgu5YMnQ0fKXoU5A/zTzTi5cvTiXfFjfbmkWdiEs
+         YTxhdhmWOw7d0xMJ2N4GUuNTeV4rJKcap5IlCqUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 020/136] PCI: aardvark: Dont blindly enable ASPM L0s and dont write to read-only register
-Date:   Tue, 23 Jun 2020 21:57:56 +0200
-Message-Id: <20200623195304.629278646@linuxfoundation.org>
+Subject: [PATCH 4.14 022/136] vfio/pci: fix memory leaks in alloc_perm_bits()
+Date:   Tue, 23 Jun 2020 21:57:58 +0200
+Message-Id: <20200623195304.747247165@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -63,63 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
+[ Upstream commit 3e63b94b6274324ff2e7d8615df31586de827c4e ]
 
-Trying to change Link Status register does not have any effect as this
-is a read-only register. Trying to overwrite bits for Negotiated Link
-Width does not make sense.
+vfio_pci_disable() calls vfio_config_free() but forgets to call
+free_perm_bits() resulting in memory leaks,
 
-In future proper change of link width can be done via Lane Count Select
-bits in PCIe Control 0 register.
+unreferenced object 0xc000000c4db2dee0 (size 16):
+  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
+  hex dump (first 16 bytes):
+    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
+  backtrace:
+    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
+    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
+    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
+    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
+    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
+    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
+    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
+    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
+    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
+    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
+    [<000000006577923d>] sys_ioctl+0x28/0x40
+    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
+    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+unreferenced object 0xc000000c4db2e330 (size 16):
+  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
+  hex dump (first 16 bytes):
+    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
+  backtrace:
+    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
+    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
+    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
+    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
+    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
+    [<000000006577923d>] sys_ioctl+0x28/0x40
+    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
+    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
 
-Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
-Control register is wrong. There should be at least some detection if
-endpoint supports L0s as isn't mandatory.
-
-Moreover ASPM Control bits in Link Control register are controlled by
-pcie/aspm.c code which sets it according to system ASPM settings,
-immediately after aardvark driver probes. So setting these bits by
-aardvark driver has no long running effect.
-
-Remove code which touches ASPM L0s bits from this driver and let
-kernel's ASPM implementation to set ASPM state properly.
-
-Some users are reporting issues that this code is problematic for some
-Intel wifi cards and removing it fixes them, see e.g.:
-https://bugzilla.kernel.org/show_bug.cgi?id=196339
-
-If problems with Intel wifi cards occur even after this commit, then
-pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
-for affected problematic cards.
-
-Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
+Signed-off-by: Qian Cai <cai@lca.pw>
+[aw: rolled in follow-up patch]
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-aardvark.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/vfio/pci/vfio_pci_config.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/host/pci-aardvark.c b/drivers/pci/host/pci-aardvark.c
-index 5f3048e75becb..c1db09fbbe041 100644
---- a/drivers/pci/host/pci-aardvark.c
-+++ b/drivers/pci/host/pci-aardvark.c
-@@ -365,10 +365,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index 423ea1f98441a..c2d300bc37f64 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1732,8 +1732,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
+ 	vdev->vconfig = NULL;
+ 	kfree(vdev->pci_config_map);
+ 	vdev->pci_config_map = NULL;
+-	kfree(vdev->msi_perm);
+-	vdev->msi_perm = NULL;
++	if (vdev->msi_perm) {
++		free_perm_bits(vdev->msi_perm);
++		kfree(vdev->msi_perm);
++		vdev->msi_perm = NULL;
++	}
+ }
  
- 	advk_pcie_wait_for_link(pcie);
- 
--	reg = PCIE_CORE_LINK_L0S_ENTRY |
--		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
--	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
--
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
- 		PCIE_CORE_CMD_IO_ACCESS_EN |
+ /*
 -- 
 2.25.1
 
