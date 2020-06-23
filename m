@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72A2D20EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A0A20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943380;
-	bh=yCnnmnrL8bLn9e8bY/dSWzWtulChL8RsibXQVL+oxy8=;
+	s=default; t=1592943384;
+	bh=vmvgYVO8n1EP5AjQrgIGT1TInpBkxtyNeuzktd11RXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBq2AaPMrwWuj6aMTnpJ+oNyYzXabKotT64rEeEXwGu/1FKQCSRE8So6lexquvYgV
-	 fnKxP0zuuO5sWmWFqSopHehE291x3AEfEzo/Hb4qbuB4X7YYXu5d0uFgg0/uT7SGtI
-	 xAj5RJCvriviOX+N8TDTzZB+w0LMg7ZHAQRSh+pk=
+	b=TIuVDHO+S8OhKTBePnE4W9aVakK09ZXakleKC8DwCUUvOdDYF6B7aRRlONAVNeLs7
+	 IknW8gvb8NSdffPnLhzIFpI09IoEHO2SHa6udiM7BogH5x0gzBEnm9hmXa0nbrC75q
+	 pV1jjUqsvdHjB84dBixvbUW20mKcyAfnmQw6yw/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387884AbgFWUQT (ORCPT
+        id S2389410AbgFWUQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59606 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:16:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389393AbgFWUQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:15 -0400
+        id S2388022AbgFWUQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:16:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F145720702;
-        Tue, 23 Jun 2020 20:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 787952073E;
+        Tue, 23 Jun 2020 20:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943375;
-        bh=yCnnmnrL8bLn9e8bY/dSWzWtulChL8RsibXQVL+oxy8=;
+        s=default; t=1592943378;
+        bh=vmvgYVO8n1EP5AjQrgIGT1TInpBkxtyNeuzktd11RXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D2I/vyQudOnkmP2uB4Beb5x9DBDSOUcjplCHbVaa9xskkvr9504nfSV/QqF+pMZ9T
-         ARgouPxdK0jLpq4Cg8jSVfrFRrQWuYuDTQn0eireMcyQyMXdUQd9ifm9+XUrf2+qz6
-         Pbu0cwttl+tIMGJg8t/6Xj8FGMNoTyQThlFvGe/Q=
+        b=qT1j0Dd3JijszeIVhXzT4HX5LizUnL3j9JMSZMHSGFWxmi1aFrQFBxDn/hgsdrSl4
+         lt2aDOe7EHuaMPzNS/F7ANFuyVvbntv9xV+KzfjjyQ6j44zCjYrCbnNNUuM7sVSfvT
+         4dX+0Lc4utWrCYg1pvfFuMk3zC9GCd0Xb4aTvE34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 366/477] x86/idt: Keep spurious entries unset in system_vectors
-Date:   Tue, 23 Jun 2020 21:56:03 +0200
-Message-Id: <20200623195424.832785282@linuxfoundation.org>
+Subject: [PATCH 5.7 338/477] net: mscc: Fix OF_MDIO config check
+Date:   Tue, 23 Jun 2020 21:55:35 +0200
+Message-Id: <20200623195423.518527381@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,50 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Dan Murphy <dmurphy@ti.com>
 
-[ Upstream commit 1f1fbc70c10e81f70e9fbe2102d439c883269811 ]
+[ Upstream commit ae602786407fef34e1d66b3c8f278a10ed37197e ]
 
-With commit dc20b2d52653 ("x86/idt: Move interrupt gate initialization to
-IDT code") non assigned system vectors are also marked as used in
-'used_vectors' (now 'system_vectors') bitmap. This makes checks in
-arch_show_interrupts() whether a particular system vector is allocated to
-always pass and e.g. 'Hyper-V reenlightenment interrupts' entry always
-shows up in /proc/interrupts.
+When CONFIG_OF_MDIO is set to be a module the code block is not
+compiled. Use the IS_ENABLED macro that checks for both built in as
+well as module.
 
-Another side effect of having all unassigned system vectors marked as used
-is that irq_matrix_debug_show() will wrongly count them among 'System'
-vectors.
-
-As it is now ensured that alloc_intr_gate() is not called after init, it is
-possible to leave unused entries in 'system_vectors' unset to fix these
-issues.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200428093824.1451532-4-vkuznets@redhat.com
+Fixes: 4f58e6dceb0e4 ("net: phy: Cleanup the Edge-Rate feature in Microsemi PHYs.")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/idt.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/phy/mscc/mscc.h      | 2 +-
+ drivers/net/phy/mscc/mscc_main.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 87ef69a72c52e..7bb4c3cbf4dcd 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -318,7 +318,11 @@ void __init idt_setup_apic_and_irq_gates(void)
+diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+index 414e3b31bb1fa..132f9bf49198f 100644
+--- a/drivers/net/phy/mscc/mscc.h
++++ b/drivers/net/phy/mscc/mscc.h
+@@ -375,7 +375,7 @@ struct vsc8531_private {
+ #endif
+ };
  
- #ifdef CONFIG_X86_LOCAL_APIC
- 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
--		set_bit(i, system_vectors);
-+		/*
-+		 * Don't set the non assigned system vectors in the
-+		 * system_vectors bitmap. Otherwise they show up in
-+		 * /proc/interrupts.
-+		 */
- 		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
- 		set_intr_gate(i, entry);
- 	}
+-#ifdef CONFIG_OF_MDIO
++#if IS_ENABLED(CONFIG_OF_MDIO)
+ struct vsc8531_edge_rate_table {
+ 	u32 vddmac;
+ 	u32 slowdown[8];
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index c8aa6d905d8e6..485a4f8a6a9a6 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -98,7 +98,7 @@ static const struct vsc85xx_hw_stat vsc8584_hw_stats[] = {
+ 	},
+ };
+ 
+-#ifdef CONFIG_OF_MDIO
++#if IS_ENABLED(CONFIG_OF_MDIO)
+ static const struct vsc8531_edge_rate_table edge_table[] = {
+ 	{MSCC_VDDMAC_3300, { 0, 2,  4,  7, 10, 17, 29, 53} },
+ 	{MSCC_VDDMAC_2500, { 0, 3,  6, 10, 14, 23, 37, 63} },
+@@ -382,7 +382,7 @@ out_unlock:
+ 	mutex_unlock(&phydev->lock);
+ }
+ 
+-#ifdef CONFIG_OF_MDIO
++#if IS_ENABLED(CONFIG_OF_MDIO)
+ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ {
+ 	u32 vdd, sd;
 -- 
 2.25.1
 
