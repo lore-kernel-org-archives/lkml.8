@@ -2,51 +2,53 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3537C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A96AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEC321531
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48C9421582
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944764;
-	bh=P8a4WFjZpL3Kvdj6tkFAa9TA2uxS7qZYDNT4HyyeK+U=;
+	s=default; t=1592944768;
+	bh=yGrHHcCypfFHgnq0HVtFGtN17pmOtTr2PTfIXymxVTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qarJifixmIUdlGClQoKIe/jq+LBhWp4mDu8JldFebKGkqOmmC8Y9ugzYUUtA0GsaW
-	 vUu2pCIF11BbPpnrMmhJ39ix0ER+ptEVOa9ZMZC9M/7VMYRoaRd0tPxXs/+/bvSIDO
-	 /MJ3kfFmmANLWj7M86TmT7cXa/kKfG/blzEYVykg=
+	b=EeT8fDUyQSJZSQ1MQaI2cDzyHuXAATU0xhfdAwl5x781Dm5HCW/RjdzXbcFjbchI/
+	 55poLtdhAqZ7XxiToIXFPPeORkoU+l3Jp5USZOfjxRr1x6ku217ZkStkvu+SbG3mHQ
+	 FfWslhahYMn2OLnQTmEtOcrt3darxFll67sMt7ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392051AbgFWUjW (ORCPT
+        id S2403851AbgFWUjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:39:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389762AbgFWUjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:39:13 -0400
+        id S2392052AbgFWUjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:39:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF9BF2080C;
-        Tue, 23 Jun 2020 20:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE38821531;
+        Tue, 23 Jun 2020 20:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944753;
-        bh=P8a4WFjZpL3Kvdj6tkFAa9TA2uxS7qZYDNT4HyyeK+U=;
+        s=default; t=1592944763;
+        bh=yGrHHcCypfFHgnq0HVtFGtN17pmOtTr2PTfIXymxVTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tghslh8udw7HgA4OQ4tMOrT8VmYDQyqdXtXIoK1gh/PvfAM0Y6mT2LQzMKvJu/EWE
-         cpIeH1BC9PeDPDLBBwl6qEKQvb+4zHKn0dNigj1I/J3eOwIHJy9GQ4GVwx37LzqESH
-         oLUSfXmrBiRv9LJ0gh9DXeSDBXdVFwCkF/W/3Q/M=
+        b=oQoK/XmzEbWCoIY0XL+E5eAvI4Q+r7wLOYsS18gVm2/g5MXgVsAedZAR/wd/BR1Nx
+         5Sl2upHYuYQsZHjOQ2CxIr8ZuO2aq2U8cYBSMpBaH+dhNjGj8A9s5UIe67Vy4cFa8E
+         OtErh35T7B+G8Q35pdRAREyk4UFGp2ipPfja8T+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 112/206] x86/apic: Make TSC deadline timer detection message visible
-Date:   Tue, 23 Jun 2020 21:57:20 +0200
-Message-Id: <20200623195322.450511624@linuxfoundation.org>
+Subject: [PATCH 4.19 115/206] clk: bcm2835: Fix return type of bcm2835_register_gate
+Date:   Tue, 23 Jun 2020 21:57:23 +0200
+Message-Id: <20200623195322.607726709@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,45 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit de308d1815c9e8fe602a958c5c76142ff6501d75 ]
+[ Upstream commit f376c43bec4f8ee8d1ba5c5c4cfbd6e84fb279cb ]
 
-The commit
+bcm2835_register_gate is used as a callback for the clk_register member
+of bcm2835_clk_desc, which expects a struct clk_hw * return type but
+bcm2835_register_gate returns a struct clk *.
 
-  c84cb3735fd5 ("x86/apic: Move TSC deadline timer debug printk")
+This discrepancy is hidden by the fact that bcm2835_register_gate is
+cast to the typedef bcm2835_clk_register by the _REGISTER macro. This
+turns out to be a control flow integrity violation, which is how this
+was noticed.
 
-removed the message which said that the deadline timer was enabled.
-It added a pr_debug() message which is issued when deadline timer
-validation succeeds.
+Change the return type of bcm2835_register_gate to be struct clk_hw *
+and use clk_hw_register_gate to do so. This should be a non-functional
+change as clk_register_gate calls clk_hw_register_gate anyways but this
+is needed to avoid issues with further changes.
 
-Well, issued only when CONFIG_DYNAMIC_DEBUG is enabled - otherwise
-pr_debug() calls get optimized away if DEBUG is not defined in the
-compilation unit.
-
-Therefore, make the above message pr_info() so that it is visible in
-dmesg.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200525104218.27018-1-bp@alien8.de
+Fixes: b19f009d4510 ("clk: bcm2835: Migrate to clk_hw based registration and OF APIs")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1028
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lkml.kernel.org/r/20200516080806.1459784-1-natechancellor@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/bcm/clk-bcm2835.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 53dc8492f02ff..e9456a2eef585 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2024,7 +2024,7 @@ void __init init_apic_mappings(void)
- 	unsigned int new_apicid;
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 7bef0666ae7e7..1c093fb35ebee 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -1447,13 +1447,13 @@ static struct clk_hw *bcm2835_register_clock(struct bcm2835_cprman *cprman,
+ 	return &clock->hw;
+ }
  
- 	if (apic_validate_deadline_timer())
--		pr_debug("TSC deadline timer available\n");
-+		pr_info("TSC deadline timer available\n");
+-static struct clk *bcm2835_register_gate(struct bcm2835_cprman *cprman,
++static struct clk_hw *bcm2835_register_gate(struct bcm2835_cprman *cprman,
+ 					 const struct bcm2835_gate_data *data)
+ {
+-	return clk_register_gate(cprman->dev, data->name, data->parent,
+-				 CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
+-				 cprman->regs + data->ctl_reg,
+-				 CM_GATE_BIT, 0, &cprman->regs_lock);
++	return clk_hw_register_gate(cprman->dev, data->name, data->parent,
++				    CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
++				    cprman->regs + data->ctl_reg,
++				    CM_GATE_BIT, 0, &cprman->regs_lock);
+ }
  
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
+ typedef struct clk_hw *(*bcm2835_clk_register)(struct bcm2835_cprman *cprman,
 -- 
 2.25.1
 
