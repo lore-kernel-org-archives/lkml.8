@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2183C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B46F20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D6520702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947071;
-	bh=7i/UUvq2ow8wHVnKokk+DClSu8XQ9EKsbnb7G8pQP90=;
+	s=default; t=1592947083;
+	bh=VcSOQ2qH2sWUKv+iNrqztCThkyL2PjPjllnVeVeguF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N8cAufVKlSjo4EU/h18xyPwyIosZScPmaclWILYmKad19z8R4sz8c9wxadhHhHRN/
-	 g5gOIn4hP4RD03lbO+r7R1OE7AHZVcrrv6g/rel1vmJn2HqjtRRjEUdbzMgSPbW03B
-	 muahvDkvWVIxSzxxxc7wcRzuIDfAbEH5mmdt1MDM=
+	b=YfjYaDTaxEq2jMHcMtqaKpLRtUeKH81soUmI6Z24uws4OHc2p58HGAxdIJaRaLKzL
+	 wKFZ71JcJV7tEk62hTjG4Z4PGCMORIwr5YdbC3t9If9bRja1M6iiGiKupvbEBXuo32
+	 FV5gk53QBXullSnpptkJ5mHUs5y13e4cxcT7L9Uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393421AbgFWVRs (ORCPT
+        id S2390911AbgFWVSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:17:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45792 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389149AbgFWU0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:26:34 -0400
+        id S2390643AbgFWU0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:26:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 223DF20702;
-        Tue, 23 Jun 2020 20:26:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB9A20702;
+        Tue, 23 Jun 2020 20:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943994;
-        bh=7i/UUvq2ow8wHVnKokk+DClSu8XQ9EKsbnb7G8pQP90=;
+        s=default; t=1592943983;
+        bh=VcSOQ2qH2sWUKv+iNrqztCThkyL2PjPjllnVeVeguF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=llNFSLyIHkCJVVPSjUM189Fg1BUCspCfQH9apj5GScBnJbLUoFWrfTEXjB2HoAjvh
-         WKKPE6/tSXG03xs+gFp02sT7gOwD6aCHzDWQqO49mYm/JN0URAXQUem6CNuG1iSstI
-         wlxfqtGOK3u1Y0Gr2Q3Ckymt/cfCDmz4GyLisXFI=
+        b=Mh7maM3vEDBQAsH8kD/Fv2dLUf3U9qnwsUiBdox44YtF9fGH+yQT1A6BuOgZFX953
+         xnwZynk14XNIK8H5fa5v/JNRc9Ty1yOPA5ir/nTmyGE1n9hCBwEr4NXwFLS8W0k1/P
+         5zCUELEvbUgdK62xJJkPDAJ+eBrhBarRbnLGFdyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 100/314] ALSA: usb-audio: Fix racy list management in output queue
-Date:   Tue, 23 Jun 2020 21:54:55 +0200
-Message-Id: <20200623195343.630805044@linuxfoundation.org>
+Subject: [PATCH 5.4 126/314] power: supply: lp8788: Fix an error handling path in lp8788_charger_probe()
+Date:   Tue, 23 Jun 2020 21:55:21 +0200
+Message-Id: <20200623195344.882354120@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -59,49 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 5b6cc38f3f3f37109ce72b60bda215a5f6892c0b ]
+[ Upstream commit 934ed3847a4ebc75b655659c4d2349ba4337941c ]
 
-The linked list entry from FIFO is peeked at
-queue_pending_output_urbs() but the actual element pop-out is
-performed outside the spinlock, and it's potentially racy.
+In the probe function, in case of error, resources allocated in
+'lp8788_setup_adc_channel()' must be released.
 
-Do delete the link at the right place inside the spinlock.
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
+This has the extra benefit to simplify the remove function and to axe the
+'lp8788_release_adc_channel()' function which is now useless.
 
-Fixes: 8fdff6a319e7 ("ALSA: snd-usb: implement new endpoint streaming model")
-Link: https://lore.kernel.org/r/20200424074016.14301-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/endpoint.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/power/supply/lp8788-charger.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
-index d8dc7cb56d43c..50104f658ed49 100644
---- a/sound/usb/endpoint.c
-+++ b/sound/usb/endpoint.c
-@@ -346,17 +346,17 @@ static void queue_pending_output_urbs(struct snd_usb_endpoint *ep)
- 			ep->next_packet_read_pos %= MAX_URBS;
+diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
+index 84a206f42a8e9..e7931ffb7151d 100644
+--- a/drivers/power/supply/lp8788-charger.c
++++ b/drivers/power/supply/lp8788-charger.c
+@@ -572,27 +572,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
+ 		return;
  
- 			/* take URB out of FIFO */
--			if (!list_empty(&ep->ready_playback_urbs))
-+			if (!list_empty(&ep->ready_playback_urbs)) {
- 				ctx = list_first_entry(&ep->ready_playback_urbs,
- 					       struct snd_urb_ctx, ready_list);
-+				list_del_init(&ctx->ready_list);
-+			}
- 		}
- 		spin_unlock_irqrestore(&ep->lock, flags);
+ 	/* ADC channel for battery voltage */
+-	chan = iio_channel_get(dev, pdata->adc_vbatt);
++	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
+ 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
  
- 		if (ctx == NULL)
- 			return;
+ 	/* ADC channel for battery temperature */
+-	chan = iio_channel_get(dev, pdata->adc_batt_temp);
++	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
+ 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
+ }
  
--		list_del_init(&ctx->ready_list);
+-static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
+-{
+-	int i;
 -
- 		/* copy over the length information */
- 		for (i = 0; i < packet->packets; i++)
- 			ctx->packet_size[i] = packet->packet_size[i];
+-	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
+-		if (!pchg->chan[i])
+-			continue;
+-
+-		iio_channel_release(pchg->chan[i]);
+-		pchg->chan[i] = NULL;
+-	}
+-}
+-
+ static ssize_t lp8788_show_charger_status(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+@@ -735,7 +722,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
+ 	flush_work(&pchg->charger_work);
+ 	lp8788_irq_unregister(pdev, pchg);
+ 	lp8788_psy_unregister(pchg);
+-	lp8788_release_adc_channel(pchg);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
