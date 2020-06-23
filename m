@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80631C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85491C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43BCB2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58523207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944248;
-	bh=/UXAHFaS8OVho6FHO+lrtTbMB3D6hzejmkHdzFTN9bQ=;
+	s=default; t=1592944253;
+	bh=XxQjIkUsRGB+DDxM0YIwv0o9Puh0rXkbgJQOcQqSTBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyJIMncCIOm9aCFP/N9k12QFkMH1SNDdPQ473Uj615I2bgErX0rYW1TwaNMLskxqH
-	 I488FNfVdtUIM/TnWO2f53qb7yRmUpZIikEHQXfavYWbUaFuVxxH9t7FibjfYn8Ir6
-	 mu0OMP70zYg3LaKsxSadBTdvLRcJ61DIDnGgg3As=
+	b=Ub/ig3V8Sfaj6QQt2viQYRCvM054og55zmfr98gLjad0122+AyvBAATolwypLUpWS
+	 3nKr2OqC1YBN6bAXAULefczK855ZXBJusbUvNUh3Eu3uzik/dHV39v0HzLzDhAhZmF
+	 N74SFra5wHM6hfm23osGVrsZulbs4q/vAVQw25lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391167AbgFWUap (ORCPT
+        id S2390146AbgFWUau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51060 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391152AbgFWUam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:30:42 -0400
+        id S2390881AbgFWUap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:30:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EE052070E;
-        Tue, 23 Jun 2020 20:30:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB8EB2070E;
+        Tue, 23 Jun 2020 20:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944242;
-        bh=/UXAHFaS8OVho6FHO+lrtTbMB3D6hzejmkHdzFTN9bQ=;
+        s=default; t=1592944245;
+        bh=XxQjIkUsRGB+DDxM0YIwv0o9Puh0rXkbgJQOcQqSTBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cFGv3wmIV0kqTrfNbmKK3uKjiH6rPRwYF8paYPNxOL61IRls3SCddyVi2pdb8bWOR
-         KBtQTFL0cs1wIPKG3ZEO+qKHYRGLb7KmEz643sJwC0j1s9Qji/IAtVq+neU8cWT9i5
-         qJe2+BWrlvwVJIyj9jCRzS3fIO0U5WG3s6uq3MwA=
+        b=pov/4fQaZ/nKQtfY3D7ZCcygyKj1UtFU3Cxi6InaUnP2xqCOnNAHo6j9qDK86VTwS
+         suO+18gjlsgeVqrHnQyj92Q0CQ/RN1BWN0MYD8vMVBeOHyzHzOAp8+TtM9NZ7qnRN2
+         Bp/qtxWpr4l3tA9XYU1ygJ3/ymjrDnAu6SF6KZAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 227/314] blktrace: fix endianness for blk_log_remap()
-Date:   Tue, 23 Jun 2020 21:57:02 +0200
-Message-Id: <20200623195349.776578978@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 198/314] NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESSION
+Date:   Tue, 23 Jun 2020 21:56:33 +0200
+Message-Id: <20200623195348.368417937@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,62 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-[ Upstream commit 5aec598c456fe3c1b71a1202cbb42bdc2a643277 ]
+[ Upstream commit 1c709b766e73e54d64b1dde1b7cfbcf25bcb15b9 ]
 
-The function blk_log_remap() can be simplified by removing the
-call to get_pdu_remap() that copies the values into extra variable to
-print the data, which also fixes the endiannness warning reported by
-sparse.
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 02a95dee8cf0 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session_callback")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ fs/nfs/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 23e5f86c99215..a677aa84ccb6e 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1266,17 +1266,6 @@ static __u64 get_pdu_int(const struct trace_entry *ent, bool has_cg)
- 	return be64_to_cpu(*val);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e257653f25abd..33c17c69aeaa3 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7870,7 +7870,7 @@ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
  }
  
--static void get_pdu_remap(const struct trace_entry *ent,
--			  struct blk_io_trace_remap *r, bool has_cg)
--{
--	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
--	__u64 sector_from = __r->sector_from;
--
--	r->device_from = be32_to_cpu(__r->device_from);
--	r->device_to   = be32_to_cpu(__r->device_to);
--	r->sector_from = be64_to_cpu(sector_from);
--}
--
- typedef void (blk_log_action_t) (struct trace_iterator *iter, const char *act,
- 	bool has_cg);
+ static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
+-	.rpc_call_done =  &nfs4_bind_one_conn_to_session_done,
++	.rpc_call_done =  nfs4_bind_one_conn_to_session_done,
+ };
  
-@@ -1402,13 +1391,13 @@ static void blk_log_with_error(struct trace_seq *s,
- 
- static void blk_log_remap(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
- {
--	struct blk_io_trace_remap r = { .device_from = 0, };
-+	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
- 
--	get_pdu_remap(ent, &r, has_cg);
- 	trace_seq_printf(s, "%llu + %u <- (%d,%d) %llu\n",
- 			 t_sector(ent), t_sec(ent),
--			 MAJOR(r.device_from), MINOR(r.device_from),
--			 (unsigned long long)r.sector_from);
-+			 MAJOR(be32_to_cpu(__r->device_from)),
-+			 MINOR(be32_to_cpu(__r->device_from)),
-+			 be64_to_cpu(__r->sector_from));
- }
- 
- static void blk_log_plug(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
+ /*
 -- 
 2.25.1
 
