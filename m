@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C31CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79DA220842
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0250420857
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872723;
-	bh=0XLoP4u6mLOqOEwZNGlpgrofXLn4xvy0MoAxyMsE/RU=;
+	s=default; t=1592872726;
+	bh=p3AXeB+VOEIX1532PITIGWynvghXPAsUq+RRT6GbDv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nv1oFnXq+32pkpFRh9Yp1gAX+s5sytkpRA7hplrbG8ag8Is3fVolqS+E2edxti7By
-	 K7HRGskaEAgBCrF0nKRb2nE2xTIakYmjYD8q1RvtOhcfZRTxRNioaEDr/ijnRoa7rO
-	 DhoWKJ87KY9IqiY+QE8KbHcIq0IKyNUzxGJknVAw=
+	b=bifBddrjRo9MbkVFaT9ImPdnl1/ci4+RoP+Jk0Uk5K6UwOrH5wDQp41rxpwIFYyRl
+	 u/uBN7J8fEasI1ityCKxBqK8jfBjdY6xihVyD8bNPbdEnHiIg1E+TB0EFoCCsTFGZM
+	 2XqaiAGI+e988oUAroQG4l/kXf9Mf1c6esHi0ymY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732259AbgFWAim (ORCPT
+        id S1732266AbgFWAio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:38:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732153AbgFWAh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732154AbgFWAh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:37:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E997A20FC3;
-        Tue, 23 Jun 2020 00:37:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29A902137B;
+        Tue, 23 Jun 2020 00:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592872677;
-        bh=0XLoP4u6mLOqOEwZNGlpgrofXLn4xvy0MoAxyMsE/RU=;
+        bh=p3AXeB+VOEIX1532PITIGWynvghXPAsUq+RRT6GbDv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Y6EfOmO9+jeiUTJEPelSGvT/++20BAp7x2NQFA2ortI2leX/af9E1NROJY6q4NDu
-         botA/w3fKY9lGt8GLazJg5CGl1K6Z+1YCXDlLcQeMuq87LhBVsSK6lXy2P27lpGXzP
-         +s3iJTliNArFOXWCRfEIZ+iC/ZL+kOxLx2ow9qnE=
+        b=mCf3ywLixTvLSK63to03mfAKo3/FFbl6Y4zOmoaBW10blwxnmXgdQXVvrg47lp2SG
+         qyP/Hpckp2dkriYdLNluw3pmvyl5UEDeHzy+X/CUYNzO9e73HP3FMcUJxfY/NTY9ri
+         SJifybKJVc/VjGBqQpaCtTu9hOw0Xoiz47M1ehjE=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Marco Elver <elver@google.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 15/23] torture: Pass --kmake-arg to all make invocations
-Date:   Mon, 22 Jun 2020 17:37:44 -0700
-Message-Id: <20200623003752.26872-15-paulmck@kernel.org>
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 16/23] torture: Correctly summarize build-only runs
+Date:   Mon, 22 Jun 2020 17:37:45 -0700
+Message-Id: <20200623003752.26872-16-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623003731.GA26717@paulmck-ThinkPad-P72>
 References: <20200623003731.GA26717@paulmck-ThinkPad-P72>
@@ -60,41 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-We need to pass the arguments provided to --kmake-arg to all make
-invocations. In particular, the make invocations generating the configs
-need to see the final make arguments, e.g. if config variables depend on
-particular variables that are passed to make.
+Currently, kvm-recheck.sh complains that qemu failed for --buildonly
+runs, which is sort of true given that qemu can hardly succeed if not
+invoked in the first place.  Nevertheless, this commit swaps the order
+of checks in kvm-recheck.sh so that --buildonly runs will be summarized
+more straightforwardly.
 
-For example, when using '--kcsan --kmake-arg CC=clang-11', we would lose
-CONFIG_KCSAN=y due to 'make oldconfig' not seeing that we want to use a
-compiler that supports KCSAN.
-
-Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/configinit.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm-recheck.sh | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/configinit.sh b/tools/testing/selftests/rcutorture/bin/configinit.sh
-index 93e80a4..d6e5ce0 100755
---- a/tools/testing/selftests/rcutorture/bin/configinit.sh
-+++ b/tools/testing/selftests/rcutorture/bin/configinit.sh
-@@ -32,11 +32,11 @@ if test -z "$TORTURE_TRUST_MAKE"
- then
- 	make clean > $resdir/Make.clean 2>&1
- fi
--make $TORTURE_DEFCONFIG > $resdir/Make.defconfig.out 2>&1
-+make $TORTURE_KMAKE_ARG $TORTURE_DEFCONFIG > $resdir/Make.defconfig.out 2>&1
- mv .config .config.sav
- sh $T/upd.sh < .config.sav > .config
- cp .config .config.new
--yes '' | make oldconfig > $resdir/Make.oldconfig.out 2> $resdir/Make.oldconfig.err
-+yes '' | make $TORTURE_KMAKE_ARG oldconfig > $resdir/Make.oldconfig.out 2> $resdir/Make.oldconfig.err
- 
- # verify new config matches specification.
- configcheck.sh .config $c
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+index 2261aa6..357899c 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+@@ -56,15 +56,15 @@ do
+ 				cat $i/Warnings
+ 			fi
+ 		else
+-			if test -f "$i/qemu-cmd"
+-			then
+-				print_bug qemu failed
+-				echo "   $i"
+-			elif test -f "$i/buildonly"
++			if test -f "$i/buildonly"
+ 			then
+ 				echo Build-only run, no boot/test
+ 				configcheck.sh $i/.config $i/ConfigFragment
+ 				parse-build.sh $i/Make.out $configfile
++			elif test -f "$i/qemu-cmd"
++			then
++				print_bug qemu failed
++				echo "   $i"
+ 			else
+ 				print_bug Build failed
+ 				echo "   $i"
 -- 
 2.9.5
 
