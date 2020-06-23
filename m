@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA66C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F445C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F1C20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537B020702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946972;
-	bh=3UCPZR2zeAskPCWyEr5PkUxJorj5DnhR6MseG5q1/aI=;
+	s=default; t=1592946970;
+	bh=BqB/9KVj8We+s1sje/PIaux8HMU7k4aVnS/tkl1/wkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s+VH6Xf5pwGEm1u+zq+KWmVMohdy+aQlcKv1PwVZYqHY3se7dOUagl+v175USbhnB
-	 wQyEYRDDA8mCO2MfEYaFOK5UqnAgcT02us9NwxrUFfPm1yr81nW6jjEdwz4DVfPH0u
-	 m+OsCuuNh7jhPxzv557YZ6vrfknuNi2AoLDXmsy4=
+	b=PCyVyLM7jsguEgQMlTNa6TQRoLsGd53jDqA47yrCx4/ostdQcML/zxYE5mp3Nd/jX
+	 Sr1DE35rStNyrIZcoB99ixTTwH9JSve3ITlIH0RIjjiejFrqk9QnUJ+kVul84su2Wr
+	 LJIdkbvHs89y/2vaIdu2aEkp2vKtmCdmj9LC5NQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390689AbgFWVQL (ORCPT
+        id S2390827AbgFWU2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:16:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390822AbgFWU17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:27:59 -0400
+        id S2390805AbgFWU1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:27:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49B9B20702;
-        Tue, 23 Jun 2020 20:27:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F872064B;
+        Tue, 23 Jun 2020 20:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944079;
-        bh=3UCPZR2zeAskPCWyEr5PkUxJorj5DnhR6MseG5q1/aI=;
+        s=default; t=1592944072;
+        bh=BqB/9KVj8We+s1sje/PIaux8HMU7k4aVnS/tkl1/wkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OfNRIBghEAKo6PJLM9gN08K6RPjXZ9tvvDvqeGsK0cJRLg/KhhrfkAMvnMnuqTxET
-         y1+W96ituQ/070Z7C3ecKgwyZNcy1skiyxb+vbyVkTZDaDluXJroy88Mg3Y7pmic40
-         Z6wczTQwxcSYNCGzfhFb6vNtgno9YRa4X5D/egDU=
+        b=CHxAVjI/pUCRUgHY6oYPAx99IAUtI3J9iBIY9ZxcavU6Bt3G8cK6g2QssQN5DkxLW
+         b/1rYxhbn/AlfFcsgIPaNrVkz/d9Z/Vm0r41hO3tsRP0dhCj2KjxnA4Klc/0fJCTO3
+         SXwkbRDAVWHZvAaM6pXkzPWko5HumcRvBhdpU2Jw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Peter Ujfalusi <peter.ujflausi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 134/314] ASoC: ti: omap-mcbsp: Fix an error handling path in asoc_mcbsp_probe()
-Date:   Tue, 23 Jun 2020 21:55:29 +0200
-Message-Id: <20200623195345.265310226@linuxfoundation.org>
+Subject: [PATCH 5.4 160/314] RDMA/hns: Bugfix for querying qkey
+Date:   Tue, 23 Jun 2020 21:55:55 +0200
+Message-Id: <20200623195346.502831653@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,68 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Lijun Ou <oulijun@huawei.com>
 
-[ Upstream commit 03990fd58d2b7c8f7d53e514ba9b8749fac260f9 ]
+[ Upstream commit 349be276509455ac2f19fa4051ed773082c6a27e ]
 
-If an error occurs after the call to 'omap_mcbsp_init()', the reference to
-'mcbsp->fclk' must be decremented, as already done in the remove function.
+The qkey queried through the query ud qp verb is a fixed value and it
+should be read from qp context.
 
-This can be achieved easily by using the devm_ variant of 'clk_get()'
-when the reference is taken in 'omap_mcbsp_init()'
-
-This fixes the leak in the probe and has the side effect to simplify both
-the error handling path of 'omap_mcbsp_init()' and the remove function.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Peter Ujfalusi <peter.ujflausi@ti.com>
-Link: https://lore.kernel.org/r/20200512134325.252073-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 926a01dc000d ("RDMA/hns: Add QP operations support for hip08 SoC")
+Link: https://lore.kernel.org/r/1588931159-56875-2-git-send-email-liweihang@huawei.com
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Weihang Li <liweihang@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ti/omap-mcbsp.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-index 26b503bbdb5fe..3273b317fa3b9 100644
---- a/sound/soc/ti/omap-mcbsp.c
-+++ b/sound/soc/ti/omap-mcbsp.c
-@@ -686,7 +686,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- 	mcbsp->dma_data[1].addr = omap_mcbsp_dma_reg_params(mcbsp,
- 						SNDRV_PCM_STREAM_CAPTURE);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 4540b00ccee94..9a8053bd01e22 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4564,7 +4564,7 @@ static int hns_roce_v2_query_qp(struct ib_qp *ibqp, struct ib_qp_attr *qp_attr,
+ 	qp_attr->path_mig_state = IB_MIG_ARMED;
+ 	qp_attr->ah_attr.type   = RDMA_AH_ATTR_TYPE_ROCE;
+ 	if (hr_qp->ibqp.qp_type == IB_QPT_UD)
+-		qp_attr->qkey = V2_QKEY_VAL;
++		qp_attr->qkey = le32_to_cpu(context.qkey_xrcd);
  
--	mcbsp->fclk = clk_get(&pdev->dev, "fck");
-+	mcbsp->fclk = devm_clk_get(&pdev->dev, "fck");
- 	if (IS_ERR(mcbsp->fclk)) {
- 		ret = PTR_ERR(mcbsp->fclk);
- 		dev_err(mcbsp->dev, "unable to get fck: %d\n", ret);
-@@ -711,7 +711,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- 		if (ret) {
- 			dev_err(mcbsp->dev,
- 				"Unable to create additional controls\n");
--			goto err_thres;
-+			return ret;
- 		}
- 	}
- 
-@@ -724,8 +724,6 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- err_st:
- 	if (mcbsp->pdata->buffer_size)
- 		sysfs_remove_group(&mcbsp->dev->kobj, &additional_attr_group);
--err_thres:
--	clk_put(mcbsp->fclk);
- 	return ret;
- }
- 
-@@ -1442,8 +1440,6 @@ static int asoc_mcbsp_remove(struct platform_device *pdev)
- 
- 	omap_mcbsp_st_cleanup(pdev);
- 
--	clk_put(mcbsp->fclk);
--
- 	return 0;
- }
- 
+ 	qp_attr->rq_psn = roce_get_field(context.byte_108_rx_reqepsn,
+ 					 V2_QPC_BYTE_108_RX_REQ_EPSN_M,
 -- 
 2.25.1
 
