@@ -2,164 +2,149 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC565C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93317207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E75D2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gKib9cjM"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rV+QlZOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbgFWMo2 (ORCPT
+        id S1732623AbgFWMpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:44:28 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36168 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729611AbgFWMo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:44:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592916265;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=OnsqCJoxsY29WjyE1XmCtuqZtL8mvk+SOndv2w7roqA=;
-        b=gKib9cjM4+KMpkwrvcg1PE70qqp+Bib/UQ+3qE2d65yXp0DC1qFlfA8AjnE6TpKlpysOFR
-        VYeNz0lt9C2FcHX39hD079kCNh9Wtb2qR4aT5G0untXNiIsV324WLPUso9jy/l3b19me0+
-        dW2cgqRgwzm2Be2c/34owvqYKLdCyoM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-DUQIyjFjPzitYOnUYJD6KQ-1; Tue, 23 Jun 2020 08:44:23 -0400
-X-MC-Unique: DUQIyjFjPzitYOnUYJD6KQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 337281B18BD6;
-        Tue, 23 Jun 2020 12:44:05 +0000 (UTC)
-Received: from [10.36.113.187] (ovpn-113-187.ams2.redhat.com [10.36.113.187])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AFD1F5DAA0;
-        Tue, 23 Jun 2020 12:44:03 +0000 (UTC)
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <414b4cbf-02f5-0e90-df92-c0889e9ad65b@redhat.com>
-Date:   Tue, 23 Jun 2020 14:44:02 +0200
+        Tue, 23 Jun 2020 08:45:33 -0400
+Received: from mout.web.de ([212.227.15.14]:42863 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729504AbgFWMpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:45:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592916323;
+        bh=wZeKsBjYqwbsphXGlDIEV2mIF1HfcLK+v/WhnvkUt5c=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=rV+QlZODDElPKUt/DEVWGjgzY1ulPUTC/muQB97XJIkoq3tgV/NIcH1/r9ZNRzznO
+         qQj6AR99Wbjwri66EOiNpaBeFCKnt9tztPYvJn6XpuqJlvsf+Adq34+u0i9VZ7geDJ
+         HEIfgRCSXprtPtmzdxXTvHcD5v1CDJr2IO0rnO4I=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.105.198]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MLyCC-1jmamU3N3U-007izh; Tue, 23
+ Jun 2020 14:45:22 +0200
+Subject: Re: [v2 1/2] ASoC: fsl_mqs: Don't check clock is NULL before calling
+ clk API
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>, Timur Tabi <timur@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <39ac8f24-3148-2a3d-3f8d-91567b3c4c9e@web.de>
+ <CAA+D8APR2NGAn9jRDSZzr1fgj5u0hAvH19VxZS+tj2A7j3PCuw@mail.gmail.com>
+ <24be48d2-63de-b900-cec7-d21e83a89ca2@web.de>
+ <CAA+D8AMSVCbJtcDoCbsMeV6ygrSdARpn3_PWE83mitcnkA1Tog@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <a2a5d4d7-748b-e164-09c9-13245b64b9cc@web.de>
+Date:   Tue, 23 Jun 2020 14:45:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+In-Reply-To: <CAA+D8AMSVCbJtcDoCbsMeV6ygrSdARpn3_PWE83mitcnkA1Tog@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IW6xw4Oh/6fwz4+xqE2R2RDQ+woXbhCvtwX6iDCexDp7OcRNmia
+ NsTx1XNMvlwvz8fQVX7vtTuhrLgVP8dCt0O1sNfOmk071rND3KePF6vTUdHzWBJAItPGCFQ
+ MplFmdGPjJYCtT0HeSxvinmKlY6DJlnRspauGLU8un9QEZixPuCY7f3oDe+b1dH0lnLY5e2
+ sx7WenpXdvMzqTvlL4LTA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xMWpbwgtIMQ=:nYWve4H8NKJIAGdhlYaBe3
+ CVofffNYNFUUbwfybc5ghddxL7OfUryL/vNn1clWZTzV7HQjXCBftRVeOxfx+4O9ZmP1UkjCw
+ V7qWKjwuVXxC2xYq2RYZQHktRc8cnlpq44OQx8CyL3Wzw/ppU3qpa0OXXuWWzTmidaub8zeEy
+ iHDqfhnCM0NnXJbtp/DuMPLt7WRR7z9W4eDJlqnBU/nWwuOXMh+8G8XiGf3kpDzGZ5bkh/Lo4
+ az5VDqisNTCeH5j06aU1UNeq9bnKfaxsWpdBNl4FDA04kbOud9hTK2L2dBawwdIQi1DPKpOIG
+ /Z57dbUE/3npP2CdthTkjfBFG1msnlExj0ywlZvACUmJxLgnfEitU7thMYezTL05P892nROmI
+ w9Bd5RfMOikaltjj7LLZeLBqPBidqBuMRJgmUKiimSi8+gRLRB8ksgeiO+3pgg9CWInS12h4A
+ Mu/ULvJHNoDAZB/ZDMGQ0xceMOb85UwVZVnjdpBuo9rMSxZT6gXjua6AXMypXWQnL142D2dpt
+ GAfcIBV7N26tVjBCh9bo08Hu07ZwW1HXDRuC5L9JYH2bBIDEaWOJR+BWK2wHRe9JK7Xuosgoy
+ 37AF/GXslHSlEe8xvv1Mq/mc1eH5Gz37S4NF5Z2Xe1q4c6gA6cG+qR3PO1YRMP4wBwkxYY84W
+ eYoF1gwoVx2RaplP9Z+xMpSXpykzfOehynqmKFeYRqYuKuihBmsZrXwGQMwQlU5LkgRaiMDY2
+ I549eLD1F0rQ33WK+6SJxjiYn+Yb696v5WkmJM/OeZPtOxQQtyq7oc3/m2SOBpBkUsBAvZ2ap
+ IVNwOkRenWFSostS0v0fM3Ghs4eTTKuxVfBiLRKLItttGMhoNe4AZhzvpnfTILIm9saH8fpCp
+ QAWRBHvjjPXURGkbb1WvhkcSqyeZ8/kQCCOZ5uleRg84KuQAfhhIK7HUAO+TGDB6Y0nlD+7dc
+ qjWPpVI9pDyiFjF+s8LeV/cayXc7DqZG6nAW9lYW7PlENSqRTUtNslcb9hRfUB7gr7pcuk+fb
+ UhOqTtr2+KtTAKT+OzDXftDHjzF7hoOxmrm/QSlJsEYRLBMZJLktA+rt9dLoT1v0fDSBGe32d
+ YRCZ0YRKISQeoUjAgXIuV0K8LPfftnGxHGFmdcLNKr2ZPW2LoHqJdp334986g8QjzjERBHK92
+ jSb8qfHHZVR0HO28jlfRt+EhXNKajyExguQ6GSTP//8hqmjd1y3HZqAsZ8SC5xmxsFQm2u8rw
+ thpJzPA7Oav4sojXt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.06.20 11:42, Wei Yang wrote:
-> For early sections, we assumes its memmap will never be partially
-> removed. But current behavior breaks this.
-> 
-> Let's correct it.
-> 
-> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> ---
->  mm/sparse.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index b2b9a3e34696..1a0069f492f5 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -825,10 +825,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
->  	}
->  
-> -	if (section_is_early && memmap)
-> -		free_map_bootmem(memmap);
-> -	else
-> +	if (!section_is_early)
->  		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +	else if (memmap)
-> +		free_map_bootmem(memmap);
->  
->  	if (empty)
->  		ms->section_mem_map = (unsigned long)NULL;
-> 
+>>>                                                       if the parameter
+>>>     is NULL, clk_prepare_enable and clk_disable_unprepare will
+>>>     return immediately.
+>>
+>> The interpretation of these function implementations seems to be reason=
+able.
+>> Would you like to achieve any improvements for the corresponding softwa=
+re documentation?
+>
+> Which document do you mean?
 
-Agreed, that's what pfn_valid() and section_activate() expect.
+Example:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/in=
+clude/linux/clk.h?id=3Ddd0d718152e4c65b173070d48ea9dfc06894c3e5#n905
+https://elixir.bootlin.com/linux/v5.7.2/source/include/linux/clk.h#L905
 
-"If we hot-add memory into such a section then we do not need to
-populate the memmap and can simply reuse what is already there." - this
-is the case when hot-adding sub-sections into partially populated early
-sections, and has to be the case when re-hot-adding after hot-removing.
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
-
-I am also not convinced that the complicated sparse_decode_mem_map()
-handling in that function is required - ms->section_mem_map &
-SECTION_MAP_MASK is sufficient for this use case of removing the memmap
-of a full early section once empty.
-
--- 
-Thanks,
-
-David / dhildenb
-
+Regards,
+Markus
