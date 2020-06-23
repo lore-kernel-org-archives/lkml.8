@@ -2,80 +2,72 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD412072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9798320724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592895067;
+	bh=C5FlAHhZpaa+KxqYHKVR7HYYVpMpz8TplbMahkIcUcI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fYtdGkC0/xK4pv7cRww6eiEoB5tCEqoRndNam5LmRp06THAJQuGBQXnBNFYRB30sF
+	 xAk4EgAJZvUX6EZHnvziM81aEaGY82i9uyYDR6TvF35nEhi1HtJBxwZGUIKWlGfV3O
+	 YYs7il8xUOrXQlfo/BuDUCM4aqaHP88T8NNp2TX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbgFWGsj (ORCPT
+        id S1730754AbgFWGvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:48:39 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:40906 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730583AbgFWGsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:48:38 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id EE0C2D9D8CF7C3E7A478;
-        Tue, 23 Jun 2020 14:48:36 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Tue, 23 Jun 2020 14:48:36 +0800
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 23 Jun 2020 14:48:36 +0800
-Subject: Re: [PATCH net-next v1 5/5] hinic: add support to get eeprom
- information
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-References: <20200620094258.13181-1-luobin9@huawei.com>
- <20200620094258.13181-6-luobin9@huawei.com>
- <20200622151520.79ab2af9@kicinski-fedora-PC1C0HJN>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <c980638a-2229-7ea4-79fd-2f19d70d40cf@huawei.com>
-Date:   Tue, 23 Jun 2020 14:48:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 23 Jun 2020 02:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730583AbgFWGvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:51:05 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFDA20706;
+        Tue, 23 Jun 2020 06:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592895065;
+        bh=C5FlAHhZpaa+KxqYHKVR7HYYVpMpz8TplbMahkIcUcI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FtAGu6WCswXbBBTB8IPlyFFfyRL5MVDFoH1K5g/a7zvRVhReiNWEy4eWnPbNS2XLf
+         9MC96h+KDFTc4fQUxfh2IrtLkCOGSwXcj7x2r6JY53q/9+7jFEBSXuUFiNFDwnRb5V
+         wrbb0+YcRn+hSiXPUDwSlB5zS1il7wgnVne0O9bg=
+Date:   Tue, 23 Jun 2020 14:50:58 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, aisheng.dong@nxp.com,
+        robh+dt@kernel.org, sboyd@kernel.org, linux@rempel-privat.de,
+        jaswinder.singh@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        l.stach@pengutronix.de, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH V3 2/3] arm64: dts: imx8m: add mu node
+Message-ID: <20200623065057.GP30139@dragon>
+References: <1590999602-29482-1-git-send-email-peng.fan@nxp.com>
+ <1590999602-29482-3-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622151520.79ab2af9@kicinski-fedora-PC1C0HJN>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590999602-29482-3-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/23 6:15, Jakub Kicinski wrote:
-> On Sat, 20 Jun 2020 17:42:58 +0800 Luo bin wrote:
->> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.h b/drivers/net/ethernet/huawei/hinic/hinic_port.h
->> index 5c916875f295..0d0354241345 100644
->> --- a/drivers/net/ethernet/huawei/hinic/hinic_port.h
->> +++ b/drivers/net/ethernet/huawei/hinic/hinic_port.h
->> @@ -677,6 +677,37 @@ struct hinic_led_info {
->>  	u8	reset;
->>  };
->>  
->> +#define MODULE_TYPE_SFP		0x3
->> +#define MODULE_TYPE_QSFP28	0x11
->> +#define MODULE_TYPE_QSFP	0x0C
->> +#define MODULE_TYPE_QSFP_PLUS	0x0D
->> +
->> +#define STD_SFP_INFO_MAX_SIZE	640
+On Mon, Jun 01, 2020 at 04:20:01PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Please use the existing defines, e.g. from #include <linux/sfp.h>
-> there is no need for every driver to redefine those constants.
-> .
+> Add mu node to let A53 could communicate with M Core.
 > 
-Will fix. Thanks for your review.
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+
+Applied, thanks.
