@@ -6,79 +6,57 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F45CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F941C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB7620724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6411520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732503AbgFWLn3 (ORCPT
+        id S1732430AbgFWLpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:43:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51890 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732389AbgFWLn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:43:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8771FAF9F;
-        Tue, 23 Jun 2020 11:43:26 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 13:43:24 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623114324.GA14101@suse.de>
-References: <20200425191032.GK21900@8bytes.org>
- <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200623094519.GF31822@suse.de>
- <20200623104559.GA4817@hirez.programming.kicks-ass.net>
- <20200623111107.GG31822@suse.de>
- <20200623111443.GC4817@hirez.programming.kicks-ass.net>
+        Tue, 23 Jun 2020 07:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732245AbgFWLp3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:45:29 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE0AC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 04:45:29 -0700 (PDT)
+Received: from [2a02:fe0:c700:2:8ac:86d7:cb55:d6b9] (port=55254)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <Ywe-C4rlyn@I-T-Shed-Studio.eu>)
+        id 1jnhMk-0005Md-QC
+        for linux-kernel@vger.kernel.org; Tue, 23 Jun 2020 13:45:26 +0200
+To:     linux-kernel@vger.kernel.org
+From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <Ywe-C4rlyn@I-T-Shed-Studio.eu>
+Subject: =?UTF-8?Q?In=c3=b3_X_-_Sorted_information_for_the_derivative_works_?=
+ =?UTF-8?Q?of_Adams_Tablet=2e?=
+Message-ID: <d24e4350-272a-c749-8e4e-27881bbeabd0@I-T-Shed-Studio.eu>
+Date:   Tue, 23 Jun 2020 13:45:24 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623111443.GC4817@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 01:14:43PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 23, 2020 at 01:11:07PM +0200, Joerg Roedel wrote:
+Inó X OS
 
-> > The v3 patchset implements an unconditional shift of the #VC IST entry
-> > in the NMI handler, before it can trigger a #VC exception.
-> 
-> Going by that other thread -- where you said that any memory access can
-> trigger a #VC, there just isn't such a guarantee.
+"Only the creators will for computing space".
 
-As I wrote in the other mail, this can only happen when SNP gets enabled
-(which is follow-on work to this) and is handled by a stack recursion
-check in the #VC handler.
+Sorted information for the derivative works of Adams Tablet.
 
-The reason I mentioned the #VC-anywhere case is to make it more clear
-why #VC needs an IST handler.
+Should be the best OS ever made. And best economy also.
 
-Regards,
+Even the pointer is "do not eat of the tree", and a sign from the 
+Dispilio Tablet!
 
-	Joerg
+Serene Greetings,
+Ywe Cærlyn.
+https://i-t-shed-studio.eu/
+
