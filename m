@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9D22072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB94E2070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944221;
-	bh=V/s8NPxg6JfdnXjqV+GFshr1cIzxmfG5AaSgnm8hZIY=;
+	s=default; t=1592944225;
+	bh=Y3yARQh0T25+WI1hcfxzdNJCo/227p3KnHgtfLNc2bU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1jO1WYQhi+rKl8mWPUkuV/Dijke4R8rqTx5qtCYROdcTicrbNviB4O6Vndmcl1Tg
-	 167MyQVxdnMk5nal9cyECDwwhZQMsFQ/OXTAHUOAa4wVKx5S/lTfV3iDgc7glAyubi
-	 6yTIYukHndkdggq2p+hw+2c9TXCaumtceXUhgOu8=
+	b=OMBMDIE8KWmhy+9FMCh3+ZM//g82yuvpcXwe2svSnxEqAHBG8Fz+QIsQgi2wFlVvA
+	 BZQDgZScfPZ4rWal/fCTWBCK+sBcNqIBxvaaU204AQ0pJUz+9twfdlwvE6h679MGDY
+	 PTS6Fc1YkAU69w79BI2U8shVlB9v84E//jlqbdwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389451AbgFWUaT (ORCPT
+        id S2389018AbgFWUaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50302 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:30:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391044AbgFWUaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:30:06 -0400
+        id S2390595AbgFWUaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:30:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DFFC206C3;
-        Tue, 23 Jun 2020 20:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F1B206EB;
+        Tue, 23 Jun 2020 20:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944207;
-        bh=V/s8NPxg6JfdnXjqV+GFshr1cIzxmfG5AaSgnm8hZIY=;
+        s=default; t=1592944209;
+        bh=Y3yARQh0T25+WI1hcfxzdNJCo/227p3KnHgtfLNc2bU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YjFTDyoEwpAyGKFJluu7Zz21bnWSVkdQP6c5Tor+G2NG/1DrlGYUutqA7h5f9XF5g
-         c3oVJJVYKhNcpFUnkfXW3WFwhvqRWJJKHp+apCr0lRy14JpCxGV/Yo/m/ESRoyVBRo
-         MH5u8a0M8q0s22+3Bhbt6ndmHjXZt5pE8fZ7PklA=
+        b=aTuzbCfpOVJcHbtSgCcSOblddqYM+mi0vKKuAbVPkV+cn7L7PSe37h5cZnEsAU8rp
+         bSkxzysd0ZGEjZ9Yubk0IzsOmngbEYQbU/yjeFTVuAwXNvQL/KO/0xfUqx878BJRAB
+         AoknIIv5YSrFZrTqrrhLdxcWqzuTdUQVUXuciCyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 214/314] scsi: ufs: Dont update urgent bkops level when toggling auto bkops
-Date:   Tue, 23 Jun 2020 21:56:49 +0200
-Message-Id: <20200623195349.126633596@linuxfoundation.org>
+Subject: [PATCH 5.4 215/314] pinctrl: imxl: Fix an error handling path in imx1_pinctrl_core_probe()
+Date:   Tue, 23 Jun 2020 21:56:50 +0200
+Message-Id: <20200623195349.182363330@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,39 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit be32acff43800c87dc5c707f5d47cc607b76b653 ]
+[ Upstream commit 9eb728321286c4b31e964d2377fca2368526d408 ]
 
-Urgent bkops level is used to compare against actual bkops status read from
-UFS device. Urgent bkops level is set during initialization and might be
-updated in exception event handler during runtime. But it should not be
-updated to the actual bkops status every time when auto bkops is toggled.
-Otherwise, if urgent bkops level is updated to 0, auto bkops shall always
-be kept enabled.
+When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
+an error handling path has not been updated.
 
-Link: https://lore.kernel.org/r/1590632686-17866-1-git-send-email-cang@codeaurora.org
-Fixes: 24366c2afbb0 ("scsi: ufs: Recheck bkops level if bkops is disabled")
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Axe a now unneeded 'pinctrl_unregister()'.
+
+Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20200530201952.585798-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 1 -
+ drivers/pinctrl/freescale/pinctrl-imx1-core.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index bc73181b0405a..2b6853c7375c9 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5101,7 +5101,6 @@ static int ufshcd_bkops_ctrl(struct ufs_hba *hba,
- 		err = ufshcd_enable_auto_bkops(hba);
- 	else
- 		err = ufshcd_disable_auto_bkops(hba);
--	hba->urgent_bkops_lvl = curr_status;
- out:
- 	return err;
- }
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
+index 7e29e3fecdb24..5bb183c0ce310 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
+@@ -638,7 +638,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
+ 
+ 	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+ 	if (ret) {
+-		pinctrl_unregister(ipctl->pctl);
+ 		dev_err(&pdev->dev, "Failed to populate subdevices\n");
+ 		return ret;
+ 	}
 -- 
 2.25.1
 
