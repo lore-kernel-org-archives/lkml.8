@@ -2,106 +2,148 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0830FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFE120720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C3320720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lzk/L5n6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731919AbgFWBbP (ORCPT
+        id S1731954AbgFWBbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:31:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:34260 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731572AbgFWBbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:31:14 -0400
-IronPort-SDR: sdd61Fmjis3csYauweirzlatTzOD2gQgK7V3jTIawqGoX7vM4shzfNX09ROY12NtocjzE8sTH5
- CT0RQb9ufJBg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142192752"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="142192752"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 18:31:12 -0700
-IronPort-SDR: cPVmBRoexshcGq3le/Hx4xRbS5QEUaEdxjP2bt7ofWqBso70NQG16s04e+QU4I6iRzHTHPKXTm
- WoOKPWpLo6/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="293039433"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 22 Jun 2020 18:31:11 -0700
-Date:   Mon, 22 Jun 2020 18:31:11 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jingqi Liu <jingqi.liu@intel.com>,
-        Tao Xu <tao3.xu@intel.com>
-Subject: Re: [PATCH] KVM: VMX: Stop context switching MSR_IA32_UMWAIT_CONTROL
-Message-ID: <20200623013111.GE6151@linux.intel.com>
-References: <20200623005135.10414-1-sean.j.christopherson@intel.com>
- <7e840f1c-d8e2-3374-5009-f2ab41a87386@intel.com>
+        Mon, 22 Jun 2020 21:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731850AbgFWBbk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 21:31:40 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A2B4C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:31:39 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id w1so17448189qkw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eHCbxa4yLLq+0pOhVBKweZwAtR1jWaAM46jnceQkpwE=;
+        b=lzk/L5n62mkf/Wo6a6zH8O6wr3Zw88adM8VMgiuL8jPiS//Hx1thymfjN6+oEGvYz3
+         3bAJFxPc+ArHIAW7wLZuNUJaKeeSdo4HxIYoAC6F64avprFgnqqC7pbUc4IFCsjrKAHh
+         gKgi9bb6RSIig4GQna3l0IIkjp+zf3Z+VI2pY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eHCbxa4yLLq+0pOhVBKweZwAtR1jWaAM46jnceQkpwE=;
+        b=drOePBGm7y8eEoOOCSy66k42ePA8otgUZ7RwG9V/+tY8RVhoiSjnjuGFhLdYfEHxnT
+         40OFChTgtwtokkwu3ftFoT3yBcQ9lhMGgy+YkwmaVy6E48w04Z+rRAerWEEoNmmF3Tb7
+         qx+vV+n7BhfJvptHOlfiAZMFXMT/mTJH1TmFLvUIkESApz+s9Ybwzw908tYwX3OGO5A1
+         cpnq9lBMMbHlAI0L3bTkC1RrVLydOcA7DWuqS6zLFSq3MYYDZ/HPFI8PtCZKx8vSb77V
+         qwo+ananVo3ie7GZK1L8WJaNRafvDFuF6SYTOuv7DFLJngYYkL5MlHEHah6p4t4mizWK
+         ODpg==
+X-Gm-Message-State: AOAM533uWVucwJ143spvMLKUXqyxLGpk55eaeXtFqKnWHSZp17R17azy
+        Z+R3I5YZZ/rWRo/wlSl1o95cgEMUK92cxgUvZLvvYA==
+X-Google-Smtp-Source: ABdhPJwMJlxh1gtY97I2kVKm9OIAts8GWq+RuGfGOUmzRWY4SAjkUqzw8u1O4Yn7AgYcPbJZ0Vsm0B2frMtXAAEZyiE=
+X-Received: by 2002:a05:620a:40c1:: with SMTP id g1mr12395512qko.391.1592875898709;
+ Mon, 22 Jun 2020 18:31:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e840f1c-d8e2-3374-5009-f2ab41a87386@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200609012518.198908-1-stevensd@chromium.org> <20200609055021-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200609055021-mutt-send-email-mst@kernel.org>
+From:   David Stevens <stevensd@chromium.org>
+Date:   Tue, 23 Jun 2020 10:31:28 +0900
+Message-ID: <CAD=HUj7wJfoKj_K44Cs9eEmh=OQHZ1+qz7ZHxoscHjYgOMXvZQ@mail.gmail.com>
+Subject: Re: [virtio-dev] Re: [PATCH v5 0/3] Support virtio cross-device resources
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org,
+        alex.williamson@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:21:28AM +0800, Xiaoyao Li wrote:
-> On 6/23/2020 8:51 AM, Sean Christopherson wrote:
-> >Remove support for context switching between the guest's and host's
-> >desired UMWAIT_CONTROL.  Propagating the guest's value to hardware isn't
-> >required for correct functionality, e.g. KVM intercepts reads and writes
-> >to the MSR, and the latency effects of the settings controlled by the
-> >MSR are not architecturally visible.
-> >
-> >As a general rule, KVM should not allow the guest to control power
-> >management settings unless explicitly enabled by userspace, e.g. see
-> >KVM_CAP_X86_DISABLE_EXITS.  E.g. Intel's SDM explicitly states that C0.2
-> >can improve the performance of SMT siblings.  A devious guest could
-> >disable C0.2 so as to improve the performance of their workloads at the
-> >detriment to workloads running in the host or on other VMs.
-> >
-> >Wholesale removal of UMWAIT_CONTROL context switching also fixes a race
-> >condition where updates from the host may cause KVM to enter the guest
-> >with the incorrect value.  Because updates are are propagated to all
-> >CPUs via IPI (SMP function callback), the value in hardware may be
-> >stale with respect to the cached value and KVM could enter the guest
-> >with the wrong value in hardware.  As above, the guest can't observe the
-> >bad value, but it's a weird and confusing wart in the implementation.
-> >
-> >Removal also fixes the unnecessary usage of VMX's atomic load/store MSR
-> >lists.  Using the lists is only necessary for MSRs that are required for
-> >correct functionality immediately upon VM-Enter/VM-Exit, e.g. EFER on
-> >old hardware, or for MSRs that need to-the-uop precision, e.g. perf
-> >related MSRs.  For UMWAIT_CONTROL, the effects are only visible in the
-> >kernel via TPAUSE/delay(), and KVM doesn't do any form of delay in
-> >vcpu_vmx_run().
-> 
-> >Using the atomic lists is undesirable as they are more
-> >expensive than direct RDMSR/WRMSR.
-> 
-> Do you mean the extra handling of atomic list facility in kvm? Or just mean
-> vm-exit/-entry MSR-load/save in VMX hardware is expensive than direct
-> RDMSR/WRMSR instruction?
+Unless there are any remaining objections to these patches, what are
+the next steps towards getting these merged? Sorry, I'm not familiar
+with the workflow for contributing patches to Linux.
 
-Both.  The KVM handling is the bigger cost, e.g. requires two VMWRITEs to
-update the list counts, on top of the list processing.  The actual ucode
-cost is also somewhat expensive if adding an MSR to the list causes the
-load/store lists to be activated, e.g. on top of the memory accesses for
-the list, VM-Enter ucode needs to do its consistency checks.
+Thanks,
+David
 
-Expensive is obviously relative, but as far as the lists are concerned it's
-an easy penalty to avoid.
+On Tue, Jun 9, 2020 at 6:53 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Tue, Jun 09, 2020 at 10:25:15AM +0900, David Stevens wrote:
+> > This patchset implements the current proposal for virtio cross-device
+> > resource sharing [1]. It will be used to import virtio resources into
+> > the virtio-video driver currently under discussion [2]. The patch
+> > under consideration to add support in the virtio-video driver is [3].
+> > It uses the APIs from v3 of this series, but the changes to update it
+> > are relatively minor.
+> >
+> > This patchset adds a new flavor of dma-bufs that supports querying the
+> > underlying virtio object UUID, as well as adding support for exporting
+> > resources from virtgpu.
+>
+> Gerd, David, if possible, please test this in configuration with
+> virtual VTD enabled but with iommu_platform=off
+> to make sure we didn't break this config.
+>
+>
+> Besides that, for virtio parts:
+>
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+>
+>
+> > [1] https://markmail.org/thread/2ypjt5cfeu3m6lxu
+> > [2] https://markmail.org/thread/p5d3k566srtdtute
+> > [3] https://markmail.org/thread/j4xlqaaim266qpks
+> >
+> > v4 -> v5 changes:
+> >  - Remove virtio_dma_buf_export_info.
+> >
+> > David Stevens (3):
+> >   virtio: add dma-buf support for exported objects
+> >   virtio-gpu: add VIRTIO_GPU_F_RESOURCE_UUID feature
+> >   drm/virtio: Support virtgpu exported resources
+> >
+> >  drivers/gpu/drm/virtio/virtgpu_drv.c   |  3 +
+> >  drivers/gpu/drm/virtio/virtgpu_drv.h   | 20 ++++++
+> >  drivers/gpu/drm/virtio/virtgpu_kms.c   |  4 ++
+> >  drivers/gpu/drm/virtio/virtgpu_prime.c | 96 +++++++++++++++++++++++++-
+> >  drivers/gpu/drm/virtio/virtgpu_vq.c    | 55 +++++++++++++++
+> >  drivers/virtio/Makefile                |  2 +-
+> >  drivers/virtio/virtio.c                |  6 ++
+> >  drivers/virtio/virtio_dma_buf.c        | 82 ++++++++++++++++++++++
+> >  include/linux/virtio.h                 |  1 +
+> >  include/linux/virtio_dma_buf.h         | 37 ++++++++++
+> >  include/uapi/linux/virtio_gpu.h        | 19 +++++
+> >  11 files changed, 321 insertions(+), 4 deletions(-)
+> >  create mode 100644 drivers/virtio/virtio_dma_buf.c
+> >  create mode 100644 include/linux/virtio_dma_buf.h
+> >
+> > --
+> > 2.27.0.278.ge193c7cf3a9-goog
+>
+>
+> ---------------------------------------------------------------------
+> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
+> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
+>
