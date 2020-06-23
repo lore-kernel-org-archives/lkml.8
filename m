@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8005FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9229EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD3D20DD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B6A2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942613;
-	bh=ehPQWl894sbgTNmzS/SIs0Z6pQg1mVWU2x14we6GvyA=;
+	s=default; t=1592942616;
+	bh=iFur/krslITuodOFdsok2QxAsRks4Xwnx4x364VXxRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kmhyho7SVOD4EzVHHKURUpGHnhuh6CihMfjv4UM8865jQfJuBzcUnoHwNZpJAhEmW
-	 0kugqZu13BvaJVLhiu5HjJ6ohKm8rsfFd6h+iN04o9tPsolM5SNbUXS7qTvYuK3S+h
-	 OoZ0jeGEDOB76YkByNKqsjexHHcR1feayBOghOzw=
+	b=lYPUvRn+wyHRvlWlyYEpGn2HCkWB7Vh8786fLMuYIfd6XEbNKj7MQHo1PXTukr02Q
+	 YzEhdlINltbcvZ9612WqioXy8zfOXyvODKm2wMUhG1iRRb4ysrPIa3aAA8fnyqFfkG
+	 vt4bLKUCDfVVx8N71ry8FlHp0Xtf/NfBKBIne6pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388049AbgFWUDc (ORCPT
+        id S2388058AbgFWUDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41106 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388032AbgFWUDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:25 -0400
+        id S2388041AbgFWUD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F6A82078A;
-        Tue, 23 Jun 2020 20:03:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D84BC206C3;
+        Tue, 23 Jun 2020 20:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942604;
-        bh=ehPQWl894sbgTNmzS/SIs0Z6pQg1mVWU2x14we6GvyA=;
+        s=default; t=1592942607;
+        bh=iFur/krslITuodOFdsok2QxAsRks4Xwnx4x364VXxRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zk2S3qfn6H2fYiWR3s5ezLn4hNfuQ7GY+byZj1BLszRwM8WgLRfO3/BXxG2zey+Y
-         RnfF+LnYlBU4bTfyuYlX3pojoIGU04V1udvRC+zz5A6cdayi/OkB6sRZ1/ZrFPmC87
-         3KXS7lWce1FiJfFm2YBrdoUqgYA77cAYYZXEFBX4=
+        b=VEX7p++VE7LUmQPM0xbAlBdwi/VW9XoxvvW9/ukKKD0/S2s0iiWIuBy/7kzWgxOg2
+         ni+Ye7Hnfnz6uRErGTk4oilH48odtEAGI4yYi16eBmXbDSGp4PWycvgBk9sDUu6Eay
+         nZWqf+sVZOrnq+hk8wDHdqUAc+Zx49y1QHCVvUeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 036/477] i2c: pxa: clear all master action bits in i2c_pxa_stop_message()
-Date:   Tue, 23 Jun 2020 21:50:33 +0200
-Message-Id: <20200623195409.307067673@linuxfoundation.org>
+        stable@vger.kernel.org, Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 063/477] scsi: hisi_sas: Do not reset phy timer to wait for stray phy up
+Date:   Tue, 23 Jun 2020 21:51:00 +0200
+Message-Id: <20200623195410.596418806@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,43 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-[ Upstream commit e81c979f4e071d516aa27cf5a0c3939da00dc1ca ]
+[ Upstream commit e16b9ed61e078d836a0f24a82080cf29d7539c7e ]
 
-If we timeout during a message transfer, the control register may
-contain bits that cause an action to be set. Read-modify-writing the
-register leaving these bits set may trigger the hardware to attempt
-one of these actions unintentionally.
+We found out that after phy up, the hardware reports another oob interrupt
+but did not follow a phy up interrupt:
 
-Always clear these bits when cleaning up after a message or after
-a timeout.
+oob ready -> phy up -> DEV found -> oob read -> wait phy up -> timeout
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+We run link reset when wait phy up timeout, and it send a normal disk into
+reset processing. So we made some circumvention action in the code, so that
+this abnormal oob interrupt will not start the timer to wait for phy up.
+
+Link: https://lore.kernel.org/r/1589552025-165012-2-git-send-email-john.garry@huawei.com
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 466e4f681d7a4..30a6e07212a42 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -747,11 +747,9 @@ static inline void i2c_pxa_stop_message(struct pxa_i2c *i2c)
- {
- 	u32 icr;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 9a6deb21fe4df..11caa4b0d7977 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -898,8 +898,11 @@ void hisi_sas_phy_oob_ready(struct hisi_hba *hisi_hba, int phy_no)
+ 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
+ 	struct device *dev = hisi_hba->dev;
  
--	/*
--	 * Clear the STOP and ACK flags
--	 */
-+	/* Clear the START, STOP, ACK, TB and MA flags */
- 	icr = readl(_ICR(i2c));
--	icr &= ~(ICR_STOP | ICR_ACKNAK);
-+	icr &= ~(ICR_START | ICR_STOP | ICR_ACKNAK | ICR_TB | ICR_MA);
- 	writel(icr, _ICR(i2c));
- }
- 
++	dev_dbg(dev, "phy%d OOB ready\n", phy_no);
++	if (phy->phy_attached)
++		return;
++
+ 	if (!timer_pending(&phy->timer)) {
+-		dev_dbg(dev, "phy%d OOB ready\n", phy_no);
+ 		phy->timer.expires = jiffies + HISI_SAS_WAIT_PHYUP_TIMEOUT * HZ;
+ 		add_timer(&phy->timer);
+ 	}
 -- 
 2.25.1
 
