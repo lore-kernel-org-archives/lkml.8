@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F70BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEBEC20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD5E2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947935;
-	bh=4No8kJj82MoxCjfbp7pfjrtBJ3527AwcbSZTRVcL31s=;
+	s=default; t=1592947937;
+	bh=PG+TUyNYYfqZu3IIU4lPjTC8VRqZMGf/AGQSmiHIdpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wg30M95UjyTL4E0akkNpG8+7Ky1gL2tULKvGsMUxSmWYVibg8qul6ACfsGSdDalRh
-	 4IA9GFZ623oRnRbHZ4+i3kyuMTefO4jgOCzycFJdy6q60vp+MzyaEOId3B8IVlrh3M
-	 jt/t5xl3IkB3f8kGaMUAXYkJKuTFL8Kizxf0D+0M=
+	b=r/R1+XqEtfpBHh9p+16xyzoWlLy2yTN5TzpNOzNxXhwffSF5v9guazP6t6PAd88BZ
+	 VUroKml8WvEkWc2BWMiaiRtU+ItZ0pb7uUik2wHZ9Z+oBMvNN08ysklQ+fZhvXmcJe
+	 bDcSQC/m7GuM3G+lZeOX4ggoA/fCcazU+Ei4nQeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393303AbgFWVcN (ORCPT
+        id S2393628AbgFWVcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:32:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54458 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:32:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388557AbgFWUMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:12:42 -0400
+        id S2388486AbgFWUMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:12:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 975D420EDD;
-        Tue, 23 Jun 2020 20:12:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4263206C3;
+        Tue, 23 Jun 2020 20:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943162;
-        bh=4No8kJj82MoxCjfbp7pfjrtBJ3527AwcbSZTRVcL31s=;
+        s=default; t=1592943157;
+        bh=PG+TUyNYYfqZu3IIU4lPjTC8VRqZMGf/AGQSmiHIdpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v05v46xo+evEGYTp2aXcHTimM+nGlYQnUM+lvitije6ztri0/M96E5Z44dLQq2xpl
-         9TtbwrHoGI7O+JDxdTFOC7KztP0VrxOJem7XYv4Q6a0MIUCnHLc8WWnGa03TRfcVoF
-         bHsXkjgy3WTUoqvEMOABXvPvV8Mnolivs8OZoiJo=
+        b=ktnx/W5SEZq1N6b9ucKy7Jmcrt/F9t4/cu5PEEPO15nwWPi3+SYmMUtky1AUyz83V
+         au6TTu8llfqnFwbERHbTUb9XDxAPoUZem1L/i1p7K8yuCQYztP74Z0z9XgUK0Rvbwe
+         HByOs8oXOfEr9aQttyg1jX/IC3Y5Y/NMZ3cABzPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurent Dufour <ldufour@linux.ibm.com>,
-        Greg Kurz <groug@kaod.org>, Ram Pai <linuxram@us.ibm.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
         Paul Mackerras <paulus@ozlabs.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 284/477] KVM: PPC: Book3S HV: Relax check on H_SVM_INIT_ABORT
-Date:   Tue, 23 Jun 2020 21:54:41 +0200
-Message-Id: <20200623195420.996711569@linuxfoundation.org>
+Subject: [PATCH 5.7 282/477] KVM: PPC: Book3S HV: Ignore kmemleak false positives
+Date:   Tue, 23 Jun 2020 21:54:39 +0200
+Message-Id: <20200623195420.901258515@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,55 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Dufour <ldufour@linux.ibm.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit e3326ae3d59e443a379367c6936941d6ab55d316 ]
+[ Upstream commit 0aca8a5575544bd21b3363058afb8f1e81505150 ]
 
-The commit 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_*
-Hcalls") added checks of secure bit of SRR1 to filter out the Hcall
-reserved to the Ultravisor.
+kvmppc_pmd_alloc() and kvmppc_pte_alloc() allocate some memory but then
+pud_populate() and pmd_populate() will use __pa() to reference the newly
+allocated memory.
 
-However, the Hcall H_SVM_INIT_ABORT is made by the Ultravisor passing the
-context of the VM calling UV_ESM. This allows the Hypervisor to return to
-the guest without going through the Ultravisor. Thus the Secure bit of SRR1
-is not set in that particular case.
+Since kmemleak is unable to track the physical memory resulting in false
+positives, silence those by using kmemleak_ignore().
 
-In the case a regular VM is calling H_SVM_INIT_ABORT, this hcall will be
-filtered out in kvmppc_h_svm_init_abort() because kvm->arch.secure_guest is
-not set in that case.
+unreferenced object 0xc000201c382a1000 (size 4096):
+ comm "qemu-kvm", pid 124828, jiffies 4295733767 (age 341.250s)
+ hex dump (first 32 bytes):
+   c0 00 20 09 f4 60 03 87 c0 00 20 10 72 a0 03 87  .. ..`.... .r...
+   c0 00 20 0e 13 a0 03 87 c0 00 20 1b dc c0 03 87  .. ....... .....
+ backtrace:
+   [<000000004cc2790f>] kvmppc_create_pte+0x838/0xd20 [kvm_hv]
+   kvmppc_pmd_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:366
+   (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:590
+   [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+   [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+   [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+   [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+   [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+   [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+   [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+   [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+   [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+   [<000000004afc4310>] system_call_exception+0x114/0x1e0
+   [<00000000fb70a873>] system_call_common+0xf0/0x278
+unreferenced object 0xc0002001f0c03900 (size 256):
+ comm "qemu-kvm", pid 124830, jiffies 4295735235 (age 326.570s)
+ hex dump (first 32 bytes):
+   c0 00 20 10 fa a0 03 87 c0 00 20 10 fa a1 03 87  .. ....... .....
+   c0 00 20 10 fa a2 03 87 c0 00 20 10 fa a3 03 87  .. ....... .....
+ backtrace:
+   [<0000000023f675b8>] kvmppc_create_pte+0x854/0xd20 [kvm_hv]
+   kvmppc_pte_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:356
+   (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:593
+   [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+   [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+   [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+   [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+   [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+   [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+   [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+   [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+   [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+   [<000000004afc4310>] system_call_exception+0x114/0x1e0
+   [<00000000fb70a873>] system_call_common+0xf0/0x278
 
-Fixes: 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_* Hcalls")
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Reviewed-by: Ram Pai <linuxram@us.ibm.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/powerpc/kvm/book3s_64_mmu_radix.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 93493f0cbfe8e..ee581cde48788 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -1099,9 +1099,14 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
- 			ret = kvmppc_h_svm_init_done(vcpu->kvm);
- 		break;
- 	case H_SVM_INIT_ABORT:
--		ret = H_UNSUPPORTED;
--		if (kvmppc_get_srr1(vcpu) & MSR_S)
--			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
-+		/*
-+		 * Even if that call is made by the Ultravisor, the SSR1 value
-+		 * is the guest context one, with the secure bit clear as it has
-+		 * not yet been secured. So we can't check it here.
-+		 * Instead the kvm->arch.secure_guest flag is checked inside
-+		 * kvmppc_h_svm_init_abort().
-+		 */
-+		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
- 		break;
+diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+index aa12cd4078b32..bc6c1aa3d0e92 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+@@ -353,7 +353,13 @@ static struct kmem_cache *kvm_pmd_cache;
  
- 	default:
+ static pte_t *kvmppc_pte_alloc(void)
+ {
+-	return kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
++	pte_t *pte;
++
++	pte = kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
++	/* pmd_populate() will only reference _pa(pte). */
++	kmemleak_ignore(pte);
++
++	return pte;
+ }
+ 
+ static void kvmppc_pte_free(pte_t *ptep)
+@@ -363,7 +369,13 @@ static void kvmppc_pte_free(pte_t *ptep)
+ 
+ static pmd_t *kvmppc_pmd_alloc(void)
+ {
+-	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
++	pmd_t *pmd;
++
++	pmd = kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
++	/* pud_populate() will only reference _pa(pmd). */
++	kmemleak_ignore(pmd);
++
++	return pmd;
+ }
+ 
+ static void kvmppc_pmd_free(pmd_t *pmdp)
 -- 
 2.25.1
 
