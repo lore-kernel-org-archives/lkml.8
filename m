@@ -2,120 +2,102 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC2320772
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3067720724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592895794;
+	bh=gio4N1dA4fGuZAJ5nVNg44IgyAGoEia9pKq64sAKoIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YP7w1pVc0r1BZ0ijn3nYqNdRIntO10W0jlbYreNkd7vk92YmBHwMNcp0zqkcsaaEl
+	 WZ5m7fyIU7SWCDC8YtDqIJ+DHBeXoMmkgN5lDMdWZRTviHNsMAa2vjUePYwqw28TEj
+	 ChHqYgm0FxX95dZIdWxKgVV2Cng5YfDEtPVgoLs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbgFWHCe (ORCPT
+        id S1731399AbgFWHDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:02:34 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:34772 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730830AbgFWHCe (ORCPT
+        Tue, 23 Jun 2020 03:03:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730830AbgFWHDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:02:34 -0400
-X-IronPort-AV: E=Sophos;i="5.75,270,1589234400"; 
-   d="scan'208";a="456156865"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 09:02:31 +0200
-Date:   Tue, 23 Jun 2020 09:02:31 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        "Gustavo A. R. Silva" <garsilva@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v4] coccinelle: misc: add array_size_dup script to detect
- missed overflow checks
-In-Reply-To: <4014118b-90a6-68c5-048f-32485fa3e852@web.de>
-Message-ID: <alpine.DEB.2.22.394.2006230902210.2367@hadrien>
-References: <4014118b-90a6-68c5-048f-32485fa3e852@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Tue, 23 Jun 2020 03:03:12 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D34C061573;
+        Tue, 23 Jun 2020 00:03:12 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s10so9462481pgm.0;
+        Tue, 23 Jun 2020 00:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4JVWCz8+lqtSop9dl2ZAnWPRN6EuY7Bv8qrsUVE3nXI=;
+        b=eOert1F3W3A+fuUjzfaUw/OvDWW+QrwyruMv33b8OO6vVCo45o56Wqe2hKdpObJ6/k
+         0Mya8f7dxVC+Y0xaw5ty1qtaZjKs2W39IhD+HUmDbrHFGncL5wGhXqBOZCnceQNDqrm+
+         AdhnJF6heFeUcHGTdQPDrNlERwOJMkQ83wFl4QG2TRSnfaHzqeQ+WvSUwDNZnoCjNH4j
+         IuH/Z3nqf8i5oHVwiAJixTbpYGr2nYXL5YUUQeOEE+1sguNP8TaLNDukiImeazNAMuyo
+         CKL8TfrnChJdSJRDkC+Yk36DdtMWk+gCaA+CqIKtq68CuYvUiG1gxeP0pk+JkV4PsREL
+         zMnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=4JVWCz8+lqtSop9dl2ZAnWPRN6EuY7Bv8qrsUVE3nXI=;
+        b=bdvgGHRvsEQe2KKudQ9N8e86zBf1Kyj+Mzp0tCa7rP/YUFl50PvBvLRh/CQfFmLUi0
+         bDwpX1YRNdJYd4F+pnbxgzpJTkO8lqChimYy/2bJwWvvuxSSns+Coe4kgmUvQnIfjQdr
+         L9gBk9236bcsw65zcbFUUAd+tTORJRwKY42cjlEUJVH7+wl7mR1m27rNI1NxDr83X2MX
+         l8OeCOROaNhRXFKqykfMr0y5M+MLcMWMrNOx6LSwn0UzXIiZPPSTcvLk0HaPF0l/6xaP
+         u0pilt1jhgE9T2oQuY0uwKVPJdPy/SKbrpj0bSFXuCX85AwCmwXqirtRwc13A1OK3S7k
+         RegA==
+X-Gm-Message-State: AOAM5339cgXphQia6WptCgfMhIfvKcv1c8yy3fHRJoN2YQr6TUgg2STK
+        yDZGWctYF7yNWoXvelsJ1cU=
+X-Google-Smtp-Source: ABdhPJxwNxkZOf7Lk7xd3jy8Z+Qwdj4VK/Om3PshkykoWiSM8D32CqOWsfyLOHBjXexj0MN1jzYFoQ==
+X-Received: by 2002:a63:7707:: with SMTP id s7mr15672418pgc.295.1592895791467;
+        Tue, 23 Jun 2020 00:03:11 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id z144sm16857370pfc.195.2020.06.23.00.03.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 00:03:09 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 00:03:08 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Nitin Gupta <ngupta@vflare.org>,
+        Steffen Maier <maier@linux.ibm.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wade Mealing <wmealing@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v2] Revert "zram: convert remaining CLASS_ATTR() to
+ CLASS_ATTR_RO()"
+Message-ID: <20200623070308.GA186116@google.com>
+References: <20200617103412.GA2027053@kroah.com>
+ <20200617114946.GA2131650@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1108794673-1592895751=:2367"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617114946.GA2131650@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, Jun 17, 2020 at 01:49:46PM +0200, Greg Kroah-Hartman wrote:
+> From: Wade Mealing <wmealing@redhat.com>
+> 
+> Turns out that the permissions for 0400 really are what we want here,
+> otherwise any user can read from this file.
+> 
+> [fixed formatting, added changelog, and made attribute static - gregkh]
+> 
+> Reported-by: Wade Mealing <wmealing@redhat.com>
+> Cc: stable <stable@vger.kernel.org>
+> Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---8323329-1108794673-1592895751=:2367
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-I don't agree with any of these comments.
-
-julia
-
-On Tue, 23 Jun 2020, Markus Elfring wrote:
-
-> > Changes in v2:
-> …
-> > - assignment operator used
->
-> I prefer the distinction for the application of corresponding metavariables.
->
->
-> > Changes in v3:
-> …
-> >  - \(&E1\|&E2\) changed to &\(E1\|E2\)
->
-> Would it be more helpful to mention the movement of the ampersand
-> before SmPL disjunctions?
->
->
-> …
-> >+/// Three types of patterns for these functions:
->
-> Will another adjustment be needed according to your information “duplicates warning removed”?
->
->
-> …
-> > +virtual context
-> > +virtual report
-> > +virtual org
->
-> Can the following SmPL code variant ever become more attractive?
->
-> +virtual context, report, org
->
->
-> …
-> > +expression subE1 <= as.E1;
-> > +expression subE2 <= as.E2;
-> > +expression as.E1, as.E2, E3;
->
-> How do you think about the following SmPL code variant?
->
-> +expression subE1 <= as.E1,
-> +           subE2 <= as.E2,
-> +           as.E1, as.E2, E3;
->
->
-> …
-> > +msg = "WARNING: array_size is used later (line %s) to compute the same size" % (p2[0].line)
-> > +coccilib.report.print_report(p1[0], msg)
->
-> Please omit the extra Python variable “msg” for the passing of such simple message objects.
->
-> What does hinder you to take the proposed script variants better into account?
->
-> Regards,
-> Markus
->
---8323329-1108794673-1592895751=:2367--
+Acked-by: Minchan Kim <minchan@kernel.org>
