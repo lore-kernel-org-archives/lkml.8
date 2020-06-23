@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B725BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC6702080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850E021556
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944627;
-	bh=NVD3gOOYKy/FQpq731q8IpOhveShIgkLDPQqbCvguE0=;
+	s=default; t=1592944632;
+	bh=PrCNUgQ/SXgMeIdcoc5Sk0/EeTIz7pOsb/IZl/fh8g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5t4nz/GEgEIm06ISVmWBc6TexKJEoda2VRCwdsQIUWIkOibsk89V4W2/T39K8Jrp
-	 upMO/3d+YA/1HDM1X4gdfDvIphrwWu//U6ndglHujgQdtywLjnVJL40LDCIcJ6iMpL
-	 QtJdhR6m1mBP48aM+n7E1uOgrAyNMgRQtaulnSQs=
+	b=wdngfYYckhY8IL70/pJE2Zs13hS5k8eNVF6ZgJJhQGvqRKT+q7SLAoV4ZDDSjNtRG
+	 GwPmJ6E/mvYhSHafjxHs3BqH/3+2/l/C5vU0FkWNXdWchgS4PrMgJqqrgLUsFzTBgy
+	 8A0kJoofW2tqQNC25PZBmKHi6RBH7Uo49Dfcr48o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391297AbgFWUhF (ORCPT
+        id S2390363AbgFWUhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:37:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60138 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:37:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391835AbgFWUgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:36:54 -0400
+        id S2391264AbgFWUg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:36:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4BA82080C;
-        Tue, 23 Jun 2020 20:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E577321527;
+        Tue, 23 Jun 2020 20:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944614;
-        bh=NVD3gOOYKy/FQpq731q8IpOhveShIgkLDPQqbCvguE0=;
+        s=default; t=1592944619;
+        bh=PrCNUgQ/SXgMeIdcoc5Sk0/EeTIz7pOsb/IZl/fh8g4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LV3Jo+B+yoaGQvlaXSox2Ucg124wGBSCp/EU4EQIsz9S9gWa/eVzF1r/+eI4MruLV
-         YOWv19rC0joZJ4irAMB2UTWOTdJLBzhuyOYNoaoQplyI64pLeAs/W1ZKTYLc/NKdwP
-         YodHCfAs12LD0qgg1VptOJO2xu5Kndfa+JR105ZY=
+        b=j/kdxM1rLmmVPnp2wqKmt+i+Gj6W25a3CLYwj9HpYCuvQb08p9iI0fh6sFKSem1mm
+         Od/UC/qPMDmekcdJRKhylWrna6JiQknp+x0KEY6P/NJt2ovW9wFx+wdnX0SQWiMm8A
+         IBAZUDAyuZ+p0Te6Z5mGjb4/+XakIZkAta5EyZqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
-        James Smart <james.smart@broadcom.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/206] scsi: lpfc: Fix lpfc_nodelist leak when processing unsolicited event
-Date:   Tue, 23 Jun 2020 21:55:58 +0200
-Message-Id: <20200623195318.460552908@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 058/206] staging: gasket: Fix mapping refcnt leak when register/store fails
+Date:   Tue, 23 Jun 2020 21:56:26 +0200
+Message-Id: <20200623195319.825470787@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -65,47 +61,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 7217e6e694da3aae6d17db8a7f7460c8d4817ebf ]
+[ Upstream commit e3436ce60cf5f5eaedda2b8c622f69feb97595e2 ]
 
-In order to create or activate a new node, lpfc_els_unsol_buffer() invokes
-lpfc_nlp_init() or lpfc_enable_node() or lpfc_nlp_get(), all of them will
-return a reference of the specified lpfc_nodelist object to "ndlp" with
+gasket_sysfs_register_store() invokes get_mapping(), which returns a
+reference of the specified gasket_sysfs_mapping object to "mapping" with
 increased refcnt.
 
-When lpfc_els_unsol_buffer() returns, local variable "ndlp" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+When gasket_sysfs_register_store() returns, local variable "mapping"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
 
 The reference counting issue happens in one exception handling path of
-lpfc_els_unsol_buffer(). When "ndlp" in DEV_LOSS, the function forgets to
-decrease the refcnt increased by lpfc_nlp_init() or lpfc_enable_node() or
-lpfc_nlp_get(), causing a refcnt leak.
+gasket_sysfs_register_store(). When gasket_dev is NULL, the function
+forgets to decrease the refcnt increased by get_mapping(), causing a
+refcnt leak.
 
-Fix this issue by calling lpfc_nlp_put() when "ndlp" in DEV_LOSS.
+Fix this issue by calling put_mapping() when gasket_dev is NULL.
 
-Link: https://lore.kernel.org/r/1590416184-52592-1-git-send-email-xiyuyang19@fudan.edu.cn
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: James Smart <james.smart@broadcom.com>
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lore.kernel.org/r/1587618941-13718-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/gasket/gasket_sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 7398350b08b41..9032793c405eb 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -7949,6 +7949,8 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
- 	spin_lock_irq(shost->host_lock);
- 	if (ndlp->nlp_flag & NLP_IN_DEV_LOSS) {
- 		spin_unlock_irq(shost->host_lock);
-+		if (newnode)
-+			lpfc_nlp_put(ndlp);
- 		goto dropit;
+diff --git a/drivers/staging/gasket/gasket_sysfs.c b/drivers/staging/gasket/gasket_sysfs.c
+index 9c982f1c0881d..5986c67bc7ec3 100644
+--- a/drivers/staging/gasket/gasket_sysfs.c
++++ b/drivers/staging/gasket/gasket_sysfs.c
+@@ -377,6 +377,7 @@ ssize_t gasket_sysfs_register_store(struct device *device,
+ 	gasket_dev = mapping->gasket_dev;
+ 	if (!gasket_dev) {
+ 		dev_err(device, "Device driver may have been removed\n");
++		put_mapping(mapping);
+ 		return 0;
  	}
- 	spin_unlock_irq(shost->host_lock);
+ 
 -- 
 2.25.1
 
