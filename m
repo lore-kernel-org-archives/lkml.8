@@ -2,52 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E69220EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E6020EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943507;
-	bh=YGsIDItN95h1rPeyRWo05Da3ZqlmUTAwMlfmX1pfVUg=;
+	s=default; t=1592943515;
+	bh=PoNil7jr+30iVCj+zJ8Urou9pPiuYD7sNpCe1oXReJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QMiZkTsX1fkPpNjKcP0Qf6vWtBtID6rMf8OIR9Y7zV18cclZgx7EFXvngCK26qL4N
-	 JEZ8pIwCXHYdb2qiTADtS+n2ZF0T6FhWneXD4nUwLlgS9yp0XzRHtwN0p634ulyjDU
-	 wUnAKqyDespp6AtWTctiGEhEEPRl+stGzJ0gPE/s=
+	b=DxMkbcUMy5hd9I/AxI/sghpDpr/EB02hscXmaZePxUnyOluc3OhXoH+RcDnod/nm2
+	 3IBsGXa6OHdV85ircNDbZtoVSmkvbn28TXT70o3SPQ8MlScnb46Tvjp8vF68OrEWxV
+	 hg48R/vQJakEKU+2gtrcVdx0A9EutraMTHG84Qjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389668AbgFWUS0 (ORCPT
+        id S2389695AbgFWUSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34796 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389329AbgFWUSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:18:08 -0400
+        id S2389660AbgFWUSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:18:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 677432064B;
-        Tue, 23 Jun 2020 20:18:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 039CB21473;
+        Tue, 23 Jun 2020 20:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943488;
-        bh=YGsIDItN95h1rPeyRWo05Da3ZqlmUTAwMlfmX1pfVUg=;
+        s=default; t=1592943503;
+        bh=PoNil7jr+30iVCj+zJ8Urou9pPiuYD7sNpCe1oXReJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b5cewsCA8KqNazQr6FCrX04vl88CehIkSzMYBHLTy08RyDaXNO4Q9Z+/3tMf46rXP
-         kaaatQ14Iexfs1iESeiwR6T8Kwe25Jt0NkP/W95SAkbNhoQ9NdTSNajhKDcP4D9DWt
-         607qd+R5QmewVutFFEDdwbwyTtI77WbWf5E3GdmM=
+        b=dMR+Cfqk4albqgFmcuo9+Fpbkg6y5RO8VPq+lWHnirkSWMYfHL4ldKsxTcj95GZP/
+         EuVD7qOf7K8u34v4a60aaDGjVRrZ6pLHyPveMD6bRfMJOKaldwBw2hHnT4EVqzYvfE
+         SqGEkQTzkm+dpvA1frAEDP/Nt342ngGiPkzDrEVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 412/477] libata: Use per port sync for detach
-Date:   Tue, 23 Jun 2020 21:56:49 +0200
-Message-Id: <20200623195427.003726589@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 5.7 418/477] arm64: dts: realtek: rtd129x: Use reserved-memory for RPC regions
+Date:   Tue, 23 Jun 2020 21:56:55 +0200
+Message-Id: <20200623195427.287074940@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,93 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Andreas Färber <afaerber@suse.de>
 
-[ Upstream commit b5292111de9bb70cba3489075970889765302136 ]
+commit 690677c22d5fa5dfdaa609a1739b75fdfb1c4a24 upstream.
 
-Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
-detach") may cause system freeze during suspend.
+Move /reserved-memory node from RTD1295 to RTD129x DT.
+Convert RPC /memreserve/s into /reserved-memory nodes.
 
-Using async_synchronize_full() in PM callbacks is wrong, since async
-callbacks that are already scheduled may wait for not-yet-scheduled
-callbacks, causes a circular dependency.
+Fixes: 72a7786c0a0d ("ARM64: dts: Add Realtek RTD1295 and Zidoo X9S")
+Fixes: f8b3436dad5c ("arm64: dts: realtek: Factor out common RTD129x parts")
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Instead of using big hammer like async_synchronize_full(), use async
-cookie to make sure port probe are synced, without affecting other
-scheduled PM callbacks.
-
-Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
-Suggested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: John Garry <john.garry@huawei.com>
-BugLink: https://bugs.launchpad.net/bugs/1867983
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-core.c | 11 +++++------
- include/linux/libata.h    |  3 +++
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi |   13 +------------
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi |   23 ++++++++++++++++++++---
+ 2 files changed, 21 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index beca5f91bb4c7..e74c8fe2a5fdb 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -42,7 +42,6 @@
- #include <linux/workqueue.h>
- #include <linux/scatterlist.h>
- #include <linux/io.h>
--#include <linux/async.h>
- #include <linux/log2.h>
- #include <linux/slab.h>
- #include <linux/glob.h>
-@@ -5778,7 +5777,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
- 	/* perform each probe asynchronously */
- 	for (i = 0; i < host->n_ports; i++) {
- 		struct ata_port *ap = host->ports[i];
--		async_schedule(async_port_probe, ap);
-+		ap->cookie = async_schedule(async_port_probe, ap);
- 	}
- 
- 	return 0;
-@@ -5920,11 +5919,11 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
- 
--	/* Ensure ata_port probe has completed */
--	async_synchronize_full();
--
--	for (i = 0; i < host->n_ports; i++)
-+	for (i = 0; i < host->n_ports; i++) {
-+		/* Ensure ata_port probe has completed */
-+		async_synchronize_cookie(host->ports[i]->cookie + 1);
- 		ata_port_detach(host->ports[i]);
-+	}
- 
- 	/* the host is dead now, dissociate ACPI */
- 	ata_acpi_dissociate(host);
-diff --git a/include/linux/libata.h b/include/linux/libata.h
-index cffa4714bfa84..ae6dfc107ea82 100644
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -22,6 +22,7 @@
- #include <linux/acpi.h>
- #include <linux/cdrom.h>
- #include <linux/sched.h>
-+#include <linux/async.h>
- 
+--- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+@@ -2,7 +2,7 @@
  /*
-  * Define if arch has non-standard setup.  This is a _PCI_ standard
-@@ -872,6 +873,8 @@ struct ata_port {
- 	struct timer_list	fastdrain_timer;
- 	unsigned long		fastdrain_cnt;
+  * Realtek RTD1295 SoC
+  *
+- * Copyright (c) 2016-2017 Andreas Färber
++ * Copyright (c) 2016-2019 Andreas Färber
+  */
  
-+	async_cookie_t		cookie;
+ #include "rtd129x.dtsi"
+@@ -47,17 +47,6 @@
+ 		};
+ 	};
+ 
+-	reserved-memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		tee@10100000 {
+-			reg = <0x10100000 0xf00000>;
+-			no-map;
+-		};
+-	};
+-
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13
+--- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+@@ -2,14 +2,12 @@
+ /*
+  * Realtek RTD1293/RTD1295/RTD1296 SoC
+  *
+- * Copyright (c) 2016-2017 Andreas Färber
++ * Copyright (c) 2016-2019 Andreas Färber
+  */
+ 
+ /memreserve/	0x0000000000000000 0x0000000000030000;
+-/memreserve/	0x000000000001f000 0x0000000000001000;
+ /memreserve/	0x0000000000030000 0x00000000000d0000;
+ /memreserve/	0x0000000001b00000 0x00000000004be000;
+-/memreserve/	0x0000000001ffe000 0x0000000000004000;
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/realtek,rtd1295.h>
+@@ -19,6 +17,25 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
- 	int			em_message_type;
- 	void			*private_data;
- 
--- 
-2.25.1
-
++		rpc_comm: rpc@1f000 {
++			reg = <0x1f000 0x1000>;
++		};
++
++		rpc_ringbuf: rpc@1ffe000 {
++			reg = <0x1ffe000 0x4000>;
++		};
++
++		tee: tee@10100000 {
++			reg = <0x10100000 0xf00000>;
++			no-map;
++		};
++	};
++
+ 	arm_pmu: arm-pmu {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
 
 
