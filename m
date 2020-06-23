@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B53C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB7F92085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6702080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944623;
-	bh=BU/QA9tBqFHcNghQcGnbX53aQxjRoM8xJY829ViD5do=;
+	s=default; t=1592944627;
+	bh=NVD3gOOYKy/FQpq731q8IpOhveShIgkLDPQqbCvguE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XMylRKpUE3RUkiJSkORZDS1sWwYHcaK2kMsEps/pfCSK0TFQ3dKbphwu74s2BF5aK
-	 A+WEwWLDBVKYVJMKTX9+NBqnGKKiJyqA9j33htc1vZTyDhLfr4alzPpRRYbpE6VFuU
-	 TcsbiVXw2gXc9UDqzWMj4taWRdSgkUotBLMxzmEw=
+	b=s5t4nz/GEgEIm06ISVmWBc6TexKJEoda2VRCwdsQIUWIkOibsk89V4W2/T39K8Jrp
+	 upMO/3d+YA/1HDM1X4gdfDvIphrwWu//U6ndglHujgQdtywLjnVJL40LDCIcJ6iMpL
+	 QtJdhR6m1mBP48aM+n7E1uOgrAyNMgRQtaulnSQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391591AbgFWUhB (ORCPT
+        id S2391297AbgFWUhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60076 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:37:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391825AbgFWUgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:36:51 -0400
+        id S2391835AbgFWUgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:36:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A272080C;
-        Tue, 23 Jun 2020 20:36:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4BA82080C;
+        Tue, 23 Jun 2020 20:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944611;
-        bh=BU/QA9tBqFHcNghQcGnbX53aQxjRoM8xJY829ViD5do=;
+        s=default; t=1592944614;
+        bh=NVD3gOOYKy/FQpq731q8IpOhveShIgkLDPQqbCvguE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H04scwKt6I9L1QKhja1zJcdSJ0q56lNdkbm49axD1qPmF8RqpvA53cZYUyXHNnOgf
-         Vusi4v+DsTZi7P7Sx2yuAm/agn4AS1R9uz5GvbnfNteSsxgpTsWrP1pyzSBYe1786n
-         zQtGnBH+91FLTpFiIoHX6bzco5RdrxqezlJVRxXM=
+        b=LV3Jo+B+yoaGQvlaXSox2Ucg124wGBSCp/EU4EQIsz9S9gWa/eVzF1r/+eI4MruLV
+         YOWv19rC0joZJ4irAMB2UTWOTdJLBzhuyOYNoaoQplyI64pLeAs/W1ZKTYLc/NKdwP
+         YodHCfAs12LD0qgg1VptOJO2xu5Kndfa+JR105ZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/206] firmware: qcom_scm: fix bogous abuse of dma-direct internals
-Date:   Tue, 23 Jun 2020 21:56:24 +0200
-Message-Id: <20200623195319.731229019@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
+        James Smart <james.smart@broadcom.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 030/206] scsi: lpfc: Fix lpfc_nodelist leak when processing unsolicited event
+Date:   Tue, 23 Jun 2020 21:55:58 +0200
+Message-Id: <20200623195318.460552908@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,70 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 459b1f86f1cba7de813fbc335df476c111feec22 ]
+[ Upstream commit 7217e6e694da3aae6d17db8a7f7460c8d4817ebf ]
 
-As far as the device is concerned the dma address is the physical
-address.  There is no need to convert it to a physical address,
-especially not using dma-direct internals that are not available
-to drivers and which will interact badly with IOMMUs.  Last but not
-least the commit introducing it claimed to just fix a type issue,
-but actually changed behavior.
+In order to create or activate a new node, lpfc_els_unsol_buffer() invokes
+lpfc_nlp_init() or lpfc_enable_node() or lpfc_nlp_get(), all of them will
+return a reference of the specified lpfc_nodelist object to "ndlp" with
+increased refcnt.
 
-Fixes: 6e37ccf78a532 ("firmware: qcom_scm: Use proper types for dma mappings")
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20200414123136.441454-1-hch@lst.de
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+When lpfc_els_unsol_buffer() returns, local variable "ndlp" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
+
+The reference counting issue happens in one exception handling path of
+lpfc_els_unsol_buffer(). When "ndlp" in DEV_LOSS, the function forgets to
+decrease the refcnt increased by lpfc_nlp_init() or lpfc_enable_node() or
+lpfc_nlp_get(), causing a refcnt leak.
+
+Fix this issue by calling lpfc_nlp_put() when "ndlp" in DEV_LOSS.
+
+Link: https://lore.kernel.org/r/1590416184-52592-1-git-send-email-xiyuyang19@fudan.edu.cn
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/qcom_scm.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 98c987188835b..513908a0c2622 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -18,7 +18,6 @@
- #include <linux/init.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
--#include <linux/dma-direct.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -449,8 +448,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	struct qcom_scm_mem_map_info *mem_to_map;
- 	phys_addr_t mem_to_map_phys;
- 	phys_addr_t dest_phys;
--	phys_addr_t ptr_phys;
--	dma_addr_t ptr_dma;
-+	dma_addr_t ptr_phys;
- 	size_t mem_to_map_sz;
- 	size_t dest_sz;
- 	size_t src_sz;
-@@ -468,10 +466,9 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
- 			ALIGN(dest_sz, SZ_64);
- 
--	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
-+	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
--	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
- 
- 	/* Fill source vmid detail */
- 	src = ptr;
-@@ -501,7 +498,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 
- 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
- 				    ptr_phys, src_sz, dest_phys, dest_sz);
--	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
-+	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_phys);
- 	if (ret) {
- 		dev_err(__scm->dev,
- 			"Assign memory protection call failed %d.\n", ret);
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 7398350b08b41..9032793c405eb 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -7949,6 +7949,8 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+ 	spin_lock_irq(shost->host_lock);
+ 	if (ndlp->nlp_flag & NLP_IN_DEV_LOSS) {
+ 		spin_unlock_irq(shost->host_lock);
++		if (newnode)
++			lpfc_nlp_put(ndlp);
+ 		goto dropit;
+ 	}
+ 	spin_unlock_irq(shost->host_lock);
 -- 
 2.25.1
 
