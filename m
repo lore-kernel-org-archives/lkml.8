@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6502C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB4E22072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F84206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948263;
-	bh=M6TT/wa8OZMxO/0biWgPTLNtCFxHhFd3MFg8EdmO0so=;
+	s=default; t=1592948269;
+	bh=nB3D23PSQEQIgg2JsOVOyOV9SHvzUBlpHpmwACf6F7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h1e6QzN7h/IOjIPhmw6+VHBu1Ll9SVYG5mU5Sbivfp4IqUFh7dyDBXwK7LhzYDqoH
-	 ag88Cdz1gp+pH9esPW0x3tgbm2TQww0uwT6sMHvZll+6XeUAZJdZMsGnjkLMUUKz5G
-	 h2WOBwwbbna34SngNnAm21phfbEQqETpR1MyfIrE=
+	b=XN888Zo3KaALZdIlnTDe0PIs6ZjlPSChZfb66bCBqSWOcE5CyBdswv79TeR/NZPjR
+	 TmVMsdEIVf4grZFwJI5TLCfj7CatCPjvZMdx6bip72LtpeQc4IRgGiEEOE5OWJMnrl
+	 O4xzxvoIdQToIMkP5/ABNyPSr2z6lBXnb4VzGr5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388375AbgFWVhl (ORCPT
+        id S2393699AbgFWVhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49804 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388211AbgFWUIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:49 -0400
+        id S2388266AbgFWUIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA1D2064B;
-        Tue, 23 Jun 2020 20:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7045A2064B;
+        Tue, 23 Jun 2020 20:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942928;
-        bh=M6TT/wa8OZMxO/0biWgPTLNtCFxHhFd3MFg8EdmO0so=;
+        s=default; t=1592942923;
+        bh=nB3D23PSQEQIgg2JsOVOyOV9SHvzUBlpHpmwACf6F7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UsSTrUPipi3SLstB7St0L/Syjh2SYyd20GvZqEDoDAwakNPzqvfoBLI5YajpqQm+T
-         6DvUWbPY2E+pmUlYFfAuXGX/vIX9vc3l4aMfDBijcOPd60+taNEJy2S55RxKujHOaq
-         vAJBxuFhC04j+G1fobA7zoHBU98b45ibuNuZJMFI=
+        b=dHz+hiJpuSVkeIDbfZGXPkqY3L1ZvYHQO9QbU2FVe+YxFlQJheGAI2YPQuB4chexX
+         ykzdEdhHGl+j5HTqID/ZYDIWEglNOxxyclvXwWNbDI3oldNyuzEZLnCQcAsYxyo+8e
+         o+/PKXkiRe/RVmbCihtQDI40NP1RmuQZsXe0uaC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Li <licheng0822@thundersoft.com>,
-        Yongbo Zhang <giraffesnn123@gmail.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 190/477] SoC: rsnd: add interrupt support for SSI BUSIF buffer
-Date:   Tue, 23 Jun 2020 21:53:07 +0200
-Message-Id: <20200623195416.572189433@linuxfoundation.org>
+Subject: [PATCH 5.7 188/477] um: do not evaluate compilers library path when cleaning
+Date:   Tue, 23 Jun 2020 21:53:05 +0200
+Message-Id: <20200623195416.475424176@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,279 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongbo Zhang <giraffesnn123@gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 66c705d07d784fb6b4622c6e47b6acae357472db ]
+[ Upstream commit 7e49afc03212010d0ee27532a75cfeb0125bd868 ]
 
-SSI BUSIF buffer is possible to overflow or underflow, especially in a
-hypervisor environment. If there is no interrupt support, it will eventually
-lead to errors in pcm data.
-This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
+Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
+-Wframe-larger-than="), 'make ARCH=um clean' emits an error message
+as follows:
 
-Reported-by: Chen Li <licheng0822@thundersoft.com>
-Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
-Tested-by: Chen Li <licheng0822@thundersoft.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200512093003.28332-1-giraffesnn123@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  $ make ARCH=um clean
+  gcc: error: missing argument to '-Wframe-larger-than='
+
+We do not care compiler flags when cleaning.
+
+Use the '=' operator for lazy expansion because we do not use
+LDFLAGS_pcap.o or LDFLAGS_vde.o when cleaning.
+
+While I was here, I removed the redundant -r option because it
+already exists in the recipe.
+
+Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> [build]
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/gen.c  |   8 +++
- sound/soc/sh/rcar/rsnd.h |   9 +++
- sound/soc/sh/rcar/ssi.c  | 145 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 162 insertions(+)
+ arch/um/drivers/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sh/rcar/gen.c b/sound/soc/sh/rcar/gen.c
-index af19010b9d88f..8bd49c8a9517e 100644
---- a/sound/soc/sh/rcar/gen.c
-+++ b/sound/soc/sh/rcar/gen.c
-@@ -224,6 +224,14 @@ static int rsnd_gen2_probe(struct rsnd_priv *priv)
- 		RSND_GEN_S_REG(SSI_SYS_STATUS5,	0x884),
- 		RSND_GEN_S_REG(SSI_SYS_STATUS6,	0x888),
- 		RSND_GEN_S_REG(SSI_SYS_STATUS7,	0x88c),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE0, 0x850),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE1, 0x854),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE2, 0x858),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE3, 0x85c),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE4, 0x890),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE5, 0x894),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE6, 0x898),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE7, 0x89c),
- 		RSND_GEN_S_REG(HDMI0_SEL,	0x9e0),
- 		RSND_GEN_S_REG(HDMI1_SEL,	0x9e4),
+diff --git a/arch/um/drivers/Makefile b/arch/um/drivers/Makefile
+index a290821e355c2..2a249f6194671 100644
+--- a/arch/um/drivers/Makefile
++++ b/arch/um/drivers/Makefile
+@@ -18,9 +18,9 @@ ubd-objs := ubd_kern.o ubd_user.o
+ port-objs := port_kern.o port_user.o
+ harddog-objs := harddog_kern.o harddog_user.o
  
-diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
-index ea6cbaa9743ee..d47608ff5facc 100644
---- a/sound/soc/sh/rcar/rsnd.h
-+++ b/sound/soc/sh/rcar/rsnd.h
-@@ -189,6 +189,14 @@ enum rsnd_reg {
- 	SSI_SYS_STATUS5,
- 	SSI_SYS_STATUS6,
- 	SSI_SYS_STATUS7,
-+	SSI_SYS_INT_ENABLE0,
-+	SSI_SYS_INT_ENABLE1,
-+	SSI_SYS_INT_ENABLE2,
-+	SSI_SYS_INT_ENABLE3,
-+	SSI_SYS_INT_ENABLE4,
-+	SSI_SYS_INT_ENABLE5,
-+	SSI_SYS_INT_ENABLE6,
-+	SSI_SYS_INT_ENABLE7,
- 	HDMI0_SEL,
- 	HDMI1_SEL,
- 	SSI9_BUSIF0_MODE,
-@@ -237,6 +245,7 @@ enum rsnd_reg {
- #define SSI9_BUSIF_ADINR(i)	(SSI9_BUSIF0_ADINR + (i))
- #define SSI9_BUSIF_DALIGN(i)	(SSI9_BUSIF0_DALIGN + (i))
- #define SSI_SYS_STATUS(i)	(SSI_SYS_STATUS0 + (i))
-+#define SSI_SYS_INT_ENABLE(i) (SSI_SYS_INT_ENABLE0 + (i))
+-LDFLAGS_pcap.o := -r $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
++LDFLAGS_pcap.o = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
  
+-LDFLAGS_vde.o := -r $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
++LDFLAGS_vde.o = $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
  
- struct rsnd_priv;
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index 4a7d3413917fc..47d5ddb526f21 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -372,6 +372,9 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
- 	u32 wsr		= ssi->wsr;
- 	int width;
- 	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+	int i;
-+	u32 sys_int_enable = 0;
+ targets := pcap_kern.o pcap_user.o vde_kern.o vde_user.o
  
- 	is_tdm		= rsnd_runtime_is_tdm(io);
- 	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
-@@ -447,6 +450,38 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
- 		cr_mode = DIEN;		/* PIO : enable Data interrupt */
- 	}
- 
-+	/* enable busif buffer over/under run interrupt. */
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE(i * 2));
-+				sys_int_enable |= 0xf << (id * 4);
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE(i * 2),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE((i * 2) + 1));
-+				sys_int_enable |= 0xf << 4;
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE((i * 2) + 1),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		}
-+	}
-+
- init_end:
- 	ssi->cr_own	= cr_own;
- 	ssi->cr_mode	= cr_mode;
-@@ -496,6 +531,13 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
- {
- 	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
- 	struct device *dev = rsnd_priv_to_dev(priv);
-+	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+	int i;
-+	u32 sys_int_enable = 0;
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
- 
- 	if (!rsnd_ssi_is_run_mods(mod, io))
- 		return 0;
-@@ -517,6 +559,38 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
- 		ssi->wsr	= 0;
- 	}
- 
-+	/* disable busif buffer over/under run interrupt. */
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+						SSI_SYS_INT_ENABLE(i * 2));
-+				sys_int_enable &= ~(0xf << (id * 4));
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE(i * 2),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE((i * 2) + 1));
-+				sys_int_enable &= ~(0xf << 4);
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE((i * 2) + 1),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -622,6 +696,11 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
- 			int enable)
- {
- 	u32 val = 0;
-+	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
- 
- 	if (rsnd_is_gen1(priv))
- 		return 0;
-@@ -635,6 +714,19 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
- 	if (enable)
- 		val = rsnd_ssi_is_dma_mode(mod) ? 0x0e000000 : 0x0f000000;
- 
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+		case 9:
-+			val |= 0x0000ff00;
-+			break;
-+		}
-+	}
-+
- 	rsnd_mod_write(mod, SSI_INT_ENABLE, val);
- 
- 	return 0;
-@@ -651,6 +743,12 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
- 	u32 status;
- 	bool elapsed = false;
- 	bool stop = false;
-+	int id = rsnd_mod_id(mod);
-+	int i;
-+	int is_tdm, is_tdm_split;
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
- 
- 	spin_lock(&priv->lock);
- 
-@@ -672,6 +770,53 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
- 		stop = true;
- 	}
- 
-+	status = 0;
-+
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				status = rsnd_mod_read(mod,
-+						       SSI_SYS_STATUS(i * 2));
-+				status &= 0xf << (id * 4);
-+
-+				if (status) {
-+					rsnd_dbg_irq_status(dev,
-+						"%s err status : 0x%08x\n",
-+						rsnd_mod_name(mod), status);
-+					rsnd_mod_write(mod,
-+						       SSI_SYS_STATUS(i * 2),
-+						       0xf << (id * 4));
-+					stop = true;
-+					break;
-+				}
-+			}
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				status = rsnd_mod_read(mod,
-+						SSI_SYS_STATUS((i * 2) + 1));
-+				status &= 0xf << 4;
-+
-+				if (status) {
-+					rsnd_dbg_irq_status(dev,
-+						"%s err status : 0x%08x\n",
-+						rsnd_mod_name(mod), status);
-+					rsnd_mod_write(mod,
-+						SSI_SYS_STATUS((i * 2) + 1),
-+						0xf << 4);
-+					stop = true;
-+					break;
-+				}
-+			}
-+			break;
-+		}
-+	}
-+
- 	rsnd_ssi_status_clear(mod);
- rsnd_ssi_interrupt_out:
- 	spin_unlock(&priv->lock);
 -- 
 2.25.1
 
