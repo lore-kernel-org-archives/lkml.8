@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D091C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7AC22080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4190A2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943531;
-	bh=pcVWBQgxGpe/YfxjYihvBQJmOnuIdosCzeBy3mZT0lY=;
+	s=default; t=1592943535;
+	bh=IVRB9q9/6/QXpG+dXxWFNhybvoHx+eg0H3V+4CyDGDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAsIQv9kEx8IEXGxzOeY74csuxbPx1BRowOdONb071OkwO/UDWaBM8mHEdJb+74Fr
-	 l/W9puS85udkVZfLWTnYvrUpzEq7ATgZrzY0v6orkXeaRY9EDM+/9IPJEezwotuKu3
-	 O2/S14GkC3tZFPWsH+C4YJDLOJl7NSnsvQoZ7Ejo=
+	b=scNeZJsP5jg370mX0p1jPKmfsS2ZBEpx4NTH31dc4u2Iy2DB6K9DY0WV/I2NBBmLa
+	 9x+o/c03j99PYmjmFPEh//E71cj7WUXOOZWKlxOJAOZVrcs9xiCyTg0sa+hs/8zT+2
+	 XTDJLzdrKU9zbrwweAU5pWBIA0v+6h9Bg2C8Lgvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388857AbgFWUSt (ORCPT
+        id S2389724AbgFWUSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:18:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388831AbgFWUSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:18:46 -0400
+        id S2389443AbgFWUSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:18:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A494720E65;
-        Tue, 23 Jun 2020 20:18:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E9552064B;
+        Tue, 23 Jun 2020 20:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943526;
-        bh=pcVWBQgxGpe/YfxjYihvBQJmOnuIdosCzeBy3mZT0lY=;
+        s=default; t=1592943528;
+        bh=IVRB9q9/6/QXpG+dXxWFNhybvoHx+eg0H3V+4CyDGDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1oiIhJ/VAmbihqFxR/zGpvPtJG6kJJQ27zBZe2i1zGl8fRZ5Tj+UqWnzZXb99ZONo
-         qq/9qYRPrdRwlhoh/owzZ86uCBfsMK1iy6bCyzhN3O47uxT51ZYn5wx6CLr/3nuxSn
-         XmHVX2/O69ymuNHw8XZML5AXUa8UOypXPAfyob88=
+        b=08KjDKszeWh7Uvwd7efC14pB4S2aICxIjZvLFsrM4LBMhXHy0OrdjsOLFani+Stdo
+         MJn1bh0AsWtrhAM8TdhkImGO3Xc4iwmspIe4RfafSfQN61G03+QsfManyGzq09vkZU
+         uMCIYHLTxIS5me8BaLrb6IdmX/O3WpxV32HOmgsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
         Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.7 426/477] selinux: fix double free
-Date:   Tue, 23 Jun 2020 21:57:03 +0200
-Message-Id: <20200623195427.667004235@linuxfoundation.org>
+Subject: [PATCH 5.7 427/477] selinux: fix a double free in cond_read_node()/cond_read_list()
+Date:   Tue, 23 Jun 2020 21:57:04 +0200
+Message-Id: <20200623195427.714040921@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,44 +62,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Rix <trix@redhat.com>
 
-commit 65de50969a77509452ae590e9449b70a22b923bb upstream.
+commit aa449a7965a6172a89d48844c313708962216f1f upstream.
 
-Clang's static analysis tool reports these double free memory errors.
+Clang static analysis reports this double free error
 
-security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
-                        kfree(bnames[i]);
-                        ^~~~~~~~~~~~~~~~
-security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
-        kfree(bvalues);
-        ^~~~~~~~~~~~~~
+security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
+        kfree(node->expr.nodes);
+        ^~~~~~~~~~~~~~~~~~~~~~~
 
-So improve the security_get_bools error handling by freeing these variables
-and setting their return pointers to NULL and the return len to 0
+When cond_read_node fails, it calls cond_node_destroy which frees the
+node but does not poison the entry in the node list.  So when it
+returns to its caller cond_read_list, cond_read_list deletes the
+partial list.  The latest entry in the list will be deleted twice.
+
+So instead of freeing the node in cond_read_node, let list freeing in
+code_read_list handle the freeing the problem node along with all of the
+earlier nodes.
+
+Because cond_read_node no longer does any error handling, the goto's
+the error case are redundant.  Instead just return the error code.
 
 Cc: stable@vger.kernel.org
+Fixes: 60abd3181db2 ("selinux: convert cond_list to array")
 Signed-off-by: Tom Rix <trix@redhat.com>
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+[PM: subject line tweaks]
 Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/selinux/ss/services.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ security/selinux/ss/conditional.c |   18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
 
---- a/security/selinux/ss/services.c
-+++ b/security/selinux/ss/services.c
-@@ -2923,8 +2923,12 @@ err:
- 	if (*names) {
- 		for (i = 0; i < *len; i++)
- 			kfree((*names)[i]);
-+		kfree(*names);
+--- a/security/selinux/ss/conditional.c
++++ b/security/selinux/ss/conditional.c
+@@ -392,27 +392,19 @@ static int cond_read_node(struct policyd
+ 
+ 		rc = next_entry(buf, fp, sizeof(u32) * 2);
+ 		if (rc)
+-			goto err;
++			return rc;
+ 
+ 		expr->expr_type = le32_to_cpu(buf[0]);
+ 		expr->bool = le32_to_cpu(buf[1]);
+ 
+-		if (!expr_node_isvalid(p, expr)) {
+-			rc = -EINVAL;
+-			goto err;
+-		}
++		if (!expr_node_isvalid(p, expr))
++			return -EINVAL;
  	}
- 	kfree(*values);
-+	*len = 0;
-+	*names = NULL;
-+	*values = NULL;
- 	goto out;
+ 
+ 	rc = cond_read_av_list(p, fp, &node->true_list, NULL);
+ 	if (rc)
+-		goto err;
+-	rc = cond_read_av_list(p, fp, &node->false_list, &node->true_list);
+-	if (rc)
+-		goto err;
+-	return 0;
+-err:
+-	cond_node_destroy(node);
+-	return rc;
++		return rc;
++	return cond_read_av_list(p, fp, &node->false_list, &node->true_list);
  }
  
+ int cond_read_list(struct policydb *p, void *fp)
 
 
