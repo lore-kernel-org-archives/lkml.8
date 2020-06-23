@@ -2,191 +2,180 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F34C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0D9420720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:02:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="JvX0MDxx"
+	by mail.kernel.org (Postfix) with ESMTP id A4DC020720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732740AbgFWOCo (ORCPT
+        id S1732780AbgFWODs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:02:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729504AbgFWOCn (ORCPT
+        Tue, 23 Jun 2020 10:03:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36534 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732727AbgFWODs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:02:43 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD29C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:02:43 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id n23so23532428ljh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+mDKHqL9XaZmj7XcsJJwYzkkEK6i2Pe8R8fplxjQ0ik=;
-        b=JvX0MDxxQ7q45iyUquGhnRAfIa6C8NJAargxgnJLVJ1QKDLMHSQdE4DHqkXQDQQvMA
-         0BlItz+1HrqAU843jnYC7PfhRIxKT0JH19lnfBaqxGSiKEfVwkV0H5AeiwaryqbwipQ+
-         n5g+jwL4+9Joj4DgkA5NywYvIjzDIitw+83lU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+mDKHqL9XaZmj7XcsJJwYzkkEK6i2Pe8R8fplxjQ0ik=;
-        b=MJiLpnTdMgao0ZcMbKkFBvNBRe2O2UopOd0hUyjqNAQu/ZhDJTntTx5mn5SLLgee10
-         rDCVdotZ/F+Am95wcerNkl0PUOkAA0ncq2Dog4uf2N04PnGrbnRde9dKqckNYpoiXvmr
-         Bbp3AgyTHPCx2q1yGGKR+qrMcTn7GBS8+uDz4rL4DTA+gCLRJH/ssX4fjLPvPJ/luKhZ
-         cJ+wpWszA64LyIKfxu85sce5oxc8ST40Kin72GtgqWVJvABJoCPRS6jXgOjny3drF8BB
-         KG7dSbolIHksXHiGCZLB3shr3paxV1QPlj3V6QADwkBGXaT4WH+ig4B7RGiQ8JPThtRm
-         FS2g==
-X-Gm-Message-State: AOAM533lsU/vngCDzwJKSkhVMHj3kGtBHGzNQRcYvUFh29QL7lPa18ZT
-        B5tXWQIpIfaZHeO0Zt57XTlKJVIS0hH3H5IgCarsmggd5Bs=
-X-Google-Smtp-Source: ABdhPJwkp7xO233qrwVR3p5tSB1yZTt9QFCbp0qjfLwtRcyVzpREtRGELz74ul+4qEqtniyRgrWITwvGeGjIWMKuSHU=
-X-Received: by 2002:a2e:3603:: with SMTP id d3mr10508629lja.259.1592920961167;
- Tue, 23 Jun 2020 07:02:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200622153546.49880-1-colin.king@canonical.com>
- <20200622182816.GF4151@kadam> <B926444035E5E2439431908E3842AFD2514C4B@DGGEMI525-MBS.china.huawei.com>
- <baf5a045-40f3-254b-fe0f-ad00cdf4b775@canonical.com>
-In-Reply-To: <baf5a045-40f3-254b-fe0f-ad00cdf4b775@canonical.com>
-From:   Vitaly Wool <vitaly.wool@konsulko.com>
-Date:   Tue, 23 Jun 2020 16:02:29 +0200
-Message-ID: <CAM4kBB+v+FJaoKx+zL3pfnV1e1pk8sVRX1=7-aq9OGdXXuBxJA@mail.gmail.com>
-Subject: Re: [PATCH][next] mm/zswap: fix a couple of memory leaks and rework
- kzalloc failure check
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Tue, 23 Jun 2020 10:03:48 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NE21rl132386;
+        Tue, 23 Jun 2020 10:03:38 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ue3dtgsg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 10:03:38 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05NE2Cws133248;
+        Tue, 23 Jun 2020 10:03:37 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ue3dtgqy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 10:03:37 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NE0qW5022671;
+        Tue, 23 Jun 2020 14:03:34 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31uk4mg031-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 14:03:34 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NE3WJe34865156
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 14:03:32 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3525E42049;
+        Tue, 23 Jun 2020 14:03:32 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D34242056;
+        Tue, 23 Jun 2020 14:03:11 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.212.185])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Jun 2020 14:03:11 +0000 (GMT)
+Message-ID: <1592920990.5437.15.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: extend boot_aggregate with kernel measurements
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Maurizio Drocco <maurizio.drocco@ibm.com>
+Cc:     Silviu.Vlasceanu@huawei.com, dmitry.kasatkin@gmail.com,
+        jejb@linux.ibm.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, mdrocco@linux.vnet.ibm.com,
+        roberto.sassu@huawei.com, serge@hallyn.com
+Date:   Tue, 23 Jun 2020 10:03:10 -0400
+In-Reply-To: <20200622045019.1636-1-maurizio.drocco@ibm.com>
+References: <1592856871.4987.21.camel@linux.ibm.com>
+         <20200622045019.1636-1-maurizio.drocco@ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 impostorscore=0 cotscore=-2147483648 adultscore=0
+ mlxscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ phishscore=0 suspectscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006230108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020, 1:12 PM Colin Ian King <colin.king@canonical.com> wrote:
->
-> On 22/06/2020 20:55, Song Bao Hua (Barry Song) wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
-> >> Sent: Tuesday, June 23, 2020 6:28 AM
-> >> To: Colin King <colin.king@canonical.com>
-> >> Cc: Seth Jennings <sjenning@redhat.com>; Dan Streetman
-> >> <ddstreet@ieee.org>; Vitaly Wool <vitaly.wool@konsulko.com>; Andrew
-> >> Morton <akpm@linux-foundation.org>; Song Bao Hua (Barry Song)
-> >> <song.bao.hua@hisilicon.com>; Stephen Rothwell <sfr@canb.auug.org.au>;
-> >> linux-mm@kvack.org; kernel-janitors@vger.kernel.org;
-> >> linux-kernel@vger.kernel.org
-> >> Subject: Re: [PATCH][next] mm/zswap: fix a couple of memory leaks and
-> >> rework kzalloc failure check
-> >>
-> >> On Mon, Jun 22, 2020 at 04:35:46PM +0100, Colin King wrote:
-> >>> From: Colin Ian King <colin.king@canonical.com>
-> >>>
-> >>> kzalloc failures return NULL on out of memory errors, so replace the
-> >>> IS_ERR_OR_NULL check with the usual null pointer check.  Fix two memory
-> >>> leaks with on acomp and acomp_ctx by ensuring these objects are free'd
-> >>> on the error return path.
-> >>>
-> >>> Addresses-Coverity: ("Resource leak")
-> >>> Fixes: d4f86abd6e35 ("mm/zswap: move to use crypto_acomp API for
-> >> hardware acceleration")
-> >>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >
-> >
-> > Colin, thanks for your patch. I am sorry I did the same thing with you here:
-> > https://lkml.org/lkml/2020/6/22/347
->
-> Thanks for fixing this correctly, I ran out of time yesterday to re-do
-> the fix.
->
-> Colin
+Hi Maurizio,
 
-I think this has gotten out of hand. Barry, could you please come up
-with a replacement for the initial patch rather than doing it
-incrementally?
+When re-posting patches, please include the version number (e.g.
+[PATCH v4] ima: ... ).
 
-Thanks,
-   Vitaly
+On Mon, 2020-06-22 at 00:50 -0400, Maurizio Drocco wrote:
+> IMA is not considering TPM registers 8-9 when calculating the boot
+> aggregate.
 
->
-> >
-> >
-> >>> ---
-> >>>  mm/zswap.c | 16 +++++++++++-----
-> >>>  1 file changed, 11 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/mm/zswap.c b/mm/zswap.c
-> >>> index 0d914ba6b4a0..14839cbac7ff 100644
-> >>> --- a/mm/zswap.c
-> >>> +++ b/mm/zswap.c
-> >>> @@ -433,23 +433,23 @@ static int zswap_cpu_comp_prepare(unsigned int
-> >> cpu, struct hlist_node *node)
-> >>>             return 0;
-> >>>
-> >>>     acomp_ctx = kzalloc(sizeof(*acomp_ctx), GFP_KERNEL);
-> >>> -   if (IS_ERR_OR_NULL(acomp_ctx)) {
-> >>> +   if (!acomp_ctx) {
-> >>>             pr_err("Could not initialize acomp_ctx\n");
-> >>>             return -ENOMEM;
-> >>>     }
-> >>>     acomp = crypto_alloc_acomp(pool->tfm_name, 0, 0);
-> >>> -   if (IS_ERR_OR_NULL(acomp)) {
-> >>> +   if (!acomp) {
-> >>
-> >> This should be IS_ERR(acomp).  Please preserve the error code.
-> >>
-> >>>             pr_err("could not alloc crypto acomp %s : %ld\n",
-> >>>                             pool->tfm_name, PTR_ERR(acomp));
-> >>> -           return -ENOMEM;
-> >>> +           goto free_acomp_ctx;
-> >>>     }
-> >>>     acomp_ctx->acomp = acomp;
-> >>>
-> >>>     req = acomp_request_alloc(acomp_ctx->acomp);
-> >>> -   if (IS_ERR_OR_NULL(req)) {
-> >>> +   if (!req) {
-> >>>             pr_err("could not alloc crypto acomp %s : %ld\n",
-> >>>                    pool->tfm_name, PTR_ERR(acomp));
-> >>> -           return -ENOMEM;
-> >>> +           goto free_acomp;
-> >>>     }
-> >>>     acomp_ctx->req = req;
-> >>>
-> >>> @@ -462,6 +462,12 @@ static int zswap_cpu_comp_prepare(unsigned int
-> >> cpu, struct hlist_node *node)
-> >>>     *per_cpu_ptr(pool->acomp_ctx, cpu) = acomp_ctx;
-> >>>
-> >>>     return 0;
-> >>> +
-> >>> +free_acomp:
-> >>> +   kfree(acomp);
-> >>
-> >> The kfree() isn't correct.  It needs to be:
-> >>
-> >>      crypto_free_acomp(acomp);
-> >>
-> >>> +free_acomp_ctx:
-> >>> +   kfree(acomp_ctx);
-> >>> +   return -ENOMEM;
-> >>
-> >> regards,
-> >> dan carpenter
-> >
->
+This line is unnecessary with the following change.
+
+> When registers 8-9 are used to store measurements of the
+> kernel and its command line (e.g., grub2 bootloader with tpm module
+> enabled), IMA should include them in the boot aggregate.
+
+The "When" clause makes this sound like PCRs 8 & 9 are not always
+included.  I would split this into two sentences.
+
+>  Registers
+> 8-9 are only included in non-SHA1 boot_aggregate digests to avoid
+> ambiguity.
+> 
+> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+> ---
+
+Missing "Changelog:".
+
+Changelog:
+v2: 
+- Limit including PCRs 8 & 9 to non-sha1 hashes
+v1:
+- Include non zero PCRs 8 & 9 in the boot_aggregate
+
+>  security/integrity/ima/ima.h        |  2 +-
+>  security/integrity/ima/ima_crypto.c | 15 ++++++++++++++-
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index df93ac258e01..9d94080bdad8 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -30,7 +30,7 @@
+>  
+>  enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
+>  		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
+> -enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
+> +enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
+>  
+>  /* digest size for IMA, fits SHA1 or MD5 */
+>  #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+> index 220b14920c37..d02917d85033 100644
+> --- a/security/integrity/ima/ima_crypto.c
+> +++ b/security/integrity/ima/ima_crypto.c
+> @@ -823,13 +823,26 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+>  	if (rc != 0)
+>  		return rc;
+>  
+> -	/* cumulative sha1 over tpm registers 0-7 */
+> +	/* cumulative digest over tpm registers 0-7 */
+
+Please uppercase "tpm" here and below.
+
+>  	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+>  		ima_pcrread(i, &d);
+>  		/* now accumulate with current aggregate */
+>  		rc = crypto_shash_update(shash, d.digest,
+>  					 crypto_shash_digestsize(tfm));
+>  	}
+> +	/*
+> +	 * extend cumulative digest over tpm registers 8-9, which contain
+> +	 * measurement for the kernel command line (reg. 8) and image (reg. 9)
+> +	 * in a typical PCR allocation. Registers 8-9 are only included in
+> +	 * non-SHA1 boot_aggregate digests to avoid ambiguity.
+> +	 */
+
+Comments that are full sentences should start with an uppercase letter
+and end with a period (e.g. Extend).
+
+thanks,
+
+Mimi
+
+> +	if (alg_id != TPM_ALG_SHA1) {
+> +		for (i = TPM_PCR8; i < TPM_PCR10; i++) {
+> +			ima_pcrread(i, &d);
+> +			rc = crypto_shash_update(shash, d.digest,
+> +						crypto_shash_digestsize(tfm));
+> +		}
+> +	}
+>  	if (!rc)
+>  		crypto_shash_final(shash, digest);
+>  	return rc;
+
