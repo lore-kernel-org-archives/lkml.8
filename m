@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F143C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ED5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5265220724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446EE20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947781;
-	bh=VBdzvVfhqazPp12xh0vochK2TNE8hSqZV2m7XV3otm8=;
+	s=default; t=1592947798;
+	bh=PA0/KPh9VXWbprDD8v41oKM2j8WmSDeOIfzwSNvXqko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIys0VgMEsqbWpANXYfZHZ/GZk0BXT9xIgc0xHO+WEWtgbnVljWKjGqvHZLE5kvLD
-	 6BChTS97Ps5zb0npWOTdA2PP8aNynSj/ZC3dWI7lTy8qVZIgcLBF+oBoaFzCjexe8G
-	 zg5SRZpyiRjQK0BWKENNwh0G0QFOEDHjfH76O/QI=
+	b=pROyw6UOwmxJzyD3TnL6O3V/HBgQsSP1IDIA9DuFVwNwdWx3clromiZZaQUztxlTC
+	 sVHOMJ+OTodn+r4+mz5ebxIE5ug8yW6AZVzHLOtHJ6Ct06tFQrDtM8ZS9qfu/WFOmr
+	 dgHn/SHdHwDkIrH5dbePut+aflNljUbh6NLLg8qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393588AbgFWV3j (ORCPT
+        id S2390868AbgFWV3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:29:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389287AbgFWUPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:15:01 -0400
+        id S2388885AbgFWUOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:14:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E73E2073E;
-        Tue, 23 Jun 2020 20:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0DC82137B;
+        Tue, 23 Jun 2020 20:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943300;
-        bh=VBdzvVfhqazPp12xh0vochK2TNE8hSqZV2m7XV3otm8=;
+        s=default; t=1592943278;
+        bh=PA0/KPh9VXWbprDD8v41oKM2j8WmSDeOIfzwSNvXqko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xa5Jhe/A1/uZx4bb1u91cNb9tEiRHnDK6CaFnf4TBtZJ4iwXkiV9b7XJJmfMg0TNw
-         cYtdtHAEqVy95zb3DELeEOiM1QZS0r2aL3xTcDPenGFaA5bl4N6GSV+YGZUXkyoIbu
-         uW4jC7q78RhQCJ/46znWnKBXedxxhEZhgNGZUwdg=
+        b=tr60YAe4WVork3P5pdTNERdYGWgxtI2Ggm0w0xUM3KPvtEYbwkRo9N1g0rLnK9DSJ
+         SfGAjCwM7uItgaQeEuFZQdvYKyMMhLYumJucF40nDS/929Jwa2QenClzfhrgefx9Vd
+         O2LHVVVsEWaamrQgOvH5rGwI35tNDtrlM6FcAFQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 307/477] drm/nouveau/disp/gm200-: fix NV_PDISP_SOR_HDMI2_CTRL(n) selection
-Date:   Tue, 23 Jun 2020 21:55:04 +0200
-Message-Id: <20200623195422.051716748@linuxfoundation.org>
+Subject: [PATCH 5.7 329/477] include/linux/bitops.h: avoid clang shift-count-overflow warnings
+Date:   Tue, 23 Jun 2020 21:55:26 +0200
+Message-Id: <20200623195423.088269827@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,38 +66,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit a1ef8bad506e4ffa0c57ac5f8cb99ab5cbc3b1fc ]
+[ Upstream commit bd93f003b7462ae39a43c531abca37fe7073b866 ]
 
-This is a SOR register, and not indexed by the bound head.
+Clang normally does not warn about certain issues in inline functions when
+it only happens in an eliminated code path. However if something else
+goes wrong, it does tend to complain about the definition of hweight_long()
+on 32-bit targets:
 
-Fixes display not coming up on high-bandwidth HDMI displays under a
-number of configurations.
+  include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+          return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
+                                                 ^~~~~~~~~~~~
+  include/asm-generic/bitops/const_hweight.h:29:49: note: expanded from macro 'hweight64'
+   define hweight64(w) (__builtin_constant_p(w) ? __const_hweight64(w) : __arch_hweight64(w))
+                                                  ^~~~~~~~~~~~~~~~~~~~
+  include/asm-generic/bitops/const_hweight.h:21:76: note: expanded from macro '__const_hweight64'
+   define __const_hweight64(w) (__const_hweight32(w) + __const_hweight32((w) >> 32))
+                                                                             ^  ~~
+  include/asm-generic/bitops/const_hweight.h:20:49: note: expanded from macro '__const_hweight32'
+   define __const_hweight32(w) (__const_hweight16(w) + __const_hweight16((w) >> 16))
+                                                  ^
+  include/asm-generic/bitops/const_hweight.h:19:72: note: expanded from macro '__const_hweight16'
+   define __const_hweight16(w) (__const_hweight8(w)  + __const_hweight8((w)  >> 8 ))
+                                                                         ^
+  include/asm-generic/bitops/const_hweight.h:12:9: note: expanded from macro '__const_hweight8'
+            (!!((w) & (1ULL << 2))) +     \
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Adding an explicit cast to __u64 avoids that warning and makes it easier
+to read other output.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Link: http://lkml.kernel.org/r/20200505135513.65265-1-arnd@arndb.de
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/bitops.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
-index 9b16a08eb4d9f..bf6d41fb0c9fe 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
-@@ -27,10 +27,10 @@ void
- gm200_hdmi_scdc(struct nvkm_ior *ior, int head, u8 scdc)
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index 9acf654f0b191..99f2ac30b1d9b 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -72,7 +72,7 @@ static inline int get_bitmask_order(unsigned int count)
+ 
+ static __always_inline unsigned long hweight_long(unsigned long w)
  {
- 	struct nvkm_device *device = ior->disp->engine.subdev.device;
--	const u32 hoff = head * 0x800;
-+	const u32 soff = nv50_ior_base(ior);
- 	const u32 ctrl = scdc & 0x3;
- 
--	nvkm_mask(device, 0x61c5bc + hoff, 0x00000003, ctrl);
-+	nvkm_mask(device, 0x61c5bc + soff, 0x00000003, ctrl);
- 
- 	ior->tmds.high_speed = !!(scdc & 0x2);
+-	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
++	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
  }
+ 
+ /**
 -- 
 2.25.1
 
