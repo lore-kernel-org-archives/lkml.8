@@ -2,204 +2,149 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63099C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391B2207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948376;
-	bh=fEu990Jc+4BA09Z/U8MIa9gAe4IpCEiRB2ZNTTlWX3M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUIvc9taEjqlPOlHEPz5HJwQmSREvqaGiMfD8H4K6TelDSmmp009EKrv/ww4h5RB0
-	 5LQPhd/JRCJpJvWlPgXKfbMm3poyfhyqrBRZTmNzIF7ARZmVCCBxHbbhSEZPpoftGJ
-	 EGWMJxorzWigJrMrvrNvxlxf67VHClN7ZGikma8o=
+	by mail.kernel.org (Postfix) with ESMTP id 17280207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393706AbgFWVjc (ORCPT
+        id S2388724AbgFWVjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:39:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47560 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:39:39 -0400
+Received: from mga07.intel.com ([134.134.136.100]:53885 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388558AbgFWUHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:07:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A642082F;
-        Tue, 23 Jun 2020 20:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942826;
-        bh=fEu990Jc+4BA09Z/U8MIa9gAe4IpCEiRB2ZNTTlWX3M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5VaS/uzg3MKasEt6dRnQZTTOnnTclwR7oFVwW9tg+bVF3V1Na5Dzs0ylanxY27nO
-         jlqLe/qHcHwMmI0QU5nhGzFPzD4M/mMp/Pva9WSBxhB39Wk2clmrVaq4Ejd9h5PdkG
-         UOliqdP4ZOuVeR7ga/g0pwC8+hxq39zzte7fWAzw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Gudert <m.gudert@eckelmann.de>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 151/477] gpio: pca953x: fix handling of automatic address incrementing
-Date:   Tue, 23 Jun 2020 21:52:28 +0200
-Message-Id: <20200623195414.729048627@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2387773AbgFWUHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:05 -0400
+IronPort-SDR: +Aas+ROpdhZR/x82s1jEC4syCnTI4vlepPjlBKogu9ymwwSZbTVkF5Y5M0YGawDVlE2RvFihKL
+ x4L/sXVRfLtA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="209400455"
+X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
+   d="scan'208";a="209400455"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 13:07:03 -0700
+IronPort-SDR: BUquHP6/egIubskUC+wd1qMKZIo8Ikj9vc9R1L2KgEVN7Re1Fh7E6yhj8tO0FBTJxozd8Oe4ES
+ HDhJEnS/VEsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
+   d="scan'208";a="301379329"
+Received: from otcsectest.jf.intel.com (HELO 6540770db1d7) ([10.54.30.81])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jun 2020 13:07:02 -0700
+Date:   Tue, 23 Jun 2020 20:03:35 +0000
+From:   "Andersen, John" <john.s.andersen@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, mchehab+huawei@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        pawan.kumar.gupta@linux.intel.com, Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, reinette.chatre@intel.com,
+        vineela.tummalapalli@intel.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        caoj.fnst@cn.fujitsu.com, Baoquan He <bhe@redhat.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>, eric.auger@redhat.com,
+        aaronlewis@google.com, Peter Xu <peterx@redhat.com>,
+        makarandsonare@google.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH 4/4] X86: Use KVM CR pin MSRs
+Message-ID: <20200623200334.GA23@6540770db1d7>
+References: <20200617190757.27081-1-john.s.andersen@intel.com>
+ <20200617190757.27081-5-john.s.andersen@intel.com>
+ <CALCETrXwzQDDd1rfBW+ptmijEjc2cMqfWGvJu-qqrqia5Ls=Uw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXwzQDDd1rfBW+ptmijEjc2cMqfWGvJu-qqrqia5Ls=Uw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On Fri, Jun 19, 2020 at 10:13:25PM -0700, Andy Lutomirski wrote:
+> On Wed, Jun 17, 2020 at 12:05 PM John Andersen
+> <john.s.andersen@intel.com> wrote:
+> > Guests using the kexec system call currently do not support
+> > paravirtualized control register pinning. This is due to early boot
+> > code writing known good values to control registers, these values do
+> > not contain the protected bits. This is due to CPU feature
+> > identification being done at a later time, when the kernel properly
+> > checks if it can enable protections. As such, the pv_cr_pin command line
+> > option has been added which instructs the kernel to disable kexec in
+> > favor of enabling paravirtualized control register pinning. crashkernel
+> > is also disabled when the pv_cr_pin parameter is specified due to its
+> > reliance on kexec.
+> 
+> Is there a plan for fixing this for real?  I'm wondering if there is a
+> sane weakening of this feature that still allows things like kexec.
+> 
 
-[ Upstream commit bcf41dc480b179bfb669a232080a2e26dc7294b4 ]
+I'm pretty sure kexec can be fixed. I had it working at one point, I'm
+currently in the process of revalidating this. The issue was though that
+kexec only worked within the guest, not on the physical host, which I suspect
+is related to the need for supervisor pages to be mapped, which seems to be
+required before enabling SMAP (based on what I'd seen with the selftests and
+unittests). I was also just blindly turning on the bits without checking for
+support when I'd tried this, so that could have been the issue too.
 
-Some of the chips supported by the pca953x driver need the most
-significant bit in the address word set to automatically increment the
-address pointer on subsequent reads and writes (example: PCA9505). With
-this bit unset the same register is read multiple times on a multi-byte
-read sequence. Other chips must not have this bit set and autoincrement
-always (example: PCA9555).
+I think most of the changes for just blindly enabling the bits were in
+relocate_kernel, secondary_startup_64, and startup_32.
 
-Up to now this AI bit was interpreted to be part of the address, which
-resulted in inconsistent regmap caching when a register was written with
-AI set and then read without it. This happened for the PCA9505 in
-pca953x_gpio_set_multiple() where pca953x_read_regs() bulk read from the
-cache for registers 0x8-0xc and then wrote to registers 0x88-0x8c. (Side
-note: reading 5 values from offset 0x8 yiels OP0 5 times because AI must
-be set to get OP0-OP4, which is another bug that is resolved here as a
-by-product.) The same problem happens when calls to gpio_set_value() and
-gpio_set_array_value() were mixed.
+> What happens if a guest tries to reset?  For that matter, what happens
+> when a guest vCPU sends SIPI to another guest vCPU?  The target CPU
+> starts up in real mode, right?
+>
 
-With this patch the AI bit is always set for chips that support it. This
-works as there are no code locations that make use of the behaviour with
-AI unset (for the chips that support it).
+In this case we hit kvm_vcpu_reset, where we clear pinning. Yes I believe it
+starts up in real mode.
 
-Note that the call to pca953x_setup_gpio() had to be done a bit earlier
-to make the NBANK macro work.
+> There's no SMEP or SMAP in real mode, and real mode has basically no security
+> mitigations at all.
+> 
 
-The history of this bug is a bit complicated. Commit b32cecb46bdc
-("gpio: pca953x: Extract the register address mangling to single
-function") changed which chips and functions are affected. Commit
-3b00691cc46a ("gpio: pca953x: hack to fix 24 bit gpio expanders") used
-some duct tape to make the driver at least appear to work. Commit
-49427232764d ("gpio: pca953x: Perform basic regmap conversion")
-introduced the caching. Commit b4818afeacbd ("gpio: pca953x: Add
-set_multiple to allow multiple bits to be set in one write.") introduced
-the .set_multiple() callback which didn't work for chips that need the
-AI bit which was fixed later for some chips in 8958262af3fb ("gpio:
-pca953x: Repair multi-byte IO address increment on PCA9575"). So I'm
-sorry, I don't know which commit I should pick for a Fixes: line.
+We'd thought about the switch to real mode being a case where we'd want to drop
+pinning. However, we weren't sure how much weaker, if at all, it makes this
+protection.
 
-Tested-by: Marcel Gudert <m.gudert@eckelmann.de>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpio-pca953x.c | 44 +++++++++++++++++++++++--------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+Unless someone knows, I'll probably need to do some digging into what an
+exploit might look like that tries switching to real mode and switching back as
+a way around this protection.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 4269ea9a817e6..01011a780688a 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -307,8 +307,22 @@ static const struct regmap_config pca953x_i2c_regmap = {
- 	.volatile_reg = pca953x_volatile_register,
- 
- 	.cache_type = REGCACHE_RBTREE,
--	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
--	.max_register = 0xff,
-+	.max_register = 0x7f,
-+};
-+
-+static const struct regmap_config pca953x_ai_i2c_regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.read_flag_mask = REG_ADDR_AI,
-+	.write_flag_mask = REG_ADDR_AI,
-+
-+	.readable_reg = pca953x_readable_register,
-+	.writeable_reg = pca953x_writeable_register,
-+	.volatile_reg = pca953x_volatile_register,
-+
-+	.cache_type = REGCACHE_RBTREE,
-+	.max_register = 0x7f,
- };
- 
- static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
-@@ -319,18 +333,6 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
- 	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
- 	u8 regaddr = pinctrl | addr | (off / BANK_SZ);
- 
--	/* Single byte read doesn't need AI bit set. */
--	if (!addrinc)
--		return regaddr;
--
--	/* Chips with 24 and more GPIOs always support Auto Increment */
--	if (write && NBANK(chip) > 2)
--		regaddr |= REG_ADDR_AI;
--
--	/* PCA9575 needs address-increment on multi-byte writes */
--	if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE)
--		regaddr |= REG_ADDR_AI;
--
- 	return regaddr;
- }
- 
-@@ -863,6 +865,7 @@ static int pca953x_probe(struct i2c_client *client,
- 	int ret;
- 	u32 invert = 0;
- 	struct regulator *reg;
-+	const struct regmap_config *regmap_config;
- 
- 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
- 	if (chip == NULL)
-@@ -925,7 +928,17 @@ static int pca953x_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, chip);
- 
--	chip->regmap = devm_regmap_init_i2c(client, &pca953x_i2c_regmap);
-+	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
-+
-+	if (NBANK(chip) > 2 || PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
-+		dev_info(&client->dev, "using AI\n");
-+		regmap_config = &pca953x_ai_i2c_regmap;
-+	} else {
-+		dev_info(&client->dev, "using no AI\n");
-+		regmap_config = &pca953x_i2c_regmap;
-+	}
-+
-+	chip->regmap = devm_regmap_init_i2c(client, regmap_config);
- 	if (IS_ERR(chip->regmap)) {
- 		ret = PTR_ERR(chip->regmap);
- 		goto err_exit;
-@@ -956,7 +969,6 @@ static int pca953x_probe(struct i2c_client *client,
- 	/* initialize cached registers from their original values.
- 	 * we can't share this chip with another i2c master.
- 	 */
--	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
- 
- 	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
- 		chip->regs = &pca953x_regs;
--- 
-2.25.1
+If we can use the switch to real mode as a drop pinning trigger then I think
+that might just solve the kexec problem.
 
+> PCID is an odd case.  I see no good reason to pin it, and pinning PCID
+> on prevents use of 32-bit mode.
 
-
+Maybe it makes sense to default to the values we have, but allow host userspace
+to overwrite the allowed values, in case some other guest OS wants to do
+something that Linux doesn't with PCID or other bits.
