@@ -2,54 +2,55 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F7820724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7D320724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947567;
-	bh=PE7Z++9CtFSGHnUPbe+vMfnKMjQfrC6E6jUfYSx6lXE=;
+	s=default; t=1592947580;
+	bh=dPmGxPGMWMKzHL8mfVbsqBkzs9hF4k9EuDE+oC0Fku4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mwNq/vjHNiz8nw0zNnyhyY6E3v/k7waCDAa7mybCsDd3rBHm7+08x6SMlA4lGpvV8
-	 7AzTa75ig0ZflOrDW510rxU1JFRveOqPO42pwbYDGZCgfEwuNmhIGaKmfMInhsVFVP
-	 DDdQc/1aZgbqH+Jw3CCnEYPxXrprIuKouGzd5xhE=
+	b=yHWOKsTIzasbbOO+tIxj1it2+UU0yRoBQUpQKw7cR+vyA6uMfFYfG1gNmZNCIo27l
+	 LKvJwIohCwU1mXTNqAOjXdc9KN57yIJpYmBJUIrTDAepUkgBKsFJvz76nKR4orIWIl
+	 A4CjXb0lNLaTh9/AOEMe6v57DzJUI+ReTD94MnBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388807AbgFWV0F (ORCPT
+        id S2390403AbgFWV0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:26:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35398 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389670AbgFWUS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:18:28 -0400
+        id S2389652AbgFWUSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:18:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FF6B20EDD;
-        Tue, 23 Jun 2020 20:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB1EC2145D;
+        Tue, 23 Jun 2020 20:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943508;
-        bh=PE7Z++9CtFSGHnUPbe+vMfnKMjQfrC6E6jUfYSx6lXE=;
+        s=default; t=1592943498;
+        bh=dPmGxPGMWMKzHL8mfVbsqBkzs9hF4k9EuDE+oC0Fku4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mThyvJO5DQe27M5Hv+Oawg7tv+6j2Cj90BmhOOkmQSIRSQJ977nkSE8P3xzo+n8Jk
-         /31JccYhJp4BrWrFg65KAi/XCv1CMthzrhMkQXrM+K1N7PMTMVw0SYwNjw+yVE4ZLE
-         YM19GxXe68dujf1tKOST4R0WFUkgKioPuxrhcVKg=
+        b=iG8X548d2+rZjB3CqyzKe0RNZvHQGJTmDqGea6VFlgGnLcghY3f+Ky5Jaa9DBs4r6
+         1Yad6iiQ4SCvubyRC1+ZlWlz9Qy5jS7Qrd7PrXhNvbQvOiOaVwzQECOvXMym3SRTRm
+         EPPwOl7Tw1kupWPs8AA+IpA/J6LIl1jl6LT/GS6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 402/477] bnxt_en: Return from timer if interface is not in open state.
-Date:   Tue, 23 Jun 2020 21:56:39 +0200
-Message-Id: <20200623195426.532767501@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Rosenberg <drosen@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
+        Eric Biggers <ebiggers@google.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.7 416/477] ext4: avoid utf8_strncasecmp() with unstable name
+Date:   Tue, 23 Jun 2020 21:56:53 +0200
+Message-Id: <20200623195427.187563020@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,37 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit e000940473d1423a42ef9c823fb23ccffe3f07ea ]
+commit 2ce3ee931a097e9720310db3f09c01c825a4580c upstream.
 
-This will avoid many uneccessary error logs when driver or firmware is
-in reset.
+If the dentry name passed to ->d_compare() fits in dentry::d_iname, then
+it may be concurrently modified by a rename.  This can cause undefined
+behavior (possibly out-of-bounds memory accesses or crashes) in
+utf8_strncasecmp(), since fs/unicode/ isn't written to handle strings
+that may be concurrently modified.
 
-Fixes: 230d1f0de754 ("bnxt_en: Handle firmware reset.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by first copying the filename to a stack buffer if needed.
+This way we get a stable snapshot of the filename.
+
+Fixes: b886ee3e778e ("ext4: Support case-insensitive file name lookups")
+Cc: <stable@vger.kernel.org> # v5.2+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Daniel Rosenberg <drosen@google.com>
+Cc: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Link: https://lore.kernel.org/r/20200601200543.59417-1-ebiggers@kernel.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/dir.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index a29bf3ca0b48e..19c4a0a5727a4 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -10014,7 +10014,7 @@ static void bnxt_timer(struct timer_list *t)
- 	struct bnxt *bp = from_timer(bp, t, timer);
- 	struct net_device *dev = bp->dev;
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -675,6 +675,7 @@ static int ext4_d_compare(const struct d
+ 	struct qstr qstr = {.name = str, .len = len };
+ 	const struct dentry *parent = READ_ONCE(dentry->d_parent);
+ 	const struct inode *inode = READ_ONCE(parent->d_inode);
++	char strbuf[DNAME_INLINE_LEN];
  
--	if (!netif_running(dev))
-+	if (!netif_running(dev) || !test_bit(BNXT_STATE_OPEN, &bp->state))
- 		return;
+ 	if (!inode || !IS_CASEFOLDED(inode) ||
+ 	    !EXT4_SB(inode->i_sb)->s_encoding) {
+@@ -683,6 +684,21 @@ static int ext4_d_compare(const struct d
+ 		return memcmp(str, name->name, len);
+ 	}
  
- 	if (atomic_read(&bp->intr_sem) != 0)
--- 
-2.25.1
-
++	/*
++	 * If the dentry name is stored in-line, then it may be concurrently
++	 * modified by a rename.  If this happens, the VFS will eventually retry
++	 * the lookup, so it doesn't matter what ->d_compare() returns.
++	 * However, it's unsafe to call utf8_strncasecmp() with an unstable
++	 * string.  Therefore, we have to copy the name into a temporary buffer.
++	 */
++	if (len <= DNAME_INLINE_LEN - 1) {
++		memcpy(strbuf, str, len);
++		strbuf[len] = 0;
++		qstr.name = strbuf;
++		/* prevent compiler from optimizing out the temporary buffer */
++		barrier();
++	}
++
+ 	return ext4_ci_compare(inode, name, &qstr, false);
+ }
+ 
 
 
