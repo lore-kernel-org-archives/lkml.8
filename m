@@ -2,101 +2,71 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF146C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BE5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8514A20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:13:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bw86Y+sy"
+	by mail.kernel.org (Postfix) with ESMTP id EF75520723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732846AbgFWONI (ORCPT
+        id S1732755AbgFWOO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:13:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732657AbgFWONH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:13:07 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21C9C061573;
-        Tue, 23 Jun 2020 07:13:07 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y17so9171675plb.8;
-        Tue, 23 Jun 2020 07:13:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kv/flmJxdITY06izPrpUM9DznPPretUt7mFM0eDenMQ=;
-        b=bw86Y+sySkSfKdSRCx035M1Vp/ZVqfcWzUmz5PNcWw9I6HAGgdpn1cyxRWTKwCxeia
-         6qgvqsGl87J7csGPxBJ2GqP3IdftZ0wk5JyVp+2h6YmHRS/uDH9MflYv6r+IWv32JAOo
-         h2v3sspify5L+zezH3mtqT93bbvlfccE4a1Mf1VXpug5z3+Z35L7elgCbckVXZqx1ayD
-         f9wiPZf2bO7KkCb/YIcFjouKS8rxJWhgyG79ewdW7KacDbrdbvAMK7Yl0zgDLfy/yFFj
-         Ncv767ZZIN++BBU2JcIgz+CaMt8Q2yRbAe5K8oMBp8r6S3kDfz7G9SsauzYNJWE0yPSP
-         kUVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kv/flmJxdITY06izPrpUM9DznPPretUt7mFM0eDenMQ=;
-        b=RTS3n9bq0NG5c38bQpqRukv84OAn3r2ewku8VceZBxSCmhIadfw6nu4bectW17V+ZY
-         05AUMQgmb6C/zazBlQ6908l85az3x2KavLKws+sfblvOdoO5hSspqlkg2VF4BLqSrhrg
-         WUKF9cyW5GQV5gUoshT9uuQbETVURGBcFIgEWHK6SYBLiOKw12RZyUMH+u1cwEczhk5W
-         GBNlvqe8t003gaacadB/C21wJdYJR78ldIbZXINF/22Xjs3/Q/HxSaXs1Y84tUIn7shc
-         k5VcvLoNj/utUQ8IgDAWbO8EdkpjsUpBR+d5PF6jVkcs0jq6YJqAxELpSq606FAk5wDo
-         3uBA==
-X-Gm-Message-State: AOAM530MuyVUgP1GAHOSEdLtDrInxkdMkYGLqpARWnMd06dzu+oK0wgy
-        vzoF1Lpyn4YHAN+QuncARhc=
-X-Google-Smtp-Source: ABdhPJzuqJMlCo835PZD5abF8+zRIUHR1K4a7VPz2K3X+TQ81eo4NLWVzjkNhKWjRqWWM4Xp1aIvNg==
-X-Received: by 2002:a17:90b:2042:: with SMTP id ji2mr24047010pjb.68.1592921587080;
-        Tue, 23 Jun 2020 07:13:07 -0700 (PDT)
-Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
-        by smtp.gmail.com with ESMTPSA id 25sm17083203pfi.7.2020.06.23.07.13.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 07:13:06 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id CF0CE236023F; Tue, 23 Jun 2020 23:13:04 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        davem@davemloft.net, idosch@mellanox.com, jiri@mellanox.com
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH net-next] mlxsw: spectrum_dcb: Fix a spelling typo in spectrum_dcb.c
-Date:   Tue, 23 Jun 2020 23:13:01 +0900
-Message-Id: <20200623141301.168413-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.27.0.139.gc9c318d6bf26
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 23 Jun 2020 10:14:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48364 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732657AbgFWOOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 10:14:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DA5AAAD6A;
+        Tue, 23 Jun 2020 14:14:53 +0000 (UTC)
+Date:   Tue, 23 Jun 2020 16:14:53 +0200
+Message-ID: <s5hwo3xna1u.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Jussi Laako <jussi@sonarnerd.net>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Dmitry Panchenko <dmitry@d-systems.ee>,
+        Chris Wulff <crwulff@gmail.com>,
+        Jesus Ramos <jesus-ramos@live.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        linux-usb@vger.kernel.org, stable@vger.kernel.org,
+        Chihhao Chen <chihhao.chen@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>
+Subject: Re: [PATCH] sound: usb: quirks: add quirk for Samsung USBC Headset (AKG)
+In-Reply-To: <1592910203-24035-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1592910203-24035-1-git-send-email-macpaul.lin@mediatek.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a spelling typo in spectrum_dcb.c
+On Tue, 23 Jun 2020 13:03:23 +0200,
+Macpaul Lin wrote:
+> 
+> We've found Samsung USBC Headset (AKG) (VID: 0x04e8, PID: 0xa051)
+> need a tiny delay after each class compliant request.
+> Otherwise the device might not be able to be recognized each times.
+> 
+> Signed-off-by: Chihhao Chen <chihhao.chen@mediatek.com>
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> Cc: stable@vger.kernel.org
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks, applied.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
-index 49a72a8f1f57..f8e3d635b9e2 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dcb.c
-@@ -138,7 +138,7 @@ static int mlxsw_sp_port_headroom_set(struct mlxsw_sp_port *mlxsw_sp_port,
- 	err = mlxsw_sp_port_pg_destroy(mlxsw_sp_port, my_ets->prio_tc,
- 				       ets->prio_tc);
- 	if (err)
--		netdev_warn(dev, "Failed to remove ununsed PGs\n");
-+		netdev_warn(dev, "Failed to remove unused PGs\n");
- 
- 	return 0;
- 
--- 
-2.27.0.139.gc9c318d6bf26
 
+Takashi
