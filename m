@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B15C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20047214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1F32098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944422;
-	bh=kGRmZLItnQkLpbUnjXCwaWJEJgShGAHtqXcmb9eupoo=;
+	s=default; t=1592944428;
+	bh=sSWelBKzhntvZvh7CNi1kL0bBAXPsuvV7Ivr7aGUKTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTPANTnC+hUUm3xa55byRSqLf6fpQduOnDi9G2u4Vv3hUR3S8GwiCfiMTqR6yRw52
-	 iFqQBGYgx7otXhcqTSUUmu9GRC0xTwE6e0LRAfHTM9Yu4OxKAegArGjCMXzVkTtJLO
-	 KOY8n8gkNBDtzbvVUtvEvgjKz74LoHBOGal8jdqM=
+	b=jHkXN/NGIprHsyIiO0h+aktKBA8aM7eh36xS+AonJQdLoLpxLFmiFzM/R7EeQI7u7
+	 c6XdE2hZpeiUGTU7lkR8Z6GAslSdvmhldRuHgg5iABUAC1vRwKC2GfxusbzF+1p+pc
+	 PkTY9WXYEJK5F3xsnKCj3Q/vFc42js9+fgxhW9sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391442AbgFWUdk (ORCPT
+        id S2391451AbgFWUdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:33:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391419AbgFWUd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:26 -0400
+        id S2391424AbgFWUd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BE852072E;
-        Tue, 23 Jun 2020 20:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2BAE206C3;
+        Tue, 23 Jun 2020 20:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944406;
-        bh=kGRmZLItnQkLpbUnjXCwaWJEJgShGAHtqXcmb9eupoo=;
+        s=default; t=1592944409;
+        bh=sSWelBKzhntvZvh7CNi1kL0bBAXPsuvV7Ivr7aGUKTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YaI0PkBehFJj2cMyO/up2ZB2ylwBjIkRjBLI2VAGxaIEFaxBmodIP0Ur2nuQGNyxD
-         yc3ZxbrltP5vXDcCrswBeRLfLYcA+R5lOWY73odE335ULtEUyusQW1/1yQT3y9P9hA
-         tCA1Nt1iT263oWHuJIQbqhvF6F9Texmy8N3pSZ+M=
+        b=MpbSp/dRlwS7z/zmFFO96ETWGg8fZEQmWQzwhfYzwy6wkDhyYjQghYwIkLETmCqb8
+         KmDEBpLs6UG/6mHMKEzeqArcUknyLy6U3PcDhxx/4BsG9zJH1H6NT+zHvrI3VkY/a/
+         8Qpchl8yh+zUGATz5KUl/QlkC3M88QNx268+MH+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 291/314] x86/boot/compressed: Relax sed symbol type regex for LLVM ld.lld
-Date:   Tue, 23 Jun 2020 21:58:06 +0200
-Message-Id: <20200623195352.856096802@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 292/314] block: nr_sects_write(): Disable preemption on seqcount write
+Date:   Tue, 23 Jun 2020 21:58:07 +0200
+Message-Id: <20200623195352.902010609@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,67 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-commit bc310baf2ba381c648983c7f4748327f17324562 upstream.
+[ Upstream commit 15b81ce5abdc4b502aa31dff2d415b79d2349d2f ]
 
-The final build stage of the x86 kernel captures some symbol
-addresses from the decompressor binary and copies them into zoffset.h.
-It uses sed with a regular expression that matches the address, symbol
-type and symbol name, and mangles the captured addresses and the names
-of symbols of interest into #define directives that are added to
-zoffset.h
+For optimized block readers not holding a mutex, the "number of sectors"
+64-bit value is protected from tearing on 32-bit architectures by a
+sequence counter.
 
-The symbol type is indicated by a single letter, which we match
-strictly: only letters in the set 'ABCDGRSTVW' are matched, even
-though the actual symbol type is relevant and therefore ignored.
+Disable preemption before entering that sequence counter's write side
+critical section. Otherwise, the read side can preempt the write side
+section and spin for the entire scheduler tick. If the reader belongs to
+a real-time scheduling class, it can spin forever and the kernel will
+livelock.
 
-Commit bc7c9d620 ("efi/libstub/x86: Force 'hidden' visibility for
-extern declarations") made a change to the way external symbol
-references are classified, resulting in 'startup_32' now being
-emitted as a hidden symbol. This prevents the use of GOT entries to
-refer to this symbol via its absolute address, which recent toolchains
-(including Clang based ones) already avoid by default, making this
-change a no-op in the majority of cases.
-
-However, as it turns out, the LLVM linker classifies such hidden
-symbols as symbols with static linkage in fully linked ELF binaries,
-causing tools such as NM to output a lowercase 't' rather than an upper
-case 'T' for the type of such symbols. Since our sed expression only
-matches upper case letters for the symbol type, the line describing
-startup_32 is disregarded, resulting in a build error like the following
-
-  arch/x86/boot/header.S:568:18: error: symbol 'ZO_startup_32' can not be
-                                        undefined in a subtraction expression
-  init_size: .long (0x00000000008fd000 - ZO_startup_32 +
-                    (((0x0000000001f6361c + ((0x0000000001f6361c >> 8) + 65536)
-                     - 0x00000000008c32e5) + 4095) & ~4095)) # kernel initialization size
-
-Given that we are only interested in the value of the symbol, let's match
-any character in the set 'a-zA-Z' instead.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: c83f6bf98dc1 ("block: add partition resize function to blkpg ioctl")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/genhd.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index e2839b5c246c2..6539c50fb9aae 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -87,7 +87,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
- 
- SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
- 
--sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
-+sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
- 
- quiet_cmd_zoffset = ZOFFSET $@
-       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 8b5330dd5ac09..62a2ec9f17df8 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -750,9 +750,11 @@ static inline sector_t part_nr_sects_read(struct hd_struct *part)
+ static inline void part_nr_sects_write(struct hd_struct *part, sector_t size)
+ {
+ #if BITS_PER_LONG==32 && defined(CONFIG_SMP)
++	preempt_disable();
+ 	write_seqcount_begin(&part->nr_sects_seq);
+ 	part->nr_sects = size;
+ 	write_seqcount_end(&part->nr_sects_seq);
++	preempt_enable();
+ #elif BITS_PER_LONG==32 && defined(CONFIG_PREEMPT)
+ 	preempt_disable();
+ 	part->nr_sects = size;
 -- 
 2.25.1
 
