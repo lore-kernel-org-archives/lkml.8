@@ -2,109 +2,142 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB404C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C184620707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1504D2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYlMCPTl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PDsCvaLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731169AbgFWHZP (ORCPT
+        id S1731245AbgFWH2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45024 "EHLO
+        Tue, 23 Jun 2020 03:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730830AbgFWHZP (ORCPT
+        with ESMTP id S1731054AbgFWH2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:25:15 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED73C061573;
-        Tue, 23 Jun 2020 00:25:14 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id t6so1643595pgq.1;
-        Tue, 23 Jun 2020 00:25:14 -0700 (PDT)
+        Tue, 23 Jun 2020 03:28:20 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE8BC061797
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:28:20 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 72so2055210otc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:28:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xt/VVu1bm6xh/GckfKGMv2YCPJI7Ah04aj5E/xaHxVM=;
-        b=qYlMCPTlddqSo7pbSAWRTyH1yy4Dx9C7V2W+KzSxPB57u/HhkcvMp/MdGALZUzq4xj
-         /gfzbYzCWbgRQAbx7qGbECpX9It+PkQjA/OWgry6ImyvYky3GDU7KOJyDKP54IchNiam
-         fjn8d5zMFyF36cGssXV0qm3NuWSbcO2RI2TxZhdqpH42wmGuVbfGsY6EqsvZZckZGKGO
-         EYccfnhu43tX1o/kYNNGSEI+gHDqfBWYTREe4Ca+4YT21SVMVBOwF0YxHVH0b8OFt/LQ
-         DWRNbnETQw+W0d/C+lI+bhhd23EnGxYbUhQlGTuoLa9wCn8fQoWV9r0SvwZyFD+blYgF
-         MDAg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZleFPD0cvqJ3sKu6UtqPD0rWOKA/Zt+zhrXRP4AOnvg=;
+        b=PDsCvaLKh9mBy736pxT8qsMAQLVP6PLNFR6KI0UWK8e2RkH5jKLIbuAGiOyAu+ML+Z
+         9lOTrwjFNWHvaDYEpBhv2iJT9MIxhUDOH/eVnfRqqHcXtdofBXK8SwdQdic3gNBW/0Tj
+         GU6krAzxByGuLpPL26+OjKOcQsYwz9rGsxEWubx33sS1U6nSJ+hcmlsycuj/JCJ7qj0J
+         1neoBaEOrtod1giKMaAx4BzXEAcHvIJr1P63v0wNw1SeV70Fjqi5O6t/2rexBFGHIkz1
+         TL4D6EPFZQUbkKG7eON2nDTfaO9aJ5yxQNWp8mJVrWtfKgJE9J2GlwI+U74K/KO5tU8b
+         Js4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xt/VVu1bm6xh/GckfKGMv2YCPJI7Ah04aj5E/xaHxVM=;
-        b=etDlWVCPzm5ji2nRE6xwp3e1Z2qI4seU6QYV0E73+i0PxhjAGvb2OVDx9XD86fAipI
-         CgdZmZkwvpdL3AecbBqmMUwDuLgxH4VAlXTds/lvY8ZHGnWnVi4dOgJS+Ut7zn5F8z0D
-         gjIa8UYye/R8fEbXS6gYOk1YntKmpT6NldzvK60uY/qObo3jKeoWjXF6Jo/P1CvW2bzA
-         N4NeQTrY/qqOEX9jd2ih4IbekYj31pX89RUxNrb17yjDv+c0OiVyVgOCjAQ/4uXvomrC
-         cYHCpv0lZqoUsYyOKRefugAnOnN6vtc2gbZKGfr6Q1HjElZEHtCwRYKV47TEMIpcJibH
-         A2yA==
-X-Gm-Message-State: AOAM533W5TQknBUqhfNeaUY7lrIfRkvk31YMpBMZdTr9l0n/nCxdEiQF
-        /LA1Vr19UV2k20h3DG1G81ZId7ZfrnqBUZ1PRYW/Dsos
-X-Google-Smtp-Source: ABdhPJxf2Y0rS20pXyphZu92O09Fz/nvBGNSVSJ5Tr1gBa3eC82kmsw2SDdOQf2SfKFxxzhr5Q8XTgyOPzBagpc2PPY=
-X-Received: by 2002:a62:5284:: with SMTP id g126mr24365325pfb.36.1592897113551;
- Tue, 23 Jun 2020 00:25:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZleFPD0cvqJ3sKu6UtqPD0rWOKA/Zt+zhrXRP4AOnvg=;
+        b=COGdDL78JkYaRpwj4hbswZGj+rPJfeN516KdgVjoB6y1Zdx6h58rNJbw+K8r+MOkQ9
+         5Qt6yWBIpFgBfLvip/v5DSLBuqWBdBbfiuySzDtPKKr5r5EJvi8/TSU+qoakxPlYJkyZ
+         EgnfJM6jUUxHhokVU/zSZpO4TLeP/Ira5ptkJ7VIj9oQMZ6/U/oaCI8zj4PXj0BDEz8M
+         I6rhbv5f4V3EBSF5RAtO0k4hYzGMCrN1U1EsRRg5rccX7srVIXD6S8UHrUHBZ9avacXU
+         26semywAtaXxu8pK+9wx2c764paZ51R+AF/4JGgzZx652Xbz+abUkVD09JhshytEpKee
+         1qxA==
+X-Gm-Message-State: AOAM5307td2PwP9m1/Uc0+H0KCPfnc7rnmYDHXEurLdS+gaCORo60oWB
+        l0BWulTuhBnNdO3tfLvUUtEjqg==
+X-Google-Smtp-Source: ABdhPJzzGYHFm3tkDGQDm2FvcqbLAhEc5k7M1RWwN7OHmjbHWoaV4NOnDMqGZlJo3b44MKMZvSLwSA==
+X-Received: by 2002:a05:6830:20d7:: with SMTP id z23mr18042947otq.157.1592897299885;
+        Tue, 23 Jun 2020 00:28:19 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d145sm2530080oib.17.2020.06.23.00.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 00:28:19 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 00:25:35 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] mailbox: qcom: Add sdm660 hmss compatible
+Message-ID: <20200623072535.GX128451@builder.lan>
+References: <20200622192558.152828-1-konradybcio@gmail.com>
+ <20200622192558.152828-8-konradybcio@gmail.com>
 MIME-Version: 1.0
-References: <20200613113328.GA5400@kunai> <CANcMJZDT0oc8m1jjthVANGz6iZ+J4gv5YOqnXMLWbHtZgeQ_eA@mail.gmail.com>
-In-Reply-To: <CANcMJZDT0oc8m1jjthVANGz6iZ+J4gv5YOqnXMLWbHtZgeQ_eA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 23 Jun 2020 10:25:00 +0300
-Message-ID: <CAHp75Vfa_X-KR_v0bHG+mgy1q2i-_e_3Q2Akq12juviqR91PAw@mail.gmail.com>
-Subject: Re: [PULL REQUEST] i2c for 5.8
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        YongQin Liu <yongqin.liu@linaro.org>,
-        Tom Gall <tom.gall@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622192558.152828-8-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 5:05 AM John Stultz <john.stultz@linaro.org> wrote:
-> On Sat, Jun 13, 2020 at 4:36 AM Wolfram Sang <wsa@kernel.org> wrote:
+On Mon 22 Jun 12:25 PDT 2020, Konrad Dybcio wrote:
 
-...
+> The Qualcomm SDM660 platform has a APCS HMSS GLOBAL block, add the
+> compatible for this.
+> 
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
-> > Andy Shevchenko (17):
-> ...
-> >       i2c: designware: Move ACPI parts into common module
->
-> Just as a heads up. I'm seeing a regression from this merge that I
-> bisected down to the patch above (f9288fcc5c615), with the HiKey
-> board. It seems the adv7511 (HDMI bridge) driver isn't probing, which
-> causes graphics to fail.
->
-> I've just bisected it down and haven't managed to do much debugging,
-> but I wanted to raise a flag on this. Let me know if there is anything
-> you'd like me to try right off.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Thank you for the report!
+Regards,
+Bjorn
 
-The above change was purely clean up  / refactoring to get PCI
-enumerated devices used to ACPI additional data. I bet your patch is
-correct, but I will look closer and see what is the real root cause of
-such behaviour. I'll comment on your patch separately.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml   | 1 +
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 5 +++++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> index 12eff942708d..b4501c6b5c6f 100644
+> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> @@ -22,6 +22,7 @@ properties:
+>        - qcom,msm8998-apcs-hmss-global
+>        - qcom,qcs404-apcs-apps-global
+>        - qcom,sc7180-apss-shared
+> +      - qcom,sdm660-apcs-hmss-global
+>        - qcom,sdm845-apss-shared
+>        - qcom,sm8150-apss-shared
+>  
+> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> index cec34f0af6ce..ab0275869434 100644
+> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> @@ -49,6 +49,10 @@ static const struct qcom_apcs_ipc_data msm8998_apcs_data = {
+>  	.offset = 8, .clk_name = NULL
+>  };
+>  
+> +static const struct qcom_apcs_ipc_data sdm660_apcs_data = {
+> +	.offset = 8, .clk_name = NULL
+> +};
+> +
+>  static const struct qcom_apcs_ipc_data apps_shared_apcs_data = {
+>  	.offset = 12, .clk_name = NULL
+>  };
+> @@ -150,6 +154,7 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
+>  	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = &msm8998_apcs_data },
+>  	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = &msm8916_apcs_data },
+>  	{ .compatible = "qcom,sc7180-apss-shared", .data = &apps_shared_apcs_data },
+> +	{ .compatible = "qcom,sdm660-apcs-hmss-global", .data = &sdm660_apcs_data },
+>  	{ .compatible = "qcom,sdm845-apss-shared", .data = &apps_shared_apcs_data },
+>  	{ .compatible = "qcom,sm8150-apss-shared", .data = &apps_shared_apcs_data },
+>  	{}
+> -- 
+> 2.27.0
+> 
