@@ -2,127 +2,193 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29920C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F79A20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1078D2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbgFWP4K (ORCPT
+        id S1733082AbgFWP4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:56:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:57980 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732781AbgFWP4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:56:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 329F61F1;
-        Tue, 23 Jun 2020 08:56:09 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A222D3F6CF;
-        Tue, 23 Jun 2020 08:56:07 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 16:56:05 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Quentin Perret <qperret@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, Joel Fernandes <joelaf@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        ctheegal@codeaurora.org, Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
- cpu freq
-Message-ID: <20200623155507.5l6ck4hder2px3ii@e107158-lin.cambridge.arm.com>
-References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
- <20200611110301.GA132747@google.com>
- <CAD=FV=V2FvFcYrghxUSdHNxmcS3DKpnBbk2oL64w7hh=tV-DfQ@mail.gmail.com>
- <20200612092454.GA94228@google.com>
- <20200612123448.fcmzv3rdtsbawmpd@e107158-lin.cambridge.arm.com>
- <CAD=FV=UySLsTaUP3nOfQO98qPEUkY8tMhw25pJ4Yi7FVM5xU6g@mail.gmail.com>
- <20200619153146.vaizbj7muy52zvbd@e107158-lin.cambridge.arm.com>
- <CAD=FV=V0YCS69uErFnY-cF_v44mDfAe4AWa+K+U6mQR+TNLkww@mail.gmail.com>
+        Tue, 23 Jun 2020 11:56:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732979AbgFWP4r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 11:56:47 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NFWhCA069355;
+        Tue, 23 Jun 2020 11:56:38 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uk64u3kb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 11:56:38 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NFfLqT025582;
+        Tue, 23 Jun 2020 15:56:35 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 31uk33038w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 15:56:35 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NFuX1J62783658
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 15:56:33 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1AE474C050;
+        Tue, 23 Jun 2020 15:56:33 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DCBE4C04E;
+        Tue, 23 Jun 2020 15:56:30 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.145.25.83])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 23 Jun 2020 15:56:29 +0000 (GMT)
+Date:   Tue, 23 Jun 2020 18:56:27 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 5/9] docs: move nommu-mmap.txt to admin-guide and
+ rename to ReST
+Message-ID: <20200623155224.GD1774541@linux.ibm.com>
+References: <cover.1592905407.git.mchehab+huawei@kernel.org>
+ <a8f4a5a8ba117bc15785901423f46f5725fd68b0.1592905407.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=V0YCS69uErFnY-cF_v44mDfAe4AWa+K+U6mQR+TNLkww@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <a8f4a5a8ba117bc15785901423f46f5725fd68b0.1592905407.git.mchehab+huawei@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_07:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 clxscore=1011
+ mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006120000
+ definitions=main-2006230118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/22/20 11:19, Doug Anderson wrote:
-
-[...]
-
-> > Hmm I thought OEMs who ship stuff that are based on Chrome OS would have to do
-> > the final tuning here, which would be based on the recommendation of the SoC
-> > vendor. And I'm being overly generic here to think not only SoC from Intel
-> > which traditionally they have been treated in different ways.
-> >
-> > I think you provide a generic stack for OEMs, no?
+On Tue, Jun 23, 2020 at 11:52:58AM +0200, Mauro Carvalho Chehab wrote:
+> The nommu-mmap.txt file provides description of user visible
+> behaviuour. So, move it to the admin-guide.
 > 
-> No, that's the Android way.  The only way Chrome OS can ship updates
-> for the whole fleet every ~6 weeks and support it for so many years is
-> that all the builds and updates happen on Google servers.  The only
-> way Google can maintain this is to not have a separate kernel code
-> base for every single variant of every single board.
-
-I was referring to userspace tuning, which I expected to be platform specific.
-Assuming the devices share the same kernel. At least in the context of uclamp
-and RT tuning that should be possible.
-
-I appreciate that you want to ship a simple generic setup on as many
-devices. But there will be a trade-off to make between optimal tuning and
-keeping things simple and generic. The latter is perfectly fine goal to have
-of course. Others who want to tune more they're free to do so too as well.
-
+> As it is already at the ReST, also rename it.
 > 
+> Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
+> Suggested-by: Jonathan Corbet <corbet@lwn.net>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+
+> ---
+>  Documentation/admin-guide/mm/index.rst                          | 1 +
+>  Documentation/{nommu-mmap.txt => admin-guide/mm/nommu-mmap.rst} | 0
+>  Documentation/admin-guide/sysctl/vm.rst                         | 2 +-
+>  Documentation/gpu/drm-mm.rst                                    | 2 +-
+>  init/Kconfig                                                    | 2 +-
+>  mm/Kconfig                                                      | 2 +-
+>  mm/nommu.c                                                      | 2 +-
+>  7 files changed, 6 insertions(+), 5 deletions(-)
+>  rename Documentation/{nommu-mmap.txt => admin-guide/mm/nommu-mmap.rst} (100%)
 > 
-> > Generally for RT tasks, Linux always required an admin to do the tuning. And to
-> > provide an automatic solution that fits all is not easy to happen, because what
-> > ultimately is important for userspace, is only known by the userspace.
-> >
-> > This is an interesting problem for me personally that I have been trying to
-> > look at in my free time. On general purpose systems, it's hard to reason about
-> > what's important because, as you say, you distribute something that should
-> > target a wide range of platforms. And sometimes the end user (like a person
-> > installing Ubuntu Desktop on their laptop), have no clue what a driver is even
-> > to pick the right tuning for all RT tasks in their system.
-> >
-> > But this problem already exists and catching up with this will need more work
-> > from both distros and maybe kernel. I can't see a possible situation where the
-> > kernel can do all the tuning without userspace providing more info anyway.
-> >
-> > The per-device weirdness you're talking about is just how the way goes in
-> > a world where there are many SoCs that are created to target different budgets
-> > and use cases.
+> diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
+> index 11db46448354..774dad6d3d29 100644
+> --- a/Documentation/admin-guide/mm/index.rst
+> +++ b/Documentation/admin-guide/mm/index.rst
+> @@ -31,6 +31,7 @@ the Linux memory management.
+>     idle_page_tracking
+>     ksm
+>     memory-hotplug
+> +   nommu-map
+>     numa_memory_policy
+>     numaperf
+>     pagemap
+> diff --git a/Documentation/nommu-mmap.txt b/Documentation/admin-guide/mm/nommu-mmap.rst
+> similarity index 100%
+> rename from Documentation/nommu-mmap.txt
+> rename to Documentation/admin-guide/mm/nommu-mmap.rst
+> diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+> index 4b7c496199ca..4b9d2e8e9142 100644
+> --- a/Documentation/admin-guide/sysctl/vm.rst
+> +++ b/Documentation/admin-guide/sysctl/vm.rst
+> @@ -598,7 +598,7 @@ trimming of allocations is initiated.
+>  
+>  The default value is 1.
+>  
+> -See Documentation/nommu-mmap.txt for more information.
+> +See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
+>  
+>  
+>  numa_zonelist_order
+> diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
+> index 8d10e6b38918..9abee1589c1e 100644
+> --- a/Documentation/gpu/drm-mm.rst
+> +++ b/Documentation/gpu/drm-mm.rst
+> @@ -311,7 +311,7 @@ To use drm_gem_cma_get_unmapped_area(), drivers must fill the struct
+>  a pointer on drm_gem_cma_get_unmapped_area().
+>  
+>  More detailed information about get_unmapped_area can be found in
+> -Documentation/nommu-mmap.txt
+> +Documentation/admin-guide/mm/nommu-mmap.rst
+>  
+>  Memory Coherency
+>  ----------------
+> diff --git a/init/Kconfig b/init/Kconfig
+> index a46aa8f3174d..2dd5531dae98 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1957,7 +1957,7 @@ config MMAP_ALLOW_UNINITIALIZED
+>  	  userspace.  Since that isn't generally a problem on no-MMU systems,
+>  	  it is normally safe to say Y here.
+>  
+> -	  See Documentation/nommu-mmap.txt for more information.
+> +	  See Documentation/mm/nommu-mmap.rst for more information.
+>  
+>  config SYSTEM_DATA_VERIFICATION
+>  	def_bool n
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index f2104cc0d35c..d41f3fa7e923 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -387,7 +387,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
+>  	  This option specifies the initial value of this option.  The default
+>  	  of 1 says that all excess pages should be trimmed.
+>  
+> -	  See Documentation/nommu-mmap.txt for more information.
+> +	  See Documentation/mm/nommu-mmap.rst for more information.
+>  
+>  config TRANSPARENT_HUGEPAGE
+>  	bool "Transparent Hugepage Support"
+> diff --git a/mm/nommu.c b/mm/nommu.c
+> index f32a69095d50..314174817b04 100644
+> --- a/mm/nommu.c
+> +++ b/mm/nommu.c
+> @@ -5,7 +5,7 @@
+>   *  Replacement code for mm functions to support CPU's that don't
+>   *  have any form of memory management unit (thus no virtual memory).
+>   *
+> - *  See Documentation/nommu-mmap.txt
+> + *  See Documentation/mm/nommu-mmap.rst
+>   *
+>   *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
+>   *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
+> -- 
+> 2.26.2
 > 
-> I think it's sane for the OS to do very high level tuning, like "this
-> platform has an underpowered CPU and being fast is more important than
-> battery life, so error on the side of running fast" or "this platform
-> has a fast SSD so tune disk algorithms appropriately".  ...but picking
-> specific values gets tricky.
 
-You can always use the per-task API to boost that task to maximum, if power is
-not your concern. From user-space ;-)
-
-If you're power conscious too, yeah there's no way but to test for the minimum
-value that gives you what you want. The task can try to regulate itself too if
-it can observe when it's not running fast enough (notices a glitch?).
-
-You can get fancy if you want, depending on your goal.
-
-It's hard to get the best though with one size fits all.
-
-HTH
-
---
-Qais Yousef
+-- 
+Sincerely yours,
+Mike.
