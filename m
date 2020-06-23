@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E491FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3530C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B86FB20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B02C20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947638;
-	bh=ua2CwIbuX9rW6cSbfOZaPkhnt2NKjBdgLpNFabwYfcQ=;
+	s=default; t=1592947646;
+	bh=iremO8qJ45paftYAO3M1qTShaKNRP4EwjN7wWH9FyL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nGcs0w5VnhNcihFlAuxjsjj1s6+iqkIauMW1/a/bcFzs6375M2nLG6bDJSItc5vAS
-	 +aXAbjLZ/XKRRC3/5Zd04rfu/v5Z8/L3VYnRW3yn2W14iWmjPO824yzr6x5Hy3yxbM
-	 KTH7GirWdaSXSIKUgrUJ7KZEJgFOXEbbCG6ZO0u4=
+	b=IUUCU0SltiIY7Ku+ijd72BYWDj9WpC2UoIzVtmLgHK82FtVSECHLiFPZxOQoFXM6T
+	 HcnIPg9VYEPyCmRrkGerlm9ltZ7618VPTidYUfdoYCCwp0lOnwIvW+C2ouI3M6ju1Y
+	 B7UUKBjnI36hJ+Of/FCYMQX0OnK8EZAgH2q1W5cE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389514AbgFWURO (ORCPT
+        id S2388970AbgFWV1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:27:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388879AbgFWURE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:04 -0400
+        id S2389229AbgFWUQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:16:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E36C2080C;
-        Tue, 23 Jun 2020 20:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D36012145D;
+        Tue, 23 Jun 2020 20:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943424;
-        bh=ua2CwIbuX9rW6cSbfOZaPkhnt2NKjBdgLpNFabwYfcQ=;
+        s=default; t=1592943419;
+        bh=iremO8qJ45paftYAO3M1qTShaKNRP4EwjN7wWH9FyL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXF/bVh8aXbnNBfJQq+ICqkPWucdcqQaQg/Y3yInOCaJmZag2siCzdDY/KE46GuSQ
-         UafWRpKg0okj7Mmce+kx6PgA7G2u8uym0sZgUhqZDoNdiMXBS7kkjuoNTPb5fAKAkO
-         0HPiorbqWMfITvIy0EwYNrqEmIzg7y4dI2/hcGFc=
+        b=Tld/yRDocRi67pnPWJ4WoBIkWt3fIK75DIo2kIuo+2YzSEa63pLRefVPa0BSDF41t
+         gXVLUQ6qE1fievZJ/FOp3pJOJ8gIydgAe6sdWPT0IZWxWPK4ta1i8/ertwjBRwvjMY
+         EGWaS0ENp58uBUxKtzk1nM2Xt7Y+ik4eS5L3OgqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tobias Klauser <tklauser@distanz.ch>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 369/477] tools, bpftool: Fix memory leak in codegen error cases
-Date:   Tue, 23 Jun 2020 21:56:06 +0200
-Message-Id: <20200623195424.972829781@linuxfoundation.org>
+        stable@vger.kernel.org, Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        bpf@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 385/477] perf probe: Fix user attribute access in kprobes
+Date:   Tue, 23 Jun 2020 21:56:22 +0200
+Message-Id: <20200623195425.725155460@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,42 +66,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobias Klauser <tklauser@distanz.ch>
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
 
-[ Upstream commit d4060ac969563113101c79433f2ae005feca1c29 ]
+[ Upstream commit 9256c3031eb9beafa3957c61093104c3c75a6148 ]
 
-Free the memory allocated for the template on error paths in function
-codegen.
+Issue:
 
-Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200610130804.21423-1-tklauser@distanz.ch
+  # perf probe -a 'do_sched_setscheduler pid policy param->sched_priority@user'
+
+did not work before.
+
+Fix:
+
+Make:
+
+  # perf probe -a 'do_sched_setscheduler pid policy param->sched_priority@user'
+
+output equivalent to ftrace:
+
+  # echo 'p:probe/do_sched_setscheduler _text+517384 pid=%r2:s32 policy=%r3:s32 sched_priority=+u0(%r4):s32' > /sys/kernel/debug/tracing/kprobe_events
+
+Other:
+
+1. Right now, __match_glob() does not handle [u]<offset>. For now, use
+  *u]<offset>.
+
+2. @user attribute was introduced in commit 1e032f7cfa14 ("perf-probe:
+   Add user memory access attribute support")
+
+Test:
+1. perf probe -a 'do_sched_setscheduler  pid policy
+   param->sched_priority@user'
+
+2 ./perf script
+   sched 305669 [000] 1614458.838675: perf_bpf_probe:func: (2904e508)
+   pid=261614 policy=2 sched_priority=1
+
+3. cat /sys/kernel/debug/tracing/trace
+   <...>-309956 [006] .... 1616098.093957: 0: prio: 1
+
+Committer testing:
+
+Before:
+
+  # perf probe -a 'do_sched_setscheduler pid policy param->sched_priority@user'
+  param(type:sched_param) has no member sched_priority@user.
+    Error: Failed to add events.
+  # pahole sched_param
+  struct sched_param {
+  	int                        sched_priority;       /*     0     4 */
+
+  	/* size: 4, cachelines: 1, members: 1 */
+  	/* last cacheline: 4 bytes */
+  };
+  #
+
+After:
+
+  # perf probe -a 'do_sched_setscheduler pid policy param->sched_priority@user'
+  Added new event:
+    probe:do_sched_setscheduler (on do_sched_setscheduler with pid policy sched_priority=param->sched_priority)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:do_sched_setscheduler -aR sleep 1
+
+  # cat /sys/kernel/debug/tracing/kprobe_events
+  p:probe/do_sched_setscheduler _text+1113792 pid=%di:s32 policy=%si:s32 sched_priority=+u0(%dx):s32
+  #
+
+Fixes: 1e032f7cfa14 ("perf-probe: Add user memory access attribute support")
+Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: bpf@vger.kernel.org
+LPU-Reference: 20200609081019.60234-2-sumanthk@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/gen.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/probe-event.c | 7 +++++--
+ tools/perf/util/probe-file.c  | 2 +-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
-index f8113b3646f52..f5960b48c8615 100644
---- a/tools/bpf/bpftool/gen.c
-+++ b/tools/bpf/bpftool/gen.c
-@@ -225,6 +225,7 @@ static int codegen(const char *template, ...)
- 		} else {
- 			p_err("unrecognized character at pos %td in template '%s'",
- 			      src - template - 1, template);
-+			free(s);
- 			return -EINVAL;
- 		}
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index a08f373d33056..df713a5d1e26a 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1575,7 +1575,7 @@ static int parse_perf_probe_arg(char *str, struct perf_probe_arg *arg)
  	}
-@@ -235,6 +236,7 @@ static int codegen(const char *template, ...)
- 			if (*src != '\t') {
- 				p_err("not enough tabs at pos %td in template '%s'",
- 				      src - template - 1, template);
-+				free(s);
- 				return -EINVAL;
- 			}
- 		}
+ 
+ 	tmp = strchr(str, '@');
+-	if (tmp && tmp != str && strcmp(tmp + 1, "user")) { /* user attr */
++	if (tmp && tmp != str && !strcmp(tmp + 1, "user")) { /* user attr */
+ 		if (!user_access_is_supported()) {
+ 			semantic_error("ftrace does not support user access\n");
+ 			return -EINVAL;
+@@ -1995,7 +1995,10 @@ static int __synthesize_probe_trace_arg_ref(struct probe_trace_arg_ref *ref,
+ 		if (depth < 0)
+ 			return depth;
+ 	}
+-	err = strbuf_addf(buf, "%+ld(", ref->offset);
++	if (ref->user_access)
++		err = strbuf_addf(buf, "%s%ld(", "+u", ref->offset);
++	else
++		err = strbuf_addf(buf, "%+ld(", ref->offset);
+ 	return (err < 0) ? err : depth;
+ }
+ 
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index 8c852948513e3..064b63a6a3f31 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -1044,7 +1044,7 @@ static struct {
+ 	DEFINE_TYPE(FTRACE_README_PROBE_TYPE_X, "*type: * x8/16/32/64,*"),
+ 	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
+ 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
+-	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
++	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*u]<offset>*"),
+ 	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
+ 	DEFINE_TYPE(FTRACE_README_IMMEDIATE_VALUE, "*\\imm-value,*"),
+ };
 -- 
 2.25.1
 
