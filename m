@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4412C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A479DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C405121532
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77423206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944413;
-	bh=eF2Vq92pDKUB9RrOaLpiE6jRXx30XtgtWH4ah/uWtu0=;
+	s=default; t=1592944418;
+	bh=0isMCShVUmt0PgznSHcfZZBMuds+0OqhFhci1HPEPVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yqQS+UmqIoTTroVrLONiImu4VA1MyNXxtxfJVUwZg32ZYdBEmDYEMv5TzwzCHqSwj
-	 WACbWOWLHIYDr3U2yshsRJ+1jRsXtsTk/Un/q0hxTEUdNtBb5xbF/beHexb3EvVhG9
-	 J7DARG3yn7XsFizcq3IObnDfWm4M797x97/zJjfg=
+	b=K9vrioJ0xAYd2IatfjE65W5RhzJks0nkyX54trDWahw8MXYlU4s2STC0TamUpfwOD
+	 lzJv9sq0iJqUhSdrWjVGwAeqiJ27Fz6OPRbf8wfTe32XT+q+g+bxyzCphdQCT9f+Lk
+	 3FC9n/es2VgU39k3cGyOHkj6CWHKZ8eJBF5q3oeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390715AbgFWUdb (ORCPT
+        id S2391434AbgFWUdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:33:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54574 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391403AbgFWUdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:19 -0400
+        id S2391409AbgFWUdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1DFE2064B;
-        Tue, 23 Jun 2020 20:33:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23218206C3;
+        Tue, 23 Jun 2020 20:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944399;
-        bh=eF2Vq92pDKUB9RrOaLpiE6jRXx30XtgtWH4ah/uWtu0=;
+        s=default; t=1592944401;
+        bh=0isMCShVUmt0PgznSHcfZZBMuds+0OqhFhci1HPEPVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4iLwbQl+5oNzNKL51b3fk8gbncla2UXmRoggzh5tYaGqCeEDMRbVRr2cAesYWWSc
-         CnMghYOXAfkr4xXGslp5cGWov4TCYSliZwrkNAjf4spsCcvk6WJi/0paz6K9Zp+pT5
-         b+ELW0Nb1B63EqzLSxYluscs+dOrfJyXX+TM7ncY=
+        b=18Raxs/PuzJ1x5hQggaGQuCzppFkNmSpHl1FAIReb1L8XTCA1ctpcvrpEw39c1U7n
+         gw1/ZZZxrllt7VSCu2HYGJPacovQaqxfBJH3w5ah+1jWXe4FWLHxzdgNiIlfvx10zA
+         CoWRF2drNVYKS2lJ6R0jfffMmnx96PVVJJ9CJIWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Sean Paul <sean@poorly.run>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 289/314] drm/dp_mst: Increase ACT retry timeout to 3s
-Date:   Tue, 23 Jun 2020 21:58:04 +0200
-Message-Id: <20200623195352.759304796@linuxfoundation.org>
+        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        amd-gfx@lists.freedesktop.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 290/314] drm/amd/display: Use swap() where appropriate
+Date:   Tue, 23 Jun 2020 21:58:05 +0200
+Message-Id: <20200623195352.809162782@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -59,130 +66,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-[ Upstream commit 873a95e0d59ac06901ae261dda0b7165ffd002b8 ]
+[ Upstream commit 34b86b75dfc90ab3d996c224314ce51772a3b351 ]
 
-Currently we only poll for an ACT up to 30 times, with a busy-wait delay
-of 100µs between each attempt - giving us a timeout of 2900µs. While
-this might seem sensible, it would appear that in certain scenarios it
-can take dramatically longer then that for us to receive an ACT. On one
-of the EVGA MST hubs that I have available, I observed said hub
-sometimes taking longer then a second before signalling the ACT. These
-delays mostly seem to occur when previous sideband messages we've sent
-are NAKd by the hub, however it wouldn't be particularly surprising if
-it's possible to reproduce times like this simply by introducing branch
-devices with large LCTs since payload allocations have to take effect on
-every downstream device up to the payload's target.
+Mostly a cocci-job, but it flat out refused to remove the
+declaration in drivers/gpu/drm/amd/display/dc/core/dc.c so
+had to do that part manually.
 
-So, instead of just retrying 30 times we poll for the ACT for up to 3ms,
-and additionally use usleep_range() to avoid a very long and rude
-busy-wait. Note that the previous retry count of 30 appears to have been
-arbitrarily chosen, as I can't find any mention of a recommended timeout
-or retry count for ACTs in the DisplayPort 2.0 specification. This also
-goes for the range we were previously using for udelay(), although I
-suspect that was just copied from the recommended delay for link
-training on SST devices.
+@swap@
+identifier TEMP;
+expression A,B;
+@@
+- TEMP = A;
+- A = B;
+- B = TEMP;
++ swap(A, B);
 
-Changes since v1:
-* Use readx_poll_timeout() instead of open-coding timeout loop - Sean
-  Paul
-Changes since v2:
-* Increase poll interval to 200us - Sean Paul
-* Print status in hex when we timeout waiting for ACT - Sean Paul
+@@
+type T;
+identifier swap.TEMP;
+@@
+(
+- T TEMP;
+|
+- T TEMP = {...};
+)
+... when != TEMP
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Cc: Sean Paul <sean@poorly.run>
-Cc: <stable@vger.kernel.org> # v3.17+
-Reviewed-by: Sean Paul <sean@poorly.run>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200406221253.1307209-4-lyude@redhat.com
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Leo Li <sunpeng.li@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Cc: amd-gfx@lists.freedesktop.org
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 54 ++++++++++++++++-----------
- 1 file changed, 32 insertions(+), 22 deletions(-)
+ drivers/gpu/drm/amd/display/dc/bios/bios_parser.c  | 7 ++-----
+ drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c | 8 ++------
+ drivers/gpu/drm/amd/display/dc/core/dc.c           | 6 +-----
+ 3 files changed, 5 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 313ca06a4fcb4..006d6087700fb 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -27,6 +27,7 @@
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/seq_file.h>
-+#include <linux/iopoll.h>
+diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
+index 221e0f56389f3..823843cd26133 100644
+--- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
++++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
+@@ -2543,7 +2543,6 @@ static enum bp_result construct_integrated_info(
  
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-@@ -3498,6 +3499,17 @@ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
- 	return ret;
- }
+ 	/* Sort voltage table from low to high*/
+ 	if (result == BP_RESULT_OK) {
+-		struct clock_voltage_caps temp = {0, 0};
+ 		uint32_t i;
+ 		uint32_t j;
  
-+static int do_get_act_status(struct drm_dp_aux *aux)
-+{
-+	int ret;
-+	u8 status;
-+
-+	ret = drm_dp_dpcd_readb(aux, DP_PAYLOAD_TABLE_UPDATE_STATUS, &status);
-+	if (ret < 0)
-+		return ret;
-+
-+	return status;
-+}
+@@ -2553,10 +2552,8 @@ static enum bp_result construct_integrated_info(
+ 						info->disp_clk_voltage[j].max_supported_clk <
+ 						info->disp_clk_voltage[j-1].max_supported_clk) {
+ 					/* swap j and j - 1*/
+-					temp = info->disp_clk_voltage[j-1];
+-					info->disp_clk_voltage[j-1] =
+-							info->disp_clk_voltage[j];
+-					info->disp_clk_voltage[j] = temp;
++					swap(info->disp_clk_voltage[j - 1],
++					     info->disp_clk_voltage[j]);
+ 				}
+ 			}
+ 		}
+diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
+index dff65c0fe82f8..7873abea4112b 100644
+--- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
++++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
+@@ -1613,8 +1613,6 @@ static enum bp_result construct_integrated_info(
  
- /**
-  * drm_dp_check_act_status() - Check ACT handled status.
-@@ -3507,30 +3519,28 @@ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
-  */
- int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
- {
--	int count = 0, ret;
--	u8 status;
+ 	struct atom_common_table_header *header;
+ 	struct atom_data_revision revision;
 -
--	do {
--		ret = drm_dp_dpcd_readb(mgr->aux,
--					DP_PAYLOAD_TABLE_UPDATE_STATUS,
--					&status);
--		if (ret < 0) {
--			DRM_DEBUG_KMS("failed to read payload table status %d\n",
--				      ret);
--			return ret;
--		}
--
--		if (status & DP_PAYLOAD_ACT_HANDLED)
--			break;
--		count++;
--		udelay(100);
--	} while (count < 30);
--
--	if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
--		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n",
--			      status, count);
-+	/*
-+	 * There doesn't seem to be any recommended retry count or timeout in
-+	 * the MST specification. Since some hubs have been observed to take
-+	 * over 1 second to update their payload allocations under certain
-+	 * conditions, we use a rather large timeout value.
-+	 */
-+	const int timeout_ms = 3000;
-+	int ret, status;
-+
-+	ret = readx_poll_timeout(do_get_act_status, mgr->aux, status,
-+				 status & DP_PAYLOAD_ACT_HANDLED || status < 0,
-+				 200, timeout_ms * USEC_PER_MSEC);
-+	if (ret < 0 && status >= 0) {
-+		DRM_DEBUG_KMS("Failed to get ACT after %dms, last status: %02x\n",
-+			      timeout_ms, status);
- 		return -EINVAL;
-+	} else if (status < 0) {
-+		DRM_DEBUG_KMS("Failed to read payload table status: %d\n",
-+			      status);
-+		return status;
+-	struct clock_voltage_caps temp = {0, 0};
+ 	uint32_t i;
+ 	uint32_t j;
+ 
+@@ -1644,10 +1642,8 @@ static enum bp_result construct_integrated_info(
+ 				info->disp_clk_voltage[j-1].max_supported_clk
+ 				) {
+ 				/* swap j and j - 1*/
+-				temp = info->disp_clk_voltage[j-1];
+-				info->disp_clk_voltage[j-1] =
+-					info->disp_clk_voltage[j];
+-				info->disp_clk_voltage[j] = temp;
++				swap(info->disp_clk_voltage[j - 1],
++				     info->disp_clk_voltage[j]);
+ 			}
+ 		}
  	}
-+
- 	return 0;
- }
- EXPORT_SYMBOL(drm_dp_check_act_status);
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index b95a58aa82d91..47e7d11ca0c9c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -907,15 +907,11 @@ static void program_timing_sync(
+ 
+ 		/* set first pipe with plane as master */
+ 		for (j = 0; j < group_size; j++) {
+-			struct pipe_ctx *temp;
+-
+ 			if (pipe_set[j]->plane_state) {
+ 				if (j == 0)
+ 					break;
+ 
+-				temp = pipe_set[0];
+-				pipe_set[0] = pipe_set[j];
+-				pipe_set[j] = temp;
++				swap(pipe_set[0], pipe_set[j]);
+ 				break;
+ 			}
+ 		}
 -- 
 2.25.1
 
