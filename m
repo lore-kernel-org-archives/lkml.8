@@ -2,156 +2,127 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD35C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B0E2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GJ668M5g"
+	by mail.kernel.org (Postfix) with ESMTP id 1F79A20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733070AbgFWP4B (ORCPT
+        id S1733076AbgFWP4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:56:01 -0400
-Received: from mout.web.de ([212.227.15.3]:45661 "EHLO mout.web.de"
+        Tue, 23 Jun 2020 11:56:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:57980 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732781AbgFWP4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:56:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592927737;
-        bh=NMunOW08e0Ol3CHmW1tqHG6VHtH1UbilsDaEjPlkoSk=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=GJ668M5gZWHjm120FHtr4EyTyfOlZ+CJlWL3oJhlwS8GJwZkszQN/6YDVxJv68D+j
-         dygHmTtSduI52FY26vDQekdLWkuMOGD3SngWpQugcUbEbB0JQdDrzrF6tQ8H6UcPDn
-         dwGIhY/7VJKithPrI/cuDrJGqrO1zQ4072cVvBgE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.105.198]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MMmwZ-1jmPQ61SVr-008cwa; Tue, 23
- Jun 2020 17:55:37 +0200
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 1/7] irqchip: Fix potential resource leaks
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
-Date:   Tue, 23 Jun 2020 17:55:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1732781AbgFWP4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 11:56:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 329F61F1;
+        Tue, 23 Jun 2020 08:56:09 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A222D3F6CF;
+        Tue, 23 Jun 2020 08:56:07 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 16:56:05 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Quentin Perret <qperret@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        hsinyi@chromium.org, Joel Fernandes <joelaf@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        ctheegal@codeaurora.org, Guenter Roeck <groeck@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
+ cpu freq
+Message-ID: <20200623155507.5l6ck4hder2px3ii@e107158-lin.cambridge.arm.com>
+References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
+ <20200611110301.GA132747@google.com>
+ <CAD=FV=V2FvFcYrghxUSdHNxmcS3DKpnBbk2oL64w7hh=tV-DfQ@mail.gmail.com>
+ <20200612092454.GA94228@google.com>
+ <20200612123448.fcmzv3rdtsbawmpd@e107158-lin.cambridge.arm.com>
+ <CAD=FV=UySLsTaUP3nOfQO98qPEUkY8tMhw25pJ4Yi7FVM5xU6g@mail.gmail.com>
+ <20200619153146.vaizbj7muy52zvbd@e107158-lin.cambridge.arm.com>
+ <CAD=FV=V0YCS69uErFnY-cF_v44mDfAe4AWa+K+U6mQR+TNLkww@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/yG29YMWtAvukhcljyGyAEyr+1Aiee2Us0Je2/uzZcLq8mho4og
- 8vr/IipbtEZ0s7u85lfGnntO3FNjooLQQD+m9xPZNSudbcG7s6v8BZ8c95usrY8Qholu5E6
- hGKiCsDnndDREQqqIY3VwMo1sd/JRll8oFeh/RWri5bMAGup502G/CtJLhjNsptp1Ehv9Ma
- GOdkcdc1n/oKgKnIgoYZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:u9rvyksljl4=:8XNBqI30421Z89AyKccswo
- Sy1qK1PFmdwuVQ7zUnCjO/xQ/YQG1FE3MFIKvXbFkuLKHabQ1xs+PjgqXqm5zLhZ1h4gvHbQk
- cas8R0Aw1MyUtdoT4rZ1rIR++5la8gXWATTCCoQ98W0YZDKSNWWyu6xMA6mmP4iyQaMhI/8Ns
- px3jbTb9m8NBFGGiuep2ADVspz+0nhbvupuWTAsogkIYTjzo5wF/eAlqS9jPOO1P8H9yTdbM7
- HOLyynp0+069Y/my4DnJcFXsUPvBZteb1fYnTo9QEC02aHFLXcCVEPAKLshnpv2fmFYOKf4rM
- L4ODTZQlEeVtHv8DeAwznO2av7L1RXdZgDDmZ4PDLpQ0HU0GzV2ITAF13qQAvzsB58GeIZ511
- juOwBMKNK8MFik/Uo7kqUndNHagaU8JEkrH8JxEU2wSLVOXAdBEWWA+FV2HB5PYENjpjrLxCV
- z12xuMVOBcHA8IU/rq8SMriN0o6LGNRdquqyF/+UmifKBzZTtSnaLZSrdFqPoxKC/+RfmEqYm
- /Apjehz7CfFpu0aoCVU3Jul6uR8oYAKSjinqSAQPUjvFz2V3pjboxXBiDVfiBHGSKh09tibm1
- g1J7q8EhCm2UQYQhud00PzZDU/Fzu1ov+BwMSHnooQNCZpyZd5okyekXCtIvVKowx0WKcKzCU
- ghDGIynx5YGwmUD0L5NzoaG2kypQRvp9WFDPosZJas9UR8iuiZEFHyaGH9zquLxz3qXAIL5tq
- 9h0/tbpKMvZBS6ihqbmTm5rGJTZwqO1hGyrF00yMsgFDA+V2rxaRFBFPITcj28X0hCnvNLzzF
- mTx4mGc4/BwFJY76mOajyG1husk2X1JhOqOBqAG/LYICjfy6dgUmcyMSLHw6ylEp9ybYLz8Xh
- WxFukKai4ZFdEhTKoD1bsTOndHWancX35bnBbC0YrXGDMO2LfRRJX1+EXBwyZ30KvLOlUjTDm
- V5xYNP1EYvWXru8xRiOo50JW75YDjjxF1APyaYvKlmusKN+Jc5vTIOh3VTC0YNk7oDWSbu0Np
- jLTYa+yxljXbrueYKAOH8Pfk40z5S3afV1sZ4eVSK6ZmOooRZGj8jvYh1kyutV+W953O+gOSw
- 2nkDygILs2D7AsSgkimyOmKInnuGr+ZoEtKjf7wrmUZ1xr8CK2PYN7U2/V05QowQcp1EFX624
- yWTRryUNrSt7KpiTV8GY7pkCCa/21IDQxzed6iVJKR3nYz+11gY2vzvAgNjnT4wqiROnlVrd2
- KfPCJlzKlIj6ktHLu
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=V0YCS69uErFnY-cF_v44mDfAe4AWa+K+U6mQR+TNLkww@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> There exists some potential resource leaks in the error path, fix them.
+On 06/22/20 11:19, Doug Anderson wrote:
 
-Will the tag =E2=80=9CFixes=E2=80=9D become relevant for the commit messag=
-e?
+[...]
 
+> > Hmm I thought OEMs who ship stuff that are based on Chrome OS would have to do
+> > the final tuning here, which would be based on the recommendation of the SoC
+> > vendor. And I'm being overly generic here to think not only SoC from Intel
+> > which traditionally they have been treated in different ways.
+> >
+> > I think you provide a generic stack for OEMs, no?
+> 
+> No, that's the Android way.  The only way Chrome OS can ship updates
+> for the whole fleet every ~6 weeks and support it for so many years is
+> that all the builds and updates happen on Google servers.  The only
+> way Google can maintain this is to not have a separate kernel code
+> base for every single variant of every single board.
 
-=E2=80=A6
-> +++ b/drivers/irqchip/irq-nvic.c
-> @@ -94,6 +94,7 @@ static int __init nvic_of_init(struct device_node *nod=
-e,
->
->  	if (!nvic_irq_domain) {
->  		pr_warn("Failed to allocate irq domain\n");
-> +		iounmap(nvic_base);
->  		return -ENOMEM;
->  	}
->
-> @@ -103,6 +104,7 @@ static int __init nvic_of_init(struct device_node *n=
-ode,
->  	if (ret) {
->  		pr_warn("Failed to allocate irq chips\n");
->  		irq_domain_remove(nvic_irq_domain);
-> +		iounmap(nvic_base);
->  		return ret;
->  	}
+I was referring to userspace tuning, which I expected to be platform specific.
+Assuming the devices share the same kernel. At least in the context of uclamp
+and RT tuning that should be possible.
 
-Can it helpful to add jump targets so that a bit of exception handling
-can be better reused at the end of this function?
+I appreciate that you want to ship a simple generic setup on as many
+devices. But there will be a trade-off to make between optimal tuning and
+keeping things simple and generic. The latter is perfectly fine goal to have
+of course. Others who want to tune more they're free to do so too as well.
 
-Regards,
-Markus
+> 
+> 
+> > Generally for RT tasks, Linux always required an admin to do the tuning. And to
+> > provide an automatic solution that fits all is not easy to happen, because what
+> > ultimately is important for userspace, is only known by the userspace.
+> >
+> > This is an interesting problem for me personally that I have been trying to
+> > look at in my free time. On general purpose systems, it's hard to reason about
+> > what's important because, as you say, you distribute something that should
+> > target a wide range of platforms. And sometimes the end user (like a person
+> > installing Ubuntu Desktop on their laptop), have no clue what a driver is even
+> > to pick the right tuning for all RT tasks in their system.
+> >
+> > But this problem already exists and catching up with this will need more work
+> > from both distros and maybe kernel. I can't see a possible situation where the
+> > kernel can do all the tuning without userspace providing more info anyway.
+> >
+> > The per-device weirdness you're talking about is just how the way goes in
+> > a world where there are many SoCs that are created to target different budgets
+> > and use cases.
+> 
+> I think it's sane for the OS to do very high level tuning, like "this
+> platform has an underpowered CPU and being fast is more important than
+> battery life, so error on the side of running fast" or "this platform
+> has a fast SSD so tune disk algorithms appropriately".  ...but picking
+> specific values gets tricky.
+
+You can always use the per-task API to boost that task to maximum, if power is
+not your concern. From user-space ;-)
+
+If you're power conscious too, yeah there's no way but to test for the minimum
+value that gives you what you want. The task can try to regulate itself too if
+it can observe when it's not running fast enough (notices a glitch?).
+
+You can get fancy if you want, depending on your goal.
+
+It's hard to get the best though with one size fits all.
+
+HTH
+
+--
+Qais Yousef
