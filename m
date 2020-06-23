@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4699EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02056C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0AC2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C921E2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948202;
-	bh=SigPQRGWvtPjEXyreRGfyr8fEmPoalFz2X9U0FSRtEY=;
+	s=default; t=1592948203;
+	bh=1H4i9incKA8JrKVHqNH+Avto6Sk4RJGCA2gTwPD6aUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kbzoFJwjXbB8u4yN192bkNXwMG4018r9S0/gjwTMGpB+BxDrENEo6GdJ5CnFo4toy
-	 9mXb7xMWmF1IRNHLqlzDPDlspARDW2NTR2hEXkLwrqrQVhiSUGNKIrB/wWMGjS1bze
-	 EpJgxs5LTMdAQFpJQoL9F2zIwoSDru5x9Uztl7vQ=
+	b=PBbMWBoTPp7p4dk+kUrr5MK2WxuB3n71bIHcpTgSHkHTA6J6BsCw+GORgy6LRRugF
+	 /eSl/BWXv3OoHLnzimrtqz9pWXK0colO8S7VVjvwXWdgn0pDNwrG+StPWUCD4ZF54Z
+	 7eFjzfyQUp1U7/KWilQqAmqfzLuje+ymlq2Sg9sA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387691AbgFWUJm (ORCPT
+        id S2388730AbgFWUJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50062 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388311AbgFWUJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:03 -0400
+        id S2388285AbgFWUI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EA7B206C3;
-        Tue, 23 Jun 2020 20:09:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1362920E65;
+        Tue, 23 Jun 2020 20:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942943;
-        bh=SigPQRGWvtPjEXyreRGfyr8fEmPoalFz2X9U0FSRtEY=;
+        s=default; t=1592942935;
+        bh=1H4i9incKA8JrKVHqNH+Avto6Sk4RJGCA2gTwPD6aUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pHg8tgrlYuvM384iExddmMqeMf/YDCyyxLz2LnYJZTN45/WiBqT+C66DJQk8H/uVt
-         CrOOHdavzuxOVlveGP7WuBD0CWvEopqzxylQbmQWSaDrhiVj62asIwkwhLGv7c3Sx1
-         rYoDQfA8xouesvVewVN4NMnDC0eanXaJMFnC9ezQ=
+        b=k6d44NmJYzyb2cWdY1j/sjFGxGJI024xE8IsgdEUgik/TuRXV5T/3drGTYY+wX22q
+         oXrvp/wftk8ficTq/c1FPU4OcPqhFdG619U+L9heKHIn1zfEthQ3OVpLidEE83AEQl
+         GIO6GhrKxjfXhnITkFyE8EfOCQ7+5DQjAvwlk6hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 196/477] phy: ti: j721e-wiz: Fix some error return code in wiz_probe()
-Date:   Tue, 23 Jun 2020 21:53:13 +0200
-Message-Id: <20200623195416.849454492@linuxfoundation.org>
+Subject: [PATCH 5.7 193/477] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
+Date:   Tue, 23 Jun 2020 21:53:10 +0200
+Message-Id: <20200623195416.711160211@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,56 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit e2ae8bca494481a9f38fcd1d52943ac04e654745 ]
+[ Upstream commit d7faa8ffb6be57bf8233a4b5a636d76b83c51ce7 ]
 
-Fix to return negative error code from some error handling
-cases instead of 0, as done elsewhere in this function.
+In function rockchip_dt_node_to_map, a new_map variable is
+allocated by:
 
-Fixes: 091876cc355d ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Acked-by: Roger Quadros <rogerq@ti.com>
-Link: https://lore.kernel.org/r/20200507054109.110849-1-weiyongjun1@huawei.com
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
+		       GFP_KERNEL);
+
+This uses devres and attaches new_map to the pinctrl driver.
+This cause a leak since new_map is not released when the probed
+driver is removed. Fix it by using kcalloc to allocate new_map
+and free it in `rockchip_dt_free_map`
+
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20200506100903.15420-1-dafna.hirschfeld@collabora.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/ti/phy-j721e-wiz.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index 7b51045df7836..c8e4ff341cefa 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -794,8 +794,10 @@ static int wiz_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 0989513463393..d7869b636889e 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -508,8 +508,8 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
  	}
  
- 	base = devm_ioremap(dev, res.start, resource_size(&res));
--	if (!base)
-+	if (!base) {
-+		ret = -ENOMEM;
- 		goto err_addr_to_resource;
-+	}
+ 	map_num += grp->npins;
+-	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
+-								GFP_KERNEL);
++
++	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
+ 	if (!new_map)
+ 		return -ENOMEM;
  
- 	regmap = devm_regmap_init_mmio(dev, base, &wiz_regmap_config);
- 	if (IS_ERR(regmap)) {
-@@ -812,6 +814,7 @@ static int wiz_probe(struct platform_device *pdev)
- 
- 	if (num_lanes > WIZ_MAX_LANES) {
- 		dev_err(dev, "Cannot support %d lanes\n", num_lanes);
-+		ret = -ENODEV;
- 		goto err_addr_to_resource;
+@@ -519,7 +519,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	/* create mux map */
+ 	parent = of_get_parent(np);
+ 	if (!parent) {
+-		devm_kfree(pctldev->dev, new_map);
++		kfree(new_map);
+ 		return -EINVAL;
  	}
+ 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
+@@ -546,6 +546,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ static void rockchip_dt_free_map(struct pinctrl_dev *pctldev,
+ 				    struct pinctrl_map *map, unsigned num_maps)
+ {
++	kfree(map);
+ }
  
-@@ -897,6 +900,7 @@ static int wiz_probe(struct platform_device *pdev)
- 	serdes_pdev = of_platform_device_create(child_node, NULL, dev);
- 	if (!serdes_pdev) {
- 		dev_WARN(dev, "Unable to create SERDES platform device\n");
-+		ret = -ENOMEM;
- 		goto err_pdev_create;
- 	}
- 	wiz->serdes_pdev = serdes_pdev;
+ static const struct pinctrl_ops rockchip_pctrl_ops = {
 -- 
 2.25.1
 
