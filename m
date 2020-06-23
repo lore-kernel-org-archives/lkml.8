@@ -2,117 +2,86 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68124C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D411C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4178120720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CD620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AnagMKzr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyWrRyvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731860AbgFWBTn (ORCPT
+        id S1731784AbgFWBVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:19:43 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:55052 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731667AbgFWBTm (ORCPT
+        Mon, 22 Jun 2020 21:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731572AbgFWBVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:19:42 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1C361327;
-        Tue, 23 Jun 2020 03:19:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1592875180;
-        bh=A1BPBP7IBhvl06oo1JVRf8zGahYeO6mzOQ68hxqYL4U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AnagMKzrYkDtq6thkbxOVWtLV7eZh5FUbo8aY4leF4Z9ZmKdur1cCWCcBeubE591X
-         x+VYQwOnk9B04PTlgxtbrU3NbAQntb7L/LGNbhr23EP5y7Mt0L70qxrqKAGpfdBKNC
-         lAwhsag/fbjrQnRaPcty8A/vV7/y5mhrFHCrtxu8=
-Date:   Tue, 23 Jun 2020 04:19:15 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 1/2] media: omap3isp: Remove cacheflush.h
-Message-ID: <20200623011915.GP5852@pendragon.ideasonboard.com>
-References: <20200622234740.72825-1-natechancellor@gmail.com>
- <20200622234740.72825-2-natechancellor@gmail.com>
+        Mon, 22 Jun 2020 21:21:18 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4E7C061573;
+        Mon, 22 Jun 2020 18:21:16 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t85so8422822ili.5;
+        Mon, 22 Jun 2020 18:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KhdGsndwHFxm5Fp3MmCQGP1IyrRRJHSC/HQA9VsGSeg=;
+        b=NyWrRyvlVt7C8BfTJYfvuvXPl8iLEwICqLIhEcVj2RVnhMnxArqfgIknGPbxUTwWao
+         iDHZ0YssBrCUnjki6osEE308QUMvFzhYPxpyzIS0PEI2Fgs+WGvt37viTne1VhL+PSHJ
+         FBRFjZxonJ36JMmI0guwKY2JAdW9j2FiONX/DGy4QeYxi4R8Ta128W2fOk0RQqexwT+d
+         ncO/M1lNiKWo3IzH/t8AHAVnK/hBHrIWDBhdEy69CaQygtWOdyWTxA58po/8IV1m+NVL
+         0DxdfqaRgybeUH21Veep3GQWAx999zHQoA0V7uE0C9K0Tpm/qGJ/Hljql+egFTy/UTH2
+         g2kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KhdGsndwHFxm5Fp3MmCQGP1IyrRRJHSC/HQA9VsGSeg=;
+        b=ZAlG/NjCTKPG1dZBcDflK17UmHErlyAdewZdFq9Rbk/gtm7rxKmygOeHqlEvoZSNzZ
+         e3iGFfOLgEmc2yQ/BIozhwMv4vAT9pCVHzZ5WfyDTWQMadxn123JwVx5nEW8vF7NbXCj
+         pWSp5G6Dx1tEQ6x2scT0r5Pq6ze8Fgt/nZShnGblbrfeBjQmPv09/nbMkEgneBxfvDLD
+         lmOtWGcAOYIz2lQMNR6RCuMMr+pBvT4VoJM+hWNpfnpwaNKCl2lqgPblQhU5V4ZR0wDG
+         YWuCcGCVfVR44/sJOCLqEB7Jwhhb3oiWN/gDXl51gA/Q1zJILvRAbLr5DiZjcmsIHkt9
+         CBmA==
+X-Gm-Message-State: AOAM530yiGGsenkpCv9LcUC/T5PbP+Lezp0w7ri4wNgwFIb6w36MbFYC
+        jhUuEqPfn+dG7TZRfUwm2TN1pxm6x6iCcIf4k5XO8A==
+X-Google-Smtp-Source: ABdhPJwUOYKyHRh+39pF9jFUDmuhLJaJg8Qk3hT27V1809kQadXBeResMx7Xf1RVRNeIGp8WoPZW4qIZTV2fZo2T8/Y=
+X-Received: by 2002:a92:849c:: with SMTP id y28mr4696835ilk.33.1592875275542;
+ Mon, 22 Jun 2020 18:21:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200622234740.72825-2-natechancellor@gmail.com>
+References: <20200622220048.717073-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200622220048.717073-1-bjorn.andersson@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 22 Jun 2020 19:21:04 -0600
+Message-ID: <CAOCk7Noj5E19PPtSV34wnAyQG4qE-5NC3vbQW9egTUJNpm3+6g@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm SM8250 pinctrl driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
+On Mon, Jun 22, 2020 at 4:03 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> The SM8250 pinctrl driver provides pin configuration, pin muxing and
+> GPIO pin control for many pins on the SM8250 SoC.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Thank you for the patch.
+Looks sane to me.
 
-On Mon, Jun 22, 2020 at 04:47:39PM -0700, Nathan Chancellor wrote:
-> After mm.h was removed from the asm-generic version of cacheflush.h,
-> s390 allyesconfig shows several warnings of the following nature:
-> 
-> In file included from ./arch/s390/include/generated/asm/cacheflush.h:1,
->                  from drivers/media/platform/omap3isp/isp.c:42:
-> ./include/asm-generic/cacheflush.h:16:42: warning: 'struct mm_struct'
-> declared inside parameter list will not be visible outside of this
-> definition or declaration
-> 
-> As Geert and Laurent point out, this driver does not need this header in
-> the two files that include it. Remove it so there are no warnings.
-> 
-> Fixes: e0cf615d725c ("asm-generic: don't include <linux/mm.h> in cacheflush.h")
-> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/media/platform/omap3isp/isp.c      | 2 --
->  drivers/media/platform/omap3isp/ispvideo.c | 1 -
->  2 files changed, 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-> index a4ee6b86663e..b91e472ee764 100644
-> --- a/drivers/media/platform/omap3isp/isp.c
-> +++ b/drivers/media/platform/omap3isp/isp.c
-> @@ -39,8 +39,6 @@
->   *	Troy Laramy <t-laramy@ti.com>
->   */
->  
-> -#include <asm/cacheflush.h>
-> -
->  #include <linux/clk.h>
->  #include <linux/clkdev.h>
->  #include <linux/delay.h>
-> diff --git a/drivers/media/platform/omap3isp/ispvideo.c b/drivers/media/platform/omap3isp/ispvideo.c
-> index 10c214bd0903..1ac9aef70dff 100644
-> --- a/drivers/media/platform/omap3isp/ispvideo.c
-> +++ b/drivers/media/platform/omap3isp/ispvideo.c
-> @@ -18,7 +18,6 @@
->  #include <linux/sched.h>
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
-> -#include <asm/cacheflush.h>
->  
->  #include <media/v4l2-dev.h>
->  #include <media/v4l2-ioctl.h>
-> 
-> base-commit: 27f11fea33608cbd321a97cbecfa2ef97dcc1821
-
--- 
-Regards,
-
-Laurent Pinchart
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
