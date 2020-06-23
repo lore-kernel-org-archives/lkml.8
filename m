@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C46C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92476214F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7FD2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943501;
-	bh=YkVoEorFSdIv9ryto11yZN9u8v2/IijlcqCT9u3qakE=;
+	s=default; t=1592943504;
+	bh=7q4axiA0Tm1nEfJFiUKPJX5zM5O2lmPDAXdKfaPrOZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1RXHUDZIajLDsr2elq9f2l+WRgMC6xZQO0eRDusOxFLTJp7mzfSrT9ZPhIkbF7pvl
-	 auWAHDet/T1RLoyAfllXl20c3Cxis5IyM2aOGhXtXNJTuiGg+HIelfKFvjCMHNN8aS
-	 Btu2lcjFuJJhAHUP3IsHFDxaopGJSKCHJWjoUhoQ=
+	b=0EIX9Q1ThYEcqkX83scnRGFAXX67Nb4AwwDvLQhkkFdRzU4whydg0ln89STAMT2ez
+	 upncQnLiw5RmAhEvlY6MSEcqKhMM9n7mjZMb1JajUVc6Qg/lUBSyHeg0q5FgxfdRQe
+	 X3gfK15rZ1Bd+QuRUL99qoArIPfTLcTwJ+JnyGEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbgFWUST (ORCPT
+        id S2389392AbgFWUSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34848 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389627AbgFWUSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:18:10 -0400
+        id S2389643AbgFWUSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:18:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7E1B2073E;
-        Tue, 23 Jun 2020 20:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78FAE2080C;
+        Tue, 23 Jun 2020 20:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943490;
-        bh=YkVoEorFSdIv9ryto11yZN9u8v2/IijlcqCT9u3qakE=;
+        s=default; t=1592943493;
+        bh=7q4axiA0Tm1nEfJFiUKPJX5zM5O2lmPDAXdKfaPrOZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Op+FhTuXNMhCcK9yDqVukY70MHmXzCRlp2TBF2t89JgTvtmDpRR7Bkim2bgSN3+y0
-         jd8JNqQmLSsHXhNWsZnliXj/HbohQUN2VL4JjJouEddI3xrfKnFyJPh5O32Mjp3Fvo
-         VAILUc2FL+Iz22K+dCJjPRDcN8axcnkkKnrF6QcA=
+        b=UCO2XEl+AzSIuofBirZH0fCbkmCRTHN+3dlWDrbjnVTPkZTJ+8BHQZFYUtIYB009L
+         1lC7E28Yhie+qPXa6URJpjU8V7nANbK/96fAe9TR5F+OhXc9gCoZkmRPW15bI370aC
+         qEmvMFm2OqWQxx9L+cbsqmUm3TMwsmB4iMgReW3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 413/477] drm: encoder_slave: fix refcouting error for modules
-Date:   Tue, 23 Jun 2020 21:56:50 +0200
-Message-Id: <20200623195427.050996347@linuxfoundation.org>
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 414/477] pinctrl: qcom: ipq6018 Add missing pins in qpic pin group
+Date:   Tue, 23 Jun 2020 21:56:51 +0200
+Message-Id: <20200623195427.098323373@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,48 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 
-[ Upstream commit f78d4032de60f50fd4afaa0fb68ea03b985f820a ]
+[ Upstream commit 7f5f4de83ca30a4922bb178b80144e2778faad01 ]
 
-module_put() balances try_module_get(), not request_module(). Fix the
-error path to match that.
+The patch adds missing qpic data pins to qpic pingroup. These pins are
+necessary for the qpic nand to work.
 
-Fixes: 2066facca4c7 ("drm/kms: slave encoder interface.")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: ef1ea54eab0e ("pinctrl: qcom: Add ipq6018 pinctrl driver")
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Link: https://lore.kernel.org/r/1592541089-17700-1-git-send-email-sivaprak@codeaurora.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_encoder_slave.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_encoder_slave.c b/drivers/gpu/drm/drm_encoder_slave.c
-index cf804389f5eca..d50a7884e69e1 100644
---- a/drivers/gpu/drm/drm_encoder_slave.c
-+++ b/drivers/gpu/drm/drm_encoder_slave.c
-@@ -84,7 +84,7 @@ int drm_i2c_encoder_init(struct drm_device *dev,
+diff --git a/drivers/pinctrl/qcom/pinctrl-ipq6018.c b/drivers/pinctrl/qcom/pinctrl-ipq6018.c
+index 38c33a778cb8d..ec50a3b4bd161 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ipq6018.c
++++ b/drivers/pinctrl/qcom/pinctrl-ipq6018.c
+@@ -367,7 +367,8 @@ static const char * const wci20_groups[] = {
  
- 	err = encoder_drv->encoder_init(client, dev, encoder);
- 	if (err)
--		goto fail_unregister;
-+		goto fail_module_put;
+ static const char * const qpic_pad_groups[] = {
+ 	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio9", "gpio10",
+-	"gpio11", "gpio17",
++	"gpio11", "gpio17", "gpio15", "gpio12", "gpio13", "gpio14", "gpio5",
++	"gpio6", "gpio7", "gpio8",
+ };
  
- 	if (info->platform_data)
- 		encoder->slave_funcs->set_config(&encoder->base,
-@@ -92,9 +92,10 @@ int drm_i2c_encoder_init(struct drm_device *dev,
- 
- 	return 0;
- 
-+fail_module_put:
-+	module_put(module);
- fail_unregister:
- 	i2c_unregister_device(client);
--	module_put(module);
- fail:
- 	return err;
- }
+ static const char * const burn0_groups[] = {
 -- 
 2.25.1
 
