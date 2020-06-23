@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F322E20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816EB20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946223;
-	bh=PO6z4E1RvorJii8ydbCrTv+qwvupsdcyw1g8L4SwrZ0=;
+	s=default; t=1592946228;
+	bh=hdGBFCYcuW2mHMvmT1HAclvF/VBwBp9BitV8pAwPeWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hLEYbqxHB822EpyN3dtAS/Z26KNZYz4fbfnt6J+UKTKkB1b4nx1oMVClTHFipP+69
-	 YpOI+5QMNiLw0f2cvZqCkuovDO2t4MCodIv0HxlLu92UeAubk3to4TiWVkTDaXf3me
-	 MAccFXy3bEuq/CjLG2M21Whrt/lYaCkOdUBlmLN0=
+	b=18B1uAgzNLuhzTKvi/N6+ZyF0TjDZAtUX2h6NgUg++9g59btrTwyq1NhKKd2hGT9S
+	 CfnhF6UpOtJgOpdxs8Bvhrus3e7arARMwt/GiNw+USYi5kbeGUX4GBJUYJIfdncGZa
+	 HjIe9DC1J+9QpSRf2oD61nqTAwQyv6ayM34NOQiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391578AbgFWUi1 (ORCPT
+        id S2403828AbgFWUiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:38:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391569AbgFWUiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:38:16 -0400
+        id S2391927AbgFWUiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:38:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F419D21531;
-        Tue, 23 Jun 2020 20:38:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E458D21531;
+        Tue, 23 Jun 2020 20:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944696;
-        bh=PO6z4E1RvorJii8ydbCrTv+qwvupsdcyw1g8L4SwrZ0=;
+        s=default; t=1592944691;
+        bh=hdGBFCYcuW2mHMvmT1HAclvF/VBwBp9BitV8pAwPeWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wubgelqaJFs2pvlQRKQJr4etRME5cHXwnZokoQXo6JEmAjRS03IDxEoi64a3OvWLV
-         nMu1vsOwGZ+q1T7fveydOIj/s+lz0aXVbiXlqd4vxl3MUu0d7290gvQ6k9dR9VtzpO
-         7GJmmlumpVG+vA2zEqugq4cBPW8elL0alIh40opE=
+        b=XUEb+8pdLeDbqV6ZUrk3Oc0TDcorbgCTq0i/F7/lJji+a0xdwR5VPYEgDek3GABKE
+         cp9dUVuZ703UPjlrUlFeVeyKt7oHwY9aU43Bo9YWr+PwJs37jZMINY9kI5IFYYQk0x
+         ND5chNPbYarjenJshfT2Ws5M+vJlxXXbc4INsJNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Feng Tang <feng.tang@intel.com>,
+        Corey Minyard <cminyard@mvista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/206] powerpc/ps3: Fix kexec shutdown hang
-Date:   Tue, 23 Jun 2020 21:56:57 +0200
-Message-Id: <20200623195321.328662178@linuxfoundation.org>
+Subject: [PATCH 4.19 087/206] ipmi: use vzalloc instead of kmalloc for user creation
+Date:   Tue, 23 Jun 2020 21:56:55 +0200
+Message-Id: <20200623195321.230431462@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,81 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geoff Levand <geoff@infradead.org>
+From: Feng Tang <feng.tang@intel.com>
 
-[ Upstream commit 126554465d93b10662742128918a5fc338cda4aa ]
+[ Upstream commit 7c47a219b95d0e06b5ef5fcc7bad807895015eac ]
 
-The ps3_mm_region_destroy() and ps3_mm_vas_destroy() routines
-are called very late in the shutdown via kexec's mmu_cleanup_all
-routine.  By the time mmu_cleanup_all runs it is too late to use
-udbg_printf, and calling it will cause PS3 systems to hang.
+We met mulitple times of failure of staring bmc-watchdog,
+due to the runtime memory allocation failure of order 4.
 
-Remove all debugging statements from ps3_mm_region_destroy() and
-ps3_mm_vas_destroy() and replace any error reporting with calls
-to lv1_panic.
+     bmc-watchdog: page allocation failure: order:4, mode:0x40cc0(GFP_KERNEL|__GFP_COMP), nodemask=(null),cpuset=/,mems_allowed=0-1
+     CPU: 1 PID: 2571 Comm: bmc-watchdog Not tainted 5.5.0-00045-g7d6bb61d6188c #1
+     Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.00.01.0015.110720180833 11/07/2018
+     Call Trace:
+      dump_stack+0x66/0x8b
+      warn_alloc+0xfe/0x160
+      __alloc_pages_slowpath+0xd3e/0xd80
+      __alloc_pages_nodemask+0x2f0/0x340
+      kmalloc_order+0x18/0x70
+      kmalloc_order_trace+0x1d/0xb0
+      ipmi_create_user+0x55/0x2c0 [ipmi_msghandler]
+      ipmi_open+0x72/0x110 [ipmi_devintf]
+      chrdev_open+0xcb/0x1e0
+      do_dentry_open+0x1ce/0x380
+      path_openat+0x305/0x14f0
+      do_filp_open+0x9b/0x110
+      do_sys_open+0x1bd/0x250
+      do_syscall_64+0x5b/0x1f0
+      entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-With this change builds with 'DEBUG' defined will not cause kexec
-reboots to hang, and builds with 'DEBUG' defined or not will end
-in lv1_panic if an error is encountered.
+Using vzalloc/vfree for creating ipmi_user heals the
+problem
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/7325c4af2b4c989c19d6a26b90b1fec9c0615ddf.1589049250.git.geoff@infradead.org
+Thanks to Stephen Rothwell for finding the vmalloc.h
+inclusion issue.
+
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/ps3/mm.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/char/ipmi/ipmi_msghandler.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
-index 8c7009d001d96..894f62d77a777 100644
---- a/arch/powerpc/platforms/ps3/mm.c
-+++ b/arch/powerpc/platforms/ps3/mm.c
-@@ -212,13 +212,14 @@ void ps3_mm_vas_destroy(void)
- {
- 	int result;
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index 69734b1df7927..cb85516e1eb3c 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -30,6 +30,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/uuid.h>
+ #include <linux/nospec.h>
++#include <linux/vmalloc.h>
  
--	DBG("%s:%d: map.vas_id    = %llu\n", __func__, __LINE__, map.vas_id);
--
- 	if (map.vas_id) {
- 		result = lv1_select_virtual_address_space(0);
--		BUG_ON(result);
--		result = lv1_destruct_virtual_address_space(map.vas_id);
--		BUG_ON(result);
-+		result += lv1_destruct_virtual_address_space(map.vas_id);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		map.vas_id = 0;
- 	}
- }
-@@ -316,19 +317,20 @@ static void ps3_mm_region_destroy(struct mem_region *r)
- 	int result;
+ #define PFX "IPMI message handler: "
  
- 	if (!r->destroy) {
--		pr_info("%s:%d: Not destroying high region: %llxh %llxh\n",
--			__func__, __LINE__, r->base, r->size);
- 		return;
- 	}
+@@ -1089,7 +1090,7 @@ static void free_user_work(struct work_struct *work)
+ 					      remove_work);
  
--	DBG("%s:%d: r->base = %llxh\n", __func__, __LINE__, r->base);
--
- 	if (r->base) {
- 		result = lv1_release_memory(r->base);
--		BUG_ON(result);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		r->size = r->base = r->offset = 0;
- 		map.total = map.rm.size;
- 	}
-+
- 	ps3_mm_set_repository_highmem(NULL);
+ 	cleanup_srcu_struct(&user->release_barrier);
+-	kfree(user);
++	vfree(user);
  }
  
+ int ipmi_create_user(unsigned int          if_num,
+@@ -1121,7 +1122,7 @@ int ipmi_create_user(unsigned int          if_num,
+ 	if (rv)
+ 		return rv;
+ 
+-	new_user = kmalloc(sizeof(*new_user), GFP_KERNEL);
++	new_user = vzalloc(sizeof(*new_user));
+ 	if (!new_user)
+ 		return -ENOMEM;
+ 
+@@ -1170,7 +1171,7 @@ int ipmi_create_user(unsigned int          if_num,
+ 
+ out_kfree:
+ 	srcu_read_unlock(&ipmi_interfaces_srcu, index);
+-	kfree(new_user);
++	vfree(new_user);
+ 	return rv;
+ }
+ EXPORT_SYMBOL(ipmi_create_user);
 -- 
 2.25.1
 
