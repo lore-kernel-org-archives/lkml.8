@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 399B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C502720E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB1D2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942728;
-	bh=bwz6D8FBQD9hPc5U0y0YPLANP4AYBqfGkOSytfzbCVc=;
+	s=default; t=1592942734;
+	bh=4bFTiyTI+21Z9p8NR5i0JtG0TLkhfG+w1D0qOnIinuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RlaFc96C4RsxjWD+9CuTy73v4EfzKeuwveNJOSfDfMQ2PtQHgbc6kag8hJQMsnz1y
-	 1rwKC5RioAZwfP8/lcs+0jMJIbbMQNphb56RPKw+BoNGvcYz2rbhTQ2QRnYIY8ELKd
-	 9L80sE/WfOaX8Tb+gSezGzgJXCNPS7Om7jIRyCdw=
+	b=G3sjrKpjb5PIUKy17y9XxYtOItJ5H95F+uDmekQTtfZIXZkBjEknkF6SlvppI0VJr
+	 WF1L+0hi+rTU4WpsMxDs7ergDhlA1HltihAML+36kYNNAGnmWMQ5vtHczYTtRI5xuJ
+	 mobu1uer/+K67eDVyYU2BL8cLYlZo18ltCeIOiVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388357AbgFWUF1 (ORCPT
+        id S2388365AbgFWUFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:05:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388333AbgFWUFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:05:16 -0400
+        id S2387753AbgFWUF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:05:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD31620DD4;
-        Tue, 23 Jun 2020 20:05:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF745206C3;
+        Tue, 23 Jun 2020 20:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942716;
-        bh=bwz6D8FBQD9hPc5U0y0YPLANP4AYBqfGkOSytfzbCVc=;
+        s=default; t=1592942726;
+        bh=4bFTiyTI+21Z9p8NR5i0JtG0TLkhfG+w1D0qOnIinuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WokMzvlkfGt6c8KKdsqNBhAGo9iAgsyjFsTbFglqGwg14Lm7Km38z1cPxQGnrvKdU
-         MFksEvLOohv+pSBHxmaw0FPUhzrMyhoJbjhvSPjCD8to3A7YU4p4O0O8uSmh77UTIu
-         vxq0QWppT2FoyHQXdruk7+K0Il79pERaZ6iH/v/c=
+        b=BJC/gF+pYWi42ECdcSJsFVgw+SF2XzRU4hhxa14fzlQURBNqF1+Lw7wRbrX+uwi86
+         rT3FmtJTkzEH64loukh/klaZCr+/8HGbSkPFMEwYWJ8nxTN9MMieoNnDsgCuvZ6Ly+
+         kjra/HURrZX6b92++NFFdAWkpxsEtDPbwlExjve4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 066/477] m68k/PCI: Fix a memory leak in an error handling path
-Date:   Tue, 23 Jun 2020 21:51:03 +0200
-Message-Id: <20200623195410.740318987@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 112/477] x86/purgatory: Disable various profiling and sanitizing options
+Date:   Tue, 23 Jun 2020 21:51:49 +0200
+Message-Id: <20200623195412.887062030@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,38 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit c3f4ec050f56eeab7c1f290321f9b762c95bd332 ]
+[ Upstream commit e2ac07c06058ae2d58b45bbf2a2a352771d76fcb ]
 
-If 'ioremap' fails, we must free 'bridge', as done in other error handling
-path bellow.
+Since the purgatory is a special stand-alone binary, various profiling
+and sanitizing options must be disabled. Having these options enabled
+typically will cause dependencies on various special symbols exported by
+special libs / stubs used by these frameworks. Since the purgatory is
+special, it is not linked against these stubs causing missing symbols in
+the purgatory if these options are not disabled.
 
-Fixes: 19cc4c843f40 ("m68k/PCI: Replace pci_fixup_irqs() call with host bridge IRQ mapping hooks")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Sync the set of disabled profiling and sanitizing options with that from
+drivers/firmware/efi/libstub/Makefile, adding
+-DDISABLE_BRANCH_PROFILING to the CFLAGS and setting:
+
+  GCOV_PROFILE                    := n
+  UBSAN_SANITIZE                  := n
+
+This fixes broken references to ftrace_likely_update() when
+CONFIG_TRACE_BRANCH_PROFILING is enabled and to __gcov_init() and
+__gcov_exit() when CONFIG_GCOV_KERNEL is enabled.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200317130841.290418-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/coldfire/pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/purgatory/Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/m68k/coldfire/pci.c b/arch/m68k/coldfire/pci.c
-index 62b0eb6cf69a3..84eab0f5e00af 100644
---- a/arch/m68k/coldfire/pci.c
-+++ b/arch/m68k/coldfire/pci.c
-@@ -216,8 +216,10 @@ static int __init mcf_pci_init(void)
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index fb4ee54443799..9733d1cc791dd 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -17,7 +17,10 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+ LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
+ targets += purgatory.ro
  
- 	/* Keep a virtual mapping to IO/config space active */
- 	iospace = (unsigned long) ioremap(PCI_IO_PA, PCI_IO_SIZE);
--	if (iospace == 0)
-+	if (iospace == 0) {
-+		pci_free_host_bridge(bridge);
- 		return -ENODEV;
-+	}
- 	pr_info("Coldfire: PCI IO/config window mapped to 0x%x\n",
- 		(u32) iospace);
++# Sanitizer, etc. runtimes are unavailable and cannot be linked here.
++GCOV_PROFILE	:= n
+ KASAN_SANITIZE	:= n
++UBSAN_SANITIZE	:= n
+ KCOV_INSTRUMENT := n
  
+ # These are adjustments to the compiler flags used for objects that
+@@ -25,7 +28,7 @@ KCOV_INSTRUMENT := n
+ 
+ PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+ PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
+-PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
++PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
+ 
+ # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+ # in turn leaves some undefined symbols like __fentry__ in purgatory and not
 -- 
 2.25.1
 
