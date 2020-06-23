@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40729C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D068C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13A14206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EA12073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943700;
-	bh=j93+ShpfVnVieFiAVVRKTuHiA21HoQSiCNNYzqeRwJE=;
+	s=default; t=1592943706;
+	bh=0Fb7EP+pKmYTFIeqqOxu3NP+meod2WPdfsqrmM6rM1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lWArh8/MtTAE9yHgRJl0/3Q9u9DZnaKEm3iNJnjjST5YATJeOzp0mcYVVBgabyzhC
-	 d9Cqs8I7ONLtoVsDRpgQ4Mv1jFEXD4fhEKN8Cf9DosR8964eATUaBKcVlrpk7Ni3h6
-	 da1f2WSZkR+caSmRN0uqwhnjEu8B3+j/ji1ir6ag=
+	b=YQbh+ux3BgWC/XlCRdqRa4bA2SOb9nMgnkTgbmRz9haPqt5ces1ltXcaBF1eKThrv
+	 j+RkOhuh6l01CbV47x+cwJEHH2q1DKbtp3NDwk3CdDxZlM5+QAzzSkubnLeGLS+Snh
+	 gvtif22/kWgnge2fKnnYlo5lwychY0+H5k9nxJeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389023AbgFWUVi (ORCPT
+        id S2388986AbgFWUVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:21:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390032AbgFWUV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:21:28 -0400
+        id S2390054AbgFWUVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:21:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 083E5206C3;
-        Tue, 23 Jun 2020 20:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF522070E;
+        Tue, 23 Jun 2020 20:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943688;
-        bh=j93+ShpfVnVieFiAVVRKTuHiA21HoQSiCNNYzqeRwJE=;
+        s=default; t=1592943696;
+        bh=0Fb7EP+pKmYTFIeqqOxu3NP+meod2WPdfsqrmM6rM1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pupLXLWcXC3resUvOCQn5EAAUO6aWpeXQbT5hWzzKnMIQyO9h8jq8BQZwglWeBvIW
-         Otk+L+/sQbzDVuqQ3B9cooOdvY65SEcAsmbrwsZCOo4H4NBO6geN73a/LbAHqVkfdQ
-         QNB3a3UVbhNbVtHiVah7DdxOB0cyVmylWvzrCVMc=
+        b=pHAULZK8f/JiwTocEjq0dyiztbCO3a0Y3loIsXIeFzO4s1Wdjh9435Pz0au/K1jbm
+         WJrCA8XQn9Qm41xGVlWvQ2u1OYc7X5uUW7m08mofLZtJS1XKTWR7TGAGwG4i0XVByf
+         ui42R7DTxAbNclJg80cFIdH90dNoLwFQG2qzFe2w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 012/314] ASoC: davinci-mcasp: Fix dma_chan refcnt leak when getting dma type
-Date:   Tue, 23 Jun 2020 21:53:27 +0200
-Message-Id: <20200623195339.377407774@linuxfoundation.org>
+Subject: [PATCH 5.4 015/314] scsi: core: free sgtables in case command setup fails
+Date:   Tue, 23 Jun 2020 21:53:30 +0200
+Message-Id: <20200623195339.513491985@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,51 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-[ Upstream commit a697ae6ea56e23397341b027098c1b11d9ab13da ]
+[ Upstream commit 20a66f2bf280277ab5bb22e27445153b4eb0ac88 ]
 
-davinci_mcasp_get_dma_type() invokes dma_request_chan(), which returns a
-reference of the specified dma_chan object to "chan" with increased
-refcnt.
+In case scsi_setup_fs_cmnd() fails we're not freeing the sgtables allocated
+by scsi_init_io(), thus we leak the allocated memory.
 
-When davinci_mcasp_get_dma_type() returns, local variable "chan" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+Free the sgtables allocated by scsi_init_io() in case scsi_setup_fs_cmnd()
+fails.
 
-The reference counting issue happens in one exception handling path of
-davinci_mcasp_get_dma_type(). When chan device is NULL, the function
-forgets to decrease the refcnt increased by dma_request_chan(), causing
-a refcnt leak.
+Technically scsi_setup_scsi_cmnd() does not suffer from this problem as it
+can only fail if scsi_init_io() fails, so it does not have sgtables
+allocated. But to maintain symmetry and as a measure of defensive
+programming, free the sgtables on scsi_setup_scsi_cmnd() failure as well.
+scsi_mq_free_sgtables() has safeguards against double-freeing of memory so
+this is safe to do.
 
-Fix this issue by calling dma_release_channel() when chan device is
-NULL.
+While we're at it, rename scsi_mq_free_sgtables() to scsi_free_sgtables().
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/1587818916-38730-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205595
+Link: https://lore.kernel.org/r/20200428104605.8143-2-johannes.thumshirn@wdc.com
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ti/davinci-mcasp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_lib.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index 7aa3c32e4a492..0541071f454bd 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -1875,8 +1875,10 @@ static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
- 				PTR_ERR(chan));
- 		return PTR_ERR(chan);
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 91c007d26c1ef..206c9f53e9e7a 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -551,7 +551,7 @@ static void scsi_uninit_cmd(struct scsi_cmnd *cmd)
  	}
--	if (WARN_ON(!chan->device || !chan->device->dev))
-+	if (WARN_ON(!chan->device || !chan->device->dev)) {
-+		dma_release_channel(chan);
- 		return -EINVAL;
-+	}
+ }
  
- 	if (chan->device->dev->of_node)
- 		ret = of_property_read_string(chan->device->dev->of_node,
+-static void scsi_mq_free_sgtables(struct scsi_cmnd *cmd)
++static void scsi_free_sgtables(struct scsi_cmnd *cmd)
+ {
+ 	if (cmd->sdb.table.nents)
+ 		sg_free_table_chained(&cmd->sdb.table,
+@@ -563,7 +563,7 @@ static void scsi_mq_free_sgtables(struct scsi_cmnd *cmd)
+ 
+ static void scsi_mq_uninit_cmd(struct scsi_cmnd *cmd)
+ {
+-	scsi_mq_free_sgtables(cmd);
++	scsi_free_sgtables(cmd);
+ 	scsi_uninit_cmd(cmd);
+ 	scsi_del_cmd_from_list(cmd);
+ }
+@@ -1063,7 +1063,7 @@ blk_status_t scsi_init_io(struct scsi_cmnd *cmd)
+ 
+ 	return BLK_STS_OK;
+ out_free_sgtables:
+-	scsi_mq_free_sgtables(cmd);
++	scsi_free_sgtables(cmd);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(scsi_init_io);
+@@ -1214,6 +1214,7 @@ static blk_status_t scsi_setup_cmnd(struct scsi_device *sdev,
+ 		struct request *req)
+ {
+ 	struct scsi_cmnd *cmd = blk_mq_rq_to_pdu(req);
++	blk_status_t ret;
+ 
+ 	if (!blk_rq_bytes(req))
+ 		cmd->sc_data_direction = DMA_NONE;
+@@ -1223,9 +1224,14 @@ static blk_status_t scsi_setup_cmnd(struct scsi_device *sdev,
+ 		cmd->sc_data_direction = DMA_FROM_DEVICE;
+ 
+ 	if (blk_rq_is_scsi(req))
+-		return scsi_setup_scsi_cmnd(sdev, req);
++		ret = scsi_setup_scsi_cmnd(sdev, req);
+ 	else
+-		return scsi_setup_fs_cmnd(sdev, req);
++		ret = scsi_setup_fs_cmnd(sdev, req);
++
++	if (ret != BLK_STS_OK)
++		scsi_free_sgtables(cmd);
++
++	return ret;
+ }
+ 
+ static blk_status_t
 -- 
 2.25.1
 
