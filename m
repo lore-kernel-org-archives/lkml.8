@@ -2,145 +2,148 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFB020702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947021;
-	bh=DDOWVhcevjEc+OJE8PaFKULsj0HRiL3698dx+Sh4vO0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjnNuBMCxggROgaV2wyp+Y5XQ81Z994TaaU0LDvy1OCTLCASaJfmhvKRIbtmIzG2m
-	 Y2ZEiMxHYUAYMxDpEBXdanTmpXbDVabiScqsGntjEJ7I881A6/1HUp9ONXmQcdU1YZ
-	 fmqE4f/Fg0MC14jZ1GFZPn1BAirjMLiVxM8T/INc=
+	by mail.kernel.org (Postfix) with ESMTP id E8D8520702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KO987pjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393114AbgFWVRA (ORCPT
+        id S2393332AbgFWVRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390478AbgFWU1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:27:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 23 Jun 2020 17:17:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24317 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389312AbgFWU1L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:27:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592944029;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tWgiqK629K1J6FFA3OHGCtK+IArht+OUbON7PWvIrTY=;
+        b=KO987pjcJLN4ugQqemc3F60O38eq/a6ptbIUwCgPG4RW+E1i3x7DD6ZO4WAxfQugphJ4qa
+        sd/ZY+s4gs+MNvRNtbF8yofYX9p/xNmbXZ8TDCKOOJeCvsE2Lo/iyxgQttR66ZXhCPhvDp
+        J0WHBEkXnQxgwP1v3irVQgE49SDLOtM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-qjWdDP3IPCikL0nDxWQPaQ-1; Tue, 23 Jun 2020 16:27:06 -0400
+X-MC-Unique: qjWdDP3IPCikL0nDxWQPaQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A475206C3;
-        Tue, 23 Jun 2020 20:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944033;
-        bh=DDOWVhcevjEc+OJE8PaFKULsj0HRiL3698dx+Sh4vO0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ksTXMfHpWO/YXZsgaEy+I65gUTYGJEIkElqTDLR+TZPh9Uir8g7Z+WvnU4LZ6Wcn3
-         iOyRVxxJvahtDIAx08YqGrDoSJcG2+pBaIwTVW2XRbGJ0cHJsAeAjVkKQu6h9lnKTs
-         gQO69iWPYpegBeERodU0x62+UACeQNcR0QTUl/CQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feng Tang <feng.tang@intel.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 147/314] ipmi: use vzalloc instead of kmalloc for user creation
-Date:   Tue, 23 Jun 2020 21:55:42 +0200
-Message-Id: <20200623195345.871487095@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
-References: <20200623195338.770401005@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A4E2806BAA;
+        Tue, 23 Jun 2020 20:26:55 +0000 (UTC)
+Received: from localhost (ovpn-116-10.gru2.redhat.com [10.97.116.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C34962B6D4;
+        Tue, 23 Jun 2020 20:26:49 +0000 (UTC)
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     zohar@linux.ibm.com, erichte@linux.ibm.com, nayna@linux.ibm.com,
+        Bruno Meneguele <bmeneg@redhat.com>
+Subject: [PATCH v3 2/2] ima: move APPRAISE_BOOTPARAM dependency on ARCH_POLICY to runtime
+Date:   Tue, 23 Jun 2020 17:26:40 -0300
+Message-Id: <20200623202640.4936-3-bmeneg@redhat.com>
+In-Reply-To: <20200623202640.4936-1-bmeneg@redhat.com>
+References: <20200623202640.4936-1-bmeneg@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Tang <feng.tang@intel.com>
+IMA_APPRAISE_BOOTPARAM has been marked as dependent on !IMA_ARCH_POLICY in
+compile time, enforcing the appraisal whenever the kernel had the arch
+policy option enabled.
 
-[ Upstream commit 7c47a219b95d0e06b5ef5fcc7bad807895015eac ]
+However it breaks systems where the option is actually set but the system
+wasn't booted in a "secure boot" platform. In this scenario, anytime an
+appraisal policy (i.e. ima_policy=appraisal_tcb) is used it will be forced,
+giving no chance to the user set the 'fix' state (ima_appraise=fix) to
+actually measure system's files.
 
-We met mulitple times of failure of staring bmc-watchdog,
-due to the runtime memory allocation failure of order 4.
+This patch remove this compile time dependency and move it to a runtime
+decision: all architecture that supports it so far (powerpc, x86 and s390)
+only enable such specific policies if the secure/trusted boot is actually
+enabled in the platform, thus the IMA_APPRAISE_ENFORCE flag is set whenever
+the secure/trusted boot state is met, otherwise the kernel paramenter value
+passed is used.
 
-     bmc-watchdog: page allocation failure: order:4, mode:0x40cc0(GFP_KERNEL|__GFP_COMP), nodemask=(null),cpuset=/,mems_allowed=0-1
-     CPU: 1 PID: 2571 Comm: bmc-watchdog Not tainted 5.5.0-00045-g7d6bb61d6188c #1
-     Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.00.01.0015.110720180833 11/07/2018
-     Call Trace:
-      dump_stack+0x66/0x8b
-      warn_alloc+0xfe/0x160
-      __alloc_pages_slowpath+0xd3e/0xd80
-      __alloc_pages_nodemask+0x2f0/0x340
-      kmalloc_order+0x18/0x70
-      kmalloc_order_trace+0x1d/0xb0
-      ipmi_create_user+0x55/0x2c0 [ipmi_msghandler]
-      ipmi_open+0x72/0x110 [ipmi_devintf]
-      chrdev_open+0xcb/0x1e0
-      do_dentry_open+0x1ce/0x380
-      path_openat+0x305/0x14f0
-      do_filp_open+0x9b/0x110
-      do_sys_open+0x1bd/0x250
-      do_syscall_64+0x5b/0x1f0
-      entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Using vzalloc/vfree for creating ipmi_user heals the
-problem
-
-Thanks to Stephen Rothwell for finding the vmalloc.h
-inclusion issue.
-
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kernel/ima_arch.c          |  3 +--
+ security/integrity/ima/Kconfig      |  2 +-
+ security/integrity/ima/ima_policy.c | 20 ++++++++++++++------
+ 3 files changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 90f5292e2051c..ac656a6d5daf1 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -33,6 +33,7 @@
- #include <linux/workqueue.h>
- #include <linux/uuid.h>
- #include <linux/nospec.h>
-+#include <linux/vmalloc.h>
+diff --git a/arch/x86/kernel/ima_arch.c b/arch/x86/kernel/ima_arch.c
+index 168393d399ba..78fb61b2e480 100644
+--- a/arch/x86/kernel/ima_arch.c
++++ b/arch/x86/kernel/ima_arch.c
+@@ -85,8 +85,7 @@ static const char * const sb_arch_rules[] = {
  
- #define IPMI_DRIVER_VERSION "39.2"
+ const char * const *arch_get_ima_policy(void)
+ {
+-	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) &&
+-	    arch_ima_secure_or_tusted_boot()) {
++	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY)) {
+ 		if (IS_ENABLED(CONFIG_MODULE_SIG))
+ 			set_module_sig_enforced();
+ 		return sb_arch_rules;
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index edde88dbe576..62dc11a5af01 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -232,7 +232,7 @@ config IMA_APPRAISE_REQUIRE_POLICY_SIGS
  
-@@ -1170,7 +1171,7 @@ static void free_user_work(struct work_struct *work)
- 					      remove_work);
+ config IMA_APPRAISE_BOOTPARAM
+ 	bool "ima_appraise boot parameter"
+-	depends on IMA_APPRAISE && !IMA_ARCH_POLICY
++	depends on IMA_APPRAISE
+ 	default y
+ 	help
+ 	  This option enables the different "ima_appraise=" modes
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index e493063a3c34..6742f86b6c60 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -732,12 +732,20 @@ void __init ima_init_policy(void)
+ 	 * and custom policies, prior to other appraise rules.
+ 	 * (Highest priority)
+ 	 */
+-	arch_entries = ima_init_arch_policy();
+-	if (!arch_entries)
+-		pr_info("No architecture policies found\n");
+-	else
+-		add_rules(arch_policy_entry, arch_entries,
+-			  IMA_DEFAULT_POLICY | IMA_CUSTOM_POLICY);
++	if (arch_ima_secure_or_trusted_boot()) {
++		/* In secure and/or trusted boot the appraisal must be
++		 * enforced, regardless kernel parameters, preventing
++		 * runtime changes */
++		pr_info("setting IMA appraisal to enforced\n");
++		ima_appraise |= IMA_APPRAISE_ENFORCE;
++
++		arch_entries = ima_init_arch_policy();
++		if (!arch_entries)
++			pr_info("No architecture policies found\n");
++		else
++			add_rules(arch_policy_entry, arch_entries,
++				  IMA_DEFAULT_POLICY | IMA_CUSTOM_POLICY);
++	}
  
- 	cleanup_srcu_struct(&user->release_barrier);
--	kfree(user);
-+	vfree(user);
- }
- 
- int ipmi_create_user(unsigned int          if_num,
-@@ -1202,7 +1203,7 @@ int ipmi_create_user(unsigned int          if_num,
- 	if (rv)
- 		return rv;
- 
--	new_user = kmalloc(sizeof(*new_user), GFP_KERNEL);
-+	new_user = vzalloc(sizeof(*new_user));
- 	if (!new_user)
- 		return -ENOMEM;
- 
-@@ -1249,7 +1250,7 @@ int ipmi_create_user(unsigned int          if_num,
- 
- out_kfree:
- 	srcu_read_unlock(&ipmi_interfaces_srcu, index);
--	kfree(new_user);
-+	vfree(new_user);
- 	return rv;
- }
- EXPORT_SYMBOL(ipmi_create_user);
+ 	/*
+ 	 * Insert the builtin "secure_boot" policy rules requiring file
 -- 
-2.25.1
-
-
+2.26.2
 
