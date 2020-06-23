@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F367CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA7F520724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61E320707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948070;
-	bh=VmTq7WiCpOLz3tHYQ0PS3FnAJD+WTh8JM+zId/dUwOM=;
+	s=default; t=1592948072;
+	bh=DBn9ZbzhT1k8vrqt6RxEW8AJGIFpCqoDSa6vCS+riM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IEK3ziVpJwMqGYzLxx7AdoYrBr9usw/GZVWFx2LmMiV4PZVNE2No+gtOY7V3SaW63
-	 eeU0pOT/GLcdQfpNkO3NIO1DNrsNW5dryHzNYluC4gIoPHbwC/2ptstT+b5zxDP/BA
-	 pg8j3vLE8KRtPuaFzbhhOyltjUG8n3AHDwUmMtLA=
+	b=oe7qbeHNQwN/NywtOtlEguQg/lB7iZrtjcaGGXbru6ly02rT++gFCwVU0/BoKIL6q
+	 Io4h1eXI6YHgKDaGrE5y/KXhr/d0lsh21peRXKFPPo5Q6/eNwPH1FTmVoDmW0U0B2C
+	 F9Q6hw6vQCJRSfNCGlR54qMHfWkrExb6NEC18CFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393727AbgFWVe3 (ORCPT
+        id S2388852AbgFWUK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:34:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387680AbgFWUK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:10:59 -0400
+        id S2388344AbgFWUK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:10:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F9E920EDD;
-        Tue, 23 Jun 2020 20:10:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2844D20DD4;
+        Tue, 23 Jun 2020 20:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943058;
-        bh=VmTq7WiCpOLz3tHYQ0PS3FnAJD+WTh8JM+zId/dUwOM=;
+        s=default; t=1592943024;
+        bh=DBn9ZbzhT1k8vrqt6RxEW8AJGIFpCqoDSa6vCS+riM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dOfozMUR/2Rl5r9AIoUcbaeCfO+C7PC9oTLu16iDfvQWVRER1pYf02v1kaJlQnjmR
-         /VwH1iGBL6wcbAcNotrmpwu/2EjhlD0WB00gQh1ofmYbdOGiboutQZ2jQztAe9eLNO
-         wN/nioozWN3lWZyqJjU0ULZTyFmPR1Uf6+9tqOcA=
+        b=rysmKAJizkZB3bjo1ipwbGipMF1giCxv5iddbwENRPm5UNeHxqF8fO/sC3fygaMk4
+         w5G7nw8okjct1YPiQk15Zk46IHqJFkxI7ztCHyroSy5teRCZb+vW2/OKLf6PYze3Sk
+         akQlGRhpMoGv/5Fv2sjNQoZVKm3pJYZcPPLt3PW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 244/477] arm64: tegra: Fix flag for 64-bit resources in ranges property
-Date:   Tue, 23 Jun 2020 21:54:01 +0200
-Message-Id: <20200623195419.103544592@linuxfoundation.org>
+Subject: [PATCH 5.7 229/477] ASoC: Intel: bytcr_rt5640: Add quirk for Toshiba Encore WT8-A tablet
+Date:   Tue, 23 Jun 2020 21:53:46 +0200
+Message-Id: <20200623195418.405626427@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,79 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 3482a7afb261e2de9269a7f9ad0f4a3a82a83a53 ]
+[ Upstream commit 0e0e10fde0e9808d1991268f5dca69fb36c025f7 ]
 
-Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
-represent 64-bit resources.
+The Toshiba Encore WT8-A tablet almost fully works with the default
+settings for non-CR Bay Trail devices. The only problem is that its
+jack-detect switch is not inverted (it is active high instead of
+the normal active low).
 
-Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Add a quirk for this model using the default settings +
+BYT_RT5640_JD_NOT_INV.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200518072416.5348-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index f4ede86e32b42..3c928360f4ed2 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1387,7 +1387,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1432,7 +1432,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1477,7 +1477,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1522,7 +1522,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
-@@ -1567,7 +1567,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
-@@ -1616,7 +1616,7 @@
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 08f4ae964b02a..fbfd53874b477 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -742,6 +742,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_SSP0_AIF1 |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{	/* Toshiba Encore WT8-A */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "TOSHIBA WT8-A"),
++		},
++		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
++					BYT_RT5640_JD_SRC_JD2_IN4N |
++					BYT_RT5640_OVCD_TH_2000UA |
++					BYT_RT5640_OVCD_SF_0P75 |
++					BYT_RT5640_JD_NOT_INV |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{	/* Catch-all for generic Insyde tablets, must be last */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
 -- 
 2.25.1
 
