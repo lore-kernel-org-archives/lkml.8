@@ -2,123 +2,128 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7863C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2182D20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9FF20723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uCJ+3MMM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YzRmSVna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732076AbgFWJet (ORCPT
+        id S1731996AbgFWJhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:34:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39658 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731947AbgFWJes (ORCPT
+        Tue, 23 Jun 2020 05:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731786AbgFWJhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:34:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05N9GQYR018709;
-        Tue, 23 Jun 2020 09:34:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=4GZ+lAHaQT1ZwUI8rD/MMNRHeM2iw7kQTbeUV+DTFfc=;
- b=uCJ+3MMMjtAzIAKPVHM4tivjv0fWPilltvMkeN0HCWauR4EToFJm9s91W8zURFu7uSCg
- d8VDLP9fnFewVOGNFmVBidfcuQLObrVoykYCDMD7Mihe1QcrERe9s4cocpORqBCbBZGX
- dM7GH35qalQC0c/f4e4pzUNyBrlEi6+UPNUZ8Ti3wH2EeSYkYeTdV4lBTZsoiutfEMSr
- JztWBfnQYbXT8dWMo9KZtIcbqWdJhvCTaFhpUD28GBA5+FBFBpH9VNB6CZ8gXBi5T1PZ
- cdAyFHu+ZZMilsqVU2u88qH/4gO9adlqSXy7ju2/G64S3vqNJtHaZRY1qDSQmM2xy+Mz 4g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 31sebbm72b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jun 2020 09:34:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05N9I0qZ034859;
-        Tue, 23 Jun 2020 09:32:37 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 31svc3nj4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 09:32:37 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05N9WZbN021581;
-        Tue, 23 Jun 2020 09:32:36 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jun 2020 09:32:35 +0000
-Date:   Tue, 23 Jun 2020 12:32:28 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Joe Perches <joe@perches.com>, trivial@kernel.org,
-        kernel-janitors@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] trivial: fix kerneldoc comments
-Message-ID: <20200623093228.GI4151@kadam>
-References: <1592854669-20606-1-git-send-email-Julia.Lawall@inria.fr>
- <6b0649c53e853fd2a35e9996f13e702daa0d7e2f.camel@perches.com>
- <alpine.DEB.2.22.394.2006230954560.2367@hadrien>
+        Tue, 23 Jun 2020 05:37:39 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF2BC061573;
+        Tue, 23 Jun 2020 02:37:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rr3b1L/FRTesaaOv4/PvWj0LHdOB3M9NfrW+uOEVYWA=; b=YzRmSVnafR71kfHBMtvsTFlor4
+        R+lp5VMgL0ebzHOh+QEWTBnMhVzxPSRJSHxoDsIzRrvVxe1a7hyOEZkLFNynKT0S4zR6n9Ny4aEXD
+        Xar4W98pYb2i2DeNZZEUUsaOPqH3xOSDCrwgMe01aiW8B8EbuUDcYOxLKwiXLnTfn2j2JYDvjW68F
+        qeVTgtIwKZYkV8POYR+MmUm1uOYFFqlNglQVmBTKco9lFLO2Vt7VcA9opS2xLXGxq+z/3HXWD7Y9C
+        g++uw7TqMk9ZEU4jy1S8OZTepUzIql6kpRloaga4DMwh4j4EUlzV3Zz3xPGj3qZNwYbT3IeWi5gf1
+        ICi5L0BA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnfMi-0007Fm-AT; Tue, 23 Jun 2020 09:37:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D1C5C3003E5;
+        Tue, 23 Jun 2020 11:37:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9947A2370F7C4; Tue, 23 Jun 2020 11:37:14 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 11:37:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] arm64: use PAGE_KERNEL_ROX directly in
+ alloc_insn_page
+Message-ID: <20200623093714.GE4781@hirez.programming.kicks-ass.net>
+References: <20200618064307.32739-1-hch@lst.de>
+ <20200618064307.32739-3-hch@lst.de>
+ <20200620191616.bae356186ba3329ade67bbf7@linux-foundation.org>
+ <20200623090505.GA7518@lst.de>
+ <20200623090757.GB3743@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2006230954560.2367@hadrien>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
- spamscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006230074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 cotscore=-2147483648 mlxscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=0 clxscore=1011
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006230074
+In-Reply-To: <20200623090757.GB3743@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:59:57AM +0200, Julia Lawall wrote:
-> > > diff --git a/drivers/crypto/bcm/spu.c b/drivers/crypto/bcm/spu.c
-> > []
-> > > @@ -519,7 +519,7 @@ u32 spum_assoc_resp_len(enum spu_cipher_mode cipher_mode,
-> > >   * spu_aead_ivlen() - Calculate the length of the AEAD IV to be included
-> > >   * in a SPU request after the AAD and before the payload.
-> > >   * @cipher_mode:  cipher mode
-> > > - * @iv_ctr_len:   initialization vector length in bytes
-> > > + * @iv_len:   initialization vector length in bytes
-> > >   *
-> > >   * In Linux ~4.2 and later, the assoc_data sg includes the IV. So no need
-> > >   * to include the IV as a separate field in the SPU request msg.
-> > > @@ -917,7 +917,7 @@ u16 spum_cipher_req_init(u8 *spu_hdr, struct spu_cipher_parms *cipher_parms)
-> > >   * setkey() time in spu_cipher_req_init().
-> > >   * @spu_hdr:         Start of the request message header (MH field)
-> > >   * @spu_req_hdr_len: Length in bytes of the SPU request header
-> > > - * @isInbound:       0 encrypt, 1 decrypt
-> > > + * @is_inbound:       0 encrypt, 1 decrypt
-> >
-> > odd alignments
+On Tue, Jun 23, 2020 at 10:07:58AM +0100, Will Deacon wrote:
+> On Tue, Jun 23, 2020 at 11:05:05AM +0200, Christoph Hellwig wrote:
+> > On Sat, Jun 20, 2020 at 07:16:16PM -0700, Andrew Morton wrote:
+> > > On Thu, 18 Jun 2020 08:43:06 +0200 Christoph Hellwig <hch@lst.de> wrote:
+> > > 
+> > > > Use PAGE_KERNEL_ROX directly instead of allocating RWX and setting the
+> > > > page read-only just after the allocation.
+> > > > 
+> > > > --- a/arch/arm64/kernel/probes/kprobes.c
+> > > > +++ b/arch/arm64/kernel/probes/kprobes.c
+> > > > @@ -120,15 +120,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+> > > >  
+> > > >  void *alloc_insn_page(void)
+> > > >  {
+> > > > -	void *page;
+> > > > -
+> > > > -	page = vmalloc_exec(PAGE_SIZE);
+> > > > -	if (page) {
+> > > > -		set_memory_ro((unsigned long)page, 1);
+> > > > -		set_vm_flush_reset_perms(page);
+> > > > -	}
+> > > > -
+> > > > -	return page;
+> > > > +	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
+> > > > +			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
+> > > > +			NUMA_NO_NODE, __func__);
+> > > >  }
+> > > >  
+> > > >  /* arm kprobe: install breakpoint in text */
+> > > 
+> > > But why.  I think this is just a cleanup, doesn't address any runtime issue?
+> > 
+> > It doesn't "fix" an issue - it just simplifies and speeds up the code.
 > 
-> Sorry to have missed these.
+> Ok, but I don't understand the PLT comment from Peter in
+> 20200618092754.GF576905@hirez.programming.kicks-ass.net:
 > 
-> > etc...
+>   | I think this has the exact same range issue as the x86 user. But it
+>   | might be less fatal if their PLT magic can cover the full range.
 > 
-> Are there a lot of other such problems?  I did look through the whole
-> patch several times by hand, but perhaps it is just too big to see
-> everything.
+> Peter, please could you elaborate on your concern? I feel like I'm missing
+> some context.
 
-Probably the comments for spum_assoc_resp_len() could be tweaked.
+On x86 we can only directly call code in a (signed) 32bit immediate
+range (2G) and our kernel text and module range are constrained by that.
 
-I had written an email about this one that Joe mentioned and
-spum_assoc_resp_len() but then I decided that it wasn't enough to worry
-about so I deleted the email instead of sending it.
+IIRC ARM64 has an even smaller immediate range and needs to play fixup
+games with trampolines or somesuch (there was an ARM specific name for
+it that I've misplaced again). Does that machinery cover the entire
+vmalloc space or are you only able to fix up for a smaller range?
 
-regards,
-dan carpenter
-
+Your arch/arm64/kernel/module.c:module_alloc() implementation seems to
+have an explicit module range different from the full vmalloc range, I'm
+thinking this is for a reason.
