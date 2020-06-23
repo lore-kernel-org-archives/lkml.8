@@ -7,49 +7,56 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB8392080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2D9206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944454;
-	bh=C0UEociYPoleF+yP29f7LXRb7NbN0E3lsZrgXKbsd6c=;
+	s=default; t=1592944459;
+	bh=c05FWqPt6F+q4V82NOoJQu8NcLtJOe6Ox1hjJVAlF6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XN7LAYkZxOd8/ZDZJquItpDf4Rns541gDnB9oOKErZs5VIgxky0qsPT75FKKLF6Sx
-	 ZaZZmt7bftlZfhnfi7bYMLK4qnw6t6OxRcppNSvxb7BhodpZdFVE7U/RZcdl7Ej4Ia
-	 bLWbC4NXYcHWOFBIELtKTWonR8clPOBPdLB+tC5M=
+	b=lkzsWrPPAY0ISnjwN0NaTD1RlvXQdNoAiGoHqM+SfStK7h7iIEFWKhqmsnr4hbjL6
+	 E185ThhwWTJBU1n9NJ4wfA+E1ksJySZIVCKJ6HAy6seitJlXmnSMpoHgfeb4ByAq5q
+	 y0FVJHaPYqbZEmhPX+Q5lZqFOvUF3QbRGmG9QU5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391504AbgFWUeM (ORCPT
+        id S2391515AbgFWUeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55636 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391477AbgFWUd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:59 -0400
+        id S2391493AbgFWUeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0788420836;
-        Tue, 23 Jun 2020 20:33:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADC682085B;
+        Tue, 23 Jun 2020 20:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944439;
-        bh=C0UEociYPoleF+yP29f7LXRb7NbN0E3lsZrgXKbsd6c=;
+        s=default; t=1592944447;
+        bh=c05FWqPt6F+q4V82NOoJQu8NcLtJOe6Ox1hjJVAlF6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ffB/wP9yuf6WOZgkjksQdt496o3cRv3KyZw86txtZNl0HYvoYwzK36LfMQypmwGPv
-         ANwAgYM+XSi+AStUjG3yLuXUcLeP/6zeo0vMm9nOvp5P8TRxnoe5AZ4nWbFY/I5hlc
-         EEnzbBNvwZiZwlH/r/2gbia5osXUz6wlO1kvDuHE=
+        b=VXofEaVHI87OlGicaBUeDMh7K5uRVh24gybRAg6uexCKpWfGMax9TUM99Mc9bM05h
+         H2Qx1crLY17gufFSIZd1+N7vopCisnuoWRBTdL+bWmv3eolyCedQuxQNh+M3Op1woX
+         fMkQNxI1A9uokjUBxbbc5Cqy8D+X9Hq0wyV6Ovb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Gerow <gerow@google.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eric Biggers <ebiggers@google.com>,
-        =?UTF-8?q?Kai=20L=C3=BCke?= <kai@kinvolk.io>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 306/314] crypto: algboss - dont wait during notifier callback
-Date:   Tue, 23 Jun 2020 21:58:21 +0200
-Message-Id: <20200623195353.589822127@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Ingo Molnar <mingo@elte.hu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ziqian SUN (Zamir)" <zsun@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 309/314] kretprobe: Prevent triggering kretprobe from within kprobe_flush_task
+Date:   Tue, 23 Jun 2020 21:58:24 +0200
+Message-Id: <20200623195353.738476598@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,55 +69,238 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jiri Olsa <jolsa@redhat.com>
 
-commit 77251e41f89a813b4090f5199442f217bbf11297 upstream.
+commit 9b38cc704e844e41d9cf74e647bff1d249512cb3 upstream.
 
-When a crypto template needs to be instantiated, CRYPTO_MSG_ALG_REQUEST
-is sent to crypto_chain.  cryptomgr_schedule_probe() handles this by
-starting a thread to instantiate the template, then waiting for this
-thread to complete via crypto_larval::completion.
+Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
+My test was also able to trigger lockdep output:
 
-This can deadlock because instantiating the template may require loading
-modules, and this (apparently depending on userspace) may need to wait
-for the crc-t10dif module (lib/crc-t10dif.c) to be loaded.  But
-crc-t10dif's module_init function uses crypto_register_notifier() and
-therefore takes crypto_chain.rwsem for write.  That can't proceed until
-the notifier callback has finished, as it holds this semaphore for read.
+ ============================================
+ WARNING: possible recursive locking detected
+ 5.6.0-rc6+ #6 Not tainted
+ --------------------------------------------
+ sched-messaging/2767 is trying to acquire lock:
+ ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
 
-Fix this by removing the wait on crypto_larval::completion from within
-cryptomgr_schedule_probe().  It's actually unnecessary because
-crypto_alg_mod_lookup() calls crypto_larval_wait() itself after sending
-CRYPTO_MSG_ALG_REQUEST.
+ but task is already holding lock:
+ ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
 
-This only actually became a problem in v4.20 due to commit b76377543b73
-("crc-t10dif: Pick better transform if one becomes available"), but the
-unnecessary wait was much older.
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207159
-Reported-by: Mike Gerow <gerow@google.com>
-Fixes: 398710379f51 ("crypto: algapi - Move larval completion into algboss")
-Cc: <stable@vger.kernel.org> # v3.6+
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reported-by: Kai Lüke <kai@kinvolk.io>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+        CPU0
+        ----
+   lock(&(kretprobe_table_locks[i].lock));
+   lock(&(kretprobe_table_locks[i].lock));
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+ 1 lock held by sched-messaging/2767:
+  #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+
+ stack backtrace:
+ CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
+ Call Trace:
+  dump_stack+0x96/0xe0
+  __lock_acquire.cold.57+0x173/0x2b7
+  ? native_queued_spin_lock_slowpath+0x42b/0x9e0
+  ? lockdep_hardirqs_on+0x590/0x590
+  ? __lock_acquire+0xf63/0x4030
+  lock_acquire+0x15a/0x3d0
+  ? kretprobe_hash_lock+0x52/0xa0
+  _raw_spin_lock_irqsave+0x36/0x70
+  ? kretprobe_hash_lock+0x52/0xa0
+  kretprobe_hash_lock+0x52/0xa0
+  trampoline_handler+0xf8/0x940
+  ? kprobe_fault_handler+0x380/0x380
+  ? find_held_lock+0x3a/0x1c0
+  kretprobe_trampoline+0x25/0x50
+  ? lock_acquired+0x392/0xbc0
+  ? _raw_spin_lock_irqsave+0x50/0x70
+  ? __get_valid_kprobe+0x1f0/0x1f0
+  ? _raw_spin_unlock_irqrestore+0x3b/0x40
+  ? finish_task_switch+0x4b9/0x6d0
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x40/0x70
+
+The code within the kretprobe handler checks for probe reentrancy,
+so we won't trigger any _raw_spin_lock_irqsave probe in there.
+
+The problem is in outside kprobe_flush_task, where we call:
+
+  kprobe_flush_task
+    kretprobe_table_lock
+      raw_spin_lock_irqsave
+        _raw_spin_lock_irqsave
+
+where _raw_spin_lock_irqsave triggers the kretprobe and installs
+kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
+
+The kretprobe_trampoline handler is then executed with already
+locked kretprobe_table_locks, and first thing it does is to
+lock kretprobe_table_locks ;-) the whole lockup path like:
+
+  kprobe_flush_task
+    kretprobe_table_lock
+      raw_spin_lock_irqsave
+        _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
+
+        ---> kretprobe_table_locks locked
+
+        kretprobe_trampoline
+          trampoline_handler
+            kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
+
+Adding kprobe_busy_begin/end helpers that mark code with fake
+probe installed to prevent triggering of another kprobe within
+this code.
+
+Using these helpers in kprobe_flush_task, so the probe recursion
+protection check is hit and the probe is never set to prevent
+above lockup.
+
+Link: http://lkml.kernel.org/r/158927059835.27680.7011202830041561604.stgit@devnote2
+
+Fixes: ef53d9c5e4da ("kprobes: improve kretprobe scalability with hashed locking")
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc: Anders Roxell <anders.roxell@linaro.org>
+Cc: "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David Miller <davem@davemloft.net>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Reported-by: "Ziqian SUN (Zamir)" <zsun@redhat.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algboss.c |    2 --
- 1 file changed, 2 deletions(-)
+ arch/x86/kernel/kprobes/core.c |   16 +++-------------
+ include/linux/kprobes.h        |    4 ++++
+ kernel/kprobes.c               |   24 ++++++++++++++++++++++++
+ 3 files changed, 31 insertions(+), 13 deletions(-)
 
---- a/crypto/algboss.c
-+++ b/crypto/algboss.c
-@@ -188,8 +188,6 @@ static int cryptomgr_schedule_probe(stru
- 	if (IS_ERR(thread))
- 		goto err_put_larval;
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -746,16 +746,11 @@ asm(
+ NOKPROBE_SYMBOL(kretprobe_trampoline);
+ STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
  
--	wait_for_completion_interruptible(&larval->completion);
+-static struct kprobe kretprobe_kprobe = {
+-	.addr = (void *)kretprobe_trampoline,
+-};
 -
- 	return NOTIFY_STOP;
+ /*
+  * Called from kretprobe_trampoline
+  */
+ __used __visible void *trampoline_handler(struct pt_regs *regs)
+ {
+-	struct kprobe_ctlblk *kcb;
+ 	struct kretprobe_instance *ri = NULL;
+ 	struct hlist_head *head, empty_rp;
+ 	struct hlist_node *tmp;
+@@ -765,16 +760,12 @@ __used __visible void *trampoline_handle
+ 	void *frame_pointer;
+ 	bool skipped = false;
  
- err_put_larval:
+-	preempt_disable();
+-
+ 	/*
+ 	 * Set a dummy kprobe for avoiding kretprobe recursion.
+ 	 * Since kretprobe never run in kprobe handler, kprobe must not
+ 	 * be running at this point.
+ 	 */
+-	kcb = get_kprobe_ctlblk();
+-	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+-	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
++	kprobe_busy_begin();
+ 
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+@@ -850,7 +841,7 @@ __used __visible void *trampoline_handle
+ 			__this_cpu_write(current_kprobe, &ri->rp->kp);
+ 			ri->ret_addr = correct_ret_addr;
+ 			ri->rp->handler(ri, regs);
+-			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
++			__this_cpu_write(current_kprobe, &kprobe_busy);
+ 		}
+ 
+ 		recycle_rp_inst(ri, &empty_rp);
+@@ -866,8 +857,7 @@ __used __visible void *trampoline_handle
+ 
+ 	kretprobe_hash_unlock(current, &flags);
+ 
+-	__this_cpu_write(current_kprobe, NULL);
+-	preempt_enable();
++	kprobe_busy_end();
+ 
+ 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+ 		hlist_del(&ri->hlist);
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -350,6 +350,10 @@ static inline struct kprobe_ctlblk *get_
+ 	return this_cpu_ptr(&kprobe_ctlblk);
+ }
+ 
++extern struct kprobe kprobe_busy;
++void kprobe_busy_begin(void);
++void kprobe_busy_end(void);
++
+ kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset);
+ int register_kprobe(struct kprobe *p);
+ void unregister_kprobe(struct kprobe *p);
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1237,6 +1237,26 @@ __releases(hlist_lock)
+ }
+ NOKPROBE_SYMBOL(kretprobe_table_unlock);
+ 
++struct kprobe kprobe_busy = {
++	.addr = (void *) get_kprobe,
++};
++
++void kprobe_busy_begin(void)
++{
++	struct kprobe_ctlblk *kcb;
++
++	preempt_disable();
++	__this_cpu_write(current_kprobe, &kprobe_busy);
++	kcb = get_kprobe_ctlblk();
++	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
++}
++
++void kprobe_busy_end(void)
++{
++	__this_cpu_write(current_kprobe, NULL);
++	preempt_enable();
++}
++
+ /*
+  * This function is called from finish_task_switch when task tk becomes dead,
+  * so that we can recycle any function-return probe instances associated
+@@ -1254,6 +1274,8 @@ void kprobe_flush_task(struct task_struc
+ 		/* Early boot.  kretprobe_table_locks not yet initialized. */
+ 		return;
+ 
++	kprobe_busy_begin();
++
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	hash = hash_ptr(tk, KPROBE_HASH_BITS);
+ 	head = &kretprobe_inst_table[hash];
+@@ -1267,6 +1289,8 @@ void kprobe_flush_task(struct task_struc
+ 		hlist_del(&ri->hlist);
+ 		kfree(ri);
+ 	}
++
++	kprobe_busy_end();
+ }
+ NOKPROBE_SYMBOL(kprobe_flush_task);
+ 
 
 
