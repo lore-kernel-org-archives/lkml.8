@@ -2,51 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6096CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE740C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3742520656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A692078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945906;
-	bh=mN4gSfA1BZ9tDTLJPfcnd7yd2OXQBhvuB2726QAx6WQ=;
+	s=default; t=1592945908;
+	bh=NTchpH2N+tGRFwKBbV6cT0k1eAGQYth7qLi69ZJvrag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0iOfc5YkEGqUe2WXpZkxVXM6Vy957zV/6Ec0m5fFwiCIQl+UyRPpjoc3NNSWhfzq5
-	 JpVd++Cw2K66p+YrxPg7rVxhpJicdox36angVgOgGLmOlkLxtvyA2QA0fcupCwkedE
-	 tpnMM6I/wX3NJt8deSOT8OIy5H9EfSy+sreSOqH4=
+	b=xz2dTQvwxRv6nWoxdBp9/RyBgQng0AGOM2xRoWaWtxwivZQztfC+1p3/gm1AUN9ld
+	 1tZACEdCHXJLQWJF/9PFHacOcO4ddiixAOB8WPbaoYJsM8ga9DVpIMgWyY/rwuE6Vw
+	 CJ5xHtLEz3AjT/Z5FKip328Av647+qJJD/d//fi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404220AbgFWU6Y (ORCPT
+        id S2391905AbgFWUlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38476 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392370AbgFWUlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:55 -0400
+        id S2403871AbgFWUls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E3B2053B;
-        Tue, 23 Jun 2020 20:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3276721919;
+        Tue, 23 Jun 2020 20:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944915;
-        bh=mN4gSfA1BZ9tDTLJPfcnd7yd2OXQBhvuB2726QAx6WQ=;
+        s=default; t=1592944907;
+        bh=NTchpH2N+tGRFwKBbV6cT0k1eAGQYth7qLi69ZJvrag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4SbMgc4Way0GPvUdSyj2+LVTGS0lgZP5feWqPUur6MIv0XbHbp3qVQMgmlXzlLWV
-         ey4jlRtL09ZD50wivNzBJ2bB+fMTU+iTRI39NhD8/nSIhtW3yIxG5j4F/+aeKkJqw8
-         M7brIrE74CFwdfWLAbmedPFfYXjqnKYT5P8ydMKo=
+        b=rdvYCEabYmLAiBwXUHnM5gyOjNGYdqi3YkByH1H9O6xiDwRR8SZrTdPskul0zJmcd
+         CiRIZ2mb9MbrvS6DSqLOOGoj+EwFJ4H54nFK2UYpx9PbcRo3JDNhx/Lq/V0cE3tLbD
+         gm5vK7NVoGulZSdwoDA8KRSYehlVgXUW1xL3dUSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 4.19 175/206] drm/qxl: Use correct notify port address when creating cursor ring
-Date:   Tue, 23 Jun 2020 21:58:23 +0200
-Message-Id: <20200623195325.637864990@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 172/206] libata: Use per port sync for detach
+Date:   Tue, 23 Jun 2020 21:58:20 +0200
+Message-Id: <20200623195325.488939770@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,40 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 80e5f89da3ab949fbbf1cae01dfaea29f5483a75 upstream.
+[ Upstream commit b5292111de9bb70cba3489075970889765302136 ]
 
-The command ring and cursor ring use different notify port addresses
-definition: QXL_IO_NOTIFY_CMD and QXL_IO_NOTIFY_CURSOR. However, in
-qxl_device_init() we use QXL_IO_NOTIFY_CMD to create both command ring
-and cursor ring. This doesn't cause any problems now, because QEMU's
-behaviors on QXL_IO_NOTIFY_CMD and QXL_IO_NOTIFY_CURSOR are the same.
-However, QEMU's behavior may be change in future, so let's fix it.
+Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
+detach") may cause system freeze during suspend.
 
-P.S.: In the X.org QXL driver, the notify port address of cursor ring
-      is correct.
+Using async_synchronize_full() in PM callbacks is wrong, since async
+callbacks that are already scheduled may wait for not-yet-scheduled
+callbacks, causes a circular dependency.
 
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Cc: <stable@vger.kernel.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/1585635488-17507-1-git-send-email-chenhc@lemote.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Instead of using big hammer like async_synchronize_full(), use async
+cookie to make sure port probe are synced, without affecting other
+scheduled PM callbacks.
 
+Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
+Suggested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: John Garry <john.garry@huawei.com>
+BugLink: https://bugs.launchpad.net/bugs/1867983
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/qxl/qxl_kms.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/libata-core.c | 11 +++++------
+ include/linux/libata.h    |  3 +++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/qxl/qxl_kms.c
-+++ b/drivers/gpu/drm/qxl/qxl_kms.c
-@@ -181,7 +181,7 @@ int qxl_device_init(struct qxl_device *q
- 				&(qdev->ram_header->cursor_ring_hdr),
- 				sizeof(struct qxl_command),
- 				QXL_CURSOR_RING_SIZE,
--				qdev->io_base + QXL_IO_NOTIFY_CMD,
-+				qdev->io_base + QXL_IO_NOTIFY_CURSOR,
- 				false,
- 				&qdev->cursor_event);
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 75d582ca917ff..6b372fa583822 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -57,7 +57,6 @@
+ #include <linux/workqueue.h>
+ #include <linux/scatterlist.h>
+ #include <linux/io.h>
+-#include <linux/async.h>
+ #include <linux/log2.h>
+ #include <linux/slab.h>
+ #include <linux/glob.h>
+@@ -6610,7 +6609,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
+ 	/* perform each probe asynchronously */
+ 	for (i = 0; i < host->n_ports; i++) {
+ 		struct ata_port *ap = host->ports[i];
+-		async_schedule(async_port_probe, ap);
++		ap->cookie = async_schedule(async_port_probe, ap);
+ 	}
  
+ 	return 0;
+@@ -6750,11 +6749,11 @@ void ata_host_detach(struct ata_host *host)
+ {
+ 	int i;
+ 
+-	/* Ensure ata_port probe has completed */
+-	async_synchronize_full();
+-
+-	for (i = 0; i < host->n_ports; i++)
++	for (i = 0; i < host->n_ports; i++) {
++		/* Ensure ata_port probe has completed */
++		async_synchronize_cookie(host->ports[i]->cookie + 1);
+ 		ata_port_detach(host->ports[i]);
++	}
+ 
+ 	/* the host is dead now, dissociate ACPI */
+ 	ata_acpi_dissociate(host);
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index 75a916d7ab2a4..ed1453c15041d 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -38,6 +38,7 @@
+ #include <linux/acpi.h>
+ #include <linux/cdrom.h>
+ #include <linux/sched.h>
++#include <linux/async.h>
+ 
+ /*
+  * Define if arch has non-standard setup.  This is a _PCI_ standard
+@@ -887,6 +888,8 @@ struct ata_port {
+ 	struct timer_list	fastdrain_timer;
+ 	unsigned long		fastdrain_cnt;
+ 
++	async_cookie_t		cookie;
++
+ 	int			em_message_type;
+ 	void			*private_data;
+ 
+-- 
+2.25.1
+
 
 
