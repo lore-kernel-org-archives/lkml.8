@@ -2,159 +2,128 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F610C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C10F2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tK0NSCo5"
+	by mail.kernel.org (Postfix) with ESMTP id 0841F20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592945448;
+	bh=Cdjy+yn64BFMht6Zz/VIpSAsycphMZ2trnMFdAXoZi4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O0WoN5bw6YUr/aCqTkuVVPlSEUh7AD6cR0/SRJuixGOAcCm18aGciQXWPjC+o4zHa
+	 gCoJH3Dg3V5Szdns1j2JW8k6AgEfwmDBdFwxKhC2bMqJXC3qba58wiTOLUMtmfIVRR
+	 ffGKhPKBHA3WXIdJSvmschhV/jZln3TR+b+k/v8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393159AbgFWUuh (ORCPT
+        id S2392947AbgFWUsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:50:37 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54833 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388016AbgFWUub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:50:31 -0400
-Received: from [IPv6:2601:646:8600:3281:793b:110b:9a95:572b] ([IPv6:2601:646:8600:3281:793b:110b:9a95:572b])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 05NKnsMA2994193
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Tue, 23 Jun 2020 13:49:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 05NKnsMA2994193
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020052301; t=1592945401;
-        bh=ZPhdAYw0DZqPh39NH3i9vcQbK+fMod7/4PWe2cDAUow=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=tK0NSCo5lz87kwexbz8w4k4xxP53yygNw6yw50FeH8gxO7t6R24X8Sudq073jIXrR
-         Cv2EAMR4/nESFO8mhlNay1uPywCxbHWaKCMWcpmJNi2wgL5RnozFeIfcD1krRv8YTq
-         UeYy6VuTu8pu+4UxCE33YGkSCI7+ts8j3EMRkLixnRn2303bvLYUL1fFQ+Bdqhv7D2
-         oOfrqtNMGrsjaypDOT5Eq2ZVSFJFVY+PvkcyjYG4Y8Ijh5QakFbo7v8SafiDPgWWye
-         8p8WyMlTiHPtj9CEDC4wO43Hm9UC9JhBffHILIEkfYIxTSmgbOrmfyAVVZQyJwnlRi
-         bsghPTlPA3nLA==
-Date:   Tue, 23 Jun 2020 13:49:47 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMzpN2jA3rdfCA-UYGEtRPrYCChK1wzHfVUhbrHiqGL3iL4PBA@mail.gmail.com>
-References: <20200616142315.375918-1-brgerst@gmail.com> <20200616142315.375918-2-brgerst@gmail.com> <CALCETrXUjM9g2e5v7chFXWoadvUO_7cqhGvuFn2s7YVpyff__Q@mail.gmail.com> <CAMzpN2jA3rdfCA-UYGEtRPrYCChK1wzHfVUhbrHiqGL3iL4PBA@mail.gmail.com>
+        Tue, 23 Jun 2020 16:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392913AbgFWUsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:48:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2F2F21582;
+        Tue, 23 Jun 2020 20:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592945298;
+        bh=Cdjy+yn64BFMht6Zz/VIpSAsycphMZ2trnMFdAXoZi4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mA0vqGyAnZrytC3NC3YiFSxiGTBPmRR7vADiy9GtEFQB0LNLVpOA8apZ/nyQ7lqzH
+         IKdyVzWMdl2v3CILDtBd6vf6Z/nrZVx0HHWoB6oAXVyVQnsD93CRSCDfx7l2v6FtO3
+         qVWwlgHNQ9ELBFRi8Z0eoHMgUg7TSzoQploCZxaE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 117/136] x86/boot/compressed: Relax sed symbol type regex for LLVM ld.lld
+Date:   Tue, 23 Jun 2020 21:59:33 +0200
+Message-Id: <20200623195309.604760517@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
+References: <20200623195303.601828702@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] x86/x32: Use __x64 prefix for X32 compat syscalls
-To:     Brian Gerst <brgerst@gmail.com>, Andy Lutomirski <luto@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>
-From:   hpa@zytor.com
-Message-ID: <6D37758F-E61F-4DF9-9D86-C02DF91B4BDE@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On June 16, 2020 10:17:29 AM PDT, Brian Gerst <brgerst@gmail=2Ecom> wrote:
->On Tue, Jun 16, 2020 at 12:49 PM Andy Lutomirski <luto@kernel=2Eorg>
->wrote:
->>
->> On Tue, Jun 16, 2020 at 7:23 AM Brian Gerst <brgerst@gmail=2Ecom>
->wrote:
->> >
->> > The ABI prefix for syscalls specifies the argument register
->mapping, so
->> > there is no specific reason to continue using the __x32 prefix for
->the
->> > compat syscalls=2E  This change will allow using native syscalls in
->the X32
->> > specific portion of the syscall table=2E
->>
->> Okay, I realize that the x86 syscall machinery is held together by
->> duct tape and a lot of luck, but:
->>
->> >
->> > Signed-off-by: Brian Gerst <brgerst@gmail=2Ecom>
->> > ---
->> >  arch/x86/entry/syscall_x32=2Ec           |  8 +++-----
->> >  arch/x86/include/asm/syscall_wrapper=2Eh | 10 +++++-----
->> >  2 files changed, 8 insertions(+), 10 deletions(-)
->> >
->> > diff --git a/arch/x86/entry/syscall_x32=2Ec
->b/arch/x86/entry/syscall_x32=2Ec
->> > index 3d8d70d3896c=2E=2Ef993e6254043 100644
->> > --- a/arch/x86/entry/syscall_x32=2Ec
->> > +++ b/arch/x86/entry/syscall_x32=2Ec
->> > @@ -9,15 +9,13 @@
->> >  #include <asm/syscall=2Eh>
->> >
->> >  #define __SYSCALL_64(nr, sym)
->> > +#define __SYSCALL_COMMON(nr, sym) __SYSCALL_X32(nr, sym)
->> >
->> > -#define __SYSCALL_X32(nr, sym) extern long __x32_##sym(const
->struct pt_regs *);
->> > -#define __SYSCALL_COMMON(nr, sym) extern long __x64_##sym(const
->struct pt_regs *);
->> > +#define __SYSCALL_X32(nr, sym) extern long __x64_##sym(const
->struct pt_regs *);
->> >  #include <asm/syscalls_64=2Eh>
->> >  #undef __SYSCALL_X32
->> > -#undef __SYSCALL_COMMON
->> >
->> > -#define __SYSCALL_X32(nr, sym) [nr] =3D __x32_##sym,
->> > -#define __SYSCALL_COMMON(nr, sym) [nr] =3D __x64_##sym,
->> > +#define __SYSCALL_X32(nr, sym) [nr] =3D __x64_##sym,
->> >
->> >  asmlinkage const sys_call_ptr_t
->x32_sys_call_table[__NR_x32_syscall_max+1] =3D {
->> >         /*
->> > diff --git a/arch/x86/include/asm/syscall_wrapper=2Eh
->b/arch/x86/include/asm/syscall_wrapper=2Eh
->> > index a84333adeef2=2E=2E267fae9904ff 100644
->> > --- a/arch/x86/include/asm/syscall_wrapper=2Eh
->> > +++ b/arch/x86/include/asm/syscall_wrapper=2Eh
->> > @@ -17,7 +17,7 @@ extern long __ia32_sys_ni_syscall(const struct
->pt_regs *regs);
->> >   * __x64_sys_*()         - 64-bit native syscall
->> >   * __ia32_sys_*()        - 32-bit native syscall or common compat
->syscall
->> >   * __ia32_compat_sys_*() - 32-bit compat syscall
->>
->> On a 64-bit kernel, an "ia32" compat syscall is __ia32_compat_sys_*,
->but=2E=2E=2E
->>
->> > - * __x32_compat_sys_*()  - 64-bit X32 compat syscall
->> > + * __x64_compat_sys_*()  - 64-bit X32 compat syscall
->>
->> Now an x32 compat syscall is __x64_compat?  This seems nonsensical=2E
->
->Again, think of it as how the registers are mapped, not which syscall
->table it belongs to=2E  X32 and X64 are identical in that regard=2E
->
->> I'm also a bit confused as to how this is even necessary for your
->> other patch=2E
->
->This came out of discussion on Cristoph's patch to combine compat
->execve*() into the native version:
->https://lore=2Ekernel=2Eorg/lkml/20200615141239=2EGA12951@lst=2Ede/
->
->The bottom line is that marking a syscall as X32-only in the syscall
->table forces an __x32 prefix even if it's not a "compat" syscall=2E
->This causes a link failure=2E  This is just another quirk caused by how
->X32 was designed=2E  The solution is to make the prefix consistent for
->the whole table=2E  The other alternative is to use __x32 for all the
->common syscalls=2E
->
->The second patch isn't really necessary, but it makes more sense to
->not have a compat syscall with no corresponding native version=2E
->
->--
->Brian Gerst
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Please don't use "x64" to mean anything other than x86-64, as some, ahem, =
-other OSes use those as synonyms=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+commit bc310baf2ba381c648983c7f4748327f17324562 upstream.
+
+The final build stage of the x86 kernel captures some symbol
+addresses from the decompressor binary and copies them into zoffset.h.
+It uses sed with a regular expression that matches the address, symbol
+type and symbol name, and mangles the captured addresses and the names
+of symbols of interest into #define directives that are added to
+zoffset.h
+
+The symbol type is indicated by a single letter, which we match
+strictly: only letters in the set 'ABCDGRSTVW' are matched, even
+though the actual symbol type is relevant and therefore ignored.
+
+Commit bc7c9d620 ("efi/libstub/x86: Force 'hidden' visibility for
+extern declarations") made a change to the way external symbol
+references are classified, resulting in 'startup_32' now being
+emitted as a hidden symbol. This prevents the use of GOT entries to
+refer to this symbol via its absolute address, which recent toolchains
+(including Clang based ones) already avoid by default, making this
+change a no-op in the majority of cases.
+
+However, as it turns out, the LLVM linker classifies such hidden
+symbols as symbols with static linkage in fully linked ELF binaries,
+causing tools such as NM to output a lowercase 't' rather than an upper
+case 'T' for the type of such symbols. Since our sed expression only
+matches upper case letters for the symbol type, the line describing
+startup_32 is disregarded, resulting in a build error like the following
+
+  arch/x86/boot/header.S:568:18: error: symbol 'ZO_startup_32' can not be
+                                        undefined in a subtraction expression
+  init_size: .long (0x00000000008fd000 - ZO_startup_32 +
+                    (((0x0000000001f6361c + ((0x0000000001f6361c >> 8) + 65536)
+                     - 0x00000000008c32e5) + 4095) & ~4095)) # kernel initialization size
+
+Given that we are only interested in the value of the symbol, let's match
+any character in the set 'a-zA-Z' instead.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/boot/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 1c060748c813e..f38ffcc610d20 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -87,7 +87,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
+ 
+ SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+ 
+-sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
++sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
+ 
+ quiet_cmd_zoffset = ZOFFSET $@
+       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+-- 
+2.25.1
+
+
+
