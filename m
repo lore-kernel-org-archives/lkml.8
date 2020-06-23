@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E508C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FCBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5A42080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5365820738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="HfM+XX/h"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="mCK+r2ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732894AbgFWNyV (ORCPT
+        id S1732772AbgFWNxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:54:21 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:16972 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732741AbgFWNxl (ORCPT
+        Tue, 23 Jun 2020 09:53:30 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:6964 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732633AbgFWNxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:53:41 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NDjF1V024287;
-        Tue, 23 Jun 2020 06:53:40 -0700
+        Tue, 23 Jun 2020 09:53:23 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NDVLnX021634;
+        Tue, 23 Jun 2020 06:53:20 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=pfpt0818;
- bh=S37wSmvqIx07DTZh4sdMLTylznmuNY6nhdD735d4Nbg=;
- b=HfM+XX/h4VnxSPCf+jNYhcwsmqBXNDxVdJlXo7mEUrm3v4H3e0sG0LKtmBqqD7KLC79Y
- xTAyHpJorx4rT/FF1bkq1glY3w2YYjPhrX4nrt0q7sN+kkPXHeGGIMwnR0TWDE5ZLUi9
- I1chswyT3jk45g9KaIcfnYHdM8TV0Ta1jPaGxgD7dpbGTLdDHUca+7H61pbpU0lzKmIp
- wz/pkxBAF85EraZXRsco3FmicpjZXpFx0irARdDYQZR9cu//3Ufyz5PLF9YSFdCNdvZK
- OU1V3LRLRXc1n//iCxbkk8sMJ3QNAKV+mldnQSnule9ZW6wGKxyM+60buSPA4qpwX7WQ Pg== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 31ujw9r0y9-1
+ bh=TMNGW46xChmebRT/q+kx1ZrrsZm4V/Ii3aP9se6OEho=;
+ b=mCK+r2wsmgqTF+0tYl8FcraCoPFQCJCAKgbKfYXLd6Ya7QO5n3K0OFvVlNcwbiT6E6Vw
+ 3h9NF+5K0UCx5Y1CWtCNbZisUPAKnfkmxsMBrFEaM57v1jSzGDS5Zrks2Cfv8/2Bu40P
+ jF+XhePHRgsnbhN+MEqa2gJqbstMTQ9zTashaoS4oTkV7njRYiSK4nUYqGqed1JCT/zK
+ Cv9RDTcX69miMLbPLNDw/Dcobj/BptIcEGDDPjU07gLguiE3l8qaCVmp8QpW8bcg3TlH
+ z4+gjUurg5ImzWuPSzKl4OAWWKHsGi+gs1n8BKR1yqmB0nC14AsHkVl8gNcS78bdPXNi VA== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0b-0016f401.pphosted.com with ESMTP id 31shynwjej-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 06:53:40 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Jun
- 2020 06:53:39 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Jun
- 2020 06:53:39 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 23 Jun 2020 06:53:39 -0700
+        Tue, 23 Jun 2020 06:53:20 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Jun
+ 2020 06:53:18 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Jun
+ 2020 06:53:18 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 23 Jun 2020 06:53:18 -0700
 Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.39.36])
-        by maili.marvell.com (Postfix) with ESMTP id 5CB1C3F703F;
-        Tue, 23 Jun 2020 06:53:35 -0700 (PDT)
+        by maili.marvell.com (Postfix) with ESMTP id 647673F703F;
+        Tue, 23 Jun 2020 06:53:14 -0700 (PDT)
 From:   Alexander Lobakin <alobakin@marvell.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -62,9 +62,9 @@ CC:     Igor Russkikh <irusskikh@marvell.com>,
         Alexander Lobakin <alobakin@marvell.com>,
         <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net 6/9] net: qede: fix PTP initialization on recovery
-Date:   Tue, 23 Jun 2020 16:51:34 +0300
-Message-ID: <20200623135136.3185-7-alobakin@marvell.com>
+Subject: [PATCH v2 net 1/9] net: qed: fix left elements count calculation
+Date:   Tue, 23 Jun 2020 16:51:29 +0300
+Message-ID: <20200623135136.3185-2-alobakin@marvell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623135136.3185-1-alobakin@marvell.com>
 References: <20200623135136.3185-1-alobakin@marvell.com>
@@ -78,114 +78,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently PTP cyclecounter and timecounter are initialized only on
-the first probing and are cleaned up during removal. This means that
-PTP becomes non-functional after device recovery.
-Fix this by unconditional PTP initialization on probing and clearing
-Tx pending bit on exiting.
+qed_chain_get_element_left{,_u32} returned 0 when the difference
+between producer and consumer page count was equal to the total
+page count.
+Fix this by conditional expanding of producer value (vs
+unconditional). This allowed to eliminate normalizaton against
+total page count, which was the cause of this bug.
 
-Fixes: ccc67ef50b90 ("qede: Error recovery process")
+Misc: replace open-coded constants with common defines.
+
+Fixes: a91eb52abb50 ("qed: Revisit chain implementation")
 Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
 Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 ---
- drivers/net/ethernet/qlogic/qede/qede_main.c |  2 +-
- drivers/net/ethernet/qlogic/qede/qede_ptp.c  | 31 ++++++++------------
- drivers/net/ethernet/qlogic/qede/qede_ptp.h  |  2 +-
- 3 files changed, 15 insertions(+), 20 deletions(-)
+ include/linux/qed/qed_chain.h | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 756c05eb96f3..f6ff31e73ebe 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1229,7 +1229,7 @@ static int __qede_probe(struct pci_dev *pdev, u32 dp_module, u8 dp_level,
+diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
+index 733fad7dfbed..6d15040c642c 100644
+--- a/include/linux/qed/qed_chain.h
++++ b/include/linux/qed/qed_chain.h
+@@ -207,28 +207,34 @@ static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
  
- 	/* PTP not supported on VFs */
- 	if (!is_vf)
--		qede_ptp_enable(edev, (mode == QEDE_PROBE_NORMAL));
-+		qede_ptp_enable(edev);
- 
- 	edev->ops->register_ops(cdev, &qede_ll_ops, edev);
- 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.c b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-index 4c7f7a7fc151..cd5841a9415e 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-@@ -412,6 +412,7 @@ void qede_ptp_disable(struct qede_dev *edev)
- 	if (ptp->tx_skb) {
- 		dev_kfree_skb_any(ptp->tx_skb);
- 		ptp->tx_skb = NULL;
-+		clear_bit_unlock(QEDE_FLAGS_PTP_TX_IN_PRORGESS, &edev->flags);
- 	}
- 
- 	/* Disable PTP in HW */
-@@ -423,7 +424,7 @@ void qede_ptp_disable(struct qede_dev *edev)
- 	edev->ptp = NULL;
- }
- 
--static int qede_ptp_init(struct qede_dev *edev, bool init_tc)
-+static int qede_ptp_init(struct qede_dev *edev)
+ static inline u16 qed_chain_get_elem_left(struct qed_chain *p_chain)
  {
- 	struct qede_ptp *ptp;
- 	int rc;
-@@ -444,25 +445,19 @@ static int qede_ptp_init(struct qede_dev *edev, bool init_tc)
- 	/* Init work queue for Tx timestamping */
- 	INIT_WORK(&ptp->work, qede_ptp_task);
++	u16 elem_per_page = p_chain->elem_per_page;
++	u32 prod = p_chain->u.chain16.prod_idx;
++	u32 cons = p_chain->u.chain16.cons_idx;
+ 	u16 used;
  
--	/* Init cyclecounter and timecounter. This is done only in the first
--	 * load. If done in every load, PTP application will fail when doing
--	 * unload / load (e.g. MTU change) while it is running.
--	 */
--	if (init_tc) {
--		memset(&ptp->cc, 0, sizeof(ptp->cc));
--		ptp->cc.read = qede_ptp_read_cc;
--		ptp->cc.mask = CYCLECOUNTER_MASK(64);
--		ptp->cc.shift = 0;
--		ptp->cc.mult = 1;
--
--		timecounter_init(&ptp->tc, &ptp->cc,
--				 ktime_to_ns(ktime_get_real()));
--	}
-+	/* Init cyclecounter and timecounter */
-+	memset(&ptp->cc, 0, sizeof(ptp->cc));
-+	ptp->cc.read = qede_ptp_read_cc;
-+	ptp->cc.mask = CYCLECOUNTER_MASK(64);
-+	ptp->cc.shift = 0;
-+	ptp->cc.mult = 1;
- 
--	return rc;
-+	timecounter_init(&ptp->tc, &ptp->cc, ktime_to_ns(ktime_get_real()));
+-	used = (u16) (((u32)0x10000 +
+-		       (u32)p_chain->u.chain16.prod_idx) -
+-		      (u32)p_chain->u.chain16.cons_idx);
++	if (prod < cons)
++		prod += (u32)U16_MAX + 1;
 +
-+	return 0;
++	used = (u16)(prod - cons);
+ 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
+-		used -= p_chain->u.chain16.prod_idx / p_chain->elem_per_page -
+-		    p_chain->u.chain16.cons_idx / p_chain->elem_per_page;
++		used -= prod / elem_per_page - cons / elem_per_page;
+ 
+ 	return (u16)(p_chain->capacity - used);
  }
  
--int qede_ptp_enable(struct qede_dev *edev, bool init_tc)
-+int qede_ptp_enable(struct qede_dev *edev)
+ static inline u32 qed_chain_get_elem_left_u32(struct qed_chain *p_chain)
  {
- 	struct qede_ptp *ptp;
- 	int rc;
-@@ -483,7 +478,7 @@ int qede_ptp_enable(struct qede_dev *edev, bool init_tc)
++	u16 elem_per_page = p_chain->elem_per_page;
++	u64 prod = p_chain->u.chain32.prod_idx;
++	u64 cons = p_chain->u.chain32.cons_idx;
+ 	u32 used;
  
- 	edev->ptp = ptp;
+-	used = (u32) (((u64)0x100000000ULL +
+-		       (u64)p_chain->u.chain32.prod_idx) -
+-		      (u64)p_chain->u.chain32.cons_idx);
++	if (prod < cons)
++		prod += (u64)U32_MAX + 1;
++
++	used = (u32)(prod - cons);
+ 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
+-		used -= p_chain->u.chain32.prod_idx / p_chain->elem_per_page -
+-		    p_chain->u.chain32.cons_idx / p_chain->elem_per_page;
++		used -= (u32)(prod / elem_per_page - cons / elem_per_page);
  
--	rc = qede_ptp_init(edev, init_tc);
-+	rc = qede_ptp_init(edev);
- 	if (rc)
- 		goto err1;
- 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.h b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-index 691a14c4b2c5..89c7f3cf3ee2 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-@@ -41,7 +41,7 @@ void qede_ptp_rx_ts(struct qede_dev *edev, struct sk_buff *skb);
- void qede_ptp_tx_ts(struct qede_dev *edev, struct sk_buff *skb);
- int qede_ptp_hw_ts(struct qede_dev *edev, struct ifreq *req);
- void qede_ptp_disable(struct qede_dev *edev);
--int qede_ptp_enable(struct qede_dev *edev, bool init_tc);
-+int qede_ptp_enable(struct qede_dev *edev);
- int qede_ptp_get_ts_info(struct qede_dev *edev, struct ethtool_ts_info *ts);
- 
- static inline void qede_ptp_record_rx_ts(struct qede_dev *edev,
+ 	return p_chain->capacity - used;
+ }
 -- 
 2.25.1
 
