@@ -2,179 +2,124 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F31C20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF2A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592873515;
+	bh=rusCGE8VmxnUeat7eeB/4yD2dk/dl69rmXmSB9V0l58=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=SAeplyr8aSwAlkC1PBjL2syqZMRau8gGlrBvO8lJ/5CJ2HK/MVkqC+UG4pSaafvVL
+	 5EBnl0cBqvwLH2R19cwxc2OIlD99dDO6Qz37ryVL8XsDXlRVJXvHQDZLNRwzRMPrpQ
+	 sazaN+3XEEg03s+lwGeb2iwalkgg6i37xAxEpAR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732347AbgFWAvj (ORCPT
+        id S1732357AbgFWAvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:51:39 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10120 "EHLO mga04.intel.com"
+        Mon, 22 Jun 2020 20:51:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731750AbgFWAvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:51:38 -0400
-IronPort-SDR: TwQ4rW+XOK1NTshp9+G8eOvNKtr7K6kZc9Jgu7nL6YJd29tV6PkLEhMe2ILDec54za4ctRdczw
- fiS5pBGfqjpg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="141422602"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="141422602"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 17:51:37 -0700
-IronPort-SDR: RXTycZaOvOOv96UEW80afRXTHI74G+J3g0EXw6R3mRJBzFpBV01mjP80zcCQbuOfjoMwPes/u+
- jAi8gMV7Q+sQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="319007683"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 17:51:36 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jingqi Liu <jingqi.liu@intel.com>,
-        Tao Xu <tao3.xu@intel.com>
-Subject: [PATCH] KVM: VMX: Stop context switching MSR_IA32_UMWAIT_CONTROL
-Date:   Mon, 22 Jun 2020 17:51:35 -0700
-Message-Id: <20200623005135.10414-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        id S1731785AbgFWAvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:51:53 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AF7420720;
+        Tue, 23 Jun 2020 00:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592873512;
+        bh=rusCGE8VmxnUeat7eeB/4yD2dk/dl69rmXmSB9V0l58=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=KpCZaNEaC/y9sKYJjL8Vd9XvGMEB4HioKQj1Q8Gx4wBMqJGO38lif+tI1tZt4j818
+         FxRguVQzczzS/cp8/ziJbqzjcbOJTu5aNSuy9fbALM7gPeaq9FIo9vrTGt1skW5DA6
+         nFvht92Y/Ax0/QgY4QJLqokkX1s1FKnq2yLX+V84=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 743B8352306A; Mon, 22 Jun 2020 17:51:52 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 17:51:52 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org
+Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
+        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        akiyks@gmail.com
+Subject: [PATCH memory-model 0/14] LKMM updates for v5.9
+Message-ID: <20200623005152.GA27459@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove support for context switching between the guest's and host's
-desired UMWAIT_CONTROL.  Propagating the guest's value to hardware isn't
-required for correct functionality, e.g. KVM intercepts reads and writes
-to the MSR, and the latency effects of the settings controlled by the
-MSR are not architecturally visible.
+Hello!
 
-As a general rule, KVM should not allow the guest to control power
-management settings unless explicitly enabled by userspace, e.g. see
-KVM_CAP_X86_DISABLE_EXITS.  E.g. Intel's SDM explicitly states that C0.2
-can improve the performance of SMT siblings.  A devious guest could
-disable C0.2 so as to improve the performance of their workloads at the
-detriment to workloads running in the host or on other VMs.
+This series contains updates to the Linux-kernel memory model:
 
-Wholesale removal of UMWAIT_CONTROL context switching also fixes a race
-condition where updates from the host may cause KVM to enter the guest
-with the incorrect value.  Because updates are are propagated to all
-CPUs via IPI (SMP function callback), the value in hardware may be
-stale with respect to the cached value and KVM could enter the guest
-with the wrong value in hardware.  As above, the guest can't observe the
-bad value, but it's a weird and confusing wart in the implementation.
+1.	tools/memory-model: Add recent references.
 
-Removal also fixes the unnecessary usage of VMX's atomic load/store MSR
-lists.  Using the lists is only necessary for MSRs that are required for
-correct functionality immediately upon VM-Enter/VM-Exit, e.g. EFER on
-old hardware, or for MSRs that need to-the-uop precision, e.g. perf
-related MSRs.  For UMWAIT_CONTROL, the effects are only visible in the
-kernel via TPAUSE/delay(), and KVM doesn't do any form of delay in
-vcpu_vmx_run().  Using the atomic lists is undesirable as they are more
-expensive than direct RDMSR/WRMSR.
+2.	tools/memory-model: Fix "conflict" definition, courtesy of
+	Marco Elver.
 
-Furthermore, even if giving the guest control of the MSR is legitimate,
-e.g. in pass-through scenarios, it's not clear that the benefits would
-outweigh the overhead.  E.g. saving and restoring an MSR across a VMX
-roundtrip costs ~250 cycles, and if the guest diverged from the host
-that cost would be paid on every run of the guest.  In other words, if
-there is a legitimate use case then it should be enabled by a new
-per-VM capability.
+3.	Documentation: LKMM: Add litmus test for RCU GP guarantee where
+	updater frees object, courtesy of Joel Fernandes.
 
-Note, KVM still needs to emulate MSR_IA32_UMWAIT_CONTROL so that it can
-correctly expose other WAITPKG features to the guest, e.g. TPAUSE,
-UMWAIT and UMONITOR.
+4.	Documentation: LKMM: Add litmus test for RCU GP guarantee where
+	reader stores, courtesy of Joel Fernandes.
 
-Fixes: 6e3ba4abcea56 ("KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL")
-Cc: stable@vger.kernel.org
-Cc: Jingqi Liu <jingqi.liu@intel.com>
-Cc: Tao Xu <tao3.xu@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/include/asm/mwait.h |  2 --
- arch/x86/kernel/cpu/umwait.c |  6 ------
- arch/x86/kvm/vmx/vmx.c       | 18 ------------------
- 3 files changed, 26 deletions(-)
+5.	MAINTAINERS: Update maintainers for new Documentation/litmus-tests,
+	courtesy of Joel Fernandes.
 
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index 73d997aa2966..e039a933aca3 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -25,8 +25,6 @@
- #define TPAUSE_C01_STATE		1
- #define TPAUSE_C02_STATE		0
- 
--u32 get_umwait_control_msr(void);
--
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
- {
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index 300e3fd5ade3..ec8064c0ae03 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -18,12 +18,6 @@
-  */
- static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
- 
--u32 get_umwait_control_msr(void)
--{
--	return umwait_control_cached;
--}
--EXPORT_SYMBOL_GPL(get_umwait_control_msr);
--
- /*
-  * Cache the original IA32_UMWAIT_CONTROL MSR value which is configured by
-  * hardware or BIOS before kernel boot.
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 08e26a9518c2..b2447c1ee362 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6606,23 +6606,6 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- 					msrs[i].host, false);
- }
- 
--static void atomic_switch_umwait_control_msr(struct vcpu_vmx *vmx)
--{
--	u32 host_umwait_control;
--
--	if (!vmx_has_waitpkg(vmx))
--		return;
--
--	host_umwait_control = get_umwait_control_msr();
--
--	if (vmx->msr_ia32_umwait_control != host_umwait_control)
--		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
--			vmx->msr_ia32_umwait_control,
--			host_umwait_control, false);
--	else
--		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
--}
--
- static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -6730,7 +6713,6 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	if (vcpu_to_pmu(vcpu)->version)
- 		atomic_switch_perf_msrs(vmx);
--	atomic_switch_umwait_control_msr(vmx);
- 
- 	if (enable_preemption_timer)
- 		vmx_update_hv_timer(vcpu);
--- 
-2.26.0
+6.	tools/memory-model: Add an exception for limitations on _unless()
+	family, courtesy of Boqun Feng.
 
+7.	Documentation/litmus-tests: Introduce atomic directory, courtesy of
+	Boqun Feng.
+
+8.	Documentation/litmus-tests/atomic: Add a test for atomic_set()
+	courtesy of Boqun Feng.
+
+9.	Documentation/litmus-tests/atomic: Add a test for
+	smp_mb__after_atomic(), courtesy of Boqun Feng.
+
+10.	tools/memory-model: Fix reference to litmus test in recipes.txt
+	courtesy of Akira Yokosawa.
+
+11.	Documentation/litmus-tests: Merge atomic's README into top-level
+	one, courtesy of Akira Yokosawa.
+
+12.	Documentation/litmus-tests: Cite an RCU litmus test, courtesy of
+	Joel Fernandes.
+
+13.	tools/memory-model/README: Expand dependency of klitmus7, courtesy
+	of Akira Yokosawa.
+
+14.	fix references for DMA*.txt files, courtesy of Mauro Carvalho Chehab.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ /Documentation/litmus-tests/atomic/README                                                       |   16 -
+ b/Documentation/atomic_t.txt                                                                    |   24 +-
+ b/Documentation/litmus-tests/README                                                             |   34 ++++
+ b/Documentation/litmus-tests/atomic/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus |   32 +++
+ b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus             |   24 ++
+ b/Documentation/litmus-tests/atomic/README                                                      |   16 +
+ b/Documentation/litmus-tests/rcu/RCU+sync+free.litmus                                           |   42 +++++
+ b/Documentation/litmus-tests/rcu/RCU+sync+read.litmus                                           |   37 ++++
+ b/Documentation/memory-barriers.txt                                                             |    6 
+ b/MAINTAINERS                                                                                   |    2 
+ b/tools/memory-model/Documentation/explanation.txt                                              |   83 +++++-----
+ b/tools/memory-model/Documentation/recipes.txt                                                  |    2 
+ b/tools/memory-model/Documentation/references.txt                                               |   21 ++
+ b/tools/memory-model/README                                                                     |   40 ++++
+ 14 files changed, 302 insertions(+), 77 deletions(-)
