@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE08DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E66FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9517920781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B4820706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933990;
-	bh=vaRQ/p5DNeZC+XH89icaFwbOk5udiG7bKnUDIJl5TrE=;
+	s=default; t=1592933995;
+	bh=ovJvvILH3TbnZcQB+zLhCu7tBZPRlFUs6GXGT0TNi1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cRYzON2iy7xqFhBmSjMmSJ8GckTr2pfqxeyGeHk0lrIglg/cebQxLzE+voiRXNfEi
-	 LasvXtVb+uG+xNecS1PizJYA7M1N2vW7loaavsMeLKRyKELalp8vdPEATodl6eEH2i
-	 8wdKW3w0X3T/yEcc1ICdpWHDCZlZqp9/hsWi4jSs=
+	b=a6XuoQGTWcudVt9k+4bEeqSYTHnFUqgMAvV4xZa0oUFwuhqmYaUB4+I6OPbTr4qJV
+	 36Q49djBP6cZRS1tdBIjf7EbEqr2nVLyUWIvAdJbdEgaGQH2WgnhR5lvyTA31QXaXU
+	 NSo100uJGdG53I9AJXWAy+Tn0hm4otkeDE1r2/8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387550AbgFWRgV (ORCPT
+        id S2387657AbgFWRjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:36:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33192 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387508AbgFWRgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:13 -0400
+        id S2387535AbgFWRgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B1EE20780;
-        Tue, 23 Jun 2020 17:36:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30E11207F9;
+        Tue, 23 Jun 2020 17:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933773;
-        bh=vaRQ/p5DNeZC+XH89icaFwbOk5udiG7bKnUDIJl5TrE=;
+        s=default; t=1592933777;
+        bh=ovJvvILH3TbnZcQB+zLhCu7tBZPRlFUs6GXGT0TNi1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RbRrlqRRhW2c7JIBlHGj6dammYzN7z9huxLj9lp5XQeT9zTgLpTa3aEGCe9FR5zNU
-         mKYWQ5Voz3jW8EA66dKTzqQYj2F57Zd3IJtyZflGgcg52F54AxKOtKZUGpV9LAIemW
-         BdUml4k8H2/0XbXVhb6lL0ZWf7wcVAePVRF64fCg=
+        b=l8VOyJfIVhhYNZNt9unS7hHSzfgHgMAVkpqP5EnwnWifxjlOdL/w9P8c5NzDTazTN
+         TP6rcsqvJ8fLO9YmDfyk6R0OILUsH6rZAutHc05IMOgUlVIyiDlYa8J2g+M6/rL7n+
+         EPzuf0aTpa0fr7KgPMLxA78YvkUpY0JlVEOGtvHA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Auhagen <sven.auhagen@voleatech.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 11/24] mvpp2: ethtool rxtx stats fix
-Date:   Tue, 23 Jun 2020 13:35:46 -0400
-Message-Id: <20200623173559.1355728-11-sashal@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 15/24] s390/ptrace: fix setting syscall number
+Date:   Tue, 23 Jun 2020 13:35:50 -0400
+Message-Id: <20200623173559.1355728-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
 References: <20200623173559.1355728-1-sashal@kernel.org>
@@ -59,42 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Auhagen <sven.auhagen@voleatech.de>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit cc970925feb9a38c2f0d34305518e00a3084ce85 ]
+[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
 
-The ethtool rx and tx queue statistics are reporting wrong values.
-Fix reading out the correct ones.
+When strace wants to update the syscall number, it sets GPR2
+to the desired number and updates the GPR via PTRACE_SETREGSET.
+It doesn't update regs->int_code which would cause the old syscall
+executed on syscall restart. As we cannot change the ptrace ABI and
+don't have a field for the interruption code, check whether the tracee
+is in a syscall and the last instruction was svc. In that case assume
+that the tracer wants to update the syscall number and copy the GPR2
+value to regs->int_code.
 
-Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 373b8c8328501..ae40880f216bc 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -1541,7 +1541,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
- 	for (q = 0; q < port->ntxqs; q++)
- 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++)
- 			*pstats++ += mvpp2_read_index(port->priv,
--						      MVPP22_CTRS_TX_CTR(port->id, i),
-+						      MVPP22_CTRS_TX_CTR(port->id, q),
- 						      mvpp2_ethtool_txq_regs[i].offset);
- 
- 	/* Rxqs are numbered from 0 from the user standpoint, but not from the
-@@ -1550,7 +1550,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
- 	for (q = 0; q < port->nrxqs; q++)
- 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++)
- 			*pstats++ += mvpp2_read_index(port->priv,
--						      port->first_rxq + i,
-+						      port->first_rxq + q,
- 						      mvpp2_ethtool_rxq_regs[i].offset);
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index 5a2b1501d9983..5aa786063eb3e 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -324,6 +324,25 @@ static inline void __poke_user_per(struct task_struct *child,
+ 		child->thread.per_user.end = data;
  }
  
++static void fixup_int_code(struct task_struct *child, addr_t data)
++{
++	struct pt_regs *regs = task_pt_regs(child);
++	int ilc = regs->int_code >> 16;
++	u16 insn;
++
++	if (ilc > 6)
++		return;
++
++	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
++			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
++		return;
++
++	/* double check that tracee stopped on svc instruction */
++	if ((insn >> 8) != 0xa)
++		return;
++
++	regs->int_code = 0x20000 | (data & 0xffff);
++}
+ /*
+  * Write a word to the user area of a process at location addr. This
+  * operation does have an additional problem compared to peek_user.
+@@ -335,7 +354,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 	struct user *dummy = NULL;
+ 	addr_t offset;
+ 
++
+ 	if (addr < (addr_t) &dummy->regs.acrs) {
++		struct pt_regs *regs = task_pt_regs(child);
+ 		/*
+ 		 * psw and gprs are stored on the stack
+ 		 */
+@@ -353,7 +374,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 				/* Invalid addressing mode bits */
+ 				return -EINVAL;
+ 		}
+-		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
++
++		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++			addr == offsetof(struct user, regs.gprs[2]))
++			fixup_int_code(child, data);
++		*(addr_t *)((addr_t) &regs->psw + addr) = data;
+ 
+ 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
+ 		/*
+@@ -719,6 +744,10 @@ static int __poke_user_compat(struct task_struct *child,
+ 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
+ 				(__u64)(tmp & PSW32_ADDR_AMODE);
+ 		} else {
++
++			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++				addr == offsetof(struct compat_user, regs.gprs[2]))
++				fixup_int_code(child, data);
+ 			/* gpr 0-15 */
+ 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
+ 		}
 -- 
 2.25.1
 
