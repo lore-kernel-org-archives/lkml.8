@@ -2,83 +2,82 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4236C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9809C20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BF220723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GwJYdbNW"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="RYlKqMV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732608AbgFWNKA (ORCPT
+        id S1732632AbgFWNLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:10:00 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49752 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729504AbgFWNJ7 (ORCPT
+        Tue, 23 Jun 2020 09:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732610AbgFWNLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:09:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592917797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zkx1ErBA+e2/cfoAENc9bfwtwsTIO4mVEVPpuQkBgT4=;
-        b=GwJYdbNWGdCYewTdkuMcfbTm4t+i31R4X9oCCltrryKENtJj/UWhfU5S0d4bdJ6hCLhfJP
-        XuQjnKlhqZRZcjhPMduM+UIo+nWtjHF2sqcq2r/YpE9OOFlV3A9XM7SJOxKZE9zXgtegGm
-        3EtsoGXXKAixn7r3ZcYpuZJpwGXrXaM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-dVAkXxbuO8aPDN-VfMNqcg-1; Tue, 23 Jun 2020 09:09:56 -0400
-X-MC-Unique: dVAkXxbuO8aPDN-VfMNqcg-1
-Received: by mail-ed1-f69.google.com with SMTP id a21so10422655edy.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:09:55 -0700 (PDT)
+        Tue, 23 Jun 2020 09:11:24 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20166C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:11:23 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a9so23342621ljn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:11:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mlmFSSdTWebFxD2gTR/U29ddRq9uUBP28CsLIBv6hs0=;
+        b=RYlKqMV3+NySqvFz+sBwz2KeTHKcjpS/dM0JwloCcBbV8uUEstmlFACm9YxX/NANg3
+         Ghx3BgLjT2+w8PE2V34IwjKR3CFsGFavuzjA0zPR6mPcmeOc/+x3Q/fCfqPbTUo4whNo
+         Sszc0p3cz8OpjPgoF8szHgCswA9YVRWOm7cH0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=zkx1ErBA+e2/cfoAENc9bfwtwsTIO4mVEVPpuQkBgT4=;
-        b=GqUwh10QU5bKk6oTxjcIbSE9XeMY1mq6H/CuLBXI+G4WJW6+qBUrr+TSO7dJfabobH
-         hd8ofmIJk+NQ/6bsh35420F29GBsjt138eYjIfM3aI5qC2Ix+3E6llfM8oU8EfK3kna0
-         lhcBM/kfvWPPMMadwlS8ROrje4UcSWisCk0QxaG/hazWBkxK3EaVSobXSguK8T3nQdSz
-         mzYNDyISmU2+7Bi+Ou/sdnlb6C7hFtemvSQ5GxTWIi7Dsfm21tEuV6qh5KhLuIVrFrD7
-         uWHsPC6yhxvTVbAIftAs3EibvaEwSN4LVbvvd0DBuzg6qGai5S1hLO79MaGyflTFj2BT
-         uEoQ==
-X-Gm-Message-State: AOAM531P3qrLLbOQ4g7eqbwOKYd1um1sBzC0yN635VTGJT0Lw4NZVKB2
-        V0ixNql/ITW5IW8CIjQfcLbpBQo9A/Z/G81++dTuj3hT90hxfpWDEYJOIOcvcyNZzCrrJmKP4Qh
-        BK6aU5+rXsF9d4gLjwzMc79rx
-X-Received: by 2002:a17:906:93f7:: with SMTP id yl23mr20041168ejb.366.1592917793746;
-        Tue, 23 Jun 2020 06:09:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz4y3aEtz58QMxkXLbJ2y2yFeesR5msJNak4RPLHWT6aKhj4HhSd1IzuBmsTRod7a3vvSLz3g==
-X-Received: by 2002:a17:906:93f7:: with SMTP id yl23mr20041156ejb.366.1592917793534;
-        Tue, 23 Jun 2020 06:09:53 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id v5sm13582802ejx.123.2020.06.23.06.09.52
+        bh=mlmFSSdTWebFxD2gTR/U29ddRq9uUBP28CsLIBv6hs0=;
+        b=YcZ2uZK1dqGjk0hc15Ot/k8YaHssVuvF6TaMsPinf8/XcBO22NHt8tYesWnpI2dr5R
+         xGyiTQABqSiXROm+NP4FQT0FzJbn2FDUxyHA9ObxcxvqOWy4chbVoAHrCG00VzoDqqEs
+         AsJrRhmJtL4JUrw/PFRrK4B9hIVSTB9dfAfg9gSEQH5pq3VHgaYVogdBM8pfsaQ61Cr9
+         dztBExbvtrXr140f1ZElfdGqZwojn4OEqs6V6tGSQVRqoxJqcACiboHeyzymt7h6Ercg
+         2f4ijvusyhYLE4ye0THHo3m7B/7yX9pCKWukGLpPLuMFO+5NrMIHsd1Y0FsMOQRxPYix
+         PEFQ==
+X-Gm-Message-State: AOAM532xHDVgXXzP7dOFTeWOsVDq6CkzapCKshOxEfMV33P0dCQ2BLqg
+        udThvuggiwG3OmxTvd90idGrcQ==
+X-Google-Smtp-Source: ABdhPJxu21nt5X4UswcI9f1ogE/YOaFoaQd0pqW/XIjXnAoxz5Vlxfzpj+BU0iyXwf5ee3FamMHkaA==
+X-Received: by 2002:a2e:8847:: with SMTP id z7mr10509130ljj.300.1592917881527;
+        Tue, 23 Jun 2020 06:11:21 -0700 (PDT)
+Received: from [172.21.3.181] ([87.54.42.112])
+        by smtp.gmail.com with ESMTPSA id j12sm3288234ljg.15.2020.06.23.06.11.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 06:09:52 -0700 (PDT)
-Subject: Re: [PATCH 5/8] virt: vbox: Add support for the new
- VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200520195440.38759-1-hdegoede@redhat.com>
- <20200520195440.38759-5-hdegoede@redhat.com>
- <CAK8P3a1sDRsfsmPf4=Q3mG75VVNoD3CC7Rrgb4BZMEEfTu66qA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c81cd7ac-a698-8d9b-c5c1-6a4e0bc90966@redhat.com>
-Date:   Tue, 23 Jun 2020 15:09:52 +0200
+        Tue, 23 Jun 2020 06:11:20 -0700 (PDT)
+Subject: Re: [PATCH v3 bpf-next 4/8] printk: add type-printing %pT format
+ specifier which uses BTF
+To:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org,
+        daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
+        arnaldo.melo@gmail.com
+Cc:     kafai@fb.com, songliubraving@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, joe@perches.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
+ <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <9ff219a4-dcae-95a1-584b-054d0d5e4ebb@rasmusvillemoes.dk>
+Date:   Tue, 23 Jun 2020 15:11:19 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1sDRsfsmPf4=Q3mG75VVNoD3CC7Rrgb4BZMEEfTu66qA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,41 +85,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 23/06/2020 14.07, Alan Maguire wrote:
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index fc8f03c..8f8f5d2 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -618,4 +618,20 @@ static inline void print_hex_dump_debug(const char *prefix_str, int prefix_type,
+>  #define print_hex_dump_bytes(prefix_str, prefix_type, buf, len)	\
+>  	print_hex_dump_debug(prefix_str, prefix_type, 16, 1, buf, len, true)
+>  
+> +/**
+> + * struct btf_ptr is used for %pT (typed pointer) display; the
+> + * additional type string/BTF id are used to render the pointer
+> + * data as the appropriate type.
+> + */
+> +struct btf_ptr {
+> +	void *ptr;
+> +	const char *type;
+> +	u32 id;
+> +};
+> +
+> +#define	BTF_PTR_TYPE(ptrval, typeval) \
+> +	(&((struct btf_ptr){.ptr = ptrval, .type = #typeval}))
+> +
+> +#define BTF_PTR_ID(ptrval, idval) \
+> +	(&((struct btf_ptr){.ptr = ptrval, .id = idval}))
 
-Thank you for the review and sorry for being slow with
-responding.
+Isn't there some better place to put this than printk.h? Anyway, you
+probably want the ptr member to be "const void*", to avoid "... discards
+const qualifier" warnings when somebody happens to have a "const struct
+foobar *".
 
-On 5/20/20 11:47 PM, Arnd Bergmann wrote:
-> On Wed, May 20, 2020 at 9:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Add support for the new VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl, this
->> is necessary for automatic resizing of the guest resolution to match the
->> VM-window size to work with the new VMSVGA virtual GPU which is now the
->> new default in VirtualBox.
->>
->> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1789545
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> This is not a great interface, but I see no bugs in the implementation
-> or problems with portability.
-> 
-> If you want to improve it a little bit, note that spin_lock_irqsave() inside
-> of mutex_lock() is a little bit silly since you know at this point that
-> interrupts are enabled and you could use spin_lock_irq() instead.
-> 
-> I assume the driver does the same thing everywhere but I did not check.
+>  #endif
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 259e558..c0d209d 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -44,6 +44,7 @@
+>  #ifdef CONFIG_BLOCK
+>  #include <linux/blkdev.h>
+>  #endif
+> +#include <linux/btf.h>
+>  
+>  #include "../mm/internal.h"	/* For the trace_print_flags arrays */
+>  
+> @@ -2092,6 +2093,87 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+>  	return widen_string(buf, buf - buf_start, end, spec);
+>  }
+>  
+> +#define btf_modifier_flag(c)	(c == 'c' ? BTF_SHOW_COMPACT :	\
+> +				 c == 'N' ? BTF_SHOW_NONAME :	\
+> +				 c == 'x' ? BTF_SHOW_PTR_RAW :	\
+> +				 c == 'u' ? BTF_SHOW_UNSAFE : \
+> +				 c == '0' ? BTF_SHOW_ZERO : 0)
+> +
+> +static noinline_for_stack
+> +char *btf_string(char *buf, char *end, void *ptr, struct printf_spec spec,
+> +		 const char *fmt)
+> +{
+> +	struct btf_ptr *bp = (struct btf_ptr *)ptr;
+> +	u8 btf_kind = BTF_KIND_TYPEDEF;
+> +	const struct btf_type *t;
+> +	const struct btf *btf;
+> +	char *buf_start = buf;
+> +	const char *btf_type;
+> +	u64 flags = 0, mod;
+> +	s32 btf_id;
+> +
+> +	if (check_pointer(&buf, end, ptr, spec))
+> +		return buf;
+> +
+> +	if (check_pointer(&buf, end, bp->ptr, spec))
+> +		return buf;
+> +
+> +	while (isalnum(*fmt)) {
+> +		mod = btf_modifier_flag(*fmt);
+> +		if (!mod)
+> +			break;
+> +		flags |= mod;
+> +		fmt++;
+> +	}
+> +
+> +	btf = bpf_get_btf_vmlinux();
 
-Yes the driver does the same everywhere and TBH I would prefer to keep
-it that way, this all is not that performance critical and in my experience
-once a driver starts using the less save variants it is easy for some
-mistakes to creep in.
+AFAICT, this function is only compiled if CONFIG_BPF=y and
+CONFIG_BPF_SYSCALL=y, and I don't see any static inline stub defined
+anywhere. Have you built the kernel with one or both of those turned off?
 
-As for the rate-limiting of the printk remark you made in reply to the
-"virt: vbox: Log unknown ioctl requests as error" patch that is a valid
-remark. I will prepare a v2 of this patch-set addressing that.
-
-Regards,
-
-Hans
-
+Rasmus
