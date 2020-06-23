@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7360AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B543220723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BA32064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944318;
-	bh=01+YQWr4j3FbYj08pkDDK3koCDjAYk0NHqiSypUixvs=;
+	s=default; t=1592944323;
+	bh=05fQ7hKQmDihBqA8in3S2FObPU4aIxjbEFrVpaTkUsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zZHoJVPjfKjxIM4/Qpk2ckTY38XPOxaGlrou3vhSvUxOq884hoTXIrR91ellRUad8
-	 Bnz2Qcyi5ZN8joKlvgOR4NwdaOdt8y2RJS7p0p48lXqoez3tejcQnBFUZL60k3N5gd
-	 BmlhLF3Ao2MzlZyEevvgzF/enRbAF03Q+7xBtoeA=
+	b=JFyex9haO5OatJyjOM4vms5kMpQwgDV3VlaKyr+SpQrtwjyHeTfifAtO6RrzKhoo3
+	 hxZ+CADdKBIM+6xoeMVQhDj82qiug4ac3ZKdydwF/Rs97wEC2GyEUK7Ty8KIhu5Dkj
+	 UEmHKN5WHaYYUnTaze2X5zawNqY0Ho2/o0+LeJdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391209AbgFWUb4 (ORCPT
+        id S2391010AbgFWUcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52198 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391216AbgFWUbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:31:34 -0400
+        id S2391227AbgFWUbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:31:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20C9B20702;
-        Tue, 23 Jun 2020 20:31:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C716120723;
+        Tue, 23 Jun 2020 20:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944294;
-        bh=01+YQWr4j3FbYj08pkDDK3koCDjAYk0NHqiSypUixvs=;
+        s=default; t=1592944302;
+        bh=05fQ7hKQmDihBqA8in3S2FObPU4aIxjbEFrVpaTkUsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixc0EQNBUitBxFiPv+SyfqmjwnvbhUsOepKrvjrGMT2+e50hYbjf5uXqXnOtMPnWT
-         ur2blqbC+tnn0WzzfHmi4T28BEkBJBMbHz6Gf8KGlAVZBKuKcr7xfjdIGoQdvKrXCV
-         t2Kn+iakOUBtAYAyFdwNhGM14BbjEsUp+URVktEU=
+        b=MKslvNTc6+uNkPQsmekdjufGLsWgPTJGi/JKA9MToLqQ85McI/+36oDClsvBxmtRE
+         ATvM9QJlM9ofg3+ZQQ7aROOPISHH9yNS8z5LHclVIn495lz685bJzCFnbgwqpwRveK
+         H/EzSp+/Q640X14J8uG/7MJGw5/siSwypPTIX7dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 248/314] bpf, sockhash: Synchronize delete from bucket list on map free
-Date:   Tue, 23 Jun 2020 21:57:23 +0200
-Message-Id: <20200623195350.777739053@linuxfoundation.org>
+Subject: [PATCH 5.4 251/314] libbpf: Handle GCC noreturn-turned-volatile quirk
+Date:   Tue, 23 Jun 2020 21:57:26 +0200
+Message-Id: <20200623195350.932411438@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,114 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 75e68e5bf2c7fa9d3e874099139df03d5952a3e1 ]
+[ Upstream commit 32022fd97ed34f6812802bf1288db27c313576f4 ]
 
-We can end up modifying the sockhash bucket list from two CPUs when a
-sockhash is being destroyed (sock_hash_free) on one CPU, while a socket
-that is in the sockhash is unlinking itself from it on another CPU
-it (sock_hash_delete_from_link).
+Handle a GCC quirk of emitting extra volatile modifier in DWARF (and
+subsequently preserved in BTF by pahole) for function pointers marked as
+__attribute__((noreturn)). This was the way to mark such functions before GCC
+2.5 added noreturn attribute. Drop such func_proto modifiers, similarly to how
+it's done for array (also to handle GCC quirk/bug).
 
-This results in accessing a list element that is in an undefined state as
-reported by KASAN:
+Such volatile attribute is emitted by GCC only, so existing selftests can't
+express such test. Simple repro is like this (compiled with GCC + BTF
+generated by pahole):
 
-| ==================================================================
-| BUG: KASAN: wild-memory-access in sock_hash_free+0x13c/0x280
-| Write of size 8 at addr dead000000000122 by task kworker/2:1/95
-|
-| CPU: 2 PID: 95 Comm: kworker/2:1 Not tainted 5.7.0-rc7-02961-ge22c35ab0038-dirty #691
-| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
-| Workqueue: events bpf_map_free_deferred
-| Call Trace:
-|  dump_stack+0x97/0xe0
-|  ? sock_hash_free+0x13c/0x280
-|  __kasan_report.cold+0x5/0x40
-|  ? mark_lock+0xbc1/0xc00
-|  ? sock_hash_free+0x13c/0x280
-|  kasan_report+0x38/0x50
-|  ? sock_hash_free+0x152/0x280
-|  sock_hash_free+0x13c/0x280
-|  bpf_map_free_deferred+0xb2/0xd0
-|  ? bpf_map_charge_finish+0x50/0x50
-|  ? rcu_read_lock_sched_held+0x81/0xb0
-|  ? rcu_read_lock_bh_held+0x90/0x90
-|  process_one_work+0x59a/0xac0
-|  ? lock_release+0x3b0/0x3b0
-|  ? pwq_dec_nr_in_flight+0x110/0x110
-|  ? rwlock_bug.part.0+0x60/0x60
-|  worker_thread+0x7a/0x680
-|  ? _raw_spin_unlock_irqrestore+0x4c/0x60
-|  kthread+0x1cc/0x220
-|  ? process_one_work+0xac0/0xac0
-|  ? kthread_create_on_node+0xa0/0xa0
-|  ret_from_fork+0x24/0x30
-| ==================================================================
+  struct my_struct {
+      void __attribute__((noreturn)) (*fn)(int);
+  };
+  struct my_struct a;
 
-Fix it by reintroducing spin-lock protected critical section around the
-code that removes the elements from the bucket on sockhash free.
+Without this fix, output will be:
 
-To do that we also need to defer processing of removed elements, until out
-of atomic context so that we can unlink the socket from the map when
-holding the sock lock.
+struct my_struct {
+    voidvolatile  (*fn)(int);
+};
 
-Fixes: 90db6d772f74 ("bpf, sockmap: Remove bucket->lock from sock_{hash|map}_free")
-Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200607205229.2389672-3-jakub@cloudflare.com
+With the fix:
+
+struct my_struct {
+    void (*fn)(int);
+};
+
+Fixes: 351131b51c7a ("libbpf: add btf_dump API for BTF-to-C conversion")
+Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Tested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Link: https://lore.kernel.org/bpf/20200610052335.2862559-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sock_map.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ tools/lib/bpf/btf_dump.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index ba65c608c2282..b22e9f1191803 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -861,6 +861,7 @@ static void sock_hash_free(struct bpf_map *map)
- {
- 	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
- 	struct bpf_htab_bucket *bucket;
-+	struct hlist_head unlink_list;
- 	struct bpf_htab_elem *elem;
- 	struct hlist_node *node;
- 	int i;
-@@ -872,13 +873,31 @@ static void sock_hash_free(struct bpf_map *map)
- 	synchronize_rcu();
- 	for (i = 0; i < htab->buckets_num; i++) {
- 		bucket = sock_hash_select_bucket(htab, i);
--		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
--			hlist_del_rcu(&elem->node);
-+
-+		/* We are racing with sock_hash_delete_from_link to
-+		 * enter the spin-lock critical section. Every socket on
-+		 * the list is still linked to sockhash. Since link
-+		 * exists, psock exists and holds a ref to socket. That
-+		 * lets us to grab a socket ref too.
-+		 */
-+		raw_spin_lock_bh(&bucket->lock);
-+		hlist_for_each_entry(elem, &bucket->head, node)
-+			sock_hold(elem->sk);
-+		hlist_move_list(&bucket->head, &unlink_list);
-+		raw_spin_unlock_bh(&bucket->lock);
-+
-+		/* Process removed entries out of atomic context to
-+		 * block for socket lock before deleting the psock's
-+		 * link to sockhash.
-+		 */
-+		hlist_for_each_entry_safe(elem, node, &unlink_list, node) {
-+			hlist_del(&elem->node);
- 			lock_sock(elem->sk);
- 			rcu_read_lock();
- 			sock_map_unref(elem->sk, elem);
- 			rcu_read_unlock();
- 			release_sock(elem->sk);
-+			sock_put(elem->sk);
- 			sock_hash_free_elem(htab, elem);
- 		}
+diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+index 87f27e2664c5d..d9e386b8f47ed 100644
+--- a/tools/lib/bpf/btf_dump.c
++++ b/tools/lib/bpf/btf_dump.c
+@@ -1141,6 +1141,20 @@ static void btf_dump_emit_mods(struct btf_dump *d, struct id_stack *decl_stack)
  	}
+ }
+ 
++static void btf_dump_drop_mods(struct btf_dump *d, struct id_stack *decl_stack)
++{
++	const struct btf_type *t;
++	__u32 id;
++
++	while (decl_stack->cnt) {
++		id = decl_stack->ids[decl_stack->cnt - 1];
++		t = btf__type_by_id(d->btf, id);
++		if (!btf_is_mod(t))
++			return;
++		decl_stack->cnt--;
++	}
++}
++
+ static void btf_dump_emit_name(const struct btf_dump *d,
+ 			       const char *name, bool last_was_ptr)
+ {
+@@ -1239,14 +1253,7 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
+ 			 * a const/volatile modifier for array, so we are
+ 			 * going to silently skip them here.
+ 			 */
+-			while (decls->cnt) {
+-				next_id = decls->ids[decls->cnt - 1];
+-				next_t = btf__type_by_id(d->btf, next_id);
+-				if (btf_is_mod(next_t))
+-					decls->cnt--;
+-				else
+-					break;
+-			}
++			btf_dump_drop_mods(d, decls);
+ 
+ 			if (decls->cnt == 0) {
+ 				btf_dump_emit_name(d, fname, last_was_ptr);
+@@ -1274,7 +1281,15 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
+ 			__u16 vlen = btf_vlen(t);
+ 			int i;
+ 
+-			btf_dump_emit_mods(d, decls);
++			/*
++			 * GCC emits extra volatile qualifier for
++			 * __attribute__((noreturn)) function pointers. Clang
++			 * doesn't do it. It's a GCC quirk for backwards
++			 * compatibility with code written for GCC <2.5. So,
++			 * similarly to extra qualifiers for array, just drop
++			 * them, instead of handling them.
++			 */
++			btf_dump_drop_mods(d, decls);
+ 			if (decls->cnt) {
+ 				btf_dump_printf(d, " (");
+ 				btf_dump_emit_type_chain(d, decls, fname, lvl);
 -- 
 2.25.1
 
