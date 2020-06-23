@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69436C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D45520702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4251F20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946305;
-	bh=Yi0rkYte0Ul8/AyWWV2kwBrjlTBSzJEKQoFAOQiac0E=;
+	s=default; t=1592946311;
+	bh=dXTFG5khJBhiGNK4rQl3wOm13SR/QgqgpGnN2+yILl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dW+d+HV6QoeOpHbmP5oILjV2mh9twhiMGeyYzhbvtG7mmvXpwvOLLQyvK9pA+qXVq
-	 i4NZneHK3nfageEQZuuKkQHFooeTGEEJRXoSbYRCX6GOqvdNzF127tVDsdteoEGAkD
-	 PcroCpu0TxLbKNwWL/ODWBd9lJQKw/dmDYZx/DlQ=
+	b=XwvdGYPm50p/ENxL4Nfve1qUjwdFEuC+Qo2/zUoxwPxGxEgRcVzTg/CGh85NH30PS
+	 Kvd+CPxyynGsYb7yACr55kI8Tl5C2gwOAM2jkZqO7iEKQx876V1PqLaxunWlVGp31m
+	 OATrwr3hlBNS+fXpK3RQPkcHU6h2Mf6VlE1dVK9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393298AbgFWVFD (ORCPT
+        id S2392098AbgFWVFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:05:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32968 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403827AbgFWUhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:37:42 -0400
+        id S2391854AbgFWUha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:37:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D23872080C;
-        Tue, 23 Jun 2020 20:37:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E3521531;
+        Tue, 23 Jun 2020 20:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944662;
-        bh=Yi0rkYte0Ul8/AyWWV2kwBrjlTBSzJEKQoFAOQiac0E=;
+        s=default; t=1592944649;
+        bh=dXTFG5khJBhiGNK4rQl3wOm13SR/QgqgpGnN2+yILl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cUDwoVWF1mqR36eci/b+BkHA1ta14Fq/81LLp/eUjyJIznxNLLNqD9M+qWe5I5myO
-         B83kHwpnzvCrAEU+3tdDuc1HRIMewsrE4XEOV5qwe0PVqNeOHlEGWQVubI5MrsymM8
-         Vg+gua2EJV1Cls//Oq2dN99VpomBMIOmPpJqJSLE=
+        b=cOi6jXHwZFpzozva3KUS2Sc4OI58PbyD+YNA3ObGr/ZgNHVBywiRVFg7MBfSJ8MLL
+         uMkGCy+DcmLiOhfp40pOyMqw9m0UR4zos9CYG4jyT1/aCtbwP8tjS4u6Q2BHgOqktM
+         ogTQxMJALyl1cJm37SJQNbRbykEuGMA/X79yasZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Heidelberg <david@ixit.cz>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 077/206] power: supply: smb347-charger: IRQSTAT_D is volatile
-Date:   Tue, 23 Jun 2020 21:56:45 +0200
-Message-Id: <20200623195320.735902699@linuxfoundation.org>
+Subject: [PATCH 4.19 072/206] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
+Date:   Tue, 23 Jun 2020 21:56:40 +0200
+Message-Id: <20200623195320.506198568@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,36 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
+[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
 
-Fix failure when USB cable is connected:
-smb347 2-006a: reading IRQSTAT_D failed
+If platform bus driver registration is failed then, accessing
+platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
+in __platform_driver_probe() without verifying the return value
+__platform_driver_register() can lead to NULL pointer exception.
 
-Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
+So check the return value before attempting the spin lock.
 
-Tested-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+One such example is below:
+
+For a custom usecase, I have intentionally failed the platform bus
+registration and I expected all the platform device/driver
+registrations to fail gracefully. But I came across this panic
+issue.
+
+[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
+[    1.331118] #PF: supervisor write access in kernel mode
+[    1.331163] #PF: error_code(0x0002) - not-present page
+[    1.331208] PGD 0 P4D 0
+[    1.331233] Oops: 0002 [#1] PREEMPT SMP
+[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
+[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
+[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
+[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
+[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
+[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
+[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
+[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
+[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
+[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
+[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    1.332252] Call Trace:
+[    1.332281]  __platform_driver_probe+0x92/0xee
+[    1.332323]  ? rtc_dev_init+0x2b/0x2b
+[    1.332358]  cmos_init+0x37/0x67
+[    1.332396]  do_one_initcall+0x7d/0x168
+[    1.332428]  kernel_init_freeable+0x16c/0x1c9
+[    1.332473]  ? rest_init+0xc0/0xc0
+[    1.332508]  kernel_init+0x5/0x100
+[    1.332543]  ret_from_fork+0x1f/0x30
+[    1.332579] CR2: 00000000000000c8
+[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
+[    1.333549] note: swapper/0[1] exited with preempt_count 1
+[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    1.333736] Kernel Offset: disabled
+
+Note, this can only be triggered if a driver errors out from this call,
+which should never happen.  If it does, the driver needs to be fixed.
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/smb347-charger.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/platform.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
-index 072c5189bd6d1..0655dbdc7000d 100644
---- a/drivers/power/supply/smb347-charger.c
-+++ b/drivers/power/supply/smb347-charger.c
-@@ -1141,6 +1141,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
- 	switch (reg) {
- 	case IRQSTAT_A:
- 	case IRQSTAT_C:
-+	case IRQSTAT_D:
- 	case IRQSTAT_E:
- 	case IRQSTAT_F:
- 	case STAT_A:
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index d1f901b58f755..349c2754eed78 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -700,6 +700,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
+ 	/* temporary section violation during probe() */
+ 	drv->probe = probe;
+ 	retval = code = __platform_driver_register(drv, module);
++	if (retval)
++		return retval;
+ 
+ 	/*
+ 	 * Fixup that section violation, being paranoid about code scanning
 -- 
 2.25.1
 
