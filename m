@@ -2,125 +2,92 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87528C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF7B20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AAB20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:23:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uwd8NM91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732224AbgFWJWo (ORCPT
+        id S1732049AbgFWJXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:22:44 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2355 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731912AbgFWJWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:22:43 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 06EDE80076BFC7DAFC81;
-        Tue, 23 Jun 2020 10:22:42 +0100 (IST)
-Received: from [127.0.0.1] (10.47.2.88) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 23 Jun
- 2020 10:22:40 +0100
-Subject: Re: [PATCH 4/4] iommu/arm-smmu-v3: Remove cmpxchg() in
- arm_smmu_cmdq_issue_cmdlist()
-To:     kernel test robot <lkp@intel.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        <rikard.falkeborn@gmail.com>
-CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "trivial@kernel.org" <trivial@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>, "maz@kernel.org" <maz@kernel.org>
-References: <1592846920-45338-5-git-send-email-john.garry@huawei.com>
- <202006230905.3HpPgtSC%lkp@intel.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <5ba2e240-b324-d316-c00c-38c03ee49baa@huawei.com>
-Date:   Tue, 23 Jun 2020 10:21:12 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 23 Jun 2020 05:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731912AbgFWJXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:23:53 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 855BEC061573;
+        Tue, 23 Jun 2020 02:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=n42uQFh17CdO0bIElKUPrWq2FZ0jIAeEhIRWnOCALuU=; b=uwd8NM91afP+YPwWO0zwWWECYF
+        te8u/t4tum1nk/XdFbYYU/ZyLOoDRuEj5aRqUrDQO45/erMoawOMwOjZAioaX51dTXjKamd2vtar1
+        BwImxnHqwdzY/Cn3tSKyaPRaLu5qOZaN3raDA/JXMB1lWSvLA0CizlO5iAw2HggPqtixMeGbsWSkX
+        6dVuKdU+5Kd0bD+d11ZrppzcItzKCL1RDNMJfI3WYakzbXsT8gdXTqqrx/oszZNsZ4I38EvycrLEo
+        IPLCOGE+0zxP6ZtLeSfgmZOK34uAzkwKfNT0mm8KxVPXQ03JH0+q0C3Br72eNHgo5bbEyQA9fvogA
+        FakPkASw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnf98-0000ln-Hf; Tue, 23 Jun 2020 09:23:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CDE0F3003E5;
+        Tue, 23 Jun 2020 11:23:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 65933237095E6; Tue, 23 Jun 2020 11:23:12 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 11:23:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
+        sfr@canb.auug.org.au, stephen@networkplumber.org,
+        rppt@linux.vnet.ibm.com
+Subject: Re: [Patch v2 3/3] net: Restrict receive packets queuing to
+ housekeeping CPUs
+Message-ID: <20200623092312.GC4781@hirez.programming.kicks-ass.net>
+References: <20200622234510.240834-1-nitesh@redhat.com>
+ <20200622234510.240834-4-nitesh@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <202006230905.3HpPgtSC%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.2.88]
-X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622234510.240834-4-nitesh@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 02:07, kernel test robot wrote:
+On Mon, Jun 22, 2020 at 07:45:10PM -0400, Nitesh Narayan Lal wrote:
+> @@ -756,6 +757,13 @@ static ssize_t store_rps_map(struct netdev_rx_queue *queue,
+>  		return err;
+>  	}
+>  
+> +	hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
+> +	cpumask_and(mask, mask, housekeeping_cpumask(hk_flags));
+> +	if (cpumask_weight(mask) == 0) {
 
-+ Rikard, as the GENMASK compile-time sanity checks were added recently
+We have cpumask_empty() for that, which is a much more efficient way of
+testing the same.
 
-> Hi John,
+> +		free_cpumask_var(mask);
+> +		return -EINVAL;
+> +	}
+> +
+>  	map = kzalloc(max_t(unsigned int,
+>  			    RPS_MAP_SIZE(cpumask_weight(mask)), L1_CACHE_BYTES),
+>  		      GFP_KERNEL);
+> -- 
+> 2.18.4
 > 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on iommu/next]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use  as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/0day-ci/linux/commits/John-Garry/iommu-arm-smmu-v3-Improve-cmdq-lock-efficiency/20200623-013438
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
-> config: arm64-randconfig-c024-20200622 (attached as .config)
-> compiler: aarch64-linux-gcc (GCC) 9.3.0
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> In file included from include/linux/bits.h:23,
-> from include/linux/ioport.h:15,
-> from include/linux/acpi.h:12,
-> from drivers/iommu/arm-smmu-v3.c:12:
-> drivers/iommu/arm-smmu-v3.c: In function 'arm_smmu_cmdq_issue_cmdlist':
-> include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-> 26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-
-I'd say that GENMASK_INPUT_CHECK() should be able to handle a l=0 and 
-h=unsigned value, so I doubt this warn.
-
-Using GENMASK((int)cmdq->q.llq.max_n_shift, 0) resolves it, but it looks 
-like GENMASK_INPUT_CHECK() could be improved.
-
-> |                            ^
-> include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
-> 16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-> |                                                              ^
-> include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
-> 39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-> |   ^~~~~~~~~~~~~~~~~~~
->>> drivers/iommu/arm-smmu-v3.c:1404:18: note: in expansion of macro 'GENMASK'
-> 1404 |  u32 prod_mask = GENMASK(cmdq->q.llq.max_n_shift, 0);
-> |                  ^~~~~~~
-> include/linux/bits.h:26:40: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-> 26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> |                                        ^
-> include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
-> 16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-> |                                                              ^
-> include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
-> 39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-> |   ^~~~~~~~~~~~~~~~~~~
->>> drivers/iommu/arm-smmu-v3.c:1404:18: note: in expansion of macro 'GENMASK'
-> 1404 |  u32 prod_mask = GENMASK(cmdq->q.llq.max_n_shift, 0);
-> |                  ^~~~~~~
-> 
-> vim +/GENMASK +1404 drivers/iommu/arm-smmu-v3.c
-
-
