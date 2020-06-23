@@ -2,136 +2,188 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C593C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 082A12073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CbxaxDD6"
+	by mail.kernel.org (Postfix) with ESMTP id 1606D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592943885;
+	bh=UgbZ9Qw2gQpzHL3rf3ShAbFztRYC6a/dlE0iWmMaPzk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Nuc2z7WsELOc6hTHBRQssbaY9vBhe4HTPIQtT4dCEzc65Viv9ho+guNxm9hbzpZrF
+	 9tqZMEWXHBzPgVSM/qYm0UTnbl5DtDKF4XaXM/JNbaThIM9UcaNXitKHKP/PD+qX7C
+	 svAmECgjzBAmkcJ0z6MYeC4MjG4O1+zVGCwQWlng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390126AbgFWUYi (ORCPT
+        id S2390456AbgFWUYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390440AbgFWUYc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:32 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18381C061573;
-        Tue, 23 Jun 2020 13:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=nqLuJpwpk0A53PmvRN23yoDtfY4/X7aPFQklmjH025U=; b=CbxaxDD6KGmoDKlE+iZHVS3Fdo
-        WX5rKGhFi9UifHi3fhpVS0c3n5ae+3i2Al4d3lCr5Ji04Spo9FmrZxodYVQjX87tiDFWzQrx3PI3I
-        NevvGJ2fT2SJF/sfTRCcx+V5LepSslMyZY/fBaQFFSFYMW3Ds6KLSk62JTmmgEstJ0GAnCI3YQrbA
-        oQX43gmPUSuGcEWq5WZvkMcKClyAU3eITCvusiMPH0bQqyzC/rfkbAk4QryNwCs7993kYRBifyp+h
-        285p4O1IIgAuQYXB0wrjE+7+M6vZiHzcyqAKwuKVqqEbDx8FaeBrF3IgpcgClmRCjf8NvQOcf0R2V
-        zRHPIfpg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnpSe-0003Y5-I2; Tue, 23 Jun 2020 20:24:04 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 213A9983A87; Tue, 23 Jun 2020 22:24:04 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 22:24:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
-        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        bigeasy@linutronix.de, davem@davemloft.net,
-        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-Message-ID: <20200623202404.GE2483@worktop.programming.kicks-ass.net>
-References: <20200623083645.277342609@infradead.org>
- <20200623083721.512673481@infradead.org>
- <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
- <20200623152450.GM4817@hirez.programming.kicks-ass.net>
- <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
- <20200623163730.GA4800@hirez.programming.kicks-ass.net>
- <20200623175957.GA106514@elver.google.com>
- <20200623181232.GB4800@hirez.programming.kicks-ass.net>
+        Tue, 23 Jun 2020 16:24:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388915AbgFWUYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 789B0206C3;
+        Tue, 23 Jun 2020 20:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592943879;
+        bh=UgbZ9Qw2gQpzHL3rf3ShAbFztRYC6a/dlE0iWmMaPzk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mVHmHOESK4IU82bsfrsqjzO9wzK0s3dUo/Su0dvQFpEluIeWwvSnH2xf+2qxU0wb0
+         xKqMfH/nBx8/i67Pem1MDOO+C8j/hDD18Zpp5gaRnOn37KItO64Frtx5zfc11KGVwx
+         XsLPjzmUGmMLU7DIy+pUSN9m2KswOSEWA8juYvqs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 086/314] arm64: dts: mt8173: fix unit name warnings
+Date:   Tue, 23 Jun 2020 21:54:41 +0200
+Message-Id: <20200623195342.975920438@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
+References: <20200623195338.770401005@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623181232.GB4800@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
-> Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
-> anything happens.
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-OK, so the below patch doesn't seem to have any nasty recursion issues
-here. The only 'problem' is that lockdep now sees report_lock can cause
-deadlocks.
+[ Upstream commit 72b29215aced394d01ca25e432963b619daa0098 ]
 
-It is completely right about it too, but I don't suspect there's much we
-can do about it, it's pretty much the standard printk() with scheduler
-locks held report.
+Fixing several unit name warnings:
 
+Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
+Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
+Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Link: https://lore.kernel.org/r/20200210063523.133333-4-hsinyi@chromium.org
+[mb: drop fixes for '_' in property name]
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 15f67949d11e..732623c30359 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -397,8 +397,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	}
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 5891b71514328..dec5e4113ce4c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -238,21 +238,21 @@
+ 		cpu_on	      = <0x84000003>;
+ 	};
  
- 	if (!kcsan_interrupt_watcher)
--		/* Use raw to avoid lockdep recursion via IRQ flags tracing. */
--		raw_local_irq_save(irq_flags);
-+		local_irq_save(irq_flags);
+-	clk26m: oscillator@0 {
++	clk26m: oscillator0 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <26000000>;
+ 		clock-output-names = "clk26m";
+ 	};
  
- 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
- 	if (watchpoint == NULL) {
-@@ -539,7 +538,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
- out_unlock:
- 	if (!kcsan_interrupt_watcher)
--		raw_local_irq_restore(irq_flags);
-+		local_irq_restore(irq_flags);
- out:
- 	user_access_restore(ua_flags);
- }
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index ac5f8345bae9..ef31c1d2dac3 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -605,14 +605,6 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 	if (WARN_ON(watchpoint_idx < 0 || watchpoint_idx >= ARRAY_SIZE(other_infos)))
- 		goto out;
+-	clk32k: oscillator@1 {
++	clk32k: oscillator1 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <32000>;
+ 		clock-output-names = "clk32k";
+ 	};
  
--	/*
--	 * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
--	 * we do not turn off lockdep here; this could happen due to recursion
--	 * into lockdep via KCSAN if we detect a race in utilities used by
--	 * lockdep.
--	 */
--	lockdep_off();
--
- 	if (prepare_report(&flags, type, &ai, other_info)) {
- 		/*
- 		 * Never report if value_change is FALSE, only if we it is
-@@ -628,7 +620,6 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 		release_report(&flags, other_info);
- 	}
+-	cpum_ck: oscillator@2 {
++	cpum_ck: oscillator2 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <0>;
+@@ -268,19 +268,19 @@
+ 			sustainable-power = <1500>; /* milliwatts */
  
--	lockdep_on();
- out:
- 	kcsan_enable_current();
- }
+ 			trips {
+-				threshold: trip-point@0 {
++				threshold: trip-point0 {
+ 					temperature = <68000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				target: trip-point@1 {
++				target: trip-point1 {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu_crit: cpu_crit@0 {
++				cpu_crit: cpu_crit0 {
+ 					temperature = <115000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -288,13 +288,13 @@
+ 			};
+ 
+ 			cooling-maps {
+-				map@0 {
++				map0 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu0 0 0>,
+ 							 <&cpu1 0 0>;
+ 					contribution = <3072>;
+ 				};
+-				map@1 {
++				map1 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu2 0 0>,
+ 							 <&cpu3 0 0>;
+@@ -308,7 +308,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
+-		vpu_dma_reserved: vpu_dma_mem_region {
++		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
+ 			compatible = "shared-dma-pool";
+ 			reg = <0 0xb7000000 0 0x500000>;
+ 			alignment = <0x1000>;
+@@ -360,7 +360,7 @@
+ 			reg = <0 0x10005000 0 0x1000>;
+ 		};
+ 
+-		pio: pinctrl@10005000 {
++		pio: pinctrl@1000b000 {
+ 			compatible = "mediatek,mt8173-pinctrl";
+ 			reg = <0 0x1000b000 0 0x1000>;
+ 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
+@@ -567,7 +567,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		gic: interrupt-controller@10220000 {
++		gic: interrupt-controller@10221000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
+ 			interrupt-parent = <&gic>;
+-- 
+2.25.1
+
+
 
