@@ -2,131 +2,121 @@ Return-Path: <SRS0=Xj+s=AD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8886BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20BDF20727
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644A62075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jun 2020 23:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592870375;
+	bh=2OwgDfY9J2es0wq3aPDxl3nxMrgbdyAY0myLa2Sqmog=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=WzMPJXIQxsq39NT1040IFmwZaHloRaVOzH5i3iyzGkC1rGa0S0h59myO+JT65J/F3
+	 7qwBCZl7wstQXQejDhOuTIcEl7wsw5LdzyooCpN4k80fxgjVsLqnLJshNVcDmTfBlQ
+	 2ppgfTgZmSNFs414kDHWPSfyXpbovK3/KrczAsrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbgFVX4L (ORCPT
+        id S1731094AbgFVX7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 19:56:11 -0400
-Received: from mga17.intel.com ([192.55.52.151]:11902 "EHLO mga17.intel.com"
+        Mon, 22 Jun 2020 19:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730227AbgFVX4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 19:56:10 -0400
-IronPort-SDR: cjxSC6Mp8hRHguqrALewvWmUeNON9hFivRi9dBUvx/Ub8o0TEwaTOVvsdEehjx0r4AQiGIMESh
- RcZTAguKyVYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="124181112"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="124181112"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 16:56:09 -0700
-IronPort-SDR: irzyprq6G5p8Nboz85WR7PJ/zywM297w/FBcxuGfnSkwiAz8fhKRvr3cj3fwAc//0h+5khrOiT
- KBFAiYyYBEkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="318997735"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.251.16.129]) ([10.251.16.129])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 16:56:08 -0700
-Subject: Re: [PATCH] checkpatch: use $root/.git when seeding camel case
-To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>
-References: <20200622215834.2858106-1-jacob.e.keller@intel.com>
- <fe60cadc38d430f38ff8cb3d1ca9c1f44260b59d.camel@perches.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <66793797-4be2-9c39-edb6-44f731f7c6d6@intel.com>
-Date:   Mon, 22 Jun 2020 16:56:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1728636AbgFVX7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 19:59:33 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88F9620727;
+        Mon, 22 Jun 2020 23:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592870373;
+        bh=2OwgDfY9J2es0wq3aPDxl3nxMrgbdyAY0myLa2Sqmog=;
+        h=Date:From:To:Cc:Subject:From;
+        b=C3Dct/bBNvay6NeT7uLjs5uFJABFs0MoIj4gqLRcTlzmZFF7H0FtOomU716ywWOFR
+         yY0yUdHPNIU4hPoqCLRs3Oy1NN64l5h4CRVHPXe3U9fzoHm4YZL5cmu5xX2Fid1vgP
+         XEfz40gQzipHJX3AbrBHnefhg8Si7vsTa9zCLMDU=
+Date:   Mon, 22 Jun 2020 19:05:02 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] perf annotate: Use struct_size() helper
+Message-ID: <20200623000502.GA18040@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <fe60cadc38d430f38ff8cb3d1ca9c1f44260b59d.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes. Also, remove unnecessary
+function disasm_line_size().
 
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-On 6/22/2020 3:11 PM, Joe Perches wrote:
-> On Mon, 2020-06-22 at 14:58 -0700, Jacob Keller wrote:
->> When seeding the camel case file, checkpatch.pl uses the $root directory
->> in order to find the acceptable list of allowed camel case words.
->>
->> However, if the current directory is a git repository, checkpatch.pl
->> attempts to seed using the local git directory.
->>
->> This is problematic if checkpatch.pl is passed a --root and is being run
->> from within another git repository. Rather than seeding from the
->> provided root tree, checkpatch.pl will seed using the local files. If
->> the current git repository isn't a kernel tree, this can lead to
->> unexpected warnings about camel case issues.
->>
->> Always honor the $root parameter when seeding camelcase files by using
->> "$root/.git" and changing directory to the $root before invoking git.
-> []
->> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
->> @@ -919,8 +919,8 @@ sub seed_camelcase_includes {
->>  
->>  	$camelcase_seeded = 1;
->>  
->> -	if (-e ".git") {
->> -		my $git_last_include_commit = `${git_command} log --no-merges --pretty=format:"%h%n" -1 -- include`;
->> +	if (-e "$root/.git") {
->> +		my $git_last_include_commit = `cd $root && ${git_command} log --no-merges --pretty=format:"%h%n" -1 -- include`;
->>  		chomp $git_last_include_commit;
->>  		$camelcase_cache = ".checkpatch-camelcase.git.$git_last_include_commit";
->>  	} else {
->> @@ -947,9 +947,10 @@ sub seed_camelcase_includes {
->>  		return;
->>  	}
->>  
->> -	if (-e ".git") {
->> -		$files = `${git_command} ls-files "include/*.h"`;
->> +	if (-e "$root/.git") {
->> +		$files = `cd $root && ${git_command} ls-files "include/*.h"`;
->>  		@include_files = split('\n', $files);
->> +		@include_files = map("$root/$_", @include_files);
->>  	}
->>  
->>  	foreach my $file (@include_files) {
-> 
-> checkpatch has 4 uses of ${git_command}
-> 
-> Maybe git_command should be changed instead.
->
-So, in part, I'm not 100% sure. In our use case, it depends on what git
-is being used for.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ tools/perf/util/annotate.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-Something like "checkpatch.pl -g HEAD", we would like to target the
-local repository. Where as camelcase, we'd like to target the --root
-repository.
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 76bfb4a9d94e..9330520c34a0 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -43,6 +43,7 @@
+ #include <linux/string.h>
+ #include <subcmd/parse-options.h>
+ #include <subcmd/run-command.h>
++#include <linux/overflow.h>
+ 
+ /* FIXME: For the HE_COLORSET */
+ #include "ui/browser.h"
+@@ -775,7 +776,7 @@ static int annotated_source__alloc_histograms(struct annotated_source *src,
+ 	if (size > (SIZE_MAX - sizeof(struct sym_hist)) / sizeof(struct sym_hist_entry))
+ 		return -1;
+ 
+-	sizeof_sym_hist = (sizeof(struct sym_hist) + size * sizeof(struct sym_hist_entry));
++	sizeof_sym_hist = struct_size(src->histograms, addr, size);
+ 
+ 	/* Check for overflow in zalloc argument */
+ 	if (sizeof_sym_hist > SIZE_MAX / nr_hists)
+@@ -1167,13 +1168,6 @@ static void annotation_line__exit(struct annotation_line *al)
+ 	zfree(&al->line);
+ }
+ 
+-static size_t disasm_line_size(int nr)
+-{
+-	struct annotation_line *al;
+-
+-	return (sizeof(struct disasm_line) + (sizeof(al->data[0]) * nr));
+-}
+-
+ /*
+  * Allocating the disasm annotation line data with
+  * following structure:
+@@ -1193,7 +1187,7 @@ static struct disasm_line *disasm_line__new(struct annotate_args *args)
+ 	if (evsel__is_group_event(args->evsel))
+ 		nr = args->evsel->core.nr_members;
+ 
+-	dl = zalloc(disasm_line_size(nr));
++	dl = zalloc(struct_size(dl, al.data, nr));
+ 	if (!dl)
+ 		return NULL;
+ 
+-- 
+2.27.0
 
-What if, instead of this, we opt to use the local .git for camelcase
-only when $root is non-empty? That way, if --root is applied, camcel
-case seeding always uses --root, rather than the local tree.
-
-Something like:
-
-if (-e ".git" && $root eq "") for this block, so then we fall through to
-the non-git style instead?
-
-> I wonder how this interacts with the GIT_DIR environment variable.
-> 
-
-Probably poorly. I suspect it would end up looking at GIT_DIR instead of
-$root/.git, despite the cd.
-
-Thanks,
-Jake
