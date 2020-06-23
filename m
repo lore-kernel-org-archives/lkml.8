@@ -2,93 +2,102 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E134AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31301C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0DE920706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 102D720706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2bNXSqL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X2PXDCmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731732AbgFWIDP (ORCPT
+        id S1731783AbgFWIDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731534AbgFWIDO (ORCPT
+        Tue, 23 Jun 2020 04:03:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28359 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731534AbgFWIDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:03:14 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE9CC061573;
-        Tue, 23 Jun 2020 01:03:14 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id h28so3445993edz.0;
-        Tue, 23 Jun 2020 01:03:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2rPds0/G6EcL2nawpDhmBWpfMm0TyFqHBbBHy9o57w0=;
-        b=B2bNXSqLuEsu8gf7GVyhIgx9TT8yKSIML+JRlieMW/cGH0XYqBkF6Dxev7Ut9w8CDc
-         jTFmGd/3K4PaxRUDlYvMYqR1NpHxdHDxmToLFDI43BWiJPJB5syXRDmNhvt1+uRTQ+y/
-         PQVigefkF3mTwJ4TfKt4gs8m8npdbBzsFhJp6fMlaqteyfmGJ/YJCIeUcqdb+uhxMxqT
-         19bJKP7hJdrn4dTQ1BtdxaOnKGOyet/61UuMl8Q05HK2Hz9Ar++Z2Y0U8qd1WT+MyyDv
-         JxuT2wj1MwtgOtXLHEuhghLdD3TMNwGhr5vKLi6AgoxfKhpZQ6C4UPKCRflguDZkGe25
-         C0LA==
+        Tue, 23 Jun 2020 04:03:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592899397;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=l6YBkvu4NKIVRvb0+R6NtCtLkpIDbKvQHwDRTDMavYs=;
+        b=X2PXDCmMiJaHYm5nL8CmOMMh6V/iGcnVNZGYpfnYuQs+zXcPTXVHT0ED10GXfNwgKs0yl4
+        wdsvQHKS9Y4KeZ2ceSwTs4StxVin6wAptQFXOXAi/6JhLNza541jh8/PFzl9SzvH0z6uC8
+        8vaQj8lRA/b3Y0QNUhWvcgd7wUg4+Fs=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-163-BWOTNlfBO2auqO6176yD1g-1; Tue, 23 Jun 2020 04:03:15 -0400
+X-MC-Unique: BWOTNlfBO2auqO6176yD1g-1
+Received: by mail-ej1-f69.google.com with SMTP id b24so7847055ejb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 01:03:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2rPds0/G6EcL2nawpDhmBWpfMm0TyFqHBbBHy9o57w0=;
-        b=rflxtQBivgi2zWud7rpEVo4hAxF2L8p3MYeRGZIDkXV/f6snIfD43qTDSCIg4dSvAI
-         060avyEhpGXbkqXCw8FI7JgOEJOWOOQgblRPd5QODaf2IkNpcTzFsT56AluS3atimatf
-         NHnyXIlWqZidQVrdxZoQnsM/Ezmh46h7HC1TylTAOf/bEV0Np/znajwuDNZJI9f/oIVK
-         nxo2g7tABjQsaRsiaafzQxfZAzweGarcZmr2EYIzFu382eBsBb6KtjCuc45QV+B9t+sz
-         1NGEpE5v0kezqJRhS4OzdbnrbSTLhLGQ4g5BN3DWsbVsLZTt4X0oYQ4ucPFQtMWcB/pt
-         bXNQ==
-X-Gm-Message-State: AOAM5301OXq3WKybV5tndxyF0vVYTOF/3NSCRBpoRjPil2o1fTeMLKYm
-        /g3jXTXA1Tuoa7Edx/wWoJ6xnX9KEGyV8IPjTgA=
-X-Google-Smtp-Source: ABdhPJxnTEC/7IMkbPEIMk4DJSmNqD8oNigmUD2kQb5Tg7dzsWj+iVEI5HhsukquaXBoDUo3B64tHTOC9luNNG2CLmE=
-X-Received: by 2002:aa7:c756:: with SMTP id c22mr20940182eds.239.1592899393084;
- Tue, 23 Jun 2020 01:03:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l6YBkvu4NKIVRvb0+R6NtCtLkpIDbKvQHwDRTDMavYs=;
+        b=ORMOJX2pxxb1go38z/4VnKEJms7EmzzOa4gE1UVqccPdw5p8UQn7wsK6plAvLJslkp
+         VIJYiPDkiPrxSKCfhzjaapehRTSMI+a2i3jpNPFWs7NKrhcU8BAZ1I8QBk+f5NSJ0IhR
+         7Lg6XdNGwvEbeT1uwma1JD/4SSjlGeogzkQ/RU5OLo8jR3GMVSD/wy4N8Q++GZyurxIL
+         JTGxAk1zsVbJx3RkcjsaQwOgp0dstRCYNMabuhS6Y4qgSdVLMavIvC+ZR/vfuDWKUUbk
+         Ol/iclEShVB2wa5Rh2U/7hLIn6lbcj7nyWB7AeD4kEH60gdpWfWi3sxl/odYGlPK/PDe
+         UBLQ==
+X-Gm-Message-State: AOAM5301zmX13bxdVDbBs12QjAeAZw1FFbkUeSEmCOBO1oxb15DJKTew
+        JIvdwyxtB4sbUtNLixm9km2nQBzxzNW+cbLOouZ0TAP+h8PemEzV3tJiuQD7TkAOmhJ4kGiPOHb
+        glDuod/7iahxtytU2RGwswxle
+X-Received: by 2002:a50:d6dd:: with SMTP id l29mr4423991edj.345.1592899393650;
+        Tue, 23 Jun 2020 01:03:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxUO01hrtBJeja7UCvnapxRDA0N13a8vbDxVvxvfNDa9KjTKO3iua7zztinJD+WlgufIZAdhA==
+X-Received: by 2002:a50:d6dd:: with SMTP id l29mr4423970edj.345.1592899393410;
+        Tue, 23 Jun 2020 01:03:13 -0700 (PDT)
+Received: from localhost ([2001:470:5b39:29:79fc:ff4e:48ab:b845])
+        by smtp.gmail.com with ESMTPSA id x11sm13035250ejv.81.2020.06.23.01.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 01:03:12 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 10:03:11 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     "R.F. Burns" <burnsrf@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: PC speaker
+Message-ID: <20200623080311.7ljhyo3zymfbtnbl@butterfly.localdomain>
+References: <CABG1boOyDJheyNFuxhB0amA3_NH_DtvtZb2BBUtUOCQ01jeCEw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200622192558.152828-1-konradybcio@gmail.com>
- <20200622192558.152828-2-konradybcio@gmail.com> <20200623072624.GY128451@builder.lan>
-In-Reply-To: <20200623072624.GY128451@builder.lan>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Tue, 23 Jun 2020 10:02:37 +0200
-Message-ID: <CAMS8qEWZ6hg1-n737ZDop6qsL4k3aNLPt_pJJqTwStNtRKhTcA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] pinctrl: qcom: spmi-gpio: Add pm660(l) compatibility
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABG1boOyDJheyNFuxhB0amA3_NH_DtvtZb2BBUtUOCQ01jeCEw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes, you did.
+Hello.
 
-This was a mistake on my end and I realized it
- after sending the v3, but I figured there's no
- point in sending it yet again exclusively for this reason.
-Hope you don't mind.
+On Thu, Jun 18, 2020 at 01:49:37PM -0400, R.F. Burns wrote:
+> Is it possible to write a kernel module which, when loaded, will blow
+> the PC speaker?
 
-Regards
-Konrad
+1) where have you been starting from 2011 till 2015?
+2) why does the posting date of this letter varies a little bit?
+3) why June (but July in 2008)?
+4) are you a robot?
+5) if you are a robot, what's your setup?
+6) if you are not a robot, blink.
+
+I'm eagerly waiting for this email each year, but it's a shame you
+neither reveal any details nor respond to questions. We are intrigued!
+
+Please uncover this great LKML mystery. We'd like to know you closer.
+
+Thanks.
+
+-- 
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Principal Software Maintenance Engineer
+
