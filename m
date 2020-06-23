@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E358C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF04C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C24F20EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844742145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943362;
-	bh=iIu7yHtK80ljItvjvrWJOIhey9o7CF3Lqvyv/NYgzCU=;
+	s=default; t=1592943367;
+	bh=CoUWkoNza6UN9/1kLJu/JmxiUJyTQiCu0L4g1FUCvCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8bDRcv4JtUfn5ZB7orAJv0XCWpOWAu7ZHA/MS64a/gSHKmvQVFDNEw+/WtIfB/Nb
-	 kFskZozRqbOtbjsqM+dUUw0RC8VYxO4EHJqDteTumeVXMUQmfPWltudGyeWX0lF63U
-	 H057AnGPkeqev+xhbVF/Ebtec7ylbPWavADHen+8=
+	b=s00jxqJlYMwj8J/r207rVqhzcr5S0Cf1vC/F9rJ81xkJQnhrdiCf73qQWK6wAtQB9
+	 I/O6MdnR3Zzbo0YqVXa8PqxzB8aMXJtdB7xWXOwABmwfXT5MRHTfRJL1iBxA5oFQOQ
+	 Zcg/v/ylAzDC7Q9eUyHSSa/y4yLWF75EuVj6sNFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389365AbgFWUP7 (ORCPT
+        id S2389380AbgFWUQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59070 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:16:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388441AbgFWUPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:15:54 -0400
+        id S2388901AbgFWUP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:15:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B329E2064B;
-        Tue, 23 Jun 2020 20:15:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF31C20702;
+        Tue, 23 Jun 2020 20:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943354;
-        bh=iIu7yHtK80ljItvjvrWJOIhey9o7CF3Lqvyv/NYgzCU=;
+        s=default; t=1592943359;
+        bh=CoUWkoNza6UN9/1kLJu/JmxiUJyTQiCu0L4g1FUCvCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KJc1nKDsLh4pp6BOfCpcPeA0iYDmzdQQL+5uCyNqf9eLDzribE+3gyovCT/s5K7Hp
-         gVZuMt9Z3JiiIy60nMwe07TO3gYYKYX+zFh7rZfT5QA/ORZuArdw5JYznf66FRCjcd
-         KA9f4F2GCq/LlWjY+6jf0aeWqpXt+YCnyXeZVVV8=
+        b=ZZwiUJpKJzEOCQjxMr5216/ElI6mmX31CLkmYfcYRsJXMrWLzgvIH02yQpGKj5omL
+         MqNTEJotuZgh9NKVyAngEFoZHRy+5aAqG/ivDh87rmTUcVxv1N9aDuFYaNrOC4ik4F
+         Skv56ZjaRb9iHZ2degz1eusH18L2lmD20K6rAuNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, dihu <anny.hu@linux.alibaba.com>,
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
         Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
+        Yonghong Song <yhs@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 359/477] bpf/sockmap: Fix kernel panic at __tcp_bpf_recvmsg
-Date:   Tue, 23 Jun 2020 21:55:56 +0200
-Message-Id: <20200623195424.505239623@linuxfoundation.org>
+Subject: [PATCH 5.7 361/477] tracing/probe: Fix bpf_task_fd_query() for kprobes and uprobes
+Date:   Tue, 23 Jun 2020 21:55:58 +0200
+Message-Id: <20200623195424.595608159@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,61 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dihu <anny.hu@linux.alibaba.com>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 487082fb7bd2a32b66927d2b22e3a81b072b44f0 ]
+[ Upstream commit 22d5bd6867364b41576a712755271a7d6161abd6 ]
 
-When user application calls read() with MSG_PEEK flag to read data
-of bpf sockmap socket, kernel panic happens at
-__tcp_bpf_recvmsg+0x12c/0x350. sk_msg is not removed from ingress_msg
-queue after read out under MSG_PEEK flag is set. Because it's not
-judged whether sk_msg is the last msg of ingress_msg queue, the next
-sk_msg may be the head of ingress_msg queue, whose memory address of
-sg page is invalid. So it's necessary to add check codes to prevent
-this problem.
+Commit 60d53e2c3b75 ("tracing/probe: Split trace_event related data from
+trace_probe") removed the trace_[ku]probe structure from the
+trace_event_call->data pointer. As bpf_get_[ku]probe_info() were
+forgotten in that change, fix them now. These functions are currently
+only used by the bpf_task_fd_query() syscall handler to collect
+information about a perf event.
 
-[20759.125457] BUG: kernel NULL pointer dereference, address:
-0000000000000008
-[20759.132118] CPU: 53 PID: 51378 Comm: envoy Tainted: G            E
-5.4.32 #1
-[20759.140890] Hardware name: Inspur SA5212M4/YZMB-00370-109, BIOS
-4.1.12 06/18/2017
-[20759.149734] RIP: 0010:copy_page_to_iter+0xad/0x300
-[20759.270877] __tcp_bpf_recvmsg+0x12c/0x350
-[20759.276099] tcp_bpf_recvmsg+0x113/0x370
-[20759.281137] inet_recvmsg+0x55/0xc0
-[20759.285734] __sys_recvfrom+0xc8/0x130
-[20759.290566] ? __audit_syscall_entry+0x103/0x130
-[20759.296227] ? syscall_trace_enter+0x1d2/0x2d0
-[20759.301700] ? __audit_syscall_exit+0x1e4/0x290
-[20759.307235] __x64_sys_recvfrom+0x24/0x30
-[20759.312226] do_syscall_64+0x55/0x1b0
-[20759.316852] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: dihu <anny.hu@linux.alibaba.com>
+Fixes: 60d53e2c3b75 ("tracing/probe: Split trace_event related data from trace_probe")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Acked-by: Jakub Sitnicki <jakub@cloudflare.com>
-Link: https://lore.kernel.org/bpf/20200605084625.9783-1-anny.hu@linux.alibaba.com
+Acked-by: Yonghong Song <yhs@fb.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/bpf/20200608124531.819838-1-jean-philippe@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_bpf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/trace_kprobe.c | 2 +-
+ kernel/trace/trace_uprobe.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 9c5540887fbe5..7aa68f4aae6c3 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -64,6 +64,9 @@ int __tcp_bpf_recvmsg(struct sock *sk, struct sk_psock *psock,
- 		} while (i != msg_rx->sg.end);
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 35989383ae113..8eeb95e04bf52 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -1629,7 +1629,7 @@ int bpf_get_kprobe_info(const struct perf_event *event, u32 *fd_type,
+ 	if (perf_type_tracepoint)
+ 		tk = find_trace_kprobe(pevent, group);
+ 	else
+-		tk = event->tp_event->data;
++		tk = trace_kprobe_primary_from_call(event->tp_event);
+ 	if (!tk)
+ 		return -EINVAL;
  
- 		if (unlikely(peek)) {
-+			if (msg_rx == list_last_entry(&psock->ingress_msg,
-+						      struct sk_msg, list))
-+				break;
- 			msg_rx = list_next_entry(msg_rx, list);
- 			continue;
- 		}
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 2a8e8e9c1c754..fdd47f99b18fd 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -1412,7 +1412,7 @@ int bpf_get_uprobe_info(const struct perf_event *event, u32 *fd_type,
+ 	if (perf_type_tracepoint)
+ 		tu = find_probe_event(pevent, group);
+ 	else
+-		tu = event->tp_event->data;
++		tu = trace_uprobe_primary_from_call(event->tp_event);
+ 	if (!tu)
+ 		return -EINVAL;
+ 
 -- 
 2.25.1
 
