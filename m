@@ -2,441 +2,308 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F44AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE77720771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F702072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nitingupta.dev header.i=@nitingupta.dev header.b="XggkRuH8"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="UVJ9/QPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbgFWGmV (ORCPT
+        id S1730962AbgFWGoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730728AbgFWGmU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:42:20 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11131C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:42:20 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b5so9617302pfp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:42:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nitingupta.dev; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KBdtjn/eUP0KCyYSVUTxmPmnPLxzRk9ZjyIeGHC8krs=;
-        b=XggkRuH89w9WM7UUI0gtFUXmBpJJeiQ8HhmnKGIC62ASIzzvLjcPdXZM8gXGzpDR9T
-         Dghdu5HhwG05iIK1nZjtzDpKv9flcjL8dL+QwNuGXUcHpgV9Z97aZN/hO8zkhLs1EjLO
-         gWXYep04tm8y7Obgvs+yzLsBGyy9k1RYu2/MOJ+efIbL07OL1Gny5bqUMkBcq7cA9Y2T
-         nEPcza5AW78SuMzFJd6KSOS0GCJ7UHN0hUIEVsXL85n3e2t6Jq90IsGUcNQfCTC7QzEY
-         RNyeHHJWHuK9750anxAjvkpHqdcWHE6M0oZ8lsxu8afng1X1k4+yKXlYgmxFEqFap0LE
-         Y5fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KBdtjn/eUP0KCyYSVUTxmPmnPLxzRk9ZjyIeGHC8krs=;
-        b=NYq68Egvi1Em4+W18UIni1gtYBfahFVjL758ZP/3jwjQL9By/gFhw0NKY794+oGyDx
-         r8e5XGubk6eio89IZYMJN4Ou7Z1VyPM1iBrEMcMYEA9kTtRjDkqjN0x/amsQB3401aKw
-         w4PrcZFBDVhdGILeZmUZ84ERLp15dZZRXkEKcvJ7zZKB7GnpRE53nppvETE8z74BVAsj
-         F9V0HZWHqGDrji20q+bCgRfIG8BgbxyRePQH5brs+06k0G9teUC4ZyQF8X7vGQBXUECu
-         z4R8pZ0tUWNARfvlJfP+UGfT3Y/K6Qga5DFQkV8AqMArqVm9/KtsjBfkdW0qTo4n3Qlb
-         zAaQ==
-X-Gm-Message-State: AOAM530tu0xxhQrN2Dp4kFMnjDWQSarY86lxkRJqXDmmMRzbWdiUn/kL
-        XzWNhVprw4iLh6Ns7OtV0p84XQ==
-X-Google-Smtp-Source: ABdhPJzmtXuO9HplM4wbDlDxbABG1JX3QHBgxJPV2IcoQBTa5BZ/+goHRNwAJPJI+GVw43lV0gugOg==
-X-Received: by 2002:a62:a110:: with SMTP id b16mr16711905pff.102.1592894539267;
-        Mon, 22 Jun 2020 23:42:19 -0700 (PDT)
-Received: from ngvpn01-170-51.dyn.scz.us.nvidia.com ([2601:646:9302:1050:d88e:a8a0:b827:da35])
-        by smtp.gmail.com with ESMTPSA id ca6sm1357851pjb.46.2020.06.22.23.42.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 23:42:18 -0700 (PDT)
-Subject: Re: [PATCH v8] mm: Proactive compaction
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nitin Gupta <nigupta@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mips@vger.kernel.org
-References: <20200616204527.19185-1-nigupta@nvidia.com>
- <20200623022636.GA1051134@ubuntu-n2-xlarge-x86>
- <d51d4db4-31b6-8db8-b4b7-62d3080ad001@nitingupta.dev>
- <20200623045740.GA2912137@ubuntu-n2-xlarge-x86>
-From:   Nitin Gupta <ngupta@nitingupta.dev>
-Message-ID: <4d6b4822-f692-9cad-54c9-d6ef087a3947@nitingupta.dev>
-Date:   Mon, 22 Jun 2020 23:42:17 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200623045740.GA2912137@ubuntu-n2-xlarge-x86>
-Content-Type: text/plain; charset=utf-8
+        Tue, 23 Jun 2020 02:44:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:26234 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730635AbgFWGn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:43:59 -0400
+IronPort-SDR: 0HgRcXXQBRSCRLQacXHLqbK0aCxjjEq16lFIWOzLBhJBN7Oe3vH/fNjEDMawN2FNrc8zOhAh/C
+ LnwmqsMzzsPw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="131392280"
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="131392280"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 23:43:57 -0700
+IronPort-SDR: gRyOhPTSYh3q8zWeBbY+U921fRQR9fqVt4htZy6NbsKmJMCeRQ7Nhoy5UNQYLHmF/0gtiKjSLR
+ dJXNQjnUJ1Yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="452112000"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga005.jf.intel.com with ESMTP; 22 Jun 2020 23:43:57 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 22 Jun 2020 23:43:57 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 22 Jun 2020 23:43:57 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 22 Jun 2020 23:43:57 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.177)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 22 Jun 2020 23:43:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nP8TBDz1Uu6ygKRNFv/0qLfLsHYj9Nxi/CCwp+GbEYfC7m0xWSFPFvt3FEVGtDWUzo2z3s8FNFjQWPHM8xL5S042TAYerZqzuw4Phy8H7QnEiY0PBl3BSoiKR50WC8Ve5S2fglfBHwt51Qmb9RxrRvhsHhB4jLzsmgBgALq0Xhz6GmbbRnKzwDAQDhU7ZpozkWkX+zGAvUkNGAAlyDpakRb19z7Q95+ssT7VoudWKpuWur/3rXlIeqbS3aQHZHrwKq4WzmEuj2PRP+N6+S9sjyZO1/PdCNZ/UoeVfYNVvrV1a/I00I0cR/wRgJ7qPLTXZaISwH54wDTYSMWQRAqO8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GZed6e6lLPqftRY0AmBrf0V0x+yCfEMnEYvTMTsNQ40=;
+ b=NrXOgFhMBGLzyFp+vqTeRXqa0TY2b8Z7ZnGto8Ufb9t1uwPRW9a5Z/89uLCHUbmiEcfhNfDbk+OiUsMsoAs6Oku/dsPwDY3paQOJBTfY/Ugd94Z6mIyJ7G8Pq0PVqWOGKvqAO632njMwB3ssfm3NpQxBeGa6tz8VlnJcLgpuSFAR8QWzOcethm8wHE3DwqPFMSI5e61MgUr5l6ejV3buhrqz5H0HU//1FbD1uWEjqTxruatymHPreOvL+S3zgtjmPMzfsEx9qtPAQocCAKrKSZWps6/SO/mkr64XCAwIeFzIJeLEW8ZZvKm7CTEoMNHESA+Z2STue/vH6a+DTFYBCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GZed6e6lLPqftRY0AmBrf0V0x+yCfEMnEYvTMTsNQ40=;
+ b=UVJ9/QPkWpz5r14PzASX+h1OhQ7nebc36PwNBxKCSB/HF/vet0P4e8jW98YDDoEYSd8XWY1pFK47e16dv4srINGBN3hdiDxjKxK9htHm/YozXbiCcCkKdznnjfzSYs6i4pkkphTB7YT3d/QZ+nAs2XrefEfxwxDgrSadVt3NxHE=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
+ DM5PR1101MB2265.namprd11.prod.outlook.com (2603:10b6:4:50::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3109.22; Tue, 23 Jun 2020 06:43:55 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
+ 06:43:55 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 14/15] vfio: Document dual stage control
+Thread-Topic: [PATCH v2 14/15] vfio: Document dual stage control
+Thread-Index: AQHWP+klJ2WDrhzcJUGl5z7dUgTydqjZcnYAgALkw9CACFCUAIABK3hA
+Date:   Tue, 23 Jun 2020 06:43:54 +0000
+Message-ID: <DM5PR11MB1435B5A1D25A245AD5E3B6D3C3940@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
+ <1591877734-66527-15-git-send-email-yi.l.liu@intel.com>
+ <20200615094128.GB1491454@stefanha-x1.localdomain>
+ <DM5PR11MB1435C484283BDCD75F19EDB5C39A0@DM5PR11MB1435.namprd11.prod.outlook.com>
+ <20200622125114.GC15683@stefanha-x1.localdomain>
+In-Reply-To: <20200622125114.GC15683@stefanha-x1.localdomain>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.218]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7eb49aa1-328b-4a79-10a3-08d81740cca7
+x-ms-traffictypediagnostic: DM5PR1101MB2265:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR1101MB2265B1C1335A17691D2A8F39C3940@DM5PR1101MB2265.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-forefront-prvs: 04433051BF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p5zwf0+TCX1gLLQ45aLgZPtOgWPTnSWV9P8MeU6DjYH5E45azjBgqoF37yjhaNFv/I00xcNY94CPSHO+hvsMYWT/lDJWtBDCgGYa2MJ+qNOyKgVJqzFxycgWyDYt1v/mlMTY1lK6Q6shZ9U272NLwZhe/LnhH0adgxyvQklIbe94i1eq8ZVZVBGtVPE41yWKjE7E5mej7bU13yH08NJKpnIuLq9uR7J+oY+TQ4jCtbgXYlViJ8wF5dAlsjTT7GvdksOOECGUCbLd8evkwV+ighFlS9v3xIEnPSRFWt8FalXAqHPr/XnCfiJ8CMqRA34NIUf439cl6/JfwRrzBINHCl8Q8yBYAW9BVE4mcI+cbJ/3Trbe/9fmdjsojIX4J4H9sZBJHaolcvs88xiwdiLHqg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(346002)(366004)(376002)(136003)(83380400001)(2906002)(6916009)(8676002)(52536014)(478600001)(5660300002)(71200400001)(966005)(7696005)(6506007)(76116006)(64756008)(7416002)(26005)(66556008)(66476007)(66946007)(54906003)(186003)(316002)(33656002)(4326008)(8936002)(86362001)(55016002)(66446008)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: cCfq0L/wGTLlCgiraBieapfe2xZMMFs6RhpN9u3GNmdscIbzn2eKih6U+7pBra1oOF9TERgKQF5Z28x2aZ1wH/s0CiCM6XFU8Mirt0emExY+5PX2AXTy/QZj8AE1DkQpmQLA6bFrEE6LfhSNpVWO5qF5c/U5l31JcGM1tEdyre/qsVi/5nv3G4Sfwsy0aB8lDhyKdbv3SWQuUgtPT9EiO3Ou4rNEcX9eGFITx/tZaeR9QOeSZXVLzMFAKLv73G8d/owYvAseuN9Id48gjEbd06r6vSty68mGe9+yUw6g+kmUqEfnITdjhW2AodyWFvqsrDPg3rzuZ2x0feD4c2PStw/JhyfYFDylItU3oNMKqJ5JKr73MbBayMzUBNeFRYPJmiwvU45cvcPbK82Pi52P9e7nLlLUQkKG0pDSCFY6WzswuAtguUBRT/1aNUqG46VMYgHJozGmdsJB1YVfA8f6v0yOt/kJIxTZ0NpZPjpdxun4c85iPN76ddCCDHBZ77uL
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7eb49aa1-328b-4a79-10a3-08d81740cca7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2020 06:43:55.0412
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Gn1TSR9n1QJ8Qh/eXK1wZOryIg5NuBqgjS3SJXj7QKRwv0D37Y7RL9utydwHDtf39xo01oF3/tju2ivvkI9M8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2265
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 9:57 PM, Nathan Chancellor wrote:
-> On Mon, Jun 22, 2020 at 09:32:12PM -0700, Nitin Gupta wrote:
->> On 6/22/20 7:26 PM, Nathan Chancellor wrote:
->>> On Tue, Jun 16, 2020 at 01:45:27PM -0700, Nitin Gupta wrote:
->>>> For some applications, we need to allocate almost all memory as
->>>> hugepages. However, on a running system, higher-order allocations can
->>>> fail if the memory is fragmented. Linux kernel currently does on-demand
->>>> compaction as we request more hugepages, but this style of compaction
->>>> incurs very high latency. Experiments with one-time full memory
->>>> compaction (followed by hugepage allocations) show that kernel is able
->>>> to restore a highly fragmented memory state to a fairly compacted memory
->>>> state within <1 sec for a 32G system. Such data suggests that a more
->>>> proactive compaction can help us allocate a large fraction of memory as
->>>> hugepages keeping allocation latencies low.
->>>>
->>>> For a more proactive compaction, the approach taken here is to define a
->>>> new sysctl called 'vm.compaction_proactiveness' which dictates bounds
->>>> for external fragmentation which kcompactd tries to maintain.
->>>>
->>>> The tunable takes a value in range [0, 100], with a default of 20.
->>>>
->>>> Note that a previous version of this patch [1] was found to introduce
->>>> too many tunables (per-order extfrag{low, high}), but this one reduces
->>>> them to just one sysctl. Also, the new tunable is an opaque value
->>>> instead of asking for specific bounds of "external fragmentation", which
->>>> would have been difficult to estimate. The internal interpretation of
->>>> this opaque value allows for future fine-tuning.
->>>>
->>>> Currently, we use a simple translation from this tunable to [low, high]
->>>> "fragmentation score" thresholds (low=100-proactiveness, high=low+10%).
->>>> The score for a node is defined as weighted mean of per-zone external
->>>> fragmentation. A zone's present_pages determines its weight.
->>>>
->>>> To periodically check per-node score, we reuse per-node kcompactd
->>>> threads, which are woken up every 500 milliseconds to check the same. If
->>>> a node's score exceeds its high threshold (as derived from user-provided
->>>> proactiveness value), proactive compaction is started until its score
->>>> reaches its low threshold value. By default, proactiveness is set to 20,
->>>> which implies threshold values of low=80 and high=90.
->>>>
->>>> This patch is largely based on ideas from Michal Hocko [2]. See also the
->>>> LWN article [3].
->>>>
->>>> Performance data
->>>> ================
->>>>
->>>> System: x64_64, 1T RAM, 80 CPU threads.
->>>> Kernel: 5.6.0-rc3 + this patch
->>>>
->>>> echo madvise | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
->>>> echo madvise | sudo tee /sys/kernel/mm/transparent_hugepage/defrag
->>>>
->>>> Before starting the driver, the system was fragmented from a userspace
->>>> program that allocates all memory and then for each 2M aligned section,
->>>> frees 3/4 of base pages using munmap. The workload is mainly anonymous
->>>> userspace pages, which are easy to move around. I intentionally avoided
->>>> unmovable pages in this test to see how much latency we incur when
->>>> hugepage allocations hit direct compaction.
->>>>
->>>> 1. Kernel hugepage allocation latencies
->>>>
->>>> With the system in such a fragmented state, a kernel driver then
->>>> allocates as many hugepages as possible and measures allocation
->>>> latency:
->>>>
->>>> (all latency values are in microseconds)
->>>>
->>>> - With vanilla 5.6.0-rc3
->>>>
->>>>   percentile latency
->>>>   –––––––––– –––––––
->>>> 	   5    7894
->>>> 	  10    9496
->>>> 	  25   12561
->>>> 	  30   15295
->>>> 	  40   18244
->>>> 	  50   21229
->>>> 	  60   27556
->>>> 	  75   30147
->>>> 	  80   31047
->>>> 	  90   32859
->>>> 	  95   33799
->>>>
->>>> Total 2M hugepages allocated = 383859 (749G worth of hugepages out of
->>>> 762G total free => 98% of free memory could be allocated as hugepages)
->>>>
->>>> - With 5.6.0-rc3 + this patch, with proactiveness=20
->>>>
->>>> sysctl -w vm.compaction_proactiveness=20
->>>>
->>>>   percentile latency
->>>>   –––––––––– –––––––
->>>> 	   5       2
->>>> 	  10       2
->>>> 	  25       3
->>>> 	  30       3
->>>> 	  40       3
->>>> 	  50       4
->>>> 	  60       4
->>>> 	  75       4
->>>> 	  80       4
->>>> 	  90       5
->>>> 	  95     429
->>>>
->>>> Total 2M hugepages allocated = 384105 (750G worth of hugepages out of
->>>> 762G total free => 98% of free memory could be allocated as hugepages)
->>>>
->>>> 2. JAVA heap allocation
->>>>
->>>> In this test, we first fragment memory using the same method as for (1).
->>>>
->>>> Then, we start a Java process with a heap size set to 700G and request
->>>> the heap to be allocated with THP hugepages. We also set THP to madvise
->>>> to allow hugepage backing of this heap.
->>>>
->>>> /usr/bin/time
->>>>  java -Xms700G -Xmx700G -XX:+UseTransparentHugePages -XX:+AlwaysPreTouch
->>>>
->>>> The above command allocates 700G of Java heap using hugepages.
->>>>
->>>> - With vanilla 5.6.0-rc3
->>>>
->>>> 17.39user 1666.48system 27:37.89elapsed
->>>>
->>>> - With 5.6.0-rc3 + this patch, with proactiveness=20
->>>>
->>>> 8.35user 194.58system 3:19.62elapsed
->>>>
->>>> Elapsed time remains around 3:15, as proactiveness is further increased.
->>>>
->>>> Note that proactive compaction happens throughout the runtime of these
->>>> workloads. The situation of one-time compaction, sufficient to supply
->>>> hugepages for following allocation stream, can probably happen for more
->>>> extreme proactiveness values, like 80 or 90.
->>>>
->>>> In the above Java workload, proactiveness is set to 20. The test starts
->>>> with a node's score of 80 or higher, depending on the delay between the
->>>> fragmentation step and starting the benchmark, which gives more-or-less
->>>> time for the initial round of compaction. As t	he benchmark consumes
->>>> hugepages, node's score quickly rises above the high threshold (90) and
->>>> proactive compaction starts again, which brings down the score to the
->>>> low threshold level (80).  Repeat.
->>>>
->>>> bpftrace also confirms proactive compaction running 20+ times during the
->>>> runtime of this Java benchmark. kcompactd threads consume 100% of one of
->>>> the CPUs while it tries to bring a node's score within thresholds.
->>>>
->>>> Backoff behavior
->>>> ================
->>>>
->>>> Above workloads produce a memory state which is easy to compact.
->>>> However, if memory is filled with unmovable pages, proactive compaction
->>>> should essentially back off. To test this aspect:
->>>>
->>>> - Created a kernel driver that allocates almost all memory as hugepages
->>>>   followed by freeing first 3/4 of each hugepage.
->>>> - Set proactiveness=40
->>>> - Note that proactive_compact_node() is deferred maximum number of times
->>>>   with HPAGE_FRAG_CHECK_INTERVAL_MSEC of wait between each check
->>>>   (=> ~30 seconds between retries).
->>>>
->>>> [1] https://patchwork.kernel.org/patch/11098289/
->>>> [2] https://lore.kernel.org/linux-mm/20161230131412.GI13301@dhcp22.suse.cz/
->>>> [3] https://lwn.net/Articles/817905/
->>>>
->>>> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
->>>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
->>>> Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
->>>> Reviewed-by: Oleksandr Natalenko <oleksandr@redhat.com>
->>>> Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
->>>> To: Andrew Morton <akpm@linux-foundation.org>
->>>> CC: Vlastimil Babka <vbabka@suse.cz>
->>>> CC: Khalid Aziz <khalid.aziz@oracle.com>
->>>> CC: Michal Hocko <mhocko@suse.com>
->>>> CC: Mel Gorman <mgorman@techsingularity.net>
->>>> CC: Matthew Wilcox <willy@infradead.org>
->>>> CC: Mike Kravetz <mike.kravetz@oracle.com>
->>>> CC: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->>>> CC: David Rientjes <rientjes@google.com>
->>>> CC: Nitin Gupta <ngupta@nitingupta.dev>
->>>> CC: Oleksandr Natalenko <oleksandr@redhat.com>
->>>> CC: linux-kernel <linux-kernel@vger.kernel.org>
->>>> CC: linux-mm <linux-mm@kvack.org>
->>>> CC: Linux API <linux-api@vger.kernel.org>
->>>
->>> This is now in -next and causes the following build failure:
->>>
->>> $ make -skj"$(nproc)" ARCH=mips CROSS_COMPILE=mipsel-linux- O=out/mipsel distclean malta_kvm_guest_defconfig mm/compaction.o
->>> In file included from include/linux/dev_printk.h:14,
->>>                  from include/linux/device.h:15,
->>>                  from include/linux/node.h:18,
->>>                  from include/linux/cpu.h:17,
->>>                  from mm/compaction.c:11:
->>> In function 'fragmentation_score_zone',
->>>     inlined from '__compact_finished' at mm/compaction.c:1982:11,
->>>     inlined from 'compact_zone' at mm/compaction.c:2062:8:
->>> include/linux/compiler.h:339:38: error: call to '__compiletime_assert_301' declared with attribute error: BUILD_BUG failed
->>>   339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>       |                                      ^
->>> include/linux/compiler.h:320:4: note: in definition of macro '__compiletime_assert'
->>>   320 |    prefix ## suffix();    \
->>>       |    ^~~~~~
->>> include/linux/compiler.h:339:2: note: in expansion of macro '_compiletime_assert'
->>>   339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>       |  ^~~~~~~~~~~~~~~~~~~
->>> include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
->>>    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>>       |                                     ^~~~~~~~~~~~~~~~~~
->>> include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
->>>    59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->>>       |                     ^~~~~~~~~~~~~~~~
->>> arch/mips/include/asm/page.h:70:30: note: in expansion of macro 'BUILD_BUG'
->>>    70 | #define HUGETLB_PAGE_ORDER ({BUILD_BUG(); 0; })
->>>       |                              ^~~~~~~~~
->>> mm/compaction.c:66:32: note: in expansion of macro 'HUGETLB_PAGE_ORDER'
->>>    66 | #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
->>>       |                                ^~~~~~~~~~~~~~~~~~
->>> mm/compaction.c:1898:28: note: in expansion of macro 'COMPACTION_HPAGE_ORDER'
->>>  1898 |    extfrag_for_order(zone, COMPACTION_HPAGE_ORDER);
->>>       |                            ^~~~~~~~~~~~~~~~~~~~~~
->>> In function 'fragmentation_score_zone',
->>>     inlined from 'kcompactd' at mm/compaction.c:1918:12:
->>> include/linux/compiler.h:339:38: error: call to '__compiletime_assert_301' declared with attribute error: BUILD_BUG failed
->>>   339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>       |                                      ^
->>> include/linux/compiler.h:320:4: note: in definition of macro '__compiletime_assert'
->>>   320 |    prefix ## suffix();    \
->>>       |    ^~~~~~
->>> include/linux/compiler.h:339:2: note: in expansion of macro '_compiletime_assert'
->>>   339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>       |  ^~~~~~~~~~~~~~~~~~~
->>> include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
->>>    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>>       |                                     ^~~~~~~~~~~~~~~~~~
->>> include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
->>>    59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->>>       |                     ^~~~~~~~~~~~~~~~
->>> arch/mips/include/asm/page.h:70:30: note: in expansion of macro 'BUILD_BUG'
->>>    70 | #define HUGETLB_PAGE_ORDER ({BUILD_BUG(); 0; })
->>>       |                              ^~~~~~~~~
->>> mm/compaction.c:66:32: note: in expansion of macro 'HUGETLB_PAGE_ORDER'
->>>    66 | #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
->>>       |                                ^~~~~~~~~~~~~~~~~~
->>> mm/compaction.c:1898:28: note: in expansion of macro 'COMPACTION_HPAGE_ORDER'
->>>  1898 |    extfrag_for_order(zone, COMPACTION_HPAGE_ORDER);
->>>       |                            ^~~~~~~~~~~~~~~~~~~~~~
->>> In function 'fragmentation_score_zone',
->>>     inlined from 'kcompactd' at mm/compaction.c:1918:12:
->>> include/linux/compiler.h:339:38: error: call to '__compiletime_assert_301' declared with attribute error: BUILD_BUG failed
->>>   339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>       |                                      ^
->>> include/linux/compiler.h:320:4: note: in definition of macro '__compiletime_assert'
->>>   320 |    prefix ## suffix();    \
->>>       |    ^~~~~~
->>> include/linux/compiler.h:339:2: note: in expansion of macro '_compiletime_assert'
->>>   339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>       |  ^~~~~~~~~~~~~~~~~~~
->>> include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
->>>    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>>       |                                     ^~~~~~~~~~~~~~~~~~
->>> include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
->>>    59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->>>       |                     ^~~~~~~~~~~~~~~~
->>> arch/mips/include/asm/page.h:70:30: note: in expansion of macro 'BUILD_BUG'
->>>    70 | #define HUGETLB_PAGE_ORDER ({BUILD_BUG(); 0; })
->>>       |                              ^~~~~~~~~
->>> mm/compaction.c:66:32: note: in expansion of macro 'HUGETLB_PAGE_ORDER'
->>>    66 | #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
->>>       |                                ^~~~~~~~~~~~~~~~~~
->>> mm/compaction.c:1898:28: note: in expansion of macro 'COMPACTION_HPAGE_ORDER'
->>>  1898 |    extfrag_for_order(zone, COMPACTION_HPAGE_ORDER);
->>>       |                            ^~~~~~~~~~~~~~~~~~~~~~
->>> In function 'fragmentation_score_zone',
->>>     inlined from 'kcompactd' at mm/compaction.c:1918:12:
->>> include/linux/compiler.h:339:38: error: call to '__compiletime_assert_301' declared with attribute error: BUILD_BUG failed
->>>   339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>       |                                      ^
->>> include/linux/compiler.h:320:4: note: in definition of macro '__compiletime_assert'
->>>   320 |    prefix ## suffix();    \
->>>       |    ^~~~~~
->>> include/linux/compiler.h:339:2: note: in expansion of macro '_compiletime_assert'
->>>   339 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>       |  ^~~~~~~~~~~~~~~~~~~
->>> include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
->>>    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>>       |                                     ^~~~~~~~~~~~~~~~~~
->>> include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
->>>    59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->>>       |                     ^~~~~~~~~~~~~~~~
->>> arch/mips/include/asm/page.h:70:30: note: in expansion of macro 'BUILD_BUG'
->>>    70 | #define HUGETLB_PAGE_ORDER ({BUILD_BUG(); 0; })
->>>       |                              ^~~~~~~~~
->>> mm/compaction.c:66:32: note: in expansion of macro 'HUGETLB_PAGE_ORDER'
->>>    66 | #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
->>>       |                                ^~~~~~~~~~~~~~~~~~
->>> mm/compaction.c:1898:28: note: in expansion of macro 'COMPACTION_HPAGE_ORDER'
->>>  1898 |    extfrag_for_order(zone, COMPACTION_HPAGE_ORDER);
->>>       |                            ^~~~~~~~~~~~~~~~~~~~~~
->>> make[3]: *** [scripts/Makefile.build:281: mm/compaction.o] Error 1
->>> make[3]: Target '__build' not remade because of errors.
->>> make[2]: *** [Makefile:1765: mm] Error 2
->>> make[2]: Target 'mm/compaction.o' not remade because of errors.
->>> make[1]: *** [Makefile:336: __build_one_by_one] Error 2
->>> make[1]: Target 'distclean' not remade because of errors.
->>> make[1]: Target 'malta_kvm_guest_defconfig' not remade because of errors.
->>> make[1]: Target 'mm/compaction.o' not remade because of errors.
->>> make: *** [Makefile:185: __sub-make] Error 2
->>> make: Target 'distclean' not remade because of errors.
->>> make: Target 'malta_kvm_guest_defconfig' not remade because of errors.
->>> make: Target 'mm/compaction.o' not remade because of errors.
->>>
->>> I am not sure why MIPS is special with its handling of hugepage support
->>> but I am far from a MIPS expert :)
->>>
->>
->> Can you check if this patch fixes the compile error:
->>
->>
->> diff --git a/mm/compaction.c b/mm/compaction.c
->> index 45fd24a0ea0b..02963ffb9e70 100644
->> --- a/mm/compaction.c
->> +++ b/mm/compaction.c
->> @@ -62,7 +62,7 @@ static const unsigned int
->> HPAGE_FRAG_CHECK_INTERVAL_MSEC = 500;
->>   */
->>  #if defined CONFIG_TRANSPARENT_HUGEPAGE
->>  #define COMPACTION_HPAGE_ORDER HPAGE_PMD_ORDER
->> -#elif defined HUGETLB_PAGE_ORDER
->> +#elif defined CONFIG_HUGETLBFS
->>  #define COMPACTION_HPAGE_ORDER HUGETLB_PAGE_ORDER
->>  #else
->>  #define COMPACTION_HPAGE_ORDER (PMD_SHIFT - PAGE_SHIFT)
->>
->>
->>
->>
-> 
-> Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
-> 
+> From: Stefan Hajnoczi <stefanha@gmail.com>
+> Sent: Monday, June 22, 2020 8:51 PM
+>=20
+> On Wed, Jun 17, 2020 at 06:27:27AM +0000, Liu, Yi L wrote:
+> > > From: Stefan Hajnoczi <stefanha@gmail.com>
+> > > Sent: Monday, June 15, 2020 5:41 PM
+> > > On Thu, Jun 11, 2020 at 05:15:33AM -0700, Liu Yi L wrote:
+> > >
+> > > > From: Eric Auger <eric.auger@redhat.com>
+> > > >
+> > > > The VFIO API was enhanced to support nested stage control: a bunch =
+of
+> > > > new iotcls and usage guideline.
+> > > >
+> > > > Let's document the process to follow to set up nested mode.
+> > > >
+> > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > > Cc: Eric Auger <eric.auger@redhat.com>
+> > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > > Cc: Joerg Roedel <joro@8bytes.org>
+> > > > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > > > Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > > ---
+> > > > v1 -> v2:
+> > > > *) new in v2, compared with Eric's original version, pasid table bi=
+nd
+> > > >    and fault reporting is removed as this series doesn't cover them=
+.
+> > > >    Original version from Eric.
+> > > >    https://lkml.org/lkml/2020/3/20/700
+> > > >
+> > > >  Documentation/driver-api/vfio.rst | 64
+> > > > +++++++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 64 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/driver-api/vfio.rst
+> > > > b/Documentation/driver-api/vfio.rst
+> > > > index f1a4d3c..06224bd 100644
+> > > > --- a/Documentation/driver-api/vfio.rst
+> > > > +++ b/Documentation/driver-api/vfio.rst
+> > > > @@ -239,6 +239,70 @@ group and can access them as follows::
+> > > >  	/* Gratuitous device reset and go... */
+> > > >  	ioctl(device, VFIO_DEVICE_RESET);
+> > > >
+> > > > +IOMMU Dual Stage Control
+> > > > +------------------------
+> > > > +
+> > > > +Some IOMMUs support 2 stages/levels of translation. Stage correspo=
+nds
+> > > > +to the ARM terminology while level corresponds to Intel's VTD term=
+inology.
+> > > > +In the following text we use either without distinction.
+> > > > +
+> > > > +This is useful when the guest is exposed with a virtual IOMMU and
+> > > > +some devices are assigned to the guest through VFIO. Then the gues=
+t
+> > > > +OS can use stage 1 (GIOVA -> GPA or GVA->GPA), while the hyperviso=
+r
+> > > > +uses stage 2 for VM isolation (GPA -> HPA).
+> > > > +
+> > > > +Under dual stage translation, the guest gets ownership of the stag=
+e 1
+> > > > +page tables and also owns stage 1 configuration structures. The
+> > > > +hypervisor owns the root configuration structure (for security
+> > > > +reason), including stage 2 configuration. This works as long
+> > > > +configuration structures and page table
+> > >
+> > > s/as long configuration/as long as configuration/
+> >
+> > got it.
+> >
+> > >
+> > > > +format are compatible between the virtual IOMMU and the physical I=
+OMMU.
+> > >
+> > > s/format/formats/
+> >
+> > I see.
+> >
+> > > > +
+> > > > +Assuming the HW supports it, this nested mode is selected by choos=
+ing
+> > > > +the VFIO_TYPE1_NESTING_IOMMU type through:
+> > > > +
+> > > > +    ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_NESTING_IOMMU);
+> > > > +
+> > > > +This forces the hypervisor to use the stage 2, leaving stage 1
+> > > > +available for guest usage. The guest stage 1 format depends on IOM=
+MU
+> > > > +vendor, and it is the same with the nesting configuration method.
+> > > > +User space should check the format and configuration method after
+> > > > +setting nesting type by
+> > > > +using:
+> > > > +
+> > > > +    ioctl(container->fd, VFIO_IOMMU_GET_INFO, &nesting_info);
+> > > > +
+> > > > +Details can be found in Documentation/userspace-api/iommu.rst. For
+> > > > +Intel VT-d, each stage 1 page table is bound to host by:
+> > > > +
+> > > > +    nesting_op->flags =3D VFIO_IOMMU_NESTING_OP_BIND_PGTBL;
+> > > > +    memcpy(&nesting_op->data, &bind_data, sizeof(bind_data));
+> > > > +    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
+> > > > +
+> > > > +As mentioned above, guest OS may use stage 1 for GIOVA->GPA or GVA=
+->GPA.
+> > > > +GVA->GPA page tables are available when PASID (Process Address Spa=
+ce
+> > > > +GVA->ID)
+> > > > +is exposed to guest. e.g. guest with PASID-capable devices assigne=
+d.
+> > > > +For such page table binding, the bind_data should include PASID in=
+fo,
+> > > > +which is allocated by guest itself or by host. This depends on
+> > > > +hardware vendor e.g. Intel VT-d requires to allocate PASID from ho=
+st.
+> > > > +This requirement is available by VFIO_IOMMU_GET_INFO. User space
+> > > > +could allocate PASID from host by:
+> > > > +
+> > > > +    req.flags =3D VFIO_IOMMU_ALLOC_PASID;
+> > > > +    ioctl(container, VFIO_IOMMU_PASID_REQUEST, &req);
+> > >
+> > > It is not clear how the userspace application determines whether PASI=
+Ds must be
+> > > allocated from the host via VFIO_IOMMU_PASID_REQUEST or if the guest =
+itself
+> can
+> > > allocate PASIDs. The text mentions VFIO_IOMMU_GET_INFO but what exact=
+ly
+> > > should the userspace application check?
+> >
+> > For VT-d, spec 3.0 introduced Virtual Cmd interface for PASID allocatio=
+n,
+> > guest request PASID from host if it detects the interface. Application
+> > should check the IOMMU_NESTING_FEAT_SYSWIDE_PASID setting in the below
+> > info reported by VFIO_IOMMU_GET_INFO. And virtual VT-d should not repor=
+t
+> > SVA related capabilities to guest if  SYSWIDE_PASID is not supported by
+> > kernel.
+> >
+> > +struct iommu_nesting_info {
+> > +	__u32	size;
+> > +	__u32	format;
+> > +	__u32	features;
+> > +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
+> > +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
+> > +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
+> > +	__u32	flags;
+> > +	__u8	data[];
+> > +};
+> > https://lore.kernel.org/linux-iommu/1591877734-66527-3-git-send-email-
+> yi.l.liu@intel.com/
+>=20
+> I see. Is it possible to add this information into this patch or at
+> least a reference so readers know where to find out exactly how to do
+> this?
 
-Thanks. I will send out a patch with this fix soon.
+oh, yes. this would help a lot. will add it.
 
-Nitin
-
+Regards,
+Yi Liu
+> Stefan
