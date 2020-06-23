@@ -2,165 +2,81 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C65B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE3E120780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC5820780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="BwUqHklf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DUDXf0pl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388094AbgFWXio (ORCPT
+        id S2388104AbgFWXis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387598AbgFWXim (ORCPT
+        Tue, 23 Jun 2020 19:38:48 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:43432 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387985AbgFWXio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:38:42 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD0DC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:38:42 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id x24so94922edi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n+5DEpU8MPUbZ6qwtbZiaceci+Pn8MEakpjQ5eTQOsI=;
-        b=BwUqHklfO/CutrJi4sSum+0Oq/aYqJfREtlUlYvFqbg7C2o95ZsY+aAXTx7fNIqRlM
-         Om074BwZAmcoci+DUnxoZzH3aUY868XxJQ3e+6JDyQEeC5iWZeGHiE70uuI/atB1cNom
-         xCXyVRlG/BG+Rk5xaw7GbqzulJ1j6coo4t2CZwbOL2cZm9+rBLrxB8B9p4DdnTG5jBOR
-         QOAJ0t25Rb7Yshr94RCpaZRQfmpGRLjm10NrzcoQauH2bK0ogXDlXycuJivzDLWf2kpl
-         Gn4kSiTKiGrLyb2dt9L3qvS4RYk5JmJUO1YPrBkKVpK/5pye8XDZdSTLgh373wVJZ+jb
-         d8fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n+5DEpU8MPUbZ6qwtbZiaceci+Pn8MEakpjQ5eTQOsI=;
-        b=dT5C8ViFx1gxi2u+ag7nYhIgScAqsU9lwEEKjpBNR4xw7PJiX7g7Rk4CFZi2lrJ+o3
-         oQiS3L5EnkBJJQnJGFjpP2j1nq9keYt4FxvI/1bVvgXv9OThpdnL/4loADObnCu/WSrE
-         euF5xFeMmZGLydyL/kp2Mmo7h2zpkE8cKBQKw6i+wEjD9gklUtbH6Pvru8Wxe70Jkhyn
-         vLRJUX2IfgzdjRaPvXrGM4raR9GV46m8uHX2gCbctrHxs64gDD74U8ZrEg4klaqNKJHW
-         Tf3KGYEF5achnSRmO0dCCjIjp5sGvgsljCXuhMJzJ7PxH5aMnCyx/KXo0n//iNXPc8MT
-         GSPA==
-X-Gm-Message-State: AOAM531hKBABCHNAeEytmjxrlb6ZZuz0IWXtpJbViY2Grx6h9RRBx3LB
-        Q/wHSG8NOt2wwV22be3fUNecDSffL1Qo/eSny0W3sw==
-X-Google-Smtp-Source: ABdhPJwasF7vLiirxOKWGUzsRqmUk8WOnFuNI5R6Wx/5Z8Z+01/3A8rY2PQo2WH9IbTfWRuQy6ZyR4TfT8v3+uoVWY4=
-X-Received: by 2002:a05:6402:459:: with SMTP id p25mr23770678edw.383.1592955520956;
- Tue, 23 Jun 2020 16:38:40 -0700 (PDT)
+        Tue, 23 Jun 2020 19:38:44 -0400
+Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D777E20B7192;
+        Tue, 23 Jun 2020 16:38:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D777E20B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1592955523;
+        bh=hQwK1gRYRMLEuO0Gi1zguKsW5VTmFG8FYoY12ORsrOQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DUDXf0plUaNojGDZ23fU0oSPNmgLJL03VYNfdTRWB9pLofs/PPDcZXbuTP4f8yp4b
+         8sI+5Z+FMSaweeOMImg1yZV0lDLfnHkBZ6ngLuwsYzARXrn6ltrQq3mBi++UjnqXJ5
+         kJEleUxLEDIa9zBzsUZVnQZwPwWmqrxT9lyMSaCM=
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH] ima: AppArmor satisfies the audit rule requirements
+Date:   Tue, 23 Jun 2020 18:38:23 -0500
+Message-Id: <20200623233823.904882-1-tyhicks@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1503686.1591113304@warthog.procyon.org.uk> <23219b787ed1c20a63017ab53839a0d1c794ec53.camel@intel.com>
-In-Reply-To: <23219b787ed1c20a63017ab53839a0d1c794ec53.camel@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 23 Jun 2020 16:38:29 -0700
-Message-ID: <CAPcyv4g+T+GK4yVJs8bTT1q90SFDpFYUSL9Pk_u8WZROhREPkw@mail.gmail.com>
-Subject: Re: [GIT PULL] General notification queue and key notifications
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>
-Cc:     "raven@themaw.net" <raven@themaw.net>,
-        "kzak@redhat.com" <kzak@redhat.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "dray@redhat.com" <dray@redhat.com>,
-        "swhiteho@redhat.com" <swhiteho@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "mszeredi@redhat.com" <mszeredi@redhat.com>,
-        "jlayton@redhat.com" <jlayton@redhat.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "andres@anarazel.de" <andres@anarazel.de>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 6:15 PM Williams, Dan J
-<dan.j.williams@intel.com> wrote:
->
-> Hi David,
->
-> On Tue, 2020-06-02 at 16:55 +0100, David Howells wrote:
-> > Date: Tue, 02 Jun 2020 16:51:44 +0100
-> >
-> > Hi Linus,
-> >
-> > Can you pull this, please?  It adds a general notification queue
-> > concept
-> > and adds an event source for keys/keyrings, such as linking and
-> > unlinking
-> > keys and changing their attributes.
-> [..]
->
-> This commit:
->
-> >       keys: Make the KEY_NEED_* perms an enum rather than a mask
->
-> ...upstream as:
->
->     8c0637e950d6 keys: Make the KEY_NEED_* perms an enum rather than a mask
->
-> ...triggers a regression in the libnvdimm unit test that exercises the
-> encrypted keys used to store nvdimm passphrases. It results in the
-> below warning.
+AppArmor meets all the requirements for IMA in terms of audit rules
+since commit e79c26d04043 ("apparmor: Add support for audit rule
+filtering"). Update IMA's Kconfig section for CONFIG_IMA_LSM_RULES to
+reflect this.
 
-This regression is still present in tip of tree. David, have you had a
-chance to take a look?
+Fixes: e79c26d04043 ("apparmor: Add support for audit rule filtering")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+---
+ security/integrity/ima/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index edde88dbe576..794ebb5cbf74 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -54,7 +54,7 @@ config IMA_MEASURE_PCR_IDX
+ 
+ config IMA_LSM_RULES
+ 	bool
+-	depends on IMA && AUDIT && (SECURITY_SELINUX || SECURITY_SMACK)
++	depends on IMA && AUDIT && (SECURITY_SELINUX || SECURITY_SMACK || SECURITY_APPARMOR)
+ 	default y
+ 	help
+ 	  Disabling this option will disregard LSM based policy rules.
+-- 
+2.25.1
 
-
->
-> ---
->
-> WARNING: CPU: 15 PID: 6276 at security/keys/permission.c:35 key_task_permission+0xd3/0x140
-> Modules linked in: nd_blk(OE) nfit_test(OE) device_dax(OE) ebtable_filter(E) ebtables(E) ip6table_filter(E) ip6_tables(E) kvm_intel(E) kvm(E) irqbypass(E) nd_pmem(OE) dax_pmem(OE) nd_btt(OE) dax_p
-> ct10dif_pclmul(E) nd_e820(OE) nfit(OE) crc32_pclmul(E) libnvdimm(OE) crc32c_intel(E) ghash_clmulni_intel(E) serio_raw(E) encrypted_keys(E) trusted(E) nfit_test_iomap(OE) tpm(E) drm(E)
-> CPU: 15 PID: 6276 Comm: lt-ndctl Tainted: G           OE     5.7.0-rc6+ #155
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-> RIP: 0010:key_task_permission+0xd3/0x140
-> Code: c8 21 d9 39 d9 75 25 48 83 c4 08 4c 89 e6 48 89 ef 5b 5d 41 5c 41 5d e9 1b a7 00 00 bb 01 00 00 00 83 fa 01 0f 84 68 ff ff ff <0f> 0b 48 83 c4 08 b8 f3 ff ff ff 5b 5d 41 5c 41 5d c3 83 fa 06
->
-> RSP: 0018:ffffaddc42db7c90 EFLAGS: 00010297
-> RAX: 0000000000000001 RBX: 0000000000000001 RCX: ffffaddc42db7c7c
-> RDX: 0000000000000000 RSI: ffff985e1c46e840 RDI: ffff985e3a03de01
-> RBP: ffff985e3a03de01 R08: 0000000000000000 R09: 5461e7bc000002a0
-> R10: 0000000000000004 R11: 0000000066666666 R12: ffff985e1c46e840
-> R13: 0000000000000000 R14: ffffaddc42db7cd8 R15: ffff985e248c6540
-> FS:  00007f863c18a780(0000) GS:ffff985e3bbc0000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000006d3708 CR3: 0000000125a1e006 CR4: 0000000000160ee0
-> Call Trace:
->  lookup_user_key+0xeb/0x6b0
->  ? vsscanf+0x3df/0x840
->  ? key_validate+0x50/0x50
->  ? key_default_cmp+0x20/0x20
->  nvdimm_get_user_key_payload.part.0+0x21/0x110 [libnvdimm]
->  nvdimm_security_store+0x67d/0xb20 [libnvdimm]
->  security_store+0x67/0x1a0 [libnvdimm]
->  kernfs_fop_write+0xcf/0x1c0
->  vfs_write+0xde/0x1d0
->  ksys_write+0x68/0xe0
->  do_syscall_64+0x5c/0xa0
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x7f863c624547
-> Code: 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
-> RSP: 002b:00007ffd61d8f5e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 00007ffd61d8f640 RCX: 00007f863c624547
-> RDX: 0000000000000014 RSI: 00007ffd61d8f640 RDI: 0000000000000005
-> RBP: 0000000000000005 R08: 0000000000000014 R09: 00007ffd61d8f4a0
-> R10: fffffffffffff455 R11: 0000000000000246 R12: 00000000006dbbf0
-> R13: 00000000006cd710 R14: 00007f863c18a6a8 R15: 00007ffd61d8fae0
-> irq event stamp: 36976
-> hardirqs last  enabled at (36975): [<ffffffff9131fa40>] __slab_alloc+0x70/0x90
-> hardirqs last disabled at (36976): [<ffffffff910049c7>] trace_hardirqs_off_thunk+0x1a/0x1c
-> softirqs last  enabled at (35474): [<ffffffff91e00357>] __do_softirq+0x357/0x466
-> softirqs last disabled at (35467): [<ffffffff910eae96>] irq_exit+0xe6/0xf0
->
