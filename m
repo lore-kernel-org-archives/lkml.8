@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5037EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE56020720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B8620720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592871889;
-	bh=BYXm29KJj9Z265W9P4EdU/JUSgSluBZZAEaSUoJJsQE=;
+	s=default; t=1592871894;
+	bh=GcBg6ntwDJyu48eVyKptdQCgIvfOwSLRJBixW2jT1j0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X5gEyAhgoRzFiqAx6IyjKSkjtnbyLV3liXpqFk2hGwCZGMEXcLIFI2RzCrNy+fhzG
-	 zxYVkOCtRLEObM0sG2scNyXAWry5XoWvbLG3g8LByM6HCQ8rIg/fE6Jr+mYmmD16LW
-	 fifx1YCLn5e+HlUECcxf8Webr3jLcMQMR/dHbTbc=
+	b=DBmysAK025xPru0MiZO8Ns9+1ZjuiGWPO5LkGgTG00VGs4AajhDcmp2eNOny1EgLf
+	 WOnwIv5+XB0YLY3H8MYSHdU8RifEhbEfqek+2IEfNh5ajySkwGZvaSZkqKm+o+4Ze2
+	 tedkI55M5MOB+3fUfXTsQC2xwcFZQ9JF1KtbWteA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbgFWAYt (ORCPT
+        id S1731820AbgFWAYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:24:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730987AbgFWAYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731524AbgFWAYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:24:45 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08D1820702;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8CC207F5;
         Tue, 23 Jun 2020 00:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592871885;
-        bh=BYXm29KJj9Z265W9P4EdU/JUSgSluBZZAEaSUoJJsQE=;
+        bh=GcBg6ntwDJyu48eVyKptdQCgIvfOwSLRJBixW2jT1j0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7CKfT95tW8KyfFsxg+PGDlY0uHG/O2nqJn/dL8dJtxSHrRqIxikMbNu1WYuHEkhO
-         uVA3Ma/1zlyGV992up/UImsvQAUhdBrlW53ik5d9lwV8u2PDfpTwMWBxr0G9kpUjo4
-         cR/KsBj4EQqWGm/pOk4O0eTZeKQc0L0pJCab4RI0=
+        b=HRmXScL7XIZrt43O5a9qVqFMgFtDIu8WXdV8N0Z/uHHisOtJRNj7Od35shy/QND+K
+         S2dQK9kIgYZWJHxyqNKO3riSdR5MKTisWSTrDlTr9U40L1UNa+EXSjb1mKCSNCtR0r
+         Af2sAx5G1rlpKoGpBwpAadZm6n9GTNOOEJ/C8y+4=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 1/5] rcu-tasks: Convert sleeps to idle priority
-Date:   Mon, 22 Jun 2020 17:24:39 -0700
-Message-Id: <20200623002443.25954-1-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 3/5] rcu-tasks: Add #include of rcupdate_trace.h to update.c
+Date:   Mon, 22 Jun 2020 17:24:41 -0700
+Message-Id: <20200623002443.25954-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002423.GA25869@paulmck-ThinkPad-P72>
 References: <20200623002423.GA25869@paulmck-ThinkPad-P72>
@@ -61,47 +61,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit converts the long-standing schedule_timeout_interruptible()
-and schedule_timeout_uninterruptible() calls used by the various Tasks
-RCU's grace-period kthreads to schedule_timeout_idle().  This conversion
-avoids polluting the load-average with Tasks-RCU-related sleeping.
+Although this is in some strict sense unnecessary, it is good to allow
+the compiler to compare the function declaration with its definition.
+This commit therefore adds a #include of linux/rcupdate_trace.h to
+kernel/rcu/update.c.
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tasks.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/rcu/update.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index ce23f6c..91fee81 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -205,7 +205,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
- 			if (!rtp->cbs_head) {
- 				WARN_ON(signal_pending(current));
- 				set_tasks_gp_state(rtp, RTGS_WAIT_WAIT_CBS);
--				schedule_timeout_interruptible(HZ/10);
-+				schedule_timeout_idle(HZ/10);
- 			}
- 			continue;
- 		}
-@@ -227,7 +227,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
- 			cond_resched();
- 		}
- 		/* Paranoid sleep to keep this from entering a tight loop */
--		schedule_timeout_uninterruptible(HZ/10);
-+		schedule_timeout_idle(HZ/10);
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index 84843ad..c0fea80 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -42,6 +42,7 @@
+ #include <linux/kprobes.h>
+ #include <linux/slab.h>
+ #include <linux/irq_work.h>
++#include <linux/rcupdate_trace.h>
  
- 		set_tasks_gp_state(rtp, RTGS_WAIT_CBS);
- 	}
-@@ -336,7 +336,7 @@ static void rcu_tasks_wait_gp(struct rcu_tasks *rtp)
+ #define CREATE_TRACE_POINTS
  
- 		/* Slowly back off waiting for holdouts */
- 		set_tasks_gp_state(rtp, RTGS_WAIT_SCAN_HOLDOUTS);
--		schedule_timeout_interruptible(HZ/fract);
-+		schedule_timeout_idle(HZ/fract);
- 
- 		if (fract > 1)
- 			fract--;
 -- 
 2.9.5
 
