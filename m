@@ -2,196 +2,152 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4803C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9119120771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DBD2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:09:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="P2oBais/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NMW+DdGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgFWFIa (ORCPT
+        id S1730332AbgFWFJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 01:08:30 -0400
-Received: from mga02.intel.com ([134.134.136.20]:8335 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgFWFI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 01:08:29 -0400
-IronPort-SDR: 1D7Elj0jaHDY4oTVfFwTcVi8qIaLOpWWUMR6oGiAMELizN4XB4xQ4Pvj0PVteHD38QNwBfuhu0
- yCJNOACoxCjw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="132378471"
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="132378471"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 22:08:28 -0700
-IronPort-SDR: Q290IY4chja4vvP6+Aq1hh17GFbP1qKUGqcj6+TIVfZOkKJLwoQ46pdKcGG+okP1UhPuNdCi1t
- vp2uPA9nSIvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="478730363"
-Received: from lkp-server01.sh.intel.com (HELO f484c95e4fd1) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Jun 2020 22:08:27 -0700
-Received: from kbuild by f484c95e4fd1 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jnbAY-0000cL-Lb; Tue, 23 Jun 2020 05:08:26 +0000
-Date:   Tue, 23 Jun 2020 13:08:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/fsgsbase] BUILD SUCCESS
- a5d25e01c8146ad8846da4760422e12242fceafe
-Message-ID: <5ef18e3a.LIR3zB4nVP0Vi8j8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 23 Jun 2020 01:09:20 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35173 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728615AbgFWFJT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 01:09:19 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.west.internal (Postfix) with ESMTP id B51711523;
+        Tue, 23 Jun 2020 01:09:17 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Tue, 23 Jun 2020 01:09:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        BhAMcLIJbzcVg3EcrY75vci3LWn+3/RFUgkWveFZuJ0=; b=P2oBais/wQsWyflW
+        7M9CuhHGBe+s5rh4j5PHmrG4qqa2DSt9wgM1cw7/tCA5zfQ8gv/5GDqhvGnpTylm
+        U2S+Npbk63AyxQ2uImjOxQVqm2atxUjc2UPJC/ba8QdIZ3MmLGmIWBj7kNl0lKna
+        CY73qmyFvzPUIKRA1PNW9m7/2XqsMuVzz440nOuGPMJ5VvCOm+x33JSG3yTMFeIJ
+        690S8xmclTGmELMYd+7OfrHja3dDHrRJk57Eb4g0dyzelKRdHtU18slccMC4leC7
+        l3mJ8e+ZCmfJWB7czUSZCi8AssXZh8Qs5tt2kXeEZF5b6zDej7sDeSmwrDaqR6r/
+        n5u1rw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=BhAMcLIJbzcVg3EcrY75vci3LWn+3/RFUgkWveFZu
+        J0=; b=NMW+DdGap8KZTIHQbvLwetLGlIMc1O63Ajx49FYNZWz9feJ85fKkCwMBR
+        JxZoUnJtBBdsXzoE1fRToW8OnNHhzm/cyP+4CIIv4rLlHLzDFNfHRDRnlvpcyaze
+        baHas4qlQxZRXSePwQniZN+YEQuanAZWtN0UAkuXxkshu5GmdHgBIxdPuhF7XGGY
+        dbx5iobn3x+6R5CttamWqnJXoU7S6cftCK2siUw9izFhjfXwYXPyoD64lS12j5k7
+        xRxjrDzxsbDTodYyzgzTmvw88D0SVtoDncoCC15L5JnIbYnNKtY8QiJ0XYu1PkQJ
+        fm0IdpsFxceev2+iTdbBxNBNRJokg==
+X-ME-Sender: <xms:fI7xXluCzZiiw5TyO3G3rPn_ipXv_Kh8ChYb0WjBB8R1gcNQKfCm5w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekfedgleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
+    phepuddukedrvddtkedrheegrdehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:fI7xXudeeBAbIR-Bq7g_yMNCCzpZi5BqQm_le8CohSdrS7fSh-df7A>
+    <xmx:fI7xXoxK2O5j-A5hPOmzdPa1sr5MA0oBQCs0QNAOa2ExQwMxqU7uUw>
+    <xmx:fI7xXsPxBGssEkTCtHfpuAEsYU-F6aScDjkPrOtgjGeWR-qYVEyy4A>
+    <xmx:fY7xXoknoAQHhVn0UYRW0KtPaEG0jwRInryev1DhlCXM-RaokFavHQ>
+Received: from mickey.themaw.net (unknown [118.208.54.50])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1D807306743C;
+        Tue, 23 Jun 2020 01:09:12 -0400 (EDT)
+Message-ID: <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+From:   Ian Kent <raven@themaw.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>
+Cc:     Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 23 Jun 2020 13:09:08 +0800
+In-Reply-To: <20200622180306.GA1917323@kroah.com>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+         <20200619153833.GA5749@mtj.thefacebook.com>
+         <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
+         <20200619222356.GA13061@mtj.duckdns.org>
+         <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
+         <20200622174845.GB13061@mtj.duckdns.org>
+         <20200622180306.GA1917323@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/fsgsbase
-branch HEAD: a5d25e01c8146ad8846da4760422e12242fceafe  selftests/x86: Add a syscall_arg_fault_64 test for negative GSBASE
+On Mon, 2020-06-22 at 20:03 +0200, Greg Kroah-Hartman wrote:
+> On Mon, Jun 22, 2020 at 01:48:45PM -0400, Tejun Heo wrote:
+> > Hello, Ian.
+> > 
+> > On Sun, Jun 21, 2020 at 12:55:33PM +0800, Ian Kent wrote:
+> > > > > They are used for hotplugging and partitioning memory. The
+> > > > > size of
+> > > > > the
+> > > > > segments (and thus the number of them) is dictated by the
+> > > > > underlying
+> > > > > hardware.
+> > > > 
+> > > > This sounds so bad. There gotta be a better interface for that,
+> > > > right?
+> > > 
+> > > I'm still struggling a bit to grasp what your getting at but ...
+> > 
+> > I was more trying to say that the sysfs device interface with per-
+> > object
+> > directory isn't the right interface for this sort of usage at all.
+> > Are these
+> > even real hardware pieces which can be plugged in and out? While
+> > being a
+> > discrete piece of hardware isn't a requirement to be a device model
+> > device,
+> > the whole thing is designed with such use cases on mind. It
+> > definitely isn't
+> > the right design for representing six digit number of logical
+> > entities.
+> > 
+> > It should be obvious that representing each consecutive memory
+> > range with a
+> > separate directory entry is far from an optimal way of representing
+> > something like this. It's outright silly.
+> 
+> I agree.  And again, Ian, you are just "kicking the problem down the
+> road" if we accept these patches.  Please fix this up properly so
+> that
+> this interface is correctly fixed to not do looney things like this.
 
-elapsed time: 728m
+Fine, mitigating this problem isn't the end of the story, and you
+don't want to do accept a change to mitigate it because that could
+mean no further discussion on it and no further work toward solving
+it.
 
-configs tested: 126
-configs skipped: 6
+But it seems to me a "proper" solution to this will cross a number
+of areas so this isn't just "my" problem and, as you point out, it's
+likely to become increasingly problematic over time.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+So what are your ideas and recommendations on how to handle hotplug
+memory at this granularity for this much RAM (and larger amounts)?
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                           corgi_defconfig
-arm                        realview_defconfig
-xtensa                           allyesconfig
-arm                            mmp2_defconfig
-mips                malta_kvm_guest_defconfig
-arm                         s3c6400_defconfig
-xtensa                           alldefconfig
-sh                  sh7785lcr_32bit_defconfig
-parisc                           alldefconfig
-mips                malta_qemu_32r6_defconfig
-arc                    vdk_hs38_smp_defconfig
-arm                       netwinder_defconfig
-mips                          ath79_defconfig
-xtensa                    xip_kc705_defconfig
-arm                        keystone_defconfig
-arm                       versatile_defconfig
-m68k                            mac_defconfig
-sh                           sh2007_defconfig
-arm                           efm32_defconfig
-m68k                             alldefconfig
-m68k                         apollo_defconfig
-powerpc                     pseries_defconfig
-sh                        sh7785lcr_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20200622
-i386                 randconfig-a002-20200622
-i386                 randconfig-a003-20200622
-i386                 randconfig-a001-20200622
-i386                 randconfig-a005-20200622
-i386                 randconfig-a004-20200622
-x86_64               randconfig-a012-20200623
-x86_64               randconfig-a011-20200623
-x86_64               randconfig-a013-20200623
-x86_64               randconfig-a014-20200623
-x86_64               randconfig-a015-20200623
-x86_64               randconfig-a016-20200623
-i386                 randconfig-a013-20200622
-i386                 randconfig-a016-20200622
-i386                 randconfig-a012-20200622
-i386                 randconfig-a014-20200622
-i386                 randconfig-a015-20200622
-i386                 randconfig-a011-20200622
-x86_64               randconfig-a004-20200622
-x86_64               randconfig-a002-20200622
-x86_64               randconfig-a003-20200622
-x86_64               randconfig-a005-20200622
-x86_64               randconfig-a001-20200622
-x86_64               randconfig-a006-20200622
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+Ian
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
