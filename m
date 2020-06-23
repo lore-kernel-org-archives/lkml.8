@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2DC20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74B021531
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872684;
-	bh=eO9Q3V7983tc3kcuBt9Bg7GH/DNVxDpMAkG8JcRHURI=;
+	s=default; t=1592872686;
+	bh=G8x8XPcxZs85lPYsBAKK4gjW3vPHBeMjy9sfMokT/vU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bkXNPV+qJgZAHHPDMlJk0qGawno/cZWRf7wj/K7Jk8GZA7gbLj1Ar934GziKvfLXe
-	 BHGWI8X/hjAmz+4Y9cXZkMhOHYGxxEw+B0XmhSENVBcNXF1NIgZ33TlWAr21wakZjR
-	 H71EcyMR3Vpbl7lL6jU0XCvwE8t/jvJdgW0yWWZ4=
+	b=PZNYHXnhD3getV3x/qe4r79O2lV6jHT4Kyowk6tvTuGlm3h8H4baXKRHz5Se3P0CF
+	 OdMmECZyKOVx+RjeHckLfpAdbzxXPoHbRrhJng+GY/mI1asvZSevzg11acx56BFTMe
+	 5DO7AHBHz0A0ZUuSSGNCoRlcg14Lx6yhN398iTp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732184AbgFWAiC (ORCPT
+        id S1732190AbgFWAiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:38:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:38:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732071AbgFWAh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:37:56 -0400
+        id S1732035AbgFWAhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:37:55 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCC8320857;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C292208A7;
         Tue, 23 Jun 2020 00:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592872675;
-        bh=eO9Q3V7983tc3kcuBt9Bg7GH/DNVxDpMAkG8JcRHURI=;
+        bh=G8x8XPcxZs85lPYsBAKK4gjW3vPHBeMjy9sfMokT/vU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1nQiwRZwxNf9aCxzUh7zFQO65vmznR//RwBEDvZ7h8U5Q2guLVI1Mu/vYH3NMD5MP
-         KhihZfnzDcDqlpoxN11vnKg8ax3gOOf7ffqYuzu5FgcukREAX1B/HZGmHiA3GfBmu4
-         kC2rmQxUiQ6ZvH5r0+u1HKAl5YyyxyU2gEhu4sCc=
+        b=X3/xMKgiP4EpmTAH1AC2PhRM6tXgjGwaFp/g8Sw+iHTnyys0HFGBwZVFyu70mASJY
+         4jzschj1n26DBe4TQMTYKR2IajPHodEn5/WA3IevHagrYcJyMJ4gGZszpNzOAMFfHO
+         uvGpVpHZFw0bR2M1WkOLDUdNH45PDmXjdvRvGmN4=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 09/23] torture: Add --allcpus argument to the kvm.sh script
-Date:   Mon, 22 Jun 2020 17:37:38 -0700
-Message-Id: <20200623003752.26872-9-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 08/23] torture: Remove whitespace from identify_qemu_vcpus output
+Date:   Mon, 22 Jun 2020 17:37:37 -0700
+Message-Id: <20200623003752.26872-8-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623003731.GA26717@paulmck-ThinkPad-P72>
 References: <20200623003731.GA26717@paulmck-ThinkPad-P72>
@@ -61,32 +61,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Leaving off the kvm.sh script's --cpus argument results in the script
-testing the scenarios sequentially, which can be quite slow.  However,
-having to specify the actual number of CPUs can be error-prone.
-This commit therefore adds a --allcpus argument that causes kvm.sh to
-use all available CPUs.
+The identify_qemu_vcpus bash function can return numbers including
+whitespace characters, which can be a bit annoying in some bash
+dollar-sign substitutions.  This commit therefore strips all spaces and
+tabs from the value that identify_qemu_vcpus outputs.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/kvm.sh | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/testing/selftests/rcutorture/bin/functions.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
-index c279cf9..7dbce7a 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
-@@ -73,6 +73,10 @@ usage () {
- while test $# -gt 0
- do
- 	case "$1" in
-+	--allcpus)
-+		cpus=$TORTURE_ALLOTED_CPUS
-+		max_cpus=$TORTURE_ALLOTED_CPUS
-+		;;
- 	--bootargs|--bootarg)
- 		checkarg --bootargs "(list of kernel boot arguments)" "$#" "$2" '.*' '^--'
- 		TORTURE_BOOTARGS="$2"
+diff --git a/tools/testing/selftests/rcutorture/bin/functions.sh b/tools/testing/selftests/rcutorture/bin/functions.sh
+index 436b154..51f3464 100644
+--- a/tools/testing/selftests/rcutorture/bin/functions.sh
++++ b/tools/testing/selftests/rcutorture/bin/functions.sh
+@@ -231,7 +231,7 @@ identify_qemu_args () {
+ # Returns the number of virtual CPUs available to the aggregate of the
+ # guest OSes.
+ identify_qemu_vcpus () {
+-	lscpu | grep '^CPU(s):' | sed -e 's/CPU(s)://'
++	lscpu | grep '^CPU(s):' | sed -e 's/CPU(s)://' -e 's/[ 	]*//g'
+ }
+ 
+ # print_bug
 -- 
 2.9.5
 
