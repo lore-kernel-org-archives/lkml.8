@@ -2,126 +2,144 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF140C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE366C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD3EB2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2BE20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:28:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e7XzSW9B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/51c5fP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbgFWH21 (ORCPT
+        id S1731393AbgFWH2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:28:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45522 "EHLO
+        Tue, 23 Jun 2020 03:28:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731054AbgFWH20 (ORCPT
+        with ESMTP id S1731057AbgFWH2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:28:26 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D67C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:28:25 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id n10so1205826qvp.17
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:28:25 -0700 (PDT)
+        Tue, 23 Jun 2020 03:28:35 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C72C061573;
+        Tue, 23 Jun 2020 00:28:35 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t194so2061817wmt.4;
+        Tue, 23 Jun 2020 00:28:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=nTQWvepZzYSn4rQEU0+1xmqZl1OOXUog19hqREujmU4=;
-        b=e7XzSW9BiALiACWkVQb7mFB8mq6jtD10kFJCz/zBWeoYyHB4MjXZv5mb3HDvr1j71/
-         cgtALbncqtn6Z0+DsYEIBUPB3KG3dfumqLm0/4nvNRqwmDe//6bQQeEsAb4EuErIDHrC
-         F5KDujFk65s4f8WpCKGbF0Dz78AIJECom73qcL78UIZ6rRyPc+XmTX+uoaSgSOK2uipT
-         IUnqmSkwigP7MpQJjKOKMGyC3duuOp07Kl8UaBG91ONMvc0oCODHAg7iIrmqdISI7pXg
-         ibGwXhA9/6FTWCRR55quMDfGTB+Jv7KLEbaQ0vNx2FX6w5iBzvnoK5Gjq6ZqzQJPXj/q
-         WbnA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eAOzaLEvri148C9yhZfXxhkQ6ShWPHEsBtHOhazXNYw=;
+        b=k/51c5fP79PIPvtCdg/zzQVAGamF8aZgZZitf+FsnsPgs4L+4fjxxcE00SkMX+0WzW
+         klVODQPpnEBqm1ZF8kyQacSFxCsrNU/2bNIbDPwdV2l3nyPc3Z7mGBxNbovGYGxd9W8U
+         b8Yp5e3hOKBwUPBrPrn0iSJl6tQ+jpA3xtmE6yxzTKPo8aUKjpixYGyUOPYOzBVTGvcf
+         AtcPOLanSux/ja1dFIArUpv4dWAzenGbBGwxxoClNJRvyp6r7htdfPcuIgcZjM05l6z6
+         HFQPVrvf/lLJmfWgL4NcoorNrlKFyL0c0oM7SChGvlZZP/j+L52eZlnb54arWnNoH0MD
+         mq1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=nTQWvepZzYSn4rQEU0+1xmqZl1OOXUog19hqREujmU4=;
-        b=cuR+8qSTPsJTazTTnsREMLhWvPAXFWFi5qGtzBsKCTSx/ZOf3ElgeswEqHRPYMSKne
-         BbpYPM8uAI5swMRzdbeLJLw7smfRphi0GphEU5hgMGBslfaC7vlL6ATNASnVsyy8MNmL
-         OHFNp9UPeiXh9FmahK/GGuMpyBlfclkAKx4rf4F2BKnwevR2NEtrFcbL3+vkTPfLdNXU
-         jEMnCHb6SmeyDr2AeCPQrR8OvVL3lXstLE6niUDUKPG4e+g6cxWlpAX4RTzXG9W386yk
-         ZSMeQWALIk9PBJcpls6JVmY7DsgJVhCBUTkACKV2vRcGaOc7r+11Pn2k2oJ6wLe3g4KS
-         m9HQ==
-X-Gm-Message-State: AOAM533z7okH80NF77QGlPG0TlCZLVA3dhckG+LR8Cv3faH10DOaEmSq
-        hUXYzi5Vx6kby8fHXozkrspABrTK7Q==
-X-Google-Smtp-Source: ABdhPJwj2i8o0If+UymYmvMwr9/d224DtNwbNKtKbk/yUkG5UMMHuHoay3TWBfoyY2g3OwYvH8W1ykEufQ==
-X-Received: by 2002:a05:6214:8d1:: with SMTP id da17mr5298435qvb.62.1592897304605;
- Tue, 23 Jun 2020 00:28:24 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 09:26:54 +0200
-Message-Id: <20200623072653.114563-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH v2] mm, kcsan: Instrument SLAB/SLUB free with "ASSERT_EXCLUSIVE_ACCESS"
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, akpm@linux-foundation.org
-Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eAOzaLEvri148C9yhZfXxhkQ6ShWPHEsBtHOhazXNYw=;
+        b=VATVWVj0sbU7e42+pZrisTbneuxcXhzwTDyoRDUQAWf4UsQilhh/bKFbNzFWqXVE3A
+         J49cVOSBoS0k6+DXxmnTtP3ZJn/8GemsUFmUquDxGn3rV+nhWKK6Nm4mRJgubxoUXFXJ
+         EjOc7HBseI1phsp40rkJJGiYMlsmXmUls5qWZ9GGYA+xSuKBtJ3DFf9MfcqTYZjzA8yZ
+         Zww85TuMrvom+wcaOkpilOYmA4zosM12azvyA4qR7ulYkPyrLy1WACuRhLIkCVRNbfd/
+         JydEpUSvmD5LepZjO8VnKLqWiXTUajLM7juGtESLqEl5bZzF1JqrV2vXwEbw+1N8esdR
+         whJg==
+X-Gm-Message-State: AOAM533PHPI/0ODZm/7Rno05aJDTWHRXizglnmh9uILRkuGjaJM6xDzv
+        B3+gWJJuzofblxhxwpsaiwHgQsx+/8g=
+X-Google-Smtp-Source: ABdhPJzuz4+aXy0DOjxqXCya5QX3G7FXScweqlUDkFN+8wby91HADp2yldiuF1+TtlQwjLBQ2at4Ig==
+X-Received: by 2002:a1c:6102:: with SMTP id v2mr20964522wmb.6.1592897314040;
+        Tue, 23 Jun 2020 00:28:34 -0700 (PDT)
+Received: from [192.168.2.27] (39.35.broadband4.iol.cz. [85.71.35.39])
+        by smtp.gmail.com with ESMTPSA id 185sm2496882wmz.22.2020.06.23.00.28.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 00:28:33 -0700 (PDT)
+Subject: Re: New mode DM-Verity error handling
+To:     JeongHyeon Lee <jhs2.lee@samsung.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sami Tolvanen <samitolvanen@google.com>
+Cc:     dm-devel@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, agk@redhat.com, corbet@lwn.net
+References: <CGME20200618070250epcas1p409eb2ddd19ecc5d55c219ac3dc884f25@epcas1p4.samsung.com>
+ <98eac3fc-c399-625d-5730-29853b3a0771@samsung.com>
+ <20200618154444.GB18007@redhat.com> <20200618165006.GA103290@google.com>
+ <20200618170952.GA18057@redhat.com>
+ <b7eaf4a7-6692-ffdf-2bbc-b622f93ef601@gmail.com>
+ <250156a6-a2d6-dbfd-daa3-be9c36f0cf36@samsung.com>
+From:   Milan Broz <gmazyland@gmail.com>
+Message-ID: <2c3bf8c1-c742-b1e9-6ff6-91b2253638e1@gmail.com>
+Date:   Tue, 23 Jun 2020 09:28:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <250156a6-a2d6-dbfd-daa3-be9c36f0cf36@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide the necessary KCSAN checks to assist with debugging racy
-use-after-frees. While KASAN is more reliable at generally catching such
-use-after-frees (due to its use of a quarantine), it can be difficult to
-debug racy use-after-frees. If a reliable reproducer exists, KCSAN can
-assist in debugging such issues.
+On 23/06/2020 01:53, JeongHyeon Lee wrote:
+> 
+> For what reason isn't panic better?
 
-Note: ASSERT_EXCLUSIVE_ACCESS is a convenience wrapper if the size is
-simply sizeof(var). Instead, here we just use __kcsan_check_access()
-explicitly to pass the correct size.
+I did not say panic is better, I said that while we have restart already in mainline dm-verity code,
+panic() is almost the same, so I see no problem in merging this patch.
 
-Signed-off-by: Marco Elver <elver@google.com>
----
-v2:
-* SLAB_TYPESAFE_BY_RCU allows racy use after free within RCU grace
-  period. If slab is SLAB_TYPESAFE_BY_RCU do not check access.
----
- mm/slab.c | 5 +++++
- mm/slub.c | 5 +++++
- 2 files changed, 10 insertions(+)
+Stopping system this way could create more damage if it is not configured properly,
+but I think it is quite common to stop the system as fast as possible if data system integrity
+is violated...
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 9350062ffc1a..cba71d88e89c 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -3426,6 +3426,11 @@ static __always_inline void __cache_free(struct kmem_cache *cachep, void *objp,
- 	if (kasan_slab_free(cachep, objp, _RET_IP_))
- 		return;
- 
-+	/* Use KCSAN to help debug racy use-after-free. */
-+	if (!(cachep->flags & SLAB_TYPESAFE_BY_RCU))
-+		__kcsan_check_access(objp, cachep->object_size,
-+				     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT);
-+
- 	___cache_free(cachep, objp, caller);
- }
- 
-diff --git a/mm/slub.c b/mm/slub.c
-index b8f798b50d44..4a9d43fda669 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1470,6 +1470,11 @@ static __always_inline bool slab_free_hook(struct kmem_cache *s, void *x)
- 	if (!(s->flags & SLAB_DEBUG_OBJECTS))
- 		debug_check_no_obj_freed(x, s->object_size);
- 
-+	/* Use KCSAN to help debug racy use-after-free. */
-+	if (!(s->flags & SLAB_TYPESAFE_BY_RCU))
-+		__kcsan_check_access(x, s->object_size,
-+				     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT);
-+
- 	/* KASAN might put x into memory quarantine, delaying its reuse */
- 	return kasan_slab_free(s, x, _RET_IP_);
- }
--- 
-2.27.0.111.gc72c7da667-goog
+> If when i suggested new patch, i will send you a patch that increased 
+> minor version.
 
+I think Mike can fold-in version increase, if the patch is accepted.
+
+But please include these version changes with every new feature.
+
+Actually I am tracking it here for dm-verity as part of veritysetup userspace documentation:
+  https://gitlab.com/cryptsetup/cryptsetup/-/wikis/DMVerity
+
+Thanks,
+Milan
+
+> On 22/06/2020 16:58, Milan Broz wrote:
+>> On 18/06/2020 19:09, Mike Snitzer wrote:
+>>> On Thu, Jun 18 2020 at 12:50pm -0400,
+>>> Sami Tolvanen <samitolvanen@google.com> wrote:
+>>>
+>>>> On Thu, Jun 18, 2020 at 11:44:45AM -0400, Mike Snitzer wrote:
+>>>>> I do not accept that panicing the system because of verity failure is
+>>>>> reasonable.
+>>>>>
+>>>>> In fact, even rebooting (via DM_VERITY_MODE_RESTART) looks very wrong.
+>>>>>
+>>>>> The device should be put in a failed state and left for admin recovery.
+>>>> That's exactly how the restart mode works on some Android devices. The
+>>>> bootloader sees the verification error and puts the device in recovery
+>>>> mode. Using the restart mode on systems without firmware support won't
+>>>> make sense, obviously.
+>>> OK, so I need further justification from Samsung why they are asking for
+>>> this panic mode.
+>> I think when we have reboot already, panic is not much better :-)
+>>
+>> Just please note that dm-verity is used not only in Android world (with own tooling)
+>> but in normal Linux distributions, and I need to modify userspace (veritysetup) to support
+>> and recognize this flag.
+>>
+>> Please *always* increase minor dm-verity target version when adding a new feature
+>> - we can then provide some better hint if it is not supported.
+>>
+>> Thanks,
+>> Milan
+>>
+>>
