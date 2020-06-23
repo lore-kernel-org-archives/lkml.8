@@ -2,121 +2,112 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1143DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E86AA2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D0A20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592919792;
+	bh=g6tRclVhtSAW5qi8EewP5Y8pul/IVob3dqrhPrm4VBY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=cgt/yGTBU9ycPrSdVqBaFN95iPCKP68aSbY7vzA2hiFVi9GhtuTTNXQ94AnUMJgsm
+	 bs48HHLygZVw/k3U1ofidH7v/Wp9dj8+OyO8bqIKSRxkx/D8ww0qd8Ut5IKhdHvtUD
+	 TAWHUE0+eGpAltibmBYk3tkz2/gjuV2WQr4m6kWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732732AbgFWNmf convert rfc822-to-8bit (ORCPT
+        id S1732759AbgFWNnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:42:35 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:43182 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732631AbgFWNme (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:42:34 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-42-tuWEcT22NmmyTjcRjBXV1g-1; Tue, 23 Jun 2020 14:42:31 +0100
-X-MC-Unique: tuWEcT22NmmyTjcRjBXV1g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 23 Jun 2020 14:42:30 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 23 Jun 2020 14:42:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
+        Tue, 23 Jun 2020 09:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732629AbgFWNnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:43:09 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 391BF2070E;
+        Tue, 23 Jun 2020 13:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592919789;
+        bh=g6tRclVhtSAW5qi8EewP5Y8pul/IVob3dqrhPrm4VBY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=qcAuHWsDyGTkatCEmevMuVi9SvNOqHcICBUvMOANCoEUsupKwv/jFgfmcn5XwzurA
+         G803DE95LTHZxb2lY9lXcVsDOStklRdWseO7wE/h+KEz5A0mGBeK7O14jVXIZC6JzG
+         juIiXlkOSfkTvkppE/39/qST8cRxQp1WjwAbxiSE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1E5CE352265E; Tue, 23 Jun 2020 06:43:09 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 06:43:09 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>, kernel-team@fb.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
         Alexander Potapenko <glider@google.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
- each syscall
-Thread-Topic: [PATCH v4 3/5] stack: Optionally randomize kernel stack offset
- each syscall
-Thread-Index: AQHWSPkh/p0bc5D3iUelrjbiR4wWCajmNFDA
-Date:   Tue, 23 Jun 2020 13:42:30 +0000
-Message-ID: <917458f43d194385a760d75292d4eb47@AcuMS.aculab.com>
-References: <20200622193146.2985288-1-keescook@chromium.org>
- <20200622193146.2985288-4-keescook@chromium.org>
- <20200622225615.GA3511702@rani.riverdale.lan>
- <202006221604.871B13DE3@keescook>
- <20200623000510.GA3542245@rani.riverdale.lan>
- <202006221748.DA27A7FFC@keescook>
-In-Reply-To: <202006221748.DA27A7FFC@keescook>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Dmitry Vyukov <dvyukov@google.com>, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [PATCH kcsan 0/10] KCSAN updates for v5.9
+Message-ID: <20200623134309.GB9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200623004310.GA26995@paulmck-ThinkPad-P72>
+ <CANpmjNOV=rGaDmvU+neSe8Pyz-Jezm6c45LS0-DJHADNU9H_QA@mail.gmail.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNOV=rGaDmvU+neSe8Pyz-Jezm6c45LS0-DJHADNU9H_QA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook
-> Sent: 23 June 2020 01:56
-> On Mon, Jun 22, 2020 at 08:05:10PM -0400, Arvind Sankar wrote:
-> > But I still don't see anything _stopping_ the compiler from optimizing
-> > this better in the future. The "=m" is not a barrier: it just informs
-> > the compiler that the asm produces an output value in *ptr (and no other
-> > outputs). If nothing can consume that output, it doesn't stop the
-> > compiler from freeing the allocation immediately after the asm instead
-> > of at the end of the function.
+On Tue, Jun 23, 2020 at 08:31:15AM +0200, Marco Elver wrote:
+> On Tue, 23 Jun 2020 at 02:43, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > Hello!
+> >
+> > This series provides KCSAN updates:
+> >
+> > 1.      Annotate a data race in vm_area_dup(), courtesy of Qian Cai.
+> >
+> > 2.      x86/mm/pat: Mark an intentional data race, courtesy of Qian Cai.
+> >
+> > 3.      Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init_rcu().
+> >
+> > 4.      Add test suite, courtesy of Marco Elver.
+> >
+> > 5.      locking/osq_lock: Annotate a data race in osq_lock.
+> >
+> > 6.      Prefer '__no_kcsan inline' in test, courtesy of Marco Elver.
+> >
+> > 7.      Silence -Wmissing-prototypes warning with W=1, courtesy of Qian Cai.
+> >
+> > 8.      Rename test.c to selftest.c, courtesy of Marco Elver.
+> >
+> > 9.      Remove existing special atomic rules, courtesy of Marco Elver.
+> >
+> > 10.     Add jiffies test to test suite, courtesy of Marco Elver.
 > 
-> Ah, yeah, I get what you mean.
+> Do we want GCC support back for 5.9?
 > 
-> > I'm talking about something like
-> > 	asm volatile("" : : "r" (ptr) : "memory");
-> > which tells the compiler that the asm may change memory arbitrarily.
+>    https://lkml.kernel.org/r/20200618093118.247375-1-elver@google.com
 > 
-> Yeah, I will adjust it.
-> 
-> > Here, we don't use it really as a barrier, but to tell the compiler that
-> > the asm may have stashed the value of ptr somewhere in memory, so it's
-> > not free to reuse the space that it pointed to until the function
-> > returns (unless it can prove that nothing accesses memory, not just that
-> > nothing accesses ptr).
+> I was hoping it could go into 5.9, because it makes a big difference
+> in terms of usability as it provides more compiler choice. The only
+> significant change for GCC support is the addition of the checking of
+> (CC_IS_GCC && (....)).
 
-Do you need another asm volatile("" : : "r" (ptr) : "memory");
-(or similar) at the bottom of the function - that the compiler thinks
-might access the memory whose address it thought got saved earlier?
+Very good, I will rebase the following into the KCSAN branch for v5.9:
 
-I wonder if it would be easier to allocate the stack space
-in the asm wrapper? At least as an architecture option.
+	3e490e3 kcsan: Re-add GCC as a supported compiler
+	03296de kcsan: Simplify compiler flags
+	d831090 kcsan: Disable branch tracing in core runtime
 
-	David
+Please let me know if any other adjustments are needed.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+							Thanx, Paul
