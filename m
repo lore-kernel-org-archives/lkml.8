@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0840C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B72C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 994262078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574D22078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjiZFdgv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qlW0UT0I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733307AbgFWSI6 (ORCPT
+        id S2387440AbgFWSJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60214 "EHLO
+        Tue, 23 Jun 2020 14:09:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733284AbgFWSIy (ORCPT
+        with ESMTP id S1733214AbgFWSIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:08:54 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28DCDC061755;
-        Tue, 23 Jun 2020 11:08:54 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l10so21516976wrr.10;
-        Tue, 23 Jun 2020 11:08:54 -0700 (PDT)
+        Tue, 23 Jun 2020 14:08:46 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97359C061573;
+        Tue, 23 Jun 2020 11:08:45 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id l17so3824532wmj.0;
+        Tue, 23 Jun 2020 11:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NJb/Qt78Z8DfdEW8Q4k8rLkSQZ59o11xf0Ra8vOTaoA=;
-        b=ZjiZFdgv6Mlt7tW9bGMwcXe5JCCDkexXud8ofkREEEYmcu6QkHtaIBBz/x1Tvqwq1t
-         OqRM1XWKnQQQABGjV6x0jVASO+DEzhoxD5/PH8FiTC7w6GklsbDxPNb7IfHzysNgExr3
-         S/BawsNvDrzCeZWkEhOdL0BlpPpTbOWnIbjq+5FtuQIdsueEZSKPZ58vLOrhpqy0PWc2
-         NZaWzOvCCKXwcS9cydX16CxWjxm73C0phsAvXQgIQtFgT47M79uvx1Qthb/tVkmiC99/
-         46WY2LfQIkBchQY3IEJ+IUzHOAJar8PKyKF/TnilhXq/ID+YQGaT+fgXEX5/5BWnoR9T
-         Ee7w==
+        bh=J8OcL2igjAskSXad9xrzVVWdlH7GJvm1mWz0l8/dfzA=;
+        b=qlW0UT0INRLFF+18UA4WegQJDYUTYkGa2on8OgajVSza/LdEv0MWiQLmjbiZXiychi
+         MZ0XwkY/FFJkgJXCubN2Lcmn8lrhgmBmyErSPqFD7telVRgLXQFHBSRNwGi4oepLFl1F
+         oZH9WgVeI0xsT78HliB0EhzAp3l6NzZDOnIFl+iSQzBkjuZMpxyZn1YRb7o31c1W+yHJ
+         TO1FzUfCQyz5YSOQ5AQyvPpyyxbfP3qLwX96ZMOWezf88JTykzysuhRYxsiqtkK0bfOL
+         Z+SuRnEwSSD1bPcJ1UzE3Oxbt8/Z3fhj7NAe9Lq7Q4LLXlfgnWFGfQ3aazEiMpRcpurX
+         qq0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NJb/Qt78Z8DfdEW8Q4k8rLkSQZ59o11xf0Ra8vOTaoA=;
-        b=Y6Ka1t/klpAVmSXCOGzcmcmxP6mvxA4BuAl713yWFzkbUntlkRzralaAo08wjakVJr
-         MY7z7UDuZWW4NOATQ/6T9kcWKn8fqSZtOVS0slpl4rJC/1uy4nf/kSURNyf+MyUtiz9t
-         3pPr0lDhSZ05Fe/QK9zd2g5FH9L0/ep14vj7OCkmpQSlQrRIZmYRf/T58Jk1nEMhIyz1
-         o8dJmGvhFXq6+brao9OXccmDqbnM4YvJLlevndutS5enrU6OD1NtCPODdWysEL2862hq
-         k+cAx844jFJVe277Vurvs3mpt9vLtU4NdO6CRYsLyPzYfUJAp9y4kb48QSm1RD1OGfMX
-         3mTA==
-X-Gm-Message-State: AOAM530c0qOjGdMHGb708So+npmZKJqBizl9BkJ4MxN3yZz6QT9iSYs3
-        o+d9/0oG6lHbOOL3bR6qBio=
-X-Google-Smtp-Source: ABdhPJwKbNHj7fxZw6W0flIpjCg5w0QrmDUyVyAjAgJ5owo2FB2xcMGrmJigdwLxPwfrCF8PiCLs8g==
-X-Received: by 2002:adf:ed87:: with SMTP id c7mr1772034wro.422.1592935732911;
-        Tue, 23 Jun 2020 11:08:52 -0700 (PDT)
+        bh=J8OcL2igjAskSXad9xrzVVWdlH7GJvm1mWz0l8/dfzA=;
+        b=hte+FF7NIXcplGxu1F3+0w6pdRq2AZCJ7yhdtnu1gt66++gZUo8MgND81pC3ZVqZnu
+         C1B1zfW8KijG57WbkfoVsbL6oFSwni7UXPqU4d/PHQHd+c9Gyu5/OLWC96Jb7MgDIvmt
+         drcSkZf0oMwT7yhxNejzo6p0W7HoJvooVGeV11en8XuKT0RpEJINmhIHe0m2gSPZ7V3D
+         hBfi+eGiCBXr9xnAp1pkUoSSJ50vj5Na+/ztYMOjA21Ormj+GCmEPyIbjt2Gkh0czwYo
+         tcF0uX+H/gv0jdj2d9xC0YsTQDQEHj1SZ+2p4rMAl/AMprufaT1d+DSTaxKYk+mPJEQT
+         2gdw==
+X-Gm-Message-State: AOAM532OMm2ar+fEE1x6urQcrxESdrvIk8xKJPu9URv69Sx2LvuZNkSb
+        71iLOUhXHGYUnMkS5wFwvR4=
+X-Google-Smtp-Source: ABdhPJwXRXk7kAY+Swq+1CCO+mVVjQWtgirNw0i03TSNku0/pz4e3x4VGJtYXemKG951DrgLzVPTrw==
+X-Received: by 2002:a1c:96ce:: with SMTP id y197mr26789007wmd.55.1592935724369;
+        Tue, 23 Jun 2020 11:08:44 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id c16sm4719529wml.45.2020.06.23.11.08.51
+        by smtp.googlemail.com with ESMTPSA id c16sm4719529wml.45.2020.06.23.11.08.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 11:08:52 -0700 (PDT)
+        Tue, 23 Jun 2020 11:08:44 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -72,9 +72,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Rajendra Nayak <rnayak@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 7/8] arm64: dts: qcom: sdm630: nile: Remove Volume Down gpio-key
-Date:   Tue, 23 Jun 2020 20:08:31 +0200
-Message-Id: <20200623180832.254163-8-konradybcio@gmail.com>
+Subject: [PATCH 3/8] arm64: dts: qcom: sdm630: Add tsens node
+Date:   Tue, 23 Jun 2020 20:08:27 +0200
+Message-Id: <20200623180832.254163-4-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623180832.254163-1-konradybcio@gmail.com>
 References: <20200623180832.254163-1-konradybcio@gmail.com>
@@ -85,42 +85,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the driver crashes with tons of
-gpiochip_irq_unmask+0x30/0x40.
-
-Removing the key for now will prevent the
-kernel from panicking, so that the development
-can go on.
+Enable tsens on this SoC using tsens-v2 driver.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- .../boot/dts/qcom/sdm630-sony-xperia-nile.dtsi      | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/thermal/qcom-tsens.yaml       |  1 +
+ arch/arm64/boot/dts/qcom/sdm630.dtsi                  | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-index 9fe800d547cb..3646890040b3 100644
---- a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-@@ -63,14 +63,11 @@ camera_snapshot {
- 			debounce-interval = <15>;
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+index d7be931b42d2..d89d5acd6e2a 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -39,6 +39,7 @@ properties:
+               - qcom,msm8996-tsens
+               - qcom,msm8998-tsens
+               - qcom,sc7180-tsens
++              - qcom,sdm630-tsens
+               - qcom,sdm845-tsens
+           - const: qcom,tsens-v2
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+index ea85f28032d2..92bf4ae6a590 100644
+--- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+@@ -566,6 +566,17 @@ anoc2_smmu: iommu@16c0000 {
+ 				<GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>;
  		};
  
--		vol_down {
--			label = "Volume Down";
--			gpios = <&pm660l_gpios 7 GPIO_ACTIVE_LOW>;
--			linux,input-type = <1>;
--			linux,code = <KEY_VOLUMEDOWN>;
--			gpio-key,wakeup;
--			debounce-interval = <15>;
--		};
-+		/* Nile also uses gpio-keys for
-+		 * Volume Down,  but currently there's an
-+		 * issue with it that has to be resolved.
-+		 * Until then, let's not make the kernel panic
-+		 */
- 	};
- 
- 	reserved-memory {
++		tsens: thermal-sensor@10ae000 {
++			compatible = "qcom,sdm630-tsens", "qcom,tsens-v2";
++			reg = <0x010ae000 0x1000>, /* TM */
++				  <0x010ad000 0x1000>; /* SROT */
++			#qcom,sensors = <12>;
++			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
++					 <GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "uplow", "critical";
++			#thermal-sensor-cells = <1>;
++		};
++
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+ 			reg = <0x01f40000 0x20000>;
 -- 
 2.27.0
 
