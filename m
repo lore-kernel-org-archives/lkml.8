@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2736C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E00420724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2F620724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947915;
-	bh=L15Vj8OeudxmTag2zQVdk1b8JpwbIF3FlYGHITujZPQ=;
+	s=default; t=1592947919;
+	bh=V1SPoplEmZ/3LzfyNCzLGqwymNW+A/LBYDY/0GhcAA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2roFIjLC9zVufJ1pqx1SaKCRbwNDOcjc6FwgBybrGqmQ8+AmZUrf3/wB01J9uJuka
-	 r3lYODQqsjIjgHgrm8QArDN+z8eaQZzHY6PrVyUQ4+cWWVHHf49CPxE/AFUEViawSK
-	 UCYNQWqChKB0SCKIBhp92F3P2uI+sgUxmC73FU2g=
+	b=K3m7/5kiEivK1NR283CAdNsAN1Rw18a5SYIlcS1kWcyCoBH6bsAQVzYLVSz4myf2j
+	 SUm7cvxx9HzT5IRZzEf6DCB9B6RG7baNGPYJ8nviBhqjFFeTrhxjTwb2669jTceqrj
+	 u+lvAIW4RpqUPD38Cb8JKqh/VgR6/TrYYjjeL9ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389013AbgFWVby (ORCPT
+        id S2393606AbgFWVb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:31:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389008AbgFWUMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:12:49 -0400
+        id S2387764AbgFWUMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:12:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA1B82145D;
-        Tue, 23 Jun 2020 20:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84DB120707;
+        Tue, 23 Jun 2020 20:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943169;
-        bh=L15Vj8OeudxmTag2zQVdk1b8JpwbIF3FlYGHITujZPQ=;
+        s=default; t=1592943167;
+        bh=V1SPoplEmZ/3LzfyNCzLGqwymNW+A/LBYDY/0GhcAA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=REbKA2P8Rr+8/ZAcrgnftA7q9+m8oXyrtDBvpqMw2tTyEyqFjPGl9fw9MnaqaaIhV
-         idaQz06DQGAT5z1jDShRrKbFiGTQ+MRvCBSfdvQBKHynX4F447gzg99IOopkV5yTQ/
-         GZe2e8ibQT2EKyIxyF5xHcH2SLtbBD0l1q+qulAg=
+        b=YEVGF/X/zPFBVR3ycBiFqSy8syLBTDUkcG2DGNVtpXt9oKJtCDlHNQJj0ZRXCjaDM
+         Y8deEwa1d6ZsY366raApw74Nv4mxE4WYTJ55RB925cxxE9GXiHylt94n4IE+KDMDBb
+         HeWHupdZdRgnH6MxtTqVLdiNS893QlOwhosCfDek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 269/477] mfd: stmfx: Reset chip on resume as supply was disabled
-Date:   Tue, 23 Jun 2020 21:54:26 +0200
-Message-Id: <20200623195420.292114342@linuxfoundation.org>
+Subject: [PATCH 5.7 286/477] clk: ast2600: Fix AHB clock divider for A1
+Date:   Tue, 23 Jun 2020 21:54:43 +0200
+Message-Id: <20200623195421.090400246@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,40 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Eddie James <eajames@linux.ibm.com>
 
-[ Upstream commit e583649d87ec090444aa5347af0927cd6e8581ae ]
+[ Upstream commit 2d491066ccd4286538450c227fc5094ceb04b494 ]
 
-STMFX supply is disabled during suspend. To avoid a too early access to
-the STMFX firmware on resume, reset the chip and wait for its firmware to
-be loaded.
+The latest specs for the AST2600 A1 chip include some different bit
+definitions for calculating the AHB clock divider. Implement these in
+order to get the correct AHB clock value in Linux.
 
-Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Link: https://lkml.kernel.org/r/20200408203616.4031-1-eajames@linux.ibm.com
+Fixes: d3d04f6c330a ("clk: Add support for AST2600 SoC")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/stmfx.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/clk/clk-ast2600.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
-index 857991cb3cbb8..fde6541e347c8 100644
---- a/drivers/mfd/stmfx.c
-+++ b/drivers/mfd/stmfx.c
-@@ -501,6 +501,13 @@ static int stmfx_resume(struct device *dev)
- 		}
- 	}
+diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+index 392d01705b97b..99afc949925f0 100644
+--- a/drivers/clk/clk-ast2600.c
++++ b/drivers/clk/clk-ast2600.c
+@@ -642,14 +642,22 @@ static const u32 ast2600_a0_axi_ahb_div_table[] = {
+ 	2, 2, 3, 5,
+ };
  
-+	/* Reset STMFX - supply has been stopped during suspend */
-+	ret = stmfx_chip_reset(stmfx);
-+	if (ret) {
-+		dev_err(stmfx->dev, "Failed to reset chip: %d\n", ret);
-+		return ret;
-+	}
+-static const u32 ast2600_a1_axi_ahb_div_table[] = {
+-	4, 6, 2, 4,
++static const u32 ast2600_a1_axi_ahb_div0_tbl[] = {
++	3, 2, 3, 4,
++};
 +
- 	ret = regmap_raw_write(stmfx->map, STMFX_REG_SYS_CTRL,
- 			       &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
- 	if (ret)
++static const u32 ast2600_a1_axi_ahb_div1_tbl[] = {
++	3, 4, 6, 8,
++};
++
++static const u32 ast2600_a1_axi_ahb200_tbl[] = {
++	3, 4, 3, 4, 2, 2, 2, 2,
+ };
+ 
+ static void __init aspeed_g6_cc(struct regmap *map)
+ {
+ 	struct clk_hw *hw;
+-	u32 val, div, chip_id, axi_div, ahb_div;
++	u32 val, div, divbits, chip_id, axi_div, ahb_div;
+ 
+ 	clk_hw_register_fixed_rate(NULL, "clkin", NULL, 0, 25000000);
+ 
+@@ -679,11 +687,22 @@ static void __init aspeed_g6_cc(struct regmap *map)
+ 	else
+ 		axi_div = 2;
+ 
++	divbits = (val >> 11) & 0x3;
+ 	regmap_read(map, ASPEED_G6_SILICON_REV, &chip_id);
+-	if (chip_id & BIT(16))
+-		ahb_div = ast2600_a1_axi_ahb_div_table[(val >> 11) & 0x3];
+-	else
++	if (chip_id & BIT(16)) {
++		if (!divbits) {
++			ahb_div = ast2600_a1_axi_ahb200_tbl[(val >> 8) & 0x3];
++			if (val & BIT(16))
++				ahb_div *= 2;
++		} else {
++			if (val & BIT(16))
++				ahb_div = ast2600_a1_axi_ahb_div1_tbl[divbits];
++			else
++				ahb_div = ast2600_a1_axi_ahb_div0_tbl[divbits];
++		}
++	} else {
+ 		ahb_div = ast2600_a0_axi_ahb_div_table[(val >> 11) & 0x3];
++	}
+ 
+ 	hw = clk_hw_register_fixed_factor(NULL, "ahb", "hpll", 0, 1, axi_div * ahb_div);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_AHB] = hw;
 -- 
 2.25.1
 
