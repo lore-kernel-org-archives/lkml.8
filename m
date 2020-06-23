@@ -2,124 +2,114 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40249C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9670F20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:34:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ozbYJ0dZ"
+	by mail.kernel.org (Postfix) with ESMTP id 219242070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732685AbgFWNeg (ORCPT
+        id S1732700AbgFWNfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:34:36 -0400
-Received: from mail-eopbgr680078.outbound.protection.outlook.com ([40.107.68.78]:45121
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732616AbgFWNef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:34:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n9GG1NyI6WMtE2Hl9BUh9UeAJd7ZqEHvyaBQl5qHGQzI1FbTedkHSBM5d+VOiBCAACp2EpldAWxB2asbLoyFbWnzC47aIFfYR2vsocNd2frrt4KI3PlLBO+ENcaB2Z4TS2pjbtfoUai8X/6G/9RIhbyu8nogOwEFjHlO/V4n6lE3EA/8pGlsKPOf5kXcgnWIMfTJVwmdAmPXxSWGOITzYhPWLzdNWB7nq/JMUQu4jLPx66ZkyGWFG4yh2wfTf7UHBJNCFEdO9Bxt/zIiQEix0zTtZS0HLO0T69X1QJB/4XN4QdrJChqHqq2CDzXusgiX5zqCXXgR9oNUvjiFcjHeTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yDxamDF/moxkEaZGQvhjYbbTsUXZMOKillh/xW7cEVI=;
- b=kak4yktmOG0IP9MF7Ox4Prus82dv3lQNjE1DK44nEwYfV/5QBXwQHxRFF8na0DzGGGUBmVku4dlXFaaNzmzl1oHrhh5aupWb2lSiKa1qskY72EI56aG99DuEU4wn6czebJxV73HDfQrSNcdE0ZEJzM6sHVW4Cdprp6ZIxLyskzEXn6wLvPjf1pNXxahbKS25lYaBbg5WWQhT5wkOVwEcw4Gzwx05/H5M5AEKp7D4wywyUIf+qRykEDVL7k/58E8SDzexY+7CFYQ09RJWebtwk5RDXS1Pp8juNMLF7VOpGiZJEmU1g+39Lfoe3R81NkiQYOP6lfWjKPfLLpIzOwT6eQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yDxamDF/moxkEaZGQvhjYbbTsUXZMOKillh/xW7cEVI=;
- b=ozbYJ0dZHrpif/XYdhxOMMNdnnqE28oEN/uXZAnDYnQyaQ0MJoRYq02XfT3ZqaG+PrR6H2l93pI8qkTQo3Gze8KWsUF4q+mLJThgIaaAtI1V+mzOoIoWANdxmQLj4+mHO/V8bi4t7NWlZZrERIsbC0d2UVYTvu3SfkrT+Xq8t0Q=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1337.namprd12.prod.outlook.com (2603:10b6:3:6e::11) by
- DM6PR12MB2809.namprd12.prod.outlook.com (2603:10b6:5:4a::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3109.21; Tue, 23 Jun 2020 13:34:32 +0000
-Received: from DM5PR12MB1337.namprd12.prod.outlook.com
- ([fe80::f51a:1689:5079:c01b]) by DM5PR12MB1337.namprd12.prod.outlook.com
- ([fe80::f51a:1689:5079:c01b%11]) with mapi id 15.20.3109.027; Tue, 23 Jun
- 2020 13:34:32 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, rrangel@google.com,
-        nehal-bakulchandra.shah@amd.com,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mmc: sdhci-acpi: For amd device set driver type as MMC_SET_DRIVER_TYPE_A
-Date:   Tue, 23 Jun 2020 19:03:27 +0530
-Message-Id: <20200623133347.4598-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0039.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::25) To DM5PR12MB1337.namprd12.prod.outlook.com
- (2603:10b6:3:6e::11)
+        Tue, 23 Jun 2020 09:35:23 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:59518 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732616AbgFWNfW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:35:22 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 5FFD01C0C0A; Tue, 23 Jun 2020 15:35:19 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 15:35:12 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Micha?? Miros??aw <mirq-linux@rere.qmqm.pl>,
+        kernel@collabora.com
+Subject: Re: [PATCH v2] Input: document inhibiting
+Message-ID: <20200623133512.GA2783@bug>
+References: <f9007f37-c526-5fa4-3188-a554d2434177@redhat.com>
+ <20200617101822.8558-1-andrzej.p@collabora.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from akshu-HP-EliteBook-745-G4.dlink.router (122.171.36.38) by MA1PR0101CA0039.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Tue, 23 Jun 2020 13:34:24 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [122.171.36.38]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0a04825e-3573-4beb-4003-08d8177a2964
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2809:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB28098424AF0C17698AB02563F8940@DM6PR12MB2809.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1468;
-X-Forefront-PRVS: 04433051BF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: v82p10kRJhs3hjNigKGN3Yb6ZuI3J8RwJDD+RlC8VME+yPdY8Q99JmoiZl5UkTJn/in5L9VMppHniHWJpIC3wvglQnOKyIaczqtUIHF1TIk6f3j9oOvgpVSMbqaMCDeln8WckJc1eEobSm2UpchZR2i1u2po6ZoZhumnudefPgrRyuRamqkoQKfujD9D62MXlsdX7QfeBehU2c2MbIFDjGzDP8itvB/TqahZrRlUTk46mx4/rU1qtaHE/wC8Txvna43QaEdjLQ6/bt1YWkhKTDCODRKXi4gR1a194T0QtH866Br3Hx9yISm3R8bOUw1TNC4ejPK4m4zpgm7aa5+uyKoFSqlay3zYhv2IO/BbWy072y8JbxtpO/Zz3N54Kvwg
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1337.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(44832011)(8936002)(1076003)(8676002)(36756003)(5660300002)(86362001)(54906003)(4744005)(66946007)(66476007)(83380400001)(2906002)(2616005)(956004)(316002)(66556008)(52116002)(6486002)(109986005)(4326008)(6506007)(478600001)(26005)(16526019)(186003)(6512007)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: B/QpJz/RqeYG8t2uuC5TYluuRgqFktMHmLFKLpJWiQBDgQHM6D/iTgYgVSlLc3DiOsq6ZrkIR7fk3MIheOuKeZUuNiUWMVuXEdIDgrpsXkA+nw6j/hvGVlakQiwbyjc1trYtN6W1E3mFkeb3mV3kJlbU/kRNdforaoe91k7RDMijsdtblVLIlc/oHz2LN5PTCXnKiVp4eJa9iRj3lbx8hkXZ3hQaDWyX8YRvVQ7L9sVIFEIxW/o/YnInoc/jxbv15bkcC4AMSVHeKRCnXybrkuiNR0GgsI5Uo9FfueW1JnOWUpduSLh0N6W2ofHNyNsrsvllD1I8o36RL728rrCsVU0n03j5wiPz2c5m2XLg50kf96SKv5O7GgVTrQ+oHDjtW9iBFnyv085xUokPHG8UE3rps4nCEYXVmtUEtiPpPvq4RQ1X0MswrmAViM6Iz481HrnIplOGOUuds1XCTEGyEMlvDTbxUobLFE3h0m4Yafg=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a04825e-3573-4beb-4003-08d8177a2964
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 13:34:32.6657
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HoL1IZMDHbX/ezNZSAhFElA9KnJ/i/AkSNKigbAUn1L/yBpPENYREN9s28m+hL4j5BC1ADwG8o+zpeYrmQKCPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2809
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617101822.8558-1-andrzej.p@collabora.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HS400/HS200/eMMC HS doesn't have Preset Value register.
-Hence, sdhci_set_ios function overrides the value set by fmw to
-SDHCI_CTRL_DRV_TYPE_B.
-This patch sets drv_type to MMC_SET_DRIVER_TYPE_A
-so that host_control2 register gets updated with the required
-strength value.
+Hi!
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- drivers/mmc/host/sdhci-acpi.c | 1 +
- 1 file changed, 1 insertion(+)
+> +Inhibiting input devices
+> +~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +Inhibiting a device means ignoring input events from it. As such it is about maintaining
+> +relationships with input handlers - either already existing relationships, or relationships
+> +to be established while the device is in inhibited state.
+> +
+> +If a device is inhibited, no input handler will receive events from it.
+> +
+> +The fact that nobody wants events from the device is exploited further, by calling device's
+> +close() (if there are users) and open() (if there are users) on inhibit and uninhibit
+> +operations, respectively. Indeed, the meaning of close() is to stop providing events
+> +to the input core and that of open() is to start providing events to the input core.
+> +
+> +Calling the device's close() method on inhibit (if there are users) allows the driver
+> +to save power. Either by directly powering down the device or by releasing the
+> +runtime-pm reference it got in open() when the driver is using runtime-pm.
+> +
+> +Inhibiting and uninhibiting are orthogonal to opening and closing the device by input
+> +handlers. Userspace might want to inhibit a device in anticipation before any handler is
+> +positively matched against it.
 
-diff --git a/drivers/mmc/host/sdhci-acpi.c b/drivers/mmc/host/sdhci-acpi.c
-index d8b76cb8698a..48ecbd0b180d 100644
---- a/drivers/mmc/host/sdhci-acpi.c
-+++ b/drivers/mmc/host/sdhci-acpi.c
-@@ -542,6 +542,7 @@ static int amd_select_drive_strength(struct mmc_card *card,
- 				     unsigned int max_dtr, int host_drv,
- 				     int card_drv, int *drv_type)
- {
-+	*drv_type = MMC_SET_DRIVER_TYPE_A;
- 	return MMC_SET_DRIVER_TYPE_A;
- }
- 
+Ok.
+
+> +Inhibiting and uninhibiting are orthogonal to device's being a wakeup source, too. 
+> Being a +wakeup source plays a role when the system is sleeping, not when the system is 
+> operating. +How drivers should program their interaction between inhibiting, sleeping 
+> and being a wakeup +source is driver-specific. + +Taking the analogy with the network 
+
+I don't believe making interaction driver-specific is good idea. We should decide
+what reasonable behaviour is and then make drivers implement that...
+
+Best regards,
+									Pavel
 -- 
-2.20.1
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
