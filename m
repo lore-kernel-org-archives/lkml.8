@@ -2,179 +2,231 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA47C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14BCF20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786492075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IMAWcKqP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYvzcMSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387808AbgFWXwq (ORCPT
+        id S2387983AbgFWXz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:52:46 -0400
-Received: from mail-eopbgr150075.outbound.protection.outlook.com ([40.107.15.75]:59813
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387546AbgFWXwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:52:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kczkzTfircPkSFfeZNGk4SQpdDVowmd7Tfm6Djt5sR9rpX00zzbo7QnG22WwykxbM7q6yHfUUeEkxgExCsuAKTyz57l5w0HktLsAQYRqzNDCvNNUYLpoG4GLQDBMupQCfE74Y+es4CtUQ9zihw5E7iJ5QtBTx240ZxeBPxZi7xxrk2r6jMg+6fkpvqO5igz5wM+57UjvmQtmC1XFcn0Suw3tK8C5Iz0E+DJqePy5bw+Y5nO/cNy/WTgMf8Whk2cQNWyew39nKV+LoY5/9n1aKL705ennNZuR8wl3xyr0EcLyNmysvUranucTRwJjlo9CPGNGMgAwKbA0MGzTedBIvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uMIUZfzeh7u0pZOwmHf8GYZKUNjMr+6CyFy8Pj4s0nI=;
- b=CyROfUeduGzY3a/U27xZb6JNazzRX7zyVMVAqAaMPKI7mSTJv+jSrqcl2p4cvBhrDEw8M0tUve9tcnuko3ul9CiYjmR/hs1cvH7fErpkNwTUWhM7leT/jYdKKekiJmMoi8mnVgSEzmPTx7WwILVN8KH92u667I9NyJ3WiC2DpLZqf3VG1HPoi/Wavyy2rtlxxiMNsgqJ9JO2yKBcYmMgKE1a/H336U3bTQS3J4PRwrh6+6FJ24D7DdvF8dj44WTbEGjTlJcW8NOpIVNrj/kaj/50jhceCCBvcyAoUjJBVYQNtYeoaWdv39A8wUDPXoHbNEpv6G29QnENAhijcNdc9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uMIUZfzeh7u0pZOwmHf8GYZKUNjMr+6CyFy8Pj4s0nI=;
- b=IMAWcKqPVYDC+QYm8nrAROf/fzcelYAeJEnfL5dJ0UDfxvXUlazmPItdkUHtOVuVIyxQw3EC9FGYmGoxsk+djisBUKpzVMW1+sJr+F0k0P6LkhM3xzjQ41mx91/rn/olrNe+VA5w8RafYKk32Jkux1l3J93T+78mR17wFzzgAg8=
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
- by VE1PR04MB6733.eurprd04.prod.outlook.com (2603:10a6:803:11e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Tue, 23 Jun
- 2020 23:52:40 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1%3]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 23:52:40 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "idosch@idosch.org" <idosch@idosch.org>
-CC:     "jiri@resnulli.us" <jiri@resnulli.us>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "vlad@buslov.dev" <vlad@buslov.dev>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "michael.chan@broadcom.com" <michael.chan@broadcom.com>,
-        "vishal@chelsio.com" <vishal@chelsio.com>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "idosch@mellanox.com" <idosch@mellanox.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "moshe@mellanox.com" <moshe@mellanox.com>,
-        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
-        "andre.guedes@linux.intel.com" <andre.guedes@linux.intel.com>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        Edward Cree <ecree@solarflare.com>
-Subject: RE:  Re: [v1,net-next 3/4] net: qos: police action add index for tc
- flower offloading
-Thread-Topic: Re: [v1,net-next 3/4] net: qos: police action add index for tc
- flower offloading
-Thread-Index: AdZJs6PHvCIyKG/STfCN4JWFwwPAXw==
-Date:   Tue, 23 Jun 2020 23:52:40 +0000
-Message-ID: <VE1PR04MB6496AD2BE9868D72A475935492940@VE1PR04MB6496.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mojatatu.com; dkim=none (message not signed)
- header.d=none;mojatatu.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [221.221.90.193]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d26e1c2f-75d6-4f07-47ec-08d817d083ec
-x-ms-traffictypediagnostic: VE1PR04MB6733:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6733B44080FF3A3E07D59DE592940@VE1PR04MB6733.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 04433051BF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YtaXXTCfVThuO5+r9oGs2cueNH3wb3UXEqZ4nyZ5pCKF3BkevKw3kkc4iVuDltJeljC+otWK/hINP9PykNcYdkij9uxW0mTWxMfCQaS2RJCmoOGHSAcr/ag6puCvuquPCvehlQQwXLipm3P0Hcw3V8HCKIH7t07+YwvRZ/p9rN/WETGPqghzKA8YpSOAbGmHfv514AqYLxpIR2cvYpTpnaOvjOGyFGp7ZpiiP6iIGMAkoUukuVC+xMzQWP8iphu+G/G/DiiQo+G4UemrGO2beaLwzWFQKMpnPLpQ67SIu397Bivg/MF3xYLccWmq+9nrJYEbtuZG6e2axwKjh0NvJtDApCBufB9HIMDnwiVbtuv1vOoR+RRvIFG+fXyZEfWC
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(52536014)(6506007)(53546011)(44832011)(86362001)(186003)(5660300002)(26005)(83380400001)(76116006)(66946007)(7416002)(66556008)(64756008)(66476007)(110136005)(66446008)(2906002)(33656002)(478600001)(71200400001)(7696005)(9686003)(4326008)(316002)(55016002)(8676002)(54906003)(8936002)(21314003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: NuNTcCFnbxBG2FFzs4jsedzBMFUQ85JuNjmReTlibA0LsvFRx3kNV/yfwvNnN25P6rJlYSaQTInf3qdOtz2W9MB9p3TYWQ4mOdLCQNgeAeU3BsGWuXsHflAGRKgxtoxsUuaLJ05zzsJINEmJ88jmgo9Z4Izh08E4EUDF7mwFMEkoaVmVjBMhr/qJ8pM2zllp4SBlgfb1dHBVgJ3Y3iLq8qALjivGQxncFZszQt7cQdZygJ74HTfDGgfpFNF4GbdXjFI/zWa0k7Teeoi1SDXLasghC76tmaAndgzF9+YXkozEYeSIvtWLf7VHJmrltfXexIrxkupE8wejujBr703EndBZ19VV+thF+zV6FyeJqco3c7KyfwsZrlVy5ar9oDlMDTQWpmpPwSv9r2jzpFIxei64r0AaAQj7v/TKXlgiL3tmvV0N951I3PDDtfuO4at93N5edt1IhjyaZNsBhcHTA/0WqgEQRnCAm6I7NVW5cjOXwd8wjyVmzR9lHOHm+IwI
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 23 Jun 2020 19:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387518AbgFWXz1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 19:55:27 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0075C061573;
+        Tue, 23 Jun 2020 16:55:25 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id z1so329613qtn.2;
+        Tue, 23 Jun 2020 16:55:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E9zV8lOV197lqceFWJXuqVlYBc5GlEgmlIsGMyfRQvM=;
+        b=WYvzcMSox5xQbtQukC0PoQlXSIEqN5udEQG2u7CVeZlnfYIxfyr6Yo21pqoq/0Q5kc
+         rli4kyx5YXdLp3zVxAC2BDUKyVEqp9Shdjdi3hwXK0O1VhrUJ9OynW3wNWR44KWEWH19
+         BhoTsB9KV+pVBEz0AlSDBODDpqAOKBDLZfBTpDSSNlMR5cqevkEuHfrpG0yWYEnxgSXc
+         1V5YWDVSsfH+O3+9fzI1p1KWojJ4EQlHVYmmQodV47TzkqHe7s4jPXp85YJymjso3mej
+         3a5X+5Xwozw1OJ40fOZERce4L6OrJD7AwBItmSFVUuF8+XfQo9HWKUy9ocFaYx/s/SMm
+         itfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E9zV8lOV197lqceFWJXuqVlYBc5GlEgmlIsGMyfRQvM=;
+        b=Xfx8hQigP62EjKoNrl3UCDhVjvo0r9wV+BvKDKi0AdF4yoY6UZNojFsaBEOFj2iuic
+         /TOzXq6aEbySjwEj5xmZDw8OCWxZCa8PUgUbpwEXpVR13Sla5/nR2kSGNcd0N+98KEuF
+         ANdQutqidZFNWEjyagGvYvTeCL8yfpzl5YbP4AQaw+/jgOBWCMHDs/828xnYOoc3oIoj
+         uhswZ2UHDCMfAE3IWzHzHZdFXgHgmrwcNbSldbyrA513fSJ5v2HQPmMjW4C1PhaJWfVs
+         ZIh8AwakJcOYrhp/PT5iYnIO74AER3Z6s4eX3YfRImvWjs0KBFqTWVIivqlmnEs/7+jF
+         WKig==
+X-Gm-Message-State: AOAM532Wn6CPUIyNmsR5L3FEvDyRfRXPq6K+vsjk4qJ5yesmIyjyTtSR
+        6z7QGH7dWmGdFv2mIS3ZqCM=
+X-Google-Smtp-Source: ABdhPJzgU9KRQ1xL1j2O+Qa3Yhe+6mrXawsqogJEqnGkIeZJhJGcxxWV2CQaqt3joydCz/MnpCL+jw==
+X-Received: by 2002:aed:2b04:: with SMTP id p4mr11794303qtd.158.1592956524868;
+        Tue, 23 Jun 2020 16:55:24 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id p29sm2094597qtu.15.2020.06.23.16.55.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 16:55:21 -0700 (PDT)
+Subject: Re: RFC: KTAP documentation - expected messages
+To:     David Gow <davidgow@google.com>, Dmitry Vyukov <dvyukov@google.com>
+Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
+ <CABVgOSkwZUAEjxrqO46kqj=uY5HDzr-E_LR9i04yXEKqjp91Og@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <6d70b168-d05b-5330-89c8-148b334f9fce@gmail.com>
+Date:   Tue, 23 Jun 2020 18:55:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d26e1c2f-75d6-4f07-47ec-08d817d083ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2020 23:52:40.4533
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: W/mJITu7Swf3zrrFj5ox4dbEB7SosjzViUHZeI+ExYk1d794lUMqUHu1G1MJU1Us
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6733
+In-Reply-To: <CABVgOSkwZUAEjxrqO46kqj=uY5HDzr-E_LR9i04yXEKqjp91Og@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFtYWwsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYW1h
-bCBIYWRpIFNhbGltIDxqaHNAbW9qYXRhdHUuY29tPg0KPiBTZW50OiAyMDIw5bm0NuaciDIz5pel
-IDIwOjE4DQo+IFRvOiBQbyBMaXUgPHBvLmxpdUBueHAuY29tPjsgZGF2ZW1AZGF2ZW1sb2Z0Lm5l
-dDsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IG5ldGRldkB2Z2VyLmtlcm5lbC5v
-cmc7IGlkb3NjaEBpZG9zY2gub3JnDQo+IENjOiBqaXJpQHJlc251bGxpLnVzOyB2aW5pY2l1cy5n
-b21lc0BpbnRlbC5jb207IHZsYWRAYnVzbG92LmRldjsgQ2xhdWRpdQ0KPiBNYW5vaWwgPGNsYXVk
-aXUubWFub2lsQG54cC5jb20+OyBWbGFkaW1pciBPbHRlYW4NCj4gPHZsYWRpbWlyLm9sdGVhbkBu
-eHAuY29tPjsgQWxleGFuZHJ1IE1hcmdpbmVhbg0KPiA8YWxleGFuZHJ1Lm1hcmdpbmVhbkBueHAu
-Y29tPjsgbWljaGFlbC5jaGFuQGJyb2FkY29tLmNvbTsNCj4gdmlzaGFsQGNoZWxzaW8uY29tOyBz
-YWVlZG1AbWVsbGFub3guY29tOyBsZW9uQGtlcm5lbC5vcmc7DQo+IGppcmlAbWVsbGFub3guY29t
-OyBpZG9zY2hAbWVsbGFub3guY29tOw0KPiBhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbTsg
-VU5HTGludXhEcml2ZXJAbWljcm9jaGlwLmNvbTsNCj4ga3ViYUBrZXJuZWwub3JnOyB4aXlvdS53
-YW5nY29uZ0BnbWFpbC5jb207DQo+IHNpbW9uLmhvcm1hbkBuZXRyb25vbWUuY29tOyBwYWJsb0Bu
-ZXRmaWx0ZXIub3JnOw0KPiBtb3NoZUBtZWxsYW5veC5jb207IG0ta2FyaWNoZXJpMkB0aS5jb207
-DQo+IGFuZHJlLmd1ZWRlc0BsaW51eC5pbnRlbC5jb207IHN0ZXBoZW5AbmV0d29ya3BsdW1iZXIu
-b3JnOyBFZHdhcmQNCj4gQ3JlZSA8ZWNyZWVAc29sYXJmbGFyZS5jb20+DQo+IFN1YmplY3Q6IFJl
-OiBbdjEsbmV0LW5leHQgMy80XSBuZXQ6IHFvczogcG9saWNlIGFjdGlvbiBhZGQgaW5kZXggZm9y
-IHRjDQo+IGZsb3dlciBvZmZsb2FkaW5nDQo+IA0KPiBPbiAyMDIwLTA2LTIzIDc6NTUgYS5tLiwg
-UG8gTGl1IHdyb3RlOg0KPiANCj4gDQo+IFsuLl0NCj4gPj4gTXkgcXVlc3Rpb246IElzIHRoaXMg
-YW55IGRpZmZlcmVudCBmcm9tIGhvdyBzdGF0cyBhcmUgc3RydWN0dXJlZD8NCj4gPg0KPiA+IEkg
-ZG9uJ3Qga25vdyBJIGZ1bGx5IGNhdGNoIHRoZSBxdWVzdGlvbi4gQXJlIHlvdSB0cnlpbmcgdG8g
-Z2V0IGhvdyBtYW55DQo+IGZyYW1lcyBmb3IgZWFjaCBmaWx0ZXIgY2hhaW4gcGFzc2luZyBvbmUg
-aW5kZXggcG9saWNpbmcgYWN0aW9uPw0KPiA+IElmIG9uZSBpbmRleCBwb2xpY2UgYWN0aW9uIGJp
-bmQgdG8gbXVsdGlwbGUgdGMgZmlsdGVyKHRoZXkgc2hvdWxkIGhhdmUNCj4gZGlmZmVybnQgY2hh
-aW4gaW5kZXggKS4gQWxsIHRob3NlIGZpbHRlciBzaG91bGQgZ2V0IHNhbWUgaW5kZXggcG9saWNl
-IGFjdGlvbg0KPiBzdGF0cyB2YWx1ZSBzaW5jZSB0aGV5IGFyZSBzaGFyaW5nIHRoZSBzYW1lIGhh
-cmR3YXJlIGVudHJ5LiBCdXQgSSBkb24ndA0KPiB0aGluayB0aGlzIGlzIHRoZSBwcm9ibGVtLg0K
-PiA+DQo+IA0KPiBUaGlzIGlzIGEgZ29vZCB0aGluZy4gV2hhdCBpcyBuaWNlIGlzIGkgY2FuIHVz
-ZSB0aGUgc2FtZSBpbmRleCBmb3Igcy93IGFuZA0KPiBoL3cgKGFuZCBubyBuZWVkIGZvciBhIHRy
-YW5zbGF0aW9uL3JlbWFwcGluZykuDQo+IA0KPiA+IFdpdGggaW5kZXggcHJvdmlkZSB0byBkZXZp
-Y2UgZHJpdmVyKG1hcCB0aGUgcy93IGFjdGlvbiBpbmRleCB0byBhIGgvdw0KPiB0YWJsZSBpbmRl
-eCApLCB1c2VyIGNvdWxkIGxpc3QgdGhlIHBvbGljZSBhY3Rpb25zIGxpc3QgYnkgY29tbWFuZDoN
-Cj4gPiAjIHRjIGFjdGlvbnMgc2hvdyBhY3Rpb24gcG9saWNlDQo+ID4gU2hvd3MgdGhlIHBvbGlj
-ZSBhY3Rpb24gdGFibGUgYnkgaW5kZXguDQo+IA0KPiBUaGlzIGlzIGFsc28gbmljZS4NCj4gDQo+
-IE15IHF1ZXN0aW9uOiBXaHkgY2FudCB5b3UgYXBwbHkgdGhlIHNhbWUgc2VtYW50aWNzIGZvciB0
-aGUgY291bnRlcnM/DQo+IERvZXMgeW91ciBoYXJkd2FyZSBoYXZlIGFuIGluZGV4ZWQgY291bnRl
-ci9zdGF0cyB0YWJsZT8gSWYgeWVzIHRoZW4geW91DQoNClllcywgIGJ1dCBJIHRoaW5rIHRjIGZs
-b3dlciBjYW4gb25seSBjYXJlIGFib3V0IHRoZSAgY291bnRlcnMgb2YgdGhhdCBjaGFpbi4gQW5k
-IGFjdGlvbiBwb2xpY2UgY2FyZSBhYm91dCBob3cgbWFueSBmcmFtZXMgZm9yIGVhY2ggcG9saWNl
-IGVudHJ5Lg0KDQo+IHNob3VsZCBiZSBhYmxlIHRvIGRvIHNpbWlsYXIgdGhpbmcgZm9yIGNvdW50
-ZXJzIGFzIHlvdSBkbyBmb3IgcG9saWNlciAoaS5lDQo+IHVzZSBhbiBpbmRleCBhbmQgc2hhcmUg
-Y291bnRlcnMgYWNyb3NzIGFjdGlvbnMpLiBTbyB3aGVuIGkgc2F5Og0KPiB0YyBhY3Rpb24gZHJv
-cCBpbmRleCA1DQoNCkRvIHlvdSBtZWFuIHNvbWV0aGluZyBsaWtlICJ0YyB4eHggZmxvd2VyIGFj
-dGlvbiBwb2xpY2UgaW5kZXggNSBkcm9wIiAgc2luY2UgJycgdGMgYWN0aW9uIGRyb3AgaW5kZXgg
-NSIgaXMgbm90IGEgcHJvcGVyIGNvbW1hbmQ/ICh0aGVyZSBpcyAnYWN0aW9uIGRyb3AnICBmb2xs
-b3cgdGhlIHRjIGZpbHRlciBjb21tYW5kIGJ1dCBub3Qgd2l0aCBpbmRleCBhc3NpZ25lZCkuIA0K
-DQo+IGFuZA0KPiB0YyBhY3Rpb24gb2sgaW5kZXggNQ0KPiBpbmZhY3QgdGhleSB1c2UgdGhlIHNh
-bWUgY291bnRlci4NCg0KTWF5YmUgeW91IGFyZSBzYXlpbmcgaWYgYWN0aW9uIHBvbGljZSBmb2xs
-b3cgd2l0aCAnQ09OVFJPTCcgKHJlY2xhc3NpZnkgfCBwaXBlIHwgZHJvcCB8IGNvbnRpbnVlIHwg
-b2spICB3aGVuIG9mZmxvYWRpbmcgdG8gaGFyZHdhcmUuIFdpdGggZGlmZmVyZW50ICdDT05UUk9M
-JywgdGhlIGhhcmR3YXJlIGNvdW50ZXIgd29uJ3QgY2hhbmdlZCBzaW5jZSBoYXJkd2FyZSBuZXZl
-ciBrbm93biB3aGF0IHRoZSAnQ09OVFJPTCcgaXMuIFRoaXMgaXMgc3RpbGwgc29mdHdhcmUgcGFy
-dCBhbmQgd2lsbCBkbyBhdCBzb2Z0d2FyZSBwYXJ0KGFsdGhvdWdoIHNvZnR3YXJlIHNlZW1zIG5v
-dCBkZWFsIHdpdGggdGhpcywgSSBhbHNvIHN1Z2dlc3QgdG8gYWZ0ZXIgb2ZmbG9hZGluZyBzaG91
-bGQgYmFjayB0byB0Y2ZfcG9saWNlX2FjdCgpIGNvbnRpbnVlIHRoZSBhY3Rpb24pLiANCg0KV2hl
-biBzZXQgdG8gYmUgb2ZmbG9hZGluZyBtb2RlLCB0aGUgY291bnRlcnMgb25seSBzaG93aW5nIHRo
-ZSBoYXJkd2FyZSBjb3VudGVycyhldmVuIGRpZmZlcmVudCB2ZW5kb3IgY291bGQgc2V0IGRpZmZl
-cmVudCBjb3VudGVyIHJlZ2lzdGVyLikuIEJ1dCBJIGRvbid0IHRoaW5rIHRoZSBpbmRleCBvZmZs
-b2FkaW5nIGNvdWxkIGJyZWFrIGFueXRoaW5nLg0KDQo+IA0KPiANCj4gY2hlZXJzLA0KPiBqYW1h
-bA0KDQoNCkJyLA0KUG8gTGl1DQo=
++Dmitry, since Brendan added him to another reply at this thread level
+
+On 2020-06-22 21:46, David Gow wrote:
+> On Mon, Jun 22, 2020 at 6:45 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> Tim Bird started a thread [1] proposing that he document the selftest result
+>> format used by Linux kernel tests.
+>>
+>> [1] https://lore.kernel.org/r/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com
+>>
+>> The issue of messages generated by the kernel being tested (that are not
+>> messages directly created by the tests, but are instead triggered as a
+>> side effect of the test) came up.  In this thread, I will call these
+>> messages "expected messages".  Instead of sidetracking that thread with
+>> a proposal to handle expected messages, I am starting this new thread.
+> 
+> Thanks for doing this: I think there are quite a few tests which could
+> benefit from something like this.
+> 
+> I think there were actually two separate questions: what do we do with
+> unexpected messages (most of which I expect are useless, but some of
+> which may end up being related to an unexpected test failure), and how
+> to have tests "expect" a particular message to appear. I'll stick to
+
+Yes.  But there is also a third aspect that made this feature important
+for the Devicetree unittest.  There was a question on the devicetree
+mail list, asking whether some devicetree related kernel warning and/or
+error messages were devicetree problems.  The messages appeared while
+the unittest was executing, but at the same time a lot of system
+initialization is in progress, resulting in lots of console messages
+that are unrelated to unittest.  I could not in good conscious reply
+that the messages were truly of no consequence without actually
+chasing each of them down and verifying that they were triggered by
+unittest, and were showing what the devicetree infrastructure should
+be reporting in response to the test stimulus, vs an underlying bug
+in the devicetree infrastructure.
+
+I found the expected messages API to be a useful tool to document
+the validity of the messages, both for myself, and for the random
+developer who might be reading the boot messages.
+
+> talking about the latter for this thread, but even there there's two
+> possible interpretations of "expected messages" we probably want to
+> explicitly distinguish between: a message which must be present for
+> the test to pass (which I think best fits the "expected message"
+> name), and a message which the test is likely to produce, but which
+> shouldn't alter the result (an "ignored message").
+
+This type of case was the impetus for me to create the API.  There
+was a unittest that resulted in the probe of a device, where the
+probe executed devicetree subsystem code that invoked a
+blocking_notifier_call_chain(), that resulted in another subsystem
+taking some action, and that action just happened to do a printk()
+reporting a specific action that the unittest was trying to
+verify.
+
+I was able to verify much of the asynchronous activity by creating
+a fake driver and corresponding devices to be probed and could
+instrument the fake driver.  The printk() information provided
+the last little bit of checking for correct behavior.
+
+> I don't see much
+> use for the latter at present, but if we wanted to do more things with
+> messages and had some otherwise very verbose tests, it could
+> potentially be useful.
+
+The use for the "ignored message" is my third aspect above.  This points
+out that yet another possible consumer of the console boot log is the
+QA or test engineer.  They can have the same concerns as any "random
+developer".
+
+> 
+> The other thing I'd note here is that this proposal seems to be doing
+> all of the actual message filtering in userspace, which makes a lot of
+> sense for kselftest tests, but does mean that the kernel can't know if
+> the test has passed or failed.
+
+Yes.  I had absolutely no interest in my test code examining the history
+of console messages, which could be generated on any other processor.
+
+The printk related code has always been complex, nuanced, and seems to
+attract the attention of people who want to change it instead of
+leaving it stable.  I would really like to stay away from any dependency
+on it.
+
+> There's definitely a tradeoff between
+> trying to put too much needless string parsing in the kernel and
+> having to have a userland tool determine the test results. The
+> proposed KCSAN test suite[1] is using tracepoints to do this in the
+> kernel. It's not the cleanest thing, but there's no reason KUnit or
+> similar couldn't implement a nicer API around it.
+
+My interest is in printk() based messages that are present in areas
+outside of my test code and independent of my test code.  I specifically
+did not want to modify that existing code with any test code.
+
+I was willing to accept the extra layer of running a user space program
+to process the console output to verify one small portion of the
+test passing or failing (or alternately, just examining the console
+output manually).
+
+-Frank
+
+> 
+> [1]: https://lkml.org/lkml/2020/6/22/1506
+> 
+>> I implemented an API for expected messages that are triggered by tests
+>> in the Devicetree unittest code, with the expectation that the specific
+>> details may change when the Devicetree unittest code adapts the KUnit
+>> API.  It seems appropriate to incorporate the concept of expected
+>> messages in Tim's documentation instead of waiting to address the
+>> subject when the Devicetree unittest code adapts the KUnit API, since
+>> Tim's document may become the kernel selftest standard.
+> 
+> Is having a nice way to handle expected messages the only thing
+> holding up porting this to KUnit?
+> 
+>> Instead of creating a very long email containing multiple objects,
+>> I will reply to this email with a separate reply for each of:
+>>
+>>   The "expected messages" API implemention and use can be from
+>>   drivers/of/unittest.c in the mainline kernel.
+>>
+>>   of_unittest_expect - A proof of concept perl program to filter console
+>>                        output containing expected messages output
+>>
+>>                        of_unittest_expect is also available by cloning
+>>                        https://github.com/frowand/dt_tools.git
+>>
+>>   An example raw console output with timestamps and expect messages.
+>>
+>>   An example of console output processed by filter program
+>>   of_unittest_expect to be more human readable.  The expected
+>>   messages are not removed, but are flagged.
+>>
+>>   An example of console output processed by filter program
+>>   of_unittest_expect to be more human readable.  The expected
+>>   messages are removed instead of being flagged.
+> 
+> Cheers,
+> -- David
+> 
+
