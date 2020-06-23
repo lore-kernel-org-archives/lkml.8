@@ -2,51 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2670FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01DB6206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA5120EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943636;
-	bh=5LDLI5H6sMrSpzHKnCAMgq0GYUOgelYUTiMI0XOiXs8=;
+	s=default; t=1592943639;
+	bh=JesX2s7Bnr7ACQY9GYcngwLRoEMrjna5g0qrWyPQT78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Esr5QjtOds6l+a1qSk8/FM3BLEQyip6BugpfvJgiD1L7xR8rfmQ3m55PcDooxoCdK
-	 vexmNovvS8lnesexRZ29l//ZCsEQ62wMUxdM11MJ7KDmax7Wqjo5nCgC8xnk2jQ1Tr
-	 Em5CMDU2Y5p/SVJdJIro4dgrCOYy7e4Ei1uz9CfY=
+	b=gztI+3wzV/wRdHO4XhTN4KjHRI0GTSnFN11a8VyiGB5Fz7Pb7Ga+1JYoj45N2oE/j
+	 pSURx2tepc9+laS8Jri8w2F9NVqBiHuGhqGGrsSLMCL0j3wh5iYypkxt8uNCO3pi0n
+	 OqXGBnfB/m2Ym38FJjHRfDV+Q7Xyj853qpUdaQ90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389948AbgFWUUd (ORCPT
+        id S2388433AbgFWUUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37788 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:20:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389937AbgFWUU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:20:26 -0400
+        id S2389949AbgFWUUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:20:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A94520780;
-        Tue, 23 Jun 2020 20:20:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9CB62078A;
+        Tue, 23 Jun 2020 20:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943626;
-        bh=5LDLI5H6sMrSpzHKnCAMgq0GYUOgelYUTiMI0XOiXs8=;
+        s=default; t=1592943634;
+        bh=JesX2s7Bnr7ACQY9GYcngwLRoEMrjna5g0qrWyPQT78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vpOqODamcOb2/IWf/T3U4OT7V+KoXY6gc+qaWOoN1dqCTl9kg3BGnruoGxr7oZ+yu
-         V5fEpPZoc+YB7FM+Hy4gRQq4xnZI1AwJSDMmJjdwcz4NLK1VcSfcLkRAQkSJ+7DA29
-         ty7V9iETZY+5CSfZyVRsJqhEVwLibkQSAsMR37Oo=
+        b=vbWak4pbe7dwrBlRyvkZ9dqKGMDJv3vg0dUE8x2hW6DAeAUIDLTmM6dPVLQK02xwI
+         cNJVqFiW9zfGEBLJcAJMzTzUce7MyIQCe/KI2lQ1JX+8Ft8t2ZzNOULuVokMr2QbNu
+         +OEBAbtPrxHkyVoOwsZbDkKGTwGWGk4SHZ8V9GyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.7 464/477] proc/bootconfig: Fix to use correct quotes for value
-Date:   Tue, 23 Jun 2020 21:57:41 +0200
-Message-Id: <20200623195429.485939347@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Sean Paul <sean@poorly.run>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 437/477] drm/dp_mst: Increase ACT retry timeout to 3s
+Date:   Tue, 23 Jun 2020 21:57:14 +0200
+Message-Id: <20200623195428.187058925@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,87 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Lyude Paul <lyude@redhat.com>
 
-commit 4e264ffd953463cd14c0720eaa9315ac052f5973 upstream.
+[ Upstream commit 873a95e0d59ac06901ae261dda0b7165ffd002b8 ]
 
-Fix /proc/bootconfig to select double or single quotes
-corrctly according to the value.
+Currently we only poll for an ACT up to 30 times, with a busy-wait delay
+of 100µs between each attempt - giving us a timeout of 2900µs. While
+this might seem sensible, it would appear that in certain scenarios it
+can take dramatically longer then that for us to receive an ACT. On one
+of the EVGA MST hubs that I have available, I observed said hub
+sometimes taking longer then a second before signalling the ACT. These
+delays mostly seem to occur when previous sideband messages we've sent
+are NAKd by the hub, however it wouldn't be particularly surprising if
+it's possible to reproduce times like this simply by introducing branch
+devices with large LCTs since payload allocations have to take effect on
+every downstream device up to the payload's target.
 
-If a bootconfig value includes a double quote character,
-we must use single-quotes to quote that value.
+So, instead of just retrying 30 times we poll for the ACT for up to 3ms,
+and additionally use usleep_range() to avoid a very long and rude
+busy-wait. Note that the previous retry count of 30 appears to have been
+arbitrarily chosen, as I can't find any mention of a recommended timeout
+or retry count for ACTs in the DisplayPort 2.0 specification. This also
+goes for the range we were previously using for udelay(), although I
+suspect that was just copied from the recommended delay for link
+training on SST devices.
 
-This modifies if() condition and blocks for avoiding
-double-quote in value check in 2 places. Anyway, since
-xbc_array_for_each_value() can handle the array which
-has a single node correctly.
-Thus,
+Changes since v1:
+* Use readx_poll_timeout() instead of open-coding timeout loop - Sean
+  Paul
+Changes since v2:
+* Increase poll interval to 200us - Sean Paul
+* Print status in hex when we timeout waiting for ACT - Sean Paul
 
-if (vnode && xbc_node_is_array(vnode)) {
-	xbc_array_for_each_value(vnode)	/* vnode->next != NULL */
-		...
-} else {
-	snprintf(val); /* val is an empty string if !vnode */
-}
-
-is equivalent to
-
-if (vnode) {
-	xbc_array_for_each_value(vnode)	/* vnode->next can be NULL */
-		...
-} else {
-	snprintf("");	/* value is always empty */
-}
-
-Link: http://lkml.kernel.org/r/159230244786.65555.3763894451251622488.stgit@devnote2
-
-Cc: stable@vger.kernel.org
-Fixes: c1a3c36017d4 ("proc: bootconfig: Add /proc/bootconfig to show boot config list")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Cc: Sean Paul <sean@poorly.run>
+Cc: <stable@vger.kernel.org> # v3.17+
+Reviewed-by: Sean Paul <sean@poorly.run>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200406221253.1307209-4-lyude@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/bootconfig.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 54 ++++++++++++++++-----------
+ 1 file changed, 32 insertions(+), 22 deletions(-)
 
---- a/fs/proc/bootconfig.c
-+++ b/fs/proc/bootconfig.c
-@@ -26,8 +26,9 @@ static int boot_config_proc_show(struct
- static int __init copy_xbc_key_value_list(char *dst, size_t size)
- {
- 	struct xbc_node *leaf, *vnode;
--	const char *val;
- 	char *key, *end = dst + size;
-+	const char *val;
-+	char q;
- 	int ret = 0;
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index b521f64172893..abb1f358ec6df 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -27,6 +27,7 @@
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+ #include <linux/seq_file.h>
++#include <linux/iopoll.h>
  
- 	key = kzalloc(XBC_KEYLEN_MAX, GFP_KERNEL);
-@@ -41,16 +42,20 @@ static int __init copy_xbc_key_value_lis
- 			break;
- 		dst += ret;
- 		vnode = xbc_node_get_child(leaf);
--		if (vnode && xbc_node_is_array(vnode)) {
-+		if (vnode) {
- 			xbc_array_for_each_value(vnode, val) {
--				ret = snprintf(dst, rest(dst, end), "\"%s\"%s",
--					val, vnode->next ? ", " : "\n");
-+				if (strchr(val, '"'))
-+					q = '\'';
-+				else
-+					q = '"';
-+				ret = snprintf(dst, rest(dst, end), "%c%s%c%s",
-+					q, val, q, vnode->next ? ", " : "\n");
- 				if (ret < 0)
- 					goto out;
- 				dst += ret;
- 			}
- 		} else {
--			ret = snprintf(dst, rest(dst, end), "\"%s\"\n", val);
-+			ret = snprintf(dst, rest(dst, end), "\"\"\n");
- 			if (ret < 0)
- 				break;
- 			dst += ret;
+ #if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
+ #include <linux/stacktrace.h>
+@@ -4448,6 +4449,17 @@ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
+ 	return ret;
+ }
+ 
++static int do_get_act_status(struct drm_dp_aux *aux)
++{
++	int ret;
++	u8 status;
++
++	ret = drm_dp_dpcd_readb(aux, DP_PAYLOAD_TABLE_UPDATE_STATUS, &status);
++	if (ret < 0)
++		return ret;
++
++	return status;
++}
+ 
+ /**
+  * drm_dp_check_act_status() - Check ACT handled status.
+@@ -4457,30 +4469,28 @@ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
+  */
+ int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
+ {
+-	int count = 0, ret;
+-	u8 status;
+-
+-	do {
+-		ret = drm_dp_dpcd_readb(mgr->aux,
+-					DP_PAYLOAD_TABLE_UPDATE_STATUS,
+-					&status);
+-		if (ret < 0) {
+-			DRM_DEBUG_KMS("failed to read payload table status %d\n",
+-				      ret);
+-			return ret;
+-		}
+-
+-		if (status & DP_PAYLOAD_ACT_HANDLED)
+-			break;
+-		count++;
+-		udelay(100);
+-	} while (count < 30);
+-
+-	if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
+-		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n",
+-			      status, count);
++	/*
++	 * There doesn't seem to be any recommended retry count or timeout in
++	 * the MST specification. Since some hubs have been observed to take
++	 * over 1 second to update their payload allocations under certain
++	 * conditions, we use a rather large timeout value.
++	 */
++	const int timeout_ms = 3000;
++	int ret, status;
++
++	ret = readx_poll_timeout(do_get_act_status, mgr->aux, status,
++				 status & DP_PAYLOAD_ACT_HANDLED || status < 0,
++				 200, timeout_ms * USEC_PER_MSEC);
++	if (ret < 0 && status >= 0) {
++		DRM_DEBUG_KMS("Failed to get ACT after %dms, last status: %02x\n",
++			      timeout_ms, status);
+ 		return -EINVAL;
++	} else if (status < 0) {
++		DRM_DEBUG_KMS("Failed to read payload table status: %d\n",
++			      status);
++		return status;
+ 	}
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(drm_dp_check_act_status);
+-- 
+2.25.1
+
 
 
