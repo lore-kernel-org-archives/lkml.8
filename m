@@ -2,154 +2,130 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83693C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F57C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEB920780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C345520780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:47:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZWus7F/w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nLhPkqBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731706AbgFWCrK (ORCPT
+        id S1731782AbgFWCrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:47:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58838 "EHLO
+        Mon, 22 Jun 2020 22:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730456AbgFWCrJ (ORCPT
+        with ESMTP id S1731727AbgFWCrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:47:09 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED5DC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:47:08 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id t194so1602122wmt.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:47:08 -0700 (PDT)
+        Mon, 22 Jun 2020 22:47:10 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FEF8C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:47:10 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k6so8471979pll.9
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nO5X8az1iZdZpQgcucoRmbtaCiu8/dHvR/vuZisbGbg=;
-        b=ZWus7F/wJ5uGQya+5s5/T0SJ/pHOu6ysTi808P3JHesr4MkDHHBWSCTZWZHhFAWQ0i
-         kiHYEDyZOdgN48Iu28wFy9/I8HN9OM6RVX8iQqkDdzJtBB3iFmeipxarIHkTfvpaY3UM
-         C6NViwBAby8Ca5tt4udkIHQOtMSDHmwOzLD/Fqt123GRK+QyK5cmcbZ6zV8n/+jiTJDv
-         13D0YgnXySUirtY5wstCyg58sFZRXMVEhP+zam4kEMdP7N0gS35N3Ogg/VkF+lXGwX8N
-         zAD5YuVZSsrKDoZHsEX6Ai2+60GP6zXJl+tT5Obi3yeL9N4d7jTcg3QILNc4Z7ZAJcDf
-         OHgA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HW9UZmnIeKRsydo19hBj6Mv14OBgXNqn665pFSfj4ok=;
+        b=nLhPkqBRM79THEO2LMq70tOS1WvKazl+AuWuGMIqQZQX9jXSzFDdynDQBnZ3hbbV6H
+         fm39JGAEL93wz6l3lHF0uaYQ4EmoZnkBPmymWsc/oagbZ4XfLIS1/Vl1T2Hds44PVtY6
+         ueURrdQ5icu+ERjnAdYTaCJT8rMh8pzKhUcEnTL9buR1Z9++HNNVBCnYs6LOfo8WiqZa
+         memwjCcsJV2TNtyWBWb8fvTXLgzyI2kSlWR6GQkBIr72nfXp5wQOO+NTf5crZCOTWjAx
+         qlppT9bpdqh2XCa0ph4Ld9/yNDEu0KPCBZUj684gnh+1BsvJ3T+P9Rb7GdxYxYB43UrW
+         RQzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nO5X8az1iZdZpQgcucoRmbtaCiu8/dHvR/vuZisbGbg=;
-        b=BQJalAmcAwvlS/hT8dheuIsVLcS0hVIHbY5fhf0x24CgOa9kbc1o5geTrnwHcXYlQQ
-         g31IluQwYHVk8lPEOQeJQ23AJIhM8qOkQB9h1Zg8KNizWh4FsR5a+pSUvOyKUKmC65bk
-         SeBjX/w+MmCZx9Sj1iRsYiIbPjzVrfglUFb/t67m0TZN6dBuyW18V9vo5YiOYlGI7ifT
-         QZNAcLLoqghLAnDufIZqpBV6KgjMrdzSZ7tS1jtXeuLnxpgkVvyDnn2yoarNl5o6N7et
-         cv+1ilOTUBtTu1V2efiXyCWC79jLK3eaK7CAotMIsoexVbxDp1BQSHZuAm3jHxGhGNyL
-         tphg==
-X-Gm-Message-State: AOAM530tghK7vxY2FN0vdv88uhELvEYVeqmWx0RhmB/ZBP2ZccYpiOAZ
-        Ap9FslKPySK6ivB2MVX1NpBHFJzdK5o8Vi35x2iaKQ==
-X-Google-Smtp-Source: ABdhPJwVhwBuznzaEXZC0Z8D79xNdvpGAAjV8U45ICfWzRKRdyWpqj9d6UN8PJvPV5l6xbkf9WzwPIIGOte4iLoo5wQ=
-X-Received: by 2002:a1c:750e:: with SMTP id o14mr21195505wmc.86.1592880426707;
- Mon, 22 Jun 2020 19:47:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HW9UZmnIeKRsydo19hBj6Mv14OBgXNqn665pFSfj4ok=;
+        b=q0sN6+Gk2W0WJBBhRDoktximisf77Ws35+bwUTAq1fNrzJkUskC1yLxCYpPF7GqzKY
+         CHV1m4eIjiTrgtCRYt1Kc5U6Y3wmtrJmu7xLUw0k9xPio/JOmkAxwunMemJtAucazRm7
+         E7qDYJqAl0Kli6iqYplwdOC2KISU/FJMIQCRsj6DmiJcLG/GdFJVc0P4ZvBaACF7g7X8
+         E/ZfuSxtgMZztpCr1bw358YkxESa44MCIWEcigt8Ne2POwqfeY47dkRbTYBj6Qn7ac0M
+         23lVvLrzudribtTunpakN81jXKsoWJDqmvo/V+8QBRigcIN8i+nVDKuZ09lDAgnQlz6O
+         kRkA==
+X-Gm-Message-State: AOAM532feptajrHGGsCVdoK7UClrOLdgZZ/VRR2SD6YmkJRCcXzKiVe9
+        rapHJwZA2y5Zc5SmBhNKtvQL
+X-Google-Smtp-Source: ABdhPJy1Yu8LxzqMo/6kXYwMwJ7Hp5ADmcmtmGWI55g8q8hUZ778zWWVzljRS2J4WGQkdaYhIqrQWw==
+X-Received: by 2002:a17:902:eb13:: with SMTP id l19mr23026861plb.213.1592880429838;
+        Mon, 22 Jun 2020 19:47:09 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:609d:7d26:e4ff:f0b0:edd6:2484])
+        by smtp.gmail.com with ESMTPSA id j17sm761127pjy.22.2020.06.22.19.47.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jun 2020 19:47:09 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 08:17:02 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/6] arm64: dts: qcom: sm8250: Add QMP AOSS node
+Message-ID: <20200623024702.GC11093@Mani-XPS-13-9360>
+References: <20200622222747.717306-1-bjorn.andersson@linaro.org>
+ <20200622222747.717306-4-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-References: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
-In-Reply-To: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Tue, 23 Jun 2020 10:46:54 +0800
-Message-ID: <CABVgOSkwZUAEjxrqO46kqj=uY5HDzr-E_LR9i04yXEKqjp91Og@mail.gmail.com>
-Subject: Re: RFC: KTAP documentation - expected messages
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622222747.717306-4-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 6:45 AM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> Tim Bird started a thread [1] proposing that he document the selftest result
-> format used by Linux kernel tests.
->
-> [1] https://lore.kernel.org/r/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com
->
-> The issue of messages generated by the kernel being tested (that are not
-> messages directly created by the tests, but are instead triggered as a
-> side effect of the test) came up.  In this thread, I will call these
-> messages "expected messages".  Instead of sidetracking that thread with
-> a proposal to handle expected messages, I am starting this new thread.
+On Mon, Jun 22, 2020 at 03:27:44PM -0700, Bjorn Andersson wrote:
+> Add a node for the QMP AOSS.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Thanks for doing this: I think there are quite a few tests which could
-benefit from something like this.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-I think there were actually two separate questions: what do we do with
-unexpected messages (most of which I expect are useless, but some of
-which may end up being related to an unexpected test failure), and how
-to have tests "expect" a particular message to appear. I'll stick to
-talking about the latter for this thread, but even there there's two
-possible interpretations of "expected messages" we probably want to
-explicitly distinguish between: a message which must be present for
-the test to pass (which I think best fits the "expected message"
-name), and a message which the test is likely to produce, but which
-shouldn't alter the result (an "ignored message"). I don't see much
-use for the latter at present, but if we wanted to do more things with
-messages and had some otherwise very verbose tests, it could
-potentially be useful.
+Thanks,
+Mani
 
-The other thing I'd note here is that this proposal seems to be doing
-all of the actual message filtering in userspace, which makes a lot of
-sense for kselftest tests, but does mean that the kernel can't know if
-the test has passed or failed. There's definitely a tradeoff between
-trying to put too much needless string parsing in the kernel and
-having to have a userland tool determine the test results. The
-proposed KCSAN test suite[1] is using tracepoints to do this in the
-kernel. It's not the cleanest thing, but there's no reason KUnit or
-similar couldn't implement a nicer API around it.
-
-[1]: https://lkml.org/lkml/2020/6/22/1506
-
-> I implemented an API for expected messages that are triggered by tests
-> in the Devicetree unittest code, with the expectation that the specific
-> details may change when the Devicetree unittest code adapts the KUnit
-> API.  It seems appropriate to incorporate the concept of expected
-> messages in Tim's documentation instead of waiting to address the
-> subject when the Devicetree unittest code adapts the KUnit API, since
-> Tim's document may become the kernel selftest standard.
-
-Is having a nice way to handle expected messages the only thing
-holding up porting this to KUnit?
-
-> Instead of creating a very long email containing multiple objects,
-> I will reply to this email with a separate reply for each of:
->
->   The "expected messages" API implemention and use can be from
->   drivers/of/unittest.c in the mainline kernel.
->
->   of_unittest_expect - A proof of concept perl program to filter console
->                        output containing expected messages output
->
->                        of_unittest_expect is also available by cloning
->                        https://github.com/frowand/dt_tools.git
->
->   An example raw console output with timestamps and expect messages.
->
->   An example of console output processed by filter program
->   of_unittest_expect to be more human readable.  The expected
->   messages are not removed, but are flagged.
->
->   An example of console output processed by filter program
->   of_unittest_expect to be more human readable.  The expected
->   messages are removed instead of being flagged.
-
-Cheers,
--- David
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index 74a7ca96177e..246e6f279aa8 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -7,6 +7,7 @@
+>  #include <dt-bindings/clock/qcom,gcc-sm8250.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/mailbox/qcom-ipcc.h>
+> +#include <dt-bindings/power/qcom-aoss-qmp.h>
+>  #include <dt-bindings/power/qcom-rpmpd.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  
+> @@ -989,6 +990,19 @@ pdc: interrupt-controller@b220000 {
+>  			interrupt-controller;
+>  		};
+>  
+> +		aoss_qmp: qmp@c300000 {
+> +			compatible = "qcom,sm8250-aoss-qmp";
+> +			reg = <0 0x0c300000 0 0x100000>;
+> +			interrupts-extended = <&ipcc IPCC_CLIENT_AOP
+> +						     IPCC_MPROC_SIGNAL_GLINK_QMP
+> +						     IRQ_TYPE_EDGE_RISING>;
+> +			mboxes = <&ipcc IPCC_CLIENT_AOP
+> +					IPCC_MPROC_SIGNAL_GLINK_QMP>;
+> +
+> +			#clock-cells = <0>;
+> +			#power-domain-cells = <1>;
+> +		};
+> +
+>  		spmi_bus: spmi@c440000 {
+>  			compatible = "qcom,spmi-pmic-arb";
+>  			reg = <0x0 0x0c440000 0x0 0x0001100>,
+> -- 
+> 2.26.2
+> 
