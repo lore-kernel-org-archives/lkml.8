@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB87C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F41C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCC8206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E037520DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942993;
-	bh=eDfL3JuLelj7xO3kbKYdLwY99ZR4LRlpajMsM2UADRo=;
+	s=default; t=1592943002;
+	bh=jVjffcSOIbJYK+zbCM3/dVavuvMb866W3gt3yZzkCaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJczQnzedXFOtfizvPkoyZE/hLYyOUSwJKKs8Ghy5fAlOU+p6PXzBsHRPSzK7Wxz8
-	 tbIYqh/swIUlrlE5+vYgc+xSKUP/8WZr0P7Jr+QM9dDkxu6MCEMxZcztw/MThzP0SP
-	 Y2OztvrdNgqtzM8oP//bOohTuLs77NH8M8EPSa2M=
+	b=oUwaGpI8p5GXi+29nunR8qXQ1cTO8PlMt0d6F7mPKuGiXO0RHUI42edOYNk2vBGNm
+	 krKxYuNeK5BUfJG1hNmNIfc0WRXsHJQ3s8GAN+hIP5xW3FCr2QPgS/HXrWdg2u0THm
+	 WEC/AVB1rAwz0gttkgoZzfD9ATVEim3ZxbnH0zak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388431AbgFWUJv (ORCPT
+        id S2388780AbgFWUKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50192 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:10:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388362AbgFWUJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:11 -0400
+        id S2387464AbgFWUJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B8BF2078A;
-        Tue, 23 Jun 2020 20:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98D3A206C3;
+        Tue, 23 Jun 2020 20:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942950;
-        bh=eDfL3JuLelj7xO3kbKYdLwY99ZR4LRlpajMsM2UADRo=;
+        s=default; t=1592942961;
+        bh=jVjffcSOIbJYK+zbCM3/dVavuvMb866W3gt3yZzkCaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yx+ED35TO79ADXGIPslij1Z6+DIqfGLaF6GQIHgdnw6feGhzUvmBDoLfBD/hAxjAY
-         DK3UYdUkiHoeIm+ptbTeQTaLla6DsfmRMFU0fg1zmpbTEJvM3kNKfVD6z/KGNfZSsD
-         qy4dBuWZ2cZiIUDaowhm2Y4Gl0uEbgUn2f85Zxnk=
+        b=vxobtJPqXNWVK8z8zv477bSTV8yWctKuErRbFVtNQHRcZJi8/qoH0Xrp9Ppam0iVA
+         Ot7P17ffSIpARLLLF+IQ1Ze65DFfCLBrU4KYgsjG8BtnexT1iq6VF1XYMYu6u4mCI0
+         Huc6WJ+cFZdze2vUkNtAAwvPu4dZDDVD2hWCNWoc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 198/477] arm64: dts: qcom: db820c: Fix invalid pm8994 supplies
-Date:   Tue, 23 Jun 2020 21:53:15 +0200
-Message-Id: <20200623195416.945955649@linuxfoundation.org>
+Subject: [PATCH 5.7 173/477] PCI: rcar: Fix incorrect programming of OB windows
+Date:   Tue, 23 Jun 2020 21:52:50 +0200
+Message-Id: <20200623195415.761293840@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,62 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Andrew Murray <andrew.murray@arm.com>
 
-[ Upstream commit 1cacdf5d3bb9644ac7b9339c611ac5b9dd90d09d ]
+[ Upstream commit 2b9f217433e31d125fb697ca7974d3de3ecc3e92 ]
 
-It's uncertain where the "vreg_s8a_l3a_input" comes from, but the supply
-for VDD_L3_L11 on PM8994 should be VREG_S3A_1P3, so correct this - and
-drop the vreg_s8a_l3a_input.
+The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
+a CPU address (which is determined by the window number 'x') and a
+programmed PCI address - Thus allowing the controller to translate CPU
+accesses into PCI accesses.
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Fixes: 83d9ed4342a3 ("arm64: dts: qcom: db820c: Use regulator names from schematics")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200417070712.1376355-1-bjorn.andersson@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+However the existing code incorrectly writes the CPU address - lets fix
+this by writing the PCI address instead.
+
+For memory transactions, existing DT users describe a 1:1 identity mapping
+and thus this change should have no effect. However the same isn't true for
+I/O.
+
+Link: https://lore.kernel.org/r/20191004132941.6660-1-andrew.murray@arm.com
+Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ drivers/pci/controller/pcie-rcar.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index c4abbccf2bed0..eaa1eb70b4555 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -117,16 +117,6 @@
- 		regulator-max-microvolt = <3700000>;
- 	};
+diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+index 759c6542c5c80..1bae6a4abaaeb 100644
+--- a/drivers/pci/controller/pcie-rcar.c
++++ b/drivers/pci/controller/pcie-rcar.c
+@@ -333,11 +333,12 @@ static struct pci_ops rcar_pcie_ops = {
+ };
  
--	vreg_s8a_l3a_input: vreg-s8a-l3a-input {
--		compatible = "regulator-fixed";
--		regulator-name = "vreg_s8a_l3a_input";
--		regulator-always-on;
--		regulator-boot-on;
--
--		regulator-min-microvolt = <0>;
--		regulator-max-microvolt = <0>;
--	};
--
- 	wlan_en: wlan-en-1-8v {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&wlan_en_gpios>;
-@@ -705,14 +695,14 @@
- 		vdd_s11-supply = <&vph_pwr>;
- 		vdd_s12-supply = <&vph_pwr>;
- 		vdd_l2_l26_l28-supply = <&vreg_s3a_1p3>;
--		vdd_l3_l11-supply = <&vreg_s8a_l3a_input>;
-+		vdd_l3_l11-supply = <&vreg_s3a_1p3>;
- 		vdd_l4_l27_l31-supply = <&vreg_s3a_1p3>;
- 		vdd_l5_l7-supply = <&vreg_s5a_2p15>;
- 		vdd_l6_l12_l32-supply = <&vreg_s5a_2p15>;
- 		vdd_l8_l16_l30-supply = <&vph_pwr>;
- 		vdd_l14_l15-supply = <&vreg_s5a_2p15>;
- 		vdd_l25-supply = <&vreg_s3a_1p3>;
--		vdd_lvs1_2-supply = <&vreg_s4a_1p8>;
-+		vdd_lvs1_lvs2-supply = <&vreg_s4a_1p8>;
+ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+-				   struct resource *res)
++				   struct resource_entry *window)
+ {
+ 	/* Setup PCIe address space mappings for each resource */
+ 	resource_size_t size;
+ 	resource_size_t res_start;
++	struct resource *res = window->res;
+ 	u32 mask;
  
- 		vreg_s3a_1p3: s3 {
- 			regulator-name = "vreg_s3a_1p3";
+ 	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
+@@ -351,9 +352,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+ 	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
+ 
+ 	if (res->flags & IORESOURCE_IO)
+-		res_start = pci_pio_to_address(res->start);
++		res_start = pci_pio_to_address(res->start) - window->offset;
+ 	else
+-		res_start = res->start;
++		res_start = res->start - window->offset;
+ 
+ 	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
+ 	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
+@@ -382,7 +383,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
+ 		switch (resource_type(res)) {
+ 		case IORESOURCE_IO:
+ 		case IORESOURCE_MEM:
+-			rcar_pcie_setup_window(i, pci, res);
++			rcar_pcie_setup_window(i, pci, win);
+ 			i++;
+ 			break;
+ 		case IORESOURCE_BUS:
 -- 
 2.25.1
 
