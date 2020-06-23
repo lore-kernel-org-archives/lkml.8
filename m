@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB7B2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE07D2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943873;
-	bh=xw5JK02itgcMsIpRhkXA2usII7j09CBG0B41PyTPPik=;
+	s=default; t=1592943876;
+	bh=4bFTiyTI+21Z9p8NR5i0JtG0TLkhfG+w1D0qOnIinuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVCM9Z7OILjx6D6Tqw0AIF+sx4xd5LZEYTXD2m6ZewbfJef24I0YtBksnzTzft2Br
-	 1y2D8qPvHivOlpcphyJo8xvp92Gntd0cZFWioAFxg9XLUFwZ/DQua8EngmMToJqqny
-	 1KPPAXiHYePM3HatjJXtN4UquddmHfKzuu0jdXlY=
+	b=cgKE7YfcVq972xrB9n6TQQozhle2aQDzF5/bIBaKFx6Vl/bqy4p58b5yqQB4mPBjM
+	 p6+4TXzPUWAkjwxq+WoFp4JR8cYD4qGIIIshjrTrumhUeEWBsuQSf/Fhr7NIeTHajw
+	 RytHwD2n/UULG4zSMwAxTMtizqg0qKdUGI/tl81E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390436AbgFWUYb (ORCPT
+        id S2390449AbgFWUYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43062 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:24:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390419AbgFWUY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:26 -0400
+        id S2390432AbgFWUYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3DFD2070E;
-        Tue, 23 Jun 2020 20:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DAF22158C;
+        Tue, 23 Jun 2020 20:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943866;
-        bh=xw5JK02itgcMsIpRhkXA2usII7j09CBG0B41PyTPPik=;
+        s=default; t=1592943871;
+        bh=4bFTiyTI+21Z9p8NR5i0JtG0TLkhfG+w1D0qOnIinuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oxzdzA+j5zqNzNRjmTxNrCe9S4vIp+oU2M64RHPepbUamnMSRyXKF1TmkqhsjCYrL
-         EFIB6vXJr5L3vgT5ETj8u4rMMfQgmAfTsPN00Xkx9RmsfG8R/c4eMOOJ8wwD01yJ+Z
-         K8Q6KVoF9B/ys6Fb+4S9J0uE5UMLjujB486sUyK8=
+        b=lu8pEeTwwBMUgrNnFdkJu0jznhLP4KUaUFI3XBla+OB/KU+ukuIO63lyyRhRgH11l
+         F36VbHEg7UE5yal51RLAEb6D9I5sSZS9MylacYJD4srzELUrPPbUsEiJSb3jeQ6MVp
+         5tluh2BhYiVfZfQyQOJp3+z6yRiU/NohdhIlSb7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 081/314] scsi: ibmvscsi: Dont send host info in adapter info MAD after LPM
-Date:   Tue, 23 Jun 2020 21:54:36 +0200
-Message-Id: <20200623195342.729019242@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 083/314] x86/purgatory: Disable various profiling and sanitizing options
+Date:   Tue, 23 Jun 2020 21:54:38 +0200
+Message-Id: <20200623195342.828949467@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,44 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 4919b33b63c8b69d8dcf2b867431d0e3b6dc6d28 ]
+[ Upstream commit e2ac07c06058ae2d58b45bbf2a2a352771d76fcb ]
 
-The adapter info MAD is used to send the client info and receive the host
-info as a response. A persistent buffer is used and as such the client info
-is overwritten after the response. During the course of a normal adapter
-reset the client info is refreshed in the buffer in preparation for sending
-the adapter info MAD.
+Since the purgatory is a special stand-alone binary, various profiling
+and sanitizing options must be disabled. Having these options enabled
+typically will cause dependencies on various special symbols exported by
+special libs / stubs used by these frameworks. Since the purgatory is
+special, it is not linked against these stubs causing missing symbols in
+the purgatory if these options are not disabled.
 
-However, in the special case of LPM where we reenable the CRQ instead of a
-full CRQ teardown and reset we fail to refresh the client info in the
-adapter info buffer. As a result, after Live Partition Migration (LPM) we
-erroneously report the host's info as our own.
+Sync the set of disabled profiling and sanitizing options with that from
+drivers/firmware/efi/libstub/Makefile, adding
+-DDISABLE_BRANCH_PROFILING to the CFLAGS and setting:
 
-[mkp: typos]
+  GCOV_PROFILE                    := n
+  UBSAN_SANITIZE                  := n
 
-Link: https://lore.kernel.org/r/20200603203632.18426-1-tyreld@linux.ibm.com
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This fixes broken references to ftrace_likely_update() when
+CONFIG_TRACE_BRANCH_PROFILING is enabled and to __gcov_init() and
+__gcov_exit() when CONFIG_GCOV_KERNEL is enabled.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200317130841.290418-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/purgatory/Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index 59f0f1030c54a..c5711c659b517 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -415,6 +415,8 @@ static int ibmvscsi_reenable_crq_queue(struct crq_queue *queue,
- 	int rc = 0;
- 	struct vio_dev *vdev = to_vio_dev(hostdata->dev);
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index fb4ee54443799..9733d1cc791dd 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -17,7 +17,10 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+ LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
+ targets += purgatory.ro
  
-+	set_adapter_info(hostdata);
-+
- 	/* Re-enable the CRQ */
- 	do {
- 		if (rc)
++# Sanitizer, etc. runtimes are unavailable and cannot be linked here.
++GCOV_PROFILE	:= n
+ KASAN_SANITIZE	:= n
++UBSAN_SANITIZE	:= n
+ KCOV_INSTRUMENT := n
+ 
+ # These are adjustments to the compiler flags used for objects that
+@@ -25,7 +28,7 @@ KCOV_INSTRUMENT := n
+ 
+ PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+ PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
+-PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
++PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
+ 
+ # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+ # in turn leaves some undefined symbols like __fentry__ in purgatory and not
 -- 
 2.25.1
 
