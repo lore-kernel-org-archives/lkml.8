@@ -2,208 +2,116 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5819C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A937BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A89DE207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tdKjXBvP"
+	by mail.kernel.org (Postfix) with ESMTP id 841CB20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592947983;
+	bh=OOgmetCZuRCnH71qbi5n8ujQZdNpbGz/9VMiNpgv6Kk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vL4qr0OZOydaFM4qFpK2Qd102wmfs5UMvEGVU3nZtkHVa99y7sxDf8yJYqUs6wSPN
+	 ipZClMsnXBMiCByfLF9mlH3N0ZE70/b9BKTKDbSN6qZiaPr9El+G+o34ze4pLtmgbV
+	 9KOetomKyyt9Do3FfCGMQSPoJQ38OaJsMQK6xsNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393681AbgFWVcw (ORCPT
+        id S2389285AbgFWVdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388925AbgFWUMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:12:02 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 002B4C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:12:01 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 64so7040420oti.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 13:12:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XIF/78/oz3AALSTMCdkQl40XEyXtQL+RlWZw1uAr9zg=;
-        b=tdKjXBvP63QvKoBudz2TiD3q5385th1hMT4YyYbkpfKPZCL8IJ+Ea/zWDdJaupAjUS
-         /kBIO05NYoTtOQi7v+pjbbkLZ1Qb9T7/MilL7zxh96EEB+oGsCYT8rg0T6sgm+CnEPhR
-         +yt2Ka2mZtXXNQGsmzR+xNKA93lfLcZkspz5RGQFiC44WauvAIf2kirLnhG4wUU1JjSY
-         BUxdlSB0YrLdRk8T5A33yaoB5ZnoqGwr/HzmfalqHKKvqYB2VGE1uX3r4zpciuDSElnH
-         sLKa76Di6HbMOjthg7U7OzD66Fl2B87tt+fZWbYrygveTZYkAZahP7rWsV4oaxrX7b0U
-         tlMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XIF/78/oz3AALSTMCdkQl40XEyXtQL+RlWZw1uAr9zg=;
-        b=ORJ8XJi1B4oBaFQy7dASsgOU9UDpQTlVGwhuAblaMdjXBqi/2bmrkQMa1R86zAv4m+
-         9kcxEeeDHQYn34QZI6dYy7vJQfKSaEtBaCv6KKgUdlSDqSZj2hQL2QYb9QhzsGGijIjo
-         sMVvcnjzIVZTmsl9nrXitGl38huRUwb1vauGvrH41LLZ/fwWaA+0dmAVMbvQ0+oOtHQT
-         sK4E1qAngkLmAiPWib4+lYmzKQ5JRfto1nXz4N9W3f4APxesa1Nson4CxGuIVMyPl2dN
-         UNxFn+MZrUHAhE9dmiAUqPl4b8if/N65fA1To5aasYQt3D+xD0cClsWrNt7WoVDrFTq8
-         lmww==
-X-Gm-Message-State: AOAM533MNKVhILzLYobK0BHrLHCrKdPRHatbwBztwMlzky/te8TsMGMV
-        H/1ztuHuQUnMCwSLGnGZH8NIwg==
-X-Google-Smtp-Source: ABdhPJxzH8gIlLIF2g+bTSsjHv193lX+0hnB105m8aM4ZVMB52dgPURejz1TiABTEcdU/ErrOhXIlQ==
-X-Received: by 2002:a9d:53c3:: with SMTP id i3mr20384120oth.300.1592943121239;
-        Tue, 23 Jun 2020 13:12:01 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s17sm249054oog.33.2020.06.23.13.12.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 13:12:00 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 13:09:18 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loic.pallardy@st.com,
-        arnaud.pouliquen@st.com, s-anna@ti.com
-Subject: Re: [PATCH v4 9/9] remoteproc: Properly handle firmware name when
- attaching
-Message-ID: <20200623200918.GA407764@builder.lan>
-References: <20200601175139.22097-1-mathieu.poirier@linaro.org>
- <20200601175139.22097-10-mathieu.poirier@linaro.org>
- <20200622073319.GK149351@builder.lan>
- <20200623194849.GC1908098@xps15>
+        Tue, 23 Jun 2020 17:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388897AbgFWULp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:11:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0148320707;
+        Tue, 23 Jun 2020 20:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592943105;
+        bh=OOgmetCZuRCnH71qbi5n8ujQZdNpbGz/9VMiNpgv6Kk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YOV1tDR7ACi6Hr1nWze7oGkO/dSlVxK3q4V9Tp1Qbcw6AqEqdIQYDCphs9zPlEsz9
+         CFSJ0jfGT4MW7bI8ctEq3DXEgx18LiXYxy2cWT3Tqo2uYk/OQ1tf+0OPgIeX7+8Tdw
+         T1JkCZsLNk1g8thxpwj/UxcZSZ8QTzsq/MG+T62E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        kbuild test robot <lkp@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 261/477] USB: gadget: udc: s3c2410_udc: Remove pointless NULL check in s3c2410_udc_nuke
+Date:   Tue, 23 Jun 2020 21:54:18 +0200
+Message-Id: <20200623195419.903440510@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
+References: <20200623195407.572062007@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623194849.GC1908098@xps15>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 23 Jun 12:48 PDT 2020, Mathieu Poirier wrote:
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-> On Mon, Jun 22, 2020 at 12:33:19AM -0700, Bjorn Andersson wrote:
-> > On Mon 01 Jun 10:51 PDT 2020, Mathieu Poirier wrote:
-> > 
-> > > This patch prevents the firmware image name from being displayed when
-> > > the remoteproc core is attaching to a remote processor. This is needed
-> > > needed since there is no guarantee about the nature of the firmware
-> > > image that is loaded by the external entity.
-> > > 
-> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > 
-> > How about renaming the bool "firmware_unknown"?
-> 
-> My hope was to use the same variable, i.e "autonomous", for the RUNNING ->
-> DETACHED and CRASHED -> DETACHED scenarios to reduce the amount of
-> variables we need to keep track of when the functionality is implemented in
-> upcoming pachsets.
-> 
+[ Upstream commit 7a0fbcf7c308920bc6116b3a5fb21c8cc5fec128 ]
 
-Sounds like a good goal, let's keep it as is for now!
+Clang warns:
 
-Thanks,
-Bjorn
+drivers/usb/gadget/udc/s3c2410_udc.c:255:11: warning: comparison of
+address of 'ep->queue' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (&ep->queue == NULL)
+             ~~~~^~~~~    ~~~~
+1 warning generated.
 
-> Thanks for the review,
-> Mathieu
-> 
-> > 
-> > Apart from that, I think this looks good.
-> > 
-> > Regards,
-> > Bjorn
-> > 
-> > > ---
-> > >  drivers/remoteproc/remoteproc_core.c  | 18 ++++++++++++++++++
-> > >  drivers/remoteproc/remoteproc_sysfs.c | 16 ++++++++++++++--
-> > >  include/linux/remoteproc.h            |  2 ++
-> > >  3 files changed, 34 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> > > index 0e23284fbd25..a8adc712e7f6 100644
-> > > --- a/drivers/remoteproc/remoteproc_core.c
-> > > +++ b/drivers/remoteproc/remoteproc_core.c
-> > > @@ -1642,6 +1642,14 @@ static int rproc_stop(struct rproc *rproc, bool crashed)
-> > >  
-> > >  	rproc->state = RPROC_OFFLINE;
-> > >  
-> > > +	/*
-> > > +	 * The remote processor has been stopped and is now offline, which means
-> > > +	 * that the next time it is brought back online the remoteproc core will
-> > > +	 * be responsible to load its firmware.  As such it is no longer
-> > > +	 * autonomous.
-> > > +	 */
-> > > +	rproc->autonomous = false;
-> > > +
-> > >  	dev_info(dev, "stopped remote processor %s\n", rproc->name);
-> > >  
-> > >  	return 0;
-> > > @@ -2166,6 +2174,16 @@ int rproc_add(struct rproc *rproc)
-> > >  	/* create debugfs entries */
-> > >  	rproc_create_debug_dir(rproc);
-> > >  
-> > > +	/*
-> > > +	 * Remind ourselves the remote processor has been attached to rather
-> > > +	 * than booted by the remoteproc core.  This is important because the
-> > > +	 * RPROC_DETACHED state will be lost as soon as the remote processor
-> > > +	 * has been attached to.  Used in firmware_show() and reset in
-> > > +	 * rproc_stop().
-> > > +	 */
-> > > +	if (rproc->state == RPROC_DETACHED)
-> > > +		rproc->autonomous = true;
-> > > +
-> > >  	/* if rproc is marked always-on, request it to boot */
-> > >  	if (rproc->auto_boot) {
-> > >  		ret = rproc_trigger_auto_boot(rproc);
-> > > diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-> > > index 8b462c501465..4ee158431f67 100644
-> > > --- a/drivers/remoteproc/remoteproc_sysfs.c
-> > > +++ b/drivers/remoteproc/remoteproc_sysfs.c
-> > > @@ -14,8 +14,20 @@ static ssize_t firmware_show(struct device *dev, struct device_attribute *attr,
-> > >  			  char *buf)
-> > >  {
-> > >  	struct rproc *rproc = to_rproc(dev);
-> > > -
-> > > -	return sprintf(buf, "%s\n", rproc->firmware);
-> > > +	const char *firmware = rproc->firmware;
-> > > +
-> > > +	/*
-> > > +	 * If the remote processor has been started by an external
-> > > +	 * entity we have no idea of what image it is running.  As such
-> > > +	 * simply display a generic string rather then rproc->firmware.
-> > > +	 *
-> > > +	 * Here we rely on the autonomous flag because a remote processor
-> > > +	 * may have been attached to and currently in a running state.
-> > > +	 */
-> > > +	if (rproc->autonomous)
-> > > +		firmware = "unknown";
-> > > +
-> > > +	return sprintf(buf, "%s\n", firmware);
-> > >  }
-> > >  
-> > >  /* Change firmware name via sysfs */
-> > > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> > > index bf6a310ba870..cf5e31556780 100644
-> > > --- a/include/linux/remoteproc.h
-> > > +++ b/include/linux/remoteproc.h
-> > > @@ -491,6 +491,7 @@ struct rproc_dump_segment {
-> > >   * @table_sz: size of @cached_table
-> > >   * @has_iommu: flag to indicate if remote processor is behind an MMU
-> > >   * @auto_boot: flag to indicate if remote processor should be auto-started
-> > > + * @autonomous: true if an external entity has booted the remote processor
-> > >   * @dump_segments: list of segments in the firmware
-> > >   * @nb_vdev: number of vdev currently handled by rproc
-> > >   */
-> > > @@ -524,6 +525,7 @@ struct rproc {
-> > >  	size_t table_sz;
-> > >  	bool has_iommu;
-> > >  	bool auto_boot;
-> > > +	bool autonomous;
-> > >  	struct list_head dump_segments;
-> > >  	int nb_vdev;
-> > >  	u8 elf_class;
-> > > -- 
-> > > 2.20.1
-> > > 
+It is not wrong, queue is not a pointer so if ep is not NULL, the
+address of queue cannot be NULL. No other driver does a check like this
+and this check has been around since the driver was first introduced,
+presumably with no issues so it does not seem like this check should be
+something else. Just remove it.
+
+Commit afe956c577b2d ("kbuild: Enable -Wtautological-compare") exposed
+this but it is not the root cause of the warning.
+
+Fixes: 3fc154b6b8134 ("USB Gadget driver for Samsung s3c2410 ARM SoC")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1004
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/gadget/udc/s3c2410_udc.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
+index 0507a2ca0f552..80002d97b59d8 100644
+--- a/drivers/usb/gadget/udc/s3c2410_udc.c
++++ b/drivers/usb/gadget/udc/s3c2410_udc.c
+@@ -251,10 +251,6 @@ static void s3c2410_udc_done(struct s3c2410_ep *ep,
+ static void s3c2410_udc_nuke(struct s3c2410_udc *udc,
+ 		struct s3c2410_ep *ep, int status)
+ {
+-	/* Sanity check */
+-	if (&ep->queue == NULL)
+-		return;
+-
+ 	while (!list_empty(&ep->queue)) {
+ 		struct s3c2410_request *req;
+ 		req = list_entry(ep->queue.next, struct s3c2410_request,
+-- 
+2.25.1
+
+
+
