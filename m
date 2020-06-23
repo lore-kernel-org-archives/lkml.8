@@ -2,77 +2,83 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850C1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3153FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCC420781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0682B2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="elmIn/w9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733052AbgFWP71 (ORCPT
+        id S1733061AbgFWQAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:59:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:31599 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731616AbgFWP70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:59:26 -0400
-IronPort-SDR: JLvwQvHAfJ24nOt7c4x1dL7A7H+/aMZnYu6O3btioplnOvwzRMNyz5slbB22fKC9lf/DlG0sfs
- g2GhNQv5r0Pw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="209307529"
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="209307529"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 08:59:22 -0700
-IronPort-SDR: iq26dOLKgX3H15tBFZLuja+vdDxalzbD2WF/C0QK3i/G9gmZaftr40VuZiXDtyitN0nWawvHvG
- 0hDSMJ3QZjKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="301299965"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jun 2020 08:59:19 -0700
-Date:   Tue, 23 Jun 2020 08:59:18 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Feiner <pfeiner@google.com>
-Cc:     Jon Cargille <jcargill@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kvm: x86 mmu: avoid mmu_page_hash lookup for
- direct_map-only VM
-Message-ID: <20200623155918.GC23842@linux.intel.com>
-References: <20200508182425.69249-1-jcargill@google.com>
- <20200508201355.GS27052@linux.intel.com>
- <CAM3pwhEw+KYq9AD+z8wPGyG10Bex7xLKaPM=yVV-H+W_eHTW4w@mail.gmail.com>
- <20200623065348.GA23054@linux.intel.com>
+        Tue, 23 Jun 2020 12:00:38 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40806 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733012AbgFWQAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:00:38 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05NFxoNB045823;
+        Tue, 23 Jun 2020 10:59:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592927990;
+        bh=olC4l/jXzIroYJbEpRReyOUqgRg7I8gSJNp27yn9+/g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=elmIn/w9jpsWEuzqTTEYJMbNKlN3CikTLSag64yS0+7RWQhvsgkwgPuhSnidqaH3Y
+         zLFp4scutmYLF7bf1PmT96FcQcJmQahn/lROVxVGJdOZOUR3UP4ucXrxsnrV9CA7tE
+         hB02ImQxeZkTKLUtZglqNab7Oy6xEg00+9XjJCQE=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05NFxotF083470
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jun 2020 10:59:50 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 23
+ Jun 2020 10:59:50 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 23 Jun 2020 10:59:50 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05NFxnjP128978;
+        Tue, 23 Jun 2020 10:59:50 -0500
+Subject: Re: [PATCH v4 2/2] ASoC: tas2562: Update shutdown GPIO property
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200612171412.25423-1-dmurphy@ti.com>
+ <20200612171412.25423-2-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <cfb043e3-77c5-2957-20b6-2814f1445cf0@ti.com>
+Date:   Tue, 23 Jun 2020 10:59:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623065348.GA23054@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200612171412.25423-2-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:53:48PM -0700, Sean Christopherson wrote:
-> If we do get agressive and zap all children (or if my analysis is wrong),
-> and prevent the mixed level insansity, then a simpler approach would be to
-> skip the lookup if the MMU is direct.  I.e. no need for the per-VM toggle.
-> Direct vs. indirect MMUs are guaranteed to have different roles and so the
-> direct MMU's pages can't be reused/shared.
+Hello
 
-Clarification on the above.  Direct and not-guaranteed-to-be-direct MMUs for
-a given VM are guaranteed to have different roles, even for nested NPT vs.
-NPT, as nested MMUs will have role.guest_mode=1.
+On 6/12/20 12:14 PM, Dan Murphy wrote:
+> Update the shutdown GPIO property to be shutdown from shut-down.
+
+I have some other patches that go on top of this patchset I am wondering 
+if I should re-submit with those patches on top or indicate in a cover 
+letter the dependency
+
+Dan
+
