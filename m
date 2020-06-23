@@ -2,260 +2,159 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57755C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B44BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADB62076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:53:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="ZU4PvE1E"
+	by mail.kernel.org (Postfix) with ESMTP id 228B52076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592927661;
+	bh=6SrOT80UTSn/ROCESG3xoWDGTuarvycjZLf+Tqy5hbo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ldQSjl3kBnQ2UY2Lhr+EN/jGvsEBwGax5MFlYZ7a7VrVH0Q4aoClTVKJmkZYpKygx
+	 dmzZ4StdNFWzB/Q7X8vScHeARfsfOEF1GtUOHV9YLebhPKxCZ4gZQ4yO0dl182+dbI
+	 UmM1EEPI+yci/Vp2jSgzClVhL+W4ctT1p07y8i2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733052AbgFWPxI (ORCPT
+        id S1733000AbgFWPyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:53:08 -0400
-Received: from cmta19.telus.net ([209.171.16.92]:53963 "EHLO cmta19.telus.net"
+        Tue, 23 Jun 2020 11:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732942AbgFWPxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:53:07 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id nlEMjsYeMFblknlEOjcGYd; Tue, 23 Jun 2020 09:53:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1592927585; bh=nlfqUqrnDt8mw74udY2oJ06tBa7QryRseE54RE1eYiY=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=ZU4PvE1EewXnf2KEOVQxomqVu++0D04kdmyF/1q75VhqMzbUkTNp53pfMjnUL2O+t
-         sB+FEMtLF3AQpFezL2uPf7mVUQsdZQqS94v6Vs6nNJ6uKq4trnauyOW7IJ1zp9H/HY
-         vqfrLbGczwjLA/Ah8WDb3yoCHZyFWSE3OZdVB7/lFNKZOrAqmn4EVaiKjTAPaCi2F9
-         bzinU2j1EGgaYuijamJOmOpEhNaDoFM8kIsNqdbM3NjB+iz9lLKhXCXdsUC+8SwGKE
-         dlYoVEkZ0fvKbjeMpSU3RwrMhFd+VhxsMlhZhDh440lueVoAfprkkHFA6Eh3vymVYk
-         QTzSvHMY1rtbg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=BNTNU2YG c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
- a=QyXUC8HyAAAA:8 a=asNcfZ7KW6wfmf0wXiAA:9 a=UhRXDiYojVoVNxzP:21
- a=lKfM9UDmurNOeIvW:21 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        <lenb@kernel.org>
-Cc:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>
-References: <20200623051233.1419218-1-srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <20200623051233.1419218-1-srinivas.pandruvada@linux.intel.com>
-Subject: RE: [PATCH 1/2] cpufreq: intel_pstate: Allow enable/disable energy efficiency
-Date:   Tue, 23 Jun 2020 08:53:01 -0700
-Message-ID: <001e01d64976$616de950$2449bbf0$@net>
+        id S1732781AbgFWPyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 11:54:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 440CE2073E;
+        Tue, 23 Jun 2020 15:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592927659;
+        bh=6SrOT80UTSn/ROCESG3xoWDGTuarvycjZLf+Tqy5hbo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=W/u8qXH8J2KikHKNIe6/s8WAM1SvEVKNzSZI/H/gZrTbWEHdjMJoJtw5D9p+6pVAy
+         XVsc+LAJJDOCEATmPuc//0YGBOE7SlmmJtOc0Q04OJcWi2dau7aXrnCp3+qHHIXZKi
+         mLI+6OZ3AOPmXvFhYGV48ANqfoIyV8mLtVlxWYiM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2C5613522657; Tue, 23 Jun 2020 08:54:19 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 08:54:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
+        parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
+        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
+Subject: Re: [PATCH tip/core/rcu 13/14] tools/memory-model/README: Expand
+ dependency of klitmus7
+Message-ID: <20200623155419.GI9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
+ <20200623005231.27712-13-paulmck@kernel.org>
+ <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdZJHPAX2aqri8LLTYWzgCMOCZFopAATGg2Q
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfGxRbxc6ov9093k7Z4lmJwMEuZRl/DIZzQhCjSiQVmnDmfx2W1io7hDRCFDrl7opjNKUrskmIZX3z9LYswOJwP9uYeLWXJRWJT6JA6Prw1PBaQftCnhg
- UI446xSo9rLoy/7WNH0WDchYy0gmF9rOL4kxEopmRfpgwy5jNhONMI4z9zTn+htg9EwgV1kF0WfNqCtuJ4eunMyzeTvoBLLa6yQhyYCMClNjjp7IWMEJEU19
- PcKxIdFVOIkwq1ALQvshDmBLXIFMnJYKSx/ViCWAsfaTdGhkF58ykPSQHmJoIv4iwJX6DmO5hJrHrKO4/6HO0DodrIghRBfBuZHAZJpnppl3bK0IEliXgJk+
- guIQ5ljA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020.06.22 22:13 Srinivas Pandruvada wrote:
-
-> By default intel_pstate driver disables energy efficiency by setting
-> MSR_IA32_POWER_CTL bit 19 for Kaby Lake desktop CPU model in HWP mode.
-> This CPU model is also shared by Coffee Lake desktop CPUs. This allows
-> these systems to reach maximum possible frequency. But this adds power
-> penalty, which some customers don't want. They want some way to enable/
-> disable dynamically.
+On Tue, Jun 23, 2020 at 11:37:32PM +0900, Akira Yokosawa wrote:
+> On Mon, 22 Jun 2020 17:52:30 -0700, paulmck@kernel.org wrote:
+> > From: Akira Yokosawa <akiyks@gmail.com>
+> > 
+> > klitmus7 is independent of the memory model but depends on the
+> > build-target kernel release.
+> > It occasionally lost compatibility due to kernel API changes [1, 2, 3].
+> > It was remedied in a backwards-compatible manner respectively [4, 5, 6].
+> > 
+> > Reflect this fact in README.
+> > 
+> > [1]: b899a850431e ("compiler.h: Remove ACCESS_ONCE()")
+> > [2]: 0bb95f80a38f ("Makefile: Globally enable VLA warning")
+> > [3]: d56c0d45f0e2 ("proc: decouple proc from VFS with "struct proc_ops"")
+> > [4]: https://github.com/herd/herdtools7/commit/e87d7f9287d1
+> >      ("klitmus: Use WRITE_ONCE and READ_ONCE in place of deprecated ACCESS_ONCE")
+> > [5]: https://github.com/herd/herdtools7/commit/a0cbb10d02be
+> >      ("klitmus: Avoid variable length array")
+> > [6]: https://github.com/herd/herdtools7/commit/46b9412d3a58
+> >      ("klitmus: Linux kernel v5.6.x compat")
+> > 
+> > NOTE: [5] was ahead of herdtools7 7.53, which did not make an
+> > official release.  Code generated by klitmus7 without [5] can still be
+> > built targeting Linux 4.20--5.5 if you don't care VLA warnings.
+> > 
+> > Acked-by: Andrea Parri <parri.andrea@gmail.com>
+> > Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > ---
+> >  tools/memory-model/README | 30 ++++++++++++++++++++++++++++--
+> >  1 file changed, 28 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/memory-model/README b/tools/memory-model/README
+> > index b9c562e..90af203 100644
+> > --- a/tools/memory-model/README
+> > +++ b/tools/memory-model/README
+> > @@ -28,8 +28,34 @@ downloaded separately:
+> >  See "herdtools7/INSTALL.md" for installation instructions.
+> >  
+> >  Note that although these tools usually provide backwards compatibility,
+> > -this is not absolutely guaranteed.  Therefore, if a later version does
+> > -not work, please try using the exact version called out above.
+> > +this is not absolutely guaranteed.
+> > +
+> > +For example, a future version of herd7 might not work with the model
+> > +in this release.  A compatible model will likely be made available in
+> > +a later release of Linux kernel.
+> > +
+> > +If you absolutely need to run the model in this particular release,
+> > +please try using the exact version called out above.
+> > +
+> > +klitmus7 is independent of the model provided here.  It has its own
+> > +dependency on a target kernel release where converted code is built
+> > +and executed.  Any change in kernel APIs essential to klitmus7 will
+> > +necessitate an upgrade of klitmus7.
+> > +
+> > +If you find any compatibility issues in klitmus7, please inform the
+> > +memory model maintainers.
+> > +
+> > +klitmus7 Compatibility Table
+> > +----------------------------
+> > +
+> > +	============  ==========
+> > +	target Linux  herdtools7
+> > +	------------  ----------
+> > +	     -- 4.18  7.48 --
+> > +	4.15 -- 4.19  7.49 --
+> > +	4.20 -- 5.5   7.54 --
+> > +	5.6  --       HEAD
+> > +	============  ==========
 > 
-> So, add an additional attribute "energy_efficiency_enable" under
-> /sys/devices/system/cpu/intel_pstate/ for these CPU models. This allows
-> to read and write bit 19 ("Disable Energy Efficiency Optimization") in
-> the MSR IA32_POWER_CTL.
+> Paul,
 > 
-> This attribute is present in both HWP and non-HWP mode as this has an
-> effect in both modes. Refer to Intel Software Developer's manual for
-> details. The scope of this bit is package wide.
-
-I do and always have. However these manuals are 1000's of pages,
-are updated often, and it can be difficult to find the correct page
-for the correct processor. So it is great that, in general, the same
-mnemonics are used in the code as the manuals.
-
+> I was planning to send an update on this one.
+> herdtoolds7 7.56 will be released later this week (now tagged 7.56-rc1).
 > 
-> Suggested-by: Len Brown <lenb@kernel.org>
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  Documentation/admin-guide/pm/intel_pstate.rst |  7 +++
->  drivers/cpufreq/intel_pstate.c                | 49 ++++++++++++++++++-
->  2 files changed, 54 insertions(+), 2 deletions(-)
+> Andrea tested klitmus7 7.56-rc1 against Linux 5.7 and 5.8-rc1.
+> I tested it against Linux 5.7.4.
+> klitmus7 worked fine in all these test.
 > 
-> diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-
-> guide/pm/intel_pstate.rst
-> index 39d80bc29ccd..939bfdc53f4f 100644
-> --- a/Documentation/admin-guide/pm/intel_pstate.rst
-> +++ b/Documentation/admin-guide/pm/intel_pstate.rst
-> @@ -431,6 +431,13 @@ argument is passed to the kernel in the command line.
->  	supported in the current configuration, writes to this attribute will
->  	fail with an appropriate error.
+> So I think we can safely update the bottom row of the table as:
 > 
-> +``energy_efficiency_enable``
-> +	This attribute is only present on platforms, which has CPUs matching
-> +	Kaby Lake desktop CPU model. By default "energy_efficiency" is disabled
-
-So, why not mention Coffee Lake also, as you did above?
-
-> +	on these CPU models in HWP mode by this driver. Enabling energy
-> +	efficiency may limit maximum operating frequency in both HWP and non
-> +	HWP mode.
-> +
->  Interpretation of Policy Attributes
->  -----------------------------------
+> > +	5.6  --       7.56 --
 > 
-> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> index 8e23a698ce04..1cf6d06f2314 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -1218,6 +1218,44 @@ static ssize_t store_hwp_dynamic_boost(struct kobject *a,
->  	return count;
->  }
-> 
-> +#define MSR_IA32_POWER_CTL_BIT_EE	19
+> Can you amend this one directly?
+> Or do you want me to send a follow-up patch?
 
-(same comment as the other day, for another patch) In my opinion and for
-consistency, this bit should be defined in
+A follow-up patch is probably best.  This can't be the only place that
+must change?  Or maybe we set this up better than I remember?  ;-)
 
-arch/x86/include/asm/msr-index.h
-
-like so (I defined the other bits also):
-
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index e8370e64a155..1a6084067f18 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -255,6 +255,12 @@
-
- #define MSR_IA32_POWER_CTL             0x000001fc
-
-+/* POWER_CTL bits (some are model specific): */
-+
-+#define POWER_CTL_C1E                  1
-+#define POWER_CTL_EEO                  19
-+#define POWER_CTL_RHO                  20
-+
- #define MSR_IA32_MC0_CTL               0x00000400
- #define MSR_IA32_MC0_STATUS            0x00000401
- #define MSR_IA32_MC0_ADDR              0x00000402
-
-There is another almost identical file at:
-
-tools/arch/x86/include/asm/msr-index.h
-
-and I am not sure which one is the master, but
-the former contains stuff that the later does not.
-
-I have defined the bits names in a consistent way
-as observed elsewhere in the file. i.e. drop the
-"MSR_IA32_" prefix and add the bit.
-
-Now, tying this back to my earlier comment about the
-manuals:
-The file "tools/arch/x86/include/asm/msr-index.h"
-is an excellent gateway reference for those
-1000's of pages of software reference manuals.
-
-As a user that uses them all the time, but typically
-only digs deep into those manuals once every year or
-two, I find tremendous value added via the msr-index.h
-file.
-
-> +
-> +static ssize_t show_energy_efficiency_enable(struct kobject *kobj,
-> +					     struct kobj_attribute *attr,
-> +					     char *buf)
-> +{
-> +	u64 power_ctl;
-> +	int enable;
-> +
-> +	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
-> +	enable = (power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE)) >> MSR_IA32_POWER_CTL_BIT_EE;
-> +	return sprintf(buf, "%d\n", !enable);
-> +}
-> +
-> +static ssize_t store_energy_efficiency_enable(struct kobject *a,
-> +					      struct kobj_attribute *b,
-> +					      const char *buf, size_t count)
-> +{
-> +	u64 power_ctl;
-> +	u32 input;
-> +	int ret;
-> +
-> +	ret = kstrtouint(buf, 10, &input);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_lock(&intel_pstate_driver_lock);
-> +	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
-> +	if (input)
-> +		power_ctl &= ~BIT(MSR_IA32_POWER_CTL_BIT_EE);
-> +	else
-> +		power_ctl |= BIT(MSR_IA32_POWER_CTL_BIT_EE);
-> +	wrmsrl(MSR_IA32_POWER_CTL, power_ctl);
-> +	mutex_unlock(&intel_pstate_driver_lock);
-> +
-> +	return count;
-> +}
-> +
->  show_one(max_perf_pct, max_perf_pct);
->  show_one(min_perf_pct, min_perf_pct);
-> 
-> @@ -1228,6 +1266,7 @@ define_one_global_rw(min_perf_pct);
->  define_one_global_ro(turbo_pct);
->  define_one_global_ro(num_pstates);
->  define_one_global_rw(hwp_dynamic_boost);
-> +define_one_global_rw(energy_efficiency_enable);
-> 
->  static struct attribute *intel_pstate_attributes[] = {
->  	&status.attr,
-> @@ -1241,6 +1280,8 @@ static const struct attribute_group intel_pstate_attr_group = {
->  	.attrs = intel_pstate_attributes,
->  };
-> 
-> +static const struct x86_cpu_id intel_pstate_cpu_ee_disable_ids[];
-> +
->  static void __init intel_pstate_sysfs_expose_params(void)
->  {
->  	struct kobject *intel_pstate_kobject;
-> @@ -1273,6 +1314,12 @@ static void __init intel_pstate_sysfs_expose_params(void)
->  				       &hwp_dynamic_boost.attr);
->  		WARN_ON(rc);
->  	}
-> +
-> +	if (x86_match_cpu(intel_pstate_cpu_ee_disable_ids)) {
-> +		rc = sysfs_create_file(intel_pstate_kobject,
-> +				       &energy_efficiency_enable.attr);
-> +		WARN_ON(rc);
-> +	}
->  }
->  /************************** sysfs end ************************/
-> 
-> @@ -1288,8 +1335,6 @@ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
->  		cpudata->epp_default = intel_pstate_get_epp(cpudata, 0);
->  }
-> 
-> -#define MSR_IA32_POWER_CTL_BIT_EE	19
-> -
->  /* Disable energy efficiency optimization */
->  static void intel_pstate_disable_ee(int cpu)
->  {
-> --
-> 2.25.4
-
-
+							Thanx, Paul
