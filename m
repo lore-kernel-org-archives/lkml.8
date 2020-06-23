@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F962C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E19C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7C22070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20AF20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944282;
-	bh=wp2eEhecngahC/65rFUimCdQA1SXjWVXATveRRM+YOQ=;
+	s=default; t=1592944288;
+	bh=4FNERBhkUSGaXASr+00swIbprdO+V4A8iWEn1CK1sb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N5Kl8PdJjJHb1f1bWsBf8dV3vzOz1mZjWMiu2T9NG47/J43jMxLesqkA73riGE3AP
-	 GtEJ/wIttY1kteIPMP4T6C4pNkONqx0rNE65JCjwgaCT+q2KrFFwMbEJIR/ohuCUt5
-	 qGLDHri7z36FC4TSHYrCaZ4zdc7MtNiEq+l1SV2I=
+	b=NxsAZWykbvMuQ1wMQBXG4i7tO4rqRRnQY0i1+3bJQRtcoj3lPsnTVbcwtv6axlXhT
+	 lmpHkcQ4TKfCioSFhUfiRzrzUwVAAOSfJ/wQ5Qdkp6ylIVHjp1TfgU4p0YEFnCXXyp
+	 ewWW3Ou6fLKG5I092Zd7tx1xsaxTWpMkfsltQhA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390955AbgFWUbU (ORCPT
+        id S2389709AbgFWUb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51650 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388271AbgFWUbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:31:11 -0400
+        id S2388079AbgFWUbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:31:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DD392064B;
-        Tue, 23 Jun 2020 20:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8400206C3;
+        Tue, 23 Jun 2020 20:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944271;
-        bh=wp2eEhecngahC/65rFUimCdQA1SXjWVXATveRRM+YOQ=;
+        s=default; t=1592944274;
+        bh=4FNERBhkUSGaXASr+00swIbprdO+V4A8iWEn1CK1sb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixUw6Vpm5bJH+fkweIYWdQkthqBdFvOeIcSO9mXL51ekKah4ybGPXz4Z9Ki6JyA2o
-         cy/jMtN4Lmu/LEpKgdAbqIES/s4KNUtu9EmmDmoLsg5nF0Oz7rQLe+S+E55qozO6yD
-         Un30T1rGGXVRQpfzdPxTNuRYmDu5C3NcSjr8126M=
+        b=d4hVMv1A+WY5haTYih/2Wjx3l1EqOK9Z+SGvWjvz8uFyOS2bSn1hWqFaOWlBS+aie
+         a/Id4jGx6WiXEfW2StWqRY7okSEvxhSayDTs7mA7IEA7gaVEcvr1oM0tCHbB0n8aie
+         rYh7JJxFo/Fhvoz1cDXs96rQ+nen8c103I4JaCm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 240/314] selftests/net: in timestamping, strncpy needs to preserve null byte
-Date:   Tue, 23 Jun 2020 21:57:15 +0200
-Message-Id: <20200623195350.404510408@linuxfoundation.org>
+Subject: [PATCH 5.4 241/314] f2fs: dont return vmalloc() memory from f2fs_kmalloc()
+Date:   Tue, 23 Jun 2020 21:57:16 +0200
+Message-Id: <20200623195350.452061877@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,63 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
+[ Upstream commit 0b6d4ca04a86b9dababbb76e58d33c437e127b77 ]
 
-If user passed an interface option longer than 15 characters, then
-device.ifr_name and hwtstamp.ifr_name became non-null-terminated
-strings. The compiler warned about this:
+kmalloc() returns kmalloc'ed memory, and kvmalloc() returns either
+kmalloc'ed or vmalloc'ed memory.  But the f2fs wrappers, f2fs_kmalloc()
+and f2fs_kvmalloc(), both return both kinds of memory.
 
-timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
-destination size [-Wstringop-truncation]
-  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
+It's redundant to have two functions that do the same thing, and also
+breaking the standard naming convention is causing bugs since people
+assume it's safe to kfree() memory allocated by f2fs_kmalloc().  See
+e.g. the various allocations in fs/f2fs/compress.c.
 
-Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by making f2fs_kmalloc() just use kmalloc().  And to avoid
+re-introducing the allocation failures that the vmalloc fallback was
+intended to fix, convert the largest allocations to use f2fs_kvmalloc().
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/f2fs/checkpoint.c | 4 ++--
+ fs/f2fs/f2fs.h       | 8 +-------
+ fs/f2fs/node.c       | 8 ++++----
+ fs/f2fs/super.c      | 2 +-
+ 4 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
-index aca3491174a1e..f4bb4fef0f399 100644
---- a/tools/testing/selftests/networking/timestamping/timestamping.c
-+++ b/tools/testing/selftests/networking/timestamping/timestamping.c
-@@ -313,10 +313,16 @@ int main(int argc, char **argv)
- 	int val;
- 	socklen_t len;
- 	struct timeval next;
-+	size_t if_len;
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index a28ffecc0f95a..bbd07fe8a4921 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -892,8 +892,8 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
+ 	int i;
+ 	int err;
  
- 	if (argc < 2)
- 		usage(0);
- 	interface = argv[1];
-+	if_len = strlen(interface);
-+	if (if_len >= IFNAMSIZ) {
-+		printf("interface name exceeds IFNAMSIZ\n");
-+		exit(1);
-+	}
+-	sbi->ckpt = f2fs_kzalloc(sbi, array_size(blk_size, cp_blks),
+-				 GFP_KERNEL);
++	sbi->ckpt = f2fs_kvzalloc(sbi, array_size(blk_size, cp_blks),
++				  GFP_KERNEL);
+ 	if (!sbi->ckpt)
+ 		return -ENOMEM;
+ 	/*
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index a26ea1e6ba88f..c22ca7d867ee5 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2790,18 +2790,12 @@ static inline bool f2fs_may_extent_tree(struct inode *inode)
+ static inline void *f2fs_kmalloc(struct f2fs_sb_info *sbi,
+ 					size_t size, gfp_t flags)
+ {
+-	void *ret;
+-
+ 	if (time_to_inject(sbi, FAULT_KMALLOC)) {
+ 		f2fs_show_injection_info(FAULT_KMALLOC);
+ 		return NULL;
+ 	}
  
- 	for (i = 2; i < argc; i++) {
- 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
-@@ -350,12 +356,12 @@ int main(int argc, char **argv)
- 		bail("socket");
+-	ret = kmalloc(size, flags);
+-	if (ret)
+-		return ret;
+-
+-	return kvmalloc(size, flags);
++	return kmalloc(size, flags);
+ }
  
- 	memset(&device, 0, sizeof(device));
--	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-+	memcpy(device.ifr_name, interface, if_len + 1);
- 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
- 		bail("getting interface IP address");
+ static inline void *f2fs_kzalloc(struct f2fs_sb_info *sbi,
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index f14401a77d601..90a20bd129614 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2933,7 +2933,7 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
+ 		return 0;
  
- 	memset(&hwtstamp, 0, sizeof(hwtstamp));
--	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
-+	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
- 	hwtstamp.ifr_data = (void *)&hwconfig;
- 	memset(&hwconfig, 0, sizeof(hwconfig));
- 	hwconfig.tx_type =
+ 	nm_i->nat_bits_blocks = F2FS_BLK_ALIGN((nat_bits_bytes << 1) + 8);
+-	nm_i->nat_bits = f2fs_kzalloc(sbi,
++	nm_i->nat_bits = f2fs_kvzalloc(sbi,
+ 			nm_i->nat_bits_blocks << F2FS_BLKSIZE_BITS, GFP_KERNEL);
+ 	if (!nm_i->nat_bits)
+ 		return -ENOMEM;
+@@ -3066,9 +3066,9 @@ static int init_free_nid_cache(struct f2fs_sb_info *sbi)
+ 	int i;
+ 
+ 	nm_i->free_nid_bitmap =
+-		f2fs_kzalloc(sbi, array_size(sizeof(unsigned char *),
+-					     nm_i->nat_blocks),
+-			     GFP_KERNEL);
++		f2fs_kvzalloc(sbi, array_size(sizeof(unsigned char *),
++					      nm_i->nat_blocks),
++			      GFP_KERNEL);
+ 	if (!nm_i->free_nid_bitmap)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index d89c85177e092..f4b882ee48ddf 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2901,7 +2901,7 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
+ 	if (nr_sectors & (bdev_zone_sectors(bdev) - 1))
+ 		FDEV(devi).nr_blkz++;
+ 
+-	FDEV(devi).blkz_seq = f2fs_kzalloc(sbi,
++	FDEV(devi).blkz_seq = f2fs_kvzalloc(sbi,
+ 					BITS_TO_LONGS(FDEV(devi).nr_blkz)
+ 					* sizeof(unsigned long),
+ 					GFP_KERNEL);
 -- 
 2.25.1
 
