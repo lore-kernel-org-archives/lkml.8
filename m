@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6992FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC6420EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386C620E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943118;
-	bh=ggsTuskSj4K5EHhmGKWXLIBJuVQS4rsQa1LwuranfaI=;
+	s=default; t=1592943129;
+	bh=qCwwKKQpp5o/nt8/xbyiQ5qTYy0kjm6IZqzVdG/ItpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dYSP/orBdrnwOVtoIYIwjtl4m/JbPiNzRML53a28VcdLEnKg829zEnsrA4SIW9NXl
-	 sE3R27NolRh8xH/I/tj6UUGCnhs1h1fOrdjB2r0IGmSdjvSFxVuZmquRCK4AaX+0U4
-	 uKqMsTEdy/22rIlJn5rJ/xcTgj08lpQUZiXF1zgo=
+	b=tz/gFsAyRo+1nzdAiWwXscZry9g1uay3+qn9G99oIzIi3Qi/ntqvK++SpTj+e82Iz
+	 ggDc3Gt3v8STGhi6io6d0Vzqtq0QBLcihK+RVqbJ085r/NLdq5zLUYmLQ0NMcukdcY
+	 BncXL+rlqa9oI1CSov8s/TL1VCx6Jjic5GXA1xcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387928AbgFWUL4 (ORCPT
+        id S2388939AbgFWUMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53340 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388913AbgFWULv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:11:51 -0400
+        id S2387612AbgFWUL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:11:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C45A206C3;
-        Tue, 23 Jun 2020 20:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D34D02073E;
+        Tue, 23 Jun 2020 20:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943110;
-        bh=ggsTuskSj4K5EHhmGKWXLIBJuVQS4rsQa1LwuranfaI=;
+        s=default; t=1592943118;
+        bh=qCwwKKQpp5o/nt8/xbyiQ5qTYy0kjm6IZqzVdG/ItpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLU9Nx+grtR1KcSvgxhTcTgGYH+BUSJmoxe5yvC10rSoucdXDZp1XepejqCNgHqQl
-         Duwhbt04UuZ2G/nv8rubvDCJRl6tQjLeIAfsBobbSg6TEs0Lb8vZ0k30h0t+G51yv5
-         1IscZArecu9o8gO3hJadfBS2O5LfVK3XSV7b3XoQ=
+        b=KKJBfKHCV7gDnrxkrS2jUIGglAOqEflbMgV90jZoyRRDrYKMSL1nUOfycEsbk4LKc
+         x5P6lp3Fag420HVwITQrZBjDhSzbAj7HZgIoPwwSR3O4sFp59xd/kG+kPlptvM3Z7x
+         kj0oTAwTfE36Vt7t1+OgjA6Mnlj47MLZ4uicuI+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 263/477] usb: gadget: fix potential double-free in m66592_probe.
-Date:   Tue, 23 Jun 2020 21:54:20 +0200
-Message-Id: <20200623195419.994615508@linuxfoundation.org>
+Subject: [PATCH 5.7 265/477] pinctrl: Fix return value about devm_platform_ioremap_resource()
+Date:   Tue, 23 Jun 2020 21:54:22 +0200
+Message-Id: <20200623195420.094080299@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,36 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 44734a594196bf1d474212f38fe3a0d37a73278b ]
+[ Upstream commit b5d9ff10dca49f4d4b7846c3751c6bec50d07375 ]
 
-m66592_free_request() is called under label "err_add_udc"
-and "clean_up", and m66592->ep0_req is not set to NULL after
-first free, leading to a double-free. Fix this issue by
-setting m66592->ep0_req to NULL after the first free.
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-Fixes: 0f91349b89f3 ("usb: gadget: convert all users to the new udc infrastructure")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Link: https://lore.kernel.org/r/1590234326-2194-1-git-send-email-yangtiezhu@loongson.cn
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/m66592-udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 2 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/m66592-udc.c b/drivers/usb/gadget/udc/m66592-udc.c
-index 75d16a8902e6d..931e6362a13da 100644
---- a/drivers/usb/gadget/udc/m66592-udc.c
-+++ b/drivers/usb/gadget/udc/m66592-udc.c
-@@ -1667,7 +1667,7 @@ static int m66592_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+index f690fc5cd6885..71e6661783006 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+@@ -1406,7 +1406,7 @@ static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
+ 	pdata->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pdata->reg_base)) {
+ 		dev_err(&pdev->dev, "Failed to ioremap MEM resource\n");
+-		return -ENODEV;
++		return PTR_ERR(pdata->reg_base);
+ 	}
  
- err_add_udc:
- 	m66592_free_request(&m66592->ep[0].ep, m66592->ep0_req);
--
-+	m66592->ep0_req = NULL;
- clean_up3:
- 	if (m66592->pdata->on_chip) {
- 		clk_disable(m66592->clk);
+ 	/* Initialize the dynamic part of pinctrl_desc */
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index 694912409fd9e..54222ccddfb19 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1019,7 +1019,7 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	atmel_pioctrl->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(atmel_pioctrl->reg_base))
+-		return -EINVAL;
++		return PTR_ERR(atmel_pioctrl->reg_base);
+ 
+ 	atmel_pioctrl->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(atmel_pioctrl->clk)) {
 -- 
 2.25.1
 
