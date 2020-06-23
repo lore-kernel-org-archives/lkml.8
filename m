@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7810DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 960652078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580192078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942752;
-	bh=lmYpPAnA5Y27sTPHBibeJ37EiHg5YwUSOJugpRYL+IA=;
+	s=default; t=1592942759;
+	bh=Qq2YUB6UbFuTjB9tvvUMGK3L9h5ULnUYz8sdOpbnuow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJTt8/ISKnHcVJsxXJ4ncTlDFYNgc8MXFyqdxr0ysVajWvZxGpwcQ+JwA9BXWfmml
-	 wEvNo9TDHL6vBR4dh8e4Wxsvqsy6DZ0Xq4HgXA+mbPIntReyKE5iBlKmcAqPrk/lPb
-	 KA+gmBmZtFU1Mln7os09PmdzdcA9EvbXuIrkaiQE=
+	b=N3ugoiLTHQO6CCrxYik7B81zg5OrQID717Qt6sIWUPNtr4N+uCB8l/Ou2YWj+K4vp
+	 cHj9nzaeXmsEN4dJ8tlWMPxhqCTJYAiuEY3KxnbzoeMpEYmcoe5cV0sEGiXQUoEYqr
+	 0Mkd9fwinp9+vJOfBjiKLtncKvncAG9flHJYtON4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388391AbgFWUFv (ORCPT
+        id S2388409AbgFWUF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:05:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:05:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387873AbgFWUFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:05:43 -0400
+        id S2388382AbgFWUFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:05:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A789208C9;
-        Tue, 23 Jun 2020 20:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C3E92078A;
+        Tue, 23 Jun 2020 20:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942741;
-        bh=lmYpPAnA5Y27sTPHBibeJ37EiHg5YwUSOJugpRYL+IA=;
+        s=default; t=1592942746;
+        bh=Qq2YUB6UbFuTjB9tvvUMGK3L9h5ULnUYz8sdOpbnuow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cQYXw4y90QsSwjkP7uTFd8Mx5+4t/95lnt7+vnLsHpWlwSYy46rltD7WUTCxkfhmw
-         1b5WxWlrDFp1H4tu/j1/LUIRru7jnhwAc0SBc9++eaXvJOGBrAVjpFeKu8PYU3JolX
-         Kv4k12xTUdijUgMMgPXXWkxMd8ryau8/2RTyeTN8=
+        b=yk96xY2WFZR8SPPUBwJESim+DY2hL/IAGe5rHwLTWdexHKHs3uZP95hFbDFy5pWO3
+         gXpTQwAU2y6xRMyUG+HNr++y3nBGHpCubuRC5mHI9qaSsY1PIvwUVZ25gEFWEOVS78
+         iQfZyLtgqD0g8NceQCNIZ9gLIe1G7M1q4Edcm+OY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        stable@vger.kernel.org, "Pavel Machek (CIP)" <pavel@denx.de>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 118/477] arm64: dts: mt8173: fix unit name warnings
-Date:   Tue, 23 Jun 2020 21:51:55 +0200
-Message-Id: <20200623195413.182493348@linuxfoundation.org>
+Subject: [PATCH 5.7 102/477] ASoC: meson: add missing free_irq() in error path
+Date:   Tue, 23 Jun 2020 21:51:39 +0200
+Message-Id: <20200623195412.410103496@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,128 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Pavel Machek (CIP) <pavel@denx.de>
 
-[ Upstream commit 72b29215aced394d01ca25e432963b619daa0098 ]
+[ Upstream commit 3b8a299a58b2afce464ae11324b59dcf0f1d10a7 ]
 
-Fixing several unit name warnings:
+free_irq() is missing in case of error, fix that.
 
-Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
-Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
-Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Link: https://lore.kernel.org/r/20200210063523.133333-4-hsinyi@chromium.org
-[mb: drop fixes for '_' in property name]
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Link: https://lore.kernel.org/r/20200606153103.GA17905@amd
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ sound/soc/meson/axg-fifo.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index d819e44d94a8d..6ad1053afd271 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -242,21 +242,21 @@
- 		cpu_on	      = <0x84000003>;
- 	};
+diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
+index 2e9b56b29d313..b2e867113226b 100644
+--- a/sound/soc/meson/axg-fifo.c
++++ b/sound/soc/meson/axg-fifo.c
+@@ -249,7 +249,7 @@ int axg_fifo_pcm_open(struct snd_soc_component *component,
+ 	/* Enable pclk to access registers and clock the fifo ip */
+ 	ret = clk_prepare_enable(fifo->pclk);
+ 	if (ret)
+-		return ret;
++		goto free_irq;
  
--	clk26m: oscillator@0 {
-+	clk26m: oscillator0 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <26000000>;
- 		clock-output-names = "clk26m";
- 	};
+ 	/* Setup status2 so it reports the memory pointer */
+ 	regmap_update_bits(fifo->map, FIFO_CTRL1,
+@@ -269,8 +269,14 @@ int axg_fifo_pcm_open(struct snd_soc_component *component,
+ 	/* Take memory arbitror out of reset */
+ 	ret = reset_control_deassert(fifo->arb);
+ 	if (ret)
+-		clk_disable_unprepare(fifo->pclk);
++		goto free_clk;
++
++	return 0;
  
--	clk32k: oscillator@1 {
-+	clk32k: oscillator1 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <32000>;
- 		clock-output-names = "clk32k";
- 	};
- 
--	cpum_ck: oscillator@2 {
-+	cpum_ck: oscillator2 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
-@@ -272,19 +272,19 @@
- 			sustainable-power = <1500>; /* milliwatts */
- 
- 			trips {
--				threshold: trip-point@0 {
-+				threshold: trip-point0 {
- 					temperature = <68000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				target: trip-point@1 {
-+				target: trip-point1 {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit: cpu_crit@0 {
-+				cpu_crit: cpu_crit0 {
- 					temperature = <115000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -292,13 +292,13 @@
- 			};
- 
- 			cooling-maps {
--				map@0 {
-+				map0 {
- 					trip = <&target>;
- 					cooling-device = <&cpu0 0 0>,
- 							 <&cpu1 0 0>;
- 					contribution = <3072>;
- 				};
--				map@1 {
-+				map1 {
- 					trip = <&target>;
- 					cooling-device = <&cpu2 0 0>,
- 							 <&cpu3 0 0>;
-@@ -312,7 +312,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
--		vpu_dma_reserved: vpu_dma_mem_region {
-+		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
- 			compatible = "shared-dma-pool";
- 			reg = <0 0xb7000000 0 0x500000>;
- 			alignment = <0x1000>;
-@@ -365,7 +365,7 @@
- 			reg = <0 0x10005000 0 0x1000>;
- 		};
- 
--		pio: pinctrl@10005000 {
-+		pio: pinctrl@1000b000 {
- 			compatible = "mediatek,mt8173-pinctrl";
- 			reg = <0 0x1000b000 0 0x1000>;
- 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
-@@ -572,7 +572,7 @@
- 			status = "disabled";
- 		};
- 
--		gic: interrupt-controller@10220000 {
-+		gic: interrupt-controller@10221000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
++free_clk:
++	clk_disable_unprepare(fifo->pclk);
++free_irq:
++	free_irq(fifo->irq, ss);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(axg_fifo_pcm_open);
 -- 
 2.25.1
 
