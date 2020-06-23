@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E152C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3352078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003832078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948175;
-	bh=s/Cy2BKCYpzUTUPPYO325Q7i/LpMEO5BDKCOiNIEZJU=;
+	s=default; t=1592948179;
+	bh=5L4uTe5XJeR1TnS9+y0mdKLSkDnpZ4V3Xcs0dQ63MQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hWDwZiWKlMoQi7QR9OOMUjPeRY0R1pg+71ct3ukpmCvDBRCk2rJFVQLwS39ElGem9
-	 hZzOWkNSqG/n/H0ifI4GVqAroAtBeFcLVdOYTuLOJIlpHdmtBJpsk92q40Mdr+tbmN
-	 xKB3qFNWasLN2JKdiH1ltvDTR70mEx4yLMgikrjg=
+	b=EjkLjqVaLps1bjdMcaoZahMTBqHPX/txrQa49xvh1zuoyUw1HOyw8BnLDaHMF4Q1U
+	 q/2tThaYctJJVPfxhQiIzbyHFda7RUWBa4SI8FtJ9rmjYYsT5xBx2oCnIF+G0U2l2l
+	 m8B4QtUsYeo0iU9mtUfGh5pvJH6OLdHdv31cepRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388770AbgFWUJ5 (ORCPT
+        id S2388280AbgFWVgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50384 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:36:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388701AbgFWUJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:19 -0400
+        id S2388771AbgFWUJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAAAE2082F;
-        Tue, 23 Jun 2020 20:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5216F2082F;
+        Tue, 23 Jun 2020 20:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942958;
-        bh=s/Cy2BKCYpzUTUPPYO325Q7i/LpMEO5BDKCOiNIEZJU=;
+        s=default; t=1592942997;
+        bh=5L4uTe5XJeR1TnS9+y0mdKLSkDnpZ4V3Xcs0dQ63MQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NSm41EUSGZQJSpVdzymGFwxaafeL+viSFUAtJJpWYnEfzGCZ8jPQItgGQysh6/FeH
-         CzZEECkSnEGZE4Rszf7hj+gYYO4lbgmc0ChJBoXdTlGTo/5u3aLBNAHmtu1+jjQH1q
-         T5k0Xz+vicgdbA4N9Bdot7P1XXgefzyslvdewA60=
+        b=P1zfv/U3LuMemS3brgEJXp7tC3psBhiKpR9XC6xKyrvu4AYiLZBXBGN8/zoFEKktE
+         9lMQH3ddtpm71TqwbaRY1NdVyVMAoKuccbhFxqegJwcMGV7Qx4kTxnJwXohBJeIq6r
+         uT8mDWCZNRA2yDTdoj1KvsHwfCJPvzrvoMvN4cQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        stable@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 172/477] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
-Date:   Tue, 23 Jun 2020 21:52:49 +0200
-Message-Id: <20200623195415.714460986@linuxfoundation.org>
+Subject: [PATCH 5.7 219/477] PCI: aardvark: Improve link training
+Date:   Tue, 23 Jun 2020 21:53:36 +0200
+Message-Id: <20200623195417.938543220@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,82 +64,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Marek Behún <marek.behun@nic.cz>
 
-[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
+[ Upstream commit 43fc679ced18006b12d918d7a8a4af392b7fbfe7 ]
 
-If platform bus driver registration is failed then, accessing
-platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
-in __platform_driver_probe() without verifying the return value
-__platform_driver_register() can lead to NULL pointer exception.
+Currently the aardvark driver trains link in PCIe gen2 mode. This may
+cause some buggy gen1 cards (such as Compex WLE900VX) to be unstable or
+even not detected. Moreover when ASPM code tries to retrain link second
+time, these cards may stop responding and link goes down. If gen1 is
+used this does not happen.
 
-So check the return value before attempting the spin lock.
+Unconditionally forcing gen1 is not a good solution since it may have
+performance impact on gen2 cards.
 
-One such example is below:
+To overcome this, read 'max-link-speed' property (as defined in PCI
+device tree bindings) and use this as max gen mode. Then iteratively try
+link training at this mode or lower until successful. After successful
+link training choose final controller gen based on Negotiated Link Speed
+from Link Status register, which should match card speed.
 
-For a custom usecase, I have intentionally failed the platform bus
-registration and I expected all the platform device/driver
-registrations to fail gracefully. But I came across this panic
-issue.
-
-[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
-[    1.331118] #PF: supervisor write access in kernel mode
-[    1.331163] #PF: error_code(0x0002) - not-present page
-[    1.331208] PGD 0 P4D 0
-[    1.331233] Oops: 0002 [#1] PREEMPT SMP
-[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
-[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
-[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
-[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
-[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
-[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
-[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
-[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
-[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
-[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
-[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    1.332252] Call Trace:
-[    1.332281]  __platform_driver_probe+0x92/0xee
-[    1.332323]  ? rtc_dev_init+0x2b/0x2b
-[    1.332358]  cmos_init+0x37/0x67
-[    1.332396]  do_one_initcall+0x7d/0x168
-[    1.332428]  kernel_init_freeable+0x16c/0x1c9
-[    1.332473]  ? rest_init+0xc0/0xc0
-[    1.332508]  kernel_init+0x5/0x100
-[    1.332543]  ret_from_fork+0x1f/0x30
-[    1.332579] CR2: 00000000000000c8
-[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
-[    1.333549] note: swapper/0[1] exited with preempt_count 1
-[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[    1.333736] Kernel Offset: disabled
-
-Note, this can only be triggered if a driver errors out from this call,
-which should never happen.  If it does, the driver needs to be fixed.
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200430080625.26070-5-pali@kernel.org
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/pci-aardvark.c | 114 ++++++++++++++++++++------
+ 1 file changed, 89 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index b27d0f6c18c9c..f5d485166fd3f 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -851,6 +851,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
- 	/* temporary section violation during probe() */
- 	drv->probe = probe;
- 	retval = code = __platform_driver_register(drv, module);
-+	if (retval)
-+		return retval;
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 74b90940a9d46..e202f954eb84e 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -40,6 +40,7 @@
+ #define PCIE_CORE_LINK_CTRL_STAT_REG				0xd0
+ #define     PCIE_CORE_LINK_L0S_ENTRY				BIT(0)
+ #define     PCIE_CORE_LINK_TRAINING				BIT(5)
++#define     PCIE_CORE_LINK_SPEED_SHIFT				16
+ #define     PCIE_CORE_LINK_WIDTH_SHIFT				20
+ #define PCIE_CORE_ERR_CAPCTL_REG				0x118
+ #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
+@@ -201,6 +202,7 @@ struct advk_pcie {
+ 	struct mutex msi_used_lock;
+ 	u16 msi_msg;
+ 	int root_bus_nr;
++	int link_gen;
+ 	struct pci_bridge_emul bridge;
+ };
  
- 	/*
- 	 * Fixup that section violation, being paranoid about code scanning
+@@ -225,20 +227,16 @@ static int advk_pcie_link_up(struct advk_pcie *pcie)
+ 
+ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+ {
+-	struct device *dev = &pcie->pdev->dev;
+ 	int retries;
+ 
+ 	/* check if the link is up or not */
+ 	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+-		if (advk_pcie_link_up(pcie)) {
+-			dev_info(dev, "link up\n");
++		if (advk_pcie_link_up(pcie))
+ 			return 0;
+-		}
+ 
+ 		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+ 	}
+ 
+-	dev_err(dev, "link never came up\n");
+ 	return -ETIMEDOUT;
+ }
+ 
+@@ -253,6 +251,85 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+ 	}
+ }
+ 
++static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
++{
++	int ret, neg_gen;
++	u32 reg;
++
++	/* Setup link speed */
++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
++	reg &= ~PCIE_GEN_SEL_MSK;
++	if (gen == 3)
++		reg |= SPEED_GEN_3;
++	else if (gen == 2)
++		reg |= SPEED_GEN_2;
++	else
++		reg |= SPEED_GEN_1;
++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
++
++	/*
++	 * Enable link training. This is not needed in every call to this
++	 * function, just once suffices, but it does not break anything either.
++	 */
++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
++	reg |= LINK_TRAINING_EN;
++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
++
++	/*
++	 * Start link training immediately after enabling it.
++	 * This solves problems for some buggy cards.
++	 */
++	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
++	reg |= PCIE_CORE_LINK_TRAINING;
++	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
++
++	ret = advk_pcie_wait_for_link(pcie);
++	if (ret)
++		return ret;
++
++	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
++	neg_gen = (reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
++
++	return neg_gen;
++}
++
++static void advk_pcie_train_link(struct advk_pcie *pcie)
++{
++	struct device *dev = &pcie->pdev->dev;
++	int neg_gen = -1, gen;
++
++	/*
++	 * Try link training at link gen specified by device tree property
++	 * 'max-link-speed'. If this fails, iteratively train at lower gen.
++	 */
++	for (gen = pcie->link_gen; gen > 0; --gen) {
++		neg_gen = advk_pcie_train_at_gen(pcie, gen);
++		if (neg_gen > 0)
++			break;
++	}
++
++	if (neg_gen < 0)
++		goto err;
++
++	/*
++	 * After successful training if negotiated gen is lower than requested,
++	 * train again on negotiated gen. This solves some stability issues for
++	 * some buggy gen1 cards.
++	 */
++	if (neg_gen < gen) {
++		gen = neg_gen;
++		neg_gen = advk_pcie_train_at_gen(pcie, gen);
++	}
++
++	if (neg_gen == gen) {
++		dev_info(dev, "link up at gen %i\n", gen);
++		return;
++	}
++
++err:
++	dev_err(dev, "link never came up\n");
++}
++
+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ {
+ 	u32 reg;
+@@ -288,12 +365,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 		PCIE_CORE_CTRL2_TD_ENABLE;
+ 	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
+ 
+-	/* Set GEN2 */
+-	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+-	reg &= ~PCIE_GEN_SEL_MSK;
+-	reg |= SPEED_GEN_2;
+-	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+-
+ 	/* Set lane X1 */
+ 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+ 	reg &= ~LANE_CNT_MSK;
+@@ -341,20 +412,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	 */
+ 	msleep(PCI_PM_D3COLD_WAIT);
+ 
+-	/* Enable link training */
+-	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+-	reg |= LINK_TRAINING_EN;
+-	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+-
+-	/*
+-	 * Start link training immediately after enabling it.
+-	 * This solves problems for some buggy cards.
+-	 */
+-	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+-	reg |= PCIE_CORE_LINK_TRAINING;
+-	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+-
+-	advk_pcie_wait_for_link(pcie);
++	advk_pcie_train_link(pcie);
+ 
+ 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+ 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+@@ -988,6 +1046,12 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	}
+ 	pcie->root_bus_nr = bus->start;
+ 
++	ret = of_pci_get_max_link_speed(dev->of_node);
++	if (ret <= 0 || ret > 3)
++		pcie->link_gen = 3;
++	else
++		pcie->link_gen = ret;
++
+ 	advk_pcie_setup_hw(pcie);
+ 
+ 	advk_sw_pci_bridge_init(pcie);
 -- 
 2.25.1
 
