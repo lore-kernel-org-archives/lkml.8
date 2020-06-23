@@ -2,98 +2,92 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 453AB20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592910152;
-	bh=RPNK/pzqOU74G6k8hebrnlpAWV7QilbzH+uEcOtIS3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ayt333fa4GRu3Plaq6vcUnxmXGnqcPeJ6fG4tjflcQwTDGCv9PT/Ie9a4PXNSbXGz
-	 CPQt7QRPz3n99ZiUDbDSxuIf7/OY0prJSleoiPemH6+g195DdM/3yRw5EywWGbYBh6
-	 4aeor5xOp7MRXLmqDtOTvGXK+TNu9tJc2l7poQfA=
+	by mail.kernel.org (Postfix) with ESMTP id AA31C2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WbyJeYa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbgFWLCa (ORCPT
+        id S1732315AbgFWLGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:02:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732227AbgFWLC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:02:29 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C49520738;
-        Tue, 23 Jun 2020 11:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592910149;
-        bh=RPNK/pzqOU74G6k8hebrnlpAWV7QilbzH+uEcOtIS3w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e7zdTo/GgQBAMTJOkNJ1+nr/EnxggnpFyNnS43WzzjScGNWygXeN4TQyWah4e2BAO
-         WSsqfLjxVLGFrqCx0zdKfBovGUM7Kj/dCyj6r9jR9oSXPLOE0dv9XxTO0fISRqLBQz
-         tOYYpg/oDqF5SAbJGOIJw5+1k5cDjHXRmx9tzWOE=
-Date:   Tue, 23 Jun 2020 19:02:23 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, Yu Kuai <yukuai3@huawei.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Yi Zhang <yi.zhang@huawei.com>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: ARM: imx6: add missing put_device() call in imx6q_suspend_init()
-Message-ID: <20200623110222.GX30139@dragon>
-References: <cf810c93-297c-c02c-9bba-8c3d097b8e31@web.de>
- <2ab2cc9f-c720-75ca-e20c-0e4236ff45fd@huawei.com>
- <1542979d-f7f6-bcf1-53c3-22b7c076ddc7@web.de>
- <20200623073220.GV30139@dragon>
- <5300cb30-2243-9bfe-125c-96e720cd1f29@web.de>
+        Tue, 23 Jun 2020 07:06:08 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58894 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732227AbgFWLGC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:06:02 -0400
+X-UUID: 1746d2d9aaf84717a1868fe194cb0ea4-20200623
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=CcaM225zZP7WnZ1PC960F675Ck0YgebshhPK0DXhRCI=;
+        b=WbyJeYa1YmwygxexZSRYMyPs+OMDQevvaC4W3kSL4FPHWPL7grOxDWN6fl7h0S2so88lZd9WHzAJLLq3fJQgV6Y6I4dbQW1w3rdfAecDj0pKbHfKiBlRDbTKa0iYVGGggX04cR05a73V+Luxu65JHBkh2+ZVB2B2EvxvPlT8Mis=;
+X-UUID: 1746d2d9aaf84717a1868fe194cb0ea4-20200623
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1849796380; Tue, 23 Jun 2020 19:05:59 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 23 Jun 2020 19:03:25 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 23 Jun 2020 19:03:19 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Jussi Laako <jussi@sonarnerd.net>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Dmitry Panchenko <dmitry@d-systems.ee>,
+        Chris Wulff <crwulff@gmail.com>,
+        Jesus Ramos <jesus-ramos@live.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        <linux-usb@vger.kernel.org>,
+        Chihhao Chen <chihhao.chen@mediatek.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH] sound: usb: quirks: add quirk for Samsung USBC Headset (AKG)
+Date:   Tue, 23 Jun 2020 19:03:23 +0800
+Message-ID: <1592910203-24035-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5300cb30-2243-9bfe-125c-96e720cd1f29@web.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 0C8C2E45E79FA20259A2A0BA8BD54FE967742A430CC67CFC5A05F99C5875173C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:48:52AM +0200, Markus Elfring wrote:
-> >>>> Do you find a previous update suggestion useful?
-> >>>>
-> >>>> ARM: imx6: Add missing put_device() call in imx6q_suspend_init()
-> >>>> https://lore.kernel.org/linux-arm-kernel/5acd7308-f6e1-4b1e-c744-bb2e5fdca1be@web.de/
-> >>>> https://lore.kernel.org/patchwork/patch/1151158/
-> >>>> https://lkml.org/lkml/2019/11/9/125
-> >> …
-> >>> It is useful indeed.
-> …
-> >>> Any idea why these pathes didn't get applied ?
-> >>
-> >> I can make assumptions about the reasons for the possibly questionable handling
-> >> of such patches.
-> >
-> > Markus,
-> >
-> > Could you resend it to my kernel.org address?
-> 
-> You can get relevant information from the referenced message archive interfaces,
-> can't you?
+V2UndmUgZm91bmQgU2Ftc3VuZyBVU0JDIEhlYWRzZXQgKEFLRykgKFZJRDogMHgwNGU4LCBQSUQ6
+IDB4YTA1MSkNCm5lZWQgYSB0aW55IGRlbGF5IGFmdGVyIGVhY2ggY2xhc3MgY29tcGxpYW50IHJl
+cXVlc3QuDQpPdGhlcndpc2UgdGhlIGRldmljZSBtaWdodCBub3QgYmUgYWJsZSB0byBiZSByZWNv
+Z25pemVkIGVhY2ggdGltZXMuDQoNClNpZ25lZC1vZmYtYnk6IENoaWhoYW8gQ2hlbiA8Y2hpaGhh
+by5jaGVuQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IE1hY3BhdWwgTGluIDxtYWNwYXVs
+LmxpbkBtZWRpYXRlay5jb20+DQpDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KLS0tDQogc291
+bmQvdXNiL3F1aXJrcy5jIHwgICAgOCArKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2Vy
+dGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL3NvdW5kL3VzYi9xdWlya3MuYyBiL3NvdW5kL3VzYi9x
+dWlya3MuYw0KaW5kZXggYmNhMDE3OS4uZWJiYTI5YSAxMDA2NDQNCi0tLSBhL3NvdW5kL3VzYi9x
+dWlya3MuYw0KKysrIGIvc291bmQvdXNiL3F1aXJrcy5jDQpAQCAtMTY3Myw2ICsxNjczLDE0IEBA
+IHZvaWQgc25kX3VzYl9jdGxfbXNnX3F1aXJrKHN0cnVjdCB1c2JfZGV2aWNlICpkZXYsIHVuc2ln
+bmVkIGludCBwaXBlLA0KIAkgICAgIGNoaXAtPnVzYl9pZCA9PSBVU0JfSUQoMHgwOTUxLCAweDE2
+YWQpKSAmJg0KIAkgICAgKHJlcXVlc3R0eXBlICYgVVNCX1RZUEVfTUFTSykgPT0gVVNCX1RZUEVf
+Q0xBU1MpDQogCQl1c2xlZXBfcmFuZ2UoMTAwMCwgMjAwMCk7DQorDQorCS8qDQorCSAqIFNhbXN1
+bmcgVVNCQyBIZWFkc2V0IChBS0cpIG5lZWQgYSB0aW55IGRlbGF5IGFmdGVyIGVhY2gNCisJICog
+Y2xhc3MgY29tcGxpYW50IHJlcXVlc3QuIChNb2RlbCBudW1iZXI6IEFBTTYyNVIgb3IgQUFNNjI3
+UikNCisJICovDQorCWlmIChjaGlwLT51c2JfaWQgPT0gVVNCX0lEKDB4MDRlOCwgMHhhMDUxKSAm
+Jg0KKwkgICAgKHJlcXVlc3R0eXBlICYgVVNCX1RZUEVfTUFTSykgPT0gVVNCX1RZUEVfQ0xBU1Mp
+DQorCQl1c2xlZXBfcmFuZ2UoNTAwMCwgNjAwMCk7DQogfQ0KIA0KIC8qDQotLSANCjEuNy45LjUN
+Cg==
 
-Well, I'm asking you to resend to make sure the following:
-
- - Use correct maintainer mailbox address.
- - You still care about the patch.
- - The patch applies to v5.8-rc.
-
-Shawn
