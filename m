@@ -2,67 +2,119 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25423C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0908A20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE7020724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:12:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732775AbgFWOMh (ORCPT
+        id S1732830AbgFWOMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:12:37 -0400
-Received: from winnie.ispras.ru ([83.149.199.91]:17641 "EHLO smtp.ispras.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732657AbgFWOMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:12:37 -0400
-Received: from home.intra.ispras.ru (unknown [10.10.165.12])
-        by smtp.ispras.ru (Postfix) with ESMTP id 8DB09201D0;
-        Tue, 23 Jun 2020 17:12:32 +0300 (MSK)
-From:   Evgeny Novikov <novikov@ispras.ru>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        ldv-project@linuxtesting.org
-Subject: [PATCH] staging: rts5208: fix memleaks on error handling paths in probe
-Date:   Tue, 23 Jun 2020 17:12:30 +0300
-Message-Id: <20200623141230.7258-1-novikov@ispras.ru>
-X-Mailer: git-send-email 2.16.4
+        Tue, 23 Jun 2020 10:12:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62288 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732657AbgFWOMv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 10:12:51 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NE54Z8119634;
+        Tue, 23 Jun 2020 10:12:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uhcqvar3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 10:12:04 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05NE5a9c122692;
+        Tue, 23 Jun 2020 10:12:04 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uhcqvaps-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 10:12:04 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NEBNq1019088;
+        Tue, 23 Jun 2020 14:12:02 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03fra.de.ibm.com with ESMTP id 31uk4wr05b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 14:12:01 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NEAew058851746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 14:10:41 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FF0E4C072;
+        Tue, 23 Jun 2020 14:11:58 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 818524C071;
+        Tue, 23 Jun 2020 14:11:58 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 23 Jun 2020 14:11:58 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 04F32E13EA; Tue, 23 Jun 2020 16:11:58 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     mcgrof@kernel.org
+Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390@vger.kernel.or
+Subject: linux-next: umh: fix processed error when UMH_WAIT_PROC is used seems to break linux bridge on s390x (bisected)
+Date:   Tue, 23 Jun 2020 16:11:57 +0200
+Message-Id: <20200623141157.5409-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200610154923.27510-5-mcgrof@kernel.org>
+References: <20200610154923.27510-5-mcgrof@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ suspectscore=1 mlxlogscore=865 spamscore=0 bulkscore=0 lowpriorityscore=0
+ cotscore=-2147483648 mlxscore=0 priorityscore=1501 malwarescore=0
+ clxscore=1011 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006230108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rtsx_probe() allocates host, but does not free it on error handling
-paths. The patch adds missed scsi_host_put().
+Jens Markwardt reported a regression in the linux-next runs.  with "umh: fix
+processed error when UMH_WAIT_PROC is used" (from linux-next) a linux bridge
+with an KVM guests no longer activates :
 
-Found by Linux Driver Verification project (linuxtesting.org).
+without patch
+# ip addr show dev virbr1
+6: virbr1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+       valid_lft forever preferred_lft forever
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
----
- drivers/staging/rts5208/rtsx.c | 1 +
- 1 file changed, 1 insertion(+)
+with this patch the bridge stays DOWN with NO-CARRIER
 
-diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
-index be0053c795b7..937f4e732a75 100644
---- a/drivers/staging/rts5208/rtsx.c
-+++ b/drivers/staging/rts5208/rtsx.c
-@@ -972,6 +972,7 @@ static int rtsx_probe(struct pci_dev *pci,
- 	kfree(dev->chip);
- chip_alloc_fail:
- 	dev_err(&pci->dev, "%s failed\n", __func__);
-+	scsi_host_put(host);
- scsi_host_alloc_fail:
- 	pci_release_regions(pci);
- 	return err;
--- 
-2.16.4
+# ip addr show dev virbr1
+6: virbr1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+       valid_lft forever preferred_lft forever
 
+This was bisected in linux-next. Reverting from linux-next also fixes the issue.
+
+Any idea?
+
+Christian
