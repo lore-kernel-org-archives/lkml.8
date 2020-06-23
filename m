@@ -2,111 +2,164 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D796AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B337C206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FE420724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732416AbgFWLaa (ORCPT
+        id S1732463AbgFWLcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:30:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:58868 "EHLO foss.arm.com"
+        Tue, 23 Jun 2020 07:32:16 -0400
+Received: from mga01.intel.com ([192.55.52.88]:13397 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732191AbgFWLaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:30:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 477CD1F1;
-        Tue, 23 Jun 2020 04:30:20 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB48E3F6CF;
-        Tue, 23 Jun 2020 04:30:17 -0700 (PDT)
-Subject: Re: [PATCH v6 3/4] iommu/arm-smmu: Add global/context fault
- implementation hooks
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Krishna Reddy <vdumpa@nvidia.com>
-Cc:     snikam@nvidia.com, mperttunen@nvidia.com, bhuntsman@nvidia.com,
-        will@kernel.org, joro@8bytes.org, linux-kernel@vger.kernel.org,
-        praithatha@nvidia.com, talho@nvidia.com,
-        iommu@lists.linux-foundation.org, nicolinc@nvidia.com,
-        linux-tegra@vger.kernel.org, yhsu@nvidia.com, treding@nvidia.com,
-        linux-arm-kernel@lists.infradead.org, bbiswas@nvidia.com
-References: <20200604234414.21912-1-vdumpa@nvidia.com>
- <20200604234414.21912-4-vdumpa@nvidia.com> <20200623083643.GB4098287@ulmo>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <2dda4530-39cc-d549-1124-26337dd9afbe@arm.com>
-Date:   Tue, 23 Jun 2020 12:30:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1732450AbgFWLcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:32:07 -0400
+IronPort-SDR: pMpnCYkGbQbgOtkmZxsuOb8kyRtrhcIjn2UmW+3nO2zehu17+aRiUcCtP7+PKAdbbU89Ua/qRu
+ pPzdNd9tIKKQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="162125691"
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="162125691"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 04:32:04 -0700
+IronPort-SDR: 5tkfT0mZr3W/taJOkL52IkrQPichvXxonir3i8I80hB2DPMHRI27NufAZe238Pjv7lkhilhA4x
+ ntx8O0syHBkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="353775553"
+Received: from xpf-desktop.sh.intel.com ([10.239.13.107])
+  by orsmga001.jf.intel.com with ESMTP; 23 Jun 2020 04:32:01 -0700
+Date:   Tue, 23 Jun 2020 19:41:55 +0800
+From:   Pengfei Xu <pengfei.xu@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Heng Su <heng.su@intel.com>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kai Svahn <kai.svahn@intel.com>
+Subject: Re: [PATCH v2] Kernel selftests: TPM2: upgrade TPM2 tests from
+ Python 2 to Python 3
+Message-ID: <20200623114155.GA15561@xpf-desktop.sh.intel.com>
+References: <20200618081502.15302-1-pengfei.xu@intel.com>
+ <20200622214613.GA22727@linux.intel.com>
+ <20200622214739.GB22727@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200623083643.GB4098287@ulmo>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622214739.GB22727@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-23 09:36, Thierry Reding wrote:
-[...]
->> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->> index 243bc4cb2705b..d720e1e191176 100644
->> --- a/drivers/iommu/arm-smmu.c
->> +++ b/drivers/iommu/arm-smmu.c
->> @@ -673,6 +673,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->>   	enum io_pgtable_fmt fmt;
->>   	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->>   	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
->> +	irqreturn_t (*context_fault)(int irq, void *dev);
->>   
->>   	mutex_lock(&smmu_domain->init_mutex);
->>   	if (smmu_domain->smmu)
->> @@ -835,7 +836,9 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->>   	 * handler seeing a half-initialised domain state.
->>   	 */
->>   	irq = smmu->irqs[smmu->num_global_irqs + cfg->irptndx];
->> -	ret = devm_request_irq(smmu->dev, irq, arm_smmu_context_fault,
->> +	context_fault = (smmu->impl && smmu->impl->context_fault) ?
->> +			 smmu->impl->context_fault : arm_smmu_context_fault;
-> 
-> A simpler way might have been to assign arm_smmu_context_fault to all
-> implementations. That way we wouldn't have to perform this check here
-> and instead just always using smmu->impl->context_fault.
+Hi Jarkk,
+  Thanks for your comments!
+  My feedback is as below.
 
-But smmu->impl can still be NULL...
+  BR.
 
-Everything in impl, including the presence of impl itself, is optional, 
-so the notion of overriding a default with the same default doesn't 
-really make much sense, and would go against the pattern everywhere else.
+On 2020-06-23 at 00:47:39 +0300, Jarkko Sakkinen wrote:
+> On Tue, Jun 23, 2020 at 12:46:18AM +0300, Jarkko Sakkinen wrote:
+> > On Thu, Jun 18, 2020 at 04:15:02PM +0800, Pengfei Xu wrote:
+> > > Python 2 is no longer supported by the Python upstream project, so
+> > > upgrade TPM2 tests to Python 3.
+> > > 
+> > > Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
+> > 
+> > Use "selftests: tpm: <short summary>".
+> > 
 
-Robin.
+   Will do.
 
->> +	ret = devm_request_irq(smmu->dev, irq, context_fault,
->>   			       IRQF_SHARED, "arm-smmu-context-fault", domain);
->>   	if (ret < 0) {
->>   		dev_err(smmu->dev, "failed to request context IRQ %d (%u)\n",
->> @@ -2107,6 +2110,7 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->>   	struct arm_smmu_device *smmu;
->>   	struct device *dev = &pdev->dev;
->>   	int num_irqs, i, err;
->> +	irqreturn_t (*global_fault)(int irq, void *dev);
->>   
->>   	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
->>   	if (!smmu) {
->> @@ -2193,9 +2197,12 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->>   		smmu->num_context_irqs = smmu->num_context_banks;
->>   	}
->>   
->> +	global_fault = (smmu->impl && smmu->impl->global_fault) ?
->> +			smmu->impl->global_fault : arm_smmu_global_fault;
->> +
+> > > ---
+> > >  tools/testing/selftests/tpm2/test_smoke.sh |  4 +-
+> > >  tools/testing/selftests/tpm2/test_space.sh |  2 +-
+> > >  tools/testing/selftests/tpm2/tpm2.py       | 68 ++++++++++++++--------
+> > >  tools/testing/selftests/tpm2/tpm2_tests.py | 24 +++++---
+> > >  4 files changed, 61 insertions(+), 37 deletions(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+> > > index 663062701d5a..d05467f6d258 100755
+> > > --- a/tools/testing/selftests/tpm2/test_smoke.sh
+> > > +++ b/tools/testing/selftests/tpm2/test_smoke.sh
+> > > @@ -6,8 +6,8 @@ ksft_skip=4
+> > >  
+> > >  [ -f /dev/tpm0 ] || exit $ksft_skip
+> > >  
+> > > -python -m unittest -v tpm2_tests.SmokeTest
+> > > -python -m unittest -v tpm2_tests.AsyncTest
+> > > +python3 -m unittest -v tpm2_tests.SmokeTest
+> > > +python3 -m unittest -v tpm2_tests.AsyncTest
+> > >  
+> > >  CLEAR_CMD=$(which tpm2_clear)
+> > >  if [ -n $CLEAR_CMD ]; then
+> > > diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+> > > index 36c9d030a1c6..151c64e8ee9f 100755
+> > > --- a/tools/testing/selftests/tpm2/test_space.sh
+> > > +++ b/tools/testing/selftests/tpm2/test_space.sh
+> > > @@ -6,4 +6,4 @@ ksft_skip=4
+> > >  
+> > >  [ -f /dev/tpmrm0 ] || exit $ksft_skip
+> > >  
+> > > -python -m unittest -v tpm2_tests.SpaceTest
+> > > +python3 -m unittest -v tpm2_tests.SpaceTest
+> > > diff --git a/tools/testing/selftests/tpm2/tpm2.py b/tools/testing/selftests/tpm2/tpm2.py
+> > > index d0fcb66a88a6..b0ccc1499c53 100644
+> > > --- a/tools/testing/selftests/tpm2/tpm2.py
+> > > +++ b/tools/testing/selftests/tpm2/tpm2.py
+> > > @@ -247,14 +247,18 @@ class ProtocolError(Exception):
+> > >  class AuthCommand(object):
+> > >      """TPMS_AUTH_COMMAND"""
+> > >  
+> > > -    def __init__(self, session_handle=TPM2_RS_PW, nonce='', session_attributes=0,
+> > > -                 hmac=''):
+> > > +    def __init__(self, session_handle=TPM2_RS_PW, nonce=''.encode(),
+> > > +                 session_attributes=0, hmac=''.encode()):
+> > > +        if not isinstance(nonce, bytes):
+> > > +            nonce = nonce.encode()
+> > > +        if not isinstance(hmac, bytes):
+> > > +            hmac = hmac.encode()
+> > 
+> > This looks messy. Please, instead
+> > 
+> >     def __init__(self, session_handle=TPM2_RS_PW, nonce=bytes(),
+> >                  session_attributes=0, hmac=bytes()):
+> >          self.session_handle = session_handle
+> >          self.nonce = nonce
+> >          self.session_attributes = session_attributes
+> > 
+> > Applies also to other places.
 > 
-> Same as above.
+> I.e. use '.encode()' in the call site.
 > 
-> Thierry
-> 
+
+  I tried to use bytes(parm, encoding='UTF-8') way, it met the situation
+  that sometimes parm is string, sometimes parm is bytes.
+  And it's better we could convert all types value to bytes in
+  __init__ function.
+
+  Could we modify it as below:
+def ConvertToBytes(parm):
+    if not isinstance(parm, bytes):
+        parm = parm.encode()
+    return parm
+
+class AuthCommand(object):
+    """TPMS_AUTH_COMMAND"""
+
+    def __init__(self, session_handle=TPM2_RS_PW, nonce='',
+                 session_attributes=0, hmac=''):
+        self.session_handle = session_handle
+        self.nonce = ConvertToBytes(nonce)
+        self.session_attributes = session_attributes
+        self.hmac = ConvertToBytes(hmac)
+
+Thanks!
+
+> /Jarkko
