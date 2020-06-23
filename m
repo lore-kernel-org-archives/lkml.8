@@ -2,116 +2,133 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE86C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75BCC2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FPiNWHnk"
+	by mail.kernel.org (Postfix) with ESMTP id 0D2742075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592872655;
+	bh=xEt5aOB7pqhhf2Hy4IEmUPEWm6spZT7oV0603FSswZg=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=rDVSnbsCPN7CI3UsLIKl5kTP0afLeWifrGe2E5pc6yklemw0/qdSSqEGUwwTI3BjM
+	 wLG4SQK8gd6ItWUqNCPKp1aH4am3PrSZhrrEkyVOmxRwd9Rhu/60DAu7Ygy+xU28Xm
+	 hAFuFRsQn1D0jNJLvoSQGiikWj7DqAQxGWVPZUlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbgFWAfA (ORCPT
+        id S1732139AbgFWAhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:35:00 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:47448 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731889AbgFWAeQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:34:16 -0400
-Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0B61B20B4781;
-        Mon, 22 Jun 2020 17:34:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0B61B20B4781
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1592872455;
-        bh=tPM2cLdleiXTdhTcx3SJbwPTbqR3C7p+Rm6GApOkV+U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FPiNWHnk28C2EkEMbDX9KqsktQr53PywyM67fEEx9JgBdcaTX8KRLOPzjOPcJ1iFv
-         pw/EA03DivehJgoaKkKBepalnBbg02L5fJ/duZScba+5aJB8KRfJ7G5qXs6KCq5szL
-         JpPT8UiDfTI5BLJgyOS83vUbKG7MSukUiZ4TAUTQ=
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH 04/12] ima: Free the entire rule if it fails to parse
-Date:   Mon, 22 Jun 2020 19:32:28 -0500
-Message-Id: <20200623003236.830149-5-tyhicks@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
-References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+        Mon, 22 Jun 2020 20:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731561AbgFWAhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:37:32 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8C2720738;
+        Tue, 23 Jun 2020 00:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592872652;
+        bh=xEt5aOB7pqhhf2Hy4IEmUPEWm6spZT7oV0603FSswZg=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=uPCKkuMU24ek8MKjZDgxI8qDTSR7Nn4k5ijn5efqMvUM8XxBqH6pmQkBjMkaHNjfJ
+         0qFYghMJlE3ZinuzfFjq0oZcPGv7GAzgAF6awKbFHUSosbzhqgvegvydopVN9xTtjZ
+         ad8rZJk+7YO/cZeJX9GKJ7n8tSe2ZQ9IZsCsvPvw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id CA4E2352306A; Mon, 22 Jun 2020 17:37:31 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 17:37:31 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/23] Torture-test updates for v5.9
+Message-ID: <20200623003731.GA26717@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use ima_free_rule() to fix memory leaks of allocated ima_rule_entry
-members, such as .fsname and .keyrings, when an error is encountered
-during rule parsing.
+Hello!
 
-Set the args_p pointer to NULL after freeing it in the error path of
-ima_lsm_rule_init() so that it isn't freed twice.
+This series provides torture-test updates:
 
-This fixes a memory leak seen when loading an rule that contains an
-additional piece of allocated memory, such as an fsname, followed by an
-invalid conditional:
+1.	 Remove qemu dependency on EFI firmware.
 
- # echo "measure fsname=tmpfs bad=cond" > /sys/kernel/security/ima/policy
- -bash: echo: write error: Invalid argument
- # echo scan > /sys/kernel/debug/kmemleak
- # cat /sys/kernel/debug/kmemleak
- unreferenced object 0xffff98e7e4ece6c0 (size 8):
-   comm "bash", pid 672, jiffies 4294791843 (age 21.855s)
-   hex dump (first 8 bytes):
-     74 6d 70 66 73 00 6b a5                          tmpfs.k.
-   backtrace:
-     [<00000000abab7413>] kstrdup+0x2e/0x60
-     [<00000000f11ede32>] ima_parse_add_rule+0x7d4/0x1020
-     [<00000000f883dd7a>] ima_write_policy+0xab/0x1d0
-     [<00000000b17cf753>] vfs_write+0xde/0x1d0
-     [<00000000b8ddfdea>] ksys_write+0x68/0xe0
-     [<00000000b8e21e87>] do_syscall_64+0x56/0xa0
-     [<0000000089ea7b98>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+2.	Add script to smoke-test commits in a branch.
 
-Fixes: f1b08bbcbdaf ("ima: define a new policy condition based on the filesystem name")
-Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
----
- security/integrity/ima/ima_policy.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+3.	Use true and false to assign to bool variables, courtesy of Zou Wei.
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 94ca3b8abb69..ee5152ecd3d9 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -919,6 +919,7 @@ static int ima_lsm_rule_init(struct ima_rule_entry *entry,
- 
- 		if (ima_rules == &ima_default_rules) {
- 			kfree(entry->lsm[lsm_rule].args_p);
-+			entry->lsm[lsm_rule].args_p = NULL;
- 			result = -EINVAL;
- 		} else
- 			result = 0;
-@@ -1410,7 +1411,7 @@ ssize_t ima_parse_add_rule(char *rule)
- 
- 	result = ima_parse_rule(p, entry);
- 	if (result) {
--		kfree(entry);
-+		ima_free_rule(entry);
- 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL,
- 				    NULL, op, "invalid-policy", result,
- 				    audit_info);
--- 
-2.25.1
+4.	Add races with task-exit processing.
 
+5.	Set configfile variable to current scenario.
+
+6.	Handle non-statistic bang-string error messages.
+
+7.	NULL rcu_torture_current earlier in cleanup code.
+
+8.	Remove whitespace from identify_qemu_vcpus output.
+
+9.	Add --allcpus argument to the kvm.sh script.
+
+10.	rcu/rcutorture: Replace 0 with false, courtesy of Jules Irenge.
+
+11.	Create qemu-cmd in --buildonly runs.
+
+12.	Add a stop-run capability.
+
+13.	Abstract out console-log error detection.
+
+14.	Check for unwatched readers.
+
+15.	Pass --kmake-arg to all make invocations, courtesy of Marco Elver.
+
+16.	Correctly summarize build-only runs.
+
+17.	Improve diagnostic for KCSAN-incapable compilers.
+
+18.	Add more tracing crib notes to kvm.sh.
+
+19.	Add kvm-tranform.sh script for qemu-cmd files.
+
+20.	Dump ftrace at shutdown only if requested.
+
+21.	Avoid duplicate specification of qemu command.
+
+22.	Remove obsolete "cd $KVM".
+
+23.	Remove KCSAN stubs.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ Documentation/admin-guide/kernel-parameters.txt              |   21 +
+ include/linux/torture.h                                      |    5 
+ kernel/locking/locktorture.c                                 |   14 -
+ kernel/rcu/rcutorture.c                                      |  130 +++++++++--
+ kernel/torture.c                                             |    6 
+ tools/testing/selftests/rcutorture/bin/configinit.sh         |    4 
+ tools/testing/selftests/rcutorture/bin/console-badness.sh    |   16 +
+ tools/testing/selftests/rcutorture/bin/functions.sh          |   23 +
+ tools/testing/selftests/rcutorture/bin/jitter.sh             |    6 
+ tools/testing/selftests/rcutorture/bin/kvm-build.sh          |    6 
+ tools/testing/selftests/rcutorture/bin/kvm-check-branches.sh |  108 +++++++++
+ tools/testing/selftests/rcutorture/bin/kvm-recheck.sh        |   20 +
+ tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh     |   27 +-
+ tools/testing/selftests/rcutorture/bin/kvm-transform.sh      |   51 ++++
+ tools/testing/selftests/rcutorture/bin/kvm.sh                |   10 
+ tools/testing/selftests/rcutorture/bin/parse-console.sh      |   23 +
+ 16 files changed, 419 insertions(+), 51 deletions(-)
