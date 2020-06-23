@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E13BC433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9979DC433E4
 	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F602078E
+	by mail.kernel.org (Postfix) with ESMTP id 7AF6920857
 	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cleLukYO"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PN0FUSV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732059AbgFWB65 (ORCPT
+        id S1732095AbgFWB7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:58:57 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50140 "EHLO
+        Mon, 22 Jun 2020 21:59:00 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58444 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730871AbgFWB6x (ORCPT
+        by vger.kernel.org with ESMTP id S1731916AbgFWB6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:58:53 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05N1tV2D020003
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:58:52 -0700
+        Mon, 22 Jun 2020 21:58:55 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05N1wElY003333
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:58:54 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=8oQq9mbfN7u+78zKU/22sk8TgDqRjx2rzmqnCfVeR/c=;
- b=cleLukYOTlXlKChvEY5+qIXVFoORh8mkQoaRyRpAtvh55J16JeVbtR1bT8xEPmfWFyJs
- EzDIaxmN5aCiOcuBwiLBB0Zijh/JoHJorlGKnOGFKphD10zmJ3w6fDGhPo8E0TJjphwT
- vjHKANAaFcSVI155wjYY/gGuj5DBI8/6fdE= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0089730.ppops.net with ESMTP id 31sdxyupbb-1
+ bh=pNPRuF5LajF9VNFx2UDWcECUyJwt02enUzuyXlWJX/A=;
+ b=PN0FUSV5FKlBizfu8v2GUC/b920MIWFbwVbREK9jJ6OygdWkaiMa+D76OrYcJg/tsf0o
+ 5cGFk9o2zTykFxpk4e7ZSQytendkn7/oRVcxCaSfKa6Qtf0zH0pjjMTypBWfI6F/3ai9
+ oyrEslu/cPWzI00b1UNEjfYWDioWN7bj1hI= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 31se4nknfd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:58:52 -0700
-Received: from intmgw002.41.prn1.facebook.com (2620:10d:c085:108::8) by
- mail.thefacebook.com (2620:10d:c085:21d::5) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:58:54 -0700
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 22 Jun 2020 18:58:51 -0700
+ 15.1.1979.3; Mon, 22 Jun 2020 18:58:53 -0700
 Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id 78DF826DD028; Mon, 22 Jun 2020 18:58:48 -0700 (PDT)
+        id 2F36E26DD01A; Mon, 22 Jun 2020 18:58:48 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
@@ -54,9 +54,9 @@ CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v7 07/19] mm: memcg/slab: allocate obj_cgroups for non-root slab pages
-Date:   Mon, 22 Jun 2020 18:58:34 -0700
-Message-ID: <20200623015846.1141975-8-guro@fb.com>
+Subject: [PATCH v7 01/19] mm: memcg: factor out memcg- and lruvec-level changes out of __mod_lruvec_state()
+Date:   Mon, 22 Jun 2020 18:58:28 -0700
+Message-ID: <20200623015846.1141975-2-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200623015846.1141975-1-guro@fb.com>
 References: <20200623015846.1141975-1-guro@fb.com>
@@ -66,10 +66,10 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-22_16:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=2
- phishscore=0 mlxscore=0 lowpriorityscore=0 cotscore=-2147483648
- adultscore=0 spamscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 clxscore=1015 priorityscore=1501 classifier=spam adjust=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
+ impostorscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ cotscore=-2147483648 adultscore=0 suspectscore=0 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006230012
 X-FB-Internal: deliver
@@ -78,225 +78,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate and release memory to store obj_cgroup pointers for each non-roo=
-t
-slab page. Reuse page->mem_cgroup pointer to store a pointer to the
-allocated space.
-
-This commit temporarily increases the memory footprint of the kernel memo=
-ry
-accounting. To store obj_cgroup pointers we'll need a place for an
-objcg_pointer for each allocated object. However, the following patches
-in the series will enable sharing of slab pages between memory cgroups,
-which will dramatically increase the total slab utilization. And the fina=
-l
-memory footprint will be significantly smaller than before.
-
-To distinguish between obj_cgroups and memcg pointers in case when it's
-not obvious which one is used (as in page_cgroup_ino()), let's always set
-the lowest bit in the obj_cgroup case. The original obj_cgroups
-pointer is marked to be ignored by kmemleak, which otherwise would
-report a memory leak for each allocated vector.
+To convert memcg and lruvec slab counters to bytes there must be a way to
+change these counters without touching node counters.  Factor out
+__mod_memcg_lruvec_state() out of __mod_lruvec_state().
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 Reviewed-by: Shakeel Butt <shakeelb@google.com>
 ---
- include/linux/mm_types.h |  5 +++-
- include/linux/slab_def.h |  6 +++++
- include/linux/slub_def.h |  5 ++++
- mm/memcontrol.c          | 17 ++++++++++---
- mm/slab.h                | 52 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 81 insertions(+), 4 deletions(-)
+ include/linux/memcontrol.h | 17 +++++++++++++++
+ mm/memcontrol.c            | 43 +++++++++++++++++++++-----------------
+ 2 files changed, 41 insertions(+), 19 deletions(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 64ede5f150dc..0277fbab7c93 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -198,7 +198,10 @@ struct page {
- 	atomic_t _refcount;
-=20
- #ifdef CONFIG_MEMCG
--	struct mem_cgroup *mem_cgroup;
-+	union {
-+		struct mem_cgroup *mem_cgroup;
-+		struct obj_cgroup **obj_cgroups;
-+	};
- #endif
-=20
- 	/*
-diff --git a/include/linux/slab_def.h b/include/linux/slab_def.h
-index abc7de77b988..ccda7b9669a5 100644
---- a/include/linux/slab_def.h
-+++ b/include/linux/slab_def.h
-@@ -114,4 +114,10 @@ static inline unsigned int obj_to_index(const struct=
- kmem_cache *cache,
- 	return reciprocal_divide(offset, cache->reciprocal_buffer_size);
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index e77197a62809..b250f8197710 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -679,11 +679,23 @@ static inline unsigned long lruvec_page_state_local=
+(struct lruvec *lruvec,
+ 	return x;
  }
 =20
-+static inline int objs_per_slab_page(const struct kmem_cache *cache,
-+				     const struct page *page)
++void __mod_memcg_lruvec_state(struct lruvec *lruvec, enum node_stat_item=
+ idx,
++			      int val);
+ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+ 			int val);
+ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val);
+ void mod_memcg_obj_state(void *p, int idx, int val);
+=20
++static inline void mod_memcg_lruvec_state(struct lruvec *lruvec,
++					  enum node_stat_item idx, int val)
 +{
-+	return cache->num;
++	unsigned long flags;
++
++	local_irq_save(flags);
++	__mod_memcg_lruvec_state(lruvec, idx, val);
++	local_irq_restore(flags);
 +}
 +
- #endif	/* _LINUX_SLAB_DEF_H */
-diff --git a/include/linux/slub_def.h b/include/linux/slub_def.h
-index 30e91c83d401..f87302dcfe8c 100644
---- a/include/linux/slub_def.h
-+++ b/include/linux/slub_def.h
-@@ -198,4 +198,9 @@ static inline unsigned int obj_to_index(const struct =
-kmem_cache *cache,
- 	return __obj_to_index(cache, page_address(page), obj);
+ static inline void mod_lruvec_state(struct lruvec *lruvec,
+ 				    enum node_stat_item idx, int val)
+ {
+@@ -1057,6 +1069,11 @@ static inline unsigned long lruvec_page_state_loca=
+l(struct lruvec *lruvec,
+ 	return node_page_state(lruvec_pgdat(lruvec), idx);
  }
 =20
-+static inline int objs_per_slab_page(const struct kmem_cache *cache,
-+				     const struct page *page)
++static inline void __mod_memcg_lruvec_state(struct lruvec *lruvec,
++					    enum node_stat_item idx, int val)
 +{
-+	return page->objects;
 +}
- #endif /* _LINUX_SLUB_DEF_H */
++
+ static inline void __mod_lruvec_state(struct lruvec *lruvec,
+ 				      enum node_stat_item idx, int val)
+ {
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 407f90f7a2f7..60e3f3ca75ca 100644
+index 19622328e4b5..13ab84c7e4ac 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -569,10 +569,21 @@ ino_t page_cgroup_ino(struct page *page)
- 	unsigned long ino =3D 0;
-=20
- 	rcu_read_lock();
--	if (PageSlab(page) && !PageTail(page))
-+	if (PageSlab(page) && !PageTail(page)) {
- 		memcg =3D memcg_from_slab_page(page);
--	else
--		memcg =3D READ_ONCE(page->mem_cgroup);
-+	} else {
-+		memcg =3D page->mem_cgroup;
-+
-+		/*
-+		 * The lowest bit set means that memcg isn't a valid
-+		 * memcg pointer, but a obj_cgroups pointer.
-+		 * In this case the page is shared and doesn't belong
-+		 * to any specific memory cgroup.
-+		 */
-+		if ((unsigned long) memcg & 0x1UL)
-+			memcg =3D NULL;
-+	}
-+
- 	while (memcg && !(memcg->css.flags & CSS_ONLINE))
- 		memcg =3D parent_mem_cgroup(memcg);
- 	if (memcg)
-diff --git a/mm/slab.h b/mm/slab.h
-index 1e2d80991904..7d175c2f1a61 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -109,6 +109,7 @@ struct memcg_cache_params {
- #include <linux/kmemleak.h>
- #include <linux/random.h>
- #include <linux/sched/mm.h>
-+#include <linux/kmemleak.h>
-=20
- /*
-  * State of the slab allocator.
-@@ -347,6 +348,18 @@ static inline struct kmem_cache *memcg_root_cache(st=
-ruct kmem_cache *s)
- 	return s->memcg_params.root_cache;
+@@ -713,30 +713,13 @@ parent_nodeinfo(struct mem_cgroup_per_node *pn, int=
+ nid)
+ 	return mem_cgroup_nodeinfo(parent, nid);
  }
 =20
-+static inline struct obj_cgroup **page_obj_cgroups(struct page *page)
-+{
-+	/*
-+	 * page->mem_cgroup and page->obj_cgroups are sharing the same
-+	 * space. To distinguish between them in case we don't know for sure
-+	 * that the page is a slab page (e.g. page_cgroup_ino()), let's
-+	 * always set the lowest bit of obj_cgroups.
-+	 */
-+	return (struct obj_cgroup **)
-+		((unsigned long)page->obj_cgroups & ~0x1UL);
-+}
-+
- /*
-  * Expects a pointer to a slab page. Please note, that PageSlab() check
-  * isn't sufficient, as it returns true also for tail compound slab page=
-s,
-@@ -434,6 +447,28 @@ static __always_inline void memcg_uncharge_slab(stru=
-ct page *page, int order,
- 	percpu_ref_put_many(&s->memcg_params.refcnt, nr_pages);
- }
-=20
-+static inline int memcg_alloc_page_obj_cgroups(struct page *page,
-+					       struct kmem_cache *s, gfp_t gfp)
-+{
-+	unsigned int objects =3D objs_per_slab_page(s, page);
-+	void *vec;
-+
-+	vec =3D kcalloc_node(objects, sizeof(struct obj_cgroup *), gfp,
-+			   page_to_nid(page));
-+	if (!vec)
-+		return -ENOMEM;
-+
-+	kmemleak_not_leak(vec);
-+	page->obj_cgroups =3D (struct obj_cgroup **) ((unsigned long)vec | 0x1U=
-L);
-+	return 0;
-+}
-+
-+static inline void memcg_free_page_obj_cgroups(struct page *page)
-+{
-+	kfree(page_obj_cgroups(page));
-+	page->obj_cgroups =3D NULL;
-+}
-+
- extern void slab_init_memcg_params(struct kmem_cache *);
- extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *me=
-mcg);
-=20
-@@ -483,6 +518,16 @@ static inline void memcg_uncharge_slab(struct page *=
-page, int order,
+-/**
+- * __mod_lruvec_state - update lruvec memory statistics
+- * @lruvec: the lruvec
+- * @idx: the stat item
+- * @val: delta to add to the counter, can be negative
+- *
+- * The lruvec is the intersection of the NUMA node and a cgroup. This
+- * function updates the all three counters that are affected by a
+- * change of state at this level: per-node, per-cgroup, per-lruvec.
+- */
+-void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+-			int val)
++void __mod_memcg_lruvec_state(struct lruvec *lruvec, enum node_stat_item=
+ idx,
++			      int val)
  {
+-	pg_data_t *pgdat =3D lruvec_pgdat(lruvec);
+ 	struct mem_cgroup_per_node *pn;
+ 	struct mem_cgroup *memcg;
+ 	long x;
+=20
+-	/* Update node */
+-	__mod_node_page_state(pgdat, idx, val);
+-
+-	if (mem_cgroup_disabled())
+-		return;
+-
+ 	pn =3D container_of(lruvec, struct mem_cgroup_per_node, lruvec);
+ 	memcg =3D pn->memcg;
+=20
+@@ -748,6 +731,7 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum n=
+ode_stat_item idx,
+=20
+ 	x =3D val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
+ 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
++		pg_data_t *pgdat =3D lruvec_pgdat(lruvec);
+ 		struct mem_cgroup_per_node *pi;
+=20
+ 		for (pi =3D pn; pi; pi =3D parent_nodeinfo(pi, pgdat->node_id))
+@@ -757,6 +741,27 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum =
+node_stat_item idx,
+ 	__this_cpu_write(pn->lruvec_stat_cpu->count[idx], x);
  }
 =20
-+static inline int memcg_alloc_page_obj_cgroups(struct page *page,
-+					       struct kmem_cache *s, gfp_t gfp)
++/**
++ * __mod_lruvec_state - update lruvec memory statistics
++ * @lruvec: the lruvec
++ * @idx: the stat item
++ * @val: delta to add to the counter, can be negative
++ *
++ * The lruvec is the intersection of the NUMA node and a cgroup. This
++ * function updates the all three counters that are affected by a
++ * change of state at this level: per-node, per-cgroup, per-lruvec.
++ */
++void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
++			int val)
 +{
-+	return 0;
++	/* Update node */
++	__mod_node_page_state(lruvec_pgdat(lruvec), idx, val);
++
++	/* Update memcg and lruvec */
++	if (!mem_cgroup_disabled())
++		__mod_memcg_lruvec_state(lruvec, idx, val);
 +}
 +
-+static inline void memcg_free_page_obj_cgroups(struct page *page)
-+{
-+}
-+
- static inline void slab_init_memcg_params(struct kmem_cache *s)
+ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
  {
- }
-@@ -509,12 +554,18 @@ static __always_inline int charge_slab_page(struct =
-page *page,
- 					    gfp_t gfp, int order,
- 					    struct kmem_cache *s)
- {
-+	int ret;
-+
- 	if (is_root_cache(s)) {
- 		mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
- 				    PAGE_SIZE << order);
- 		return 0;
- 	}
-=20
-+	ret =3D memcg_alloc_page_obj_cgroups(page, s, gfp);
-+	if (ret)
-+		return ret;
-+
- 	return memcg_charge_slab(page, gfp, order, s);
- }
-=20
-@@ -527,6 +578,7 @@ static __always_inline void uncharge_slab_page(struct=
- page *page, int order,
- 		return;
- 	}
-=20
-+	memcg_free_page_obj_cgroups(page);
- 	memcg_uncharge_slab(page, order, s);
- }
-=20
+ 	pg_data_t *pgdat =3D page_pgdat(virt_to_page(p));
 --=20
 2.26.2
 
