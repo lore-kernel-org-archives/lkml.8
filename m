@@ -2,208 +2,109 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF051C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B118220723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90D020723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbgFWG1N (ORCPT
+        id S1730914AbgFWG1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:27:13 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46824 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730395AbgFWG1M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:27:12 -0400
-Received: by mail-io1-f70.google.com with SMTP id w2so14393880iom.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:27:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gZ4kRg/lsKbtR4x7IDRCO8QC7n8viAfM9eVMzkEuu4M=;
-        b=d6iCt5oyDcbq04khC9ruWIei4JZN8v4nzvyegZxYRkNtTYLgRgvN8ExEHawFtaA5MC
-         i30abUaLBjpsRehzyqPtHttJ8lPt+cwlJljUtkLx2yXsb2Im/Mwg2o0ZMt5YoaLnKB2c
-         KgHRGPR1/g32UMd2noiYuSIakEyk3M8MZ5Wg3MTnw1xw+1YR3AKuQELULPHvUGtdAL1E
-         Co+fqy4Cu7VYPgg9BP4uIKoRVKvHf9MQ9IcvrSreZpaQg23p0wv8QhgXCm6P1Hh378sU
-         HQiimP73+CyBHv1b8ZMSpM0/5Tw6a85/88BsjJc6O/soqxk06sIAN75i9Q03HT5r2Mso
-         zIcw==
-X-Gm-Message-State: AOAM532Wr19mdCX5+DHGprUokh3l7Ia3SStWy01qcTHnIw+O9bceMsrY
-        TwUiVrKh5cKgN+VrgxBRhb+Ar8m5nAGK/gjhtAbcBWWjqHLx
-X-Google-Smtp-Source: ABdhPJygsyK2Vg7E/T4BB9XKQGhiLjySMxeGIWjnVsQ3Y7mdHOw/zPYzo7vHaRR9JfmtztW9YO4105Fq0nDfS+tKwBuZ72HPfz4C
+        Tue, 23 Jun 2020 02:27:48 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:40904 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730447AbgFWG1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:27:47 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axlum8oPFe+6JIAA--.11077S3;
+        Tue, 23 Jun 2020 14:27:08 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Do not flush tlb when setting pmd entry
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+References: <1591177333-17833-1-git-send-email-maobibo@loongson.cn>
+ <20200615101443.GA10075@alpha.franken.de>
+ <4bef403d-baba-ddf8-c25c-3d6968897a53@loongson.cn>
+ <20200617111403.GC9940@alpha.franken.de>
+ <ea914a82-70c1-b9a3-f6f0-f92a6d6c6e7f@loongson.cn>
+ <20200622154855.GC17294@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <a121b9c0-2c35-a895-6874-bdea3a6b0452@loongson.cn>
+Date:   Tue, 23 Jun 2020 14:27:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:958e:: with SMTP id a14mr23593863ioo.157.1592893631204;
- Mon, 22 Jun 2020 23:27:11 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 23:27:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000d958105a8ba73bf@google.com>
-Subject: possible deadlock in rds_wake_sk_sleep (3)
-From:   syzbot <syzbot+4670352c72e1f1994dc3@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        rds-devel@oss.oracle.com, santosh.shilimkar@oracle.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200622154855.GC17294@alpha.franken.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Axlum8oPFe+6JIAA--.11077S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7CryrXFykuF4rGw1rZFWfAFb_yoW8AFy7pa
+        sFka1vyF1DJw40yr1Ivw1rtr1aq34UtrW3Wr98GrW5Aas0grn7Kr43Kw4YkasrurWfCw42
+        va10gFya934DA3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvFb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        c2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWU
+        AwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AK
+        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+        xUcVWlDUUUU
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    cb8e59cc Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=155e8915100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a16ddbc78955e3a9
-dashboard link: https://syzkaller.appspot.com/bug?extid=4670352c72e1f1994dc3
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4670352c72e1f1994dc3@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-5.7.0-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.0/13525 is trying to acquire lock:
-ffff88808bdab658 (&rs->rs_recv_lock){..--}-{2:2}, at: rds_wake_sk_sleep+0x1f/0xe0 net/rds/af_rds.c:109
-
-but task is already holding lock:
-ffff888050ad2900 (&rm->m_rs_lock){..-.}-{2:2}, at: rds_send_remove_from_sock+0x35a/0xa00 net/rds/send.c:628
-
-which lock already depends on the new lock.
 
 
-the existing dependency chain (in reverse order) is:
+On 06/22/2020 11:48 PM, Thomas Bogendoerfer wrote:
+> On Sat, Jun 20, 2020 at 11:47:35AM +0800, maobibo wrote:
+>>
+>>
+>> On 06/17/2020 07:14 PM, Thomas Bogendoerfer wrote:
+>>> On Tue, Jun 16, 2020 at 06:34:21PM +0800, maobibo wrote:
+>>>>
+>>>>
+>>>> On 06/15/2020 06:14 PM, Thomas Bogendoerfer wrote:
+>>>>> On Wed, Jun 03, 2020 at 05:42:13PM +0800, Bibo Mao wrote:
+>>>>>> Function set_pmd_at is to set pmd entry, if tlb entry need to
+>>>>>> be flushed, there exists pmdp_huge_clear_flush alike function
+>>>>>> before set_pmd_at is called. So it is not necessary to call
+>>>>>> flush_tlb_all in this function.
+>>>>>
+>>>>> have you checked all set_pmd_at() calls ? I found a few case where
+>>>>> it's not clear to me, if tlb flushing is done... If you think this
+>>>>> is still the right thing to do, please change arch/mips/mm/pgtable-32.c
+>>>>> as well.
+>>>> well, I will double check this and do more testing about thp and hugepage.
+>>>
+>>> I was more concerned about
+>>>
+>>> fs/dax.c
+>>> fs/proc/task_mmu.c
+>>> mm/rmap.c
+>>
+>> I think that flush_tlb_all should not be called in function set_pmd_at
+>> on mips platform. However update_mmu_cache_pmd() should be called __after__
+>> set_pmd_at() function to update tlb entry at some places, it is another issue.
+>> Here is my analysis in the three files where set_pmd_at is called.
+>> [..]
+> 
+> thank you for confirming that we are good with removing flush_tlb_all().
+Sorry, there is something wrong if remove flush_tlb_all(). If pmd_none is true,
+pmd points to invalid_pte_table, maybe there exists pte entry with normal page size
+for fault address. And we need invalidate this pte entry like it is done in function build_huge_handler_tail in file arch/mips/mm/tlbex.c
 
--> #1 (&rm->m_rs_lock){..-.}-{2:2}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-       rds_message_purge net/rds/message.c:138 [inline]
-       rds_message_put net/rds/message.c:180 [inline]
-       rds_message_put+0x1d5/0xd90 net/rds/message.c:173
-       rds_inc_put+0x13a/0x1a0 net/rds/recv.c:82
-       rds_clear_recv_queue+0x14a/0x350 net/rds/recv.c:770
-       rds_release+0x102/0x3f0 net/rds/af_rds.c:73
-       __sock_release+0xcd/0x280 net/socket.c:605
-       sock_close+0x18/0x20 net/socket.c:1278
-       __fput+0x33e/0x880 fs/file_table.c:281
-       task_work_run+0xf4/0x1b0 kernel/task_work.c:123
-       tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-       exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
-       prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
-       syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
-       do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
-       entry_SYSCALL_64_after_hwframe+0x49/0xb3
+I will send another patch.
+> 
+> Thomas.
+> 
 
--> #0 (&rs->rs_recv_lock){..--}-{2:2}:
-       check_prev_add kernel/locking/lockdep.c:2496 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
-       validate_chain kernel/locking/lockdep.c:3218 [inline]
-       __lock_acquire+0x2a9c/0x4a70 kernel/locking/lockdep.c:4380
-       lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4959
-       __raw_read_lock_irqsave include/linux/rwlock_api_smp.h:159 [inline]
-       _raw_read_lock_irqsave+0x93/0xd0 kernel/locking/spinlock.c:231
-       rds_wake_sk_sleep+0x1f/0xe0 net/rds/af_rds.c:109
-       rds_send_remove_from_sock+0xc1/0xa00 net/rds/send.c:634
-       rds_send_path_drop_acked+0x303/0x3d0 net/rds/send.c:710
-       rds_tcp_write_space+0x1a7/0x658 net/rds/tcp_send.c:198
-       tcp_new_space net/ipv4/tcp_input.c:5226 [inline]
-       tcp_check_space+0x178/0x730 net/ipv4/tcp_input.c:5237
-       tcp_data_snd_check net/ipv4/tcp_input.c:5247 [inline]
-       tcp_rcv_established+0x17dc/0x1d90 net/ipv4/tcp_input.c:5654
-       tcp_v4_do_rcv+0x605/0x8b0 net/ipv4/tcp_ipv4.c:1629
-       sk_backlog_rcv include/net/sock.h:996 [inline]
-       __release_sock+0x134/0x3a0 net/core/sock.c:2548
-       release_sock+0x54/0x1b0 net/core/sock.c:3064
-       rds_send_xmit+0x1487/0x2510 net/rds/send.c:422
-       rds_sendmsg+0x273d/0x3100 net/rds/send.c:1381
-       sock_sendmsg_nosec net/socket.c:652 [inline]
-       sock_sendmsg+0xcf/0x120 net/socket.c:672
-       ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
-       ___sys_sendmsg+0x100/0x170 net/socket.c:2406
-       __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
-       do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-       entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&rm->m_rs_lock);
-                               lock(&rs->rs_recv_lock);
-                               lock(&rm->m_rs_lock);
-  lock(&rs->rs_recv_lock);
-
- *** DEADLOCK ***
-
-3 locks held by syz-executor.0/13525:
- #0: ffff888064497020 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1576 [inline]
- #0: ffff888064497020 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: tcp_sock_set_cork+0x16/0x90 net/ipv4/tcp.c:2829
- #1: ffff8880644972c8 (k-clock-AF_INET){++.-}-{2:2}, at: rds_tcp_write_space+0x25/0x658 net/rds/tcp_send.c:184
- #2: ffff888050ad2900 (&rm->m_rs_lock){..-.}-{2:2}, at: rds_send_remove_from_sock+0x35a/0xa00 net/rds/send.c:628
-
-stack backtrace:
-CPU: 1 PID: 13525 Comm: syz-executor.0 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1827
- check_prev_add kernel/locking/lockdep.c:2496 [inline]
- check_prevs_add kernel/locking/lockdep.c:2601 [inline]
- validate_chain kernel/locking/lockdep.c:3218 [inline]
- __lock_acquire+0x2a9c/0x4a70 kernel/locking/lockdep.c:4380
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4959
- __raw_read_lock_irqsave include/linux/rwlock_api_smp.h:159 [inline]
- _raw_read_lock_irqsave+0x93/0xd0 kernel/locking/spinlock.c:231
- rds_wake_sk_sleep+0x1f/0xe0 net/rds/af_rds.c:109
- rds_send_remove_from_sock+0xc1/0xa00 net/rds/send.c:634
- rds_send_path_drop_acked+0x303/0x3d0 net/rds/send.c:710
- rds_tcp_write_space+0x1a7/0x658 net/rds/tcp_send.c:198
- tcp_new_space net/ipv4/tcp_input.c:5226 [inline]
- tcp_check_space+0x178/0x730 net/ipv4/tcp_input.c:5237
- tcp_data_snd_check net/ipv4/tcp_input.c:5247 [inline]
- tcp_rcv_established+0x17dc/0x1d90 net/ipv4/tcp_input.c:5654
- tcp_v4_do_rcv+0x605/0x8b0 net/ipv4/tcp_ipv4.c:1629
- sk_backlog_rcv include/net/sock.h:996 [inline]
- __release_sock+0x134/0x3a0 net/core/sock.c:2548
- release_sock+0x54/0x1b0 net/core/sock.c:3064
- rds_send_xmit+0x1487/0x2510 net/rds/send.c:422
- rds_sendmsg+0x273d/0x3100 net/rds/send.c:1381
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
- ___sys_sendmsg+0x100/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45ca59
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6d9be39c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000005019e0 RCX: 000000000045ca59
-RDX: 0000000000000040 RSI: 0000000020000240 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a1d R14: 00000000004cd008 R15: 00007f6d9be3a6d4
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
