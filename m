@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69110C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F944C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A737207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CE6207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948323;
-	bh=o8nUac153Zhp9kKJXh7VSgyrThceuzDG1+BM86N1P/w=;
+	s=default; t=1592948326;
+	bh=5rB47IRt3w2v7qDHOt4FBAEYDoNAJuxs7BoOZJzslfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wo9Y4oB2d91+rOj28rz5jMvwEIjvL0zaL8ui8XUL0oCeeKBTylDxDSM0Npju8BxPq
-	 0AgPBZPBW5GzyhXGZjgyohtRVh6hJBSflbd4qtkyUJASesG3me+8D0NPfl4HXFSoRz
-	 f8QCuWHz+4Y8y9ZGe06RW2eDhzQrpBmchkytw/pA=
+	b=LN2FIp5UJAn8zHhx5deEsPzXfS0FUR3+qc1VeSebdWAUM7W9RQvCEsaxdqdrRSmYP
+	 +GX6ZVIV0yQKM1l9Kp4yHiQvrzKm60Uw/mRt1c7U8ChKqn/zFOt0WVCBd0JOg9hL5o
+	 o5JD5TeW01iWaqJPCE240eyiRfrXJ4bmEhLFar1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388672AbgFWUHx (ORCPT
+        id S2391625AbgFWVio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48518 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388659AbgFWUHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:07:47 -0400
+        id S2388666AbgFWUHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDD62206C3;
-        Tue, 23 Jun 2020 20:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD4322064B;
+        Tue, 23 Jun 2020 20:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942867;
-        bh=o8nUac153Zhp9kKJXh7VSgyrThceuzDG1+BM86N1P/w=;
+        s=default; t=1592942872;
+        bh=5rB47IRt3w2v7qDHOt4FBAEYDoNAJuxs7BoOZJzslfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIxMh1kjyjT7O2ttR5dEyiPHJfBJ0Z2qYueEsjD6G9GyLv98PfbX9FV6Rqlhal1cI
-         CjqHgCUgBa3o0+FF2skYcSJaIZUosmz/eIJPR7G6kYYSKiO1284dC9O2MlpTggmkOF
-         c2DnGm9LYNGt1OHTGgjYVfshF7kc/OV0OqwtbAvI=
+        b=jORZ94uZwhBQs+mc5/tPJ/QkuWhLJWJgGZQ1mLBYMvLlQfMYBwiSkbC0OGOyHBKlp
+         1O1tZrPRb8vdjflJZq0EMBQLhS9GqU6DUuM/2nrdYkocaCoLB03kgmbYz3gkmY7d9R
+         NxeQmXW8Fjt/M9zty2/spU4e8WjHcwKEhqBLm0Rs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Andi Shyti <andi@etezian.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 165/477] usb: dwc3: meson-g12a: check return of dwc3_meson_g12a_usb_init
-Date:   Tue, 23 Jun 2020 21:52:42 +0200
-Message-Id: <20200623195415.386274170@linuxfoundation.org>
+Subject: [PATCH 5.7 137/477] Input: mms114 - add extra compatible for mms345l
+Date:   Tue, 23 Jun 2020 21:52:14 +0200
+Message-Id: <20200623195414.083583794@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,36 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 8f5bc1ec770c2bdc8c604ba4119a77d81d8f3529 ]
+[ Upstream commit 7842087b0196d674ed877d768de8f2a34d7fdc53 ]
 
-The dwc3_meson_g12a_usb_init function can return an error, check it.
+MMS345L is another first generation touch screen from Melfas,
+which uses mostly the same registers as MMS152.
 
-Fixes: c99993376f72ca ("usb: dwc3: Add Amlogic G12A DWC3 glue")
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+However, there is some garbage printed during initialization.
+Apparently MMS345L does not have the MMS152_COMPAT_GROUP register
+that is read+printed during initialization.
+
+  TSP FW Rev: bootloader 0x6 / core 0x26 / config 0x26, Compat group: \x06
+
+On earlier kernel versions the compat group was actually printed as
+an ASCII control character, seems like it gets escaped now.
+
+But we probably shouldn't print something from a random register.
+
+Add a separate "melfas,mms345l" compatible that avoids reading
+from the MMS152_COMPAT_GROUP register. This might also help in case
+there is some other device-specific quirk in the future.
+
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Andi Shyti <andi@etezian.org>
+Link: https://lore.kernel.org/r/20200423102431.2715-1-stephan@gerhold.net
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-meson-g12a.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/mms114.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-index b81d085bc534c..2d257bdfe8485 100644
---- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -525,7 +525,9 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- 	/* Get dr_mode */
- 	priv->otg_mode = usb_get_dr_mode(dev);
+diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+index 2ef1adaed9afb..5bdf4ac1a3033 100644
+--- a/drivers/input/touchscreen/mms114.c
++++ b/drivers/input/touchscreen/mms114.c
+@@ -54,6 +54,7 @@
+ enum mms_type {
+ 	TYPE_MMS114	= 114,
+ 	TYPE_MMS152	= 152,
++	TYPE_MMS345L	= 345,
+ };
  
--	dwc3_meson_g12a_usb_init(priv);
-+	ret = dwc3_meson_g12a_usb_init(priv);
-+	if (ret)
-+		goto err_disable_clks;
+ struct mms114_data {
+@@ -250,6 +251,15 @@ static int mms114_get_version(struct mms114_data *data)
+ 	int error;
  
- 	/* Init PHYs */
- 	for (i = 0 ; i < PHY_COUNT ; ++i) {
+ 	switch (data->type) {
++	case TYPE_MMS345L:
++		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
++		if (error)
++			return error;
++
++		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x\n",
++			 buf[0], buf[1], buf[2]);
++		break;
++
+ 	case TYPE_MMS152:
+ 		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
+ 		if (error)
+@@ -287,8 +297,8 @@ static int mms114_setup_regs(struct mms114_data *data)
+ 	if (error < 0)
+ 		return error;
+ 
+-	/* MMS152 has no configuration or power on registers */
+-	if (data->type == TYPE_MMS152)
++	/* Only MMS114 has configuration and power on registers */
++	if (data->type != TYPE_MMS114)
+ 		return 0;
+ 
+ 	error = mms114_set_active(data, true);
+@@ -597,6 +607,9 @@ static const struct of_device_id mms114_dt_match[] = {
+ 	}, {
+ 		.compatible = "melfas,mms152",
+ 		.data = (void *)TYPE_MMS152,
++	}, {
++		.compatible = "melfas,mms345l",
++		.data = (void *)TYPE_MMS345L,
+ 	},
+ 	{ }
+ };
 -- 
 2.25.1
 
