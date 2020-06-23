@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC44C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57052C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A07B20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E19020656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945158;
-	bh=3Ob8pXuAG12RcidzX5/UkCv6xb4eoYNzwyVZ7XKkcCo=;
+	s=default; t=1592945167;
+	bh=VDpoRRqnG5j5UuTahOZVlHdffJFEYj7+m59b2DsLsac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C3vVud7S13Y8hRIUD+k1JItkAXn7JDG4oidnWAPnjnDsFHWgdH5BdlXr77tJjSwSn
-	 3Hb4tOZxSrmXnKLCJQVJ/nEZZePg9Jt90gRvZZdhai9hlb7HfXl1WU1hx45ZB7yTAA
-	 63HSKIre50C3N/q5C/ViRjqF9IKa6lGQNU37nktM=
+	b=pLFinCjJD/0jUloXxU0/SdBlGCTTYlQbmwU8gqJU02OlxegNqCV5TndpWTFeWDQJk
+	 k0oe1Q0CiUr+9bs7HXkXG5YzNrVVR6j4FqMjAT6g8SMPBwL7sIWnzXSZyKlMrSz0E8
+	 BnHuhaEYVIT1pU4m5SGVP0mJwImIcZzUUu4380Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392791AbgFWUpz (ORCPT
+        id S2404015AbgFWUqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43552 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:46:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392778AbgFWUpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:45:52 -0400
+        id S2392131AbgFWUqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:46:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1119921548;
-        Tue, 23 Jun 2020 20:45:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F40C20656;
+        Tue, 23 Jun 2020 20:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945152;
-        bh=3Ob8pXuAG12RcidzX5/UkCv6xb4eoYNzwyVZ7XKkcCo=;
+        s=default; t=1592945160;
+        bh=VDpoRRqnG5j5UuTahOZVlHdffJFEYj7+m59b2DsLsac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IdYv0mY2HA+l/IFMJaKoCYzREjrhbo04RjsrN2c2IkHC4KgwOCLi4Z9hCI7nO+vGM
-         LDsW8XSL8FwMGZ2ViJ0n4adM/VPLzLXs1t/0ygo6RdYlv1T7siuA31gOWH2PXod7Mq
-         oPZh0ng82vi0cw2zZQ5YvqF0J9Jzv2Gm/zBcQLJQ=
+        b=aqOxi/lBJkDBDicwgxHPukm54h2IH3kiKv/xzz+kc60eZ3gdf0vEngRJeqOlQRw7P
+         jJwR0mZcvdgp1zy6yWalDlCgNEJQg8QCSCVvV5wbiNOIZ70grk/vrfxyclgogThP41
+         ASOe6MX/Nri8FEPEBEdfGKKRo89po69qwqEO44gc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Oliver Neukum <oneukum@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 059/136] powerpc/ps3: Fix kexec shutdown hang
-Date:   Tue, 23 Jun 2020 21:58:35 +0200
-Message-Id: <20200623195306.653644308@linuxfoundation.org>
+Subject: [PATCH 4.14 061/136] usb/ohci-platform: Fix a warning when hibernating
+Date:   Tue, 23 Jun 2020 21:58:37 +0200
+Message-Id: <20200623195306.759097665@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,81 +64,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geoff Levand <geoff@infradead.org>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit 126554465d93b10662742128918a5fc338cda4aa ]
+[ Upstream commit 1cb3b0095c3d0bb96912bfbbce4fc006d41f367c ]
 
-The ps3_mm_region_destroy() and ps3_mm_vas_destroy() routines
-are called very late in the shutdown via kexec's mmu_cleanup_all
-routine.  By the time mmu_cleanup_all runs it is too late to use
-udbg_printf, and calling it will cause PS3 systems to hang.
+The following warning was observed when attempting to suspend to disk
+using a USB flash as a swap device.
 
-Remove all debugging statements from ps3_mm_region_destroy() and
-ps3_mm_vas_destroy() and replace any error reporting with calls
-to lv1_panic.
+[  111.779649] ------------[ cut here ]------------
+[  111.788382] URB (____ptrval____) submitted while active
+[  111.796646] WARNING: CPU: 3 PID: 365 at drivers/usb/core/urb.c:363 usb_submit_urb+0x3d8/0x590
+[  111.805417] Modules linked in:
+[  111.808584] CPU: 3 PID: 365 Comm: kworker/3:2 Not tainted 5.6.0-rc6-00002-gdfd1731f9a3e-dirty #545
+[  111.817796] Hardware name: ARM Juno development board (r2) (DT)
+[  111.823896] Workqueue: usb_hub_wq hub_event
+[  111.828217] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  111.833156] pc : usb_submit_urb+0x3d8/0x590
+[  111.837471] lr : usb_submit_urb+0x3d8/0x590
+[  111.841783] sp : ffff800018de38b0
+[  111.845205] x29: ffff800018de38b0 x28: 0000000000000003
+[  111.850682] x27: ffff000970530b20 x26: ffff8000133fd000
+[  111.856159] x25: ffff8000133fd000 x24: ffff800018de3b38
+[  111.861635] x23: 0000000000000004 x22: 0000000000000c00
+[  111.867112] x21: 0000000000000000 x20: 00000000fffffff0
+[  111.872589] x19: ffff0009704e7a00 x18: ffffffffffffffff
+[  111.878065] x17: 00000000a7c8f4bc x16: 000000002af33de8
+[  111.883542] x15: ffff8000133fda88 x14: 0720072007200720
+[  111.889019] x13: 0720072007200720 x12: 0720072007200720
+[  111.894496] x11: 0000000000000000 x10: 00000000a5286134
+[  111.899973] x9 : 0000000000000002 x8 : ffff000970c837a0
+[  111.905449] x7 : 0000000000000000 x6 : ffff800018de3570
+[  111.910926] x5 : 0000000000000001 x4 : 0000000000000003
+[  111.916401] x3 : 0000000000000000 x2 : ffff800013427118
+[  111.921879] x1 : 9d4e965b4b7d7c00 x0 : 0000000000000000
+[  111.927356] Call trace:
+[  111.929892]  usb_submit_urb+0x3d8/0x590
+[  111.933852]  hub_activate+0x108/0x7f0
+[  111.937633]  hub_resume+0xac/0x148
+[  111.941149]  usb_resume_interface.isra.10+0x60/0x138
+[  111.946265]  usb_resume_both+0xe4/0x140
+[  111.950225]  usb_runtime_resume+0x24/0x30
+[  111.954365]  __rpm_callback+0xdc/0x138
+[  111.958236]  rpm_callback+0x34/0x98
+[  111.961841]  rpm_resume+0x4a8/0x720
+[  111.965445]  rpm_resume+0x50c/0x720
+[  111.969049]  __pm_runtime_resume+0x4c/0xb8
+[  111.973276]  usb_autopm_get_interface+0x28/0x60
+[  111.977948]  hub_event+0x80/0x16d8
+[  111.981466]  process_one_work+0x2a4/0x748
+[  111.985604]  worker_thread+0x48/0x498
+[  111.989387]  kthread+0x13c/0x140
+[  111.992725]  ret_from_fork+0x10/0x18
+[  111.996415] irq event stamp: 354
+[  111.999756] hardirqs last  enabled at (353): [<ffff80001019ea1c>] console_unlock+0x504/0x5b8
+[  112.008441] hardirqs last disabled at (354): [<ffff8000100a95d0>] do_debug_exception+0x1a8/0x258
+[  112.017479] softirqs last  enabled at (350): [<ffff8000100818a4>] __do_softirq+0x4bc/0x568
+[  112.025984] softirqs last disabled at (343): [<ffff8000101145a4>] irq_exit+0x144/0x150
+[  112.034129] ---[ end trace dc96030b9cf6c8a3 ]---
 
-With this change builds with 'DEBUG' defined will not cause kexec
-reboots to hang, and builds with 'DEBUG' defined or not will end
-in lv1_panic if an error is encountered.
+The problem was tracked down to a missing call to
+pm_runtime_set_active() on resume in ohci-platform.
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/7325c4af2b4c989c19d6a26b90b1fec9c0615ddf.1589049250.git.geoff@infradead.org
+Link: https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Tony Prisk <linux@prisktech.co.nz>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mathias Nyman <mathias.nyman@intel.com>
+CC: Oliver Neukum <oneukum@suse.de>
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-usb@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20200518154931.6144-1-qais.yousef@arm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/ps3/mm.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/usb/host/ohci-platform.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
-index b0f34663b1aec..19bae78b1f25b 100644
---- a/arch/powerpc/platforms/ps3/mm.c
-+++ b/arch/powerpc/platforms/ps3/mm.c
-@@ -212,13 +212,14 @@ void ps3_mm_vas_destroy(void)
- {
- 	int result;
- 
--	DBG("%s:%d: map.vas_id    = %llu\n", __func__, __LINE__, map.vas_id);
--
- 	if (map.vas_id) {
- 		result = lv1_select_virtual_address_space(0);
--		BUG_ON(result);
--		result = lv1_destruct_virtual_address_space(map.vas_id);
--		BUG_ON(result);
-+		result += lv1_destruct_virtual_address_space(map.vas_id);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		map.vas_id = 0;
+diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+index 61fe2b985070f..742cefa22c2b5 100644
+--- a/drivers/usb/host/ohci-platform.c
++++ b/drivers/usb/host/ohci-platform.c
+@@ -355,6 +355,11 @@ static int ohci_platform_resume(struct device *dev)
  	}
+ 
+ 	ohci_resume(hcd, false);
++
++	pm_runtime_disable(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
+ 	return 0;
  }
-@@ -316,19 +317,20 @@ static void ps3_mm_region_destroy(struct mem_region *r)
- 	int result;
- 
- 	if (!r->destroy) {
--		pr_info("%s:%d: Not destroying high region: %llxh %llxh\n",
--			__func__, __LINE__, r->base, r->size);
- 		return;
- 	}
- 
--	DBG("%s:%d: r->base = %llxh\n", __func__, __LINE__, r->base);
--
- 	if (r->base) {
- 		result = lv1_release_memory(r->base);
--		BUG_ON(result);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		r->size = r->base = r->offset = 0;
- 		map.total = map.rm.size;
- 	}
-+
- 	ps3_mm_set_repository_highmem(NULL);
- }
- 
+ #endif /* CONFIG_PM_SLEEP */
 -- 
 2.25.1
 
