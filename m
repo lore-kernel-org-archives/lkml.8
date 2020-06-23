@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D05AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3EF20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97D920656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945832;
-	bh=eCIISwX8b9C15X9TqAuD6sELfLxLdfmbumORZ1Z8M3g=;
+	s=default; t=1592945834;
+	bh=Xyq7Rd3xJ9lMMJTvTVShejbG5V6YJWXpQdHVzdJB8gQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJ43Pg6Uackb/rKXa/kg0qNNCKTrGYvgAadtwLZj7J9TEC27e2iSBAr5QXtNZsvrs
-	 o52UYgEIVmecDrf/G1Q/VW0mahv75NN75srdWvzlTEInHgmjzb/U+sUozofzRdexQa
-	 M1IyznU0RsDdrcT85y2VMIdtJ0T5iRFcmHvGr/nI=
+	b=gOPDULYNy0mMHe1d5IsF0PqyhbI2ydZ8LCK2lFzLNbDl3SvlMdXsF0wXroqAxdr4G
+	 Li63XdcsYFyVTfzKg4aMpmxX9YMu4b5rsGqVRcV38JoPhXZso44a9iZmKJse1PNZqb
+	 9IFZTSBq4E0xer9f8MW+XCP0m+Z1Y1+TJ4OsTI78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393094AbgFWU5L (ORCPT
+        id S2392467AbgFWUm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:57:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392469AbgFWUm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:59 -0400
+        id S2389956AbgFWUmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5471C218AC;
-        Tue, 23 Jun 2020 20:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA60F2070E;
+        Tue, 23 Jun 2020 20:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944979;
-        bh=eCIISwX8b9C15X9TqAuD6sELfLxLdfmbumORZ1Z8M3g=;
+        s=default; t=1592944972;
+        bh=Xyq7Rd3xJ9lMMJTvTVShejbG5V6YJWXpQdHVzdJB8gQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=biNzA4/5iNKtLq/mTrEcIqrrBezllO1QUHhcu82qp6j0beJzrotfzbbOnkNjEXVeU
-         5a1SnF/DJ1x2FsdwofTWFQ7XexiMkvkh1bwTiWyorbQg4lESNEPi+piUsUe8siZUSf
-         mIXti0z4BPt9Dzs3v/tiKnqAHIXIRumOa3qZpOtE=
+        b=G7grFQWUnVpcj5gBqOuvaBEup6/8X9CHp8YTdVcS64I3b+EwrsHY0xXCh6pppyAy1
+         UyT3caom8W4Mqpq2/kfR35jD/a+F8jO7zAcJkNhfJc0XN4Qxa/2yUroRP73h9K1Wnt
+         sBpugfNRQJYw72iAwOPxWZi1NfGQkbL6PMb0MCu4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 159/206] x86/idt: Keep spurious entries unset in system_vectors
-Date:   Tue, 23 Jun 2020 21:58:07 +0200
-Message-Id: <20200623195324.811460432@linuxfoundation.org>
+Subject: [PATCH 4.19 166/206] ext4: stop overwrite the errcode in ext4_setup_super
+Date:   Tue, 23 Jun 2020 21:58:14 +0200
+Message-Id: <20200623195325.173015774@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,50 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: yangerkun <yangerkun@huawei.com>
 
-[ Upstream commit 1f1fbc70c10e81f70e9fbe2102d439c883269811 ]
+[ Upstream commit 5adaccac46ea79008d7b75f47913f1a00f91d0ce ]
 
-With commit dc20b2d52653 ("x86/idt: Move interrupt gate initialization to
-IDT code") non assigned system vectors are also marked as used in
-'used_vectors' (now 'system_vectors') bitmap. This makes checks in
-arch_show_interrupts() whether a particular system vector is allocated to
-always pass and e.g. 'Hyper-V reenlightenment interrupts' entry always
-shows up in /proc/interrupts.
+Now the errcode from ext4_commit_super will overwrite EROFS exists in
+ext4_setup_super. Actually, no need to call ext4_commit_super since we
+will return EROFS. Fix it by goto done directly.
 
-Another side effect of having all unassigned system vectors marked as used
-is that irq_matrix_debug_show() will wrongly count them among 'System'
-vectors.
-
-As it is now ensured that alloc_intr_gate() is not called after init, it is
-possible to leave unused entries in 'system_vectors' unset to fix these
-issues.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200428093824.1451532-4-vkuznets@redhat.com
+Fixes: c89128a00838 ("ext4: handle errors on ext4_commit_super")
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200601073404.3712492-1-yangerkun@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/idt.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/ext4/super.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index a7e0e975043fd..e1f9355307b81 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -320,7 +320,11 @@ void __init idt_setup_apic_and_irq_gates(void)
- 
- #ifdef CONFIG_X86_LOCAL_APIC
- 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
--		set_bit(i, system_vectors);
-+		/*
-+		 * Don't set the non assigned system vectors in the
-+		 * system_vectors bitmap. Otherwise they show up in
-+		 * /proc/interrupts.
-+		 */
- 		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
- 		set_intr_gate(i, entry);
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 93c14ecac831e..affccf55294e9 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2249,6 +2249,7 @@ static int ext4_setup_super(struct super_block *sb, struct ext4_super_block *es,
+ 		ext4_msg(sb, KERN_ERR, "revision level too high, "
+ 			 "forcing read-only mode");
+ 		err = -EROFS;
++		goto done;
  	}
+ 	if (read_only)
+ 		goto done;
 -- 
 2.25.1
 
