@@ -2,125 +2,107 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD09C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AB4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 236782076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592871800;
-	bh=QdyVEtKG5bZE6YpANneYBroHwKvjQwPmzpo9lmFsayU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/QiCdi9WPwGpauYh7BeBVEoXBER1EmQPtstUpjr3ifaAUeSQSCCwpmPVWSvtHhTd
-	 ID9uYrypA6zg6gSWYBPUz5TmpPiQrKEFvwYmCIW9n3LuSZqbLnE3AeWEfxUd/06N4v
-	 aajMtmlKr1ZvGaKPoxtnrw3tu0gp1fNAWhLnGp8A=
+	by mail.kernel.org (Postfix) with ESMTP id 3ECC720702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RXqewzIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731812AbgFWAXS (ORCPT
+        id S1731675AbgFWAYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:23:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731416AbgFWAVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:21:50 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EE77207F5;
-        Tue, 23 Jun 2020 00:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592871710;
-        bh=QdyVEtKG5bZE6YpANneYBroHwKvjQwPmzpo9lmFsayU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jnifzw2SYUH+kxojlQPNqL1/nuv0hZ8a81YuhfNA/f8VVBuZjrYI7rfL87Queeu1c
-         Vc8cI++4N/r9htg/+4l6oIa2n2ziADVCG2NqZYyli1q88YehSybLxtDwFlIReDg016
-         qB0H3tH8LhZWMNPQKriG+Dtt+b/5uLQhqfkJrueI=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 04/26] rcu: Add callbacks-invoked counters
-Date:   Mon, 22 Jun 2020 17:21:25 -0700
-Message-Id: <20200623002147.25750-4-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200623002128.GA25456@paulmck-ThinkPad-P72>
-References: <20200623002128.GA25456@paulmck-ThinkPad-P72>
+        Mon, 22 Jun 2020 20:24:01 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49716 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730987AbgFWAYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:24:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592871839;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NahUiJQzDT4T5YVMvJMh+ukesK3KvitTEMq94zE6mM8=;
+        b=RXqewzIkpO9wLHq1oNOhj8kcqBFJVDy63fqHbkPH+jnIne+jkcADPMFklqfqCnGz23kD3h
+        Qv3CzxdM278sAPHaxLLDFcDXw2ggsdn+hlHmEfIM4rFqG6kGTJ3KG1Y8o7gLKIMapdwdL8
+        C3wqVM2w0yrva+9x6dA0zJMNL7Bli14=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-428-MPKLF5hKMXu7ClMOwVwYfQ-1; Mon, 22 Jun 2020 20:23:56 -0400
+X-MC-Unique: MPKLF5hKMXu7ClMOwVwYfQ-1
+Received: by mail-wr1-f72.google.com with SMTP id j5so10175357wro.6
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:23:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NahUiJQzDT4T5YVMvJMh+ukesK3KvitTEMq94zE6mM8=;
+        b=nppQpvCzJId3+J+X/ike7ZOjouMn1Gw1U4vez2OALC8kfgzWa24FB4ssrodlBb9QWX
+         H9uHEEyjPsNDQ9B0Y515UfuaHfAbmwMTtt7ATeopC3yJxm106URKovV4awncSwKGiBBg
+         tDm3Z1bXDo+aFGH+DUcD5U5LDmi3VY3myv242WpKnwxwH5NssKUe5HJwp/Jdxz+dxFVD
+         33nRPaXyDUL35I0V70kSIG5fGi55LtOgBVwwGx/YzItHfZIxhLo9QSDeQNaBiaSLR5YZ
+         3Hc6qquaQzRbSP+92j2L2c7ckPScsFXbZ0WfuZwiB7JjGzTr0CTP4azqSrAJU2pyLmMy
+         5Odg==
+X-Gm-Message-State: AOAM530RK7qxtHV1yhYINz/H3OaCD9ljujDgWxYg0SW240LKk6IleO7a
+        brKc9vgrOP8MVJdNyY6MW3ItgwjwvuLKQAUCUb6ml0RWw8ctk/5YJJ7DBSvGulFIouA2oS/UBXC
+        e7JUnBeqFbrecwyecjieO8mJC
+X-Received: by 2002:a1c:9d07:: with SMTP id g7mr9834357wme.160.1592871834868;
+        Mon, 22 Jun 2020 17:23:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy9X5tQCXeIJHnr5kL8QlKHGaaTuNECyqcOl4C6xBySPZ8QwnGYQom1PDI3LxchqhObFc9j0g==
+X-Received: by 2002:a1c:9d07:: with SMTP id g7mr9834332wme.160.1592871834573;
+        Mon, 22 Jun 2020 17:23:54 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
+        by smtp.gmail.com with ESMTPSA id h14sm4124267wrt.36.2020.06.22.17.23.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 17:23:54 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86/mmu: Don't put invalid SPs back on the list of
+ active pages
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200622191850.8529-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d1916978-6efb-2839-d45a-c39ff2f6dc1f@redhat.com>
+Date:   Tue, 23 Jun 2020 02:23:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200622191850.8529-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On 22/06/20 21:18, Sean Christopherson wrote:
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index fdd05c233308..fa5bd3f987dd 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -2757,10 +2757,13 @@ static bool __kvm_mmu_prepare_zap_page(struct kvm *kvm,
+>  	if (!sp->root_count) {
+>  		/* Count self */
+>  		(*nr_zapped)++;
+> -		list_move(&sp->link, invalid_list);
+> +		if (sp->role.invalid)
+> +			list_add(&sp->link, invalid_list);
+> +		else
+> +			list_move(&sp->link, invalid_list);
 
-This commit adds a count of the callbacks invoked to the per-CPU rcu_data
-structure.  This count is printed by the show_rcu_gp_kthreads() that
-is invoked by rcutorture and the RCU CPU stall-warning code.  It is also
-intended for use by drgn.
+It's late here, but I think this part needs a comment anyway...
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/rcu/tree.c       | 1 +
- kernel/rcu/tree.h       | 1 +
- kernel/rcu/tree_stall.h | 3 +++
- 3 files changed, 5 insertions(+)
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 9caaeee..db17ffe 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2425,6 +2425,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
- 	local_irq_save(flags);
- 	rcu_nocb_lock(rdp);
- 	count = -rcl.len;
-+	rdp->n_cbs_invoked += count;
- 	trace_rcu_batch_end(rcu_state.name, count, !!rcl.head, need_resched(),
- 			    is_idle_task(current), rcu_is_callbacks_kthread());
- 
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 43991a4..9c6f734 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -171,6 +171,7 @@ struct rcu_data {
- 					/* different grace periods. */
- 	long		qlen_last_fqs_check;
- 					/* qlen at last check for QS forcing */
-+	unsigned long	n_cbs_invoked;	/* # callbacks invoked since boot. */
- 	unsigned long	n_force_qs_snap;
- 					/* did other CPU force QS recently? */
- 	long		blimit;		/* Upper limit on a processed batch */
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index 54a6dba..2768ce6 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -649,6 +649,7 @@ static void check_cpu_stall(struct rcu_data *rdp)
-  */
- void show_rcu_gp_kthreads(void)
- {
-+	unsigned long cbs = 0;
- 	int cpu;
- 	unsigned long j;
- 	unsigned long ja;
-@@ -690,9 +691,11 @@ void show_rcu_gp_kthreads(void)
- 	}
- 	for_each_possible_cpu(cpu) {
- 		rdp = per_cpu_ptr(&rcu_data, cpu);
-+		cbs += data_race(rdp->n_cbs_invoked);
- 		if (rcu_segcblist_is_offloaded(&rdp->cblist))
- 			show_rcu_nocb_state(rdp);
- 	}
-+	pr_info("RCU callbacks invoked since boot: %lu\n", cbs);
- 	show_rcu_tasks_gp_kthreads();
- }
- EXPORT_SYMBOL_GPL(show_rcu_gp_kthreads);
--- 
-2.9.5
+Paolo
 
