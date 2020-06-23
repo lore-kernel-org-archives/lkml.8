@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD07CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9EB320EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A2D20EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943377;
-	bh=hBnhPaUOIXD6v875OOpOmRPlaTzi8Xe4/zZSGViND5g=;
+	s=default; t=1592943380;
+	bh=yCnnmnrL8bLn9e8bY/dSWzWtulChL8RsibXQVL+oxy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUZM5mFO54sjCoSCNGDwZJuSC6RHgOb6ryHeSuU11fHs4l94oumWoXaiTopdWyVVS
-	 DhtJEAnha0b2SWNOxfpwUwhYrwfTCaR8AwTmM8dyLe4vWnsJQCb6HFtUX7rI3a0ZN7
-	 5DVfmbAjBInWVYddkZPmADY1PzXXbVwVp592e0iI=
+	b=XBq2AaPMrwWuj6aMTnpJ+oNyYzXabKotT64rEeEXwGu/1FKQCSRE8So6lexquvYgV
+	 fnKxP0zuuO5sWmWFqSopHehE291x3AEfEzo/Hb4qbuB4X7YYXu5d0uFgg0/uT7SGtI
+	 xAj5RJCvriviOX+N8TDTzZB+w0LMg7ZHAQRSh+pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389395AbgFWUQP (ORCPT
+        id S2387884AbgFWUQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:16:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389108AbgFWUQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:12 -0400
+        id S2389393AbgFWUQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:16:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C2B20EDD;
-        Tue, 23 Jun 2020 20:16:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F145720702;
+        Tue, 23 Jun 2020 20:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943372;
-        bh=hBnhPaUOIXD6v875OOpOmRPlaTzi8Xe4/zZSGViND5g=;
+        s=default; t=1592943375;
+        bh=yCnnmnrL8bLn9e8bY/dSWzWtulChL8RsibXQVL+oxy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0k5WOgRaeufzRqn/LhCLBhuaKwWsldBF6m3LK5dZCNQl7M8OMC+QDxuv5uLOIZOj2
-         SOUr3Nwj5p9t9R6xnqOh5gp3K9KAeBjFzHbFyb0iqf2kmBuZs2Qh8nMzKZP5E6743E
-         /Iek57GA2yQ1MpN4U2PptpzaKZ0bN42p53POfBUA=
+        b=D2I/vyQudOnkmP2uB4Beb5x9DBDSOUcjplCHbVaa9xskkvr9504nfSV/QqF+pMZ9T
+         ARgouPxdK0jLpq4Cg8jSVfrFRrQWuYuDTQn0eireMcyQyMXdUQd9ifm9+XUrf2+qz6
+         Pbu0cwttl+tIMGJg8t/6Xj8FGMNoTyQThlFvGe/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 365/477] drm/ast: fix missing break in switch statement for format->cpp[0] case 4
-Date:   Tue, 23 Jun 2020 21:56:02 +0200
-Message-Id: <20200623195424.785533273@linuxfoundation.org>
+Subject: [PATCH 5.7 366/477] x86/idt: Keep spurious entries unset in system_vectors
+Date:   Tue, 23 Jun 2020 21:56:03 +0200
+Message-Id: <20200623195424.832785282@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,38 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 291ddeb621e4a9f1ced8302a777fbd7fbda058c6 ]
+[ Upstream commit 1f1fbc70c10e81f70e9fbe2102d439c883269811 ]
 
-Currently the switch statement for format->cpp[0] value 4 assigns
-color_index which is never read again and then falls through to the
-default case and returns. This looks like a missing break statement
-bug. Fix this by adding a break statement.
+With commit dc20b2d52653 ("x86/idt: Move interrupt gate initialization to
+IDT code") non assigned system vectors are also marked as used in
+'used_vectors' (now 'system_vectors') bitmap. This makes checks in
+arch_show_interrupts() whether a particular system vector is allocated to
+always pass and e.g. 'Hyper-V reenlightenment interrupts' entry always
+shows up in /proc/interrupts.
 
-Addresses-Coverity: ("Unused value")
-Fixes: 259d14a76a27 ("drm/ast: Split ast_set_vbios_mode_info()")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200610115804.1132338-1-colin.king@canonical.com
+Another side effect of having all unassigned system vectors marked as used
+is that irq_matrix_debug_show() will wrongly count them among 'System'
+vectors.
+
+As it is now ensured that alloc_intr_gate() is not called after init, it is
+possible to leave unused entries in 'system_vectors' unset to fix these
+issues.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200428093824.1451532-4-vkuznets@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ast/ast_mode.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/idt.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 7a9f20a2fd303..fbf0ef58385db 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -226,6 +226,7 @@ static void ast_set_vbios_color_reg(struct ast_private *ast,
- 	case 3:
- 	case 4:
- 		color_index = TrueCModeIndex;
-+		break;
- 	default:
- 		return;
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 87ef69a72c52e..7bb4c3cbf4dcd 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -318,7 +318,11 @@ void __init idt_setup_apic_and_irq_gates(void)
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
+-		set_bit(i, system_vectors);
++		/*
++		 * Don't set the non assigned system vectors in the
++		 * system_vectors bitmap. Otherwise they show up in
++		 * /proc/interrupts.
++		 */
+ 		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
+ 		set_intr_gate(i, entry);
  	}
 -- 
 2.25.1
