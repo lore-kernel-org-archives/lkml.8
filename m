@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A37EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 310182078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581D72078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948164;
-	bh=k3tlRRhC1fTflnib/pAr4fMixtp8WBqHsMHjw6kq2BM=;
+	s=default; t=1592948173;
+	bh=oI11+UeCNAjXbuWH90HC9sblP0vXUeNVYXJNIZhvkVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uL+jkZaiv98+wMc1kl+RE3woFTyHFrn8/X0fH8AFBPXgd9VaMXGzeBpjxC6zvtpX1
-	 lgK25OaQrBGgHUsKvn/RS1A4HpJ6qmecv9VAbcHQY0OkGr/piYpzGCBrJTUZTOt9O3
-	 0+wzaktJdc10oXol5gD905/IwTSzkhoDuLIBReJQ=
+	b=NqM+lqEdB/EmYpQjmPTTe2easxZPqgPyW0T5cnuf6e+LGjizPgqI2zylU5faL/5Gg
+	 sBF2iOZimjylixlKxBwfvcUMcWUIwAXdrHxPbdwoRNLO49UYoCo5YxN8bUbvSZiPkS
+	 iYgbpYD0j6TJvB9zRfTz/q+9Pwi3SX7a2HDbz4+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389157AbgFWVgD (ORCPT
+        id S2388307AbgFWVgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51258 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388320AbgFWUKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:10:05 -0400
+        id S2388396AbgFWUKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:10:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A5182078A;
-        Tue, 23 Jun 2020 20:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A8720EDD;
+        Tue, 23 Jun 2020 20:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943005;
-        bh=k3tlRRhC1fTflnib/pAr4fMixtp8WBqHsMHjw6kq2BM=;
+        s=default; t=1592943002;
+        bh=oI11+UeCNAjXbuWH90HC9sblP0vXUeNVYXJNIZhvkVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEFlUqydHQWVdOgD6Tj0gm4tpg5CR+KLKCe6NfIRcGWtGWJj2REnkNaiQbaQxZtCh
-         erA5ZaaxN10INX4dUDYtXZ/DGZxjJukYj+JJOLyutu43fg0BLQJzWedcD8/vMUyZjq
-         NXy8aYkD6ZkX9PdhgVMVwO9D5jS2XIgijmX7VICk=
+        b=x5EDxhkI9Awk1MZTGFrB8cRmL3ppnjyJS/N0K+RdqlvhJzryuSX02dR84c7uaCEwO
+         g2lSZhJ6hcQ5W9pHtM7oLDsUJZUeNXnRQFtZaOs/7B5qjlPksCFlGr5e9sjyKPB6Pk
+         yH2l/ZPPHxEpg5kaSBBY3GeNwexXnEke8RL+BwwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bharat Gooty <bharat.gooty@broadcom.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 221/477] drivers: phy: sr-usb: do not use internal fsm for USB2 phy init
-Date:   Tue, 23 Jun 2020 21:53:38 +0200
-Message-Id: <20200623195418.030120423@linuxfoundation.org>
+Subject: [PATCH 5.7 220/477] PCI: aardvark: Issue PERST via GPIO
+Date:   Tue, 23 Jun 2020 21:53:37 +0200
+Message-Id: <20200623195417.984616032@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,148 +62,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharat Gooty <bharat.gooty@broadcom.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit 6f0577d1411337a0d97d545abe4a784e9e611516 ]
+[ Upstream commit 5169a9851daaa2782a7bd2bb83d5b1bd224b2879 ]
 
-During different reboot cycles, USB PHY PLL may not always lock
-during initialization and therefore can cause USB to be not usable.
+Add support for issuing PERST via GPIO specified in 'reset-gpios'
+property (as described in PCI device tree bindings).
 
-Hence do not use internal FSM programming sequence for the USB
-PHY initialization.
+Some buggy cards (e.g. Compex WLE900VX or WLE1216) are not detected
+after reboot when PERST is not issued during driver initialization.
 
-Fixes: 4dcddbb38b64 ("phy: sr-usb: Add Stingray USB PHY driver")
-Signed-off-by: Bharat Gooty <bharat.gooty@broadcom.com>
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Link: https://lore.kernel.org/r/20200513173947.10919-1-rayagonda.kokatanur@broadcom.com
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+If bootloader already enabled link training then issuing PERST has no
+effect for some buggy cards (e.g. Compex WLE900VX) and these cards are
+not detected. We therefore clear the LINK_TRAINING_EN register before.
+
+It was observed that Compex WLE900VX card needs to be in PERST reset
+for at least 10ms if bootloader enabled link training.
+
+Tested on Turris MOX.
+
+Link: https://lore.kernel.org/r/20200430080625.26070-6-pali@kernel.org
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/broadcom/phy-bcm-sr-usb.c | 55 +--------------------------
- 1 file changed, 2 insertions(+), 53 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 43 ++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-index fe6c58910e4cb..7c7862b4f41f0 100644
---- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
-+++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-@@ -16,8 +16,6 @@ enum bcm_usb_phy_version {
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index e202f954eb84e..2ecc79c03ade1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/delay.h>
++#include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+@@ -18,6 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
++#include <linux/of_gpio.h>
+ #include <linux/of_pci.h>
+ 
+ #include "../pci.h"
+@@ -204,6 +206,7 @@ struct advk_pcie {
+ 	int root_bus_nr;
+ 	int link_gen;
+ 	struct pci_bridge_emul bridge;
++	struct gpio_desc *reset_gpio;
  };
  
- enum bcm_usb_phy_reg {
--	PLL_NDIV_FRAC,
--	PLL_NDIV_INT,
- 	PLL_CTRL,
- 	PHY_CTRL,
- 	PHY_PLL_CTRL,
-@@ -31,18 +29,11 @@ static const u8 bcm_usb_combo_phy_ss[] = {
- };
+ static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
+@@ -330,10 +333,31 @@ err:
+ 	dev_err(dev, "link never came up\n");
+ }
  
- static const u8 bcm_usb_combo_phy_hs[] = {
--	[PLL_NDIV_FRAC]	= 0x04,
--	[PLL_NDIV_INT]	= 0x08,
- 	[PLL_CTRL]	= 0x0c,
- 	[PHY_CTRL]	= 0x10,
- };
++static void advk_pcie_issue_perst(struct advk_pcie *pcie)
++{
++	u32 reg;
++
++	if (!pcie->reset_gpio)
++		return;
++
++	/* PERST does not work for some cards when link training is enabled */
++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
++	reg &= ~LINK_TRAINING_EN;
++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
++
++	/* 10ms delay is needed for some cards */
++	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
++	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
++	usleep_range(10000, 11000);
++	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
++}
++
+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ {
+ 	u32 reg;
  
--#define HSPLL_NDIV_INT_VAL	0x13
--#define HSPLL_NDIV_FRAC_VAL	0x1005
--
- static const u8 bcm_usb_hs_phy[] = {
--	[PLL_NDIV_FRAC]	= 0x0,
--	[PLL_NDIV_INT]	= 0x4,
- 	[PLL_CTRL]	= 0x8,
- 	[PHY_CTRL]	= 0xc,
- };
-@@ -52,7 +43,6 @@ enum pll_ctrl_bits {
- 	SSPLL_SUSPEND_EN,
- 	PLL_SEQ_START,
- 	PLL_LOCK,
--	PLL_PDIV,
- };
++	advk_pcie_issue_perst(pcie);
++
+ 	/* Set to Direct mode */
+ 	reg = advk_readl(pcie, CTRL_CONFIG_REG);
+ 	reg &= ~(CTRL_MODE_MASK << CTRL_MODE_SHIFT);
+@@ -406,7 +430,8 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
  
- static const u8 u3pll_ctrl[] = {
-@@ -66,29 +56,17 @@ static const u8 u3pll_ctrl[] = {
- #define HSPLL_PDIV_VAL		0x1
+ 	/*
+ 	 * PERST# signal could have been asserted by pinctrl subsystem before
+-	 * probe() callback has been called, making the endpoint going into
++	 * probe() callback has been called or issued explicitly by reset gpio
++	 * function advk_pcie_issue_perst(), making the endpoint going into
+ 	 * fundamental reset. As required by PCI Express spec a delay for at
+ 	 * least 100ms after such a reset before link training is needed.
+ 	 */
+@@ -1046,6 +1071,22 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	}
+ 	pcie->root_bus_nr = bus->start;
  
- static const u8 u2pll_ctrl[] = {
--	[PLL_PDIV]	= 1,
- 	[PLL_RESETB]	= 5,
- 	[PLL_LOCK]	= 6,
- };
- 
- enum bcm_usb_phy_ctrl_bits {
- 	CORERDY,
--	AFE_LDO_PWRDWNB,
--	AFE_PLL_PWRDWNB,
--	AFE_BG_PWRDWNB,
--	PHY_ISO,
- 	PHY_RESETB,
- 	PHY_PCTL,
- };
- 
- #define PHY_PCTL_MASK	0xffff
--/*
-- * 0x0806 of PCTL_VAL has below bits set
-- * BIT-8 : refclk divider 1
-- * BIT-3:2: device mode; mode is not effect
-- * BIT-1: soft reset active low
-- */
--#define HSPHY_PCTL_VAL	0x0806
- #define SSPHY_PCTL_VAL	0x0006
- 
- static const u8 u3phy_ctrl[] = {
-@@ -98,10 +76,6 @@ static const u8 u3phy_ctrl[] = {
- 
- static const u8 u2phy_ctrl[] = {
- 	[CORERDY]		= 0,
--	[AFE_LDO_PWRDWNB]	= 1,
--	[AFE_PLL_PWRDWNB]	= 2,
--	[AFE_BG_PWRDWNB]	= 3,
--	[PHY_ISO]		= 4,
- 	[PHY_RESETB]		= 5,
- 	[PHY_PCTL]		= 6,
- };
-@@ -186,38 +160,13 @@ static int bcm_usb_hs_phy_init(struct bcm_usb_phy_cfg *phy_cfg)
- 	int ret = 0;
- 	void __iomem *regs = phy_cfg->regs;
- 	const u8 *offset;
--	u32 rd_data;
- 
- 	offset = phy_cfg->offset;
- 
--	writel(HSPLL_NDIV_INT_VAL, regs + offset[PLL_NDIV_INT]);
--	writel(HSPLL_NDIV_FRAC_VAL, regs + offset[PLL_NDIV_FRAC]);
--
--	rd_data = readl(regs + offset[PLL_CTRL]);
--	rd_data &= ~(HSPLL_PDIV_MASK << u2pll_ctrl[PLL_PDIV]);
--	rd_data |= (HSPLL_PDIV_VAL << u2pll_ctrl[PLL_PDIV]);
--	writel(rd_data, regs + offset[PLL_CTRL]);
--
--	/* Set Core Ready high */
--	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
--			      BIT(u2phy_ctrl[CORERDY]));
--
--	/* Maximum timeout for Core Ready done */
--	msleep(30);
--
-+	bcm_usb_reg32_clrbits(regs + offset[PLL_CTRL],
-+			      BIT(u2pll_ctrl[PLL_RESETB]));
- 	bcm_usb_reg32_setbits(regs + offset[PLL_CTRL],
- 			      BIT(u2pll_ctrl[PLL_RESETB]));
--	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
--			      BIT(u2phy_ctrl[PHY_RESETB]));
--
--
--	rd_data = readl(regs + offset[PHY_CTRL]);
--	rd_data &= ~(PHY_PCTL_MASK << u2phy_ctrl[PHY_PCTL]);
--	rd_data |= (HSPHY_PCTL_VAL << u2phy_ctrl[PHY_PCTL]);
--	writel(rd_data, regs + offset[PHY_CTRL]);
--
--	/* Maximum timeout for PLL reset done */
--	msleep(30);
- 
- 	ret = bcm_usb_pll_lock_check(regs + offset[PLL_CTRL],
- 				     BIT(u2pll_ctrl[PLL_LOCK]));
++	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
++						       "reset-gpios", 0,
++						       GPIOD_OUT_LOW,
++						       "pcie1-reset");
++	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
++	if (ret) {
++		if (ret == -ENOENT) {
++			pcie->reset_gpio = NULL;
++		} else {
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "Failed to get reset-gpio: %i\n",
++					ret);
++			return ret;
++		}
++	}
++
+ 	ret = of_pci_get_max_link_speed(dev->of_node);
+ 	if (ret <= 0 || ret > 3)
+ 		pcie->link_gen = 3;
 -- 
 2.25.1
 
