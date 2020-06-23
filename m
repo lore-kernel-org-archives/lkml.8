@@ -2,134 +2,155 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B960420781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE47D20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E5nOfASC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iijPksou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387429AbgFWSj3 (ORCPT
+        id S2387455AbgFWSju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36732 "EHLO
+        Tue, 23 Jun 2020 14:39:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733291AbgFWSj2 (ORCPT
+        with ESMTP id S1733291AbgFWSju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:39:28 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3073C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:39:28 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id l9so5651700ilq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:39:28 -0700 (PDT)
+        Tue, 23 Jun 2020 14:39:50 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A8BC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:39:48 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id u23so17661950otq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:39:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MMSXyImcuZBfchMfbTmyyDTCpqvru9kfQ2n1P5epXmU=;
-        b=E5nOfASCg0KLZfYJnx0RJBrvw0hgcvN7agf/yEALoOKoOyqGyeo3GlF7vqZCUrEiIG
-         jRd0GMymTl2YWbQTClWJejZ5GGd///O97/aV/0gtqbPe5RnmLLIOkGdYXAVQuNqHCqs7
-         ZvH1YD9BnuVTb5ug86OCQpg7SBm54T6Cy9VdyUdQu8MMK7RQeBSIIkt2eXu7hp136ZOI
-         ilAkCuJ85pz6Wuh+oiozpw0Pz0+MgkDbQw1UsJjqUeHepSjJyrvwKSUUYGggdNv17iCe
-         iHkPhSEhV5F8Z1v96uSmRoU0pvlttTsVgI7o/GnpsV1WTeIeJRue/PFkFMQoaMJ8VIf7
-         ErLg==
+        bh=Z9Mv0PSZMGpAWk3UqJDbiXv8a+JYzUxjPXY8KHbS/hU=;
+        b=iijPksoun5xx2rBmnB5BFGt7QhPEMrBBzcpBa53UdPi/WXfZ/RM1EwWz88xyVWE2tH
+         lwdxOx87PRLPbpqxCuOOUK6r4qg2SX2F9iko4RLnrBo0FD4CvqGpwtBCey4NdL8Xjt5P
+         z/NnaQi6MSAvf31tnlAtJrzALovM15et5mYRXuMhAJw5q2FITuXra+NWmr5TRqPOgM06
+         KwONwYXzjSpvXwJl/mh+EL8rEG6F7w8hbInt8Fz3w705HtjRqg2g4Ksq6vSEn5IOuF0U
+         cdu9ETDvCStOMf56Uap6OhWaQBZgf/egDwjw141wQrW1KNlJvmL5stDOzDwc1B7n74cA
+         PUrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MMSXyImcuZBfchMfbTmyyDTCpqvru9kfQ2n1P5epXmU=;
-        b=slsuTTd8I4NsQqqmHYl/Jazsk9bJnDrr1Ls219Ztm8D68qbwv06WAZPd/M3QA8zm8U
-         eUOyhkSUj8yUG2W0A6JJqs5Gp+Ml66o8S+JijQRnD7LSLADV9BZ8mkakaT+dz8Z8z8xF
-         ACev/YcFXI7So5Zs0IWbKoByuiRMA89P145zy8/VIEyaBmBxEN1CMQQT3fwmMWW//5YV
-         1yhEitY8PZd2yc+55qE7KQo8x23ZX0Kh3r3eNEJlBqz0KYwzlCzi4P/EJ3UspmSXHqel
-         eHOjkO4zBO+o9aKSoKowzeE22IhjFGcCAQOMfKC7E3bh/UeswA94OIBlv4xhPfNgMLBU
-         wpyg==
-X-Gm-Message-State: AOAM530bykmNjsjrY6uYCj7Smz+pnDClLBE7I8uiMR1iH+Od8O6EEDTH
-        9pwg1yZVEd7Ho7GbiPAvm/sgS4utpuwV+FTKYH5BSg==
-X-Google-Smtp-Source: ABdhPJzaVCgxNpWBznUqrKseKsAXasxfjsVvnbxT8NFZdObtFa5g4xVCLJ/cORy0Q5LOHjGD4eSddehMr0u4RWuZigw=
-X-Received: by 2002:a05:6e02:cd:: with SMTP id r13mr18549799ilq.119.1592937567599;
- Tue, 23 Jun 2020 11:39:27 -0700 (PDT)
+        bh=Z9Mv0PSZMGpAWk3UqJDbiXv8a+JYzUxjPXY8KHbS/hU=;
+        b=OQSm25ziB8DEvMord2qqiB5uO9fqqhJwEN7cjjNTJDQRoD07obeaeCG62bfBT3Yjaz
+         aQh1Ztw5nf3wIBFeXKaZM9JEWQ213nSm6wXJyRUGMRk2stzDCTJpV2A+1M634MC5p24i
+         aJOHHdzbKWm1DvpGEAPLVUQZYvKhDzc5QoZjLMk0AU45QRsMZ3w3FsA7tg2ZVKkj4DVJ
+         v4v3jf2cWHvTMw7jXCnjl8DSRWyCIQRUw1BLRRRyVhBw9d7QY9KUMW7kifUIdNziVoph
+         LP3/dhQTa6ehjyasetmDCql/GjXZ1CylnHti/3ifYBKp3OCb3I/EU9aF9Q/pYe8b5fZx
+         TbeA==
+X-Gm-Message-State: AOAM532tjvFju0mWaebD2GbyLp6hKjAICLGYBa0wdqqbxEKYeyQkYI4h
+        ePNQkXsxg09A6oahzIzJo+vXnfXCVXdqYk0tkteIJQ==
+X-Google-Smtp-Source: ABdhPJyQWmZXSz2iX0eZ/je4eHr1g9U0vu4eNfE0+KLA5wajMcXCN1n72CVKsQtNr7QxRx1XJy83ffFOLJyXsvgaaSo=
+X-Received: by 2002:a9d:58c9:: with SMTP id s9mr20833338oth.233.1592937587368;
+ Tue, 23 Jun 2020 11:39:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200623063530.81917-1-like.xu@linux.intel.com> <20200623182910.GA24107@linux.intel.com>
-In-Reply-To: <20200623182910.GA24107@linux.intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 23 Jun 2020 11:39:16 -0700
-Message-ID: <CALMp9eQPA40FWBEOiQ8T5JX2fv+uEfU_x6js8WhAguQ8TL6frA@mail.gmail.com>
-Subject: Re: [PATCH] KVM: X86: Emulate APERF/MPERF to report actual VCPU frequency
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, wei.huang2@amd.com,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <20200623083645.277342609@infradead.org> <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net> <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+ <20200623163730.GA4800@hirez.programming.kicks-ass.net> <20200623175957.GA106514@elver.google.com>
+ <20200623181232.GB4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200623181232.GB4800@hirez.programming.kicks-ass.net>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 23 Jun 2020 20:39:35 +0200
+Message-ID: <CANpmjNMmYYa-mVo_Ao_n+9KzwxhGYcb6B6C72yCHyD9sZudDfA@mail.gmail.com>
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Li RongQing <lirongqing@baidu.com>,
-        Chai Wen <chaiwen@baidu.com>, Jia Lina <jialina01@baidu.com>
+        Steven Rostedt <rostedt@goodmis.org>, bigeasy@linutronix.de,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
+        Qian Cai <cai@lca.pw>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:29 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Tue, 23 Jun 2020 at 20:13, Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Tue, Jun 23, 2020 at 02:35:30PM +0800, Like Xu wrote:
-> > The aperf/mperf are used to report current CPU frequency after 7d5905dc14a
-> > "x86 / CPU: Always show current CPU frequency in /proc/cpuinfo". But guest
-> > kernel always reports a fixed VCPU frequency in the /proc/cpuinfo, which
-> > may confuse users especially when turbo is enabled on the host.
+> On Tue, Jun 23, 2020 at 07:59:57PM +0200, Marco Elver wrote:
+> > On Tue, Jun 23, 2020 at 06:37PM +0200, Peter Zijlstra wrote:
+> > > On Tue, Jun 23, 2020 at 06:13:21PM +0200, Ahmed S. Darwish wrote:
+> > > > Well, freshly merged code is using it. For example, KCSAN:
+> > > >
+> > > >     => f1bc96210c6a ("kcsan: Make KCSAN compatible with lockdep")
+> > > >     => kernel/kcsan/report.c:
+> > > >
+> > > >     void kcsan_report(...)
+> > > >     {
+> > > >   ...
+> > > >         /*
+> > > >          * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
+> > > >          * we do not turn off lockdep here; this could happen due to recursion
+> > > >          * into lockdep via KCSAN if we detect a race in utilities used by
+> > > >          * lockdep.
+> > > >          */
+> > > >         lockdep_off();
+> > > >   ...
+> > > >     }
+> > >
+> > > Marco, do you remember what exactly happened there? Because I'm about to
+> > > wreck that. That is, I'm going to make TRACE_IRQFLAGS ignore
+> > > lockdep_off().
 > >
-> > Emulate guest APERF/MPERF capability based their values on the host.
+> > Yeah, I was trying to squash any kind of recursion:
 > >
-> > Co-developed-by: Li RongQing <lirongqing@baidu.com>
-> > Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> > Reviewed-by: Chai Wen <chaiwen@baidu.com>
-> > Reviewed-by: Jia Lina <jialina01@baidu.com>
-> > Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> > ---
+> >       lockdep -> other libs ->
+> >               -> KCSAN
+> >               -> print report
+> >               -> dump stack, printk and friends
+> >               -> lockdep -> other libs
+> >                       -> KCSAN ...
+> >
+> > Some history:
+> >
+> > * Initial patch to fix:
+> >       https://lore.kernel.org/lkml/20200115162512.70807-1-elver@google.com/
 >
-> ...
+> That patch is weird; just :=n on lockdep.c should've cured that, the
+> rest is massive overkill.
 >
-> > @@ -8312,7 +8376,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-> >               dm_request_for_irq_injection(vcpu) &&
-> >               kvm_cpu_accept_dm_intr(vcpu);
-> >       fastpath_t exit_fastpath;
-> > -
-> > +     u64 enter_mperf = 0, enter_aperf = 0, exit_mperf = 0, exit_aperf = 0;
-> >       bool req_immediate_exit = false;
-> >
-> >       if (kvm_request_pending(vcpu)) {
-> > @@ -8516,8 +8580,17 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-> >               vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
-> >       }
-> >
-> > +     if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap))
-> > +             get_host_amperf(&enter_mperf, &enter_aperf);
-> > +
-> >       exit_fastpath = kvm_x86_ops.run(vcpu);
-> >
-> > +     if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap)) {
-> > +             get_host_amperf(&exit_mperf, &exit_aperf);
-> > +             vcpu_update_amperf(vcpu, get_amperf_delta(enter_aperf, exit_aperf),
-> > +                     get_amperf_delta(enter_mperf, exit_mperf));
-> > +     }
-> > +
+> > * KCSAN+lockdep+ftrace:
+> >       https://lore.kernel.org/lkml/20200214211035.209972-1-elver@google.com/
 >
-> Is there an alternative approach that doesn't require 4 RDMSRs on every VMX
-> round trip?  That's literally more expensive than VM-Enter + VM-Exit
-> combined.
+> That doesn't really have anything useful..
 >
-> E.g. what about adding KVM_X86_DISABLE_EXITS_APERF_MPERF and exposing the
-> MSRs for read when that capability is enabled?
+> > lockdep now has KCSAN_SANITIZE := n, but we still need to ensure that
+> > there are no paths out of lockdep, or the IRQ flags tracing code, that
+> > might lead through other libs, through KCSAN, libs used to generate a
+> > report, and back to lockdep.
+> >
+> > I never quite figured out the exact trace that led to corruption, but
+> > avoiding any kind of potential for recursion was the only thing that
+> > would avoid the check_flags() warnings.
+>
+> Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
+> anything happens.
 
-When would you load the hardware MSRs with the guest/host values?
+Thanks!
+
+This was happening with Qian Cai's (Cc'd) test cases. If the kernel or
+this patch changed things around so this doesn't happen anymore
+regardless, then I don't see a problem.
+
+Thanks,
+-- Marco
