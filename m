@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4CC20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16BC20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945586;
-	bh=ridycpqTE1S9wgnTO4TRgseyQs/OqkDJIyJrLdDfziQ=;
+	s=default; t=1592945589;
+	bh=P/xQFApdL9TuihnLUerhnPMfJWlHfPpcFKHFkh6WFKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mke3jZetrE/ftgaEZiQgm4hZn77/zQ9huexSRCv4O3q5smY642gTLFqhkdNoTptRX
-	 nucsIxWVUgSYtfIHKWHkmJTTQkqsnEX8hJ4qidCQQVAAT4t1KhKn58QeX4AhvqQMVv
-	 MHQpVF3eKefvxy3CmzljWAtfnvmEF/HiTArfK29Q=
+	b=DLLUOItA2Hebo1Q8MfKHv3rl/Stvg1GMh4Wrs+d7nOe4vynDzycVqUbZzn7e9Jsbz
+	 LO/I5uzJZFTB7Sf+BBsA2vwfZdqeFhBID3pE1Tk4pCcv9Q7rp/K3BbvGcjX52C/8rZ
+	 ftMYsFMrdLX4Lp8GRcAfQ0ca6fq7CdoRiSUuDMIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392839AbgFWUxC (ORCPT
+        id S2392869AbgFWUrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:53:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45404 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:47:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403922AbgFWUrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:47:06 -0400
+        id S2391022AbgFWUor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3AB3214DB;
-        Tue, 23 Jun 2020 20:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2450521941;
+        Tue, 23 Jun 2020 20:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945227;
-        bh=ridycpqTE1S9wgnTO4TRgseyQs/OqkDJIyJrLdDfziQ=;
+        s=default; t=1592945087;
+        bh=P/xQFApdL9TuihnLUerhnPMfJWlHfPpcFKHFkh6WFKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gV5wrPjozwEeFfWBvw3occXuKwjLKVGV/4jpLm1SoB6s/YP+gh5yHp2SagkD9xkHl
-         4OoUFBfDhGhNtgxZglt3O+ZQ0U8PUWfZTG6MFFk6bIRhvgKIp5v6VqePhbnYJodxVY
-         6WID831kTyhZ8D62hcQX6xmhlnq/T8GzwvJyT1sg=
+        b=10khhRQDasRY7vbq5To2gXIXyraetx2ZQD8tGfc7qJSXh7YRMz4bRZgpoXcRX7Q/O
+         AkjmCpZYeLgZMSqTPU29UKD2xezOFAnZ3hPdb5vue+kyRJXHGca5wWrCbEd/GEPjI9
+         uUdvAnbee/AO8zdiBVhJ58eFSA4Tz4Op/R2tYrG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 088/136] scsi: ufs: Dont update urgent bkops level when toggling auto bkops
-Date:   Tue, 23 Jun 2020 21:59:04 +0200
-Message-Id: <20200623195308.101743130@linuxfoundation.org>
+Subject: [PATCH 4.14 006/136] iio: pressure: bmp280: Tolerate IRQ before registering
+Date:   Tue, 23 Jun 2020 21:57:42 +0200
+Message-Id: <20200623195303.933983517@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -61,39 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit be32acff43800c87dc5c707f5d47cc607b76b653 ]
+[ Upstream commit 97b31a6f5fb95b1ec6575b78a7240baddba34384 ]
 
-Urgent bkops level is used to compare against actual bkops status read from
-UFS device. Urgent bkops level is set during initialization and might be
-updated in exception event handler during runtime. But it should not be
-updated to the actual bkops status every time when auto bkops is toggled.
-Otherwise, if urgent bkops level is updated to 0, auto bkops shall always
-be kept enabled.
+With DEBUG_SHIRQ enabled we have a kernel crash
 
-Link: https://lore.kernel.org/r/1590632686-17866-1-git-send-email-cang@codeaurora.org
-Fixes: 24366c2afbb0 ("scsi: ufs: Recheck bkops level if bkops is disabled")
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[  116.482696] BUG: kernel NULL pointer dereference, address: 0000000000000000
+
+...
+
+[  116.606571] Call Trace:
+[  116.609023]  <IRQ>
+[  116.611047]  complete+0x34/0x50
+[  116.614206]  bmp085_eoc_irq+0x9/0x10 [bmp280]
+
+because DEBUG_SHIRQ mechanism fires an IRQ before registration and drivers
+ought to be able to handle an interrupt happening before request_irq() returns.
+
+Fixes: aae953949651 ("iio: pressure: bmp280: add support for BMP085 EOC interrupt")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/iio/pressure/bmp280-core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 3a98e5a1d830c..1e2a97a10033b 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4890,7 +4890,6 @@ static int ufshcd_bkops_ctrl(struct ufs_hba *hba,
- 		err = ufshcd_enable_auto_bkops(hba);
- 	else
- 		err = ufshcd_disable_auto_bkops(hba);
--	hba->urgent_bkops_lvl = curr_status;
- out:
- 	return err;
- }
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index 5f625ffa2a88d..3204dff34e0ad 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -651,7 +651,7 @@ static int bmp180_measure(struct bmp280_data *data, u8 ctrl_meas)
+ 	unsigned int ctrl;
+ 
+ 	if (data->use_eoc)
+-		init_completion(&data->done);
++		reinit_completion(&data->done);
+ 
+ 	ret = regmap_write(data->regmap, BMP280_REG_CTRL_MEAS, ctrl_meas);
+ 	if (ret)
+@@ -907,6 +907,9 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
+ 			"trying to enforce it\n");
+ 		irq_trig = IRQF_TRIGGER_RISING;
+ 	}
++
++	init_completion(&data->done);
++
+ 	ret = devm_request_threaded_irq(dev,
+ 			irq,
+ 			bmp085_eoc_irq,
 -- 
 2.25.1
 
