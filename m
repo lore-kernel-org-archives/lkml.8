@@ -2,52 +2,54 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 731AE2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54F520768
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946114;
-	bh=q7AB9mS4mtH1q8Pg4IL60EGe/7NmFsbw+nZpN7cOZ1A=;
+	s=default; t=1592946122;
+	bh=nka1z1JeJotYw4mRLwT1jWGnMFhFzOVKfzEffkT2o7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rA4b8NJVMEE5FubKWbv/1wTCfHXniGitBGvu2sNnDtRqtRNqp4e+QbVjRo4/ivAo4
-	 JDX2WA8oMHZJ3doONKo+zPK5nSK8bjM/m4KF4cyCUAgtzyIKCmhRvtAbC6d3nk6REM
-	 ELLs4JhHR423tO7fyrRm5AZSviuChKmgre6tIIxk=
+	b=TcPw6SB55cLLw9Ri+MqoR59IAuqzgG6IjkTNJD62fmFIx8DWV687l8MmOJ52lK5kv
+	 0FwclAtCwFjDyBJvVZqI6qq/I1Frk3fxBoWp1EDxbBBeixLsxPypUKuYAGRtFe7j1/
+	 +JdfgHYO6iEvbNnDUIb9Zln2OGB3tgtrxZgnfZgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392060AbgFWUjh (ORCPT
+        id S2404264AbgFWVCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:39:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35176 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391643AbgFWUj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:39:28 -0400
+        id S2392047AbgFWUjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:39:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 242232085B;
-        Tue, 23 Jun 2020 20:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C9BB21883;
+        Tue, 23 Jun 2020 20:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944768;
-        bh=q7AB9mS4mtH1q8Pg4IL60EGe/7NmFsbw+nZpN7cOZ1A=;
+        s=default; t=1592944760;
+        bh=nka1z1JeJotYw4mRLwT1jWGnMFhFzOVKfzEffkT2o7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ys682eGBtbo5+WujP/e7gU6mH+QdgmsETvDsYKbh1Xn2CE0Dnt89gaznOWamHHdyu
-         XVXtVDITGbutCDapulTyVzmsIsl+U27W6/2Gbuz3zP9ZkARXK/tKLVaeP7br4stmbO
-         PlaNQoessPVwWHNxsDV8bE/JLYO3Hs4cnWuO2kVo=
+        b=Dsa+qUdIi3+G6/6bg0bN1aGDzb0q+bVxA/TI/tTpKBeWhGUTHfe+sAKnzujFxxgWR
+         HFoHYhgsMiFjNCVj8yXlcwA5J4aun6UTjWpI7wirYc/gpHZUkWxyGrMT6DQ4BQqLmU
+         eP9Y9NI2aAA0yZyRqi76ytaFEIq1qPeHVFc0hWsk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Paul Mackerras <paulus@ozlabs.org>,
+        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
+        David Disseldorp <ddiss@suse.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 117/206] KVM: PPC: Book3S HV: Ignore kmemleak false positives
-Date:   Tue, 23 Jun 2020 21:57:25 +0200
-Message-Id: <20200623195322.702803406@linuxfoundation.org>
+Subject: [PATCH 4.19 114/206] scsi: target: tcmu: Fix a use after free in tcmu_check_expired_queue_cmd()
+Date:   Tue, 23 Jun 2020 21:57:22 +0200
+Message-Id: <20200623195322.553626574@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,99 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0aca8a5575544bd21b3363058afb8f1e81505150 ]
+[ Upstream commit 9d7464b18892332e35ff37f0b024429a1a9835e6 ]
 
-kvmppc_pmd_alloc() and kvmppc_pte_alloc() allocate some memory but then
-pud_populate() and pmd_populate() will use __pa() to reference the newly
-allocated memory.
+The pr_debug() dereferences "cmd" after we already freed it by calling
+tcmu_free_cmd(cmd).  The debug printk needs to be done earlier.
 
-Since kmemleak is unable to track the physical memory resulting in false
-positives, silence those by using kmemleak_ignore().
-
-unreferenced object 0xc000201c382a1000 (size 4096):
- comm "qemu-kvm", pid 124828, jiffies 4295733767 (age 341.250s)
- hex dump (first 32 bytes):
-   c0 00 20 09 f4 60 03 87 c0 00 20 10 72 a0 03 87  .. ..`.... .r...
-   c0 00 20 0e 13 a0 03 87 c0 00 20 1b dc c0 03 87  .. ....... .....
- backtrace:
-   [<000000004cc2790f>] kvmppc_create_pte+0x838/0xd20 [kvm_hv]
-   kvmppc_pmd_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:366
-   (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:590
-   [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
-   [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
-   [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
-   [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
-   [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
-   [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
-   [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
-   [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
-   [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
-   [<000000004afc4310>] system_call_exception+0x114/0x1e0
-   [<00000000fb70a873>] system_call_common+0xf0/0x278
-unreferenced object 0xc0002001f0c03900 (size 256):
- comm "qemu-kvm", pid 124830, jiffies 4295735235 (age 326.570s)
- hex dump (first 32 bytes):
-   c0 00 20 10 fa a0 03 87 c0 00 20 10 fa a1 03 87  .. ....... .....
-   c0 00 20 10 fa a2 03 87 c0 00 20 10 fa a3 03 87  .. ....... .....
- backtrace:
-   [<0000000023f675b8>] kvmppc_create_pte+0x854/0xd20 [kvm_hv]
-   kvmppc_pte_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:356
-   (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:593
-   [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
-   [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
-   [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
-   [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
-   [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
-   [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
-   [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
-   [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
-   [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
-   [<000000004afc4310>] system_call_exception+0x114/0x1e0
-   [<00000000fb70a873>] system_call_common+0xf0/0x278
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Link: https://lore.kernel.org/r/20200523101129.GB98132@mwanda
+Fixes: 61fb24822166 ("scsi: target: tcmu: Userspace must not complete queued commands")
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Reviewed-by: David Disseldorp <ddiss@suse.de>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_64_mmu_radix.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/target/target_core_user.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index 998f8d089ac7e..df0f08cb821b5 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -171,7 +171,13 @@ static struct kmem_cache *kvm_pmd_cache;
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index ac523f247a9ca..8da89925a874d 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1303,13 +1303,13 @@ static void tcmu_check_expired_queue_cmd(struct tcmu_cmd *cmd)
+ 	if (!time_after(jiffies, cmd->deadline))
+ 		return;
  
- static pte_t *kvmppc_pte_alloc(void)
- {
--	return kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
-+	pte_t *pte;
++	pr_debug("Timing out queued cmd %p on dev %s.\n",
++		  cmd, cmd->tcmu_dev->name);
 +
-+	pte = kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
-+	/* pmd_populate() will only reference _pa(pte). */
-+	kmemleak_ignore(pte);
-+
-+	return pte;
+ 	list_del_init(&cmd->queue_entry);
+ 	se_cmd = cmd->se_cmd;
+ 	tcmu_free_cmd(cmd);
+ 
+-	pr_debug("Timing out queued cmd %p on dev %s.\n",
+-		  cmd, cmd->tcmu_dev->name);
+-
+ 	target_complete_cmd(se_cmd, SAM_STAT_TASK_SET_FULL);
  }
  
- static void kvmppc_pte_free(pte_t *ptep)
-@@ -187,7 +193,13 @@ static inline int pmd_is_leaf(pmd_t pmd)
- 
- static pmd_t *kvmppc_pmd_alloc(void)
- {
--	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-+	pmd_t *pmd;
-+
-+	pmd = kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-+	/* pud_populate() will only reference _pa(pmd). */
-+	kmemleak_ignore(pmd);
-+
-+	return pmd;
- }
- 
- static void kvmppc_pmd_free(pmd_t *pmdp)
 -- 
 2.25.1
 
