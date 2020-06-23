@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF2DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D868AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FED420706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B491920706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946837;
-	bh=HxgZGib8B7jApfVRJLYV16Iqb0rLo81W0p/C/EOsT08=;
+	s=default; t=1592946841;
+	bh=J8gLyxuh7i1Ph5mKliRbbrUkmLcIN1tXAi/qcBYfNoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=to5XIEOf++bi/BCu4TjXbY4jaXcachg553MaChm2aiVVaeFvKagVIgkXvuKgcKMwA
-	 xahqqKyycylJ3d7NmFOyBMoExB41GLWE6BbkHW/9mfmdMOyNqHxFlRmIFDOqjyKh/v
-	 WhEoKAkQVtIDmQ885QLvgp91RIj5vCN0+GWz7zQ0=
+	b=bHjs9yoa1ZiMdliKRyKspvulcl15s6dXFbTNRzQBOoRT5TsNGpSMh0q7HkhWcSt63
+	 QPW6VI9fD1aArVUdgcIJbUZ9a78O0JbBawWFPQthx265bvYwEry/beyfvp5l9wHsAg
+	 wWnTXmDpDT1cWHA7/YB91HUErxf9frbtR80Vfh74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391074AbgFWUaI (ORCPT
+        id S2389322AbgFWUaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:30:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391104AbgFWUaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 16:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389797AbgFWU3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1835206C3;
-        Tue, 23 Jun 2020 20:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E31E7206EB;
+        Tue, 23 Jun 2020 20:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944202;
-        bh=HxgZGib8B7jApfVRJLYV16Iqb0rLo81W0p/C/EOsT08=;
+        s=default; t=1592944194;
+        bh=J8gLyxuh7i1Ph5mKliRbbrUkmLcIN1tXAi/qcBYfNoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xrrs/bqxrrrP4G6eypdvo0XSqIAmcUaO4tZysIOb2qcXLS+/aec/yFNdsOFcZEQ2L
-         EYxFCRA1A+N/Miu+1yEUCRZTeKp6oR00JrFt2SRyGCFXEIi8WJfwfsRplNwXIJOt1n
-         AcqAeI6rFKoDUtiNtM5vUI1ZdF7NiYO0l+YTKs4k=
+        b=OeFn1JZRMdnVNcFHEn2ZE0xEpY36WkulAII9ougbCA1s5UkBF/nD8zquDmyAswOqI
+         X/xmt88m0oTTPt2QOYzJyA+U87tqTsQMbSp+blIvpSpURK2lwlHSdLJUEs/v9z42f6
+         +fWVoyA3VoAl7Okf2PWoLMHhT9gEAxed4SLVsbQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
-        Qiushi Wu <wu000273@umn.edu>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 213/314] scsi: iscsi: Fix reference count leak in iscsi_boot_create_kobj
-Date:   Tue, 23 Jun 2020 21:56:48 +0200
-Message-Id: <20200623195349.078630022@linuxfoundation.org>
+Subject: [PATCH 5.4 210/314] ceph: dont return -ESTALE if theres still an open file
+Date:   Tue, 23 Jun 2020 21:56:45 +0200
+Message-Id: <20200623195348.934335976@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,36 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit 0267ffce562c8bbf9b57ebe0e38445ad04972890 ]
+[ Upstream commit 878dabb64117406abd40977b87544d05bb3031fc ]
 
-kobject_init_and_add() takes reference even when it fails. If this
-function returns an error, kobject_put() must be called to properly
-clean up the memory associated with the object.
+Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+a file handle to dentry"), this fixes another corner case with
+name_to_handle_at/open_by_handle_at.  The issue has been detected by
+xfstest generic/467, when doing:
 
-Link: https://lore.kernel.org/r/20200528201353.14849-1-wu000273@umn.edu
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+ - name_to_handle_at("/cephfs/myfile")
+ - open("/cephfs/myfile")
+ - unlink("/cephfs/myfile")
+ - sync; sync;
+ - drop caches
+ - open_by_handle_at()
+
+The call to open_by_handle_at should not fail because the file hasn't been
+deleted yet (only unlinked) and we do have a valid handle to it.  -ESTALE
+shall be returned only if i_nlink is 0 *and* i_count is 1.
+
+This patch also makes sure we have LINK caps before checking i_nlink.
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/iscsi_boot_sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/export.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/iscsi_boot_sysfs.c b/drivers/scsi/iscsi_boot_sysfs.c
-index e4857b7280338..a64abe38db2d4 100644
---- a/drivers/scsi/iscsi_boot_sysfs.c
-+++ b/drivers/scsi/iscsi_boot_sysfs.c
-@@ -352,7 +352,7 @@ iscsi_boot_create_kobj(struct iscsi_boot_kset *boot_kset,
- 	boot_kobj->kobj.kset = boot_kset->kset;
- 	if (kobject_init_and_add(&boot_kobj->kobj, &iscsi_boot_ktype,
- 				 NULL, name, index)) {
--		kfree(boot_kobj);
-+		kobject_put(&boot_kobj->kobj);
- 		return NULL;
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 79dc06881e78e..e088843a7734c 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -172,9 +172,16 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+ static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+ {
+ 	struct inode *inode = __lookup_inode(sb, ino);
++	int err;
++
+ 	if (IS_ERR(inode))
+ 		return ERR_CAST(inode);
+-	if (inode->i_nlink == 0) {
++	/* We need LINK caps to reliably check i_nlink */
++	err = ceph_do_getattr(inode, CEPH_CAP_LINK_SHARED, false);
++	if (err)
++		return ERR_PTR(err);
++	/* -ESTALE if inode as been unlinked and no file is open */
++	if ((inode->i_nlink == 0) && (atomic_read(&inode->i_count) == 1)) {
+ 		iput(inode);
+ 		return ERR_PTR(-ESTALE);
  	}
- 	boot_kobj->data = data;
 -- 
 2.25.1
 
