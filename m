@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3107C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B151C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A18D12064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2840620780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943787;
-	bh=a/lHXKCVrLSIa+JZAQDjfBCBrAxsRAXKYhxhhT2WEWI=;
+	s=default; t=1592943792;
+	bh=bwz6D8FBQD9hPc5U0y0YPLANP4AYBqfGkOSytfzbCVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TAMaNVw2Rxkk2irbzhcdcy/pg+ZZ9SRKsC8assXclNi7+yWjsOQ8F5627LP7f+jTc
-	 MW2231MIetgibuSXvat9Xxup+I0tKzNWmQuIvykhMgRp5lNzU6HtIHSf/z5XJ6hyGK
-	 lVQlhf3FsGzlcTdSzwkMe73d34uobqyLhVgPElqM=
+	b=R4EwdgzzfnIIkTHJN0pJE1qz1yET7klo7Is4Dm9w4WNQDxizQHbfMxe2K2p8sKX9q
+	 S1Eft71R+29d9dS9nm3qAEbmnVnB84xLbpDuc/B1FMSlnWPhBLoayjo5jrRAkod/92
+	 sTpuCUJUIimQ7IPohs+yKNbYVLu1DMAsQ2HWBQuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390252AbgFWUXG (ORCPT
+        id S2390265AbgFWUXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390196AbgFWUW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:22:56 -0400
+        id S2390196AbgFWUXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:23:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CB512070E;
-        Tue, 23 Jun 2020 20:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5088B206C3;
+        Tue, 23 Jun 2020 20:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943776;
-        bh=a/lHXKCVrLSIa+JZAQDjfBCBrAxsRAXKYhxhhT2WEWI=;
+        s=default; t=1592943786;
+        bh=bwz6D8FBQD9hPc5U0y0YPLANP4AYBqfGkOSytfzbCVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=01mvzEwrYS+WHwuFNvcWgj1bKSEFIEnbJWq4sGGeBJDfQIgxD2CpVrjvRLust5Yr4
-         e4M0oOmTuHUbi6KDRx3bRdtDCx9nhAh376fglr0DnZkOlyCQpFr0ODClclwCQ6ibwH
-         GthSt3tH3oDUs85rt6Cx8goK4SAYBP92e/2vzIlU=
+        b=bCLoU0i0dftNApTAklj5e22jLSgqoNZGKt7BYrlvolyjslcFXpcGihY5GRBWFWlbF
+         w7UFeO2bpHHIF5xiE3eR9dzHyZ1OC31WLfA6DbkIaiA/sq2btPqAcaqSeS5rikbi3L
+         1FU0WNjgvftRnKL35SZD8JFR8lScjn3OhDsZRrzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/314] RDMA/mlx5: Add init2init as a modify command
-Date:   Tue, 23 Jun 2020 21:54:02 +0200
-Message-Id: <20200623195341.055550965@linuxfoundation.org>
+Subject: [PATCH 5.4 050/314] m68k/PCI: Fix a memory leak in an error handling path
+Date:   Tue, 23 Jun 2020 21:54:05 +0200
+Message-Id: <20200623195341.209368381@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,37 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aharon Landau <aharonl@mellanox.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 819f7427bafd494ef7ca4942ec6322db20722d7b ]
+[ Upstream commit c3f4ec050f56eeab7c1f290321f9b762c95bd332 ]
 
-Missing INIT2INIT entry in the list of modify commands caused DEVX
-applications to be unable to modify_qp for this transition state. Add the
-MLX5_CMD_OP_INIT2INIT_QP opcode to the list of allowed DEVX opcodes.
+If 'ioremap' fails, we must free 'bridge', as done in other error handling
+path bellow.
 
-Fixes: e662e14d801b ("IB/mlx5: Add DEVX support for modify and query commands")
-Link: https://lore.kernel.org/r/20200513095550.211345-1-leon@kernel.org
-Signed-off-by: Aharon Landau <aharonl@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 19cc4c843f40 ("m68k/PCI: Replace pci_fixup_irqs() call with host bridge IRQ mapping hooks")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/devx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/m68k/coldfire/pci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
-index d609f4659afb7..bba7ab0784305 100644
---- a/drivers/infiniband/hw/mlx5/devx.c
-+++ b/drivers/infiniband/hw/mlx5/devx.c
-@@ -814,6 +814,7 @@ static bool devx_is_obj_modify_cmd(const void *in)
- 	case MLX5_CMD_OP_SET_L2_TABLE_ENTRY:
- 	case MLX5_CMD_OP_RST2INIT_QP:
- 	case MLX5_CMD_OP_INIT2RTR_QP:
-+	case MLX5_CMD_OP_INIT2INIT_QP:
- 	case MLX5_CMD_OP_RTR2RTS_QP:
- 	case MLX5_CMD_OP_RTS2RTS_QP:
- 	case MLX5_CMD_OP_SQERR2RTS_QP:
+diff --git a/arch/m68k/coldfire/pci.c b/arch/m68k/coldfire/pci.c
+index 62b0eb6cf69a3..84eab0f5e00af 100644
+--- a/arch/m68k/coldfire/pci.c
++++ b/arch/m68k/coldfire/pci.c
+@@ -216,8 +216,10 @@ static int __init mcf_pci_init(void)
+ 
+ 	/* Keep a virtual mapping to IO/config space active */
+ 	iospace = (unsigned long) ioremap(PCI_IO_PA, PCI_IO_SIZE);
+-	if (iospace == 0)
++	if (iospace == 0) {
++		pci_free_host_bridge(bridge);
+ 		return -ENODEV;
++	}
+ 	pr_info("Coldfire: PCI IO/config window mapped to 0x%x\n",
+ 		(u32) iospace);
+ 
 -- 
 2.25.1
 
