@@ -2,124 +2,119 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E319C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B86C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18A1E2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81282073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943397;
-	bh=gDGnvZfZxG08b9wvGhCaBJiEgiArLyhOEhwuqh+/4Xg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ri/B56nzDTJ/WwlrgP/jJepkkf2NLwdRyZxQfX17fYPUhL9kaOiCVGCINA0nmV6Hq
-	 THHaM6PFunAxu18+9Z9mqB0qja1xfowtI9bz7nF8hg0teVXtNDr2/Rs9W8FPy7HX1O
-	 LAmEX3UeBgGBQE3MRz96LxQFs8f+n/zA9rpqS1Xc=
+	s=default; t=1592943403;
+	bh=qO2w1WAQY0W9g78yumPqSmR/mtWdlrTUoYZHbi4d/Rc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CSfP/tbSYm8SBxOYFXEjNW5fM/QTUuaUj/7dRRZokKr+grfmZsdW/ARJk9foXL2s0
+	 0xRdbFij67bKT7M11MTUy9JKSoL3VNAf67IvXmsoaXgtk2xxgICLwpNokOQ9CYJB5E
+	 Medqo8tgiRfPJgvXUTanV6e1W6w9KWmIrudBlMyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389446AbgFWUQf (ORCPT
+        id S2389450AbgFWUQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60046 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389427AbgFWUQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:31 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        id S2389434AbgFWUQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:16:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB322064B;
-        Tue, 23 Jun 2020 20:16:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66D8720702;
+        Tue, 23 Jun 2020 20:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943390;
-        bh=gDGnvZfZxG08b9wvGhCaBJiEgiArLyhOEhwuqh+/4Xg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Y9UwVHOwGJuOhYMiSxOJo8XDSMmeGgWKrc0Uz3JBUaLR4LA6LbHi7+Oi+JfJLfcaq
-         pKB2NjOEMM3KUgJf9UswWdLF53hl6JjKFdIhEfegfP+IvdJWnRd/j9XnlTSz2f0k02
-         fsulvyWw9rlpOsS0WvtokvCV2JlEajVWPOdNF6KA=
-Date:   Tue, 23 Jun 2020 13:16:28 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 03/11] net: devres: relax devm_register_netdev()
-Message-ID: <20200623131628.232ec75e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CAMRc=MfF1RbQCJ62QhscFLu1HKYRc9M-2SMep1_vTJ2xhKjLAA@mail.gmail.com>
-References: <20200622100056.10151-1-brgl@bgdev.pl>
-        <20200622100056.10151-4-brgl@bgdev.pl>
-        <20200622154943.02782b5a@kicinski-fedora-PC1C0HJN>
-        <CAMRc=MfF1RbQCJ62QhscFLu1HKYRc9M-2SMep1_vTJ2xhKjLAA@mail.gmail.com>
+        s=default; t=1592943394;
+        bh=qO2w1WAQY0W9g78yumPqSmR/mtWdlrTUoYZHbi4d/Rc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fj+4v35jNaure/ghmjDanBlNgI9Oz7hXP4+K5nC1O0b0WSeaWLjR4aXEYV8plRnHm
+         naQAYLlq6wWDWUvGfniV7H6t4pZV11KmSwBUneQmcpYakLG6pHbdcVaBG/Eff5qgT2
+         hQW0z3jIWuKYCR7vfcD0rwHzcBrEkIz9znTwhbwk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Marcelo Bandeira Condotta <mcondotta@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 334/477] KVM: selftests: Fix build with "make ARCH=x86_64"
+Date:   Tue, 23 Jun 2020 21:55:31 +0200
+Message-Id: <20200623195423.325563135@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
+References: <20200623195407.572062007@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 11:12:24 +0200 Bartosz Golaszewski wrote:
-> wt., 23 cze 2020 o 00:49 Jakub Kicinski <kuba@kernel.org> napisa=C5=82(a):
-> > On Mon, 22 Jun 2020 12:00:48 +0200 Bartosz Golaszewski wrote: =20
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > This devres helper registers a release callback that only unregisters
-> > > the net_device. It works perfectly fine with netdev structs that are
-> > > not managed on their own. There's no reason to check this - drop the
-> > > warning.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com> =20
-> >
-> > I think the reasoning for this suggestion was to catch possible UAF
-> > errors. The netdev doesn't necessarily has to be from devm_alloc_*
-> > but it has to be part of devm-ed memory or memory which is freed
-> > after driver's remove callback.
-> > =20
->=20
-> Yes I understand that UAF was the concern here, but this limitation is
-> unnecessary. In its current form devm_register_netdev() only works for
-> struct net_device allocated with devm_alloc_etherdev(). Meanwhile
-> calling alloc_netdev() (which doesn't have its devm counterpart yet -
-> I may look into it shortly),
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-If resource managed alloc_netdev() is needed devm_alloc_netdev() can
-be created, and even reuse devm_free_netdev() so no changes to the
-warning are even necessary for such extension.
+[ Upstream commit b80db73dc8be7022adae1b4414a1bebce50fe915 ]
 
-> then registering a devm action with devm_add_action_or_reset() which
-> would free this memory is a perfectly fine use case. This patch would
-> make it possible.
+Marcelo reports that kvm selftests fail to build with
+"make ARCH=x86_64":
 
-alloc_netdev() + devm_add_action makes no sense in the upstream kernel,
-just add the appropriate helper, we care little about out of tree code.
+gcc -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99
+ -fno-stack-protector -fno-PIE -I../../../../tools/include
+ -I../../../../tools/arch/x86_64/include  -I../../../../usr/include/
+ -Iinclude -Ilib -Iinclude/x86_64 -I.. -c lib/kvm_util.c
+ -o /var/tmp/20200604202744-bin/lib/kvm_util.o
 
-> > Are there cases in practice where you've seen the netdev not being
-> > devm allocated? =20
->=20
-> As I said above - alloc_netdev() used by wireless, can, usb etc.
-> drivers doesn't have a devres variant.
+In file included from lib/kvm_util.c:11:
+include/x86_64/processor.h:14:10: fatal error: asm/msr-index.h: No such
+ file or directory
+
+ #include <asm/msr-index.h>
+          ^~~~~~~~~~~~~~~~~
+compilation terminated.
+
+"make ARCH=x86", however, works. The problem is that arch specific headers
+for x86_64 live in 'tools/arch/x86/include', not in
+'tools/arch/x86_64/include'.
+
+Fixes: 66d69e081b52 ("selftests: fix kvm relocatable native/cross builds and installs")
+Reported-by: Marcelo Bandeira Condotta <mcondotta@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Message-Id: <20200605142028.550068-1-vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/testing/selftests/kvm/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 42f4f49f2a488..2c85b9dd86f58 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -80,7 +80,11 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
++ifeq ($(ARCH),x86_64)
++LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
++else
+ LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
++endif
+ CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
+ 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+ 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
+-- 
+2.25.1
+
 
 
