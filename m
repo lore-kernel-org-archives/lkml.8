@@ -2,27 +2,26 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C88C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59DAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2A220702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B3D20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732184AbgFWJHK (ORCPT
+        id S1732075AbgFWJGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:07:10 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44744 "EHLO loongson.cn"
+        Tue, 23 Jun 2020 05:06:49 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:44702 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732049AbgFWJGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:06:51 -0400
+        id S1731912AbgFWJGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:06:49 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2oexvFeJ7JIAA--.33S6;
-        Tue, 23 Jun 2020 17:06:43 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2oexvFeJ7JIAA--.33S2;
+        Tue, 23 Jun 2020 17:06:40 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -31,77 +30,75 @@ Cc:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 4/7 RESEND] irqchip/loongson-pch-pic: Check return value of irq_domain_translate_twocell()
-Date:   Tue, 23 Jun 2020 17:06:35 +0800
-Message-Id: <1592903198-5505-5-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH 0/7 RESEND] Fix potential resource leaks and do some code cleanups about irqchip
+Date:   Tue, 23 Jun 2020 17:06:31 +0800
+Message-Id: <1592903198-5505-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1592903198-5505-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1592903198-5505-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxf2oexvFeJ7JIAA--.33S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF17JrW8tFWkAr1fXrW5Jrb_yoW8Xw1DpF
-        4UAwnFqr4DJFyUZw1xCws5Xry3Jw1ftFW7tayfKas3WrZ5J34qkF1UuFn5ur1rAF45JFy7
-        Zrs8KFWUuF13AFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUlIb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-        8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
-        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI
-        8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2
-        z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2
-        xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
-        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5V
-        A0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Wrv_
-        ZF1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMx
-        CIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-        JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-        v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8I
-        cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRKRRRtUUUUU==
+X-CM-TRANSID: AQAAf9Dxf2oexvFeJ7JIAA--.33S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr43CFWDZrWrXF13Gry3Jwb_yoW8ZrWfpF
+        47A39Ivr1fCa43Ar1fAr40yFy3AFn5Kay7K3yxt3sxXr95G34DWF1UAa4kXr97JrWxG3Wj
+        9F4rWFWUG3WUCF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
+        xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+        8cxan2IY04v7MxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+        WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+        67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42
+        IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1U
+        MIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCT
+        nIWIevJa73UjIFyTuYvjfU09NVDUUUU
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check the return value of irq_domain_translate_twocell() due to
-it may returns -EINVAL if failed and use variable fwspec for it,
-and then use a new variable parent_fwspec which is proper for
-irq_domain_alloc_irqs_parent().
+[git send-email failed due to too many commands,
+ so only cc the major related email and resend it,
+ sorry for that again]
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-loongson-pch-pic.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+When I test the irqchip code of Loongson, I read the related code of other
+chips in drivers/irqchip and I find some potential resource leaks in the
+error path, I think it is better to fix them. Additionally, do some code
+cleanups about Loongson to make it more clean and readable.
 
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index 2a05b93..016f32c 100644
---- a/drivers/irqchip/irq-loongson-pch-pic.c
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -135,16 +135,19 @@ static int pch_pic_alloc(struct irq_domain *domain, unsigned int virq,
- 	int err;
- 	unsigned int type;
- 	unsigned long hwirq;
--	struct irq_fwspec fwspec;
-+	struct irq_fwspec *fwspec = arg;
-+	struct irq_fwspec parent_fwspec;
- 	struct pch_pic *priv = domain->host_data;
- 
--	irq_domain_translate_twocell(domain, arg, &hwirq, &type);
-+	err = irq_domain_translate_twocell(domain, fwspec, &hwirq, &type);
-+	if (err)
-+		return err;
- 
--	fwspec.fwnode = domain->parent->fwnode;
--	fwspec.param_count = 1;
--	fwspec.param[0] = hwirq + priv->ht_vec_base;
-+	parent_fwspec.fwnode = domain->parent->fwnode;
-+	parent_fwspec.param_count = 1;
-+	parent_fwspec.param[0] = hwirq + priv->ht_vec_base;
- 
--	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-+	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &parent_fwspec);
- 	if (err)
- 		return err;
- 
+Tiezhu Yang (7):
+  irqchip: Fix potential resource leaks
+  irqchip/loongson-htpic: Remove redundant kfree operation
+  irqchip/loongson-htvec: Check return value of
+    irq_domain_translate_onecell()
+  irqchip/loongson-pch-pic: Check return value of
+    irq_domain_translate_twocell()
+  irqchip/loongson-pch-msi: Remove unneeded variable
+  irqchip/loongson-htpic: Remove unneeded select of I8259
+  dt-bindings: interrupt-controller: Fix typos in loongson,liointc.yaml
+
+ .../interrupt-controller/loongson,liointc.yaml     |  4 ++--
+ drivers/irqchip/Kconfig                            |  1 -
+ drivers/irqchip/irq-ath79-misc.c                   |  3 +++
+ drivers/irqchip/irq-csky-apb-intc.c                |  3 +++
+ drivers/irqchip/irq-csky-mpintc.c                  | 26 +++++++++++++++++-----
+ drivers/irqchip/irq-davinci-aintc.c                | 17 ++++++++++----
+ drivers/irqchip/irq-davinci-cp-intc.c              | 17 +++++++++++---
+ drivers/irqchip/irq-digicolor.c                    |  4 ++++
+ drivers/irqchip/irq-dw-apb-ictl.c                  | 11 ++++++---
+ drivers/irqchip/irq-loongson-htpic.c               |  6 ++---
+ drivers/irqchip/irq-loongson-htvec.c               | 10 +++++++--
+ drivers/irqchip/irq-loongson-pch-msi.c             |  7 +-----
+ drivers/irqchip/irq-loongson-pch-pic.c             | 15 ++++++++-----
+ drivers/irqchip/irq-ls1x.c                         |  4 +++-
+ drivers/irqchip/irq-mscc-ocelot.c                  |  6 +++--
+ drivers/irqchip/irq-nvic.c                         |  2 ++
+ drivers/irqchip/irq-omap-intc.c                    |  4 +++-
+ drivers/irqchip/irq-riscv-intc.c                   |  1 +
+ drivers/irqchip/irq-s3c24xx.c                      | 20 ++++++++++++-----
+ drivers/irqchip/irq-xilinx-intc.c                  |  1 +
+ 20 files changed, 116 insertions(+), 46 deletions(-)
+
 -- 
 2.1.0
 
