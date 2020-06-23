@@ -5,93 +5,94 @@ X-Spam-Level:
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 871CD206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D2E20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:43:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBqtOtj6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyUZBOOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732039AbgFWAkQ (ORCPT
+        id S1731815AbgFWAnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39182 "EHLO
+        Mon, 22 Jun 2020 20:43:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731625AbgFWAkO (ORCPT
+        with ESMTP id S1731566AbgFWAnI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:40:14 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11A6FC061573;
-        Mon, 22 Jun 2020 17:39:34 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id j189so17349124oih.10;
-        Mon, 22 Jun 2020 17:39:33 -0700 (PDT)
+        Mon, 22 Jun 2020 20:43:08 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5861EC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:43:08 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id b4so17334276qkn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:43:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8gg5xcfbj2whqXxmSEa9T/iWOw2YwyVIV2mrfaawyUE=;
-        b=iBqtOtj6PpiscFSPYPQwVkLB3pum2HERpu/4Zbx3HuodXjwvGfuDEjUADFUPcnmJkT
-         0q3lFKM2x4/sNmAQytMDGbS6DJdlHvvxW7hEIRemFt4mI00wyTIIU2rWmZ39kgbpQHei
-         Vo36HARttyGRuF3D80oVRnp4OXoN7MvDb4FaJb+x3vtvF7ANKAl8+YbbgJQ4wrFtYT9s
-         rDuBrct6kpUAzUQvFg84HY38NmcXS9QBjcxj1WFGcQUpSBob+Lce8qJej4Bzl/8Gcs/O
-         y/kLRFQzmjcWBhjmTq+Cdt+7eQjgriUmPBj3p1evFawWxas1mT3DfhqYEy+wKuEudafe
-         1IDw==
+        h=from:to:cc:subject:date:message-id;
+        bh=FBwIr+e7jchXkt4H6NuRTDKCZPzK552qDXzcqbEDs6A=;
+        b=gyUZBOOzt670fE92C1H0iaD0YACDowMWCt1Yg0vHM7ewn375tV7lJPyuf9yyJMK1hU
+         2TVCWtSpSQZdhiGiAbXjOayedf9NICfebY6TTZ3kqGgqvQF/asjbyXr4pkiBu/LhK122
+         DKm0saOCl+8vEE0dM7mZksUpIIl5h8zR60FZ6qzno3Vp/w42ULGGhY/Zb/KuFGRHhB2f
+         4Al128UAiE0YOrGQOl+fiDpwoezJDDBYRe+NEFVxpj/F1DRL8QGLU+MxNWfl0cd9TkLq
+         3BTGmSB3VNi+PVqVpuJoR+bGC3Smkt5U0aECRwLS7jX901sFjestTpB3cMGYRHFdK0oN
+         13mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8gg5xcfbj2whqXxmSEa9T/iWOw2YwyVIV2mrfaawyUE=;
-        b=SNP//5M8tRdLeU0VpGuCPn+ICTBSaCnTfb9br9iws+73Uz+TDaj8ldXMViLD4XCtu2
-         eIYtdCPtUOREML8RLLvin+qm+2yxZH3hBgwMBXtcTOvFzY9w1gREyKzx1KUU41l4HEim
-         um28lDOdzsrNHn74aPCWnqPH0rD9Cc1AwQVeFZMx1zvYzjwv4EE/cNJ7bMpoSktz8rK+
-         sK+fIkkQoqzLjcMKsHp6cDKewlh4i7bD3PtcvQiWkNJUfIQo8eVJWO1oAVXj8rdgBWF4
-         INdaYeeYP728VnEYVJr3fV+/FjsuMMcuW0fzn7JG43uzJfdGmnT8AzAxI7kPgrdn9E3u
-         7IdQ==
-X-Gm-Message-State: AOAM532qTHPYiXcCtJ9IYtjVHRFTUbzKKIYW6MEWv6EKzb0HXh0HBajv
-        vaXQC5b70WjYViayU7wbGKNfZ6Hg
-X-Google-Smtp-Source: ABdhPJx8hTNMnfiRhhP2jbOGvs6MmoC/nZk9+07kzXuHFoV0Tu0ZpvLDzw6IBOGmsupvMEvAIlqCNA==
-X-Received: by 2002:a05:6808:295:: with SMTP id z21mr14399674oic.178.1592872772765;
-        Mon, 22 Jun 2020 17:39:32 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id y31sm3677828otb.41.2020.06.22.17.39.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FBwIr+e7jchXkt4H6NuRTDKCZPzK552qDXzcqbEDs6A=;
+        b=ElV+Eg8F/twOW0E1GhXZpyYpEOrJWf2xIPtzxDIimLqO+++uISNaezKqpIUfHWI6+S
+         IQX1q5txtUHE2Q5uhsWRYZXMicjlwzOpy1GhvS6LnikpeXD9fx89TO5npIVF9MlXHdRA
+         TX0KPzdTDWSJ6dXxBCMYgBhvkHlaHdBtXSUH6e+k8hqq+0AIiN2IzWkFu52E7uyLAc4o
+         B9JX8h17twjzweijjm8MabR2pBT1nkscy8rHVJLD5YApzoOp97vibetSsjcCS8C0jcyg
+         JJUzkrBw09H57JCpfo+nRuZ16VqKJDiFDHzlrHGxvJRLVjyV2mXVcR3/JPjUQOnteJ65
+         zYPw==
+X-Gm-Message-State: AOAM532UV9Dvme667CCbBH1DYE220RfnMIjFs1nTRu1NtiAgEdxCqotK
+        1YBuPrSRs19vCsEV6sfOrX/yREyS
+X-Google-Smtp-Source: ABdhPJy8yhN8dEOHDWjDvJKogoT9P6faHK76jOSvqXmfq56hqURheop/aYNpu9v8b7kCBZT13YPisQ==
+X-Received: by 2002:a37:a20d:: with SMTP id l13mr16239706qke.296.1592872987098;
+        Mon, 22 Jun 2020 17:43:07 -0700 (PDT)
+Received: from localhost.localdomain ([72.53.229.195])
+        by smtp.gmail.com with ESMTPSA id i14sm14544702qkl.105.2020.06.22.17.43.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 17:39:32 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH 0/2] Small fixes around cacheflush.h
-Date:   Mon, 22 Jun 2020 16:47:38 -0700
-Message-Id: <20200622234740.72825-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 22 Jun 2020 17:43:06 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Janos Farkas <chexum+dev@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v1 0/2] address romfs performance regression
+Date:   Mon, 22 Jun 2020 20:42:59 -0400
+Message-Id: <20200623004301.26117-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Tree: next-20200613
 
-These two patches are the culmination of the small discussion here:
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Janos Farkas <chexum+dev@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+To: linux-kernel@vger.kernel.org
 
-https://lore.kernel.org/lkml/CAMuHMdVSduTOi5bUgF9sLQdGADwyL1+qALWsKgin1TeOLGhAKQ@mail.gmail.com/
+Sven Van Asbroeck (2):
+  romfs: use s_blocksize(_bits) if CONFIG_BLOCK
+  romfs: address performance regression since v3.10
 
-I have fallen behind on fixing issues so sorry for not sending these
-sooner and letting these warnings slip into mainline. Please let me know
-if there are any comments or concerns. They are two completely
-independent patches so if they need to be routed via separate trees,
-that is fine. It was just easier to send them together since they are
-dealing with the same problem.
+ fs/romfs/storage.c | 25 ++++++++--------
+ fs/romfs/super.c   | 71 ++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 78 insertions(+), 18 deletions(-)
 
-Cheers,
-Nathan
-
+-- 
+2.17.1
 
