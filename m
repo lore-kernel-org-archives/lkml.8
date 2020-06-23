@@ -2,123 +2,126 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23786C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C63C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07D7720720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DE420774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:48:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DHSb/7qb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732854AbgFWOrH (ORCPT
+        id S1732845AbgFWOsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:47:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
+        Tue, 23 Jun 2020 10:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732738AbgFWOrG (ORCPT
+        with ESMTP id S1732798AbgFWOsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:47:06 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56670C061573;
-        Tue, 23 Jun 2020 07:47:06 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 46FA62601D1
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20200413134611.478441-1-enric.balletbo@collabora.com>
- <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
- <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
- <10490419.gsntqH5CaE@kreacher> <20200606180435.GQ89269@dtor-ws>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <cb138300-6063-f345-f358-512193a9574c@collabora.com>
-Date:   Tue, 23 Jun 2020 16:46:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 23 Jun 2020 10:48:46 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A996C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:48:46 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id y7so320077vkf.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NEabnoTzMSMmcitY1/kUEpPMigRk7eTjdULYpM76Ya0=;
+        b=DHSb/7qblyoC5f9D++LorPl3ez8L+VQhZKYnVxUQ9dLG2QiycB4kbSeK6pXj88TjQz
+         QD3h3IvFfIXvU2jIAt0tjkC6PMYXNql5yUzFG36LH05yzBs/z623O0R5YrGgwT7Osv00
+         Vqdknz0xMDz/A0AbHhPKiBKgL/zlLArpB/LwQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NEabnoTzMSMmcitY1/kUEpPMigRk7eTjdULYpM76Ya0=;
+        b=uIZDqubkeEGPUL+UOp3pzretyiHmNMLd5kpgAyQa6/mHWMztHk+JuFm6FZV4jNtgyn
+         FPOokzl9Ebq6GqgaP0g5b+rWHxDgj7BU48wEW28Xr2hW8c4doW9k+TQ7aDuCYbj499At
+         OX/E/Loisu9lNM2oB0x/SIX/ANKDdqppgikVpvRazlRsIaoN96CVjZma1n3TBGzDAnav
+         st+aehglBnmy/1KC76+QgTzyZR5KwwQy5362SzbK/USPfpf+suR2SOcizMVFjb8daVSY
+         qJk5mkj+CQWGWgxm6X7APPNsJ0EPNsunH7+LLPrcR0oquoC3nBF0CSGrxMEPHhHTDW42
+         2m5g==
+X-Gm-Message-State: AOAM532Yu9m6CjcKoxirD66nWhDO5BG3MVs5v0OU7FTp42qDnLj43QtP
+        yUmO8gvvL6o588zIcbGyt/xubDCqxKI=
+X-Google-Smtp-Source: ABdhPJymP0IwJpFlHTSnI7oJwwZFfLUxmExNWsbrX769Sw3L/SrVFBsTxEPDxYEGhhzetoiM3oX6Bg==
+X-Received: by 2002:a1f:4355:: with SMTP id q82mr5412733vka.69.1592923725637;
+        Tue, 23 Jun 2020 07:48:45 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id s19sm2649712vke.14.2020.06.23.07.48.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 07:48:44 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id a10so6890610uan.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:48:44 -0700 (PDT)
+X-Received: by 2002:a9f:3b1c:: with SMTP id i28mr13926131uah.22.1592923723861;
+ Tue, 23 Jun 2020 07:48:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200606180435.GQ89269@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200617145116.247432-1-dianders@chromium.org>
+ <20200617074930.v3.3.I68222d0b5966f652f29dd3a73ab33551a6e3b7e0@changeid> <20200623133559.GD2783@bug>
+In-Reply-To: <20200623133559.GD2783@bug>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 23 Jun 2020 07:48:32 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Up9MfQju_5Pvqqe1kU1ebZrmWK-qWvA_-zm8K74wkKNg@mail.gmail.com>
+Message-ID: <CAD=FV=Up9MfQju_5Pvqqe1kU1ebZrmWK-qWvA_-zm8K74wkKNg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] nvmem: qfprom: Add fuse blowing support
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, dhavalp@codeaurora.org,
+        mturney@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        sparate@codeaurora.org, mkurumel@codeaurora.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+Hi,
 
-On 6/6/20 20:04, Dmitry Torokhov wrote:
-> Hi Rafael,
-> 
-> On Fri, Jun 05, 2020 at 01:17:15PM +0200, Rafael J. Wysocki wrote:
->>
->> First off, GGL0001 is not a valid ACPI device ID, because the GGL prefix is not
->> present in the list at https://uefi.org/acpi_id_list
->>
+On Tue, Jun 23, 2020 at 6:36 AM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> Hi!
+>
+> > This patch adds support for blowing fuses to the qfprom driver if the
+> > required properties are defined in the device tree.
+>
+> Should we have this in kernel?
+>
+> If so, should we make it harder to use, like passing module parameter
+> enabling this kind of support or something? Kconfig option as most users
+> will not need this so this should be compiled out?
+>
+>                                                                         Pavel
 
-True, this device ID is not in the ACPI id list, but it is in the legacy PNP id
-list at https://uefi.org/pnp_id_list
+It's definitely a good question.  I'm curious: who are you trying to
+protect these fuses from?  A bumbling user or a malicious bit of code.
 
-Even is a legacy one, this device has been here a long time, just that Google
-had an out-of-tree patch to support that we would like to upstream.
+For a bumbling user we presumably just need something that makes it
+not quite so easy to blow the fuses.  Passing a module parameter isn't
+a bad idea.  Would the module parameter only take effect if provided
+when the module was loaded, or could it be switched on later via
+sysfs?
 
-So, I'm wondering if PNP id's are still valid?
+For a malicious bit of code: the only real protection is to have the
+bootloader protect these, or to blow the fuses which disable future
+fuses from being blown (the access permission fuses).  Otherwise
+malicious code could always just code up its own driver to bypass any
+protections.
 
->> There are two ways to address that.  One would be to take the GOOG prefix
->> (present in the list above), append a proper unique number (if I were to
->> guess, I would say that 0001 had been reserved already) to it and then
->> put the resulting device ID into the firmware, to be returned _HID for the
->> device in question (you can add a _CID returning "GGL0001" so it can be
->> found by the old invalid ID at least from the kernel).
-> 
-> This is not going to happen, as there are devices in the wild with such
-> firmware (i.e. Samus - Google Pixel 2 - was shipped in 2015). Even if
-> Google were to release updated firmware (which is quite unlikely), it
-> does not mean that users who are not using Chrome OS would apply updated
-> firmware.
-> 
->> The other one would
->> be to properly register the GGL prefix for Google and establish a process for
->> allocating IDs with that prefix internally.
-> 
-> I think it depends on whether there are more instances of "GGL" prefix.
-> I thought we mostly used GOOG for everything.
-> 
+NOTE: if we already have protection from malicious code by having the
+bootloader configure protections, I wonder if we still need additional
+protections against a bumbling user?
 
-I only see one instance using GGL, GGL0001 which I think is present on all
-ACPI-based Chromebooks, and I'd think that the PNP id GGL is a proper valid
-prefix for Google. However is true that then Google mostly used GOOG.
 
-[1]
-https://chromium.googlesource.com/chromiumos/third_party/coreboot/+/refs/heads/chromeos-2016.05/src/vendorcode/google/chromeos/acpi/chromeos.asl
-
-Thanks,
- Enric
-
-> Thanks.
-> 
+-Doug
