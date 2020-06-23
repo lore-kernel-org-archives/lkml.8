@@ -2,115 +2,96 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8931EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 362CD204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946664;
-	bh=4Xicm35odI0DIe2upMQXW0PefIjA4OgLuPkTJlGjGRo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4PuuMSPwRcG4lDwT1UG42BtGKk1qfKk1ih3S653Ds6wDUDx2KOB0YyE1TMTwibNt
-	 ZESTaGy6Cb7ay0aKGmjoI9x/tqI8JbJCW7xCc+MiPAH3RPk5qJSyV54OIDdgKgoBZW
-	 8RON2wgEfjXq6Vm9+BUGTUqePhsVjT1GdQJbzPD8=
+	by mail.kernel.org (Postfix) with ESMTP id 5E716204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393342AbgFWVLC (ORCPT
+        id S2390850AbgFWVLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:11:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389684AbgFWUdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B00FA206C3;
-        Tue, 23 Jun 2020 20:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944404;
-        bh=4Xicm35odI0DIe2upMQXW0PefIjA4OgLuPkTJlGjGRo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=moHj+cRb8A/C3sAcGYA6Mgqa9U1i4alefucsWkM85PGSeaPiyOvkzP+hYVz3/dG1d
-         WYNSMes1r8LGqJaEb08+EZrNrlOreCSjiwxm+jiYh/ERSNmYVAkfDUfd2OnS9Lu7WY
-         II4hRv5F5RsNLZ+BAIxyfgwRTxZvx2F4hu+etljE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hongbo Yao <yaohongbo@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wei Li <liwei391@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 264/314] perf stat: Fix NULL pointer dereference
-Date:   Tue, 23 Jun 2020 21:57:39 +0200
-Message-Id: <20200623195351.567147685@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
-References: <20200623195338.770401005@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 17:11:10 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53408 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389684AbgFWVLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:11:05 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 56CED1C0C0A; Tue, 23 Jun 2020 23:11:03 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 23:11:03 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 066/206] soundwire: slave: dont init debugfs on
+ device registration error
+Message-ID: <20200623211102.GB4401@amd>
+References: <20200623195316.864547658@linuxfoundation.org>
+ <20200623195320.204985936@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
+Content-Disposition: inline
+In-Reply-To: <20200623195320.204985936@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hongbo Yao <yaohongbo@huawei.com>
 
-[ Upstream commit c0c652fc705de75f4ba52e93053acc1ed3933e74 ]
+--i0/AhcQY5QxfSsSZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If config->aggr_map is NULL and config->aggr_get_id is not NULL,
-the function print_aggr() will still calling arrg_update_shadow(),
-which can result in accessing the invalid pointer.
+Hi!
 
-Fixes: 088519f318be ("perf stat: Move the display functions to stat-display.c")
-Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wei Li <liwei391@huawei.com>
-Link: https://lore.kernel.org/lkml/20200608163625.GC3073@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/util/stat-display.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> [ Upstream commit 8893ab5e8ee5d7c12e0fc1dca4a309475064473d ]
+>=20
+> The error handling flow seems incorrect, there is no reason to try and
+> add debugfs support if the device registration did not
+> succeed. Return on error.
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ed3b0ac2f7850..373e399e57d28 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -661,7 +661,7 @@ static void print_aggr(struct perf_stat_config *config,
- 	int s;
- 	bool first;
- 
--	if (!(config->aggr_map || config->aggr_get_id))
-+	if (!config->aggr_map || !config->aggr_get_id)
- 		return;
- 
- 	aggr_update_shadow(config, evlist);
-@@ -1140,7 +1140,7 @@ static void print_percore(struct perf_stat_config *config,
- 	int s;
- 	bool first = true;
- 
--	if (!(config->aggr_map || config->aggr_get_id))
-+	if (!config->aggr_map || !config->aggr_get_id)
- 		return;
- 
- 	for (s = 0; s < config->aggr_map->nr; s++) {
--- 
-2.25.1
+> +++ b/drivers/soundwire/slave.c
+> @@ -55,6 +55,8 @@ static int sdw_slave_add(struct sdw_bus *bus,
+>  		list_del(&slave->node);
+>  		mutex_unlock(&bus->bus_lock);
+>  		put_device(&slave->dev);
+> +
+> +		return ret;
+>  	}
+> =20
+>  	return ret;
 
+Mainline is significantly different here; this patch does not make
+sense in v4.19 -- as it does not do anything.
 
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--i0/AhcQY5QxfSsSZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7yb+YACgkQMOfwapXb+vIpBgCguXIYBDydvxHF/VrSJvIq1C6u
+CrEAn3RXvz12D0iGQtA1lz2By4y491LE
+=qSV3
+-----END PGP SIGNATURE-----
+
+--i0/AhcQY5QxfSsSZ--
