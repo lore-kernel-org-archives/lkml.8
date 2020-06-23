@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F08C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C46A208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21B720EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592871712;
-	bh=JWeEvxY1czQrY61YbGMme47ATcktCscWlySH9PAuJx8=;
+	s=default; t=1592871714;
+	bh=v8L16gFdtdEwBmp5EsUutLkEAAPJcRQNFOZhQugVOR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UWE9Hv0FwvcYZsTm1Is0vBWevyOAafsBUGrtmBooRLDu97HVr8TzLrg2R6VwkzpUR
-	 XDSxmW7ufMOkgPcrHfOBZIcwsiu19u9eS9n7TMWBijiSz45f4LpsjUzSEZkl0Lk2IL
-	 RkGS/DFfa53t1kSXzHR1fu4MGJJd07QeTCD7FWCw=
+	b=f9V9j5b2xj4vRgCHLBRqm6gl8fu/xBjJul2dsLpHXuNn9jLvBzA1UWm43N4LfdPDA
+	 WNYBSRRt1esAmf3dQYIW7lJUrvKMV1g3320dgJdVgWvILY66z2nmC06MvV0o5mEu5l
+	 hxg9QEEZleo0l5wZYC3RDUcNvG413ZUa+ZrpY8go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbgFWAVu (ORCPT
+        id S1731561AbgFWAVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48000 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:21:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730309AbgFWAVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730421AbgFWAVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:21:50 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6759F20720;
+        by mail.kernel.org (Postfix) with ESMTPSA id A095320780;
         Tue, 23 Jun 2020 00:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592871709;
-        bh=JWeEvxY1czQrY61YbGMme47ATcktCscWlySH9PAuJx8=;
+        bh=v8L16gFdtdEwBmp5EsUutLkEAAPJcRQNFOZhQugVOR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXfDUHGRwuP4kp7TtjbOR9fftgnIgYmmDwobs5wuU23smBfmfpIoi/7reD0VHi8EN
-         arMdotaPsa4GT/pwxTCnKaUxrqT+JJlCg6Vji6bGiiy0Z8DScRor2pxrhbR9jeNVhH
-         RRMP7xB7rcI4H5Hp4E+v0ZyKeLuxUjyIYocsDXyo=
+        b=aKcKnGJjD3+Wzb8bYF+tGmsDY+grnvXJ5JTdH/8kzqKBpHK96KSXU8UarB+Ube8+2
+         rbRAD/XbuBOkMkA5mQWGFADMjcr6EGSGw3uRgAp+WIvJiFkIw+feV2wgqXamBds6qs
+         1pv1LNQtQKd2ZsNXVYLSxsPCnLw0MuP7Ek1e7Uzc=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 01/26] rcu: Initialize and destroy rcu_synchronize only when necessary
-Date:   Mon, 22 Jun 2020 17:21:22 -0700
-Message-Id: <20200623002147.25750-1-paulmck@kernel.org>
+        "Paul E. McKenney" <paulmck@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH tip/core/rcu 02/26] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
+Date:   Mon, 22 Jun 2020 17:21:23 -0700
+Message-Id: <20200623002147.25750-2-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002128.GA25456@paulmck-ThinkPad-P72>
 References: <20200623002128.GA25456@paulmck-ThinkPad-P72>
@@ -60,54 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yang <richard.weiyang@gmail.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The __wait_rcu_gp() function unconditionally initializes and cleans up
-each element of rs_array[], whether used or not.  This is slightly
-wasteful and rather confusing, so this commit skips both initialization
-and cleanup for duplicate callback functions.
+A large process running on a heavily loaded system can encounter the
+following RCU CPU stall warning:
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+  rcu: INFO: rcu_sched self-detected stall on CPU
+  rcu: \x093-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
+  \x09(t=21013 jiffies g=1005461 q=132576)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
+  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
+  Call Trace:
+   <IRQ>
+   dump_stack+0x46/0x60
+   nmi_cpu_backtrace.cold.3+0x13/0x50
+   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
+   nmi_trigger_cpumask_backtrace+0xba/0xca
+   rcu_dump_cpu_stacks+0x99/0xc7
+   rcu_sched_clock_irq.cold.87+0x1aa/0x397
+   ? tick_sched_do_timer+0x60/0x60
+   update_process_times+0x28/0x60
+   tick_sched_timer+0x37/0x70
+   __hrtimer_run_queues+0xfe/0x270
+   hrtimer_interrupt+0xf4/0x210
+   smp_apic_timer_interrupt+0x5e/0x120
+   apic_timer_interrupt+0xf/0x20
+   </IRQ>
+  RIP: 0010:kmem_cache_free+0x223/0x300
+  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
+  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
+  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
+  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
+  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
+  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
+   ? remove_vma+0x4f/0x60
+   remove_vma+0x4f/0x60
+   exit_mmap+0xd6/0x160
+   mmput+0x4a/0x110
+   do_exit+0x278/0xae0
+   ? syscall_trace_enter+0x1d3/0x2b0
+   ? handle_mm_fault+0xaa/0x1c0
+   do_group_exit+0x3a/0xa0
+   __x64_sys_exit_group+0x14/0x20
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
+for a very long time given a large process.  This commit therefore adds
+a cond_resched() to this loop, providing RCU any needed quiescent states.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <linux-mm@kvack.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/update.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ mm/mmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 84843ad..f5a82e1 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -390,13 +390,14 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
- 			might_sleep();
- 			continue;
- 		}
--		init_rcu_head_on_stack(&rs_array[i].head);
--		init_completion(&rs_array[i].completion);
- 		for (j = 0; j < i; j++)
- 			if (crcu_array[j] == crcu_array[i])
- 				break;
--		if (j == i)
-+		if (j == i) {
-+			init_rcu_head_on_stack(&rs_array[i].head);
-+			init_completion(&rs_array[i].completion);
- 			(crcu_array[i])(&rs_array[i].head, wakeme_after_rcu);
-+		}
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 59a4682..972f839 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3159,6 +3159,7 @@ void exit_mmap(struct mm_struct *mm)
+ 		if (vma->vm_flags & VM_ACCOUNT)
+ 			nr_accounted += vma_pages(vma);
+ 		vma = remove_vma(vma);
++		cond_resched();
  	}
- 
- 	/* Wait for all callbacks to be invoked. */
-@@ -407,9 +408,10 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
- 		for (j = 0; j < i; j++)
- 			if (crcu_array[j] == crcu_array[i])
- 				break;
--		if (j == i)
-+		if (j == i) {
- 			wait_for_completion(&rs_array[i].completion);
--		destroy_rcu_head_on_stack(&rs_array[i].head);
-+			destroy_rcu_head_on_stack(&rs_array[i].head);
-+		}
- 	}
+ 	vm_unacct_memory(nr_accounted);
  }
- EXPORT_SYMBOL_GPL(__wait_rcu_gp);
 -- 
 2.9.5
 
