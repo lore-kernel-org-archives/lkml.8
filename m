@@ -2,152 +2,184 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E218C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97DBD2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:09:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="P2oBais/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NMW+DdGa"
+	by mail.kernel.org (Postfix) with ESMTP id 1DAA520738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbgFWFJU (ORCPT
+        id S1728785AbgFWFMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 01:09:20 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35173 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728615AbgFWFJT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 01:09:19 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id B51711523;
-        Tue, 23 Jun 2020 01:09:17 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 23 Jun 2020 01:09:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        BhAMcLIJbzcVg3EcrY75vci3LWn+3/RFUgkWveFZuJ0=; b=P2oBais/wQsWyflW
-        7M9CuhHGBe+s5rh4j5PHmrG4qqa2DSt9wgM1cw7/tCA5zfQ8gv/5GDqhvGnpTylm
-        U2S+Npbk63AyxQ2uImjOxQVqm2atxUjc2UPJC/ba8QdIZ3MmLGmIWBj7kNl0lKna
-        CY73qmyFvzPUIKRA1PNW9m7/2XqsMuVzz440nOuGPMJ5VvCOm+x33JSG3yTMFeIJ
-        690S8xmclTGmELMYd+7OfrHja3dDHrRJk57Eb4g0dyzelKRdHtU18slccMC4leC7
-        l3mJ8e+ZCmfJWB7czUSZCi8AssXZh8Qs5tt2kXeEZF5b6zDej7sDeSmwrDaqR6r/
-        n5u1rw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=BhAMcLIJbzcVg3EcrY75vci3LWn+3/RFUgkWveFZu
-        J0=; b=NMW+DdGap8KZTIHQbvLwetLGlIMc1O63Ajx49FYNZWz9feJ85fKkCwMBR
-        JxZoUnJtBBdsXzoE1fRToW8OnNHhzm/cyP+4CIIv4rLlHLzDFNfHRDRnlvpcyaze
-        baHas4qlQxZRXSePwQniZN+YEQuanAZWtN0UAkuXxkshu5GmdHgBIxdPuhF7XGGY
-        dbx5iobn3x+6R5CttamWqnJXoU7S6cftCK2siUw9izFhjfXwYXPyoD64lS12j5k7
-        xRxjrDzxsbDTodYyzgzTmvw88D0SVtoDncoCC15L5JnIbYnNKtY8QiJ0XYu1PkQJ
-        fm0IdpsFxceev2+iTdbBxNBNRJokg==
-X-ME-Sender: <xms:fI7xXluCzZiiw5TyO3G3rPn_ipXv_Kh8ChYb0WjBB8R1gcNQKfCm5w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekfedgleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
-    phepuddukedrvddtkedrheegrdehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:fI7xXudeeBAbIR-Bq7g_yMNCCzpZi5BqQm_le8CohSdrS7fSh-df7A>
-    <xmx:fI7xXoxK2O5j-A5hPOmzdPa1sr5MA0oBQCs0QNAOa2ExQwMxqU7uUw>
-    <xmx:fI7xXsPxBGssEkTCtHfpuAEsYU-F6aScDjkPrOtgjGeWR-qYVEyy4A>
-    <xmx:fY7xXoknoAQHhVn0UYRW0KtPaEG0jwRInryev1DhlCXM-RaokFavHQ>
-Received: from mickey.themaw.net (unknown [118.208.54.50])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1D807306743C;
-        Tue, 23 Jun 2020 01:09:12 -0400 (EDT)
-Message-ID: <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-From:   Ian Kent <raven@themaw.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>
-Cc:     Rick Lindsley <ricklind@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 23 Jun 2020 13:09:08 +0800
-In-Reply-To: <20200622180306.GA1917323@kroah.com>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
-         <20200619153833.GA5749@mtj.thefacebook.com>
-         <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
-         <20200619222356.GA13061@mtj.duckdns.org>
-         <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
-         <20200622174845.GB13061@mtj.duckdns.org>
-         <20200622180306.GA1917323@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 23 Jun 2020 01:12:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8579 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726359AbgFWFMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 01:12:39 -0400
+IronPort-SDR: dR0cHZlvxZ7Q8pQktbIMSMAKulHP9DRZFexwWNPExun2XGqEmz0395uuzbJGllJb0ZaRF0rr2+
+ 9KBJG0Yluxnw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="132378787"
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="132378787"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 22:12:37 -0700
+IronPort-SDR: 4US/X2t6JntLkTjyz/6nb1NF6h/OLfkpRiDyZK4gFqjAVc44jszCKKXxO+SxCxH24mpPrsigAy
+ vwA1ASmbdofQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="311165675"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.255.228.38])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Jun 2020 22:12:36 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, lenb@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 1/2] cpufreq: intel_pstate: Allow enable/disable energy efficiency
+Date:   Mon, 22 Jun 2020 22:12:32 -0700
+Message-Id: <20200623051233.1419218-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-22 at 20:03 +0200, Greg Kroah-Hartman wrote:
-> On Mon, Jun 22, 2020 at 01:48:45PM -0400, Tejun Heo wrote:
-> > Hello, Ian.
-> > 
-> > On Sun, Jun 21, 2020 at 12:55:33PM +0800, Ian Kent wrote:
-> > > > > They are used for hotplugging and partitioning memory. The
-> > > > > size of
-> > > > > the
-> > > > > segments (and thus the number of them) is dictated by the
-> > > > > underlying
-> > > > > hardware.
-> > > > 
-> > > > This sounds so bad. There gotta be a better interface for that,
-> > > > right?
-> > > 
-> > > I'm still struggling a bit to grasp what your getting at but ...
-> > 
-> > I was more trying to say that the sysfs device interface with per-
-> > object
-> > directory isn't the right interface for this sort of usage at all.
-> > Are these
-> > even real hardware pieces which can be plugged in and out? While
-> > being a
-> > discrete piece of hardware isn't a requirement to be a device model
-> > device,
-> > the whole thing is designed with such use cases on mind. It
-> > definitely isn't
-> > the right design for representing six digit number of logical
-> > entities.
-> > 
-> > It should be obvious that representing each consecutive memory
-> > range with a
-> > separate directory entry is far from an optimal way of representing
-> > something like this. It's outright silly.
-> 
-> I agree.  And again, Ian, you are just "kicking the problem down the
-> road" if we accept these patches.  Please fix this up properly so
-> that
-> this interface is correctly fixed to not do looney things like this.
+By default intel_pstate driver disables energy efficiency by setting
+MSR_IA32_POWER_CTL bit 19 for Kaby Lake desktop CPU model in HWP mode.
+This CPU model is also shared by Coffee Lake desktop CPUs. This allows
+these systems to reach maximum possible frequency. But this adds power
+penalty, which some customers don't want. They want some way to enable/
+disable dynamically.
 
-Fine, mitigating this problem isn't the end of the story, and you
-don't want to do accept a change to mitigate it because that could
-mean no further discussion on it and no further work toward solving
-it.
+So, add an additional attribute "energy_efficiency_enable" under
+/sys/devices/system/cpu/intel_pstate/ for these CPU models. This allows
+to read and write bit 19 ("Disable Energy Efficiency Optimization") in
+the MSR IA32_POWER_CTL.
 
-But it seems to me a "proper" solution to this will cross a number
-of areas so this isn't just "my" problem and, as you point out, it's
-likely to become increasingly problematic over time.
+This attribute is present in both HWP and non-HWP mode as this has an
+effect in both modes. Refer to Intel Software Developer's manual for
+details. The scope of this bit is package wide.
 
-So what are your ideas and recommendations on how to handle hotplug
-memory at this granularity for this much RAM (and larger amounts)?
+Suggested-by: Len Brown <lenb@kernel.org>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ Documentation/admin-guide/pm/intel_pstate.rst |  7 +++
+ drivers/cpufreq/intel_pstate.c                | 49 ++++++++++++++++++-
+ 2 files changed, 54 insertions(+), 2 deletions(-)
 
-Ian
+diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-guide/pm/intel_pstate.rst
+index 39d80bc29ccd..939bfdc53f4f 100644
+--- a/Documentation/admin-guide/pm/intel_pstate.rst
++++ b/Documentation/admin-guide/pm/intel_pstate.rst
+@@ -431,6 +431,13 @@ argument is passed to the kernel in the command line.
+ 	supported in the current configuration, writes to this attribute will
+ 	fail with an appropriate error.
+ 
++``energy_efficiency_enable``
++	This attribute is only present on platforms, which has CPUs matching
++	Kaby Lake desktop CPU model. By default "energy_efficiency" is disabled
++	on these CPU models in HWP mode by this driver. Enabling energy
++	efficiency may limit maximum operating frequency in both HWP and non
++	HWP mode.
++
+ Interpretation of Policy Attributes
+ -----------------------------------
+ 
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 8e23a698ce04..1cf6d06f2314 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1218,6 +1218,44 @@ static ssize_t store_hwp_dynamic_boost(struct kobject *a,
+ 	return count;
+ }
+ 
++#define MSR_IA32_POWER_CTL_BIT_EE	19
++
++static ssize_t show_energy_efficiency_enable(struct kobject *kobj,
++					     struct kobj_attribute *attr,
++					     char *buf)
++{
++	u64 power_ctl;
++	int enable;
++
++	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
++	enable = (power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE)) >> MSR_IA32_POWER_CTL_BIT_EE;
++	return sprintf(buf, "%d\n", !enable);
++}
++
++static ssize_t store_energy_efficiency_enable(struct kobject *a,
++					      struct kobj_attribute *b,
++					      const char *buf, size_t count)
++{
++	u64 power_ctl;
++	u32 input;
++	int ret;
++
++	ret = kstrtouint(buf, 10, &input);
++	if (ret)
++		return ret;
++
++	mutex_lock(&intel_pstate_driver_lock);
++	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
++	if (input)
++		power_ctl &= ~BIT(MSR_IA32_POWER_CTL_BIT_EE);
++	else
++		power_ctl |= BIT(MSR_IA32_POWER_CTL_BIT_EE);
++	wrmsrl(MSR_IA32_POWER_CTL, power_ctl);
++	mutex_unlock(&intel_pstate_driver_lock);
++
++	return count;
++}
++
+ show_one(max_perf_pct, max_perf_pct);
+ show_one(min_perf_pct, min_perf_pct);
+ 
+@@ -1228,6 +1266,7 @@ define_one_global_rw(min_perf_pct);
+ define_one_global_ro(turbo_pct);
+ define_one_global_ro(num_pstates);
+ define_one_global_rw(hwp_dynamic_boost);
++define_one_global_rw(energy_efficiency_enable);
+ 
+ static struct attribute *intel_pstate_attributes[] = {
+ 	&status.attr,
+@@ -1241,6 +1280,8 @@ static const struct attribute_group intel_pstate_attr_group = {
+ 	.attrs = intel_pstate_attributes,
+ };
+ 
++static const struct x86_cpu_id intel_pstate_cpu_ee_disable_ids[];
++
+ static void __init intel_pstate_sysfs_expose_params(void)
+ {
+ 	struct kobject *intel_pstate_kobject;
+@@ -1273,6 +1314,12 @@ static void __init intel_pstate_sysfs_expose_params(void)
+ 				       &hwp_dynamic_boost.attr);
+ 		WARN_ON(rc);
+ 	}
++
++	if (x86_match_cpu(intel_pstate_cpu_ee_disable_ids)) {
++		rc = sysfs_create_file(intel_pstate_kobject,
++				       &energy_efficiency_enable.attr);
++		WARN_ON(rc);
++	}
+ }
+ /************************** sysfs end ************************/
+ 
+@@ -1288,8 +1335,6 @@ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
+ 		cpudata->epp_default = intel_pstate_get_epp(cpudata, 0);
+ }
+ 
+-#define MSR_IA32_POWER_CTL_BIT_EE	19
+-
+ /* Disable energy efficiency optimization */
+ static void intel_pstate_disable_ee(int cpu)
+ {
+-- 
+2.25.4
 
