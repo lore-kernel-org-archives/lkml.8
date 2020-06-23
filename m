@@ -2,51 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7132C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96279207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F7C20EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943642;
-	bh=Yk050y+biJEAGvsKaTUJVbcaGV4a4C3rY2vTssrcBwg=;
+	s=default; t=1592943647;
+	bh=qtfhiFe0v18fNHPyxnSffZu9lTeMjDJR23OVn4vBBGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1niJMBSkQGJZhVfffAp1qTJPRf3kRe9BWFyXBhGzfTxRQN9hInCdYTY130OkzJO0i
-	 jEqDeuu91tueGY7uP3Is2BPIlU6/108Nf5yj9nKgxB21CI8dF/QLu/xjrWvwJOCmjL
-	 mdBoCOZG7LCu/H6dzokMzIZ5cRQMbeBzUi2w65WU=
+	b=11zJCUwz6IgdKuFTtv9C3xThpYkdESChOYx+f6KRyZ80dt7l5oRhnSZr0a8Gtc96C
+	 MgdBbFDZiqI/+yRceb4JmlqOR7X5Q34DxxXrXhJqPivWmqnksLlGLb5M0mihsy0QfD
+	 BwrW53hQD3L+MSyKerKl16voA5gw4rSi6Yfxh+gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389958AbgFWUUk (ORCPT
+        id S2389965AbgFWUUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:20:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37884 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:20:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389868AbgFWUUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:20:31 -0400
+        id S2389431AbgFWUUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:20:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B19872070E;
-        Tue, 23 Jun 2020 20:20:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2A82206C3;
+        Tue, 23 Jun 2020 20:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943631;
-        bh=Yk050y+biJEAGvsKaTUJVbcaGV4a4C3rY2vTssrcBwg=;
+        s=default; t=1592943639;
+        bh=qtfhiFe0v18fNHPyxnSffZu9lTeMjDJR23OVn4vBBGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBK6Umu/gyF88A8NXr88xr7bmzzEhmzbVslADGX5UaCnrrvjKx/MwGYKOGWEcSF+n
-         o5TYCv72CcIt7ujqya8IGdxJ+cWOeixY9kxku/j4IQEeImTfZcoMClz7daqjfPFZ5g
-         9ejL7BLCW2paOPC1l5TiJVfdAJJJuVzMqnAqNX/g=
+        b=k5AucaT5Nqe5NN7ywni5k53t3jW4lpg70pnzRfbE+ksmhT8eF4HTdTMMejMf0TvSQ
+         NFY8I3FFQ0ad+/DD8iyGssXHcIFieuNAyy2ZA1N5Z8ukoUWQvJ2SGq4OhOSDbgsAtB
+         zAz5huuHBCyGhteRBh20rtx2Hg2l9E1KSmTCOwCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.7 466/477] tools/bootconfig: Fix to return 0 if succeeded to show the bootconfig
-Date:   Tue, 23 Jun 2020 21:57:43 +0200
-Message-Id: <20200623195429.575649147@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 439/477] f2fs: split f2fs_d_compare() from f2fs_match_name()
+Date:   Tue, 23 Jun 2020 21:57:16 +0200
+Message-Id: <20200623195428.282330586@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,45 +60,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit f91cb5b7476a603068eae31e5b2cc170dd2b9b1b upstream.
+[ Upstream commit f874fa1c7c7905c1744a2037a11516558ed00a81 ]
 
-Fix bootconfig to return 0 if succeeded to show the bootconfig
-in initrd. Without this fix, "bootconfig INITRD" command
-returns !0 even if the command succeeded to show the bootconfig.
+Sharing f2fs_ci_compare() between comparing cached dentries
+(f2fs_d_compare()) and comparing on-disk dentries (f2fs_match_name())
+doesn't work as well as intended, as these actions fundamentally differ
+in several ways (e.g. whether the task may sleep, whether the directory
+is stable, whether the casefolded name was precomputed, whether the
+dentry will need to be decrypted once we allow casefold+encrypt, etc.)
 
-Link: http://lkml.kernel.org/r/159230246566.65555.11891772258543514487.stgit@devnote2
+Just make f2fs_d_compare() implement what it needs directly, and rework
+f2fs_ci_compare() to be specialized for f2fs_match_name().
 
-Cc: stable@vger.kernel.org
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bootconfig/main.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/f2fs/dir.c  | 70 +++++++++++++++++++++++++-------------------------
+ fs/f2fs/f2fs.h |  5 ----
+ 2 files changed, 35 insertions(+), 40 deletions(-)
 
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -207,11 +207,13 @@ int show_xbc(const char *path)
- 	}
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 44bfc464df787..44eb12a00cd0e 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -107,36 +107,28 @@ static struct f2fs_dir_entry *find_in_block(struct inode *dir,
+ /*
+  * Test whether a case-insensitive directory entry matches the filename
+  * being searched for.
+- *
+- * Returns: 0 if the directory entry matches, more than 0 if it
+- * doesn't match or less than zero on error.
+  */
+-int f2fs_ci_compare(const struct inode *parent, const struct qstr *name,
+-				const struct qstr *entry, bool quick)
++static bool f2fs_match_ci_name(const struct inode *dir, const struct qstr *name,
++			       const struct qstr *entry, bool quick)
+ {
+-	const struct f2fs_sb_info *sbi = F2FS_SB(parent->i_sb);
++	const struct f2fs_sb_info *sbi = F2FS_SB(dir->i_sb);
+ 	const struct unicode_map *um = sbi->s_encoding;
+-	int ret;
++	int res;
  
- 	ret = load_xbc_from_initrd(fd, &buf);
--	if (ret < 0)
-+	if (ret < 0) {
- 		pr_err("Failed to load a boot config from initrd: %d\n", ret);
--	else
--		xbc_show_compact_tree();
+ 	if (quick)
+-		ret = utf8_strncasecmp_folded(um, name, entry);
++		res = utf8_strncasecmp_folded(um, name, entry);
+ 	else
+-		ret = utf8_strncasecmp(um, name, entry);
 -
-+		goto out;
-+	}
-+	xbc_show_compact_tree();
-+	ret = 0;
-+out:
- 	close(fd);
- 	free(buf);
+-	if (ret < 0) {
+-		/* Handle invalid character sequence as either an error
+-		 * or as an opaque byte sequence.
++		res = utf8_strncasecmp(um, name, entry);
++	if (res < 0) {
++		/*
++		 * In strict mode, ignore invalid names.  In non-strict mode,
++		 * fall back to treating them as opaque byte sequences.
+ 		 */
+-		if (f2fs_has_strict_mode(sbi))
+-			return -EINVAL;
+-
+-		if (name->len != entry->len)
+-			return 1;
+-
+-		return !!memcmp(name->name, entry->name, name->len);
++		if (f2fs_has_strict_mode(sbi) || name->len != entry->len)
++			return false;
++		return !memcmp(name->name, entry->name, name->len);
+ 	}
+-
+-	return ret;
++	return res == 0;
+ }
  
+ static void f2fs_fname_setup_ci_filename(struct inode *dir,
+@@ -188,10 +180,10 @@ static inline bool f2fs_match_name(struct f2fs_dentry_ptr *d,
+ 		if (cf_str->name) {
+ 			struct qstr cf = {.name = cf_str->name,
+ 					  .len = cf_str->len};
+-			return !f2fs_ci_compare(parent, &cf, &entry, true);
++			return f2fs_match_ci_name(parent, &cf, &entry, true);
+ 		}
+-		return !f2fs_ci_compare(parent, fname->usr_fname, &entry,
+-					false);
++		return f2fs_match_ci_name(parent, fname->usr_fname, &entry,
++					  false);
+ 	}
+ #endif
+ 	if (fscrypt_match_name(fname, d->filename[bit_pos],
+@@ -1080,17 +1072,25 @@ const struct file_operations f2fs_dir_operations = {
+ static int f2fs_d_compare(const struct dentry *dentry, unsigned int len,
+ 			  const char *str, const struct qstr *name)
+ {
+-	struct qstr qstr = {.name = str, .len = len };
+ 	const struct dentry *parent = READ_ONCE(dentry->d_parent);
+-	const struct inode *inode = READ_ONCE(parent->d_inode);
+-
+-	if (!inode || !IS_CASEFOLDED(inode)) {
+-		if (len != name->len)
+-			return -1;
+-		return memcmp(str, name->name, len);
+-	}
+-
+-	return f2fs_ci_compare(inode, name, &qstr, false);
++	const struct inode *dir = READ_ONCE(parent->d_inode);
++	const struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
++	struct qstr entry = QSTR_INIT(str, len);
++	int res;
++
++	if (!dir || !IS_CASEFOLDED(dir))
++		goto fallback;
++
++	res = utf8_strncasecmp(sbi->s_encoding, name, &entry);
++	if (res >= 0)
++		return res;
++
++	if (f2fs_has_strict_mode(sbi))
++		return -EINVAL;
++fallback:
++	if (len != name->len)
++		return 1;
++	return !!memcmp(str, name->name, len);
+ }
+ 
+ static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 555c84953ea81..5a0f95dfbac2b 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3101,11 +3101,6 @@ int f2fs_update_extension_list(struct f2fs_sb_info *sbi, const char *name,
+ 							bool hot, bool set);
+ struct dentry *f2fs_get_parent(struct dentry *child);
+ 
+-extern int f2fs_ci_compare(const struct inode *parent,
+-			   const struct qstr *name,
+-			   const struct qstr *entry,
+-			   bool quick);
+-
+ /*
+  * dir.c
+  */
+-- 
+2.25.1
+
 
 
