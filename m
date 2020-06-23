@@ -2,159 +2,136 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B44BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 228B52076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592927661;
-	bh=6SrOT80UTSn/ROCESG3xoWDGTuarvycjZLf+Tqy5hbo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ldQSjl3kBnQ2UY2Lhr+EN/jGvsEBwGax5MFlYZ7a7VrVH0Q4aoClTVKJmkZYpKygx
-	 dmzZ4StdNFWzB/Q7X8vScHeARfsfOEF1GtUOHV9YLebhPKxCZ4gZQ4yO0dl182+dbI
-	 UmM1EEPI+yci/Vp2jSgzClVhL+W4ctT1p07y8i2o=
+	by mail.kernel.org (Postfix) with ESMTP id 94E382073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:54:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y6jIt2KF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733000AbgFWPyU (ORCPT
+        id S1733057AbgFWPyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732781AbgFWPyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:54:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 440CE2073E;
-        Tue, 23 Jun 2020 15:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592927659;
-        bh=6SrOT80UTSn/ROCESG3xoWDGTuarvycjZLf+Tqy5hbo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=W/u8qXH8J2KikHKNIe6/s8WAM1SvEVKNzSZI/H/gZrTbWEHdjMJoJtw5D9p+6pVAy
-         XVsc+LAJJDOCEATmPuc//0YGBOE7SlmmJtOc0Q04OJcWi2dau7aXrnCp3+qHHIXZKi
-         mLI+6OZ3AOPmXvFhYGV48ANqfoIyV8mLtVlxWYiM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2C5613522657; Tue, 23 Jun 2020 08:54:19 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 08:54:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
-        parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
-Subject: Re: [PATCH tip/core/rcu 13/14] tools/memory-model/README: Expand
- dependency of klitmus7
-Message-ID: <20200623155419.GI9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
- <20200623005231.27712-13-paulmck@kernel.org>
- <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
+        Tue, 23 Jun 2020 11:54:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60364 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733013AbgFWPyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 11:54:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592927678;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hkLiUukuiXYIVGoeVwJVWCpKIqIZbdauaKoo+m3/3nA=;
+        b=Y6jIt2KFpBShAPPnXvLS4SWze1RLVA3IEajWhpLZ3yz7QK5oRo3go2Pp5ZWJgesy6saotd
+        XD7CAhXecBCyy91Ra+CniEH1OEXcZ/TzjvPk3r5XOQJIQ7ndxOlne8Gy1EMvEkZ5IfTqAC
+        giOsSEd4Vsqg8mfXiEX5FPV8HLgI6wY=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-BGpIunpIOiyA9fO4kLAebg-1; Tue, 23 Jun 2020 11:54:37 -0400
+X-MC-Unique: BGpIunpIOiyA9fO4kLAebg-1
+Received: by mail-qv1-f70.google.com with SMTP id v20so2146358qvt.15
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:54:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hkLiUukuiXYIVGoeVwJVWCpKIqIZbdauaKoo+m3/3nA=;
+        b=EWJQHAzMg3ti/6YWHGSdsBK745dKTWBHM8BPs/PjQdyrtN9IyksiAjZ69xGsqeG/xG
+         xuxwnKy/1NEA2qd2bqIxPxu/aqkHwZ6Xc9kZxonkj1BUb1y5R+sWTXoTFRRK8YFoYqhV
+         Hs528V0c5RfILRG3Y3NR3SFqtHglZZBU2HUe6wEUXjE8qxpD2lXXPycpxG2LSMyKH9xP
+         OntESVcemJLXUTyE5T+2wwA/wQERLIt4nMnl1qhCUP0Up5jcXlC4869wSrx+uerJBUVX
+         lxphIBwQt4a2XuiPSb+EczYQyFIlTF803RPdQefo0Mpp5/nleP5qsLIJWk9KsHnSkJ1+
+         Ru/Q==
+X-Gm-Message-State: AOAM532lpQoN7Jo6BalzGJMcDnUXng5gWNh1DmFihPs2BA+BGXs6ySbP
+        baKxCVHga1prc3iZrBPbbGKjAtE1vWLcWro7/BCdRWNII5O5vh7gBnQ2tNG8+XIdCvdwZFuC211
+        jdX5rQQ6cboAS3P+B+tc0k9O5TfgeIupAntKbYDhm
+X-Received: by 2002:ad4:4732:: with SMTP id l18mr3784728qvz.208.1592927676567;
+        Tue, 23 Jun 2020 08:54:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxaMrF3dl8inlInwgi9ZvOstGos06ueqsrxUIfXtsW401PD1wsBXR5y4aT0AAuSJXkN6jcwtfzXMTpt1KtoBl0=
+X-Received: by 2002:ad4:4732:: with SMTP id l18mr3784714qvz.208.1592927676350;
+ Tue, 23 Jun 2020 08:54:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200611113404.17810-1-mst@redhat.com> <20200611113404.17810-3-mst@redhat.com>
+ <0332b0cf-cf00-9216-042c-e870efa33626@redhat.com> <20200622115946-mutt-send-email-mst@kernel.org>
+ <c56cc86d-a420-79ca-8420-e99db91980fa@redhat.com> <CAJaqyWc3C_Td_SpV97CuemkQH9vH+EL3sGgeWGE82E5gYxZNCA@mail.gmail.com>
+ <20200623042456-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200623042456-mutt-send-email-mst@kernel.org>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Tue, 23 Jun 2020 17:54:00 +0200
+Message-ID: <CAJaqyWfKdOUwnG50a1ni=MBEwfM5qp-h+zj1xbT4xUbvKGP5iw@mail.gmail.com>
+Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:37:32PM +0900, Akira Yokosawa wrote:
-> On Mon, 22 Jun 2020 17:52:30 -0700, paulmck@kernel.org wrote:
-> > From: Akira Yokosawa <akiyks@gmail.com>
-> > 
-> > klitmus7 is independent of the memory model but depends on the
-> > build-target kernel release.
-> > It occasionally lost compatibility due to kernel API changes [1, 2, 3].
-> > It was remedied in a backwards-compatible manner respectively [4, 5, 6].
-> > 
-> > Reflect this fact in README.
-> > 
-> > [1]: b899a850431e ("compiler.h: Remove ACCESS_ONCE()")
-> > [2]: 0bb95f80a38f ("Makefile: Globally enable VLA warning")
-> > [3]: d56c0d45f0e2 ("proc: decouple proc from VFS with "struct proc_ops"")
-> > [4]: https://github.com/herd/herdtools7/commit/e87d7f9287d1
-> >      ("klitmus: Use WRITE_ONCE and READ_ONCE in place of deprecated ACCESS_ONCE")
-> > [5]: https://github.com/herd/herdtools7/commit/a0cbb10d02be
-> >      ("klitmus: Avoid variable length array")
-> > [6]: https://github.com/herd/herdtools7/commit/46b9412d3a58
-> >      ("klitmus: Linux kernel v5.6.x compat")
-> > 
-> > NOTE: [5] was ahead of herdtools7 7.53, which did not make an
-> > official release.  Code generated by klitmus7 without [5] can still be
-> > built targeting Linux 4.20--5.5 if you don't care VLA warnings.
-> > 
-> > Acked-by: Andrea Parri <parri.andrea@gmail.com>
-> > Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  tools/memory-model/README | 30 ++++++++++++++++++++++++++++--
-> >  1 file changed, 28 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/memory-model/README b/tools/memory-model/README
-> > index b9c562e..90af203 100644
-> > --- a/tools/memory-model/README
-> > +++ b/tools/memory-model/README
-> > @@ -28,8 +28,34 @@ downloaded separately:
-> >  See "herdtools7/INSTALL.md" for installation instructions.
-> >  
-> >  Note that although these tools usually provide backwards compatibility,
-> > -this is not absolutely guaranteed.  Therefore, if a later version does
-> > -not work, please try using the exact version called out above.
-> > +this is not absolutely guaranteed.
-> > +
-> > +For example, a future version of herd7 might not work with the model
-> > +in this release.  A compatible model will likely be made available in
-> > +a later release of Linux kernel.
-> > +
-> > +If you absolutely need to run the model in this particular release,
-> > +please try using the exact version called out above.
-> > +
-> > +klitmus7 is independent of the model provided here.  It has its own
-> > +dependency on a target kernel release where converted code is built
-> > +and executed.  Any change in kernel APIs essential to klitmus7 will
-> > +necessitate an upgrade of klitmus7.
-> > +
-> > +If you find any compatibility issues in klitmus7, please inform the
-> > +memory model maintainers.
-> > +
-> > +klitmus7 Compatibility Table
-> > +----------------------------
-> > +
-> > +	============  ==========
-> > +	target Linux  herdtools7
-> > +	------------  ----------
-> > +	     -- 4.18  7.48 --
-> > +	4.15 -- 4.19  7.49 --
-> > +	4.20 -- 5.5   7.54 --
-> > +	5.6  --       HEAD
-> > +	============  ==========
-> 
-> Paul,
-> 
-> I was planning to send an update on this one.
-> herdtoolds7 7.56 will be released later this week (now tagged 7.56-rc1).
-> 
-> Andrea tested klitmus7 7.56-rc1 against Linux 5.7 and 5.8-rc1.
-> I tested it against Linux 5.7.4.
-> klitmus7 worked fine in all these test.
-> 
-> So I think we can safely update the bottom row of the table as:
-> 
-> > +	5.6  --       7.56 --
-> 
-> Can you amend this one directly?
-> Or do you want me to send a follow-up patch?
+On Tue, Jun 23, 2020 at 10:25 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Tue, Jun 23, 2020 at 09:00:57AM +0200, Eugenio Perez Martin wrote:
+> > On Tue, Jun 23, 2020 at 4:51 AM Jason Wang <jasowang@redhat.com> wrote:
+> > >
+> > >
+> > > On 2020/6/23 =E4=B8=8A=E5=8D=8812:00, Michael S. Tsirkin wrote:
+> > > > On Wed, Jun 17, 2020 at 11:19:26AM +0800, Jason Wang wrote:
+> > > >> On 2020/6/11 =E4=B8=8B=E5=8D=887:34, Michael S. Tsirkin wrote:
+> > > >>>    static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+> > > >>>    {
+> > > >>>     kfree(vq->descs);
+> > > >>> @@ -394,6 +400,9 @@ static long vhost_dev_alloc_iovecs(struct vho=
+st_dev *dev)
+> > > >>>     for (i =3D 0; i < dev->nvqs; ++i) {
+> > > >>>             vq =3D dev->vqs[i];
+> > > >>>             vq->max_descs =3D dev->iov_limit;
+> > > >>> +           if (vhost_vq_num_batch_descs(vq) < 0) {
+> > > >>> +                   return -EINVAL;
+> > > >>> +           }
+> > > >> This check breaks vdpa which set iov_limit to zero. Consider iov_l=
+imit is
+> > > >> meaningless to vDPA, I wonder we can skip the test when device doe=
+sn't use
+> > > >> worker.
+> > > >>
+> > > >> Thanks
+> > > > It doesn't need iovecs at all, right?
+> > > >
+> > > > -- MST
+> > >
+> > >
+> > > Yes, so we may choose to bypass the iovecs as well.
+> > >
+> > > Thanks
+> > >
+> >
+> > I think that the kmalloc_array returns ZERO_SIZE_PTR for all of them
+> > in that case, so I didn't bother to skip the kmalloc_array parts.
+> > Would you prefer to skip them all and let them NULL? Or have I
+> > misunderstood what you mean?
+> >
+> > Thanks!
+>
+> Sorry about being unclear. I just meant that it seems cleaner
+> to check for iov_limit being 0 not for worker thread.
 
-A follow-up patch is probably best.  This can't be the only place that
-must change?  Or maybe we set this up better than I remember?  ;-)
+Actually yes, I also think that iov_limit =3D=3D 0 is a better check.
+Changing for the next revision if everyone agrees.
 
-							Thanx, Paul
+Thanks!
+
+>
+> --
+> MST
+>
+
