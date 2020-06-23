@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB64C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3CB52073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFD52064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943838;
-	bh=mUUu3G3kX/MG6RIEg98bdeapRrbqiepmG9DOcONQhRw=;
+	s=default; t=1592943843;
+	bh=wcAgNaQvdHcK1XfFg3FwAbfYOohj7YRHevkrO1aMAD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gi2j3x713A3p/KaLXuFj2oKLe7/iBGheAPT8O/sZUgHOqvfEQ6CbowuXn+y1XJJUF
-	 mIvoREfgbYul4w6NfLJBsJQCgVejFHkcRwMk3Gf+nBgd8sgx7r3FKijdDHkwwLk9Fn
-	 IKwlf028ZeYkbA4k2I3bXLyG8kxu9IQDa8Ji3L8o=
+	b=0ul5rGtiNjAAih+aQ54w8h5AqoYCmyt9HpfczK3PsztSmj19syH51VH768+xDX2aL
+	 R537KyxKyN6EFKGnGvzYTRINoKG+0uZ1hyTq51k0m5txwRISuD2otpH/IUOKelfKL8
+	 AxTDf5VshLpCZlCZpseAvultt6cs60J2EZweEp6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390001AbgFWUX4 (ORCPT
+        id S2390369AbgFWUYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42170 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390353AbgFWUXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:23:52 -0400
+        id S2387861AbgFWUX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:23:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 011252070E;
-        Tue, 23 Jun 2020 20:23:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E07BB2070E;
+        Tue, 23 Jun 2020 20:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943832;
-        bh=mUUu3G3kX/MG6RIEg98bdeapRrbqiepmG9DOcONQhRw=;
+        s=default; t=1592943837;
+        bh=wcAgNaQvdHcK1XfFg3FwAbfYOohj7YRHevkrO1aMAD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRjMR1/N9JphnOJUNKkTWoVby5qOqcB6SvIOARHUMK7a7typzSDtjOO4MuIj4V9Fd
-         W21flfmYjBaC8bK55hgXBJQexCdXo5Oa2gEXeGwjwIkIrH6DlvlZ7bKD1x3ADvg9Fs
-         82bnb0+O+n8kukTRxladH+lthjExlU+VRMUp0WY0=
+        b=ZvRXLUdHRdniBZ8hU4jWZlDGXgtDM+lvzbJQNRvJPk8dYN0zrvQNPKeoLlqAi3Eel
+         607cogsQ0qPyrApAHUAehssIaigs9yh2hTlBI0jS+j6oX6ABJtzygR3XyYFAlpvvFN
+         6mvxZnVKXEKakQSY20ehobBipKyKfuT5tGYAJZHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 028/314] remoteproc: qcom_q6v5_mss: map/unmap mpss segments before/after use
-Date:   Tue, 23 Jun 2020 21:53:43 +0200
-Message-Id: <20200623195340.150783120@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 071/314] NTB: ntb_pingpong: Choose doorbells based on port number
+Date:   Tue, 23 Jun 2020 21:54:26 +0200
+Message-Id: <20200623195342.223688495@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,108 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit be050a3429f46ecf13eb2b80f299479f8bb823fb ]
+[ Upstream commit ca93c45755da98302c93abdd788fc09113baf9e0 ]
 
-The application processor accessing the mpss region when the Q6 modem is
-running will lead to an XPU violation. Fix this by un-mapping the mpss
-segments post copy during mpss authentication and coredumps.
+This commit fixes pingpong support for existing drivers that do not
+implement ntb_default_port_number() and ntb_default_peer_port_number().
+This is required for hardware (like the crosslink topology of
+switchtec) which cannot assign reasonable port numbers to each port due
+to its perfect symmetry.
 
-Tested-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200415071619.6052-1-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Instead of picking the doorbell to use based on the the index of the
+peer, we use the peer's port number. This is a bit clearer and easier
+to understand.
+
+Fixes: c7aeb0afdcc2 ("NTB: ntb_pp: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_q6v5_mss.c | 31 +++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ drivers/ntb/test/ntb_pingpong.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 6ba065d5c4d95..d84e9f306086b 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -1005,7 +1005,13 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 			goto release_firmware;
- 		}
+diff --git a/drivers/ntb/test/ntb_pingpong.c b/drivers/ntb/test/ntb_pingpong.c
+index 65865e460ab87..18d00eec7b025 100644
+--- a/drivers/ntb/test/ntb_pingpong.c
++++ b/drivers/ntb/test/ntb_pingpong.c
+@@ -121,15 +121,14 @@ static int pp_find_next_peer(struct pp_ctx *pp)
+ 	link = ntb_link_is_up(pp->ntb, NULL, NULL);
  
--		ptr = qproc->mpss_region + offset;
-+		ptr = ioremap_wc(qproc->mpss_phys + offset, phdr->p_memsz);
-+		if (!ptr) {
-+			dev_err(qproc->dev,
-+				"unable to map memory region: %pa+%zx-%x\n",
-+				&qproc->mpss_phys, offset, phdr->p_memsz);
-+			goto release_firmware;
-+		}
- 
- 		if (phdr->p_filesz && phdr->p_offset < fw->size) {
- 			/* Firmware is large enough to be non-split */
-@@ -1014,6 +1020,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 					"failed to load segment %d from truncated file %s\n",
- 					i, fw_name);
- 				ret = -EINVAL;
-+				iounmap(ptr);
- 				goto release_firmware;
- 			}
- 
-@@ -1024,6 +1031,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
- 			if (ret) {
- 				dev_err(qproc->dev, "failed to load %s\n", fw_name);
-+				iounmap(ptr);
- 				goto release_firmware;
- 			}
- 
-@@ -1036,6 +1044,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
- 			memset(ptr + phdr->p_filesz, 0,
- 			       phdr->p_memsz - phdr->p_filesz);
- 		}
-+		iounmap(ptr);
- 		size += phdr->p_memsz;
- 	}
- 
-@@ -1075,7 +1084,8 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
- 	int ret = 0;
- 	struct q6v5 *qproc = rproc->priv;
- 	unsigned long mask = BIT((unsigned long)segment->priv);
--	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
-+	int offset = segment->da - qproc->mpss_reloc;
-+	void *ptr = NULL;
- 
- 	/* Unlock mba before copying segments */
- 	if (!qproc->dump_mba_loaded) {
-@@ -1089,10 +1099,15 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
- 		}
- 	}
- 
--	if (!ptr || ret)
--		memset(dest, 0xff, segment->size);
--	else
-+	if (!ret)
-+		ptr = ioremap_wc(qproc->mpss_phys + offset, segment->size);
-+
-+	if (ptr) {
- 		memcpy(dest, ptr, segment->size);
-+		iounmap(ptr);
-+	} else {
-+		memset(dest, 0xff, segment->size);
-+	}
- 
- 	qproc->dump_segment_mask |= mask;
- 
-@@ -1393,12 +1408,6 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
- 
- 	qproc->mpss_phys = qproc->mpss_reloc = r.start;
- 	qproc->mpss_size = resource_size(&r);
--	qproc->mpss_region = devm_ioremap_wc(qproc->dev, qproc->mpss_phys, qproc->mpss_size);
--	if (!qproc->mpss_region) {
--		dev_err(qproc->dev, "unable to map memory region: %pa+%zx\n",
--			&r.start, qproc->mpss_size);
--		return -EBUSY;
+ 	/* Find next available peer */
+-	if (link & pp->nmask) {
++	if (link & pp->nmask)
+ 		pidx = __ffs64(link & pp->nmask);
+-		out_db = BIT_ULL(pidx + 1);
+-	} else if (link & pp->pmask) {
++	else if (link & pp->pmask)
+ 		pidx = __ffs64(link & pp->pmask);
+-		out_db = BIT_ULL(pidx);
+-	} else {
++	else
+ 		return -ENODEV;
 -	}
++
++	out_db = BIT_ULL(ntb_peer_port_number(pp->ntb, pidx));
  
- 	return 0;
+ 	spin_lock(&pp->lock);
+ 	pp->out_pidx = pidx;
+@@ -303,7 +302,7 @@ static void pp_init_flds(struct pp_ctx *pp)
+ 			break;
+ 	}
+ 
+-	pp->in_db = BIT_ULL(pidx);
++	pp->in_db = BIT_ULL(lport);
+ 	pp->pmask = GENMASK_ULL(pidx, 0) >> 1;
+ 	pp->nmask = GENMASK_ULL(pcnt - 1, pidx);
+ 
+@@ -435,4 +434,3 @@ static void __exit pp_exit(void)
+ 	debugfs_remove_recursive(pp_dbgfs_topdir);
  }
+ module_exit(pp_exit);
+-
 -- 
 2.25.1
 
