@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3225C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949B3204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB87C204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733071AbgFWQpT (ORCPT
+        id S1733070AbgFWQpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:45:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39042 "EHLO mx2.suse.de"
+        Tue, 23 Jun 2020 12:45:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39240 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733040AbgFWQpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:45:15 -0400
+        id S1733062AbgFWQpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:45:19 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E12C6AECB;
-        Tue, 23 Jun 2020 16:45:12 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 6B41BAEB1;
+        Tue, 23 Jun 2020 16:45:17 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     gregkh@linuxfoundation.org
 Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
@@ -31,9 +31,9 @@ Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 12/50] staging: vchi: Get rid of all useless callback reasons
-Date:   Tue, 23 Jun 2020 18:41:58 +0200
-Message-Id: <20200623164235.29566-13-nsaenzjulienne@suse.de>
+Subject: [PATCH 18/50] staging: vchi_common: Get rid of all unused definitions
+Date:   Tue, 23 Jun 2020 18:42:04 +0200
+Message-Id: <20200623164235.29566-19-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
 References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
@@ -44,74 +44,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They are neither produced nor expected, so just delete them.
+There is a series of structures and enums defined but never used. Get
+rid of them.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../interface/vchi/vchi_common.h              | 40 ++-----------------
- 1 file changed, 3 insertions(+), 37 deletions(-)
+ .../interface/vchi/vchi_common.h              | 65 -------------------
+ 1 file changed, 65 deletions(-)
 
 diff --git a/drivers/staging/vc04_services/interface/vchi/vchi_common.h b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-index 7fc04e38936d..0f79bea4757d 100644
+index 0f79bea4757d..e07376fe4dfd 100644
 --- a/drivers/staging/vc04_services/interface/vchi/vchi_common.h
 +++ b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-@@ -31,8 +31,6 @@ enum vchi_crc_control {
- 
- //callback reasons when an event occurs on a service
- enum vchi_callback_reason {
--	VCHI_CALLBACK_REASON_MIN,
+@@ -10,23 +10,7 @@ enum vchi_flags {
+ 	VCHI_FLAGS_BLOCK_UNTIL_OP_COMPLETE   = 0x1,   // waits for message to be received, or sent (NB. not the same as being seen on other side)
+ 	VCHI_FLAGS_CALLBACK_WHEN_OP_COMPLETE = 0x2,   // run a callback when message sent
+ 	VCHI_FLAGS_BLOCK_UNTIL_QUEUED        = 0x4,   // return once the transfer is in a queue ready to go
+-	VCHI_FLAGS_ALLOW_PARTIAL             = 0x8,
+ 	VCHI_FLAGS_BLOCK_UNTIL_DATA_READ     = 0x10,
+-	VCHI_FLAGS_CALLBACK_WHEN_DATA_READ   = 0x20,
 -
- 	/*
- 	 * This indicates that there is data available handle is the msg id that
- 	 * was transmitted with the data
-@@ -41,44 +39,12 @@ enum vchi_callback_reason {
- 	 * Tasks get kicked by the callback, reset their event and try and read
- 	 * from the fifo until it fails
- 	 */
-+	VCHI_CALLBACK_SERVICE_CLOSED,
- 	VCHI_CALLBACK_MSG_AVAILABLE,
--	VCHI_CALLBACK_MSG_SENT,
--	VCHI_CALLBACK_MSG_SPACE_AVAILABLE, // XXX not yet implemented
+-	VCHI_FLAGS_ALIGN_SLOT            = 0x000080,  // internal use only
+-	VCHI_FLAGS_BULK_AUX_QUEUED       = 0x010000,  // internal use only
+-	VCHI_FLAGS_BULK_AUX_COMPLETE     = 0x020000,  // internal use only
+-	VCHI_FLAGS_BULK_DATA_QUEUED      = 0x040000,  // internal use only
+-	VCHI_FLAGS_BULK_DATA_COMPLETE    = 0x080000,  // internal use only
+-	VCHI_FLAGS_INTERNAL              = 0xFF0000
+-};
 -
--	// This indicates that a transfer from the other side has completed
--	VCHI_CALLBACK_BULK_RECEIVED,
--	//This indicates that data queued up to be sent has now gone
--	//handle is the msg id that was used when sending the data
- 	VCHI_CALLBACK_BULK_SENT,
--	VCHI_CALLBACK_BULK_RX_SPACE_AVAILABLE, // XXX not yet implemented
--	VCHI_CALLBACK_BULK_TX_SPACE_AVAILABLE, // XXX not yet implemented
--
--	VCHI_CALLBACK_SERVICE_CLOSED,
--
--	/*
--	 * this side has sent XOFF to peer due to lack of data consumption by
--	 * service (suggests the service may need to take some recovery action
--	 * if it has been deliberately holding off consuming data)
--	 */
--	VCHI_CALLBACK_SENT_XOFF,
--	VCHI_CALLBACK_SENT_XON,
--
--	// indicates that a bulk transfer has finished reading the source buffer
--	VCHI_CALLBACK_BULK_DATA_READ,
--
--	// power notification events (currently host side only)
--	VCHI_CALLBACK_PEER_OFF,
--	VCHI_CALLBACK_PEER_SUSPENDED,
--	VCHI_CALLBACK_PEER_ON,
--	VCHI_CALLBACK_PEER_RESUMED,
--	VCHI_CALLBACK_FORCED_POWER_OFF,
--
--	// some extra notifications provided by vchiq_arm
--	VCHI_CALLBACK_SERVICE_OPENED,
--	VCHI_CALLBACK_BULK_RECEIVE_ABORTED,
-+	VCHI_CALLBACK_BULK_RECEIVED,
- 	VCHI_CALLBACK_BULK_TRANSMIT_ABORTED,
--
--	VCHI_CALLBACK_REASON_MAX
-+	VCHI_CALLBACK_BULK_RECEIVE_ABORTED,
+-// constants for vchi_crc_control()
+-enum vchi_crc_control {
+-	VCHI_CRC_NOTHING = -1,
+-	VCHI_CRC_PER_SERVICE = 0,
+-	VCHI_CRC_EVERYTHING = 1,
  };
  
- // service control options
+ //callback reasons when an event occurs on a service
+@@ -47,58 +31,9 @@ enum vchi_callback_reason {
+ 	VCHI_CALLBACK_BULK_RECEIVE_ABORTED,
+ };
+ 
+-// service control options
+-enum vchi_service_option {
+-	VCHI_SERVICE_OPTION_MIN,
+-
+-	VCHI_SERVICE_OPTION_TRACE,
+-	VCHI_SERVICE_OPTION_SYNCHRONOUS,
+-
+-	VCHI_SERVICE_OPTION_MAX
+-};
+-
+ //Callback used by all services / bulk transfers
+ typedef void (*vchi_callback)(void *callback_param, //my service local param
+ 			      enum vchi_callback_reason reason,
+ 			      void *handle); //for transmitting msg's only
+ 
+-/*
+- * Define vector struct for scatter-gather (vector) operations
+- * Vectors can be nested - if a vector element has negative length, then
+- * the data pointer is treated as pointing to another vector array, with
+- * '-vec_len' elements. Thus to append a header onto an existing vector,
+- * you can do this:
+- *
+- * void foo(const struct vchi_msg_vector *v, int n)
+- * {
+- *    struct vchi_msg_vector nv[2];
+- *    nv[0].vec_base = my_header;
+- *    nv[0].vec_len = sizeof my_header;
+- *    nv[1].vec_base = v;
+- *    nv[1].vec_len = -n;
+- *    ...
+- *
+- */
+-struct vchi_msg_vector {
+-	const void *vec_base;
+-	int32_t vec_len;
+-};
+-
+-/*
+- * Iterator structure for reading ahead through received message queue.
+- * Allocated by client, initialised by vchi_msg_look_ahead. Fields are for
+- * internal VCHI use only.
+- * Iterates over messages in queue at the instant of the call to
+- * vchi_msg_lookahead - will not proceed to messages received since.
+- * Behaviour is undefined if an iterator is used again after messages for that
+- * service are removed/dequeued by any means other than vchi_msg_iter_...
+- * calls on the iterator itself.
+- */
+-struct vchi_msg_iter {
+-	struct opaque_vchi_service_t *service;
+-	void *last;
+-	void *next;
+-	void *remove;
+-};
+-
+ #endif // VCHI_COMMON_H_
 -- 
 2.27.0
 
