@@ -2,128 +2,106 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7863C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D423FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9FF20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7E220723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YzRmSVna"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XUj2kzOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbgFWJhk (ORCPT
+        id S1732053AbgFWJiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731786AbgFWJhj (ORCPT
+        Tue, 23 Jun 2020 05:38:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59306 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731786AbgFWJiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:37:39 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF2BC061573;
-        Tue, 23 Jun 2020 02:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rr3b1L/FRTesaaOv4/PvWj0LHdOB3M9NfrW+uOEVYWA=; b=YzRmSVnafR71kfHBMtvsTFlor4
-        R+lp5VMgL0ebzHOh+QEWTBnMhVzxPSRJSHxoDsIzRrvVxe1a7hyOEZkLFNynKT0S4zR6n9Ny4aEXD
-        Xar4W98pYb2i2DeNZZEUUsaOPqH3xOSDCrwgMe01aiW8B8EbuUDcYOxLKwiXLnTfn2j2JYDvjW68F
-        qeVTgtIwKZYkV8POYR+MmUm1uOYFFqlNglQVmBTKco9lFLO2Vt7VcA9opS2xLXGxq+z/3HXWD7Y9C
-        g++uw7TqMk9ZEU4jy1S8OZTepUzIql6kpRloaga4DMwh4j4EUlzV3Zz3xPGj3qZNwYbT3IeWi5gf1
-        ICi5L0BA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnfMi-0007Fm-AT; Tue, 23 Jun 2020 09:37:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D1C5C3003E5;
-        Tue, 23 Jun 2020 11:37:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9947A2370F7C4; Tue, 23 Jun 2020 11:37:14 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 11:37:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 2/3] arm64: use PAGE_KERNEL_ROX directly in
- alloc_insn_page
-Message-ID: <20200623093714.GE4781@hirez.programming.kicks-ass.net>
-References: <20200618064307.32739-1-hch@lst.de>
- <20200618064307.32739-3-hch@lst.de>
- <20200620191616.bae356186ba3329ade67bbf7@linux-foundation.org>
- <20200623090505.GA7518@lst.de>
- <20200623090757.GB3743@willie-the-truck>
+        Tue, 23 Jun 2020 05:38:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592905095;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=49gqC52SNruUIJgdOHQWjZ/EQ4cGKnvSIHeC7qzdXXc=;
+        b=XUj2kzOPO/JItT4O5zzlqQiEauuB/YJm+MSoIAKD0OS/iDop43sMpbipFtCwdtfxOmrYjh
+        Y08sB/XQncp9XuyuUM8924b8cAy4fATsCEPqLXSVVk9Z3XRvMbOb+Tnc43cc32atBTPWiM
+        cfcmgwS2s8qXkjDFEG8CTRmrzUs1CWs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-qJC5RED6Nwa8g7wk2_V8NQ-1; Tue, 23 Jun 2020 05:38:14 -0400
+X-MC-Unique: qJC5RED6Nwa8g7wk2_V8NQ-1
+Received: by mail-wr1-f71.google.com with SMTP id l3so5392098wrw.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:38:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=49gqC52SNruUIJgdOHQWjZ/EQ4cGKnvSIHeC7qzdXXc=;
+        b=DVIB9htEKmyNye8enNep4Nq5nzwGWc+jk/m9OufwDVnHDkU9701vgcqipahbOMs4Eg
+         HHtfu8txtNVL0aEJPPVi3dUjytSsWY4Txt09DXZNE1Ni85JACtU7W7QCMO7fSvkHGNot
+         1PRW1JC4mQx19+Xu3WjYkacwDhoGHr/LlaRK8cI1glYp4rM39F+0wXTkw6Cf2+XVyv+A
+         rjVzI2wYIB0mUgQWY0RnkWzPA9kxGPUJq6bb4oUYJfvCauf3RwiG3tkcQgVbM1fdOhXi
+         9pSodeShyM8pv8OPwKM16QOAz8pkLXLGuL3ZcKTxPyNceRyRbXJC8xk3pjObRXJ7f9Do
+         zegA==
+X-Gm-Message-State: AOAM530kpZliBnXdZS4UTn1AJidx1fBgiXZMSxrDhM6dzdHApx6SqUlO
+        M2HWTBzs7CNAYcGczuvrzOlQgJN1TNPdlSRavPGKdpYn2XEmLOW7jclq3ALBzyQX71KJcJMqoal
+        k1MVq8g8jAMBS1rLJT2hvPDRz
+X-Received: by 2002:a1c:4187:: with SMTP id o129mr3125326wma.38.1592905092961;
+        Tue, 23 Jun 2020 02:38:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwq/0679MuZvIaPvX1WWewRB4gARTUFIStDzpJ6aOYCG5tFW9wcbNINeQOYcdxwA9/inspg3Q==
+X-Received: by 2002:a1c:4187:: with SMTP id o129mr3125310wma.38.1592905092755;
+        Tue, 23 Jun 2020 02:38:12 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
+        by smtp.gmail.com with ESMTPSA id n16sm2777677wmc.40.2020.06.23.02.38.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 02:38:12 -0700 (PDT)
+Subject: Re: [PATCH] KVM: nVMX: Wrap VM-Fail valid path in generic VM-Fail
+ helper
+To:     Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200609015607.6994-1-sean.j.christopherson@intel.com>
+ <CALMp9eQNF0b8q3naibxtKxo=pym554hRoMJ5ro5febzOUBU-=A@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8f7f7592-7d6f-b1ac-aa85-e5904865b21a@redhat.com>
+Date:   Tue, 23 Jun 2020 11:38:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623090757.GB3743@willie-the-truck>
+In-Reply-To: <CALMp9eQNF0b8q3naibxtKxo=pym554hRoMJ5ro5febzOUBU-=A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:07:58AM +0100, Will Deacon wrote:
-> On Tue, Jun 23, 2020 at 11:05:05AM +0200, Christoph Hellwig wrote:
-> > On Sat, Jun 20, 2020 at 07:16:16PM -0700, Andrew Morton wrote:
-> > > On Thu, 18 Jun 2020 08:43:06 +0200 Christoph Hellwig <hch@lst.de> wrote:
-> > > 
-> > > > Use PAGE_KERNEL_ROX directly instead of allocating RWX and setting the
-> > > > page read-only just after the allocation.
-> > > > 
-> > > > --- a/arch/arm64/kernel/probes/kprobes.c
-> > > > +++ b/arch/arm64/kernel/probes/kprobes.c
-> > > > @@ -120,15 +120,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
-> > > >  
-> > > >  void *alloc_insn_page(void)
-> > > >  {
-> > > > -	void *page;
-> > > > -
-> > > > -	page = vmalloc_exec(PAGE_SIZE);
-> > > > -	if (page) {
-> > > > -		set_memory_ro((unsigned long)page, 1);
-> > > > -		set_vm_flush_reset_perms(page);
-> > > > -	}
-> > > > -
-> > > > -	return page;
-> > > > +	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-> > > > +			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
-> > > > +			NUMA_NO_NODE, __func__);
-> > > >  }
-> > > >  
-> > > >  /* arm kprobe: install breakpoint in text */
-> > > 
-> > > But why.  I think this is just a cleanup, doesn't address any runtime issue?
-> > 
-> > It doesn't "fix" an issue - it just simplifies and speeds up the code.
+On 09/06/20 19:54, Jim Mattson wrote:
+> On Mon, Jun 8, 2020 at 6:56 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+>>
+>> Add nested_vmx_fail() to wrap VM-Fail paths that _may_ result in VM-Fail
+>> Valid to make it clear at the call sites that the Valid flavor isn't
+>> guaranteed.
+>>
+>> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Reviewed-by: Jim Mattson <jmattson@google.com>
 > 
-> Ok, but I don't understand the PLT comment from Peter in
-> 20200618092754.GF576905@hirez.programming.kicks-ass.net:
-> 
->   | I think this has the exact same range issue as the x86 user. But it
->   | might be less fatal if their PLT magic can cover the full range.
-> 
-> Peter, please could you elaborate on your concern? I feel like I'm missing
-> some context.
 
-On x86 we can only directly call code in a (signed) 32bit immediate
-range (2G) and our kernel text and module range are constrained by that.
+Queued, thanks.
 
-IIRC ARM64 has an even smaller immediate range and needs to play fixup
-games with trampolines or somesuch (there was an ARM specific name for
-it that I've misplaced again). Does that machinery cover the entire
-vmalloc space or are you only able to fix up for a smaller range?
+Paolo
 
-Your arch/arm64/kernel/module.c:module_alloc() implementation seems to
-have an explicit module range different from the full vmalloc range, I'm
-thinking this is for a reason.
