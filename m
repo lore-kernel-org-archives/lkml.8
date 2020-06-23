@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE31C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB977C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBC1A214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B9221527
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943279;
-	bh=UA5Iy2yywDIJFznu0z+/7VIb+IIeFKicMJ2FXnd/Hjo=;
+	s=default; t=1592943283;
+	bh=R4gC8Std6+0cBF63AiYHIBg/fdvklqlY1l8m+PkvrKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uZQlefin1scr4NxtpvZICuhN1QPETPtrv2h34IqnUz2wBGaFabwaljnuuSq2HwTwd
-	 9S+5GtPx6rWKTcw1yHRZMxf4MfIDZkqob3J1Nmpnl5lYXVKa9rwe6uq6f6GcTH8I2O
-	 PQyaC6ibkTICESVzXbqR3vSA2lJ9Dmh2VEoTx954=
+	b=2LrTFcyk6JBz/vE/D4PKxsMZ0dZL1Wat4sz47hFcPVbuDo8pdkh5uxzvAVXP+XMqb
+	 FBxlU7KkrEpErR2F1qosabVtYyionMutI8eZymoGRzXXXt5hb4wuGankj7nuldhWpm
+	 GWfREaeS8Md11RQ1SsUC9DXKKL3J5n6fANj17lr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388779AbgFWUOg (ORCPT
+        id S2389219AbgFWUOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388885AbgFWUOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:33 -0400
+        id S2389203AbgFWUOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:14:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B31D6206C3;
-        Tue, 23 Jun 2020 20:14:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C50920E65;
+        Tue, 23 Jun 2020 20:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943273;
-        bh=UA5Iy2yywDIJFznu0z+/7VIb+IIeFKicMJ2FXnd/Hjo=;
+        s=default; t=1592943270;
+        bh=R4gC8Std6+0cBF63AiYHIBg/fdvklqlY1l8m+PkvrKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fg2I2AZZ/OslPtGfaVTU9Vu79kdEoSNFRCTtG6f19WeROGbu+yGk6LGxn5q67GB1+
-         vQclKYQ7rU+sraiXCrBeKOT4rdtS8YA1bNltmPtvhtEZCXax8IV1vio63mSQjSUh9H
-         L54SOrOgdONfIVn55P9gzIIr8tyBpTp4VbEOiKEg=
+        b=a4eP0hMjY3ussb3pK3hmAKOENkUIyBdu2I/pjpnPE0Xyp6BX6+GVxViHYkvN8Teev
+         www2LMei4kC51j0HJD5b3WpVZuGysl070+y1MeOQj8B6OgxGEY6PC459ajXjJrjQDJ
+         Eq5dKLlfm7+F2unJUS1BeiwWEMH+gE25xxZMJNMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 327/477] geneve: change from tx_error to tx_dropped on missing metadata
-Date:   Tue, 23 Jun 2020 21:55:24 +0200
-Message-Id: <20200623195422.993121461@linuxfoundation.org>
+Subject: [PATCH 5.7 326/477] bpf: Fix an error code in check_btf_func()
+Date:   Tue, 23 Jun 2020 21:55:23 +0200
+Message-Id: <20200623195422.945688879@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,62 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 9d149045b3c0e44c049cdbce8a64e19415290017 ]
+[ Upstream commit e7ed83d6fa1a00d0f2ad0327e73d3ea9e7ea8de1 ]
 
-If the geneve interface is in collect_md (external) mode, it can't send any
-packets submitted directly to its net interface, as such packets won't have
-metadata attached. This is expected.
+This code returns success if the "info_aux" allocation fails but it
+should return -ENOMEM.
 
-However, the kernel itself sends some packets to the interface, most
-notably, IPv6 DAD, IPv6 multicast listener reports, etc. This is not wrong,
-as tunnel metadata can be specified in routing table (although technically,
-that has never worked for IPv6, but hopefully will be fixed eventually) and
-then the interface must correctly participate in IPv6 housekeeping.
-
-The problem is that any such attempt increases the tx_error counter. Just
-bringing up a geneve interface with IPv6 enabled is enough to see a number
-of tx_errors. That causes confusion among users, prompting them to find
-a network error where there is none.
-
-Change the counter used to tx_dropped. That better conveys the meaning
-(there's nothing wrong going on, just some packets are getting dropped) and
-hopefully will make admins panic less.
-
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8c1b6e69dcc1 ("bpf: Compare BTF types of functions arguments with actual types")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20200604085436.GA943001@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/geneve.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/bpf/verifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index 6b461be1820bb..75266580b586d 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -987,9 +987,10 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
- 	if (geneve->collect_md) {
- 		info = skb_tunnel_info(skb);
- 		if (unlikely(!info || !(info->mode & IP_TUNNEL_INFO_TX))) {
--			err = -EINVAL;
- 			netdev_dbg(dev, "no tunnel metadata\n");
--			goto tx_error;
-+			dev_kfree_skb(skb);
-+			dev->stats.tx_dropped++;
-+			return NETDEV_TX_OK;
- 		}
- 	} else {
- 		info = &geneve->info;
-@@ -1006,7 +1007,7 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index efe14cf24bc65..739d9ba3ba6b7 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -7366,7 +7366,7 @@ static int check_btf_func(struct bpf_verifier_env *env,
+ 	const struct btf *btf;
+ 	void __user *urecord;
+ 	u32 prev_offset = 0;
+-	int ret = 0;
++	int ret = -ENOMEM;
  
- 	if (likely(!err))
- 		return NETDEV_TX_OK;
--tx_error:
-+
- 	dev_kfree_skb(skb);
- 
- 	if (err == -ELOOP)
+ 	nfuncs = attr->func_info_cnt;
+ 	if (!nfuncs)
 -- 
 2.25.1
 
