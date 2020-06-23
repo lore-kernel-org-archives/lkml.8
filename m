@@ -3,69 +3,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC23AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4236C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C50912078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592917516;
-	bh=E+DOq7F5ULl1cRralKF9cu2iDyzgJSDXvsLsNukPyhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RAsivYvVxutRyTpKc7bbD6Sm4u0evDZWpKg1YrpzKgNfg9TvSeS6dopaOymEifQ2x
-	 oMI/hymfcx5umvyiNiWmUqmn1ct4BwvTv8U8cOFCQUmueY238Xg92qqnUW6jm80g8G
-	 H3Nxftoke4kZLbzroZVzDM43ljwZ30s3xTr080Sg=
+	by mail.kernel.org (Postfix) with ESMTP id 9809C20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:10:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GwJYdbNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732619AbgFWNFP (ORCPT
+        id S1732608AbgFWNKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729504AbgFWNFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:05:14 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F007920716;
-        Tue, 23 Jun 2020 13:05:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592917514;
-        bh=E+DOq7F5ULl1cRralKF9cu2iDyzgJSDXvsLsNukPyhc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1acT84O01ZTv2OAWQnjeBfndCV/OU6pe7/Trmn6kZVTPcTC6pVzH4E91XtnzqCarP
-         FU3kKISFVaOiVeAZH8By/+54IkVWtJoeguUO/4XapdCSe0MyZYw4z4bDPBS+nY71JP
-         eXQaStpRLjRqXHNGMtWhpWJgJmOs35olrJXMHEZI=
-Date:   Tue, 23 Jun 2020 21:04:59 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, mfuzzey@parkeon.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [PATCH] ARM: imx5: add missing put_device() call in
- imx_suspend_alloc_ocram()
-Message-ID: <20200623130458.GA29965@dragon>
-References: <20200604124206.3910721-1-yukuai3@huawei.com>
+        Tue, 23 Jun 2020 09:10:00 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49752 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729504AbgFWNJ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:09:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592917797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zkx1ErBA+e2/cfoAENc9bfwtwsTIO4mVEVPpuQkBgT4=;
+        b=GwJYdbNWGdCYewTdkuMcfbTm4t+i31R4X9oCCltrryKENtJj/UWhfU5S0d4bdJ6hCLhfJP
+        XuQjnKlhqZRZcjhPMduM+UIo+nWtjHF2sqcq2r/YpE9OOFlV3A9XM7SJOxKZE9zXgtegGm
+        3EtsoGXXKAixn7r3ZcYpuZJpwGXrXaM=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371-dVAkXxbuO8aPDN-VfMNqcg-1; Tue, 23 Jun 2020 09:09:56 -0400
+X-MC-Unique: dVAkXxbuO8aPDN-VfMNqcg-1
+Received: by mail-ed1-f69.google.com with SMTP id a21so10422655edy.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:09:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zkx1ErBA+e2/cfoAENc9bfwtwsTIO4mVEVPpuQkBgT4=;
+        b=GqUwh10QU5bKk6oTxjcIbSE9XeMY1mq6H/CuLBXI+G4WJW6+qBUrr+TSO7dJfabobH
+         hd8ofmIJk+NQ/6bsh35420F29GBsjt138eYjIfM3aI5qC2Ix+3E6llfM8oU8EfK3kna0
+         lhcBM/kfvWPPMMadwlS8ROrje4UcSWisCk0QxaG/hazWBkxK3EaVSobXSguK8T3nQdSz
+         mzYNDyISmU2+7Bi+Ou/sdnlb6C7hFtemvSQ5GxTWIi7Dsfm21tEuV6qh5KhLuIVrFrD7
+         uWHsPC6yhxvTVbAIftAs3EibvaEwSN4LVbvvd0DBuzg6qGai5S1hLO79MaGyflTFj2BT
+         uEoQ==
+X-Gm-Message-State: AOAM531P3qrLLbOQ4g7eqbwOKYd1um1sBzC0yN635VTGJT0Lw4NZVKB2
+        V0ixNql/ITW5IW8CIjQfcLbpBQo9A/Z/G81++dTuj3hT90hxfpWDEYJOIOcvcyNZzCrrJmKP4Qh
+        BK6aU5+rXsF9d4gLjwzMc79rx
+X-Received: by 2002:a17:906:93f7:: with SMTP id yl23mr20041168ejb.366.1592917793746;
+        Tue, 23 Jun 2020 06:09:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz4y3aEtz58QMxkXLbJ2y2yFeesR5msJNak4RPLHWT6aKhj4HhSd1IzuBmsTRod7a3vvSLz3g==
+X-Received: by 2002:a17:906:93f7:: with SMTP id yl23mr20041156ejb.366.1592917793534;
+        Tue, 23 Jun 2020 06:09:53 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id v5sm13582802ejx.123.2020.06.23.06.09.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 06:09:52 -0700 (PDT)
+Subject: Re: [PATCH 5/8] virt: vbox: Add support for the new
+ VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200520195440.38759-1-hdegoede@redhat.com>
+ <20200520195440.38759-5-hdegoede@redhat.com>
+ <CAK8P3a1sDRsfsmPf4=Q3mG75VVNoD3CC7Rrgb4BZMEEfTu66qA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c81cd7ac-a698-8d9b-c5c1-6a4e0bc90966@redhat.com>
+Date:   Tue, 23 Jun 2020 15:09:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604124206.3910721-1-yukuai3@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAK8P3a1sDRsfsmPf4=Q3mG75VVNoD3CC7Rrgb4BZMEEfTu66qA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 08:42:06PM +0800, yu kuai wrote:
-> if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
-> have a corresponding put_device(). Thus add a jump target to fix the
-> exception handling for this function implementation.
-> 
-> Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+Hi,
 
-Applied, thanks.
+Thank you for the review and sorry for being slow with
+responding.
+
+On 5/20/20 11:47 PM, Arnd Bergmann wrote:
+> On Wed, May 20, 2020 at 9:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Add support for the new VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES ioctl, this
+>> is necessary for automatic resizing of the guest resolution to match the
+>> VM-window size to work with the new VMSVGA virtual GPU which is now the
+>> new default in VirtualBox.
+>>
+>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1789545
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> This is not a great interface, but I see no bugs in the implementation
+> or problems with portability.
+> 
+> If you want to improve it a little bit, note that spin_lock_irqsave() inside
+> of mutex_lock() is a little bit silly since you know at this point that
+> interrupts are enabled and you could use spin_lock_irq() instead.
+> 
+> I assume the driver does the same thing everywhere but I did not check.
+
+Yes the driver does the same everywhere and TBH I would prefer to keep
+it that way, this all is not that performance critical and in my experience
+once a driver starts using the less save variants it is easy for some
+mistakes to creep in.
+
+As for the rate-limiting of the printk remark you made in reply to the
+"virt: vbox: Log unknown ioctl requests as error" patch that is a valid
+remark. I will prepare a v2 of this patch-set addressing that.
+
+Regards,
+
+Hans
+
