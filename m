@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A72C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B09C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA54720702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A98D20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945661;
-	bh=wicaoCAJNuk7XntjN2HU1xs0spmHSn5Q2EMQqELHpJM=;
+	s=default; t=1592945668;
+	bh=aX+lEto5wk3wPUElfWKnrhb60HTxaeneR+sp8EXlhXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kW7Sr/r20FFagNkUicQ/bWcOGf6yGR3nyU4yB+B/OzrhOPXKM+Qx+aLSQ7QYY9lI6
-	 ao2qcgcbATZtf3JduVQuGlHSUpHBgBFeTItISKoorBlbmOtB5H88GhXvYBNYq6L/QX
-	 yBITtz8Y881GN/S1VW3tqJzrDWNW5JPt8uLXSGCU=
+	b=L8Eur0xFrhwdu20Vs9JLyfm3EEomj/37HZ7xlebgj8spgB0tScCLJOOAneVq/u6Lw
+	 cpCgT9trDmBHhGZpaTNpRbzFEjmnZMWtc14WXRBoQlDtG+PJJtHfgmhllk8j7ikWe+
+	 JqmaAifoPpCLmnzs6or630j4GQ0UvLD0OdscaNH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392794AbgFWUqA (ORCPT
+        id S2392812AbgFWUy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:46:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43630 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392786AbgFWUpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:45:54 -0400
+        id S2391684AbgFWUpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:45:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A851620656;
-        Tue, 23 Jun 2020 20:45:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF6220781;
+        Tue, 23 Jun 2020 20:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945155;
-        bh=wicaoCAJNuk7XntjN2HU1xs0spmHSn5Q2EMQqELHpJM=;
+        s=default; t=1592945147;
+        bh=aX+lEto5wk3wPUElfWKnrhb60HTxaeneR+sp8EXlhXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qo87JOGE2/PPOX5IgETZs72tWFlAhpGFJHxMrRhyo/tQzxLcHq5ti2j9JFnlZWZ6k
-         1CHqec7lAYmYYFiWNyNJRMBlvnVIj3J97+f2cqClArfYSd6W6s+pmwfOJ2xU+ICn9B
-         Gy09AmYmTQrzNaAKvAG/jMGtNSLPPx1GrsmJ+ctA=
+        b=L1Xoyh/+shWMyeZnPSA0R+Q7XmluhXth4RmsWjk3MbU85AvlDpMvU2ZqVDckjBQS9
+         y++o7C1vZvQd9Rd2CY1E5A2T5L4PSAgFmAXxaKkinNMWwwG9RilhuWHhbZlURnY/eR
+         NsTu4vMraQASZpYLjE65Bbg/xYQgePtgpkaHPfuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 060/136] vfio-pci: Mask cap zero
-Date:   Tue, 23 Jun 2020 21:58:36 +0200
-Message-Id: <20200623195306.701731577@linuxfoundation.org>
+Subject: [PATCH 4.14 057/136] tty: n_gsm: Fix waking up upper tty layer when room available
+Date:   Tue, 23 Jun 2020 21:58:33 +0200
+Message-Id: <20200623195306.546625618@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,48 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit bc138db1b96264b9c1779cf18d5a3b186aa90066 ]
+[ Upstream commit 01dbb362f0a114fbce19c8abe4cd6f4710e934d5 ]
 
-The PCI Code and ID Assignment Specification changed capability ID 0
-from reserved to a NULL capability in the v1.1 revision.  The NULL
-capability is defined to include only the 16-bit capability header,
-ie. only the ID and next pointer.  Unfortunately vfio-pci creates a
-map of config space, where ID 0 is used to reserve the standard type
-0 header.  Finding an actual capability with this ID therefore results
-in a bogus range marked in that map and conflicts with subsequent
-capabilities.  As this seems to be a dummy capability anyway and we
-already support dropping capabilities, let's hide this one rather than
-delving into the potentially subtle dependencies within our map.
+Warn the upper layer when n_gms is ready to receive data
+again. Without this the associated virtual tty remains blocked
+indefinitely.
 
-Seen on an NVIDIA Tesla T4.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200512115323.1447922-4-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/tty/n_gsm.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index c2d300bc37f64..36bc8f104e42e 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1464,7 +1464,12 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
- 		if (ret)
- 			return ret;
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index eabdcfa414aad..e7417eac3f216 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -677,7 +677,7 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
+  *	FIXME: lock against link layer control transmissions
+  */
  
--		if (cap <= PCI_CAP_ID_MAX) {
-+		/*
-+		 * ID 0 is a NULL capability, conflicting with our fake
-+		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
-+		 * hidden for now.
-+		 */
-+		if (cap && cap <= PCI_CAP_ID_MAX) {
- 			len = pci_cap_length[cap];
- 			if (len == 0xFF) { /* Variable length */
- 				len = vfio_cap_len(vdev, cap, pos);
+-static void gsm_data_kick(struct gsm_mux *gsm)
++static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ {
+ 	struct gsm_msg *msg, *nmsg;
+ 	int len;
+@@ -709,6 +709,24 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ 
+ 		list_del(&msg->list);
+ 		kfree(msg);
++
++		if (dlci) {
++			tty_port_tty_wakeup(&dlci->port);
++		} else {
++			int i = 0;
++
++			for (i = 0; i < NUM_DLCI; i++) {
++				struct gsm_dlci *dlci;
++
++				dlci = gsm->dlci[i];
++				if (dlci == NULL) {
++					i++;
++					continue;
++				}
++
++				tty_port_tty_wakeup(&dlci->port);
++			}
++		}
+ 	}
+ }
+ 
+@@ -760,7 +778,7 @@ static void __gsm_data_queue(struct gsm_dlci *dlci, struct gsm_msg *msg)
+ 	/* Add to the actual output queue */
+ 	list_add_tail(&msg->list, &gsm->tx_list);
+ 	gsm->tx_bytes += msg->len;
+-	gsm_data_kick(gsm);
++	gsm_data_kick(gsm, dlci);
+ }
+ 
+ /**
+@@ -1221,7 +1239,7 @@ static void gsm_control_message(struct gsm_mux *gsm, unsigned int command,
+ 		gsm_control_reply(gsm, CMD_FCON, NULL, 0);
+ 		/* Kick the link in case it is idling */
+ 		spin_lock_irqsave(&gsm->tx_lock, flags);
+-		gsm_data_kick(gsm);
++		gsm_data_kick(gsm, NULL);
+ 		spin_unlock_irqrestore(&gsm->tx_lock, flags);
+ 		break;
+ 	case CMD_FCOFF:
+@@ -2420,7 +2438,7 @@ static void gsmld_write_wakeup(struct tty_struct *tty)
+ 	/* Queue poll */
+ 	clear_bit(TTY_DO_WRITE_WAKEUP, &tty->flags);
+ 	spin_lock_irqsave(&gsm->tx_lock, flags);
+-	gsm_data_kick(gsm);
++	gsm_data_kick(gsm, NULL);
+ 	if (gsm->tx_bytes < TX_THRESH_LO) {
+ 		gsm_dlci_data_sweep(gsm);
+ 	}
 -- 
 2.25.1
 
