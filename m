@@ -7,59 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAA3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB19C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49CA621548
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D07A21548
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945266;
-	bh=WUZmUys8GXwbBRoi2bD5fzkBN59mbeajwnIIzjFuBIQ=;
+	s=default; t=1592945270;
+	bh=8fU3l5yIMm0+QfOPOLk1KC+nutzhw3BIfXEgK1zhcjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pw6w3z9UchX21JHNRYjtpxgrq/Koge13rCwCcHqW84hx1fIHEG723TSAHpoRvExUf
-	 fv+zSx5BM0pu8vZs9/sd/F0fnyzeqcLZ+Bw5gam3BmKUpoQhfrqoyM3xG3DNajFJX4
-	 R1G9xyZ+wf1wXfnWiEL6huV+Xvsl9yGRq+AD3ebU=
+	b=Q9yPk9RZYQk/RXGFw1/ZsqxacYwYt8Yg85uebDzZRLhwbdA293sDU4gHz8Odf/Qkj
+	 /dcVx0s27JFqGOD4M9OyanSloOS/zbFGOswUOGlm7t7XikWNoEuchO5On21yxMUvhw
+	 4+3oJSHWs7HWli5X1ITgEVxpEKhXRHjt+2uSnJlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392277AbgFWUro (ORCPT
+        id S2392153AbgFWUrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:47:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404045AbgFWUr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:47:29 -0400
+        id S2404057AbgFWUre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:47:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8F820781;
-        Tue, 23 Jun 2020 20:47:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A036820781;
+        Tue, 23 Jun 2020 20:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945250;
-        bh=WUZmUys8GXwbBRoi2bD5fzkBN59mbeajwnIIzjFuBIQ=;
+        s=default; t=1592945255;
+        bh=8fU3l5yIMm0+QfOPOLk1KC+nutzhw3BIfXEgK1zhcjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OB6/cIi9xo8kbrqYOLLwMZ6J2G0MTqvdn1qzIymgTwaGpDjGEBguxK2s5Qz4CbZAq
-         /fmdvZosvrN3z/6mXI9CjyXeBywlJR+HArETSLEQF1ekXp+36g3T+3u15tBYJCoceo
-         dV60/q5L/z+nqYpfw9DbH8dYSpy7bWnAhfDN/pnk=
+        b=cEXeKNNpxU4LUZTbnxj1fBrV7sq/+yN4IEnywdX5XhP5xPJ5/Kbsylh+eoffUoKW5
+         8TVCEETaHDNwuxFym1qjcYAGP5QLww6lnaTWCTT+4R6mkmXXM0YedEucnihmhtiHQ2
+         aDbOjh9xo4pJQURdzgtfb43YM1xvpto/pjP8Htj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ram Pai <linuxram@us.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/136] selftests/vm/pkeys: fix alloc_random_pkey() to make it really random
-Date:   Tue, 23 Jun 2020 21:59:12 +0200
-Message-Id: <20200623195308.498764523@linuxfoundation.org>
+Subject: [PATCH 4.14 069/136] IB/cma: Fix ports memory leak in cma_configfs
+Date:   Tue, 23 Jun 2020 21:58:45 +0200
+Message-Id: <20200623195307.152650592@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -72,58 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ram Pai <linuxram@us.ibm.com>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-[ Upstream commit 6e373263ce07eeaa6410843179535fbdf561fc31 ]
+[ Upstream commit 63a3345c2d42a9b29e1ce2d3a4043689b3995cea ]
 
-alloc_random_pkey() was allocating the same pkey every time.  Not all
-pkeys were geting tested.  This fixes it.
+The allocated ports structure in never freed. The free function should be
+called by release_cma_ports_group, but the group is never released since
+we don't remove its default group.
 
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Michal Suchanek <msuchanek@suse.de>
-Cc: Shuah Khan <shuah@kernel.org>
-Link: http://lkml.kernel.org/r/0162f55816d4e783a0d6e49e554d0ab9a3c9a23b.1585646528.git.sandipan@linux.ibm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Remove default groups when device group is deleted.
+
+Fixes: 045959db65c6 ("IB/cma: Add configfs for rdma_cm")
+Link: https://lore.kernel.org/r/20200521072650.567908-1-leon@kernel.org
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/protection_keys.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/cma_configfs.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/tools/testing/selftests/x86/protection_keys.c b/tools/testing/selftests/x86/protection_keys.c
-index 5d546dcdbc805..b8778960da106 100644
---- a/tools/testing/selftests/x86/protection_keys.c
-+++ b/tools/testing/selftests/x86/protection_keys.c
-@@ -24,6 +24,7 @@
- #define _GNU_SOURCE
- #include <errno.h>
- #include <linux/futex.h>
-+#include <time.h>
- #include <sys/time.h>
- #include <sys/syscall.h>
- #include <string.h>
-@@ -612,10 +613,10 @@ int alloc_random_pkey(void)
- 	int nr_alloced = 0;
- 	int random_index;
- 	memset(alloced_pkeys, 0, sizeof(alloced_pkeys));
-+	srand((unsigned int)time(NULL));
+diff --git a/drivers/infiniband/core/cma_configfs.c b/drivers/infiniband/core/cma_configfs.c
+index 54076a3e80076..ac47e8a1dfbf4 100644
+--- a/drivers/infiniband/core/cma_configfs.c
++++ b/drivers/infiniband/core/cma_configfs.c
+@@ -319,8 +319,21 @@ fail:
+ 	return ERR_PTR(err);
+ }
  
- 	/* allocate every possible key and make a note of which ones we got */
- 	max_nr_pkey_allocs = NR_PKEYS;
--	max_nr_pkey_allocs = 1;
- 	for (i = 0; i < max_nr_pkey_allocs; i++) {
- 		int new_pkey = alloc_pkey();
- 		if (new_pkey < 0)
++static void drop_cma_dev(struct config_group *cgroup, struct config_item *item)
++{
++	struct config_group *group =
++		container_of(item, struct config_group, cg_item);
++	struct cma_dev_group *cma_dev_group =
++		container_of(group, struct cma_dev_group, device_group);
++
++	configfs_remove_default_groups(&cma_dev_group->ports_group);
++	configfs_remove_default_groups(&cma_dev_group->device_group);
++	config_item_put(item);
++}
++
+ static struct configfs_group_operations cma_subsys_group_ops = {
+ 	.make_group	= make_cma_dev,
++	.drop_item	= drop_cma_dev,
+ };
+ 
+ static struct config_item_type cma_subsys_type = {
 -- 
 2.25.1
 
