@@ -2,56 +2,57 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E987C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DC2C433E0
 	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7102020724
+	by mail.kernel.org (Postfix) with ESMTP id 4D58220702
 	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592945815;
-	bh=6m3wXgaVYOYeOzH2NXttvoEuW9DYuUgob8tBzPyiZ/w=;
+	bh=hCGzX3Xu/Hpancbw3z3g4E5LxuqQw193GktQeyXp204=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRvSLAj936Q5oJvG1xirE/BRoLYyzJzP+C93zd5w+2FFahVzFn30bBJ5PMOcWlLyy
-	 NRK81VbZ0/ipd/gxVRF/xAhXKh8I864haCtOZUF3qQe39eU2fR3OlZqStldIwXQw5I
-	 JJckr98LiCmhOo4PZbFPHb7PDb8wLRMbFE0wfgqg=
+	b=w/f3rtOjf/6m1t6lu3uphJQdmnFw4qWAdIA7kzsiIChY1p8YB+AEBjHB/JGxo6HMU
+	 buRrYzhW2dyRrfD3NVNPRK/rUVT4CVoFxxY3Vd1IyuHVJrRvW+J97H1b/ZbX/+FPz/
+	 4gCkbhccl4uTN+zUAzknwNJHVM25OZJk6I4SKTXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393002AbgFWUyz (ORCPT
+        id S2392509AbgFWU4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:54:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43094 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:56:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392694AbgFWUpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:45:34 -0400
+        id S2392510AbgFWUnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:43:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF0F120781;
-        Tue, 23 Jun 2020 20:45:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E9F2070E;
+        Tue, 23 Jun 2020 20:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945134;
-        bh=6m3wXgaVYOYeOzH2NXttvoEuW9DYuUgob8tBzPyiZ/w=;
+        s=default; t=1592945001;
+        bh=hCGzX3Xu/Hpancbw3z3g4E5LxuqQw193GktQeyXp204=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YUaeN5X4xYBFYe5KB0MFIv0/aQXq2dBhMPjMOov12KCGVMUgpwfLKBRBeEjYLoiuA
-         UcojCSwVtLiOuOIl3s0uoe9YM1nTqmWiabbyGLF9spfX8etJ8VbmtqJaffqhawuaSc
-         oAjGGa55EszeGDJU1eIYELZ7mExMb+6iFWZzhkgc=
+        b=dA+GQvqAUzzp3d4VCN1KOC3cNq9yzJiRRDDLVypZmoK7TipFaUXiYxGIO1cETtLQ8
+         ZlKtFWd64joda25VocVhtiIC/qpJGxYKzQuYpZs05u/ZQgd9qIbeeKXAURHZ1nPofI
+         hf4IWSYcgzFK5EChmq6pvjhFNRGXVNKbHv+iXycw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Suganath Prabu S <suganath-prabu.subramani@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/136] scsi: mpt3sas: Fix double free warnings
-Date:   Tue, 23 Jun 2020 21:58:28 +0200
-Message-Id: <20200623195306.296095733@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 195/206] s390: fix syscall_get_error for compat processes
+Date:   Tue, 23 Jun 2020 21:58:43 +0200
+Message-Id: <20200623195326.629457027@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
-References: <20200623195303.601828702@linuxfoundation.org>
+In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
+References: <20200623195316.864547658@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,43 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
+From: Dmitry V. Levin <ldv@altlinux.org>
 
-[ Upstream commit cbbfdb2a2416c9f0cde913cf09670097ac281282 ]
+commit b3583fca5fb654af2cfc1c08259abb9728272538 upstream.
 
-Fix following warning from Smatch static analyser:
+If both the tracer and the tracee are compat processes, and gprs[2]
+is assigned a value by __poke_user_compat, then the higher 32 bits
+of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
+syscall_get_error() always returns 0.
 
-drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
-warn: 'ioc->hpr_lookup' double freed
+Fix the implementation by sign-extending the value for compat processes
+the same way as x86 implementation does.
 
-drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
-warn: 'ioc->internal_lookup' double freed
+The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
+PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
 
-Link: https://lore.kernel.org/r/20200508110738.30732-1-suganath-prabu.subramani@broadcom.com
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This change fixes strace syscall tampering on s390.
+
+Link: https://lkml.kernel.org/r/20200602180051.GA2427@altlinux.org
+Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
+Cc: Elvira Khabirova <lineprinter@altlinux.org>
+Cc: stable@vger.kernel.org # v2.6.28+
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/include/asm/syscall.h |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index 817a7963a038b..556971c5f0b0e 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -3263,7 +3263,9 @@ _base_release_memory_pools(struct MPT3SAS_ADAPTER *ioc)
- 		ioc->scsi_lookup = NULL;
- 	}
- 	kfree(ioc->hpr_lookup);
-+	ioc->hpr_lookup = NULL;
- 	kfree(ioc->internal_lookup);
-+	ioc->internal_lookup = NULL;
- 	if (ioc->chain_lookup) {
- 		for (i = 0; i < ioc->chain_depth; i++) {
- 			if (ioc->chain_lookup[i].chain_buffer)
--- 
-2.25.1
-
+--- a/arch/s390/include/asm/syscall.h
++++ b/arch/s390/include/asm/syscall.h
+@@ -38,7 +38,17 @@ static inline void syscall_rollback(stru
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+-	return IS_ERR_VALUE(regs->gprs[2]) ? regs->gprs[2] : 0;
++	unsigned long error = regs->gprs[2];
++#ifdef CONFIG_COMPAT
++	if (test_tsk_thread_flag(task, TIF_31BIT)) {
++		/*
++		 * Sign-extend the value so (int)-EFOO becomes (long)-EFOO
++		 * and will match correctly in comparisons.
++		 */
++		error = (long)(int)error;
++	}
++#endif
++	return IS_ERR_VALUE(error) ? error : 0;
+ }
+ 
+ static inline long syscall_get_return_value(struct task_struct *task,
 
 
