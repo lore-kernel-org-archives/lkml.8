@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1765EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE58F20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B346F20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945670;
-	bh=08kRE9xJpAdoX2wEKMab3pugKkKAumuZV7XRl7t29kA=;
+	s=default; t=1592945677;
+	bh=Rzukqn1LovFivbTJcvvURK5wy2+wHiHaUXxgkGBpk34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNpkbhXL+Jw3viwMSnIa4dvQU6i02swaQrwCIRR5551fFm9B+hggJ46t1C6kI0e5S
-	 ALWvEKPdtWKg57Dg3/S1gvnheSsMJU/4aDu8oXLj4eHhxRq6VemkoB58yWcvxTM/uB
-	 DvJrsg6lhcXCCOFzeP2COIRSFB8xO2EueQy1HV8M=
+	b=JDWZ8Yy/xTOkQTsi0oYA/T6OpsVPaWHYkW+LydXOVxUuvTM4uGrdzdGwxdZTy6jVq
+	 d/nMkK8MpQe/h2qwtF3McFykbn5ot3Nx8E9Dc7BlGiwtGJLysDGtyG+SpDbCMVAUu5
+	 p0VfaqgfTi5Ze9tvoiwBifxt1NsWVh9T31FpTB2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392764AbgFWUpn (ORCPT
+        id S2392773AbgFWUyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43018 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:54:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392685AbgFWUp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:45:28 -0400
+        id S2392765AbgFWUpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:45:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA13120781;
-        Tue, 23 Jun 2020 20:45:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02F32098B;
+        Tue, 23 Jun 2020 20:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945129;
-        bh=08kRE9xJpAdoX2wEKMab3pugKkKAumuZV7XRl7t29kA=;
+        s=default; t=1592945144;
+        bh=Rzukqn1LovFivbTJcvvURK5wy2+wHiHaUXxgkGBpk34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OkTyD2vx19fjPPwgchpbD3MjxPcfxE8t/OKYi4LAD5oNyfMdqh5Jbd6An7xSPm1d9
-         ZTNuNcAp8tRg7EjFYcc139818z61JVDgUFj3fVbftlUbb3/d5wjSVzpEy6dJC2/con
-         AsctDGmCtSJ5DeYPeoLmMTzTWOXOsbwtbT24/KE8=
+        b=0AUuhwS2cAXIU6QVMlYNbKIPlq8/jZXEjPtEfbQhNGS/kDlQXBTIkfZQxDUGpH8zR
+         1l4eNerfbE9GjouGmkBJEUIj/dEY4h1gfWiAgGubOf0BgIamIkwD7jmpBZzEyeA6Vx
+         IylU3YxeO91zWbsbJ/o9ILOxz5a8pO/Bz7dhM4Vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        John Johansen <john.johansen@canonical.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 033/136] apparmor: fix introspection of of task mode for unconfined tasks
-Date:   Tue, 23 Jun 2020 21:58:09 +0200
-Message-Id: <20200623195305.315757092@linuxfoundation.org>
+Subject: [PATCH 4.14 056/136] tty: n_gsm: Fix SOF skipping
+Date:   Tue, 23 Jun 2020 21:58:32 +0200
+Message-Id: <20200623195306.492631180@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,61 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Johansen <john.johansen@canonical.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit dd2569fbb053719f7df7ef8fdbb45cf47156a701 ]
+[ Upstream commit 84d6f81c1fb58b56eba81ff0a36cf31946064b40 ]
 
-Fix two issues with introspecting the task mode.
+For at least some modems like the TELIT LE910, skipping SOF makes
+transfers blocking indefinitely after a short amount of data
+transferred.
 
-1. If a task is attached to a unconfined profile that is not the
-   ns->unconfined profile then. Mode the mode is always reported
-   as -
+Given the small improvement provided by skipping the SOF (just one
+byte on about 100 bytes), it seems better to completely remove this
+"feature" than make it optional.
 
-      $ ps -Z
-      LABEL                               PID TTY          TIME CMD
-      unconfined                         1287 pts/0    00:00:01 bash
-      test (-)                           1892 pts/0    00:00:00 ps
-
-   instead of the correct value of (unconfined) as shown below
-
-      $ ps -Z
-      LABEL                               PID TTY          TIME CMD
-      unconfined                         2483 pts/0    00:00:01 bash
-      test (unconfined)                  3591 pts/0    00:00:00 ps
-
-2. if a task is confined by a stack of profiles that are unconfined
-   the output of label mode is again the incorrect value of (-) like
-   above, instead of (unconfined). This is because the visibile
-   profile count increment is skipped by the special casing of
-   unconfined.
-
-Fixes: f1bd904175e8 ("apparmor: add the base fns() for domain labels")
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200512115323.1447922-3-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/label.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/n_gsm.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/security/apparmor/label.c b/security/apparmor/label.c
-index ea63710442ae5..212a0f39ddae8 100644
---- a/security/apparmor/label.c
-+++ b/security/apparmor/label.c
-@@ -1536,13 +1536,13 @@ static const char *label_modename(struct aa_ns *ns, struct aa_label *label,
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index f46bd1af7a10b..eabdcfa414aad 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -681,7 +681,6 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ {
+ 	struct gsm_msg *msg, *nmsg;
+ 	int len;
+-	int skip_sof = 0;
  
- 	label_for_each(i, label, profile) {
- 		if (aa_ns_visible(ns, profile->ns, flags & FLAG_VIEW_SUBNS)) {
--			if (profile->mode == APPARMOR_UNCONFINED)
-+			count++;
-+			if (profile == profile->ns->unconfined)
- 				/* special case unconfined so stacks with
- 				 * unconfined don't report as mixed. ie.
- 				 * profile_foo//&:ns1:unconfined (mixed)
- 				 */
- 				continue;
--			count++;
- 			if (mode == -1)
- 				mode = profile->mode;
- 			else if (mode != profile->mode)
+ 	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
+ 		if (gsm->constipated && msg->addr)
+@@ -703,15 +702,10 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ 			print_hex_dump_bytes("gsm_data_kick: ",
+ 					     DUMP_PREFIX_OFFSET,
+ 					     gsm->txframe, len);
+-
+-		if (gsm->output(gsm, gsm->txframe + skip_sof,
+-						len - skip_sof) < 0)
++		if (gsm->output(gsm, gsm->txframe, len) < 0)
+ 			break;
+ 		/* FIXME: Can eliminate one SOF in many more cases */
+ 		gsm->tx_bytes -= msg->len;
+-		/* For a burst of frames skip the extra SOF within the
+-		   burst */
+-		skip_sof = 1;
+ 
+ 		list_del(&msg->list);
+ 		kfree(msg);
 -- 
 2.25.1
 
