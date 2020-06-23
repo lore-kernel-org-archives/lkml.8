@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D783C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCB32070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5496A20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943804;
-	bh=YafA3EWnVKlPgcnGlE3EnN71/mS7K93tAvScmovO+Wo=;
+	s=default; t=1592943811;
+	bh=Gh4L15gDSzmHrlzpSp+S0YmYDCZZarcflVvMYIjTvVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FjWv0XxURzhnf+BePAW+et5Ay9+YgG65I+3k6KrVVgkwBxOv9C3N6aqsVwPaGN3Ys
-	 jdq/IuD/gpgVvkkWBfe1iG/3cjn/6NOpMm9kRge/Myr/gnfO68GV+59R6UaT/dkz6t
-	 lT5CnebfLlpn790RHIBzJilUcxtt+AgMK4NkMXqY=
+	b=0sREB2B4QElH+K1OsVh4TTSPMQ8Wl59K/TfMRC9NLuK/qSoo4Bn7hTv51j8v8W6Vt
+	 i+MNz8gWdpqIi/jz8Akj/NsD0skgQqfELcg7DUi1izQMx9fiimH5rTUkSJJHjf+Iwl
+	 GYbedpceRcorG6DNIID3DZ281okEWYaeu9THUZhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390288AbgFWUXW (ORCPT
+        id S2390304AbgFWUX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:23:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41290 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389742AbgFWUXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:23:12 -0400
+        id S2390291AbgFWUXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:23:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A40E206C3;
-        Tue, 23 Jun 2020 20:23:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E38E20723;
+        Tue, 23 Jun 2020 20:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943792;
-        bh=YafA3EWnVKlPgcnGlE3EnN71/mS7K93tAvScmovO+Wo=;
+        s=default; t=1592943804;
+        bh=Gh4L15gDSzmHrlzpSp+S0YmYDCZZarcflVvMYIjTvVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xjmJkKU4rrd5ZmPvLTYBYJJ715go3BoPQbWWXf8vTShAGxYf4Wbzbq72tWfVEOL8T
-         uH+2BYhWGByafcncd/o084TQbBST9ishMDJH2wbU7QIaMVy7Tr5qRV+X+DNWFWKl1Y
-         Grz6qCmRXYztNIYFPLejlzfWYDS4JrzORzRtyPWQ=
+        b=1+SMqIasX+pF7otm7YGH6mUwXhpxltetY45pV86gQKt7gVJonzqhFAfrgoLUGd8QY
+         P5pK1E5CRCJPlqP8Q3ea9wDzz3gXXPedzwF+PCiuhYtSv3SExrPZg9K1WK2CeIEgTz
+         4E3b1r7qh6aQ3UJlrBp1BRl+LvUsgi1FuHIBtw+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun Li <jun.li@nxp.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
+        James Smart <james.smart@broadcom.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 052/314] usb: gadget: core: sync interrupt before unbind the udc
-Date:   Tue, 23 Jun 2020 21:54:07 +0200
-Message-Id: <20200623195341.306535044@linuxfoundation.org>
+Subject: [PATCH 5.4 057/314] scsi: lpfc: Fix lpfc_nodelist leak when processing unsolicited event
+Date:   Tue, 23 Jun 2020 21:54:12 +0200
+Message-Id: <20200623195341.538635329@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,135 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 3c73bc52195def14165c3a7d91bdbb33b51725f5 ]
+[ Upstream commit 7217e6e694da3aae6d17db8a7f7460c8d4817ebf ]
 
-The threaded interrupt handler may still be called after the
-usb_gadget_disconnect is called, it causes the structures used
-at interrupt handler was freed before it uses, eg the
-usb_request. This issue usually occurs we remove the udc function
-during the transfer. Below is the example when doing stress
-test for android switch function, the EP0's request is freed
-by .unbind (configfs_composite_unbind -> composite_dev_cleanup),
-but the threaded handler accesses this request during handling
-setup packet request.
+In order to create or activate a new node, lpfc_els_unsol_buffer() invokes
+lpfc_nlp_init() or lpfc_enable_node() or lpfc_nlp_get(), all of them will
+return a reference of the specified lpfc_nodelist object to "ndlp" with
+increased refcnt.
 
-In fact, there is no protection between unbind the udc
-and udc interrupt handling, so we have to avoid the interrupt
-handler is occurred or scheduled during the .unbind flow.
+When lpfc_els_unsol_buffer() returns, local variable "ndlp" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-init: Sending signal 9 to service 'adbd' (pid 18077) process group...
-android_work: did not send uevent (0 0 000000007bec2039)
-libprocessgroup: Successfully killed process cgroup uid 0 pid 18077 in 6ms
-init: Service 'adbd' (pid 18077) received signal 9
-init: Sending signal 9 to service 'adbd' (pid 18077) process group...
-libprocessgroup: Successfully killed process cgroup uid 0 pid 18077 in 0ms
-init: processing action (init.svc.adbd=stopped) from (/init.usb.configfs.rc:14)
-init: Received control message 'start' for 'adbd' from pid: 399 (/vendor/bin/hw/android.hardware.usb@1.
+The reference counting issue happens in one exception handling path of
+lpfc_els_unsol_buffer(). When "ndlp" in DEV_LOSS, the function forgets to
+decrease the refcnt increased by lpfc_nlp_init() or lpfc_enable_node() or
+lpfc_nlp_get(), causing a refcnt leak.
 
-init: starting service 'adbd'...
-read descriptors
-read strings
-Unable to handle kernel read from unreadable memory at virtual address 000000000000002a
-android_work: sent uevent USB_STATE=CONNECTED
-Mem abort info:
-  ESR = 0x96000004
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000004
-  CM = 0, WnR = 0
-user pgtable: 4k pages, 48-bit VAs, pgdp=00000000e97f1000
-using random self ethernet address
-[000000000000002a] pgd=0000000000000000
-Internal error: Oops: 96000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 232 Comm: irq/68-5b110000 Not tainted 5.4.24-06075-g94a6b52b5815 #92
-Hardware name: Freescale i.MX8QXP MEK (DT)
-pstate: 00400085 (nzcv daIf +PAN -UAO)
-using random host ethernet address
-pc : composite_setup+0x5c/0x1730
-lr : android_setup+0xc0/0x148
-sp : ffff80001349bba0
-x29: ffff80001349bba0 x28: ffff00083a50da00
-x27: ffff8000124e6000 x26: ffff800010177950
-x25: 0000000000000040 x24: ffff000834e18010
-x23: 0000000000000000 x22: 0000000000000000
-x21: ffff00083a50da00 x20: ffff00082e75ec40
-x19: 0000000000000000 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0000000000000000
-x13: 0000000000000000 x12: 0000000000000001
-x11: ffff80001180fb58 x10: 0000000000000040
-x9 : ffff8000120fc980 x8 : 0000000000000000
-x7 : ffff00083f98df50 x6 : 0000000000000100
-x5 : 00000307e8978431 x4 : ffff800011386788
-x3 : 0000000000000000 x2 : ffff800012342000
-x1 : 0000000000000000 x0 : ffff800010c6d3a0
-Call trace:
- composite_setup+0x5c/0x1730
- android_setup+0xc0/0x148
- cdns3_ep0_delegate_req+0x64/0x90
- cdns3_check_ep0_interrupt_proceed+0x384/0x738
- cdns3_device_thread_irq_handler+0x124/0x6e0
- cdns3_thread_irq+0x94/0xa0
- irq_thread_fn+0x30/0xa0
- irq_thread+0x150/0x248
- kthread+0xfc/0x128
- ret_from_fork+0x10/0x18
-Code: 910e8000 f9400693 12001ed7 79400f79 (3940aa61)
----[ end trace c685db37f8773fba ]---
-Kernel panic - not syncing: Fatal exception
-SMP: stopping secondary CPUs
-Kernel Offset: disabled
-CPU features: 0x0002,20002008
-Memory Limit: none
-Rebooting in 5 seconds..
+Fix this issue by calling lpfc_nlp_put() when "ndlp" in DEV_LOSS.
 
-Reviewed-by: Jun Li <jun.li@nxp.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Link: https://lore.kernel.org/r/1590416184-52592-1-git-send-email-xiyuyang19@fudan.edu.cn
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/core.c | 2 ++
- include/linux/usb/gadget.h    | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/scsi/lpfc/lpfc_els.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
-index 51fa614b40794..0e7820158aaa9 100644
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -1297,6 +1297,8 @@ static void usb_gadget_remove_driver(struct usb_udc *udc)
- 	kobject_uevent(&udc->dev.kobj, KOBJ_CHANGE);
- 
- 	usb_gadget_disconnect(udc->gadget);
-+	if (udc->gadget->irq)
-+		synchronize_irq(udc->gadget->irq);
- 	udc->driver->unbind(udc->gadget);
- 	usb_gadget_udc_stop(udc);
- 
-diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-index 124462d65eac4..67f5adc9b8753 100644
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -373,6 +373,7 @@ struct usb_gadget_ops {
-  * @connected: True if gadget is connected.
-  * @lpm_capable: If the gadget max_speed is FULL or HIGH, this flag
-  *	indicates that it supports LPM as per the LPM ECN & errata.
-+ * @irq: the interrupt number for device controller.
-  *
-  * Gadgets have a mostly-portable "gadget driver" implementing device
-  * functions, handling all usb configurations and interfaces.  Gadget
-@@ -427,6 +428,7 @@ struct usb_gadget {
- 	unsigned			deactivated:1;
- 	unsigned			connected:1;
- 	unsigned			lpm_capable:1;
-+	int				irq;
- };
- #define work_to_gadget(w)	(container_of((w), struct usb_gadget, work))
- 
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 66f8867dd8377..94d8f28341009 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -8394,6 +8394,8 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+ 	spin_lock_irq(shost->host_lock);
+ 	if (ndlp->nlp_flag & NLP_IN_DEV_LOSS) {
+ 		spin_unlock_irq(shost->host_lock);
++		if (newnode)
++			lpfc_nlp_put(ndlp);
+ 		goto dropit;
+ 	}
+ 	spin_unlock_irq(shost->host_lock);
 -- 
 2.25.1
 
