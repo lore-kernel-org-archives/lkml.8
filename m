@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC80C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46877C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD482053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1750821531
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944923;
-	bh=uwlo3ynjf9FGMtYijKi+Yi2FGpOSik9dpgosa/9oYt4=;
+	s=default; t=1592944928;
+	bh=Wn50G7UV7hw+PsejYjxC4ngZXtE2dq+bWcMqBvPE7yY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TEpl530nQxZZIEzufEa/QAqy6vfKrL8Eb3U5hFtD2f6ZzF2oUJF+ZSicyE0d5qEIN
-	 zjiranOlG2pzrrJu7wS9OWINMZCbCUI7RFOPBCpVgdWQoESbW4VWwysA/iU9Hf1Kix
-	 6nsb3GS0EcyQiA1plCvl7U4zoWHWlkXeDz7Iu3Rk=
+	b=xLWfj99GicMZkKokBhs2GqVbEAs451lonK+qR7mrwCMAFFLt08bI+8uc3r6WMYDQI
+	 E7KBdZA/fz7ZTs/di+/DYjrcwe5o4GvnH7gOUCxAM4p8xihnulDrlCZUpsWC9eMTuo
+	 1BfxbEDSOKg6Lec1Ee9H89AsCe8/9VAPUwlENUgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391787AbgFWUmB (ORCPT
+        id S2392384AbgFWUmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:42:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38506 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403880AbgFWUl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:57 -0400
+        id S2403900AbgFWUmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F65C20702;
-        Tue, 23 Jun 2020 20:41:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D3192053B;
+        Tue, 23 Jun 2020 20:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944918;
-        bh=uwlo3ynjf9FGMtYijKi+Yi2FGpOSik9dpgosa/9oYt4=;
+        s=default; t=1592944920;
+        bh=Wn50G7UV7hw+PsejYjxC4ngZXtE2dq+bWcMqBvPE7yY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jl2oJ0hxU83622de6MlcKjgjhgeGI2/FStKsYYeH4OQb0qx5UaVXfD6iRiSHB5Ufb
-         yimarxDeyqR1HKtWTjjNJ2JmzVTTsR16DV6qjqwT0IHz0uapXz7RhheuGYgA/emhG+
-         AaZdMiZYwTU9BvT96NU2t3jrwm9vF//1scWKW60I=
+        b=SSXHgqtygc2tnac2OAugIYC0h3/or/47oc/prQ89maLMo0ZzV1u+ap6rHafeHID4+
+         B7Sp+D7ClbWzzCN9DfDkNSbYccqMx11tnbCaZ9qZoIkclCpB4kGVEY9o284/TwJRmT
+         gYUkOp/fkcgxxeaTo8W0+jxfeytPMc/t3Atk+aqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sandeep Raghuraman <sandy.8925@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.19 176/206] drm/amdgpu: Replace invalid device ID with a valid device ID
-Date:   Tue, 23 Jun 2020 21:58:24 +0200
-Message-Id: <20200623195325.697496436@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.19 177/206] selinux: fix double free
+Date:   Tue, 23 Jun 2020 21:58:25 +0200
+Message-Id: <20200623195325.745737040@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,37 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandeep Raghuraman <sandy.8925@gmail.com>
+From: Tom Rix <trix@redhat.com>
 
-commit 790243d3bf78f9830a3b2ffbca1ed0f528295d48 upstream.
+commit 65de50969a77509452ae590e9449b70a22b923bb upstream.
 
-Initializes Powertune data for a specific Hawaii card by fixing what
-looks like a typo in the code. The device ID 66B1 is not a supported
-device ID for this driver, and is not mentioned elsewhere. 67B1 is a
-valid device ID, and is a Hawaii Pro GPU.
+Clang's static analysis tool reports these double free memory errors.
 
-I have tested on my R9 390 which has device ID 67B1, and it works
-fine without problems.
+security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
+                        kfree(bnames[i]);
+                        ^~~~~~~~~~~~~~~~
+security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
+        kfree(bvalues);
+        ^~~~~~~~~~~~~~
 
-Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+So improve the security_get_bools error handling by freeing these variables
+and setting their return pointers to NULL and the return len to 0
+
 Cc: stable@vger.kernel.org
+Signed-off-by: Tom Rix <trix@redhat.com>
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/selinux/ss/services.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
-@@ -238,7 +238,7 @@ static void ci_initialize_power_tune_def
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -2857,8 +2857,12 @@ err:
+ 	if (*names) {
+ 		for (i = 0; i < *len; i++)
+ 			kfree((*names)[i]);
++		kfree(*names);
+ 	}
+ 	kfree(*values);
++	*len = 0;
++	*names = NULL;
++	*values = NULL;
+ 	goto out;
+ }
  
- 	switch (dev_id) {
- 	case 0x67BA:
--	case 0x66B1:
-+	case 0x67B1:
- 		smu_data->power_tune_defaults = &defaults_hawaii_pro;
- 		break;
- 	case 0x67B8:
 
 
