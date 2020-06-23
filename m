@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E595BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C35E12085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306812064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944437;
-	bh=BeNoM61Ga5yyRjpP8AmXMwEPB8tRVkJNovcta/xrdv8=;
+	s=default; t=1592944441;
+	bh=b1LMwzWgnToHNsHu4GCbq7IDfPyY3D1u3I1WSG/sckg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rHHjjwWgH/8C979beK5uzweISto2qX8EaZhqN+DnI0kpFoXBn6G7uUTTGnQamBgu4
-	 fpCcUJv1d6r1yDfCHH0G20ffHrqJwnesJUtYcLw2SV+TcI+eFPy2OWmjpW7uPw45mj
-	 poCtYIazm0E7OCScFpltH88DRpLvBltrbJD+ShfA=
+	b=IHSMY4krvpjoPmo3WggcniKeDU+WkaADObfp3FiZNrleuVBpBMj8B+DNwYX4GE+D5
+	 1uZeQYCZN12cwvSZMYjOl7qquQkC1ctzFThNAjhMLZqHTbt61QGTk1tnMhlbmZARzs
+	 RYLFMK67363iofWPfaU+awNB7mguhBE1vROGtKv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389699AbgFWUd4 (ORCPT
+        id S2389549AbgFWUd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:33:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55052 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:33:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390263AbgFWUdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:36 -0400
+        id S2390930AbgFWUdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61C342080C;
-        Tue, 23 Jun 2020 20:33:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 432CE21473;
+        Tue, 23 Jun 2020 20:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944416;
-        bh=BeNoM61Ga5yyRjpP8AmXMwEPB8tRVkJNovcta/xrdv8=;
+        s=default; t=1592944426;
+        bh=b1LMwzWgnToHNsHu4GCbq7IDfPyY3D1u3I1WSG/sckg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QWvGS9HW7vm42zK8OlNRyajKkNpY2tqb8W62PHIlm/8q6jjF3SWLf5BkupZSxusOG
-         GHiroROfmDTGpNAjCVC1D5m0gfwV18l3IH5PteyuVqT9UHu44xuYHEaAxN55Xpj8B7
-         8AvhYaGwbpjseAprYB4Ji+yyQN6T9Q85PvDWZuZY=
+        b=CgFwfHHrkQPWiygesQTV/fXI+NXtl339iU4zmM6Wod+qed+qVMd27Ggd9voM8r1ip
+         7pwjWvuyUrqdU2qhJth2GyNq+xGLVqygtQ/6Z9cmKS6x6oMHHFJkw3QSXyVwO2xBVz
+         O6rrS5o668ix01Bk1YOjjDFvkojJgEDToBjg3Gko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 266/314] bcache: fix potential deadlock problem in btree_gc_coalesce
-Date:   Tue, 23 Jun 2020 21:57:41 +0200
-Message-Id: <20200623195351.663361083@linuxfoundation.org>
+Subject: [PATCH 5.4 270/314] afs: Fix EOF corruption
+Date:   Tue, 23 Jun 2020 21:57:45 +0200
+Message-Id: <20200623195351.865288807@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,93 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit be23e837333a914df3f24bf0b32e87b0331ab8d1 ]
+[ Upstream commit 3f4aa981816368fe6b1d13c2bfbe76df9687e787 ]
 
-coccicheck reports:
-  drivers/md//bcache/btree.c:1538:1-7: preceding lock on line 1417
+When doing a partial writeback, afs_write_back_from_locked_page() may
+generate an FS.StoreData RPC request that writes out part of a file when a
+file has been constructed from pieces by doing seek, write, seek, write,
+... as is done by ld.
 
-In btree_gc_coalesce func, if the coalescing process fails, we will goto
-to out_nocoalesce tag directly without releasing new_nodes[i]->write_lock.
-Then, it will cause a deadlock when trying to acquire new_nodes[i]->
-write_lock for freeing new_nodes[i] before return.
+The FS.StoreData RPC is given the current i_size as the file length, but
+the server basically ignores it unless the data length is 0 (in which case
+it's just a truncate operation).  The revised file length returned in the
+result of the RPC may then not reflect what we suggested - and this leads
+to i_size getting moved backwards - which causes issues later.
 
-btree_gc_coalesce func details as follows:
-	if alloc new_nodes[i] fails:
-		goto out_nocoalesce;
-	// obtain new_nodes[i]->write_lock
-	mutex_lock(&new_nodes[i]->write_lock)
-	// main coalescing process
-	for (i = nodes - 1; i > 0; --i)
-		[snipped]
-		if coalescing process fails:
-			// Here, directly goto out_nocoalesce
-			 // tag will cause a deadlock
-			goto out_nocoalesce;
-		[snipped]
-	// release new_nodes[i]->write_lock
-	mutex_unlock(&new_nodes[i]->write_lock)
-	// coalesing succ, return
-	return;
-out_nocoalesce:
-	btree_node_free(new_nodes[i])	// free new_nodes[i]
-	// obtain new_nodes[i]->write_lock
-	mutex_lock(&new_nodes[i]->write_lock);
-	// set flag for reuse
-	clear_bit(BTREE_NODE_dirty, &ew_nodes[i]->flags);
-	// release new_nodes[i]->write_lock
-	mutex_unlock(&new_nodes[i]->write_lock);
+Fix the client to take account of this by ignoring the returned file size
+unless the data version number jumped unexpectedly - in which case we're
+going to have to clear the pagecache and reload anyway.
 
-To fix the problem, we add a new tag 'out_unlock_nocoalesce' for
-releasing new_nodes[i]->write_lock before out_nocoalesce tag. If
-coalescing process fails, we will go to out_unlock_nocoalesce tag
-for releasing new_nodes[i]->write_lock before free new_nodes[i] in
-out_nocoalesce tag.
+This can be observed when doing a kernel build on an AFS mount.  The
+following pair of commands produce the issue:
 
-(Coly Li helps to clean up commit log format.)
+  ld -m elf_x86_64 -z max-page-size=0x200000 --emit-relocs \
+      -T arch/x86/realmode/rm/realmode.lds \
+      arch/x86/realmode/rm/header.o \
+      arch/x86/realmode/rm/trampoline_64.o \
+      arch/x86/realmode/rm/stack.o \
+      arch/x86/realmode/rm/reboot.o \
+      -o arch/x86/realmode/rm/realmode.elf
+  arch/x86/tools/relocs --realmode \
+      arch/x86/realmode/rm/realmode.elf \
+      >arch/x86/realmode/rm/realmode.relocs
 
-Fixes: 2a285686c109816 ("bcache: btree locking rework")
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This results in the latter giving:
+
+	Cannot read ELF section headers 0/18: Success
+
+as the realmode.elf file got corrupted.
+
+The sequence of events can also be driven with:
+
+	xfs_io -t -f \
+		-c "pwrite -S 0x58 0 0x58" \
+		-c "pwrite -S 0x59 10000 1000" \
+		-c "close" \
+		/afs/example.com/scratch/a
+
+Fixes: 31143d5d515e ("AFS: implement basic file write support")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/btree.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/afs/inode.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 46a8b5a91c386..3c1109fceb2fb 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -1442,7 +1442,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 			if (__set_blocks(n1, n1->keys + n2->keys,
- 					 block_bytes(b->c)) >
- 			    btree_blocks(new_nodes[i]))
--				goto out_nocoalesce;
-+				goto out_unlock_nocoalesce;
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index 46d2d7cb461da..a74e8e209454b 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -171,6 +171,7 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
+ 	struct timespec64 t;
+ 	umode_t mode;
+ 	bool data_changed = false;
++	bool change_size = false;
  
- 			keys = n2->keys;
- 			/* Take the key of the node we're getting rid of */
-@@ -1471,7 +1471,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
+ 	BUG_ON(test_bit(AFS_VNODE_UNSET, &vnode->flags));
  
- 		if (__bch_keylist_realloc(&keylist,
- 					  bkey_u64s(&new_nodes[i]->key)))
--			goto out_nocoalesce;
-+			goto out_unlock_nocoalesce;
+@@ -226,6 +227,7 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
+ 		} else {
+ 			set_bit(AFS_VNODE_ZAP_DATA, &vnode->flags);
+ 		}
++		change_size = true;
+ 	} else if (vnode->status.type == AFS_FTYPE_DIR) {
+ 		/* Expected directory change is handled elsewhere so
+ 		 * that we can locally edit the directory and save on a
+@@ -233,11 +235,19 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
+ 		 */
+ 		if (test_bit(AFS_VNODE_DIR_VALID, &vnode->flags))
+ 			data_changed = false;
++		change_size = true;
+ 	}
  
- 		bch_btree_node_write(new_nodes[i], &cl);
- 		bch_keylist_add(&keylist, &new_nodes[i]->key);
-@@ -1517,6 +1517,10 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 	/* Invalidated our iterator */
- 	return -EINTR;
- 
-+out_unlock_nocoalesce:
-+	for (i = 0; i < nodes; i++)
-+		mutex_unlock(&new_nodes[i]->write_lock);
+ 	if (data_changed) {
+ 		inode_set_iversion_raw(&vnode->vfs_inode, status->data_version);
+-		afs_set_i_size(vnode, status->size);
 +
- out_nocoalesce:
- 	closure_sync(&cl);
++		/* Only update the size if the data version jumped.  If the
++		 * file is being modified locally, then we might have our own
++		 * idea of what the size should be that's not the same as
++		 * what's on the server.
++		 */
++		if (change_size)
++			afs_set_i_size(vnode, status->size);
+ 	}
+ }
  
 -- 
 2.25.1
