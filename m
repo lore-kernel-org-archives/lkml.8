@@ -5,53 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70213C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 415252070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985D921919
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944971;
-	bh=2pOq+a6mzU9kK7Y31dgwxOh6PtmWViOMD6qN44fKLJI=;
+	s=default; t=1592944975;
+	bh=kORmj3Jqmaq1UgJjqWnJ6xS+gE+avf9nMSLRJyuvJwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HAMX3pRf2B/yNPmpehUzshtz4kRcdtYq2zt9UjMHleik7bwHo9bdevar9Q2U4GOf+
-	 iUdqKjAPKtwRpfAaPS5ThcBsYCkWiw7/z3XIAySlN9l1CKUiArYjLahDLwpjPMX4d4
-	 jTDeA8lsieNLaWrkjhHGZw5f9wsGF1oThnSGplps=
+	b=0r/ICDQXKPaJ7/+5KCaloNVpxB/0Z/kkywFKWwa7K5YfKXLxz7eB2tkqA9IG5tYZ7
+	 KOFamgxo/vMAFXcUtWbD9Djgb6Chs+A2rCw05IJS0OWxpqTyfBBR1BfoRVJWD/hlIg
+	 U+2zoI+g7MNrH5owuFZIEk7QWg290VN/TNu/59gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403905AbgFWUmt (ORCPT
+        id S2392461AbgFWUmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39432 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392448AbgFWUmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:46 -0400
+        id S2390256AbgFWUmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89AD52070E;
-        Tue, 23 Jun 2020 20:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EF3B20767;
+        Tue, 23 Jun 2020 20:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944967;
-        bh=2pOq+a6mzU9kK7Y31dgwxOh6PtmWViOMD6qN44fKLJI=;
+        s=default; t=1592944969;
+        bh=kORmj3Jqmaq1UgJjqWnJ6xS+gE+avf9nMSLRJyuvJwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=atN35/0Qlaa1MbSAgt8O1AkLrfSRJlXk8RP9PD++q4gVcY7l6+Pmsr1524EtFBN7P
-         h5HXAwq4TtsU/FdzxspvQVBhT12qsRa/s3QkLwIuTA7ucqsJEyIS9PChDR4nb2RWeH
-         jkGzcd6o4wyonFM/lWB+YAVWCcLm/3ovbFdTnA7M=
+        b=kd/i6UmmFlEZ7nsZGBoIwiSlG5x2rra/WpWwyMA2p4X3xBsfoHhED+BIDfdQXpk6y
+         IpKyILA3IGbwPItnXm5BQJgFXuLCQ2/dU9Y9osBhjjprqIUza5GCgX7NCk/7bZ54Pa
+         vXzNKt12XuaYrvC9ohztkUR6VRufiZ4J8XqeWjRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Oliver Neukum <oneukum@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Gaurav Singh <gaurav1086@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 164/206] usb/ehci-platform: Set PM runtime as active on resume
-Date:   Tue, 23 Jun 2020 21:58:12 +0200
-Message-Id: <20200623195325.065129185@linuxfoundation.org>
+Subject: [PATCH 4.19 165/206] perf report: Fix NULL pointer dereference in hists__fprintf_nr_sample_events()
+Date:   Tue, 23 Jun 2020 21:58:13 +0200
+Message-Id: <20200623195325.114676312@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -64,48 +66,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Gaurav Singh <gaurav1086@gmail.com>
 
-[ Upstream commit 16bdc04cc98ab0c74392ceef2475ecc5e73fcf49 ]
+[ Upstream commit 11b6e5482e178055ec1f2444b55f2518713809d1 ]
 
-Follow suit of ohci-platform.c and perform pm_runtime_set_active() on
-resume.
+The 'evname' variable can be NULL, as it is checked a few lines back,
+check it before using.
 
-ohci-platform.c had a warning reported due to the missing
-pm_runtime_set_active() [1].
-
-[1] https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Tony Prisk <linux@prisktech.co.nz>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Mathias Nyman <mathias.nyman@intel.com>
-CC: Oliver Neukum <oneukum@suse.de>
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-usb@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20200518154931.6144-3-qais.yousef@arm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 9e207ddfa207 ("perf report: Show call graph from reference events")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-platform.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/builtin-report.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index 8a45362155c5a..cbc45941a699d 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -457,6 +457,10 @@ static int ehci_platform_resume(struct device *dev)
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 5312c761a5dba..05eae94d09cb8 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -447,8 +447,7 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
+ 	if (rep->time_str)
+ 		ret += fprintf(fp, " (time slices: %s)", rep->time_str);
  
- 	ehci_resume(hcd, priv->reset_on_resume);
- 
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
- 	if (priv->quirk_poll)
- 		quirk_poll_init(priv);
+-	if (symbol_conf.show_ref_callgraph &&
+-	    strstr(evname, "call-graph=no")) {
++	if (symbol_conf.show_ref_callgraph && evname && strstr(evname, "call-graph=no")) {
+ 		ret += fprintf(fp, ", show reference callgraph");
+ 	}
  
 -- 
 2.25.1
