@@ -2,187 +2,112 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73625C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4692E20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E652070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:20:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vUCJgvja"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mDh1Fl94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbgFWGTr (ORCPT
+        id S1730765AbgFWGUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:19:47 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:24907 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730510AbgFWGTq (ORCPT
+        Tue, 23 Jun 2020 02:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730510AbgFWGUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:19:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592893185; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=qSIBjsymwcejYBr9cEeko6qfS3ROa3wXIu8BjipLX44=; b=vUCJgvjahzg/cfLAr9v0fpaYWcnWL3G0ASF12fejCMEvTtcO5lZeGUTxB74P5s4N5MnwdHIl
- zKpECpu9vuFWTivfuOsjOcLDFwWuwf1724xi2fTiL/NWzZQvIlSsRp3qQbYOZG3faN/rN4y1
- hV4ZyMcesyh1UJY0mHisNY062tI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ef19f00a6e154319f7bb3cc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 06:19:44
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2D9CDC433A0; Tue, 23 Jun 2020 06:19:44 +0000 (UTC)
-Received: from [192.168.0.100] (unknown [124.123.165.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC7CFC433C8;
-        Tue, 23 Jun 2020 06:19:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC7CFC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: [PATCH] rcu/tree: Force quiescent state on callback overload
-To:     paulmck@kernel.org
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1592764647-2452-1-git-send-email-neeraju@codeaurora.org>
- <20200621195052.GF9247@paulmck-ThinkPad-P72>
- <94686c2e-b589-2598-e658-42f13cec1216@codeaurora.org>
- <20200622031325.GG9247@paulmck-ThinkPad-P72>
- <b72302b1-f49a-84fb-6bb9-75dd5f16bd2c@codeaurora.org>
- <20200622225356.GT9247@paulmck-ThinkPad-P72>
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <fdfa6bce-e566-2b04-6be5-e80492a8ae98@codeaurora.org>
-Date:   Tue, 23 Jun 2020 11:49:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 23 Jun 2020 02:20:24 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A71C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:20:24 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id p11so913385pff.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xkEZLfW1ArYgf+mEiL+b5tURW9CFpN3REEce4uqJNH0=;
+        b=mDh1Fl94b3/LSZ+hMlztNtRD33tkWnaxz8jVAg3XWYW8wZ8vRi1lGAMFXvmC+ld9oq
+         yoj1BYpiF4qp/PUndN/UrCjFRgoxGIVbP7WdIa/Og1WXc5/3wG9C91iC1qcV50TlhZ6m
+         XBllvcUyb3wDmPZK3Etsz833H3UWSiNLXTZlbHuC0a/stsEgjxQDg6gu5q309hEyTJNc
+         VA6U6mtmGjjwP7IWZrxUg9ih8rRJMMh8IC5Jqvi9wNZq8UAohIxZndVvX0mI5xnYvPxJ
+         EmHNG66dntMreD3T8r2oyjt9i/uD//9Mo0vhNQEblG0eGl2WJqHcpUUNoZqCbP92pq5k
+         B5yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xkEZLfW1ArYgf+mEiL+b5tURW9CFpN3REEce4uqJNH0=;
+        b=TI3HjxyGwQRnOcpLXwb0v76Yl5EdzT4bko8Jncl/pF6i/loJaNq+PSyh8Mx9zInJSE
+         ll6l20mcfNr9XGCF0ACpO1obBiPUAvLfRotoukFZrbk7pe5zT++9iEW8Fa/iN3MZNzw6
+         ksGbd32SaoUVXn920rMUkWN3NyQ6X7Ue3/PrT78AYLH1feO+QlZobwKA35+6qWHgSIVV
+         iOTC/OUqyLeM7FiOq2CtnsCcgX2ZmbQ9bEaFUZEY4KN7rd9QNBTRSEMkyesLdXgx2NVM
+         4foDQR1qlcgoRiE9PCMlt4F1XgIRBP+03M6rFkM6Aibuz9gRdUF/U/xAVzaz0GGyrFNY
+         DwZA==
+X-Gm-Message-State: AOAM530lG96IDCzOheFDI2VAu1plPr6etoPZCa9Gy1eCKPA8tPJ2+T2F
+        F6I6VvyaL2bcUTMclGUM8AHRBg==
+X-Google-Smtp-Source: ABdhPJzPhO4piZUlhyX41kRvKT0EgrKEBSKMGlr2VTKP7RKfZOV4lMU0w2m7uDvwx/uYcjh4UjbI6g==
+X-Received: by 2002:a63:3f42:: with SMTP id m63mr16314448pga.310.1592893223436;
+        Mon, 22 Jun 2020 23:20:23 -0700 (PDT)
+Received: from localhost ([122.172.111.76])
+        by smtp.gmail.com with ESMTPSA id np5sm1408030pjb.43.2020.06.22.23.20.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jun 2020 23:20:22 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 11:50:20 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bbasu@nvidia.com, mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ Patch v3 3/4] cpufreq: Add Tegra194 cpufreq
+ driver
+Message-ID: <20200623062020.weg6h4uygelkih7d@vireshk-i7>
+References: <1592775274-27513-1-git-send-email-sumitg@nvidia.com>
+ <1592775274-27513-4-git-send-email-sumitg@nvidia.com>
+ <20200622072052.uryxo4hri6gzrkku@vireshk-i7>
+ <ed6956a3-3f77-2943-6387-5affc25b59d2@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622225356.GT9247@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed6956a3-3f77-2943-6387-5affc25b59d2@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On 23-06-20, 10:49, Sumit Gupta wrote:
+> Hi Viresh,
+> 
+> Thank you for the review. please find my reply inline.
+> 
+> 
+> > > +++ b/drivers/cpufreq/tegra194-cpufreq.c
+> > > @@ -0,0 +1,403 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
+> > 
+> >                      2020
 
-On 6/23/2020 4:23 AM, Paul E. McKenney wrote:
-> On Mon, Jun 22, 2020 at 09:16:24AM +0530, Neeraj Upadhyay wrote:
->> Hi Paul,
->>
->> On 6/22/2020 8:43 AM, Paul E. McKenney wrote:
->>> On Mon, Jun 22, 2020 at 01:30:31AM +0530, Neeraj Upadhyay wrote:
->>>> Hi Paul,
->>>>
->>>> On 6/22/2020 1:20 AM, Paul E. McKenney wrote:
->>>>> On Mon, Jun 22, 2020 at 12:07:27AM +0530, Neeraj Upadhyay wrote:
->>>>>> On callback overload, we want to force quiescent state immediately,
->>>>>> for the first and second fqs. Enforce the same, by including
->>>>>> RCU_GP_FLAG_OVLD flag, in fqsstart check.
->>>>>>
->>>>>> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
->>>>>
->>>>> Good catch!
->>>>>
->>>>> But what did you do to verify that this change does the right thing?
->>>>>
->>>>> 						Thanx, Paul
->>>>>
->>>>
->>>> I haven't done a runtime verification of this code path; I posted this,
->>>> based on review of this code.
->>>
->>> My concern is that under overload, the FQS scans would happen continuously
->>> rather than accelerating only the first such scan in a given grace period.
->>> This would of course result in a CPU-bound grace-period kthread, which
->>> users might not be all that happy with.
->>>
->>> Or am I missing something subtle that prevents this?
->>
->> Looks like under overload, only the first and second scans are accelerated?
->>
->>      gf = 0;
->>      if (first_gp_fqs) {
->>           first_gp_fqs = false;
->>            gf = rcu_state.cbovld ? RCU_GP_FLAG_OVLD : 0;
->>      }
-> 
-> Very good, it does sound like you understand this, and it matches my
-> analysis and passes light testing, so I queued this one.  I did improve
-> the commit log, please check below.  The added detail is helpful to people
-> (including ourselves, by the way) who might need to look at this commit
-> some time in the future.
-> 
+You missed this ?
 
-Thanks; patch looks good; I will try to put more efforts on commit log
-for future patches.
+> T194 supports four CPU clusters, each with two cores. Each CPU cluster is
+> capable of running at a specific frequency sourced by respective NAFLL to
+> provide cluster specific clocks. Individual cores within a cluster write
+> freq in per core register. Cluster h/w forwards the max(core0, core1)
+> request to per cluster NAFLL.
 
-> If you have an x86 system lying around, running rcutorture is quite
-> straightforward.  Non-x86 systems can also run rcutorture, if nothing
-> else by using modprobe and rmmod as described here:
-> 
-> https://paulmck.livejournal.com/57769.html
-> 
-> The scripting described in the latter part of this document has worked
-> on ARMv8 and PowerPC, and might still work for all I know.
-
-I will set it up at my end; the livejournal is pretty detailed! Thanks
-for sharing this!
-
-
-Thanks
-Neeraj
-
-> 
-> 						Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit 9482524d7dd0aea5d32a6efa2979223eea07c029
-> Author: Neeraj Upadhyay <neeraju@codeaurora.org>
-> Date:   Mon Jun 22 00:07:27 2020 +0530
-> 
->      rcu/tree: Force quiescent state on callback overload
->      
->      On callback overload, it is necessary to quickly detect idle CPUs,
->      and rcu_gp_fqs_check_wake() checks for this condition.  Unfortunately,
->      the code following the call to this function does not repeat this check,
->      which means that in reality no actual quiescent-state forcing, instead
->      only a couple of quick and pointless wakeups at the beginning of the
->      grace period.
->      
->      This commit therefore adds a check for the RCU_GP_FLAG_OVLD flag in
->      the post-wakeup "if" statement in rcu_gp_fqs_loop().
->      
->      Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
->      Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index d0988a1..6226bfb 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -1865,7 +1865,7 @@ static void rcu_gp_fqs_loop(void)
->   			break;
->   		/* If time for quiescent-state forcing, do it. */
->   		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
-> -		    (gf & RCU_GP_FLAG_FQS)) {
-> +		    (gf & (RCU_GP_FLAG_FQS | RCU_GP_FLAG_OVLD))) {
->   			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
->   					       TPS("fqsstart"));
->   			rcu_gp_fqs(first_gp_fqs);
-> 
+Okay, this is clear now. Add a comment about this max thing in the
+target routine to show why you need to do this on all CPUs.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of the Code Aurora Forum, hosted by The Linux Foundation
+viresh
