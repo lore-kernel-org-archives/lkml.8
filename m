@@ -2,66 +2,83 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35843C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A61C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D0520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109E620738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:32:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="mJouaHPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731837AbgFWIad (ORCPT
+        id S1731733AbgFWIcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:30:33 -0400
-Received: from winnie.ispras.ru ([83.149.199.91]:11366 "EHLO smtp.ispras.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731595AbgFWIac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:30:32 -0400
-Received: from home.intra.ispras.ru (unknown [10.10.165.12])
-        by smtp.ispras.ru (Postfix) with ESMTP id 3C388201D0;
-        Tue, 23 Jun 2020 11:30:27 +0300 (MSK)
-From:   Evgeny Novikov <novikov@ispras.ru>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Sam Muhammed <jane.pnx9@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
-Subject: [PATCH] staging: kpc2000: kpc_dma: set error code in probe
-Date:   Tue, 23 Jun 2020 11:29:59 +0300
-Message-Id: <20200623082959.14951-1-novikov@ispras.ru>
-X-Mailer: git-send-email 2.16.4
+        Tue, 23 Jun 2020 04:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731579AbgFWIcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:32:02 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEE5C061573;
+        Tue, 23 Jun 2020 01:32:01 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 2C4B722EDB;
+        Tue, 23 Jun 2020 10:31:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1592901117;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FlOZBOvH0FZU1XGLz4KXR5VgiLM9oa/q+XZPRnsX968=;
+        b=mJouaHPa/SlK0n+u4dgknpratnruefsoa3XsN5L+C5bBRLFGV11VSxZveppefppunG0BYE
+        IKVMBXoeli6F6T9oViupLnXq/CEilOEMJXvvjFFlaZLBbqjwDpHjv3KJTilZjBQyeZebjC
+        6NBOJVPdmaBMPlTaldb56pW9sreXjdg=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 23 Jun 2020 10:31:57 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
+In-Reply-To: <20200623060526.29922-1-mans0n@gorani.run>
+References: <20200623060526.29922-1-mans0n@gorani.run>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If device_create() fails during probing the device, kpc_dma_probe() does
-not set the error code and returns 0. This can result in various bad
-issues later. The patch sets the error code on the corresponding error
-handling path.
+Hi Sungbo,
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Am 2020-06-23 08:05, schrieb Sungbo Eo:
+> This patch adds support for the PCA9570 I2C GPO expander.
+> 
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> ---
+> Tested in kernel 5.4 on an ipq40xx platform.
+> 
+> This is my first time submitting a whole driver patch, and I'm not
+> really familiar with this PCA expander series.
+> Please let me know how I can improve this patch further. (Do I also
+> need to document the DT compatible string?)
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
----
- drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c | 1 +
- 1 file changed, 1 insertion(+)
+Did you have a look at drivers/gpio/gpio-regmap.c ? Your driver seems
+to be simple enough to be easily integrated with that. If you need a
+blueprint; because at the moment there is no driver in the kernel
+using that, you could have a look at:
+https://lore.kernel.org/linux-gpio/20200604211039.12689-7-michael@walle.cc/
 
-diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-index c3b30551e0ca..624d47bae4d1 100644
---- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-+++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-@@ -140,6 +140,7 @@ int  kpc_dma_probe(struct platform_device *pldev)
- 	dev = MKDEV(assigned_major_num, pldev->id);
- 	ldev->kpc_dma_dev = device_create(kpc_dma_class, &pldev->dev, dev, ldev, "kpc_dma%d", pldev->id);
- 	if (IS_ERR(ldev->kpc_dma_dev)) {
-+		rv = PTR_ERR(ldev->kpc_dma_dev);
- 		dev_err(&ldev->pldev->dev, "%s: device_create failed: %d\n", __func__, rv);
- 		goto err_kfree;
- 	}
--- 
-2.16.4
-
+-michael
