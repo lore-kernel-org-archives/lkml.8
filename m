@@ -2,136 +2,64 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D400EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 03:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 03:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE5020786
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 03:04:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BF7DmQg0"
+	by mail.kernel.org (Postfix) with ESMTP id 2F7A720702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 03:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732096AbgFWDE3 (ORCPT
+        id S1732141AbgFWDFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 23:04:29 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:39466 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731820AbgFWDE2 (ORCPT
+        Mon, 22 Jun 2020 23:05:16 -0400
+Received: from out20-49.mail.aliyun.com ([115.124.20.49]:46115 "EHLO
+        out20-49.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731690AbgFWDFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 23:04:28 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E02BB20B7192;
-        Mon, 22 Jun 2020 20:04:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E02BB20B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1592881467;
-        bh=381Z41lC2pIuRAjDOd1plbxk7DixDyCGV2sdQrwp2K8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BF7DmQg0pl1+RSkVQ+UHXPhVzA05min9ZtgSAp4sjf9eiEZbWpW37yBlfH4Gs28JW
-         0qObN7Q++fObJG1IT7S2kSL/nQAK+qLRq40yPxUbGqe7qmmxL7F9H+ILgRR4jYoKUY
-         ERX66DrDmXerBOnmTGdDXf4AQUuQjrQQAd71dIPc=
-Date:   Mon, 22 Jun 2020 22:04:10 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Janne Karhunen <janne.karhunen@gmail.com>
-Subject: Re: [PATCH 01/12] ima: Have the LSM free its audit rule
-Message-ID: <20200623030410.GA6048@sequoia>
-References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
- <20200623003236.830149-2-tyhicks@linux.microsoft.com>
- <277dd210-c443-c067-e731-44ac53418fa5@schaufler-ca.com>
+        Mon, 22 Jun 2020 23:05:16 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1963569|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0456264-0.000926188-0.953447;FP=18262275217699229393|4|2|5|0|-1|-1|-1;HT=e01l07447;MF=aiden.leong@aibsd.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.HqyYtR0_1592881512;
+Received: from ubuntu(mailfrom:aiden.leong@aibsd.com fp:SMTPD_---.HqyYtR0_1592881512)
+          by smtp.aliyun-inc.com(10.147.42.198);
+          Tue, 23 Jun 2020 11:05:13 +0800
+From:   Aiden Leong <aiden.leong@aibsd.com>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH v2] GUE: Fix a typo
+Date:   Mon, 22 Jun 2020 20:04:58 -0700
+Message-Id: <20200623030459.13508-1-aiden.leong@aibsd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <277dd210-c443-c067-e731-44ac53418fa5@schaufler-ca.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22 17:55:59, Casey Schaufler wrote:
-> On 6/22/2020 5:32 PM, Tyler Hicks wrote:
-> > Ask the LSM to free its audit rule rather than directly calling kfree().
-> > Both AppArmor and SELinux do additional work in their audit_rule_free()
-> > hooks. Fix memory leaks by allowing the LSMs to perform necessary work.
-> >
-> > Fixes: b16942455193 ("ima: use the lsm policy update notifier")
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > Cc: Janne Karhunen <janne.karhunen@gmail.com>
-> > ---
-> >  security/integrity/ima/ima.h        | 6 ++++++
-> >  security/integrity/ima/ima_policy.c | 2 +-
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> > index df93ac258e01..de05d7f1d3ec 100644
-> > --- a/security/integrity/ima/ima.h
-> > +++ b/security/integrity/ima/ima.h
-> > @@ -404,6 +404,7 @@ static inline void ima_free_modsig(struct modsig *modsig)
-> >  #ifdef CONFIG_IMA_LSM_RULES
-> >  
-> >  #define security_filter_rule_init security_audit_rule_init
-> > +#define security_filter_rule_free security_audit_rule_free
-> >  #define security_filter_rule_match security_audit_rule_match
-> 
-> In context this seems perfectly reasonable. If, however, you're
-> working with the LSM infrastructure this set of #defines is maddening.
-> The existing ones have been driving my nuts for the past few years,
-> so I'd like to discourage adding another. Since the security_filter_rule
-> functions are IMA specific they shouldn't be prefixed security_. I know
-> that it seems to be code churn/bikesheading, but we please change these:
-> 
-> static inline int ima_filter_rule_init(.....)
-> {
-> 	return security_audit_rule_init(.....);
-> }
-> 
-> and so forth. I understand if you don't want to make the change.
-> I have plenty of other things driving me crazy just now, so this
-> doesn't seem likely to push me over the edge.
+Fix a typo in gue.h
 
-I'd be happy to take a stab at that as a follow-up or a 13/12 patch. I'd
-like to leave this one as-is for stable kernel reasons since it is
-straightforward and simple.
+Signed-off-by: Aiden Leong <aiden.leong@aibsd.com>
+---
+ include/net/gue.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tyler
+diff --git a/include/net/gue.h b/include/net/gue.h
+index 3a6595bfa641..e42402f180b7 100644
+--- a/include/net/gue.h
++++ b/include/net/gue.h
+@@ -21,7 +21,7 @@
+  * |                                                               |
+  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  *
+- * C bit indicates contol message when set, data message when unset.
++ * C bit indicates control message when set, data message when unset.
+  * For a control message, proto/ctype is interpreted as a type of
+  * control message. For data messages, proto/ctype is the IP protocol
+  * of the next header.
+-- 
+2.25.1
 
-> 
-> >  
-> >  #else
-> > @@ -414,6 +415,11 @@ static inline int security_filter_rule_init(u32 field, u32 op, char *rulestr,
-> >  	return -EINVAL;
-> >  }
-> >  
-> > +static inline void security_filter_rule_free(void *lsmrule)
-> > +{
-> > +	return -EINVAL;
-> > +}
-> > +
-> >  static inline int security_filter_rule_match(u32 secid, u32 field, u32 op,
-> >  					     void *lsmrule)
-> >  {
-> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> > index e493063a3c34..236a731492d1 100644
-> > --- a/security/integrity/ima/ima_policy.c
-> > +++ b/security/integrity/ima/ima_policy.c
-> > @@ -258,7 +258,7 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
-> >  	int i;
-> >  
-> >  	for (i = 0; i < MAX_LSM_RULES; i++) {
-> > -		kfree(entry->lsm[i].rule);
-> > +		security_filter_rule_free(entry->lsm[i].rule);
-> >  		kfree(entry->lsm[i].args_p);
-> >  	}
-> >  	kfree(entry);
