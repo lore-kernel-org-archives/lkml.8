@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6502C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 504FA2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4E22072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948260;
-	bh=YeSMzpUEVd/Ea1T4A5u8LcMSo/luwXHnf3TWTA7I/8w=;
+	s=default; t=1592948263;
+	bh=M6TT/wa8OZMxO/0biWgPTLNtCFxHhFd3MFg8EdmO0so=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aoxyvBVUt0nd4JKNVRwPkLmHAYgiUmtaxGCC/7+A/hNZMXBTmyNr3HG1NYqR0mYrr
-	 encn8tmH17SErgqV0mEiOPgbI8u8WNDF8FaVufEHFntVZALIKi4v6Sk4FL+5eWRKQJ
-	 9iKBVKwoEmLYhweegOBCaaD2wCWiCuqZ51OvkPp4=
+	b=h1e6QzN7h/IOjIPhmw6+VHBu1Ll9SVYG5mU5Sbivfp4IqUFh7dyDBXwK7LhzYDqoH
+	 ag88Cdz1gp+pH9esPW0x3tgbm2TQww0uwT6sMHvZll+6XeUAZJdZMsGnjkLMUUKz5G
+	 h2WOBwwbbna34SngNnAm21phfbEQqETpR1MyfIrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388887AbgFWVhi (ORCPT
+        id S2388375AbgFWVhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49888 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388182AbgFWUIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:51 -0400
+        id S2388211AbgFWUIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E63F32082F;
-        Tue, 23 Jun 2020 20:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA1D2064B;
+        Tue, 23 Jun 2020 20:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942930;
-        bh=YeSMzpUEVd/Ea1T4A5u8LcMSo/luwXHnf3TWTA7I/8w=;
+        s=default; t=1592942928;
+        bh=M6TT/wa8OZMxO/0biWgPTLNtCFxHhFd3MFg8EdmO0so=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QThCtETvl+VfIPv3P4KRwezuS9BVwjsZgrGj8IOaMFH5oapmS8ybgVzsjE/Xe7cAC
-         u4Uk0X+g369QH/juq/rD+gEpK5bqEAXLFwmkOEfWrXj8/Pn6tUOc49mU6OyM4DgRtn
-         hpmAg5NHftPbM0HEzdTXiVzvo2FtLPP2V+KrKWGg=
+        b=UsSTrUPipi3SLstB7St0L/Syjh2SYyd20GvZqEDoDAwakNPzqvfoBLI5YajpqQm+T
+         6DvUWbPY2E+pmUlYFfAuXGX/vIX9vc3l4aMfDBijcOPd60+taNEJy2S55RxKujHOaq
+         vAJBxuFhC04j+G1fobA7zoHBU98b45ibuNuZJMFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org, Chen Li <licheng0822@thundersoft.com>,
+        Yongbo Zhang <giraffesnn123@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 191/477] ASoC: ux500: mop500: Fix some refcounted resources issues
-Date:   Tue, 23 Jun 2020 21:53:08 +0200
-Message-Id: <20200623195416.613650010@linuxfoundation.org>
+Subject: [PATCH 5.7 190/477] SoC: rsnd: add interrupt support for SSI BUSIF buffer
+Date:   Tue, 23 Jun 2020 21:53:07 +0200
+Message-Id: <20200623195416.572189433@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,56 +62,279 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Yongbo Zhang <giraffesnn123@gmail.com>
 
-[ Upstream commit 4e8748fcaeec073e3ba794871ce86c545e4f961f ]
+[ Upstream commit 66c705d07d784fb6b4622c6e47b6acae357472db ]
 
-There are 2 issues here:
-   - if one of the 'of_parse_phandle' fails, calling 'mop500_of_node_put()'
-     is a no-op because the 'mop500_dai_links' structure has not been
-     initialized yet, so the referenced are not decremented
-   - The reference stored in 'mop500_dai_links[i].codecs' is refcounted
-     only once in the probe and must be decremented only once.
+SSI BUSIF buffer is possible to overflow or underflow, especially in a
+hypervisor environment. If there is no interrupt support, it will eventually
+lead to errors in pcm data.
+This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
 
-Fixes: 39013bd60e79 ("ASoC: Ux500: Dispose of device nodes correctly")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200512100705.246349-1-christophe.jaillet@wanadoo.fr
+Reported-by: Chen Li <licheng0822@thundersoft.com>
+Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
+Tested-by: Chen Li <licheng0822@thundersoft.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20200512093003.28332-1-giraffesnn123@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ux500/mop500.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ sound/soc/sh/rcar/gen.c  |   8 +++
+ sound/soc/sh/rcar/rsnd.h |   9 +++
+ sound/soc/sh/rcar/ssi.c  | 145 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 162 insertions(+)
 
-diff --git a/sound/soc/ux500/mop500.c b/sound/soc/ux500/mop500.c
-index 2873e8e6f02be..cdae1190b930b 100644
---- a/sound/soc/ux500/mop500.c
-+++ b/sound/soc/ux500/mop500.c
-@@ -63,10 +63,11 @@ static void mop500_of_node_put(void)
- {
- 	int i;
+diff --git a/sound/soc/sh/rcar/gen.c b/sound/soc/sh/rcar/gen.c
+index af19010b9d88f..8bd49c8a9517e 100644
+--- a/sound/soc/sh/rcar/gen.c
++++ b/sound/soc/sh/rcar/gen.c
+@@ -224,6 +224,14 @@ static int rsnd_gen2_probe(struct rsnd_priv *priv)
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS5,	0x884),
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS6,	0x888),
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS7,	0x88c),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE0, 0x850),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE1, 0x854),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE2, 0x858),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE3, 0x85c),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE4, 0x890),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE5, 0x894),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE6, 0x898),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE7, 0x89c),
+ 		RSND_GEN_S_REG(HDMI0_SEL,	0x9e0),
+ 		RSND_GEN_S_REG(HDMI1_SEL,	0x9e4),
  
--	for (i = 0; i < 2; i++) {
-+	for (i = 0; i < 2; i++)
- 		of_node_put(mop500_dai_links[i].cpus->of_node);
--		of_node_put(mop500_dai_links[i].codecs->of_node);
--	}
-+
-+	/* Both links use the same codec, which is refcounted only once */
-+	of_node_put(mop500_dai_links[0].codecs->of_node);
- }
+diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
+index ea6cbaa9743ee..d47608ff5facc 100644
+--- a/sound/soc/sh/rcar/rsnd.h
++++ b/sound/soc/sh/rcar/rsnd.h
+@@ -189,6 +189,14 @@ enum rsnd_reg {
+ 	SSI_SYS_STATUS5,
+ 	SSI_SYS_STATUS6,
+ 	SSI_SYS_STATUS7,
++	SSI_SYS_INT_ENABLE0,
++	SSI_SYS_INT_ENABLE1,
++	SSI_SYS_INT_ENABLE2,
++	SSI_SYS_INT_ENABLE3,
++	SSI_SYS_INT_ENABLE4,
++	SSI_SYS_INT_ENABLE5,
++	SSI_SYS_INT_ENABLE6,
++	SSI_SYS_INT_ENABLE7,
+ 	HDMI0_SEL,
+ 	HDMI1_SEL,
+ 	SSI9_BUSIF0_MODE,
+@@ -237,6 +245,7 @@ enum rsnd_reg {
+ #define SSI9_BUSIF_ADINR(i)	(SSI9_BUSIF0_ADINR + (i))
+ #define SSI9_BUSIF_DALIGN(i)	(SSI9_BUSIF0_DALIGN + (i))
+ #define SSI_SYS_STATUS(i)	(SSI_SYS_STATUS0 + (i))
++#define SSI_SYS_INT_ENABLE(i) (SSI_SYS_INT_ENABLE0 + (i))
  
- static int mop500_of_probe(struct platform_device *pdev,
-@@ -81,7 +82,9 @@ static int mop500_of_probe(struct platform_device *pdev,
  
- 	if (!(msp_np[0] && msp_np[1] && codec_np)) {
- 		dev_err(&pdev->dev, "Phandle missing or invalid\n");
--		mop500_of_node_put();
-+		for (i = 0; i < 2; i++)
-+			of_node_put(msp_np[i]);
-+		of_node_put(codec_np);
- 		return -EINVAL;
+ struct rsnd_priv;
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index 4a7d3413917fc..47d5ddb526f21 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -372,6 +372,9 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 	u32 wsr		= ssi->wsr;
+ 	int width;
+ 	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++	int i;
++	u32 sys_int_enable = 0;
+ 
+ 	is_tdm		= rsnd_runtime_is_tdm(io);
+ 	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+@@ -447,6 +450,38 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 		cr_mode = DIEN;		/* PIO : enable Data interrupt */
  	}
  
++	/* enable busif buffer over/under run interrupt. */
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE(i * 2));
++				sys_int_enable |= 0xf << (id * 4);
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE(i * 2),
++					       sys_int_enable);
++			}
++
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE((i * 2) + 1));
++				sys_int_enable |= 0xf << 4;
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE((i * 2) + 1),
++					       sys_int_enable);
++			}
++
++			break;
++		}
++	}
++
+ init_end:
+ 	ssi->cr_own	= cr_own;
+ 	ssi->cr_mode	= cr_mode;
+@@ -496,6 +531,13 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+ {
+ 	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+ 	struct device *dev = rsnd_priv_to_dev(priv);
++	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++	int i;
++	u32 sys_int_enable = 0;
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
+ 		return 0;
+@@ -517,6 +559,38 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+ 		ssi->wsr	= 0;
+ 	}
+ 
++	/* disable busif buffer over/under run interrupt. */
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++						SSI_SYS_INT_ENABLE(i * 2));
++				sys_int_enable &= ~(0xf << (id * 4));
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE(i * 2),
++					       sys_int_enable);
++			}
++
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE((i * 2) + 1));
++				sys_int_enable &= ~(0xf << 4);
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE((i * 2) + 1),
++					       sys_int_enable);
++			}
++
++			break;
++		}
++	}
++
+ 	return 0;
+ }
+ 
+@@ -622,6 +696,11 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 			int enable)
+ {
+ 	u32 val = 0;
++	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	if (rsnd_is_gen1(priv))
+ 		return 0;
+@@ -635,6 +714,19 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 	if (enable)
+ 		val = rsnd_ssi_is_dma_mode(mod) ? 0x0e000000 : 0x0f000000;
+ 
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++		case 9:
++			val |= 0x0000ff00;
++			break;
++		}
++	}
++
+ 	rsnd_mod_write(mod, SSI_INT_ENABLE, val);
+ 
+ 	return 0;
+@@ -651,6 +743,12 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
+ 	u32 status;
+ 	bool elapsed = false;
+ 	bool stop = false;
++	int id = rsnd_mod_id(mod);
++	int i;
++	int is_tdm, is_tdm_split;
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	spin_lock(&priv->lock);
+ 
+@@ -672,6 +770,53 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
+ 		stop = true;
+ 	}
+ 
++	status = 0;
++
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				status = rsnd_mod_read(mod,
++						       SSI_SYS_STATUS(i * 2));
++				status &= 0xf << (id * 4);
++
++				if (status) {
++					rsnd_dbg_irq_status(dev,
++						"%s err status : 0x%08x\n",
++						rsnd_mod_name(mod), status);
++					rsnd_mod_write(mod,
++						       SSI_SYS_STATUS(i * 2),
++						       0xf << (id * 4));
++					stop = true;
++					break;
++				}
++			}
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				status = rsnd_mod_read(mod,
++						SSI_SYS_STATUS((i * 2) + 1));
++				status &= 0xf << 4;
++
++				if (status) {
++					rsnd_dbg_irq_status(dev,
++						"%s err status : 0x%08x\n",
++						rsnd_mod_name(mod), status);
++					rsnd_mod_write(mod,
++						SSI_SYS_STATUS((i * 2) + 1),
++						0xf << 4);
++					stop = true;
++					break;
++				}
++			}
++			break;
++		}
++	}
++
+ 	rsnd_ssi_status_clear(mod);
+ rsnd_ssi_interrupt_out:
+ 	spin_unlock(&priv->lock);
 -- 
 2.25.1
 
