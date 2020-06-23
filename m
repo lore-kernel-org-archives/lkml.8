@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A8D2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905082070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943611;
-	bh=oo51x5EQhWJuseftlFJxl0FZBh3KHWrE2vskUof0qkg=;
+	s=default; t=1592943618;
+	bh=wDtFrapsnioZClbXOoiJVnqKh7rXYEFcysXwDAhr9fg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nisEqmbaKrx2eLEHZGAYfhZ3drtUbxnzlV4BHIf+JamsR6gwDnp1GjeDlkgr1jd1Q
-	 ykb9MyL4eEB7mhfWLllgD3l+wQLQfp1daTUaQkzjvL2MJjAoYaEJ+dEQL+4IFxIlx7
-	 Sqn1pKGvLs0l3LUwpjip4z2reBDYHx+zZs42cNsk=
+	b=pM0rSYFaPepRfa8nS6ZwaHk1XbPRM1gLVKjCp12z7lR2365kOV2qKu7bKkBbG5nRa
+	 qbpGHYRsiANNdhK7ZUfx5K3DOKimEr3ASnNGg9iaepZN/6kzOxEdKkOiTAuO1Oe5IT
+	 QdcfoEIaPPazwXKZSg5PSogkCrIoKJpJnabnHpm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389875AbgFWUUJ (ORCPT
+        id S2389911AbgFWUUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389599AbgFWUUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:20:06 -0400
+        id S2388937AbgFWUUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:20:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60CAB2080C;
-        Tue, 23 Jun 2020 20:20:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1AFC2073E;
+        Tue, 23 Jun 2020 20:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943605;
-        bh=oo51x5EQhWJuseftlFJxl0FZBh3KHWrE2vskUof0qkg=;
+        s=default; t=1592943613;
+        bh=wDtFrapsnioZClbXOoiJVnqKh7rXYEFcysXwDAhr9fg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APFEEcVLC0c3XcB9rlkOu6H+5INaPHSF/0x87fyndXm+gs6VTne+xAy3RUp3nzXDi
-         CFzbFrBf16k50BvEGBXOFRQQ3OA6hM5+qtPwvlg0v+6VutE+5aO46jySb4gs+HEao6
-         mR4FxMFs1HZShW9jJyYjqE3fPFKccSyqxmzdaG1I=
+        b=BF1Rm/DjHzwrnnOl31P4BLzWs9KrUuzyUFyefTnzniTimNv0d/gnfpvFj4r9/Ql7c
+         AMrvjFKem8lRqRLxc0FtEPNyEmH3HpuOqh2Y9NgG6ElH136GALu8PE7PKuBaaUnkwR
+         VY83e1jeY3TO+n6JYUFSqWzsjrxDZD+iMOhDJZdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.7 457/477] drm/i915/gt: Move gen4 GT workarounds from init_clock_gating to workarounds
-Date:   Tue, 23 Jun 2020 21:57:34 +0200
-Message-Id: <20200623195429.152286516@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Stephan Mueller <smueller@chronox.de>
+Subject: [PATCH 5.7 460/477] crypto: algif_skcipher - Cap recv SG list at ctx->used
+Date:   Tue, 23 Jun 2020 21:57:37 +0200
+Message-Id: <20200623195429.292966212@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,111 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 27582a9c917940bc71c0df0b8e022cbde8d735d2 upstream.
+commit 7cf81954705b7e5b057f7dc39a7ded54422ab6e1 upstream.
 
-Rescue the GT workarounds from being buried inside init_clock_gating so
-that we remember to apply them after a GT reset, and that they are
-included in our verification that the workarounds are applied.
+Somewhere along the line the cap on the SG list length for receive
+was lost.  This patch restores it and removes the subsequent test
+which is now redundant.
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20200611080140.30228-6-chris@chris-wilson.co.uk
-(cherry picked from commit 2bcefd0d263ab4a72f0d61921ae6b0dc81606551)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Fixes: 2d97591ef43d ("crypto: af_alg - consolidation of...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Stephan Mueller <smueller@chronox.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gt/intel_workarounds.c |   27 ++++++++++++++++++++++-----
- drivers/gpu/drm/i915/intel_pm.c             |   15 ---------------
- 2 files changed, 22 insertions(+), 20 deletions(-)
+ crypto/algif_skcipher.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/i915/gt/intel_workarounds.c
-+++ b/drivers/gpu/drm/i915/gt/intel_workarounds.c
-@@ -704,15 +704,28 @@ int intel_engine_emit_ctx_wa(struct i915
- }
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -74,14 +74,10 @@ static int _skcipher_recvmsg(struct sock
+ 		return PTR_ERR(areq);
  
- static void
--ilk_gt_workarounds_init(struct drm_i915_private *i915, struct i915_wa_list *wal)
-+gen4_gt_workarounds_init(struct drm_i915_private *i915,
-+			 struct i915_wa_list *wal)
- {
--	wa_masked_en(wal, _3D_CHICKEN2, _3D_CHICKEN2_WM_READ_PIPELINED);
-+	/* WaDisable_RenderCache_OperationalFlush:gen4,ilk */
-+	wa_masked_dis(wal, CACHE_MODE_0, RC_OP_FLUSH_ENABLE);
-+}
-+
-+static void
-+g4x_gt_workarounds_init(struct drm_i915_private *i915, struct i915_wa_list *wal)
-+{
-+	gen4_gt_workarounds_init(i915, wal);
+ 	/* convert iovecs of output buffers into RX SGL */
+-	err = af_alg_get_rsgl(sk, msg, flags, areq, -1, &len);
++	err = af_alg_get_rsgl(sk, msg, flags, areq, ctx->used, &len);
+ 	if (err)
+ 		goto free;
  
--	/* WaDisableRenderCachePipelinedFlush:ilk */
-+	/* WaDisableRenderCachePipelinedFlush:g4x,ilk */
- 	wa_masked_en(wal, CACHE_MODE_0, CM0_PIPELINED_RENDER_FLUSH_DISABLE);
-+}
- 
--	/* WaDisable_RenderCache_OperationalFlush:ilk */
--	wa_masked_dis(wal, CACHE_MODE_0, RC_OP_FLUSH_ENABLE);
-+static void
-+ilk_gt_workarounds_init(struct drm_i915_private *i915, struct i915_wa_list *wal)
-+{
-+	g4x_gt_workarounds_init(i915, wal);
-+
-+	wa_masked_en(wal, _3D_CHICKEN2, _3D_CHICKEN2_WM_READ_PIPELINED);
- }
- 
- static void
-@@ -1198,6 +1211,10 @@ gt_init_workarounds(struct drm_i915_priv
- 		snb_gt_workarounds_init(i915, wal);
- 	else if (IS_GEN(i915, 5))
- 		ilk_gt_workarounds_init(i915, wal);
-+	else if (IS_G4X(i915))
-+		g4x_gt_workarounds_init(i915, wal);
-+	else if (IS_GEN(i915, 4))
-+		gen4_gt_workarounds_init(i915, wal);
- 	else if (INTEL_GEN(i915) <= 8)
- 		return;
- 	else
---- a/drivers/gpu/drm/i915/intel_pm.c
-+++ b/drivers/gpu/drm/i915/intel_pm.c
-@@ -7070,13 +7070,6 @@ static void g4x_init_clock_gating(struct
- 		dspclk_gate |= DSSUNIT_CLOCK_GATE_DISABLE;
- 	I915_WRITE(DSPCLK_GATE_D, dspclk_gate);
- 
--	/* WaDisableRenderCachePipelinedFlush */
--	I915_WRITE(CACHE_MODE_0,
--		   _MASKED_BIT_ENABLE(CM0_PIPELINED_RENDER_FLUSH_DISABLE));
+-	/* Process only as much RX buffers for which we have TX data */
+-	if (len > ctx->used)
+-		len = ctx->used;
 -
--	/* WaDisable_RenderCache_OperationalFlush:g4x */
--	I915_WRITE(CACHE_MODE_0, _MASKED_BIT_DISABLE(RC_OP_FLUSH_ENABLE));
--
- 	g4x_disable_trickle_feed(dev_priv);
- }
- 
-@@ -7092,11 +7085,6 @@ static void i965gm_init_clock_gating(str
- 	intel_uncore_write(uncore,
- 			   MI_ARB_STATE,
- 			   _MASKED_BIT_ENABLE(MI_ARB_DISPLAY_TRICKLE_FEED_DISABLE));
--
--	/* WaDisable_RenderCache_OperationalFlush:gen4 */
--	intel_uncore_write(uncore,
--			   CACHE_MODE_0,
--			   _MASKED_BIT_DISABLE(RC_OP_FLUSH_ENABLE));
- }
- 
- static void i965g_init_clock_gating(struct drm_i915_private *dev_priv)
-@@ -7109,9 +7097,6 @@ static void i965g_init_clock_gating(stru
- 	I915_WRITE(RENCLK_GATE_D2, 0);
- 	I915_WRITE(MI_ARB_STATE,
- 		   _MASKED_BIT_ENABLE(MI_ARB_DISPLAY_TRICKLE_FEED_DISABLE));
--
--	/* WaDisable_RenderCache_OperationalFlush:gen4 */
--	I915_WRITE(CACHE_MODE_0, _MASKED_BIT_DISABLE(RC_OP_FLUSH_ENABLE));
- }
- 
- static void gen3_init_clock_gating(struct drm_i915_private *dev_priv)
+ 	/*
+ 	 * If more buffers are to be expected to be processed, process only
+ 	 * full block size buffers.
 
 
