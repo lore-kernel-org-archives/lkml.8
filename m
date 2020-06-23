@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F73C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F878C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75AB4206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149D32070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944065;
-	bh=Qm2d/tMU5SizH6un6knnDQpfNtVPUrE8jVQCZ+MR8WM=;
+	s=default; t=1592944072;
+	bh=JT7YxV6z/6qiwExiVMHHGnzReWH50EhdvoD/VQr3wiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tq8lTaVhIAG+qnn/QA0z6drMhutYpeq0Y+two+tQuJ1b3MbOnMjkvV02HvOxfWy4Z
-	 F/mNp956XohmQNs4eQlcyncQlg6xy6l9z6KyWjRXIZjUerA2i/CQ8WckioBEkBTz0h
-	 oRYCbD9XG8FI1zIsnwVAuAZC5wilMqcXckfLgsBI=
+	b=pmaHkZqODv2UbL/s+6Y8oGotpaDqgDXktkOcBuPr+w2dfDu5s/L0hul2nqB2foRrS
+	 felbRJNtlEdVeJCYg5KT6XqVqSG79rvAKBd5Xv3piD1WwwofmH4z5OssZYe6y+Qkze
+	 ilJg/newei0ILyX7bna2e7xdFEqrJHWYw/Pkpywk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390789AbgFWU1l (ORCPT
+        id S2389269AbgFWU1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:27:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47144 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:27:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390771AbgFWU1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:27:35 -0400
+        id S2390788AbgFWU1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:27:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EE7F20702;
-        Tue, 23 Jun 2020 20:27:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D1F92064B;
+        Tue, 23 Jun 2020 20:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944054;
-        bh=Qm2d/tMU5SizH6un6knnDQpfNtVPUrE8jVQCZ+MR8WM=;
+        s=default; t=1592944064;
+        bh=JT7YxV6z/6qiwExiVMHHGnzReWH50EhdvoD/VQr3wiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jcF8RDXpA7B3xRnSIfmWcspfWLC/QodpV9jmmXbGt5Y2cqM8ccQTeADur/KRyRFMZ
-         ST7wMtGncSTYxRvICZH4HOjAjakSuFnTZLIuJDM4gJwq6Mg5SXop3TGvREOx4dcLwc
-         ZqmmUj88wcHrSISqrf69mCuVkf8H5mIvT1/km+gg=
+        b=L67PAqsSR+ubxEcyUe2z43DLRaG/VrBr69465STczqROwaiGxU1qf2H7YxNXXReen
+         pDnJPch0zGWVv/qY6ogh2Ht9ou+nIWjqPNyke3sNkpX2Bo3BR3wGPQn1ueOg+BjgBW
+         uU4znbUkg3sBDMi3gT09GcNP+dRF2vSre3X8t+a8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roy Spliet <nouveau@spliet.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Suganath Prabu S <suganath-prabu.subramani@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 154/314] drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
-Date:   Tue, 23 Jun 2020 21:55:49 +0200
-Message-Id: <20200623195346.202507110@linuxfoundation.org>
+Subject: [PATCH 5.4 131/314] scsi: mpt3sas: Fix double free warnings
+Date:   Tue, 23 Jun 2020 21:55:26 +0200
+Message-Id: <20200623195345.120586545@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,35 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roy Spliet <nouveau@spliet.org>
+From: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit e4337877c5d578722c0716f131fb774522013cf5 ]
+[ Upstream commit cbbfdb2a2416c9f0cde913cf09670097ac281282 ]
 
-When allocation for mdp5_kms fails, calling mdp5_destroy() leads to undefined
-behaviour, likely a nullptr exception or use-after-free troubles.
+Fix following warning from Smatch static analyser:
 
-Signed-off-by: Roy Spliet <nouveau@spliet.org>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
+warn: 'ioc->hpr_lookup' double freed
+
+drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
+warn: 'ioc->internal_lookup' double freed
+
+Link: https://lore.kernel.org/r/20200508110738.30732-1-suganath-prabu.subramani@broadcom.com
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index 91cd76a2bab11..77823ccdd0f8f 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -1037,7 +1037,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 752b71cfbe12c..7fd1d731555f9 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -4777,7 +4777,9 @@ _base_release_memory_pools(struct MPT3SAS_ADAPTER *ioc)
+ 	}
  
- 	return 0;
- fail:
--	mdp5_destroy(pdev);
-+	if (mdp5_kms)
-+		mdp5_destroy(pdev);
- 	return ret;
- }
- 
+ 	kfree(ioc->hpr_lookup);
++	ioc->hpr_lookup = NULL;
+ 	kfree(ioc->internal_lookup);
++	ioc->internal_lookup = NULL;
+ 	if (ioc->chain_lookup) {
+ 		for (i = 0; i < ioc->scsiio_depth; i++) {
+ 			for (j = ioc->chains_per_prp_buffer;
 -- 
 2.25.1
 
