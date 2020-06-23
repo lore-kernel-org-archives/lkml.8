@@ -2,120 +2,92 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11A5720780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933972;
-	bh=KGTxbpDBwea5FTUqlV3d9WT6LzTHKFm5813Edct4Qfg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OSkeFqR1AnWgkPXtO3Gy0kV7xw11iFrnAhoutqJ8FAZAZgSMvYpbuEX1WnN9QhDZ1
-	 pdVeofkSpIUbxcWy4BaB71+gC+7Dfxw9b8XeSxc+ULrBu7zBZJnRzutkcdtWyYu4xt
-	 JP1b4iX3fsv42vGxbStIre++ocKZ4TQAHnl5RVC4=
+	by mail.kernel.org (Postfix) with ESMTP id 7D02220781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbgFWRja (ORCPT
+        id S2387886AbgFWRjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33790 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:39:35 -0400
+Received: from trent.utfs.org ([94.185.90.103]:44768 "EHLO trent.utfs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387586AbgFWRg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387586AbgFWRjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:39:32 -0400
+Received: from localhost (localhost [IPv6:::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CDE2078A;
-        Tue, 23 Jun 2020 17:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933789;
-        bh=KGTxbpDBwea5FTUqlV3d9WT6LzTHKFm5813Edct4Qfg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x4+C37qg5AJZz0BDfSqX/2KZed2zZQ9cGwwn3WvQbNwlLjilXx0i9rtrhIBLuSPZi
-         Wmmr842du+JOGfcxdPLdmfKMLOw5LI/87mNlHgqs5U7LOSbWqT1ZjAiLHLdeidRbub
-         J6wim6hho0E2ssW93FEboDtd69ktFsOGNFUtBmJw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 24/24] RISC-V: Don't allow write+exec only page mapping request in mmap
-Date:   Tue, 23 Jun 2020 13:35:59 -0400
-Message-Id: <20200623173559.1355728-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
-References: <20200623173559.1355728-1-sashal@kernel.org>
+        by trent.utfs.org (Postfix) with ESMTPS id A730F5FA38;
+        Tue, 23 Jun 2020 19:39:26 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 10:39:26 -0700 (PDT)
+From:   Christian Kujau <lists@nerdbynature.de>
+To:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Kees Kook <keescook@chromium.org>
+cc:     linux-kernel@vger.kernel.org
+Subject: process '/usr/bin/rsync' started with executable stack
+Message-ID: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
+User-Agent: Alpine 2.22.1 (DEB 446 2020-06-13)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yash Shah <yash.shah@sifive.com>
+Hi,
 
-[ Upstream commit e0d17c842c0f824fd4df9f4688709fc6907201e1 ]
+exactly this[0] happened today, on a 5.6.5 kernel:
 
-As per the table 4.4 of version "20190608-Priv-MSU-Ratified" of the
-RISC-V instruction set manual[0], the PTE permission bit combination of
-"write+exec only" is reserved for future use. Hence, don't allow such
-mapping request in mmap call.
+  process '/usr/bin/rsync' started with executable stack
 
-An issue is been reported by David Abdurachmanov, that while running
-stress-ng with "sysbadaddr" argument, RCU stalls are observed on RISC-V
-specific kernel.
+But I can't reproduce this message, and rsync (v3.2.0, not exactly 
+abandonware) runs several times a day, so to repeat Andrew's questions[0] 
+from last year:
 
-This issue arises when the stress-sysbadaddr request for pages with
-"write+exec only" permission bits and then passes the address obtain
-from this mmap call to various system call. For the riscv kernel, the
-mmap call should fail for this particular combination of permission bits
-since it's not valid.
+  > What are poor users supposed to do if this message comes out? 
+  > Hopefully google the message and end up at this thread.  What do you
+  > want to tell them?
 
-[0]: http://dabbelt.com/~palmer/keep/riscv-isa-manual/riscv-privileged-20190608-1.pdf
+Also, the PID is missing from that message. I had some long running rsync 
+processes running earlier, maybe the RWE status would have been visible in 
+/proc/$PID/map, or somewhere else maybe?
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
-Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
-[Palmer: Refer to the latest ISA specification at the only link I could
-find, and update the terminology.]
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/riscv/kernel/sys_riscv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Please advise? :-)
 
-diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
-index f3619f59d85cc..12f8a7fce78b1 100644
---- a/arch/riscv/kernel/sys_riscv.c
-+++ b/arch/riscv/kernel/sys_riscv.c
-@@ -8,6 +8,7 @@
- #include <linux/syscalls.h>
- #include <asm/unistd.h>
- #include <asm/cacheflush.h>
-+#include <asm-generic/mman-common.h>
- 
- static long riscv_sys_mmap(unsigned long addr, unsigned long len,
- 			   unsigned long prot, unsigned long flags,
-@@ -16,6 +17,11 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
- {
- 	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
- 		return -EINVAL;
-+
-+	if ((prot & PROT_WRITE) && (prot & PROT_EXEC))
-+		if (unlikely(!(prot & PROT_READ)))
-+			return -EINVAL;
-+
- 	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
- 			       offset >> (PAGE_SHIFT - page_shift_offset));
- }
+Thanks,
+Christian.
+
+[0] https://lore.kernel.org/patchwork/patch/1164047/#1362722
+
+
+$ checksec --format=json --extended --file=`which rsync` | jq
+{
+  "/usr/bin/rsync": {
+    "relro": "full",
+    "canary": "yes",
+    "nx": "no",
+    "pie": "yes",
+    "clangcfi": "no",
+    "safestack": "no",
+    "rpath": "no",
+    "runpath": "no",
+    "symbols": "no",
+    "fortify_source": "yes",
+    "fortified": "10",
+    "fortify-able": "19"
+  }
+}
+
 -- 
-2.25.1
+BOFH excuse #244:
 
+Your cat tried to eat the mouse.
