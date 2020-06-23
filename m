@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4698FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74130C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18EAC20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCD520781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947726;
-	bh=jv9TmoNHZvbkTcvTMR+B0Yh6jQzHQ9JleDRbuqKRw9A=;
+	s=default; t=1592947733;
+	bh=g8N5YsB2wRO78MxTIYoOpkUVW6ucTYCxpFn8Ycm0xqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MuRvJQPy5MlHxoVrizjSiNd6HKDsR1HTmqPYYV9g44Gma/3yU5fwF3iaTpLKJ56F3
-	 OXc3b06IyO8S7IF77wSuOYrHPjKvIJNo/S3EyJRPbCj8IgqlEO3dt4LK2DjI5siQbP
-	 Gk4EVUp3naYMC0snGTc1wa5u6aNDmnZ6wAMR6gnU=
+	b=NISAn7TU4VBGVN9BS+16TgvQUQIHs/EXq59wA7nTTvp6/8bfXdxfVLnMuZnagazmU
+	 6VVgukh7m43wHojueUFfrNAM+6jgFU2LYFihOGuMVjm3KN8ZEl0XwuURtpIJh++mba
+	 Y8/Be0TOaWpHv9gvDLjGs90aky6sIGnWdEfaAE/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393570AbgFWV2k (ORCPT
+        id S2393581AbgFWV2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58928 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:28:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388152AbgFWUPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:15:47 -0400
+        id S2389101AbgFWUPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:15:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 281D32064B;
-        Tue, 23 Jun 2020 20:15:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68F52080C;
+        Tue, 23 Jun 2020 20:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943346;
-        bh=jv9TmoNHZvbkTcvTMR+B0Yh6jQzHQ9JleDRbuqKRw9A=;
+        s=default; t=1592943339;
+        bh=g8N5YsB2wRO78MxTIYoOpkUVW6ucTYCxpFn8Ycm0xqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeHkc1oIOrKpXTGj7wUDSO7M4pbfzXClYZm2iGBIDMdjRZSBEIS9OLf+ohW3eGE8E
-         L3ygKZE2Jf92AmuGq8LxxD4qCTWrUiznAQfC4pSOu0BJ0SnTNQ3Z9SfxPwS9Plu8Ex
-         VeLKisFDr3rmEvZjJaRfR+kPYYq/zdZWJWU7mk6Y=
+        b=ICQho6reEr/Lg/npZuDxyw1/cANZz36MRzgI1dsoiPyr8zA87QkjwmCSCQ3O6aaLa
+         5Y0l38wkqPmP/unNQ3wu7VmCSnk3jFfzeWsJnPbmqFkEDYgXaM3eNkoBfUHasy0NjS
+         509rQHJloW9otPXy3aqlXiCX+MkgaekGlNDSH2b8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@gmail.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 356/477] ASoC: SOF: nocodec: conditionally set dpcm_capture/dpcm_playback flags
-Date:   Tue, 23 Jun 2020 21:55:53 +0200
-Message-Id: <20200623195424.367102295@linuxfoundation.org>
+Subject: [PATCH 5.7 336/477] net: dp83867: Fix OF_MDIO config check
+Date:   Tue, 23 Jun 2020 21:55:33 +0200
+Message-Id: <20200623195423.423284308@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -64,48 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Dan Murphy <dmurphy@ti.com>
 
-[ Upstream commit ba4e5abc6c4e173af7c941c03c067263b686665d ]
+[ Upstream commit 506de00677b84dfc6718cbbd3495b1d90df5d098 ]
 
-With additional checks on dailinks, we see errors such as
+When CONFIG_OF_MDIO is set to be a module the code block is not
+compiled. Use the IS_ENABLED macro that checks for both built in as
+well as module.
 
-[ 3.000418] sof-nocodec sof-nocodec: CPU DAI DMIC01 Pin for rtd
-NoCodec-6 does not support playback
-
-It's not clear why we set the dpcm_playback and dpcm_capture flags
-unconditionally, add a check on number of channels for each direction
-to avoid invalid configurations.
-
-Fixes: 8017b8fd37bf5e ('ASoC: SOF: Add Nocodec machine driver support')
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://lore.kernel.org/r/20200608194415.4663-5-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2a10154abcb75 ("net: phy: dp83867: Add TI dp83867 phy")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/nocodec.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/phy/dp83867.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
-index 2233146386ccf..71cf5f9db79d0 100644
---- a/sound/soc/sof/nocodec.c
-+++ b/sound/soc/sof/nocodec.c
-@@ -52,8 +52,10 @@ static int sof_nocodec_bes_setup(struct device *dev,
- 		links[i].platforms->name = dev_name(dev);
- 		links[i].codecs->dai_name = "snd-soc-dummy-dai";
- 		links[i].codecs->name = "snd-soc-dummy";
--		links[i].dpcm_playback = 1;
--		links[i].dpcm_capture = 1;
-+		if (ops->drv[i].playback.channels_min)
-+			links[i].dpcm_playback = 1;
-+		if (ops->drv[i].capture.channels_min)
-+			links[i].dpcm_capture = 1;
- 	}
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index b55e3c0403edd..ddac79960ea71 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -488,7 +488,7 @@ static int dp83867_verify_rgmii_cfg(struct phy_device *phydev)
+ 	return 0;
+ }
  
- 	card->dai_link = links;
+-#ifdef CONFIG_OF_MDIO
++#if IS_ENABLED(CONFIG_OF_MDIO)
+ static int dp83867_of_init(struct phy_device *phydev)
+ {
+ 	struct dp83867_private *dp83867 = phydev->priv;
 -- 
 2.25.1
 
