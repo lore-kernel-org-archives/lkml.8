@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A10C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA6B20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839EE20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592873569;
-	bh=fIORlCQbxBxgk9voZ1LkLthTTqwXiwUQiuX5p9e4JlI=;
+	s=default; t=1592873571;
+	bh=pPT7PfjJzKSC81ptYixfp/4tz9OcnAEgAnp+0SKw3X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yIUKgWnER38rHs9znW0FbL6+0GoKWh2Uwr/Sz0MmkwYYM9UpQa4zWD4edmtfbH6l3
-	 rDOQGLvnKH9zsZtpSFqlkTg9Yu5pyACGONzc9VxX5LzDu0Sh2spc6gzdhk098HcKBR
-	 cq4ZgCthDdLn8sa0QEju+T8cm++aL94ZJyqSth+g=
+	b=LUrGIlw1hkEQ52Wfyt2pchU2hS6BrPjadmUWiwOMZLU3DebpzXBFlbSayPaGFlGpH
+	 m4n8pwAYvVnx0ZL3uMH8WigmwkMCeHfWIh0EYIvrFWDFR8i7TMvChOERlCzO+H/GI9
+	 pLJ80YdyQXyJwEOw4DknY2/m4BHRvONoxqzmcXmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbgFWAwr (ORCPT
+        id S1732432AbgFWAwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:52:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46576 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:52:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731750AbgFWAwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732386AbgFWAwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:52:35 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF5C2084D;
+        by mail.kernel.org (Postfix) with ESMTPSA id D15F420738;
         Tue, 23 Jun 2020 00:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592873554;
-        bh=fIORlCQbxBxgk9voZ1LkLthTTqwXiwUQiuX5p9e4JlI=;
+        bh=pPT7PfjJzKSC81ptYixfp/4tz9OcnAEgAnp+0SKw3X0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pC6+JGDQ+uuzPDGi0PPwXo7VTL6Y3KEVbJW4tjRZscofs/ZjSzTLPxIJ65GXxwBKX
-         LOZD1gHJpOiC8ovZi6rlMOMmzFvhSgeWviJ10eQM6lmBa8UdRiIvghpNRlwcFCM9fb
-         OeUPB1rk9jVvON2vSiesqYboC6UCnclz3SybwMlM=
+        b=g3UyqNZdqT563LcDgE0gmQJVPdONZWjpJN7kS8A8bb9fXMVP1Dh/xO5z4cTLT04Ff
+         rkxTCMhskIOoKcCkUL1pDejZDPzTk6Ww2870xk6I3kn/1rhS41Kij6xFd0krTi/vh9
+         +ZoCMKr6Ne/boZ4z0NuGT78fLyH9QeIAjdFPyeSc=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         kernel-team@fb.com, mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 07/14] Documentation/litmus-tests: Introduce atomic directory
-Date:   Mon, 22 Jun 2020 17:52:24 -0700
-Message-Id: <20200623005231.27712-7-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 10/14] tools/memory-model: Fix reference to litmus test in recipes.txt
+Date:   Mon, 22 Jun 2020 17:52:27 -0700
+Message-Id: <20200623005231.27712-10-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623005152.GA27459@paulmck-ThinkPad-P72>
 References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
@@ -57,47 +57,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com>
+From: Akira Yokosawa <akiyks@gmail.com>
 
-Although we have atomic_t.txt and its friends to describe the semantics
-of atomic APIs and lib/atomic64_test.c for build testing and testing in
-UP mode, the tests for our atomic APIs in real SMP mode are still
-missing. Since now we have the LKMM tool in kernel and litmus tests can
-be used to generate kernel modules for testing purpose with "klitmus" (a
-tool from the LKMM toolset), it makes sense to put a few typical litmus
-tests into kernel so that
+The name of litmus test doesn't match the one described below.
+Fix the name of litmus test.
 
-1)	they are the examples to describe the conceptual mode of the
-	semantics of atomic APIs, and
-
-2)	they can be used to generate kernel test modules for anyone
-	who is interested to test the atomic APIs implementation (in
-	most cases, is the one who implements the APIs for a new arch)
-
-Therefore, introduce the atomic directory for this purpose. The
-directory is maintained by the LKMM group to make sure the litmus tests
-are always aligned with our memory model.
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
 Acked-by: Andrea Parri <parri.andrea@gmail.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/litmus-tests/atomic/README | 4 ++++
- 1 file changed, 4 insertions(+)
- create mode 100644 Documentation/litmus-tests/atomic/README
+ tools/memory-model/Documentation/recipes.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
-new file mode 100644
-index 0000000..ae61201
---- /dev/null
-+++ b/Documentation/litmus-tests/atomic/README
-@@ -0,0 +1,4 @@
-+This directory contains litmus tests that are typical to describe the semantics
-+of our atomic APIs. For more information about how to "run" a litmus test or
-+how to generate a kernel test module based on a litmus test, please see
-+tools/memory-model/README.
+diff --git a/tools/memory-model/Documentation/recipes.txt b/tools/memory-model/Documentation/recipes.txt
+index 7fe8d7a..63c4adf 100644
+--- a/tools/memory-model/Documentation/recipes.txt
++++ b/tools/memory-model/Documentation/recipes.txt
+@@ -126,7 +126,7 @@ However, it is not necessarily the case that accesses ordered by
+ locking will be seen as ordered by CPUs not holding that lock.
+ Consider this example:
+ 
+-	/* See Z6.0+pooncerelease+poacquirerelease+fencembonceonce.litmus. */
++	/* See Z6.0+pooncelock+pooncelock+pombonce.litmus. */
+ 	void CPU0(void)
+ 	{
+ 		spin_lock(&mylock);
 -- 
 2.9.5
 
