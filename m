@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7933DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B346F20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4915720724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945677;
-	bh=Rzukqn1LovFivbTJcvvURK5wy2+wHiHaUXxgkGBpk34=;
+	s=default; t=1592945683;
+	bh=M8WePFkO2RB60+1w99NmjnzDngSvR9I6iLpfPoEiAko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JDWZ8Yy/xTOkQTsi0oYA/T6OpsVPaWHYkW+LydXOVxUuvTM4uGrdzdGwxdZTy6jVq
-	 d/nMkK8MpQe/h2qwtF3McFykbn5ot3Nx8E9Dc7BlGiwtGJLysDGtyG+SpDbCMVAUu5
-	 p0VfaqgfTi5Ze9tvoiwBifxt1NsWVh9T31FpTB2M=
+	b=rnu+fvl40mYgFZw++g0dWVXB+tzmYKNynA4zltfbwKmLFUTQLCNaAYQwQuVh1MIxY
+	 rgHeFXlMqMz8JUP34scq9UOjHoS5HUckCuyutOm9RN0bsSJcdna0AEaGAwzwuArw0f
+	 F3ZIg6wIAPUiEZRq1aI87GhKhB3naPKIZMD2tJEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392773AbgFWUyf (ORCPT
+        id S2392991AbgFWUyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:54:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43362 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:54:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392765AbgFWUpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:45:44 -0400
+        id S2392394AbgFWUpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:45:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D02F32098B;
-        Tue, 23 Jun 2020 20:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A17520781;
+        Tue, 23 Jun 2020 20:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945144;
-        bh=Rzukqn1LovFivbTJcvvURK5wy2+wHiHaUXxgkGBpk34=;
+        s=default; t=1592945141;
+        bh=M8WePFkO2RB60+1w99NmjnzDngSvR9I6iLpfPoEiAko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0AUuhwS2cAXIU6QVMlYNbKIPlq8/jZXEjPtEfbQhNGS/kDlQXBTIkfZQxDUGpH8zR
-         1l4eNerfbE9GjouGmkBJEUIj/dEY4h1gfWiAgGubOf0BgIamIkwD7jmpBZzEyeA6Vx
-         IylU3YxeO91zWbsbJ/o9ILOxz5a8pO/Bz7dhM4Vk=
+        b=xA2vAMw+UBtnPzdsmfjTbTTXMFN/ImqDL4cSl8f+TF5KUJVdj2g5VTFlYubxNz6B/
+         975G9Tvxg2+VL9kzamYAehcpk7ezjbwlFHE1ad/VAL0HOfJVROJqjAucEV8G38hKyx
+         ddBF2p2ILog8y3u3S+zCt9meAyfblQMtQaGhw+N8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 056/136] tty: n_gsm: Fix SOF skipping
-Date:   Tue, 23 Jun 2020 21:58:32 +0200
-Message-Id: <20200623195306.492631180@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 055/136] PCI: Fix pci_register_host_bridge() device_register() error handling
+Date:   Tue, 23 Jun 2020 21:58:31 +0200
+Message-Id: <20200623195306.443001606@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,56 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 84d6f81c1fb58b56eba81ff0a36cf31946064b40 ]
+[ Upstream commit 1b54ae8327a4d630111c8d88ba7906483ec6010b ]
 
-For at least some modems like the TELIT LE910, skipping SOF makes
-transfers blocking indefinitely after a short amount of data
-transferred.
+If device_register() has an error, we should bail out of
+pci_register_host_bridge() rather than continuing on.
 
-Given the small improvement provided by skipping the SOF (just one
-byte on about 100 bytes), it seems better to completely remove this
-"feature" than make it optional.
-
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200512115323.1447922-3-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface")
+Link: https://lore.kernel.org/r/20200513223859.11295-1-robh@kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/pci/probe.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index f46bd1af7a10b..eabdcfa414aad 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -681,7 +681,6 @@ static void gsm_data_kick(struct gsm_mux *gsm)
- {
- 	struct gsm_msg *msg, *nmsg;
- 	int len;
--	int skip_sof = 0;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 31cc04aeaaaab..55ece07e584a0 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -792,9 +792,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 		goto free;
  
- 	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
- 		if (gsm->constipated && msg->addr)
-@@ -703,15 +702,10 @@ static void gsm_data_kick(struct gsm_mux *gsm)
- 			print_hex_dump_bytes("gsm_data_kick: ",
- 					     DUMP_PREFIX_OFFSET,
- 					     gsm->txframe, len);
+ 	err = device_register(&bridge->dev);
+-	if (err)
++	if (err) {
+ 		put_device(&bridge->dev);
 -
--		if (gsm->output(gsm, gsm->txframe + skip_sof,
--						len - skip_sof) < 0)
-+		if (gsm->output(gsm, gsm->txframe, len) < 0)
- 			break;
- 		/* FIXME: Can eliminate one SOF in many more cases */
- 		gsm->tx_bytes -= msg->len;
--		/* For a burst of frames skip the extra SOF within the
--		   burst */
--		skip_sof = 1;
- 
- 		list_del(&msg->list);
- 		kfree(msg);
++		goto free;
++	}
+ 	bus->bridge = get_device(&bridge->dev);
+ 	device_enable_async_suspend(bus->bridge);
+ 	pci_set_bus_of_node(bus);
 -- 
 2.25.1
 
