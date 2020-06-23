@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF62C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0841F20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0D920702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945448;
-	bh=Cdjy+yn64BFMht6Zz/VIpSAsycphMZ2trnMFdAXoZi4=;
+	s=default; t=1592945451;
+	bh=3PAE0rb8umTgiVnbizPCTpcvNcF8NBTtTzgHjp8hxiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O0WoN5bw6YUr/aCqTkuVVPlSEUh7AD6cR0/SRJuixGOAcCm18aGciQXWPjC+o4zHa
-	 gCoJH3Dg3V5Szdns1j2JW8k6AgEfwmDBdFwxKhC2bMqJXC3qba58wiTOLUMtmfIVRR
-	 ffGKhPKBHA3WXIdJSvmschhV/jZln3TR+b+k/v8A=
+	b=gkw4JH65sdT74oc2GvSQYpTaz+dhEX7lg0BbzbdvMpNBNoGHRbU0yXev6YZxeMrsJ
+	 WZ+9ruLCpwqQCJKe7CL96gYBzK9VRKGCLcmTdUKYyDOb9R5+XZN9pu+oQAzkPuf9xl
+	 3NYa/tm3+GYSH3RPgDX7qQlri353EATtlZhHBako=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392947AbgFWUsi (ORCPT
+        id S2392996AbgFWUut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392913AbgFWUsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:48:18 -0400
+        id S2392640AbgFWUsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:48:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2F2F21582;
-        Tue, 23 Jun 2020 20:48:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 558902098B;
+        Tue, 23 Jun 2020 20:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945298;
-        bh=Cdjy+yn64BFMht6Zz/VIpSAsycphMZ2trnMFdAXoZi4=;
+        s=default; t=1592945318;
+        bh=3PAE0rb8umTgiVnbizPCTpcvNcF8NBTtTzgHjp8hxiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mA0vqGyAnZrytC3NC3YiFSxiGTBPmRR7vADiy9GtEFQB0LNLVpOA8apZ/nyQ7lqzH
-         IKdyVzWMdl2v3CILDtBd6vf6Z/nrZVx0HHWoB6oAXVyVQnsD93CRSCDfx7l2v6FtO3
-         qVWwlgHNQ9ELBFRi8Z0eoHMgUg7TSzoQploCZxaE=
+        b=C8UJrRoTw/PCFF205zc76Sd8njwp+rDBAB7U3XoWMFAqfLT7uUNfagt9/bqNrB8U2
+         2nZhvbWN8wCcGzzyHoGJxmUfi8nXPEmQVCVhCpkRLyZoyJg16Fvyq4GKT6+Ks0wZyM
+         dfx0B8jjUYBfdvwGD+Q5E9FnGSegCE1BHXmX+W/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 117/136] x86/boot/compressed: Relax sed symbol type regex for LLVM ld.lld
-Date:   Tue, 23 Jun 2020 21:59:33 +0200
-Message-Id: <20200623195309.604760517@linuxfoundation.org>
+Subject: [PATCH 4.14 124/136] mtd: rawnand: oxnas: Add of_node_put()
+Date:   Tue, 23 Jun 2020 21:59:40 +0200
+Message-Id: <20200623195310.017515738@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -61,67 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-commit bc310baf2ba381c648983c7f4748327f17324562 upstream.
+[ Upstream commit c436f68beeb20f2f92937677db1d9069b0dd2a3d ]
 
-The final build stage of the x86 kernel captures some symbol
-addresses from the decompressor binary and copies them into zoffset.h.
-It uses sed with a regular expression that matches the address, symbol
-type and symbol name, and mangles the captured addresses and the names
-of symbols of interest into #define directives that are added to
-zoffset.h
+Each iteration of for_each_child_of_node puts the previous node, but in
+the case of a goto from the middle of the loop, there is no put, thus
+causing a memory leak. Hence add an of_node_put under a new goto to put
+the node at a loop exit.
+Issue found with Coccinelle.
 
-The symbol type is indicated by a single letter, which we match
-strictly: only letters in the set 'ABCDGRSTVW' are matched, even
-though the actual symbol type is relevant and therefore ignored.
-
-Commit bc7c9d620 ("efi/libstub/x86: Force 'hidden' visibility for
-extern declarations") made a change to the way external symbol
-references are classified, resulting in 'startup_32' now being
-emitted as a hidden symbol. This prevents the use of GOT entries to
-refer to this symbol via its absolute address, which recent toolchains
-(including Clang based ones) already avoid by default, making this
-change a no-op in the majority of cases.
-
-However, as it turns out, the LLVM linker classifies such hidden
-symbols as symbols with static linkage in fully linked ELF binaries,
-causing tools such as NM to output a lowercase 't' rather than an upper
-case 'T' for the type of such symbols. Since our sed expression only
-matches upper case letters for the symbol type, the line describing
-startup_32 is disregarded, resulting in a build error like the following
-
-  arch/x86/boot/header.S:568:18: error: symbol 'ZO_startup_32' can not be
-                                        undefined in a subtraction expression
-  init_size: .long (0x00000000008fd000 - ZO_startup_32 +
-                    (((0x0000000001f6361c + ((0x0000000001f6361c >> 8) + 65536)
-                     - 0x00000000008c32e5) + 4095) & ~4095)) # kernel initialization size
-
-Given that we are only interested in the value of the symbol, let's match
-any character in the set 'a-zA-Z' instead.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/oxnas_nand.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 1c060748c813e..f38ffcc610d20 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -87,7 +87,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
+diff --git a/drivers/mtd/nand/oxnas_nand.c b/drivers/mtd/nand/oxnas_nand.c
+index ff58999887388..7f0ba28f8a007 100644
+--- a/drivers/mtd/nand/oxnas_nand.c
++++ b/drivers/mtd/nand/oxnas_nand.c
+@@ -123,7 +123,7 @@ static int oxnas_nand_probe(struct platform_device *pdev)
+ 				    GFP_KERNEL);
+ 		if (!chip) {
+ 			err = -ENOMEM;
+-			goto err_clk_unprepare;
++			goto err_release_child;
+ 		}
  
- SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+ 		chip->controller = &oxnas->base;
+@@ -144,12 +144,12 @@ static int oxnas_nand_probe(struct platform_device *pdev)
+ 		/* Scan to find existence of the device */
+ 		err = nand_scan(mtd, 1);
+ 		if (err)
+-			goto err_clk_unprepare;
++			goto err_release_child;
  
--sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
-+sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
+ 		err = mtd_device_register(mtd, NULL, 0);
+ 		if (err) {
+ 			nand_release(chip);
+-			goto err_clk_unprepare;
++			goto err_release_child;
+ 		}
  
- quiet_cmd_zoffset = ZOFFSET $@
-       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+ 		oxnas->chips[nchips] = chip;
+@@ -166,6 +166,8 @@ static int oxnas_nand_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++err_release_child:
++	of_node_put(nand_np);
+ err_clk_unprepare:
+ 	clk_disable_unprepare(oxnas->clk);
+ 	return err;
 -- 
 2.25.1
 
