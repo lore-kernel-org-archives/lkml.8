@@ -2,52 +2,56 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D58520702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D263320663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946548;
-	bh=y6ffQj4qH7Omef1MmsNgOQ0VBr1XnTxBNwn3tmYwFh8=;
+	s=default; t=1592946554;
+	bh=4UAPmVhI7Yg5vv2YBav4NutQEvI7ancXbl5399gKWjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBbqjKkW5eWpd/64caWtnR2aVShij5lfBKP67qyYT28lmjui324wXbjNpSloSdHLI
-	 g3DWO0uxVb7xd7RLq4sqYL/2SgvumK/Six95/hi6KUVhZtkjo0uhWhaR1c33cJsQsY
-	 VdCaML3mCc3ksDiXps8lYzRy6u7JuZ0SKun12RCY=
+	b=wVyyAvCmCxjIe9AWVbKfAJXOkYMYuDK03yB0DhEB9XKwRAfI+w3ryj9LhkEId2tL4
+	 v6S1Zo5u1g36X3V3pOFXdWxbfde/5VASQrVUUQhleSHl4kHLe/pDcR5SWH3Bqex9QS
+	 LW7CXQtRreRXnKDTWa48lP2dKjE5MogDNH8KwhL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393207AbgFWVJG (ORCPT
+        id S2390608AbgFWVJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:09:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56378 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391533AbgFWUeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:25 -0400
+        id S2391526AbgFWUeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4930206C3;
-        Tue, 23 Jun 2020 20:34:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CD0B2098B;
+        Tue, 23 Jun 2020 20:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944465;
-        bh=y6ffQj4qH7Omef1MmsNgOQ0VBr1XnTxBNwn3tmYwFh8=;
+        s=default; t=1592944462;
+        bh=4UAPmVhI7Yg5vv2YBav4NutQEvI7ancXbl5399gKWjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jJzK+EoRfBTiRO7VSSjqOq6/NuD9hIdCuW/N7rQlGWJHuE7cW4rA1LMTGloyxgCIX
-         vNcbuthMEisublOtpNnteTp4H+r5yOzqMCud7JdckpQ7Ud2lAWK3APPTP6aavsGwf4
-         e6gXm5CUZYc+SHDgZNgAxvWyd+3GgQYE+p4P8iPs=
+        b=M85GLd6IO+0+HKnvRy1nkVtACFmB6noyYc8+xgvmIXpocP/mWb2dR3j7+eQbbVra0
+         XC7Cc3DQ0jbUF9jRJKzh5uPlUJgGY+/pDsyH5sPJV5V7arc/hEiYoIp6ZR/N/c6FVx
+         AKiHHGLS5uTJQ9lSYw8RuQoarbECmxuNsJKhIKX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.4 297/314] drm/i915: Fix AUX power domain toggling across TypeC mode resets
-Date:   Tue, 23 Jun 2020 21:58:12 +0200
-Message-Id: <20200623195353.162475199@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.4 314/314] net: core: device_rename: Use rwsem instead of a seqcount
+Date:   Tue, 23 Jun 2020 21:58:29 +0200
+Message-Id: <20200623195353.980476509@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,49 +64,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-commit d96536f0fe699729a0974eb5b65eb0d87cc747e1 upstream.
+[ Upstream commit 11d6011c2cf29f7c8181ebde6c8bc0c4d83adcd7 ]
 
-Make sure to select the port's AUX power domain while holding the TC
-port lock. The domain depends on the port's current TC mode, which may
-get changed under us if we're not holding the lock.
+Sequence counters write paths are critical sections that must never be
+preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
 
-This was left out from
-commit 8c10e2262663 ("drm/i915: Keep the TypeC port mode fixed for detect/AUX transfers")
+Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
+netdev name retrieval.") handled a deadlock, observed with
+CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
+infinitely spinning: it got scheduled after the seqcount write side
+blocked inside its own critical section.
 
-Cc: <stable@vger.kernel.org> # v5.4+
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200514204553.27193-1-imre.deak@intel.com
-(cherry picked from commit ae9b6cfe1352da25931bce3ea4acfd4dc1ac8a85)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To fix that deadlock, among other issues, the commit added a
+cond_resched() inside the read side section. While this will get the
+non-preemptible kernel eventually unstuck, the seqcount reader is fully
+exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
 
+The fix is also still broken: if the seqcount reader belongs to a
+real-time scheduling policy, it can spin forever and the kernel will
+livelock.
+
+Disabling preemption over the seqcount write side critical section will
+not work: inside it are a number of GFP_KERNEL allocations and mutex
+locking through the drivers/base/ :: device_rename() call chain.
+
+>From all the above, replace the seqcount with a rwsem.
+
+Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
+Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
+Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
+Cc: <stable@vger.kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com> [ v1 missing up_read() on error exit ]
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com> [ v1 missing up_read() on error exit ]
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/display/intel_dp.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/core/dev.c | 40 ++++++++++++++++++----------------------
+ 1 file changed, 18 insertions(+), 22 deletions(-)
 
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -1292,8 +1292,7 @@ intel_dp_aux_xfer(struct intel_dp *intel
- 	bool is_tc_port = intel_phy_is_tc(i915, phy);
- 	i915_reg_t ch_ctl, ch_data[5];
- 	u32 aux_clock_divider;
--	enum intel_display_power_domain aux_domain =
--		intel_aux_power_domain(intel_dig_port);
-+	enum intel_display_power_domain aux_domain;
- 	intel_wakeref_t aux_wakeref;
- 	intel_wakeref_t pps_wakeref;
- 	int i, ret, recv_bytes;
-@@ -1308,6 +1307,8 @@ intel_dp_aux_xfer(struct intel_dp *intel
- 	if (is_tc_port)
- 		intel_tc_port_lock(intel_dig_port);
+diff --git a/net/core/dev.c b/net/core/dev.c
+index b127f022d8bd9..204d87e7c9b19 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -79,6 +79,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/mm.h>
+ #include <linux/mutex.h>
++#include <linux/rwsem.h>
+ #include <linux/string.h>
+ #include <linux/mm.h>
+ #include <linux/socket.h>
+@@ -194,7 +195,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
+ static unsigned int napi_gen_id = NR_CPUS;
+ static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
  
-+	aux_domain = intel_aux_power_domain(intel_dig_port);
+-static seqcount_t devnet_rename_seq;
++static DECLARE_RWSEM(devnet_rename_sem);
+ 
+ static inline void dev_base_seq_inc(struct net *net)
+ {
+@@ -816,33 +817,28 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
+  *	@net: network namespace
+  *	@name: a pointer to the buffer where the name will be stored.
+  *	@ifindex: the ifindex of the interface to get the name from.
+- *
+- *	The use of raw_seqcount_begin() and cond_resched() before
+- *	retrying is required as we want to give the writers a chance
+- *	to complete when CONFIG_PREEMPTION is not set.
+  */
+ int netdev_get_name(struct net *net, char *name, int ifindex)
+ {
+ 	struct net_device *dev;
+-	unsigned int seq;
++	int ret;
+ 
+-retry:
+-	seq = raw_seqcount_begin(&devnet_rename_seq);
++	down_read(&devnet_rename_sem);
+ 	rcu_read_lock();
 +
- 	aux_wakeref = intel_display_power_get(i915, aux_domain);
- 	pps_wakeref = pps_lock(intel_dp);
+ 	dev = dev_get_by_index_rcu(net, ifindex);
+ 	if (!dev) {
+-		rcu_read_unlock();
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto out;
+ 	}
  
+ 	strcpy(name, dev->name);
+-	rcu_read_unlock();
+-	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
+-		cond_resched();
+-		goto retry;
+-	}
+ 
+-	return 0;
++	ret = 0;
++out:
++	rcu_read_unlock();
++	up_read(&devnet_rename_sem);
++	return ret;
+ }
+ 
+ /**
+@@ -1115,10 +1111,10 @@ int dev_change_name(struct net_device *dev, const char *newname)
+ 	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
+ 		return -EBUSY;
+ 
+-	write_seqcount_begin(&devnet_rename_seq);
++	down_write(&devnet_rename_sem);
+ 
+ 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return 0;
+ 	}
+ 
+@@ -1126,7 +1122,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
+ 
+ 	err = dev_get_valid_name(net, dev, newname);
+ 	if (err < 0) {
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return err;
+ 	}
+ 
+@@ -1141,11 +1137,11 @@ rollback:
+ 	if (ret) {
+ 		memcpy(dev->name, oldname, IFNAMSIZ);
+ 		dev->name_assign_type = old_assign_type;
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return ret;
+ 	}
+ 
+-	write_seqcount_end(&devnet_rename_seq);
++	up_write(&devnet_rename_sem);
+ 
+ 	netdev_adjacent_rename_links(dev, oldname);
+ 
+@@ -1166,7 +1162,7 @@ rollback:
+ 		/* err >= 0 after dev_alloc_name() or stores the first errno */
+ 		if (err >= 0) {
+ 			err = ret;
+-			write_seqcount_begin(&devnet_rename_seq);
++			down_write(&devnet_rename_sem);
+ 			memcpy(dev->name, oldname, IFNAMSIZ);
+ 			memcpy(oldname, newname, IFNAMSIZ);
+ 			dev->name_assign_type = old_assign_type;
+-- 
+2.25.1
+
 
 
