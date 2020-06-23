@@ -4,164 +4,229 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A31C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49D0A20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACDE20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 10:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gOKzF5Yl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hVTKgZRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732322AbgFWKvR (ORCPT
+        id S1732400AbgFWKwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48686 "EHLO
+        Tue, 23 Jun 2020 06:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732289AbgFWKvQ (ORCPT
+        with ESMTP id S1732375AbgFWKwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:51:16 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1231C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:51:15 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id n5so16131177otj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:51:15 -0700 (PDT)
+        Tue, 23 Jun 2020 06:52:09 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5060C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:52:08 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h5so20036879wrc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 03:52:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QoCPlVuRfLdDkwTBRDRK73tEwxS3sN2fuJiGkn2CvdE=;
-        b=gOKzF5Yl8kKYahi5zjnsTU+qXPPirvcXIt/7AkVJ+qdy+FWf0uU8V6HbpsO4r2juD7
-         w2iP9eBLHtTmU+rweutvCfl7szvkDoX2LnG9M/YYCRnGryXBoohfc4iAuNKngf9sT2St
-         1E0jtqC1MmLkv3KSwEE7j8DVPU+fk/IRWiczw=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dBzPbPycPoCqD0jxPC/ZRazkaIKgNXR6qz1TtThkFUU=;
+        b=hVTKgZRYdrZf8D1hqAyqe0LNbpXqLr2qkyQuORdV5ZQF1n8hpcd2PdufDsxy2KZshW
+         f3xFNx1WZb2U5LWD+NgGoZ7RarxK1BfT88GLA/1YuWUZ3l3UTlZO4jGaPBsRqOjOc9R4
+         Gz86QuEbWGVO12QL7IcTOXHrAyOjMblCv6w1ADGv4nXP3YZwJVoeFu+dLUbQWZF5KzWn
+         e8ajLS9iSB76QXQOfuZlpGZROIkNwTDFhhRsOc/OKvkydOic3Oo/md3dFvCPS5eX6T7Z
+         4XuA5j6ku24jRQSOB5wf2TI8xKo1W911B7qq2Y4IPNu7Br70etSZO121Jms9Lll2HL0K
+         srEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QoCPlVuRfLdDkwTBRDRK73tEwxS3sN2fuJiGkn2CvdE=;
-        b=GvnZDwfDE1PQ2pWUK6qmUnyoysH0V9xydYCh9JfcEmXJGMJQU0Kf8qmbs5Qbd503dE
-         /V8Y5+AY9SMrOjdPeZYdejOZ/3kzAhn7oM+5hOZl62+OLxmEh0QsaUk0YBdv8ufG9A2L
-         hV1bPgfGw5lUzR7b4a08ot/h2VeNqpkJDf+b9owdtTIG18mF/2lJOskYd34APSkvIBl/
-         fQ3e/32uUsj/TfXME/jpCwteYagioNajZQx5vzbg0NFq0fYvBO3QcrMY/aj4SYxpJ0FH
-         PC5VjqXUp6H9cYVfEX4u++sx15LT30/HnUdraOW66SlHudThCtPgFhZCGvh2bpWELnFE
-         BWSA==
-X-Gm-Message-State: AOAM532Put1ys273Fr5E0k+AYfXBP4gFWlGi6a0KcAzDfGgL/iUIJB+1
-        AeGVD7yN3rU4TiV7ovKAKO1Lp1HpTXc8tjpFZ9lDhA==
-X-Google-Smtp-Source: ABdhPJwsXeafc7ngCrqn/R9dExkVr9aTpMWL7pHCp5L8XQ6N2/9uvR1ASQII2PdIi3/ADKwLAzkpagO1g50upZNnhdo=
-X-Received: by 2002:a05:6830:54:: with SMTP id d20mr18786397otp.281.1592909475390;
- Tue, 23 Jun 2020 03:51:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dBzPbPycPoCqD0jxPC/ZRazkaIKgNXR6qz1TtThkFUU=;
+        b=SsmsbrrjjKMSbvOpku8RbOPjw/AACdS4ku9FBm0Ihuvq+Gr2+f5i7yhNu+Dzitecq1
+         pHP+bk/B/xTpZFHWicjCjeM5pD6Es0+NtCOgK79ysx7sHr36q5acbA/PZBynuAgFj3DD
+         nFRdS4ZDGkh0RL902uNLtJM042tV3dfkXOdUWQF12fvQmVX6cpc/DZa52765I+4nbiLj
+         +kWSWOX1bQ+F1v27D5nMIz8mB6SRrcl9wSkYEN89AKb7L3l5TTZBvBt/8mfI19RNXxs8
+         RzEO/Jq2Tr4o0BLQ625qPOrirZ/2bTAtNJwUgLyrLFX+QIhDSzU3fXdbbuxxuYb7N9OQ
+         9+AA==
+X-Gm-Message-State: AOAM530EjKCXRsQOyaEyjUU66Y4hb3o1owgXd91uB5dugNaw22e/DdD7
+        U0JefWfH/Xm+wIf1L2hr8x4LUQ==
+X-Google-Smtp-Source: ABdhPJxLAPHsxecFBVI1/3n+UdvZKrmvDn4Mcf8d7zg0Xtlmk9Z6ZJ4YUJm4LoASAqM0Kz5pD+MAXA==
+X-Received: by 2002:adf:dc42:: with SMTP id m2mr26010430wrj.342.1592909527428;
+        Tue, 23 Jun 2020 03:52:07 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id c66sm3471923wma.20.2020.06.23.03.52.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 03:52:06 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 11:52:04 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/7] tty: serial: Add poll_get_irq() to the polling
+ interface
+Message-ID: <20200623105204.mj4eax7wq7om4jka@holly.lan>
+References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
+ <1592835984-28613-3-git-send-email-sumit.garg@linaro.org>
+ <20200622155624.he2vs2r3e5yzf3sl@holly.lan>
+ <CAFA6WYPEbLVRSHC0QFcWusUrakmxuEjBMYJQb41htbALeTQRPg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch> <20200604081224.863494-9-daniel.vetter@ffwll.ch>
-In-Reply-To: <20200604081224.863494-9-daniel.vetter@ffwll.ch>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 23 Jun 2020 12:51:04 +0200
-Message-ID: <CAKMK7uHx+rFyjQOWL2r1fOo2EP3u_owMP2zfg3NnEkxUY4BhkA@mail.gmail.com>
-Subject: Re: [PATCH 08/18] drm/amdgpu: add dma-fence annotations to atomic
- commit path
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Roland Scheidegger <sroland@vmware.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYPEbLVRSHC0QFcWusUrakmxuEjBMYJQb41htbALeTQRPg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roland & vmwgfx maintainers,
+On Tue, Jun 23, 2020 at 01:18:25PM +0530, Sumit Garg wrote:
+> On Mon, 22 Jun 2020 at 21:26, Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > On Mon, Jun 22, 2020 at 07:56:19PM +0530, Sumit Garg wrote:
+> > > From: Daniel Thompson <daniel.thompson@linaro.org>
+> >
+> > Sumit, to some extent this mail is me yelling at myself two years ago
+> > although, in my defence, at the time I choose not to post it because I
+> > knew it wasn't right.
+> >
+> > I'm a bit concerned to see the TODO: comment critiquing this interface
+> > being removed (from patch 3) without this patch being changed to
+> > address that comment.
+> >
+> 
+> I did consider that comment but I couldn't think of a normal scenario
+> where request_irq() should fail. And in case it fails as well, I did
+> put in "WARN_ON(res);" so that the user is notified of that particular
+> error scenario.
+> 
+> >
+> > > Add new API: poll_get_irq() to the polling interface in order for user
+> > > of polling interface to retrieve allocated IRQ corresponding to
+> > > underlying serial device.
+> > >
+> > > Although, serial interface still works in polling mode but interrupt
+> > > associated with serial device can be leveraged for special purposes like
+> > > debugger(kgdb) entry.
+> > >
+> > > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > ---
+> > >  drivers/tty/serial/serial_core.c | 18 ++++++++++++++++++
+> > >  include/linux/serial_core.h      |  1 +
+> > >  include/linux/tty_driver.h       |  1 +
+> > >  3 files changed, 20 insertions(+)
+> > >
+> > > diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> > > index 66a5e2f..1bb033c 100644
+> > > --- a/drivers/tty/serial/serial_core.c
+> > > +++ b/drivers/tty/serial/serial_core.c
+> > > @@ -2470,6 +2470,23 @@ static void uart_poll_put_char(struct tty_driver *driver, int line, char ch)
+> > >       port->ops->poll_put_char(port, ch);
+> > >       uart_port_deref(port);
+> > >  }
+> > > +
+> > > +static int uart_poll_get_irq(struct tty_driver *driver, int line)
+> > > +{
+> > > +     struct uart_driver *drv = driver->driver_state;
+> > > +     struct uart_state *state = drv->state + line;
+> > > +     struct uart_port *port;
+> > > +     int ret = -ENODEV;
+> > > +
+> > > +     port = uart_port_ref(state);
+> > > +     if (port && port->ops->poll_get_irq) {
+> > > +             ret = port->ops->poll_get_irq(port);
+> > > +             uart_port_deref(port);
+> > > +     }
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > >  #endif
+> > >
+> > >  static const struct tty_operations uart_ops = {
+> > > @@ -2505,6 +2522,7 @@ static const struct tty_operations uart_ops = {
+> > >       .poll_init      = uart_poll_init,
+> > >       .poll_get_char  = uart_poll_get_char,
+> > >       .poll_put_char  = uart_poll_put_char,
+> > > +     .poll_get_irq   = uart_poll_get_irq,
+> >
+> > The TODO comments claimed this API was bogus because it doesn't permit
+> > a free and that can cause interoperation problems with the real serial
+> > driver. I'll cover some of that in a reply to patch 3 but for now.
+> >
+> > Anyhow, for this patch, what are the expected semantics for
+> > uart_poll_get_irq().
+> 
+> Currently, the expected use for this API is to enable uart RX
+> interrupts and return corresponding IRQ id.
+> 
+> Although, we can make this interface modular as follows:
+> 
+> .poll_get_irq
+> .poll_enable_rx_int
+> .poll_disable_rx_int
+> 
+> Your views?
 
-Thomas has played around with these annotations on his vmwgfx setup,
-and found some issues. Apparently in the atomic_commit_tail path when
-handling the dirty rectangle stuff you acquire a ttm reservation,
-which is a no-go since it could deadlock with other paths - atomic
-commits can produce a dma_fence.
+A direct reply is to ask what the purpose of poll_enable_rx_int()
+is? It appears to be making something modular without any reason to do
+so.
 
-This patch here highlights that with the new annotations, and
-apparently causes a lockdep splat if you go through the dirty rect
-paths (not sure if it also happens otherwise, Thomas can fill you in
-with the details).
+More generally lets ask some more questions:
 
-Can you pls take a look at this? I'm happy to help out with analyzing
-any lockdep splats. For actual fixes Thomas is better since I don't
-understand a lot of how drm/vmwgfx works internally.
+1. What serial hardware and/or driver state change happens when we call
+   poll_get_irq()
 
-Cheers, Daniel
+2. After a call to poll_get_irq() are there any new restrictions on
+   the underlying serial driver?
 
+3. Does implementing poll_get_irq() create an implied change of
+   contract to any other polling function (I think yes, because
+   poll_read_char() will now have to acknowledge an interrupt if
+   the interrupt flags are edge triggered)?
 
-On Thu, Jun 4, 2020 at 10:12 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrot=
-e:
->
-> I need a canary in a ttm-based atomic driver to make sure the
-> dma_fence_begin/end_signalling annotations actually work.
->
-> Cc: linux-media@vger.kernel.org
-> Cc: linaro-mm-sig@lists.linaro.org
-> Cc: linux-rdma@vger.kernel.org
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> ---
->  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/=
-gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index bdba0bfd6df1..adabfa929f42 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -57,6 +57,7 @@
->
->  #include "ivsrcid/ivsrcid_vislands30.h"
->
-> +#include <linux/module.h>
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
->  #include <linux/version.h>
-> @@ -7320,6 +7321,9 @@ static void amdgpu_dm_atomic_commit_tail(struct drm=
-_atomic_state *state)
->         struct drm_connector_state *old_con_state, *new_con_state;
->         struct dm_crtc_state *dm_old_crtc_state, *dm_new_crtc_state;
->         int crtc_disable_count =3D 0;
-> +       bool fence_cookie;
-> +
-> +       fence_cookie =3D dma_fence_begin_signalling();
->
->         drm_atomic_helper_update_legacy_modeset_state(dev, state);
->
-> @@ -7600,6 +7604,8 @@ static void amdgpu_dm_atomic_commit_tail(struct drm=
-_atomic_state *state)
->         /* Signal HW programming completion */
->         drm_atomic_helper_commit_hw_done(state);
->
-> +       dma_fence_end_signalling(fence_cookie);
-> +
->         if (wait_for_vblank)
->                 drm_atomic_helper_wait_for_flip_done(dev, state);
->
-> --
-> 2.26.2
->
+4. To what extent, if any, do we have to support disconnection of
+   kgdb_nmi?
+
+5. Is the API matched with how it will be used by the layers above?
+   (top level uses a request_irq approach, low level is using a
+   let me have the irq number approach)
+
+An interesting idea to explore is using a different verb for
+poll_get_irq(). Perhaps poll_borrow_irq()? It is now much clearer that
+we are stealing the IRQ and making it unusable by the underlying serial
+driver.
 
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> > In particular how do they ensure correct interlocking with the real
+> > serial driver underlying it (if kgdb_nmi is active on a serial port
+> > then the underlying driver better not be active at the same time).
+> >
+> 
+> AFAIU kgdb_nmi feature, it registers a new tty driver (ttyNMI0) which
+> is expected to work alongside underlying tty driver (eg. ttyAMA0 with
+> amba-pl011). So ttyAMA0 will only become active if user-space tries to
+> interact with /dev/ttyAMA0 like:
+> 
+> # echo "Hello World!" > /dev/ttyAMA0
+> 
+> So I would like to understand the downsides of having both of them
+> active at the same time using shared IRQ (although that won't be
+> possible with NMI as that doesn't support shared mode)?
+
+It is likely that one of the interrupt handlers will become unreachable
+since the first handler to execute will clear the interrupt flags. This
+will result in anything waiting for the broken driver getting stuck and
+not reporting an error code.
+
+That isn't acceptable.
+
+
+Daniel.
