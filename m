@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1209EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9D6C2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191452078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948589;
-	bh=uYcJmosV6tInU82yzfrOIp5xqvo2+Hg22rH8s7wwIYw=;
+	s=default; t=1592948600;
+	bh=vKNoM1ApIz1lnjdBHNegq3LBINjhr/lVwMFcuHsoekE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQOMlJ8ciupcefbIhylZRM025HZejRQS7x1a5iAPOVZ9gGeB1LBK7WZN7IlnSKWGW
-	 vPhsfPxM0vMwTRu83RJz/xULZdRzc4fgaA8ebEvPvW2VEzoK/5QI73sIGZeFLN/sdH
-	 LVotZTdidZKpxtlFEvYUyqsb7NpCA7wlnTwY7JGM=
+	b=W5N0GdYEqsJzYJEDQ/S36eMEbUMGB9B2gl7YTil43IT4gkyW82I/Y6EIgiPQNFFt+
+	 7UCQ9e95MIfq/I4Kwlu1qnGRK3vkhSey79AeGp6+V1I/evie29KTuhJoiaJfKWJmg/
+	 tmP01CDOZ/oNPFb8MvCXLQpch+Fk6LWsNHqYCE+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbgFWUEK (ORCPT
+        id S2388836AbgFWVnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:04:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42304 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:43:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388150AbgFWUEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:05 -0400
+        id S2387627AbgFWUD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E8592080C;
-        Tue, 23 Jun 2020 20:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C60DC2137B;
+        Tue, 23 Jun 2020 20:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942645;
-        bh=uYcJmosV6tInU82yzfrOIp5xqvo2+Hg22rH8s7wwIYw=;
+        s=default; t=1592942635;
+        bh=vKNoM1ApIz1lnjdBHNegq3LBINjhr/lVwMFcuHsoekE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQoit2inrHQhl51aQ8lz917Bw2O5D8rDf4+pDStNVd18pHaRC69qzzFtoud3qBYxh
-         vLMozwK1OipPxNSpMRyc+oVLFn1zSHq0PULf0JC8/0SD9Bt/dg81F6DziOqpAQAElh
-         YxwWTFxACRnNfGS1BRiG9tbBJJ5UjUxFOtdBSzrk=
+        b=1TEHhYfvYrPQthqmkM5Bj94vu0ksWhT3WFTSCAvazcb/GZb+y36T++aX/6KGyRw7f
+         MANF3/vRV8THKuVfX4AZ7C9AY56Yl9qnRaNpODngKg3VjMmKTs2v7l//p7TRw8jIt0
+         mNGQ6VjhCyb00oCXVdRG3pAYw23kCt53LCGz2agI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 080/477] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
-Date:   Tue, 23 Jun 2020 21:51:17 +0200
-Message-Id: <20200623195411.393287971@linuxfoundation.org>
+Subject: [PATCH 5.7 076/477] scsi: vhost: Notify TCM about the maximum sg entries supported per command
+Date:   Tue, 23 Jun 2020 21:51:13 +0200
+Message-Id: <20200623195411.214148222@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,42 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 
-[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
+[ Upstream commit 5ae6a6a915033bfee79e76e0c374d4f927909edc ]
 
-nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
-refcount of the "c->cn_xprt".
+vhost-scsi pre-allocates the maximum sg entries per command and if a
+command requires more than VHOST_SCSI_PREALLOC_SGLS entries, then that
+command is failed by it. This patch lets vhost communicate the max sg limit
+when it registers vhost_scsi_ops with TCM. With this change, TCM would
+report the max sg entries through "Block Limits" VPD page which will be
+typically queried by the SCSI initiator during device discovery. By knowing
+this limit, the initiator could ensure the maximum transfer length is less
+than or equal to what is reported by vhost-scsi.
 
-The reference counting issue happens in one exception handling path of
-nfsd4_process_cb_update(). When setup callback client failed, the
-function forgets to decrease the refcnt increased by svc_xprt_get(),
-causing a refcnt leak.
-
-Fix this issue by calling svc_xprt_put() when setup callback client
-failed.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Link: https://lore.kernel.org/r/1590166317-953-1-git-send-email-sudhakar.panneerselvam@oracle.com
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4callback.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/vhost/scsi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 5cf91322de0fc..07e0c6f6322f3 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1301,6 +1301,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
- 	err = setup_callback_client(clp, &conn, ses);
- 	if (err) {
- 		nfsd4_mark_cb_down(clp, err);
-+		if (c)
-+			svc_xprt_put(c->cn_xprt);
- 		return;
- 	}
- }
+diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
+index c39952243fd32..8b104f76f3245 100644
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -2280,6 +2280,7 @@ static struct configfs_attribute *vhost_scsi_wwn_attrs[] = {
+ static const struct target_core_fabric_ops vhost_scsi_ops = {
+ 	.module				= THIS_MODULE,
+ 	.fabric_name			= "vhost",
++	.max_data_sg_nents		= VHOST_SCSI_PREALLOC_SGLS,
+ 	.tpg_get_wwn			= vhost_scsi_get_fabric_wwn,
+ 	.tpg_get_tag			= vhost_scsi_get_tpgt,
+ 	.tpg_check_demo_mode		= vhost_scsi_check_true,
 -- 
 2.25.1
 
