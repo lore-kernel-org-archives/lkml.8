@@ -2,144 +2,126 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE366C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC2BE20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CE52072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/51c5fP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rFJ8lK/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbgFWH2g (ORCPT
+        id S1731539AbgFWH3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45548 "EHLO
+        Tue, 23 Jun 2020 03:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731057AbgFWH2f (ORCPT
+        with ESMTP id S1731057AbgFWH3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:28:35 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C72C061573;
-        Tue, 23 Jun 2020 00:28:35 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t194so2061817wmt.4;
-        Tue, 23 Jun 2020 00:28:35 -0700 (PDT)
+        Tue, 23 Jun 2020 03:29:09 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5139FC061796
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:29:09 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id t6so15586968otk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 00:29:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eAOzaLEvri148C9yhZfXxhkQ6ShWPHEsBtHOhazXNYw=;
-        b=k/51c5fP79PIPvtCdg/zzQVAGamF8aZgZZitf+FsnsPgs4L+4fjxxcE00SkMX+0WzW
-         klVODQPpnEBqm1ZF8kyQacSFxCsrNU/2bNIbDPwdV2l3nyPc3Z7mGBxNbovGYGxd9W8U
-         b8Yp5e3hOKBwUPBrPrn0iSJl6tQ+jpA3xtmE6yxzTKPo8aUKjpixYGyUOPYOzBVTGvcf
-         AtcPOLanSux/ja1dFIArUpv4dWAzenGbBGwxxoClNJRvyp6r7htdfPcuIgcZjM05l6z6
-         HFQPVrvf/lLJmfWgL4NcoorNrlKFyL0c0oM7SChGvlZZP/j+L52eZlnb54arWnNoH0MD
-         mq1Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3dK86lliqilxlnT1j+X/UKoKjGOBmN/8rGq1nOZ9OOI=;
+        b=rFJ8lK/GfDcL3+VviKsfng5Eknh29Tmgxgcgj64B5qCcNtUUhA5cGltkmWsfUvMq2f
+         lUxqyzmt+Nj9M2OCEzFwHfFjzsDHoQd+SYJ1OhhZj+h30oivHbAFJN9MnxGKRVTwQtwf
+         nUug0qiKvcJZLHGTVfoV90VOAmgWGtPla/l5rGZNQIHvHdaAol39Kv1MHKj7xbZSkknp
+         iwHaudLtfU56rdyFoAGIoEFq5J1c+7M4Ogv92c7+ItQYxFEHrtDZ8VtHpasmOj+uTqgS
+         uI/zJ9cTUJSnHNPg60FiTIo+sqMktYkazfjUX7gjHQh/b+lAO1pSJ7uU8xXC7squm7+X
+         hR5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eAOzaLEvri148C9yhZfXxhkQ6ShWPHEsBtHOhazXNYw=;
-        b=VATVWVj0sbU7e42+pZrisTbneuxcXhzwTDyoRDUQAWf4UsQilhh/bKFbNzFWqXVE3A
-         J49cVOSBoS0k6+DXxmnTtP3ZJn/8GemsUFmUquDxGn3rV+nhWKK6Nm4mRJgubxoUXFXJ
-         EjOc7HBseI1phsp40rkJJGiYMlsmXmUls5qWZ9GGYA+xSuKBtJ3DFf9MfcqTYZjzA8yZ
-         Zww85TuMrvom+wcaOkpilOYmA4zosM12azvyA4qR7ulYkPyrLy1WACuRhLIkCVRNbfd/
-         JydEpUSvmD5LepZjO8VnKLqWiXTUajLM7juGtESLqEl5bZzF1JqrV2vXwEbw+1N8esdR
-         whJg==
-X-Gm-Message-State: AOAM533PHPI/0ODZm/7Rno05aJDTWHRXizglnmh9uILRkuGjaJM6xDzv
-        B3+gWJJuzofblxhxwpsaiwHgQsx+/8g=
-X-Google-Smtp-Source: ABdhPJzuz4+aXy0DOjxqXCya5QX3G7FXScweqlUDkFN+8wby91HADp2yldiuF1+TtlQwjLBQ2at4Ig==
-X-Received: by 2002:a1c:6102:: with SMTP id v2mr20964522wmb.6.1592897314040;
-        Tue, 23 Jun 2020 00:28:34 -0700 (PDT)
-Received: from [192.168.2.27] (39.35.broadband4.iol.cz. [85.71.35.39])
-        by smtp.gmail.com with ESMTPSA id 185sm2496882wmz.22.2020.06.23.00.28.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 00:28:33 -0700 (PDT)
-Subject: Re: New mode DM-Verity error handling
-To:     JeongHyeon Lee <jhs2.lee@samsung.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sami Tolvanen <samitolvanen@google.com>
-Cc:     dm-devel@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, agk@redhat.com, corbet@lwn.net
-References: <CGME20200618070250epcas1p409eb2ddd19ecc5d55c219ac3dc884f25@epcas1p4.samsung.com>
- <98eac3fc-c399-625d-5730-29853b3a0771@samsung.com>
- <20200618154444.GB18007@redhat.com> <20200618165006.GA103290@google.com>
- <20200618170952.GA18057@redhat.com>
- <b7eaf4a7-6692-ffdf-2bbc-b622f93ef601@gmail.com>
- <250156a6-a2d6-dbfd-daa3-be9c36f0cf36@samsung.com>
-From:   Milan Broz <gmazyland@gmail.com>
-Message-ID: <2c3bf8c1-c742-b1e9-6ff6-91b2253638e1@gmail.com>
-Date:   Tue, 23 Jun 2020 09:28:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3dK86lliqilxlnT1j+X/UKoKjGOBmN/8rGq1nOZ9OOI=;
+        b=XVqu0fnupc5L9yLxj1hR7NJc++zS+JJ0Sq+bYUNQUjhu1V8E1ATxdzcnZeYrtrA8pk
+         t5oa12HQ2ygtebTplBsCMa5gNnUSWgi/+1pXrSXzVd8Yn9oeQxOGMfi34GvA8NIip+uV
+         mw7+IPZXws6DPZN3shk6uabuUCqHE39UpRgDblOolesZExxFpzrQWB8dBl1hwFoDEhvX
+         PVnt/dQ8V6KnZX89qKWkRd8N/Gm4ZV8Q4Ohne0JMGJ1irxM8VZffePBFiHDZ2FZAGitZ
+         50aojcMQN1+ZKN4UcrCQBO+tjj3asUvSKF61JoS/OUR6QTyV2xpog1yWquoeu2w+9Qnh
+         qKfA==
+X-Gm-Message-State: AOAM531MbfjLNTgLPKZEJUYA2v4/4m5q9Tbt14jYjkaBm0S9AhkqcaWb
+        NTXlWFiWpSiXp7GF4ksdQ9FSNQ==
+X-Google-Smtp-Source: ABdhPJzphMaKHre+mibTwmytvd0pnWE76craUo6S3437jlhVLdsw90RaWAlSqnbl2g481NdT/tt2Kg==
+X-Received: by 2002:a05:6830:134d:: with SMTP id r13mr17032299otq.264.1592897348617;
+        Tue, 23 Jun 2020 00:29:08 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b32sm3865473otc.71.2020.06.23.00.29.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 00:29:08 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 00:26:24 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] pinctrl: qcom: spmi-gpio: Add pm660(l)
+ compatibility
+Message-ID: <20200623072624.GY128451@builder.lan>
+References: <20200622192558.152828-1-konradybcio@gmail.com>
+ <20200622192558.152828-2-konradybcio@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <250156a6-a2d6-dbfd-daa3-be9c36f0cf36@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622192558.152828-2-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 01:53, JeongHyeon Lee wrote:
+On Mon 22 Jun 12:25 PDT 2020, Konrad Dybcio wrote:
+
+> Add support for pm660(l) SPMI GPIOs. The PMICs feature
+> 13 and 12 GPIOs respectively, though with a lot of
+> holes inbetween.
 > 
-> For what reason isn't panic better?
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
-I did not say panic is better, I said that while we have restart already in mainline dm-verity code,
-panic() is almost the same, so I see no problem in merging this patch.
+Didn't I ack this change in v2? If so please remember to add such tags
+when you resubmit the change...
 
-Stopping system this way could create more damage if it is not configured properly,
-but I think it is quite common to stop the system as fast as possible if data system integrity
-is violated...
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> If when i suggested new patch, i will send you a patch that increased 
-> minor version.
+Regards,
+Bjorn
 
-I think Mike can fold-in version increase, if the patch is accepted.
-
-But please include these version changes with every new feature.
-
-Actually I am tracking it here for dm-verity as part of veritysetup userspace documentation:
-  https://gitlab.com/cryptsetup/cryptsetup/-/wikis/DMVerity
-
-Thanks,
-Milan
-
-> On 22/06/2020 16:58, Milan Broz wrote:
->> On 18/06/2020 19:09, Mike Snitzer wrote:
->>> On Thu, Jun 18 2020 at 12:50pm -0400,
->>> Sami Tolvanen <samitolvanen@google.com> wrote:
->>>
->>>> On Thu, Jun 18, 2020 at 11:44:45AM -0400, Mike Snitzer wrote:
->>>>> I do not accept that panicing the system because of verity failure is
->>>>> reasonable.
->>>>>
->>>>> In fact, even rebooting (via DM_VERITY_MODE_RESTART) looks very wrong.
->>>>>
->>>>> The device should be put in a failed state and left for admin recovery.
->>>> That's exactly how the restart mode works on some Android devices. The
->>>> bootloader sees the verification error and puts the device in recovery
->>>> mode. Using the restart mode on systems without firmware support won't
->>>> make sense, obviously.
->>> OK, so I need further justification from Samsung why they are asking for
->>> this panic mode.
->> I think when we have reboot already, panic is not much better :-)
->>
->> Just please note that dm-verity is used not only in Android world (with own tooling)
->> but in normal Linux distributions, and I need to modify userspace (veritysetup) to support
->> and recognize this flag.
->>
->> Please *always* increase minor dm-verity target version when adding a new feature
->> - we can then provide some better hint if it is not supported.
->>
->> Thanks,
->> Milan
->>
->>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> index fe0be8a6ebb7..95ca66e24e7c 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -1118,6 +1118,10 @@ static const struct of_device_id pmic_gpio_of_match[] = {
+>  	{ .compatible = "qcom,pma8084-gpio", .data = (void *) 22 },
+>  	/* pms405 has 12 GPIOs with holes on 1, 9, and 10 */
+>  	{ .compatible = "qcom,pms405-gpio", .data = (void *) 12 },
+> +	/* pm660 has 13 GPIOs with holes on 1, 5, 6, 7, 8 and 10 */
+> +	{ .compatible = "qcom,pm660-gpio", .data = (void *) 13 },
+> +	/* pm660l has 12 GPIOs with holes on 1, 2, 10, 11 and 12 */
+> +	{ .compatible = "qcom,pm660l-gpio", .data = (void *) 12 },
+>  	/* pm8150 has 10 GPIOs with holes on 2, 5, 7 and 8 */
+>  	{ .compatible = "qcom,pm8150-gpio", .data = (void *) 10 },
+>  	/* pm8150b has 12 GPIOs with holes on 3, r and 7 */
+> -- 
+> 2.27.0
+> 
