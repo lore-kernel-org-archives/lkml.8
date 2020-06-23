@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3132CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5546C20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D10520702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945651;
-	bh=i1VysaGa42y0nHT5K3qxGsdgcH9ggzwrCWfHoQHl6ZY=;
+	s=default; t=1592945659;
+	bh=fDPxEN2laKuOofyfZvjWh8lcMNwzEztQA23LMtZmpKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NF93tpo2F3FxSV8I5CLngK/VF8notdivXfZKC4ndM75iz6XlKefn2zGnubf8ohnfG
-	 H9GnIz1j0mLLYbtYDFx3qxJhKDyoRI68epdds1jrBje8fo3DLs/2PQeDffS5ftawKS
-	 ASewb7/g2/YDrd3Euy/CyEMvVK31uFGVr2s+2GqQ=
+	b=Hzz9dmmKt2ZQzuUbd4LTbdAFW6SI4rSJbwIcWIxvxrkPMfFEfo1lOozgLIOlxBaEL
+	 fPqpIRTnAxMVjLMFmGBwn0tBUI+21aM5pIyqBuxm9Xl4KPqHql+g6BPWENoRxadvCg
+	 51+xPmcmPAcTpFkXbJ6XEp/aShidBrUNmfyKl9lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392978AbgFWUyK (ORCPT
+        id S2392803AbgFWUqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:54:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43934 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:46:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390111AbgFWUqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:46:07 -0400
+        id S2390236AbgFWUp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:45:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50FF12168B;
-        Tue, 23 Jun 2020 20:46:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2832221556;
+        Tue, 23 Jun 2020 20:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945167;
-        bh=i1VysaGa42y0nHT5K3qxGsdgcH9ggzwrCWfHoQHl6ZY=;
+        s=default; t=1592945157;
+        bh=fDPxEN2laKuOofyfZvjWh8lcMNwzEztQA23LMtZmpKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6MqxlBhjwP9VnCIpzyXn7BJ3cZuo5s6f8BZur0CeBHV57NCyEYMwJb36fER0PElN
-         TyHUvv++KivhEy6/zxU7c3IFgq0Uqhdd0vzOr7i0RZGK0CReCugF4m0IsAyIge+iNZ
-         f1Zv9rlKz1QhJEA+DrRLqw1rwx81EjzT0vj3vaSk=
+        b=Xj1iLTntRWGGKokjTOht9eO5PA2guR7bDssFGno6nfkEohi03FdXJrdcrPRpGqBWl
+         Ltff/9HXLLBOWgmr1PKriKgPhM2Q0nf9ziDqcsiXjJtaT5gjOdKypzx7zpQ/FO5mK5
+         6AHGRK26O9MKxXfGFsxoRleUaLjCN8KUDWjvUIkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        stable@vger.kernel.org, Simon Arlott <simon@octiron.net>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 064/136] tty: n_gsm: Fix bogus i++ in gsm_data_kick
-Date:   Tue, 23 Jun 2020 21:58:40 +0200
-Message-Id: <20200623195306.911582028@linuxfoundation.org>
+Subject: [PATCH 4.14 034/136] scsi: sr: Fix sr_probe() missing deallocate of device minor
+Date:   Tue, 23 Jun 2020 21:58:10 +0200
+Message-Id: <20200623195305.359509797@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,51 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Simon Arlott <simon@octiron.net>
 
-[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
+[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
 
-When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
-layer when room available". It was suggested to switch from a while to
-a for loop, but when doing it, there was a remaining bogus i++.
+If the cdrom fails to be registered then the device minor should be
+deallocated.
 
-This patch removes this i++ and also reorganizes the code making it more
-compact.
-
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
+Signed-off-by: Simon Arlott <simon@octiron.net>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/scsi/sr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index e7417eac3f216..c70e79a0e9f28 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -715,17 +715,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
- 		} else {
- 			int i = 0;
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index d0389b20574d0..5be3d6b7991b4 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -748,7 +748,7 @@ static int sr_probe(struct device *dev)
+ 	cd->cdi.disk = disk;
  
--			for (i = 0; i < NUM_DLCI; i++) {
--				struct gsm_dlci *dlci;
--
--				dlci = gsm->dlci[i];
--				if (dlci == NULL) {
--					i++;
--					continue;
--				}
--
--				tty_port_tty_wakeup(&dlci->port);
--			}
-+			for (i = 0; i < NUM_DLCI; i++)
-+				if (gsm->dlci[i])
-+					tty_port_tty_wakeup(&gsm->dlci[i]->port);
- 		}
- 	}
- }
+ 	if (register_cdrom(&cd->cdi))
+-		goto fail_put;
++		goto fail_minor;
+ 
+ 	/*
+ 	 * Initialize block layer runtime PM stuffs before the
+@@ -766,6 +766,10 @@ static int sr_probe(struct device *dev)
+ 
+ 	return 0;
+ 
++fail_minor:
++	spin_lock(&sr_index_lock);
++	clear_bit(minor, sr_index_bits);
++	spin_unlock(&sr_index_lock);
+ fail_put:
+ 	put_disk(disk);
+ fail_free:
 -- 
 2.25.1
 
