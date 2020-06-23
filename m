@@ -2,112 +2,122 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4452AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48E652070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mDh1Fl94"
+	by mail.kernel.org (Postfix) with ESMTP id 20C6B2070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592893234;
+	bh=Dxxtu9JejAl8IVsxWoK8TC+TGSvvbQrjHiwpR/3/1ng=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VK4wk5EC+xb0qK8TIMtjAFFU6Fn/xQqov79xzYTD1F7p6SU1jRa/dkN2+hsN2E9RU
+	 Abcx1Ze6Xuc+eOX8wWnNZE1zzgT/OPeaFEzsAxJLGW1U0bVy4Z4YXDp8DhKRxipO9h
+	 sJO1CQfYx6M4vvvr6KQnr4wslXKHJ5wl5m3ibb/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbgFWGUZ (ORCPT
+        id S1730852AbgFWGUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730510AbgFWGUY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:20:24 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A71C061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:20:24 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id p11so913385pff.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xkEZLfW1ArYgf+mEiL+b5tURW9CFpN3REEce4uqJNH0=;
-        b=mDh1Fl94b3/LSZ+hMlztNtRD33tkWnaxz8jVAg3XWYW8wZ8vRi1lGAMFXvmC+ld9oq
-         yoj1BYpiF4qp/PUndN/UrCjFRgoxGIVbP7WdIa/Og1WXc5/3wG9C91iC1qcV50TlhZ6m
-         XBllvcUyb3wDmPZK3Etsz833H3UWSiNLXTZlbHuC0a/stsEgjxQDg6gu5q309hEyTJNc
-         VA6U6mtmGjjwP7IWZrxUg9ih8rRJMMh8IC5Jqvi9wNZq8UAohIxZndVvX0mI5xnYvPxJ
-         EmHNG66dntMreD3T8r2oyjt9i/uD//9Mo0vhNQEblG0eGl2WJqHcpUUNoZqCbP92pq5k
-         B5yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xkEZLfW1ArYgf+mEiL+b5tURW9CFpN3REEce4uqJNH0=;
-        b=TI3HjxyGwQRnOcpLXwb0v76Yl5EdzT4bko8Jncl/pF6i/loJaNq+PSyh8Mx9zInJSE
-         ll6l20mcfNr9XGCF0ACpO1obBiPUAvLfRotoukFZrbk7pe5zT++9iEW8Fa/iN3MZNzw6
-         ksGbd32SaoUVXn920rMUkWN3NyQ6X7Ue3/PrT78AYLH1feO+QlZobwKA35+6qWHgSIVV
-         iOTC/OUqyLeM7FiOq2CtnsCcgX2ZmbQ9bEaFUZEY4KN7rd9QNBTRSEMkyesLdXgx2NVM
-         4foDQR1qlcgoRiE9PCMlt4F1XgIRBP+03M6rFkM6Aibuz9gRdUF/U/xAVzaz0GGyrFNY
-         DwZA==
-X-Gm-Message-State: AOAM530lG96IDCzOheFDI2VAu1plPr6etoPZCa9Gy1eCKPA8tPJ2+T2F
-        F6I6VvyaL2bcUTMclGUM8AHRBg==
-X-Google-Smtp-Source: ABdhPJzPhO4piZUlhyX41kRvKT0EgrKEBSKMGlr2VTKP7RKfZOV4lMU0w2m7uDvwx/uYcjh4UjbI6g==
-X-Received: by 2002:a63:3f42:: with SMTP id m63mr16314448pga.310.1592893223436;
-        Mon, 22 Jun 2020 23:20:23 -0700 (PDT)
-Received: from localhost ([122.172.111.76])
-        by smtp.gmail.com with ESMTPSA id np5sm1408030pjb.43.2020.06.22.23.20.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jun 2020 23:20:22 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 11:50:20 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
-        thierry.reding@gmail.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bbasu@nvidia.com, mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ Patch v3 3/4] cpufreq: Add Tegra194 cpufreq
- driver
-Message-ID: <20200623062020.weg6h4uygelkih7d@vireshk-i7>
-References: <1592775274-27513-1-git-send-email-sumitg@nvidia.com>
- <1592775274-27513-4-git-send-email-sumitg@nvidia.com>
- <20200622072052.uryxo4hri6gzrkku@vireshk-i7>
- <ed6956a3-3f77-2943-6387-5affc25b59d2@nvidia.com>
+        Tue, 23 Jun 2020 02:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730510AbgFWGUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:20:32 -0400
+Received: from coco.lan (unknown [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FBF820720;
+        Tue, 23 Jun 2020 06:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592893231;
+        bh=Dxxtu9JejAl8IVsxWoK8TC+TGSvvbQrjHiwpR/3/1ng=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xiCNweWMDBrmlOdtr3Nz9fvmudwtUf8FgnWO/KvRuTdTH19r5jFz+kQpF36lfcser
+         cGjqt1Bp/vRd6H0Z5ucCAY9GXYq40M/kagvXhXqUlCzblYYr6a1H17k0eL2yKBCTYj
+         AT5TBqE+0uRB6svC2t1jX72L8GY5w7UANmpx/olQ=
+Date:   Tue, 23 Jun 2020 08:20:26 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 1/2] media: omap3isp: Remove cacheflush.h
+Message-ID: <20200623082026.055d361a@coco.lan>
+In-Reply-To: <20200622234740.72825-2-natechancellor@gmail.com>
+References: <20200622234740.72825-1-natechancellor@gmail.com>
+        <20200622234740.72825-2-natechancellor@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed6956a3-3f77-2943-6387-5affc25b59d2@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-06-20, 10:49, Sumit Gupta wrote:
-> Hi Viresh,
+Em Mon, 22 Jun 2020 16:47:39 -0700
+Nathan Chancellor <natechancellor@gmail.com> escreveu:
+
+> After mm.h was removed from the asm-generic version of cacheflush.h,
+> s390 allyesconfig shows several warnings of the following nature:
 > 
-> Thank you for the review. please find my reply inline.
+> In file included from ./arch/s390/include/generated/asm/cacheflush.h:1,
+>                  from drivers/media/platform/omap3isp/isp.c:42:
+> ./include/asm-generic/cacheflush.h:16:42: warning: 'struct mm_struct'
+> declared inside parameter list will not be visible outside of this
+> definition or declaration
 > 
+> As Geert and Laurent point out, this driver does not need this header in
+> the two files that include it. Remove it so there are no warnings.
 > 
-> > > +++ b/drivers/cpufreq/tegra194-cpufreq.c
-> > > @@ -0,0 +1,403 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
-> > 
-> >                      2020
+> Fixes: e0cf615d725c ("asm-generic: don't include <linux/mm.h> in cacheflush.h")
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-You missed this ?
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-> T194 supports four CPU clusters, each with two cores. Each CPU cluster is
-> capable of running at a specific frequency sourced by respective NAFLL to
-> provide cluster specific clocks. Individual cores within a cluster write
-> freq in per core register. Cluster h/w forwards the max(core0, core1)
-> request to per cluster NAFLL.
+> ---
+>  drivers/media/platform/omap3isp/isp.c      | 2 --
+>  drivers/media/platform/omap3isp/ispvideo.c | 1 -
+>  2 files changed, 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+> index a4ee6b86663e..b91e472ee764 100644
+> --- a/drivers/media/platform/omap3isp/isp.c
+> +++ b/drivers/media/platform/omap3isp/isp.c
+> @@ -39,8 +39,6 @@
+>   *	Troy Laramy <t-laramy@ti.com>
+>   */
+>  
+> -#include <asm/cacheflush.h>
+> -
+>  #include <linux/clk.h>
+>  #include <linux/clkdev.h>
+>  #include <linux/delay.h>
+> diff --git a/drivers/media/platform/omap3isp/ispvideo.c b/drivers/media/platform/omap3isp/ispvideo.c
+> index 10c214bd0903..1ac9aef70dff 100644
+> --- a/drivers/media/platform/omap3isp/ispvideo.c
+> +++ b/drivers/media/platform/omap3isp/ispvideo.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/sched.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+> -#include <asm/cacheflush.h>
+>  
+>  #include <media/v4l2-dev.h>
+>  #include <media/v4l2-ioctl.h>
+> 
+> base-commit: 27f11fea33608cbd321a97cbecfa2ef97dcc1821
 
-Okay, this is clear now. Add a comment about this max thing in the
-target routine to show why you need to do this on all CPUs.
 
--- 
-viresh
+
+Thanks,
+Mauro
