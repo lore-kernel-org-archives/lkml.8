@@ -2,133 +2,117 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE497C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2742075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872655;
-	bh=xEt5aOB7pqhhf2Hy4IEmUPEWm6spZT7oV0603FSswZg=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=rDVSnbsCPN7CI3UsLIKl5kTP0afLeWifrGe2E5pc6yklemw0/qdSSqEGUwwTI3BjM
-	 wLG4SQK8gd6ItWUqNCPKp1aH4am3PrSZhrrEkyVOmxRwd9Rhu/60DAu7Ygy+xU28Xm
-	 hAFuFRsQn1D0jNJLvoSQGiikWj7DqAQxGWVPZUlo=
+	by mail.kernel.org (Postfix) with ESMTP id CF1F32075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gjWQI/el"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732139AbgFWAhd (ORCPT
+        id S1732054AbgFWAhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33164 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:37:39 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56403 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731561AbgFWAhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:37:32 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731561AbgFWAhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:37:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8C2720738;
-        Tue, 23 Jun 2020 00:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872652;
-        bh=xEt5aOB7pqhhf2Hy4IEmUPEWm6spZT7oV0603FSswZg=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=uPCKkuMU24ek8MKjZDgxI8qDTSR7Nn4k5ijn5efqMvUM8XxBqH6pmQkBjMkaHNjfJ
-         0qFYghMJlE3ZinuzfFjq0oZcPGv7GAzgAF6awKbFHUSosbzhqgvegvydopVN9xTtjZ
-         ad8rZJk+7YO/cZeJX9GKJ7n8tSe2ZQ9IZsCsvPvw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CA4E2352306A; Mon, 22 Jun 2020 17:37:31 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 17:37:31 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/23] Torture-test updates for v5.9
-Message-ID: <20200623003731.GA26717@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49rS6T0qbfz9sSt;
+        Tue, 23 Jun 2020 10:37:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592872657;
+        bh=NZqT5bS2Rh6HY0CP0buqQsJbSrojqYPVMmdLrrrsScU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gjWQI/elsOZdMHXyz52dnNsBmx51USIVGMHGeGxcyszyHPzn2kSqBd9CBZfsTlrBZ
+         6L3Ucbv+pZt4xwDpaMVc8K5VjqN+F8WH1rbYMAWOXqav0JUdz9HYbfthUhEQQMab/Q
+         /gg3tEgLBWOuEzzG8JNXudVU8WMXsDWKf0xMJeufrRh4mHKVyCOAESiUm12TVSeU10
+         qCoyxVzkFZRTUYYdP9occweENytPToynmGZd8Gyp96sMtIMcUakndKfUy7PJ+htDCx
+         k3JZ+ItYDIiClUppwWALLq+uySt/QottphhrSNHyfiv6pICSiLG7hKl+xKVw+dltae
+         +CqFUAGXwdcQQ==
+Date:   Tue, 23 Jun 2020 10:37:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failures after merge of the hid tree
+Message-ID: <20200623103736.25f67de5@canb.auug.org.au>
+In-Reply-To: <20200621140421.7f4552df@canb.auug.org.au>
+References: <20200621140421.7f4552df@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/r0BhmJh8XwjSmoAN4kUieic";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+--Sig_/r0BhmJh8XwjSmoAN4kUieic
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This series provides torture-test updates:
+Hi all,
 
-1.	 Remove qemu dependency on EFI firmware.
+On Sun, 21 Jun 2020 14:04:21 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the hid tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+>=20
+> drivers/hid/intel-ish-hid/ipc/ipc.c:12:10: fatal error: client.h: No such=
+ file or directory
+>    12 | #include "client.h"
+>       |          ^~~~~~~~~~
+> drivers/hid/intel-ish-hid/ipc/pci-ish.c:22:10: fatal error: ishtp-dev.h: =
+No such file or directory
+>    22 | #include "ishtp-dev.h"
+>       |          ^~~~~~~~~~~~~
+>=20
+> I don't know what caused it, but commit
+>=20
+>   470376737e88 ("HID: allow building hid.ko as an external module")
+>=20
+> did not fix it.  BTW, I build with "make O=3D...".
+>=20
+> I have used the hid tree from next-20200618 for today.
+>=20
+> BTW, the hid tree really needs cleaning up, it contains merge commits dat=
+ing
+> back to April 2018 :-(
+>=20
+> $ git rev-list --count origin/master..hid/for-next
+> 301
+> $ git rev-list --no-merges --count origin/master..hid/for-next
+> 12
 
-2.	Add script to smoke-test commits in a branch.
+I am still getting this failure.
 
-3.	Use true and false to assign to bool variables, courtesy of Zou Wei.
+--=20
+Cheers,
+Stephen Rothwell
 
-4.	Add races with task-exit processing.
+--Sig_/r0BhmJh8XwjSmoAN4kUieic
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-5.	Set configfile variable to current scenario.
+-----BEGIN PGP SIGNATURE-----
 
-6.	Handle non-statistic bang-string error messages.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7xTtAACgkQAVBC80lX
+0Gx9NQf9HttFKOyGy4QqOOa7kopotlmlyjk9LD8gJTmMnWMAg5iyTQbOqM0bRCwp
+ia3LydeeeO+M9bP6/+4O1qfLX4iqc+ETS8m/Av+kXePEE9abyTGzn1sxnCKuHK+P
++xgkAyxiTPgOPVYerFDwIaDKqgJ5WWO813wCIZk3z6ymik+iPBEnbJvolT3dVLJl
+1DeNYc2YhBaXW8ppzkz5IGpuYrb7CAF2QdaoTdLImPgow3exw4rCp595awDzk/i1
++jETcnzQZYkDtvCI7KwF/HjQS4S/NYUzadhHAI10dNHMJOVmHgzleR6qMWR5ULBO
+lJAIpiQrObSMx8zyoqOjGVHaNimoMg==
+=uACl
+-----END PGP SIGNATURE-----
 
-7.	NULL rcu_torture_current earlier in cleanup code.
-
-8.	Remove whitespace from identify_qemu_vcpus output.
-
-9.	Add --allcpus argument to the kvm.sh script.
-
-10.	rcu/rcutorture: Replace 0 with false, courtesy of Jules Irenge.
-
-11.	Create qemu-cmd in --buildonly runs.
-
-12.	Add a stop-run capability.
-
-13.	Abstract out console-log error detection.
-
-14.	Check for unwatched readers.
-
-15.	Pass --kmake-arg to all make invocations, courtesy of Marco Elver.
-
-16.	Correctly summarize build-only runs.
-
-17.	Improve diagnostic for KCSAN-incapable compilers.
-
-18.	Add more tracing crib notes to kvm.sh.
-
-19.	Add kvm-tranform.sh script for qemu-cmd files.
-
-20.	Dump ftrace at shutdown only if requested.
-
-21.	Avoid duplicate specification of qemu command.
-
-22.	Remove obsolete "cd $KVM".
-
-23.	Remove KCSAN stubs.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- Documentation/admin-guide/kernel-parameters.txt              |   21 +
- include/linux/torture.h                                      |    5 
- kernel/locking/locktorture.c                                 |   14 -
- kernel/rcu/rcutorture.c                                      |  130 +++++++++--
- kernel/torture.c                                             |    6 
- tools/testing/selftests/rcutorture/bin/configinit.sh         |    4 
- tools/testing/selftests/rcutorture/bin/console-badness.sh    |   16 +
- tools/testing/selftests/rcutorture/bin/functions.sh          |   23 +
- tools/testing/selftests/rcutorture/bin/jitter.sh             |    6 
- tools/testing/selftests/rcutorture/bin/kvm-build.sh          |    6 
- tools/testing/selftests/rcutorture/bin/kvm-check-branches.sh |  108 +++++++++
- tools/testing/selftests/rcutorture/bin/kvm-recheck.sh        |   20 +
- tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh     |   27 +-
- tools/testing/selftests/rcutorture/bin/kvm-transform.sh      |   51 ++++
- tools/testing/selftests/rcutorture/bin/kvm.sh                |   10 
- tools/testing/selftests/rcutorture/bin/parse-console.sh      |   23 +
- 16 files changed, 419 insertions(+), 51 deletions(-)
+--Sig_/r0BhmJh8XwjSmoAN4kUieic--
