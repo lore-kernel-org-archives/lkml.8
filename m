@@ -2,112 +2,92 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F25AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25D6C20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592903285;
-	bh=4D4etCCkvCMI5PLH239PBNnalPiuS1ItXNUo7xWS8Js=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gGgbKUSb9rxyvgrsRlTcfYnqU174COfakO5LVUcr9oEIhIEGRlTvtWcBARvlc86+I
-	 bZfTZY1WK6IiM/NV4VkH34BLdGqtO03X4KSwu2YG1pfcJGQVwFdR9a+jI0yEc4rgTE
-	 vUqwbKdtqfubwf6HiKJfWlcOmhbtiFaG6pkDblM8=
+	by mail.kernel.org (Postfix) with ESMTP id D6C3320781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:08:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mNMCpDFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732219AbgFWJID (ORCPT
+        id S1732047AbgFWJIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:08:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731921AbgFWJID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:08:03 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E48AE2072E;
-        Tue, 23 Jun 2020 09:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592903282;
-        bh=4D4etCCkvCMI5PLH239PBNnalPiuS1ItXNUo7xWS8Js=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NHdOSaDzsWU/azllZeEMWUI6XHlYmLBCYddZDxOHLkPSw/+CWIZoY1DrnbQbVo9rf
-         sj6A9ATSHe9ypb2epOcvDg6I/jGPqB3DptqgPA4Uqws0tJkbOpNjRL+VIVWM0CtYFp
-         6OkFh2UgQjvP55uFoeTooceRYxYVpoULiM5EbXFI=
-Date:   Tue, 23 Jun 2020 10:07:58 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 2/3] arm64: use PAGE_KERNEL_ROX directly in
- alloc_insn_page
-Message-ID: <20200623090757.GB3743@willie-the-truck>
-References: <20200618064307.32739-1-hch@lst.de>
- <20200618064307.32739-3-hch@lst.de>
- <20200620191616.bae356186ba3329ade67bbf7@linux-foundation.org>
- <20200623090505.GA7518@lst.de>
+        Tue, 23 Jun 2020 05:08:38 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:49195 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731860AbgFWJIh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592903317; x=1624439317;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Hf1oiWAZW47J1FDqvjaGVKeQoXmDU3F9JmfEwLpOK8A=;
+  b=mNMCpDFQ/ZlUK35Xj75Q6McXc5Aua3ghekcAFyjU4ujMco7N9BfjX21m
+   m57kg8sOQB+wuj69QVrRQt6TmSDA+PXNF7U763w06rlP32ZG7P/ZVTzRz
+   zHrD5YhZztOpvb3NhbEJeXJu2BJ3DPmsNCwHHA2GaEx7pZWpHgEEqEIwh
+   JvQqSvCCaYdsqpJ1lZUz9jGIx/+gv1qw7MeahAU7d4w1/WkQucZJFh0VI
+   AzJwoxrGIxdJsq/x8SoSeeh0Ptc1Gpo9F2V3hHS3TeujlbGzVsse6jwAN
+   c3LAndnisSKSM5t6PLkypZITWFuFby5xG16Srr4RciCwLysdK5EiaNGZN
+   w==;
+IronPort-SDR: bAhNFfnu/8crGk787M99eNYA9w+l0xyHYdtsp5D4SrMsOMrq/6I365Ggvw21oPBRnpsk18eHbV
+ h7uaw5r7dckQA0mFLaG5GhkO5y+PPbGZI1mzvrxRPnficwBB/5ft8VT99ZeM47zoP6YlSoMP/A
+ iMvTosg9kA3WlDdRwzfe98tQSwhm1gJjg2ige+TVLOJdKw0AuPFiKeUTBmi22J0pxm9ksQYutN
+ N5OenKFSSdE5V4pcgKMbG8fxQPS9JbXfR/9L/cbYG6PckSB8CCrR8VlHd43k4eoRJwv9QJtZps
+ CaQ=
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="79436702"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jun 2020 02:08:36 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 23 Jun 2020 02:08:25 -0700
+Received: from soft-dev3.localdomain (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Tue, 23 Jun 2020 02:08:34 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+        <UNGLinuxDriver@microchip.com>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net v2 0/2] bridge: mrp: Update MRP_PORT_ROLE
+Date:   Tue, 23 Jun 2020 11:05:39 +0200
+Message-ID: <20200623090541.2964760-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623090505.GA7518@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:05:05AM +0200, Christoph Hellwig wrote:
-> On Sat, Jun 20, 2020 at 07:16:16PM -0700, Andrew Morton wrote:
-> > On Thu, 18 Jun 2020 08:43:06 +0200 Christoph Hellwig <hch@lst.de> wrote:
-> > 
-> > > Use PAGE_KERNEL_ROX directly instead of allocating RWX and setting the
-> > > page read-only just after the allocation.
-> > > 
-> > > --- a/arch/arm64/kernel/probes/kprobes.c
-> > > +++ b/arch/arm64/kernel/probes/kprobes.c
-> > > @@ -120,15 +120,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
-> > >  
-> > >  void *alloc_insn_page(void)
-> > >  {
-> > > -	void *page;
-> > > -
-> > > -	page = vmalloc_exec(PAGE_SIZE);
-> > > -	if (page) {
-> > > -		set_memory_ro((unsigned long)page, 1);
-> > > -		set_vm_flush_reset_perms(page);
-> > > -	}
-> > > -
-> > > -	return page;
-> > > +	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-> > > +			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
-> > > +			NUMA_NO_NODE, __func__);
-> > >  }
-> > >  
-> > >  /* arm kprobe: install breakpoint in text */
-> > 
-> > But why.  I think this is just a cleanup, doesn't address any runtime issue?
-> 
-> It doesn't "fix" an issue - it just simplifies and speeds up the code.
+This patch series does the following:
+- fixes the enum br_mrp_port_role_type. It removes the port role none(0x2)
+  because this is in conflict with the standard. The standard defines the
+  interconnect port role as value 0x2.
+- adds checks regarding current defined port roles: primary(0x0) and
+  secondary(0x1).
 
-Ok, but I don't understand the PLT comment from Peter in
-20200618092754.GF576905@hirez.programming.kicks-ass.net:
+v2:
+ - add the validation code when setting the port role.
 
-  | I think this has the exact same range issue as the x86 user. But it
-  | might be less fatal if their PLT magic can cover the full range.
+Horatiu Vultur (2):
+  bridge: uapi: mrp: Fix MRP_PORT_ROLE
+  bridge: mrp: Validate when setting the port role
 
-Peter, please could you elaborate on your concern? I feel like I'm missing
-some context.
+ include/uapi/linux/mrp_bridge.h |  1 -
+ net/bridge/br_mrp.c             | 10 ++++++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-Cheers,
+-- 
+2.26.2
 
-Will
