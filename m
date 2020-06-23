@@ -2,192 +2,141 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E301BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD99C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC43920774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0677A20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b0gWdjg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733121AbgFWR6C (ORCPT
+        id S1733163AbgFWSAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:58:02 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:46216 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbgFWR6C (ORCPT
+        Tue, 23 Jun 2020 14:00:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733061AbgFWSAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:58:02 -0400
-Received: from 89-64-86-94.dynamic.chello.pl (89.64.86.94) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 8d4284b4e984008f; Tue, 23 Jun 2020 19:58:00 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 2/2][v3] PM / s2idle: Code cleanup to make s2idle consistent with normal idle path
-Date:   Tue, 23 Jun 2020 19:57:59 +0200
-Message-ID: <15473183.xuek0xzqYe@kreacher>
-In-Reply-To: <a00278cc5db9f4845006cff130fd91a58c0d92d1.1592892767.git.yu.c.chen@intel.com>
-References: <cover.1592892767.git.yu.c.chen@intel.com> <a00278cc5db9f4845006cff130fd91a58c0d92d1.1592892767.git.yu.c.chen@intel.com>
+        Tue, 23 Jun 2020 14:00:05 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63EC9C061795
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:00:05 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so2042306wmh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:00:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wcyp7xJ9VH6Ce5YmoH+01qglUFlPRs0bPBHrFHPBGrU=;
+        b=b0gWdjg9shIjXDAXSuaxcUf0kvXH4yOK4YqHK+9dT9MEpAkVd6umkpXAERDfyobiWl
+         iXYdhTzGdCZyETgQEnsKBMRw2uD1/6EG+a2gNOJxd+k6D/sDEhaX6N+anOTYiE5UTlEW
+         9guLzwsJbj9ourTGn7rQyP3RVBIwQBwAZ/LZZzmAPQobTh1G7a54oM7BKIaUVWVU7sYR
+         92sTnOH08HPqyhu7XVR11xnX2duZHFm8vCQNLqhX6EcurG9VD3S0w6GR/Cq7XgDKoDq9
+         1VJ29HZZZHA+0Um8K2+yTGYbKt5FDsWkltk1RndhkdGr1x6j4EAOX4DINZmI1bfl6Cvx
+         oAyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wcyp7xJ9VH6Ce5YmoH+01qglUFlPRs0bPBHrFHPBGrU=;
+        b=kHTfJ2EVy/y0mo4/leTh8hfhoLbq+F7ofqT5PJ53DzJw+AARaATPMQrpfZDBRiZ7N0
+         ECWEZN2eF8QqHywSekhfdjYo15FK/OdPekLzIIa3HCWdGGZGIwdC3ix2jTyl+BxWZ+zx
+         W+uK3vVaoFn/r+tBBMw6tjb0jkm78lU74wk1RjHhCjzCksCXlqHD5Gvo4HSykKhdSED7
+         Dl4UsGfrRhMhZmA4KVfaD+TqNn3rb8YqjkEaoTwdewotezV+iCEEoYqRv4YCVVHRRPGY
+         4BSE5ft0aa1Tts3x9wCaXE1UqbgZKC+KZF7Iy3idABGX/ElxEXgGShp4VDOOcvnhLKpF
+         qNkA==
+X-Gm-Message-State: AOAM532NyueJgt9NEFlA5XYJEFzzT3W4WA8Z7MCva7u/UG81FSuTXXrw
+        Vu0q9bCmuh7d2TcWJriEaifEAvKJt6CeOA==
+X-Google-Smtp-Source: ABdhPJyBS+rhzsc1deZ1Ay1FOdoRDXOTCxrPOjQRzUCugXkZeGKEC8Ks241Yw7kTMxlqgYm+GZsCyQ==
+X-Received: by 2002:a7b:cb11:: with SMTP id u17mr25343911wmj.84.1592935203860;
+        Tue, 23 Jun 2020 11:00:03 -0700 (PDT)
+Received: from elver.google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id r1sm22986260wrn.29.2020.06.23.11.00.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 11:00:03 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 19:59:57 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
+        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200623175957.GA106514@elver.google.com>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net>
+ <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+ <20200623163730.GA4800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623163730.GA4800@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 23, 2020 8:31:52 AM CEST Chen Yu wrote:
-> Currently s2idle is a little different from the normal idle path. This
-> patch makes call_s2idle() consistent with call_cpuidle(), and also
-> s2idle_enter() is analogous to cpuidle_enter().
+On Tue, Jun 23, 2020 at 06:37PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 23, 2020 at 06:13:21PM +0200, Ahmed S. Darwish wrote:
+> > Well, freshly merged code is using it. For example, KCSAN:
+> > 
+> >     => f1bc96210c6a ("kcsan: Make KCSAN compatible with lockdep")
+> >     => kernel/kcsan/report.c:
+> > 
+> >     void kcsan_report(...)
+> >     {
+> > 	...
+> >         /*
+> >          * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
+> >          * we do not turn off lockdep here; this could happen due to recursion
+> >          * into lockdep via KCSAN if we detect a race in utilities used by
+> >          * lockdep.
+> >          */
+> >         lockdep_off();
+> > 	...
+> >     }
 > 
-> No functional change.
-> 
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> ---
->  drivers/cpuidle/cpuidle.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index e092789187c6..b2e764d1ac99 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -134,8 +134,8 @@ int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->  }
->  
->  #ifdef CONFIG_SUSPEND
-> -static void enter_s2idle_proper(struct cpuidle_driver *drv,
-> -				struct cpuidle_device *dev, int index)
-> +static void s2idle_enter(struct cpuidle_driver *drv,
-> +			 struct cpuidle_device *dev, int index)
->  {
->  	ktime_t time_start, time_end;
->  
-> @@ -169,6 +169,15 @@ static void enter_s2idle_proper(struct cpuidle_driver *drv,
->  	dev->states_usage[index].s2idle_usage++;
->  }
->  
-> +static int call_s2idle(struct cpuidle_driver *drv,
-> +		       struct cpuidle_device *dev, int index)
-> +{
-> +	if (!current_clr_polling_and_test())
-> +		s2idle_enter(drv, dev, index);
-> +
+> Marco, do you remember what exactly happened there? Because I'm about to
+> wreck that. That is, I'm going to make TRACE_IRQFLAGS ignore
+> lockdep_off().
 
-Well, I'd rather move the definition of this function to idle.c, because it is
-better to call current_clr_polling_and_test() from there.
+Yeah, I was trying to squash any kind of recursion:
 
-> +	return index;
-> +}
-> +
->  /**
->   * cpuidle_enter_s2idle - Enter an idle state suitable for suspend-to-idle.
->   * @drv: cpuidle driver for the given CPU.
-> @@ -187,8 +196,8 @@ int cpuidle_enter_s2idle(struct cpuidle_driver *drv, struct cpuidle_device *dev)
->  	 * be frozen safely.
->  	 */
->  	index = find_deepest_state(drv, dev, U64_MAX, 0, true);
-> -	if (index > 0 && !current_clr_polling_and_test())
-> -		enter_s2idle_proper(drv, dev, index);
-> +	if (index > 0)
-> +		call_s2idle(drv, dev, index);
+	lockdep -> other libs ->
+		-> KCSAN
+		-> print report
+		-> dump stack, printk and friends
+		-> lockdep -> other libs
+			-> KCSAN ...
 
-This can be made look more like cpuidle_enter() too.
+Some history:
 
->  
->  	return index;
->  }
-> 
+* Initial patch to fix:
+	https://lore.kernel.org/lkml/20200115162512.70807-1-elver@google.com/
 
-So overall I'd prefer to apply something like this (on top of the [1/2]):
+* KCSAN+lockdep+ftrace:
+	https://lore.kernel.org/lkml/20200214211035.209972-1-elver@google.com/
 
----
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: [PATCH] cpuidle: Rearrange s2idle-specific idle state entry code
+lockdep now has KCSAN_SANITIZE := n, but we still need to ensure that
+there are no paths out of lockdep, or the IRQ flags tracing code, that
+might lead through other libs, through KCSAN, libs used to generate a
+report, and back to lockdep.
 
-Implement call_cpuidle_s2idle() in analogy with call_cpuidle()
-for the s2idle-specific idle state entry and invoke it from
-cpuidle_idle_call() to make the s2idle-specific idle entry code
-path look more similar to the "regular" idle entry one.
+I never quite figured out the exact trace that led to corruption, but
+avoiding any kind of potential for recursion was the only thing that
+would avoid the check_flags() warnings.
 
-No intentional functional impact.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/cpuidle/cpuidle.c |    6 +++---
- kernel/sched/idle.c       |   15 +++++++++++----
- 2 files changed, 14 insertions(+), 7 deletions(-)
-
-Index: linux-pm/kernel/sched/idle.c
-===================================================================
---- linux-pm.orig/kernel/sched/idle.c
-+++ linux-pm/kernel/sched/idle.c
-@@ -96,6 +96,15 @@ void __cpuidle default_idle_call(void)
- 	}
- }
- 
-+static int call_cpuidle_s2idle(struct cpuidle_driver *drv,
-+			       struct cpuidle_device *dev)
-+{
-+	if (current_clr_polling_and_test())
-+		return -EBUSY;
-+
-+	return cpuidle_enter_s2idle(drv, dev);
-+}
-+
- static int call_cpuidle(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 		      int next_state)
- {
-@@ -171,11 +180,9 @@ static void cpuidle_idle_call(void)
- 		if (idle_should_enter_s2idle()) {
- 			rcu_idle_enter();
- 
--			entered_state = cpuidle_enter_s2idle(drv, dev);
--			if (entered_state > 0) {
--				local_irq_enable();
-+			entered_state = call_cpuidle_s2idle(drv, dev);
-+			if (entered_state > 0)
- 				goto exit_idle;
--			}
- 
- 			rcu_idle_exit();
- 
-Index: linux-pm/drivers/cpuidle/cpuidle.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/cpuidle.c
-+++ linux-pm/drivers/cpuidle/cpuidle.c
-@@ -13,7 +13,6 @@
- #include <linux/mutex.h>
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
--#include <linux/sched/idle.h>
- #include <linux/notifier.h>
- #include <linux/pm_qos.h>
- #include <linux/cpu.h>
-@@ -187,9 +186,10 @@ int cpuidle_enter_s2idle(struct cpuidle_
- 	 * be frozen safely.
- 	 */
- 	index = find_deepest_state(drv, dev, U64_MAX, 0, true);
--	if (index > 0 && !current_clr_polling_and_test())
-+	if (index > 0) {
- 		enter_s2idle_proper(drv, dev, index);
--
-+		local_irq_enable();
-+	}
- 	return index;
- }
- #endif /* CONFIG_SUSPEND */
-
-
-
+Thanks,
+-- Marco
