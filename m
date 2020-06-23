@@ -2,171 +2,98 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A43C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE25821D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048BF21BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592945107;
+	bh=IeczXYkkchN1+8AkUnZleqsDX9tLP+Nr4On3KhLpwbc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oZMKKdcO0W8UhljhxlnNyL1f5GXe3Wq5FvEo1kaAOoY0ny2Syb8ntmU5kAaCOcjoJ
+	 iFPJlzGnxeWh/3+BLXWl6zEd8R85/pcIAVAH443RkBzHbP1Hl+avSUCwrVrurnyPee
+	 e5tm/R5CIHa3QNJ9T1rq1L9P3jpy58BOux+0tlSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392711AbgFWUo5 (ORCPT
+        id S2392333AbgFWUpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:44:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34879 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390082AbgFWUon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:44:43 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jnpmb-0002XV-Ib; Tue, 23 Jun 2020 20:44:41 +0000
-Date:   Tue, 23 Jun 2020 22:44:41 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, keescook@chromium.org
-Subject: Re: [PATCH v2 4/6] selftests: pidfd: do not use ksft_exit_skip after
- ksft_set_plan
-Message-ID: <20200623204441.phngiwlj2idonpe6@wittgenstein>
-References: <20200623001547.22255-1-pbonzini@redhat.com>
- <20200623001547.22255-5-pbonzini@redhat.com>
+        Tue, 23 Jun 2020 16:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392293AbgFWUom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23F752070E;
+        Tue, 23 Jun 2020 20:44:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592945082;
+        bh=IeczXYkkchN1+8AkUnZleqsDX9tLP+Nr4On3KhLpwbc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0ozkUioXIlM9U/B2KY5JZEowkmpmWat7EjVoj9P2vQSmzwz8Kn29hgMsUnGRVwXKi
+         g7kqaSo7X9FTPjccasWuWFlZ3QkP/jk5YQmBUN9fwubba78yg0Rwszv6FhG8Dxq4O4
+         OdlRRcA/W8p0covRucOL5hVvzmFy+BguRbLjzLbg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 004/136] clk: sunxi: Fix incorrect usage of round_down()
+Date:   Tue, 23 Jun 2020 21:57:40 +0200
+Message-Id: <20200623195303.836017212@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
+References: <20200623195303.601828702@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200623001547.22255-5-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 08:15:45PM -0400, Paolo Bonzini wrote:
-> Calling ksft_exit_skip after ksft_set_plan results in executing fewer tests
-> than planned.  Use ksft_test_result_skip instead.
-> 
-> The plan passed to ksft_set_plan was wrong, too, so fix it while at it.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
+From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-Thanks for the patch!
-Hm, this series misses a bunch of Cces for the maintainers of these files...
-(Also note that Kees has a/some series with most of us Cced that might
-conflict with some of these changes. But not sure rn.)
+[ Upstream commit ee25d9742dabed3fd18158b518f846abeb70f319 ]
 
-A comment below.
+round_down() can only round to powers of 2. If round_down() is asked
+to round to something that is not a power of 2, incorrect results are
+produced. The incorrect results can be both too large and too small.
 
->  tools/testing/selftests/pidfd/pidfd_test.c | 39 ++++++++++++++++++----
->  1 file changed, 33 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
-> index 7aff2d3b42c0..380c6314e6a2 100644
-> --- a/tools/testing/selftests/pidfd/pidfd_test.c
-> +++ b/tools/testing/selftests/pidfd/pidfd_test.c
-> @@ -8,6 +8,7 @@
->  #include <sched.h>
->  #include <signal.h>
->  #include <stdio.h>
-> +#include <stdbool.h>
->  #include <stdlib.h>
->  #include <string.h>
->  #include <syscall.h>
-> @@ -27,6 +28,8 @@
->  
->  #define MAX_EVENTS 5
->  
-> +static bool have_pidfd_send_signal = false;
-> +
->  static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
->  {
->  	size_t stack_size = 1024;
-> @@ -56,6 +59,13 @@ static int test_pidfd_send_signal_simple_success(void)
->  	int pidfd, ret;
->  	const char *test_name = "pidfd_send_signal send SIGUSR1";
->  
-> +	if (!have_pidfd_send_signal) {
-> +		ksft_test_result_skip(
-> +			"%s test: pidfd_send_signal() syscall not supported\n",
-> +			test_name);
-> +		return 0;
-> +	}
-> +
->  	pidfd = open("/proc/self", O_DIRECTORY | O_CLOEXEC);
->  	if (pidfd < 0)
->  		ksft_exit_fail_msg(
-> @@ -86,6 +96,13 @@ static int test_pidfd_send_signal_exited_fail(void)
->  	pid_t pid;
->  	const char *test_name = "pidfd_send_signal signal exited process";
->  
-> +	if (!have_pidfd_send_signal) {
-> +		ksft_test_result_skip(
-> +			"%s test: pidfd_send_signal() syscall not supported\n",
-> +			test_name);
-> +		return 0;
-> +	}
-> +
->  	pid = fork();
->  	if (pid < 0)
->  		ksft_exit_fail_msg("%s test: Failed to create new process\n",
-> @@ -137,6 +154,13 @@ static int test_pidfd_send_signal_recycled_pid_fail(void)
->  	pid_t pid1;
->  	const char *test_name = "pidfd_send_signal signal recycled pid";
->  
-> +	if (!have_pidfd_send_signal) {
-> +		ksft_test_result_skip(
-> +			"%s test: pidfd_send_signal() syscall not supported\n",
-> +			test_name);
-> +		return 0;
-> +	}
-> +
->  	ret = unshare(CLONE_NEWPID);
->  	if (ret < 0)
->  		ksft_exit_fail_msg("%s test: Failed to unshare pid namespace\n",
-> @@ -325,13 +349,16 @@ static int test_pidfd_send_signal_syscall_support(void)
->  
->  	ret = sys_pidfd_send_signal(pidfd, 0, NULL, 0);
->  	if (ret < 0) {
-> -		if (errno == ENOSYS)
-> -			ksft_exit_skip(
-> +		if (errno == ENOSYS) {
-> +			ksft_test_result_skip(
->  				"%s test: pidfd_send_signal() syscall not supported\n",
->  				test_name);
+Instead, use rounddown() which can round to any number.
 
-If pidfd_send_signal() is not supported, you're falling through and then
-you're reporting:
+Fixes: 6a721db180a2 ("clk: sunxi: Add A31 clocks support")
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/sunxi/clk-sunxi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-ok 5 # SKIP pidfd_send_signal check for support test: pidfd_send_signal() syscall not supported
-ok 6 pidfd_send_signal check for support test: pidfd_send_signal() syscall is supported. Tests can be executed
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index aa4add580516d..0b5e091742f97 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -98,7 +98,7 @@ static void sun6i_a31_get_pll1_factors(struct factors_request *req)
+ 	 * Round down the frequency to the closest multiple of either
+ 	 * 6 or 16
+ 	 */
+-	u32 round_freq_6 = round_down(freq_mhz, 6);
++	u32 round_freq_6 = rounddown(freq_mhz, 6);
+ 	u32 round_freq_16 = round_down(freq_mhz, 16);
+ 
+ 	if (round_freq_6 > round_freq_16)
+-- 
+2.25.1
 
-which seems wrong.
 
-> -
-> -		ksft_exit_fail_msg("%s test: Failed to send signal\n",
-> -				   test_name);
-> +		} else {
-> +			ksft_exit_fail_msg("%s test: Failed to send signal\n",
-> +					   test_name);
-> +		}
-> +	} else {
-> +		have_pidfd_send_signal = true;
->  	}
->  
->  	close(pidfd);
-> @@ -521,7 +548,7 @@ static void test_pidfd_poll_leader_exit(int use_waitpid)
->  int main(int argc, char **argv)
->  {
->  	ksft_print_header();
-> -	ksft_set_plan(4);
-> +	ksft_set_plan(8);
->  
->  	test_pidfd_poll_exec(0);
->  	test_pidfd_poll_exec(1);
-> -- 
-> 2.26.2
-> 
-> 
+
