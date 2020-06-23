@@ -2,67 +2,67 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489ADC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F72EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26400207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731BF207F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNSt3YG5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qOKZ5J4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbgFWS54 (ORCPT
+        id S1733311AbgFWS76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39600 "EHLO
+        Tue, 23 Jun 2020 14:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733138AbgFWS5z (ORCPT
+        with ESMTP id S1733138AbgFWS75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:57:55 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE82C061573;
-        Tue, 23 Jun 2020 11:57:55 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id c16so9899559ioi.9;
-        Tue, 23 Jun 2020 11:57:55 -0700 (PDT)
+        Tue, 23 Jun 2020 14:59:57 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A50C061573;
+        Tue, 23 Jun 2020 11:59:55 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id w16so22706800ejj.5;
+        Tue, 23 Jun 2020 11:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=W+8l06X4v9gDesMKnj8QO14cib7Ri6lEvDT8pbY4bDE=;
-        b=FNSt3YG5TjrjaIjyA6ZoiEbsXTsaJTsmRGLTLcmwrB5xlNMW3iY7zh6Nc7qW3hXkCG
-         4Une3WN7ZKj+HngnLffx3SO3MMeumtXNgL+1qAdMslcTMV8DvolTAaTDoQwtW0QcWVDA
-         bBT8jdwbZTdtp4XZAF//nKk5CM7a34a0xqW3VqDGb5eIkMeYeyL6sqE60MyXNWj8ALtv
-         d5r9umBTx3xnZ+uv0ySGHei12YDgiLUr8CHx0EIT3AfIFd7WUdZkXR+EGcRaHzr9kSy4
-         7WAuLFW2CZpSnW9cSzt8ZzbtWNlBuP4QriIAtsA4Yi4X9uJPMvLaq44HXyPjHbYbiAY+
-         NNWA==
+        bh=ARUvIZCtRggYIgRlUkEErm7D276R21f9e3LiRcWQhd0=;
+        b=qOKZ5J4CL3CWx8aSDTNcyKpvIcWSu7X1pL3PkIyDHm5YO1o3rxKsc9yCbsbto9X/uS
+         6J5Gmqc4cyK5ZnTYMcP3PO2PacB70RuGRm4FMDK47DzCMESzJC9bzTSVYqo+099voI7H
+         s06f4Djb0zqiKcNVNvBWMKOdrI8ShBppqXi0NpN4wC5kuZOXV6xQ3I2fPx/+VSoKWDWK
+         +SqOfyAyD/F97XO0QD5qOea8SQ4tHT8575YG/I1FgKujfWHddeTz0/sC0BBfZD7I0mut
+         tU6XptIySATDV0hYYa394Hgaku3zq0k1HXa92m4LfxeePSMpDL9pqT1jHOqBhVP6HDnH
+         b8bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=W+8l06X4v9gDesMKnj8QO14cib7Ri6lEvDT8pbY4bDE=;
-        b=A3GITqa6tR2K6mmf/vc/9qkx2F9Jh85OyWw1EJ4b6kWcp4GrM3XpL+CqkEhqqV2PqX
-         2XBmPasJNPgIv0dpunQKVnd98MKux9AqkEfhaXWRHmBg9hZJx+zj86F9KTRtgCFzNyF2
-         pQUdRnvcUDg7zYq3vgtjqdkvnNvriMWDd4MyCXIQqKBqPLj4gvwrBnLzWLBROkUSc/+C
-         ag+81F/7vOjsSGUKjrLiFXUayvPTfM7sN0RXArHGpwjAH7glWISXhooNTPSn/2AjuI+Y
-         qyYk/lFG6GLhmY3q2fnemX1puLFMa3vY+7zuge3PTO1Y3vYlfRWbqQFQiG+4sxwiCu3H
-         M9ag==
-X-Gm-Message-State: AOAM533q9uojRypEB5zSlibLN+G6LCPfbWJko1r1D9d6eGdLnQFIsDdv
-        rZpXJu/uO2oM1FsNRfgOffA=
-X-Google-Smtp-Source: ABdhPJyRicd7kL+j+lcuh24xWHywCbBXGfllIpS7K2ujTzaAcU1siWCYI/3d7eCe//OPZPOO2AeFug==
-X-Received: by 2002:a02:5806:: with SMTP id f6mr23495582jab.136.1592938674433;
-        Tue, 23 Jun 2020 11:57:54 -0700 (PDT)
+        bh=ARUvIZCtRggYIgRlUkEErm7D276R21f9e3LiRcWQhd0=;
+        b=uPUxLxDgJJCY1quSE2PTa7bqxJ/QioD4SvyRccsw84wB9+vEcd0oiGwS7Biotk8Ikd
+         5ORsuBof/U3htChL7CPupZs68WVtAbGcaNGyDX/+nGkzTA093ONZdvSUCs/0ty2R72Bv
+         lXbtooTdXyqTo2h4NdO8H1g8HrGADRyCZqSwTqC8hCYqUUDutp3a9FsLK1bdtuENvbWM
+         jHt1pw3xY1yMlUVh6ftLHSgCUrgwdQVgyXiWTw64vfDt8536Gna+XiqqRfdauLYBATeN
+         FSnzawMTY9bi73xvSHHOsMK8XSFsewIhf2yh5SGwuDPTgc4YMD9Jcagj0bDRlnlE56wA
+         LUww==
+X-Gm-Message-State: AOAM531Sc29QMVFJwnDWczPchmkQk5WghLKp31zrfH5aOPxq27lQBhel
+        IjBNkVKuWYa8s5ttJJKZFUHKIBNm
+X-Google-Smtp-Source: ABdhPJz6mBbCm+Sggz52Xcd8rPZ+ORcVpVCCHmrIXmqbsItRjz9hxGYwQA0j693Ash+pcV7izPK6OA==
+X-Received: by 2002:a17:906:2bc2:: with SMTP id n2mr20961949ejg.115.1592938794396;
+        Tue, 23 Jun 2020 11:59:54 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id l22sm3001444ioc.24.2020.06.23.11.57.43
+        by smtp.googlemail.com with ESMTPSA id kt1sm298761ejb.78.2020.06.23.11.59.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 11:57:53 -0700 (PDT)
-Subject: Re: [PATCH 03/15] net: phy: arrange headers in phy_device.c
- alphabetically
+        Tue, 23 Jun 2020 11:59:53 -0700 (PDT)
+Subject: Re: [PATCH 04/15] net: mdio: add a forward declaration for
+ reset_control to mdio.h
 To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
@@ -96,7 +96,7 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-4-brgl@bgdev.pl>
+ <20200622093744.13685-5-brgl@bgdev.pl>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -152,12 +152,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <ee977a56-1153-15c3-cb0a-36c18f1ad524@gmail.com>
-Date:   Tue, 23 Jun 2020 11:57:41 -0700
+Message-ID: <3188e6a9-1eb1-a0e8-4835-7d046e819ca5@gmail.com>
+Date:   Tue, 23 Jun 2020 11:59:42 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200622093744.13685-4-brgl@bgdev.pl>
+In-Reply-To: <20200622093744.13685-5-brgl@bgdev.pl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -169,11 +169,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On 6/22/20 2:37 AM, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Keeping the headers in alphabetical order is better for readability and
-> allows to easily see if given header is already included.
+> This header refers to struct reset_control but doesn't include any reset
+> header. The structure definition is probably somehow indirectly pulled in
+> since no warnings are reported but for the sake of correctness add the
+> forward declaration for struct reset_control.
 > 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  include/linux/mdio.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/mdio.h b/include/linux/mdio.h
+> index 36d2e0673d03..9ac5e7ff6156 100644
+> --- a/include/linux/mdio.h
+> +++ b/include/linux/mdio.h
+> @@ -17,6 +17,7 @@
+>  #define MII_REGADDR_C45_MASK	GENMASK(15, 0)
+>  
+>  struct gpio_desc;
+> +struct reset_control;
+>  struct mii_bus;
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+You wrote 3 patches to sort the headers alphabetically, do you mind
+doing the same thing for forward declarations as well?
 -- 
 Florian
