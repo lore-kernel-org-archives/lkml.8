@@ -2,140 +2,95 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A244206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:48:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XZOsF4wq"
+	by mail.kernel.org (Postfix) with ESMTP id 551EE20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbgFWAsZ (ORCPT
+        id S1731988AbgFWAun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:48:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732235AbgFWAsU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:48:20 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA47EC061573;
-        Mon, 22 Jun 2020 17:48:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xW7XautdzOxud38pqzUM3uCC+kw5dmatbyChhqw/vJc=; b=XZOsF4wq148/vLc7JZ7mHdlG/h
-        z9hXDq0z7ilaQccnLPANd6oz1/O0Fga5+UkO5lukzIIK2dB1/3sANlEtNeYOAkIY3LFg1TGlD4kfO
-        JwWGqAhPvsqKRoOx1KHsBpF8SgseJQPZWKoeUWv/YPSmx6e0wS2tBVcwYXrUf2hz9lydsPGQovjGi
-        uPH9f4d99anthkQ0G33tXrKSCafS6kyy+yA4BoojXhBsvE4y5xhJpQ857aOXJItLF0KvCV/qrej8A
-        RDkrROu6NFbkKrVWizoOh7K236jXiPQKOhJ8GxPPS1+q0EpocGhaYGt/RHH/f8E9fLygaptMF1h0Z
-        2kyT9/Fg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnX6S-00014H-8H; Tue, 23 Jun 2020 00:47:56 +0000
-Date:   Tue, 23 Jun 2020 01:47:56 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Junxiao Bi <junxiao.bi@oracle.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin@oracle.com" <joe.jin@oracle.com>,
-        Wengang Wang <wen.gang.wang@oracle.com>
-Subject: Re: [PATCH] proc: Avoid a thundering herd of threads freeing proc
- dentries
-Message-ID: <20200623004756.GE21350@casper.infradead.org>
-References: <20200618233958.GV8681@bombadil.infradead.org>
- <877dw3apn8.fsf@x220.int.ebiederm.org>
- <2cf6af59-e86b-f6cc-06d3-84309425bd1d@oracle.com>
- <87bllf87ve.fsf_-_@x220.int.ebiederm.org>
- <caa9adf6-e1bb-167b-6f59-d17fd587d4fa@oracle.com>
- <87k1036k9y.fsf@x220.int.ebiederm.org>
- <68a1f51b-50bf-0770-2367-c3e1b38be535@oracle.com>
- <87blle4qze.fsf@x220.int.ebiederm.org>
- <20200620162752.GF8681@bombadil.infradead.org>
- <39e9f488-110c-588d-d977-413da3dc5dfa@oracle.com>
+        Mon, 22 Jun 2020 20:50:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:3802 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731526AbgFWAum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:50:42 -0400
+IronPort-SDR: Zjqf4XvfGRdjFl7zUBQCRnyRQODuGd4Twn9aoJR5bMYU8/ja+UgPaQstSzBYwykBabtQUF2gfm
+ VI0umvLrXOPw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="228576385"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="228576385"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 17:50:41 -0700
+IronPort-SDR: NQZ2b+kbGeudWWVrnRpJr4mCx+Xzw+yu2KbiQYirZ5UPucKt2IqPwMYdi7GcuJMa26OHkjLr+B
+ 3bIWN0DPA74A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="275174181"
+Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
+  by orsmga003.jf.intel.com with ESMTP; 22 Jun 2020 17:50:36 -0700
+Date:   Tue, 23 Jun 2020 03:50:34 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: Re: [PATCHv8 0/3] optee: register drivers on optee bus
+Message-ID: <20200623005034.GC28795@linux.intel.com>
+References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+ <CAD8XO3YTz=xN2k5h8HsrYsLUgmC6dD57XbBj63e+3_xFF1H0rw@mail.gmail.com>
+ <20200616082907.GA2305431@jade>
+ <20200617233755.GI62794@linux.intel.com>
+ <20200618075613.GA97184@jade>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <39e9f488-110c-588d-d977-413da3dc5dfa@oracle.com>
+In-Reply-To: <20200618075613.GA97184@jade>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 10:15:39PM -0700, Junxiao Bi wrote:
-> On 6/20/20 9:27 AM, Matthew Wilcox wrote:
-> > On Fri, Jun 19, 2020 at 05:42:45PM -0500, Eric W. Biederman wrote:
-> > > Junxiao Bi <junxiao.bi@oracle.com> writes:
-> > > > Still high lock contention. Collect the following hot path.
-> > > A different location this time.
+On Thu, Jun 18, 2020 at 09:56:13AM +0200, Jens Wiklander wrote:
+> On Thu, Jun 18, 2020 at 02:37:55AM +0300, Jarkko Sakkinen wrote:
+> > On Tue, Jun 16, 2020 at 10:29:07AM +0200, Jens Wiklander wrote:
+> > > Hi Maxim and Jarkko,
 > > > 
-> > > I know of at least exit_signal and exit_notify that take thread wide
-> > > locks, and it looks like exit_mm is another.  Those don't use the same
-> > > locks as flushing proc.
+> > > On Mon, Jun 15, 2020 at 05:32:40PM +0300, Maxim Uvarov wrote:
+> > > > ping.
+> > > > Patchset was reviewed and all comments are codeverd. Optee-os patches
+> > > > were merged. These kernel patches look like they are hanging
+> > > > somewhere...
 > > > 
+> > > I'm almost OK with this patchset, except that
+> > > Documentation/ABI/testing/sysfs-bus-optee-devices needs to be updated
+> > > for the new kernel version and TEE mailing list which we're changing right
+> > > now.
 > > > 
-> > > So I think you are simply seeing a result of the thundering herd of
-> > > threads shutting down at once.  Given that thread shutdown is fundamentally
-> > > a slow path there is only so much that can be done.
+> > > The last patch touches files I'm not maintainer of. That patch depends
+> > > on the previous patches so it makes sense to keep them together.  If a
+> > > TPM device driver maintainer would ack that patch I can take it via my
+> > > tree. Or we can do it the other way around (with a v9 patchset),
+> > > whichever is preferred.
 > > > 
-> > > If you are up for a project to working through this thundering herd I
-> > > expect I can help some.  It will be a long process of cleaning up
-> > > the entire thread exit process with an eye to performance.
-> > Wengang had some tests which produced wall-clock values for this problem,
-> > which I agree is more informative.
+> > > Cheers,
+> > > Jens
 > > 
-> > I'm not entirely sure what the customer workload is that requires a
-> > highly threaded workload to also shut down quickly.  To my mind, an
-> > overall workload is normally composed of highly-threaded tasks that run
-> > for a long time and only shut down rarely (thus performance of shutdown
-> > is not important) and single-threaded tasks that run for a short time.
+> > Probably easier if you pick all three and I ack the one touching TPM.
 > 
-> The real workload is a Java application working in server-agent mode, issue
-> happened in agent side, all it do is waiting works dispatching from server
-> and execute. To execute one work, agent will start lots of short live
-> threads, there could be a lot of threads exit same time if there were a lots
-> of work to execute, the contention on the exit path caused a high %sys time
-> which impacted other workload.
+> Makes sense, let's do that.
 
-How about this for a micro?  Executes in about ten seconds on my laptop.
-You might need to tweak it a bit to get better timing on a server.
+Great, thanks!
 
-// gcc -pthread -O2 -g -W -Wall
-#include <pthread.h>
-#include <unistd.h>
-
-void *worker(void *arg)
-{
-	int i = 0;
-	int *p = arg;
-
-	for (;;) {
-		while (i < 1000 * 1000) {
-			i += *p;
-		}
-		sleep(1);
-	}
-}
-
-int main(int argc, char **argv)
-{
-	pthread_t threads[20][100];
-	int i, j, one = 1;
-
-	for (i = 0; i < 1000; i++) {
-		for (j = 0; j < 100; j++)
-			pthread_create(&threads[i % 20][j], NULL, worker, &one);
-		if (i < 5)
-			continue;
-		for (j = 0; j < 100; j++)
-			pthread_cancel(threads[(i - 5) %20][j]);
-	}
-
-	return 0;
-}
+/Jarkko
