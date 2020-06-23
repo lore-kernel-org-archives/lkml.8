@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EBFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2591A2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7C12158C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944666;
-	bh=Y7FAiX8CURS11zx9KBYS3lzd3Tvh+mY6DZ2CwCmsM7Q=;
+	s=default; t=1592944673;
+	bh=ZIL0HgmfwPJtXldmiev5Ked/x3oNohzoKFZIzXOlS4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVnBkywJnme06WR0o+Ir/UYAiCdn5h4OOIAw38NyYLcpfXHaGDgHla+FOmrSvzyrM
-	 KHYH+th0VeywbYfiufvdGe4brfiQ4BtGRwtHwpHKyqzjcvEOBpfBtqOi7w0/8++WKj
-	 OCC8pVAFfvHoieEDmk/vbzOnXHf3PTu/fduCsCFA=
+	b=E3nydoWsbGb3pmTm6xSSZlWdg1XPsY+XetXHVursLV7QRL1yAC30Z+5DyK2in6Cpp
+	 ZwK61Y6ZPWDGoJIkGWDKbyjpj9/nsXbGU/4xZ+HHyLwqRsaX/SU00HCJgC1WGFnDqj
+	 ws2oU6gM6r9w8zzZxl18TKjVee7n+GYF/HFS4qXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391877AbgFWUhn (ORCPT
+        id S2391895AbgFWUhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:37:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:37:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391863AbgFWUhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:37:31 -0400
+        id S2389931AbgFWUhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:37:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A47BD20781;
-        Tue, 23 Jun 2020 20:37:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52AD720781;
+        Tue, 23 Jun 2020 20:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944652;
-        bh=Y7FAiX8CURS11zx9KBYS3lzd3Tvh+mY6DZ2CwCmsM7Q=;
+        s=default; t=1592944659;
+        bh=ZIL0HgmfwPJtXldmiev5Ked/x3oNohzoKFZIzXOlS4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aCob0pbZemgeqJxDcqE1cCUJ37dGUTC1QsCiZ5W6yYUktFQ5g1s81YIcwQ15bBmjl
-         1wZt0Z+h97CLLioaIjP+8MGNhJIp6Qm2VGLFyh9Ho6WTviR8nAVl6kfVdQmqv7ign9
-         6cpixtTkpicl3/Qu25w/xxKtW/RvAsR459L8IXx0=
+        b=xKs+hT36ro6RAiUHNSNsu9z4pfjFM6i7iXOGGDUhsZww9uGlNCQCt/J0eIsGJsbYy
+         XJ1gEaGtLFh1K7iN8jhi+ZytZ9hBFtlIv5sOTOMaUFROrjyAjdw1pgdiA2+DYp3DMF
+         gb6XPM2uaZCNKFlCk3f6HUL1Q1ouN04W0NII/aFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/206] PCI: rcar: Fix incorrect programming of OB windows
-Date:   Tue, 23 Jun 2020 21:56:41 +0200
-Message-Id: <20200623195320.547670274@linuxfoundation.org>
+Subject: [PATCH 4.19 076/206] power: supply: lp8788: Fix an error handling path in lp8788_charger_probe()
+Date:   Tue, 23 Jun 2020 21:56:44 +0200
+Message-Id: <20200623195320.685021999@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -62,72 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 2b9f217433e31d125fb697ca7974d3de3ecc3e92 ]
+[ Upstream commit 934ed3847a4ebc75b655659c4d2349ba4337941c ]
 
-The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
-a CPU address (which is determined by the window number 'x') and a
-programmed PCI address - Thus allowing the controller to translate CPU
-accesses into PCI accesses.
+In the probe function, in case of error, resources allocated in
+'lp8788_setup_adc_channel()' must be released.
 
-However the existing code incorrectly writes the CPU address - lets fix
-this by writing the PCI address instead.
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
+This has the extra benefit to simplify the remove function and to axe the
+'lp8788_release_adc_channel()' function which is now useless.
 
-For memory transactions, existing DT users describe a 1:1 identity mapping
-and thus this change should have no effect. However the same isn't true for
-I/O.
-
-Link: https://lore.kernel.org/r/20191004132941.6660-1-andrew.murray@arm.com
-Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-rcar.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/power/supply/lp8788-charger.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-index 333ab6092f174..00296c5eacb9c 100644
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -335,11 +335,12 @@ static struct pci_ops rcar_pcie_ops = {
- };
+diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
+index 0f3432795f3c2..b8f7dac7ac3fe 100644
+--- a/drivers/power/supply/lp8788-charger.c
++++ b/drivers/power/supply/lp8788-charger.c
+@@ -600,27 +600,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
+ 		return;
  
- static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
--				   struct resource *res)
-+				   struct resource_entry *window)
+ 	/* ADC channel for battery voltage */
+-	chan = iio_channel_get(dev, pdata->adc_vbatt);
++	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
+ 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
+ 
+ 	/* ADC channel for battery temperature */
+-	chan = iio_channel_get(dev, pdata->adc_batt_temp);
++	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
+ 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
+ }
+ 
+-static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
+-{
+-	int i;
+-
+-	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
+-		if (!pchg->chan[i])
+-			continue;
+-
+-		iio_channel_release(pchg->chan[i]);
+-		pchg->chan[i] = NULL;
+-	}
+-}
+-
+ static ssize_t lp8788_show_charger_status(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
  {
- 	/* Setup PCIe address space mappings for each resource */
- 	resource_size_t size;
- 	resource_size_t res_start;
-+	struct resource *res = window->res;
- 	u32 mask;
+@@ -747,7 +734,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
+ 	lp8788_irq_unregister(pdev, pchg);
+ 	sysfs_remove_group(&pdev->dev.kobj, &lp8788_attr_group);
+ 	lp8788_psy_unregister(pchg);
+-	lp8788_release_adc_channel(pchg);
  
- 	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
-@@ -353,9 +354,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
- 	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
- 
- 	if (res->flags & IORESOURCE_IO)
--		res_start = pci_pio_to_address(res->start);
-+		res_start = pci_pio_to_address(res->start) - window->offset;
- 	else
--		res_start = res->start;
-+		res_start = res->start - window->offset;
- 
- 	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
- 	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
-@@ -384,7 +385,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
- 		switch (resource_type(res)) {
- 		case IORESOURCE_IO:
- 		case IORESOURCE_MEM:
--			rcar_pcie_setup_window(i, pci, res);
-+			rcar_pcie_setup_window(i, pci, win);
- 			i++;
- 			break;
- 		case IORESOURCE_BUS:
+ 	return 0;
+ }
 -- 
 2.25.1
 
