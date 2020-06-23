@@ -2,119 +2,104 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA2F520768
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:03:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kGSfp6xH"
+	by mail.kernel.org (Postfix) with ESMTP id 088F820768
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732661AbgFWNDx (ORCPT
+        id S1732676AbgFWNEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732542AbgFWNDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:03:52 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D49C061573;
-        Tue, 23 Jun 2020 06:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YaPfqTCjeDJ9yQ4e7Ug2AGa7kbHGPm3KcaODCyhYn5k=; b=kGSfp6xHac4GqUF2vY+RwsZvtv
-        UtLfm9rQDTo+JtvY9BvI3ZBed/ULh8lhJvTMgFO03+l0rXmutXve4emLYgluNUaAjGzxt7P3/Dq7z
-        jEQ2dZHsRc0N9TSA3Onut7BDTJdXmUQ1ktnDfGVTNvD09O61TCjE8ggrVHK7U8vOoGMvG2Qx6IDfM
-        OrAT6fCMMx5AHvdh8ofYbc3OcE1CAByxLfGEty3z8FkvgQVSjRtA2G5zp+VMADbkm8Y5TYaPkDTSW
-        OC7F6qJi6s4/AF1qlXVPlcrECrBgRFz4ONJWn6G71e1KFlk7Usfpdjv91uJ6wGPH2ixslVKd91zDi
-        61hKOVmQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jniaC-0007Vk-Lm; Tue, 23 Jun 2020 13:03:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E0300300F28;
-        Tue, 23 Jun 2020 15:03:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CCDBB23CBF713; Tue, 23 Jun 2020 15:03:22 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 15:03:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623130322.GH4817@hirez.programming.kicks-ass.net>
-References: <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200623094519.GF31822@suse.de>
- <20200623104559.GA4817@hirez.programming.kicks-ass.net>
- <20200623111107.GG31822@suse.de>
- <20200623111443.GC4817@hirez.programming.kicks-ass.net>
- <20200623114324.GA14101@suse.de>
- <20200623115014.GE4817@hirez.programming.kicks-ass.net>
- <20200623121237.GC14101@suse.de>
+        Tue, 23 Jun 2020 09:04:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:33061 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732542AbgFWNEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:04:38 -0400
+IronPort-SDR: MDRAvRWKMS6vlwDSiKdvSf0lpQak9+nm3VCj7hoUIbpy4Oy4JUfIzTf0O2NDzvjOx40O+7oN4k
+ aE+7DLLXSlOQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142306005"
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="142306005"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 06:04:38 -0700
+IronPort-SDR: V0+2YvvU3iYnI514XKlaIFVV/LmrfUZnepH7R6bSkbVPoKGzVI8dG50ZlULGG9WWtN7zqcvaH4
+ JBCyQwuzuDCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="264783873"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jun 2020 06:04:33 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jnibK-00FMnm-Sx; Tue, 23 Jun 2020 16:04:34 +0300
+Date:   Tue, 23 Jun 2020 16:04:34 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
+        arnaldo.melo@gmail.com, kafai@fb.com, songliubraving@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux@rasmusvillemoes.dk, joe@perches.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com, corbet@lwn.net,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 bpf-next 7/8] bpf: add support for %pT format
+ specifier for bpf_trace_printk() helper
+Message-ID: <20200623130434.GX2428291@smile.fi.intel.com>
+References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
+ <1592914031-31049-8-git-send-email-alan.maguire@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623121237.GC14101@suse.de>
+In-Reply-To: <1592914031-31049-8-git-send-email-alan.maguire@oracle.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:12:37PM +0200, Joerg Roedel wrote:
-> On Tue, Jun 23, 2020 at 01:50:14PM +0200, Peter Zijlstra wrote:
-> > If SNP is the sole reason #VC needs to be IST, then I'd strongly urge
-> > you to only make it IST if/when you try and make SNP happen, not before.
-> 
-> It is not the only reason, when ES guests gain debug register support
-> then #VC also needs to be IST, because #DB can be promoted into #VC
-> then, and as #DB is IST for a reason, #VC needs to be too.
+On Tue, Jun 23, 2020 at 01:07:10PM +0100, Alan Maguire wrote:
+> Allow %pT[cNx0] format specifier for BTF-based display of data associated
+> with pointer.  The unsafe data modifier 'u' - where the source data
+> is traversed without copying it to a safe buffer via probe_kernel_read() -
+> is not supported.
 
-Didn't I read somewhere that that is only so for Rome/Naples but not for
-the later chips (Milan) which have #DB pass-through?
+I think I already saw this data structure definition...
 
-> Besides that, I am not a fan of delegating problems I already see coming
-> to future-Joerg and future-Peter, but if at all possible deal with them
-> now and be safe later.
+> +/*
+> + * struct __btf_ptr is used for %pT (typed pointer) display; the
+> + * additional type string/BTF id are used to render the pointer
+> + * data as the appropriate type.
+> + */
+> +struct __btf_ptr {
+> +	void *ptr;
+> +	const char *type;
+> +	__u32 id;
+> +};
 
-Well, we could just say no :-) At some point in the very near future
-this house of cards is going to implode.
+So, this is 2nd...
 
-We're talking about the 3rd case where the only reason things 'work' is
-because we'll have to panic():
 
- - #MC
- - #DB with BUS LOCK DEBUG EXCEPTION
- - #VC SNP
+> +/*
+> + * struct __btf_ptr is used for %pT (typed pointer) display; the
+> + * additional type string/BTF id are used to render the pointer
+> + * data as the appropriate type.
+> + */
+> +struct __btf_ptr {
+> +	void *ptr;
+> +	const char *type;
+> +	__u32 id;
+> +};
 
-(and it ain't a happy accident they're all IST)
+,..and this is 3rd copy. Why?
 
-Did someone forget to pass the 'ISTs are *EVIL*' memo to the hardware
-folks? How come we're getting more and more of them? (/me puts fingers
-in ears and goes la-la-la-la in anticipation of Andrew mentioning CET)
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
