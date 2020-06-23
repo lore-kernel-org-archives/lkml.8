@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A09C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6C552080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AEA206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942805;
-	bh=jIvTCGL4XEw5WgE1iqVdhjouxOo7pSFIppgNKX/ico4=;
+	s=default; t=1592942810;
+	bh=9YmC30CBs5fIMIMnajxNVucl7OFNhF85IfK4dlpZ0J0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DD1xEpAY+k3V2zqjtpgTQVQJf+BybhWcX+RbC8RiyW6TnLKWxO1FZA4jO48m+P+Fm
-	 u+1qmmzsmu7xIfBofs3CP4W0oGD1K7td1CxDjhsXlh7goc/HBFG8hAZa8XTVnW4YS/
-	 NJ/i3xrgILj2dvB5ywX8esAf6RZ5K2Ntm2gAMbuA=
+	b=eGnvWlRgyle41GGagQYkPfE6jTCKGddGwoP/EFYP+8MWfn13NDJg5/maQrcOTiJnF
+	 o2pcTwXGx+3qvc5uSpYJuVBfMFnPwBJfVicFSUAYmZ0wJ5oBA2Wx15Hxi4WENLVMto
+	 EnHJne0T4CIquYuWoMMd0FRRmWeWfH5rw1A0nVq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388517AbgFWUGo (ORCPT
+        id S2388526AbgFWUGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:06:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46836 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:06:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388502AbgFWUGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:06:38 -0400
+        id S2388515AbgFWUGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:06:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C892080C;
-        Tue, 23 Jun 2020 20:06:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6D520FC3;
+        Tue, 23 Jun 2020 20:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942798;
-        bh=jIvTCGL4XEw5WgE1iqVdhjouxOo7pSFIppgNKX/ico4=;
+        s=default; t=1592942803;
+        bh=9YmC30CBs5fIMIMnajxNVucl7OFNhF85IfK4dlpZ0J0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zDC8Ftvt8pZEBdtBLhb5hvwmF5GMYFTax9YPx787qduF4O5vZnRP1pPSErE/SKWu
-         j6sSlCUOL3XLkWo1SSX9JQeBQuqMJHkTr90W72OGOGnvBYLk+UhDgJXzqlUI4kx9Bp
-         QlpNFDOVxqMzdLcRgT7aQKYTN+2GJGapBxF5KGG0=
+        b=kTQNNnbFhELgRy4RkGUPJWFzTztnkdPKAa+tPg8V+j3Qkr3CvOZ9J+u3XB44pAvpW
+         p0weUWHkaeK5VDUqpngqDlMH0VQ8fLusskemVhGucnp/GIx+nGnUcYD4Vsa2aTM2xs
+         BDP/ZDmfK0uUaldrnTKZI0ukjstii4nGeE8pxHTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 109/477] ibmvnic: Flush existing work items before device removal
-Date:   Tue, 23 Jun 2020 21:51:46 +0200
-Message-Id: <20200623195412.748119661@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 134/477] staging: gasket: Fix mapping refcnt leak when register/store fails
+Date:   Tue, 23 Jun 2020 21:52:11 +0200
+Message-Id: <20200623195413.941134911@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,35 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 6954a9e4192b86d778fb52b525fd7b62d51b1147 ]
+[ Upstream commit e3436ce60cf5f5eaedda2b8c622f69feb97595e2 ]
 
-Ensure that all scheduled work items have completed before continuing
-with device removal and after further event scheduling has been
-halted. This patch fixes a bug where a scheduled driver reset event
-is processed following device removal.
+gasket_sysfs_register_store() invokes get_mapping(), which returns a
+reference of the specified gasket_sysfs_mapping object to "mapping" with
+increased refcnt.
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When gasket_sysfs_register_store() returns, local variable "mapping"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
+
+The reference counting issue happens in one exception handling path of
+gasket_sysfs_register_store(). When gasket_dev is NULL, the function
+forgets to decrease the refcnt increased by get_mapping(), causing a
+refcnt leak.
+
+Fix this issue by calling put_mapping() when gasket_dev is NULL.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Link: https://lore.kernel.org/r/1587618941-13718-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/staging/gasket/gasket_sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 197dc5b2c0905..1b4d04e4474bb 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -5184,6 +5184,9 @@ static int ibmvnic_remove(struct vio_dev *dev)
- 	adapter->state = VNIC_REMOVING;
- 	spin_unlock_irqrestore(&adapter->state_lock, flags);
- 
-+	flush_work(&adapter->ibmvnic_reset);
-+	flush_delayed_work(&adapter->ibmvnic_delayed_reset);
-+
- 	rtnl_lock();
- 	unregister_netdevice(netdev);
+diff --git a/drivers/staging/gasket/gasket_sysfs.c b/drivers/staging/gasket/gasket_sysfs.c
+index ad852ea1d4a92..af26bc9f184a5 100644
+--- a/drivers/staging/gasket/gasket_sysfs.c
++++ b/drivers/staging/gasket/gasket_sysfs.c
+@@ -373,6 +373,7 @@ ssize_t gasket_sysfs_register_store(struct device *device,
+ 	gasket_dev = mapping->gasket_dev;
+ 	if (!gasket_dev) {
+ 		dev_err(device, "Device driver may have been removed\n");
++		put_mapping(mapping);
+ 		return 0;
+ 	}
  
 -- 
 2.25.1
