@@ -2,94 +2,112 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B215C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 701622078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5619F2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948682;
-	bh=F3cduie+7HxSmm3SlSwpnqOPWqiGsIacr9+k/Jixv34=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=l324rO+qR3TQN0ybpK7O8u24FFNiOHQEjoEsGf7MvoQ8qtFkZk7tzfMatFfpeddhN
-	 NlbK80zJr1LT/1uDc3aGJBFdy44otzUxRQgdp5MHY8mDx2eE1iDP47ME6MQL9Xudes
-	 JVUbTj4JrowHn9Y3TtjKLSerNV0Ya8qQFw/L/BDk=
+	s=default; t=1592948690;
+	bh=hJ9W+FFy+B2YM3Rud7prhMWcV47Dqp5wecNU2/atmvQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Eve066ElRB0gb/nxBI26ODTFkH61zgJfHtjcYxtLjdKlMXVB2QOCjl84jdYX4vhmD
+	 W44vGxPHY3qWwggcvSKbHnx7Uxq21DIW4L7jbMarfQNsEsE2XSmpGaGNf5M/MDsIZx
+	 ae14ab2pK2EZZWY/S5HCAdfGbrPclq8Cz8qguoAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393868AbgFWVok (ORCPT
+        id S2388446AbgFWVos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:44:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32900 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388581AbgFWVoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 17:44:34 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S2387491AbgFWUCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:02:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E58EC2078A;
-        Tue, 23 Jun 2020 21:44:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 407B720CC7;
+        Tue, 23 Jun 2020 20:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592948673;
-        bh=F3cduie+7HxSmm3SlSwpnqOPWqiGsIacr9+k/Jixv34=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=M5bJeLzLT3a2G97qkSIxIdL8AP9OVQH66mZATVT5N9VcCipgteLJXmLIdzHwhFAys
-         xPdKK4dYoA8o0b4cNSS0tWZhXiMqCl65BAwqglM5u6GJDFQB2ccrPA6CqOpyEePXej
-         uHDE1j5uiQI2UNKyh5G0tWXRmiViTwulhSUZqmdc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D19AD3522657; Tue, 23 Jun 2020 14:44:33 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 14:44:33 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, x86@kernel.org, elver@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        will@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com
-Subject: Re: [PATCH 2/9] rcu: Fixup noinstr warnings
-Message-ID: <20200623214433.GX9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200603114014.152292216@infradead.org>
- <20200603114051.896465666@infradead.org>
- <20200615154905.GZ2531@hirez.programming.kicks-ass.net>
- <20200615155513.GG2554@hirez.programming.kicks-ass.net>
- <20200615162427.GI2554@hirez.programming.kicks-ass.net>
- <20200615171404.GI2723@paulmck-ThinkPad-P72>
- <20200619221555.GA12280@paulmck-ThinkPad-P72>
- <20200623204646.GF2483@worktop.programming.kicks-ass.net>
+        s=default; t=1592942529;
+        bh=hJ9W+FFy+B2YM3Rud7prhMWcV47Dqp5wecNU2/atmvQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RXSdw/7QUt7EVoXs0KWFAg5F2QF5EBoD2HWN9TMW2eZ34J0PoRYzMPs9uoc/+MJRB
+         s2jzDVzd0gfsfno4IfnceNfh6ObxW0LxabkD5yXx1lZ6Bh7wRx2zuB1yqKYPS26/2J
+         +bGdGJO7ITcFVLVjW3p3YI1YhsM3P/PcuWAfTXrE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 004/477] ASoC: tegra: tegra_wm8903: Support nvidia, headset property
+Date:   Tue, 23 Jun 2020 21:50:01 +0200
+Message-Id: <20200623195407.794908343@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
+References: <20200623195407.572062007@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623204646.GF2483@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:46:46PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 19, 2020 at 03:15:55PM -0700, Paul E. McKenney wrote:
-> 
-> > Just following up because I don't see this anywhere.  If I am supposed
-> > to take this (which is more plausible now that v5.8-rc1 is out), please
-> > let me know.
-> 
-> Sorry, I got distracted by that NULL ptr thing, but that seems sorted
-> now. If you don't mind taking it through your rcu/urgent tree for -rc3
-> or so that would be awesome.
+From: Dmitry Osipenko <digetx@gmail.com>
 
-Will do!
+[ Upstream commit 3ef9d5073b552d56bd6daf2af1e89b7e8d4df183 ]
 
-Just to double-check, this is the patch from you with Message-ID
-20200603114051.896465666@infradead.org, correct?
+The microphone-jack state needs to be masked in a case of a 4-pin jack
+when microphone and ground pins are shorted. Presence of nvidia,headset
+tells that WM8903 CODEC driver should mask microphone's status if short
+circuit is detected, i.e headphones are inserted.
 
-Or, if you prefer, this commit now on -rcu?
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200330204011.18465-3-digetx@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/tegra/tegra_wm8903.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-	5fe289eccfe5 ("rcu: Fixup noinstr warnings")
+diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
+index 9b5651502f127..3aca354f9e08b 100644
+--- a/sound/soc/tegra/tegra_wm8903.c
++++ b/sound/soc/tegra/tegra_wm8903.c
+@@ -177,6 +177,7 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
+ 	struct snd_soc_component *component = codec_dai->component;
+ 	struct snd_soc_card *card = rtd->card;
+ 	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
++	int shrt = 0;
+ 
+ 	if (gpio_is_valid(machine->gpio_hp_det)) {
+ 		tegra_wm8903_hp_jack_gpio.gpio = machine->gpio_hp_det;
+@@ -189,12 +190,15 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
+ 					&tegra_wm8903_hp_jack_gpio);
+ 	}
+ 
++	if (of_property_read_bool(card->dev->of_node, "nvidia,headset"))
++		shrt = SND_JACK_MICROPHONE;
++
+ 	snd_soc_card_jack_new(rtd->card, "Mic Jack", SND_JACK_MICROPHONE,
+ 			      &tegra_wm8903_mic_jack,
+ 			      tegra_wm8903_mic_jack_pins,
+ 			      ARRAY_SIZE(tegra_wm8903_mic_jack_pins));
+ 	wm8903_mic_detect(component, &tegra_wm8903_mic_jack, SND_JACK_MICROPHONE,
+-				0);
++				shrt);
+ 
+ 	snd_soc_dapm_force_enable_pin(&card->dapm, "MICBIAS");
+ 
+-- 
+2.25.1
 
-If this is the correct commit, I will rebase it on top of v5.8-rc2,
-and if it passes tests, send it along via rcu/urgent.
 
-							Thanx, Paul
+
